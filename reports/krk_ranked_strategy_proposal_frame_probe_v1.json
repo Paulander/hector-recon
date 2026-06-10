@@ -1,0 +1,122 @@
+{
+  "benchmark_underpowered": true,
+  "best_result": {
+    "accuracy": 0.8,
+    "false_negative": 0,
+    "false_positive": 3,
+    "negative_suppression": 0.5,
+    "objective": "top_family_raw_bucket",
+    "positive_precision": 0.75,
+    "positive_recall": 1.0,
+    "row_count": 15,
+    "true_negative": 3,
+    "true_positive": 9
+  },
+  "causal_status": "non_causal_offline_probe",
+  "decision": {
+    "recommended_next_step": "derive_state_local_contrast_labels_before_runtime_selector",
+    "runtime_test_allowed_next": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "ranked_frames_available_label_semantics_too_coarse"
+  },
+  "frame_summary": {
+    "frame_count": 22,
+    "outcome_counts": {
+      "mate": 9,
+      "max_plies": 10,
+      "unknown": 3
+    },
+    "stage7_challenge_frame_count": 7,
+    "stage7_top_provider_family_counts": {
+      "drive_to_edge": 4,
+      "stage0_basin": 3
+    },
+    "top_provider_family_counts": {
+      "drive_to_edge": 4,
+      "edge_trap": 4,
+      "stage0_basin": 14
+    },
+    "training_frame_count": 15
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "finding": "Ranked proposal-frame context is available, but frame-level outcome labels are too coarse to identify the winning proposal inside a frame.",
+    "stage7_training_leakage": false
+  },
+  "results": {
+    "active_label_top_family": {
+      "accuracy": 0.5333333333333333,
+      "false_negative": 1,
+      "false_positive": 6,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.5714285714285714,
+      "positive_recall": 0.8888888888888888,
+      "row_count": 15,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "provider_family_set": {
+      "accuracy": 0.7333333333333333,
+      "false_negative": 1,
+      "false_positive": 3,
+      "negative_suppression": 0.5,
+      "positive_precision": 0.7272727272727273,
+      "positive_recall": 0.8888888888888888,
+      "row_count": 15,
+      "true_negative": 3,
+      "true_positive": 8
+    },
+    "source_stage_top_family": {
+      "accuracy": 0.5333333333333333,
+      "false_negative": 1,
+      "false_positive": 6,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.5714285714285714,
+      "positive_recall": 0.8888888888888888,
+      "row_count": 15,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "top_family_maturity": {
+      "accuracy": 0.7333333333333333,
+      "false_negative": 1,
+      "false_positive": 3,
+      "negative_suppression": 0.5,
+      "positive_precision": 0.7272727272727273,
+      "positive_recall": 0.8888888888888888,
+      "row_count": 15,
+      "true_negative": 3,
+      "true_positive": 8
+    },
+    "top_family_raw_bucket": {
+      "accuracy": 0.8,
+      "false_negative": 0,
+      "false_positive": 3,
+      "negative_suppression": 0.5,
+      "positive_precision": 0.75,
+      "positive_recall": 1.0,
+      "row_count": 15,
+      "true_negative": 3,
+      "true_positive": 9
+    },
+    "top_provider_family": {
+      "accuracy": 0.7333333333333333,
+      "false_negative": 1,
+      "false_positive": 3,
+      "negative_suppression": 0.5,
+      "positive_precision": 0.7272727272727273,
+      "positive_recall": 0.8888888888888888,
+      "row_count": 15,
+      "true_negative": 3,
+      "true_positive": 8
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_ranked_strategy_proposal_frame_probe.v1",
+  "source_artifact": "reports/krk_ranked_strategy_proposal_frames_v1.json",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

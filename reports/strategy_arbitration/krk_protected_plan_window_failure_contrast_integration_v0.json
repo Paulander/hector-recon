@@ -1,0 +1,61 @@
+{
+  "causal_status": "non_causal_failure_contrast_integration",
+  "decision": {
+    "collection_run_allowed": false,
+    "label_run_allowed": false,
+    "recommended_next_step": "collect_additional_reviewed_protected_plan_window_failure_contrasts",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "protected_plan_window_failure_contrast_integration_underpowered_needs_more_valid_failures"
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "integrated_failure_contrasts": [],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_protected_plan_window_failure_contrast_integration.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_plan_v0.json",
+    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.json",
+    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_output_validation_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "current_control_plane_approval_option_ids": [
+      "approve_stage4_first_move_contrast_sandbox",
+      "review_protected_plan_window_failure_contrast_manifest"
+    ],
+    "current_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
+    "existing_unique_failure_count": 1,
+    "integrated_new_failure_count": 0,
+    "integration_ready": false,
+    "manifest_job_count": 6,
+    "minimum_new_unique_failures_needed": 4,
+    "minimum_required_unique_failures": 5,
+    "output_exists_count": 6,
+    "output_valid_count": 6,
+    "projected_unique_failure_count": 1,
+    "protected_failure_contrast_collection_blocked_by_option_id": "review_protected_plan_window_failure_contrast_manifest",
+    "protected_failure_contrast_collection_command_available": false,
+    "protected_failure_contrast_collection_option_available": false,
+    "protected_failure_contrast_collection_option_id": null,
+    "runtime_authorization_row_count": 0,
+    "selector_training_row_count": 0,
+    "skipped_counts": {
+      "not_conversion_failure": 6
+    },
+    "source_family_counts": {},
+    "source_stage_counts": {},
+    "stage7_training_row_count": 0,
+    "validated_unique_failure_candidate_count": 0,
+    "validation_status": "protected_plan_window_failure_contrast_outputs_valid_ready_for_integration"
+  }
+}

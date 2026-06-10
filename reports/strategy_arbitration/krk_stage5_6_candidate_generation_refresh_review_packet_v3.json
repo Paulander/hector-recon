@@ -1,0 +1,122 @@
+{
+  "approved_scope_if_later_authorized": {
+    "allowed_runtime_effect": "emit_extra_candidate_generation_frames_only",
+    "candidate_generation_cells": {
+      "stage5": [
+        "edge_trap",
+        "fence_established",
+        "stage0_basin"
+      ],
+      "stage6": [
+        "stage0_basin"
+      ]
+    },
+    "candidate_source": "validated_provider_capacity_scope",
+    "causal_status_for_frames": "observation_or_candidate_generation_only",
+    "direct_request": false,
+    "excluded_stages": [
+      "stage4",
+      "stage7",
+      "stage8"
+    ],
+    "score_delta": 0.0,
+    "source_stages": [
+      "stage5",
+      "stage6"
+    ],
+    "stage7_use": "held_out_challenge_only"
+  },
+  "causal_status": "runtime_review_packet_non_causal",
+  "decision": {
+    "guardrails_allowed": false,
+    "implementation_authorized_by_this_packet": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "explicit_approval_required_for_default_off_stage5_6_candidate_generation_refresh_sandbox",
+    "runtime_candidate_generator_refresh_allowed_by_this_packet": false,
+    "runtime_review_ready": true,
+    "selector_allowed": false,
+    "status": "stage5_6_candidate_generation_refresh_review_ready"
+  },
+  "evidence_summary": {
+    "benchmark_status": "stage_conditioned_candidate_generation_stage5_6_promising_stage4_blocked",
+    "positive_scope_cells": [
+      "stage5|edge_trap",
+      "stage5|fence_established",
+      "stage5|stage0_basin",
+      "stage6|stage0_basin"
+    ],
+    "stage4_metrics": {
+      "balanced_recall_risk": 0.5,
+      "false_negative": 6,
+      "false_positive": 0,
+      "negative_count": 5,
+      "negative_suppression": 1.0,
+      "positive_count": 6,
+      "positive_precision": 0.0,
+      "positive_recall": 0.0,
+      "predicted_count": 0,
+      "row_count": 11,
+      "true_negative": 5,
+      "true_positive": 0
+    },
+    "stage5_6_metrics": {
+      "balanced_recall_risk": 1.0,
+      "false_negative": 0,
+      "false_positive": 0,
+      "negative_count": 5,
+      "negative_suppression": 1.0,
+      "positive_count": 20,
+      "positive_precision": 1.0,
+      "positive_recall": 1.0,
+      "predicted_count": 20,
+      "row_count": 25,
+      "true_negative": 5,
+      "true_positive": 20
+    }
+  },
+  "explicitly_forbidden": [
+    "selecting_a_provider",
+    "selecting_a_move",
+    "suppressing_providers",
+    "changing_scores",
+    "direct_provider_routing",
+    "stage4_scope_without_companion_review",
+    "stage7_training_rows",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "hidden_python_controller"
+  ],
+  "gameplay_topology_mutation": false,
+  "implementation_requirements_if_approved_later": [
+    "explicit opt-in flag",
+    "default-off equivalence on protected Stage 5/6",
+    "zero selected move/provider delta when observing only",
+    "zero score delta",
+    "bounded generated candidate count",
+    "trace every generated candidate source term",
+    "mark Stage 7 rows held-out if sampled diagnostically",
+    "target smoke before any guardrails",
+    "separate selector review before any candidate can affect routing"
+  ],
+  "risk_register": [
+    "capacity labels are not ownership labels",
+    "Stage 4 remains mixed and excluded",
+    "Stage 7 remains held out",
+    "candidate generation may expose negative-capacity candidates if scope leaks",
+    "runtime selector is still blocked"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_stage5_6_candidate_generation_refresh_review_packet.v3",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_stage_conditioned_candidate_generation_benchmark_v3.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

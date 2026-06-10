@@ -1,0 +1,48 @@
+# Handover Notes: Purity-Preserving KRK Fix
+
+**Current Goal:** 100% win rate using strictly "purity-preserving" discovery (no hardcoded tactical logic).
+
+## Status Summary
+
+- **Win Rate:** 100% (Mate-in-1), but achieved via temporary scaffolding (+10 bonus).
+- **Topology:** Optimized (82 nodes), compiled from `baseline_krk_final` learner.
+- **Purity Path:** We are transitioning from "Hardcoded Bonus" → "Natural Discovery through Goal Retention".
+
+## Completed Phases
+
+1. **Phase 1A (Fix 9% Failure)**: ✅ DONE
+   - Root cause: Actuators ignored `is_checkmate`.
+   - Fix: Added +10.0 bonus in [krk_baseline_nodes.py](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/src/recon_lite_chess/krk_baseline_nodes.py) (line 317).
+   - **NOTE:** This bonus is TEMPORARY SCAFFOLDING.
+
+2. **Phase 1B (Wiring Fix)**: ✅ DONE
+   - [baseline_to_recon.py](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/scripts/baseline_to_recon.py) fixed to map sensors only by ID, removing silent positional miswiring.
+   - Exposed missing sensors 27/28 (harmless warning now, was bug before).
+
+3. **Phase 1C (Goal Retention)**: 🚧 PARTIALLY DONE
+   - **Library Code ([baseline.py](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/tests/test_baseline.py))**: I patched [extract_actuator_patterns](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/src/recon_lite/learning/baseline.py#463-647) to accept `goal_sensor_ids` and force their retention.
+   - **Missing Integration**: The training scripts ([train_baseline_krk.py](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/scripts/train_baseline_krk.py), etc.) do **NOT** yet pass this parameter.
+
+## Next Steps for GPU Agent
+
+The very next task is to finish **Phase 1C**:
+
+1.  **Modify [train_baseline_krk.py](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/scripts/train_baseline_krk.py)**:
+    - Locate call to [extract_actuator_patterns](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/src/recon_lite/learning/baseline.py#463-647).
+    - Pass `goal_sensor_ids=[13]` (Feature 13 is `is_checkmate` in [baseline_teacher.py](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/src/recon_lite_chess/baseline_teacher.py)).
+
+2.  **Run Training**:
+    - Retrain the baseline (now on GPU!).
+    - Verify that `sensor_13` is naturally retained in the actuator specs *without* needing to be top-K by magnitude.
+
+3.  **Phase 1D (A/B Test)**:
+    - Compile new topology from this training.
+    - **Remove the +10 bonus** from [krk_baseline_nodes.py](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/src/recon_lite_chess/krk_baseline_nodes.py).
+    - Verify win rate stays >99%.
+    - If yes, we have achieved "Purity": the system *learned* checkmate is important because we preserved the goal dimension, not because we hardcoded a score.
+
+## Critical Files
+- [src/recon_lite/learning/baseline.py](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/src/recon_lite/learning/baseline.py): Contains [extract_actuator_patterns](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/src/recon_lite/learning/baseline.py#463-647) (patched).
+- [scripts/baseline_to_recon.py](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/scripts/baseline_to_recon.py): Compiler (fixed wiring).
+- [src/recon_lite_chess/krk_baseline_nodes.py](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/src/recon_lite_chess/krk_baseline_nodes.py): Contains the +10 scaffolding (to be removed).
+- [scripts/train_baseline_krk.py](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/scripts/train_baseline_krk.py): **Needs update**.

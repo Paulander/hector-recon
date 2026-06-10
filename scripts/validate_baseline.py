@@ -5,7 +5,7 @@ Run this to verify all core components are working.
 
 import numpy as np
 import chess
-from recon_lite.learning.baseline import (
+from recon_lite_hector.learning.baseline import (
     Terminal, TerminalRole, SensorSpec, ActuatorSpec,
     apply_sensor, compute_sensor_xp, BaselineLearner
 )

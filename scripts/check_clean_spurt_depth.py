@@ -6,8 +6,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from recon_lite.models.registry import TopologyRegistry
-from recon_lite.learning.m5_structure import compute_branching_metrics
+from recon_lite_hector.models.registry import TopologyRegistry
+from recon_lite_hector.learning.m5_structure import compute_branching_metrics
 from recon_lite_chess.graph.builder import build_graph_from_topology
 
 stages = ["stage0", "stage1", "stage2", "stage3", "stage4", "stage5"]

@@ -1,0 +1,177 @@
+{
+  "causal_status": "non_causal_merge_review",
+  "decision": {
+    "recommended_next_step": "review_ranked_proposal_frame_coverage_for_protected_missing_provider_states",
+    "runtime_work_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "protected_missing_provider_labels_unmatched_by_current_proposal_frames"
+  },
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_protected_missing_provider_label_merge_review.v0",
+  "source_artifacts": [
+    "reports/krk_protected_missing_provider_capacity_labels_v0.json",
+    "reports/krk_state_local_contrast_labels_v2.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "matched_protected_label_count": 0,
+    "matched_result_counts": {},
+    "protected_label_count": 16,
+    "stage7_label_count": 0,
+    "unmatched_protected_label_count": 16,
+    "unmatched_provider_counts": {
+      "krk.drive_to_edge": 1,
+      "krk.edge_trap_close": 3,
+      "krk.edge_trap_enemy_between": 3,
+      "krk.edge_trap_wrong_tempo": 3,
+      "krk.fence_established": 3,
+      "krk.stage0_basin": 3
+    },
+    "unmatched_result_counts": {
+      "mate": 11,
+      "max_plies": 5
+    },
+    "unmatched_stage_counts": {
+      "stage4": 6,
+      "stage5": 7,
+      "stage6": 3
+    }
+  },
+  "unmatched_label_refs": [
+    {
+      "job_id": "job.krk.protected_missing_provider.75babbcc6000",
+      "plies": 27,
+      "provider_id": "krk.stage0_basin",
+      "result": "mate",
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6"
+    },
+    {
+      "job_id": "job.krk.protected_missing_provider.5f9c11521077",
+      "plies": 15,
+      "provider_id": "krk.fence_established",
+      "result": "mate",
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6"
+    },
+    {
+      "job_id": "job.krk.protected_missing_provider.38d0a11daf0c",
+      "plies": 27,
+      "provider_id": "krk.stage0_basin",
+      "result": "mate",
+      "source_stage": "stage5",
+      "state_id": "state.326222aefdf1"
+    },
+    {
+      "job_id": "job.krk.protected_missing_provider.9df1f2680cbc",
+      "plies": 37,
+      "provider_id": "krk.fence_established",
+      "result": "mate",
+      "source_stage": "stage5",
+      "state_id": "state.326222aefdf1"
+    },
+    {
+      "job_id": "job.krk.protected_missing_provider.8d58e5a5f72c",
+      "plies": 31,
+      "provider_id": "krk.edge_trap_close",
+      "result": "mate",
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca"
+    },
+    {
+      "job_id": "job.krk.protected_missing_provider.a306768e24a0",
+      "plies": 31,
+      "provider_id": "krk.edge_trap_wrong_tempo",
+      "result": "mate",
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca"
+    },
+    {
+      "job_id": "job.krk.protected_missing_provider.9a4cc895c68d",
+      "plies": 31,
+      "provider_id": "krk.edge_trap_enemy_between",
+      "result": "mate",
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca"
+    },
+    {
+      "job_id": "job.krk.protected_missing_provider.4dca16fc81b3",
+      "plies": 27,
+      "provider_id": "krk.stage0_basin",
+      "result": "mate",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "job_id": "job.krk.protected_missing_provider.abcf6fafb467",
+      "plies": 40,
+      "provider_id": "krk.drive_to_edge",
+      "result": "max_plies",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "job_id": "job.krk.protected_missing_provider.54fd6c4dd136",
+      "plies": 40,
+      "provider_id": "krk.fence_established",
+      "result": "max_plies",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "job_id": "job.krk.protected_missing_provider.01f7ab28aca7",
+      "plies": 9,
+      "provider_id": "krk.edge_trap_close",
+      "result": "mate",
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f"
+    },
+    {
+      "job_id": "job.krk.protected_missing_provider.ac1e25bed37b",
+      "plies": 9,
+      "provider_id": "krk.edge_trap_wrong_tempo",
+      "result": "mate",
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f"
+    },
+    {
+      "job_id": "job.krk.protected_missing_provider.8bd0028955fa",
+      "plies": 9,
+      "provider_id": "krk.edge_trap_enemy_between",
+      "result": "mate",
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f"
+    },
+    {
+      "job_id": "job.krk.protected_missing_provider.6262bf8a2534",
+      "plies": 40,
+      "provider_id": "krk.edge_trap_close",
+      "result": "max_plies",
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf"
+    },
+    {
+      "job_id": "job.krk.protected_missing_provider.104cb87db2f9",
+      "plies": 40,
+      "provider_id": "krk.edge_trap_wrong_tempo",
+      "result": "max_plies",
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf"
+    },
+    {
+      "job_id": "job.krk.protected_missing_provider.8343f8b595ba",
+      "plies": 40,
+      "provider_id": "krk.edge_trap_enemy_between",
+      "result": "max_plies",
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf"
+    }
+  ]
+}

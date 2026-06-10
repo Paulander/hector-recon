@@ -1,0 +1,36 @@
+{
+  "schema_version": "krk_runtime_sandbox_policy_update.v0",
+  "decision": {
+    "status": "reviewed_default_off_runtime_sandbox_allowed",
+    "allowed_scope": "progress_window_selected_owner_reconsideration",
+    "broad_runtime_changes_allowed": false,
+    "default_policy_changes_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false
+  },
+  "immediate_plan": [
+    "implement_default_off_progress_window_reconsideration_sandbox",
+    "prove_default_off_equivalence",
+    "run_protected_guardrails_only_if_target_improves",
+    "use_stage7_as_heldout_challenge_only",
+    "quarantine_or_keep_sandboxed_until_later_review"
+  ],
+  "runtime_test_result": {
+    "source_smoke": "reports/krk_progress_window_reconsideration_runtime_smoke_v0.json",
+    "source_review": "reports/krk_progress_window_reconsideration_runtime_test_review_v0.json",
+    "status": "runtime_test_scaffold_wired_but_policy_insufficient",
+    "default_off_equivalence_passed": true,
+    "activation_observed": true,
+    "target_improvement_observed": false,
+    "guardrails_allowed_now": false
+  },
+  "hard_boundaries": {
+    "hidden_python_controller": false,
+    "runtime_dtm_or_tablebase": false,
+    "gameplay_topology_mutation": false,
+    "general_predecision_selector": false,
+    "stage7_repair_or_promotion": false,
+    "stage8_training": false
+  },
+  "source_review_packet": "reports/krk_state_local_paired_selector_runtime_proxy_review_packet_v1.json"
+}

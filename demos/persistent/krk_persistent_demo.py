@@ -64,7 +64,7 @@ from recon_lite_chess.predicates import (
     would_cause_threefold,
 )
 from recon_lite.trace_db import EpisodeRecord, TickRecord, TraceDB, pack_fingerprint
-from recon_lite.plasticity import (
+from recon_lite_hector.plasticity import (
     PlasticityConfig,
     init_plasticity_state,
     update_eligibility,
@@ -73,7 +73,7 @@ from recon_lite.plasticity import (
     snapshot_plasticity,
     extract_episode_summary,
 )
-from recon_lite.plasticity.bandit import (
+from recon_lite_hector.plasticity.bandit import (
     BanditConfig,
     BanditPriors,
     init_bandit_state,
@@ -87,15 +87,15 @@ from recon_lite.plasticity.bandit import (
     export_priors as export_bandit_priors,
     merge_priors as merge_bandit_priors,
 )
-from recon_lite.plasticity.modulation import (
+from recon_lite_hector.plasticity.modulation import (
     ModulationConfig,
     compute_modulators,
 )
-from recon_lite.plasticity.consolidate import (
+from recon_lite_hector.plasticity.consolidate import (
     ConsolidationConfig,
     ConsolidationEngine,
 )
-from recon_lite.nodes.stem_cell import (
+from recon_lite_hector.nodes.stem_cell import (
     StemCellManager,
     StemCellConfig,
 )

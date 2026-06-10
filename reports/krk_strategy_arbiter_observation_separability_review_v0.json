@@ -1,0 +1,54 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "provider_support_adapter",
+    "score_bonus_or_penalty",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training"
+  ],
+  "causal_status": "non_causal_review",
+  "decision": {
+    "recommended_next_step": "run_replay_free_observation_selector_probe",
+    "runtime_arbiter_allowed": false,
+    "sandbox_ready": false,
+    "status": "observation_frames_ready_for_non_causal_selector_probe"
+  },
+  "findings": [
+    "Stage7 holdout rows are visible and mostly selected by krk.stage0_basin.",
+    "Trace-only KRK context terms are now present in observation source terms.",
+    "Provider summaries expose multiple provider families for selector analysis.",
+    "The current observation export is useful for auditability but is not a causal sandbox."
+  ],
+  "proposal_provider_distribution": {
+    "7": 12
+  },
+  "record_count": 12,
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "schema_version": "krk_strategy_arbiter_observation_separability_review.v0",
+  "selected_provider_counts": {
+    "krk.fence_established": 1,
+    "krk.stage0_basin": 11
+  },
+  "single_provider_record_count": 0,
+  "single_provider_records": [],
+  "source_artifact": "reports/krk_strategy_arbiter_observation_frames_v0.json",
+  "stage7_selected_provider_counts": {
+    "krk.stage0_basin": 9
+  },
+  "stage_counts": {
+    "stage4": 2,
+    "stage5": 1,
+    "stage7": 9
+  },
+  "term_count_distribution": {
+    "13": 1,
+    "16": 7,
+    "20": 2,
+    "21": 2
+  },
+  "underinstrumented_record_count": 0,
+  "underinstrumented_records": []
+}

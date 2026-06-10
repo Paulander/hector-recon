@@ -1,0 +1,905 @@
+{
+  "binding_summary": {
+    "all_bindings_valid": true,
+    "job_count": 18,
+    "job_count_by_stage": {
+      "stage4": 8,
+      "stage5": 6,
+      "stage6": 4
+    },
+    "missing_path_count": 0,
+    "missing_paths": []
+  },
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_sampling_manifest",
+  "decision": {
+    "bounded_labels_allowed_by_script": true,
+    "observations_allowed_now": false,
+    "recommended_next_step": "run_bounded_selected_provider_diversity_ownership_labels",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "fresh_seed_selected_provider_diversity_manifest_ready_for_bounded_labels"
+  },
+  "gameplay_topology_mutation": false,
+  "jobs": [
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "1K6/1R6/k7/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.80080a9a826d",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 0,
+        "sample_seed": 31000000,
+        "source_stage_names": [
+          "Edge_Trap_Wrong_Tempo"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.1edac27044c3",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.80080a9a826d",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "7k/5KR1/8/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.cc83524289f3",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 1,
+        "sample_seed": 31000001,
+        "source_stage_names": [
+          "Edge_Trap_Wrong_Tempo"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.510e91dce435",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.cc83524289f3",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "6k1/4R3/5K2/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.6ed5d7581360",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 2,
+        "sample_seed": 31000002,
+        "source_stage_names": [
+          "Edge_Trap_Wrong_Tempo"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.725022b11f71",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.6ed5d7581360",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "8/8/8/8/8/8/R2K4/5k2 w - - 0 1",
+      "frame_id": "cp.krk.state.c732b2d6dc56",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 6,
+        "sample_seed": 31000006,
+        "source_stage_names": [
+          "Edge_Trap_Wrong_Tempo"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.f38367fb336e",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.c732b2d6dc56",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "8/7k/5K2/8/8/8/8/6R1 w - - 0 1",
+      "frame_id": "cp.krk.state.aa04e7a0d891",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 8,
+        "sample_seed": 31000008,
+        "source_stage_names": [
+          "Edge_Trap_Wrong_Tempo"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.ceaf8d720bfd",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.aa04e7a0d891",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "k7/2K1R3/8/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.545c508c6a40",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 9,
+        "sample_seed": 31000009,
+        "source_stage_names": [
+          "Edge_Trap_Wrong_Tempo"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.b96301033687",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.545c508c6a40",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "1R6/2K5/k7/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.ea634c29ece7",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 13,
+        "sample_seed": 31000013,
+        "source_stage_names": [
+          "Edge_Trap_Wrong_Tempo"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.42d7d45b3b68",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.ea634c29ece7",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "8/8/k7/2K5/8/1R6/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.e99b2e731810",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 21,
+        "sample_seed": 31000021,
+        "source_stage_names": [
+          "Edge_Trap_Wrong_Tempo"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.9ecedba4605b",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.e99b2e731810",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "4k3/R7/K7/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.dcea518838ac",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 0,
+        "sample_seed": 31000000,
+        "source_stage_names": [
+          "Fence_Established",
+          "Anchored_Cut",
+          "Edge_Cut_Hold"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.dcd9d3e7ddec",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.dcea518838ac",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "4k3/8/8/8/R7/8/4K3/8 w - - 0 1",
+      "frame_id": "cp.krk.state.7b116c49a009",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 1,
+        "sample_seed": 31000001,
+        "source_stage_names": [
+          "Fence_Established",
+          "Anchored_Cut",
+          "Edge_Cut_Hold"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.9fe895e4ff2b",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.7b116c49a009",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "4k3/1R6/1K6/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.388d05197dd9",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 3,
+        "sample_seed": 31000003,
+        "source_stage_names": [
+          "Fence_Established",
+          "Anchored_Cut",
+          "Edge_Cut_Hold"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.5c429aa2b705",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.388d05197dd9",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "7k/4RK2/8/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.18cfccc9c4c1",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 6,
+        "sample_seed": 31000006,
+        "source_stage_names": [
+          "Fence_Established",
+          "Anchored_Cut",
+          "Edge_Cut_Hold"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.655c6d10b482",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.18cfccc9c4c1",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "7k/8/8/8/R7/8/5K2/8 w - - 0 1",
+      "frame_id": "cp.krk.state.7cab65617cd8",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 7,
+        "sample_seed": 31000007,
+        "source_stage_names": [
+          "Fence_Established",
+          "Anchored_Cut",
+          "Edge_Cut_Hold"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.21c7c54ea91a",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.7cab65617cd8",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "k7/2R5/2K5/8/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.ce89fbc790e3",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 8,
+        "sample_seed": 31000008,
+        "source_stage_names": [
+          "Fence_Established",
+          "Anchored_Cut",
+          "Edge_Cut_Hold"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.7c07cf53d71c",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.ce89fbc790e3",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage6_overlay_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/baseline/best_by_stage/drive_to_edge.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "4k3/8/3K4/8/8/8/8/R7 w - - 0 1",
+      "frame_id": "cp.krk.state.e65bbd1e9f0c",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 0,
+        "sample_seed": 31000000,
+        "source_stage_names": [
+          "Opposition_Approach",
+          "Tempo_Wait",
+          "King_Close_1"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.e100bc297488",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.e65bbd1e9f0c",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage6_overlay_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/baseline/best_by_stage/drive_to_edge.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "7k/8/5K2/8/8/8/8/R7 w - - 0 1",
+      "frame_id": "cp.krk.state.cb9f8eea01fd",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 1,
+        "sample_seed": 31000001,
+        "source_stage_names": [
+          "Opposition_Approach",
+          "Tempo_Wait",
+          "King_Close_1"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.588d08c2d2d1",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.cb9f8eea01fd",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage6_overlay_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/baseline/best_by_stage/drive_to_edge.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "1k6/8/2K5/8/8/8/8/R7 w - - 0 1",
+      "frame_id": "cp.krk.state.df10abc0731f",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 2,
+        "sample_seed": 31000002,
+        "source_stage_names": [
+          "Opposition_Approach",
+          "Tempo_Wait",
+          "King_Close_1"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.f8e9d4d6c320",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.df10abc0731f",
+      "target_observation": "selected_provider_family"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selection_observation_job",
+      "execution_binding": {
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_mode": "observe_selected_provider_only",
+        "max_ticks": 200,
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage6_overlay_v1",
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile_king_support/baseline/best_by_stage/drive_to_edge.pkl",
+        "suggestion_limit": 10,
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1"
+      },
+      "fen": "4k3/R7/8/K7/8/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.67a88e3b1dd2",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "curriculum",
+        "sample_index": 6,
+        "sample_seed": 31000006,
+        "source_stage_names": [
+          "Opposition_Approach",
+          "Tempo_Wait",
+          "King_Close_1"
+        ]
+      },
+      "job_id": "job.krk.selected_provider_diversity.f81ceba5ce56",
+      "labels_generated": false,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_selected_provider_diversity_sampling_job.v0",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.67a88e3b1dd2",
+      "target_observation": "selected_provider_family"
+    }
+  ],
+  "labels_generated_in_this_slice": false,
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_selected_provider_diversity_sampling_manifest.v1",
+  "selection_policy": {
+    "base_seed": 31,
+    "fresh_seed_label_slice": true,
+    "max_jobs": 24,
+    "max_sample_index": 500,
+    "observation_only": true,
+    "per_stage_max": 8,
+    "playout_labels": true,
+    "stage7_jobs": 0
+  },
+  "source_artifacts": [
+    "reports/krk_selected_provider_diversity_evidence_plan_v0.json",
+    "reports/krk_selected_provider_diversity_replay_free_scan_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

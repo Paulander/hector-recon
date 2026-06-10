@@ -1,0 +1,64 @@
+{
+  "causal_status": "non_causal_readiness_review",
+  "decision": {
+    "allowed_next_classes": [
+      "review whether more protected negative controls are worth collecting",
+      "design cheaper targeted stage4 wrong-tempo label runner",
+      "return to broader curriculum integration review"
+    ],
+    "blocked_next_steps": [
+      "runtime_selector",
+      "stage7_repair",
+      "stage7_promotion",
+      "stage8_training",
+      "runtime_dtm_or_tablebase",
+      "gameplay_topology_mutation",
+      "m3_m4_arbitration_update"
+    ],
+    "recommended_next_step": "architecture_review_before_more_runtime_tests",
+    "runtime_test_allowed_next": false,
+    "status": "runtime_selector_blocked_negative_suppression_zero"
+  },
+  "evidence_summary": {
+    "benchmark_underpowered": true,
+    "best_stage7_negative_suppression": 0.0,
+    "best_training_accuracy": 0.75,
+    "best_training_negative_suppression": 0.0,
+    "best_training_objective": "stage_family_rank_score",
+    "row_count": 20,
+    "stage7_challenge_row_count": 8,
+    "stage7_contrast_label_counts": {
+      "negative": 8
+    },
+    "training_contrast_label_counts": {
+      "negative": 3,
+      "positive": 9
+    },
+    "training_state_count": 8,
+    "usable_training_row_count": 12
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": [
+    "The diverse labels confirm Stage 7 residual providers remain max_plies under forced ownership, but those rows are correctly held out and cannot train a selector.",
+    "Protected training labels remain too positive-heavy after dedupe, so simple selectors still predict positives and fail to suppress negative controls.",
+    "A runtime selector would currently inherit the same failure mode as broad additive support: insufficient negative ownership evidence."
+  ],
+  "readiness_failures": [
+    "training_rows_under_40",
+    "training_negative_labels_sparse",
+    "leave_state_out_negative_suppression_zero",
+    "stage7_heldout_negative_suppression_zero",
+    "stage4_wrong_tempo_labels_deferred_due_to_runtime_cost"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_state_local_contrast_readiness_review.v2",
+  "source_artifacts": [
+    "reports/krk_state_local_contrast_labels_v2.json",
+    "reports/krk_state_local_contrast_selector_probe_v2.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

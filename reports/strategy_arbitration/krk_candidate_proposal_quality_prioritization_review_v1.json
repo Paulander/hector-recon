@@ -1,0 +1,110 @@
+{
+  "acceptance_before_selector_review": [
+    "candidate proposal quality model improves positive/negative capacity separation on protected rows",
+    "candidate count is bounded by a visible quality gate in offline analysis",
+    "Stage 7 readiness/training rows remain zero",
+    "capacity labels remain separate from ownership labels",
+    "PlanCapsule/broader strategy visibility gap is explicitly handled or deferred",
+    "focused tests pass and runtime defaults remain unchanged"
+  ],
+  "causal_status": "non_causal_architecture_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "recommended_next_step": "build_non_causal_candidate_proposal_quality_dataset",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "status": "proposal_quality_prioritization_review_ready"
+  },
+  "evidence_summary": {
+    "bounded_label_count": 12,
+    "bounded_label_negative_capacity_count": 1,
+    "bounded_label_positive_capacity_count": 11,
+    "candidate_move_frame_count": 363,
+    "missing_expected_sources": [
+      "broader_strategy_candidate",
+      "plan_capsule_sequence_candidate"
+    ],
+    "observation_frame_count": 569,
+    "protected_annotated_candidate_move_count": 22,
+    "protected_annotation_recall": 0.07534246575342465,
+    "protected_candidate_move_count": 292
+  },
+  "forbidden_next_steps": [
+    "runtime_selector",
+    "score_changes",
+    "provider_routing",
+    "guardrail_campaign",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "hidden_python_controller",
+    "more_blind_label_farming_without_quality_prioritization"
+  ],
+  "gameplay_topology_mutation": false,
+  "proposal_quality_problem": {
+    "diagnosis": "candidate_generator_is_visible_but_too_broad_and_underannotated",
+    "why_not_more_blind_labels": [
+      "bounded labels found many positives but only raised protected annotation recall to 0.075",
+      "observation emits hundreds of candidate moves, so unprioritized labeling scales poorly",
+      "capacity labels remain candidate-generation evidence, not ownership labels",
+      "negative-capacity provider-pack candidates remain present"
+    ],
+    "why_not_selector_review_yet": [
+      "candidate capacity is mostly unknown",
+      "candidate proposal quality is not ranked or filtered",
+      "PlanCapsule and broader strategy candidates are not visible in observation frames",
+      "capacity labels are not direct selector labels"
+    ]
+  },
+  "proposed_next_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_proposal_quality_dataset_v1.json",
+    "reports/strategy_arbitration/krk_candidate_proposal_quality_probe_v1.json",
+    "reports/strategy_arbitration/krk_candidate_proposal_quality_decision_v1.json"
+  ],
+  "recommended_quality_axes": [
+    {
+      "axis": "source_channel",
+      "causal_status": "non_causal",
+      "use": "separate validated_provider_pack, candidate_move_frame, plan_capsule_sequence_candidate, and broader_strategy_candidate before ranking"
+    },
+    {
+      "axis": "visible_term_density",
+      "causal_status": "non_causal",
+      "use": "prioritize candidates with meaningful move_shape/post_move/safety/source terms over low-information legal moves"
+    },
+    {
+      "axis": "safety_floor",
+      "causal_status": "non_causal",
+      "use": "separate legal-safe candidate generation from conversion-capacity evidence"
+    },
+    {
+      "axis": "known_capacity_contrast",
+      "causal_status": "non_causal",
+      "use": "use existing positive/negative capacity labels as offline quality calibration only"
+    },
+    {
+      "axis": "duplicate_or_selected_move_relation",
+      "causal_status": "non_causal",
+      "use": "distinguish current selected move, same-move provider alternatives, and distinct alternatives"
+    },
+    {
+      "axis": "stage_and_protection_scope",
+      "causal_status": "non_causal",
+      "use": "Stage 4/5/6 protected candidates may train coverage diagnostics; Stage 7 remains held-out challenge"
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_proposal_quality_prioritization_review.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_generation_observation_gap_review_v1.json",
+    "reports/strategy_arbitration/krk_candidate_move_capacity_annotation_v2.json",
+    "reports/strategy_arbitration/krk_candidate_generation_label_blocker_review_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

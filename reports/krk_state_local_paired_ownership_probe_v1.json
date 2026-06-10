@@ -1,0 +1,2683 @@
+{
+  "best_result": {
+    "accuracy": 1.0,
+    "false_negative": 0,
+    "false_positive": 0,
+    "model_id": "safe_preservation_gated_model",
+    "model_kind": "semantic_rule",
+    "notes": "Uses offline owner_a/owner_b outcome semantics; validates objective semantics but is not directly runtime-feature eligible.",
+    "objective": "safe_preservation_gated_model",
+    "prefer_capacity_false_negative_count": 0,
+    "prefer_capacity_precision": 1.0,
+    "prefer_capacity_recall": 1.0,
+    "row_count": 32,
+    "runtime_feature_eligible": false,
+    "safe_preservation_false_positive_count": 0,
+    "safe_preservation_recall": 1.0,
+    "selected_preservation_recall": 1.0,
+    "strong_conflict_accuracy": 1.0,
+    "true_negative": 25,
+    "true_positive": 7
+  },
+  "causal_status": "non_causal_offline_probe",
+  "decision": {
+    "recommended_next_step": "prepare_runtime_review_packet_for_explicit_approval",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "status": "semantic_gate_review_ready_runtime_feature_translation_needed"
+  },
+  "gameplay_topology_mutation": false,
+  "results": {
+    "baseline_owner_family_pair@0.25": {
+      "accuracy": 0.78125,
+      "false_negative": 1,
+      "false_positive": 6,
+      "features": [
+        "owner_a_family",
+        "owner_b_family"
+      ],
+      "model_id": "baseline_owner_family_pair@0.25",
+      "model_kind": "leave_state_out_feature_model",
+      "predictions": [
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "drive_to_edge"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.02cfd843a2cf",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "fence_established"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.02cfd843a2cf",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "fence_established",
+            "drive_to_edge"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.fence_established",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "fence_established",
+            "edge_trap"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.fence_established",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "fence_established",
+            "stage0_basin"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.fence_established",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "drive_to_edge"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.1e4f48a672e8",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "fence_established"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.1e4f48a672e8",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": true,
+          "score": 0.42857142857142855,
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": true,
+          "score": 0.42857142857142855,
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_wrong_tempo",
+          "predicted_prefer_capacity": true,
+          "score": 0.42857142857142855,
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_selected_owner",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "drive_to_edge"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage5",
+          "state_id": "state.2c1d6da27ea1",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_selected_owner",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "fence_established"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage5",
+          "state_id": "state.2c1d6da27ea1",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "edge_trap",
+            "drive_to_edge"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "edge_trap",
+            "fence_established"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "edge_trap",
+            "stage0_basin"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": true,
+          "score": 0.5,
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": true,
+          "score": 0.42857142857142855,
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": true,
+          "score": 0.42857142857142855,
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_wrong_tempo",
+          "predicted_prefer_capacity": true,
+          "score": 0.42857142857142855,
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "drive_to_edge"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": true,
+          "score": 0.6666666666666666,
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "fence_established"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "drive_to_edge"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": true,
+          "score": 0.6666666666666666,
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "fence_established"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "edge_trap",
+            "stage0_basin"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.699f0003a511",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "edge_trap",
+            "edge_trap"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.87b1160e68b9",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "edge_trap",
+            "edge_trap"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.edge_trap_wrong_tempo",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.87b1160e68b9",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "edge_trap",
+            "stage0_basin"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": true,
+          "score": 0.5,
+          "source_stage": "stage5",
+          "state_id": "state.87b1160e68b9",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": true,
+          "score": 0.75,
+          "source_stage": "stage6",
+          "state_id": "state.d1f052d2cab2",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": true,
+          "score": 0.75,
+          "source_stage": "stage6",
+          "state_id": "state.d1f052d2cab2",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "drive_to_edge"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.f17117682948",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "fence_established"
+          ],
+          "model_id": "baseline_owner_family_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.f17117682948",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        }
+      ],
+      "prefer_capacity_false_negative_count": 1,
+      "prefer_capacity_precision": 0.5,
+      "prefer_capacity_recall": 0.8571428571428571,
+      "row_count": 32,
+      "runtime_feature_eligible": true,
+      "safe_preservation_false_positive_count": 6,
+      "safe_preservation_recall": 0.7391304347826086,
+      "selected_preservation_recall": 0.76,
+      "strong_conflict_accuracy": 0.8888888888888888,
+      "threshold": 0.25,
+      "true_negative": 19,
+      "true_positive": 6
+    },
+    "conflict_only_model": {
+      "accuracy": 1.0,
+      "false_negative": 0,
+      "false_positive": 0,
+      "model_id": "conflict_only_model",
+      "model_kind": "semantic_rule",
+      "notes": "Uses evidence-channel/outcome labels to prefer capacity only for selected-fail plus alternative-success conflicts.",
+      "predictions": [
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage4",
+          "state_id": "state.02cfd843a2cf",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage4",
+          "state_id": "state.02cfd843a2cf",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.fence_established",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.fence_established",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.fence_established",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage4",
+          "state_id": "state.1e4f48a672e8",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage4",
+          "state_id": "state.1e4f48a672e8",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": true,
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_prefer_capacity": true
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": true,
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_prefer_capacity": true
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_wrong_tempo",
+          "predicted_prefer_capacity": true,
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_prefer_capacity": true
+        },
+        {
+          "comparison_label": "prefer_selected_owner",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.2c1d6da27ea1",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "prefer_selected_owner",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.2c1d6da27ea1",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": true,
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_prefer_capacity": true
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": true,
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_prefer_capacity": true
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_wrong_tempo",
+          "predicted_prefer_capacity": true,
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_prefer_capacity": true
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": true,
+          "source_stage": "stage6",
+          "state_id": "state.699f0003a511",
+          "target_prefer_capacity": true
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.87b1160e68b9",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.edge_trap_wrong_tempo",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.87b1160e68b9",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.87b1160e68b9",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.d1f052d2cab2",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.d1f052d2cab2",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage4",
+          "state_id": "state.f17117682948",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "conflict_only_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage4",
+          "state_id": "state.f17117682948",
+          "target_prefer_capacity": false
+        }
+      ],
+      "prefer_capacity_false_negative_count": 0,
+      "prefer_capacity_precision": 1.0,
+      "prefer_capacity_recall": 1.0,
+      "row_count": 32,
+      "runtime_feature_eligible": false,
+      "safe_preservation_false_positive_count": 0,
+      "safe_preservation_recall": 1.0,
+      "selected_preservation_recall": 1.0,
+      "strong_conflict_accuracy": 1.0,
+      "true_negative": 25,
+      "true_positive": 7
+    },
+    "context_augmented_pair@0.25": {
+      "accuracy": 0.625,
+      "false_negative": 7,
+      "false_positive": 5,
+      "features": [
+        "owner_a_family",
+        "owner_b_family",
+        "ctx:terminal_space_context.black_king_edge_bucket",
+        "ctx:terminal_space_context.white_king_support_bucket"
+      ],
+      "model_id": "context_augmented_pair@0.25",
+      "model_kind": "leave_state_out_feature_model",
+      "predictions": [
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "drive_to_edge",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.02cfd843a2cf",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "fence_established",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.02cfd843a2cf",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "fence_established",
+            "drive_to_edge",
+            "edge",
+            "far"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.fence_established",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "fence_established",
+            "edge_trap",
+            "edge",
+            "far"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.fence_established",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "fence_established",
+            "stage0_basin",
+            "edge",
+            "far"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.fence_established",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "drive_to_edge",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.1e4f48a672e8",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "fence_established",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.1e4f48a672e8",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap",
+            "edge",
+            "medium"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "score": 0.13793103448275862,
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap",
+            "edge",
+            "medium"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": false,
+          "score": 0.13793103448275862,
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap",
+            "edge",
+            "medium"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_wrong_tempo",
+          "predicted_prefer_capacity": false,
+          "score": 0.13793103448275862,
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_selected_owner",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "drive_to_edge",
+            "edge",
+            "far"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.23333333333333334,
+          "source_stage": "stage5",
+          "state_id": "state.2c1d6da27ea1",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_selected_owner",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "fence_established",
+            "edge",
+            "far"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.23333333333333334,
+          "source_stage": "stage5",
+          "state_id": "state.2c1d6da27ea1",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "edge_trap",
+            "drive_to_edge",
+            "edge",
+            "far"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "edge_trap",
+            "fence_established",
+            "edge",
+            "far"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "edge_trap",
+            "stage0_basin",
+            "edge",
+            "far"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": true,
+          "score": 1.0,
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_wrong_tempo",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "drive_to_edge",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": true,
+          "score": 0.5,
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "fence_established",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "drive_to_edge",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": true,
+          "score": 0.5,
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "fence_established",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "edge_trap",
+            "stage0_basin",
+            "edge",
+            "far"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.699f0003a511",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "edge_trap",
+            "edge_trap",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.87b1160e68b9",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "edge_trap",
+            "edge_trap",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.edge_trap_wrong_tempo",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.87b1160e68b9",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "edge_trap",
+            "stage0_basin",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.87b1160e68b9",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": true,
+          "score": 0.6,
+          "source_stage": "stage6",
+          "state_id": "state.d1f052d2cab2",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "edge_trap",
+            "edge",
+            "close"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": true,
+          "score": 0.6,
+          "source_stage": "stage6",
+          "state_id": "state.d1f052d2cab2",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "drive_to_edge",
+            "edge",
+            "medium"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.23333333333333334,
+          "source_stage": "stage4",
+          "state_id": "state.f17117682948",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage0_basin",
+            "fence_established",
+            "edge",
+            "medium"
+          ],
+          "model_id": "context_augmented_pair@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.23333333333333334,
+          "source_stage": "stage4",
+          "state_id": "state.f17117682948",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        }
+      ],
+      "prefer_capacity_false_negative_count": 7,
+      "prefer_capacity_precision": 0.0,
+      "prefer_capacity_recall": 0.0,
+      "row_count": 32,
+      "runtime_feature_eligible": true,
+      "safe_preservation_false_positive_count": 5,
+      "safe_preservation_recall": 0.782608695652174,
+      "selected_preservation_recall": 0.8,
+      "strong_conflict_accuracy": 0.2222222222222222,
+      "threshold": 0.25,
+      "true_negative": 20,
+      "true_positive": 0
+    },
+    "pair_interaction_stage_landmark@0.25": {
+      "accuracy": 0.78125,
+      "false_negative": 7,
+      "false_positive": 0,
+      "features": [
+        "source_stage",
+        "active_landmark_label",
+        "owner_a_family",
+        "owner_b_family"
+      ],
+      "model_id": "pair_interaction_stage_landmark@0.25",
+      "model_kind": "leave_state_out_feature_model",
+      "predictions": [
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage4",
+            "wrong_tempo_control",
+            "stage0_basin",
+            "drive_to_edge"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.02cfd843a2cf",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage4",
+            "wrong_tempo_control",
+            "stage0_basin",
+            "fence_established"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.02cfd843a2cf",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "fence_established",
+            "drive_to_edge"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.fence_established",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "fence_established",
+            "edge_trap"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.fence_established",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "fence_established",
+            "stage0_basin"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.fence_established",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage4",
+            "wrong_tempo_control",
+            "stage0_basin",
+            "drive_to_edge"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.1e4f48a672e8",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage4",
+            "wrong_tempo_control",
+            "stage0_basin",
+            "fence_established"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.1e4f48a672e8",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage4",
+            "wrong_tempo_control",
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "score": 0.13793103448275862,
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage4",
+            "wrong_tempo_control",
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": false,
+          "score": 0.13793103448275862,
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage4",
+            "wrong_tempo_control",
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_wrong_tempo",
+          "predicted_prefer_capacity": false,
+          "score": 0.13793103448275862,
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_selected_owner",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "stage0_basin",
+            "drive_to_edge"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.23333333333333334,
+          "source_stage": "stage5",
+          "state_id": "state.2c1d6da27ea1",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_selected_owner",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "stage0_basin",
+            "fence_established"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.23333333333333334,
+          "source_stage": "stage5",
+          "state_id": "state.2c1d6da27ea1",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "edge_trap",
+            "drive_to_edge"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "edge_trap",
+            "fence_established"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "edge_trap",
+            "stage0_basin"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "score": 0.13793103448275862,
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": false,
+          "score": 0.13793103448275862,
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_wrong_tempo",
+          "predicted_prefer_capacity": false,
+          "score": 0.13793103448275862,
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage6",
+            "drive_to_edge",
+            "stage0_basin",
+            "drive_to_edge"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage6",
+            "drive_to_edge",
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage6",
+            "drive_to_edge",
+            "stage0_basin",
+            "fence_established"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage6",
+            "drive_to_edge",
+            "stage0_basin",
+            "drive_to_edge"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage6",
+            "drive_to_edge",
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage6",
+            "drive_to_edge",
+            "stage0_basin",
+            "fence_established"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "feature_key": [
+            "stage6",
+            "drive_to_edge",
+            "edge_trap",
+            "stage0_basin"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": false,
+          "score": 0.1935483870967742,
+          "source_stage": "stage6",
+          "state_id": "state.699f0003a511",
+          "target_prefer_capacity": true,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "edge_trap",
+            "edge_trap"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.87b1160e68b9",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "edge_trap",
+            "edge_trap"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.edge_trap_wrong_tempo",
+          "predicted_prefer_capacity": false,
+          "score": 0.2413793103448276,
+          "source_stage": "stage5",
+          "state_id": "state.87b1160e68b9",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "edge_trap",
+            "stage0_basin"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage5",
+          "state_id": "state.87b1160e68b9",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage6",
+            "drive_to_edge",
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.d1f052d2cab2",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage6",
+            "drive_to_edge",
+            "stage0_basin",
+            "edge_trap"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage6",
+          "state_id": "state.d1f052d2cab2",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage4",
+            "wrong_tempo_control",
+            "stage0_basin",
+            "drive_to_edge"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.f17117682948",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "feature_key": [
+            "stage4",
+            "wrong_tempo_control",
+            "stage0_basin",
+            "fence_established"
+          ],
+          "model_id": "pair_interaction_stage_landmark@0.25",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "score": 0.0,
+          "source_stage": "stage4",
+          "state_id": "state.f17117682948",
+          "target_prefer_capacity": false,
+          "threshold": 0.25
+        }
+      ],
+      "prefer_capacity_false_negative_count": 7,
+      "prefer_capacity_precision": null,
+      "prefer_capacity_recall": 0.0,
+      "row_count": 32,
+      "runtime_feature_eligible": true,
+      "safe_preservation_false_positive_count": 0,
+      "safe_preservation_recall": 1.0,
+      "selected_preservation_recall": 1.0,
+      "strong_conflict_accuracy": 0.2222222222222222,
+      "threshold": 0.25,
+      "true_negative": 25,
+      "true_positive": 0
+    },
+    "safe_preservation_gated_model": {
+      "accuracy": 1.0,
+      "false_negative": 0,
+      "false_positive": 0,
+      "model_id": "safe_preservation_gated_model",
+      "model_kind": "semantic_rule",
+      "notes": "Uses offline owner_a/owner_b outcome semantics; validates objective semantics but is not directly runtime-feature eligible.",
+      "predictions": [
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage4",
+          "state_id": "state.02cfd843a2cf",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage4",
+          "state_id": "state.02cfd843a2cf",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.fence_established",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.fence_established",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.fence_established",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.02feb8593cc6",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage4",
+          "state_id": "state.1e4f48a672e8",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage4",
+          "state_id": "state.1e4f48a672e8",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": true,
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_prefer_capacity": true
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": true,
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_prefer_capacity": true
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_wrong_tempo",
+          "predicted_prefer_capacity": true,
+          "source_stage": "stage4",
+          "state_id": "state.256a3da30f0f",
+          "target_prefer_capacity": true
+        },
+        {
+          "comparison_label": "prefer_selected_owner",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.2c1d6da27ea1",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "prefer_selected_owner",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.2c1d6da27ea1",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.326222aefdf1",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": true,
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_prefer_capacity": true
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": true,
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_prefer_capacity": true
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_wrong_tempo",
+          "predicted_prefer_capacity": true,
+          "source_stage": "stage5",
+          "state_id": "state.3dca34326fca",
+          "target_prefer_capacity": true
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.52085d244e9d",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.69711173114a",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "prefer_capacity_alternative",
+          "evidence_channel": "strong_same_state_conflict",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": true,
+          "source_stage": "stage6",
+          "state_id": "state.699f0003a511",
+          "target_prefer_capacity": true
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.87b1160e68b9",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.edge_trap_wrong_tempo",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.87b1160e68b9",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.edge_trap_close",
+          "owner_b": "krk.stage0_basin",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage5",
+          "state_id": "state.87b1160e68b9",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_close",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.d1f052d2cab2",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.edge_trap_enemy_between",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage6",
+          "state_id": "state.d1f052d2cab2",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.drive_to_edge",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage4",
+          "state_id": "state.f17117682948",
+          "target_prefer_capacity": false
+        },
+        {
+          "comparison_label": "equivalent_positive_or_preserve_selected",
+          "evidence_channel": "safe_preservation",
+          "model_id": "safe_preservation_gated_model",
+          "owner_a": "krk.stage0_basin",
+          "owner_b": "krk.fence_established",
+          "predicted_prefer_capacity": false,
+          "source_stage": "stage4",
+          "state_id": "state.f17117682948",
+          "target_prefer_capacity": false
+        }
+      ],
+      "prefer_capacity_false_negative_count": 0,
+      "prefer_capacity_precision": 1.0,
+      "prefer_capacity_recall": 1.0,
+      "row_count": 32,
+      "runtime_feature_eligible": false,
+      "safe_preservation_false_positive_count": 0,
+      "safe_preservation_recall": 1.0,
+      "selected_preservation_recall": 1.0,
+      "strong_conflict_accuracy": 1.0,
+      "true_negative": 25,
+      "true_positive": 7
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_feature_passing_models": {},
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_state_local_paired_ownership_probe.v1",
+  "selector_training_allowed": false,
+  "source_artifacts": [
+    "reports/krk_state_local_paired_ownership_inventory_v1.json",
+    "reports/krk_state_local_paired_ownership_error_audit_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "prefer_capacity_count": 7,
+    "preserve_selected_count": 25,
+    "row_count": 32,
+    "runtime_feature_passing_model_count": 0,
+    "safe_preservation_pair_count": 23,
+    "stage7_row_count": 0,
+    "state_count": 13,
+    "strong_conflict_pair_count": 9,
+    "threshold_passing_model_count": 2
+  },
+  "threshold_passing_models": {
+    "conflict_only_model": {
+      "accuracy": 1.0,
+      "false_negative": 0,
+      "false_positive": 0,
+      "model_id": "conflict_only_model",
+      "model_kind": "semantic_rule",
+      "notes": "Uses evidence-channel/outcome labels to prefer capacity only for selected-fail plus alternative-success conflicts.",
+      "prefer_capacity_false_negative_count": 0,
+      "prefer_capacity_precision": 1.0,
+      "prefer_capacity_recall": 1.0,
+      "row_count": 32,
+      "runtime_feature_eligible": false,
+      "safe_preservation_false_positive_count": 0,
+      "safe_preservation_recall": 1.0,
+      "selected_preservation_recall": 1.0,
+      "strong_conflict_accuracy": 1.0,
+      "true_negative": 25,
+      "true_positive": 7
+    },
+    "safe_preservation_gated_model": {
+      "accuracy": 1.0,
+      "false_negative": 0,
+      "false_positive": 0,
+      "model_id": "safe_preservation_gated_model",
+      "model_kind": "semantic_rule",
+      "notes": "Uses offline owner_a/owner_b outcome semantics; validates objective semantics but is not directly runtime-feature eligible.",
+      "prefer_capacity_false_negative_count": 0,
+      "prefer_capacity_precision": 1.0,
+      "prefer_capacity_recall": 1.0,
+      "row_count": 32,
+      "runtime_feature_eligible": false,
+      "safe_preservation_false_positive_count": 0,
+      "safe_preservation_recall": 1.0,
+      "selected_preservation_recall": 1.0,
+      "strong_conflict_accuracy": 1.0,
+      "true_negative": 25,
+      "true_positive": 7
+    }
+  }
+}

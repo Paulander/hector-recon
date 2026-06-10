@@ -1,0 +1,273 @@
+{
+  "causal_status": "non_causal_semantics_review",
+  "decision": {
+    "recommended_next_step": "run_stronger_capacity_risk_feature_review_non_causal",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "capacity_labels_not_direct_selector_targets"
+  },
+  "gameplay_topology_mutation": false,
+  "recommended_objective_split": {
+    "capacity_recall_objective": "which validated providers should be present in candidate set",
+    "capacity_risk_objective": "which forced-provider paths are risky under current h40 continuation",
+    "ownership_selection_objective": "which provider should own normal runtime decision; not supplied by this dataset alone",
+    "safe_preservation_objective": "validated safe owners must be preserved before any suppression can be reviewed"
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_hard_negative_label_semantics_review.v1",
+  "semantics": [
+    {
+      "allowed_use": "candidate_capacity_evidence_and_offline_feature_probe",
+      "blocked_use": "direct_runtime_owner_selection_or_suppression",
+      "label_channel": "forced_provider_capacity_label",
+      "reason": "The labels force a provider for the first White move and then release. A mate result shows the provider can participate in conversion under that intervention; a max_plies result shows this forced path failed, not that the provider is always unsafe."
+    },
+    {
+      "allowed_use": "learn comparisons only within states or matched state families",
+      "blocked_use": "global provider-family suppression",
+      "label_channel": "state_local_capacity_contrast",
+      "reason": "The same provider family can be positive in one protected state and negative in another. Global labels would over-suppress validated providers."
+    },
+    {
+      "allowed_use": "offline risk feature and hard-negative mining",
+      "blocked_use": "selector training target until safe-owner preservation is separately validated",
+      "label_channel": "hard_negative_capacity",
+      "reason": "The current hard-negative support is still sparse: nine rows across four states."
+    }
+  ],
+  "source_artifacts": [
+    "reports/krk_hard_negative_selector_target_dataset_v2.json",
+    "reports/krk_hard_negative_selector_feature_ablation_v2.json",
+    "reports/krk_balanced_hard_negative_evidence_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "state_profiles": {
+    "state.02cfd843a2cf": {
+      "capacity_negative": 0,
+      "capacity_positive": 3,
+      "has_state_local_contrast": false,
+      "providers": [
+        "krk.drive_to_edge",
+        "krk.fence_established",
+        "krk.stage0_basin"
+      ],
+      "row_count": 3,
+      "source_stages": [
+        "stage4"
+      ]
+    },
+    "state.02feb8593cc6": {
+      "capacity_negative": 0,
+      "capacity_positive": 3,
+      "has_state_local_contrast": false,
+      "providers": [
+        "krk.drive_to_edge",
+        "krk.fence_established",
+        "krk.stage0_basin"
+      ],
+      "row_count": 3,
+      "source_stages": [
+        "stage5"
+      ]
+    },
+    "state.1e4f48a672e8": {
+      "capacity_negative": 0,
+      "capacity_positive": 3,
+      "has_state_local_contrast": false,
+      "providers": [
+        "krk.drive_to_edge",
+        "krk.fence_established",
+        "krk.stage0_basin"
+      ],
+      "row_count": 3,
+      "source_stages": [
+        "stage4"
+      ]
+    },
+    "state.256a3da30f0f": {
+      "capacity_negative": 2,
+      "capacity_positive": 3,
+      "has_state_local_contrast": true,
+      "providers": [
+        "krk.drive_to_edge",
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo",
+        "krk.stage0_basin"
+      ],
+      "row_count": 5,
+      "source_stages": [
+        "stage4"
+      ]
+    },
+    "state.2c1d6da27ea1": {
+      "capacity_negative": 2,
+      "capacity_positive": 0,
+      "has_state_local_contrast": false,
+      "providers": [
+        "krk.drive_to_edge",
+        "krk.fence_established"
+      ],
+      "row_count": 2,
+      "source_stages": [
+        "stage5"
+      ]
+    },
+    "state.326222aefdf1": {
+      "capacity_negative": 0,
+      "capacity_positive": 3,
+      "has_state_local_contrast": false,
+      "providers": [
+        "krk.drive_to_edge",
+        "krk.fence_established",
+        "krk.stage0_basin"
+      ],
+      "row_count": 3,
+      "source_stages": [
+        "stage5"
+      ]
+    },
+    "state.3dca34326fca": {
+      "capacity_negative": 0,
+      "capacity_positive": 4,
+      "has_state_local_contrast": false,
+      "providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo",
+        "krk.stage0_basin"
+      ],
+      "row_count": 4,
+      "source_stages": [
+        "stage5"
+      ]
+    },
+    "state.52085d244e9d": {
+      "capacity_negative": 0,
+      "capacity_positive": 3,
+      "has_state_local_contrast": false,
+      "providers": [
+        "krk.drive_to_edge",
+        "krk.edge_trap_close",
+        "krk.fence_established"
+      ],
+      "row_count": 3,
+      "source_stages": [
+        "stage6"
+      ]
+    },
+    "state.69711173114a": {
+      "capacity_negative": 0,
+      "capacity_positive": 3,
+      "has_state_local_contrast": false,
+      "providers": [
+        "krk.drive_to_edge",
+        "krk.edge_trap_close",
+        "krk.fence_established"
+      ],
+      "row_count": 3,
+      "source_stages": [
+        "stage6"
+      ]
+    },
+    "state.699f0003a511": {
+      "capacity_negative": 2,
+      "capacity_positive": 1,
+      "has_state_local_contrast": true,
+      "providers": [
+        "krk.drive_to_edge",
+        "krk.fence_established",
+        "krk.stage0_basin"
+      ],
+      "row_count": 3,
+      "source_stages": [
+        "stage6"
+      ]
+    },
+    "state.87b1160e68b9": {
+      "capacity_negative": 0,
+      "capacity_positive": 1,
+      "has_state_local_contrast": false,
+      "providers": [
+        "krk.stage0_basin"
+      ],
+      "row_count": 1,
+      "source_stages": [
+        "stage5"
+      ]
+    },
+    "state.b11124d658cf": {
+      "capacity_negative": 3,
+      "capacity_positive": 0,
+      "has_state_local_contrast": false,
+      "providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "row_count": 3,
+      "source_stages": [
+        "stage4"
+      ]
+    },
+    "state.d1f052d2cab2": {
+      "capacity_negative": 0,
+      "capacity_positive": 2,
+      "has_state_local_contrast": false,
+      "providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between"
+      ],
+      "row_count": 2,
+      "source_stages": [
+        "stage6"
+      ]
+    },
+    "state.f17117682948": {
+      "capacity_negative": 0,
+      "capacity_positive": 2,
+      "has_state_local_contrast": false,
+      "providers": [
+        "krk.drive_to_edge",
+        "krk.fence_established"
+      ],
+      "row_count": 2,
+      "source_stages": [
+        "stage4"
+      ]
+    }
+  },
+  "summary": {
+    "best_ablation_negative_suppression": 0.2222222222222222,
+    "best_ablation_positive_recall": 1.0,
+    "capacity_negative_count": 9,
+    "capacity_negative_state_count": 4,
+    "capacity_positive_count": 31,
+    "label_by_source_channel": {
+      "balanced_protected_hard_negative_capacity": {
+        "capacity_negative": 4,
+        "capacity_positive": 20
+      },
+      "protected_provider_capacity_v0": {
+        "capacity_negative": 5,
+        "capacity_positive": 11
+      }
+    },
+    "row_count": 40,
+    "source_channel_counts": {
+      "balanced_protected_hard_negative_capacity": 24,
+      "protected_provider_capacity_v0": 16
+    },
+    "stage7_row_count": 0,
+    "state_count": 14,
+    "state_local_contrast_state_count": 2
+  }
+}

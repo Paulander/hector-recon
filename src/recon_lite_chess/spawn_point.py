@@ -20,6 +20,7 @@ import numpy as np
 from recon_lite.graph import Node, NodeType, Graph, LinkType
 from recon_lite_chess.baseline_teacher import KRKTeacher
 from recon_lite_chess.krk_baseline_nodes import apply_readout, _goal_distance_from_features
+from recon_lite_chess.triplets import CreditPolicy, TripletGrowthConfig, TripletGrowthProfile
 
 
 # Global teacher for feature extraction
@@ -32,6 +33,27 @@ XP_PRUNE_THRESHOLD = 0.2  # Prune if XP below this
 XP_PROMOTE_THRESHOLD = 0.7  # Promote to permanent if XP above this
 
 
+def _edge_exists(graph: Graph, src: str, dst: str, ltype: LinkType) -> bool:
+    return any(e.src == src and e.dst == dst and e.ltype == ltype for e in graph.edges)
+
+
+def _add_edge_if_missing(graph: Graph, src: str, dst: str, ltype: LinkType) -> None:
+    if not _edge_exists(graph, src, dst, ltype):
+        graph.add_edge(src, dst, ltype)
+
+
+def _add_hierarchy_pair(graph: Graph, parent: str, child: str) -> None:
+    """Add parent->child SUB plus child->parent SUR for formal execution."""
+    _add_edge_if_missing(graph, parent, child, LinkType.SUB)
+    _add_edge_if_missing(graph, child, parent, LinkType.SUR)
+
+
+def _add_sequence_pair(graph: Graph, predecessor: str, successor: str) -> None:
+    """Add predecessor->successor POR plus successor->predecessor RET."""
+    _add_edge_if_missing(graph, predecessor, successor, LinkType.POR)
+    _add_edge_if_missing(graph, successor, predecessor, LinkType.RET)
+
+
 @dataclass
 class SpawnPointConfig:
     """Configuration for a spawn point"""
@@ -40,6 +62,20 @@ class SpawnPointConfig:
     trial_lifetime: int = 50  # Prune after this many ticks without improvement
     stagnation_window: int = 5
     stagnation_eps: float = 1e-3
+    growth_profile: TripletGrowthProfile = field(default_factory=TripletGrowthProfile.training)
+    credit_policy: CreditPolicy = field(default_factory=CreditPolicy)
+
+    @classmethod
+    def from_growth_config(cls, growth: TripletGrowthConfig) -> "SpawnPointConfig":
+        return cls(
+            spawn_probability=growth.profile.base_spawn_probability,
+            max_trials=growth.max_trials,
+            trial_lifetime=growth.trial_lifetime,
+            stagnation_window=growth.stagnation_window,
+            stagnation_eps=growth.stagnation_eps,
+            growth_profile=growth.profile,
+            credit_policy=CreditPolicy(),
+        )
 
 
 @dataclass
@@ -63,6 +99,9 @@ class TrialMicroScript:
     checkmate_hits: int = 0  # Times this pattern led to mate
     non_mate_hits: int = 0   # Times pattern activated but no mate
     xp: float = 0.0
+    credit_sum: float = 0.0
+    positive_progress_hits: int = 0
+    negative_progress_hits: int = 0
     ticks_alive: int = 0
     last_update_tick: int = 0
     
@@ -74,7 +113,7 @@ class TrialMicroScript:
         """
         Compute XP based on mate success rate.
         
-        Formula: XP = checkmate_hits / total_hits * consistency
+        Formula: success/progress signal * consistency
         """
         total = self.checkmate_hits + self.non_mate_hits
         if total < MIN_SAMPLES_FOR_XP:
@@ -82,6 +121,8 @@ class TrialMicroScript:
             return
         
         success_rate = self.checkmate_hits / total
+        progress_rate = self.positive_progress_hits / max(1, total)
+        credit_component = max(0.0, self.credit_sum / max(1, total))
         
         # Consistency bonus: low delta variance = higher XP
         consistency = 1.0
@@ -89,7 +130,7 @@ class TrialMicroScript:
             mean_std = np.mean(self.delta_std)
             consistency = 1.0 / (1.0 + mean_std)
         
-        self.xp = success_rate * consistency
+        self.xp = min(1.0, (success_rate + progress_rate + credit_component) / 3.0) * consistency
     
     def should_prune(self, current_tick: int) -> bool:
         """Check if trial should be pruned"""
@@ -167,8 +208,19 @@ class SpawnPoint:
         
         if len(self.active_trials) >= self.config.max_trials:
             return False
-        
-        return random.random() < self.config.spawn_probability
+
+        mean_xp = 0.0
+        if self.active_trials:
+            mean_xp = float(np.mean([t.xp for t in self.active_trials.values()]))
+        probability = self.config.growth_profile.spawn_probability(
+            active_trials=len(self.active_trials),
+            promoted_trials=len(self.promoted_trials),
+            mean_xp=mean_xp,
+            stagnant=self._goal_stagnant(),
+        )
+        # Keep legacy config as a hard cap so existing callers can throttle.
+        probability = min(float(self.config.spawn_probability), probability)
+        return random.random() < probability
     
     def spawn_trial(
         self,
@@ -224,8 +276,10 @@ class SpawnPoint:
         s0: Dict[str, float],
         s1: Dict[str, float],
         resulted_in_checkmate: bool,
-        tick: int
-    ):
+        tick: int,
+        before_goal_distance: Optional[float] = None,
+        after_goal_distance: Optional[float] = None,
+    ) -> List[Dict[str, Any]]:
         """
         Update all active trials with a new transition observation.
         
@@ -235,6 +289,7 @@ class SpawnPoint:
             resulted_in_checkmate: Whether the move achieved checkmate
             tick: Current tick number
         """
+        events: List[Dict[str, Any]] = []
         for trial in list(self.active_trials.values()):
             # Compute delta for trial's terminal subset
             deltas = []
@@ -254,6 +309,17 @@ class SpawnPoint:
                 trial.checkmate_hits += 1
             else:
                 trial.non_mate_hits += 1
+
+            credit = self.config.credit_policy.score(
+                before_goal_distance=before_goal_distance,
+                after_goal_distance=after_goal_distance,
+                success=resulted_in_checkmate,
+            )
+            trial.credit_sum += float(credit)
+            if credit > 0.0:
+                trial.positive_progress_hits += 1
+            elif credit < 0.0:
+                trial.negative_progress_hits += 1
             
             # Update delta mean/std
             if trial.delta_mean is None:
@@ -268,6 +334,21 @@ class SpawnPoint:
             
             # Update XP
             trial.update_xp()
+            events.append({
+                "tick": tick,
+                "event_type": "triplet_credit",
+                "subject_id": trial.trial_id,
+                "parent_id": self.leg_id,
+                "credit": float(credit),
+                "meta": {
+                    "samples": trial.samples,
+                    "xp": float(trial.xp),
+                    "before_goal_distance": before_goal_distance,
+                    "after_goal_distance": after_goal_distance,
+                    "resulted_in_checkmate": bool(resulted_in_checkmate),
+                },
+            })
+        return events
     
     def prune_and_promote(self, tick: int) -> Tuple[List["TrialMicroScript"], List[str]]:
         """
@@ -280,12 +361,12 @@ class SpawnPoint:
         pruned = []
         
         for trial_id, trial in list(self.active_trials.items()):
-            if trial.should_promote():
+            if self.config.growth_profile.allow_promotion and trial.should_promote():
                 promoted.append(trial)
                 self.promoted_trials.append(trial_id)
                 self.total_promotions += 1
                 del self.active_trials[trial_id]
-            elif trial.should_prune(tick):
+            elif self.config.growth_profile.allow_prune and trial.should_prune(tick):
                 pruned.append(trial_id)
                 self.pruned_trials.append(trial_id)
                 self.total_prunes += 1
@@ -311,15 +392,22 @@ class SpawnPointManager:
     Manages spawn points across all Legs in the KRK_entry graph.
     """
     
-    def __init__(self, config: Optional[SpawnPointConfig] = None, graph: Optional[Graph] = None):
+    def __init__(
+        self,
+        config: Optional[SpawnPointConfig] = None,
+        graph: Optional[Graph] = None,
+        bandit_state: Optional[Dict[str, Any]] = None,
+    ):
         self.config = config or SpawnPointConfig()
         self.graph = graph
+        self.bandit_state = bandit_state
         self.spawn_points: Dict[str, SpawnPoint] = {}
         self.tick = 0
         self.sensor_ids: List[str] = []
         self.mature_sensor_ids: List[str] = []
         self.exploratory_sensor_ids: List[str] = []
         self.goal_bank: Optional[Dict[str, Any]] = None
+        self.learning_events: List[Dict[str, Any]] = []
     
     def attach_to_legs(self, graph: Graph, leg_prefix: str = "leg_"):
         """
@@ -407,7 +495,9 @@ class SpawnPointManager:
         # Compute goal distance for stagnation checks if goal bank exists
         goal_bank = self._get_goal_bank()
         goal_dist = None
+        goal_dist_before = None
         if goal_bank:
+            goal_dist_before, _ = _goal_distance_from_features(v0, goal_bank, normalize=True, min_overlap=8)
             goal_dist, _ = _goal_distance_from_features(v1, goal_bank, normalize=True, min_overlap=8)
 
         active_leg = self._resolve_active_leg(env)
@@ -427,16 +517,34 @@ class SpawnPointManager:
                         exploratory_sensor_ids=self.exploratory_sensor_ids,
                         mature_ratio=0.7,
                     )
+                    self._record_learning_event(
+                        env,
+                        event_type="triplet_spawn",
+                        subject_id=trial.trial_id,
+                        parent_id=sp.leg_id,
+                        meta={
+                            "sensor_ids": list(trial.sensor_ids),
+                            "mode": self.config.growth_profile.mode.value,
+                        },
+                    )
                     print(f"  Spawned trial: {trial.trial_id} exploring sensors {trial.sensor_ids}")
             
             # Update all active trials with this transition
-            sp.process_transition(s0, s1, resulted_in_checkmate, self.tick)
+            for event in sp.process_transition(
+                s0,
+                s1,
+                resulted_in_checkmate,
+                self.tick,
+                before_goal_distance=goal_dist_before,
+                after_goal_distance=goal_dist,
+            ):
+                self._record_learning_event(env, **event)
         
         # Periodic prune/promote
         if self.tick % 10 == 0:
-            self._prune_and_promote()
+            self._prune_and_promote(env=env)
     
-    def _prune_and_promote(self):
+    def _prune_and_promote(self, env: Optional[Dict[str, Any]] = None):
         """Run prune/promote cycle across all spawn points"""
         total_promoted = 0
         total_pruned = 0
@@ -449,9 +557,27 @@ class SpawnPointManager:
             for trial in promoted:
                 print(f"  ✓ PROMOTED: {trial.trial_id}")
                 # Attempt to materialize into the graph if available
-                self._promote_trial_to_graph(sp, trial)
+                leg_id = self._promote_trial_to_graph(sp, trial)
+                self._record_learning_event(
+                    env,
+                    event_type="triplet_promote",
+                    subject_id=trial.trial_id,
+                    parent_id=sp.leg_id,
+                    credit=trial.credit_sum,
+                    meta={
+                        "xp": float(trial.xp),
+                        "samples": trial.samples,
+                        "materialized_leg": leg_id,
+                    },
+                )
             for trial_id in pruned:
                 print(f"  ✗ Pruned: {trial_id}")
+                self._record_learning_event(
+                    env,
+                    event_type="triplet_prune",
+                    subject_id=trial_id,
+                    parent_id=sp.leg_id,
+                )
         
         if total_promoted > 0 or total_pruned > 0:
             print(f"Prune/Promote cycle: {total_promoted} promoted, {total_pruned} pruned")
@@ -472,6 +598,34 @@ class SpawnPointManager:
             ),
         }
         return stats
+
+    def _record_learning_event(
+        self,
+        env: Optional[Dict[str, Any]],
+        *,
+        event_type: str,
+        subject_id: str,
+        parent_id: Optional[str] = None,
+        credit: Optional[float] = None,
+        meta: Optional[Dict[str, Any]] = None,
+        tick: Optional[int] = None,
+    ) -> None:
+        """Record a generic triplet learning event locally, in env, and in TraceDB if present."""
+        event = {
+            "tick": self.tick if tick is None else tick,
+            "event_type": event_type,
+            "subject_id": subject_id,
+            "parent_id": parent_id,
+            "credit": credit,
+            "meta": dict(meta or {}),
+        }
+        self.learning_events.append(event)
+        if env is None:
+            return
+        env.setdefault("learning_events", []).append(event)
+        summary = env.get("episode_summary")
+        if summary is not None and hasattr(summary, "record_learning_event"):
+            summary.record_learning_event(**event)
 
     def _compute_terminal_outputs(self, features: np.ndarray) -> Dict[str, float]:
         """Compute terminal outputs for all baseline sensors from a feature vector."""
@@ -500,7 +654,7 @@ class SpawnPointManager:
                 continue
         return outputs
 
-    def _promote_trial_to_graph(self, sp: SpawnPoint, trial: TrialMicroScript) -> None:
+    def _promote_trial_to_graph(self, sp: SpawnPoint, trial: TrialMicroScript) -> Optional[str]:
         """
         Materialize a promoted trial as a 3-part micro-script in the active graph.
         
@@ -514,7 +668,7 @@ class SpawnPointManager:
               │           ├─ SUB → sensor_i_post (TERMINAL)
         """
         if self.graph is None:
-            return
+            return None
         
         try:
             from recon_lite_chess.krk_baseline_nodes import (
@@ -523,9 +677,10 @@ class SpawnPointManager:
                 create_act_script,
                 create_sensor_terminal,
                 create_actuator_terminal,
+                create_triplet_after_terminal,
             )
         except Exception:
-            return
+            return None
         
         # Build node ids
         leg_id = f"{trial.trial_id}_leg"
@@ -533,37 +688,51 @@ class SpawnPointManager:
         act_script_id = f"{trial.trial_id}_act_script"
         postcond_id = f"{trial.trial_id}_postcond"
         actuator_id = f"{trial.trial_id}_act"
-        
-        if leg_id in self.graph.nodes:
-            return
+        after_verify_id = f"{trial.trial_id}_after_verify"
         
         # Parent leg: attach under the leg that spawned this trial
         parent_leg_id = sp.leg_id if sp.leg_id in self.graph.nodes else "krk_entry"
+
+        if leg_id in self.graph.nodes:
+            self._register_bandit_arm(parent_id=parent_leg_id, child_id=leg_id)
+            return leg_id
+
+        if trial.delta_mean is None:
+            return None
         
         # Create nodes
         leg = create_leg_script(leg_id)
         leg.meta["factory"] = "recon_lite_chess.krk_baseline_nodes:create_leg_script"
         leg.meta["origin"] = "spawn_point"
         leg.meta["trial_id"] = trial.trial_id
+        leg.meta["bandit_arm"] = True
+        leg.meta["parent_leg_id"] = parent_leg_id
         
         precond = create_and_gate(precond_id)
         precond.meta["aggregation"] = "and"
         precond.meta["factory"] = "recon_lite_chess.krk_baseline_nodes:create_and_gate"
         precond.meta["origin"] = "spawn_point"
+        precond.meta["triplet_role"] = "before"
+        precond.meta["trial_id"] = trial.trial_id
         
         act_script = create_act_script(act_script_id)
         act_script.meta["factory"] = "recon_lite_chess.krk_baseline_nodes:create_act_script"
         act_script.meta["origin"] = "spawn_point"
+        act_script.meta["triplet_role"] = "actuator_intent"
+        act_script.meta["trial_id"] = trial.trial_id
         
         postcond = create_and_gate(postcond_id)
         postcond.meta["aggregation"] = "and"
         postcond.meta["factory"] = "recon_lite_chess.krk_baseline_nodes:create_and_gate"
         postcond.meta["origin"] = "spawn_point"
+        postcond.meta["triplet_role"] = "after"
+        postcond.meta["trial_id"] = trial.trial_id
         
         actuator = create_actuator_terminal(actuator_id)
         actuator.meta["factory"] = "recon_lite_chess.krk_baseline_nodes:create_actuator_terminal"
         actuator.meta["origin"] = "spawn_point"
         actuator.meta["trial_id"] = trial.trial_id
+        actuator.meta["triplet_role"] = "actuator_terminal"
         
         # Add core nodes first so edges can target them
         self.graph.add_node(leg)
@@ -575,8 +744,6 @@ class SpawnPointManager:
         # Create sensor terminals for each feature index
         sensor_ids = []
         goal_delta = {}
-        if trial.delta_mean is None:
-            return
         for sensor_id, delta in zip(trial.sensor_ids, list(trial.delta_mean)):
             sensor_ids.append(sensor_id)
             goal_delta[sensor_id] = float(delta)
@@ -585,8 +752,8 @@ class SpawnPointManager:
             if sensor_node is None:
                 continue
             
-            # Precondition uses existing sensors
-            self.graph.add_edge(precond_id, sensor_id, LinkType.SUB)
+            # Precondition uses existing sensors.
+            _add_hierarchy_pair(self.graph, precond_id, sensor_id)
             
             # Postcondition uses new sensor clones with same spec
             post_id = f"{sensor_id}_post_{trial.trial_id}"
@@ -598,23 +765,64 @@ class SpawnPointManager:
                 sensor_post.meta["readout_params"] = dict(sensor_node.meta.get("readout_params", {}))
                 sensor_post.meta["origin"] = "spawn_point"
                 sensor_post.meta["trial_id"] = trial.trial_id
+                sensor_post.meta["triplet_role"] = "after_sensor"
                 self.graph.add_node(sensor_post)
-            self.graph.add_edge(postcond_id, post_id, LinkType.SUB)
+            _add_hierarchy_pair(self.graph, postcond_id, post_id)
         
         # Configure actuator targets
         actuator.meta["targets"] = list(sensor_ids)
         actuator.meta["goal_delta"] = goal_delta
+
+        after_verify = create_triplet_after_terminal(after_verify_id)
+        after_verify.meta["factory"] = "recon_lite_chess.krk_baseline_nodes:create_triplet_after_terminal"
+        after_verify.meta["origin"] = "spawn_point"
+        after_verify.meta["trial_id"] = trial.trial_id
+        after_verify.meta["triplet_role"] = "after_verify"
+        after_verify.meta["targets"] = list(sensor_ids)
+        after_verify.meta["goal_delta"] = dict(goal_delta)
+        after_verify.meta["min_similarity"] = 0.0
+        self.graph.add_node(after_verify)
         
         # Wire leg structure (no POR between legs or terminals)
-        self.graph.add_edge(parent_leg_id, leg_id, LinkType.SUB)
-        self.graph.add_edge(leg_id, precond_id, LinkType.SUB)
-        self.graph.add_edge(leg_id, act_script_id, LinkType.SUB)
-        self.graph.add_edge(leg_id, postcond_id, LinkType.SUB)
-        self.graph.add_edge(act_script_id, actuator_id, LinkType.SUB)
+        _add_hierarchy_pair(self.graph, parent_leg_id, leg_id)
+        _add_hierarchy_pair(self.graph, leg_id, precond_id)
+        _add_hierarchy_pair(self.graph, leg_id, act_script_id)
+        _add_hierarchy_pair(self.graph, leg_id, postcond_id)
+        _add_hierarchy_pair(self.graph, act_script_id, actuator_id)
+        _add_hierarchy_pair(self.graph, postcond_id, after_verify_id)
         
-        # POR sequencing between scripts only
-        self.graph.add_edge(precond_id, act_script_id, LinkType.POR)
-        self.graph.add_edge(act_script_id, postcond_id, LinkType.POR)
+        # POR/RET sequencing between scripts only. RET keeps earlier phases
+        # from confirming the leg before later phases have returned.
+        _add_sequence_pair(self.graph, precond_id, act_script_id)
+        _add_sequence_pair(self.graph, act_script_id, postcond_id)
+        self._mark_triplet_edge_meta(trial.trial_id)
+        self._register_bandit_arm(parent_leg_id, leg_id)
+        return leg_id
+
+    def _mark_triplet_edge_meta(self, trial_id: str) -> None:
+        if self.graph is None:
+            return
+        for edge in self.graph.edges:
+            if trial_id not in edge.src and trial_id not in edge.dst:
+                continue
+            edge.meta["origin"] = "spawn_point"
+            edge.meta["trial_id"] = trial_id
+            if edge.ltype in (LinkType.SUB, LinkType.POR):
+                edge.meta["trainable"] = True
+            elif edge.ltype in (LinkType.SUR, LinkType.RET):
+                edge.meta["structural_fixed"] = True
+
+    def _register_bandit_arm(self, parent_id: str, child_id: str) -> None:
+        if self.bandit_state is None:
+            return
+        parent_state = self.bandit_state.setdefault(parent_id, {})
+        if child_id in parent_state:
+            return
+        try:
+            from recon_lite_hector.plasticity.bandit import BanditArmState
+            parent_state[child_id] = BanditArmState(child_id=child_id)
+        except Exception:
+            parent_state[child_id] = {"child_id": child_id, "pulls": 0, "sum_reward": 0.0}
 
 
 # Convenience function for testing

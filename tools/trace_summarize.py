@@ -24,7 +24,7 @@ from typing import Any, Dict, List, Optional
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.recon_lite.trace_db import EpisodeRecord, EpisodeSummary, TraceDB
+from recon_lite.trace_db import EpisodeRecord, EpisodeSummary, TraceDB
 
 
 @dataclass

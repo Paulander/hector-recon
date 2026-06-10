@@ -1,0 +1,269 @@
+{
+  "schema_version": "krk_stage5_local_reward_contract_debt_audit.v0",
+  "created_at": "2026-05-24T19:07:44+02:00",
+  "status": "stage5_local_reward_contract_debt_is_guardrail_semantics_debt",
+  "decision": {
+    "status": "stage5_local_reward_contract_debt_is_guardrail_semantics_debt",
+    "overlay_matches_base_control_patterns": true,
+    "conversion_preserved": true,
+    "local_reward_debt_is_stage6_regression": false,
+    "runtime_behavior_changed": false,
+    "clean_stack_replacement_allowed": false,
+    "recommended_next_step": "accept_stage5_local_reward_debt_as_known_base_control_debt_for_overlay_only_review_and_run_remaining_preservation_checks_before_any_clean_stack_replacement"
+  },
+  "source_artifacts": {
+    "stage5_overlay": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+    "stage5_base_control": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40_profile_bonus.json",
+    "semantics_split": "reports/krk_stage5_guardrail_semantics_split_v0.json"
+  },
+  "stage5_overlay_summary": {
+    "path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+    "total": 300,
+    "improved": 144,
+    "worsened": 156,
+    "optimal": 144,
+    "mate": 300,
+    "max_plies": 0,
+    "mate_rate": 1.0,
+    "one_ply_status": "failed",
+    "conversion_status": "passed",
+    "shadow_candidate_count": 0,
+    "handoff_packet_counts_by_phase": {
+      "post_own_move": {
+        "failed": 156,
+        "confirmed": 144
+      },
+      "post_opponent_reply": {
+        "failed": 156,
+        "confirmed": 144
+      },
+      "playout_summary": {
+        "confirmed": 300
+      }
+    }
+  },
+  "stage5_base_control_summary": {
+    "path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40_profile_bonus.json",
+    "total": 300,
+    "improved": 144,
+    "worsened": 156,
+    "optimal": 144,
+    "mate": 300,
+    "max_plies": 0,
+    "mate_rate": 1.0,
+    "one_ply_status": "failed",
+    "conversion_status": "passed",
+    "shadow_candidate_count": 0,
+    "handoff_packet_counts_by_phase": {
+      "post_own_move": {
+        "failed": 156,
+        "confirmed": 144
+      },
+      "post_opponent_reply": {
+        "failed": 156,
+        "confirmed": 144
+      },
+      "playout_summary": {
+        "confirmed": 300
+      }
+    }
+  },
+  "pattern_summary": {
+    "unique_overlay_patterns": 6,
+    "unique_base_control_patterns": 6,
+    "post_own_status_counts": {
+      "confirmed": 144,
+      "failed": 156
+    },
+    "post_reply_status_counts": {
+      "confirmed": 144,
+      "failed": 156
+    },
+    "semantic_alignment_counts": {
+      "reward_visible_contract_conversion_aligned": 144,
+      "visible_contract_and_conversion_without_local_reward": 156
+    },
+    "root_cause_label_counts": {
+      "no_debt_pattern": 144,
+      "local_reward_too_strict_for_conversion": 156,
+      "one_ply_worst_reply_reward_prefers_alternative": 156,
+      "fence_break_after_reply_still_converts": 54,
+      "box_area_expands_after_reply_but_converts": 54,
+      "stable_fence_still_negative_dense_reward": 54
+    }
+  },
+  "pattern_rows": [
+    {
+      "count": 59,
+      "post_own_status": "confirmed",
+      "fen": "4k3/1R6/1K6/8/8/8/8/8 w - - 0 1",
+      "move": "b7h7",
+      "chosen_reward": 0.07400000000000001,
+      "oracle_reward": 0.07400000000000001,
+      "reward_confirmed": true,
+      "visible_fence_contract_confirmed": true,
+      "fence_exists_after_own_move": true,
+      "fence_stable_after_own_move": false,
+      "cut_axis_after_own_move": "edge",
+      "box_area_after_own_move": 7,
+      "post_reply_status": "confirmed",
+      "conversion_result": "mate",
+      "plies": 17,
+      "fence_survived_reply": true,
+      "fence_broken_by_reply": false,
+      "box_area_after_reply": 7,
+      "box_area_delta_after_reply": 0,
+      "semantic_alignment": "reward_visible_contract_conversion_aligned",
+      "root_cause_labels": [
+        "no_debt_pattern"
+      ]
+    },
+    {
+      "count": 54,
+      "post_own_status": "failed",
+      "fen": "4k3/8/8/8/R7/8/4K3/8 w - - 0 1",
+      "move": "a4a8",
+      "chosen_reward": -0.865,
+      "oracle_reward": 0.14900000000000002,
+      "reward_confirmed": false,
+      "visible_fence_contract_confirmed": true,
+      "fence_exists_after_own_move": true,
+      "fence_stable_after_own_move": false,
+      "cut_axis_after_own_move": "rank",
+      "box_area_after_own_move": 7,
+      "post_reply_status": "failed",
+      "conversion_result": "mate",
+      "plies": 33,
+      "fence_survived_reply": false,
+      "fence_broken_by_reply": true,
+      "box_area_after_reply": 49,
+      "box_area_delta_after_reply": 42,
+      "semantic_alignment": "visible_contract_and_conversion_without_local_reward",
+      "root_cause_labels": [
+        "local_reward_too_strict_for_conversion",
+        "one_ply_worst_reply_reward_prefers_alternative",
+        "fence_break_after_reply_still_converts",
+        "box_area_expands_after_reply_but_converts"
+      ]
+    },
+    {
+      "count": 54,
+      "post_own_status": "failed",
+      "fen": "7k/4RK2/8/8/8/8/8/8 w - - 0 1",
+      "move": "e7e1",
+      "chosen_reward": -0.016,
+      "oracle_reward": 0.07400000000000001,
+      "reward_confirmed": false,
+      "visible_fence_contract_confirmed": true,
+      "fence_exists_after_own_move": true,
+      "fence_stable_after_own_move": true,
+      "cut_axis_after_own_move": "edge",
+      "box_area_after_own_move": 21,
+      "post_reply_status": "failed",
+      "conversion_result": "mate",
+      "plies": 3,
+      "fence_survived_reply": true,
+      "fence_broken_by_reply": false,
+      "box_area_after_reply": 21,
+      "box_area_delta_after_reply": 0,
+      "semantic_alignment": "visible_contract_and_conversion_without_local_reward",
+      "root_cause_labels": [
+        "local_reward_too_strict_for_conversion",
+        "one_ply_worst_reply_reward_prefers_alternative",
+        "stable_fence_still_negative_dense_reward"
+      ]
+    },
+    {
+      "count": 48,
+      "post_own_status": "failed",
+      "fen": "7k/8/8/8/R7/8/5K2/8 w - - 0 1",
+      "move": "f2g3",
+      "chosen_reward": -0.75,
+      "oracle_reward": 0.14900000000000002,
+      "reward_confirmed": false,
+      "visible_fence_contract_confirmed": true,
+      "fence_exists_after_own_move": true,
+      "fence_stable_after_own_move": false,
+      "cut_axis_after_own_move": "edge",
+      "box_area_after_own_move": 28,
+      "post_reply_status": "failed",
+      "conversion_result": "mate",
+      "plies": 27,
+      "fence_survived_reply": true,
+      "fence_broken_by_reply": false,
+      "box_area_after_reply": 28,
+      "box_area_delta_after_reply": 0,
+      "semantic_alignment": "visible_contract_and_conversion_without_local_reward",
+      "root_cause_labels": [
+        "local_reward_too_strict_for_conversion",
+        "one_ply_worst_reply_reward_prefers_alternative"
+      ]
+    },
+    {
+      "count": 44,
+      "post_own_status": "confirmed",
+      "fen": "4k3/R7/K7/8/8/8/8/8 w - - 0 1",
+      "move": "a7h7",
+      "chosen_reward": 0.07400000000000001,
+      "oracle_reward": 0.07400000000000001,
+      "reward_confirmed": true,
+      "visible_fence_contract_confirmed": true,
+      "fence_exists_after_own_move": true,
+      "fence_stable_after_own_move": false,
+      "cut_axis_after_own_move": "edge",
+      "box_area_after_own_move": 7,
+      "post_reply_status": "confirmed",
+      "conversion_result": "mate",
+      "plies": 33,
+      "fence_survived_reply": true,
+      "fence_broken_by_reply": false,
+      "box_area_after_reply": 7,
+      "box_area_delta_after_reply": 0,
+      "semantic_alignment": "reward_visible_contract_conversion_aligned",
+      "root_cause_labels": [
+        "no_debt_pattern"
+      ]
+    },
+    {
+      "count": 41,
+      "post_own_status": "confirmed",
+      "fen": "k7/2R5/2K5/8/8/8/8/8 w - - 0 1",
+      "move": "c7h7",
+      "chosen_reward": 0.07400000000000001,
+      "oracle_reward": 0.07400000000000001,
+      "reward_confirmed": true,
+      "visible_fence_contract_confirmed": true,
+      "fence_exists_after_own_move": true,
+      "fence_stable_after_own_move": true,
+      "cut_axis_after_own_move": "edge",
+      "box_area_after_own_move": 7,
+      "post_reply_status": "confirmed",
+      "conversion_result": "mate",
+      "plies": 21,
+      "fence_survived_reply": true,
+      "fence_broken_by_reply": false,
+      "box_area_after_reply": 7,
+      "box_area_delta_after_reply": 0,
+      "semantic_alignment": "reward_visible_contract_conversion_aligned",
+      "root_cause_labels": [
+        "no_debt_pattern"
+      ]
+    }
+  ],
+  "interpretation": [
+    "All Stage 5 overlay and base-control samples convert at h40 with zero shadow candidates under the corrected profile.",
+    "The one-ply debt reproduces with the same state/move pattern signature in the paired base control.",
+    "The dominant debt class is visible fence contract plus h40 conversion without local dense reward confirmation.",
+    "This is guardrail semantics/control debt, not evidence that Stage 6 damaged Stage 5."
+  ],
+  "invariants": {
+    "runtime_defaults_changed": false,
+    "runtime_selector_implemented": false,
+    "runtime_score_changes": false,
+    "runtime_direct_routing": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "gameplay_topology_mutation": false,
+    "stage7_promotion": false,
+    "stage8_training": false
+  }
+}

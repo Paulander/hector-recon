@@ -1,0 +1,2880 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_label_run",
+  "gameplay_topology_mutation": false,
+  "labels": [
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 16,
+        "engine_early_stop_count": 16,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 144,
+        "final_fen": null,
+        "plies": 31,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.3dca34326fca",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.731953912806697
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.73095438375473
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.730217918022542
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.730131981158257
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.729713758789003
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.72885125875473
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.72885125875473
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.72885125875473
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.72885125875473
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.72885125875473
+        }
+      ],
+      "job_id": "job.krk.out_of_sample_control.87e4e2b0e724",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_strategy_arbiter_out_of_sample_control_label.v0",
+      "selected_move": "c6b6",
+      "selected_playout_success": {
+        "engine_decision_count": 16,
+        "engine_early_stop_count": 16,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 144,
+        "final_fen": null,
+        "plies": 31,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "2k5/8/1K6/8/8/8/8/R7 w - - 2 2",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.69711173114a",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_2",
+          "move_uci": "a1d1",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.885257720947266
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "a1d1",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.885257720947266
+        },
+        {
+          "actuator": "actuator_4",
+          "move_uci": "a1d1",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.885257720947266
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "a1d1",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.885257720947266
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "a1d1",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.885257720947266
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "a1d1",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.885257720947266
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "a1d1",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.885257720947266
+        },
+        {
+          "actuator": "actuator_9",
+          "move_uci": "a1d1",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.885257720947266
+        },
+        {
+          "actuator": "actuator_10",
+          "move_uci": "a1d1",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.885257720947266
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "a1d1",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.885257720947266
+        }
+      ],
+      "job_id": "job.krk.out_of_sample_control.51d3f56d8ce5",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_strategy_arbiter_out_of_sample_control_label.v0",
+      "selected_move": "a1d1",
+      "selected_playout_success": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_stage": "stage6",
+      "state_id": "state.69711173114a",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "1R6/2K5/k7/8/8/8/8/8 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 20,
+        "engine_early_stop_count": 20,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 180,
+        "final_fen": "3K4/8/k7/8/8/8/8/1R6 w - - 40 21",
+        "plies": 40,
+        "result": "max_plies",
+        "stagnation_summary": {
+          "abstract_state_history": [
+            "wk=c7|bk=a6|wr_rel=df1_dr1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a5|wr_rel=df1_dr1|wr_edge=0|box=5|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a4|wr_rel=df1_dr1|wr_edge=0|box=5|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a4|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a5|wr_rel=df1_dr1|wr_edge=0|box=5|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a4|wr_rel=df1_dr1|wr_edge=0|box=5|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a4|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a5|wr_rel=df1_dr1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a6|wr_rel=df1_dr1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w"
+          ],
+          "abstract_state_signature": "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+          "box_area_history": [
+            7,
+            7,
+            7,
+            5,
+            5,
+            7,
+            7,
+            5,
+            5,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7
+          ],
+          "enemy_king_edge_distance_history": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "king_square_history": {
+            "black": [
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a4",
+              "a4",
+              "a5",
+              "a5",
+              "a4",
+              "a4",
+              "a5",
+              "a5",
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a6"
+            ],
+            "white": [
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "d8",
+              "d8",
+              "c7",
+              "c7",
+              "d8",
+              "d8",
+              "c7",
+              "c7",
+              "d8",
+              "d8",
+              "c7",
+              "c7",
+              "d8",
+              "d8",
+              "c7",
+              "c7",
+              "d8",
+              "d8",
+              "c7",
+              "c7",
+              "d8",
+              "d8",
+              "c7",
+              "c7",
+              "d8",
+              "d8"
+            ]
+          },
+          "legal_loop_breaking_move_audits": [
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "d8e8",
+              "post_box_area": 7,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_not_increased_after_move",
+                "candidate_is_king_move",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "d8c8",
+              "post_box_area": 7,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_not_increased_after_move",
+                "candidate_is_king_move",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "d8e7",
+              "post_box_area": 7,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_not_increased_after_move",
+                "candidate_is_king_move",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "d8d7",
+              "post_box_area": 7,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_not_increased_after_move",
+                "candidate_is_king_move",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "d8c7",
+              "post_box_area": 7,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_not_increased_after_move",
+                "candidate_is_king_move",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1b4",
+              "post_box_area": 4,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_decreases_after_move",
+                "box_area_not_increased_after_move",
+                "candidate_is_rook_move",
+                "candidate_is_rook_transfer",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1b3",
+              "post_box_area": 5,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_decreases_after_move",
+                "box_area_not_increased_after_move",
+                "candidate_is_rook_move",
+                "candidate_is_rook_transfer",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1b2",
+              "post_box_area": 6,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_decreases_after_move",
+                "box_area_not_increased_after_move",
+                "candidate_is_rook_move",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1h1",
+              "post_box_area": 49,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "candidate_is_rook_move",
+                "candidate_is_rook_transfer",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1g1",
+              "post_box_area": 42,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "candidate_is_rook_move",
+                "candidate_is_rook_transfer",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1f1",
+              "post_box_area": 35,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "candidate_is_rook_move",
+                "candidate_is_rook_transfer",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1e1",
+              "post_box_area": 28,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "candidate_is_rook_move",
+                "candidate_is_rook_transfer",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1d1",
+              "post_box_area": 21,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "candidate_is_rook_move",
+                "candidate_is_rook_transfer",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1c1",
+              "post_box_area": 14,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "candidate_is_rook_move",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1a1",
+              "post_box_area": 49,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "candidate_is_rook_move",
+                "checking_line_created",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            }
+          ],
+          "legal_loop_breaking_moves": [
+            "d8e8",
+            "d8c8",
+            "d8e7",
+            "d8d7",
+            "d8c7",
+            "b1b4",
+            "b1b3",
+            "b1b2",
+            "b1h1",
+            "b1g1",
+            "b1f1",
+            "b1e1",
+            "b1d1",
+            "b1c1",
+            "b1a1"
+          ],
+          "legal_loop_breaking_moves_that_convert": [],
+          "loop_breaking_check_or_cut_available": true,
+          "loop_breaking_rook_transfer_available": true,
+          "mate_in_one_history": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "max_state_repetition": 20,
+          "no_box_progress_recently": true,
+          "no_edge_progress_recently": true,
+          "no_mate_progress_recently": true,
+          "no_progress_plies": 9,
+          "repeated_abstract_state_count": 8,
+          "repeated_abstract_state_examples": [
+            {
+              "count": 10,
+              "state": "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w"
+            },
+            {
+              "count": 8,
+              "state": "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b"
+            },
+            {
+              "count": 7,
+              "state": "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b"
+            },
+            {
+              "count": 7,
+              "state": "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w"
+            },
+            {
+              "count": 2,
+              "state": "wk=c7|bk=a4|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b"
+            }
+          ],
+          "repeated_state_count": 9,
+          "repeated_state_examples": [
+            {
+              "count": 20,
+              "state": "8/2K5/8/k7/8/8/8/1R6 w"
+            },
+            {
+              "count": 16,
+              "state": "8/2K5/k7/8/8/8/8/1R6 b"
+            },
+            {
+              "count": 14,
+              "state": "3K4/8/8/k7/8/8/8/1R6 b"
+            },
+            {
+              "count": 13,
+              "state": "3K4/8/k7/8/8/8/8/1R6 w"
+            },
+            {
+              "count": 4,
+              "state": "8/2K5/1R6/8/k7/8/8/8 w"
+            }
+          ],
+          "rook_oscillation_detected": true,
+          "rook_oscillation_loop": true,
+          "rook_oscillation_pairs": [
+            {
+              "count": 12,
+              "moves": "c7d8 / d8c7"
+            },
+            {
+              "count": 3,
+              "moves": "b1b6 / b6b1"
+            },
+            {
+              "count": 1,
+              "moves": "b1b8 / b8b1"
+            }
+          ],
+          "rook_reversal_count": 16,
+          "rook_square_history": [
+            "b8",
+            "b1",
+            "b1",
+            "b6",
+            "b6",
+            "b1",
+            "b1",
+            "b6",
+            "b6",
+            "b1",
+            "b1",
+            "b8",
+            "b8",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1"
+          ],
+          "safe_check_available_history": [
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true
+          ],
+          "safe_loop_breaking_move_available": true,
+          "stagnation_loop": true
+        },
+        "trace_included": true
+      },
+      "frame_id": "cp.krk.state.ea634c29ece7",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": false
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "b8b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 73.7653138576271
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "b8b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 73.76431432857514
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "b8b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 73.76357786297172
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "b8b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 73.76349192605913
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "b8b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 73.76307370360941
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "b8b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 73.76221120357513
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "b8b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 73.76221120357513
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "b8b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 73.76221120357513
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "b8b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 73.76221120357513
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "b8b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 73.76221120357513
+        }
+      ],
+      "job_id": "job.krk.out_of_sample_control.678147e30d2d",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_strategy_arbiter_out_of_sample_control_label.v0",
+      "selected_move": "b8b1",
+      "selected_playout_success": {
+        "engine_decision_count": 20,
+        "engine_early_stop_count": 20,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 180,
+        "final_fen": "3K4/8/k7/8/8/8/8/1R6 w - - 40 21",
+        "plies": 40,
+        "result": "max_plies",
+        "stagnation_summary": {
+          "abstract_state_history": [
+            "wk=c7|bk=a6|wr_rel=df1_dr1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a5|wr_rel=df1_dr1|wr_edge=0|box=5|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a4|wr_rel=df1_dr1|wr_edge=0|box=5|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a4|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a5|wr_rel=df1_dr1|wr_edge=0|box=5|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a4|wr_rel=df1_dr1|wr_edge=0|box=5|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a4|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a5|wr_rel=df1_dr1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a6|wr_rel=df1_dr1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+            "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b",
+            "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w"
+          ],
+          "abstract_state_signature": "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w",
+          "box_area_history": [
+            7,
+            7,
+            7,
+            5,
+            5,
+            7,
+            7,
+            5,
+            5,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7
+          ],
+          "enemy_king_edge_distance_history": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "king_square_history": {
+            "black": [
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a4",
+              "a4",
+              "a5",
+              "a5",
+              "a4",
+              "a4",
+              "a5",
+              "a5",
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a6",
+              "a6",
+              "a5",
+              "a5",
+              "a6"
+            ],
+            "white": [
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "c7",
+              "d8",
+              "d8",
+              "c7",
+              "c7",
+              "d8",
+              "d8",
+              "c7",
+              "c7",
+              "d8",
+              "d8",
+              "c7",
+              "c7",
+              "d8",
+              "d8",
+              "c7",
+              "c7",
+              "d8",
+              "d8",
+              "c7",
+              "c7",
+              "d8",
+              "d8",
+              "c7",
+              "c7",
+              "d8",
+              "d8"
+            ]
+          },
+          "legal_loop_breaking_move_audits": [
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "d8e8",
+              "post_box_area": 7,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_not_increased_after_move",
+                "candidate_is_king_move",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "d8c8",
+              "post_box_area": 7,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_not_increased_after_move",
+                "candidate_is_king_move",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "d8e7",
+              "post_box_area": 7,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_not_increased_after_move",
+                "candidate_is_king_move",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "d8d7",
+              "post_box_area": 7,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_not_increased_after_move",
+                "candidate_is_king_move",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "d8c7",
+              "post_box_area": 7,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_not_increased_after_move",
+                "candidate_is_king_move",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1b4",
+              "post_box_area": 4,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_decreases_after_move",
+                "box_area_not_increased_after_move",
+                "candidate_is_rook_move",
+                "candidate_is_rook_transfer",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1b3",
+              "post_box_area": 5,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_decreases_after_move",
+                "box_area_not_increased_after_move",
+                "candidate_is_rook_move",
+                "candidate_is_rook_transfer",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1b2",
+              "post_box_area": 6,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "box_area_decreases_after_move",
+                "box_area_not_increased_after_move",
+                "candidate_is_rook_move",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1h1",
+              "post_box_area": 49,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "candidate_is_rook_move",
+                "candidate_is_rook_transfer",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1g1",
+              "post_box_area": 42,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "candidate_is_rook_move",
+                "candidate_is_rook_transfer",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1f1",
+              "post_box_area": 35,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "candidate_is_rook_move",
+                "candidate_is_rook_transfer",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1e1",
+              "post_box_area": 28,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "candidate_is_rook_move",
+                "candidate_is_rook_transfer",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1d1",
+              "post_box_area": 21,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "candidate_is_rook_move",
+                "candidate_is_rook_transfer",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1c1",
+              "post_box_area": 14,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "candidate_is_rook_move",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            },
+            {
+              "current_box_area": 7,
+              "current_enemy_edge_distance": 0,
+              "legal": true,
+              "loop_breaking": true,
+              "move": "b1a1",
+              "post_box_area": 49,
+              "post_enemy_edge_distance": 0,
+              "source_terms": [
+                "candidate_is_rook_move",
+                "checking_line_created",
+                "enemy_edge_distance_not_increased_after_move",
+                "escapes_rook_oscillation_pair",
+                "no_draw_after_move",
+                "not_immediate_rook_reverse",
+                "rook_safe_after_move"
+              ]
+            }
+          ],
+          "legal_loop_breaking_moves": [
+            "d8e8",
+            "d8c8",
+            "d8e7",
+            "d8d7",
+            "d8c7",
+            "b1b4",
+            "b1b3",
+            "b1b2",
+            "b1h1",
+            "b1g1",
+            "b1f1",
+            "b1e1",
+            "b1d1",
+            "b1c1",
+            "b1a1"
+          ],
+          "legal_loop_breaking_moves_that_convert": [],
+          "loop_breaking_check_or_cut_available": true,
+          "loop_breaking_rook_transfer_available": true,
+          "mate_in_one_history": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "max_state_repetition": 20,
+          "no_box_progress_recently": true,
+          "no_edge_progress_recently": true,
+          "no_mate_progress_recently": true,
+          "no_progress_plies": 9,
+          "repeated_abstract_state_count": 8,
+          "repeated_abstract_state_examples": [
+            {
+              "count": 10,
+              "state": "wk=c7|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w"
+            },
+            {
+              "count": 8,
+              "state": "wk=c7|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b"
+            },
+            {
+              "count": 7,
+              "state": "wk=d8|bk=a5|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b"
+            },
+            {
+              "count": 7,
+              "state": "wk=d8|bk=a6|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=w"
+            },
+            {
+              "count": 2,
+              "state": "wk=c7|bk=a4|wr_rel=df1_dr-1|wr_edge=1|box=7|edge=0|cut=off|turn=b"
+            }
+          ],
+          "repeated_state_count": 9,
+          "repeated_state_examples": [
+            {
+              "count": 20,
+              "state": "8/2K5/8/k7/8/8/8/1R6 w"
+            },
+            {
+              "count": 16,
+              "state": "8/2K5/k7/8/8/8/8/1R6 b"
+            },
+            {
+              "count": 14,
+              "state": "3K4/8/8/k7/8/8/8/1R6 b"
+            },
+            {
+              "count": 13,
+              "state": "3K4/8/k7/8/8/8/8/1R6 w"
+            },
+            {
+              "count": 4,
+              "state": "8/2K5/1R6/8/k7/8/8/8 w"
+            }
+          ],
+          "rook_oscillation_detected": true,
+          "rook_oscillation_loop": true,
+          "rook_oscillation_pairs": [
+            {
+              "count": 12,
+              "moves": "c7d8 / d8c7"
+            },
+            {
+              "count": 3,
+              "moves": "b1b6 / b6b1"
+            },
+            {
+              "count": 1,
+              "moves": "b1b8 / b8b1"
+            }
+          ],
+          "rook_reversal_count": 16,
+          "rook_square_history": [
+            "b8",
+            "b1",
+            "b1",
+            "b6",
+            "b6",
+            "b1",
+            "b1",
+            "b6",
+            "b6",
+            "b1",
+            "b1",
+            "b8",
+            "b8",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1",
+            "b1"
+          ],
+          "safe_check_available_history": [
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true
+          ],
+          "safe_loop_breaking_move_available": true,
+          "stagnation_loop": true
+        },
+        "trace_included": true
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_stage": "stage4",
+      "state_id": "state.ea634c29ece7",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "8/8/8/8/8/4K3/3R4/5k2 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 6,
+        "engine_early_stop_count": 6,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 54,
+        "final_fen": null,
+        "plies": 11,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.2f5f57c82e5b",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.531386011672204
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.53038648262024
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52965001688805
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52956408002377
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52914585765451
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52828335762024
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52828335762024
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52828335762024
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52828335762024
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52828335762024
+        }
+      ],
+      "job_id": "job.krk.out_of_sample_control.99505412b76a",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_strategy_arbiter_out_of_sample_control_label.v0",
+      "selected_move": "d2d8",
+      "selected_playout_success": {
+        "engine_decision_count": 6,
+        "engine_early_stop_count": 6,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 54,
+        "final_fen": null,
+        "plies": 11,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_stage": "stage4",
+      "state_id": "state.2f5f57c82e5b",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "6k1/4R3/5K2/8/8/8/8/8 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 3,
+        "engine_early_stop_count": 3,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 27,
+        "final_fen": null,
+        "plies": 5,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.6ed5d7581360",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.03646259887238
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.03546306982041
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.03472660408822
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.03464066722393
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.03422244485468
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.0333599448204
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.0333599448204
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.0333599448204
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.0333599448204
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.0333599448204
+        }
+      ],
+      "job_id": "job.krk.out_of_sample_control.789de8265a5a",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_strategy_arbiter_out_of_sample_control_label.v0",
+      "selected_move": "e7a7",
+      "selected_playout_success": {
+        "engine_decision_count": 3,
+        "engine_early_stop_count": 3,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 27,
+        "final_fen": null,
+        "plies": 5,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_stage": "stage4",
+      "state_id": "state.6ed5d7581360",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "8/8/k7/2K5/8/1R6/8/8 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 4,
+        "engine_early_stop_count": 4,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 36,
+        "final_fen": null,
+        "plies": 7,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.e99b2e731810",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.662068956923672
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.661069427871706
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.660332962139517
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.66024702527523
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.659828802905977
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.658966302871704
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.658966302871704
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.658966302871704
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.658966302871704
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.658966302871704
+        }
+      ],
+      "job_id": "job.krk.out_of_sample_control.c7efcd313480",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_strategy_arbiter_out_of_sample_control_label.v0",
+      "selected_move": "b3b1",
+      "selected_playout_success": {
+        "engine_decision_count": 4,
+        "engine_early_stop_count": 4,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 36,
+        "final_fen": null,
+        "plies": 7,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_stage": "stage4",
+      "state_id": "state.e99b2e731810",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "7k/8/8/8/R7/8/5K2/8 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 14,
+        "engine_early_stop_count": 14,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 126,
+        "final_fen": null,
+        "plies": 27,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.7cab65617cd8",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin",
+          "score": 16.70948588235397
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin",
+          "score": 16.708486353302003
+        },
+        {
+          "actuator": "actuator_13",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin",
+          "score": 16.708408228302
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin",
+          "score": 16.707749887569815
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin",
+          "score": 16.707663950705527
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin",
+          "score": 16.707245728336275
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin",
+          "score": 16.706796203259298
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin",
+          "score": 16.706383228302002
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin",
+          "score": 16.706383228302002
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin",
+          "score": 16.706383228302002
+        }
+      ],
+      "job_id": "job.krk.out_of_sample_control.55f8cad4eef7",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_strategy_arbiter_out_of_sample_control_label.v0",
+      "selected_move": "f2g3",
+      "selected_playout_success": {
+        "engine_decision_count": 14,
+        "engine_early_stop_count": 14,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 126,
+        "final_fen": null,
+        "plies": 27,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_stage": "stage5",
+      "state_id": "state.7cab65617cd8",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "4k3/8/8/8/R7/8/4K3/8 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 17,
+        "engine_early_stop_count": 17,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 153,
+        "final_fen": null,
+        "plies": 33,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.7b116c49a009",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "a4a8",
+          "provider_id": "krk.stage0_basin",
+          "score": 22.631868952346036
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "a4a8",
+          "provider_id": "krk.stage0_basin",
+          "score": 22.63086942329407
+        },
+        {
+          "actuator": "actuator_12",
+          "move_uci": "a4a8",
+          "provider_id": "krk.stage0_basin",
+          "score": 22.63049638572335
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "a4a8",
+          "provider_id": "krk.stage0_basin",
+          "score": 22.63043296026786
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "a4a8",
+          "provider_id": "krk.stage0_basin",
+          "score": 22.630132957690645
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "a4a8",
+          "provider_id": "krk.stage0_basin",
+          "score": 22.63004702077806
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "a4a8",
+          "provider_id": "krk.stage0_basin",
+          "score": 22.62962879832834
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "a4a8",
+          "provider_id": "krk.stage0_basin",
+          "score": 22.628766298294067
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "a4a8",
+          "provider_id": "krk.stage0_basin",
+          "score": 22.628766298294067
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "a4a8",
+          "provider_id": "krk.stage0_basin",
+          "score": 22.628766298294067
+        }
+      ],
+      "job_id": "job.krk.out_of_sample_control.74900f2d8408",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_strategy_arbiter_out_of_sample_control_label.v0",
+      "selected_move": "a4a8",
+      "selected_playout_success": {
+        "engine_decision_count": 17,
+        "engine_early_stop_count": 17,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 153,
+        "final_fen": null,
+        "plies": 33,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_stage": "stage5",
+      "state_id": "state.7b116c49a009",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "4k3/1R6/1K6/8/8/8/8/8 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 9,
+        "engine_early_stop_count": 9,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 81,
+        "final_fen": null,
+        "plies": 17,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.388d05197dd9",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "b7h7",
+          "provider_id": "krk.stage0_basin",
+          "score": 60.91246926171798
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "b7h7",
+          "provider_id": "krk.stage0_basin",
+          "score": 60.91146973266601
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "b7h7",
+          "provider_id": "krk.stage0_basin",
+          "score": 60.9107332670626
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "b7h7",
+          "provider_id": "krk.stage0_basin",
+          "score": 60.910647330150006
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "b7h7",
+          "provider_id": "krk.stage0_basin",
+          "score": 60.91022910770029
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "b7h7",
+          "provider_id": "krk.stage0_basin",
+          "score": 60.909366607666016
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "b7h7",
+          "provider_id": "krk.stage0_basin",
+          "score": 60.909366607666016
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "b7h7",
+          "provider_id": "krk.stage0_basin",
+          "score": 60.909366607666016
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "b7h7",
+          "provider_id": "krk.stage0_basin",
+          "score": 60.909366607666016
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "b7h7",
+          "provider_id": "krk.stage0_basin",
+          "score": 60.909366607666016
+        }
+      ],
+      "job_id": "job.krk.out_of_sample_control.dd43b5f1679f",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_strategy_arbiter_out_of_sample_control_label.v0",
+      "selected_move": "b7h7",
+      "selected_playout_success": {
+        "engine_decision_count": 9,
+        "engine_early_stop_count": 9,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 81,
+        "final_fen": null,
+        "plies": 17,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_stage": "stage5",
+      "state_id": "state.388d05197dd9",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "4k3/8/3K4/8/8/8/8/R7 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.e65bbd1e9f0c",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_2",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_4",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_9",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_10",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        }
+      ],
+      "job_id": "job.krk.out_of_sample_control.4bbcc80b2558",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_strategy_arbiter_out_of_sample_control_label.v0",
+      "selected_move": "a1f1",
+      "selected_playout_success": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_stage": "stage6",
+      "state_id": "state.e65bbd1e9f0c",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "7k/8/5K2/8/8/8/8/R7 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.cb9f8eea01fd",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.832160526347344
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.83116099729538
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.83042453156319
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.83033859469891
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.82992037232965
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.82905787229538
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.82905787229538
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.82905787229538
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.82905787229538
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.82905787229538
+        }
+      ],
+      "job_id": "job.krk.out_of_sample_control.1502108d8abf",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_strategy_arbiter_out_of_sample_control_label.v0",
+      "selected_move": "f6f7",
+      "selected_playout_success": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_stage": "stage6",
+      "state_id": "state.cb9f8eea01fd",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "1k6/8/2K5/8/8/8/8/R7 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.df10abc0731f",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_9",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.74213240334578
+        },
+        {
+          "actuator": "actuator_4",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.74178999101134
+        },
+        {
+          "actuator": "actuator_16",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.739654696893695
+        },
+        {
+          "actuator": "actuator_14",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.739447120255235
+        },
+        {
+          "actuator": "actuator_15",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.73850336263953
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.73807969689369
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.73807969689369
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.73807969689369
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.73807969689369
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.73807969689369
+        }
+      ],
+      "job_id": "job.krk.out_of_sample_control.41645e9be76b",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_strategy_arbiter_out_of_sample_control_label.v0",
+      "selected_move": "a1a6",
+      "selected_playout_success": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_stage": "stage6",
+      "state_id": "state.df10abc0731f",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    }
+  ],
+  "recommended_next_step": "probe_out_of_sample_control_labels_before_any_selector_sandbox",
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_strategy_arbiter_out_of_sample_control_labels.v0",
+  "source_artifacts": [
+    "reports/krk_strategy_arbiter_out_of_sample_execution_manifest_v0.json",
+    "reports/krk_strategy_arbiter_out_of_sample_execution_manifest_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "forced_selected_provider_result_counts": {
+      "mate": 11,
+      "max_plies": 1
+    },
+    "label_count": 12,
+    "selected_result_counts": {
+      "mate": 11,
+      "max_plies": 1
+    },
+    "selected_result_counts_by_stage": {
+      "stage4:mate": 3,
+      "stage4:max_plies": 1,
+      "stage5:mate": 4,
+      "stage6:mate": 4
+    },
+    "stage7_training_rows": 0,
+    "trace_failures_only": true,
+    "wall_time_sec": 125.858986
+  }
+}

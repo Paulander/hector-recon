@@ -1,0 +1,72 @@
+{
+  "schema_version": "stage7_smoke50_unique_maxplies_role_owned_summary.v1",
+  "causal_status": "sandbox_opt_in",
+  "stage7_status": "local_valid_composition_quarantined",
+  "inputs": {
+    "families": "reports/structural_candidates/stage7_smoke50_unique_maxplies_families.json",
+    "off": "reports/structural_candidates/stage7_smoke50_unique_maxplies_role_owned_off_4_h80.json",
+    "on": "reports/structural_candidates/stage7_smoke50_unique_maxplies_role_owned_on_4_h80.json"
+  },
+  "config": {
+    "horizon": 80,
+    "note": "h80 was inherited from prior unresolved-family classification. Future smoke/overfire checks should default to h40 or h50 and escalate only ambiguous failures to h80."
+  },
+  "summary": {
+    "off": {
+      "mate": 0,
+      "max_plies": 4,
+      "role_owned_selected": 0
+    },
+    "on": {
+      "mate": 0,
+      "max_plies": 4,
+      "role_owned_selected": 0
+    },
+    "changed_families": 0,
+    "adapter_overfire_count": 0
+  },
+  "family_results": [
+    {
+      "state_id": "state.069e81a609ed",
+      "post_reply_fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+      "off": "krk.stage0_basin:e2d1:max_plies",
+      "on": "krk.stage0_basin:e2d1:max_plies",
+      "interpretation": "unchanged_no_adapter_fire"
+    },
+    {
+      "state_id": "state.bace6f82b671",
+      "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "off": "krk.stage0_basin:a5h5:max_plies",
+      "on": "krk.stage0_basin:a5h5:max_plies",
+      "interpretation": "unchanged_no_adapter_fire"
+    },
+    {
+      "state_id": "state.0926f12f8e8f",
+      "post_reply_fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+      "off": "krk.stage0_basin:e4f3:max_plies",
+      "on": "krk.stage0_basin:e4f3:max_plies",
+      "interpretation": "unchanged_no_adapter_fire"
+    },
+    {
+      "state_id": "state.2cc0b3e1033a",
+      "post_reply_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "off": "krk.stage0_basin:a6a8:max_plies",
+      "on": "krk.stage0_basin:a6a8:max_plies",
+      "interpretation": "unchanged_no_adapter_fire"
+    }
+  ],
+  "candidate_update": {
+    "candidate_id": "cand.krk.box_shrink.score_normalized_role_arbitration.v1",
+    "status": "narrow_sandbox_candidate_no_broader_overfire_observed",
+    "diagnosis": [
+      "role_owned_arbitration did not fire on four unrelated smoke50 max-plies families",
+      "no evidence of broad adapter overfire from this compact overfire check",
+      "candidate still does not solve unresolved Stage 7 families"
+    ],
+    "next_action": [
+      "use h40 or h50 for future smoke/overfire diagnostics",
+      "escalate only ambiguous unresolved classifications to h80",
+      "continue unresolved-family continuation/capacity diagnosis before any Stage 7 promotion"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "schema_version": "krk_selector_objective_architecture_review.v1",
+  "causal_status": "non_causal_architecture_review",
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_arbiter_implemented": false,
+  "source_artifacts": [
+    "reports/krk_selector_target_dataset_v0.json",
+    "reports/krk_selector_baseline_probe_v0.json",
+    "reports/krk_selector_feature_baseline_probe_v0.json",
+    "reports/krk_provider_identity_maturity_review_v0.json",
+    "reports/krk_selector_provenance_feature_probe_v0.json"
+  ],
+  "findings": [
+    {
+      "id": "provider_prior_strong",
+      "summary": "Provider-prior leave-one-out accuracy is 0.833 on selected-playout controls."
+    },
+    {
+      "id": "trace_terms_do_not_improve",
+      "summary": "Trace-only observation terms did not improve over provider prior."
+    },
+    {
+      "id": "provenance_explains_prior",
+      "summary": "Explicit provider family, maturity, source-stage, and role fields reproduce the provider-prior signal."
+    },
+    {
+      "id": "labels_are_still_narrow",
+      "summary": "The target is selected-playout success over 42 rows; it is not yet a general strategy ownership target and excludes Stage7 held-out rows from training."
+    },
+    {
+      "id": "sandbox_not_justified",
+      "summary": "No evidence authorizes a runtime arbiter, selector sandbox, provider bonus, or Stage7 repair."
+    }
+  ],
+  "decision": {
+    "status": "selector_objective_needs_stratified_label_expansion_before_sandbox",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "stage7_repair_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "recommended_next_step": "collect_small_stratified_selector_labels_v1"
+  },
+  "recommended_next_slice": {
+    "slice_id": "collect_small_stratified_selector_labels_v1",
+    "causal_status": "non_causal_label_collection",
+    "description": "Add a small bounded label slice that separates selected-playout success, forced-provider conversion, same-move compatibility, and guardrail-safe ownership across protected Stage4/5/6 controls while keeping Stage7 residuals held out.",
+    "bounds": {
+      "max_new_states": 12,
+      "horizon": 40,
+      "use_diagnostic_caches": true,
+      "trace_failures_only": true,
+      "stage7_training_rows": 0,
+      "no_exhaustive_legal_first_sweeps": true
+    },
+    "required_outputs": [
+      "reports/krk_selector_stratified_label_plan_v1.json",
+      "reports/krk_selector_stratified_label_plan_v1.md"
+    ],
+    "notes": [
+      "The next slice should first create the bounded label plan, not immediately run a large playout batch.",
+      "If existing artifacts already contain enough labels, the plan should point to replay-free extraction instead of new playouts."
+    ]
+  },
+  "blocked_next_work": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "raw_provider_id_runtime_prior",
+    "provider_support_adapter",
+    "score_bonus_or_penalty",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "m3_m4_arbitration_update"
+  ]
+}

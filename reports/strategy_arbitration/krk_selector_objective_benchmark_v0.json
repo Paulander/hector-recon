@@ -1,0 +1,2363 @@
+{
+  "causal_status": "non_causal_selector_objective_benchmark",
+  "classes": [
+    "preserve_selected_owner",
+    "prefer_visible_alternative",
+    "abstain_context_only"
+  ],
+  "decision": {
+    "recommended_next_step": "write_runtime_review_packet_not_implementation",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "status": "selector_objective_benchmark_promising_non_causal"
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "interpretation": {
+    "capacity_labels_are_not_ownership_labels": true,
+    "reason": "The benchmark uses offline owner labels only as non-causal targets. No model authorizes runtime selector behavior or provider/routing/score changes.",
+    "runtime_review_packet_is_strongest_allowed_next_step": true,
+    "runtime_selector_supported": false,
+    "selector_training_supported": false
+  },
+  "models": {
+    "combined_simple_rule": {
+      "abstain_recall": 1.0,
+      "accuracy": 0.9523809523809523,
+      "confusion_matrix": {
+        "abstain_context_only": {
+          "abstain_context_only": 5,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 0
+        },
+        "prefer_visible_alternative": {
+          "abstain_context_only": 0,
+          "prefer_visible_alternative": 4,
+          "preserve_selected_owner": 1
+        },
+        "preserve_selected_owner": {
+          "abstain_context_only": 0,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 11
+        }
+      },
+      "correct_count": 20,
+      "evaluation_method": "direct_rule_evaluation",
+      "model_id": "combined_simple_rule",
+      "model_kind": "fixed_combined_visible_rule",
+      "per_class": {
+        "abstain_context_only": {
+          "false_negative": 0,
+          "false_positive": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "true_positive": 5
+        },
+        "prefer_visible_alternative": {
+          "false_negative": 1,
+          "false_positive": 0,
+          "precision": 1.0,
+          "recall": 0.8,
+          "true_positive": 4
+        },
+        "preserve_selected_owner": {
+          "false_negative": 0,
+          "false_positive": 1,
+          "precision": 0.9166666666666666,
+          "recall": 1.0,
+          "true_positive": 11
+        }
+      },
+      "prediction_uses_offline_only_labels": false,
+      "predictions": [
+        {
+          "correct": true,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_enemy_between",
+          "selected_provider_family": "edge_trap_enemy_between",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "protected.planwin.227342c93b11",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "protected.planwin.5fa48b6e0286",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.fence_established",
+          "selected_provider_family": "fence_established",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.02feb8593cc6",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "prefer_visible_alternative",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.0b1f2153179b",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.18cfccc9c4c1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "prefer_visible_alternative",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.256a3da30f0f",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.2c1d6da27ea1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.326222aefdf1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.388d05197dd9",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.3dca34326fca",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.44938ccb8ab7",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.52085d244e9d",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "prefer_visible_alternative",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.67a88e3b1dd2",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.69711173114a",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "prefer_visible_alternative",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.699f0003a511",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.6e84c77a4520",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.80080a9a826d",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.b09c954a787e",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.b11124d658cf",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.d1f052d2cab2",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.ea634c29ece7",
+          "target_action": "abstain_context_only"
+        }
+      ],
+      "row_count": 21,
+      "runtime_feature_eligible": true,
+      "safe_preservation_recall": 1.0,
+      "switch_contrast_recall": 0.8,
+      "training_targets_use_offline_labels": false
+    },
+    "majority_baseline": {
+      "abstain_recall": 0.0,
+      "accuracy": 0.5238095238095238,
+      "confusion_matrix": {
+        "abstain_context_only": {
+          "abstain_context_only": 0,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 5
+        },
+        "prefer_visible_alternative": {
+          "abstain_context_only": 0,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 5
+        },
+        "preserve_selected_owner": {
+          "abstain_context_only": 0,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 11
+        }
+      },
+      "correct_count": 11,
+      "evaluation_method": "leave_state_out",
+      "model_id": "majority_baseline",
+      "model_kind": "leave_state_out_majority_baseline",
+      "per_class": {
+        "abstain_context_only": {
+          "false_negative": 5,
+          "false_positive": 0,
+          "precision": null,
+          "recall": 0.0,
+          "true_positive": 0
+        },
+        "prefer_visible_alternative": {
+          "false_negative": 5,
+          "false_positive": 0,
+          "precision": null,
+          "recall": 0.0,
+          "true_positive": 0
+        },
+        "preserve_selected_owner": {
+          "false_negative": 0,
+          "false_positive": 10,
+          "precision": 0.5238095238095238,
+          "recall": 1.0,
+          "true_positive": 11
+        }
+      },
+      "prediction_uses_offline_only_labels": false,
+      "predictions": [
+        {
+          "correct": true,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_enemy_between",
+          "selected_provider_family": "edge_trap_enemy_between",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "protected.planwin.227342c93b11",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "protected.planwin.5fa48b6e0286",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.fence_established",
+          "selected_provider_family": "fence_established",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.02feb8593cc6",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.0b1f2153179b",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.18cfccc9c4c1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.256a3da30f0f",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.2c1d6da27ea1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.326222aefdf1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.388d05197dd9",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.3dca34326fca",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.44938ccb8ab7",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "state.52085d244e9d",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "state.67a88e3b1dd2",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "state.69711173114a",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "state.699f0003a511",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.6e84c77a4520",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.80080a9a826d",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.b09c954a787e",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.b11124d658cf",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "state.d1f052d2cab2",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.ea634c29ece7",
+          "target_action": "abstain_context_only"
+        }
+      ],
+      "row_count": 21,
+      "runtime_feature_eligible": false,
+      "safe_preservation_recall": 1.0,
+      "switch_contrast_recall": 0.0,
+      "training_targets_use_offline_labels": true
+    },
+    "majority_baseline_leave_stage_out": {
+      "abstain_recall": 0.0,
+      "accuracy": 0.19047619047619047,
+      "confusion_matrix": {
+        "abstain_context_only": {
+          "abstain_context_only": 0,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 5
+        },
+        "prefer_visible_alternative": {
+          "abstain_context_only": 2,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 3
+        },
+        "preserve_selected_owner": {
+          "abstain_context_only": 7,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 4
+        }
+      },
+      "correct_count": 4,
+      "evaluation_method": "leave_stage_out",
+      "model_id": "majority_baseline_leave_stage_out",
+      "model_kind": "leave_stage_out_majority_baseline",
+      "per_class": {
+        "abstain_context_only": {
+          "false_negative": 5,
+          "false_positive": 9,
+          "precision": 0.0,
+          "recall": 0.0,
+          "true_positive": 0
+        },
+        "prefer_visible_alternative": {
+          "false_negative": 5,
+          "false_positive": 0,
+          "precision": null,
+          "recall": 0.0,
+          "true_positive": 0
+        },
+        "preserve_selected_owner": {
+          "false_negative": 7,
+          "false_positive": 8,
+          "precision": 0.3333333333333333,
+          "recall": 0.36363636363636365,
+          "true_positive": 4
+        }
+      },
+      "prediction_uses_offline_only_labels": false,
+      "predictions": [
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_stage_out",
+          "state_id": "state.256a3da30f0f",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_stage_out",
+          "state_id": "state.44938ccb8ab7",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_stage_out",
+          "state_id": "state.80080a9a826d",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_stage_out",
+          "state_id": "state.b09c954a787e",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_stage_out",
+          "state_id": "state.b11124d658cf",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_stage_out",
+          "state_id": "state.ea634c29ece7",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": false,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.edge_trap_enemy_between",
+          "selected_provider_family": "edge_trap_enemy_between",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "protected.planwin.227342c93b11",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.fence_established",
+          "selected_provider_family": "fence_established",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.02feb8593cc6",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.0b1f2153179b",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": false,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.18cfccc9c4c1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.2c1d6da27ea1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.326222aefdf1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.388d05197dd9",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.3dca34326fca",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": false,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.6e84c77a4520",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_stage_out",
+          "state_id": "protected.planwin.5fa48b6e0286",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_stage_out",
+          "state_id": "state.52085d244e9d",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_stage_out",
+          "state_id": "state.67a88e3b1dd2",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_stage_out",
+          "state_id": "state.69711173114a",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage6",
+          "split": "leave_stage_out",
+          "state_id": "state.699f0003a511",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_stage_out",
+          "state_id": "state.d1f052d2cab2",
+          "target_action": "preserve_selected_owner"
+        }
+      ],
+      "row_count": 21,
+      "runtime_feature_eligible": false,
+      "safe_preservation_recall": 0.36363636363636365,
+      "switch_contrast_recall": 0.0,
+      "training_targets_use_offline_labels": true
+    },
+    "proposal_count_positive_alternative_rule": {
+      "abstain_recall": 1.0,
+      "accuracy": 0.8571428571428571,
+      "confusion_matrix": {
+        "abstain_context_only": {
+          "abstain_context_only": 5,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 0
+        },
+        "prefer_visible_alternative": {
+          "abstain_context_only": 0,
+          "prefer_visible_alternative": 2,
+          "preserve_selected_owner": 3
+        },
+        "preserve_selected_owner": {
+          "abstain_context_only": 0,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 11
+        }
+      },
+      "correct_count": 18,
+      "evaluation_method": "direct_rule_evaluation",
+      "model_id": "proposal_count_positive_alternative_rule",
+      "model_kind": "fixed_positive_alternative_count_rule",
+      "per_class": {
+        "abstain_context_only": {
+          "false_negative": 0,
+          "false_positive": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "true_positive": 5
+        },
+        "prefer_visible_alternative": {
+          "false_negative": 3,
+          "false_positive": 0,
+          "precision": 1.0,
+          "recall": 0.4,
+          "true_positive": 2
+        },
+        "preserve_selected_owner": {
+          "false_negative": 0,
+          "false_positive": 3,
+          "precision": 0.7857142857142857,
+          "recall": 1.0,
+          "true_positive": 11
+        }
+      },
+      "prediction_uses_offline_only_labels": false,
+      "predictions": [
+        {
+          "correct": true,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_enemy_between",
+          "selected_provider_family": "edge_trap_enemy_between",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "protected.planwin.227342c93b11",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "protected.planwin.5fa48b6e0286",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.fence_established",
+          "selected_provider_family": "fence_established",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.02feb8593cc6",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.0b1f2153179b",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.18cfccc9c4c1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "prefer_visible_alternative",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.256a3da30f0f",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.2c1d6da27ea1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.326222aefdf1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.388d05197dd9",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.3dca34326fca",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.44938ccb8ab7",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.52085d244e9d",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.67a88e3b1dd2",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.69711173114a",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "prefer_visible_alternative",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.699f0003a511",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.6e84c77a4520",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.80080a9a826d",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.b09c954a787e",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.b11124d658cf",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.d1f052d2cab2",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.ea634c29ece7",
+          "target_action": "abstain_context_only"
+        }
+      ],
+      "row_count": 21,
+      "runtime_feature_eligible": true,
+      "safe_preservation_recall": 1.0,
+      "switch_contrast_recall": 0.4,
+      "training_targets_use_offline_labels": false
+    },
+    "provider_prior": {
+      "abstain_recall": 0.0,
+      "accuracy": 0.47619047619047616,
+      "confusion_matrix": {
+        "abstain_context_only": {
+          "abstain_context_only": 0,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 5
+        },
+        "prefer_visible_alternative": {
+          "abstain_context_only": 0,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 5
+        },
+        "preserve_selected_owner": {
+          "abstain_context_only": 0,
+          "prefer_visible_alternative": 1,
+          "preserve_selected_owner": 10
+        }
+      },
+      "correct_count": 10,
+      "evaluation_method": "leave_state_out",
+      "model_id": "provider_prior",
+      "model_kind": "leave_state_out_provider_family_prior",
+      "per_class": {
+        "abstain_context_only": {
+          "false_negative": 5,
+          "false_positive": 0,
+          "precision": null,
+          "recall": 0.0,
+          "true_positive": 0
+        },
+        "prefer_visible_alternative": {
+          "false_negative": 5,
+          "false_positive": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "true_positive": 0
+        },
+        "preserve_selected_owner": {
+          "false_negative": 1,
+          "false_positive": 10,
+          "precision": 0.5,
+          "recall": 0.9090909090909091,
+          "true_positive": 10
+        }
+      },
+      "prediction_uses_offline_only_labels": false,
+      "predictions": [
+        {
+          "correct": true,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_enemy_between",
+          "selected_provider_family": "edge_trap_enemy_between",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "protected.planwin.227342c93b11",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "protected.planwin.5fa48b6e0286",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.fence_established",
+          "selected_provider_family": "fence_established",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.02feb8593cc6",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.0b1f2153179b",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.18cfccc9c4c1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.256a3da30f0f",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.2c1d6da27ea1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "prefer_visible_alternative",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.326222aefdf1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.388d05197dd9",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.3dca34326fca",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.44938ccb8ab7",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "state.52085d244e9d",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "state.67a88e3b1dd2",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "state.69711173114a",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "state.699f0003a511",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.6e84c77a4520",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.80080a9a826d",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.b09c954a787e",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.b11124d658cf",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "state.d1f052d2cab2",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.ea634c29ece7",
+          "target_action": "abstain_context_only"
+        }
+      ],
+      "row_count": 21,
+      "runtime_feature_eligible": true,
+      "safe_preservation_recall": 0.9090909090909091,
+      "switch_contrast_recall": 0.0,
+      "training_targets_use_offline_labels": true
+    },
+    "stage_provider_family_prior": {
+      "abstain_recall": 1.0,
+      "accuracy": 0.7619047619047619,
+      "confusion_matrix": {
+        "abstain_context_only": {
+          "abstain_context_only": 5,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 0
+        },
+        "prefer_visible_alternative": {
+          "abstain_context_only": 1,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 4
+        },
+        "preserve_selected_owner": {
+          "abstain_context_only": 0,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 11
+        }
+      },
+      "correct_count": 16,
+      "evaluation_method": "leave_state_out",
+      "model_id": "stage_provider_family_prior",
+      "model_kind": "leave_state_out_stage_provider_family_prior",
+      "per_class": {
+        "abstain_context_only": {
+          "false_negative": 0,
+          "false_positive": 1,
+          "precision": 0.8333333333333334,
+          "recall": 1.0,
+          "true_positive": 5
+        },
+        "prefer_visible_alternative": {
+          "false_negative": 5,
+          "false_positive": 0,
+          "precision": null,
+          "recall": 0.0,
+          "true_positive": 0
+        },
+        "preserve_selected_owner": {
+          "false_negative": 0,
+          "false_positive": 4,
+          "precision": 0.7333333333333333,
+          "recall": 1.0,
+          "true_positive": 11
+        }
+      },
+      "prediction_uses_offline_only_labels": false,
+      "predictions": [
+        {
+          "correct": true,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_enemy_between",
+          "selected_provider_family": "edge_trap_enemy_between",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "protected.planwin.227342c93b11",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "protected.planwin.5fa48b6e0286",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.fence_established",
+          "selected_provider_family": "fence_established",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.02feb8593cc6",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.0b1f2153179b",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.18cfccc9c4c1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.256a3da30f0f",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.2c1d6da27ea1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.326222aefdf1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.388d05197dd9",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.3dca34326fca",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.44938ccb8ab7",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "state.52085d244e9d",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "state.67a88e3b1dd2",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "state.69711173114a",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "state.699f0003a511",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_state_out",
+          "state_id": "state.6e84c77a4520",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.80080a9a826d",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.b09c954a787e",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.b11124d658cf",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_state_out",
+          "state_id": "state.d1f052d2cab2",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_state_out",
+          "state_id": "state.ea634c29ece7",
+          "target_action": "abstain_context_only"
+        }
+      ],
+      "row_count": 21,
+      "runtime_feature_eligible": true,
+      "safe_preservation_recall": 1.0,
+      "switch_contrast_recall": 0.0,
+      "training_targets_use_offline_labels": true
+    },
+    "stage_provider_family_prior_leave_stage_out": {
+      "abstain_recall": 0.0,
+      "accuracy": 0.19047619047619047,
+      "confusion_matrix": {
+        "abstain_context_only": {
+          "abstain_context_only": 0,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 5
+        },
+        "prefer_visible_alternative": {
+          "abstain_context_only": 2,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 3
+        },
+        "preserve_selected_owner": {
+          "abstain_context_only": 7,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 4
+        }
+      },
+      "correct_count": 4,
+      "evaluation_method": "leave_stage_out",
+      "model_id": "stage_provider_family_prior_leave_stage_out",
+      "model_kind": "leave_stage_out_stage_provider_family_prior",
+      "per_class": {
+        "abstain_context_only": {
+          "false_negative": 5,
+          "false_positive": 9,
+          "precision": 0.0,
+          "recall": 0.0,
+          "true_positive": 0
+        },
+        "prefer_visible_alternative": {
+          "false_negative": 5,
+          "false_positive": 0,
+          "precision": null,
+          "recall": 0.0,
+          "true_positive": 0
+        },
+        "preserve_selected_owner": {
+          "false_negative": 7,
+          "false_positive": 8,
+          "precision": 0.3333333333333333,
+          "recall": 0.36363636363636365,
+          "true_positive": 4
+        }
+      },
+      "prediction_uses_offline_only_labels": false,
+      "predictions": [
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_stage_out",
+          "state_id": "state.256a3da30f0f",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_stage_out",
+          "state_id": "state.44938ccb8ab7",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_stage_out",
+          "state_id": "state.80080a9a826d",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_stage_out",
+          "state_id": "state.b09c954a787e",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_stage_out",
+          "state_id": "state.b11124d658cf",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": false,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "leave_stage_out",
+          "state_id": "state.ea634c29ece7",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": false,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.edge_trap_enemy_between",
+          "selected_provider_family": "edge_trap_enemy_between",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "protected.planwin.227342c93b11",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.fence_established",
+          "selected_provider_family": "fence_established",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.02feb8593cc6",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.0b1f2153179b",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": false,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.18cfccc9c4c1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.2c1d6da27ea1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.326222aefdf1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.388d05197dd9",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.3dca34326fca",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": false,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "leave_stage_out",
+          "state_id": "state.6e84c77a4520",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_stage_out",
+          "state_id": "protected.planwin.5fa48b6e0286",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_stage_out",
+          "state_id": "state.52085d244e9d",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_stage_out",
+          "state_id": "state.67a88e3b1dd2",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_stage_out",
+          "state_id": "state.69711173114a",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage6",
+          "split": "leave_stage_out",
+          "state_id": "state.699f0003a511",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "leave_stage_out",
+          "state_id": "state.d1f052d2cab2",
+          "target_action": "preserve_selected_owner"
+        }
+      ],
+      "row_count": 21,
+      "runtime_feature_eligible": true,
+      "safe_preservation_recall": 0.36363636363636365,
+      "switch_contrast_recall": 0.0,
+      "training_targets_use_offline_labels": true
+    },
+    "trace_context_feature_rule": {
+      "abstain_recall": 1.0,
+      "accuracy": 0.9047619047619048,
+      "confusion_matrix": {
+        "abstain_context_only": {
+          "abstain_context_only": 5,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 0
+        },
+        "prefer_visible_alternative": {
+          "abstain_context_only": 0,
+          "prefer_visible_alternative": 3,
+          "preserve_selected_owner": 2
+        },
+        "preserve_selected_owner": {
+          "abstain_context_only": 0,
+          "prefer_visible_alternative": 0,
+          "preserve_selected_owner": 11
+        }
+      },
+      "correct_count": 19,
+      "evaluation_method": "direct_rule_evaluation",
+      "model_id": "trace_context_feature_rule",
+      "model_kind": "fixed_visible_context_rule",
+      "per_class": {
+        "abstain_context_only": {
+          "false_negative": 0,
+          "false_positive": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "true_positive": 5
+        },
+        "prefer_visible_alternative": {
+          "false_negative": 2,
+          "false_positive": 0,
+          "precision": 1.0,
+          "recall": 0.6,
+          "true_positive": 3
+        },
+        "preserve_selected_owner": {
+          "false_negative": 0,
+          "false_positive": 2,
+          "precision": 0.8461538461538461,
+          "recall": 1.0,
+          "true_positive": 11
+        }
+      },
+      "prediction_uses_offline_only_labels": false,
+      "predictions": [
+        {
+          "correct": true,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_enemy_between",
+          "selected_provider_family": "edge_trap_enemy_between",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "protected.planwin.227342c93b11",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "progress_window_failure_contrast_candidate",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "protected.planwin.5fa48b6e0286",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.fence_established",
+          "selected_provider_family": "fence_established",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.02feb8593cc6",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "prefer_visible_alternative",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.0b1f2153179b",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.18cfccc9c4c1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.256a3da30f0f",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.2c1d6da27ea1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.326222aefdf1",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.388d05197dd9",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": false,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.3dca34326fca",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.44938ccb8ab7",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.52085d244e9d",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "prefer_visible_alternative",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.67a88e3b1dd2",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.69711173114a",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "candidate_switch_contrast_seed",
+          "predicted_action": "prefer_visible_alternative",
+          "selected_provider": "krk.edge_trap_close",
+          "selected_provider_family": "edge_trap",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.699f0003a511",
+          "target_action": "prefer_visible_alternative"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage5",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.6e84c77a4520",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.80080a9a826d",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.b09c954a787e",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.b11124d658cf",
+          "target_action": "abstain_context_only"
+        },
+        {
+          "correct": true,
+          "objective_channel": "safe_preservation_contrast_seed",
+          "predicted_action": "preserve_selected_owner",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage6",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.d1f052d2cab2",
+          "target_action": "preserve_selected_owner"
+        },
+        {
+          "correct": true,
+          "objective_channel": "failure_context_without_candidate_seed",
+          "predicted_action": "abstain_context_only",
+          "selected_provider": "krk.stage0_basin",
+          "selected_provider_family": "stage0_basin",
+          "source_stage": "stage4",
+          "split": "direct_rule_evaluation",
+          "state_id": "state.ea634c29ece7",
+          "target_action": "abstain_context_only"
+        }
+      ],
+      "row_count": 21,
+      "runtime_feature_eligible": true,
+      "safe_preservation_recall": 1.0,
+      "switch_contrast_recall": 0.6,
+      "training_targets_use_offline_labels": false
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_provider_suppression": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_selector_objective_benchmark.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v2.json",
+    "reports/strategy_arbitration/krk_selector_objective_seed_probe_v2.json",
+    "reports/krk_ownership_selection_context_dataset_v3.json",
+    "reports/strategy_arbitration/krk_joined_trace_ownership_collection_v0.json",
+    "reports/strategy_arbitration/krk_stage4_joined_trace_ownership_collection_v0.json",
+    "reports/strategy_arbitration/krk_selector_objective_fresh_diversity_collection_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "benchmark_underpowered": false,
+    "best_abstain_recall": 1.0,
+    "best_accuracy": 0.9523809523809523,
+    "best_model": "combined_simple_rule",
+    "best_safe_preservation_recall": 1.0,
+    "best_switch_contrast_recall": 0.8,
+    "model_count": 8,
+    "offline_label_prediction_model_count": 0,
+    "promising_runtime_feature_model_count": 1,
+    "runtime_authorization_row_count": 0,
+    "runtime_feature_eligible_model_count": 6,
+    "runtime_feature_eligible_prediction_count": 126,
+    "seed_probe_status": "selector_objective_seed_probe_v2_ready_for_non_causal_benchmark",
+    "seed_row_count": 21,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "target_action_counts": {
+      "abstain_context_only": 5,
+      "prefer_visible_alternative": 5,
+      "preserve_selected_owner": 11
+    }
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "schema_version": "provider_promotion_eval.v1",
+  "promotion_status": "quarantine",
+  "stage": {
+    "path": "reports/structural_candidates/stage7_post_king_tempo_single_use_on_25_h40.json",
+    "label": "box_shrink",
+    "total": 25,
+    "improved_rate": 1.0,
+    "worsened_rate": 0.0,
+    "mate_rate": 1.0,
+    "max_plies_rate": 0.0,
+    "shadow_candidates": 0,
+    "passed": true,
+    "failure_reasons": []
+  },
+  "stage_baseline": {
+    "path": "reports/structural_candidates/stage7_king_tempo_baseline_25_h40.json",
+    "label": "box_shrink",
+    "total": 25,
+    "improved_rate": 1.0,
+    "worsened_rate": 0.0,
+    "mate_rate": 0.0,
+    "max_plies_rate": 1.0,
+    "shadow_candidates": 50,
+    "passed": false,
+    "failure_reasons": [
+      "mate_rate=0.000 < 0.650",
+      "max_plies_rate=1.000 > 0.250",
+      "shadow_candidates=50 > 0"
+    ]
+  },
+  "target_delta_vs_baseline": {
+    "mate_rate_delta": 1.0,
+    "max_plies_rate_delta": -1.0,
+    "improved_rate_delta": 0.0,
+    "worsened_rate_delta": 0.0,
+    "shadow_candidates_delta": -50
+  },
+  "target_improved_vs_baseline": true,
+  "guardrails": [
+    {
+      "path": "reports/structural_candidates/stage7_post_king_tempo_guard_stage6_drive_50_h40.json",
+      "label": "drive_to_edge",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 1.0,
+      "max_plies_rate": 0.0,
+      "shadow_candidates": 0,
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "path": "reports/structural_candidates/stage7_post_king_tempo_guard_stage5_fence_50_h40.json",
+      "label": "fence_established",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 1.0,
+      "max_plies_rate": 0.0,
+      "shadow_candidates": 0,
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "path": "reports/structural_candidates/stage7_post_king_tempo_guard_stage4_wrong_tempo_50_h40.json",
+      "label": "edge_trap_wrong_tempo",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 0.66,
+      "max_plies_rate": 0.34,
+      "shadow_candidates": 34,
+      "passed": false,
+      "failure_reasons": [
+        "max_plies_rate=0.340 > 0.250",
+        "shadow_candidates=34 > 0"
+      ]
+    }
+  ],
+  "guardrail_controls": [
+    {
+      "path": "reports/structural_candidates/stage7_king_tempo_guard_stage6_drive_50_h40_disabled.json",
+      "label": "drive_to_edge",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 1.0,
+      "max_plies_rate": 0.0,
+      "shadow_candidates": 0,
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "path": "reports/structural_candidates/stage7_king_tempo_guard_stage5_fence_50_h40_disabled.json",
+      "label": "fence_established",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 1.0,
+      "max_plies_rate": 0.0,
+      "shadow_candidates": 0,
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "path": "reports/structural_candidates/stage7_post_king_tempo_guard_stage4_wrong_tempo_50_h40_disabled.json",
+      "label": "edge_trap_wrong_tempo",
+      "total": 50,
+      "improved_rate": 1.0,
+      "worsened_rate": 0.0,
+      "mate_rate": 0.72,
+      "max_plies_rate": 0.28,
+      "shadow_candidates": 28,
+      "passed": false,
+      "failure_reasons": [
+        "max_plies_rate=0.280 > 0.250",
+        "shadow_candidates=28 > 0"
+      ]
+    }
+  ],
+  "guardrail_deltas_vs_control": [
+    {
+      "mate_rate_delta": 0.0,
+      "max_plies_rate_delta": 0.0,
+      "improved_rate_delta": 0.0,
+      "worsened_rate_delta": 0.0,
+      "shadow_candidates_delta": 0,
+      "index": 0,
+      "candidate_path": "reports/structural_candidates/stage7_post_king_tempo_guard_stage6_drive_50_h40.json",
+      "control_path": "reports/structural_candidates/stage7_king_tempo_guard_stage6_drive_50_h40_disabled.json",
+      "regressed_vs_control": false
+    },
+    {
+      "mate_rate_delta": 0.0,
+      "max_plies_rate_delta": 0.0,
+      "improved_rate_delta": 0.0,
+      "worsened_rate_delta": 0.0,
+      "shadow_candidates_delta": 0,
+      "index": 1,
+      "candidate_path": "reports/structural_candidates/stage7_post_king_tempo_guard_stage5_fence_50_h40.json",
+      "control_path": "reports/structural_candidates/stage7_king_tempo_guard_stage5_fence_50_h40_disabled.json",
+      "regressed_vs_control": false
+    },
+    {
+      "mate_rate_delta": -0.05999999999999994,
+      "max_plies_rate_delta": 0.06,
+      "improved_rate_delta": 0.0,
+      "worsened_rate_delta": 0.0,
+      "shadow_candidates_delta": 6,
+      "index": 2,
+      "candidate_path": "reports/structural_candidates/stage7_post_king_tempo_guard_stage4_wrong_tempo_50_h40.json",
+      "control_path": "reports/structural_candidates/stage7_post_king_tempo_guard_stage4_wrong_tempo_50_h40_disabled.json",
+      "regressed_vs_control": true
+    }
+  ],
+  "failures": [
+    {
+      "kind": "guardrail_delta",
+      "mate_rate_delta": -0.05999999999999994,
+      "max_plies_rate_delta": 0.06,
+      "improved_rate_delta": 0.0,
+      "worsened_rate_delta": 0.0,
+      "shadow_candidates_delta": 6,
+      "index": 2,
+      "candidate_path": "reports/structural_candidates/stage7_post_king_tempo_guard_stage4_wrong_tempo_50_h40.json",
+      "control_path": "reports/structural_candidates/stage7_post_king_tempo_guard_stage4_wrong_tempo_50_h40_disabled.json",
+      "regressed_vs_control": true
+    }
+  ]
+}

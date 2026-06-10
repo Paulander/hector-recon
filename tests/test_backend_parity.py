@@ -5,7 +5,7 @@ try:
 except ImportError:
     torch = None
 
-from recon_lite.learning.baseline import BaselineLearner, ComputeBackend, apply_sensor, compute_sensor_xp
+from recon_lite_hector.learning.baseline import BaselineLearner, ComputeBackend, apply_sensor, compute_sensor_xp
 
 @pytest.mark.skipif(torch is None, reason="torch not installed")
 def test_backend_parity_sensor_apply():

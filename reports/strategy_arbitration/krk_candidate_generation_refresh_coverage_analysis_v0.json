@@ -1,0 +1,80 @@
+{
+  "causal_status": "non_causal_candidate_generation_frame_coverage_analysis",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "fold_refresh_sandbox_frames_into_non_causal_strategy_sequence_trace_dataset",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "status": "candidate_generation_refresh_coverage_ready_for_trace_dataset_refresh"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "approved_cells_only": true,
+    "candidate_volume_bound_exercised": true,
+    "capacity_labels_are_not_ownership_labels": true,
+    "exact_capacity_recall_is_sample_limited": false,
+    "guardrails_supported": false,
+    "negative_capacity_suppression_preserved_in_sample": true,
+    "selector_supported": false,
+    "stage_family_context_visible": true
+  },
+  "invalid_frames": [],
+  "missed_approved_positive_capacity_rows": [],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_refresh_coverage_analysis.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_generation_refresh_sandbox_v0.json",
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v3.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "approved_positive_capacity_rows_in_sample": 5,
+    "capacity_evidence_counts": {
+      "positive_capacity": 5,
+      "positive_capacity_scope": 20
+    },
+    "case_count": 3,
+    "emitted_frame_count_by_policy_cell": {
+      "stage5|edge_trap": 19,
+      "stage5|fence_established": 3,
+      "stage5|stage0_basin": 2,
+      "stage6|stage0_basin": 1
+    },
+    "emitted_frame_count_by_provider_family": {
+      "edge_trap": 19,
+      "fence_established": 3,
+      "stage0_basin": 3
+    },
+    "emitted_frame_count_by_stage": {
+      "stage5": 24,
+      "stage6": 1
+    },
+    "emitted_refresh_frame_count": 25,
+    "exact_negative_capacity_exposure_rate": 0.0,
+    "exact_negative_capacity_exposures": 0,
+    "exact_positive_capacity_hits": 5,
+    "exact_positive_capacity_recall": 1.0,
+    "invalid_frame_count": 0,
+    "negative_capacity_rows_in_sample": 5,
+    "positive_capacity_frame_count": 5,
+    "positive_capacity_scope_frame_count": 20,
+    "score_delta_count": 0,
+    "selected_move_delta_count": 0,
+    "selected_provider_delta_count": 0,
+    "stage4_frame_count": 0,
+    "stage7_frame_count": 0,
+    "stage_family_negative_capacity_exposure_rate": 0.0,
+    "stage_family_negative_capacity_exposures": 0,
+    "stage_family_positive_capacity_hits": 5,
+    "stage_family_positive_capacity_recall": 1.0,
+    "truncated_frame_count": 24,
+    "truncation_count": 2
+  }
+}

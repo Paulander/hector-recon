@@ -5,7 +5,7 @@ from pathlib import Path
 import sys
 sys.path.insert(0, "src")
 
-from recon_lite.nodes.stem_cell import StemCellManager
+from recon_lite_hector.nodes.stem_cell import StemCellManager
 
 # Load the experienced hector stem cells
 stem_path = Path("snapshots/krk_bridge_experiment/20260105_163449/experienced_hector/snapshots/stem_cells.json")

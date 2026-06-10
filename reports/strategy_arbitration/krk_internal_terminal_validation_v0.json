@@ -1,0 +1,827 @@
+{
+  "causal_status": "non_causal_validation",
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_internal_terminal_validation.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_internal_terminal_candidates_v0.json",
+    "reports/strategy_arbitration/krk_visible_monitor_terms_v0.json",
+    "reports/strategy_arbitration/krk_strategy_monitor_maturity_gate_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "causal_ready_terminals": [],
+    "recommended_next_step": "broader_evidence_collection_or_internal_monitor_design_review",
+    "strongest_internal_terminal_candidates": [
+      "terminal.krk.local_provider_competition_failed",
+      "terminal.krk.post_plan_stagnation"
+    ],
+    "terminal_count": 4,
+    "validation_record_count": 30
+  },
+  "terminal_validations": [
+    {
+      "causal_use_blocked": true,
+      "failure_precision": 1.0,
+      "generalizes_across_stages": false,
+      "mate_max_plies_unknown_distribution": {
+        "max_plies": 2
+      },
+      "recommended_maturity_status": "internal_terminal_candidate",
+      "record_count": 2,
+      "required_missing_terms": [
+        "current_owner",
+        "alternative_provider_known_mate",
+        "route_conflict"
+      ],
+      "shape": "too_sparse",
+      "source_stage_distribution": {
+        "stage7": 2
+      },
+      "stage5_6_4_count": 0,
+      "stage7_count": 2,
+      "stage7_only": true,
+      "success_precision": 0.0,
+      "terminal_id": "terminal.krk.local_provider_competition_failed",
+      "total_record_count": 33
+    },
+    {
+      "causal_use_blocked": true,
+      "failure_precision": 1.0,
+      "generalizes_across_stages": false,
+      "mate_max_plies_unknown_distribution": {
+        "max_plies": 4
+      },
+      "recommended_maturity_status": "internal_terminal_candidate",
+      "record_count": 4,
+      "required_missing_terms": [
+        "handoff_success_after_plan",
+        "multi_step_progress_required",
+        "repeated_abstract_state"
+      ],
+      "shape": "too_sparse",
+      "source_stage_distribution": {
+        "stage7": 4
+      },
+      "stage5_6_4_count": 0,
+      "stage7_count": 4,
+      "stage7_only": true,
+      "success_precision": 0.0,
+      "terminal_id": "terminal.krk.post_plan_stagnation",
+      "total_record_count": 33
+    },
+    {
+      "causal_use_blocked": true,
+      "failure_precision": 1.0,
+      "generalizes_across_stages": false,
+      "mate_max_plies_unknown_distribution": {
+        "max_plies": 1,
+        "unknown": 1
+      },
+      "recommended_maturity_status": "monitoring_only",
+      "record_count": 2,
+      "required_missing_terms": [
+        "box_shrink_goal_satisfied",
+        "validated_handoff_target_available"
+      ],
+      "shape": "too_sparse",
+      "source_stage_distribution": {
+        "stage7": 2
+      },
+      "stage5_6_4_count": 0,
+      "stage7_count": 2,
+      "stage7_only": true,
+      "success_precision": 0.0,
+      "terminal_id": "terminal.krk.box_shrink_owner_exit_pressure",
+      "total_record_count": 33
+    },
+    {
+      "causal_use_blocked": true,
+      "failure_precision": 0.8421052631578947,
+      "generalizes_across_stages": true,
+      "mate_max_plies_unknown_distribution": {
+        "mate": 3,
+        "max_plies": 16,
+        "unknown": 3
+      },
+      "recommended_maturity_status": "monitoring_only",
+      "record_count": 22,
+      "required_missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "shape": "moderate",
+      "source_stage_distribution": {
+        "stage4": 2,
+        "stage5": 6,
+        "stage6": 5,
+        "stage7": 9
+      },
+      "stage5_6_4_count": 13,
+      "stage7_count": 9,
+      "stage7_only": false,
+      "success_precision": 0.15789473684210525,
+      "terminal_id": "terminal.krk.repair_needed_monitor",
+      "total_record_count": 33
+    }
+  ],
+  "validation_records": [
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.ac0b7ed500ea",
+      "missing_terms": [
+        "current_owner",
+        "alternative_provider_known_mate",
+        "route_conflict"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "local_provider_competition_failed",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.ac0b7ed500ea",
+      "terminal_id": "terminal.krk.local_provider_competition_failed"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.ff6652c8832c",
+      "missing_terms": [
+        "current_owner",
+        "alternative_provider_known_mate",
+        "route_conflict"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "local_provider_competition_failed",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.ff6652c8832c",
+      "terminal_id": "terminal.krk.local_provider_competition_failed"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.4e34ad0b2f29",
+      "missing_terms": [
+        "handoff_success_after_plan",
+        "multi_step_progress_required",
+        "repeated_abstract_state"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "post_plan_stagnation",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.4e34ad0b2f29",
+      "terminal_id": "terminal.krk.post_plan_stagnation"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.b6796dfb62ff",
+      "missing_terms": [
+        "handoff_success_after_plan",
+        "multi_step_progress_required",
+        "repeated_abstract_state"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "post_plan_stagnation",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.b6796dfb62ff",
+      "terminal_id": "terminal.krk.post_plan_stagnation"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.0afbf11aa123",
+      "missing_terms": [
+        "handoff_success_after_plan",
+        "multi_step_progress_required",
+        "repeated_abstract_state"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "post_plan_stagnation",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.0afbf11aa123",
+      "terminal_id": "terminal.krk.post_plan_stagnation"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.38aed2f35911",
+      "missing_terms": [
+        "handoff_success_after_plan",
+        "multi_step_progress_required",
+        "repeated_abstract_state"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "post_plan_stagnation",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.38aed2f35911",
+      "terminal_id": "terminal.krk.post_plan_stagnation"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.0926f12f8e8f",
+      "missing_terms": [
+        "box_shrink_goal_satisfied",
+        "validated_handoff_target_available"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.0926f12f8e8f",
+      "terminal_id": "terminal.krk.box_shrink_owner_exit_pressure"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.0afbf11aa123",
+      "missing_terms": [
+        "box_shrink_goal_satisfied",
+        "validated_handoff_target_available"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "post_plan_stagnation",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.0afbf11aa123",
+      "terminal_id": "terminal.krk.box_shrink_owner_exit_pressure"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.069e81a609ed",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.069e81a609ed",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.0926f12f8e8f",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.0926f12f8e8f",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.4a464b782ecb",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.4a464b782ecb",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.4e34ad0b2f29",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "post_plan_stagnation",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.4e34ad0b2f29",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.b6796dfb62ff",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "post_plan_stagnation",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.b6796dfb62ff",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.0afbf11aa123",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "post_plan_stagnation",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.0afbf11aa123",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.38aed2f35911",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "post_plan_stagnation",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.38aed2f35911",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.ac0b7ed500ea",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "local_provider_competition_failed",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.ac0b7ed500ea",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.ff6652c8832c",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "local_provider_competition_failed",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage7",
+      "state_id": "state.ff6652c8832c",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "high",
+      "family_id": "state.7bd8961882ad",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage5",
+      "state_id": "state.7bd8961882ad",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "high",
+      "family_id": "state.2c1d6da27ea1",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage5",
+      "state_id": "state.2c1d6da27ea1",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "high",
+      "family_id": "state.2c1d6da27ea1",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage5",
+      "state_id": "state.2c1d6da27ea1",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.02feb8593cc6",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage5",
+      "state_id": "state.02feb8593cc6",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.326222aefdf1",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage5",
+      "state_id": "state.326222aefdf1",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.02feb8593cc6",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage5",
+      "state_id": "state.02feb8593cc6",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.699f0003a511",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.699f0003a511",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.699f0003a511",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.699f0003a511",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.699f0003a511",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.256a3da30f0f",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage4",
+      "state_id": "state.256a3da30f0f",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "confidence": "replay_free_existing_artifact",
+      "false_negative_risk": "unknown",
+      "false_positive_risk": "unknown",
+      "family_id": "state.256a3da30f0f",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "notes": "Non-causal validation record; does not authorize runtime behavior.",
+      "schema_version": "internal_terminal_validation_record.v1",
+      "source_terms_met": [
+        "box_area_no_longer_decision_relevant",
+        "cut_or_fence_restored_after_move",
+        "king_support_improves_after_move",
+        "safe_repair_move_exists"
+      ],
+      "stage": "stage4",
+      "state_id": "state.256a3da30f0f",
+      "terminal_id": "terminal.krk.repair_needed_monitor"
+    }
+  ]
+}

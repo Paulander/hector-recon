@@ -1,0 +1,65 @@
+{
+  "behavior_changing_selector_implemented": false,
+  "causal_status": "future_behavior_sandbox_review_packet_only",
+  "decision": {
+    "implementation_authorized_by_this_packet": false,
+    "recommended_next_step": "human_review_before_any_default_off_behavior_sandbox_approval",
+    "runtime_changes_allowed_by_this_packet": false,
+    "selector_runtime_ready": false,
+    "status": "refined_selector_initial_owner_behavior_review_packet_ready"
+  },
+  "evidence": {
+    "abstain_missed_switch_count": 1,
+    "capacity_label_used_as_ownership_label_count": 0,
+    "continuation_recommendation_count": 0,
+    "preserve_on_failure_count": 0,
+    "runtime_behavior_changed": false,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "switch_on_safe_owner_count": 0,
+    "unsafe_if_causal_count": 0
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "proposed_future_sandbox": {
+    "abstain_context_only_effect": "no_op",
+    "allowed_behavior_if_separately_approved": "bounded_switch_to_visible_alternative_only_when_recommendation_is_prefer_visible_alternative",
+    "continuation_recommendations_allowed": false,
+    "default_off_required": true,
+    "direct_request": false,
+    "implementation_status": "not_implemented",
+    "initial_owner_only": true,
+    "name": "default_off_initial_owner_selector_behavior_sandbox",
+    "preserve_selected_owner_effect": "no_op",
+    "score_delta": 0.0
+  },
+  "required_vetoes_before_implementation": [
+    "no_switch_if_not_initial_owner_decision",
+    "no_switch_if_recommendation_is_preserve_selected_owner",
+    "no_switch_if_recommendation_is_abstain_context_only",
+    "no_switch_if_visible_alternative_missing",
+    "no_switch_if_capacity_label_would_be_treated_as_ownership_label",
+    "no_switch_if_stage7_or_training_row",
+    "no_switch_if_source_or_explanation_terms_missing"
+  ],
+  "residual_risks": [
+    "small initial-owner sample",
+    "one abstain missed-switch row reduces target recall but is not unsafe as no-op",
+    "capacity evidence must remain provenance-only, not ownership evidence",
+    "first behavior-changing selector sandbox would require explicit approval"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_provider_suppression": false,
+  "runtime_score_changes": false,
+  "schema_version": "krk_refined_selector_initial_owner_behavior_review_packet.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_refined_selector_initial_owner_next_gate_v0.json",
+    "reports/strategy_arbitration/krk_refined_selector_initial_owner_recommendation_analysis_v0.json",
+    "reports/strategy_arbitration/krk_refined_selector_initial_owner_observability_sandbox_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

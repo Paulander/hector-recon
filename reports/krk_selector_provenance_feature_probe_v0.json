@@ -1,0 +1,159 @@
+{
+  "baselines": [
+    {
+      "abstain_or_fallback_count": 0,
+      "accuracy": 0.8333333333333334,
+      "correct": 35,
+      "name": "provider_id_loo",
+      "total": 42
+    },
+    {
+      "abstain_or_fallback_count": 0,
+      "accuracy": 0.8333333333333334,
+      "correct": 35,
+      "name": "provider_family_loo",
+      "total": 42
+    },
+    {
+      "abstain_or_fallback_count": 0,
+      "accuracy": 0.8333333333333334,
+      "correct": 35,
+      "name": "provider_maturity_loo",
+      "total": 42
+    },
+    {
+      "abstain_or_fallback_count": 0,
+      "accuracy": 0.8333333333333334,
+      "correct": 35,
+      "name": "provider_source_stage_loo",
+      "total": 42
+    },
+    {
+      "abstain_or_fallback_count": 0,
+      "accuracy": 0.8333333333333334,
+      "correct": 35,
+      "name": "validated_role_loo",
+      "total": 42
+    },
+    {
+      "abstain_or_fallback_count": 0,
+      "accuracy": 0.6666666666666666,
+      "correct": 28,
+      "name": "protected_overlay_loo",
+      "total": 42
+    },
+    {
+      "abstain_or_fallback_count": 0,
+      "accuracy": 0.8333333333333334,
+      "correct": 35,
+      "name": "family_maturity_loo",
+      "total": 42
+    }
+  ],
+  "best_baseline": {
+    "accuracy": 0.8333333333333334,
+    "name": "provider_id_loo"
+  },
+  "blocked_next_work": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "raw_provider_id_runtime_prior",
+    "provider_support_adapter",
+    "score_bonus_or_penalty",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training"
+  ],
+  "causal_status": "non_causal_probe",
+  "decision": {
+    "raw_provider_id_runtime_prior_allowed": false,
+    "recommended_next_step": "architecture_review_selector_objective_before_more_labels",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "provenance_features_explain_provider_prior_non_causal"
+  },
+  "group_summaries": {
+    "provider_family": [
+      {
+        "key": "provider_family",
+        "label_counts": {
+          "negative": 24,
+          "positive": 3
+        },
+        "positive_rate": 0.1111111111111111,
+        "total": 27,
+        "value": "edge_trap"
+      },
+      {
+        "key": "provider_family",
+        "label_counts": {
+          "negative": 4,
+          "positive": 11
+        },
+        "positive_rate": 0.7333333333333333,
+        "total": 15,
+        "value": "stage0_basin"
+      }
+    ],
+    "provider_maturity": [
+      {
+        "key": "provider_maturity",
+        "label_counts": {
+          "negative": 4,
+          "positive": 11
+        },
+        "positive_rate": 0.7333333333333333,
+        "total": 15,
+        "value": "foundation_frozen"
+      },
+      {
+        "key": "provider_maturity",
+        "label_counts": {
+          "negative": 24,
+          "positive": 3
+        },
+        "positive_rate": 0.1111111111111111,
+        "total": 27,
+        "value": "validated_low_plasticity"
+      }
+    ],
+    "provider_source_stage": [
+      {
+        "key": "provider_source_stage",
+        "label_counts": {
+          "negative": 4,
+          "positive": 11
+        },
+        "positive_rate": 0.7333333333333333,
+        "total": 15,
+        "value": "stage0"
+      },
+      {
+        "key": "provider_source_stage",
+        "label_counts": {
+          "negative": 24,
+          "positive": 3
+        },
+        "positive_rate": 0.1111111111111111,
+        "total": 27,
+        "value": "stage5"
+      }
+    ]
+  },
+  "interpretation": [
+    "Provider provenance/maturity features can reproduce the current provider-prior signal when they distinguish foundation-frozen stage0_basin from validated edge-trap providers.",
+    "This remains non-causal because the dataset is small and selected-playout labels can encode horizon/control artifacts.",
+    "The result supports explicit provenance fields in evidence records, not a runtime provider prior."
+  ],
+  "label_counts": {
+    "negative": 28,
+    "positive": 14
+  },
+  "row_count": 42,
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "schema_version": "krk_selector_provenance_feature_probe.v0",
+  "source_artifact": "reports/krk_selector_provenance_feature_dataset_v0.json",
+  "target_kind": "selected_playout_success"
+}

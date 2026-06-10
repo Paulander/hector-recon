@@ -6,8 +6,11 @@ Stage 1: Backchain using goal memories from Stage 0 (move closer to mate-in-1 go
 """
 
 import argparse
+import importlib.util
+import json
 import pickle
 import random
+import sys
 from pathlib import Path
 from typing import Dict, List, Any
 
@@ -18,7 +21,7 @@ try:
 except ImportError:
     torch = None
 
-from recon_lite.learning.baseline import (
+from recon_lite_hector.learning.baseline import (
     BaselineLearner, Terminal, TerminalRole,
     compute_sensor_xp, should_promote_sensor,
     extract_actuator_patterns, find_similar_actuator, enforce_actuator_cap,
@@ -26,7 +29,165 @@ from recon_lite.learning.baseline import (
     TransitionData, apply_sensor,
     SensorSpec,
 )
-from recon_lite_chess.baseline_teacher import KRKTeacher, generate_krk_mate_in_1_position
+from recon_lite_chess.baseline_teacher import KRKTeacher, generate_krk_mate_in_1_position, can_deliver_mate
+from recon_lite_chess.training.krk_landmarks import (
+    landmark_reward,
+    select_stage_position,
+    specs_through,
+    worst_reply_reward,
+)
+from recon_lite_chess.training.adaptive_curriculum import (
+    StagePassCriteria,
+    make_eval_result,
+    record_curriculum_event,
+)
+
+
+PRUNING_PROFILES = {"explore", "consolidate", "frozen"}
+
+
+def _load_script_module(name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec is not None and spec.loader is not None
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+_BASELINE_TO_RECON = None
+_KRK_ENTRY_EVAL = None
+_STAGE1_EVAL = None
+_LANDMARK_EVAL = None
+
+
+def _baseline_to_recon_module():
+    global _BASELINE_TO_RECON
+    if _BASELINE_TO_RECON is None:
+        _BASELINE_TO_RECON = _load_script_module(
+            "baseline_to_recon_adaptive",
+            Path(__file__).parent / "baseline_to_recon.py",
+        )
+    return _BASELINE_TO_RECON
+
+
+def _stage1_eval_module():
+    global _STAGE1_EVAL
+    if _STAGE1_EVAL is None:
+        _STAGE1_EVAL = _load_script_module(
+            "test_stage1_backchain_adaptive",
+            Path(__file__).parent / "test_stage1_backchain.py",
+        )
+    return _STAGE1_EVAL
+
+
+def _krk_entry_eval_module():
+    global _KRK_ENTRY_EVAL
+    if _KRK_ENTRY_EVAL is None:
+        _KRK_ENTRY_EVAL = _load_script_module(
+            "test_krk_entry_adaptive",
+            Path(__file__).parent / "test_krk_entry.py",
+        )
+    return _KRK_ENTRY_EVAL
+
+
+def _landmark_eval_module():
+    global _LANDMARK_EVAL
+    if _LANDMARK_EVAL is None:
+        _LANDMARK_EVAL = _load_script_module(
+            "test_krk_landmark_progress_adaptive",
+            Path(__file__).parent / "test_krk_landmark_progress.py",
+        )
+    return _LANDMARK_EVAL
+
+
+def export_learner_cycle_snapshot(
+    learner: BaselineLearner,
+    output_dir: Path,
+    *,
+    stage_name: str,
+    cycle: int,
+    transitions: List[TransitionData],
+    stats: Dict[str, Any],
+) -> Path:
+    """Write a lightweight learner topology snapshot for growth animation."""
+    nodes: Dict[str, Any] = {}
+    edges: Dict[str, Any] = {}
+
+    mature = learner.get_mature_sensors()
+    mature_by_id = {s.id: s for s in mature}
+    mature_by_index = {i: s for i, s in enumerate(mature)}
+
+    for sensor in learner.sensors:
+        nodes[f"sensor_{sensor.id}"] = {
+            "id": f"sensor_{sensor.id}",
+            "type": "TERMINAL",
+            "group": "sensor" if sensor.is_mature else "candidate_sensor",
+            "meta": {
+                "stage": int(sensor.stage),
+                "xp": float(sensor.xp),
+                "is_mature": bool(sensor.is_mature),
+                "activations": int(sensor.activations),
+                "cycles_alive": int(sensor.cycles_alive),
+                "readout_type": sensor.sensor_spec.readout_type,
+                "feature_count": int(np.sum(sensor.sensor_spec.feature_mask)),
+            },
+        }
+
+    for actuator in learner.actuators:
+        act_id = f"actuator_{actuator.id}"
+        nodes[act_id] = {
+            "id": act_id,
+            "type": "TERMINAL",
+            "group": "actuator",
+            "meta": {
+                "stage": int(actuator.stage),
+                "curriculum_label": getattr(actuator, "curriculum_label", None),
+                "xp": float(actuator.xp),
+                "sensor_count": int(len(actuator.actuator_spec.sensor_indices)),
+                "goal_delta_norm": float(np.linalg.norm(actuator.actuator_spec.goal_delta)),
+                "activations": int(actuator.activations),
+                "cycles_alive": int(actuator.cycles_alive),
+            },
+        }
+        for raw_idx in actuator.actuator_spec.sensor_indices:
+            sensor = mature_by_id.get(int(raw_idx)) or mature_by_index.get(int(raw_idx))
+            if sensor is None:
+                continue
+            edge_key = f"sensor_{sensor.id}->{act_id}:DELTA"
+            edges[edge_key] = {
+                "src": f"sensor_{sensor.id}",
+                "dst": act_id,
+                "type": "DELTA",
+                "weight": 1.0 + max(0.0, float(actuator.xp)),
+            }
+
+    total_transitions = len(transitions)
+    positive_transitions = sum(1 for t in transitions if t.label == 1)
+    avg_reward = float(np.mean([t.reward for t in transitions])) if transitions else 0.0
+    snapshot = {
+        "stage_name": stage_name,
+        "cycle": cycle,
+        "nodes": nodes,
+        "edges": edges,
+        "metrics": {
+            "sensors": len(learner.sensors),
+            "mature_sensors": len(mature),
+            "actuators": len(learner.actuators),
+            "goal_memories": len(learner.goal_memories),
+            "positive_transitions": positive_transitions,
+            "total_transitions": total_transitions,
+            "positive_rate": positive_transitions / total_transitions if total_transitions else 0.0,
+            "avg_transition_reward": avg_reward,
+            **stats,
+        },
+    }
+
+    stage_dir = output_dir / "topology_snapshots" / stage_name
+    stage_dir.mkdir(parents=True, exist_ok=True)
+    path = stage_dir / f"cycle_{cycle:04d}.json"
+    path.write_text(json.dumps(snapshot, indent=2), encoding="utf-8")
+    return path
 
 
 def generate_random_krk_position() -> chess.Board:
@@ -46,6 +207,46 @@ def generate_random_krk_position() -> chess.Board:
         if board.is_check():
             continue
         return board
+
+
+def is_forced_mate_in_2(board: chess.Board) -> bool:
+    """Return True if side-to-move (white) has a move that forces mate-in-1 next ply."""
+    if board.turn != chess.WHITE:
+        return False
+    if can_deliver_mate(board):
+        # Exclude mate-in-1 from Stage-1 generation.
+        return False
+
+    for move in board.legal_moves:
+        b1 = board.copy()
+        b1.push(move)
+        if b1.is_checkmate():
+            # Still mate-in-1 line, not Stage-1 target.
+            continue
+        replies = list(b1.legal_moves)
+        if not replies:
+            continue
+
+        # Forced: after every black reply, white can mate in 1.
+        forced = True
+        for reply in replies:
+            b2 = b1.copy()
+            b2.push(reply)
+            if not can_deliver_mate(b2):
+                forced = False
+                break
+        if forced:
+            return True
+    return False
+
+
+def generate_stage1_mate_in_2_position(max_tries: int = 5000) -> chess.Board:
+    """Generate a legal KRK position that is forced mate-in-2 for white."""
+    for _ in range(max_tries):
+        b = generate_random_krk_position()
+        if is_forced_mate_in_2(b):
+            return b
+    raise RuntimeError(f"Could not generate forced mate-in-2 after {max_tries} attempts")
 
 
 def enemy_corner_bucket(board: chess.Board) -> int | None:
@@ -105,6 +306,12 @@ def goal_signal_sensor_ids(learner: BaselineLearner, goal_feature_idx: int) -> L
 
 def compute_sensor_vectors_batch(learner: BaselineLearner, v_batch: Any, sensor_ids: List[int]) -> Any:
     """Compute sensor vectors for a batch of feature vectors in a fixed id order."""
+    if not sensor_ids:
+        batch_len = len(v_batch)
+        if learner.backend.use_torch:
+            return torch.zeros((batch_len, 0), device=learner.backend.device)
+        return np.zeros((batch_len, 0), dtype=np.float32)
+
     outputs = learner.batch_apply_sensors(v_batch)
     
     # results[i] = [s_id_0_output, s_id_1_output, ...]
@@ -129,6 +336,7 @@ def label_transitions_by_goal(
     board: chess.Board,
     goal_vectors: List[np.ndarray],
     sensor_ids: List[int],
+    teacher: KRKTeacher | None = None,
     eps: float = 1e-3,
     lookahead_black: bool = True,
     opponent_mode: str = "max",
@@ -137,7 +345,10 @@ def label_transitions_by_goal(
     
     Optimized: Batches all boards (v1 and v2) for a single GPU pass.
     """
-    teacher = KRKTeacher()
+    if not sensor_ids or not goal_vectors:
+        return []
+
+    teacher = teacher or KRKTeacher()
     v0 = teacher.features(board)
     
     # 1. Collect all board feature vectors for current move alternatives
@@ -238,6 +449,411 @@ def label_transitions_by_goal(
     return transitions
 
 
+def label_transitions_by_landmark(
+    teacher: KRKTeacher,
+    board: chess.Board,
+    label: str,
+    eps: float = 1e-3,
+    lookahead_black: bool = True,
+) -> List[TransitionData]:
+    """Label legal moves by explicit KRK landmark progress."""
+    transitions: List[TransitionData] = []
+    v0 = teacher.features(board)
+    for move in board.legal_moves:
+        b1 = board.copy()
+        b1.push(move)
+        v1 = teacher.features(b1)
+        reward = worst_reply_reward(board, move, label, use_black_reply=lookahead_black)
+        transitions.append(
+            TransitionData(
+                v0=v0,
+                v1=v1,
+                label=1 if reward > eps else 0,
+                action=move,
+                reward=reward,
+            )
+        )
+    return transitions
+
+
+def _goal_vectors_for_labels(
+    learner: BaselineLearner,
+    labels: List[str],
+    sensor_ids: List[int],
+) -> List[np.ndarray]:
+    return [
+        g.s0
+        for g in learner.goal_memories
+        if g.label in labels and g.s0.shape == (len(sensor_ids),)
+    ]
+
+
+def lower_stage_goal_sensor_ids(learner: BaselineLearner) -> List[int]:
+    """Prefer stable sensor basis from stage0_basin, fallback to mate_in_1."""
+    for label in ("stage0_basin", "mate_in_1"):
+        for goal in learner.goal_memories:
+            if goal.label == label and getattr(goal, "sensor_ids", None):
+                return list(goal.sensor_ids)
+    return [s.id for s in learner.get_mature_sensors()]
+
+
+def _weighted_min_goal_distance(
+    learner: BaselineLearner,
+    feature_vector: np.ndarray,
+    goal_vectors: List[np.ndarray],
+    sensor_ids: List[int],
+) -> float:
+    if not goal_vectors or not sensor_ids:
+        return float("inf")
+    s_vec = compute_sensor_vectors_batch(learner, feature_vector[None, :], sensor_ids)[0]
+    if learner.backend.use_torch:
+        s_vec = s_vec.detach().cpu().numpy()
+    sensor_by_id = {s.id: s for s in learner.sensors}
+    weights = np.array(
+        [1.0 + max(0.0, float(getattr(sensor_by_id.get(sid), "xp", 0.0))) for sid in sensor_ids],
+        dtype=np.float32,
+    )
+    cur = np.asarray(s_vec, dtype=np.float32)
+    cur = cur / (np.sqrt(np.sum(weights * (cur ** 2))) + 1e-6)
+    best = None
+    for goal in goal_vectors:
+        goal_np = goal.detach().cpu().numpy() if learner.backend.use_torch and hasattr(goal, "detach") else goal
+        g = np.asarray(goal_np, dtype=np.float32)
+        if g.shape != cur.shape:
+            continue
+        g = g / (np.sqrt(np.sum(weights * (g ** 2))) + 1e-6)
+        dist = float(np.sqrt(np.sum(weights * ((cur - g) ** 2))))
+        if best is None or dist < best:
+            best = dist
+    return best if best is not None else float("inf")
+
+
+def label_transitions_by_combined_landmark_goal(
+    learner: BaselineLearner,
+    teacher: KRKTeacher,
+    board: chess.Board,
+    label: str,
+    sensor_ids: List[int],
+    eps: float = 1e-3,
+    lookahead_black: bool = True,
+    landmark_weight: float = 0.45,
+    basin_weight: float = 0.55,
+) -> List[TransitionData]:
+    """Label moves by Stage-2 landmark progress plus lower-stage basin progress."""
+    transitions: List[TransitionData] = []
+    v0 = teacher.features(board)
+    goal_vectors = _goal_vectors_for_labels(learner, ["stage0_basin"], sensor_ids)
+    if not goal_vectors:
+        goal_vectors = _goal_vectors_for_labels(learner, ["mate_in_1"], sensor_ids)
+    d0 = _weighted_min_goal_distance(learner, v0, goal_vectors, sensor_ids)
+
+    def outcome_reward(outcome: chess.Board) -> float:
+        lm = landmark_reward(board, outcome, label)
+        basin_progress = 0.0
+        if d0 != float("inf") and goal_vectors:
+            d1 = _weighted_min_goal_distance(learner, teacher.features(outcome), goal_vectors, sensor_ids)
+            if d1 != float("inf"):
+                basin_progress = d0 - d1
+        reward = (landmark_weight * lm) + (basin_weight * basin_progress)
+        if outcome.is_checkmate():
+            reward += 2.0
+        if outcome.is_stalemate():
+            reward -= 1.0
+        if len(outcome.pieces(chess.ROOK, chess.WHITE)) == 0:
+            reward -= 1.0
+        return float(reward)
+
+    for move in board.legal_moves:
+        b1 = board.copy()
+        b1.push(move)
+        v1 = teacher.features(b1)
+        if lookahead_black and not b1.is_game_over():
+            replies = list(b1.legal_moves)
+            rewards = []
+            for reply in replies:
+                b2 = b1.copy()
+                b2.push(reply)
+                rewards.append(outcome_reward(b2))
+            reward = min(rewards) if rewards else outcome_reward(b1)
+        else:
+            reward = outcome_reward(b1)
+        transitions.append(
+            TransitionData(v0=v0, v1=v1, label=1 if reward > eps else 0, action=move, reward=reward)
+        )
+    return transitions
+
+
+def add_goal_memory_from_vector(
+    learner: BaselineLearner,
+    teacher: KRKTeacher,
+    feature_vector: np.ndarray,
+    label: str,
+    min_mature_for_goals: int,
+    current_goal_sensor_ids: List[int] | None = None,
+) -> List[int] | None:
+    """Record a stage-specific goal memory in the current mature sensor basis."""
+    if len(learner.get_mature_sensors()) < min_mature_for_goals:
+        return current_goal_sensor_ids
+    sensor_ids = current_goal_sensor_ids
+    if sensor_ids is None:
+        sensor_ids = [s.id for s in learner.get_mature_sensors()]
+    if not sensor_ids:
+        return sensor_ids
+    s0 = compute_sensor_vectors_batch(learner, feature_vector[None, :], sensor_ids)[0]
+    learner.add_goal_memory(s0, label=label, sensor_ids=sensor_ids)
+    return sensor_ids
+
+
+def usable_goal_memory_count(
+    learner: BaselineLearner,
+    label: str,
+    sensor_ids: List[int] | None,
+) -> int:
+    """Count goal memories that match the current sensor basis."""
+    if not sensor_ids:
+        return 0
+    return sum(
+        1
+        for goal in learner.goal_memories
+        if goal.label == label and goal.s0.shape == (len(sensor_ids),)
+    )
+
+
+def ensure_stage0_goal_memories(
+    learner: BaselineLearner,
+    teacher: KRKTeacher,
+    args: argparse.Namespace,
+    sensor_ids: List[int] | None,
+) -> List[int] | None:
+    """Seed mate-in-1 goal memories once Stage 0 has a usable mature basis."""
+    if len(learner.get_mature_sensors()) < args.min_mature_for_goals:
+        return sensor_ids
+    if sensor_ids is None:
+        sensor_ids = [s.id for s in learner.get_mature_sensors()]
+    if not sensor_ids or usable_goal_memory_count(learner, "mate_in_1", sensor_ids) > 0:
+        return sensor_ids
+
+    targets = [chess.A1, chess.A8, chess.H1, chess.H8]
+    sample_count = min(max(8, len(targets)), max(8, min(args.samples_per_cycle, 32)))
+    for idx in range(sample_count):
+        try:
+            board = generate_krk_mate_in_1_position(target_corner=targets[idx % len(targets)])
+        except RuntimeError:
+            board = generate_krk_mate_in_1_position()
+        vector = teacher.features(board)
+        s0 = compute_sensor_vectors_batch(learner, vector[None, :], sensor_ids)[0]
+        learner.add_goal_memory(s0, label="mate_in_1", sensor_ids=sensor_ids)
+    return sensor_ids
+
+
+def protected_goal_sensor_ids(learner: BaselineLearner, allow_prune_foundation: bool = False) -> set[int]:
+    """Return sensor IDs that should not be pruned because goal memories depend on them."""
+    if allow_prune_foundation:
+        return set()
+    protected: set[int] = set()
+    for goal in learner.goal_memories:
+        if getattr(goal, "sensor_ids", None):
+            protected.update(int(sid) for sid in goal.sensor_ids)
+    return protected
+
+
+def pruning_profile_for_cycle(cycle: int, total_cycles: int, has_goal_signal: bool) -> str:
+    """Default curriculum pruning schedule."""
+    if total_cycles <= 0:
+        return "explore"
+    if not has_goal_signal:
+        return "explore"
+    return "explore" if cycle < int(total_cycles * 0.3) else "consolidate"
+
+
+def pass_criteria_for_label(label: str) -> StagePassCriteria:
+    """Return default mastery criteria for a curriculum label."""
+    if label == "mate_in_1":
+        return StagePassCriteria(min_mate_rate=0.98, max_no_move_rate=0.01)
+    if label == "stage0_basin":
+        return StagePassCriteria(
+            min_improved_rate=0.95,
+            min_optimal_rate=0.90,
+            max_worsened_rate=0.02,
+            min_avg_reward=0.0,
+        )
+    if label.startswith("edge_trap"):
+        return StagePassCriteria(
+            min_improved_rate=0.70,
+            max_worsened_rate=0.20,
+            min_avg_reward=0.0,
+            min_mate_playout_rate=0.65,
+            max_draw_rate=0.10,
+            max_max_plies_rate=0.25,
+        )
+    if label in {"fence_established", "drive_to_edge", "box_shrink", "opposition_tempo", "full_krk"}:
+        return StagePassCriteria(
+            min_improved_rate=0.70,
+            max_worsened_rate=0.20,
+            min_avg_reward=0.0,
+            min_mate_playout_rate=0.65,
+            max_draw_rate=0.10,
+            max_max_plies_rate=0.25,
+        )
+    return StagePassCriteria(min_improved_rate=0.70, max_worsened_rate=0.20, min_avg_reward=0.0)
+
+
+def _jsonable_stats(stats: Dict[str, Any]) -> Dict[str, Any]:
+    """Drop verbose/non-JSON helper data from evaluator stats."""
+    payload = dict(stats)
+    payload.pop("records", None)
+    return payload
+
+
+def save_learner_checkpoint(learner: BaselineLearner, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "wb") as fh:
+        pickle.dump(learner, fh)
+
+
+def compile_checkpoint_for_eval(learner: BaselineLearner, output_dir: Path, label: str, cycle: int) -> tuple[Path, Path]:
+    """Save and compile a temporary learner checkpoint for runtime evaluation."""
+    eval_dir = output_dir / "adaptive_eval" / label / f"cycle_{cycle:04d}"
+    learner_path = eval_dir / "learner.pkl"
+    topology_path = eval_dir / "topology.json"
+    save_learner_checkpoint(learner, learner_path)
+    _baseline_to_recon_module().compile_baseline_to_topology(learner_path, topology_path)
+    return learner_path, topology_path
+
+
+def adaptive_stage_state() -> Dict[str, Any]:
+    return {"best_score": -float("inf"), "best_cycle": None, "patience_used": 0, "passed": False}
+
+
+def record_and_checkpoint_adaptive_eval(
+    *,
+    learner: BaselineLearner,
+    output_dir: Path,
+    label: str,
+    cycle: int,
+    metrics: Dict[str, Any],
+    state: Dict[str, Any],
+    patience: int,
+) -> bool:
+    """Record eval, save best checkpoint, and return True when stage passes."""
+    criteria = pass_criteria_for_label(label)
+    result = make_eval_result(label, cycle, _jsonable_stats(metrics), criteria)
+    history_path = output_dir / "curriculum_history.json"
+
+    improved = result.score > float(state.get("best_score", -float("inf"))) + 1e-9
+    if improved:
+        state["best_score"] = result.score
+        state["best_cycle"] = cycle
+        state["patience_used"] = 0
+        best_path = output_dir / "best_learner.pkl"
+        stage_best_path = output_dir / "best_by_stage" / f"{label}.pkl"
+        save_learner_checkpoint(learner, best_path)
+        save_learner_checkpoint(learner, stage_best_path)
+    else:
+        state["patience_used"] = int(state.get("patience_used", 0)) + 1
+        best_path = output_dir / "best_learner.pkl"
+        stage_best_path = output_dir / "best_by_stage" / f"{label}.pkl"
+
+    record_curriculum_event(
+        history_path,
+        {
+            "type": "stage_eval",
+            "stage_label": label,
+            "cycle": cycle,
+            "result": result,
+            "best_score": state.get("best_score"),
+            "best_cycle": state.get("best_cycle"),
+            "patience_used": state.get("patience_used"),
+            "patience": patience,
+            "best_checkpoint": str(best_path),
+            "stage_best_checkpoint": str(stage_best_path),
+        },
+    )
+    if result.passed:
+        state["passed"] = True
+        return True
+    return False
+
+
+def should_adaptive_eval(args: argparse.Namespace, cycle: int) -> bool:
+    return (
+        bool(args.adaptive_curriculum)
+        and cycle + 1 >= args.min_cycles_per_stage
+        and ((cycle + 1) % max(1, args.eval_every) == 0)
+    )
+
+
+def evaluate_stage0_checkpoint(learner: BaselineLearner, args: argparse.Namespace, cycle: int) -> Dict[str, Any]:
+    _learner_path, topology_path = compile_checkpoint_for_eval(learner, args.output_dir, "mate_in_1", cycle)
+    mod = _krk_entry_eval_module()
+    graph = mod.load_krk_entry_topology(topology_path)
+    stats = mod.run_evaluation(graph, num_positions=max(10, int(args.adaptive_eval_samples)))
+    stats["confidences"] = [float(v) for v in stats.get("confidences", [])]
+    for key in ("region_total", "region_fail", "corner_fail"):
+        if key in stats:
+            stats[key] = {str(k): int(v) for k, v in stats[key].items()}
+    return stats
+
+
+def evaluate_stage1_checkpoint(learner: BaselineLearner, args: argparse.Namespace, cycle: int) -> Dict[str, Any]:
+    learner_path, topology_path = compile_checkpoint_for_eval(learner, args.output_dir, "stage0_basin", cycle)
+    return _stage1_eval_module().evaluate_stage1_backchain(
+        topology_path,
+        learner_path,
+        samples=max(10, int(args.adaptive_eval_samples)),
+        seed=args.seed or 7,
+        stage_filter=1,
+        position_mode=args.stage1_position_mode,
+        verbose=False,
+    )
+
+
+def evaluate_landmark_checkpoint(
+    learner: BaselineLearner,
+    args: argparse.Namespace,
+    cycle: int,
+    spec_label: str,
+    source_stage_names: tuple[str, ...],
+    stage_filter: int,
+) -> Dict[str, Any]:
+    _learner_path, topology_path = compile_checkpoint_for_eval(learner, args.output_dir, spec_label, cycle)
+    eval_kwargs = {
+        "topology": topology_path,
+        "label": spec_label,
+        "samples": max(10, int(args.adaptive_eval_samples)),
+        "seed": args.seed or 7,
+        "stage_filter": stage_filter,
+        "position_mode": "curriculum",
+        "source_stage_names": source_stage_names,
+        "playout_max_plies": int(args.adaptive_playout_max_plies),
+        "black_policy": "adversarial",
+        "verbose": False,
+    }
+    composition_profile = getattr(args, "adaptive_composition_profile", "none")
+    if composition_profile and composition_profile != "none":
+        eval_kwargs["composition_profile"] = composition_profile
+    adaptive_stagnation_breaker_king_support_bonus = float(
+        getattr(args, "adaptive_stagnation_breaker_king_support_bonus", 0.0) or 0.0
+    )
+    if adaptive_stagnation_breaker_king_support_bonus > 0.0:
+        eval_kwargs["stagnation_breaker_king_support_bonus"] = (
+            adaptive_stagnation_breaker_king_support_bonus
+        )
+    parallel_workers = 1
+    chunk_size = 25
+    if getattr(args, "adaptive_use_profile_validation_defaults", False):
+        eval_kwargs["enable_diagnostic_caches"] = True
+        parallel_workers = 8
+    landmark_eval = _landmark_eval_module()
+    if parallel_workers > 1 and int(eval_kwargs.get("samples", 0) or 0) > chunk_size:
+        return landmark_eval.evaluate_landmark_progress_parallel(
+            parallel_workers=parallel_workers,
+            chunk_size=chunk_size,
+            **eval_kwargs,
+        )
+    return landmark_eval.evaluate_landmark_progress(**eval_kwargs)
+
+
 def update_learner_from_transitions(
     learner: BaselineLearner,
     transitions: List[TransitionData],
@@ -246,10 +862,32 @@ def update_learner_from_transitions(
     delta_eps: float,
     top_k: int,
     goal_sensor_ids: List[int] | None = None,
+    curriculum_label: str | None = None,
+    pruning_profile: str = "explore",
+    protected_sensor_ids: set[int] | None = None,
+    prevent_cross_label_actuator_merge: bool = False,
 ) -> Dict[str, Any]:
     """Shared update logic for sensors/actuators."""
     if not transitions:
-        return {"newly_promoted": [], "pruned_count": 0, "newly_created_actuators": 0}
+        counts = {
+            "sensors": len(learner.sensors),
+            "actuators": len(learner.actuators),
+        }
+        return {
+            "newly_promoted": [],
+            "pruned_count": 0,
+            "newly_created_actuators": 0,
+            "pruned_sensor_ids": [],
+            "pruned_actuator_ids": [],
+            "merged_actuator_ids": [],
+            "candidate_actuator_count": 0,
+            "pre_prune_counts": counts,
+            "post_prune_counts": counts,
+            "pruning_profile": pruning_profile,
+        }
+    if pruning_profile not in PRUNING_PROFILES:
+        raise ValueError(f"Unknown pruning_profile: {pruning_profile}")
+    protected_sensor_ids = protected_sensor_ids or set()
 
     # Prepare batches
     v0_batch = [t.v0 for t in transitions]
@@ -314,15 +952,43 @@ def update_learner_from_transitions(
             newly_promoted.append(sensor.id)
 
     initial_count = len(learner.sensors)
+    pre_prune_counts = {
+        "sensors": len(learner.sensors),
+        "actuators": len(learner.actuators),
+    }
+    if pruning_profile == "frozen":
+        xp_prune_threshold = -float("inf")
+        min_cycles_before_prune = 10**9
+    elif pruning_profile == "consolidate":
+        xp_prune_threshold = 0.25
+        min_cycles_before_prune = 3
+    else:
+        xp_prune_threshold = 0.05
+        min_cycles_before_prune = 5
+
+    pruned_sensor_ids = [
+        s.id
+        for s in learner.sensors
+        if (
+            s.id not in protected_sensor_ids
+            and not s.is_mature
+            and s.xp <= xp_prune_threshold
+            and s.cycles_alive >= min_cycles_before_prune
+        )
+    ]
     learner.sensors = [
         s for s in learner.sensors
-        if s.xp > 0.1 or s.cycles_alive < 3 or s.is_mature
+        if s.id not in set(pruned_sensor_ids)
     ]
     pruned_count = initial_count - len(learner.sensors)
 
     # Actuator extraction from positives
     mature_sensors = learner.get_mature_sensors()
     newly_created_actuators = 0
+    merged_actuator_ids: List[int] = []
+    cross_label_merge_guard_skipped = 0
+    candidate_actuator_count = 0
+    pruned_actuator_ids: List[int] = []
     if len(mature_sensors) >= 3:
         positive_trans = [t for t in transitions if t.label == 1]
         if positive_trans:
@@ -334,9 +1000,19 @@ def update_learner_from_transitions(
                 backend=learner.backend,
                 goal_sensor_ids=goal_sensor_ids,
             )
+            candidate_actuator_count = len(actuator_specs)
             for spec in actuator_specs:
+                merge_pool = learner.actuators
+                if prevent_cross_label_actuator_merge and curriculum_label is not None:
+                    before_merge_pool = len(merge_pool)
+                    merge_pool = [
+                        actuator
+                        for actuator in learner.actuators
+                        if getattr(actuator, "curriculum_label", None) in {None, curriculum_label}
+                    ]
+                    cross_label_merge_guard_skipped += before_merge_pool - len(merge_pool)
                 existing = find_similar_actuator(
-                    learner.actuators,
+                    merge_pool,
                     spec,
                     similarity_threshold=0.9,
                     delta_eps=delta_eps,
@@ -348,6 +1024,9 @@ def update_learner_from_transitions(
                     )
                     existing.xp += 0.1
                     existing.activations += 1
+                    if curriculum_label is not None and not getattr(existing, "curriculum_label", None):
+                        existing.curriculum_label = curriculum_label
+                    merged_actuator_ids.append(existing.id)
                 else:
                     actuator = Terminal(
                         id=learner._next_actuator_id,
@@ -356,24 +1035,43 @@ def update_learner_from_transitions(
                         actuator_spec=spec
                     )
                     actuator.xp = float(np.mean(np.abs(spec.goal_delta)))
+                    actuator.curriculum_label = curriculum_label
                     learner._next_actuator_id += 1
                     learner.actuators.append(actuator)
                     newly_created_actuators += 1
 
+            before_cap_ids = {a.id for a in learner.actuators}
             learner.actuators, pruned_actuators = enforce_actuator_cap(
                 learner.actuators,
                 stage=learner.stage,
                 max_actuators=max_actuators_per_stage,
             )
+            after_stage_cap_ids = {a.id for a in learner.actuators}
             learner.actuators, _ = enforce_actuator_cap_total(
                 learner.actuators,
                 max_total=max_actuators_total,
+            )
+            after_total_cap_ids = {a.id for a in learner.actuators}
+            pruned_actuator_ids = sorted(
+                (before_cap_ids - after_stage_cap_ids)
+                | (after_stage_cap_ids - after_total_cap_ids)
             )
 
     return {
         "newly_promoted": newly_promoted,
         "pruned_count": pruned_count,
         "newly_created_actuators": newly_created_actuators,
+        "pruned_sensor_ids": pruned_sensor_ids,
+        "pruned_actuator_ids": pruned_actuator_ids,
+        "merged_actuator_ids": sorted(set(merged_actuator_ids)),
+        "cross_label_merge_guard_skipped": cross_label_merge_guard_skipped,
+        "candidate_actuator_count": candidate_actuator_count,
+        "pre_prune_counts": pre_prune_counts,
+        "post_prune_counts": {
+            "sensors": len(learner.sensors),
+            "actuators": len(learner.actuators),
+        },
+        "pruning_profile": pruning_profile,
     }
 
 def main() -> None:
@@ -381,6 +1079,34 @@ def main() -> None:
     parser.add_argument("--load-learner", type=Path, help="Path to existing learner pickle to start from")
     parser.add_argument("--stage0-cycles", type=int, default=50)
     parser.add_argument("--stage1-cycles", type=int, default=50)
+    parser.add_argument("--max-curriculum-stage", type=int, default=1,
+                        help="Run explicit KRK landmark stages after Stage 1 up to this index")
+    parser.add_argument("--start-curriculum-stage", type=int, default=2,
+                        help="First explicit KRK landmark stage to run when max-curriculum-stage > 1")
+    parser.add_argument("--landmark-cycles", type=int, default=10,
+                        help="Cycles per explicit KRK landmark stage when --max-curriculum-stage > 1")
+    parser.add_argument("--adaptive-curriculum", action="store_true", default=False,
+                        help="Train stages until pass/plateau criteria instead of fixed cycle counts")
+    parser.add_argument("--eval-every", type=int, default=5,
+                        help="Adaptive mode: evaluate every N cycles after min-cycles-per-stage")
+    parser.add_argument("--patience", type=int, default=3,
+                        help="Adaptive mode: stop a stage after this many eval windows without improvement")
+    parser.add_argument("--min-cycles-per-stage", type=int, default=10,
+                        help="Adaptive mode: minimum cycles before a stage can pass")
+    parser.add_argument("--max-cycles-per-stage", type=int, default=80,
+                        help="Adaptive mode: maximum cycles per stage")
+    parser.add_argument("--adaptive-eval-samples", type=int, default=50,
+                        help="Adaptive mode: samples per validation evaluation")
+    parser.add_argument("--adaptive-playout-max-plies", type=int, default=80,
+                        help="Adaptive mode: max plies for landmark playout validation")
+    parser.add_argument("--adaptive-composition-profile",
+                        choices=["none", "handoff_composition_v1"],
+                        default="none",
+                        help="Optional named handoff-composition profile for adaptive landmark validation")
+    parser.add_argument("--adaptive-use-profile-validation-defaults", action="store_true",
+                        help="Enable diagnostic validation defaults associated with the adaptive composition profile")
+    parser.add_argument("--adaptive-stagnation-breaker-king-support-bonus", type=float, default=0.0,
+                        help="Opt-in extra validation bonus for visible loop-breaking king support moves")
     parser.add_argument("--samples-per-cycle", type=int, default=100)
     parser.add_argument("--initial-sensors", type=int, default=20)
     parser.add_argument("--spawn-interval", type=int, default=10)
@@ -392,13 +1118,22 @@ def main() -> None:
     parser.add_argument("--min-mature-for-goals", type=int, default=8)
     parser.add_argument("--max-actuators-per-stage", type=int, default=30)
     parser.add_argument("--max-actuators-total", type=int, default=0)
+    parser.add_argument("--prevent-cross-label-actuator-merge", action="store_true", default=False,
+                        help="When training overlay candidates, do not merge new-stage actuator patterns into older labelled providers")
     parser.add_argument("--delta-eps", type=float, default=0.22)
     parser.add_argument("--top-k", type=int, default=3)
     parser.add_argument("--stage1-reward-scale", type=float, default=1.0,
                         help="Scale factor applied to Stage-1 dense rewards before XP updates")
+    parser.add_argument("--feature-set", choices=["legacy", "krk_rich_v1"], default="legacy",
+                        help="Feature vector used by baseline sensors")
+    parser.add_argument("--allow-prune-foundation", action="store_true", default=False,
+                        help="Allow pruning sensors referenced by active goal memories")
     parser.add_argument("--device", type=str, default="auto", help="Device (cpu, cuda, auto, numpy)")
     parser.add_argument("--batch-size", type=int, default=256, help="Batch size for sensor application")
-    parser.add_argument("--goal-feature-idx", type=int, default=13,
+    parser.add_argument("--seed", type=int, default=None, help="Optional RNG seed for replayable runs")
+    parser.add_argument("--snapshot-every", type=int, default=1,
+                        help="Write lightweight topology snapshot every N cycles (0 disables)")
+    parser.add_argument("--goal-feature-idx", type=int, default=None,
                         help="Index of the goal feature bit (e.g. is_checkmate)")
     parser.add_argument("--seed-goal-sensor", action="store_true", default=True,
                         help="Seed a goal sensor template (on by default)")
@@ -406,17 +1141,42 @@ def main() -> None:
                         help="Disable seeding the goal sensor template")
     parser.add_argument("--stage0-balance-corners", action="store_true", default=False,
                         help="Balance Stage 0 samples across corners for mate-in-1 positions")
+    parser.add_argument(
+        "--stage1-position-mode",
+        type=str,
+        default="mate_in_2",
+        choices=["mate_in_2", "random", "hybrid"],
+        help="Stage-1 sampling source: forced mate-in-2, random KRK, or hybrid mix",
+    )
+    parser.add_argument(
+        "--stage1-hybrid-random-ratio",
+        type=float,
+        default=0.2,
+        help="When stage1-position-mode=hybrid, probability of sampling random KRK",
+    )
     args = parser.parse_args()
 
-    teacher = KRKTeacher()
+    if args.seed is not None:
+        random.seed(args.seed)
+        np.random.seed(args.seed)
+        if torch is not None:
+            torch.manual_seed(args.seed)
+
+    teacher = KRKTeacher(feature_set=args.feature_set)
     
     if args.load_learner and args.load_learner.exists():
         print(f"Loading existing learner from: {args.load_learner}")
         with open(args.load_learner, 'rb') as f:
             learner = pickle.load(f)
+        if getattr(learner, "feature_dim", teacher.feature_dim) != teacher.feature_dim:
+            raise ValueError(
+                "Loaded learner feature dimension does not match selected feature set: "
+                f"learner={getattr(learner, 'feature_dim', None)} "
+                f"teacher={teacher.feature_dim} feature_set={args.feature_set}"
+            )
         # Update device if requested
         if args.device != learner.device:
-            from recon_lite.learning.baseline import ComputeBackend
+            from recon_lite_hector.learning.baseline import ComputeBackend
             learner.device = args.device
             learner.backend = ComputeBackend(device=args.device)
         print(f"  Loaded {len(learner.sensors)} sensors, {len(learner.actuators)} actuators")
@@ -431,14 +1191,20 @@ def main() -> None:
         for _ in range(args.initial_sensors):
             learner.sensors.append(learner.spawn_sensor())
         print(f"Created new learner on {args.device}")
+    learner.feature_set = args.feature_set
+    learner.feature_names = tuple(getattr(teacher, "feature_names", ()))
+    learner.goal_feature_index = int(getattr(teacher, "goal_feature_index", 13))
 
-    goal_feature_idx = args.goal_feature_idx or get_goal_feature_index(teacher)
+    goal_feature_idx = args.goal_feature_idx if args.goal_feature_idx is not None else get_goal_feature_index(teacher)
     if args.seed_goal_sensor:
         # Seed if not already present
         if not goal_signal_sensor_ids(learner, goal_feature_idx):
             seed_goal_sensor(learner, goal_feature_idx)
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
+    if args.adaptive_curriculum:
+        history_path = args.output_dir / "curriculum_history.json"
+        history_path.write_text(json.dumps({"events": []}, indent=2) + "\n", encoding="utf-8")
 
     goal_sensor_ids: List[int] | None = None
 
@@ -447,7 +1213,9 @@ def main() -> None:
         print("Stage 0: Mate-in-1")
         print("=" * 70)
         
-        for cycle in range(args.stage0_cycles):
+        stage0_cycles = args.max_cycles_per_stage if args.adaptive_curriculum else args.stage0_cycles
+        stage0_state = adaptive_stage_state()
+        for cycle in range(stage0_cycles):
             transitions = []
             corner_targets = []
             if args.stage0_balance_corners:
@@ -491,7 +1259,29 @@ def main() -> None:
                 delta_eps=args.delta_eps,
                 top_k=args.top_k,
                 goal_sensor_ids=goal_signal_sensor_ids(learner, goal_feature_idx),
+                curriculum_label="mate_in_1",
+                pruning_profile=pruning_profile_for_cycle(
+                    cycle,
+                    stage0_cycles,
+                    bool(learner.goal_memories),
+                ),
+                protected_sensor_ids=protected_goal_sensor_ids(
+                    learner,
+                    allow_prune_foundation=args.allow_prune_foundation,
+                ),
+                prevent_cross_label_actuator_merge=args.prevent_cross_label_actuator_merge,
             )
+            goal_sensor_ids = ensure_stage0_goal_memories(learner, teacher, args, goal_sensor_ids)
+
+            if args.snapshot_every and cycle % args.snapshot_every == 0:
+                export_learner_cycle_snapshot(
+                    learner,
+                    args.output_dir,
+                    stage_name="stage0_mate_in_1",
+                    cycle=cycle,
+                    transitions=transitions,
+                    stats=stats,
+                )
 
             if cycle % 10 == 0 or stats["newly_promoted"] or stats["newly_created_actuators"]:
                 mature = len(learner.get_mature_sensors())
@@ -501,6 +1291,35 @@ def main() -> None:
             if cycle % args.spawn_interval == 0 and cycle > 0:
                 for _ in range(args.sensors_per_spawn):
                     learner.sensors.append(learner.spawn_sensor())
+
+            if should_adaptive_eval(args, cycle):
+                if usable_goal_memory_count(learner, "mate_in_1", goal_sensor_ids) == 0:
+                    print(
+                        f"Adaptive Stage 0 eval deferred at cycle {cycle}: "
+                        "no usable mate_in_1 goal memories yet."
+                    )
+                    continue
+                metrics = evaluate_stage0_checkpoint(learner, args, cycle)
+                if record_and_checkpoint_adaptive_eval(
+                    learner=learner,
+                    output_dir=args.output_dir,
+                    label="mate_in_1",
+                    cycle=cycle,
+                    metrics=metrics,
+                    state=stage0_state,
+                    patience=args.patience,
+                ):
+                    print(f"Adaptive Stage 0 passed at cycle {cycle}")
+                    break
+                if stage0_state["patience_used"] >= args.patience:
+                    print(f"Adaptive Stage 0 plateaued at cycle {cycle}; stopping curriculum.")
+                    args.stage1_cycles = 0
+                    args.max_curriculum_stage = 1
+                    break
+        if args.adaptive_curriculum and not stage0_state.get("passed", False):
+            print("Adaptive Stage 0 did not pass; stopping before Stage 1.")
+            args.stage1_cycles = 0
+            args.max_curriculum_stage = 1
     else:
         print(f"Skipping Stage 0 (Learner stage: {learner.stage}, Cycles requested: {args.stage0_cycles})")
 
@@ -511,10 +1330,43 @@ def main() -> None:
     if goal_sensor_ids is None:
         goal_sensor_ids = [s.id for s in learner.get_mature_sensors()]
 
-    for cycle in range(args.stage1_cycles):
+    usable_goal_memories = [
+        g for g in learner.goal_memories
+        if g.label == "mate_in_1" and goal_sensor_ids and g.s0.shape == (len(goal_sensor_ids),)
+    ]
+    stage1_requested = args.stage1_cycles > 0
+    if args.stage1_cycles > 0 and (not goal_sensor_ids or not usable_goal_memories):
+        print(
+            "Skipping Stage 1: Stage 0 did not produce mature sensors and mate_in_1 "
+            "goal prototypes. Increase --stage0-cycles/--samples-per-cycle or lower "
+            "--min-mature-for-goals for exploratory runs."
+        )
+        args.stage1_cycles = 0
+
+    stage1_cycles = args.max_cycles_per_stage if args.adaptive_curriculum and args.stage1_cycles > 0 else args.stage1_cycles
+    stage1_state = adaptive_stage_state()
+    for cycle in range(stage1_cycles):
         transitions = []
+        stage1_gen_fallbacks = 0
         for _ in range(args.samples_per_cycle):
-            b0 = generate_random_krk_position()
+            if args.stage1_position_mode == "random":
+                b0 = generate_random_krk_position()
+            elif args.stage1_position_mode == "hybrid":
+                if random.random() < args.stage1_hybrid_random_ratio:
+                    b0 = generate_random_krk_position()
+                else:
+                    try:
+                        b0 = generate_stage1_mate_in_2_position()
+                    except RuntimeError:
+                        stage1_gen_fallbacks += 1
+                        b0 = generate_random_krk_position()
+            else:
+                # Default: curated Stage-1 should be mate-in-2 and close to Stage-0 basin.
+                try:
+                    b0 = generate_stage1_mate_in_2_position()
+                except RuntimeError:
+                    stage1_gen_fallbacks += 1
+                    b0 = generate_random_krk_position()
             goal_vectors = [
                 g.s0 for g in learner.goal_memories
                 if g.label == "mate_in_1" and g.s0.shape == (len(goal_sensor_ids),)
@@ -524,6 +1376,7 @@ def main() -> None:
                 b0,
                 goal_vectors,
                 goal_sensor_ids,
+                teacher=teacher,
                 lookahead_black=True,
                 opponent_mode="max",
             )
@@ -531,6 +1384,17 @@ def main() -> None:
                 for t in stage_transitions:
                     t.reward *= float(args.stage1_reward_scale)
             transitions.extend(stage_transitions)
+
+        stage1_goal_sensor_ids: List[int] | None = None
+        for t in (t for t in transitions if t.label == 1):
+            stage1_goal_sensor_ids = add_goal_memory_from_vector(
+                learner,
+                teacher,
+                t.v1,
+                label="stage0_basin",
+                min_mature_for_goals=args.min_mature_for_goals,
+                current_goal_sensor_ids=stage1_goal_sensor_ids,
+            )
 
         stats = update_learner_from_transitions(
             learner,
@@ -540,16 +1404,190 @@ def main() -> None:
             delta_eps=args.delta_eps,
             top_k=args.top_k,
             goal_sensor_ids=goal_signal_sensor_ids(learner, goal_feature_idx),
+            curriculum_label="stage0_basin",
+            pruning_profile=pruning_profile_for_cycle(
+                cycle,
+                stage1_cycles,
+                any(g.label == "stage0_basin" for g in learner.goal_memories),
+            ),
+            protected_sensor_ids=protected_goal_sensor_ids(
+                learner,
+                allow_prune_foundation=args.allow_prune_foundation,
+            ),
+            prevent_cross_label_actuator_merge=args.prevent_cross_label_actuator_merge,
         )
+
+        if args.snapshot_every and cycle % args.snapshot_every == 0:
+            export_learner_cycle_snapshot(
+                learner,
+                args.output_dir,
+                stage_name="stage1_backchain",
+                cycle=cycle,
+                transitions=transitions,
+                stats=stats,
+            )
 
         if cycle % 10 == 0 or stats["newly_promoted"] or stats["newly_created_actuators"]:
             mature = len(learner.get_mature_sensors())
             print(f"Cycle {cycle:3d}: sensors={len(learner.sensors)} (mature={mature}) "
                   f"actuators={len(learner.actuators)} goal_prototypes={len(learner.goal_memories)}")
+            if stage1_gen_fallbacks:
+                print(f"  Stage-1 generation fallbacks to random KRK: {stage1_gen_fallbacks}")
 
         if cycle % args.spawn_interval == 0 and cycle > 0:
             for _ in range(args.sensors_per_spawn):
                 learner.sensors.append(learner.spawn_sensor())
+
+        if should_adaptive_eval(args, cycle):
+            metrics = evaluate_stage1_checkpoint(learner, args, cycle)
+            if record_and_checkpoint_adaptive_eval(
+                learner=learner,
+                output_dir=args.output_dir,
+                label="stage0_basin",
+                cycle=cycle,
+                metrics=metrics,
+                state=stage1_state,
+                patience=args.patience,
+            ):
+                print(f"Adaptive Stage 1 passed at cycle {cycle}")
+                break
+            if stage1_state["patience_used"] >= args.patience:
+                print(f"Adaptive Stage 1 plateaued at cycle {cycle}; stopping before landmark stages.")
+                args.max_curriculum_stage = 1
+                break
+    if args.adaptive_curriculum and stage1_requested and not stage1_state.get("passed", False):
+        print("Adaptive Stage 1 did not pass; stopping before landmark stages.")
+        args.max_curriculum_stage = 1
+
+    landmark_specs = [
+        spec for spec in specs_through(args.max_curriculum_stage)
+        if spec.stage_index >= args.start_curriculum_stage
+    ]
+    for spec in landmark_specs:
+        print("=" * 70)
+        print(f"Stage {spec.stage_index}: {spec.label}")
+        print("=" * 70)
+        learner.stage = spec.stage_index
+        stage_goal_sensor_ids: List[int] | None = None
+        landmark_cycles = args.max_cycles_per_stage if args.adaptive_curriculum else args.landmark_cycles
+        landmark_state = adaptive_stage_state()
+
+        for cycle in range(landmark_cycles):
+            transitions = []
+            stage_gen_fallbacks = 0
+            for _ in range(args.samples_per_cycle):
+                try:
+                    b0 = select_stage_position(spec.source_stage_names)
+                    if b0.turn != chess.WHITE or not b0.is_valid() or b0.is_game_over():
+                        raise ValueError("stale or unsuitable KRK curriculum position")
+                except Exception:
+                    stage_gen_fallbacks += 1
+                    b0 = generate_random_krk_position()
+                if spec.label.startswith("edge_trap"):
+                    transitions.extend(
+                        label_transitions_by_combined_landmark_goal(
+                            learner,
+                            teacher,
+                            b0,
+                            label=spec.label,
+                            sensor_ids=lower_stage_goal_sensor_ids(learner),
+                            lookahead_black=True,
+                        )
+                    )
+                else:
+                    transitions.extend(
+                        label_transitions_by_landmark(
+                            teacher,
+                            b0,
+                            label=spec.label,
+                            lookahead_black=True,
+                        )
+                    )
+
+            positive_count = 0
+            for t in (t for t in transitions if t.label == 1):
+                stage_goal_sensor_ids = add_goal_memory_from_vector(
+                    learner,
+                    teacher,
+                    t.v1,
+                    label=spec.label,
+                    min_mature_for_goals=args.min_mature_for_goals,
+                    current_goal_sensor_ids=stage_goal_sensor_ids,
+                )
+                positive_count += 1
+                if positive_count >= min(20, args.max_goals):
+                    break
+
+            stats = update_learner_from_transitions(
+                learner,
+                transitions,
+                max_actuators_per_stage=args.max_actuators_per_stage,
+                max_actuators_total=args.max_actuators_total,
+                delta_eps=args.delta_eps,
+                top_k=args.top_k,
+                goal_sensor_ids=None,
+                curriculum_label=spec.label,
+                pruning_profile=pruning_profile_for_cycle(
+                    cycle,
+                    landmark_cycles,
+                    any(g.label == spec.label for g in learner.goal_memories),
+                ),
+                protected_sensor_ids=protected_goal_sensor_ids(
+                    learner,
+                    allow_prune_foundation=args.allow_prune_foundation,
+                ),
+                prevent_cross_label_actuator_merge=args.prevent_cross_label_actuator_merge,
+            )
+
+            if args.snapshot_every and cycle % args.snapshot_every == 0:
+                export_learner_cycle_snapshot(
+                    learner,
+                    args.output_dir,
+                    stage_name=f"stage{spec.stage_index}_{spec.label}",
+                    cycle=cycle,
+                    transitions=transitions,
+                    stats=stats,
+                )
+
+            if cycle % 10 == 0 or stats["newly_promoted"] or stats["newly_created_actuators"]:
+                mature = len(learner.get_mature_sensors())
+                print(
+                    f"Cycle {cycle:3d}: sensors={len(learner.sensors)} (mature={mature}) "
+                    f"actuators={len(learner.actuators)} goal_prototypes={len(learner.goal_memories)} "
+                    f"profile={stats['pruning_profile']}"
+                )
+                if stage_gen_fallbacks:
+                    print(f"  Stage generation fallbacks to random KRK: {stage_gen_fallbacks}")
+
+            if cycle % args.spawn_interval == 0 and cycle > 0:
+                for _ in range(args.sensors_per_spawn):
+                    learner.sensors.append(learner.spawn_sensor())
+
+            if should_adaptive_eval(args, cycle):
+                metrics = evaluate_landmark_checkpoint(
+                    learner,
+                    args,
+                    cycle,
+                    spec.label,
+                    spec.source_stage_names,
+                    spec.stage_index,
+                )
+                if record_and_checkpoint_adaptive_eval(
+                    learner=learner,
+                    output_dir=args.output_dir,
+                    label=spec.label,
+                    cycle=cycle,
+                    metrics=metrics,
+                    state=landmark_state,
+                    patience=args.patience,
+                ):
+                    print(f"Adaptive stage {spec.label} passed at cycle {cycle}")
+                    break
+                if landmark_state["patience_used"] >= args.patience:
+                    print(f"Adaptive stage {spec.label} plateaued at cycle {cycle}; stopping curriculum.")
+                    break
+        if args.adaptive_curriculum and not landmark_state.get("passed", False):
+            break
 
     # Save learner pickle
     args.save_learner.parent.mkdir(parents=True, exist_ok=True)

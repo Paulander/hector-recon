@@ -1,0 +1,61 @@
+{
+  "causal_status": "non_causal_future_collection_review_packet_only",
+  "decision": {
+    "collection_run_allowed": false,
+    "label_run_allowed": false,
+    "recommended_next_step": "prepare_or_review_a_fresh_bounded_manifest_before_any_additional_collection",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "blocked_needs_human_approval"
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_protected_plan_window_failure_contrast_followup_review_packet.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_collection_result_v0.json",
+    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_integration_v0.json",
+    "reports/strategy_arbitration/krk_sequence_policy_after_protected_failure_contrast_refresh_v0.json",
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "execute_now": false,
+    "forbidden_next_steps": [
+      "runtime_selector",
+      "routing_or_score_change",
+      "provider_suppression",
+      "default_behavior_change",
+      "stage7_promotion",
+      "stage8_training",
+      "runtime_dtm_or_tablebase",
+      "gameplay_time_topology_mutation",
+      "stage4_runtime_sandbox",
+      "new_collection_without_fresh_explicit_approval"
+    ],
+    "integrated_new_failure_count": 0,
+    "minimum_new_unique_failures_needed": 4,
+    "new_collection_approved_by_this_packet": false,
+    "prior_collection_conversion_failure_count": 0,
+    "prior_collection_conversion_positive_count": 6,
+    "prior_collection_output_count": 6,
+    "prior_collection_status": "collection_complete_underpowered",
+    "replay_free_recovery_row_count": 0,
+    "requires_fresh_manifest_or_scope_review": true,
+    "requires_new_explicit_approval": true,
+    "review_packet_only": true,
+    "review_scope": "future protected plan-window failure-contrast collection only",
+    "runtime_authorization_row_count": 0,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0
+  }
+}

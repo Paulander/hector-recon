@@ -4,7 +4,7 @@
 import chess
 
 print("=== Graph Building Test ===")
-from recon_lite.models.registry import TopologyRegistry
+from recon_lite_hector.models.registry import TopologyRegistry
 from recon_lite_chess.graph.builder import build_graph_from_topology
 
 registry = TopologyRegistry("topologies/kpk_topology.json")

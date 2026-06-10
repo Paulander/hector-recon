@@ -380,6 +380,13 @@
       text-transform: uppercase;
     }
 
+    .gate-name-wide {
+      width: 64px;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
     .gate-fill {
       flex: 1;
       height: 8px;
@@ -392,6 +399,21 @@
       height: 100%;
       background: var(--accent);
       transition: width 0.3s;
+    }
+
+    .gate-value {
+      width: 44px;
+      font-size: 0.72rem;
+      text-align: right;
+      color: var(--text-secondary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .router-mode {
+      margin-top: 4px;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
     }
 
     @media (max-width: 900px) {
@@ -463,18 +485,74 @@
             <div class="gate-fill">
               <div id="gate-kpk" class="gate-fill-inner" style="width:0%"></div>
             </div>
+            <span id="gate-kpk-val" class="gate-value">0.00</span>
           </div>
           <div class="gate-bar">
             <span class="gate-name">KQK</span>
             <div class="gate-fill">
               <div id="gate-kqk" class="gate-fill-inner" style="width:0%"></div>
             </div>
+            <span id="gate-kqk-val" class="gate-value">0.00</span>
           </div>
           <div class="gate-bar">
             <span class="gate-name">KRK</span>
             <div class="gate-fill">
               <div id="gate-krk" class="gate-fill-inner" style="width:0%"></div>
             </div>
+            <span id="gate-krk-val" class="gate-value">0.00</span>
+          </div>
+        </div>
+
+        <div class="gate-display">
+          <h3>Continuous Router</h3>
+          <div id="router-mode" class="router-mode">Mode: --</div>
+
+          <div class="gate-bar">
+            <span class="gate-name-wide">Signal KPK</span>
+            <div class="gate-fill"><div id="router-signal-kpk" class="gate-fill-inner" style="width:0%"></div></div>
+            <span id="router-signal-kpk-val" class="gate-value">0.00</span>
+          </div>
+          <div class="gate-bar">
+            <span class="gate-name-wide">Signal KQK</span>
+            <div class="gate-fill"><div id="router-signal-kqk" class="gate-fill-inner" style="width:0%"></div></div>
+            <span id="router-signal-kqk-val" class="gate-value">0.00</span>
+          </div>
+          <div class="gate-bar">
+            <span class="gate-name-wide">Signal KRK</span>
+            <div class="gate-fill"><div id="router-signal-krk" class="gate-fill-inner" style="width:0%"></div></div>
+            <span id="router-signal-krk-val" class="gate-value">0.00</span>
+          </div>
+
+          <div class="gate-bar">
+            <span class="gate-name-wide">Weight KPK</span>
+            <div class="gate-fill"><div id="router-weight-kpk" class="gate-fill-inner" style="width:0%"></div></div>
+            <span id="router-weight-kpk-val" class="gate-value">0.00</span>
+          </div>
+          <div class="gate-bar">
+            <span class="gate-name-wide">Weight KQK</span>
+            <div class="gate-fill"><div id="router-weight-kqk" class="gate-fill-inner" style="width:0%"></div></div>
+            <span id="router-weight-kqk-val" class="gate-value">0.00</span>
+          </div>
+          <div class="gate-bar">
+            <span class="gate-name-wide">Weight KRK</span>
+            <div class="gate-fill"><div id="router-weight-krk" class="gate-fill-inner" style="width:0%"></div></div>
+            <span id="router-weight-krk-val" class="gate-value">0.00</span>
+          </div>
+
+          <div class="gate-bar">
+            <span class="gate-name-wide">Score KPK</span>
+            <div class="gate-fill"><div id="router-score-kpk" class="gate-fill-inner" style="width:0%"></div></div>
+            <span id="router-score-kpk-val" class="gate-value">0.00</span>
+          </div>
+          <div class="gate-bar">
+            <span class="gate-name-wide">Score KQK</span>
+            <div class="gate-fill"><div id="router-score-kqk" class="gate-fill-inner" style="width:0%"></div></div>
+            <span id="router-score-kqk-val" class="gate-value">0.00</span>
+          </div>
+          <div class="gate-bar">
+            <span class="gate-name-wide">Score KRK</span>
+            <div class="gate-fill"><div id="router-score-krk" class="gate-fill-inner" style="width:0%"></div></div>
+            <span id="router-score-krk-val" class="gate-value">0.00</span>
           </div>
         </div>
       </div>
@@ -1009,9 +1087,35 @@
       }
 
       const gates = frame.gate_activations || {};
-      document.getElementById('gate-kpk').style.width = `${(gates.kpk || 0) * 100}%`;
-      document.getElementById('gate-kqk').style.width = `${(gates.kqk || 0) * 100}%`;
-      document.getElementById('gate-krk').style.width = `${(gates.krk || 0) * 100}%`;
+      const routerSignals = frame.router_signals || {};
+      const routerWeights = frame.router_weights || {};
+      const routerScores = frame.router_scores || {};
+
+      function setMetric(fillId, valueId, rawValue, scale = 1.0) {
+        const v = Number.isFinite(rawValue) ? rawValue : 0.0;
+        const pct = Math.max(0, Math.min(100, (v / scale) * 100));
+        document.getElementById(fillId).style.width = `${pct}%`;
+        document.getElementById(valueId).textContent = v.toFixed(2);
+      }
+
+      setMetric('gate-kpk', 'gate-kpk-val', gates.kpk || 0, 1.0);
+      setMetric('gate-kqk', 'gate-kqk-val', gates.kqk || 0, 1.0);
+      setMetric('gate-krk', 'gate-krk-val', gates.krk || 0, 1.0);
+
+      const mode = frame.router_mode || 'n/a';
+      document.getElementById('router-mode').textContent = `Mode: ${mode}`;
+
+      setMetric('router-signal-kpk', 'router-signal-kpk-val', routerSignals.kpk || 0, 1.0);
+      setMetric('router-signal-kqk', 'router-signal-kqk-val', routerSignals.kqk || 0, 1.0);
+      setMetric('router-signal-krk', 'router-signal-krk-val', routerSignals.krk || 0, 1.0);
+
+      setMetric('router-weight-kpk', 'router-weight-kpk-val', routerWeights.kpk || 0, 3.0);
+      setMetric('router-weight-kqk', 'router-weight-kqk-val', routerWeights.kqk || 0, 3.0);
+      setMetric('router-weight-krk', 'router-weight-krk-val', routerWeights.krk || 0, 3.0);
+
+      setMetric('router-score-kpk', 'router-score-kpk-val', routerScores.kpk || 0, 3.0);
+      setMetric('router-score-kqk', 'router-score-kqk-val', routerScores.kqk || 0, 3.0);
+      setMetric('router-score-krk', 'router-score-krk-val', routerScores.krk || 0, 3.0);
 
       sliderEl.value = currentFrame;
       labelEl.textContent = `Frame ${currentFrame + 1} / ${demoData.frames.length}`;

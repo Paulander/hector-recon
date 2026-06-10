@@ -1,0 +1,600 @@
+{
+  "schema_version": "stage7_post_box_trajectory_provider_model.v1",
+  "causal_status": "sandbox_model_non_promoted",
+  "training_seed_source": "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.json",
+  "target_skill": "krk.post_box_shrink_continuation",
+  "provider_skill_id": "krk.stage7_post_box_learned_continuation",
+  "provider_version": "stage7_post_box_continuation_overlay_v1",
+  "role_id": "krk.post_box_shrink_continuation",
+  "plan_capsule_id": "krk.post_box_shrink_continuation",
+  "default_enabled": false,
+  "promotion_status": "sandbox_candidate",
+  "provider_maturity": "candidate_high_plasticity",
+  "plasticity_scope": "candidate_local",
+  "can_m3_update": true,
+  "can_m4_consolidate": false,
+  "bounded_plan_ownership": {
+    "ttl_white_moves": 4,
+    "entry_terms": [
+      "active_landmark_label.box_shrink",
+      "post_box_shrink_continuation_needed",
+      "stage7_post_box_post_reply_context",
+      "rook_safe",
+      "mate_in_one_available.false"
+    ],
+    "progress_terms": [
+      "cut_or_fence_preserved_or_restored",
+      "box_area_not_expanded",
+      "king_support_improves",
+      "mate_basin_proximity_improves",
+      "stagnation_avoided"
+    ],
+    "exit_terms": [
+      "mate_in_one_available",
+      "stage0_finish_licensed",
+      "edge_trap_role_confirmed",
+      "drive_to_edge_role_confirmed",
+      "fence_or_cut_restored"
+    ],
+    "abort_terms": [
+      "rook_unsafe",
+      "draw_or_stalemate_risk",
+      "box_expansion",
+      "stagnation_loop",
+      "no_progress_after_ttl"
+    ]
+  },
+  "model_kind": "visible_term_log_odds_linear_scorer",
+  "bias": -2.0677999666643503,
+  "weights": {
+    "coord:delta_file_abs.0": -0.492433216595094,
+    "coord:delta_file_abs.1": 0.3700314363355993,
+    "coord:delta_file_abs.2": 0.5637129549194929,
+    "coord:delta_file_abs.3": 0.7080552636482311,
+    "coord:delta_file_abs.4": -0.39055702501987855,
+    "coord:delta_file_abs.5": 0.26003054112127083,
+    "coord:delta_file_abs.6": 0.26003054112127083,
+    "coord:delta_file_abs.7": 0.799027041853958,
+    "coord:delta_file_sign.-1": -0.19950178825716924,
+    "coord:delta_file_sign.0": -0.492433216595094,
+    "coord:delta_file_sign.1": 0.598804274730763,
+    "coord:delta_rank_abs.0": 0.298391408993717,
+    "coord:delta_rank_abs.1": -0.04225033075166276,
+    "coord:delta_rank_abs.2": -0.5872673192659328,
+    "coord:delta_rank_abs.3": -0.48718386070895014,
+    "coord:delta_rank_abs.4": -0.4331166394386745,
+    "coord:delta_rank_abs.5": 0.6654956492294353,
+    "coord:delta_rank_abs.6": 1.3586428297893807,
+    "coord:delta_rank_sign.-1": -0.027651531330510123,
+    "coord:delta_rank_sign.0": 0.298391408993717,
+    "coord:delta_rank_sign.1": -0.42021323460276644,
+    "coord:from_file.0": 0.05935984565911964,
+    "coord:from_file.1": -0.2507950826447198,
+    "coord:from_file.2": 1.0709607573375997,
+    "coord:from_file.3": -0.00466201310581119,
+    "coord:from_file.4": 0.5392019239051432,
+    "coord:from_file.5": -0.21689353096903846,
+    "coord:from_file.6": -0.5872673192659326,
+    "coord:from_rank.0": 0.511344969402177,
+    "coord:from_rank.1": 0.4831740924354807,
+    "coord:from_rank.2": -0.1454345669868935,
+    "coord:from_rank.3": -0.07082370319571872,
+    "coord:from_rank.4": -0.500255942276303,
+    "coord:from_rank.5": 0.5854529415558988,
+    "coord:piece.K": 0.13641658515409413,
+    "coord:piece.R": -0.06513462458525061,
+    "coord:to_file.0": -0.7050503549223162,
+    "coord:to_file.1": 0.01490808308828579,
+    "coord:to_file.2": -0.32775612378084806,
+    "coord:to_file.3": 0.5223948055887621,
+    "coord:to_file.4": 0.5164600700689473,
+    "coord:to_file.5": -0.31141970446115463,
+    "coord:to_file.6": -0.02765153133051001,
+    "coord:to_file.7": 0.7990270418539578,
+    "coord:to_rank.0": -0.8008414195639918,
+    "coord:to_rank.1": 0.5902722279918478,
+    "coord:to_rank.2": 0.2882014180879673,
+    "coord:to_rank.3": 0.3102923759021591,
+    "coord:to_rank.4": -0.3461052624490446,
+    "coord:to_rank.5": -0.2507950826447198,
+    "coord:to_rank.6": -0.4739386339589296,
+    "coord:to_rank.7": -0.4739386339589296,
+    "move_shape:candidate_is_king_move": 0.13641658515409413,
+    "move_shape:candidate_is_rook_move": -0.06513462458525061,
+    "move_shape:candidate_is_rook_transfer": -0.16378370565508996,
+    "move_shape:king_moves_toward_enemy": 1.977682038195604,
+    "move_shape:king_moves_toward_rook_support": 0.5637129549194929,
+    "move_shape:rook_destination_far_from_enemy": -0.03846244743472579,
+    "move_shape:rook_destination_not_adjacent_enemy": 0.02132247326594939,
+    "move_shape:rook_lateral_transfer": 0.26003054112127083,
+    "move_shape:rook_safe_after_candidate": 0.04806029040518618,
+    "move_shape:rook_to_checking_line": 0.023641763057040494,
+    "move_shape:rook_to_edge_file": -0.16982602011105258,
+    "move_shape:rook_to_edge_rank": -0.6782390974716596,
+    "move_shape:rook_transfer_vertical": -0.43311663943867434,
+    "move_shape:safe_check_created": 0.4831740924354807,
+    "piece:K": 0.13641658515409413,
+    "piece:R": -0.06513462458525061,
+    "piece_type:king": 0.13641658515409413,
+    "piece_type:rook": -0.06513462458525061,
+    "post_move:black_king_escape_count_decreases_after_move": 1.2155419861487073,
+    "post_move:black_king_escape_count_not_increased_after_move": 0.327623832253799,
+    "post_move:box_area_decreases_after_move": 0.6114284279591595,
+    "post_move:box_area_not_increased_after_move": 0.2732757678712915,
+    "post_move:checking_line_created": 0.023641763057040494,
+    "post_move:cut_created_after_move": 0.15467002546344455,
+    "post_move:cut_preserved_after_move": 0.26884117080342573,
+    "post_move:enemy_corner_distance_not_increased_after_move": -0.016009956315024318,
+    "post_move:enemy_edge_distance_not_increased_after_move": -0.016009956315024318,
+    "post_move:fence_exists_after_move": 0.2059633198509952,
+    "post_move:fence_stable_after_move": 0.38326318154521904,
+    "post_move:rook_safe_after_move": 0.1191956372697847,
+    "post_move:white_king_and_rook_same_file_side_after_move": 0.0689753043585618,
+    "post_move:white_king_and_rook_same_rank_side_after_move": -0.027651531330510123,
+    "post_move:white_king_and_rook_split_file_side_after_move": -0.46051561362678883,
+    "post_move:white_king_and_rook_split_rank_side_after_move": 0.2508138860163469,
+    "post_move:white_king_distance_to_enemy_decreases": 1.977682038195604,
+    "post_move:white_king_distance_to_rook_decreases": 0.4936453923027761,
+    "post_move:white_king_file_opposition_distance_two_after_move": 0.504227501633313,
+    "post_move:white_king_rank_opposition_distance_two_after_move": 0.5354425209812375
+  },
+  "positive_count": 53,
+  "negative_count": 426,
+  "feature_count": 90,
+  "train_top1_accuracy": 0.44,
+  "train_position_count": 25,
+  "selected_rows": [
+    {
+      "fen": "8/8/8/5R2/2k5/8/8/3K4 w - - 6 4",
+      "selected_move": "d1e2",
+      "selected_label": 1,
+      "selected_score": 7.833782698923041,
+      "positive_moves": [
+        "d1e2"
+      ],
+      "positive_count": 1
+    },
+    {
+      "fen": "8/8/8/5R2/3k4/8/4K3/8 w - - 8 5",
+      "selected_move": "e2d2",
+      "selected_label": 0,
+      "selected_score": 4.038880588502318,
+      "positive_moves": [
+        "e2f3"
+      ],
+      "positive_count": 1
+    },
+    {
+      "fen": "8/8/8/5R2/8/3k1K2/8/8 w - - 10 6",
+      "selected_move": "f5d5",
+      "selected_label": 0,
+      "selected_score": 2.5822675939392488,
+      "positive_moves": [
+        "f5f4"
+      ],
+      "positive_count": 1
+    },
+    {
+      "fen": "8/8/8/8/1R6/3K4/8/3k4 w - - 28 15",
+      "selected_move": "b4e4",
+      "selected_label": 0,
+      "selected_score": 4.550939476872246,
+      "positive_moves": [
+        "b4b1"
+      ],
+      "positive_count": 1
+    },
+    {
+      "fen": "8/8/8/8/1R6/8/4K1k1/8 w - - 16 9",
+      "selected_move": "b4g4",
+      "selected_label": 0,
+      "selected_score": 4.07241862426857,
+      "positive_moves": [
+        "b4b3"
+      ],
+      "positive_count": 1
+    },
+    {
+      "fen": "8/8/8/8/3K1R2/8/3k4/8 w - - 16 9",
+      "selected_move": "f4e4",
+      "selected_label": 0,
+      "selected_score": 2.7926896191375397,
+      "positive_moves": [
+        "f4f2"
+      ],
+      "positive_count": 1
+    },
+    {
+      "fen": "8/8/8/8/3K4/8/5R2/4k3 w - - 18 10",
+      "selected_move": "d4e3",
+      "selected_label": 1,
+      "selected_score": 8.242788226481071,
+      "positive_moves": [
+        "d4e3",
+        "f2h2"
+      ],
+      "positive_count": 2
+    },
+    {
+      "fen": "8/8/8/8/3R4/2K5/5k2/8 w - - 8 5",
+      "selected_move": "c3d2",
+      "selected_label": 1,
+      "selected_score": 7.878392659512072,
+      "positive_moves": [
+        "c3d2",
+        "c3d3",
+        "d4d3"
+      ],
+      "positive_count": 3
+    },
+    {
+      "fen": "8/8/8/8/3R4/5k2/3K4/8 w - - 10 6",
+      "selected_move": "d4e4",
+      "selected_label": 0,
+      "selected_score": 1.421050808414602,
+      "positive_moves": [
+        "d4a4",
+        "d4b4",
+        "d4c4"
+      ],
+      "positive_count": 3
+    },
+    {
+      "fen": "8/8/8/8/4KR2/8/4k3/8 w - - 14 8",
+      "selected_move": "f4h4",
+      "selected_label": 0,
+      "selected_score": 0.7736565927577739,
+      "positive_moves": [
+        "e4d4"
+      ],
+      "positive_count": 1
+    },
+    {
+      "fen": "8/8/8/8/4R3/3K4/8/2k5 w - - 26 14",
+      "selected_move": "e4h4",
+      "selected_label": 0,
+      "selected_score": 2.424533663539382,
+      "positive_moves": [
+        "e4b4"
+      ],
+      "positive_count": 1
+    },
+    {
+      "fen": "8/8/8/8/5R2/5K2/3k4/8 w - - 12 7",
+      "selected_move": "f4d4",
+      "selected_label": 1,
+      "selected_score": 3.1050034190592894,
+      "positive_moves": [
+        "f3e4",
+        "f4d4"
+      ],
+      "positive_count": 2
+    },
+    {
+      "fen": "8/8/8/8/8/1R6/4K3/7k w - - 18 10",
+      "selected_move": "e2f2",
+      "selected_label": 1,
+      "selected_score": 8.103086275409574,
+      "positive_moves": [
+        "b3g3",
+        "e2f1",
+        "e2f2"
+      ],
+      "positive_count": 3
+    },
+    {
+      "fen": "8/8/8/8/8/3K4/4R3/3k4 w - - 24 13",
+      "selected_move": "e2h2",
+      "selected_label": 0,
+      "selected_score": 3.3661396762812217,
+      "positive_moves": [
+        "e2e4",
+        "e2e5",
+        "e2e6",
+        "e2e7",
+        "e2e8"
+      ],
+      "positive_count": 5
+    },
+    {
+      "fen": "8/8/8/8/8/3K4/5R2/2k5 w - - 22 12",
+      "selected_move": "f2d2",
+      "selected_label": 0,
+      "selected_score": 4.063992816965985,
+      "positive_moves": [
+        "f2e2",
+        "f2g2",
+        "f2h2"
+      ],
+      "positive_count": 3
+    },
+    {
+      "fen": "8/8/8/8/8/4K3/5R2/3k4 w - - 20 11",
+      "selected_move": "f2e2",
+      "selected_label": 1,
+      "selected_score": 3.5345148762145904,
+      "positive_moves": [
+        "e3d3",
+        "f2e2",
+        "f2g2",
+        "f2h2"
+      ],
+      "positive_count": 4
+    },
+    {
+      "fen": "8/8/8/8/8/6R1/4K2k/8 w - - 20 11",
+      "selected_move": "e2f2",
+      "selected_label": 1,
+      "selected_score": 9.60936752960361,
+      "positive_moves": [
+        "e2f2"
+      ],
+      "positive_count": 1
+    },
+    {
+      "fen": "8/8/8/8/8/6R1/5K2/7k w - - 22 12",
+      "selected_move": "g3h3",
+      "selected_label": 1,
+      "selected_score": 3.015884992751122,
+      "positive_moves": [
+        "g3h3"
+      ],
+      "positive_count": 1
+    },
+    {
+      "fen": "8/8/8/8/R7/2K1k3/8/8 w - - 6 4",
+      "selected_move": "a4d4",
+      "selected_label": 1,
+      "selected_score": 2.938401311553326,
+      "positive_moves": [
+        "a4d4",
+        "c3c2"
+      ],
+      "positive_count": 2
+    },
+    {
+      "fen": "8/8/8/8/R7/6k1/4K3/8 w - - 14 8",
+      "selected_move": "e2d2",
+      "selected_label": 0,
+      "selected_score": 3.117820920047329,
+      "positive_moves": [
+        "a4b4",
+        "a4c4",
+        "a4d4",
+        "a4e4"
+      ],
+      "positive_count": 4
+    },
+    {
+      "fen": "8/8/8/8/R7/8/3K2k1/8 w - - 12 7",
+      "selected_move": "d2e2",
+      "selected_label": 1,
+      "selected_score": 8.092128493040828,
+      "positive_moves": [
+        "d2e2",
+        "d2e3"
+      ],
+      "positive_count": 2
+    },
+    {
+      "fen": "8/8/8/R7/1k6/8/8/3K4 w - - 4 3",
+      "selected_move": "d1c2",
+      "selected_label": 0,
+      "selected_score": 5.542573886830176,
+      "positive_moves": [
+        "a5f5",
+        "a5g5",
+        "a5h5"
+      ],
+      "positive_count": 3
+    },
+    {
+      "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "selected_move": "d2e2",
+      "selected_label": 0,
+      "selected_score": 4.287387978959481,
+      "positive_moves": [
+        "d2c3"
+      ],
+      "positive_count": 1
+    },
+    {
+      "fen": "8/8/8/R7/8/2K2k2/8/8 w - - 4 3",
+      "selected_move": "c3d3",
+      "selected_label": 1,
+      "selected_score": 8.2430065296778,
+      "positive_moves": [
+        "a5a4",
+        "c3d3",
+        "c3d4"
+      ],
+      "positive_count": 3
+    },
+    {
+      "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "selected_move": "d1e2",
+      "selected_label": 0,
+      "selected_score": 7.30429178093769,
+      "positive_moves": [
+        "a6a5",
+        "a6d6",
+        "d1d2"
+      ],
+      "positive_count": 3
+    }
+  ],
+  "top_weighted_terms": [
+    {
+      "term": "move_shape:king_moves_toward_enemy",
+      "weight": 1.977682038195604
+    },
+    {
+      "term": "post_move:white_king_distance_to_enemy_decreases",
+      "weight": 1.977682038195604
+    },
+    {
+      "term": "coord:delta_rank_abs.6",
+      "weight": 1.3586428297893807
+    },
+    {
+      "term": "post_move:black_king_escape_count_decreases_after_move",
+      "weight": 1.2155419861487073
+    },
+    {
+      "term": "coord:from_file.2",
+      "weight": 1.0709607573375997
+    },
+    {
+      "term": "coord:to_rank.0",
+      "weight": -0.8008414195639918
+    },
+    {
+      "term": "coord:delta_file_abs.7",
+      "weight": 0.799027041853958
+    },
+    {
+      "term": "coord:to_file.7",
+      "weight": 0.7990270418539578
+    },
+    {
+      "term": "coord:delta_file_abs.3",
+      "weight": 0.7080552636482311
+    },
+    {
+      "term": "coord:to_file.0",
+      "weight": -0.7050503549223162
+    },
+    {
+      "term": "move_shape:rook_to_edge_rank",
+      "weight": -0.6782390974716596
+    },
+    {
+      "term": "coord:delta_rank_abs.5",
+      "weight": 0.6654956492294353
+    },
+    {
+      "term": "post_move:box_area_decreases_after_move",
+      "weight": 0.6114284279591595
+    },
+    {
+      "term": "coord:delta_file_sign.1",
+      "weight": 0.598804274730763
+    },
+    {
+      "term": "coord:to_rank.1",
+      "weight": 0.5902722279918478
+    },
+    {
+      "term": "coord:delta_rank_abs.2",
+      "weight": -0.5872673192659328
+    },
+    {
+      "term": "coord:from_file.6",
+      "weight": -0.5872673192659326
+    },
+    {
+      "term": "coord:from_rank.5",
+      "weight": 0.5854529415558988
+    },
+    {
+      "term": "coord:delta_file_abs.2",
+      "weight": 0.5637129549194929
+    },
+    {
+      "term": "move_shape:king_moves_toward_rook_support",
+      "weight": 0.5637129549194929
+    },
+    {
+      "term": "coord:from_file.4",
+      "weight": 0.5392019239051432
+    },
+    {
+      "term": "post_move:white_king_rank_opposition_distance_two_after_move",
+      "weight": 0.5354425209812375
+    },
+    {
+      "term": "coord:to_file.3",
+      "weight": 0.5223948055887621
+    },
+    {
+      "term": "coord:to_file.4",
+      "weight": 0.5164600700689473
+    },
+    {
+      "term": "coord:from_rank.0",
+      "weight": 0.511344969402177
+    },
+    {
+      "term": "post_move:white_king_file_opposition_distance_two_after_move",
+      "weight": 0.504227501633313
+    },
+    {
+      "term": "coord:from_rank.4",
+      "weight": -0.500255942276303
+    },
+    {
+      "term": "post_move:white_king_distance_to_rook_decreases",
+      "weight": 0.4936453923027761
+    },
+    {
+      "term": "coord:delta_file_abs.0",
+      "weight": -0.492433216595094
+    },
+    {
+      "term": "coord:delta_file_sign.0",
+      "weight": -0.492433216595094
+    },
+    {
+      "term": "coord:delta_rank_abs.3",
+      "weight": -0.48718386070895014
+    },
+    {
+      "term": "coord:from_rank.1",
+      "weight": 0.4831740924354807
+    },
+    {
+      "term": "move_shape:safe_check_created",
+      "weight": 0.4831740924354807
+    },
+    {
+      "term": "coord:to_rank.6",
+      "weight": -0.4739386339589296
+    },
+    {
+      "term": "coord:to_rank.7",
+      "weight": -0.4739386339589296
+    },
+    {
+      "term": "post_move:white_king_and_rook_split_file_side_after_move",
+      "weight": -0.46051561362678883
+    },
+    {
+      "term": "coord:delta_rank_abs.4",
+      "weight": -0.4331166394386745
+    },
+    {
+      "term": "move_shape:rook_transfer_vertical",
+      "weight": -0.43311663943867434
+    },
+    {
+      "term": "coord:delta_rank_sign.1",
+      "weight": -0.42021323460276644
+    },
+    {
+      "term": "coord:delta_file_abs.4",
+      "weight": -0.39055702501987855
+    }
+  ],
+  "runtime_forbidden_terms": [
+    "tablebase_lookup",
+    "dtm_oracle_move_selection",
+    "state_hash_exception"
+  ],
+  "constraints": [
+    "sandbox_opt_in_only",
+    "do_not_enable_by_default",
+    "do_not_promote_without_guardrails",
+    "do_not_use_dtm_or_tablebase_at_runtime",
+    "visible_terms_only_at_runtime"
+  ]
+}

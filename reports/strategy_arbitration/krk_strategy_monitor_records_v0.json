@@ -1,0 +1,3032 @@
+{
+  "answers": {
+    "monitor_activations_are_stage7_only": false,
+    "next_step": "architecture_review_or_targeted_companion_term_design",
+    "records_authorize_runtime_behavior": false,
+    "repair_and_plan_monitors_are_failure_oriented": true
+  },
+  "causal_status": "non_causal_monitor_extraction",
+  "gameplay_topology_mutation": false,
+  "monitor_definitions": [
+    {
+      "candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "target_concept": "edge_net_affordance",
+      "typed_as": "needs refinement / companion terms"
+    },
+    {
+      "candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "target_concept": "box_shrink_exit_condition",
+      "typed_as": "exit condition"
+    },
+    {
+      "candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "target_concept": "phase_boundary_near_edge",
+      "typed_as": "needs refinement / companion terms"
+    },
+    {
+      "candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "target_concept": "fence_or_cut_repair_affordance",
+      "typed_as": "risk/failure monitor"
+    },
+    {
+      "candidate_id": "cand.krk.strategy.plan_selection_needed.v0",
+      "causal_status": "non_causal",
+      "confidence": 1.0,
+      "missing_terms": [
+        "plan_capsule_context",
+        "handoff_success_after_plan",
+        "post_plan_stagnation"
+      ],
+      "monitor_type": "PlanSelectionNeededMonitor",
+      "notes": "stage7-only failure-oriented term; useful as a monitor, not a move-support affordance",
+      "promotion_status": "monitoring_only",
+      "source_terms": [
+        "stage7 residual",
+        "no visible heuristic hit",
+        "post_box continuation / capsule context",
+        "current_graph_h40 == max_plies"
+      ],
+      "target_concept": "plan_selection_needed",
+      "typed_as": "growth-pressure/internal monitor"
+    }
+  ],
+  "records": [
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.0926f12f8e8f.0",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.0926f12f8e8f",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.0afbf11aa123.1",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.0afbf11aa123",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.7bd8961882ad.2",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.7bd8961882ad",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.87b1160e68b9.3",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.87b1160e68b9",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.2c1d6da27ea1.4",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.2c1d6da27ea1",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.2c1d6da27ea1.5",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.2c1d6da27ea1",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.02feb8593cc6.6",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.02feb8593cc6",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/K7/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.326222aefdf1.7",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.326222aefdf1",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.3dca34326fca.8",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.3dca34326fca",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.02feb8593cc6.9",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.02feb8593cc6",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/8/4K3/8/8/8/8/R7 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.d1f052d2cab2.10",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.d1f052d2cab2",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "R7/7k/5K2/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.52085d244e9d.11",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.52085d244e9d",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "2k5/8/1K6/8/8/8/8/R7 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.69711173114a.12",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.69711173114a",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/8/4K3/8/8/8/8/R7 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.d1f052d2cab2.13",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.d1f052d2cab2",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "2k5/8/1K6/8/8/8/8/R7 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.69711173114a.14",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.69711173114a",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.699f0003a511.15",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.699f0003a511.16",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.699f0003a511.17",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.699f0003a511.18",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.699f0003a511.19",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "8/1RK5/8/k7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.1e4f48a672e8.20",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.1e4f48a672e8",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "8/8/8/8/8/3K4/3R4/6k1 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.f17117682948.21",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.f17117682948",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "7k/8/5K2/4R3/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.02cfd843a2cf.22",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.02cfd843a2cf",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.256a3da30f0f.23",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.256a3da30f0f",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "2K5/1R6/8/k7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.b11124d658cf.24",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.b11124d658cf",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "missing_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ],
+      "monitor_id": "monitor.krk.edge_net_affordance.state.256a3da30f0f.25",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "matches successful and failed edge states similarly; not a positive affordance yet",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "source_terms": [
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "edge_trap_shape_available",
+        "corner_net_pressure_proxy",
+        "rook_safe"
+      ],
+      "state_id": "state.256a3da30f0f",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.0926f12f8e8f.26",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.0926f12f8e8f",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.7bd8961882ad.27",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.7bd8961882ad",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.87b1160e68b9.28",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.87b1160e68b9",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.2c1d6da27ea1.29",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.2c1d6da27ea1",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.2c1d6da27ea1.30",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.2c1d6da27ea1",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.02feb8593cc6.31",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.02feb8593cc6",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "5k2/7R/K7/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.326222aefdf1.32",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.326222aefdf1",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.3dca34326fca.33",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.3dca34326fca",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.02feb8593cc6.34",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.02feb8593cc6",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "5k2/8/4K3/8/8/8/8/R7 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.d1f052d2cab2.35",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.d1f052d2cab2",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "R7/7k/5K2/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.52085d244e9d.36",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.52085d244e9d",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "2k5/8/1K6/8/8/8/8/R7 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.69711173114a.37",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.69711173114a",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "5k2/8/4K3/8/8/8/8/R7 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.d1f052d2cab2.38",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.d1f052d2cab2",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "2k5/8/1K6/8/8/8/8/R7 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.69711173114a.39",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.69711173114a",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.699f0003a511.40",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.699f0003a511.41",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.699f0003a511.42",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.699f0003a511.43",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.699f0003a511.44",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "8/1RK5/8/k7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.1e4f48a672e8.45",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.1e4f48a672e8",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "8/8/8/8/8/3K4/3R4/6k1 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.f17117682948.46",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.f17117682948",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "7k/8/5K2/4R3/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.02cfd843a2cf.47",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.02cfd843a2cf",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.256a3da30f0f.48",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.256a3da30f0f",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "2K5/1R6/8/k7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.b11124d658cf.49",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.b11124d658cf",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.5,
+      "fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "missing_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ],
+      "monitor_id": "monitor.krk.box_shrink_exit_condition.state.256a3da30f0f.50",
+      "monitor_type": "OwnerExitMonitor",
+      "notes": "mixed success/failure near edge; potential owner-release signal, not provider boost",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "source_terms": [
+        "box_area_relevance == low",
+        "black_king_edge_bucket == at_edge",
+        "edge_net_pressure_proxy",
+        "mate_basin_readiness"
+      ],
+      "state_id": "state.256a3da30f0f",
+      "suggested_action_class": "audit_owner_exit"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.0926f12f8e8f.51",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.0926f12f8e8f",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.0afbf11aa123.52",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.0afbf11aa123",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.7bd8961882ad.53",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.7bd8961882ad",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.87b1160e68b9.54",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.87b1160e68b9",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.2c1d6da27ea1.55",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.2c1d6da27ea1",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.2c1d6da27ea1.56",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.2c1d6da27ea1",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.02feb8593cc6.57",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.02feb8593cc6",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/K7/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.326222aefdf1.58",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.326222aefdf1",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.3dca34326fca.59",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.3dca34326fca",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.02feb8593cc6.60",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.02feb8593cc6",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/8/4K3/8/8/8/8/R7 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.d1f052d2cab2.61",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.d1f052d2cab2",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "R7/7k/5K2/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.52085d244e9d.62",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.52085d244e9d",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "2k5/8/1K6/8/8/8/8/R7 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.69711173114a.63",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.69711173114a",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/8/4K3/8/8/8/8/R7 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.d1f052d2cab2.64",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.d1f052d2cab2",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "2k5/8/1K6/8/8/8/8/R7 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.69711173114a.65",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.69711173114a",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.699f0003a511.66",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.699f0003a511.67",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.699f0003a511.68",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.699f0003a511.69",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.699f0003a511.70",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "8/1RK5/8/k7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.1e4f48a672e8.71",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.1e4f48a672e8",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "8/8/8/8/8/3K4/3R4/6k1 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.f17117682948.72",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.f17117682948",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "7k/8/5K2/4R3/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.02cfd843a2cf.73",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.02cfd843a2cf",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.256a3da30f0f.74",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.256a3da30f0f",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "2K5/1R6/8/k7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.b11124d658cf.75",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.b11124d658cf",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.48,
+      "fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "missing_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ],
+      "monitor_id": "monitor.krk.phase_boundary_near_edge.state.256a3da30f0f.76",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "notes": "near-edge context is broadly cross-stage and mixed-outcome",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "source_terms": [
+        "black_king_edge_bucket in {at_edge, near_edge}",
+        "box_area_relevance in {low, medium}",
+        "edge_net_pressure_proxy or fence_exists"
+      ],
+      "state_id": "state.256a3da30f0f",
+      "suggested_action_class": "audit_owner_phase"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.069e81a609ed.77",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.069e81a609ed",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.0926f12f8e8f.78",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.0926f12f8e8f",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "R7/8/8/8/8/2k5/8/3K4 w - - 4 3",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.4a464b782ecb.79",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.4a464b782ecb",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.4e34ad0b2f29.80",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.4e34ad0b2f29",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.b6796dfb62ff.81",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.b6796dfb62ff",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.0afbf11aa123.82",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.0afbf11aa123",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.38aed2f35911.83",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.38aed2f35911",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "8/8/8/4k3/R7/8/3K4/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.ac0b7ed500ea.84",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.ac0b7ed500ea",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.ff6652c8832c.85",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.ff6652c8832c",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.7bd8961882ad.86",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.7bd8961882ad",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.2c1d6da27ea1.87",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.2c1d6da27ea1",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "mate",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.2c1d6da27ea1.88",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.2c1d6da27ea1",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.02feb8593cc6.89",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.02feb8593cc6",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "5k2/7R/K7/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.326222aefdf1.90",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.326222aefdf1",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.02feb8593cc6.91",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.02feb8593cc6",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.699f0003a511.92",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.699f0003a511.93",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.699f0003a511.94",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.699f0003a511.95",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.699f0003a511.96",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.699f0003a511",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.256a3da30f0f.97",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.256a3da30f0f",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 0.8421052631578947,
+      "fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "missing_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.256a3da30f0f.98",
+      "monitor_type": "RepairNeededMonitor",
+      "notes": "failure-correlated; currently better as repair-pressure evidence than positive affordance",
+      "promotion_status": "proposed",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "source_terms": [
+        "fence_exists",
+        "not fence_stable",
+        "not cut_stable",
+        "rook_safe"
+      ],
+      "state_id": "state.256a3da30f0f",
+      "suggested_action_class": "record_repair_pressure"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "causal_status": "non_causal",
+      "confidence": 1.0,
+      "fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+      "missing_terms": [
+        "plan_capsule_context",
+        "handoff_success_after_plan",
+        "post_plan_stagnation"
+      ],
+      "monitor_id": "monitor.krk.plan_selection_needed.state.069e81a609ed.99",
+      "monitor_type": "PlanSelectionNeededMonitor",
+      "notes": "stage7-only failure-oriented term; useful as a monitor, not a move-support affordance",
+      "promotion_status": "monitoring_only",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.plan_selection_needed.v0",
+      "source_terms": [
+        "stage7 residual",
+        "no visible heuristic hit",
+        "post_box continuation / capsule context",
+        "current_graph_h40 == max_plies"
+      ],
+      "state_id": "state.069e81a609ed",
+      "suggested_action_class": "audit_plan_selection"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "causal_status": "non_causal",
+      "confidence": 1.0,
+      "fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+      "missing_terms": [
+        "plan_capsule_context",
+        "handoff_success_after_plan",
+        "post_plan_stagnation"
+      ],
+      "monitor_id": "monitor.krk.plan_selection_needed.state.0926f12f8e8f.100",
+      "monitor_type": "PlanSelectionNeededMonitor",
+      "notes": "stage7-only failure-oriented term; useful as a monitor, not a move-support affordance",
+      "promotion_status": "monitoring_only",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.plan_selection_needed.v0",
+      "source_terms": [
+        "stage7 residual",
+        "no visible heuristic hit",
+        "post_box continuation / capsule context",
+        "current_graph_h40 == max_plies"
+      ],
+      "state_id": "state.0926f12f8e8f",
+      "suggested_action_class": "audit_plan_selection"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "unknown",
+      "causal_status": "non_causal",
+      "confidence": 1.0,
+      "fen": "R7/8/8/8/8/2k5/8/3K4 w - - 4 3",
+      "missing_terms": [
+        "plan_capsule_context",
+        "handoff_success_after_plan",
+        "post_plan_stagnation"
+      ],
+      "monitor_id": "monitor.krk.plan_selection_needed.state.4a464b782ecb.101",
+      "monitor_type": "PlanSelectionNeededMonitor",
+      "notes": "stage7-only failure-oriented term; useful as a monitor, not a move-support affordance",
+      "promotion_status": "monitoring_only",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.plan_selection_needed.v0",
+      "source_terms": [
+        "stage7 residual",
+        "no visible heuristic hit",
+        "post_box continuation / capsule context",
+        "current_graph_h40 == max_plies"
+      ],
+      "state_id": "state.4a464b782ecb",
+      "suggested_action_class": "audit_plan_selection"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 1.0,
+      "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "missing_terms": [
+        "plan_capsule_context",
+        "handoff_success_after_plan",
+        "post_plan_stagnation"
+      ],
+      "monitor_id": "monitor.krk.plan_selection_needed.state.4e34ad0b2f29.102",
+      "monitor_type": "PlanSelectionNeededMonitor",
+      "notes": "stage7-only failure-oriented term; useful as a monitor, not a move-support affordance",
+      "promotion_status": "monitoring_only",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.plan_selection_needed.v0",
+      "source_terms": [
+        "stage7 residual",
+        "no visible heuristic hit",
+        "post_box continuation / capsule context",
+        "current_graph_h40 == max_plies"
+      ],
+      "state_id": "state.4e34ad0b2f29",
+      "suggested_action_class": "audit_plan_selection"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 1.0,
+      "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "missing_terms": [
+        "plan_capsule_context",
+        "handoff_success_after_plan",
+        "post_plan_stagnation"
+      ],
+      "monitor_id": "monitor.krk.plan_selection_needed.state.b6796dfb62ff.103",
+      "monitor_type": "PlanSelectionNeededMonitor",
+      "notes": "stage7-only failure-oriented term; useful as a monitor, not a move-support affordance",
+      "promotion_status": "monitoring_only",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.plan_selection_needed.v0",
+      "source_terms": [
+        "stage7 residual",
+        "no visible heuristic hit",
+        "post_box continuation / capsule context",
+        "current_graph_h40 == max_plies"
+      ],
+      "state_id": "state.b6796dfb62ff",
+      "suggested_action_class": "audit_plan_selection"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 1.0,
+      "fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+      "missing_terms": [
+        "plan_capsule_context",
+        "handoff_success_after_plan",
+        "post_plan_stagnation"
+      ],
+      "monitor_id": "monitor.krk.plan_selection_needed.state.0afbf11aa123.104",
+      "monitor_type": "PlanSelectionNeededMonitor",
+      "notes": "stage7-only failure-oriented term; useful as a monitor, not a move-support affordance",
+      "promotion_status": "monitoring_only",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.plan_selection_needed.v0",
+      "source_terms": [
+        "stage7 residual",
+        "no visible heuristic hit",
+        "post_box continuation / capsule context",
+        "current_graph_h40 == max_plies"
+      ],
+      "state_id": "state.0afbf11aa123",
+      "suggested_action_class": "audit_plan_selection"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 1.0,
+      "fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+      "missing_terms": [
+        "plan_capsule_context",
+        "handoff_success_after_plan",
+        "post_plan_stagnation"
+      ],
+      "monitor_id": "monitor.krk.plan_selection_needed.state.38aed2f35911.105",
+      "monitor_type": "PlanSelectionNeededMonitor",
+      "notes": "stage7-only failure-oriented term; useful as a monitor, not a move-support affordance",
+      "promotion_status": "monitoring_only",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.plan_selection_needed.v0",
+      "source_terms": [
+        "stage7 residual",
+        "no visible heuristic hit",
+        "post_box continuation / capsule context",
+        "current_graph_h40 == max_plies"
+      ],
+      "state_id": "state.38aed2f35911",
+      "suggested_action_class": "audit_plan_selection"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 1.0,
+      "fen": "8/8/8/4k3/R7/8/3K4/8 w - - 2 2",
+      "missing_terms": [
+        "plan_capsule_context",
+        "handoff_success_after_plan",
+        "post_plan_stagnation"
+      ],
+      "monitor_id": "monitor.krk.plan_selection_needed.state.ac0b7ed500ea.106",
+      "monitor_type": "PlanSelectionNeededMonitor",
+      "notes": "stage7-only failure-oriented term; useful as a monitor, not a move-support affordance",
+      "promotion_status": "monitoring_only",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.plan_selection_needed.v0",
+      "source_terms": [
+        "stage7 residual",
+        "no visible heuristic hit",
+        "post_box continuation / capsule context",
+        "current_graph_h40 == max_plies"
+      ],
+      "state_id": "state.ac0b7ed500ea",
+      "suggested_action_class": "audit_plan_selection"
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "associated_outcome": "max_plies",
+      "causal_status": "non_causal",
+      "confidence": 1.0,
+      "fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+      "missing_terms": [
+        "plan_capsule_context",
+        "handoff_success_after_plan",
+        "post_plan_stagnation"
+      ],
+      "monitor_id": "monitor.krk.plan_selection_needed.state.ff6652c8832c.107",
+      "monitor_type": "PlanSelectionNeededMonitor",
+      "notes": "stage7-only failure-oriented term; useful as a monitor, not a move-support affordance",
+      "promotion_status": "monitoring_only",
+      "schema_version": "strategy_monitor_record.v1",
+      "source_candidate_id": "cand.krk.strategy.plan_selection_needed.v0",
+      "source_terms": [
+        "stage7 residual",
+        "no visible heuristic hit",
+        "post_box continuation / capsule context",
+        "current_graph_h40 == max_plies"
+      ],
+      "state_id": "state.ff6652c8832c",
+      "suggested_action_class": "audit_plan_selection"
+    }
+  ],
+  "rejected_definitions": [
+    {
+      "candidate_id": "cand.krk.strategy.king_support_conversion_affordance.v0",
+      "causal_status": "non_causal",
+      "confidence": 0.0,
+      "missing_terms": [
+        "king_support_improvement_move_exists",
+        "white_king_distance_to_enemy_decreases_after_move"
+      ],
+      "monitor_type": "RejectedFeatureDefinition",
+      "notes": "matches nearly all records and is not separable enough as currently defined",
+      "promotion_status": "rejected",
+      "source_terms": [
+        "white_king_support_available",
+        "white_king_can_improve_support",
+        "king_support_improvement_move_exists",
+        "rook_safe"
+      ],
+      "target_concept": "king_support_conversion_affordance",
+      "typed_as": "too broad / reject"
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_strategy_monitor_records.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json",
+    "reports/strategy_arbitration/krk_feature_candidate_validation_v0.json",
+    "reports/strategy_arbitration/krk_strategy_missing_feature_candidates.json",
+    "reports/strategy_arbitration/krk_strategy_monitor_v0_plan.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "dataset_record_count": 33,
+    "monitor_definition_count": 5,
+    "monitor_record_count": 108,
+    "outcomes_by_monitor_type": {
+      "OwnerExitMonitor": {
+        "mate": 12,
+        "max_plies": 12,
+        "unknown": 1
+      },
+      "PhaseBoundaryMonitor": {
+        "mate": 24,
+        "max_plies": 26,
+        "unknown": 2
+      },
+      "PlanSelectionNeededMonitor": {
+        "max_plies": 6,
+        "unknown": 3
+      },
+      "RepairNeededMonitor": {
+        "mate": 3,
+        "max_plies": 16,
+        "unknown": 3
+      }
+    },
+    "records_by_active_landmark_label": {
+      "box_shrink": 23,
+      "drive_to_edge": 35,
+      "fence_established": 30,
+      "wrong_tempo_control": 20
+    },
+    "records_by_associated_outcome": {
+      "mate": 39,
+      "max_plies": 60,
+      "unknown": 9
+    },
+    "records_by_monitor_type": {
+      "OwnerExitMonitor": 25,
+      "PhaseBoundaryMonitor": 52,
+      "PlanSelectionNeededMonitor": 9,
+      "RepairNeededMonitor": 22
+    },
+    "rejected_definition_count": 1
+  }
+}

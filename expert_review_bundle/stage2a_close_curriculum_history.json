@@ -1,0 +1,333 @@
+{
+  "events": [
+    {
+      "type": "stage_eval",
+      "stage_label": "mate_in_1",
+      "cycle": 19,
+      "result": {
+        "stage_label": "mate_in_1",
+        "cycle": 19,
+        "metrics": {
+          "total": 100,
+          "mate_found": 100,
+          "no_move": 0,
+          "wrong_move": 0,
+          "confidences": [
+            1000001.8591218233,
+            1000001.9358568906,
+            1000002.0413393199,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000002.0207259894,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.9358568906,
+            1000001.8995216131,
+            1000001.8591218233,
+            1000002.0413393199,
+            1000001.8591218233,
+            1000002.0413393199,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000002.0207259894,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000002.0207259894,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.9963738382,
+            1000002.0413393199,
+            1000001.9963738382,
+            1000001.8591218233,
+            1000001.9963738382,
+            1000002.0413393199,
+            1000001.9681218981,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.8995216131,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000002.0413393199,
+            1000001.8591218233,
+            1000001.9358568906,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000002.0413393199,
+            1000001.8591218233,
+            1000001.9963738382,
+            1000001.8591218233,
+            1000002.0413393199,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.9681218981,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000002.0207259894,
+            1000001.8995216131,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.9681218981,
+            1000001.8591218233,
+            1000002.0413393199,
+            1000002.0413393199,
+            1000001.9963738382,
+            1000001.8591218233,
+            1000001.9963738382,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.9963738382,
+            1000002.0413393199,
+            1000002.0207259894,
+            1000002.0207259894,
+            1000002.0207259894,
+            1000001.8591218233,
+            1000001.9681218981,
+            1000002.0207259894,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000002.0207259894,
+            1000002.0413393199,
+            1000002.0207259894,
+            1000001.9963738382,
+            1000001.8591218233,
+            1000001.8995216131,
+            1000001.9681218981,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.8591218233,
+            1000001.9963738382,
+            1000002.0413393199,
+            1000001.8591218233,
+            1000002.0413393199,
+            1000001.8591218233
+          ],
+          "region_total": {
+            "edge_rank": 33,
+            "corner": 49,
+            "edge_file": 18
+          },
+          "region_fail": {},
+          "corner_fail": {}
+        },
+        "passed": true,
+        "failure_reasons": [],
+        "score": 3.0
+      },
+      "best_score": 3.0,
+      "best_cycle": 19,
+      "patience_used": 0,
+      "patience": 3,
+      "best_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2a_fixed2/baseline/best_learner.pkl",
+      "stage_best_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2a_fixed2/baseline/best_by_stage/mate_in_1.pkl"
+    },
+    {
+      "type": "stage_eval",
+      "stage_label": "stage0_basin",
+      "cycle": 9,
+      "result": {
+        "stage_label": "stage0_basin",
+        "cycle": 9,
+        "metrics": {
+          "total": 100,
+          "skipped_mate_in_1": 0,
+          "skipped_min_d0": 0,
+          "no_move": 0,
+          "improved": 100,
+          "optimal": 100,
+          "worsened": 0,
+          "avg_reward": 0.47163683174643667
+        },
+        "passed": true,
+        "failure_reasons": [],
+        "score": 3.971636831746437
+      },
+      "best_score": 3.971636831746437,
+      "best_cycle": 9,
+      "patience_used": 0,
+      "patience": 3,
+      "best_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2a_fixed2/baseline/best_learner.pkl",
+      "stage_best_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2a_fixed2/baseline/best_by_stage/stage0_basin.pkl"
+    },
+    {
+      "type": "stage_eval",
+      "stage_label": "edge_trap_close",
+      "cycle": 9,
+      "result": {
+        "stage_label": "edge_trap_close",
+        "cycle": 9,
+        "metrics": {
+          "total": 100,
+          "no_move": 0,
+          "improved": 52,
+          "flat": 0,
+          "worsened": 48,
+          "optimal": 52,
+          "avg_reward": -0.2513199999999998,
+          "avg_oracle_reward": 0.08810000000000001,
+          "playouts": {
+            "draw": 49,
+            "mate": 51
+          },
+          "label": "edge_trap_close",
+          "source_stage_names": [
+            "Edge_Trap_Close"
+          ]
+        },
+        "passed": false,
+        "failure_reasons": [
+          "improved_rate=0.520 < 0.700",
+          "worsened_rate=0.480 > 0.200",
+          "avg_reward=-0.251 < 0.000",
+          "mate_playout_rate=0.510 < 0.650",
+          "draw_rate=0.490 > 0.100"
+        ],
+        "score": 0.6486800000000001
+      },
+      "best_score": 0.6486800000000001,
+      "best_cycle": 9,
+      "patience_used": 0,
+      "patience": 3,
+      "best_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2a_fixed2/baseline/best_learner.pkl",
+      "stage_best_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2a_fixed2/baseline/best_by_stage/edge_trap_close.pkl"
+    },
+    {
+      "type": "stage_eval",
+      "stage_label": "edge_trap_close",
+      "cycle": 14,
+      "result": {
+        "stage_label": "edge_trap_close",
+        "cycle": 14,
+        "metrics": {
+          "total": 100,
+          "no_move": 0,
+          "improved": 52,
+          "flat": 0,
+          "worsened": 48,
+          "optimal": 52,
+          "avg_reward": -0.2513199999999998,
+          "avg_oracle_reward": 0.08810000000000001,
+          "playouts": {
+            "draw": 49,
+            "mate": 51
+          },
+          "label": "edge_trap_close",
+          "source_stage_names": [
+            "Edge_Trap_Close"
+          ]
+        },
+        "passed": false,
+        "failure_reasons": [
+          "improved_rate=0.520 < 0.700",
+          "worsened_rate=0.480 > 0.200",
+          "avg_reward=-0.251 < 0.000",
+          "mate_playout_rate=0.510 < 0.650",
+          "draw_rate=0.490 > 0.100"
+        ],
+        "score": 0.6486800000000001
+      },
+      "best_score": 0.6486800000000001,
+      "best_cycle": 9,
+      "patience_used": 1,
+      "patience": 3,
+      "best_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2a_fixed2/baseline/best_learner.pkl",
+      "stage_best_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2a_fixed2/baseline/best_by_stage/edge_trap_close.pkl"
+    },
+    {
+      "type": "stage_eval",
+      "stage_label": "edge_trap_close",
+      "cycle": 19,
+      "result": {
+        "stage_label": "edge_trap_close",
+        "cycle": 19,
+        "metrics": {
+          "total": 100,
+          "no_move": 0,
+          "improved": 52,
+          "flat": 0,
+          "worsened": 48,
+          "optimal": 52,
+          "avg_reward": -0.2513199999999998,
+          "avg_oracle_reward": 0.08810000000000001,
+          "playouts": {
+            "draw": 49,
+            "mate": 51
+          },
+          "label": "edge_trap_close",
+          "source_stage_names": [
+            "Edge_Trap_Close"
+          ]
+        },
+        "passed": false,
+        "failure_reasons": [
+          "improved_rate=0.520 < 0.700",
+          "worsened_rate=0.480 > 0.200",
+          "avg_reward=-0.251 < 0.000",
+          "mate_playout_rate=0.510 < 0.650",
+          "draw_rate=0.490 > 0.100"
+        ],
+        "score": 0.6486800000000001
+      },
+      "best_score": 0.6486800000000001,
+      "best_cycle": 9,
+      "patience_used": 2,
+      "patience": 3,
+      "best_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2a_fixed2/baseline/best_learner.pkl",
+      "stage_best_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2a_fixed2/baseline/best_by_stage/edge_trap_close.pkl"
+    },
+    {
+      "type": "stage_eval",
+      "stage_label": "edge_trap_close",
+      "cycle": 24,
+      "result": {
+        "stage_label": "edge_trap_close",
+        "cycle": 24,
+        "metrics": {
+          "total": 100,
+          "no_move": 0,
+          "improved": 52,
+          "flat": 0,
+          "worsened": 48,
+          "optimal": 52,
+          "avg_reward": -0.2513199999999998,
+          "avg_oracle_reward": 0.08810000000000001,
+          "playouts": {
+            "draw": 49,
+            "mate": 51
+          },
+          "label": "edge_trap_close",
+          "source_stage_names": [
+            "Edge_Trap_Close"
+          ]
+        },
+        "passed": false,
+        "failure_reasons": [
+          "improved_rate=0.520 < 0.700",
+          "worsened_rate=0.480 > 0.200",
+          "avg_reward=-0.251 < 0.000",
+          "mate_playout_rate=0.510 < 0.650",
+          "draw_rate=0.490 > 0.100"
+        ],
+        "score": 0.6486800000000001
+      },
+      "best_score": 0.6486800000000001,
+      "best_cycle": 9,
+      "patience_used": 3,
+      "patience": 3,
+      "best_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2a_fixed2/baseline/best_learner.pkl",
+      "stage_best_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2a_fixed2/baseline/best_by_stage/edge_trap_close.pkl"
+    }
+  ]
+}

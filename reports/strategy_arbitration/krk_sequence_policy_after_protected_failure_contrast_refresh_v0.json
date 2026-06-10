@@ -1,0 +1,107 @@
+{
+  "causal_status": "non_causal_post_failure_contrast_sequence_policy_refresh",
+  "decision": {
+    "label_run_allowed": false,
+    "recommended_next_step": "review_current_control_plane_gate_for_protected_failure_contrast_collection",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "sequence_policy_after_protected_failure_contrast_refresh_blocked_pending_protected_failure_contrast_control_plane_gate_review"
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_sequence_policy_after_protected_failure_contrast_refresh.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_integration_v0.json",
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json",
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
+    "reports/krk_current_control_plane_gate_v0.json"
+  ],
+  "source_scripts": [
+    "scripts/assemble_krk_sequence_policy_benchmark_inputs_v0.py",
+    "scripts/probe_krk_sequence_policy_inputs_v0.py",
+    "scripts/run_krk_sequence_policy_benchmark_v0.py",
+    "scripts/review_krk_sequence_policy_benchmark_v0.py"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "step_results": [
+    {
+      "decision_status": "sequence_policy_benchmark_inputs_ready_non_causal",
+      "label_run_allowed": false,
+      "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/assemble_krk_sequence_policy_benchmark_inputs_v0.py",
+      "selector_training_allowed": false,
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "sequence_policy_inputs"
+    },
+    {
+      "decision_status": "sequence_policy_input_probe_ready_for_full_non_causal_benchmark",
+      "label_run_allowed": false,
+      "output_json": "reports/strategy_arbitration/krk_sequence_policy_input_probe_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/probe_krk_sequence_policy_inputs_v0.py",
+      "selector_training_allowed": false,
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "sequence_policy_input_probe"
+    },
+    {
+      "decision_status": "sequence_policy_benchmark_ready_non_causal_results_available",
+      "label_run_allowed": false,
+      "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/run_krk_sequence_policy_benchmark_v0.py",
+      "selector_training_allowed": false,
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "sequence_policy_benchmark"
+    },
+    {
+      "decision_status": "sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review",
+      "label_run_allowed": false,
+      "output_json": "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
+      "runtime_changes_allowed": false,
+      "script": "scripts/review_krk_sequence_policy_benchmark_v0.py",
+      "selector_training_allowed": false,
+      "stage7_promotion_allowed": false,
+      "stage8_training_allowed": false,
+      "step_id": "sequence_policy_benchmark_review"
+    }
+  ],
+  "summary": {
+    "all_boundaries_preserved": true,
+    "boundary_violation_count": 0,
+    "boundary_violations": [],
+    "current_control_plane_approval_option_ids": [
+      "approve_stage4_first_move_contrast_sandbox",
+      "review_protected_plan_window_failure_contrast_manifest"
+    ],
+    "current_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
+    "integrated_new_failure_count": 0,
+    "integration_ready": false,
+    "integration_status": "protected_plan_window_failure_contrast_integration_underpowered_needs_more_valid_failures",
+    "protected_failure_contrast_collection_blocked_by_option_id": "review_protected_plan_window_failure_contrast_manifest",
+    "protected_failure_contrast_collection_command_available": false,
+    "protected_failure_contrast_collection_option_available": false,
+    "protected_failure_contrast_collection_option_id": null,
+    "protected_failure_contrast_row_count": 0,
+    "runtime_authorization_row_count": 0,
+    "selector_training_row_count": 0,
+    "sequence_policy_benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review",
+    "sequence_policy_benchmark_status": "sequence_policy_benchmark_ready_non_causal_results_available",
+    "sequence_policy_input_row_count": 118,
+    "stage7_training_row_count": 0
+  }
+}

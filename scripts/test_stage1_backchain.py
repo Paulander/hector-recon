@@ -6,6 +6,7 @@ decrease distance to Stage-0 goal prototypes (mate-in-1 goal bank).
 """
 
 import argparse
+import json
 import pickle
 import random
 import importlib.util
@@ -45,6 +46,43 @@ def generate_random_krk_position(rng: random.Random) -> chess.Board:
         if board.is_check():
             continue
         return board
+
+
+def is_forced_mate_in_2(board: chess.Board) -> bool:
+    """Return True if white can force a mate-in-1 position after black replies."""
+    if board.turn != chess.WHITE:
+        return False
+    if can_deliver_mate(board):
+        return False
+
+    for move in board.legal_moves:
+        b1 = board.copy()
+        b1.push(move)
+        if b1.is_checkmate():
+            continue
+        replies = list(b1.legal_moves)
+        if not replies:
+            continue
+
+        forced = True
+        for reply in replies:
+            b2 = b1.copy()
+            b2.push(reply)
+            if not can_deliver_mate(b2):
+                forced = False
+                break
+        if forced:
+            return True
+    return False
+
+
+def generate_stage1_mate_in_2_position(rng: random.Random, max_tries: int = 5000) -> chess.Board:
+    """Generate a random legal KRK position that belongs to the Stage-1 curriculum."""
+    for _ in range(max_tries):
+        board = generate_random_krk_position(rng)
+        if is_forced_mate_in_2(board):
+            return board
+    raise RuntimeError(f"Could not generate forced mate-in-2 after {max_tries} attempts")
 
 
 def choose_move_with_engine(
@@ -98,39 +136,39 @@ def goal_distance(teacher: KRKTeacher, board: chess.Board, goal_bank: dict, min_
     return float(dist)
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Stage-1 backchain evaluator")
-    parser.add_argument("--topology", type=Path, default=Path("topologies/krk_entry_topology.json"))
-    parser.add_argument("--learner", type=Path, default=Path("snapshots/baseline_krk_chain/final_learner.pkl"))
-    parser.add_argument("--samples", type=int, default=100)
-    parser.add_argument("--seed", type=int, default=7)
-    parser.add_argument("--eps", type=float, default=1e-3)
-    parser.add_argument("--min-overlap", type=float, default=8.0)
-    parser.add_argument("--lookahead-black", action="store_true", default=True)
-    parser.add_argument("--no-lookahead-black", action="store_false", dest="lookahead_black")
-    parser.add_argument("--exclude-mate-in-1", action="store_true", default=True)
-    parser.add_argument("--include-mate-in-1", action="store_false", dest="exclude_mate_in_1")
-    parser.add_argument("--stage-filter", type=int, default=None,
-                        help="If set, only actuators from this stage can propose moves")
-    parser.add_argument("--min-d0", type=float, default=0.0,
-                        help="Skip positions with starting goal-distance below this threshold")
-    args = parser.parse_args()
-
-    rng = random.Random(args.seed)
+def evaluate_stage1_backchain(
+    topology: Path,
+    learner_path: Path,
+    *,
+    samples: int = 100,
+    seed: int = 7,
+    eps: float = 1e-3,
+    min_overlap: float = 8.0,
+    lookahead_black: bool = True,
+    exclude_mate_in_1: bool = True,
+    stage_filter: int | None = None,
+    min_d0: float = 0.0,
+    position_mode: str = "random",
+    hybrid_random_ratio: float = 0.5,
+    verbose: bool = True,
+) -> dict:
+    rng = random.Random(seed)
 
     # Load learner for goal bank
-    if not args.learner.exists():
-        raise SystemExit(f"Learner not found: {args.learner}")
-    with open(args.learner, "rb") as f:
+    if not learner_path.exists():
+        raise SystemExit(f"Learner not found: {learner_path}")
+    with open(learner_path, "rb") as f:
         learner = pickle.load(f)
     goal_bank = build_goal_bank(learner, label="mate_in_1")
     if not goal_bank:
         raise SystemExit("Goal bank missing; run Stage-0 training first.")
 
-    teacher = KRKTeacher()
+    teacher = KRKTeacher(feature_set=getattr(learner, "feature_set", "legacy"))
+    if verbose:
+        print(f"Using feature_set: {teacher.feature_set}")
 
     # Load topology
-    graph = build_graph_from_topology(args.topology)
+    graph = build_graph_from_topology(topology)
     engine = ReConEngine(graph)
 
     stats = {
@@ -146,17 +184,25 @@ def main():
     records = []
 
     eval_idx = 0
-    for i in range(args.samples):
-        board = generate_random_krk_position(rng)
-        if args.exclude_mate_in_1 and can_deliver_mate(board):
+    for i in range(samples):
+        if position_mode == "mate_in_2":
+            board = generate_stage1_mate_in_2_position(rng)
+        elif position_mode == "hybrid":
+            if rng.random() < hybrid_random_ratio:
+                board = generate_random_krk_position(rng)
+            else:
+                board = generate_stage1_mate_in_2_position(rng)
+        else:
+            board = generate_random_krk_position(rng)
+        if exclude_mate_in_1 and can_deliver_mate(board):
             stats["skipped_mate_in_1"] += 1
             continue
 
-        d0 = goal_distance(teacher, board, goal_bank, args.min_overlap)
+        d0 = goal_distance(teacher, board, goal_bank, min_overlap)
         if d0 == float("inf"):
             # If we can't score, skip
             continue
-        if d0 < args.min_d0:
+        if d0 < min_d0:
             stats["skipped_min_d0"] += 1
             continue
 
@@ -166,26 +212,26 @@ def main():
         for move in board.legal_moves:
             b1 = board.copy()
             b1.push(move)
-            if args.lookahead_black:
+            if lookahead_black:
                 replies = list(b1.legal_moves)
                 if replies:
                     d2_list = []
                     for reply in replies:
                         b2 = b1.copy()
                         b2.push(reply)
-                        d2_list.append(goal_distance(teacher, b2, goal_bank, args.min_overlap))
-                    d1 = max(d2_list) if d2_list else goal_distance(teacher, b1, goal_bank, args.min_overlap)
+                        d2_list.append(goal_distance(teacher, b2, goal_bank, min_overlap))
+                    d1 = max(d2_list) if d2_list else goal_distance(teacher, b1, goal_bank, min_overlap)
                 else:
-                    d1 = goal_distance(teacher, b1, goal_bank, args.min_overlap)
+                    d1 = goal_distance(teacher, b1, goal_bank, min_overlap)
             else:
-                d1 = goal_distance(teacher, b1, goal_bank, args.min_overlap)
+                d1 = goal_distance(teacher, b1, goal_bank, min_overlap)
 
             reward = d0 - d1
             move_rewards[move.uci()] = reward
             if reward > best_reward:
                 best_reward = reward
 
-        chosen = choose_move_with_engine(graph, engine, board, stage_filter=args.stage_filter)
+        chosen = choose_move_with_engine(graph, engine, board, stage_filter=stage_filter)
         stats["total"] += 1
 
         if not chosen:
@@ -195,32 +241,39 @@ def main():
         chosen_reward = move_rewards.get(chosen, -float("inf"))
         stats["avg_reward"] += chosen_reward
 
-        if chosen_reward > args.eps:
+        if chosen_reward > eps:
             stats["improved"] += 1
             outcome = "improved"
-        elif chosen_reward < -args.eps:
+        elif chosen_reward < -eps:
             stats["worsened"] += 1
             outcome = "worsened"
         else:
             outcome = "flat"
 
-        if chosen_reward >= best_reward - args.eps:
+        if chosen_reward >= best_reward - eps:
             stats["optimal"] += 1
 
         records.append(
             {
                 "d0": float(d0),
                 "outcome": outcome,
-                "optimal": bool(chosen_reward >= best_reward - args.eps),
+                "optimal": bool(chosen_reward >= best_reward - eps),
             }
         )
 
         eval_idx += 1
-        if eval_idx % 10 == 0:
-            print(f"  {eval_idx:3d}/{args.samples}: improved={stats['improved']} optimal={stats['optimal']}")
+        if verbose and eval_idx % 10 == 0:
+            print(f"  {eval_idx:3d}/{samples}: improved={stats['improved']} optimal={stats['optimal']}")
 
     if stats["total"] > 0:
         stats["avg_reward"] /= stats["total"]
+
+    stats["records"] = records
+    return stats
+
+
+def print_stage1_results(stats: dict) -> None:
+    records = stats.get("records", [])
 
     print("\nStage-1 Backchain Evaluation")
     print("-" * 60)
@@ -275,6 +328,50 @@ def main():
                 f"optimal={row['optimal']:3d} ({row['optimal']/total*100:5.1f}%) "
                 f"worsened={row['worsened']:3d} ({row['worsened']/total*100:5.1f}%)"
             )
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Stage-1 backchain evaluator")
+    parser.add_argument("--topology", type=Path, default=Path("topologies/krk_entry_topology.json"))
+    parser.add_argument("--learner", type=Path, default=Path("snapshots/baseline_krk_chain/final_learner.pkl"))
+    parser.add_argument("--samples", type=int, default=100)
+    parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument("--eps", type=float, default=1e-3)
+    parser.add_argument("--min-overlap", type=float, default=8.0)
+    parser.add_argument("--lookahead-black", action="store_true", default=True)
+    parser.add_argument("--no-lookahead-black", action="store_false", dest="lookahead_black")
+    parser.add_argument("--exclude-mate-in-1", action="store_true", default=True)
+    parser.add_argument("--include-mate-in-1", action="store_false", dest="exclude_mate_in_1")
+    parser.add_argument("--stage-filter", type=int, default=None,
+                        help="If set, only actuators from this stage can propose moves")
+    parser.add_argument("--min-d0", type=float, default=0.0,
+                        help="Skip positions with starting goal-distance below this threshold")
+    parser.add_argument("--position-mode", choices=["mate_in_2", "random", "hybrid"], default="random",
+                        help="Evaluation source: forced mate-in-2, random KRK, or a mix")
+    parser.add_argument("--hybrid-random-ratio", type=float, default=0.5,
+                        help="When position-mode=hybrid, probability of sampling random KRK")
+    parser.add_argument("--json-output", type=Path, default=None)
+    args = parser.parse_args()
+
+    stats = evaluate_stage1_backchain(
+        args.topology,
+        args.learner,
+        samples=args.samples,
+        seed=args.seed,
+        eps=args.eps,
+        min_overlap=args.min_overlap,
+        lookahead_black=args.lookahead_black,
+        exclude_mate_in_1=args.exclude_mate_in_1,
+        stage_filter=args.stage_filter,
+        min_d0=args.min_d0,
+        position_mode=args.position_mode,
+        hybrid_random_ratio=args.hybrid_random_ratio,
+        verbose=True,
+    )
+    print_stage1_results(stats)
+    if args.json_output:
+        args.json_output.parent.mkdir(parents=True, exist_ok=True)
+        args.json_output.write_text(json.dumps(stats, indent=2) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

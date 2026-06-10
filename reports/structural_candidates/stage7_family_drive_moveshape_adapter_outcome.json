@@ -1,0 +1,43 @@
+{
+  "schema_version": "stage7_family_adapter_outcome.v1",
+  "causal_status": "non_causal",
+  "proposals_source": "reports/structural_candidates/stage7_family_support_adapter_proposals.json",
+  "default_off_equivalence_source": "reports/structural_candidates/stage7_family_drive_moveshape_default_off_equiv_5_h40.json",
+  "adapter_on_diagnostic_source": "reports/structural_candidates/stage7_family_drive_moveshape_adapter_10_h80.json",
+  "targeted_probe_source": "reports/structural_candidates/stage7_family_ff_drive_moveshape_targeted_probe.json",
+  "default_off_safe": true,
+  "adapter_fire_count": 0,
+  "targeted_adapter_fire_count": 3,
+  "targeted_forced_mate_count": 1,
+  "adapter_supported_provider_by_outcome": {},
+  "adapter_supported_mate_count": 0,
+  "adapter_supported_max_plies_count": 0,
+  "candidate_updates": [
+    {
+      "candidate_id": "cand.krk.box_shrink.family_ff6652c8832c.drive_to_edge_visible_support.v1",
+      "previous_status": "sandbox_ready",
+      "status": "wired_but_arbitration_dominated",
+      "diagnosis": [
+        "adapter_did_not_fire_under_normal_routing",
+        "adapter_fires_under_forced_provider",
+        "forced_provider_converts",
+        "provider_score_arbitration_dominates_visible_support"
+      ],
+      "next_action": "diagnose_stage0_fallback_arbitration_or_candidate_local_weight_calibration",
+      "causal_status": "non_causal",
+      "promotion_status": "proposed"
+    },
+    {
+      "candidate_id": "cand.krk.box_shrink.family_ac0b7ed500ea.fence_established_visible_support.v1",
+      "previous_status": "needs_more_terms",
+      "status": "needs_more_terms",
+      "reason": "not_compiled_for_sandbox"
+    }
+  ],
+  "hard_blocks": [
+    "do_not_promote_stage7",
+    "do_not_train_stage8",
+    "do_not_run_m3_on_overbroad_adapter",
+    "do_not_make_candidate_causal_without_guardrails"
+  ]
+}

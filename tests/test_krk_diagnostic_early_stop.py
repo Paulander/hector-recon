@@ -1,0 +1,573 @@
+#!/usr/bin/env python3
+"""Tests for diagnostic-only KRK evaluation speedups."""
+
+import chess
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from scripts.test_krk_landmark_progress import (
+    COMPOSITION_PROFILE_HANDOFF_V1,
+    COMPOSITION_PROFILE_NONE,
+    _apply_composition_profile_to_eval_kwargs,
+    _apply_krk_strategy_arbiter_sandbox_support,
+    _classify_successor_failure,
+    _cli_option_provided,
+    _compact_playout_trace,
+    _composition_profile_metadata,
+    _finalize_perf_profile,
+    _krk_strategy_arbiter_observation_for_suggestions,
+    _krk_progress_window_reconsideration_summary_for_suggestions,
+    _apply_krk_two_stage_abstention_selector,
+    _merge_count_dict,
+    _mate_in_one_available,
+    _new_perf_profile,
+    _profile_add_count,
+    _profile_add_time,
+    _playout_stagnation_summary,
+    _suggestion_stability_signature,
+)
+
+
+def test_suggestion_stability_signature_uses_top_ranked_move_and_skill():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h7c7"),
+            "score": 0.1,
+            "actuator": "actuator_low",
+            "meta": {"curriculum_label": "edge_trap_close"},
+        },
+        {
+            "move": chess.Move.from_uci("h7h1"),
+            "score": 0.2,
+            "actuator": "actuator_high",
+            "meta": {"curriculum_label": "edge_trap_enemy_between"},
+        },
+    ]
+
+    assert _suggestion_stability_signature(suggestions) == (
+        ("krk.edge_trap_enemy_between", "h7h1", "actuator_high"),
+    )
+
+
+def test_suggestion_stability_signature_respects_forced_successor_filter():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h7h1"),
+            "score": 0.2,
+            "actuator": "actuator_high",
+            "meta": {"curriculum_label": "edge_trap_enemy_between"},
+        },
+        {
+            "move": chess.Move.from_uci("h7c7"),
+            "score": 0.1,
+            "actuator": "actuator_low",
+            "meta": {"curriculum_label": "edge_trap_close"},
+        },
+    ]
+
+    assert _suggestion_stability_signature(
+        suggestions,
+        forced_successor_skill="krk.edge_trap_close",
+    ) == (("krk.edge_trap_close", "h7c7", "actuator_low"),)
+
+
+def test_compact_playout_trace_keeps_selected_skill_and_top_suggestions():
+    compact = _compact_playout_trace([
+        {
+            "ply": 3,
+            "turn": "white",
+            "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+            "move": "h7d7",
+            "resulting_fen": "8/8/8/8/8/8/8/8 b - - 1 1",
+            "engine": {
+                "move": "h7d7",
+                "confidence": 0.14,
+                "ticks": 8,
+                "early_stopped": True,
+                "suggestions": [
+                    {
+                        "move": "h7d7",
+                        "score": 0.14,
+                        "actuator": "actuator_1",
+                        "meta": {"curriculum_label": "edge_trap_close"},
+                    }
+                ],
+            },
+        }
+    ])
+
+    assert compact[0]["selected_skill"] == "krk.edge_trap_close"
+    assert compact[0]["top_suggestions"] == [
+        {"move": "h7d7", "skill_id": "krk.edge_trap_close", "score": 0.14}
+    ]
+    assert "krk_strategy_arbiter_observation" not in compact[0]
+
+
+def test_strategy_arbiter_observation_is_trace_only_and_non_causal():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h7d7"),
+            "score": 0.14,
+            "actuator": "actuator_1",
+            "meta": {"curriculum_label": "edge_trap_close"},
+        },
+        {
+            "move": chess.Move.from_uci("e1f2"),
+            "score": 33.0,
+            "actuator": "actuator_2",
+            "meta": {"curriculum_label": "stage0_basin"},
+        },
+    ]
+
+    observation = _krk_strategy_arbiter_observation_for_suggestions(
+        suggestions,
+        selected_suggestion=suggestions[1],
+        active_landmark_label="box_shrink",
+        visible_terms={
+            "active_landmark_label.box_shrink": True,
+            "irrelevant_false_term": False,
+        },
+    )
+
+    assert observation["schema_version"] == "krk_strategy_arbiter_observation.v0"
+    assert observation["causal_status"] == "non_causal_observation"
+    assert observation["direct_request"] is False
+    assert observation["score_delta"] == 0.0
+    assert observation["recommendation_only"] is True
+    assert observation["selected_provider_before_observation"] == "krk.stage0_basin"
+    assert observation["selected_move_before_observation"] == "e1f2"
+    assert observation["proposal_count"] == 2
+    assert observation["provider_candidates"][0]["provider_id"] == "krk.edge_trap_close"
+    assert observation["provider_candidates"][1]["provider_id"] == "krk.stage0_basin"
+    assert "provider_selection" in observation["blocked_causal_actions"]
+
+
+def test_strategy_arbiter_sandbox_support_is_default_off():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h7d7"),
+            "score": 0.14,
+            "actuator": "actuator_1",
+            "meta": {"curriculum_label": "edge_trap_close"},
+        }
+    ]
+
+    summary = _apply_krk_strategy_arbiter_sandbox_support(
+        suggestions,
+        enabled=False,
+        support_amount=10.0,
+        active_landmark_label="fence_established",
+    )
+
+    assert summary["enabled"] is False
+    assert summary["blocked_reason"] == "disabled"
+    assert suggestions[0]["score"] == 0.14
+    assert "krk_strategy_arbiter_sandbox_support" not in suggestions[0]["meta"]
+
+
+def test_strategy_arbiter_sandbox_support_is_visible_and_bounded():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h7d7"),
+            "score": 0.14,
+            "actuator": "actuator_1",
+            "meta": {"curriculum_label": "edge_trap_close"},
+        },
+        {
+            "move": chess.Move.from_uci("e1f2"),
+            "score": 33.0,
+            "actuator": "actuator_2",
+            "meta": {"curriculum_label": "stage0_basin"},
+        },
+    ]
+
+    summary = _apply_krk_strategy_arbiter_sandbox_support(
+        suggestions,
+        enabled=True,
+        support_amount=0.25,
+        active_landmark_label="fence_established",
+        visible_terms={"fence_exists": True},
+    )
+
+    assert summary["causal_status"] == "sandbox_opt_in"
+    assert summary["direct_request"] is False
+    assert summary["supported_count"] == 1
+    assert summary["supported_provider_counts"] == {"edge_trap": 1}
+    assert suggestions[0]["score"] == 0.39
+    payload = suggestions[0]["meta"]["krk_strategy_arbiter_sandbox_support"]
+    assert payload["schema_version"] == "krk_strategy_arbiter_sandbox_support.v0"
+    assert payload["provider_family"] == "edge_trap"
+    assert payload["support_amount"] == 0.25
+    assert payload["raw_score_before"] == 0.14
+    assert payload["direct_request"] is False
+    assert payload["causal_status"] == "sandbox_opt_in"
+    assert "direct_move_selection" in payload["forbidden_actions"]
+    assert "krk_strategy_arbiter_sandbox_support" not in suggestions[1]["meta"]
+
+
+def test_strategy_arbiter_sandbox_blocks_stage7_challenge_by_default():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("a5a6"),
+            "score": 0.5,
+            "actuator": "actuator_1",
+            "meta": {"curriculum_label": "drive_to_edge"},
+        }
+    ]
+
+    summary = _apply_krk_strategy_arbiter_sandbox_support(
+        suggestions,
+        enabled=True,
+        support_amount=1.0,
+        active_landmark_label="box_shrink",
+    )
+
+    assert summary["blocked_reason"] == "stage7_challenge_held_out"
+    assert summary["supported_count"] == 0
+    assert suggestions[0]["score"] == 0.5
+
+
+def test_two_stage_abstention_selector_is_default_off():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h7c7"),
+            "score": 0.14,
+            "actuator": "actuator_1",
+            "meta": {"curriculum_label": "edge_trap_close"},
+        }
+    ]
+    board = chess.Board("5k2/7R/1K6/8/8/8/8/8 w - - 2 2")
+
+    summary = _apply_krk_two_stage_abstention_selector(
+        suggestions,
+        enabled=False,
+        penalty=100.0,
+        active_landmark_label="fence_established",
+        board=board,
+    )
+
+    assert summary["enabled"] is False
+    assert summary["blocked_reason"] == "disabled"
+    assert suggestions[0]["score"] == 0.14
+    assert "krk_two_stage_abstention_selector" not in suggestions[0]["meta"]
+
+
+def test_two_stage_abstention_selector_is_visible_and_bounded():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h7c7"),
+            "score": 3.0,
+            "actuator": "actuator_1",
+            "meta": {"curriculum_label": "edge_trap_close"},
+        },
+        {
+            "move": chess.Move.from_uci("e2e3"),
+            "score": 2.0,
+            "actuator": "actuator_2",
+            "meta": {"curriculum_label": "stage0_basin"},
+        },
+    ]
+    board = chess.Board("5k2/7R/1K6/8/8/8/8/8 w - - 2 2")
+
+    summary = _apply_krk_two_stage_abstention_selector(
+        suggestions,
+        enabled=True,
+        unsafe_threshold=0.45,
+        preserve_threshold=0.5,
+        penalty=1.25,
+        active_landmark_label="fence_established",
+        board=board,
+    )
+
+    assert summary["causal_status"] == "sandbox_opt_in"
+    assert summary["direct_request"] is False
+    assert summary["penalized_count"] == 1
+    assert summary["penalized_provider_counts"] == {"edge_trap": 1}
+    assert suggestions[0]["score"] == 1.75
+    payload = suggestions[0]["meta"]["krk_two_stage_abstention_selector"]
+    assert payload["schema_version"] == "krk_two_stage_abstention_selector.v0"
+    assert payload["provider_family"] == "edge_trap"
+    assert payload["unsafe_score"] >= 0.45
+    assert payload["preserve_score"] < 0.5
+    assert payload["penalty"] == 1.25
+    assert payload["direct_request"] is False
+    assert payload["causal_status"] == "sandbox_opt_in"
+    assert "direct_move_selection" in payload["forbidden_actions"]
+    assert "krk_two_stage_abstention_selector" not in suggestions[1]["meta"]
+
+
+def test_two_stage_abstention_selector_blocks_stage7_challenge_by_default():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h7c7"),
+            "score": 3.0,
+            "actuator": "actuator_1",
+            "meta": {"curriculum_label": "edge_trap_close"},
+        }
+    ]
+    board = chess.Board("5k2/7R/1K6/8/8/8/8/8 w - - 2 2")
+
+    summary = _apply_krk_two_stage_abstention_selector(
+        suggestions,
+        enabled=True,
+        penalty=1.25,
+        active_landmark_label="box_shrink",
+        board=board,
+    )
+
+    assert summary["blocked_reason"] == "stage7_challenge_held_out"
+    assert summary["penalized_count"] == 0
+    assert suggestions[0]["score"] == 3.0
+
+
+def test_progress_window_reconsideration_summary_is_default_off_and_traceable():
+    suggestions = [
+        {
+            "move": chess.Move.from_uci("h4f4"),
+            "score": 3.5,
+            "actuator": "actuator_1",
+            "meta": {
+                "curriculum_label": "stage0_basin",
+                "krk_progress_window_reconsideration": {
+                    "schema_version": "krk_progress_window_reconsideration.v0",
+                    "enabled": True,
+                    "direct_request": False,
+                },
+            },
+        }
+    ]
+
+    off = _krk_progress_window_reconsideration_summary_for_suggestions(
+        suggestions,
+        selected_suggestion=suggestions[0],
+        enabled=False,
+        support=1.5,
+        active_landmark_label="fence_established",
+        allow_stage7_challenge=False,
+    )
+    enabled = _krk_progress_window_reconsideration_summary_for_suggestions(
+        suggestions,
+        selected_suggestion=suggestions[0],
+        enabled=True,
+        support=1.5,
+        active_landmark_label="fence_established",
+        allow_stage7_challenge=False,
+    )
+
+    assert off["blocked_reason"] == "disabled"
+    assert off["supported_count"] == 0
+    assert enabled["causal_status"] == "sandbox_opt_in"
+    assert enabled["direct_request"] is False
+    assert enabled["supported_count"] == 1
+    assert enabled["selected_supported"] is True
+    assert enabled["supported_provider_counts"] == {"stage0_basin": 1}
+
+
+def test_choose_move_details_forwards_progress_window_reconsideration_flags(monkeypatch):
+    import scripts.test_krk_landmark_progress as landmark
+
+    captured = {}
+
+    def fake_impl(*args, **kwargs):
+        captured.update(kwargs)
+        return {"move": None}
+
+    monkeypatch.setattr(landmark, "_choose_move_details_impl", fake_impl)
+
+    landmark.choose_move_details(
+        None,
+        None,
+        chess.Board(),
+        krk_progress_window_reconsideration_enabled=True,
+        krk_progress_window_reconsideration_support=0.5,
+        krk_progress_window_reconsideration_allow_stage7_challenge=True,
+    )
+
+    assert captured["krk_progress_window_reconsideration_enabled"] is True
+    assert captured["krk_progress_window_reconsideration_support"] == 0.5
+    assert captured["krk_progress_window_reconsideration_allow_stage7_challenge"] is True
+
+
+def test_compact_trace_preserves_strategy_arbiter_observation_metadata():
+    observation = {
+        "schema_version": "krk_strategy_arbiter_observation.v0",
+        "causal_status": "non_causal_observation",
+        "direct_request": False,
+        "score_delta": 0.0,
+    }
+
+    compact = _compact_playout_trace([
+        {
+            "ply": 0,
+            "turn": "white",
+            "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+            "move": "h7d7",
+            "resulting_fen": "8/8/8/8/8/8/8/8 b - - 1 1",
+            "engine": {
+                "move": "h7d7",
+                "confidence": 0.14,
+                "ticks": 8,
+                "suggestions": [
+                    {
+                        "move": "h7d7",
+                        "score": 0.14,
+                        "actuator": "actuator_1",
+                        "meta": {"curriculum_label": "edge_trap_close"},
+                    }
+                ],
+                "krk_strategy_arbiter_observation": observation,
+            },
+        }
+    ])
+
+    assert compact[0]["krk_strategy_arbiter_observation"] == observation
+
+
+def test_horizon_mate_in_one_available_detects_white_mate_at_limit():
+    board = chess.Board("8/5K1k/8/8/8/8/8/2R5 w - - 20 11")
+
+    assert _mate_in_one_available(board)
+
+
+def test_classify_successor_failure_marks_horizon_mate_in_one():
+    classes = _classify_successor_failure(
+        parent_skill="krk.fence_established",
+        local_confirmed=True,
+        conversion_result="max_plies",
+        successor_summary={
+            "selected_skill": "krk.edge_trap_close",
+            "best_score": 0.02,
+            "visible_terms": {},
+            "missing_afforded_skills": {},
+            "route_conflict": False,
+            "handoff_gap": False,
+        },
+        high_score_threshold=5.0,
+        final_mate_in_one_available=True,
+    )
+
+    assert "horizon_mate_in_one" in classes
+
+
+def test_playout_stagnation_summary_detects_rook_oscillation():
+    summary = _playout_stagnation_summary([
+        {
+            "turn": "white",
+            "fen": "6k1/8/K7/8/4R3/8/8/8 w - - 16 9",
+            "move": "e4h4",
+            "resulting_fen": "6k1/8/K7/8/7R/8/8/8 b - - 17 9",
+        },
+        {
+            "turn": "black",
+            "fen": "6k1/8/K7/8/7R/8/8/8 b - - 17 9",
+            "move": "g8f8",
+            "resulting_fen": "5k2/8/K7/8/7R/8/8/8 w - - 18 10",
+        },
+        {
+            "turn": "white",
+            "fen": "5k2/8/K7/8/7R/8/8/8 w - - 18 10",
+            "move": "h4e4",
+            "resulting_fen": "5k2/8/K7/8/4R3/8/8/8 b - - 19 10",
+        },
+    ])
+
+    assert summary["rook_oscillation_detected"]
+    assert summary["rook_oscillation_pairs"] == [
+        {"moves": "e4h4 / h4e4", "count": 1}
+    ]
+
+
+def test_performance_profile_schema_round_trips_core_buckets():
+    profile = _new_perf_profile(True, diagnostic_caches_enabled=True)
+    _profile_add_time(profile, "choose_move_details_time", 1.25)
+    _profile_add_time(profile, "engine_step_time", 0.75)
+    _profile_add_time(profile, "total_wall_time", 2.0)
+    _profile_add_count(profile, "samples", 3)
+    _profile_add_count(profile, "engine_ticks", 42)
+
+    finalized = _finalize_perf_profile(profile)
+
+    assert finalized["schema_version"] == "krk_performance_profile.v1"
+    assert finalized["timers_sec"]["choose_move_details_time"] == 1.25
+    assert finalized["timers_sec"]["engine_step_time"] == 0.75
+    assert finalized["counts"]["samples"] == 3
+    assert finalized["counts"]["engine_ticks"] == 42
+    assert finalized["diagnostic_caches_enabled"] is True
+    assert "cache" in finalized
+
+
+def test_merge_count_dict_handles_nested_buckets():
+    target = {"a": 1, "nested": {"mate": 2}}
+    _merge_count_dict(target, {"a": 3, "nested": {"mate": 4, "draw": 1}})
+
+    assert target == {"a": 4, "nested": {"mate": 6, "draw": 1}}
+
+
+def test_composition_profile_none_preserves_default_eval_kwargs():
+    base = {
+        "successor_affordance_layer_enabled": False,
+        "successor_role_license_enabled": False,
+        "successor_role_scoped_move_shape_enabled": False,
+        "enable_diagnostic_caches": False,
+    }
+
+    updated, runtime_overrides = _apply_composition_profile_to_eval_kwargs(
+        base,
+        COMPOSITION_PROFILE_NONE,
+    )
+
+    assert updated == {**base, "composition_profile": None}
+    assert runtime_overrides == {}
+
+
+def test_handoff_composition_v1_applies_named_experimental_profile():
+    base = {
+        "successor_affordance_layer_enabled": False,
+        "successor_role_license_enabled": False,
+        "successor_role_scoped_move_shape_enabled": False,
+        "successor_role_scoped_move_shape_bonus": 0.0,
+        "stagnation_breaker_enabled": False,
+        "stagnation_breaker_bonus": 0.0,
+        "post_break_continuation_enabled": False,
+        "post_break_continuation_bonus": 0.0,
+        "successor_stage0_drift_penalty": 0.0,
+        "enable_diagnostic_caches": False,
+    }
+
+    updated, runtime_overrides = _apply_composition_profile_to_eval_kwargs(
+        base,
+        COMPOSITION_PROFILE_HANDOFF_V1,
+        use_validation_defaults=True,
+    )
+
+    assert updated["composition_profile"] == COMPOSITION_PROFILE_HANDOFF_V1
+    assert updated["successor_affordance_layer_enabled"] is True
+    assert updated["successor_role_license_enabled"] is True
+    assert updated["successor_role_scoped_move_shape_enabled"] is True
+    assert updated["successor_role_scoped_move_shape_bonus"] == 0.05
+    assert updated["stagnation_breaker_enabled"] is True
+    assert updated["stagnation_breaker_bonus"] == 0.5
+    assert updated["post_break_continuation_enabled"] is True
+    assert updated["post_break_continuation_bonus"] == 0.25
+    assert updated["successor_stage0_drift_penalty"] == 6.0
+    assert updated["enable_diagnostic_caches"] is True
+    assert runtime_overrides == {"parallel_workers": 8, "chunk_size": 25}
+
+
+def test_handoff_composition_v1_metadata_is_non_default_and_domain_scoped():
+    metadata = _composition_profile_metadata(COMPOSITION_PROFILE_HANDOFF_V1)
+
+    assert metadata["schema_version"] == "composition_profile.v1"
+    assert metadata["profile_id"] == COMPOSITION_PROFILE_HANDOFF_V1
+    assert metadata["domain"] == "KRK"
+    assert metadata["experimental_profile"] is True
+    assert metadata["default_policy"] is False
+    assert "handoff_packets" in metadata["non_causal_records"]
+    assert metadata["settings"]["successor_stage0_drift_penalty"] == 6.0
+
+
+def test_cli_option_provided_accepts_space_and_equals_forms():
+    assert _cli_option_provided("--parallel-workers", ["--parallel-workers", "1"])
+    assert _cli_option_provided("--parallel-workers", ["--parallel-workers=1"])
+    assert not _cli_option_provided("--parallel-workers", ["--chunk-size", "25"])

@@ -1,0 +1,87 @@
+{
+  "benchmark_preflight": {
+    "benchmark_input_ready": true,
+    "blockers": [],
+    "row_count": 118,
+    "runtime_authorization_row_count": 0,
+    "selector_training_row_count": 0,
+    "stage7_heldout_row_count": 50
+  },
+  "blockers": [
+    "protected_plan_window_failure_evidence_sparse"
+  ],
+  "causal_status": "non_causal_benchmark_review",
+  "current_control_plane_gate": {
+    "approval_option_ids": [
+      "approve_stage4_first_move_contrast_sandbox",
+      "review_protected_plan_window_failure_contrast_manifest"
+    ],
+    "protected_failure_contrast_collection_blocked_by_option_id": "review_protected_plan_window_failure_contrast_manifest",
+    "protected_failure_contrast_collection_command_available": false,
+    "protected_failure_contrast_collection_option_available": false,
+    "protected_failure_contrast_collection_option_id": null,
+    "status": "krk_control_plane_waiting_on_explicit_gate_choice"
+  },
+  "decision": {
+    "label_run_allowed": false,
+    "recommended_next_step": "review_current_control_plane_gate_for_protected_failure_contrast_collection",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review"
+  },
+  "findings": [
+    "stage4_topk_sequence_signal_present",
+    "stage4_binary_rule_insufficient",
+    "stage4_negative_suppression_reasonable",
+    "protected_plan_window_failure_evidence_sparse",
+    "stage7_heldout_controls_balanced"
+  ],
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "objective_review": {
+    "protected_plan_window": {
+      "failure_evidence_sparse": true,
+      "interpretation": "needs_more_failure_contrasts",
+      "row_count": 20,
+      "target_label_counts": {
+        "conversion_failure": 1,
+        "conversion_positive": 19
+      }
+    },
+    "stage4": {
+      "interpretation": "topk_signal_present_binary_rule_insufficient",
+      "negative_suppression": 0.8636363636363636,
+      "recall": 0.34615384615384615,
+      "row_count": 48,
+      "state_count": 4,
+      "top1_conversion_positive_by_state": 0.75,
+      "top3_conversion_positive_by_state": 1.0
+    },
+    "stage7_heldout": {
+      "failure_controls_met": true,
+      "interpretation": "balanced_heldout_controls",
+      "row_count": 50,
+      "success_controls_met": true,
+      "target_label_counts": {
+        "conversion_failure": 39,
+        "conversion_positive": 11
+      }
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_sequence_policy_benchmark_review.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
+    "reports/krk_current_control_plane_gate_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

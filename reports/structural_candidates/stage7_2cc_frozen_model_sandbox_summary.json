@@ -1,0 +1,46 @@
+{
+  "schema_version": "stage7_2cc_frozen_model_sandbox_summary.v1",
+  "causal_status": "non_causal",
+  "runtime_behavior_changed": false,
+  "default_off": {
+    "playouts": {
+      "mate": 2,
+      "max_plies": 3
+    },
+    "supported_suggestion_count": 0,
+    "selected_supported_count": 0
+  },
+  "enabled": {
+    "playouts": {
+      "mate": 2,
+      "max_plies": 2,
+      "draw": 1
+    },
+    "supported_suggestion_count": 4,
+    "selected_supported_count": 1,
+    "supported_move_by_outcome": {
+      "e2f2:max_plies": 1,
+      "e4d3:max_plies": 1,
+      "d1e2:draw": 1,
+      "f2g2:mate": 1
+    },
+    "selected_by_outcome": {
+      "d1e2:draw": 1
+    }
+  },
+  "candidate_status_update": {
+    "candidate_id": "cand.krk.box_shrink.family_2cc.post_box_continuation_overlay.v1",
+    "diagnosis": "selected_candidate_move_still_insufficient_for_multistep_conversion",
+    "next_action": "run bounded candidate-local continuation warmup only if guardrails remain scoped",
+    "causal_status": "non_causal",
+    "promotion_status": "sandbox_hook_smoke_complete",
+    "credit": 0.0
+  },
+  "guardrails": [
+    "do_not_train_stage8",
+    "do_not_promote_stage7",
+    "do_not_enable_by_default",
+    "do_not_make_structural_candidate_causal",
+    "do_not_use_dtm_or_tablebase_at_runtime"
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "clean_retrain_promotion_policy": {
+    "no_debt_no_regression_target_passed": "promoted_after_remaining_guardrails",
+    "stage5_conversion_regression_vs_control": "quarantine",
+    "stage5_local_reward_debt_only_in_candidate": "quarantine_or_review",
+    "stage5_local_reward_debt_reproduces_in_base_control": "overlay_only_control_debt",
+    "stage6_target_failure": "quarantine"
+  },
+  "created_at": "2026-05-24T18:48:21+02:00",
+  "current_retry1_metrics": {
+    "base_control": {
+      "conversion_status": "passed",
+      "early_stop_stable_suggestions": 2,
+      "handoff_packet_counts_by_phase": {
+        "playout_summary": {
+          "confirmed": 300
+        },
+        "post_opponent_reply": {
+          "confirmed": 144,
+          "failed": 156
+        },
+        "post_own_move": {
+          "confirmed": 144,
+          "failed": 156
+        }
+      },
+      "improved": 144,
+      "improved_rate": 0.48,
+      "label": "fence_established",
+      "mate_rate": 1.0,
+      "max_plies_rate": 0.0,
+      "one_ply_status": "failed",
+      "optimal": 144,
+      "path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40_profile_bonus.json",
+      "playouts": {
+        "mate": 300
+      },
+      "shadow_candidate_count": 0,
+      "source_stage_names": [
+        "Fence_Established",
+        "Anchored_Cut",
+        "Edge_Cut_Hold"
+      ],
+      "stagnation_breaker_king_support_bonus": 2.0,
+      "total": 300,
+      "worsened": 156,
+      "worsened_rate": 0.52
+    },
+    "delta_overlay_vs_base_control": {
+      "improved_delta": 0,
+      "mate_rate_delta": 0.0,
+      "max_plies_rate_delta": 0.0,
+      "optimal_delta": 0,
+      "shadow_candidate_delta": 0,
+      "worsened_delta": 0
+    },
+    "overlay": {
+      "conversion_status": "passed",
+      "early_stop_stable_suggestions": 2,
+      "handoff_packet_counts_by_phase": {
+        "playout_summary": {
+          "confirmed": 300
+        },
+        "post_opponent_reply": {
+          "confirmed": 144,
+          "failed": 156
+        },
+        "post_own_move": {
+          "confirmed": 144,
+          "failed": 156
+        }
+      },
+      "improved": 144,
+      "improved_rate": 0.48,
+      "label": "fence_established",
+      "mate_rate": 1.0,
+      "max_plies_rate": 0.0,
+      "one_ply_status": "failed",
+      "optimal": 144,
+      "path": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+      "playouts": {
+        "mate": 300
+      },
+      "shadow_candidate_count": 0,
+      "source_stage_names": [
+        "Fence_Established",
+        "Anchored_Cut",
+        "Edge_Cut_Hold"
+      ],
+      "stagnation_breaker_king_support_bonus": 2.0,
+      "total": 300,
+      "worsened": 156,
+      "worsened_rate": 0.52
+    }
+  },
+  "decision": {
+    "clean_stack_replacement_allowed": false,
+    "recommended_next_step": "update_clean_retrain_promotion_review_to_accept_overlay_only_with_control_debt_but_block_clean_replacement_until_stage5_local_reward_contract_debt_is_resolved_or_accepted",
+    "stage5_conversion_preserved": true,
+    "stage5_one_ply_debt_reproduces_in_base_control": true,
+    "stage5_overlay_regressed_vs_base_control": false,
+    "stage6_overlay_use_allowed_as_overlay_only": true
+  },
+  "guardrail_tracks": [
+    {
+      "comparison": "candidate_overlay_guardrail_vs_paired_stage5_base_control",
+      "pass_condition": [
+        "mate_rate_delta >= -0.02",
+        "max_plies_rate_delta <= 0.02",
+        "shadow_candidate_delta <= 0"
+      ],
+      "promotion_effect": "allows_overlay_only_if_target_stage_passes",
+      "purpose": "Detect whether a later overlay regresses existing Stage 5 conversion behavior.",
+      "retry1_result": "passed_no_regression",
+      "track_id": "stage5.conversion_preservation_guardrail"
+    },
+    {
+      "comparison": "candidate_and_paired_base_control_against_local_reward_thresholds",
+      "pass_condition": [
+        "improved_rate >= 0.70",
+        "worsened_rate <= 0.20"
+      ],
+      "promotion_effect": "blocks_clean_stack_replacement_or_full_promotion_until_reviewed",
+      "purpose": "Track mismatch between Stage 5 local one-ply reward and visible fence-contract success.",
+      "retry1_result": "failed_but_reproduces_in_base_control",
+      "track_id": "stage5.local_reward_contract_guardrail"
+    }
+  ],
+  "invariants": {
+    "gameplay_topology_mutation": false,
+    "runtime_defaults_changed": false,
+    "runtime_direct_routing": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_score_changes": false,
+    "runtime_selector_implemented": false,
+    "stage7_promotion": false,
+    "stage8_training": false
+  },
+  "schema_version": "krk_stage5_guardrail_semantics_split.v0",
+  "source_artifacts": [
+    "reports/krk_stage5_guardrail_control_debt_review_v0.json"
+  ],
+  "status": "stage5_guardrail_semantics_split_defined"
+}

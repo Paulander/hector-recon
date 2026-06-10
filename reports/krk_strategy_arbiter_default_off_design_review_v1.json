@@ -1,0 +1,144 @@
+{
+  "blocked_next_steps": [
+    "implement_runtime_arbiter",
+    "enable_selector_sandbox",
+    "add_stage7_repair",
+    "promote_stage7",
+    "train_stage8",
+    "use_runtime_dtm_or_tablebase",
+    "mutate_topology_during_gameplay"
+  ],
+  "causal_status": "non_causal_design_review",
+  "decision": {
+    "implementation_allowed": false,
+    "recommended_next_step": "external_architecture_review_before_runtime_sandbox",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "default_off_strategy_arbiter_design_ready_for_external_review"
+  },
+  "design_review_scope": {
+    "allowed": [
+      "define future default-off sandbox interface",
+      "define trace metadata contract",
+      "define default-off equivalence requirements",
+      "define guardrail validation gates"
+    ],
+    "not_allowed": [
+      "implement runtime arbiter",
+      "enable selector sandbox",
+      "change provider scores",
+      "route providers",
+      "promote Stage 7",
+      "train Stage 8"
+    ]
+  },
+  "future_sandbox_contract": {
+    "activation_scope": [
+      "KRK domain only",
+      "explicit sandbox profile only",
+      "handoff_composition_v1 or explicit successor profile",
+      "Stage7 challenge rows held out from training/tuning"
+    ],
+    "allowed_inputs": [
+      "StrategyProposalFrame records",
+      "provider provenance and maturity metadata",
+      "visible terminal-space context terms",
+      "InternalTerminalSpec-derived non-causal monitor evidence only if promoted to visible runtime evidence in a future review",
+      "plan-capsule observation metadata only as trace evidence"
+    ],
+    "default_enabled": false,
+    "forbidden_inputs": [
+      "runtime DTM/tablebase lookup",
+      "state hash exceptions",
+      "hidden Python controller state",
+      "unpromoted StructuralCandidate as causal input",
+      "unpromoted InternalTerminalSpec as causal input",
+      "unpromoted PlanCapsuleSpec as causal input"
+    ],
+    "forbidden_outputs": [
+      "direct move selection",
+      "direct role-SCRIPT to provider request",
+      "untraced provider score mutation",
+      "gameplay topology mutation",
+      "Stage7 promotion trigger",
+      "Stage8 training trigger"
+    ],
+    "future_outputs_if_approved": [
+      "visible strategy-arbitration recommendation",
+      "explicit provider eligibility/support evidence",
+      "trace-only explanation before any score influence"
+    ],
+    "sandbox_id": "sandbox.krk.strategy_arbiter_v1"
+  },
+  "gameplay_topology_mutation": false,
+  "minimum_enabled_sandbox_smoke_if_later_approved": [
+    "trace metadata explains every recommendation",
+    "direct_request=false unless explicitly promoted topology provides a visible edge",
+    "score_delta is bounded and visible if scoring is ever enabled",
+    "Stage7 remains held-out challenge evidence, not training data",
+    "protected Stage4/5/6 smoke before any target validation"
+  ],
+  "open_risks": [
+    {
+      "detail": "Current selected-provider diversity remains poor; v3 treats this as the failure mode to test, not as a design-review blocker.",
+      "risk": "selected_provider_stage0_dominance",
+      "status": "diagnostic_only_pre_sandbox_promotion_risk"
+    },
+    {
+      "detail": "Stage7 rows remain challenge cases and must not become training rows for a selector.",
+      "risk": "stage7_overfit",
+      "status": "must_hold_out"
+    },
+    {
+      "detail": "Forced conversion labels can justify candidate ownership contrast, but they are not the same as selected-playout success labels.",
+      "risk": "forced_vs_selected_label_semantics",
+      "status": "must_keep_separate"
+    }
+  ],
+  "promotion_gates_if_later_approved": [
+    "target control-plane improvement",
+    "protected Stage4/5/6/1 guardrails hold",
+    "M1-M4 preservation holds",
+    "selected-provider dominance does not regress",
+    "no hidden controller",
+    "no runtime DTM/tablebase",
+    "no gameplay topology mutation"
+  ],
+  "readiness_v3_summary": {
+    "diagnostic_only_checks": [
+      "current_selected_provider_diversity"
+    ],
+    "hard_blockers": [],
+    "passed_checks": [
+      "proposal_family_diversity",
+      "conversion_positive_provider_diversity",
+      "label_balance",
+      "protected_stage_coverage",
+      "stage7_heldout_boundary"
+    ],
+    "reason": "Selected-provider diversity from the current raw arbiter is stage0-dominant; requiring it as a pre-sandbox hard gate blocks the mechanism meant to correct that dominance."
+  },
+  "required_default_off_tests_before_any_runtime_code": [
+    "baseline vs flag-present-default-off selected first move equivalence",
+    "selected provider equivalence",
+    "local one-ply result equivalence",
+    "conversion result equivalence on protected smoke",
+    "shadow candidate equivalence where available",
+    "no no-move/illegal/draw regression",
+    "no observation metadata emitted when disabled"
+  ],
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_strategy_arbiter_default_off_design_review.v1",
+  "selector_sandbox_implemented": false,
+  "source_artifacts": [
+    "reports/krk_selector_readiness_v3_plan.json",
+    "reports/krk_strategy_owner_contrast_probe_v0.json",
+    "reports/krk_selected_provider_diversity_architecture_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

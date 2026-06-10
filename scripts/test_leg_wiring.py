@@ -7,8 +7,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 import json
 import tempfile
 
-from recon_lite.nodes.stem_cell import StemCellTerminal, StemCellState
-from recon_lite.models.registry import TopologyRegistry
+from recon_lite_hector.nodes.stem_cell import StemCellTerminal, StemCellState
+from recon_lite_hector.models.registry import TopologyRegistry
 
 
 def test_trial_leg_wiring():
@@ -37,7 +37,7 @@ def test_trial_leg_wiring():
         registry = TopologyRegistry(topo_path)
         
         # Create a stem cell with some samples
-        from recon_lite.nodes.stem_cell import StemCellConfig, StemCellSample
+        from recon_lite_hector.nodes.stem_cell import StemCellConfig, StemCellSample
         
         config = StemCellConfig()
         cell = StemCellTerminal("test_cell", config=config)

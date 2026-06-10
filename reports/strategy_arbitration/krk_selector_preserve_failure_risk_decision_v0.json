@@ -1,0 +1,52 @@
+{
+  "causal_status": "non_causal_preserve_failure_risk_decision",
+  "decision": {
+    "behavior_changing_selector_implemented": false,
+    "future_runtime_review_packet_recommended": true,
+    "runtime_changes_allowed": false,
+    "selector_runtime_ready": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "preserve_failure_risk_resolved_non_causal"
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_provider_suppression": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_selector_preserve_failure_risk_decision.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_preserve_failure_risk_audit_v0.json",
+    "reports/strategy_arbitration/krk_selector_observability_expanded_recommendations_v0.json",
+    "reports/strategy_arbitration/krk_selector_observability_readiness_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "capacity_label_used_as_ownership_label_count": 0,
+    "failing_row_count": 1,
+    "future_runtime_review_packet_recommendation": {
+      "must_keep_trace_only_until_separately_approved": true,
+      "must_remain_default_off": true,
+      "recommended_rule": "preserve_only_if_no_selected_owner_failure_risk_terms",
+      "runtime_effect_if_later_approved": "recommendation_policy_only_review_not_implemented_here",
+      "scope": "review_only_default_off_selector_refinement"
+    },
+    "prior_readiness_status": "selector_observability_blocked_by_preserve_failure_risk",
+    "recommended_refinement_id": "preserve_only_if_no_selected_owner_failure_risk_terms",
+    "routing_delta_count": 0,
+    "runtime_behavior_changed": false,
+    "safe_preserve_row_count": 4,
+    "score_delta_count": 0,
+    "selected_move_delta_count": 0,
+    "selected_provider_delta_count": 0,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "viable_refinement_count": 2
+  }
+}

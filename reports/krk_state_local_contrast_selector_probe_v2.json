@@ -1,0 +1,240 @@
+{
+  "benchmark_underpowered": true,
+  "best_training_result": {
+    "accuracy": 0.75,
+    "false_negative": 0,
+    "false_positive": 3,
+    "negative_suppression": 0.0,
+    "objective": "stage_family_rank_score",
+    "positive_precision": 0.75,
+    "positive_recall": 1.0,
+    "row_count": 12,
+    "true_negative": 0,
+    "true_positive": 9
+  },
+  "causal_status": "non_causal_offline_probe",
+  "decision": {
+    "recommended_next_step": "review_state_local_contrast_before_runtime_tests",
+    "runtime_test_allowed_next": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "state_local_contrast_signal_not_ready"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "finding": "The diverse labels add Stage 7 held-out failures but still leave the training contrast set too small and too concentrated for runtime selector readiness.",
+    "stage7_training_leakage": false
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_state_local_contrast_selector_probe.v2",
+  "source_artifact": "reports/krk_state_local_contrast_labels_v2.json",
+  "stage7_heldout_results": {
+    "family_global_rank": {
+      "accuracy": 0.0,
+      "false_negative": 0,
+      "false_positive": 8,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.0,
+      "positive_recall": null,
+      "row_count": 8,
+      "true_negative": 0,
+      "true_positive": 0
+    },
+    "family_maturity": {
+      "accuracy": 0.0,
+      "false_negative": 0,
+      "false_positive": 8,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.0,
+      "positive_recall": null,
+      "row_count": 8,
+      "true_negative": 0,
+      "true_positive": 0
+    },
+    "family_norm_score": {
+      "accuracy": 0.0,
+      "false_negative": 0,
+      "false_positive": 8,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.0,
+      "positive_recall": null,
+      "row_count": 8,
+      "true_negative": 0,
+      "true_positive": 0
+    },
+    "family_rank": {
+      "accuracy": 0.0,
+      "false_negative": 0,
+      "false_positive": 8,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.0,
+      "positive_recall": null,
+      "row_count": 8,
+      "true_negative": 0,
+      "true_positive": 0
+    },
+    "family_rank_norm_score": {
+      "accuracy": 0.0,
+      "false_negative": 0,
+      "false_positive": 8,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.0,
+      "positive_recall": null,
+      "row_count": 8,
+      "true_negative": 0,
+      "true_positive": 0
+    },
+    "provider_family": {
+      "accuracy": 0.0,
+      "false_negative": 0,
+      "false_positive": 8,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.0,
+      "positive_recall": null,
+      "row_count": 8,
+      "true_negative": 0,
+      "true_positive": 0
+    },
+    "provider_maturity": {
+      "accuracy": 0.0,
+      "false_negative": 0,
+      "false_positive": 8,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.0,
+      "positive_recall": null,
+      "row_count": 8,
+      "true_negative": 0,
+      "true_positive": 0
+    },
+    "stage_family_rank_score": {
+      "accuracy": 0.0,
+      "false_negative": 0,
+      "false_positive": 8,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.0,
+      "positive_recall": null,
+      "row_count": 8,
+      "true_negative": 0,
+      "true_positive": 0
+    }
+  },
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "label_counts": {
+      "negative": 11,
+      "positive": 9
+    },
+    "provider_family_counts": {
+      "drive_to_edge": 2,
+      "edge_trap": 9,
+      "fence_established": 2,
+      "stage0_basin": 7
+    },
+    "row_count": 20,
+    "stage7_eval_row_count": 8,
+    "stage7_label_counts": {
+      "negative": 8
+    },
+    "stage7_training_leakage": false,
+    "state_count": 10,
+    "training_label_counts": {
+      "negative": 3,
+      "positive": 9
+    },
+    "training_row_count": 12,
+    "training_state_count": 8
+  },
+  "training_leave_state_out_results": {
+    "family_global_rank": {
+      "accuracy": 0.5833333333333334,
+      "false_negative": 2,
+      "false_positive": 3,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.7,
+      "positive_recall": 0.7777777777777778,
+      "row_count": 12,
+      "true_negative": 0,
+      "true_positive": 7
+    },
+    "family_maturity": {
+      "accuracy": 0.5,
+      "false_negative": 3,
+      "false_positive": 3,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6666666666666666,
+      "positive_recall": 0.6666666666666666,
+      "row_count": 12,
+      "true_negative": 0,
+      "true_positive": 6
+    },
+    "family_norm_score": {
+      "accuracy": 0.5,
+      "false_negative": 3,
+      "false_positive": 3,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6666666666666666,
+      "positive_recall": 0.6666666666666666,
+      "row_count": 12,
+      "true_negative": 0,
+      "true_positive": 6
+    },
+    "family_rank": {
+      "accuracy": 0.5,
+      "false_negative": 3,
+      "false_positive": 3,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6666666666666666,
+      "positive_recall": 0.6666666666666666,
+      "row_count": 12,
+      "true_negative": 0,
+      "true_positive": 6
+    },
+    "family_rank_norm_score": {
+      "accuracy": 0.5,
+      "false_negative": 3,
+      "false_positive": 3,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6666666666666666,
+      "positive_recall": 0.6666666666666666,
+      "row_count": 12,
+      "true_negative": 0,
+      "true_positive": 6
+    },
+    "provider_family": {
+      "accuracy": 0.5,
+      "false_negative": 3,
+      "false_positive": 3,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6666666666666666,
+      "positive_recall": 0.6666666666666666,
+      "row_count": 12,
+      "true_negative": 0,
+      "true_positive": 6
+    },
+    "provider_maturity": {
+      "accuracy": 0.5,
+      "false_negative": 3,
+      "false_positive": 3,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6666666666666666,
+      "positive_recall": 0.6666666666666666,
+      "row_count": 12,
+      "true_negative": 0,
+      "true_positive": 6
+    },
+    "stage_family_rank_score": {
+      "accuracy": 0.75,
+      "false_negative": 0,
+      "false_positive": 3,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.75,
+      "positive_recall": 1.0,
+      "row_count": 12,
+      "true_negative": 0,
+      "true_positive": 9
+    }
+  }
+}

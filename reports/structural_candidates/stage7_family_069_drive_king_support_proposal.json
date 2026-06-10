@@ -1,0 +1,81 @@
+{
+  "schema_version": "role_provider_support_proposal.v1",
+  "candidate_id": "cand.krk.box_shrink.family_069e81a609ed.drive_to_edge_king_support.v1",
+  "candidate_type": "successor_contract_refinement",
+  "target_role": "krk.box_shrink_to_drive_repair",
+  "target_provider": "krk.drive_to_edge",
+  "source_monitor_script": "growth.monitor.successor_miscalibration",
+  "source_terms": [
+    "forced_drive_to_edge_converted",
+    "candidate_is_king_move",
+    "white_king_and_rook_same_file_side_after_move",
+    "white_king_rank_opposition_distance_two_after_move",
+    "box_area_not_increased_after_move",
+    "rook_safe_after_move"
+  ],
+  "trigger_failure_classes": [
+    "selected_successor_miscalibrated",
+    "repeated_conversion_failure",
+    "reward_contract_mismatch"
+  ],
+  "parent_skill": "krk.box_shrink",
+  "proposed_change": {
+    "kind": "move_shape_gated_visible_support_adapter",
+    "description": "Support drive_to_edge only for the post-box king-support geometry that converted under controlled ownership in state.069e81a609ed."
+  },
+  "evidence_artifacts": [
+    "reports/structural_candidates/stage7_trace_role_king_post_no_drive_post_box_diagnosis.json",
+    "reports/structural_candidates/stage7_king_post_no_drive_failed_families_forced_h40_h50.json"
+  ],
+  "proposed_support_relations": [
+    {
+      "source_role_script": "script.krk.successor.box_shrink_to_drive_repair_affordance",
+      "target_provider_skill": "skill.krk.drive_to_edge",
+      "relation_type": "visible_role_provider_support",
+      "initial_weight": 0.05,
+      "trainable": true,
+      "causal_status": "non_causal_scaffold",
+      "direct_graph_edge_emitted": false,
+      "requires_support_adapter": true,
+      "support_required_terms": [
+        "box_shrink_drive_repair_available",
+        "drive_to_edge_affordance_after_box_shrink",
+        "enemy_king_not_at_edge",
+        "rook_safe",
+        "white_king_support_available"
+      ],
+      "support_veto_terms": [
+        "mate_in_one_available"
+      ],
+      "support_move_shape_required_terms": [
+        "candidate_is_king_move"
+      ],
+      "support_post_move_required_terms": [
+        "black_king_escape_count_not_increased_after_move",
+        "box_area_not_increased_after_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "rook_safe_after_move",
+        "white_king_and_rook_same_file_side_after_move",
+        "white_king_rank_opposition_distance_two_after_move"
+      ],
+      "adapter_contract": {
+        "kind": "gated_visible_support_adapter",
+        "confirm_when": [
+          "source_role_script_confirmed",
+          "role_contract_met",
+          "candidate_move_shape_terms_met",
+          "candidate_post_move_terms_met",
+          "provider_execution_eligible"
+        ],
+        "must_not": [
+          "request_provider_before_role_confirmation",
+          "bypass visible provider eligibility",
+          "mutate default_topology"
+        ]
+      }
+    }
+  ],
+  "promotion_status": "proposed",
+  "causal_status": "non_causal",
+  "credit": 0.0
+}

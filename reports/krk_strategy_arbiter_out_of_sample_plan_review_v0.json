@@ -1,0 +1,101 @@
+{
+  "blocked_next_work": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_plan_review",
+  "decision": {
+    "execute_collection_now": false,
+    "recommended_next_step": "generate_out_of_sample_control_execution_manifest",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "plan_review_passed_execution_manifest_needed"
+  },
+  "gaps": [
+    "Replay-free out-of-sample coverage does not span Stage4/5/6 after excluding balanced-label states.",
+    "Replay-free candidate count is below the planned max-state target.",
+    "A concrete execution manifest is needed before any new h40 labels are run."
+  ],
+  "manifest_requirements": {
+    "exclude_state_ids": [
+      "state.02cfd843a2cf",
+      "state.02feb8593cc6",
+      "state.1e4f48a672e8",
+      "state.256a3da30f0f",
+      "state.2c1d6da27ea1",
+      "state.326222aefdf1",
+      "state.52085d244e9d",
+      "state.699f0003a511",
+      "state.7bd8961882ad",
+      "state.87b1160e68b9",
+      "state.b11124d658cf",
+      "state.d1f052d2cab2",
+      "state.f17117682948"
+    ],
+    "horizon": 40,
+    "max_states": 12,
+    "must_bind_topology_profile_checkpoint": true,
+    "must_keep_stage7_training_rows_zero": true,
+    "must_remain_non_causal": true,
+    "per_stage_max": 4,
+    "required_stages": [
+      "stage4",
+      "stage5",
+      "stage6"
+    ]
+  },
+  "missing_replay_free_stages": [
+    "stage4"
+  ],
+  "plan_is_consistent_with_invariants": true,
+  "plan_status": "out_of_sample_control_plan_defined_execution_blocked",
+  "replay_free_candidate_count": 2,
+  "replay_free_candidates": [
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_replay_free_candidate",
+      "frame_id": "cp.krk.state.3dca34326fca",
+      "known_result": "max_plies",
+      "label": "negative",
+      "move_uci": "c6b6",
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_replay_free_candidate",
+      "frame_id": "cp.krk.state.69711173114a",
+      "known_result": "mate",
+      "label": "positive",
+      "move_uci": "a1d1",
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage6",
+      "state_id": "state.69711173114a"
+    }
+  ],
+  "replay_free_counts_by_label": {
+    "negative": 1,
+    "positive": 1
+  },
+  "replay_free_counts_by_stage": {
+    "stage5": 1,
+    "stage6": 1
+  },
+  "replay_free_unique_state_count": 2,
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "schema_version": "krk_strategy_arbiter_out_of_sample_plan_review.v0",
+  "source_artifacts": [
+    "reports/krk_strategy_arbiter_out_of_sample_control_plan_v0.json",
+    "reports/krk_selector_balanced_label_dataset_v1.json",
+    "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json"
+  ],
+  "used_balanced_state_count": 13
+}

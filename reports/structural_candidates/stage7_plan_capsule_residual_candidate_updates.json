@@ -1,0 +1,184 @@
+{
+  "schema_version": "stage7_plan_capsule_residual_candidate_updates.v1",
+  "causal_status": "non_causal",
+  "stage7_status": "local_valid_composition_quarantined",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_plan_capsule_owned_failure_analysis_50_h40.json",
+    "reports/structural_candidates/stage7_plan_capsule_residual_forced_provider_h40.json",
+    "reports/structural_candidates/stage7_state0926_legal_first_h40.json",
+    "reports/structural_candidates/stage7_no_drive_unresolved_legal_first_h50.json",
+    "reports/structural_candidates/stage7_remaining_krk_dtm_oracle.json"
+  ],
+  "structural_candidates": [
+    {
+      "schema_version": "structural_candidate.v1",
+      "candidate_id": "cand.krk.box_shrink.family_069.drive_role_refinement.v1",
+      "candidate_type": "family_specific_role_refinement",
+      "source_monitor_script": "growth.monitor.stage7_plan_capsule_residual_family_split",
+      "source_terms": [
+        "plan_capsule_entry_confirmed",
+        "owned_arbitration_selected_edge_trap_close",
+        "edge_trap_close_forced_max_plies",
+        "drive_to_edge_forced_mate_h40",
+        "reward_contract_mismatch"
+      ],
+      "trigger_failure_classes": [
+        "successor_conflict",
+        "wrong_owned_provider",
+        "selected_successor_miscalibrated"
+      ],
+      "target_skill": "krk.box_shrink",
+      "parent_skill": "krk.post_box_shrink_continuation",
+      "proposed_change": {
+        "kind": "visible_role_boundary_refinement",
+        "family_id": "state.069e81a609ed",
+        "current_owned_provider": "krk.edge_trap_close",
+        "forced_success_provider": "krk.drive_to_edge",
+        "forced_success_move": "e2e3",
+        "forced_success_plies": 7,
+        "required_next_audit": "derive visible terms that distinguish drive_to_edge repair from edge_trap_close in this family"
+      },
+      "evidence_artifacts": [
+        "reports/structural_candidates/stage7_plan_capsule_residual_forced_provider_h40.json",
+        "reports/structural_candidates/stage7_plan_capsule_owned_failure_analysis_50_h40.json"
+      ],
+      "governor_status": "growth_allowed",
+      "governor_metadata": {
+        "active_candidate_limit_ok": true,
+        "guardrails_required_before_promotion": true,
+        "default_runtime_behavior_changed": false
+      },
+      "topology_weight_diagnosis": {
+        "frozen_weight_probe_result": "existing provider converts when forced",
+        "forced_oracle_probe_result": "drive_to_edge mates at h40",
+        "diagnosis": "parameter_miscalibrated_or_role_boundary_wrong"
+      },
+      "candidate_diagnostic_labels": [
+        "parameter_miscalibrated",
+        "topology_present_untrained",
+        "role_boundary_overbroad_for_edge_trap_close"
+      ],
+      "promotion_status": "proposed",
+      "causal_status": "non_causal",
+      "credit": 0.0
+    },
+    {
+      "schema_version": "structural_candidate.v1",
+      "candidate_id": "cand.krk.box_shrink.family_0926.king_support_fence_stabilizer.v1",
+      "candidate_type": "move_shape_role_refinement",
+      "source_monitor_script": "growth.monitor.stage7_plan_capsule_residual_family_split",
+      "source_terms": [
+        "plan_capsule_entry_confirmed",
+        "no_existing_forced_provider_mates_h40",
+        "legal_first_move_converts_h40",
+        "king_moves_toward_enemy",
+        "king_moves_toward_rook_support",
+        "fence_stable_after_move"
+      ],
+      "trigger_failure_classes": [
+        "conversion_failure_unclassified",
+        "legal_first_action_selection_gap"
+      ],
+      "target_skill": "krk.box_shrink",
+      "parent_skill": "krk.post_box_shrink_continuation",
+      "proposed_change": {
+        "kind": "visible_move_shape_contract",
+        "family_id": "state.0926f12f8e8f",
+        "converting_legal_first_move": "e4d3",
+        "converting_plies": 9,
+        "suggested_terms": [
+          "candidate_is_king_move",
+          "king_moves_toward_enemy",
+          "king_moves_toward_rook_support",
+          "fence_exists_after_move",
+          "fence_stable_after_move",
+          "cut_preserved_after_move",
+          "white_king_distance_to_enemy_decreases",
+          "white_king_distance_to_rook_decreases"
+        ],
+        "required_next_audit": "derive a non-hash king-support/fence-stabilizing post-box move-shape role and test default-off"
+      },
+      "evidence_artifacts": [
+        "reports/structural_candidates/stage7_state0926_legal_first_h40.json",
+        "reports/structural_candidates/stage7_plan_capsule_residual_forced_provider_h40.json"
+      ],
+      "governor_status": "growth_allowed",
+      "governor_metadata": {
+        "active_candidate_limit_ok": true,
+        "guardrails_required_before_promotion": true,
+        "default_runtime_behavior_changed": false
+      },
+      "topology_weight_diagnosis": {
+        "frozen_weight_probe_result": "existing forced providers do not mate at h40",
+        "forced_oracle_probe_result": "legal-first e4d3 mates at h40 under current continuation",
+        "diagnosis": "action_selection_gap"
+      },
+      "candidate_diagnostic_labels": [
+        "provider_capacity_missing_for_selected_providers",
+        "legal_first_action_selection_gap",
+        "trainable_candidate"
+      ],
+      "promotion_status": "proposed",
+      "causal_status": "non_causal",
+      "credit": 0.0
+    },
+    {
+      "schema_version": "structural_candidate.v1",
+      "candidate_id": "cand.krk.box_shrink.family_2cc.post_box_continuation_overlay.v1",
+      "candidate_type": "narrow_overlay_training_candidate",
+      "source_monitor_script": "growth.monitor.stage7_plan_capsule_residual_family_split",
+      "source_terms": [
+        "plan_capsule_entry_confirmed",
+        "no_existing_forced_provider_mates_h40",
+        "no_legal_first_current_continuation_mates_h50",
+        "dtm_won_within_h40"
+      ],
+      "trigger_failure_classes": [
+        "successor_conflict",
+        "provider_capacity_missing",
+        "continuation_topology_underexpressive"
+      ],
+      "target_skill": "krk.box_shrink",
+      "parent_skill": "krk.post_box_shrink_continuation",
+      "proposed_change": {
+        "kind": "narrow_post_box_continuation_overlay_probe",
+        "family_id": "state.2cc0b3e1033a",
+        "dtm_plies": 27,
+        "current_graph_legal_first_h50": "no_mate",
+        "required_next_audit": "sandbox a narrow post-box continuation overlay only for visible terms matching this family; do not train generic full KRK"
+      },
+      "evidence_artifacts": [
+        "reports/structural_candidates/stage7_plan_capsule_residual_forced_provider_h40.json",
+        "reports/structural_candidates/stage7_no_drive_unresolved_legal_first_h50.json",
+        "reports/structural_candidates/stage7_remaining_krk_dtm_oracle.json"
+      ],
+      "governor_status": "structure_insufficient",
+      "governor_metadata": {
+        "active_candidate_limit_ok": true,
+        "guardrails_required_before_promotion": true,
+        "default_runtime_behavior_changed": false
+      },
+      "topology_weight_diagnosis": {
+        "frozen_weight_probe_result": "existing forced providers do not mate at h40",
+        "forced_oracle_probe_result": "DTM indicates win within h40",
+        "bounded_m3_warmup_result": "not_run_for_this_residual_family",
+        "diagnosis": "structure_insufficient_or_expressive_but_untrained"
+      },
+      "candidate_diagnostic_labels": [
+        "structure_insufficient",
+        "provider_capacity_missing",
+        "trainable_candidate"
+      ],
+      "promotion_status": "proposed",
+      "causal_status": "non_causal",
+      "credit": 0.0
+    }
+  ],
+  "boundary": [
+    "non_causal_candidate_updates_only",
+    "do_not_promote_stage7",
+    "do_not_train_stage8",
+    "do_not_increase_broad_plan_capsule_bonus",
+    "do_not_mutate_topology_during_gameplay"
+  ]
+}

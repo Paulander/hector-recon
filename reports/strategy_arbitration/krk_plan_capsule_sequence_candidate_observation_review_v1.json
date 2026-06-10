@@ -1,0 +1,81 @@
+{
+  "causal_status": "non_causal_source_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "implementation_allowed_by_this_artifact": false,
+    "recommended_next_step": "non_causal_plan_capsule_source_contract_fixture_or_cross_stage_evidence",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "status": "plan_capsule_sequence_observation_source_schema_ready_but_stage7_only"
+  },
+  "evidence": {
+    "abort_term_count": 8,
+    "capsule_causal_status": "non_causal",
+    "capsule_id": "krk.post_box_shrink_continuation",
+    "capsule_promotion_status": "sandboxed",
+    "entry_term_count": 7,
+    "exit_term_count": 7,
+    "handoff_export_count": 4,
+    "owned_arbitration_selected_count": 24,
+    "plan_audit_diagnosis": {
+      "loss_of_cut_or_fence": "possible_context_dependent",
+      "missing_king_support": "possible_context_dependent",
+      "missing_plan_commitment": "likely",
+      "premature_stage0_fallback": "observed_but_not_sufficient_after_ownership_tests",
+      "provider_capacity_gap": "likely_for_current_providers",
+      "stagnation_or_repetition": "possible_downstream",
+      "wrong_first_post_box_move": "not_sufficient",
+      "wrong_second_or_third_move": "likely"
+    },
+    "plan_failure_diagnosis": [
+      "capsule_owned_failures_are_provider_specific",
+      "edge_trap_close_ownership_still_has_max_plies_residuals",
+      "fence_established_ownership_still_has_max_plies_residuals",
+      "owned_arbitration_overrode_stage0_basin_but_conversion_still_failed",
+      "upstream_reward_contract_mismatch_remains_in_failure_set"
+    ],
+    "progress_term_count": 8,
+    "selected_supported_count": 31,
+    "ttl_white_moves": 3
+  },
+  "gameplay_topology_mutation": false,
+  "readiness": {
+    "has_bounded_ttl": true,
+    "has_entry_progress_exit_abort_terms": true,
+    "policy_succeeded": false,
+    "protected_cross_stage_evidence": false,
+    "runtime_observation_expansion_allowed": false,
+    "source_terms_visible_in_existing_artifacts": true,
+    "stage7_only_evidence": true
+  },
+  "required_observation_fields": [
+    "plan_capsule_id",
+    "entry_terms_confirmed",
+    "progress_terms_available",
+    "exit_terms_available",
+    "abort_terms_available",
+    "ttl_white_moves",
+    "handoff_targets",
+    "source_terms",
+    "capacity_evidence_kind",
+    "direct_request=false",
+    "score_delta=0.0",
+    "causal_status=observation_only"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_changes_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_plan_capsule_sequence_candidate_observation_review.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_broader_strategy_sequence_candidate_source_design_v1.json",
+    "reports/structural_candidates/stage7_post_box_continuation_capsule_candidate.json",
+    "reports/structural_candidates/stage7_plan_capsule_owned_failure_analysis_50_h40.json",
+    "reports/structural_candidates/stage7_post_box_plan_capsule_audit.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

@@ -1,0 +1,98 @@
+{
+  "causal_status": "non_causal_observation_gap_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "recommended_next_step": "non_causal_candidate_move_capacity_annotation_review",
+    "runtime_candidate_generator_changes_allowed": false,
+    "selector_allowed": false,
+    "stage7_training_rows_allowed": false,
+    "status": "observation_gap_review_blocks_selector_recommends_capacity_annotation"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "broader_strategy_candidates_visible": false,
+    "candidate_generation_visible": true,
+    "candidate_move_capacity_annotation_needed": true,
+    "candidate_move_frames_visible": true,
+    "plan_capsule_sequence_candidates_visible": false,
+    "provider_pack_contains_negative_capacity": true,
+    "provider_pack_contains_positive_capacity": true,
+    "validated_provider_pack_visible": true
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_observation_gap_review.v1",
+  "selector_blockers": [
+    "candidate_capacity_mostly_unknown",
+    "generated_set_contains_negative_capacity_candidates",
+    "plan_capsule_sequence_candidates_not_observed",
+    "broader_strategy_candidates_not_observed"
+  ],
+  "source_artifact": "reports/strategy_arbitration/krk_candidate_generation_observation_broadened_sample_v1.json",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "capacity_evidence_counts": {
+      "held_out_challenge": 111,
+      "negative_capacity": 5,
+      "positive_capacity": 11,
+      "unknown_capacity": 442
+    },
+    "frame_count": 569,
+    "invariant_failure_count": 0,
+    "missing_expected_sources": [
+      "broader_strategy_candidate",
+      "plan_capsule_sequence_candidate"
+    ],
+    "negative_capacity_by_source": {
+      "validated_provider_pack": 5
+    },
+    "negative_capacity_ratio": 0.008787346221441126,
+    "positive_capacity_by_source": {
+      "validated_provider_pack": 11
+    },
+    "protected_status_counts": {
+      "held_out_stage7_challenge": 111,
+      "protected_control": 16,
+      "protected_or_unknown": 442
+    },
+    "source_counts": {
+      "candidate_move_frame": 363,
+      "validated_provider_pack": 206
+    },
+    "source_counts_by_stage": {
+      "stage4": {
+        "candidate_move_frame": 89,
+        "validated_provider_pack": 56
+      },
+      "stage5": {
+        "candidate_move_frame": 124,
+        "validated_provider_pack": 67
+      },
+      "stage6": {
+        "candidate_move_frame": 79,
+        "validated_provider_pack": 43
+      },
+      "stage7": {
+        "candidate_move_frame": 71,
+        "validated_provider_pack": 40
+      }
+    },
+    "stage7_readiness_training_row_count": 0,
+    "stage_counts": {
+      "stage4": 145,
+      "stage5": 191,
+      "stage6": 122,
+      "stage7": 111
+    },
+    "unknown_capacity_by_source": {
+      "candidate_move_frame": 292,
+      "validated_provider_pack": 150
+    },
+    "unknown_capacity_ratio": 0.7768014059753954
+  }
+}

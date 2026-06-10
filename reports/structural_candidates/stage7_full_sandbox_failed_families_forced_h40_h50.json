@@ -1,0 +1,3381 @@
+{
+  "schema_version": "stage7_post_box_forced_provider_probe.v1",
+  "causal_status": "non_causal",
+  "source_diagnosis": "reports/structural_candidates/stage7_full_sandbox_post_box_diagnosis.json",
+  "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_trace_role_full_sandbox_w25_28_30.json",
+  "providers": [
+    "krk.stage0_basin",
+    "krk.edge_trap_close",
+    "krk.edge_trap_wrong_tempo",
+    "krk.edge_trap_enemy_between",
+    "krk.drive_to_edge",
+    "krk.fence_established",
+    "krk.stage7_drive_repair",
+    "krk.stage7_king_tempo"
+  ],
+  "horizons": [
+    40,
+    50
+  ],
+  "run_forced_playouts": true,
+  "config": {
+    "max_ticks": 40,
+    "suggestion_limit": 80,
+    "early_stop_stable_suggestions": 2,
+    "black_policy": "adversarial",
+    "successor_affordance_layer_enabled": true,
+    "successor_role_licenses_enabled": true,
+    "role_scoped_move_shapes_enabled": true,
+    "explicit_role_provider_support_enabled": true,
+    "role_owned_score_normalization_enabled": true,
+    "stage7_king_tempo_enabled": true,
+    "stage7_king_tempo_score": 25.0,
+    "stage7_drive_repair_enabled": true,
+    "stage7_drive_repair_score": 28.0,
+    "stage7_post_king_tempo_enabled": true,
+    "stage7_post_king_tempo_score": 30.0,
+    "diagnostic_caches_enabled": true,
+    "run_legal_first_sweep": false,
+    "legal_first_require_any_terms": "",
+    "legal_first_require_all_terms": "",
+    "legal_first_exclude_terms": "",
+    "legal_first_priority_terms": "",
+    "legal_first_max_moves": 0,
+    "legal_first_stop_after_mates": 0
+  },
+  "summary": {
+    "state_count": 3,
+    "states_with_any_available_provider": 3,
+    "states_with_any_mating_forced_playout": 2,
+    "first_move_available_counts": {
+      "krk.stage0_basin:available": 3,
+      "krk.edge_trap_close:available": 3,
+      "krk.edge_trap_wrong_tempo:available": 3,
+      "krk.edge_trap_enemy_between:available": 3,
+      "krk.drive_to_edge:available": 3,
+      "krk.fence_established:available": 3,
+      "krk.stage7_drive_repair:available": 3,
+      "krk.stage7_king_tempo:unavailable": 3
+    },
+    "first_move_counts": {
+      "krk.stage0_basin:e4e8": 1,
+      "krk.edge_trap_close:e2e3": 1,
+      "krk.edge_trap_wrong_tempo:e2e3": 1,
+      "krk.edge_trap_enemy_between:e2e3": 1,
+      "krk.drive_to_edge:e4h4": 1,
+      "krk.fence_established:e4e8": 1,
+      "krk.stage7_drive_repair:e2e3": 1,
+      "krk.stage7_king_tempo:none": 3,
+      "krk.stage0_basin:d1e2": 1,
+      "krk.edge_trap_close:d1e2": 1,
+      "krk.edge_trap_wrong_tempo:a5h5": 1,
+      "krk.edge_trap_enemy_between:d1e2": 1,
+      "krk.drive_to_edge:a5a8": 1,
+      "krk.fence_established:d1e2": 1,
+      "krk.stage7_drive_repair:a5b5": 1,
+      "krk.stage0_basin:d1h1": 1,
+      "krk.edge_trap_close:d2e3": 1,
+      "krk.edge_trap_wrong_tempo:d2e3": 1,
+      "krk.edge_trap_enemy_between:d2c3": 1,
+      "krk.drive_to_edge:d1h1": 1,
+      "krk.fence_established:d2e3": 1,
+      "krk.stage7_drive_repair:d2c1": 1
+    },
+    "forced_playout_outcome_counts": {
+      "krk.stage0_basin:h40:max_plies": 2,
+      "krk.stage0_basin:h50:max_plies": 2,
+      "krk.edge_trap_close:h40:max_plies": 2,
+      "krk.edge_trap_close:h50:max_plies": 2,
+      "krk.edge_trap_wrong_tempo:h40:max_plies": 3,
+      "krk.edge_trap_wrong_tempo:h50:max_plies": 3,
+      "krk.edge_trap_enemy_between:h40:max_plies": 2,
+      "krk.edge_trap_enemy_between:h50:max_plies": 2,
+      "krk.drive_to_edge:h40:mate": 1,
+      "krk.drive_to_edge:h50:mate": 1,
+      "krk.fence_established:h40:max_plies": 2,
+      "krk.fence_established:h50:max_plies": 2,
+      "krk.stage7_drive_repair:h40:max_plies": 3,
+      "krk.stage7_drive_repair:h50:max_plies": 3,
+      "krk.stage0_basin:h40:mate": 1,
+      "krk.stage0_basin:h50:mate": 1,
+      "krk.edge_trap_close:h40:mate": 1,
+      "krk.edge_trap_close:h50:mate": 1,
+      "krk.edge_trap_enemy_between:h40:mate": 1,
+      "krk.edge_trap_enemy_between:h50:mate": 1,
+      "krk.drive_to_edge:h40:max_plies": 2,
+      "krk.drive_to_edge:h50:max_plies": 2,
+      "krk.fence_established:h40:mate": 1,
+      "krk.fence_established:h50:mate": 1
+    },
+    "forced_playout_mate_by_provider": {
+      "krk.drive_to_edge": 2,
+      "krk.stage0_basin": 2,
+      "krk.edge_trap_close": 2,
+      "krk.edge_trap_enemy_between": 2,
+      "krk.fence_established": 2
+    },
+    "states_with_any_legal_first_mate": 0,
+    "legal_first_outcome_counts": {},
+    "legal_first_mate_by_move": {},
+    "topology_weight_diagnosis": "topology_present_untrained_or_miscalibrated"
+  },
+  "candidate_update": {
+    "candidate_id": "cand.krk.box_shrink.handoff_role_refinement.v1",
+    "status": "needs_bounded_m3_or_role_calibration_probe",
+    "topology_weight_diagnosis": "topology_present_untrained_or_miscalibrated",
+    "causal_status": "non_causal",
+    "promotion_status": "proposed"
+  },
+  "records": [
+    {
+      "state_id": "state.ff6652c8832c",
+      "post_reply_fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+      "selected_successor": "krk.stage7_drive_repair",
+      "selected_move": "e2e3",
+      "conversion_result": "max_plies",
+      "failure_classes": [
+        "selected_successor_miscalibrated"
+      ],
+      "source_sample_index": 1,
+      "family_id": null,
+      "diagnosis": null,
+      "source_record": {
+        "sample_index": 1,
+        "start_fen": "8/8/8/8/R7/8/2k1K3/8 w - - 0 1",
+        "stage7_move": "a4e4",
+        "post_own_move_fen": "8/8/8/8/4R3/8/2k1K3/8 b - - 1 1",
+        "black_reply": "c2c3",
+        "post_reply_fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+        "reward_confirmed": true,
+        "visible_box_area_decreased_after_own_move": true,
+        "visible_box_area_not_increased_after_reply": true,
+        "fence_or_cut_preserved": false,
+        "rook_safe_after_reply": true,
+        "enemy_king_mobility_delta": -2.0,
+        "selected_successor": "krk.stage7_drive_repair",
+        "selected_move": "e2e3",
+        "conversion_result": "max_plies",
+        "conversion_status": "failed",
+        "plies": 40,
+        "semantic_alignment_status": "reward_contract_mismatch",
+        "failure_classes": [
+          "selected_successor_miscalibrated"
+        ],
+        "shadow_triggers": []
+      },
+      "first_move_probes": [
+        {
+          "provider": "krk.stage0_basin",
+          "forced_successor_available": true,
+          "move": "e4e8",
+          "legal": true,
+          "confidence": 33.684823149275964,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 19,
+          "top_suggestions": [
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.684823149275964,
+              "actuator": "actuator_10",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.683823620224,
+              "actuator": "actuator_7",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.68308715449181,
+              "actuator": "actuator_11",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.68300121762753,
+              "actuator": "actuator_19",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.68258299525827,
+              "actuator": "actuator_18",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.681720495224,
+              "actuator": "actuator_2",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.681720495224,
+              "actuator": "actuator_3",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.681720495224,
+              "actuator": "actuator_5",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.681720495224,
+              "actuator": "actuator_6",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.681720495224,
+              "actuator": "actuator_8",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.681720495224,
+              "actuator": "actuator_12",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.681720495224,
+              "actuator": "actuator_13",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.681720495224,
+              "actuator": "actuator_17",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.681720495224,
+              "actuator": "actuator_20",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.68129682945218,
+              "actuator": "actuator_15",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.680353071862456,
+              "actuator": "actuator_14",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.680145495224,
+              "actuator": "actuator_16",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.67801020110635,
+              "actuator": "actuator_4",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "e4e8",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.67766778836548,
+              "actuator": "actuator_9",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            }
+          ],
+          "move_shape_audit": {
+            "move": "e4e8",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
+            ],
+            "move_shape_terms": [
+              "candidate_is_rook_move",
+              "candidate_is_rook_transfer",
+              "rook_destination_far_from_enemy",
+              "rook_destination_not_adjacent_enemy",
+              "rook_safe_after_candidate",
+              "rook_to_edge_rank",
+              "rook_transfer_vertical"
+            ],
+            "post_move_terms": [
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_split_rank_side_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 12,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 2,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 2,
+              "black_king_escape_count": 3
+            },
+            "post_move_metrics": {
+              "box_area": 28,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 2,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 6,
+              "black_king_escape_count": 6
+            }
+          }
+        },
+        {
+          "provider": "krk.edge_trap_close",
+          "forced_successor_available": true,
+          "move": "e2e3",
+          "legal": true,
+          "confidence": 0.09945547809787096,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 4,
+          "top_suggestions": [
+            {
+              "move": "e2e3",
+              "skill_id": "krk.edge_trap_close",
+              "score": 0.09945547809787096,
+              "actuator": "actuator_21",
+              "curriculum_label": "edge_trap_close",
+              "stage": 2
+            },
+            {
+              "move": "e2e3",
+              "skill_id": "krk.edge_trap_close",
+              "score": 0.09812974593080581,
+              "actuator": "actuator_23",
+              "curriculum_label": "edge_trap_close",
+              "stage": 2
+            },
+            {
+              "move": "e2e3",
+              "skill_id": "krk.edge_trap_close",
+              "score": 0.09786936505027116,
+              "actuator": "actuator_24",
+              "curriculum_label": "edge_trap_close",
+              "stage": 2
+            },
+            {
+              "move": "e2e3",
+              "skill_id": "krk.edge_trap_close",
+              "score": 0.09754002047566078,
+              "actuator": "actuator_22",
+              "curriculum_label": "edge_trap_close",
+              "stage": 2
+            }
+          ],
+          "move_shape_audit": {
+            "move": "e2e3",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
+            ],
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_rook_support"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_distance_to_rook_decreases",
+              "white_king_rank_opposition_distance_two_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 12,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 2,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 2,
+              "black_king_escape_count": 3
+            },
+            "post_move_metrics": {
+              "box_area": 12,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 2,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 1,
+              "black_king_escape_count": 3
+            }
+          }
+        },
+        {
+          "provider": "krk.edge_trap_wrong_tempo",
+          "forced_successor_available": true,
+          "move": "e2e3",
+          "legal": true,
+          "confidence": 0.09827853057845855,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 2,
+          "top_suggestions": [
+            {
+              "move": "e2e3",
+              "skill_id": "krk.edge_trap_wrong_tempo",
+              "score": 0.09827853057845855,
+              "actuator": "actuator_32",
+              "curriculum_label": "edge_trap_wrong_tempo",
+              "stage": 4
+            },
+            {
+              "move": "e2e3",
+              "skill_id": "krk.edge_trap_wrong_tempo",
+              "score": 0.09737241137015325,
+              "actuator": "actuator_31",
+              "curriculum_label": "edge_trap_wrong_tempo",
+              "stage": 4
+            }
+          ],
+          "move_shape_audit": {
+            "move": "e2e3",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
+            ],
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_rook_support"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_distance_to_rook_decreases",
+              "white_king_rank_opposition_distance_two_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 12,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 2,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 2,
+              "black_king_escape_count": 3
+            },
+            "post_move_metrics": {
+              "box_area": 12,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 2,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 1,
+              "black_king_escape_count": 3
+            }
+          }
+        },
+        {
+          "provider": "krk.edge_trap_enemy_between",
+          "forced_successor_available": true,
+          "move": "e2e3",
+          "legal": true,
+          "confidence": 0.09739839339442552,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 6,
+          "top_suggestions": [
+            {
+              "move": "e2e3",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.09739839339442552,
+              "actuator": "actuator_25",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            },
+            {
+              "move": "e2e3",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.09739839339442552,
+              "actuator": "actuator_26",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            },
+            {
+              "move": "e2e3",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.09718403368579846,
+              "actuator": "actuator_27",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            },
+            {
+              "move": "e2e3",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.09712082479521093,
+              "actuator": "actuator_30",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            },
+            {
+              "move": "e2e3",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.09682104313559832,
+              "actuator": "actuator_29",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            },
+            {
+              "move": "e2e3",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.09677073073401025,
+              "actuator": "actuator_28",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            }
+          ],
+          "move_shape_audit": {
+            "move": "e2e3",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
+            ],
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_rook_support"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_distance_to_rook_decreases",
+              "white_king_rank_opposition_distance_two_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 12,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 2,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 2,
+              "black_king_escape_count": 3
+            },
+            "post_move_metrics": {
+              "box_area": 12,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 2,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 1,
+              "black_king_escape_count": 3
+            }
+          }
+        },
+        {
+          "provider": "krk.drive_to_edge",
+          "forced_successor_available": true,
+          "move": "e4h4",
+          "legal": true,
+          "confidence": 0.21362318191949053,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 3,
+          "top_suggestions": [
+            {
+              "move": "e4h4",
+              "skill_id": "krk.drive_to_edge",
+              "score": 0.21362318191949053,
+              "actuator": "actuator_35",
+              "curriculum_label": "drive_to_edge",
+              "stage": 6,
+              "visible_role_provider_support_adapter": {
+                "enabled": true,
+                "adapter_id": "script.krk.support.krk_box_shrink_to_drive_repair_to_krk_drive_to_edge",
+                "source_role": "krk.box_shrink_to_drive_repair",
+                "provider_id": "krk.drive_to_edge",
+                "role_confirmed": true,
+                "source_terms": [
+                  "box_shrink_drive_repair_available",
+                  "fence_or_cut_not_preserved",
+                  "drive_to_edge_affordance_after_box_shrink",
+                  "repair_or_reestablish_cut_available",
+                  "enemy_king_not_at_edge",
+                  "box_area_large",
+                  "rook_safe"
+                ],
+                "support_amount": 0.05,
+                "direct_request": false,
+                "move_shape_gated": true,
+                "matched_move_shape_terms": [
+                  "candidate_is_rook_transfer",
+                  "rook_lateral_transfer",
+                  "rook_to_edge_file"
+                ],
+                "matched_post_move_terms": [
+                  "rook_safe_after_move"
+                ]
+              },
+              "explicit_role_provider_move_shape_support_bonus": 0.05,
+              "visible_move_shape_audit": {
+                "move_shape_terms": [
+                  "candidate_is_rook_move",
+                  "candidate_is_rook_transfer",
+                  "rook_destination_far_from_enemy",
+                  "rook_destination_not_adjacent_enemy",
+                  "rook_lateral_transfer",
+                  "rook_safe_after_candidate",
+                  "rook_to_edge_file"
+                ],
+                "post_move_terms": [
+                  "black_king_escape_count_not_increased_after_move",
+                  "enemy_corner_distance_not_increased_after_move",
+                  "enemy_edge_distance_not_increased_after_move",
+                  "rook_safe_after_move",
+                  "white_king_and_rook_same_file_side_after_move",
+                  "white_king_and_rook_split_rank_side_after_move"
+                ]
+              }
+            },
+            {
+              "move": "e4h4",
+              "skill_id": "krk.drive_to_edge",
+              "score": 0.2135176689008872,
+              "actuator": "actuator_36",
+              "curriculum_label": "drive_to_edge",
+              "stage": 6,
+              "visible_role_provider_support_adapter": {
+                "enabled": true,
+                "adapter_id": "script.krk.support.krk_box_shrink_to_drive_repair_to_krk_drive_to_edge",
+                "source_role": "krk.box_shrink_to_drive_repair",
+                "provider_id": "krk.drive_to_edge",
+                "role_confirmed": true,
+                "source_terms": [
+                  "box_shrink_drive_repair_available",
+                  "fence_or_cut_not_preserved",
+                  "drive_to_edge_affordance_after_box_shrink",
+                  "repair_or_reestablish_cut_available",
+                  "enemy_king_not_at_edge",
+                  "box_area_large",
+                  "rook_safe"
+                ],
+                "support_amount": 0.05,
+                "direct_request": false,
+                "move_shape_gated": true,
+                "matched_move_shape_terms": [
+                  "candidate_is_rook_transfer",
+                  "rook_lateral_transfer",
+                  "rook_to_edge_file"
+                ],
+                "matched_post_move_terms": [
+                  "rook_safe_after_move"
+                ]
+              },
+              "explicit_role_provider_move_shape_support_bonus": 0.05,
+              "visible_move_shape_audit": {
+                "move_shape_terms": [
+                  "candidate_is_rook_move",
+                  "candidate_is_rook_transfer",
+                  "rook_destination_far_from_enemy",
+                  "rook_destination_not_adjacent_enemy",
+                  "rook_lateral_transfer",
+                  "rook_safe_after_candidate",
+                  "rook_to_edge_file"
+                ],
+                "post_move_terms": [
+                  "black_king_escape_count_not_increased_after_move",
+                  "enemy_corner_distance_not_increased_after_move",
+                  "enemy_edge_distance_not_increased_after_move",
+                  "rook_safe_after_move",
+                  "white_king_and_rook_same_file_side_after_move",
+                  "white_king_and_rook_split_rank_side_after_move"
+                ]
+              }
+            },
+            {
+              "move": "e4h4",
+              "skill_id": "krk.drive_to_edge",
+              "score": 0.21129198491573337,
+              "actuator": "actuator_34",
+              "curriculum_label": "drive_to_edge",
+              "stage": 6,
+              "visible_role_provider_support_adapter": {
+                "enabled": true,
+                "adapter_id": "script.krk.support.krk_box_shrink_to_drive_repair_to_krk_drive_to_edge",
+                "source_role": "krk.box_shrink_to_drive_repair",
+                "provider_id": "krk.drive_to_edge",
+                "role_confirmed": true,
+                "source_terms": [
+                  "box_shrink_drive_repair_available",
+                  "fence_or_cut_not_preserved",
+                  "drive_to_edge_affordance_after_box_shrink",
+                  "repair_or_reestablish_cut_available",
+                  "enemy_king_not_at_edge",
+                  "box_area_large",
+                  "rook_safe"
+                ],
+                "support_amount": 0.05,
+                "direct_request": false,
+                "move_shape_gated": true,
+                "matched_move_shape_terms": [
+                  "candidate_is_rook_transfer",
+                  "rook_lateral_transfer",
+                  "rook_to_edge_file"
+                ],
+                "matched_post_move_terms": [
+                  "rook_safe_after_move"
+                ]
+              },
+              "explicit_role_provider_move_shape_support_bonus": 0.05,
+              "visible_move_shape_audit": {
+                "move_shape_terms": [
+                  "candidate_is_rook_move",
+                  "candidate_is_rook_transfer",
+                  "rook_destination_far_from_enemy",
+                  "rook_destination_not_adjacent_enemy",
+                  "rook_lateral_transfer",
+                  "rook_safe_after_candidate",
+                  "rook_to_edge_file"
+                ],
+                "post_move_terms": [
+                  "black_king_escape_count_not_increased_after_move",
+                  "enemy_corner_distance_not_increased_after_move",
+                  "enemy_edge_distance_not_increased_after_move",
+                  "rook_safe_after_move",
+                  "white_king_and_rook_same_file_side_after_move",
+                  "white_king_and_rook_split_rank_side_after_move"
+                ]
+              }
+            }
+          ],
+          "move_shape_audit": {
+            "move": "e4h4",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
+            ],
+            "move_shape_terms": [
+              "candidate_is_rook_move",
+              "candidate_is_rook_transfer",
+              "rook_destination_far_from_enemy",
+              "rook_destination_not_adjacent_enemy",
+              "rook_lateral_transfer",
+              "rook_safe_after_candidate",
+              "rook_to_edge_file"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_split_rank_side_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 12,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 2,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 2,
+              "black_king_escape_count": 3
+            },
+            "post_move_metrics": {
+              "box_area": 21,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 2,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 3,
+              "black_king_escape_count": 3
+            }
+          }
+        },
+        {
+          "provider": "krk.fence_established",
+          "forced_successor_available": true,
+          "move": "e4e8",
+          "legal": true,
+          "confidence": 0.031102217248578874,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 1,
+          "top_suggestions": [
+            {
+              "move": "e4e8",
+              "skill_id": "krk.fence_established",
+              "score": 0.031102217248578874,
+              "actuator": "actuator_33",
+              "curriculum_label": "fence_established",
+              "stage": 5
+            }
+          ],
+          "move_shape_audit": {
+            "move": "e4e8",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
+            ],
+            "move_shape_terms": [
+              "candidate_is_rook_move",
+              "candidate_is_rook_transfer",
+              "rook_destination_far_from_enemy",
+              "rook_destination_not_adjacent_enemy",
+              "rook_safe_after_candidate",
+              "rook_to_edge_rank",
+              "rook_transfer_vertical"
+            ],
+            "post_move_terms": [
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_split_rank_side_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 12,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 2,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 2,
+              "black_king_escape_count": 3
+            },
+            "post_move_metrics": {
+              "box_area": 28,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 2,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 6,
+              "black_king_escape_count": 6
+            }
+          }
+        },
+        {
+          "provider": "krk.stage7_drive_repair",
+          "forced_successor_available": true,
+          "move": "e2e3",
+          "legal": true,
+          "confidence": 28.0,
+          "ticks": 2,
+          "early_stopped": true,
+          "suggestion_count": 1,
+          "top_suggestions": [
+            {
+              "move": "e2e3",
+              "skill_id": "krk.stage7_drive_repair",
+              "score": 28.0,
+              "actuator": "terminal.krk.stage7_drive_repair",
+              "curriculum_label": "stage7_drive_repair",
+              "stage": 7,
+              "visible_move_shape_audit": {
+                "move_shape_terms": [
+                  "candidate_is_king_move",
+                  "king_moves_toward_rook_support"
+                ],
+                "post_move_terms": [
+                  "black_king_escape_count_not_increased_after_move",
+                  "box_area_not_increased_after_move",
+                  "enemy_corner_distance_not_increased_after_move",
+                  "enemy_edge_distance_not_increased_after_move",
+                  "rook_safe_after_move",
+                  "white_king_and_rook_same_file_side_after_move",
+                  "white_king_distance_to_rook_decreases",
+                  "white_king_rank_opposition_distance_two_after_move"
+                ]
+              }
+            }
+          ],
+          "move_shape_audit": {
+            "move": "e2e3",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_support_available"
+            ],
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_rook_support"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_distance_to_rook_decreases",
+              "white_king_rank_opposition_distance_two_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 12,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 2,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 2,
+              "black_king_escape_count": 3
+            },
+            "post_move_metrics": {
+              "box_area": 12,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 2,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 1,
+              "black_king_escape_count": 3
+            }
+          }
+        },
+        {
+          "provider": "krk.stage7_king_tempo",
+          "forced_successor_available": false,
+          "move": null,
+          "legal": false,
+          "confidence": null,
+          "ticks": 40,
+          "early_stopped": false,
+          "suggestion_count": 0,
+          "top_suggestions": [],
+          "move_shape_audit": null
+        }
+      ],
+      "playout_probes": [
+        {
+          "provider": "krk.stage0_basin",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "e4e8",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 154,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.stage0_basin",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "e4e8",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 194,
+          "engine_early_stop_count": 25
+        },
+        {
+          "provider": "krk.edge_trap_close",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "e2e3",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 154,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.edge_trap_close",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "e2e3",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 194,
+          "engine_early_stop_count": 25
+        },
+        {
+          "provider": "krk.edge_trap_wrong_tempo",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "e2e3",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 154,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.edge_trap_wrong_tempo",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "e2e3",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 194,
+          "engine_early_stop_count": 25
+        },
+        {
+          "provider": "krk.edge_trap_enemy_between",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "e2e3",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 154,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.edge_trap_enemy_between",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "e2e3",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 194,
+          "engine_early_stop_count": 25
+        },
+        {
+          "provider": "krk.drive_to_edge",
+          "horizon": 40,
+          "result": "mate",
+          "plies": 11,
+          "first_move": "e4h4",
+          "forced_successor_available": true,
+          "engine_decision_count": 6,
+          "engine_ticks_total": 42,
+          "engine_early_stop_count": 6
+        },
+        {
+          "provider": "krk.drive_to_edge",
+          "horizon": 50,
+          "result": "mate",
+          "plies": 11,
+          "first_move": "e4h4",
+          "forced_successor_available": true,
+          "engine_decision_count": 6,
+          "engine_ticks_total": 42,
+          "engine_early_stop_count": 6
+        },
+        {
+          "provider": "krk.fence_established",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "e4e8",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 154,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.fence_established",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "e4e8",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 194,
+          "engine_early_stop_count": 25
+        },
+        {
+          "provider": "krk.stage7_drive_repair",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "e2e3",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 148,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.stage7_drive_repair",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "e2e3",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 188,
+          "engine_early_stop_count": 25
+        }
+      ],
+      "legal_first_probes": []
+    },
+    {
+      "state_id": "state.38aed2f35911",
+      "post_reply_fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+      "selected_successor": "krk.stage7_drive_repair",
+      "selected_move": "a5b5",
+      "conversion_result": "max_plies",
+      "failure_classes": [
+        "selected_successor_miscalibrated"
+      ],
+      "source_sample_index": 3,
+      "family_id": null,
+      "diagnosis": null,
+      "source_record": {
+        "sample_index": 3,
+        "start_fen": "8/8/8/3k4/8/R7/8/3K4 w - - 0 1",
+        "stage7_move": "a3a5",
+        "post_own_move_fen": "8/8/8/R2k4/8/8/8/3K4 b - - 1 1",
+        "black_reply": "d5e4",
+        "post_reply_fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+        "reward_confirmed": true,
+        "visible_box_area_decreased_after_own_move": true,
+        "visible_box_area_not_increased_after_reply": false,
+        "fence_or_cut_preserved": false,
+        "rook_safe_after_reply": true,
+        "enemy_king_mobility_delta": -1.0,
+        "selected_successor": "krk.stage7_drive_repair",
+        "selected_move": "a5b5",
+        "conversion_result": "max_plies",
+        "conversion_status": "failed",
+        "plies": 40,
+        "semantic_alignment_status": "reward_visible_fence_aligned_broken_by_reply",
+        "failure_classes": [
+          "selected_successor_miscalibrated"
+        ],
+        "shadow_triggers": []
+      },
+      "first_move_probes": [
+        {
+          "provider": "krk.stage0_basin",
+          "forced_successor_available": true,
+          "move": "d1e2",
+          "legal": true,
+          "confidence": 12.212486497306823,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 19,
+          "top_suggestions": [
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.212486497306823,
+              "actuator": "actuator_13",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.21087447226412,
+              "actuator": "actuator_2",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_3",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_4",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_5",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_6",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_7",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_8",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_9",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_10",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_11",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_12",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_14",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_15",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_16",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_17",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_18",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_19",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.stage0_basin",
+              "score": 12.210461497306824,
+              "actuator": "actuator_20",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            }
+          ],
+          "move_shape_audit": {
+            "move": "d1e2",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
+            ],
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_enemy"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_decreases_after_move",
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_split_rank_side_after_move",
+              "white_king_distance_to_enemy_decreases",
+              "white_king_file_opposition_distance_two_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 28,
+              "enemy_edge_distance": 3,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 4,
+              "black_king_escape_count": 5
+            },
+            "post_move_metrics": {
+              "box_area": 28,
+              "enemy_edge_distance": 3,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 4,
+              "black_king_escape_count": 2
+            }
+          }
+        },
+        {
+          "provider": "krk.edge_trap_close",
+          "forced_successor_available": true,
+          "move": "d1e2",
+          "legal": true,
+          "confidence": 0.026651005347818137,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 4,
+          "top_suggestions": [
+            {
+              "move": "d1e2",
+              "skill_id": "krk.edge_trap_close",
+              "score": 0.026651005347818137,
+              "actuator": "actuator_21",
+              "curriculum_label": "edge_trap_close",
+              "stage": 2
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.edge_trap_close",
+              "score": 0.024973627331604565,
+              "actuator": "actuator_23",
+              "curriculum_label": "edge_trap_close",
+              "stage": 2
+            },
+            {
+              "move": "a5h5",
+              "skill_id": "krk.edge_trap_close",
+              "score": 0.024693737246841197,
+              "actuator": "actuator_24",
+              "curriculum_label": "edge_trap_close",
+              "stage": 2
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.edge_trap_close",
+              "score": 0.024171963562816385,
+              "actuator": "actuator_22",
+              "curriculum_label": "edge_trap_close",
+              "stage": 2
+            }
+          ],
+          "move_shape_audit": {
+            "move": "d1e2",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
+            ],
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_enemy"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_decreases_after_move",
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_split_rank_side_after_move",
+              "white_king_distance_to_enemy_decreases",
+              "white_king_file_opposition_distance_two_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 28,
+              "enemy_edge_distance": 3,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 4,
+              "black_king_escape_count": 5
+            },
+            "post_move_metrics": {
+              "box_area": 28,
+              "enemy_edge_distance": 3,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 4,
+              "black_king_escape_count": 2
+            }
+          }
+        },
+        {
+          "provider": "krk.edge_trap_wrong_tempo",
+          "forced_successor_available": true,
+          "move": "a5h5",
+          "legal": true,
+          "confidence": 0.025102902996024263,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 2,
+          "top_suggestions": [
+            {
+              "move": "a5h5",
+              "skill_id": "krk.edge_trap_wrong_tempo",
+              "score": 0.025102902996024263,
+              "actuator": "actuator_32",
+              "curriculum_label": "edge_trap_wrong_tempo",
+              "stage": 4
+            },
+            {
+              "move": "a5h5",
+              "skill_id": "krk.edge_trap_wrong_tempo",
+              "score": 0.024196783734609685,
+              "actuator": "actuator_31",
+              "curriculum_label": "edge_trap_wrong_tempo",
+              "stage": 4
+            }
+          ],
+          "move_shape_audit": {
+            "move": "a5h5",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
+            ],
+            "move_shape_terms": [
+              "candidate_is_rook_move",
+              "candidate_is_rook_transfer",
+              "rook_destination_far_from_enemy",
+              "rook_destination_not_adjacent_enemy",
+              "rook_lateral_transfer",
+              "rook_safe_after_candidate",
+              "rook_to_edge_file"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_split_file_side_after_move",
+              "white_king_and_rook_split_rank_side_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 28,
+              "enemy_edge_distance": 3,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 4,
+              "black_king_escape_count": 5
+            },
+            "post_move_metrics": {
+              "box_area": 28,
+              "enemy_edge_distance": 3,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 4,
+              "black_king_escape_count": 5
+            }
+          }
+        },
+        {
+          "provider": "krk.edge_trap_enemy_between",
+          "forced_successor_available": true,
+          "move": "d1e2",
+          "legal": true,
+          "confidence": 0.024484662898629907,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 6,
+          "top_suggestions": [
+            {
+              "move": "d1e2",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.024484662898629907,
+              "actuator": "actuator_26",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            },
+            {
+              "move": "a5h5",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.024222765590995555,
+              "actuator": "actuator_25",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.02416479739174247,
+              "actuator": "actuator_27",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            },
+            {
+              "move": "a5h5",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.023945197170357344,
+              "actuator": "actuator_30",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.023840159483999018,
+              "actuator": "actuator_29",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            },
+            {
+              "move": "d1e2",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.023783994988001447,
+              "actuator": "actuator_28",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            }
+          ],
+          "move_shape_audit": {
+            "move": "d1e2",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
+            ],
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_enemy"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_decreases_after_move",
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_split_rank_side_after_move",
+              "white_king_distance_to_enemy_decreases",
+              "white_king_file_opposition_distance_two_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 28,
+              "enemy_edge_distance": 3,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 4,
+              "black_king_escape_count": 5
+            },
+            "post_move_metrics": {
+              "box_area": 28,
+              "enemy_edge_distance": 3,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 4,
+              "black_king_escape_count": 2
+            }
+          }
+        },
+        {
+          "provider": "krk.drive_to_edge",
+          "forced_successor_available": true,
+          "move": "a5a8",
+          "legal": true,
+          "confidence": 0.08385186364342959,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 3,
+          "top_suggestions": [
+            {
+              "move": "a5a8",
+              "skill_id": "krk.drive_to_edge",
+              "score": 0.08385186364342959,
+              "actuator": "actuator_35",
+              "curriculum_label": "drive_to_edge",
+              "stage": 6
+            },
+            {
+              "move": "a5a8",
+              "skill_id": "krk.drive_to_edge",
+              "score": 0.08317528263827165,
+              "actuator": "actuator_36",
+              "curriculum_label": "drive_to_edge",
+              "stage": 6
+            },
+            {
+              "move": "a5a8",
+              "skill_id": "krk.drive_to_edge",
+              "score": 0.0815206664800644,
+              "actuator": "actuator_34",
+              "curriculum_label": "drive_to_edge",
+              "stage": 6
+            }
+          ],
+          "move_shape_audit": {
+            "move": "a5a8",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
+            ],
+            "move_shape_terms": [
+              "candidate_is_rook_move",
+              "candidate_is_rook_transfer",
+              "rook_destination_far_from_enemy",
+              "rook_destination_not_adjacent_enemy",
+              "rook_safe_after_candidate",
+              "rook_to_edge_file",
+              "rook_to_edge_rank",
+              "rook_transfer_vertical"
+            ],
+            "post_move_terms": [
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_split_rank_side_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 28,
+              "enemy_edge_distance": 3,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 4,
+              "black_king_escape_count": 5
+            },
+            "post_move_metrics": {
+              "box_area": 49,
+              "enemy_edge_distance": 3,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 7,
+              "black_king_escape_count": 8
+            }
+          }
+        },
+        {
+          "provider": "krk.fence_established",
+          "forced_successor_available": true,
+          "move": "d1e2",
+          "legal": true,
+          "confidence": 0.009540409181018672,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 1,
+          "top_suggestions": [
+            {
+              "move": "d1e2",
+              "skill_id": "krk.fence_established",
+              "score": 0.009540409181018672,
+              "actuator": "actuator_33",
+              "curriculum_label": "fence_established",
+              "stage": 5
+            }
+          ],
+          "move_shape_audit": {
+            "move": "d1e2",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
+            ],
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_enemy"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_decreases_after_move",
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_split_rank_side_after_move",
+              "white_king_distance_to_enemy_decreases",
+              "white_king_file_opposition_distance_two_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 28,
+              "enemy_edge_distance": 3,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 4,
+              "black_king_escape_count": 5
+            },
+            "post_move_metrics": {
+              "box_area": 28,
+              "enemy_edge_distance": 3,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 4,
+              "black_king_escape_count": 2
+            }
+          }
+        },
+        {
+          "provider": "krk.stage7_drive_repair",
+          "forced_successor_available": true,
+          "move": "a5b5",
+          "legal": true,
+          "confidence": 28.0,
+          "ticks": 2,
+          "early_stopped": true,
+          "suggestion_count": 1,
+          "top_suggestions": [
+            {
+              "move": "a5b5",
+              "skill_id": "krk.stage7_drive_repair",
+              "score": 28.0,
+              "actuator": "terminal.krk.stage7_drive_repair",
+              "curriculum_label": "stage7_drive_repair",
+              "stage": 7,
+              "visible_move_shape_audit": {
+                "move_shape_terms": [
+                  "candidate_is_rook_move",
+                  "rook_destination_far_from_enemy",
+                  "rook_destination_not_adjacent_enemy",
+                  "rook_lateral_transfer",
+                  "rook_safe_after_candidate"
+                ],
+                "post_move_terms": [
+                  "black_king_escape_count_not_increased_after_move",
+                  "box_area_decreases_after_move",
+                  "box_area_not_increased_after_move",
+                  "enemy_corner_distance_not_increased_after_move",
+                  "enemy_edge_distance_not_increased_after_move",
+                  "rook_safe_after_move",
+                  "white_king_and_rook_same_file_side_after_move",
+                  "white_king_and_rook_split_rank_side_after_move"
+                ]
+              }
+            }
+          ],
+          "move_shape_audit": {
+            "move": "a5b5",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support"
+            ],
+            "move_shape_terms": [
+              "candidate_is_rook_move",
+              "rook_destination_far_from_enemy",
+              "rook_destination_not_adjacent_enemy",
+              "rook_lateral_transfer",
+              "rook_safe_after_candidate"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_decreases_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_split_rank_side_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 28,
+              "enemy_edge_distance": 3,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 4,
+              "black_king_escape_count": 5
+            },
+            "post_move_metrics": {
+              "box_area": 24,
+              "enemy_edge_distance": 3,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 4,
+              "black_king_escape_count": 5
+            }
+          }
+        },
+        {
+          "provider": "krk.stage7_king_tempo",
+          "forced_successor_available": false,
+          "move": null,
+          "legal": false,
+          "confidence": null,
+          "ticks": 40,
+          "early_stopped": false,
+          "suggestion_count": 0,
+          "top_suggestions": [],
+          "move_shape_audit": null
+        }
+      ],
+      "playout_probes": [
+        {
+          "provider": "krk.stage0_basin",
+          "horizon": 40,
+          "result": "mate",
+          "plies": 29,
+          "first_move": "d1e2",
+          "forced_successor_available": true,
+          "engine_decision_count": 15,
+          "engine_ticks_total": 102,
+          "engine_early_stop_count": 15
+        },
+        {
+          "provider": "krk.stage0_basin",
+          "horizon": 50,
+          "result": "mate",
+          "plies": 29,
+          "first_move": "d1e2",
+          "forced_successor_available": true,
+          "engine_decision_count": 15,
+          "engine_ticks_total": 102,
+          "engine_early_stop_count": 15
+        },
+        {
+          "provider": "krk.edge_trap_close",
+          "horizon": 40,
+          "result": "mate",
+          "plies": 29,
+          "first_move": "d1e2",
+          "forced_successor_available": true,
+          "engine_decision_count": 15,
+          "engine_ticks_total": 102,
+          "engine_early_stop_count": 15
+        },
+        {
+          "provider": "krk.edge_trap_close",
+          "horizon": 50,
+          "result": "mate",
+          "plies": 29,
+          "first_move": "d1e2",
+          "forced_successor_available": true,
+          "engine_decision_count": 15,
+          "engine_ticks_total": 102,
+          "engine_early_stop_count": 15
+        },
+        {
+          "provider": "krk.edge_trap_wrong_tempo",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "a5h5",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 142,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.edge_trap_wrong_tempo",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "a5h5",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 182,
+          "engine_early_stop_count": 25
+        },
+        {
+          "provider": "krk.edge_trap_enemy_between",
+          "horizon": 40,
+          "result": "mate",
+          "plies": 29,
+          "first_move": "d1e2",
+          "forced_successor_available": true,
+          "engine_decision_count": 15,
+          "engine_ticks_total": 102,
+          "engine_early_stop_count": 15
+        },
+        {
+          "provider": "krk.edge_trap_enemy_between",
+          "horizon": 50,
+          "result": "mate",
+          "plies": 29,
+          "first_move": "d1e2",
+          "forced_successor_available": true,
+          "engine_decision_count": 15,
+          "engine_ticks_total": 102,
+          "engine_early_stop_count": 15
+        },
+        {
+          "provider": "krk.drive_to_edge",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "a5a8",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 154,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.drive_to_edge",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "a5a8",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 194,
+          "engine_early_stop_count": 25
+        },
+        {
+          "provider": "krk.fence_established",
+          "horizon": 40,
+          "result": "mate",
+          "plies": 29,
+          "first_move": "d1e2",
+          "forced_successor_available": true,
+          "engine_decision_count": 15,
+          "engine_ticks_total": 102,
+          "engine_early_stop_count": 15
+        },
+        {
+          "provider": "krk.fence_established",
+          "horizon": 50,
+          "result": "mate",
+          "plies": 29,
+          "first_move": "d1e2",
+          "forced_successor_available": true,
+          "engine_decision_count": 15,
+          "engine_ticks_total": 102,
+          "engine_early_stop_count": 15
+        },
+        {
+          "provider": "krk.stage7_drive_repair",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "a5b5",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 136,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.stage7_drive_repair",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "a5b5",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 176,
+          "engine_early_stop_count": 25
+        }
+      ],
+      "legal_first_probes": []
+    },
+    {
+      "state_id": "state.6ed746a91c76",
+      "post_reply_fen": "8/8/8/2k5/8/8/3K4/3R4 w - - 2 2",
+      "selected_successor": "krk.stage7_drive_repair",
+      "selected_move": "d2c1",
+      "conversion_result": "max_plies",
+      "failure_classes": [
+        "selected_successor_miscalibrated"
+      ],
+      "source_sample_index": 6,
+      "family_id": null,
+      "diagnosis": null,
+      "source_record": {
+        "sample_index": 6,
+        "start_fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+        "stage7_move": "a1d1",
+        "post_own_move_fen": "8/8/8/8/3k4/8/3K4/3R4 b - - 1 1",
+        "black_reply": "d4c5",
+        "post_reply_fen": "8/8/8/2k5/8/8/3K4/3R4 w - - 2 2",
+        "reward_confirmed": true,
+        "visible_box_area_decreased_after_own_move": true,
+        "visible_box_area_not_increased_after_reply": true,
+        "fence_or_cut_preserved": false,
+        "rook_safe_after_reply": true,
+        "enemy_king_mobility_delta": 3.0,
+        "selected_successor": "krk.stage7_drive_repair",
+        "selected_move": "d2c1",
+        "conversion_result": "max_plies",
+        "conversion_status": "failed",
+        "plies": 40,
+        "semantic_alignment_status": "reward_visible_fence_aligned_broken_by_reply",
+        "failure_classes": [
+          "selected_successor_miscalibrated"
+        ],
+        "shadow_triggers": []
+      },
+      "first_move_probes": [
+        {
+          "provider": "krk.stage0_basin",
+          "forced_successor_available": true,
+          "move": "d1h1",
+          "legal": true,
+          "confidence": 33.78027402778342,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 19,
+          "top_suggestions": [
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.78027402778342,
+              "actuator": "actuator_10",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.77927449836731,
+              "actuator": "actuator_7",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.77853803263512,
+              "actuator": "actuator_11",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.77845209577084,
+              "actuator": "actuator_19",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.77803387340158,
+              "actuator": "actuator_18",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.77717137336731,
+              "actuator": "actuator_2",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.77717137336731,
+              "actuator": "actuator_3",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.77717137336731,
+              "actuator": "actuator_5",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.77717137336731,
+              "actuator": "actuator_6",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.77717137336731,
+              "actuator": "actuator_8",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.77717137336731,
+              "actuator": "actuator_12",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.77717137336731,
+              "actuator": "actuator_13",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.77717137336731,
+              "actuator": "actuator_17",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.77717137336731,
+              "actuator": "actuator_20",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.776747707621475,
+              "actuator": "actuator_15",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.775803950005766,
+              "actuator": "actuator_14",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.77559637336731,
+              "actuator": "actuator_16",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.773461079249664,
+              "actuator": "actuator_4",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.stage0_basin",
+              "score": 33.773118666915224,
+              "actuator": "actuator_9",
+              "curriculum_label": "stage0_basin",
+              "stage": 1
+            }
+          ],
+          "move_shape_audit": {
+            "move": "d1h1",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "white_king_support_available"
+            ],
+            "move_shape_terms": [
+              "candidate_is_rook_move",
+              "candidate_is_rook_transfer",
+              "rook_destination_far_from_enemy",
+              "rook_destination_not_adjacent_enemy",
+              "rook_lateral_transfer",
+              "rook_safe_after_candidate",
+              "rook_to_edge_file",
+              "rook_to_edge_rank"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_same_rank_side_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 21,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 1,
+              "black_king_escape_count": 8
+            },
+            "post_move_metrics": {
+              "box_area": 49,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 4,
+              "black_king_escape_count": 8
+            }
+          }
+        },
+        {
+          "provider": "krk.edge_trap_close",
+          "forced_successor_available": true,
+          "move": "d2e3",
+          "legal": true,
+          "confidence": 0.022033178029581907,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 4,
+          "top_suggestions": [
+            {
+              "move": "d2e3",
+              "skill_id": "krk.edge_trap_close",
+              "score": 0.022033178029581907,
+              "actuator": "actuator_21",
+              "curriculum_label": "edge_trap_close",
+              "stage": 2
+            },
+            {
+              "move": "d2c3",
+              "skill_id": "krk.edge_trap_close",
+              "score": 0.02057560685637097,
+              "actuator": "actuator_23",
+              "curriculum_label": "edge_trap_close",
+              "stage": 2
+            },
+            {
+              "move": "d2e3",
+              "skill_id": "krk.edge_trap_close",
+              "score": 0.02007591028027237,
+              "actuator": "actuator_24",
+              "curriculum_label": "edge_trap_close",
+              "stage": 2
+            },
+            {
+              "move": "d2c3",
+              "skill_id": "krk.edge_trap_close",
+              "score": 0.019746565705661977,
+              "actuator": "actuator_22",
+              "curriculum_label": "edge_trap_close",
+              "stage": 2
+            }
+          ],
+          "move_shape_audit": {
+            "move": "d2e3",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "white_king_support_available"
+            ],
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_enemy"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_decreases_after_move",
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_same_rank_side_after_move",
+              "white_king_distance_to_enemy_decreases"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 21,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 1,
+              "black_king_escape_count": 8
+            },
+            "post_move_metrics": {
+              "box_area": 21,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 2,
+              "black_king_escape_count": 5
+            }
+          }
+        },
+        {
+          "provider": "krk.edge_trap_wrong_tempo",
+          "forced_successor_available": true,
+          "move": "d2e3",
+          "legal": true,
+          "confidence": 0.020485075808459756,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 2,
+          "top_suggestions": [
+            {
+              "move": "d2e3",
+              "skill_id": "krk.edge_trap_wrong_tempo",
+              "score": 0.020485075808459756,
+              "actuator": "actuator_32",
+              "curriculum_label": "edge_trap_wrong_tempo",
+              "stage": 4
+            },
+            {
+              "move": "d2e3",
+              "skill_id": "krk.edge_trap_wrong_tempo",
+              "score": 0.019578956600154445,
+              "actuator": "actuator_31",
+              "curriculum_label": "edge_trap_wrong_tempo",
+              "stage": 4
+            }
+          ],
+          "move_shape_audit": {
+            "move": "d2e3",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "white_king_support_available"
+            ],
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_enemy"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_decreases_after_move",
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_same_rank_side_after_move",
+              "white_king_distance_to_enemy_decreases"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 21,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 1,
+              "black_king_escape_count": 8
+            },
+            "post_move_metrics": {
+              "box_area": 21,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 2,
+              "black_king_escape_count": 5
+            }
+          }
+        },
+        {
+          "provider": "krk.edge_trap_enemy_between",
+          "forced_successor_available": true,
+          "move": "d2c3",
+          "legal": true,
+          "confidence": 0.01986683593206108,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 6,
+          "top_suggestions": [
+            {
+              "move": "d2c3",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.01986683593206108,
+              "actuator": "actuator_26",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            },
+            {
+              "move": "d2e3",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.019604938624426728,
+              "actuator": "actuator_25",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            },
+            {
+              "move": "d2c3",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.019580433084691568,
+              "actuator": "actuator_27",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            },
+            {
+              "move": "d2e3",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.019327370025212138,
+              "actuator": "actuator_30",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            },
+            {
+              "move": "d2e3",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.01922233251743019,
+              "actuator": "actuator_29",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            },
+            {
+              "move": "d2e3",
+              "skill_id": "krk.edge_trap_enemy_between",
+              "score": 0.01916616802143262,
+              "actuator": "actuator_28",
+              "curriculum_label": "edge_trap_enemy_between",
+              "stage": 3
+            }
+          ],
+          "move_shape_audit": {
+            "move": "d2c3",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "white_king_support_available"
+            ],
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_enemy"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_decreases_after_move",
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_rank_side_after_move",
+              "white_king_distance_to_enemy_decreases",
+              "white_king_file_opposition_distance_two_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 21,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 1,
+              "black_king_escape_count": 8
+            },
+            "post_move_metrics": {
+              "box_area": 21,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 2,
+              "black_king_escape_count": 3
+            }
+          }
+        },
+        {
+          "provider": "krk.drive_to_edge",
+          "forced_successor_available": true,
+          "move": "d1h1",
+          "legal": true,
+          "confidence": 0.08035652730885667,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 3,
+          "top_suggestions": [
+            {
+              "move": "d1h1",
+              "skill_id": "krk.drive_to_edge",
+              "score": 0.08035652730885667,
+              "actuator": "actuator_35",
+              "curriculum_label": "drive_to_edge",
+              "stage": 6,
+              "visible_role_provider_support_adapter": {
+                "enabled": true,
+                "adapter_id": "script.krk.support.krk_box_shrink_to_drive_repair_to_krk_drive_to_edge",
+                "source_role": "krk.box_shrink_to_drive_repair",
+                "provider_id": "krk.drive_to_edge",
+                "role_confirmed": true,
+                "source_terms": [
+                  "box_shrink_drive_repair_available",
+                  "fence_or_cut_not_preserved",
+                  "drive_to_edge_affordance_after_box_shrink",
+                  "repair_or_reestablish_cut_available",
+                  "enemy_king_not_at_edge",
+                  "box_area_large",
+                  "rook_safe"
+                ],
+                "support_amount": 0.05,
+                "direct_request": false,
+                "move_shape_gated": true,
+                "matched_move_shape_terms": [
+                  "candidate_is_rook_transfer",
+                  "rook_lateral_transfer",
+                  "rook_to_edge_file"
+                ],
+                "matched_post_move_terms": [
+                  "rook_safe_after_move"
+                ]
+              },
+              "explicit_role_provider_move_shape_support_bonus": 0.05,
+              "visible_move_shape_audit": {
+                "move_shape_terms": [
+                  "candidate_is_rook_move",
+                  "candidate_is_rook_transfer",
+                  "rook_destination_far_from_enemy",
+                  "rook_destination_not_adjacent_enemy",
+                  "rook_lateral_transfer",
+                  "rook_safe_after_candidate",
+                  "rook_to_edge_file",
+                  "rook_to_edge_rank"
+                ],
+                "post_move_terms": [
+                  "black_king_escape_count_not_increased_after_move",
+                  "enemy_corner_distance_not_increased_after_move",
+                  "enemy_edge_distance_not_increased_after_move",
+                  "rook_safe_after_move",
+                  "white_king_and_rook_same_file_side_after_move",
+                  "white_king_and_rook_same_rank_side_after_move"
+                ]
+              }
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.drive_to_edge",
+              "score": 0.07947068125009536,
+              "actuator": "actuator_36",
+              "curriculum_label": "drive_to_edge",
+              "stage": 6,
+              "visible_role_provider_support_adapter": {
+                "enabled": true,
+                "adapter_id": "script.krk.support.krk_box_shrink_to_drive_repair_to_krk_drive_to_edge",
+                "source_role": "krk.box_shrink_to_drive_repair",
+                "provider_id": "krk.drive_to_edge",
+                "role_confirmed": true,
+                "source_terms": [
+                  "box_shrink_drive_repair_available",
+                  "fence_or_cut_not_preserved",
+                  "drive_to_edge_affordance_after_box_shrink",
+                  "repair_or_reestablish_cut_available",
+                  "enemy_king_not_at_edge",
+                  "box_area_large",
+                  "rook_safe"
+                ],
+                "support_amount": 0.05,
+                "direct_request": false,
+                "move_shape_gated": true,
+                "matched_move_shape_terms": [
+                  "candidate_is_rook_transfer",
+                  "rook_lateral_transfer",
+                  "rook_to_edge_file"
+                ],
+                "matched_post_move_terms": [
+                  "rook_safe_after_move"
+                ]
+              },
+              "explicit_role_provider_move_shape_support_bonus": 0.05,
+              "visible_move_shape_audit": {
+                "move_shape_terms": [
+                  "candidate_is_rook_move",
+                  "candidate_is_rook_transfer",
+                  "rook_destination_far_from_enemy",
+                  "rook_destination_not_adjacent_enemy",
+                  "rook_lateral_transfer",
+                  "rook_safe_after_candidate",
+                  "rook_to_edge_file",
+                  "rook_to_edge_rank"
+                ],
+                "post_move_terms": [
+                  "black_king_escape_count_not_increased_after_move",
+                  "enemy_corner_distance_not_increased_after_move",
+                  "enemy_edge_distance_not_increased_after_move",
+                  "rook_safe_after_move",
+                  "white_king_and_rook_same_file_side_after_move",
+                  "white_king_and_rook_same_rank_side_after_move"
+                ]
+              }
+            },
+            {
+              "move": "d1h1",
+              "skill_id": "krk.drive_to_edge",
+              "score": 0.07802533030509948,
+              "actuator": "actuator_34",
+              "curriculum_label": "drive_to_edge",
+              "stage": 6,
+              "visible_role_provider_support_adapter": {
+                "enabled": true,
+                "adapter_id": "script.krk.support.krk_box_shrink_to_drive_repair_to_krk_drive_to_edge",
+                "source_role": "krk.box_shrink_to_drive_repair",
+                "provider_id": "krk.drive_to_edge",
+                "role_confirmed": true,
+                "source_terms": [
+                  "box_shrink_drive_repair_available",
+                  "fence_or_cut_not_preserved",
+                  "drive_to_edge_affordance_after_box_shrink",
+                  "repair_or_reestablish_cut_available",
+                  "enemy_king_not_at_edge",
+                  "box_area_large",
+                  "rook_safe"
+                ],
+                "support_amount": 0.05,
+                "direct_request": false,
+                "move_shape_gated": true,
+                "matched_move_shape_terms": [
+                  "candidate_is_rook_transfer",
+                  "rook_lateral_transfer",
+                  "rook_to_edge_file"
+                ],
+                "matched_post_move_terms": [
+                  "rook_safe_after_move"
+                ]
+              },
+              "explicit_role_provider_move_shape_support_bonus": 0.05,
+              "visible_move_shape_audit": {
+                "move_shape_terms": [
+                  "candidate_is_rook_move",
+                  "candidate_is_rook_transfer",
+                  "rook_destination_far_from_enemy",
+                  "rook_destination_not_adjacent_enemy",
+                  "rook_lateral_transfer",
+                  "rook_safe_after_candidate",
+                  "rook_to_edge_file",
+                  "rook_to_edge_rank"
+                ],
+                "post_move_terms": [
+                  "black_king_escape_count_not_increased_after_move",
+                  "enemy_corner_distance_not_increased_after_move",
+                  "enemy_edge_distance_not_increased_after_move",
+                  "rook_safe_after_move",
+                  "white_king_and_rook_same_file_side_after_move",
+                  "white_king_and_rook_same_rank_side_after_move"
+                ]
+              }
+            }
+          ],
+          "move_shape_audit": {
+            "move": "d1h1",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "white_king_support_available"
+            ],
+            "move_shape_terms": [
+              "candidate_is_rook_move",
+              "candidate_is_rook_transfer",
+              "rook_destination_far_from_enemy",
+              "rook_destination_not_adjacent_enemy",
+              "rook_lateral_transfer",
+              "rook_safe_after_candidate",
+              "rook_to_edge_file",
+              "rook_to_edge_rank"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_same_rank_side_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 21,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 1,
+              "black_king_escape_count": 8
+            },
+            "post_move_metrics": {
+              "box_area": 49,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 4,
+              "black_king_escape_count": 8
+            }
+          }
+        },
+        {
+          "provider": "krk.fence_established",
+          "forced_successor_available": true,
+          "move": "d2e3",
+          "legal": true,
+          "confidence": 0.06307266371647517,
+          "ticks": 8,
+          "early_stopped": true,
+          "suggestion_count": 1,
+          "top_suggestions": [
+            {
+              "move": "d2e3",
+              "skill_id": "krk.fence_established",
+              "score": 0.06307266371647517,
+              "actuator": "actuator_33",
+              "curriculum_label": "fence_established",
+              "stage": 5,
+              "visible_role_provider_support_adapter": {
+                "enabled": true,
+                "adapter_id": "script.krk.support.krk_box_shrink_to_drive_repair_to_krk_fence_established",
+                "source_role": "krk.box_shrink_to_drive_repair",
+                "provider_id": "krk.fence_established",
+                "role_confirmed": true,
+                "source_terms": [
+                  "box_shrink_drive_repair_available",
+                  "fence_or_cut_not_preserved",
+                  "drive_to_edge_affordance_after_box_shrink",
+                  "repair_or_reestablish_cut_available",
+                  "enemy_king_not_at_edge",
+                  "box_area_large",
+                  "rook_safe"
+                ],
+                "support_amount": 0.05,
+                "direct_request": false,
+                "move_shape_gated": true,
+                "matched_move_shape_terms": [
+                  "king_moves_toward_enemy"
+                ],
+                "matched_post_move_terms": [
+                  "box_area_not_increased_after_move",
+                  "rook_safe_after_move",
+                  "white_king_and_rook_same_rank_side_after_move"
+                ]
+              },
+              "explicit_role_provider_move_shape_support_bonus": 0.05,
+              "visible_move_shape_audit": {
+                "move_shape_terms": [
+                  "candidate_is_king_move",
+                  "king_moves_toward_enemy"
+                ],
+                "post_move_terms": [
+                  "black_king_escape_count_decreases_after_move",
+                  "black_king_escape_count_not_increased_after_move",
+                  "box_area_not_increased_after_move",
+                  "enemy_corner_distance_not_increased_after_move",
+                  "enemy_edge_distance_not_increased_after_move",
+                  "rook_safe_after_move",
+                  "white_king_and_rook_same_file_side_after_move",
+                  "white_king_and_rook_same_rank_side_after_move",
+                  "white_king_distance_to_enemy_decreases"
+                ]
+              }
+            }
+          ],
+          "move_shape_audit": {
+            "move": "d2e3",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "white_king_support_available"
+            ],
+            "move_shape_terms": [
+              "candidate_is_king_move",
+              "king_moves_toward_enemy"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_decreases_after_move",
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_file_side_after_move",
+              "white_king_and_rook_same_rank_side_after_move",
+              "white_king_distance_to_enemy_decreases"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 21,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 1,
+              "black_king_escape_count": 8
+            },
+            "post_move_metrics": {
+              "box_area": 21,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 2,
+              "white_king_rook_distance": 2,
+              "black_king_escape_count": 5
+            }
+          }
+        },
+        {
+          "provider": "krk.stage7_drive_repair",
+          "forced_successor_available": true,
+          "move": "d2c1",
+          "legal": true,
+          "confidence": 28.0,
+          "ticks": 2,
+          "early_stopped": true,
+          "suggestion_count": 1,
+          "top_suggestions": [
+            {
+              "move": "d2c1",
+              "skill_id": "krk.stage7_drive_repair",
+              "score": 28.0,
+              "actuator": "terminal.krk.stage7_drive_repair",
+              "curriculum_label": "stage7_drive_repair",
+              "stage": 7,
+              "visible_move_shape_audit": {
+                "move_shape_terms": [
+                  "candidate_is_king_move"
+                ],
+                "post_move_terms": [
+                  "black_king_escape_count_decreases_after_move",
+                  "black_king_escape_count_not_increased_after_move",
+                  "box_area_not_increased_after_move",
+                  "enemy_corner_distance_not_increased_after_move",
+                  "enemy_edge_distance_not_increased_after_move",
+                  "rook_safe_after_move",
+                  "white_king_and_rook_same_rank_side_after_move"
+                ]
+              }
+            }
+          ],
+          "move_shape_audit": {
+            "move": "d2c1",
+            "legal": true,
+            "current_terms": [
+              "black_king_escape_available",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "enemy_king_not_at_edge",
+              "fence_or_cut_not_preserved",
+              "king_support_improvement_move_exists",
+              "repair_or_reestablish_cut_available",
+              "rook_has_safe_lateral_transfer",
+              "rook_safe",
+              "safe_check_available",
+              "safe_rook_edge_transfer_available",
+              "safe_rook_long_transfer_available",
+              "white_king_can_improve_support",
+              "white_king_support_available"
+            ],
+            "move_shape_terms": [
+              "candidate_is_king_move"
+            ],
+            "post_move_terms": [
+              "black_king_escape_count_decreases_after_move",
+              "black_king_escape_count_not_increased_after_move",
+              "box_area_not_increased_after_move",
+              "enemy_corner_distance_not_increased_after_move",
+              "enemy_edge_distance_not_increased_after_move",
+              "rook_safe_after_move",
+              "white_king_and_rook_same_rank_side_after_move"
+            ],
+            "worst_reply_terms": [],
+            "current_metrics": {
+              "box_area": 21,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 3,
+              "white_king_rook_distance": 1,
+              "black_king_escape_count": 8
+            },
+            "post_move_metrics": {
+              "box_area": 21,
+              "enemy_edge_distance": 2,
+              "enemy_corner_distance": 3,
+              "white_king_enemy_distance": 4,
+              "white_king_rook_distance": 1,
+              "black_king_escape_count": 5
+            }
+          }
+        },
+        {
+          "provider": "krk.stage7_king_tempo",
+          "forced_successor_available": false,
+          "move": null,
+          "legal": false,
+          "confidence": null,
+          "ticks": 40,
+          "early_stopped": false,
+          "suggestion_count": 0,
+          "top_suggestions": [],
+          "move_shape_audit": null
+        }
+      ],
+      "playout_probes": [
+        {
+          "provider": "krk.stage0_basin",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "d1h1",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 154,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.stage0_basin",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "d1h1",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 194,
+          "engine_early_stop_count": 25
+        },
+        {
+          "provider": "krk.edge_trap_close",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "d2e3",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 154,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.edge_trap_close",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "d2e3",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 194,
+          "engine_early_stop_count": 25
+        },
+        {
+          "provider": "krk.edge_trap_wrong_tempo",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "d2e3",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 154,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.edge_trap_wrong_tempo",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "d2e3",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 194,
+          "engine_early_stop_count": 25
+        },
+        {
+          "provider": "krk.edge_trap_enemy_between",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "d2c3",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 154,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.edge_trap_enemy_between",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "d2c3",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 194,
+          "engine_early_stop_count": 25
+        },
+        {
+          "provider": "krk.drive_to_edge",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "d1h1",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 154,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.drive_to_edge",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "d1h1",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 194,
+          "engine_early_stop_count": 25
+        },
+        {
+          "provider": "krk.fence_established",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "d2e3",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 154,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.fence_established",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "d2e3",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 194,
+          "engine_early_stop_count": 25
+        },
+        {
+          "provider": "krk.stage7_drive_repair",
+          "horizon": 40,
+          "result": "max_plies",
+          "plies": 40,
+          "first_move": "d2c1",
+          "forced_successor_available": true,
+          "engine_decision_count": 20,
+          "engine_ticks_total": 148,
+          "engine_early_stop_count": 20
+        },
+        {
+          "provider": "krk.stage7_drive_repair",
+          "horizon": 50,
+          "result": "max_plies",
+          "plies": 50,
+          "first_move": "d2c1",
+          "forced_successor_available": true,
+          "engine_decision_count": 25,
+          "engine_ticks_total": 188,
+          "engine_early_stop_count": 25
+        }
+      ],
+      "legal_first_probes": []
+    }
+  ],
+  "wall_time_seconds": 982.818
+}

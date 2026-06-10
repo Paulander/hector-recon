@@ -1,0 +1,78 @@
+{
+  "causal_status": "non_causal_source_quality_probe",
+  "decision": {
+    "guardrails_allowed": false,
+    "implementation_allowed_by_this_artifact": false,
+    "recommended_next_step": "protected_strategy_monitor_observation_source_review_packet",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "status": "protected_strategy_monitor_frames_have_monitor_signal"
+  },
+  "family_stats": {
+    "terminal.krk.owner_exit_monitor": {
+      "failure_precision": 0.5,
+      "frame_count": 24,
+      "mate_count": 12,
+      "max_plies_count": 12,
+      "outcome_counts": {
+        "mate": 12,
+        "max_plies": 12
+      },
+      "success_precision": 0.5
+    },
+    "terminal.krk.phase_boundary_monitor": {
+      "failure_precision": 0.5,
+      "frame_count": 48,
+      "mate_count": 24,
+      "max_plies_count": 24,
+      "outcome_counts": {
+        "mate": 24,
+        "max_plies": 24
+      },
+      "success_precision": 0.5
+    },
+    "terminal.krk.repair_needed_monitor": {
+      "failure_precision": 0.7692307692307693,
+      "frame_count": 13,
+      "mate_count": 3,
+      "max_plies_count": 10,
+      "outcome_counts": {
+        "mate": 3,
+        "max_plies": 10
+      },
+      "success_precision": 0.23076923076923078
+    }
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "ambiguous_families": [
+      "terminal.krk.owner_exit_monitor",
+      "terminal.krk.phase_boundary_monitor"
+    ],
+    "monitor_frames_are_candidates_not_actions": true,
+    "runtime_observation_source_review_possible": true,
+    "strong_failure_families": [
+      "terminal.krk.repair_needed_monitor"
+    ],
+    "strong_success_families": []
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_changes_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_protected_strategy_monitor_frame_quality.v1",
+  "source_artifact": "reports/strategy_arbitration/krk_protected_strategy_monitor_frame_expansion_v1.json",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "ambiguous_family_count": 2,
+    "frame_count": 85,
+    "stage7_challenge_row_count": 0,
+    "stage7_readiness_training_row_count": 0,
+    "strong_failure_family_count": 1,
+    "strong_success_family_count": 0
+  }
+}

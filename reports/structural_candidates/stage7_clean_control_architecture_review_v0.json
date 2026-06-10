@@ -1,0 +1,78 @@
+{
+  "blocked_next_steps": [
+    "unreviewed additional Stage 7 h40 labels",
+    "Stage 7 runtime repair",
+    "Stage 7 promotion",
+    "Stage 8 training from unresolved Stage 7",
+    "runtime selector/arbiter implementation from this evidence",
+    "support bonus or provider penalty tuning"
+  ],
+  "causal_status": "non_causal_architecture_review",
+  "conclusions": [
+    "Stage 7 clean success controls and hard negatives now meet the minimum sequence-policy evidence threshold.",
+    "Stage 7 remains held out as challenge/evaluation evidence; the closed clean-control gate does not authorize runtime behavior, Stage 7 promotion, or Stage 8 training.",
+    "Additional Stage 7 h40 labels are not the primary current unblocker; the active sequence-policy gap is protected plan-window failure-contrast evidence.",
+    "Runtime selector/arbiter work remains blocked pending explicit protected failure-contrast collection/review and separate runtime review.",
+    "The current protected failure-contrast runner remains dry-run only; collection still requires a matching approval receipt and explicit execute flag."
+  ],
+  "decision": {
+    "recommended_next_step": "review_current_control_plane_gate_for_protected_failure_contrast_collection",
+    "runtime_work_allowed": false,
+    "status": "stage7_clean_control_collection_closed_heldout_only"
+  },
+  "evidence": {
+    "bounded_label_run_novel_controls": 0,
+    "bounded_label_run_playouts": {
+      "mate": 3,
+      "max_plies": 7
+    },
+    "clean_candidate_count": 46,
+    "clean_sequence_hard_negatives": 39,
+    "clean_sequence_success_controls": 11,
+    "clean_sequence_success_required": 5,
+    "protected_failure_contrast_approval_receipt_present": true,
+    "protected_failure_contrast_approval_receipt_valid": false,
+    "protected_failure_contrast_collection_blocked_by_option_id": "review_protected_plan_window_failure_contrast_manifest",
+    "protected_failure_contrast_collection_command_available": false,
+    "protected_failure_contrast_collection_option_available": false,
+    "protected_failure_contrast_collection_option_id": null,
+    "protected_failure_contrast_gate_status": "protected_plan_window_failure_contrast_runner_blocked",
+    "protected_failure_contrast_runner_collection_run_allowed": false,
+    "protected_failure_contrast_runner_executed_job_count": 0,
+    "protected_failure_contrast_runner_execution_requested": false,
+    "protected_failure_contrast_runner_processed_job_count": 0,
+    "sampling_overlap_detected": true,
+    "suite_gate_advancement_status": "krk_suite_passive_advancement_blocked_pending_protected_failure_contrast_control_plane_gate_review"
+  },
+  "gameplay_topology_mutation": false,
+  "recommended_paths": [
+    {
+      "description": "Use Stage 7 as a held-out challenge while designing broader KRK strategy ownership / sequence-policy evidence across stages.",
+      "path_id": "broader_krk_strategy_sequence_architecture_review",
+      "preferred": true,
+      "runtime_behavior_allowed": false
+    },
+    {
+      "description": "Only if more Stage 7 data is essential, design explicit disjoint source-stage/position sampling before any further labels.",
+      "path_id": "reviewed_diverse_stage7_sampling_manifest",
+      "preferred": false,
+      "runtime_behavior_allowed": false
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "stage7_clean_control_architecture_review.v0",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_clean_artifact_manifest_v0.json",
+    "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
+    "reports/structural_candidates/stage7_clean_h40_label_run_review_v0.json",
+    "reports/structural_candidates/stage7_clean_control_sampling_review_v0.json",
+    "reports/krk_full_suite_readiness_audit_v0.json",
+    "reports/krk_suite_gate_advancement_v0.json",
+    "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_runner_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

@@ -1,0 +1,67 @@
+{
+  "schema_version": "role_provider_support_proposal.v1",
+  "causal_status": "non_causal",
+  "topology_source": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_overlay.json",
+  "m3_probe_source": "reports/structural_candidates/stage7_post_box_forced_provider_h40_probe.json",
+  "target_role": "krk.box_shrink_to_drive_repair",
+  "target_provider": "krk.drive_to_edge",
+  "source_probe_result": "topology_present_untrained_or_miscalibrated",
+  "proposal_status": "sandbox_ready",
+  "candidate_id": "cand.krk.box_shrink_to_drive_repair.visible_provider_support.support_available.v1",
+  "proposed_support_relations": [
+    {
+      "source_role_script": "script.krk.successor.box_shrink_to_drive_repair_affordance",
+      "target_provider_skill": "skill.krk.drive_to_edge",
+      "relation_type": "visible_role_provider_support",
+      "initial_weight": 0.05,
+      "trainable": true,
+      "causal_status": "non_causal_scaffold",
+      "direct_graph_edge_emitted": false,
+      "requires_support_adapter": true,
+      "support_required_terms": [
+        "white_king_support_available"
+      ],
+      "support_veto_terms": [
+        "mate_in_one_available"
+      ],
+      "source_terms": [
+        "box_shrink_drive_repair_available",
+        "enemy_king_not_at_edge",
+        "rook_safe",
+        "white_king_support_available",
+        "forced_provider_drive_to_edge_converted"
+      ],
+      "adapter_contract": {
+        "kind": "gated_visible_support_adapter",
+        "confirm_when": [
+          "source_role_script_confirmed",
+          "role_contract_met",
+          "white_king_support_available",
+          "provider_execution_eligible"
+        ],
+        "must_not": [
+          "request_provider_before_role_confirmation",
+          "bypass visible provider eligibility",
+          "mutate default topology"
+        ]
+      }
+    }
+  ],
+  "proposed_relation_count": 1,
+  "unsafe_direct_graph_edges_emitted": false,
+  "sandbox_compile_strategy": "compile_gated_support_adapter_not_direct_sub_edge",
+  "required_validation": [
+    "compile_sandbox_topology_with_gated_support_adapter",
+    "stage7_target_smoke",
+    "stage6_drive_guardrail",
+    "stage5_fence_guardrail",
+    "stage1_backchain_guardrail",
+    "m1_m4_preservation"
+  ],
+  "hard_blocks": [
+    "do_not_insert_into_default_topology",
+    "do_not_train_stage8",
+    "do_not_promote_stage7_without_guardrails",
+    "do_not_make_probe_or_candidate_causal"
+  ]
+}

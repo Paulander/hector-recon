@@ -1,0 +1,217 @@
+{
+  "schema_version": "stage7_family_support_adapter_proposals.v1",
+  "causal_status": "non_causal",
+  "source_family_diagnosis": "reports/structural_candidates/stage7_post_box_family_diagnosis.json",
+  "proposal_count": 2,
+  "sandbox_ready_count": 1,
+  "proposals": [
+    {
+      "schema_version": "role_provider_support_proposal.v1",
+      "causal_status": "non_causal",
+      "target_role": "krk.box_shrink_to_drive_repair",
+      "target_provider": "krk.drive_to_edge",
+      "source_family_id": "stage7.post_box.family_ff6652c8832c",
+      "source_state_id": "state.ff6652c8832c",
+      "source_forced_provider_result": {
+        "result": "mate",
+        "plies": 7,
+        "first_move": "e4h4",
+        "horizon": 40,
+        "forced_successor_available": true,
+        "first_move_probe": {
+          "move": "e4h4",
+          "forced_successor_available": true,
+          "legal": true,
+          "confidence": 0.1636232147020452,
+          "current_terms": [
+            "black_king_escape_available",
+            "box_area_large",
+            "box_shrink_drive_repair_available",
+            "drive_to_edge_affordance_after_box_shrink",
+            "enemy_king_edge_distance_bin",
+            "enemy_king_not_at_edge",
+            "fence_or_cut_not_preserved",
+            "king_support_improvement_move_exists",
+            "repair_or_reestablish_cut_available",
+            "rook_has_safe_lateral_transfer",
+            "rook_safe",
+            "safe_check_available",
+            "safe_rook_edge_transfer_available",
+            "safe_rook_long_transfer_available",
+            "white_king_support_available"
+          ],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file"
+          ],
+          "post_move_terms": [
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move"
+          ],
+          "worst_reply_terms": []
+        }
+      },
+      "proposal_status": "sandbox_ready",
+      "candidate_id": "cand.krk.box_shrink.family_ff6652c8832c.drive_to_edge_visible_support.v1",
+      "term_separation": {
+        "target_matches": true,
+        "false_positive_families": [],
+        "separates": true
+      },
+      "proposed_support_relations": [
+        {
+          "source_role_script": "script.krk.successor.box_shrink_to_drive_repair_affordance",
+          "target_provider_skill": "skill.krk.drive_to_edge",
+          "relation_type": "visible_role_provider_support",
+          "initial_weight": 0.05,
+          "trainable": true,
+          "causal_status": "non_causal_scaffold",
+          "direct_graph_edge_emitted": false,
+          "requires_support_adapter": true,
+          "support_required_terms": [
+            "box_area_large",
+            "box_shrink_drive_repair_available",
+            "drive_to_edge_affordance_after_box_shrink",
+            "enemy_king_edge_distance_bin",
+            "king_support_improvement_move_exists",
+            "white_king_support_available"
+          ],
+          "support_veto_terms": [
+            "mate_in_one_available"
+          ],
+          "source_terms": [
+            "box_area_large",
+            "box_shrink_drive_repair_available",
+            "drive_to_edge_affordance_after_box_shrink",
+            "enemy_king_edge_distance_bin",
+            "forced_drive_to_edge_converted",
+            "king_support_improvement_move_exists",
+            "white_king_support_available"
+          ],
+          "adapter_contract": {
+            "kind": "gated_visible_support_adapter",
+            "confirm_when": [
+              "source_role_script_confirmed",
+              "role_contract_met",
+              "box_area_large",
+              "box_shrink_drive_repair_available",
+              "drive_to_edge_affordance_after_box_shrink",
+              "enemy_king_edge_distance_bin",
+              "king_support_improvement_move_exists",
+              "white_king_support_available",
+              "provider_execution_eligible"
+            ],
+            "must_not": [
+              "request_provider_before_role_confirmation",
+              "bypass visible provider eligibility",
+              "mutate default_topology"
+            ]
+          }
+        }
+      ],
+      "proposed_relation_count": 1,
+      "unsafe_direct_graph_edges_emitted": false,
+      "sandbox_compile_strategy": "compile_gated_support_adapter_not_direct_sub_edge",
+      "requires_role_provider_augmentation": false,
+      "required_validation": [
+        "compile_sandbox_topology_with_gated_support_adapter",
+        "default_off_equivalence",
+        "stage7_target_smoke",
+        "stage6_drive_guardrail",
+        "stage5_fence_guardrail",
+        "m1_m4_preservation"
+      ],
+      "hard_blocks": [
+        "do_not_insert_into_default_topology",
+        "do_not_train_stage8",
+        "do_not_promote_stage7_without_guardrails",
+        "do_not_make_candidate_causal_without_sandbox_validation"
+      ]
+    },
+    {
+      "schema_version": "role_provider_support_proposal.v1",
+      "causal_status": "non_causal",
+      "target_role": "krk.box_shrink_to_drive_repair",
+      "target_provider": "krk.fence_established",
+      "source_family_id": "stage7.post_box.family_ac0b7ed500ea",
+      "source_state_id": "state.ac0b7ed500ea",
+      "source_forced_provider_result": {
+        "result": "mate",
+        "plies": 13,
+        "first_move": "d2e3",
+        "horizon": 40,
+        "forced_successor_available": true,
+        "first_move_probe": {
+          "move": "d2e3",
+          "forced_successor_available": true,
+          "legal": true,
+          "confidence": 0.012477693292995296,
+          "current_terms": [
+            "black_king_escape_available",
+            "box_area_large",
+            "box_shrink_drive_repair_available",
+            "drive_to_edge_affordance_after_box_shrink",
+            "enemy_king_edge_distance_bin",
+            "enemy_king_not_at_edge",
+            "fence_or_cut_not_preserved",
+            "king_support_improvement_move_exists",
+            "repair_or_reestablish_cut_available",
+            "rook_has_safe_lateral_transfer",
+            "rook_safe",
+            "safe_check_available",
+            "safe_rook_edge_transfer_available",
+            "safe_rook_long_transfer_available",
+            "white_king_can_improve_support"
+          ],
+          "move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy"
+          ],
+          "post_move_terms": [
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_distance_to_enemy_decreases"
+          ],
+          "worst_reply_terms": []
+        }
+      },
+      "proposal_status": "needs_more_terms",
+      "candidate_id": "cand.krk.box_shrink.family_ac0b7ed500ea.fence_established_visible_support.v1",
+      "term_separation": {
+        "target_matches": true,
+        "false_positive_families": [
+          "state.38aed2f35911"
+        ],
+        "separates": false
+      },
+      "proposed_support_relations": [],
+      "proposed_relation_count": 0,
+      "unsafe_direct_graph_edges_emitted": false,
+      "sandbox_compile_strategy": "compile_gated_support_adapter_not_direct_sub_edge",
+      "requires_role_provider_augmentation": true,
+      "required_validation": [
+        "compile_sandbox_topology_with_gated_support_adapter",
+        "default_off_equivalence",
+        "stage7_target_smoke",
+        "stage6_drive_guardrail",
+        "stage5_fence_guardrail",
+        "m1_m4_preservation"
+      ],
+      "hard_blocks": [
+        "do_not_insert_into_default_topology",
+        "do_not_train_stage8",
+        "do_not_promote_stage7_without_guardrails",
+        "do_not_make_candidate_causal_without_sandbox_validation"
+      ]
+    }
+  ],
+  "recommended_next_action": "compile_sandbox_ready_family_adapters"
+}

@@ -1,0 +1,227 @@
+{
+  "schema_version": "stage7_family_split_candidate_update.v1",
+  "causal_status": "non_causal",
+  "stage7_status": "local_valid_composition_quarantined",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_trace_role_full_sandbox_25_h40.json",
+    "reports/structural_candidates/stage7_full_sandbox_post_box_diagnosis.json",
+    "reports/structural_candidates/stage7_full_sandbox_failed_families_forced_h40_h50.json",
+    "reports/structural_candidates/stage7_full_sandbox_state6ed_legal_first_h50.json"
+  ],
+  "summary": {
+    "state_count": 3,
+    "states_with_any_available_provider": 3,
+    "states_with_any_mating_forced_playout": 2,
+    "first_move_available_counts": {
+      "krk.stage0_basin:available": 3,
+      "krk.edge_trap_close:available": 3,
+      "krk.edge_trap_wrong_tempo:available": 3,
+      "krk.edge_trap_enemy_between:available": 3,
+      "krk.drive_to_edge:available": 3,
+      "krk.fence_established:available": 3,
+      "krk.stage7_drive_repair:available": 3,
+      "krk.stage7_king_tempo:unavailable": 3
+    },
+    "first_move_counts": {
+      "krk.stage0_basin:e4e8": 1,
+      "krk.edge_trap_close:e2e3": 1,
+      "krk.edge_trap_wrong_tempo:e2e3": 1,
+      "krk.edge_trap_enemy_between:e2e3": 1,
+      "krk.drive_to_edge:e4h4": 1,
+      "krk.fence_established:e4e8": 1,
+      "krk.stage7_drive_repair:e2e3": 1,
+      "krk.stage7_king_tempo:none": 3,
+      "krk.stage0_basin:d1e2": 1,
+      "krk.edge_trap_close:d1e2": 1,
+      "krk.edge_trap_wrong_tempo:a5h5": 1,
+      "krk.edge_trap_enemy_between:d1e2": 1,
+      "krk.drive_to_edge:a5a8": 1,
+      "krk.fence_established:d1e2": 1,
+      "krk.stage7_drive_repair:a5b5": 1,
+      "krk.stage0_basin:d1h1": 1,
+      "krk.edge_trap_close:d2e3": 1,
+      "krk.edge_trap_wrong_tempo:d2e3": 1,
+      "krk.edge_trap_enemy_between:d2c3": 1,
+      "krk.drive_to_edge:d1h1": 1,
+      "krk.fence_established:d2e3": 1,
+      "krk.stage7_drive_repair:d2c1": 1
+    },
+    "forced_playout_outcome_counts": {
+      "krk.stage0_basin:h40:max_plies": 2,
+      "krk.stage0_basin:h50:max_plies": 2,
+      "krk.edge_trap_close:h40:max_plies": 2,
+      "krk.edge_trap_close:h50:max_plies": 2,
+      "krk.edge_trap_wrong_tempo:h40:max_plies": 3,
+      "krk.edge_trap_wrong_tempo:h50:max_plies": 3,
+      "krk.edge_trap_enemy_between:h40:max_plies": 2,
+      "krk.edge_trap_enemy_between:h50:max_plies": 2,
+      "krk.drive_to_edge:h40:mate": 1,
+      "krk.drive_to_edge:h50:mate": 1,
+      "krk.fence_established:h40:max_plies": 2,
+      "krk.fence_established:h50:max_plies": 2,
+      "krk.stage7_drive_repair:h40:max_plies": 3,
+      "krk.stage7_drive_repair:h50:max_plies": 3,
+      "krk.stage0_basin:h40:mate": 1,
+      "krk.stage0_basin:h50:mate": 1,
+      "krk.edge_trap_close:h40:mate": 1,
+      "krk.edge_trap_close:h50:mate": 1,
+      "krk.edge_trap_enemy_between:h40:mate": 1,
+      "krk.edge_trap_enemy_between:h50:mate": 1,
+      "krk.drive_to_edge:h40:max_plies": 2,
+      "krk.drive_to_edge:h50:max_plies": 2,
+      "krk.fence_established:h40:mate": 1,
+      "krk.fence_established:h50:mate": 1
+    },
+    "forced_playout_mate_by_provider": {
+      "krk.drive_to_edge": 2,
+      "krk.stage0_basin": 2,
+      "krk.edge_trap_close": 2,
+      "krk.edge_trap_enemy_between": 2,
+      "krk.fence_established": 2
+    },
+    "states_with_any_legal_first_mate": 0,
+    "legal_first_outcome_counts": {},
+    "legal_first_mate_by_move": {},
+    "topology_weight_diagnosis": "topology_present_untrained_or_miscalibrated"
+  },
+  "family_updates": [
+    {
+      "state_id": "state.ff6652c8832c",
+      "post_reply_fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+      "runtime_selected_successor": "krk.stage7_drive_repair",
+      "runtime_selected_move": "e2e3",
+      "controlled_mating_providers": [
+        {
+          "provider": "krk.drive_to_edge",
+          "horizon": 40,
+          "plies": 11,
+          "first_move": "e4h4"
+        },
+        {
+          "provider": "krk.drive_to_edge",
+          "horizon": 50,
+          "plies": 11,
+          "first_move": "e4h4"
+        }
+      ],
+      "legal_first_mating_moves_h50": [],
+      "diagnosis": "existing_provider_can_convert_under_controlled_ownership",
+      "next_action": "derive_family_specific_visible_role_or_weight_calibration_probe"
+    },
+    {
+      "state_id": "state.38aed2f35911",
+      "post_reply_fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+      "runtime_selected_successor": "krk.stage7_drive_repair",
+      "runtime_selected_move": "a5b5",
+      "controlled_mating_providers": [
+        {
+          "provider": "krk.stage0_basin",
+          "horizon": 40,
+          "plies": 29,
+          "first_move": "d1e2"
+        },
+        {
+          "provider": "krk.stage0_basin",
+          "horizon": 50,
+          "plies": 29,
+          "first_move": "d1e2"
+        },
+        {
+          "provider": "krk.edge_trap_close",
+          "horizon": 40,
+          "plies": 29,
+          "first_move": "d1e2"
+        },
+        {
+          "provider": "krk.edge_trap_close",
+          "horizon": 50,
+          "plies": 29,
+          "first_move": "d1e2"
+        },
+        {
+          "provider": "krk.edge_trap_enemy_between",
+          "horizon": 40,
+          "plies": 29,
+          "first_move": "d1e2"
+        },
+        {
+          "provider": "krk.edge_trap_enemy_between",
+          "horizon": 50,
+          "plies": 29,
+          "first_move": "d1e2"
+        },
+        {
+          "provider": "krk.fence_established",
+          "horizon": 40,
+          "plies": 29,
+          "first_move": "d1e2"
+        },
+        {
+          "provider": "krk.fence_established",
+          "horizon": 50,
+          "plies": 29,
+          "first_move": "d1e2"
+        }
+      ],
+      "legal_first_mating_moves_h50": [],
+      "diagnosis": "existing_provider_can_convert_under_controlled_ownership",
+      "next_action": "derive_family_specific_visible_role_or_weight_calibration_probe"
+    },
+    {
+      "state_id": "state.6ed746a91c76",
+      "post_reply_fen": "8/8/8/2k5/8/8/3K4/3R4 w - - 2 2",
+      "runtime_selected_successor": "krk.stage7_drive_repair",
+      "runtime_selected_move": "d2c1",
+      "controlled_mating_providers": [],
+      "legal_first_mating_moves_h50": [],
+      "diagnosis": "no_legal_first_conversion_at_h50_under_current_graph",
+      "next_action": "classify_as_capacity_or_horizon_gap_before_new_overlay_training"
+    }
+  ],
+  "candidate_updates": [
+    {
+      "candidate_id": "cand.krk.box_shrink.stage7_drive_repair.v1",
+      "status": "overbroad_adapter_candidate",
+      "diagnosis": [
+        "role_fires_but_selected_provider_outcome_max_plies",
+        "runtime_selected_stage7_drive_repair_failed_all_latest_families"
+      ],
+      "next_action": "do_not_promote_or_warm_up_current_broad_drive_repair; split by family evidence",
+      "causal_status": "sandbox_opt_in",
+      "promotion_status": "quarantined"
+    },
+    {
+      "candidate_id": "cand.krk.box_shrink.family_ff6652c8832c.drive_to_edge_adapter.v1",
+      "status": "sandbox_ready_if_visible_terms_separate",
+      "diagnosis": [
+        "forced_drive_to_edge_converts_h40_h50"
+      ],
+      "next_action": "derive_narrow_visible_role_from family ff6652c8832c; avoid broad stage7_drive_repair",
+      "causal_status": "non_causal",
+      "promotion_status": "proposed"
+    },
+    {
+      "candidate_id": "cand.krk.box_shrink.family_38aed2f35911.controlled_existing_provider_continuation.v1",
+      "status": "needs_role_or_continuation_calibration",
+      "diagnosis": [
+        "multiple_existing_providers_convert_under_forced_ownership_h40_h50",
+        "runtime_stage7_drive_repair_fails"
+      ],
+      "next_action": "derive visible post-box continuation role or controlled ownership calibration; do not train new provider first",
+      "causal_status": "non_causal",
+      "promotion_status": "proposed"
+    },
+    {
+      "candidate_id": "cand.krk.box_shrink.family_6ed746a91c76.unresolved_continuation.v1",
+      "status": "capacity_or_horizon_gap_candidate",
+      "diagnosis": [
+        "no_existing_forced_provider_converts_h50",
+        "no_legal_first_move_converts_h50_under_current_graph"
+      ],
+      "next_action": "deeper horizon/tablebase-style audit or narrow post-box continuation overlay training candidate",
+      "causal_status": "non_causal",
+      "promotion_status": "proposed"
+    }
+  ],
+  "recommendation": "Stop broad Stage 7 drive-repair tuning. Use family-specific visible roles for controlled-provider-success families and classify state.6ed746a91c76 before training a new overlay."
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": "krk_two_stage_abstention_stage7_challenge_smoke.v0",
+  "status": "stage7_challenge_no_target_improvement",
+  "causal_status": "sandbox_opt_in_enabled_with_stage7_allow_flag",
+  "runtime_defaults_changed": false,
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "gameplay_topology_mutation": false,
+  "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+  "profile": "handoff_composition_v1",
+  "label": "box_shrink",
+  "samples": 3,
+  "seed": 11,
+  "horizon_plies": 40,
+  "baseline_artifact": "reports/krk_two_stage_abstention_stage7_baseline_3_seed11_h40.json",
+  "enabled_artifact": "reports/krk_two_stage_abstention_stage7_enabled_3_seed11_h40.json",
+  "selector": {
+    "enabled": true,
+    "penalty": 1.0,
+    "unsafe_threshold": 0.45,
+    "preserve_threshold": 0.5,
+    "stage7_challenge_allowed": true
+  },
+  "baseline": {
+    "playouts": {
+      "max_plies": 2,
+      "mate": 1
+    },
+    "conversion_status": "failed",
+    "shadow_candidate_count": 3,
+    "one_ply_status": "failed"
+  },
+  "enabled": {
+    "playouts": {
+      "max_plies": 2,
+      "mate": 1
+    },
+    "conversion_status": "failed",
+    "shadow_candidate_count": 3,
+    "one_ply_status": "failed",
+    "penalized_count": 12,
+    "selected_penalized_count": 0,
+    "penalized_provider_by_outcome": {},
+    "selected_by_outcome": {}
+  },
+  "summary": {
+    "conversion_delta_mates": 0,
+    "shadow_candidate_delta": 0,
+    "selected_penalized_count": 0,
+    "target_improved": false,
+    "no_regression_detected": true
+  },
+  "interpretation": "The selector can fire on Stage 7 when explicitly allowed, but the penalized suggestions were not selected and target conversion did not improve. This does not justify scaling or threshold tuning as the next action.",
+  "next_step": "go_no_go_review"
+}

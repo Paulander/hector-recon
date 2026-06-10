@@ -1,0 +1,57 @@
+{
+  "causal_status": "non_causal_label_runner_wrapper",
+  "commands": [],
+  "decision": {
+    "label_run_allowed": false,
+    "recommended_next_step": "rerun_passive_sequence_policy_gate_stack",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "stage7_additional_clean_sampling_runner_not_applicable_success_gate_closed"
+  },
+  "executed_jobs": [],
+  "execution_blockers": [
+    "stage7_success_gate_closed_no_additional_labels_allowed"
+  ],
+  "execution_requested": false,
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "post_run_refresh": null,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "stage7_additional_clean_sampling_runner.v0",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_additional_clean_sampling_manifest_v0.json",
+    "scripts/run_stage7_additional_clean_sampling_jobs_v0.py"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "dry_run": true,
+    "executed_job_count": 0,
+    "execution_readiness_all_jobs_pass": false,
+    "execution_readiness_jobs_passing": 0,
+    "execution_readiness_source": "manifest_closed_success_gate",
+    "execution_readiness_status": "not_applicable_stage7_success_gate_closed",
+    "failed_job_count": 0,
+    "invalid_existing_output_count": 0,
+    "job_count": 0,
+    "job_timeout_seconds": 900,
+    "max_jobs": null,
+    "output_validation_status": "stage7_additional_clean_sampling_outputs_not_applicable_success_gate_closed",
+    "overwrite_existing_outputs": false,
+    "processed_job_count": 0,
+    "refresh_after_run_performed": false,
+    "refresh_after_run_requested": false,
+    "runtime_authorization_row_count": 0,
+    "skipped_existing_output_count": 0,
+    "stage7_training_row_count": 0,
+    "timed_out_job_count": 0
+  }
+}

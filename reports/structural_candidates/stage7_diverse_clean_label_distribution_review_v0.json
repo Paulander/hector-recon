@@ -1,0 +1,408 @@
+{
+  "causal_status": "non_causal_label_distribution_review",
+  "decision": {
+    "implementation_allowed_by_this_review": false,
+    "label_run_allowed": false,
+    "recommended_next_step": "rerun_passive_sequence_policy_gate_stack",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "stage7_label_distribution_review_success_gate_closed"
+  },
+  "duplicate_keys": [
+    {
+      "already_clean_before_run": true,
+      "clean_after_run": true,
+      "fen": "2k5/8/2K1R3/8/8/8/8/8 w - - 0 1",
+      "move_uci": "e6e8",
+      "occurrence_count": 11,
+      "result": "mate"
+    },
+    {
+      "already_clean_before_run": true,
+      "clean_after_run": true,
+      "fen": "8/8/8/8/8/5K2/5R2/6k1 w - - 0 1",
+      "move_uci": "f3g3",
+      "occurrence_count": 11,
+      "result": "mate"
+    },
+    {
+      "already_clean_before_run": true,
+      "clean_after_run": true,
+      "fen": "8/8/8/8/4K3/R7/4k3/8 w - - 0 1",
+      "move_uci": "a3a2",
+      "occurrence_count": 10,
+      "result": "max_plies"
+    },
+    {
+      "already_clean_before_run": true,
+      "clean_after_run": true,
+      "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+      "move_uci": "a1a8",
+      "occurrence_count": 9,
+      "result": "max_plies"
+    },
+    {
+      "already_clean_before_run": true,
+      "clean_after_run": true,
+      "fen": "8/8/8/3k4/8/R7/8/3K4 w - - 0 1",
+      "move_uci": "a3a8",
+      "occurrence_count": 8,
+      "result": "max_plies"
+    },
+    {
+      "already_clean_before_run": true,
+      "clean_after_run": true,
+      "fen": "8/8/8/8/R7/8/2k1K3/8 w - - 0 1",
+      "move_uci": "a4a8",
+      "occurrence_count": 7,
+      "result": "max_plies"
+    }
+  ],
+  "findings": [
+    "all_reviewed_outputs_valid",
+    "approved_run_added_unique_clean_success_controls",
+    "label_distribution_duplicate_dominated"
+  ],
+  "followup_sampling_guidance": {
+    "highest_yield_job_ids": [
+      "stage7.diverse_clean.edge_fence_deep.seed107.samples8.h40"
+    ],
+    "minimum_additional_unique_success_controls_needed": 0,
+    "recommended_source_bias": "favor_source_cells_with_unique_new_success_yield_and_avoid_duplicate_dominated_cells",
+    "requires_explicit_approval_before_any_label_execution": true,
+    "reuse_same_manifest_without_overwrite_expected_to_help": false
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "job_reviews": [
+    {
+      "duplicate_within_or_across_manifest_count": 5,
+      "job_id": "stage7.diverse_clean.box_small.seed101.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_box_small_seed101_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "mate": 6,
+        "max_plies": 2
+      },
+      "source_stage_names": [
+        "Box_Small"
+      ],
+      "unique_key_count": 3,
+      "unique_new_key_count_vs_pre_run": 0,
+      "unique_new_success_key_count_vs_pre_run": 0,
+      "unique_success_key_count": 2
+    },
+    {
+      "duplicate_within_or_across_manifest_count": 5,
+      "job_id": "stage7.diverse_clean.box_medium.seed103.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_box_medium_seed103_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "max_plies": 8
+      },
+      "source_stage_names": [
+        "Box_Medium"
+      ],
+      "unique_key_count": 3,
+      "unique_new_key_count_vs_pre_run": 0,
+      "unique_new_success_key_count_vs_pre_run": 0,
+      "unique_success_key_count": 0
+    },
+    {
+      "duplicate_within_or_across_manifest_count": 0,
+      "job_id": "stage7.diverse_clean.edge_fence_deep.seed107.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_edge_fence_deep_seed107_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "mate": 2,
+        "max_plies": 6
+      },
+      "source_stage_names": [
+        "Edge_Fence_Deep"
+      ],
+      "unique_key_count": 8,
+      "unique_new_key_count_vs_pre_run": 8,
+      "unique_new_success_key_count_vs_pre_run": 2,
+      "unique_success_key_count": 2
+    },
+    {
+      "duplicate_within_or_across_manifest_count": 3,
+      "job_id": "stage7.diverse_clean.box_small_medium.seed109.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_box_small_medium_seed109_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "mate": 3,
+        "max_plies": 5
+      },
+      "source_stage_names": [
+        "Box_Small",
+        "Box_Medium"
+      ],
+      "unique_key_count": 5,
+      "unique_new_key_count_vs_pre_run": 0,
+      "unique_new_success_key_count_vs_pre_run": 0,
+      "unique_success_key_count": 2
+    },
+    {
+      "duplicate_within_or_across_manifest_count": 5,
+      "job_id": "stage7.diverse_clean.box_medium_edge_deep.seed113.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_box_medium_edge_deep_seed113_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "max_plies": 8
+      },
+      "source_stage_names": [
+        "Box_Medium",
+        "Edge_Fence_Deep"
+      ],
+      "unique_key_count": 3,
+      "unique_new_key_count_vs_pre_run": 0,
+      "unique_new_success_key_count_vs_pre_run": 0,
+      "unique_success_key_count": 0
+    },
+    {
+      "duplicate_within_or_across_manifest_count": 5,
+      "job_id": "stage7.diverse_clean.all_stage7_sources_a.seed127.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_a_seed127_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "mate": 5,
+        "max_plies": 3
+      },
+      "source_stage_names": [
+        "Box_Small",
+        "Box_Medium",
+        "Edge_Fence_Deep"
+      ],
+      "unique_key_count": 3,
+      "unique_new_key_count_vs_pre_run": 0,
+      "unique_new_success_key_count_vs_pre_run": 0,
+      "unique_success_key_count": 2
+    },
+    {
+      "duplicate_within_or_across_manifest_count": 4,
+      "job_id": "stage7.diverse_clean.all_stage7_sources_b.seed131.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_b_seed131_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "mate": 5,
+        "max_plies": 3
+      },
+      "source_stage_names": [
+        "Box_Small",
+        "Box_Medium",
+        "Edge_Fence_Deep"
+      ],
+      "unique_key_count": 4,
+      "unique_new_key_count_vs_pre_run": 0,
+      "unique_new_success_key_count_vs_pre_run": 0,
+      "unique_success_key_count": 2
+    },
+    {
+      "duplicate_within_or_across_manifest_count": 4,
+      "job_id": "stage7.diverse_clean.all_stage7_sources_c.seed137.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_c_seed137_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "mate": 3,
+        "max_plies": 5
+      },
+      "source_stage_names": [
+        "Box_Small",
+        "Box_Medium",
+        "Edge_Fence_Deep"
+      ],
+      "unique_key_count": 4,
+      "unique_new_key_count_vs_pre_run": 0,
+      "unique_new_success_key_count_vs_pre_run": 0,
+      "unique_success_key_count": 2
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "stage7_diverse_clean_label_distribution_review.v0",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
+    "reports/structural_candidates/stage7_diverse_clean_sampling_output_validation_v0.json",
+    "reports/structural_candidates/stage7_diverse_clean_sampling_integration_v0.json",
+    "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json"
+  ],
+  "source_cell_yield_rank": [
+    {
+      "duplicate_within_or_across_manifest_count": 0,
+      "job_id": "stage7.diverse_clean.edge_fence_deep.seed107.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_edge_fence_deep_seed107_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "mate": 2,
+        "max_plies": 6
+      },
+      "source_stage_names": [
+        "Edge_Fence_Deep"
+      ],
+      "unique_key_count": 8,
+      "unique_new_key_count_vs_pre_run": 8,
+      "unique_new_success_key_count_vs_pre_run": 2,
+      "unique_success_key_count": 2
+    },
+    {
+      "duplicate_within_or_across_manifest_count": 5,
+      "job_id": "stage7.diverse_clean.all_stage7_sources_a.seed127.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_a_seed127_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "mate": 5,
+        "max_plies": 3
+      },
+      "source_stage_names": [
+        "Box_Small",
+        "Box_Medium",
+        "Edge_Fence_Deep"
+      ],
+      "unique_key_count": 3,
+      "unique_new_key_count_vs_pre_run": 0,
+      "unique_new_success_key_count_vs_pre_run": 0,
+      "unique_success_key_count": 2
+    },
+    {
+      "duplicate_within_or_across_manifest_count": 4,
+      "job_id": "stage7.diverse_clean.all_stage7_sources_b.seed131.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_b_seed131_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "mate": 5,
+        "max_plies": 3
+      },
+      "source_stage_names": [
+        "Box_Small",
+        "Box_Medium",
+        "Edge_Fence_Deep"
+      ],
+      "unique_key_count": 4,
+      "unique_new_key_count_vs_pre_run": 0,
+      "unique_new_success_key_count_vs_pre_run": 0,
+      "unique_success_key_count": 2
+    },
+    {
+      "duplicate_within_or_across_manifest_count": 4,
+      "job_id": "stage7.diverse_clean.all_stage7_sources_c.seed137.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_c_seed137_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "mate": 3,
+        "max_plies": 5
+      },
+      "source_stage_names": [
+        "Box_Small",
+        "Box_Medium",
+        "Edge_Fence_Deep"
+      ],
+      "unique_key_count": 4,
+      "unique_new_key_count_vs_pre_run": 0,
+      "unique_new_success_key_count_vs_pre_run": 0,
+      "unique_success_key_count": 2
+    },
+    {
+      "duplicate_within_or_across_manifest_count": 5,
+      "job_id": "stage7.diverse_clean.box_medium.seed103.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_box_medium_seed103_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "max_plies": 8
+      },
+      "source_stage_names": [
+        "Box_Medium"
+      ],
+      "unique_key_count": 3,
+      "unique_new_key_count_vs_pre_run": 0,
+      "unique_new_success_key_count_vs_pre_run": 0,
+      "unique_success_key_count": 0
+    },
+    {
+      "duplicate_within_or_across_manifest_count": 5,
+      "job_id": "stage7.diverse_clean.box_medium_edge_deep.seed113.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_box_medium_edge_deep_seed113_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "max_plies": 8
+      },
+      "source_stage_names": [
+        "Box_Medium",
+        "Edge_Fence_Deep"
+      ],
+      "unique_key_count": 3,
+      "unique_new_key_count_vs_pre_run": 0,
+      "unique_new_success_key_count_vs_pre_run": 0,
+      "unique_success_key_count": 0
+    },
+    {
+      "duplicate_within_or_across_manifest_count": 5,
+      "job_id": "stage7.diverse_clean.box_small.seed101.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_box_small_seed101_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "mate": 6,
+        "max_plies": 2
+      },
+      "source_stage_names": [
+        "Box_Small"
+      ],
+      "unique_key_count": 3,
+      "unique_new_key_count_vs_pre_run": 0,
+      "unique_new_success_key_count_vs_pre_run": 0,
+      "unique_success_key_count": 2
+    },
+    {
+      "duplicate_within_or_across_manifest_count": 3,
+      "job_id": "stage7.diverse_clean.box_small_medium.seed109.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_box_small_medium_seed109_8_h40.json",
+      "raw_playout_count": 8,
+      "result_counts": {
+        "mate": 3,
+        "max_plies": 5
+      },
+      "source_stage_names": [
+        "Box_Small",
+        "Box_Medium"
+      ],
+      "unique_key_count": 5,
+      "unique_new_key_count_vs_pre_run": 0,
+      "unique_new_success_key_count_vs_pre_run": 0,
+      "unique_success_key_count": 2
+    }
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "current_clean_key_count": 50,
+    "current_success_key_count": 11,
+    "duplicate_key_count": 6,
+    "duplicate_playout_count": 50,
+    "job_count": 8,
+    "pre_existing_clean_key_count": 42,
+    "pre_existing_success_key_count": 9,
+    "raw_playout_count": 64,
+    "raw_result_counts": {
+      "mate": 24,
+      "max_plies": 40
+    },
+    "runtime_authorization_row_count": 0,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "success_controls": 11,
+    "success_controls_required": 5,
+    "success_gap": 0,
+    "unique_new_key_count_vs_pre_run": 8,
+    "unique_new_success_key_count_vs_pre_run": 2,
+    "unique_output_key_count": 14,
+    "unique_output_success_key_count": 4,
+    "validation_status": "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration"
+  }
+}

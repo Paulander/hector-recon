@@ -1,0 +1,197 @@
+{
+  "schema_version": "krk_strategy_monitor_v0_plan.v1",
+  "causal_status": "non_causal_design",
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "gameplay_topology_mutation": false,
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "decision": {
+    "accepted_source": "reports/strategy_arbitration/krk_feature_candidate_validation_v0.json",
+    "summary": "Feature candidates are monitor/internal-terminal candidates, not sandbox-ready move-support affordances.",
+    "do_not_implement_as_causal_affordances": true
+  },
+  "candidate_typing": [
+    {
+      "candidate_id": "cand.krk.strategy.edge_net_affordance.v0",
+      "target_concept": "edge_net_affordance",
+      "status": "needs_companion_terms",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "role_type": "possible_future_affordance_phase_context",
+      "causal_recommendation": "not_causal",
+      "required_companion_terms": [
+        "safe_edge_net_tighten_move_exists",
+        "king_support_conversion_affordance",
+        "draw_risk_absent"
+      ]
+    },
+    {
+      "candidate_id": "cand.krk.strategy.phase_boundary_near_edge.v0",
+      "target_concept": "phase_boundary_near_edge",
+      "status": "needs_companion_terms",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "role_type": "phase_boundary_monitor",
+      "causal_recommendation": "not_causal",
+      "required_companion_terms": [
+        "box_area_relevance",
+        "edge_net_pressure_proxy",
+        "current_owner",
+        "successful_next_provider"
+      ]
+    },
+    {
+      "candidate_id": "cand.krk.strategy.king_support_conversion_affordance.v0",
+      "target_concept": "king_support_conversion_affordance",
+      "status": "reject_or_too_broad_as_defined",
+      "monitor_type": "RejectedFeatureDefinition",
+      "role_type": "rejected_feature_definition",
+      "causal_recommendation": "not_causal",
+      "required_companion_terms": [
+        "king_support_improvement_move_exists",
+        "white_king_distance_to_enemy_decreases_after_move"
+      ]
+    },
+    {
+      "candidate_id": "cand.krk.strategy.box_shrink_exit_condition.v0",
+      "target_concept": "box_shrink_exit_condition",
+      "status": "possible_exit_condition_needs_evidence",
+      "monitor_type": "OwnerExitMonitor",
+      "role_type": "owner_exit_handoff_monitor",
+      "causal_recommendation": "not_causal",
+      "required_companion_terms": [
+        "active_landmark_label == box_shrink",
+        "edge_net_affordance",
+        "mate_basin_readiness"
+      ]
+    },
+    {
+      "candidate_id": "cand.krk.strategy.fence_or_cut_repair_affordance.v0",
+      "target_concept": "fence_or_cut_repair_affordance",
+      "status": "risk_failure_monitor",
+      "monitor_type": "RepairNeededMonitor",
+      "role_type": "internal_repair_needed_monitor",
+      "causal_recommendation": "not_move_support_affordance",
+      "required_companion_terms": [
+        "repair_or_reestablish_cut_available",
+        "rook_safe_after_repair",
+        "box_area_not_expanded_after_reply"
+      ]
+    },
+    {
+      "candidate_id": "cand.krk.strategy.plan_selection_needed.v0",
+      "target_concept": "plan_selection_needed",
+      "status": "stage7_only_growth_pressure_internal_monitor",
+      "monitor_type": "PlanSelectionNeededMonitor",
+      "role_type": "plan_strategy_selection_needed_monitor",
+      "causal_recommendation": "not_causal",
+      "required_companion_terms": [
+        "plan_capsule_context",
+        "handoff_success_after_plan",
+        "post_plan_stagnation"
+      ]
+    }
+  ],
+  "monitor_classes": [
+    {
+      "monitor_type": "PhaseBoundaryMonitor",
+      "purpose": "Detects when a local stage concept may no longer be the right owner.",
+      "suggested_action_class": "audit_owner_phase",
+      "may_choose_moves": false,
+      "may_route_providers": false
+    },
+    {
+      "monitor_type": "OwnerExitMonitor",
+      "purpose": "Detects when current skill should release ownership or hand off.",
+      "suggested_action_class": "audit_owner_exit",
+      "may_choose_moves": false,
+      "may_route_providers": false
+    },
+    {
+      "monitor_type": "RepairNeededMonitor",
+      "purpose": "Detects fence/cut/rook/king-support instability.",
+      "suggested_action_class": "record_repair_pressure",
+      "may_choose_moves": false,
+      "may_route_providers": false
+    },
+    {
+      "monitor_type": "PlanSelectionNeededMonitor",
+      "purpose": "Detects that local providers are insufficient and higher-level plan selection should be audited.",
+      "suggested_action_class": "audit_plan_selection",
+      "may_choose_moves": false,
+      "may_route_providers": false
+    },
+    {
+      "monitor_type": "GrowthPressureMonitor",
+      "purpose": "Records repeated failure patterns as structural-growth evidence only.",
+      "suggested_action_class": "record_growth_pressure",
+      "may_choose_moves": false,
+      "may_route_providers": false
+    }
+  ],
+  "strategy_monitor_record_schema": {
+    "schema_version": "strategy_monitor_record.v1",
+    "fields": [
+      "schema_version",
+      "monitor_id",
+      "monitor_type",
+      "source_candidate_id",
+      "active_landmark_label",
+      "state_id",
+      "fen",
+      "source_terms",
+      "missing_terms",
+      "confidence",
+      "associated_outcome",
+      "suggested_action_class",
+      "causal_status",
+      "promotion_status",
+      "notes"
+    ],
+    "causal_status": "non_causal",
+    "promotion_status_values": [
+      "proposed",
+      "monitoring_only",
+      "rejected"
+    ]
+  },
+  "stage7_interpretation": "Stage 7 is not blocked by a single absent move-affordance terminal. It needs better strategy-level self-monitoring for owner exit, plan selection, repair pressure, and phase-boundary changes.",
+  "relationship_to_recon_self_monitoring": {
+    "observes_graph_environment_control_state": true,
+    "chooses_moves": false,
+    "can_later_become_visible_terminal_or_script": true,
+    "may_eventually_feed_growth_monitor_or_plan_capsule_logic_after_validation": true
+  },
+  "immediate_next_non_causal_experiment": {
+    "name": "StrategyMonitorRecord extraction v0",
+    "outputs": [
+      "reports/strategy_arbitration/krk_strategy_monitor_records_v0.json",
+      "reports/strategy_arbitration/krk_strategy_monitor_records_v0.md"
+    ],
+    "constraints": [
+      "replay_free",
+      "cheap",
+      "existing_artifacts_first",
+      "no_runtime_behavior_changes",
+      "no_h40_relabeling_without_review"
+    ]
+  },
+  "stop_conditions": [
+    "monitor_would_need_to_influence_routing",
+    "monitor_source_terms_not_visible_or_explainable",
+    "work_becomes_stage7_patch",
+    "requires_expensive_new_labels",
+    "requires_hidden_controller",
+    "requires_runtime_dtm_or_tablebase",
+    "requires_gameplay_topology_mutation"
+  ],
+  "blocked_next_steps": [
+    "implement_runtime_arbiter",
+    "add_causal_terminals",
+    "add_stage7_repair",
+    "train_stage8",
+    "promote_stage7",
+    "use_runtime_dtm_or_tablebase",
+    "mutate_topology_during_gameplay"
+  ]
+}

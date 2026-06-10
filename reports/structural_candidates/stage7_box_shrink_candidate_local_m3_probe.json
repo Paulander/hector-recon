@@ -1,0 +1,135 @@
+{
+  "schema_version": "candidate_local_m3_warmup_probe.v1",
+  "causal_status": "non_causal",
+  "warmup_plan_source": "reports/structural_candidates/stage7_box_shrink_candidate_local_m3_warmup_plan_refreshed.json",
+  "diagnostic_source": "reports/structural_candidates/stage7_box_shrink_drive_repair_sandbox_smoke_10.json",
+  "target_role": "krk.box_shrink_to_drive_repair",
+  "target_provider": "krk.drive_to_edge",
+  "probe_result": "blocked_no_candidate_provider_eligibility",
+  "recommended_next_action": "compile_visible_role_provider_support_or_owner_eligibility_before_m3",
+  "diagnostic_labels": [
+    "role_contract_met_provider_not_selected",
+    "candidate_edges_not_firing",
+    "topology_present_but_not_eligible_for_weight_update"
+  ],
+  "counts": {
+    "role_contract_met": 5,
+    "role_met_provider_not_selected": 5,
+    "role_met_selected:krk.stage0_basin": 5
+  },
+  "eligible_edge_count": 21,
+  "candidate_edge_eligibility_events": 0,
+  "edge_delta_preview": [],
+  "sample_rows": [
+    {
+      "packet_id": "packet.bdc44c359f0d",
+      "fen": "8/8/8/8/R7/8/2k1K3/8 w - - 0 1",
+      "post_reply_fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+      "move": "a4h4",
+      "black_reply": "c2c3",
+      "role_contract_met": true,
+      "selected_successor": "krk.stage0_basin",
+      "playout_result": "max_plies",
+      "source_terms": [
+        "box_shrink_drive_repair_available",
+        "fence_or_cut_not_preserved",
+        "drive_to_edge_affordance_after_box_shrink",
+        "repair_or_reestablish_cut_available",
+        "enemy_king_not_at_edge",
+        "box_area_large",
+        "rook_safe"
+      ]
+    },
+    {
+      "packet_id": "packet.64b8350f81ed",
+      "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+      "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "move": "a1a5",
+      "black_reply": "d4e4",
+      "role_contract_met": true,
+      "selected_successor": "krk.stage0_basin",
+      "playout_result": "max_plies",
+      "source_terms": [
+        "box_shrink_drive_repair_available",
+        "fence_or_cut_not_preserved",
+        "drive_to_edge_affordance_after_box_shrink",
+        "repair_or_reestablish_cut_available",
+        "enemy_king_not_at_edge",
+        "box_area_large",
+        "rook_safe"
+      ]
+    },
+    {
+      "packet_id": "packet.64b8350f81ed",
+      "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+      "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "move": "a1a5",
+      "black_reply": "d4e4",
+      "role_contract_met": true,
+      "selected_successor": "krk.stage0_basin",
+      "playout_result": "max_plies",
+      "source_terms": [
+        "box_shrink_drive_repair_available",
+        "fence_or_cut_not_preserved",
+        "drive_to_edge_affordance_after_box_shrink",
+        "repair_or_reestablish_cut_available",
+        "enemy_king_not_at_edge",
+        "box_area_large",
+        "rook_safe"
+      ]
+    },
+    {
+      "packet_id": "packet.bb3267a97a6a",
+      "fen": "8/8/8/3k4/8/R7/8/3K4 w - - 0 1",
+      "post_reply_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "move": "a3a6",
+      "black_reply": "d5c4",
+      "role_contract_met": true,
+      "selected_successor": "krk.stage0_basin",
+      "playout_result": "max_plies",
+      "source_terms": [
+        "box_shrink_drive_repair_available",
+        "fence_or_cut_not_preserved",
+        "drive_to_edge_affordance_after_box_shrink",
+        "repair_or_reestablish_cut_available",
+        "enemy_king_not_at_edge",
+        "box_area_large",
+        "rook_safe"
+      ]
+    },
+    {
+      "packet_id": "packet.bb3267a97a6a",
+      "fen": "8/8/8/3k4/8/R7/8/3K4 w - - 0 1",
+      "post_reply_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "move": "a3a6",
+      "black_reply": "d5c4",
+      "role_contract_met": true,
+      "selected_successor": "krk.stage0_basin",
+      "playout_result": "max_plies",
+      "source_terms": [
+        "box_shrink_drive_repair_available",
+        "fence_or_cut_not_preserved",
+        "drive_to_edge_affordance_after_box_shrink",
+        "repair_or_reestablish_cut_available",
+        "enemy_king_not_at_edge",
+        "box_area_large",
+        "rook_safe"
+      ]
+    }
+  ],
+  "safety": {
+    "m4_consolidation_enabled": false,
+    "topology_mutation_enabled": false,
+    "protected_provider_mutation_enabled": false,
+    "hard_blocks": [
+      "do_not_train_stage8",
+      "do_not_promote_stage7",
+      "do_not_enable_stage7_repair_by_default",
+      "do_not_make_packets_stats_or_candidates_causal"
+    ]
+  },
+  "performance": {
+    "wall_time_seconds": 0.0021729709987994283,
+    "post_reply_packets": 10
+  }
+}

@@ -28,7 +28,7 @@ from typing import Dict, List, Any, Optional, Tuple
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from recon_lite.nodes.stem_cell import StemCellManager, StemCellState
+from recon_lite_hector.nodes.stem_cell import StemCellManager, StemCellState
 
 
 @dataclass

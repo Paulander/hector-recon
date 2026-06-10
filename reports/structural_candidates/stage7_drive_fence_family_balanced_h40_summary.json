@@ -1,0 +1,56 @@
+{
+  "schema_version": "stage7_family_balanced_role_owned_summary.v1",
+  "causal_status": "sandbox_opt_in",
+  "stage7_status": "local_valid_composition_quarantined",
+  "inputs": {
+    "off": "reports/structural_candidates/stage7_drive_fence_family_balanced_off_4_h40.json",
+    "on": "reports/structural_candidates/stage7_drive_fence_family_balanced_on_4_h40.json",
+    "family_diagnosis": "reports/structural_candidates/stage7_post_box_family_diagnosis.json"
+  },
+  "config": {
+    "horizon": 40,
+    "black_policy": "adversarial",
+    "explicit_role_provider_support_enabled": true,
+    "role_owned_score_normalization_enabled_off": false,
+    "role_owned_score_normalization_enabled_on": true
+  },
+  "summary": {
+    "off": {
+      "mate": 0,
+      "max_plies": 4,
+      "role_owned_selected": 0
+    },
+    "on": {
+      "mate": 2,
+      "max_plies": 2,
+      "role_owned_selected": 2
+    },
+    "h40_preserves_h80_conclusion": true
+  },
+  "family_results": [
+    {
+      "state_id": "state.ff6652c8832c",
+      "off": "krk.stage0_basin:e4e8:max_plies",
+      "on": "krk.drive_to_edge:e4h4:mate:7",
+      "interpretation": "role_owned_arbitration_fixes_drive_convertible_family"
+    },
+    {
+      "state_id": "state.ac0b7ed500ea",
+      "off": "krk.stage0_basin:a4a8:max_plies",
+      "on": "krk.fence_established:d2e3:mate:13",
+      "interpretation": "role_owned_arbitration_fixes_fence_convertible_family"
+    },
+    {
+      "state_id": "state.0afbf11aa123",
+      "off": "krk.stage0_basin:e3a3:max_plies",
+      "on": "krk.stage0_basin:e3a3:max_plies",
+      "interpretation": "unresolved_family_unchanged_no_overfire"
+    },
+    {
+      "state_id": "state.38aed2f35911",
+      "off": "krk.stage0_basin:d1e2:max_plies",
+      "on": "krk.stage0_basin:d1e2:max_plies",
+      "interpretation": "unresolved_family_unchanged_no_overfire"
+    }
+  ]
+}

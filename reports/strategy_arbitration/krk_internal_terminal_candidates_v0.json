@@ -1,0 +1,185 @@
+{
+  "blocked_next_steps": [
+    "runtime_terminals",
+    "causal_affordances",
+    "runtime_arbiter",
+    "stage7_repair",
+    "stage8_training",
+    "stage7_promotion",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "monitor_to_provider_routing"
+  ],
+  "causal_status": "non_causal_design",
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_internal_terminal_candidates.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_monitor_maturity_gate_v0.json",
+    "reports/strategy_arbitration/krk_visible_monitor_terms_v0.json"
+  ],
+  "specs": [
+    {
+      "causal_status": "non_causal",
+      "forbidden_causal_uses": [
+        "choose_provider",
+        "penalize_provider",
+        "boost_plan",
+        "mutate_topology"
+      ],
+      "intended_scope": "KRK strategy arbitration diagnostics and structural-growth evidence",
+      "maturity_status": "internal_terminal_candidate",
+      "missing_terms": [
+        "current_owner",
+        "alternative_provider_known_mate",
+        "route_conflict"
+      ],
+      "monitor_type": "internal_control_arbitration_failure_monitor",
+      "potential_future_consumers": [
+        "GrowthMonitor",
+        "StrategyArbiter training dataset",
+        "PlanCapsule entry/abort/handoff diagnostics",
+        "M3/M4 arbitration-weight evidence after later review"
+      ],
+      "promotion_status": "monitoring_only",
+      "schema_version": "internal_terminal_spec.v1",
+      "source_monitor_candidates": [
+        "local_provider_competition_failed",
+        "PlanSelectionNeededMonitor"
+      ],
+      "source_terms": [
+        "local_provider_competition_failed",
+        "selected provider closed-loop failed",
+        "current_graph_h40 == max_plies",
+        "alternative provider/candidate conversion evidence"
+      ],
+      "terminal_id": "terminal.krk.local_provider_competition_failed",
+      "validation_requirements": [
+        "broader cross-stage examples",
+        "known alternative conversion evidence",
+        "no runtime provider routing"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "forbidden_causal_uses": [
+        "force_plan_exit",
+        "force_provider_selection",
+        "alter_ttl",
+        "mutate_topology"
+      ],
+      "intended_scope": "PlanCapsule self-monitoring and strategy monitor datasets",
+      "maturity_status": "internal_terminal_candidate",
+      "missing_terms": [
+        "handoff_success_after_plan",
+        "multi_step_progress_required",
+        "repeated_abstract_state"
+      ],
+      "monitor_type": "internal_plan_progress_stagnation_monitor",
+      "potential_future_consumers": [
+        "PlanCapsule self-monitoring",
+        "GrowthMonitor",
+        "StrategyMonitor datasets"
+      ],
+      "promotion_status": "monitoring_only",
+      "schema_version": "internal_terminal_spec.v1",
+      "source_monitor_candidates": [
+        "post_plan_stagnation",
+        "PlanSelectionNeededMonitor"
+      ],
+      "source_terms": [
+        "post_plan_stagnation",
+        "plan_capsule_context",
+        "max_plies after plan",
+        "no progress over owned moves"
+      ],
+      "terminal_id": "terminal.krk.post_plan_stagnation",
+      "validation_requirements": [
+        "broader plan/capsule windows",
+        "handoff success/failure labels",
+        "no runtime TTL changes"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "forbidden_causal_uses": [
+        "select_next_owner",
+        "boost_edge_provider",
+        "boost_fence_provider",
+        "boost_stage0"
+      ],
+      "intended_scope": "box_shrink owner-exit diagnostics",
+      "maturity_status": "needs_more_evidence",
+      "missing_terms": [
+        "box_shrink_goal_satisfied",
+        "validated_handoff_target_available"
+      ],
+      "monitor_type": "owner_exit_monitor_candidate",
+      "potential_future_consumers": [
+        "OwnerExitMonitor",
+        "StrategyArbiter training dataset",
+        "PlanCapsule handoff diagnostics"
+      ],
+      "promotion_status": "proposed",
+      "schema_version": "internal_terminal_spec.v1",
+      "source_monitor_candidates": [
+        "box_area_no_longer_decision_relevant",
+        "OwnerExitMonitor"
+      ],
+      "source_terms": [
+        "active_landmark_label == box_shrink",
+        "box_area_no_longer_decision_relevant",
+        "phase boundary near edge",
+        "mate_basin_readiness or edge/fence/king-support context"
+      ],
+      "terminal_id": "terminal.krk.box_shrink_owner_exit_pressure",
+      "validation_requirements": [
+        "next-provider handoff labels",
+        "active owner labels",
+        "successful owner-exit examples"
+      ]
+    },
+    {
+      "causal_status": "non_causal",
+      "forbidden_causal_uses": [
+        "boost_fence_established",
+        "play_repair_move",
+        "route_to_provider"
+      ],
+      "intended_scope": "repair-risk and repair-pressure diagnostics",
+      "maturity_status": "monitoring_only",
+      "missing_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "box_area_not_expanded_after_reply"
+      ],
+      "monitor_type": "repair_risk_monitor",
+      "potential_future_consumers": [
+        "RepairNeededMonitor",
+        "GrowthMonitor",
+        "StrategyArbiter training dataset"
+      ],
+      "promotion_status": "monitoring_only",
+      "schema_version": "internal_terminal_spec.v1",
+      "source_monitor_candidates": [
+        "cut_or_fence_restored_after_move",
+        "RepairNeededMonitor"
+      ],
+      "source_terms": [
+        "fence_or_cut_repair_affordance",
+        "cut_or_fence_restored_after_move",
+        "repair_or_reestablish_cut_available",
+        "safe_repair_move_exists"
+      ],
+      "terminal_id": "terminal.krk.repair_needed_monitor",
+      "validation_requirements": [
+        "repair-needed context",
+        "safe repair availability",
+        "post-repair preservation labels"
+      ]
+    }
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

@@ -30,7 +30,8 @@ import chess
 
 from recon_lite.graph import Node, NodeType, NodeState, LinkType, Graph
 from recon_lite.engine import ReConEngine
-from recon_lite_chess.graph import build_unified_graph, load_all_weights
+from recon_lite_chess.graph import build_unified_graph, load_all_weights, compute_subgraph_gates
+from recon_lite_chess.sensors.phase import estimate_phase
 from recon_lite_chess.scripts.kqk import is_kqk_position
 from recon_lite_chess.scripts.kpk import build_kpk_legs_network
 from recon_lite_chess.sensors.structure import summarize_kpk_material
@@ -288,6 +289,10 @@ def export_frame(
         "turn": "white" if board.turn else "black",
         "gate_activations": gate_data.get("activations", {}),
         "gate_decision": gate_data.get("active_endgame"),
+        "router_mode": gate_data.get("router_mode"),
+        "router_signals": gate_data.get("signals"),
+        "router_weights": gate_data.get("router_weights"),
+        "router_scores": gate_data.get("router_scores"),
         "node_states": node_states,
         "node_activations": node_activations,
         "bindings": bindings,
@@ -303,6 +308,11 @@ def play_and_export(
     max_moves: int = 80,
     initial_fen: Optional[str] = None,
     load_weights: bool = True,
+    weights_dir: Path = Path("weights/latest"),
+    fullgame_pack: Optional[Path] = None,
+    router_mode: str = "binary_active_endgame",
+    router_min_signal: float = 0.05,
+    router_epsilon: float = 0.0,
     verbose: bool = True,
 ) -> bool:
     """Play a bridge game and export for visualization."""
@@ -315,17 +325,39 @@ def play_and_export(
     g = build_unified_graph(include_endgames=True, include_tactics=False, include_sensors=True)
     
     if load_weights:
-        weights_dir = Path("weights/latest")
         if weights_dir.exists():
             load_all_weights(g, weights_dir=weights_dir)
             if verbose:
-                print("Loaded weights from weights/latest")
+                print(f"Loaded weights from {weights_dir}")
         else:
             if verbose:
-                print("Warning: weights/latest not found, using default weights")
+                print(f"Warning: {weights_dir} not found, using default weights")
     else:
         if verbose:
             print("Running with default (untrained) weights")
+
+    if fullgame_pack and fullgame_pack.exists():
+        # Apply a specific full-game consolidation pack after load_all_weights().
+        # Useful when visualizing a router-trained pack stored outside weights_dir.
+        try:
+            data = json.loads(fullgame_pack.read_text())
+            w_base = data.get("w_base", {})
+            updated = 0
+            for edge_key, weight in w_base.items():
+                if "->" not in edge_key:
+                    continue
+                src, rest = edge_key.split("->", 1)
+                dst = rest.split(":", 1)[0]
+                for edge in g.edges:
+                    if edge.src == src and edge.dst == dst:
+                        edge.w = float(weight)
+                        updated += 1
+                        break
+            if verbose:
+                print(f"Applied fullgame pack {fullgame_pack} ({updated} edges)")
+        except Exception as e:
+            if verbose:
+                print(f"Warning: failed to apply fullgame pack {fullgame_pack}: {e}")
     
     engine = ReConEngine(g)
     board = chess.Board(initial_fen)
@@ -351,6 +383,22 @@ def play_and_export(
     gate_node = g.nodes.get("endgame_gate")
     if gate_node and gate_node.predicate:
         gate_node.predicate(gate_node, env)
+    if router_mode == "learned_affordance":
+        phase = estimate_phase(board)
+        signals = compute_subgraph_gates(board, phase=phase.as_dict(), use_affordance=True)
+        weights = {}
+        for name in ("kpk", "kqk", "krk"):
+            dst = f"{name}_root"
+            weights[name] = next(
+                (float(e.w) for e in g.edges if e.src == "endgame_gate" and e.dst == dst and e.ltype == LinkType.SUB),
+                1.0,
+            )
+        scores = {k: float(signals.get(k, 0.0)) * float(weights.get(k, 1.0)) for k in ("kpk", "kqk", "krk")}
+        gate_data = env.setdefault("endgame_gate", {})
+        gate_data["router_mode"] = router_mode
+        gate_data["signals"] = signals
+        gate_data["router_weights"] = weights
+        gate_data["router_scores"] = scores
     frames.append(export_frame(0, board, None, engine, env, g))
     
     move_count = 0
@@ -365,7 +413,34 @@ def play_and_export(
         # Lock subgraph based on gate decision (only if not already locked)
         if not engine.subgraph_lock:
             gate_data = env.get("endgame_gate", {})
-            active_endgame = gate_data.get("active_endgame")
+            active_endgame = None
+
+            if router_mode == "learned_affordance":
+                phase = estimate_phase(board)
+                signals = compute_subgraph_gates(board, phase=phase.as_dict(), use_affordance=True)
+                weights = {}
+                for name in ("kpk", "kqk", "krk"):
+                    dst = f"{name}_root"
+                    weights[name] = next(
+                        (float(e.w) for e in g.edges if e.src == "endgame_gate" and e.dst == dst and e.ltype == LinkType.SUB),
+                        1.0,
+                    )
+                scores = {k: float(signals.get(k, 0.0)) * float(weights.get(k, 1.0)) for k in ("kpk", "kqk", "krk")}
+                candidates = [k for k, v in scores.items() if v >= router_min_signal]
+                if candidates:
+                    if router_epsilon > 0.0 and random.random() < router_epsilon:
+                        active_endgame = random.choice(candidates)
+                    else:
+                        active_endgame = max(candidates, key=lambda k: scores[k])
+
+                gate_data["router_mode"] = router_mode
+                gate_data["signals"] = signals
+                gate_data["router_weights"] = weights
+                gate_data["router_scores"] = scores
+                gate_data["active_endgame"] = active_endgame
+            else:
+                gate_data["router_mode"] = "binary_active_endgame"
+                active_endgame = gate_data.get("active_endgame")
             
             if active_endgame:
                 subgraph_root = f"{active_endgame}_root"
@@ -647,6 +722,17 @@ def main():
     parser.add_argument("--fen", type=str, default=None)
     parser.add_argument("--no-weights", action="store_true", 
                        help="Run with untrained (default) weights")
+    parser.add_argument("--weights-dir", type=Path, default=Path("weights/latest"),
+                       help="Directory containing weight packs (default: weights/latest)")
+    parser.add_argument("--fullgame-pack", type=Path, default=None,
+                       help="Optional fullgame_consol.json to apply after loading weights-dir")
+    parser.add_argument("--router-mode", choices=["binary_active_endgame", "learned_affordance"],
+                       default="binary_active_endgame",
+                       help="Router mode for choosing endgame subgraph")
+    parser.add_argument("--router-min-signal", type=float, default=0.05,
+                       help="Min router score needed to lock in learned router mode")
+    parser.add_argument("--router-epsilon", type=float, default=0.0,
+                       help="Epsilon-greedy exploration for learned router mode")
     parser.add_argument("--legs", action="store_true",
                        help="Use KPK legs architecture (new) instead of unified graph")
     parser.add_argument("--quiet", "-q", action="store_true")
@@ -667,6 +753,11 @@ def main():
             max_moves=args.moves,
             initial_fen=args.fen,
             load_weights=not args.no_weights,
+            weights_dir=args.weights_dir,
+            fullgame_pack=args.fullgame_pack,
+            router_mode=args.router_mode,
+            router_min_signal=args.router_min_signal,
+            router_epsilon=args.router_epsilon,
             verbose=not args.quiet,
         )
     

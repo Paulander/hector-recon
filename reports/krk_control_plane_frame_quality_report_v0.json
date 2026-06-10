@@ -1,0 +1,131 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "runtime_internal_terminal",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_quality_report",
+  "coverage": {
+    "frame_count": 33,
+    "frames_by_stage": {
+      "stage4": 6,
+      "stage5": 8,
+      "stage6": 10,
+      "stage7": 9
+    },
+    "internal_monitor_records": {
+      "frames_with": 33,
+      "frames_with_by_stage": {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10,
+        "stage7": 9
+      },
+      "total_attached_records": 224
+    },
+    "outcome_distribution": {
+      "mate": 12,
+      "max_plies": 16,
+      "unknown": 5
+    },
+    "plan_capsule_window_records": {
+      "frames_with": 4,
+      "frames_with_by_stage": {
+        "stage7": 4
+      },
+      "total_attached_records": 13
+    },
+    "sequence_training_examples": {
+      "frames_with": 3,
+      "frames_with_by_stage": {
+        "stage7": 3
+      },
+      "total_attached_records": 5
+    },
+    "strategy_proposal_frames": {
+      "frames_with": 31,
+      "frames_with_by_stage": {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10,
+        "stage7": 7
+      },
+      "total_attached_records": 87
+    }
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "quality_flags": [
+    {
+      "count": 2,
+      "examples": [
+        "cp.krk.state.069e81a609ed",
+        "cp.krk.state.0926f12f8e8f"
+      ],
+      "flag_id": "some_frames_lack_strategy_proposals",
+      "interpretation": "These frames can still carry context/monitor evidence but are not usable for provider-ranking benchmarks without additional proposal extraction.",
+      "severity": "medium"
+    },
+    {
+      "count": 116,
+      "flag_id": "monitor_records_duplicate_across_duplicate_state_frames",
+      "interpretation": "Monitor attachments exceed unique monitor IDs because some state IDs appear in multiple strategy records. Consumers should group by frame_id and dedupe by monitor_id when measuring monitor support.",
+      "severity": "medium"
+    },
+    {
+      "count": 1,
+      "flag_id": "plan_windows_stage7_only",
+      "interpretation": "Plan-window evidence is not yet general across protected Stage 4/5/6 contexts.",
+      "severity": "high",
+      "stages": [
+        "stage7"
+      ]
+    },
+    {
+      "count": 1,
+      "flag_id": "sequence_examples_stage7_only",
+      "interpretation": "Offline sequence examples remain concentrated in Stage 7 residual states; do not train a general KRK sequence policy from this alone.",
+      "severity": "high",
+      "stages": [
+        "stage7"
+      ]
+    },
+    {
+      "count": 9,
+      "flag_id": "plan_window_duplicate_attachment",
+      "interpretation": "Several plan-window records share the same state/progress/outcome signature; this is useful evidence but should be deduped for statistical claims.",
+      "severity": "low"
+    }
+  ],
+  "readiness": {
+    "internal_monitor_training_dataset": "ready_for_non_causal_monitor_quality_analysis_only",
+    "offline_sequence_policy_benchmark": "not_ready_general_krk_stage7_only",
+    "offline_strategy_arbitration_probe": "ready_with_dedupe_and_missing_proposal_caveat",
+    "runtime_sandbox": "blocked",
+    "stage7_promotion": "blocked",
+    "stage8_training": "blocked"
+  },
+  "recommended_next_slice": {
+    "causal": false,
+    "new_playouts_allowed": false,
+    "reason": "Before using the frames for offline arbitration or sequence benchmarks, add dedupe/filter metadata and separate benchmark-ready frames from context-only frames.",
+    "slice_id": "control_plane_frame_dedupe_and_quality_filters_v0"
+  },
+  "runtime_arbiter_added": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_control_plane_frame_quality_report.v0",
+  "source_artifacts": [
+    "reports/krk_control_plane_frames_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

@@ -1,0 +1,1514 @@
+{
+  "schema_version": "stage7_arbitration_diagnosis.v1",
+  "causal_status": "non_causal",
+  "family_diagnosis_source": "reports/structural_candidates/stage7_post_box_family_diagnosis.json",
+  "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_family_ff_drive_move_shape_support_w005.json",
+  "providers": [
+    "krk.drive_to_edge",
+    "krk.fence_established",
+    "krk.stage0_basin"
+  ],
+  "state_ids": [],
+  "record_count": 4,
+  "diagnosis_counts": {
+    "selected_provider_differs_from_forced_candidate": 8,
+    "forced_provider_can_convert": 2,
+    "adapter_wired_and_visible_under_forced_provider": 1,
+    "provider_score_scale_mismatch": 1,
+    "adapter_not_visible_for_forced_provider": 11,
+    "no_candidate_support_available": 7
+  },
+  "candidate_update": {
+    "candidate_id": "cand.krk.box_shrink.stage0_fallback_arbitration.v1",
+    "candidate_type": "weight_vs_topology_arbitration_diagnosis",
+    "status": "needs_weight_or_score_normalization_probe",
+    "diagnosis": [
+      "forced_provider_can_convert",
+      "adapter_wired",
+      "visible_support_too_small_relative_to_provider_score_gap"
+    ],
+    "causal_status": "non_causal",
+    "promotion_status": "proposed",
+    "next_action": "run_bounded_candidate_local_calibration_or_score_scale_audit_before_new_topology",
+    "hard_blocks": [
+      "do_not_promote_stage7",
+      "do_not_train_stage8",
+      "do_not_add_broad_stage0_penalty",
+      "do_not_make_handoff_packets_or_candidates_causal"
+    ]
+  },
+  "records": [
+    {
+      "state_id": "state.ff6652c8832c",
+      "family_id": "stage7.post_box.family_ff6652c8832c",
+      "post_reply_fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+      "source_selected_successor": "krk.stage0_basin",
+      "source_selected_move": "a4e4",
+      "source_conversion_result": "max_plies",
+      "normal_selected": {
+        "move": "e4e8",
+        "skill_id": "krk.stage0_basin",
+        "score": 33.684823149275964,
+        "actuator": "actuator_10",
+        "curriculum_label": "stage0_basin",
+        "stage": 1,
+        "raw_score_before_role_bonus": 33.684823149275964,
+        "visible_affordance_bonus": 0.0,
+        "visible_role_license_bonus": null,
+        "role_bonus_total": null,
+        "explicit_role_provider_move_shape_support_bonus": null,
+        "visible_role_provider_support_adapter": {},
+        "visible_role_licenses": []
+      },
+      "normal_top_suggestions": [
+        {
+          "move": "e4e8",
+          "skill_id": "krk.stage0_basin",
+          "score": 33.684823149275964,
+          "actuator": "actuator_10",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 33.684823149275964,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e4e8",
+          "skill_id": "krk.stage0_basin",
+          "score": 33.683823620224,
+          "actuator": "actuator_7",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 33.683823620224,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e4e8",
+          "skill_id": "krk.stage0_basin",
+          "score": 33.68308715449181,
+          "actuator": "actuator_11",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 33.68308715449181,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e4e8",
+          "skill_id": "krk.stage0_basin",
+          "score": 33.68300121762753,
+          "actuator": "actuator_19",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 33.68300121762753,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e4e8",
+          "skill_id": "krk.stage0_basin",
+          "score": 33.68258299525827,
+          "actuator": "actuator_18",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 33.68258299525827,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e4e8",
+          "skill_id": "krk.stage0_basin",
+          "score": 33.681720495224,
+          "actuator": "actuator_2",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 33.681720495224,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e4e8",
+          "skill_id": "krk.stage0_basin",
+          "score": 33.681720495224,
+          "actuator": "actuator_3",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 33.681720495224,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e4e8",
+          "skill_id": "krk.stage0_basin",
+          "score": 33.681720495224,
+          "actuator": "actuator_5",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 33.681720495224,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e4e8",
+          "skill_id": "krk.stage0_basin",
+          "score": 33.681720495224,
+          "actuator": "actuator_6",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 33.681720495224,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e4e8",
+          "skill_id": "krk.stage0_basin",
+          "score": 33.681720495224,
+          "actuator": "actuator_8",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 33.681720495224,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        }
+      ],
+      "provider_arbitration": [
+        {
+          "provider": "krk.drive_to_edge",
+          "forced_successor_available": true,
+          "forced_best": {
+            "move": "e4h4",
+            "skill_id": "krk.drive_to_edge",
+            "score": 0.21362318191949053,
+            "actuator": "actuator_35",
+            "curriculum_label": "drive_to_edge",
+            "stage": 6,
+            "raw_score_before_role_bonus": 0.11362318191949056,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": 0.05,
+            "role_bonus_total": 0.05,
+            "explicit_role_provider_move_shape_support_bonus": 0.05,
+            "visible_role_provider_support_adapter": {
+              "enabled": true,
+              "adapter_id": "script.krk.support.krk_box_shrink_to_drive_repair_to_krk_drive_to_edge",
+              "source_role": "krk.box_shrink_to_drive_repair",
+              "provider_id": "krk.drive_to_edge",
+              "role_confirmed": true,
+              "source_terms": [
+                "box_shrink_drive_repair_available",
+                "fence_or_cut_not_preserved",
+                "drive_to_edge_affordance_after_box_shrink",
+                "repair_or_reestablish_cut_available",
+                "enemy_king_not_at_edge",
+                "box_area_large",
+                "rook_safe"
+              ],
+              "support_amount": 0.05,
+              "direct_request": false,
+              "move_shape_gated": true,
+              "matched_move_shape_terms": [
+                "candidate_is_rook_transfer",
+                "rook_lateral_transfer",
+                "rook_to_edge_file"
+              ],
+              "matched_post_move_terms": [
+                "rook_safe_after_move"
+              ]
+            },
+            "visible_role_licenses": [
+              {
+                "role_id": "krk.box_shrink_to_drive_repair",
+                "score": 1.0,
+                "source_terms": [
+                  "box_shrink_drive_repair_available",
+                  "fence_or_cut_not_preserved",
+                  "drive_to_edge_affordance_after_box_shrink",
+                  "repair_or_reestablish_cut_available",
+                  "enemy_king_not_at_edge",
+                  "box_area_large",
+                  "rook_safe"
+                ],
+                "provider_skill_ids": [
+                  "krk.drive_to_edge"
+                ],
+                "explicit_role_provider_support_score": 0.05,
+                "explicit_role_provider_support": {
+                  "role_id": "krk.box_shrink_to_drive_repair",
+                  "provider_skill_id": "krk.drive_to_edge",
+                  "score": 0.05,
+                  "support_weight": 0.05,
+                  "source_terms": [
+                    "box_shrink_drive_repair_available",
+                    "fence_or_cut_not_preserved",
+                    "drive_to_edge_affordance_after_box_shrink",
+                    "repair_or_reestablish_cut_available",
+                    "enemy_king_not_at_edge",
+                    "box_area_large",
+                    "rook_safe"
+                  ],
+                  "support_move_shape_required_terms": [
+                    "candidate_is_rook_transfer",
+                    "rook_lateral_transfer",
+                    "rook_to_edge_file"
+                  ],
+                  "support_post_move_required_terms": [
+                    "rook_safe_after_move"
+                  ],
+                  "role_contract_met": true,
+                  "causal_status": "explicit_sandbox_support",
+                  "adapter_node": "script.krk.support.krk_box_shrink_to_drive_repair_to_krk_drive_to_edge",
+                  "direct_request": false
+                }
+              }
+            ]
+          },
+          "normal_provider_best": {
+            "move": "e4h4",
+            "skill_id": "krk.drive_to_edge",
+            "score": 0.21362318191949053,
+            "actuator": "actuator_35",
+            "curriculum_label": "drive_to_edge",
+            "stage": 6,
+            "raw_score_before_role_bonus": 0.11362318191949056,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": 0.05,
+            "role_bonus_total": 0.05,
+            "explicit_role_provider_move_shape_support_bonus": 0.05,
+            "visible_role_provider_support_adapter": {
+              "enabled": true,
+              "adapter_id": "script.krk.support.krk_box_shrink_to_drive_repair_to_krk_drive_to_edge",
+              "source_role": "krk.box_shrink_to_drive_repair",
+              "provider_id": "krk.drive_to_edge",
+              "role_confirmed": true,
+              "source_terms": [
+                "box_shrink_drive_repair_available",
+                "fence_or_cut_not_preserved",
+                "drive_to_edge_affordance_after_box_shrink",
+                "repair_or_reestablish_cut_available",
+                "enemy_king_not_at_edge",
+                "box_area_large",
+                "rook_safe"
+              ],
+              "support_amount": 0.05,
+              "direct_request": false,
+              "move_shape_gated": true,
+              "matched_move_shape_terms": [
+                "candidate_is_rook_transfer",
+                "rook_lateral_transfer",
+                "rook_to_edge_file"
+              ],
+              "matched_post_move_terms": [
+                "rook_safe_after_move"
+              ]
+            },
+            "visible_role_licenses": [
+              {
+                "role_id": "krk.box_shrink_to_drive_repair",
+                "score": 1.0,
+                "source_terms": [
+                  "box_shrink_drive_repair_available",
+                  "fence_or_cut_not_preserved",
+                  "drive_to_edge_affordance_after_box_shrink",
+                  "repair_or_reestablish_cut_available",
+                  "enemy_king_not_at_edge",
+                  "box_area_large",
+                  "rook_safe"
+                ],
+                "provider_skill_ids": [
+                  "krk.drive_to_edge"
+                ],
+                "explicit_role_provider_support_score": 0.05,
+                "explicit_role_provider_support": {
+                  "role_id": "krk.box_shrink_to_drive_repair",
+                  "provider_skill_id": "krk.drive_to_edge",
+                  "score": 0.05,
+                  "support_weight": 0.05,
+                  "source_terms": [
+                    "box_shrink_drive_repair_available",
+                    "fence_or_cut_not_preserved",
+                    "drive_to_edge_affordance_after_box_shrink",
+                    "repair_or_reestablish_cut_available",
+                    "enemy_king_not_at_edge",
+                    "box_area_large",
+                    "rook_safe"
+                  ],
+                  "support_move_shape_required_terms": [
+                    "candidate_is_rook_transfer",
+                    "rook_lateral_transfer",
+                    "rook_to_edge_file"
+                  ],
+                  "support_post_move_required_terms": [
+                    "rook_safe_after_move"
+                  ],
+                  "role_contract_met": true,
+                  "causal_status": "explicit_sandbox_support",
+                  "adapter_node": "script.krk.support.krk_box_shrink_to_drive_repair_to_krk_drive_to_edge",
+                  "direct_request": false
+                }
+              }
+            ]
+          },
+          "forced_known_outcome": "mate",
+          "forced_known_plies": 7,
+          "score_gap_to_selected": 33.471199967356476,
+          "required_support_to_overtake_selected": 33.471200967356474,
+          "adapter_support_amount": 0.05,
+          "adapter_support_ratio_to_required": 0.0014938215108792662,
+          "adapter_fired_under_forced_provider": true,
+          "diagnosis": [
+            "selected_provider_differs_from_forced_candidate",
+            "forced_provider_can_convert",
+            "adapter_wired_and_visible_under_forced_provider",
+            "provider_score_scale_mismatch"
+          ]
+        },
+        {
+          "provider": "krk.fence_established",
+          "forced_successor_available": true,
+          "forced_best": {
+            "move": "e4e8",
+            "skill_id": "krk.fence_established",
+            "score": 0.031102217248578874,
+            "actuator": "actuator_33",
+            "curriculum_label": "fence_established",
+            "stage": 5,
+            "raw_score_before_role_bonus": 0.031102217248578874,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "normal_provider_best": {
+            "move": "e4e8",
+            "skill_id": "krk.fence_established",
+            "score": 0.031102217248578874,
+            "actuator": "actuator_33",
+            "curriculum_label": "fence_established",
+            "stage": 5,
+            "raw_score_before_role_bonus": 0.031102217248578874,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "forced_known_outcome": "max_plies",
+          "forced_known_plies": 40,
+          "score_gap_to_selected": 33.65372093202738,
+          "required_support_to_overtake_selected": 33.65372193202738,
+          "adapter_support_amount": 0.0,
+          "adapter_support_ratio_to_required": 0.0,
+          "adapter_fired_under_forced_provider": false,
+          "diagnosis": [
+            "selected_provider_differs_from_forced_candidate",
+            "adapter_not_visible_for_forced_provider",
+            "no_candidate_support_available"
+          ]
+        },
+        {
+          "provider": "krk.stage0_basin",
+          "forced_successor_available": true,
+          "forced_best": {
+            "move": "e4e8",
+            "skill_id": "krk.stage0_basin",
+            "score": 33.684823149275964,
+            "actuator": "actuator_10",
+            "curriculum_label": "stage0_basin",
+            "stage": 1,
+            "raw_score_before_role_bonus": 33.684823149275964,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "normal_provider_best": {
+            "move": "e4e8",
+            "skill_id": "krk.stage0_basin",
+            "score": 33.684823149275964,
+            "actuator": "actuator_10",
+            "curriculum_label": "stage0_basin",
+            "stage": 1,
+            "raw_score_before_role_bonus": 33.684823149275964,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "forced_known_outcome": "max_plies",
+          "forced_known_plies": 40,
+          "score_gap_to_selected": 0.0,
+          "required_support_to_overtake_selected": 0.0,
+          "adapter_support_amount": 0.0,
+          "adapter_support_ratio_to_required": null,
+          "adapter_fired_under_forced_provider": false,
+          "diagnosis": [
+            "adapter_not_visible_for_forced_provider"
+          ]
+        }
+      ]
+    },
+    {
+      "state_id": "state.0afbf11aa123",
+      "family_id": "stage7.post_box.family_0afbf11aa123",
+      "post_reply_fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+      "source_selected_successor": "krk.stage0_basin",
+      "source_selected_move": "a3e3",
+      "source_conversion_result": "max_plies",
+      "normal_selected": {
+        "move": "e3a3",
+        "skill_id": "krk.stage0_basin",
+        "score": 43.07007514854148,
+        "actuator": "actuator_10",
+        "curriculum_label": "stage0_basin",
+        "stage": 1,
+        "raw_score_before_role_bonus": 43.07007514854148,
+        "visible_affordance_bonus": 0.0,
+        "visible_role_license_bonus": null,
+        "role_bonus_total": null,
+        "explicit_role_provider_move_shape_support_bonus": null,
+        "visible_role_provider_support_adapter": {},
+        "visible_role_licenses": []
+      },
+      "normal_top_suggestions": [
+        {
+          "move": "e3a3",
+          "skill_id": "krk.stage0_basin",
+          "score": 43.07007514854148,
+          "actuator": "actuator_10",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 43.07007514854148,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e3a3",
+          "skill_id": "krk.stage0_basin",
+          "score": 43.069075619125364,
+          "actuator": "actuator_7",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 43.069075619125364,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e3a3",
+          "skill_id": "krk.stage0_basin",
+          "score": 43.068339153393175,
+          "actuator": "actuator_11",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 43.068339153393175,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e3a3",
+          "skill_id": "krk.stage0_basin",
+          "score": 43.068253216528895,
+          "actuator": "actuator_19",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 43.068253216528895,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e3a3",
+          "skill_id": "krk.stage0_basin",
+          "score": 43.06783499415964,
+          "actuator": "actuator_18",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 43.06783499415964,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e3a3",
+          "skill_id": "krk.stage0_basin",
+          "score": 43.066972494125366,
+          "actuator": "actuator_2",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 43.066972494125366,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e3a3",
+          "skill_id": "krk.stage0_basin",
+          "score": 43.066972494125366,
+          "actuator": "actuator_3",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 43.066972494125366,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e3a3",
+          "skill_id": "krk.stage0_basin",
+          "score": 43.066972494125366,
+          "actuator": "actuator_5",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 43.066972494125366,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e3a3",
+          "skill_id": "krk.stage0_basin",
+          "score": 43.066972494125366,
+          "actuator": "actuator_6",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 43.066972494125366,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "e3a3",
+          "skill_id": "krk.stage0_basin",
+          "score": 43.066972494125366,
+          "actuator": "actuator_8",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 43.066972494125366,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        }
+      ],
+      "provider_arbitration": [
+        {
+          "provider": "krk.drive_to_edge",
+          "forced_successor_available": true,
+          "forced_best": {
+            "move": "e3a3",
+            "skill_id": "krk.drive_to_edge",
+            "score": 0.06015256395032198,
+            "actuator": "actuator_35",
+            "curriculum_label": "drive_to_edge",
+            "stage": 6,
+            "raw_score_before_role_bonus": 0.06015256395032198,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "normal_provider_best": {
+            "move": "e3a3",
+            "skill_id": "krk.drive_to_edge",
+            "score": 0.06015256395032198,
+            "actuator": "actuator_35",
+            "curriculum_label": "drive_to_edge",
+            "stage": 6,
+            "raw_score_before_role_bonus": 0.06015256395032198,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "forced_known_outcome": "max_plies",
+          "forced_known_plies": 40,
+          "score_gap_to_selected": 43.00992258459115,
+          "required_support_to_overtake_selected": 43.00992358459115,
+          "adapter_support_amount": 0.0,
+          "adapter_support_ratio_to_required": 0.0,
+          "adapter_fired_under_forced_provider": false,
+          "diagnosis": [
+            "selected_provider_differs_from_forced_candidate",
+            "adapter_not_visible_for_forced_provider",
+            "no_candidate_support_available"
+          ]
+        },
+        {
+          "provider": "krk.fence_established",
+          "forced_successor_available": true,
+          "forced_best": {
+            "move": "e3a3",
+            "skill_id": "krk.fence_established",
+            "score": 0.057717782590289916,
+            "actuator": "actuator_33",
+            "curriculum_label": "fence_established",
+            "stage": 5,
+            "raw_score_before_role_bonus": 0.057717782590289916,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "normal_provider_best": {
+            "move": "e3a3",
+            "skill_id": "krk.fence_established",
+            "score": 0.057717782590289916,
+            "actuator": "actuator_33",
+            "curriculum_label": "fence_established",
+            "stage": 5,
+            "raw_score_before_role_bonus": 0.057717782590289916,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "forced_known_outcome": "max_plies",
+          "forced_known_plies": 40,
+          "score_gap_to_selected": 43.01235736595119,
+          "required_support_to_overtake_selected": 43.01235836595119,
+          "adapter_support_amount": 0.0,
+          "adapter_support_ratio_to_required": 0.0,
+          "adapter_fired_under_forced_provider": false,
+          "diagnosis": [
+            "selected_provider_differs_from_forced_candidate",
+            "adapter_not_visible_for_forced_provider",
+            "no_candidate_support_available"
+          ]
+        },
+        {
+          "provider": "krk.stage0_basin",
+          "forced_successor_available": true,
+          "forced_best": {
+            "move": "e3a3",
+            "skill_id": "krk.stage0_basin",
+            "score": 43.07007514854148,
+            "actuator": "actuator_10",
+            "curriculum_label": "stage0_basin",
+            "stage": 1,
+            "raw_score_before_role_bonus": 43.07007514854148,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "normal_provider_best": {
+            "move": "e3a3",
+            "skill_id": "krk.stage0_basin",
+            "score": 43.07007514854148,
+            "actuator": "actuator_10",
+            "curriculum_label": "stage0_basin",
+            "stage": 1,
+            "raw_score_before_role_bonus": 43.07007514854148,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "forced_known_outcome": "max_plies",
+          "forced_known_plies": 40,
+          "score_gap_to_selected": 0.0,
+          "required_support_to_overtake_selected": 0.0,
+          "adapter_support_amount": 0.0,
+          "adapter_support_ratio_to_required": null,
+          "adapter_fired_under_forced_provider": false,
+          "diagnosis": [
+            "adapter_not_visible_for_forced_provider"
+          ]
+        }
+      ]
+    },
+    {
+      "state_id": "state.38aed2f35911",
+      "family_id": "stage7.post_box.family_38aed2f35911",
+      "post_reply_fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+      "source_selected_successor": "krk.stage0_basin",
+      "source_selected_move": "a3a5",
+      "source_conversion_result": "max_plies",
+      "normal_selected": {
+        "move": "d1e2",
+        "skill_id": "krk.stage0_basin",
+        "score": 12.212486497306823,
+        "actuator": "actuator_13",
+        "curriculum_label": "stage0_basin",
+        "stage": 1,
+        "raw_score_before_role_bonus": 12.212486497306823,
+        "visible_affordance_bonus": 0.0,
+        "visible_role_license_bonus": null,
+        "role_bonus_total": null,
+        "explicit_role_provider_move_shape_support_bonus": null,
+        "visible_role_provider_support_adapter": {},
+        "visible_role_licenses": []
+      },
+      "normal_top_suggestions": [
+        {
+          "move": "d1e2",
+          "skill_id": "krk.stage0_basin",
+          "score": 12.212486497306823,
+          "actuator": "actuator_13",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 12.212486497306823,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "d1e2",
+          "skill_id": "krk.stage0_basin",
+          "score": 12.21087447226412,
+          "actuator": "actuator_2",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 12.21087447226412,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "d1e2",
+          "skill_id": "krk.stage0_basin",
+          "score": 12.210461497306824,
+          "actuator": "actuator_3",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 12.210461497306824,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "d1e2",
+          "skill_id": "krk.stage0_basin",
+          "score": 12.210461497306824,
+          "actuator": "actuator_4",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 12.210461497306824,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "d1e2",
+          "skill_id": "krk.stage0_basin",
+          "score": 12.210461497306824,
+          "actuator": "actuator_5",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 12.210461497306824,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "d1e2",
+          "skill_id": "krk.stage0_basin",
+          "score": 12.210461497306824,
+          "actuator": "actuator_6",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 12.210461497306824,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "d1e2",
+          "skill_id": "krk.stage0_basin",
+          "score": 12.210461497306824,
+          "actuator": "actuator_7",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 12.210461497306824,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "d1e2",
+          "skill_id": "krk.stage0_basin",
+          "score": 12.210461497306824,
+          "actuator": "actuator_8",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 12.210461497306824,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "d1e2",
+          "skill_id": "krk.stage0_basin",
+          "score": 12.210461497306824,
+          "actuator": "actuator_9",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 12.210461497306824,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "d1e2",
+          "skill_id": "krk.stage0_basin",
+          "score": 12.210461497306824,
+          "actuator": "actuator_10",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 12.210461497306824,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        }
+      ],
+      "provider_arbitration": [
+        {
+          "provider": "krk.drive_to_edge",
+          "forced_successor_available": true,
+          "forced_best": {
+            "move": "a5a8",
+            "skill_id": "krk.drive_to_edge",
+            "score": 0.08385186364342959,
+            "actuator": "actuator_35",
+            "curriculum_label": "drive_to_edge",
+            "stage": 6,
+            "raw_score_before_role_bonus": 0.03385186364342958,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": 0.05,
+            "role_bonus_total": 0.05,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": [
+              {
+                "role_id": "krk.box_shrink_to_drive_repair",
+                "score": 1.0,
+                "source_terms": [
+                  "box_shrink_drive_repair_available",
+                  "fence_or_cut_not_preserved",
+                  "drive_to_edge_affordance_after_box_shrink",
+                  "repair_or_reestablish_cut_available",
+                  "enemy_king_not_at_edge",
+                  "box_area_large",
+                  "rook_safe"
+                ],
+                "provider_skill_ids": [
+                  "krk.drive_to_edge"
+                ],
+                "explicit_role_provider_support_score": 0.0,
+                "explicit_role_provider_support": {}
+              }
+            ]
+          },
+          "normal_provider_best": {
+            "move": "a5a8",
+            "skill_id": "krk.drive_to_edge",
+            "score": 0.08385186364342959,
+            "actuator": "actuator_35",
+            "curriculum_label": "drive_to_edge",
+            "stage": 6,
+            "raw_score_before_role_bonus": 0.03385186364342958,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": 0.05,
+            "role_bonus_total": 0.05,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": [
+              {
+                "role_id": "krk.box_shrink_to_drive_repair",
+                "score": 1.0,
+                "source_terms": [
+                  "box_shrink_drive_repair_available",
+                  "fence_or_cut_not_preserved",
+                  "drive_to_edge_affordance_after_box_shrink",
+                  "repair_or_reestablish_cut_available",
+                  "enemy_king_not_at_edge",
+                  "box_area_large",
+                  "rook_safe"
+                ],
+                "provider_skill_ids": [
+                  "krk.drive_to_edge"
+                ],
+                "explicit_role_provider_support_score": 0.0,
+                "explicit_role_provider_support": {}
+              }
+            ]
+          },
+          "forced_known_outcome": "max_plies",
+          "forced_known_plies": 40,
+          "score_gap_to_selected": 12.128634633663394,
+          "required_support_to_overtake_selected": 12.128635633663393,
+          "adapter_support_amount": 0.0,
+          "adapter_support_ratio_to_required": 0.0,
+          "adapter_fired_under_forced_provider": false,
+          "diagnosis": [
+            "selected_provider_differs_from_forced_candidate",
+            "adapter_not_visible_for_forced_provider",
+            "no_candidate_support_available"
+          ]
+        },
+        {
+          "provider": "krk.fence_established",
+          "forced_successor_available": true,
+          "forced_best": {
+            "move": "d1e2",
+            "skill_id": "krk.fence_established",
+            "score": 0.009540376398464046,
+            "actuator": "actuator_33",
+            "curriculum_label": "fence_established",
+            "stage": 5,
+            "raw_score_before_role_bonus": 0.009540376398464046,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "normal_provider_best": {
+            "move": "d1e2",
+            "skill_id": "krk.fence_established",
+            "score": 0.009540376398464046,
+            "actuator": "actuator_33",
+            "curriculum_label": "fence_established",
+            "stage": 5,
+            "raw_score_before_role_bonus": 0.009540376398464046,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "forced_known_outcome": "max_plies",
+          "forced_known_plies": 40,
+          "score_gap_to_selected": 12.20294612090836,
+          "required_support_to_overtake_selected": 12.202947120908359,
+          "adapter_support_amount": 0.0,
+          "adapter_support_ratio_to_required": 0.0,
+          "adapter_fired_under_forced_provider": false,
+          "diagnosis": [
+            "selected_provider_differs_from_forced_candidate",
+            "adapter_not_visible_for_forced_provider",
+            "no_candidate_support_available"
+          ]
+        },
+        {
+          "provider": "krk.stage0_basin",
+          "forced_successor_available": true,
+          "forced_best": {
+            "move": "d1e2",
+            "skill_id": "krk.stage0_basin",
+            "score": 12.212486497306823,
+            "actuator": "actuator_13",
+            "curriculum_label": "stage0_basin",
+            "stage": 1,
+            "raw_score_before_role_bonus": 12.212486497306823,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "normal_provider_best": {
+            "move": "d1e2",
+            "skill_id": "krk.stage0_basin",
+            "score": 12.212486497306823,
+            "actuator": "actuator_13",
+            "curriculum_label": "stage0_basin",
+            "stage": 1,
+            "raw_score_before_role_bonus": 12.212486497306823,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "forced_known_outcome": "max_plies",
+          "forced_known_plies": 40,
+          "score_gap_to_selected": 0.0,
+          "required_support_to_overtake_selected": 0.0,
+          "adapter_support_amount": 0.0,
+          "adapter_support_ratio_to_required": null,
+          "adapter_fired_under_forced_provider": false,
+          "diagnosis": [
+            "adapter_not_visible_for_forced_provider"
+          ]
+        }
+      ]
+    },
+    {
+      "state_id": "state.ac0b7ed500ea",
+      "family_id": "stage7.post_box.family_ac0b7ed500ea",
+      "post_reply_fen": "8/8/8/4k3/R7/8/3K4/8 w - - 2 2",
+      "source_selected_successor": "krk.stage0_basin",
+      "source_selected_move": "a1a4",
+      "source_conversion_result": "max_plies",
+      "normal_selected": {
+        "move": "a4a8",
+        "skill_id": "krk.stage0_basin",
+        "score": 15.11122607608512,
+        "actuator": "actuator_10",
+        "curriculum_label": "stage0_basin",
+        "stage": 1,
+        "raw_score_before_role_bonus": 15.11122607608512,
+        "visible_affordance_bonus": 0.0,
+        "visible_role_license_bonus": null,
+        "role_bonus_total": null,
+        "explicit_role_provider_move_shape_support_bonus": null,
+        "visible_role_provider_support_adapter": {},
+        "visible_role_licenses": []
+      },
+      "normal_top_suggestions": [
+        {
+          "move": "a4a8",
+          "skill_id": "krk.stage0_basin",
+          "score": 15.11122607608512,
+          "actuator": "actuator_10",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 15.11122607608512,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "a4a8",
+          "skill_id": "krk.stage0_basin",
+          "score": 15.110226546669006,
+          "actuator": "actuator_7",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 15.110226546669006,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "a4a8",
+          "skill_id": "krk.stage0_basin",
+          "score": 15.10949008093682,
+          "actuator": "actuator_11",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 15.10949008093682,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "a4a8",
+          "skill_id": "krk.stage0_basin",
+          "score": 15.109404144072533,
+          "actuator": "actuator_19",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 15.109404144072533,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "a4a8",
+          "skill_id": "krk.stage0_basin",
+          "score": 15.10898592170328,
+          "actuator": "actuator_18",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 15.10898592170328,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "a4a8",
+          "skill_id": "krk.stage0_basin",
+          "score": 15.108123421669006,
+          "actuator": "actuator_2",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 15.108123421669006,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "a4a8",
+          "skill_id": "krk.stage0_basin",
+          "score": 15.108123421669006,
+          "actuator": "actuator_3",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 15.108123421669006,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "a4a8",
+          "skill_id": "krk.stage0_basin",
+          "score": 15.108123421669006,
+          "actuator": "actuator_5",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 15.108123421669006,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "a4a8",
+          "skill_id": "krk.stage0_basin",
+          "score": 15.108123421669006,
+          "actuator": "actuator_6",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 15.108123421669006,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        },
+        {
+          "move": "a4a8",
+          "skill_id": "krk.stage0_basin",
+          "score": 15.108123421669006,
+          "actuator": "actuator_8",
+          "curriculum_label": "stage0_basin",
+          "stage": 1,
+          "raw_score_before_role_bonus": 15.108123421669006,
+          "visible_affordance_bonus": 0.0,
+          "visible_role_license_bonus": null,
+          "role_bonus_total": null,
+          "explicit_role_provider_move_shape_support_bonus": null,
+          "visible_role_provider_support_adapter": {},
+          "visible_role_licenses": []
+        }
+      ],
+      "provider_arbitration": [
+        {
+          "provider": "krk.drive_to_edge",
+          "forced_successor_available": true,
+          "forced_best": {
+            "move": "a4a8",
+            "skill_id": "krk.drive_to_edge",
+            "score": 0.09636540164639743,
+            "actuator": "actuator_35",
+            "curriculum_label": "drive_to_edge",
+            "stage": 6,
+            "raw_score_before_role_bonus": 0.04636540164639742,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": 0.05,
+            "role_bonus_total": 0.05,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": [
+              {
+                "role_id": "krk.box_shrink_to_drive_repair",
+                "score": 1.0,
+                "source_terms": [
+                  "box_shrink_drive_repair_available",
+                  "fence_or_cut_not_preserved",
+                  "drive_to_edge_affordance_after_box_shrink",
+                  "repair_or_reestablish_cut_available",
+                  "enemy_king_not_at_edge",
+                  "box_area_large",
+                  "rook_safe"
+                ],
+                "provider_skill_ids": [
+                  "krk.drive_to_edge"
+                ],
+                "explicit_role_provider_support_score": 0.0,
+                "explicit_role_provider_support": {}
+              }
+            ]
+          },
+          "normal_provider_best": {
+            "move": "a4a8",
+            "skill_id": "krk.drive_to_edge",
+            "score": 0.09636540164639743,
+            "actuator": "actuator_35",
+            "curriculum_label": "drive_to_edge",
+            "stage": 6,
+            "raw_score_before_role_bonus": 0.04636540164639742,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": 0.05,
+            "role_bonus_total": 0.05,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": [
+              {
+                "role_id": "krk.box_shrink_to_drive_repair",
+                "score": 1.0,
+                "source_terms": [
+                  "box_shrink_drive_repair_available",
+                  "fence_or_cut_not_preserved",
+                  "drive_to_edge_affordance_after_box_shrink",
+                  "repair_or_reestablish_cut_available",
+                  "enemy_king_not_at_edge",
+                  "box_area_large",
+                  "rook_safe"
+                ],
+                "provider_skill_ids": [
+                  "krk.drive_to_edge"
+                ],
+                "explicit_role_provider_support_score": 0.0,
+                "explicit_role_provider_support": {}
+              }
+            ]
+          },
+          "forced_known_outcome": "max_plies",
+          "forced_known_plies": 40,
+          "score_gap_to_selected": 15.014860674438724,
+          "required_support_to_overtake_selected": 15.014861674438723,
+          "adapter_support_amount": 0.0,
+          "adapter_support_ratio_to_required": 0.0,
+          "adapter_fired_under_forced_provider": false,
+          "diagnosis": [
+            "selected_provider_differs_from_forced_candidate",
+            "adapter_not_visible_for_forced_provider",
+            "no_candidate_support_available"
+          ]
+        },
+        {
+          "provider": "krk.fence_established",
+          "forced_successor_available": true,
+          "forced_best": {
+            "move": "d2e3",
+            "skill_id": "krk.fence_established",
+            "score": 0.012477693292995296,
+            "actuator": "actuator_33",
+            "curriculum_label": "fence_established",
+            "stage": 5,
+            "raw_score_before_role_bonus": 0.012477693292995296,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "normal_provider_best": {
+            "move": "d2e3",
+            "skill_id": "krk.fence_established",
+            "score": 0.012477693292995296,
+            "actuator": "actuator_33",
+            "curriculum_label": "fence_established",
+            "stage": 5,
+            "raw_score_before_role_bonus": 0.012477693292995296,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "forced_known_outcome": "mate",
+          "forced_known_plies": 13,
+          "score_gap_to_selected": 15.098748382792126,
+          "required_support_to_overtake_selected": 15.098749382792125,
+          "adapter_support_amount": 0.0,
+          "adapter_support_ratio_to_required": 0.0,
+          "adapter_fired_under_forced_provider": false,
+          "diagnosis": [
+            "selected_provider_differs_from_forced_candidate",
+            "forced_provider_can_convert",
+            "adapter_not_visible_for_forced_provider",
+            "no_candidate_support_available"
+          ]
+        },
+        {
+          "provider": "krk.stage0_basin",
+          "forced_successor_available": true,
+          "forced_best": {
+            "move": "a4a8",
+            "skill_id": "krk.stage0_basin",
+            "score": 15.11122607608512,
+            "actuator": "actuator_10",
+            "curriculum_label": "stage0_basin",
+            "stage": 1,
+            "raw_score_before_role_bonus": 15.11122607608512,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "normal_provider_best": {
+            "move": "a4a8",
+            "skill_id": "krk.stage0_basin",
+            "score": 15.11122607608512,
+            "actuator": "actuator_10",
+            "curriculum_label": "stage0_basin",
+            "stage": 1,
+            "raw_score_before_role_bonus": 15.11122607608512,
+            "visible_affordance_bonus": 0.0,
+            "visible_role_license_bonus": null,
+            "role_bonus_total": null,
+            "explicit_role_provider_move_shape_support_bonus": null,
+            "visible_role_provider_support_adapter": {},
+            "visible_role_licenses": []
+          },
+          "forced_known_outcome": "max_plies",
+          "forced_known_plies": 40,
+          "score_gap_to_selected": 0.0,
+          "required_support_to_overtake_selected": 0.0,
+          "adapter_support_amount": 0.0,
+          "adapter_support_ratio_to_required": null,
+          "adapter_fired_under_forced_provider": false,
+          "diagnosis": [
+            "adapter_not_visible_for_forced_provider"
+          ]
+        }
+      ]
+    }
+  ]
+}

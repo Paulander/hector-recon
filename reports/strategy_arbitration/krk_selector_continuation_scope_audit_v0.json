@@ -1,0 +1,578 @@
+{
+  "causal_status": "non_causal_scope_review_no_runtime_change",
+  "comparison": {
+    "finding": "The observed beneficial behavior is initial-owner switching; the observed harmful behavior is a later h40 continuation switch.",
+    "ply0_successful_switch_cases": [
+      {
+        "active_landmark_label": "wrong_tempo_control",
+        "box_area_relevance": "low",
+        "decision_window": "initial_owner_choice",
+        "edge_bucket": "at_edge",
+        "explanation_terms": [
+          "selector_model.combined_simple_rule",
+          "positive_trace_provider_candidate_count.3",
+          "positive_trace_count_bucket.low",
+          "edge_bucket.at_edge",
+          "support_bucket.medium",
+          "box_area_relevance.low",
+          "selected_piece.king",
+          "source_stage.stage4",
+          "active_landmark_label.wrong_tempo_control"
+        ],
+        "ply": 0,
+        "positive_trace_count_bucket": "low",
+        "positive_trace_provider_candidate_count": 3,
+        "raw_selected_move": "d6c7",
+        "raw_selected_provider": "krk.stage0_basin",
+        "recommendation_class": "prefer_visible_alternative",
+        "replacement_move": "d6d5",
+        "replacement_provider": "krk.edge_trap_close",
+        "row_id": "stage4_joined_trace_ownership_1",
+        "selected_owner_before_sandbox": "selected_owner_failed",
+        "selected_piece": "king",
+        "source_terms": [
+          "offline_validated_provider_capacity_evidence"
+        ],
+        "state_id": "state.256a3da30f0f",
+        "support_bucket": "medium",
+        "target_improved": true
+      },
+      {
+        "active_landmark_label": "drive_to_edge",
+        "box_area_relevance": "low",
+        "decision_window": "initial_owner_choice",
+        "edge_bucket": "at_edge",
+        "explanation_terms": [
+          "selector_model.combined_simple_rule",
+          "positive_trace_provider_candidate_count.2",
+          "positive_trace_count_bucket.low",
+          "edge_bucket.at_edge",
+          "support_bucket.far",
+          "box_area_relevance.low",
+          "selected_piece.rook",
+          "source_stage.stage6",
+          "active_landmark_label.drive_to_edge"
+        ],
+        "ply": 0,
+        "positive_trace_count_bucket": "low",
+        "positive_trace_provider_candidate_count": 2,
+        "raw_selected_move": "h7c7",
+        "raw_selected_provider": "krk.edge_trap_close",
+        "recommendation_class": "prefer_visible_alternative",
+        "replacement_move": "a5b6",
+        "replacement_provider": "krk.stage0_basin",
+        "row_id": "selector_objective_fresh_diversity.05",
+        "selected_owner_before_sandbox": "selected_owner_failed",
+        "selected_piece": "rook",
+        "source_terms": [
+          "candidate_strategy_family.stage0_basin",
+          "offline_validated_provider_capacity_evidence",
+          "runtime_review_packet.krk_candidate_generation_training_refresh_runtime_review_packet_v3",
+          "source_stage.stage6",
+          "stage5_6_candidate_generation_refresh_scope"
+        ],
+        "state_id": "state.699f0003a511",
+        "support_bucket": "far",
+        "target_improved": true
+      }
+    ],
+    "ply4_regression_case": {
+      "active_landmark": "fence_established",
+      "active_selected_owner_before_switch": "krk.fence_established",
+      "baseline_continuation_outcome": {
+        "engine_decision_count": 9,
+        "plies": 17,
+        "result": "mate"
+      },
+      "continuation_context": {
+        "control_move": "e8a8",
+        "control_provider": "krk.fence_established",
+        "enabled_move": "e8b8",
+        "enabled_provider": "krk.edge_trap_close",
+        "is_initial_owner_choice": false,
+        "recommendation_reason": "near_edge_or_medium_box_relevance",
+        "white_ply": 4,
+        "why_selected_alternative": "first_current_suggestion_matching_runtime_visible_alternative"
+      },
+      "enabled_continuation_outcome": {
+        "engine_decision_count": 20,
+        "plies": 40,
+        "result": "max_plies"
+      },
+      "explanation_terms": [
+        "selector_model.combined_simple_rule",
+        "positive_trace_provider_candidate_count.7",
+        "positive_trace_count_bucket.medium",
+        "edge_bucket.near_edge",
+        "support_bucket.far",
+        "box_area_relevance.medium",
+        "selected_piece.rook",
+        "source_stage.stage5",
+        "active_landmark_label.fence_established"
+      ],
+      "fen_at_ply": "4R3/5k2/8/8/8/8/4K3/8 w - - 6 4",
+      "observability_only_outcome": {
+        "engine_decision_count": 9,
+        "plies": 17,
+        "result": "mate"
+      },
+      "plan_context": "active_h40_continuation_after_initial_owner_choice",
+      "ply": 4,
+      "raw_selected_move": "e8a8",
+      "raw_selected_provider": "krk.fence_established",
+      "recommendation_class": "prefer_visible_alternative",
+      "row_id": "joined_trace_ownership_4",
+      "selector_replacement_move": "e8b8",
+      "selector_replacement_provider": "krk.edge_trap_close",
+      "source_terms": [
+        "candidate_generation_only",
+        "edge_trap",
+        "fence_established",
+        "positive_capacity_scope",
+        "stage_conditioned_candidate_generation_refresh",
+        "stage_conditioned_capacity_scope_not_ownership_label"
+      ],
+      "state_id": "state.2c1d6da27ea1"
+    },
+    "preserve_or_abstain_rows_inside_continuation_windows": [
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "1R6/8/5k2/8/8/8/4K3/8 w - - 8 5",
+        "move": "e2f1",
+        "ply": 6,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.fence_established"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "1R6/8/8/4k3/8/8/8/5K2 w - - 10 6",
+        "move": "f1g2",
+        "ply": 8,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.edge_trap_close"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "1R6/8/8/8/3k4/8/6K1/8 w - - 12 7",
+        "move": "b8c8",
+        "ply": 10,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.stage0_basin"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "2R5/8/8/3k4/8/8/6K1/8 w - - 14 8",
+        "move": "c8a8",
+        "ply": 12,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.drive_to_edge"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "R7/8/8/8/3k4/8/6K1/8 w - - 16 9",
+        "move": "a8c8",
+        "ply": 14,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.stage0_basin"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "2R5/8/8/3k4/8/8/6K1/8 w - - 18 10",
+        "move": "c8a8",
+        "ply": 16,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.drive_to_edge"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "R7/8/8/8/3k4/8/6K1/8 w - - 20 11",
+        "move": "a8c8",
+        "ply": 18,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.stage0_basin"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "2R5/8/8/3k4/8/8/6K1/8 w - - 22 12",
+        "move": "c8a8",
+        "ply": 20,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.drive_to_edge"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "R7/8/8/8/3k4/8/6K1/8 w - - 24 13",
+        "move": "a8c8",
+        "ply": 22,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.stage0_basin"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "2R5/8/8/3k4/8/8/6K1/8 w - - 26 14",
+        "move": "c8a8",
+        "ply": 24,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.drive_to_edge"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "R7/8/8/8/3k4/8/6K1/8 w - - 28 15",
+        "move": "a8c8",
+        "ply": 26,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.stage0_basin"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "2R5/8/8/3k4/8/8/6K1/8 w - - 30 16",
+        "move": "c8a8",
+        "ply": 28,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.drive_to_edge"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "R7/8/8/8/3k4/8/6K1/8 w - - 32 17",
+        "move": "a8c8",
+        "ply": 30,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.stage0_basin"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "2R5/8/8/3k4/8/8/6K1/8 w - - 34 18",
+        "move": "c8a8",
+        "ply": 32,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.drive_to_edge"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "R7/8/8/8/3k4/8/6K1/8 w - - 36 19",
+        "move": "a8c8",
+        "ply": 34,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.stage0_basin"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "2R5/8/8/3k4/8/8/6K1/8 w - - 38 20",
+        "move": "c8a8",
+        "ply": 36,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.drive_to_edge"
+      },
+      {
+        "behavior_action": "no_op",
+        "behavior_veto_reason": "recommendation_not_prefer_visible_alternative",
+        "fen": "R7/8/8/8/3k4/8/6K1/8 w - - 40 21",
+        "move": "a8c8",
+        "ply": 38,
+        "recommendation_class": "preserve_selected_owner",
+        "selected_provider": "krk.stage0_basin"
+      }
+    ],
+    "safe_preservation_rows": [
+      {
+        "behavior_action": "no_op",
+        "h40_default_off": {
+          "engine_decision_count": 2,
+          "engine_ticks_max": 8,
+          "engine_ticks_total": 16,
+          "plies": 3,
+          "result": "mate"
+        },
+        "h40_enabled": {
+          "engine_decision_count": 2,
+          "engine_ticks_max": 8,
+          "engine_ticks_total": 16,
+          "plies": 3,
+          "result": "mate"
+        },
+        "h40_safe_regression": false,
+        "recommendation_class": "preserve_selected_owner",
+        "row_id": "joined_trace_ownership_3",
+        "selected_owner_before_sandbox": "selected_owner_converted",
+        "stage": "stage5",
+        "state_id": "state.18cfccc9c4c1"
+      },
+      {
+        "behavior_action": "no_op",
+        "h40_default_off": {
+          "engine_decision_count": 9,
+          "engine_ticks_max": 8,
+          "engine_ticks_total": 72,
+          "plies": 17,
+          "result": "mate"
+        },
+        "h40_enabled": {
+          "engine_decision_count": 20,
+          "engine_ticks_max": 8,
+          "engine_ticks_total": 160,
+          "plies": 40,
+          "result": "max_plies"
+        },
+        "h40_safe_regression": true,
+        "recommendation_class": "preserve_selected_owner",
+        "row_id": "joined_trace_ownership_4",
+        "selected_owner_before_sandbox": "selected_owner_converted",
+        "stage": "stage5",
+        "state_id": "state.2c1d6da27ea1"
+      },
+      {
+        "behavior_action": "no_op",
+        "h40_default_off": {
+          "engine_decision_count": 9,
+          "engine_ticks_max": 8,
+          "engine_ticks_total": 72,
+          "plies": 17,
+          "result": "mate"
+        },
+        "h40_enabled": {
+          "engine_decision_count": 9,
+          "engine_ticks_max": 8,
+          "engine_ticks_total": 72,
+          "plies": 17,
+          "result": "mate"
+        },
+        "h40_safe_regression": false,
+        "recommendation_class": "preserve_selected_owner",
+        "row_id": "joined_trace_ownership_5",
+        "selected_owner_before_sandbox": "selected_owner_converted",
+        "stage": "stage5",
+        "state_id": "state.388d05197dd9"
+      },
+      {
+        "behavior_action": "no_op",
+        "h40_default_off": {
+          "engine_decision_count": 2,
+          "engine_ticks_max": 8,
+          "engine_ticks_total": 16,
+          "plies": 3,
+          "result": "mate"
+        },
+        "h40_enabled": {
+          "engine_decision_count": 2,
+          "engine_ticks_max": 8,
+          "engine_ticks_total": 16,
+          "plies": 3,
+          "result": "mate"
+        },
+        "h40_safe_regression": false,
+        "recommendation_class": "preserve_selected_owner",
+        "row_id": "joined_trace_ownership_6",
+        "selected_owner_before_sandbox": "selected_owner_converted",
+        "stage": "stage6",
+        "state_id": "state.52085d244e9d"
+      },
+      {
+        "behavior_action": "no_op",
+        "h40_default_off": {
+          "engine_decision_count": 2,
+          "engine_ticks_max": 8,
+          "engine_ticks_total": 16,
+          "plies": 3,
+          "result": "mate"
+        },
+        "h40_enabled": {
+          "engine_decision_count": 2,
+          "engine_ticks_max": 8,
+          "engine_ticks_total": 16,
+          "plies": 3,
+          "result": "mate"
+        },
+        "h40_safe_regression": false,
+        "recommendation_class": "preserve_selected_owner",
+        "row_id": "joined_trace_ownership_7",
+        "selected_owner_before_sandbox": "selected_owner_converted",
+        "stage": "stage6",
+        "state_id": "state.69711173114a"
+      },
+      {
+        "behavior_action": "no_op",
+        "h40_default_off": {
+          "engine_decision_count": 11,
+          "engine_ticks_max": 8,
+          "engine_ticks_total": 88,
+          "plies": 21,
+          "result": "mate"
+        },
+        "h40_enabled": {
+          "engine_decision_count": 11,
+          "engine_ticks_max": 8,
+          "engine_ticks_total": 88,
+          "plies": 21,
+          "result": "mate"
+        },
+        "h40_safe_regression": false,
+        "recommendation_class": "preserve_selected_owner",
+        "row_id": "joined_trace_ownership_8",
+        "selected_owner_before_sandbox": "selected_owner_converted",
+        "stage": "stage5",
+        "state_id": "state.6e84c77a4520"
+      }
+    ]
+  },
+  "decision_recommendation": "selector_scope_initial_owner_only_supported",
+  "evaluation": {
+    "does_ply0_only_avoid_switching_away_from_active_fence_edge_continuations": true,
+    "does_ply0_only_preserve_safe_owners": true,
+    "is_ply0_only_runtime_feature_eligible": true,
+    "runtime_feature_eligibility_notes": "A future sandbox can use a runtime decision-window signal such as current_ply/white decision index where available. It must remain default-off and must not use offline ownership labels.",
+    "would_ply0_only_eliminate_safe_control_regression": true,
+    "would_ply0_only_preserve_prior_target_improvements": true
+  },
+  "gameplay_topology_mutation": false,
+  "non_causal_scope_rule_evaluations": [
+    {
+      "classification": "supported_for_future_review",
+      "evidence": "Both observed target improvements are initial single-decision switches; the protected regression switch occurs at ply 4.",
+      "rule": "selector allowed only at initial decision / ply 0",
+      "runtime_feature_eligible": true,
+      "would_eliminate_safe_control_regression": true,
+      "would_preserve_prior_target_improvements": true
+    },
+    {
+      "classification": "supported_but_needs_monitor_definition",
+      "evidence": "The regression overrides an active fence-established continuation. A runtime-safe continuation-window monitor must be defined without offline owner labels.",
+      "rule": "selector blocked when current provider is in an active continuation window",
+      "runtime_feature_eligible": "partially",
+      "would_eliminate_safe_control_regression": true,
+      "would_preserve_prior_target_improvements": true
+    },
+    {
+      "classification": "promising_but_requires_runtime_progress_proxy",
+      "evidence": "The raw e8a8 continuation has positive goal_progress while e8b8 has negative goal_progress, but the exact safe progress proxy needs review.",
+      "rule": "selector blocked when selected owner has recent progress",
+      "runtime_feature_eligible": "partially",
+      "would_eliminate_safe_control_regression": true,
+      "would_preserve_prior_target_improvements": "unknown"
+    },
+    {
+      "classification": "supported_but_broader_than_ply0_only",
+      "evidence": "The regression switches away from fence_established to edge_trap_close inside an h40 continuation. Broad plan-family gates risk suppressing valid future switches unless scoped.",
+      "rule": "selector blocked when plan/edge/fence continuation is active",
+      "runtime_feature_eligible": "partially",
+      "would_eliminate_safe_control_regression": true,
+      "would_preserve_prior_target_improvements": "likely"
+    },
+    {
+      "classification": "needs_more_evidence",
+      "evidence": "This is compatible with quarantine, but the failure-risk monitor is not yet proven on continuation states.",
+      "rule": "selector may only recommend abstain during continuation unless failure-risk monitor fires",
+      "runtime_feature_eligible": "partially",
+      "would_eliminate_safe_control_regression": true,
+      "would_preserve_prior_target_improvements": true
+    },
+    {
+      "classification": "unsafe_as_implemented",
+      "evidence": "Protected validation has safe_regression_count=1.",
+      "rule": "current quarantined selector_behavior path",
+      "runtime_feature_eligible": false,
+      "would_eliminate_safe_control_regression": false,
+      "would_preserve_prior_target_improvements": true
+    }
+  ],
+  "production_fix_implemented": false,
+  "production_runtime_behavior_changed": false,
+  "regression_row": {
+    "active_landmark": "fence_established",
+    "active_selected_owner_before_switch": "krk.fence_established",
+    "baseline_continuation_outcome": {
+      "engine_decision_count": 9,
+      "plies": 17,
+      "result": "mate"
+    },
+    "continuation_context": {
+      "control_move": "e8a8",
+      "control_provider": "krk.fence_established",
+      "enabled_move": "e8b8",
+      "enabled_provider": "krk.edge_trap_close",
+      "is_initial_owner_choice": false,
+      "recommendation_reason": "near_edge_or_medium_box_relevance",
+      "white_ply": 4,
+      "why_selected_alternative": "first_current_suggestion_matching_runtime_visible_alternative"
+    },
+    "enabled_continuation_outcome": {
+      "engine_decision_count": 20,
+      "plies": 40,
+      "result": "max_plies"
+    },
+    "explanation_terms": [
+      "selector_model.combined_simple_rule",
+      "positive_trace_provider_candidate_count.7",
+      "positive_trace_count_bucket.medium",
+      "edge_bucket.near_edge",
+      "support_bucket.far",
+      "box_area_relevance.medium",
+      "selected_piece.rook",
+      "source_stage.stage5",
+      "active_landmark_label.fence_established"
+    ],
+    "fen_at_ply": "4R3/5k2/8/8/8/8/4K3/8 w - - 6 4",
+    "observability_only_outcome": {
+      "engine_decision_count": 9,
+      "plies": 17,
+      "result": "mate"
+    },
+    "plan_context": "active_h40_continuation_after_initial_owner_choice",
+    "ply": 4,
+    "raw_selected_move": "e8a8",
+    "raw_selected_provider": "krk.fence_established",
+    "recommendation_class": "prefer_visible_alternative",
+    "row_id": "joined_trace_ownership_4",
+    "selector_replacement_move": "e8b8",
+    "selector_replacement_provider": "krk.edge_trap_close",
+    "source_terms": [
+      "candidate_generation_only",
+      "edge_trap",
+      "fence_established",
+      "positive_capacity_scope",
+      "stage_conditioned_candidate_generation_refresh",
+      "stage_conditioned_capacity_scope_not_ownership_label"
+    ],
+    "state_id": "state.2c1d6da27ea1"
+  },
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_selector_continuation_scope_audit.v0",
+  "selector_unquarantined": false,
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_behavior_continuation_regression_root_cause_v0.json",
+    "reports/strategy_arbitration/krk_selector_behavior_sandbox_v0.json",
+    "reports/strategy_arbitration/krk_selector_behavior_sandbox_validation_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "capacity_label_used_as_ownership_label_count": 0,
+    "continuation_preserve_abstain_row_count": 17,
+    "regression_is_initial_owner_choice": false,
+    "regression_ply": 4,
+    "regression_row_id": "joined_trace_ownership_4",
+    "safe_preservation_row_count": 6,
+    "safe_regression_count": 1,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "successful_initial_switch_count": 2,
+    "target_improvement_count": 2
+  },
+  "thresholds_tuned": false
+}

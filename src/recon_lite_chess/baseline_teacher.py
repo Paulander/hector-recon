@@ -8,7 +8,12 @@ All chess-specific logic lives HERE, not in the baseline module.
 import chess
 import numpy as np
 from typing import List
-from recon_lite.learning.baseline import TransitionData
+from recon_lite_hector.learning.baseline import TransitionData
+from recon_lite_chess.training.krk_landmarks import (
+    RICH_FEATURE_NAMES,
+    RICH_GOAL_FEATURE_INDEX,
+    rich_feature_vector,
+)
 
 
 # ============================================================================
@@ -108,17 +113,25 @@ class KRKTeacher:
     - Transition labeling (mate-in-1 for Stage 0)
     """
     
-    # Feature dimension for KRK
+    # Feature dimension for legacy KRK vectors.
     FEATURE_DIM = 15  # Added side_to_move feature
     
-    def __init__(self):
+    def __init__(self, feature_set: str = "legacy"):
         """Initialize KRK teacher"""
-        pass
+        if feature_set not in ("legacy", "krk_rich_v1"):
+            raise ValueError(f"Unknown KRK feature_set: {feature_set}")
+        self.feature_set = feature_set
+        self.feature_names = (
+            tuple(f"feature_{i}" for i in range(self.FEATURE_DIM))
+            if feature_set == "legacy"
+            else RICH_FEATURE_NAMES
+        )
+        self.goal_feature_index = 13 if feature_set == "legacy" else RICH_GOAL_FEATURE_INDEX
     
     @property
     def feature_dim(self) -> int:
         """Return feature dimension"""
-        return self.FEATURE_DIM
+        return self.FEATURE_DIM if self.feature_set == "legacy" else len(RICH_FEATURE_NAMES)
     
     def features(self, board: chess.Board) -> np.ndarray:
         """
@@ -150,6 +163,9 @@ class KRKTeacher:
         Returns:
             Feature vector of length FEATURE_DIM
         """
+        if self.feature_set == "krk_rich_v1":
+            return np.array(rich_feature_vector(board), dtype=np.float32)
+
         features = []
         
         # Box area (0-64, normalized)

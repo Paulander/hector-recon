@@ -1,0 +1,43 @@
+{
+  "schema_version": "krk_state_local_paired_ownership_work_package.v0",
+  "causal_status": "non_causal_work_package",
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_selector_implemented": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_terminals_added": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "gameplay_topology_mutation": false,
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "selector_training_allowed": false,
+  "objective_id": "krk.selector.state_local_paired_ownership.v0",
+  "thresholds": {
+    "protected_pair_count": 30,
+    "same_state_conflict_pair_count": 8,
+    "selected_failure_with_alternative_success_count": 4,
+    "safe_preservation_pair_count": 12,
+    "stage7_training_rows": 0
+  },
+  "evidence_channels": [
+    "strong_same_state_conflict",
+    "safe_preservation",
+    "abstain_or_insufficient_safe_owner",
+    "weak_capacity_context",
+    "heldout_stage7_challenge"
+  ],
+  "bounded_expansion_policy": {
+    "allowed_if_replay_free_underpowered": true,
+    "max_jobs": 12,
+    "horizon": 40,
+    "stage7_jobs_allowed": false,
+    "requires_reviewed_manifest": true,
+    "max_expansion_passes": 1
+  },
+  "decision": {
+    "status": "work_package_ready",
+    "recommended_next_step": "build_replay_free_paired_inventory_v1",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "backfillable_success_keys": [],
+  "causal_status": "non_causal_replay_free_backfill_audit",
+  "clean_hard_negative_key_audit": {
+    "current_recovered_unique_key_count": 39,
+    "raw_row_count": 145,
+    "unique_key_count": 39
+  },
+  "clean_success_key_audit": {
+    "duplicate_row_count": 87,
+    "raw_row_count": 98,
+    "unique_key_count": 11,
+    "unique_keys": [
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_2cc_frozen_model_default_off_smoke_5_h20.json",
+          "reports/structural_candidates/stage7_candidate_move_layer_default_off_10_h40.json",
+          "reports/structural_candidates/stage7_candidate_move_layer_default_off_25_h40.json",
+          "reports/structural_candidates/stage7_clean_h40_label_run_seed17_10_h40.json",
+          "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_a_seed127_8_h40.json",
+          "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_b_seed131_8_h40.json",
+          "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_c_seed137_8_h40.json",
+          "reports/structural_candidates/stage7_diverse_clean_box_small_medium_seed109_8_h40.json"
+        ],
+        "fen": "2k5/8/2K1R3/8/8/8/8/8 w - - 0 1",
+        "move_uci": "e6e8",
+        "result": "mate",
+        "source_count": 39
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json"
+        ],
+        "fen": "3K2k1/8/8/8/8/8/1R6/8 w - - 0 1",
+        "move_uci": "b2b7",
+        "result": "mate",
+        "source_count": 1
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_diverse_clean_edge_fence_deep_seed107_8_h40.json"
+        ],
+        "fen": "7k/8/8/8/R7/8/K7/8 w - - 0 1",
+        "move_uci": "a4h4",
+        "result": "mate",
+        "source_count": 1
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_diverse_clean_edge_fence_deep_seed107_8_h40.json"
+        ],
+        "fen": "8/3R4/8/7k/8/8/1K6/8 w - - 0 1",
+        "move_uci": "b2c1",
+        "result": "mate",
+        "source_count": 1
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_c_seed157_8_h40.json"
+        ],
+        "fen": "8/8/2R5/8/8/8/6k1/3K4 w - - 0 1",
+        "move_uci": "c6c8",
+        "result": "mate",
+        "source_count": 1
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json"
+        ],
+        "fen": "8/8/3R4/6K1/8/6k1/8/8 w - - 0 1",
+        "move_uci": "d6a6",
+        "result": "mate",
+        "source_count": 1
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json"
+        ],
+        "fen": "8/8/6R1/4K3/8/7k/8/8 w - - 0 1",
+        "move_uci": "g6g1",
+        "result": "mate",
+        "source_count": 1
+      },
+      {
+        "example_sources": [
+          "reports/krk_two_stage_abstention_stage7_baseline_3_seed11_h40.json",
+          "reports/structural_candidates/stage7_2cc_frozen_model_default_off_smoke_5_h20.json",
+          "reports/structural_candidates/stage7_candidate_move_layer_default_off_10_h40.json",
+          "reports/structural_candidates/stage7_candidate_move_layer_default_off_25_h40.json",
+          "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_a_seed127_8_h40.json",
+          "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_b_seed131_8_h40.json",
+          "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_c_seed137_8_h40.json",
+          "reports/structural_candidates/stage7_diverse_clean_box_small_medium_seed109_8_h40.json"
+        ],
+        "fen": "8/8/8/8/8/5K2/5R2/6k1 w - - 0 1",
+        "move_uci": "f3g3",
+        "result": "mate",
+        "source_count": 50
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_c_seed157_8_h40.json"
+        ],
+        "fen": "8/8/8/8/8/8/k1K5/3R4 w - - 0 1",
+        "move_uci": "d1d3",
+        "result": "mate",
+        "source_count": 1
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_a_seed149_8_h40.json"
+        ],
+        "fen": "8/8/8/R7/8/8/1K2k3/8 w - - 0 1",
+        "move_uci": "a5h5",
+        "result": "mate",
+        "source_count": 1
+      },
+      {
+        "example_sources": [
+          "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_c_seed157_8_h40.json"
+        ],
+        "fen": "8/8/R3K3/8/5k2/8/8/8 w - - 0 1",
+        "move_uci": "e6f6",
+        "result": "mate",
+        "source_count": 1
+      }
+    ]
+  },
+  "decision": {
+    "label_run_allowed": false,
+    "recommended_next_step": "refresh_sequence_policy_inputs_with_replay_free_backfill",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "stage7_clean_success_backfill_available"
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "non_backfillable_success_evidence": {
+    "control_count": 16,
+    "example_controls": [
+      {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "fen": "8/8/8/8/R7/8/2k1K3/8 w - - 0 1",
+        "move_uci": "a4h4",
+        "source_artifact": "reports/structural_candidates/stage7_069_drive_support_target_25_h40.json",
+        "state_id": "recovered.55326e89c6b8"
+      },
+      {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "fen": "8/8/8/8/4K3/R7/4k3/8 w - - 0 1",
+        "move_uci": "a3a2",
+        "source_artifact": "reports/structural_candidates/stage7_069_drive_support_target_25_h40.json",
+        "state_id": "recovered.4fa9a180b885"
+      },
+      {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "fen": "8/8/8/8/8/5K2/5R2/6k1 w - - 0 1",
+        "move_uci": "f3g3",
+        "source_artifact": "reports/structural_candidates/stage7_069_drive_support_target_25_h40.json",
+        "state_id": "recovered.8024600cda89"
+      },
+      {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "fen": "7k/4RK2/8/8/8/8/8/8 w - - 0 1",
+        "move_uci": "f7g6",
+        "source_artifact": "reports/structural_candidates/stage7_0af_trace_role_target_smoke_25_h40.json",
+        "state_id": "recovered.3971323792f3"
+      },
+      {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "fen": "8/8/8/R7/8/8/1K2k3/8 w - - 0 1",
+        "move_uci": "a5h5",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_a_seed149_8_h40.json",
+        "state_id": "recovered.e6aae4bd3f00"
+      },
+      {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "fen": "3K2k1/8/8/8/8/8/1R6/8 w - - 0 1",
+        "move_uci": "b2b7",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json",
+        "state_id": "recovered.f0332fb4fa91"
+      },
+      {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "fen": "8/8/6R1/4K3/8/7k/8/8 w - - 0 1",
+        "move_uci": "g6g1",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json",
+        "state_id": "recovered.dd557d6ba8ec"
+      },
+      {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "fen": "8/8/3R4/6K1/8/6k1/8/8 w - - 0 1",
+        "move_uci": "d6a6",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_b_seed151_8_h40.json",
+        "state_id": "recovered.98246f5e3a9a"
+      },
+      {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "fen": "8/8/R3K3/8/5k2/8/8/8 w - - 0 1",
+        "move_uci": "e6f6",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_c_seed157_8_h40.json",
+        "state_id": "recovered.f9287ffdcd68"
+      },
+      {
+        "control_quality": "sandbox_sourced_replay_free_success_control",
+        "fen": "8/8/2R5/8/8/8/6k1/3K4 w - - 0 1",
+        "move_uci": "c6c8",
+        "source_artifact": "reports/structural_candidates/stage7_additional_clean_edge_fence_deep_followup_c_seed157_8_h40.json",
+        "state_id": "recovered.ff1c3efc46ec"
+      }
+    ],
+    "reason": "sandbox_or_repair_sourced_success_controls_are_not_clean_heldout_controls",
+    "unique_key_count": 15
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "stage7_clean_success_backfill_audit.v0",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_clean_artifact_manifest_v0.json",
+    "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
+    "reports/structural_candidates/stage7_post_box_sequence_control_recovery_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "can_close_success_gate_replay_free": true,
+    "clean_success_controls_required": 5,
+    "current_clean_hard_negative_controls": 39,
+    "current_clean_success_controls": 11,
+    "eligible_new_success_controls": 0,
+    "manifest_clean_candidate_count": 46,
+    "manifest_h40_compatible_result_counts": {
+      "mate": 98,
+      "max_plies": 145
+    },
+    "manifest_h40_compatible_row_count": 243,
+    "manifest_unique_hard_negative_controls": 39,
+    "manifest_unique_success_controls": 11,
+    "projected_success_controls_after_backfill": 11,
+    "runtime_authorization_row_count": 0,
+    "sandbox_sourced_controls_usable_for_clean_gate": false,
+    "sandbox_sourced_post_box_success_controls": 16,
+    "sandbox_sourced_post_box_unique_success_controls": 15,
+    "selector_training_row_count": 0,
+    "skipped_counts": {
+      "not_h40_compatible": 93
+    },
+    "stage7_training_row_count": 0
+  }
+}

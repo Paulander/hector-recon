@@ -1,0 +1,438 @@
+{
+  "schema_version": "stage7_target_smoke_source_family_diagnosis.v1",
+  "causal_status": "non_causal_extraction",
+  "source": "reports/structural_candidates/stage7_0af_trace_role_target_smoke_25_h40.json",
+  "family_count": 3,
+  "families": [
+    {
+      "family_id": "stage7.target_smoke.source_family_7cab65617cd8",
+      "state_id": "state.7cab65617cd8",
+      "source_fen": "7k/8/8/8/R7/8/5K2/8 w - - 0 1",
+      "post_reply_fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+      "post_reply_state_signature": "state.1b912dd78357",
+      "stage7_move": "a4a7",
+      "black_reply": "h8g8",
+      "selected_successor": "krk.stage0_basin",
+      "selected_move": null,
+      "conversion_result": "max_plies",
+      "failure_classes": [
+        "selected_successor_miscalibrated"
+      ],
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "reward_contract_mismatch": false,
+      "visible_terms": {
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "fence_survived_reply": true,
+        "box_area_after_own_move": 7,
+        "box_area_after_reply": 7,
+        "box_area_delta_after_reply": 0,
+        "rook_safe_after_reply": true
+      },
+      "missing_afforded_skills": {
+        "krk.edge_rook_transfer_recovery": {
+          "contract_met": true,
+          "enabled": true,
+          "missing_required_terms": [],
+          "provider_skill_ids": [
+            "krk.edge_trap_close",
+            "krk.edge_trap_enemy_between",
+            "krk.edge_trap_wrong_tempo"
+          ],
+          "required_terms": [
+            "edge_rook_transfer_recovery_available",
+            "rook_safe"
+          ],
+          "role_id": "krk.edge_rook_transfer_recovery",
+          "score": 1.0,
+          "source_terms": [
+            "edge_rook_transfer_recovery_available",
+            "corner_net_pressure_available",
+            "safe_rook_edge_transfer_available",
+            "enemy_king_near_edge",
+            "post_fence_conversion_needed",
+            "rook_safe"
+          ],
+          "successor": "krk.edge_rook_transfer_recovery",
+          "veto_terms": []
+        },
+        "krk.fence_maintenance": {
+          "contract_met": true,
+          "enabled": true,
+          "missing_required_terms": [],
+          "provider_skill_ids": [
+            "krk.fence_maintenance"
+          ],
+          "required_terms": [
+            "fence_exists",
+            "rook_safe"
+          ],
+          "role_id": "krk.fence_maintenance",
+          "score": 1.0,
+          "source_terms": [
+            "fence_exists",
+            "fence_needs_repair",
+            "rook_safe",
+            "post_fence_conversion_needed"
+          ],
+          "successor": "krk.fence_maintenance",
+          "veto_terms": []
+        },
+        "krk.fence_repair": {
+          "contract_met": true,
+          "enabled": true,
+          "missing_required_terms": [],
+          "provider_skill_ids": [
+            "krk.fence_maintenance"
+          ],
+          "required_terms": [
+            "fence_needs_repair",
+            "rook_safe"
+          ],
+          "role_id": "krk.fence_repair",
+          "score": 1.0,
+          "source_terms": [
+            "fence_needs_repair",
+            "rook_safe"
+          ],
+          "successor": "krk.fence_repair",
+          "veto_terms": []
+        },
+        "krk.rook_transfer_after_fence": {
+          "contract_met": true,
+          "enabled": true,
+          "missing_required_terms": [],
+          "provider_skill_ids": [
+            "krk.edge_trap_close",
+            "krk.edge_trap_enemy_between",
+            "krk.edge_trap_wrong_tempo"
+          ],
+          "required_terms": [
+            "rook_transfer_after_fence_available",
+            "rook_safe"
+          ],
+          "role_id": "krk.rook_transfer_after_fence",
+          "score": 1.0,
+          "source_terms": [
+            "rook_transfer_after_fence_available",
+            "safe_rook_long_transfer_available",
+            "safe_rook_edge_transfer_available",
+            "rook_has_safe_lateral_transfer",
+            "post_fence_conversion_needed",
+            "rook_safe"
+          ],
+          "successor": "krk.rook_transfer_after_fence",
+          "veto_terms": []
+        }
+      },
+      "role_contract_met_but_provider_not_selected": {
+        "krk.edge_rook_transfer_recovery": [
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo"
+        ],
+        "krk.fence_maintenance": [
+          "krk.fence_maintenance"
+        ],
+        "krk.fence_repair": [
+          "krk.fence_maintenance"
+        ],
+        "krk.rook_transfer_after_fence": [
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo"
+        ]
+      },
+      "route_scores": {
+        "krk.stage0_basin": null
+      },
+      "diagnosis": "dominant_target_smoke_source_family"
+    },
+    {
+      "family_id": "stage7.target_smoke.source_family_dcea518838ac",
+      "state_id": "state.dcea518838ac",
+      "source_fen": "4k3/R7/K7/8/8/8/8/8 w - - 0 1",
+      "post_reply_fen": "3k4/7R/K7/8/8/8/8/8 w - - 2 2",
+      "post_reply_state_signature": "state.2942b4d1224f",
+      "stage7_move": "a7h7",
+      "black_reply": "e8d8",
+      "selected_successor": "krk.edge_trap_close",
+      "selected_move": null,
+      "conversion_result": "max_plies",
+      "failure_classes": [
+        "successor_conflict"
+      ],
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "reward_contract_mismatch": false,
+      "visible_terms": {
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "fence_survived_reply": true,
+        "box_area_after_own_move": 7,
+        "box_area_after_reply": 7,
+        "box_area_delta_after_reply": 0,
+        "rook_safe_after_reply": true
+      },
+      "missing_afforded_skills": {
+        "krk.edge_rook_transfer_recovery": {
+          "contract_met": true,
+          "enabled": true,
+          "missing_required_terms": [],
+          "provider_skill_ids": [
+            "krk.edge_trap_close",
+            "krk.edge_trap_enemy_between",
+            "krk.edge_trap_wrong_tempo"
+          ],
+          "required_terms": [
+            "edge_rook_transfer_recovery_available",
+            "rook_safe"
+          ],
+          "role_id": "krk.edge_rook_transfer_recovery",
+          "score": 0.8333333333333334,
+          "source_terms": [
+            "edge_rook_transfer_recovery_available",
+            "safe_rook_edge_transfer_available",
+            "enemy_king_near_edge",
+            "post_fence_conversion_needed",
+            "rook_safe"
+          ],
+          "successor": "krk.edge_rook_transfer_recovery",
+          "veto_terms": []
+        },
+        "krk.fence_maintenance": {
+          "contract_met": true,
+          "enabled": true,
+          "missing_required_terms": [],
+          "provider_skill_ids": [
+            "krk.fence_maintenance"
+          ],
+          "required_terms": [
+            "fence_exists",
+            "rook_safe"
+          ],
+          "role_id": "krk.fence_maintenance",
+          "score": 1.0,
+          "source_terms": [
+            "fence_exists",
+            "fence_needs_repair",
+            "rook_safe",
+            "post_fence_conversion_needed"
+          ],
+          "successor": "krk.fence_maintenance",
+          "veto_terms": []
+        },
+        "krk.fence_repair": {
+          "contract_met": true,
+          "enabled": true,
+          "missing_required_terms": [],
+          "provider_skill_ids": [
+            "krk.fence_maintenance"
+          ],
+          "required_terms": [
+            "fence_needs_repair",
+            "rook_safe"
+          ],
+          "role_id": "krk.fence_repair",
+          "score": 1.0,
+          "source_terms": [
+            "fence_needs_repair",
+            "rook_safe"
+          ],
+          "successor": "krk.fence_repair",
+          "veto_terms": []
+        },
+        "krk.rook_transfer_after_fence": {
+          "contract_met": true,
+          "enabled": true,
+          "missing_required_terms": [],
+          "provider_skill_ids": [
+            "krk.edge_trap_close",
+            "krk.edge_trap_enemy_between",
+            "krk.edge_trap_wrong_tempo"
+          ],
+          "required_terms": [
+            "rook_transfer_after_fence_available",
+            "rook_safe"
+          ],
+          "role_id": "krk.rook_transfer_after_fence",
+          "score": 1.0,
+          "source_terms": [
+            "rook_transfer_after_fence_available",
+            "safe_rook_long_transfer_available",
+            "safe_rook_edge_transfer_available",
+            "rook_has_safe_lateral_transfer",
+            "post_fence_conversion_needed",
+            "rook_safe"
+          ],
+          "successor": "krk.rook_transfer_after_fence",
+          "veto_terms": []
+        }
+      },
+      "role_contract_met_but_provider_not_selected": {
+        "krk.edge_rook_transfer_recovery": [
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo"
+        ],
+        "krk.fence_maintenance": [
+          "krk.fence_maintenance"
+        ],
+        "krk.fence_repair": [
+          "krk.fence_maintenance"
+        ],
+        "krk.rook_transfer_after_fence": [
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo"
+        ]
+      },
+      "route_scores": {
+        "krk.edge_trap_close": null,
+        "krk.edge_trap_enemy_between": null,
+        "krk.edge_trap_wrong_tempo": null
+      },
+      "diagnosis": "dominant_target_smoke_source_family"
+    },
+    {
+      "family_id": "stage7.target_smoke.source_family_7b116c49a009",
+      "state_id": "state.7b116c49a009",
+      "source_fen": "4k3/8/8/8/R7/8/4K3/8 w - - 0 1",
+      "post_reply_fen": "3k4/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "post_reply_state_signature": "state.73530ec4170e",
+      "stage7_move": "a4a7",
+      "black_reply": "e8d8",
+      "selected_successor": "krk.stage0_basin",
+      "selected_move": null,
+      "conversion_result": "max_plies",
+      "failure_classes": [
+        "selected_successor_miscalibrated"
+      ],
+      "semantic_alignment_status": "reward_visible_fence_aligned_survived",
+      "reward_contract_mismatch": false,
+      "visible_terms": {
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "fence_survived_reply": true,
+        "box_area_after_own_move": 7,
+        "box_area_after_reply": 7,
+        "box_area_delta_after_reply": 0,
+        "rook_safe_after_reply": true
+      },
+      "missing_afforded_skills": {
+        "krk.edge_rook_transfer_recovery": {
+          "contract_met": true,
+          "enabled": true,
+          "missing_required_terms": [],
+          "provider_skill_ids": [
+            "krk.edge_trap_close",
+            "krk.edge_trap_enemy_between",
+            "krk.edge_trap_wrong_tempo"
+          ],
+          "required_terms": [
+            "edge_rook_transfer_recovery_available",
+            "rook_safe"
+          ],
+          "role_id": "krk.edge_rook_transfer_recovery",
+          "score": 0.8333333333333334,
+          "source_terms": [
+            "edge_rook_transfer_recovery_available",
+            "safe_rook_edge_transfer_available",
+            "enemy_king_near_edge",
+            "post_fence_conversion_needed",
+            "rook_safe"
+          ],
+          "successor": "krk.edge_rook_transfer_recovery",
+          "veto_terms": []
+        },
+        "krk.fence_maintenance": {
+          "contract_met": true,
+          "enabled": true,
+          "missing_required_terms": [],
+          "provider_skill_ids": [
+            "krk.fence_maintenance"
+          ],
+          "required_terms": [
+            "fence_exists",
+            "rook_safe"
+          ],
+          "role_id": "krk.fence_maintenance",
+          "score": 1.0,
+          "source_terms": [
+            "fence_exists",
+            "fence_needs_repair",
+            "rook_safe",
+            "post_fence_conversion_needed"
+          ],
+          "successor": "krk.fence_maintenance",
+          "veto_terms": []
+        },
+        "krk.fence_repair": {
+          "contract_met": true,
+          "enabled": true,
+          "missing_required_terms": [],
+          "provider_skill_ids": [
+            "krk.fence_maintenance"
+          ],
+          "required_terms": [
+            "fence_needs_repair",
+            "rook_safe"
+          ],
+          "role_id": "krk.fence_repair",
+          "score": 1.0,
+          "source_terms": [
+            "fence_needs_repair",
+            "rook_safe"
+          ],
+          "successor": "krk.fence_repair",
+          "veto_terms": []
+        },
+        "krk.rook_transfer_after_fence": {
+          "contract_met": true,
+          "enabled": true,
+          "missing_required_terms": [],
+          "provider_skill_ids": [
+            "krk.edge_trap_close",
+            "krk.edge_trap_enemy_between",
+            "krk.edge_trap_wrong_tempo"
+          ],
+          "required_terms": [
+            "rook_transfer_after_fence_available",
+            "rook_safe"
+          ],
+          "role_id": "krk.rook_transfer_after_fence",
+          "score": 1.0,
+          "source_terms": [
+            "rook_transfer_after_fence_available",
+            "safe_rook_long_transfer_available",
+            "safe_rook_edge_transfer_available",
+            "rook_has_safe_lateral_transfer",
+            "post_fence_conversion_needed",
+            "rook_safe"
+          ],
+          "successor": "krk.rook_transfer_after_fence",
+          "veto_terms": []
+        }
+      },
+      "role_contract_met_but_provider_not_selected": {
+        "krk.edge_rook_transfer_recovery": [
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo"
+        ],
+        "krk.fence_maintenance": [
+          "krk.fence_maintenance"
+        ],
+        "krk.fence_repair": [
+          "krk.fence_maintenance"
+        ],
+        "krk.rook_transfer_after_fence": [
+          "krk.edge_trap_close",
+          "krk.edge_trap_enemy_between",
+          "krk.edge_trap_wrong_tempo"
+        ]
+      },
+      "route_scores": {
+        "krk.stage0_basin": null
+      },
+      "diagnosis": "dominant_target_smoke_source_family"
+    }
+  ]
+}

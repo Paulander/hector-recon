@@ -1,0 +1,130 @@
+{
+  "schema_version": "krk_clean_retrain_retry_result.v1",
+  "created_at": "2026-05-24T11:53:55+02:00",
+  "source_artifacts": [
+    "reports/krk_clean_curriculum_checkpoint_plan_v0.json",
+    "reports/krk_clean_retrain_execution_manifest_v0.json",
+    "reports/krk_stage6_overlay_compose_manifest_v0.json",
+    "reports/krk_clean_retrain_preflight_v0.json",
+    "reports/krk_clean_retrain_smoke_result_v0.json",
+    "reports/krk_clean_retrain_run_result_v0.json"
+  ],
+  "checkpoint_root": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1",
+  "status": "clean_retrain_retry1_completed_through_stage6_overlay_compose_basic_checks_passed",
+  "decision": {
+    "clean_retrain_retry_complete_through_stage6": true,
+    "stage2a_complete": true,
+    "stage2b_complete": true,
+    "stage4_complete": true,
+    "stage5_complete": true,
+    "stage6_complete": true,
+    "stage6_overlay_composed": true,
+    "stage7_remains_quarantined": true,
+    "stage8_remains_blocked": true,
+    "runtime_behavior_changed": false,
+    "promoted_by_this_artifact": false,
+    "recommended_next_step": "run_dedicated_stage5_stage6_handoff_guardrail_artifacts_before_any_clean_checkpoint_promotion"
+  },
+  "run_scope": {
+    "fresh_retry_root": true,
+    "protected_snapshots_overwritten": false,
+    "stage7_training_or_promotion": false,
+    "stage8_training": false,
+    "runtime_selector_or_routing_change": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "gameplay_topology_mutation": false
+  },
+  "stages": {
+    "stage2a_edge_trap_close_resume": {
+      "load_checkpoint": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0/stage2a_edge_trap_close/baseline/best_by_stage/stage0_basin.pkl",
+      "final_learner": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage2a_edge_trap_close_resume/baseline/final_learner.pkl",
+      "stage_best": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage2a_edge_trap_close_resume/baseline/best_by_stage/edge_trap_close.pkl",
+      "topology": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage2a_edge_trap_close_resume/topology/krk_entry_topology.json",
+      "topology_nodes": 301,
+      "topology_edges": 820,
+      "adaptive_status": "plateaued_with_best_checkpoint",
+      "last_eval_cycle": 24,
+      "best_score": 3.58228,
+      "basic_entry_eval": "100/100 mate",
+      "stage1_backchain_eval": "100/100 improved, 100/100 optimal"
+    },
+    "stage2b_enemy_between": {
+      "load_checkpoint": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage2a_edge_trap_close_resume/baseline/best_by_stage/edge_trap_close.pkl",
+      "final_learner": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage2b_enemy_between/baseline/final_learner.pkl",
+      "stage_best": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage2b_enemy_between/baseline/best_by_stage/edge_trap_enemy_between.pkl",
+      "topology": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage2b_enemy_between/topology/krk_entry_topology.json",
+      "topology_nodes": 309,
+      "topology_edges": 874,
+      "adaptive_status": "plateaued_with_best_checkpoint",
+      "last_eval_cycle": 24,
+      "best_score": 3.65102,
+      "basic_entry_eval": "100/100 mate",
+      "stage1_backchain_eval": "100/100 improved, 100/100 optimal"
+    },
+    "stage4_wrong_tempo": {
+      "load_checkpoint": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage2b_enemy_between/baseline/best_by_stage/edge_trap_enemy_between.pkl",
+      "final_learner": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage4_wrong_tempo/baseline/final_learner.pkl",
+      "stage_best": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage4_wrong_tempo/baseline/best_by_stage/edge_trap_wrong_tempo.pkl",
+      "topology": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage4_wrong_tempo/topology/krk_entry_topology.json",
+      "topology_nodes": 371,
+      "topology_edges": 1032,
+      "adaptive_status": "plateaued_with_best_checkpoint",
+      "last_eval_cycle": 24,
+      "best_score": 3.593,
+      "basic_entry_eval": "100/100 mate",
+      "stage1_backchain_eval": "100/100 improved, 100/100 optimal"
+    },
+    "stage5_fence_handoff": {
+      "load_checkpoint": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage4_wrong_tempo/baseline/best_by_stage/edge_trap_wrong_tempo.pkl",
+      "final_learner": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage5_fence_handoff/baseline/final_learner.pkl",
+      "stage_best": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage5_fence_handoff/baseline/best_by_stage/fence_established.pkl",
+      "topology": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage5_fence_handoff/topology/krk_entry_topology.json",
+      "topology_nodes": 364,
+      "topology_edges": 1008,
+      "adaptive_status": "plateaued_with_best_checkpoint",
+      "last_eval_cycle": 24,
+      "best_score": 3.6025,
+      "basic_entry_eval": "100/100 mate",
+      "stage1_backchain_eval": "100/100 improved, 100/100 optimal"
+    },
+    "stage6_drive_overlay_candidate": {
+      "load_checkpoint": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage5_fence_handoff/baseline/best_by_stage/fence_established.pkl",
+      "final_learner": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_drive_overlay_candidate/baseline/final_learner.pkl",
+      "stage_best": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_drive_overlay_candidate/baseline/best_by_stage/drive_to_edge.pkl",
+      "topology": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_drive_overlay_candidate/topology/krk_entry_topology.json",
+      "topology_nodes": 371,
+      "topology_edges": 1036,
+      "adaptive_status": "passed",
+      "pass_cycle": 9,
+      "best_score": 5.1671249999999995,
+      "conversion_status": "passed",
+      "h40_chunk_playouts": "8/8 chunks mate-only",
+      "basic_entry_eval": "100/100 mate",
+      "stage1_backchain_eval": "100/100 improved, 100/100 optimal"
+    },
+    "stage6_overlay_composed": {
+      "base_topology": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage5_fence_handoff/topology/krk_entry_topology.json",
+      "overlay_learner": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_drive_overlay_candidate/baseline/final_learner.pkl",
+      "overlay_label": "drive_to_edge",
+      "topology": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/topology/krk_entry_topology.json",
+      "topology_nodes": 390,
+      "topology_edges": 1088,
+      "basic_entry_eval": "100/100 mate",
+      "stage1_backchain_eval": "100/100 improved, 100/100 optimal"
+    }
+  },
+  "validation": {
+    "json_artifacts_parse": true,
+    "stage_entry_eval_samples": 100,
+    "stage1_backchain_eval_samples": 100,
+    "focused_tests_required": true,
+    "dedicated_stage5_stage6_guardrails_complete": false,
+    "promotion_validation_complete": false
+  },
+  "notes": [
+    "The first full-run root stopped before producing the Stage 2A checkpoint. Retry1 resumed Stage 2A from the fresh Stage 0/1 checkpoint and completed the chain through Stage 6 overlay composition.",
+    "Stage 2A/2B/4/5 plateaued but produced stage-best checkpoints. This matches the historical adaptive pattern where these local stages can provide handoff/overlay input without being full conversion promotions.",
+    "Stage 6 passed the h40 handoff profile at cycle 9.",
+    "The composed overlay passed only basic entry/backchain smoke checks here. Dedicated Stage 5/6 handoff guardrail artifacts are still required before treating this retry root as promotable."
+  ]
+}

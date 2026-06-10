@@ -16,7 +16,7 @@ from typing import Dict, List, Sequence, Tuple
 
 import chess
 
-from recon_lite.macro_engine import MacroEngine
+from recon_lite_hector.macro_engine import MacroEngine
 
 OUTPUT_PATH = Path(__file__).resolve().parents[1] / "outputs" / "macrograph_demo.json"
 

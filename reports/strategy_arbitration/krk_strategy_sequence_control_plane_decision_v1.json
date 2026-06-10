@@ -1,0 +1,45 @@
+{
+  "blockers_before_runtime": [
+    "selector policy remains blocked",
+    "capacity labels are not ownership labels",
+    "progress-window supported moves remain held-out target failures",
+    "no runtime candidate generator has review authorization"
+  ],
+  "causal_status": "non_causal_architecture_decision_gate",
+  "decision": {
+    "recommended_next_step": "architecture_review_for_default_off_candidate_generation_sandbox_scope",
+    "runtime_sandbox_allowed_by_this_packet": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "candidate_generation_control_plane_ready_for_architecture_review"
+  },
+  "evidence": {
+    "progress_window_supported_move_h40_mate_count": 0,
+    "protected_negative_capacity_ratio": 0.3125,
+    "protected_positive_capacity_candidates": 11,
+    "runtime_flags_false": true,
+    "stage7_training_row_count": 0
+  },
+  "explicitly_still_forbidden": [
+    "general_runtime_selector",
+    "default_runtime_candidate_generator",
+    "Stage7_promotion",
+    "Stage8_training_from_unresolved_Stage7",
+    "runtime_DTM_or_tablebase",
+    "gameplay_topology_mutation",
+    "hidden_Python_routing"
+  ],
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_strategy_sequence_control_plane_decision.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_frame_source_benchmark_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

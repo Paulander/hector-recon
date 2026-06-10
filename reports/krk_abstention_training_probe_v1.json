@@ -1,0 +1,126 @@
+{
+  "best_result": {
+    "accuracy": 0.47058823529411764,
+    "negative_suppression": 0.17647058823529413,
+    "objective": "provider_family",
+    "row_count": 51,
+    "safe_preservation": 0.6176470588235294,
+    "safe_true_negative": 21,
+    "unsafe_false_negative": 14,
+    "unsafe_false_positive": 13,
+    "unsafe_precision": 0.1875,
+    "unsafe_recall": 0.17647058823529413,
+    "unsafe_true_positive": 3
+  },
+  "causal_status": "non_causal_offline_probe",
+  "decision": {
+    "recommended_next_step": "collect_more_or_better_protected_negative_controls_before_runtime_review",
+    "runtime_test_allowed_next": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "abstention_signal_underpowered_no_runtime"
+  },
+  "gameplay_topology_mutation": false,
+  "results": {
+    "family_maturity": {
+      "accuracy": 0.47058823529411764,
+      "negative_suppression": 0.17647058823529413,
+      "row_count": 51,
+      "safe_preservation": 0.6176470588235294,
+      "safe_true_negative": 21,
+      "unsafe_false_negative": 14,
+      "unsafe_false_positive": 13,
+      "unsafe_precision": 0.1875,
+      "unsafe_recall": 0.17647058823529413,
+      "unsafe_true_positive": 3
+    },
+    "provider_family": {
+      "accuracy": 0.47058823529411764,
+      "negative_suppression": 0.17647058823529413,
+      "row_count": 51,
+      "safe_preservation": 0.6176470588235294,
+      "safe_true_negative": 21,
+      "unsafe_false_negative": 14,
+      "unsafe_false_positive": 13,
+      "unsafe_precision": 0.1875,
+      "unsafe_recall": 0.17647058823529413,
+      "unsafe_true_positive": 3
+    },
+    "provider_maturity": {
+      "accuracy": 0.43137254901960786,
+      "negative_suppression": 0.0,
+      "row_count": 51,
+      "safe_preservation": 0.6470588235294118,
+      "safe_true_negative": 22,
+      "unsafe_false_negative": 17,
+      "unsafe_false_positive": 12,
+      "unsafe_precision": 0.0,
+      "unsafe_recall": 0.0,
+      "unsafe_true_positive": 0
+    },
+    "provider_version": {
+      "accuracy": 0.5098039215686274,
+      "negative_suppression": 0.17647058823529413,
+      "row_count": 51,
+      "safe_preservation": 0.6764705882352942,
+      "safe_true_negative": 23,
+      "unsafe_false_negative": 14,
+      "unsafe_false_positive": 11,
+      "unsafe_precision": 0.21428571428571427,
+      "unsafe_recall": 0.17647058823529413,
+      "unsafe_true_positive": 3
+    },
+    "source_stage": {
+      "accuracy": 0.6078431372549019,
+      "negative_suppression": 0.0,
+      "row_count": 51,
+      "safe_preservation": 0.9117647058823529,
+      "safe_true_negative": 31,
+      "unsafe_false_negative": 17,
+      "unsafe_false_positive": 3,
+      "unsafe_precision": 0.0,
+      "unsafe_recall": 0.0,
+      "unsafe_true_positive": 0
+    },
+    "stage_family": {
+      "accuracy": 0.45098039215686275,
+      "negative_suppression": 0.0,
+      "row_count": 51,
+      "safe_preservation": 0.6764705882352942,
+      "safe_true_negative": 23,
+      "unsafe_false_negative": 17,
+      "unsafe_false_positive": 11,
+      "unsafe_precision": 0.0,
+      "unsafe_recall": 0.0,
+      "unsafe_true_positive": 0
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_abstention_training_probe.v1",
+  "source_artifact": "reports/krk_abstention_training_dataset_v1.json",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "label_counts": {
+      "safe_owner": 34,
+      "unsafe_owner": 17
+    },
+    "provider_family_counts": {
+      "drive_to_edge": 2,
+      "edge_trap": 27,
+      "fence_established": 3,
+      "stage0_basin": 19
+    },
+    "row_count": 51,
+    "stage_counts": {
+      "stage4": 9,
+      "stage5": 24,
+      "stage6": 18
+    },
+    "state_count": 15,
+    "under_minimum_requirements": false
+  }
+}

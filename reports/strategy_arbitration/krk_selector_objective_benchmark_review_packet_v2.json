@@ -1,0 +1,91 @@
+{
+  "acceptance_for_independent_validation": {
+    "excluded_stages": [
+      "stage7",
+      "stage8"
+    ],
+    "max_new_rows_first_slice": 12,
+    "protected_stages": [
+      "stage4",
+      "stage5",
+      "stage6"
+    ],
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "target_metrics": {
+      "abstain_recall_min": 0.6,
+      "preserve_recall_min": 0.8,
+      "switch_precision_min": 0.7,
+      "switch_recall_min": 0.7
+    }
+  },
+  "benchmark_summary": {
+    "best_runtime_abstain_recall": 1.0,
+    "best_runtime_accuracy": 0.9523809523809523,
+    "best_runtime_model": "visible_failure_risk_heuristic_v2",
+    "best_runtime_preserve_recall": 1.0,
+    "best_runtime_switch_precision": 1.0,
+    "best_runtime_switch_recall": 0.8,
+    "context_row_count": 41,
+    "offline_oracle_accuracy": 1.0,
+    "runtime_feature_model_count": 26,
+    "runtime_threshold_passing_model_count": 1,
+    "seed_probe_status": "selector_objective_seed_probe_v2_ready_for_non_causal_benchmark",
+    "seed_row_count": 21,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "target_action_counts": {
+      "abstain": 5,
+      "preserve": 11,
+      "switch": 5
+    }
+  },
+  "best_visible_model": {
+    "abstain_recall": 1.0,
+    "accuracy": 0.9523809523809523,
+    "model_id": "visible_failure_risk_heuristic_v2",
+    "model_kind": "fixed_visible_heuristic_probe",
+    "notes": "Non-causal visible-term probe only. Passing thresholds here justifies independent validation or a review packet, not runtime selector use.",
+    "preserve_recall": 1.0,
+    "runtime_feature_eligible": true,
+    "switch_precision": 1.0,
+    "switch_recall": 0.8
+  },
+  "decision": {
+    "implementation_authorized_by_this_packet": false,
+    "independent_validation_review_ready": true,
+    "recommended_next_step": "run_bounded_independent_protected_selector_objective_validation",
+    "runtime_changes_allowed": false,
+    "runtime_review_ready": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "status": "selector_objective_benchmark_review_ready_for_independent_validation"
+  },
+  "explicitly_forbidden": [
+    "runtime_selector",
+    "selector_training",
+    "score_changes",
+    "provider_suppression",
+    "direct_provider_routing",
+    "capacity_labels_as_ownership_labels",
+    "stage7_training_or_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "review_observations": {
+    "independent_validation_required": true,
+    "passing_runtime_feature_model_count": 1,
+    "runtime_selector_supported": false
+  },
+  "risks": [
+    "best visible heuristic may be overfit to the current 18-row seed",
+    "capacity evidence remains separate from ownership labels",
+    "passing benchmark does not authorize runtime selector behavior",
+    "Stage 7 remains held out and must not enter readiness training rows"
+  ],
+  "schema_version": "krk_selector_objective_benchmark_review_packet.v2",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_objective_benchmark_v2.json"
+  ]
+}

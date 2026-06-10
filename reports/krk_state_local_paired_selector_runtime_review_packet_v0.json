@@ -1,0 +1,67 @@
+{
+  "blocked_next_steps": [
+    "runtime_selector_implementation_without_explicit_approval",
+    "selector_training",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_runtime_review_packet",
+  "decision": {
+    "implementation_allowed_by_this_packet": false,
+    "recommended_next_step": "explicit_architecture_review_for_visible_runtime_proxy_design",
+    "status": "runtime_review_packet_ready_with_translation_blocker"
+  },
+  "gameplay_topology_mutation": false,
+  "guardrails_required_before_any_promotion": [
+    "default_off_equivalence",
+    "protected_stage4_control",
+    "protected_stage5_fence",
+    "protected_stage6_drive",
+    "Stage7_holdout_challenge_no_regression",
+    "M1_M4_preservation_suite"
+  ],
+  "implementation_allowed_by_this_packet": false,
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_sandbox_requirements": [
+    "default_off",
+    "profile_scoped_to_handoff_composition_v1_or_successor_review_profile",
+    "trace_every_suppression_or_prefer_capacity_decision",
+    "never_use_dtm_or_tablebase_at_runtime",
+    "no_gameplay_topology_mutation",
+    "no_direct_provider_request_from_metadata",
+    "rollback_tag_before_implementation"
+  ],
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_state_local_paired_selector_runtime_review_packet.v0",
+  "selector_training_allowed": false,
+  "source_artifacts": [
+    "reports/krk_state_local_paired_ownership_probe_v1.json",
+    "reports/krk_state_local_paired_ownership_review_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "best_objective": "safe_preservation_gated_model",
+    "prefer_capacity_recall": 1.0,
+    "review_status": "semantic_gate_review_ready_runtime_feature_translation_needed",
+    "runtime_feature_passing_model_count": 0,
+    "runtime_feature_translation_blocker": true,
+    "safe_preservation_recall": 1.0,
+    "selected_preservation_recall": 1.0,
+    "stage7_row_count": 0,
+    "strong_conflict_accuracy": 1.0,
+    "threshold_passing_model_count": 2
+  },
+  "translation_requirements_before_implementation": [
+    "replace offline owner_a_positive with visible selected-owner safety/failure-risk proxy",
+    "replace owner_b_positive forced-capacity labels with visible candidate-support evidence",
+    "preserve selected-mate/safe-owner behavior unless visible failure evidence is present",
+    "keep Stage 7 as held-out evaluation only"
+  ]
+}

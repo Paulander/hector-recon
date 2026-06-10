@@ -1,0 +1,555 @@
+{
+  "schema_version": "stage7_king_support_handoff_probe.v1",
+  "causal_status": "non_causal",
+  "candidate_id": "cand.krk.box_shrink.king_support_handoff.v1",
+  "source_failure_fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+  "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_drive_repair_sandbox/topology/krk_entry_topology_refreshed.json",
+  "horizons": [
+    20,
+    40,
+    60
+  ],
+  "current_visible_terms": {
+    "white_king_support_available": false,
+    "white_king_can_improve_support": true,
+    "king_support_improvement_move_exists": true,
+    "edge_trap_shape_available": true,
+    "edge_rook_transfer_recovery_available": true,
+    "rook_safe": true,
+    "fence_exists": true,
+    "fence_stable": false
+  },
+  "king_move_count": 8,
+  "king_support_ready_after_move_count": 0,
+  "converting_king_move_count": 3,
+  "converting_king_moves": [
+    "f2e1",
+    "f2e2",
+    "f2f1"
+  ],
+  "candidate_status": "sandbox_ready",
+  "diagnosis": "king_support_handoff_can_be_sandboxed",
+  "records": [
+    {
+      "move": "f2e1",
+      "legal": true,
+      "candidate_is_king_move": true,
+      "move_audit": {
+        "move": "f2e1",
+        "legal": true,
+        "post_break_followup": true,
+        "source_terms": [
+          "box_area_not_increased_after_move",
+          "candidate_is_king_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "no_draw_after_move",
+          "rook_safe_after_move"
+        ],
+        "current_box_area": 7,
+        "post_box_area": 7,
+        "current_enemy_edge_distance": 0,
+        "post_enemy_edge_distance": 0
+      },
+      "post_fen": "6k1/R7/8/8/8/8/8/4K3 b - - 3 2",
+      "white_king_support_available_after_move": false,
+      "edge_trap_shape_available_after_move": false,
+      "edge_rook_transfer_recovery_available_after_move": false,
+      "rook_safe_after_move_context": true,
+      "visible_terms_after_move": {
+        "white_king_support_available": false,
+        "white_king_can_improve_support": false,
+        "king_support_improvement_move_exists": false,
+        "edge_trap_shape_available": false,
+        "edge_rook_transfer_recovery_available": false,
+        "rook_safe": true,
+        "fence_exists": true,
+        "fence_stable": false
+      },
+      "outcomes_by_horizon": {
+        "20": {
+          "result": "max_plies",
+          "plies": 20,
+          "first_reply": "f8g7",
+          "first_successor_move": "a8d8",
+          "first_successor_skill": "stage0_basin"
+        },
+        "40": {
+          "result": "mate",
+          "plies": 40,
+          "first_reply": "f8g7",
+          "first_successor_move": "a8d8",
+          "first_successor_skill": "stage0_basin"
+        },
+        "60": {
+          "result": "mate",
+          "plies": 40,
+          "first_reply": "f8g7",
+          "first_successor_move": "a8d8",
+          "first_successor_skill": "stage0_basin"
+        }
+      },
+      "converts_to_mate": true,
+      "classification": "converts_to_mate"
+    },
+    {
+      "move": "f2e2",
+      "legal": true,
+      "candidate_is_king_move": true,
+      "move_audit": {
+        "move": "f2e2",
+        "legal": true,
+        "post_break_followup": true,
+        "source_terms": [
+          "box_area_not_increased_after_move",
+          "candidate_is_king_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "no_draw_after_move",
+          "rook_safe_after_move"
+        ],
+        "current_box_area": 7,
+        "post_box_area": 7,
+        "current_enemy_edge_distance": 0,
+        "post_enemy_edge_distance": 0
+      },
+      "post_fen": "6k1/R7/8/8/8/8/4K3/8 b - - 3 2",
+      "white_king_support_available_after_move": false,
+      "edge_trap_shape_available_after_move": false,
+      "edge_rook_transfer_recovery_available_after_move": false,
+      "rook_safe_after_move_context": true,
+      "visible_terms_after_move": {
+        "white_king_support_available": false,
+        "white_king_can_improve_support": false,
+        "king_support_improvement_move_exists": false,
+        "edge_trap_shape_available": false,
+        "edge_rook_transfer_recovery_available": false,
+        "rook_safe": true,
+        "fence_exists": true,
+        "fence_stable": false
+      },
+      "outcomes_by_horizon": {
+        "20": {
+          "result": "mate",
+          "plies": 18,
+          "first_reply": "f8g7",
+          "first_successor_move": "a8e8",
+          "first_successor_skill": "stage0_basin"
+        },
+        "40": {
+          "result": "mate",
+          "plies": 18,
+          "first_reply": "f8g7",
+          "first_successor_move": "a8e8",
+          "first_successor_skill": "stage0_basin"
+        },
+        "60": {
+          "result": "mate",
+          "plies": 18,
+          "first_reply": "f8g7",
+          "first_successor_move": "a8e8",
+          "first_successor_skill": "stage0_basin"
+        }
+      },
+      "converts_to_mate": true,
+      "classification": "converts_to_mate"
+    },
+    {
+      "move": "f2e3",
+      "legal": true,
+      "candidate_is_king_move": true,
+      "move_audit": {
+        "move": "f2e3",
+        "legal": true,
+        "post_break_followup": true,
+        "source_terms": [
+          "box_area_not_increased_after_move",
+          "candidate_is_king_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "no_draw_after_move",
+          "rook_safe_after_move",
+          "white_king_support_improves_after_move"
+        ],
+        "current_box_area": 7,
+        "post_box_area": 7,
+        "current_enemy_edge_distance": 0,
+        "post_enemy_edge_distance": 0
+      },
+      "post_fen": "6k1/R7/8/8/8/4K3/8/8 b - - 3 2",
+      "white_king_support_available_after_move": false,
+      "edge_trap_shape_available_after_move": false,
+      "edge_rook_transfer_recovery_available_after_move": false,
+      "rook_safe_after_move_context": true,
+      "visible_terms_after_move": {
+        "white_king_support_available": false,
+        "white_king_can_improve_support": false,
+        "king_support_improvement_move_exists": false,
+        "edge_trap_shape_available": false,
+        "edge_rook_transfer_recovery_available": false,
+        "rook_safe": true,
+        "fence_exists": true,
+        "fence_stable": false
+      },
+      "outcomes_by_horizon": {
+        "20": {
+          "result": "max_plies",
+          "plies": 20,
+          "first_reply": "f8e8",
+          "first_successor_move": "f4g5",
+          "first_successor_skill": "stage0_basin"
+        },
+        "40": {
+          "result": "max_plies",
+          "plies": 40,
+          "first_reply": "f8e8",
+          "first_successor_move": "f4g5",
+          "first_successor_skill": "stage0_basin"
+        },
+        "60": {
+          "result": "max_plies",
+          "plies": 60,
+          "first_reply": "f8e8",
+          "first_successor_move": "f4g5",
+          "first_successor_skill": "stage0_basin"
+        }
+      },
+      "converts_to_mate": false,
+      "classification": "king_support_move_does_not_convert_under_current_graph"
+    },
+    {
+      "move": "f2f1",
+      "legal": true,
+      "candidate_is_king_move": true,
+      "move_audit": {
+        "move": "f2f1",
+        "legal": true,
+        "post_break_followup": true,
+        "source_terms": [
+          "box_area_not_increased_after_move",
+          "candidate_is_king_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "no_draw_after_move",
+          "rook_safe_after_move"
+        ],
+        "current_box_area": 7,
+        "post_box_area": 7,
+        "current_enemy_edge_distance": 0,
+        "post_enemy_edge_distance": 0
+      },
+      "post_fen": "6k1/R7/8/8/8/8/8/5K2 b - - 3 2",
+      "white_king_support_available_after_move": false,
+      "edge_trap_shape_available_after_move": false,
+      "edge_rook_transfer_recovery_available_after_move": false,
+      "rook_safe_after_move_context": true,
+      "visible_terms_after_move": {
+        "white_king_support_available": false,
+        "white_king_can_improve_support": false,
+        "king_support_improvement_move_exists": false,
+        "edge_trap_shape_available": false,
+        "edge_rook_transfer_recovery_available": false,
+        "rook_safe": true,
+        "fence_exists": true,
+        "fence_stable": false
+      },
+      "outcomes_by_horizon": {
+        "20": {
+          "result": "max_plies",
+          "plies": 20,
+          "first_reply": "f8g7",
+          "first_successor_move": "a8d8",
+          "first_successor_skill": "stage0_basin"
+        },
+        "40": {
+          "result": "mate",
+          "plies": 40,
+          "first_reply": "f8g7",
+          "first_successor_move": "a8d8",
+          "first_successor_skill": "stage0_basin"
+        },
+        "60": {
+          "result": "mate",
+          "plies": 40,
+          "first_reply": "f8g7",
+          "first_successor_move": "a8d8",
+          "first_successor_skill": "stage0_basin"
+        }
+      },
+      "converts_to_mate": true,
+      "classification": "converts_to_mate"
+    },
+    {
+      "move": "f2f3",
+      "legal": true,
+      "candidate_is_king_move": true,
+      "move_audit": {
+        "move": "f2f3",
+        "legal": true,
+        "post_break_followup": true,
+        "source_terms": [
+          "box_area_not_increased_after_move",
+          "candidate_is_king_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "no_draw_after_move",
+          "rook_safe_after_move",
+          "white_king_support_improves_after_move"
+        ],
+        "current_box_area": 7,
+        "post_box_area": 7,
+        "current_enemy_edge_distance": 0,
+        "post_enemy_edge_distance": 0
+      },
+      "post_fen": "6k1/R7/8/8/8/5K2/8/8 b - - 3 2",
+      "white_king_support_available_after_move": false,
+      "edge_trap_shape_available_after_move": false,
+      "edge_rook_transfer_recovery_available_after_move": false,
+      "rook_safe_after_move_context": true,
+      "visible_terms_after_move": {
+        "white_king_support_available": false,
+        "white_king_can_improve_support": false,
+        "king_support_improvement_move_exists": false,
+        "edge_trap_shape_available": false,
+        "edge_rook_transfer_recovery_available": false,
+        "rook_safe": true,
+        "fence_exists": true,
+        "fence_stable": false
+      },
+      "outcomes_by_horizon": {
+        "20": {
+          "result": "max_plies",
+          "plies": 20,
+          "first_reply": "f8e8",
+          "first_successor_move": "g4g5",
+          "first_successor_skill": "stage0_basin"
+        },
+        "40": {
+          "result": "max_plies",
+          "plies": 40,
+          "first_reply": "f8e8",
+          "first_successor_move": "g4g5",
+          "first_successor_skill": "stage0_basin"
+        },
+        "60": {
+          "result": "max_plies",
+          "plies": 60,
+          "first_reply": "f8e8",
+          "first_successor_move": "g4g5",
+          "first_successor_skill": "stage0_basin"
+        }
+      },
+      "converts_to_mate": false,
+      "classification": "king_support_move_does_not_convert_under_current_graph"
+    },
+    {
+      "move": "f2g1",
+      "legal": true,
+      "candidate_is_king_move": true,
+      "move_audit": {
+        "move": "f2g1",
+        "legal": true,
+        "post_break_followup": true,
+        "source_terms": [
+          "box_area_not_increased_after_move",
+          "candidate_is_king_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "no_draw_after_move",
+          "rook_safe_after_move"
+        ],
+        "current_box_area": 7,
+        "post_box_area": 7,
+        "current_enemy_edge_distance": 0,
+        "post_enemy_edge_distance": 0
+      },
+      "post_fen": "6k1/R7/8/8/8/8/8/6K1 b - - 3 2",
+      "white_king_support_available_after_move": false,
+      "edge_trap_shape_available_after_move": false,
+      "edge_rook_transfer_recovery_available_after_move": false,
+      "rook_safe_after_move_context": true,
+      "visible_terms_after_move": {
+        "white_king_support_available": false,
+        "white_king_can_improve_support": false,
+        "king_support_improvement_move_exists": false,
+        "edge_trap_shape_available": false,
+        "edge_rook_transfer_recovery_available": false,
+        "rook_safe": true,
+        "fence_exists": true,
+        "fence_stable": false
+      },
+      "outcomes_by_horizon": {
+        "20": {
+          "result": "max_plies",
+          "plies": 20,
+          "first_reply": "f8e8",
+          "first_successor_move": "h2h3",
+          "first_successor_skill": "stage0_basin"
+        },
+        "40": {
+          "result": "max_plies",
+          "plies": 40,
+          "first_reply": "f8e8",
+          "first_successor_move": "h2h3",
+          "first_successor_skill": "stage0_basin"
+        },
+        "60": {
+          "result": "max_plies",
+          "plies": 60,
+          "first_reply": "f8e8",
+          "first_successor_move": "h2h3",
+          "first_successor_skill": "stage0_basin"
+        }
+      },
+      "converts_to_mate": false,
+      "classification": "king_support_move_does_not_convert_under_current_graph"
+    },
+    {
+      "move": "f2g2",
+      "legal": true,
+      "candidate_is_king_move": true,
+      "move_audit": {
+        "move": "f2g2",
+        "legal": true,
+        "post_break_followup": true,
+        "source_terms": [
+          "box_area_not_increased_after_move",
+          "candidate_is_king_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "no_draw_after_move",
+          "rook_safe_after_move"
+        ],
+        "current_box_area": 7,
+        "post_box_area": 7,
+        "current_enemy_edge_distance": 0,
+        "post_enemy_edge_distance": 0
+      },
+      "post_fen": "6k1/R7/8/8/8/8/6K1/8 b - - 3 2",
+      "white_king_support_available_after_move": false,
+      "edge_trap_shape_available_after_move": false,
+      "edge_rook_transfer_recovery_available_after_move": false,
+      "rook_safe_after_move_context": true,
+      "visible_terms_after_move": {
+        "white_king_support_available": false,
+        "white_king_can_improve_support": false,
+        "king_support_improvement_move_exists": false,
+        "edge_trap_shape_available": false,
+        "edge_rook_transfer_recovery_available": false,
+        "rook_safe": true,
+        "fence_exists": true,
+        "fence_stable": false
+      },
+      "outcomes_by_horizon": {
+        "20": {
+          "result": "max_plies",
+          "plies": 20,
+          "first_reply": "f8e8",
+          "first_successor_move": "h3h4",
+          "first_successor_skill": "stage0_basin"
+        },
+        "40": {
+          "result": "max_plies",
+          "plies": 40,
+          "first_reply": "f8e8",
+          "first_successor_move": "h3h4",
+          "first_successor_skill": "stage0_basin"
+        },
+        "60": {
+          "result": "max_plies",
+          "plies": 60,
+          "first_reply": "f8e8",
+          "first_successor_move": "h3h4",
+          "first_successor_skill": "stage0_basin"
+        }
+      },
+      "converts_to_mate": false,
+      "classification": "king_support_move_does_not_convert_under_current_graph"
+    },
+    {
+      "move": "f2g3",
+      "legal": true,
+      "candidate_is_king_move": true,
+      "move_audit": {
+        "move": "f2g3",
+        "legal": true,
+        "post_break_followup": true,
+        "source_terms": [
+          "box_area_not_increased_after_move",
+          "candidate_is_king_move",
+          "enemy_edge_distance_not_increased_after_move",
+          "no_draw_after_move",
+          "rook_safe_after_move",
+          "white_king_support_improves_after_move"
+        ],
+        "current_box_area": 7,
+        "post_box_area": 7,
+        "current_enemy_edge_distance": 0,
+        "post_enemy_edge_distance": 0
+      },
+      "post_fen": "6k1/R7/8/8/8/6K1/8/8 b - - 3 2",
+      "white_king_support_available_after_move": false,
+      "edge_trap_shape_available_after_move": false,
+      "edge_rook_transfer_recovery_available_after_move": false,
+      "rook_safe_after_move_context": true,
+      "visible_terms_after_move": {
+        "white_king_support_available": false,
+        "white_king_can_improve_support": false,
+        "king_support_improvement_move_exists": false,
+        "edge_trap_shape_available": false,
+        "edge_rook_transfer_recovery_available": false,
+        "rook_safe": true,
+        "fence_exists": true,
+        "fence_stable": false
+      },
+      "outcomes_by_horizon": {
+        "20": {
+          "result": "max_plies",
+          "plies": 20,
+          "first_reply": "f8e8",
+          "first_successor_move": "h4g5",
+          "first_successor_skill": "stage0_basin"
+        },
+        "40": {
+          "result": "max_plies",
+          "plies": 40,
+          "first_reply": "f8e8",
+          "first_successor_move": "h4g5",
+          "first_successor_skill": "stage0_basin"
+        },
+        "60": {
+          "result": "max_plies",
+          "plies": 60,
+          "first_reply": "f8e8",
+          "first_successor_move": "h4g5",
+          "first_successor_skill": "stage0_basin"
+        }
+      },
+      "converts_to_mate": false,
+      "classification": "king_support_move_does_not_convert_under_current_graph"
+    }
+  ],
+  "structural_candidate": {
+    "schema_version": "structural_candidate.v1",
+    "candidate_id": "cand.krk.box_shrink.king_support_handoff.v1",
+    "candidate_type": "handoff_role_refinement",
+    "source_monitor_script": "growth.monitor.successor_miscalibration",
+    "source_terms": [
+      "white_king_can_improve_support",
+      "white_king_support_available=false",
+      "edge_trap_support_blocked",
+      "repeated_conversion_failure"
+    ],
+    "trigger_failure_classes": [
+      "selected_successor_miscalibrated",
+      "repeated_conversion_failure"
+    ],
+    "target_skill": "krk.box_shrink",
+    "parent_skill": "krk.drive_to_edge",
+    "proposed_change": {
+      "kind": "king_support_handoff_audit",
+      "suggested_terms": [
+        "white_king_support_available_after_move",
+        "white_king_support_improves_after_move",
+        "king_support_improvement_preserves_box",
+        "edge_trap_support_ready_after_king_move"
+      ]
+    },
+    "promotion_status": "sandbox_ready",
+    "causal_status": "non_causal",
+    "credit": 0.0
+  }
+}

@@ -13,8 +13,8 @@ import sys
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from recon_lite.learning.baseline import BaselineLearner
-from recon_lite.learning.baseline_viz import (
+from recon_lite_hector.learning.baseline import BaselineLearner
+from recon_lite_hector.learning.baseline_viz import (
     export_baseline_to_topology,
     create_baseline_visualization_index
 )
@@ -60,7 +60,7 @@ def recreate_and_export():
     
     # Create placeholder actuators
     print(f"Creating placeholder actuators...")
-    from recon_lite.learning.baseline import Terminal, TerminalRole, ActuatorSpec
+    from recon_lite_hector.learning.baseline import Terminal, TerminalRole, ActuatorSpec
     import numpy as np
     
     for i in range(learner_info['actuator_count']):

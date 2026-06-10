@@ -1,0 +1,83 @@
+{
+  "schema_version": "scoped_overlay_promotion_manifest.v1",
+  "candidate_id": "cand.krk.box_shrink.post_king_tempo_continuation.v1",
+  "candidate_status": "validated_scoped_overlay",
+  "promotion_status": "promoted_scoped",
+  "causal_status": "compiled_opt_in_visible_topology",
+  "scope": {
+    "domain": "KRK",
+    "active_landmark_label": "box_shrink",
+    "stage7_provider_scope_label": "box_shrink",
+    "global_default": false
+  },
+  "topology": {
+    "sandbox_topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_drive_repair_sandbox/topology/krk_entry_topology_stage7_post_king_tempo_sandbox.json",
+    "added_nodes": [
+      "terminal.krk.stage7_king_tempo",
+      "terminal.krk.stage7_post_king_tempo"
+    ],
+    "temporal_scope": [
+      "stage7_king_tempo fires at most once per playout",
+      "stage7_post_king_tempo fires only after stage7_king_tempo and at most once per playout"
+    ]
+  },
+  "runtime_flags": {
+    "enable_successor_affordance_layer": true,
+    "enable_successor_role_licenses": true,
+    "successor_stage0_drift_penalty": 6.0,
+    "enable_role_scoped_move_shapes": true,
+    "role_scoped_move_shape_bonus": 0.05,
+    "enable_stagnation_breaker": true,
+    "stagnation_breaker_bonus": 0.5,
+    "enable_post_break_continuation": true,
+    "post_break_continuation_bonus": 0.25,
+    "enable_stage7_king_tempo": true,
+    "stage7_king_tempo_score": 25.0,
+    "enable_stage7_post_king_tempo": true,
+    "stage7_post_king_tempo_score": 30.0,
+    "enable_diagnostic_caches": true,
+    "early_stop_stable_suggestions": 2
+  },
+  "validation_artifacts": {
+    "target_25": "reports/structural_candidates/stage7_post_king_tempo_scoped_on_25_h40.json",
+    "target_100": "reports/structural_candidates/stage7_post_king_tempo_scoped_on_100_h40.json",
+    "target_100_analysis": "reports/structural_candidates/stage7_post_king_tempo_scoped_on_100_h40_analysis.md",
+    "stage6_guard": "reports/structural_candidates/stage7_post_king_tempo_guard_stage6_drive_50_h40.json",
+    "stage5_guard": "reports/structural_candidates/stage7_post_king_tempo_guard_stage5_fence_50_h40.json",
+    "stage4_scoped_guard": "reports/structural_candidates/stage7_post_king_tempo_scoped_guard_stage4_wrong_tempo_50_h40.json",
+    "stage4_disabled_control": "reports/structural_candidates/stage7_post_king_tempo_guard_stage4_wrong_tempo_50_h40_disabled.json",
+    "promotion_eval_100": "reports/structural_candidates/stage7_post_king_tempo_scoped_100_promotion_eval.json"
+  },
+  "validation_summary": {
+    "stage7_target_100": {
+      "samples": 100,
+      "mate": 100,
+      "max_plies": 0,
+      "shadow_candidates": 0,
+      "improved": 100,
+      "optimal": 49
+    },
+    "guardrail_deltas_vs_control": {
+      "stage6_drive_to_edge": {
+        "mate_rate_delta": 0.0,
+        "shadow_candidates_delta": 0
+      },
+      "stage5_fence_established": {
+        "mate_rate_delta": 0.0,
+        "shadow_candidates_delta": 0
+      },
+      "stage4_edge_trap_wrong_tempo": {
+        "mate_rate_delta": 0.0,
+        "shadow_candidates_delta": 0
+      }
+    }
+  },
+  "growth_governor_interpretation": {
+    "weight_vs_topology": "topology_present_but_followup_selection_miscalibrated",
+    "repair_type": "scoped_visible_followup_provider",
+    "reason_for_scoping": "Unscoped Stage 7 post-king-tempo provider regressed Stage 4; scoped provider preserves Stage 4 control behavior.",
+    "next_recommended_state": "settling_medium_plasticity",
+    "do_not_enable_globally": true,
+    "do_not_train_stage8_from_unscoped_topology": true
+  }
+}

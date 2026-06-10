@@ -7,9 +7,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 def test_imports():
     """Test all required imports."""
-    from recon_lite.nodes.stem_cell import StemCellManager
+    from recon_lite_hector.nodes.stem_cell import StemCellManager
     from recon_lite_chess.features.krk_features import extract_krk_features, KRKFeatures
-    from recon_lite.learning.m5_structure import discover_krk_box_method_por, compute_branching_metrics
+    from recon_lite_hector.learning.m5_structure import discover_krk_box_method_por, compute_branching_metrics
     print("✅ All imports successful!")
     return True
 
@@ -33,7 +33,7 @@ def test_krk_features():
 
 def test_transfer_api():
     """Test knowledge transfer API exists."""
-    from recon_lite.nodes.stem_cell import StemCellManager
+    from recon_lite_hector.nodes.stem_cell import StemCellManager
     
     has_load = hasattr(StemCellManager, "load_with_transfer")
     has_reuse = hasattr(StemCellManager, "compute_sensor_reuse_ratio")

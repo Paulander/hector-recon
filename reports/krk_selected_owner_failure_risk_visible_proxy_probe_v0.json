@@ -1,0 +1,120 @@
+{
+  "candidate_proxy": {
+    "causal_status": "non_causal_candidate",
+    "definition": "stage0_vs_edge_trap_selected_king_stalls_box OR edge_trap_drive_context_rook_expands_box",
+    "false_negative": 0,
+    "false_positive": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "requires_out_of_sample_validation": true,
+    "requires_visible_competing_provider_proposal": true,
+    "safe_preservation_recall": 1.0,
+    "term_id": "selected_owner_failure_risk_proxy_v0",
+    "term_name": "selected_owner_failure_risk_proxy_v0",
+    "true_negative": 33,
+    "true_positive": 7
+  },
+  "causal_status": "non_causal_visible_proxy_probe",
+  "decision": {
+    "recommended_next_step": "validate_proxy_candidate_on_independent_protected_pairs",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "status": "visible_failure_risk_proxy_candidate_needs_out_of_sample_validation"
+  },
+  "gameplay_topology_mutation": false,
+  "implementation_allowed_by_this_probe": false,
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_selected_owner_failure_risk_visible_proxy_probe.v0",
+  "selector_training_allowed": false,
+  "source_artifacts": [
+    "reports/krk_selected_owner_failure_risk_visible_terms_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "failure_risk_target_count": 7,
+    "review_threshold_met": true,
+    "row_count": 40,
+    "safe_preservation_recall": 1.0,
+    "selected_owner_failure_risk_proxy_precision": 1.0,
+    "selected_owner_failure_risk_proxy_recall": 1.0,
+    "stage7_row_count": 0
+  },
+  "term_metrics": {
+    "edge_trap_drive_context_rook_expands_box": {
+      "false_negative": 6,
+      "false_positive": 0,
+      "precision": 1.0,
+      "recall": 0.14285714285714285,
+      "safe_preservation_recall": 1.0,
+      "term_name": "edge_trap_drive_context_rook_expands_box",
+      "true_negative": 33,
+      "true_positive": 1
+    },
+    "selected_king_no_box_progress": {
+      "false_negative": 1,
+      "false_positive": 3,
+      "precision": 0.6666666666666666,
+      "recall": 0.8571428571428571,
+      "safe_preservation_recall": 0.9090909090909091,
+      "term_name": "selected_king_no_box_progress",
+      "true_negative": 30,
+      "true_positive": 6
+    },
+    "selected_king_worsens_rook_support": {
+      "false_negative": 1,
+      "false_positive": 3,
+      "precision": 0.6666666666666666,
+      "recall": 0.8571428571428571,
+      "safe_preservation_recall": 0.9090909090909091,
+      "term_name": "selected_king_worsens_rook_support",
+      "true_negative": 30,
+      "true_positive": 6
+    },
+    "selected_owner_context_contention_visible": {
+      "false_negative": 1,
+      "false_positive": 20,
+      "precision": 0.23076923076923078,
+      "recall": 0.8571428571428571,
+      "safe_preservation_recall": 0.3939393939393939,
+      "term_name": "selected_owner_context_contention_visible",
+      "true_negative": 13,
+      "true_positive": 6
+    },
+    "selected_owner_failure_risk_proxy_v0": {
+      "false_negative": 0,
+      "false_positive": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "safe_preservation_recall": 1.0,
+      "term_name": "selected_owner_failure_risk_proxy_v0",
+      "true_negative": 33,
+      "true_positive": 7
+    },
+    "selected_owner_trace_stagnation_visible": {
+      "false_negative": 6,
+      "false_positive": 4,
+      "precision": 0.2,
+      "recall": 0.14285714285714285,
+      "safe_preservation_recall": 0.8787878787878788,
+      "term_name": "selected_owner_trace_stagnation_visible",
+      "true_negative": 29,
+      "true_positive": 1
+    },
+    "stage0_vs_edge_trap_selected_king_stalls_box": {
+      "false_negative": 1,
+      "false_positive": 0,
+      "precision": 1.0,
+      "recall": 0.8571428571428571,
+      "safe_preservation_recall": 1.0,
+      "term_name": "stage0_vs_edge_trap_selected_king_stalls_box",
+      "true_negative": 33,
+      "true_positive": 6
+    }
+  }
+}

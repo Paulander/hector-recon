@@ -1,0 +1,207 @@
+{
+  "schema_version": "recon_long_term_architecture_roadmap.v0",
+  "created_date": "2026-05-22",
+  "purpose": "Reset the architecture direction after the quarantined progress-window reconsideration runtime test.",
+  "current_runtime_test_result": {
+    "sandbox_id": "sandbox.krk.progress_window_reconsideration_v0",
+    "status": "runtime_test_scaffold_wired_but_policy_insufficient",
+    "promotion_status": "quarantined_or_analysis_only",
+    "default_off_equivalence_passed": true,
+    "target_improvement_observed": false,
+    "next_action": "candidate_generation_or_broader_strategy_sequence_review"
+  },
+  "validated_stack": [
+    "handoff_composition_v1",
+    "frozen_provider_overlay_pattern",
+    "stage5_protected_base",
+    "stage6_drive_to_edge_overlay_preservation",
+    "stage1_stage5_stage6_protected_components",
+    "stage4_mostly_clean_with_known_h40_overlay_control_caveat",
+    "kpk_to_kqk_bridge_preservation",
+    "m1_m4_preservation",
+    "growth_monitor_structural_candidate_growth_governor_evidence_flow",
+    "default_off_runtime_sandbox_lifecycle_validated_as_process"
+  ],
+  "stage7_conclusion": {
+    "status": "local_valid_composition_quarantined",
+    "box_shrink_role": "local_evidence_handoff_trigger_phase_boundary_signal",
+    "stage7_promotion_allowed": false,
+    "stage8_training_from_stage7_allowed": false,
+    "stage7_residuals_role": "held_out_challenge_cases",
+    "progress_window_sandbox_status": "quarantined_policy_insufficient"
+  },
+  "reusable_mechanisms": [
+    "SkillContractSpec",
+    "HandoffPacket",
+    "ShadowStemCandidate",
+    "StructuralCandidate",
+    "GrowthGovernor",
+    "provider_preservation_overlays",
+    "PlanCapsuleSpec",
+    "CandidateMoveFrame",
+    "InternalTerminalSpec_candidates",
+    "StrategyMonitorRecord",
+    "role_owned_arbitration",
+    "StrategyProposalFrame_evidence",
+    "default_off_sandbox_review_process",
+    "promotion_quarantine_manifests",
+    "guardrail_aware_validation",
+    "held_out_challenge_set_discipline"
+  ],
+  "unresolved_architectural_gaps": [
+    "provider_candidate_generation_proposal_coverage",
+    "strategy_arbitration_among_incomparable_provider_scores",
+    "sequence_policy_learning_for_plan_capsules",
+    "internal_terminal_maturity",
+    "robust_owner_reconsideration",
+    "multi_step_training_objective_model_expression",
+    "curriculum_boundary_detection",
+    "label_semantics_separation",
+    "avoid_over_diagnosis_loops"
+  ],
+  "recommended_next_milestone": {
+    "name": "KRK Strategy/Sequence Control Plane v1",
+    "stage7_specific": false,
+    "uses_stage7_as_heldout_challenge": true,
+    "components": [
+      "candidate_generation_over_validated_providers",
+      "strategy_proposal_frames",
+      "plan_capsule_proposal_frames",
+      "internal_monitor_records",
+      "sequence_policy_benchmark",
+      "candidate_generation_coverage_benchmark",
+      "protected_strategy_arbitration_benchmark",
+      "reviewed_default_off_sandboxes_only_after_review_ready_evidence"
+    ],
+    "first_question": "What conversion-relevant candidates should have been visible when reconsideration fired?"
+  },
+  "milestone_ladder": [
+    {
+      "id": 1,
+      "name": "Stabilize KRK protected stack"
+    },
+    {
+      "id": 2,
+      "name": "Build KRK Strategy/Sequence Control Plane v1"
+    },
+    {
+      "id": 3,
+      "name": "Validate full KRK conversion from random won KRK positions"
+    },
+    {
+      "id": 4,
+      "name": "Re-run KPK->KQK bridge with the same machinery"
+    },
+    {
+      "id": 5,
+      "name": "Add KQK direct conversion and KPK conversion"
+    },
+    {
+      "id": 6,
+      "name": "Add tactics interrupt layer"
+    },
+    {
+      "id": 7,
+      "name": "Build full-game chess prototype"
+    },
+    {
+      "id": 8,
+      "name": "Extract generic ReCoN library"
+    },
+    {
+      "id": 9,
+      "name": "Apply to non-chess simple world or Pacman-like domain"
+    }
+  ],
+  "runtime_sandbox_policy": {
+    "runtime_blocked_by_default": true,
+    "reviewed_sandboxes_allowed": true,
+    "conditions": [
+      "review_packet_exists",
+      "explicit_approval_given",
+      "default_off",
+      "reversible",
+      "scoped",
+      "traceable_visible_source_terms",
+      "no_runtime_dtm_or_tablebase",
+      "no_gameplay_topology_mutation",
+      "no_hidden_python_controller",
+      "default_off_equivalence_first",
+      "targeted_smoke_before_guardrails",
+      "protected_guardrails_before_promotion",
+      "quarantine_fast_if_no_improvement"
+    ],
+    "status_ladder": [
+      "runtime_blocked",
+      "runtime_review_ready",
+      "sandbox_approved_default_off",
+      "sandbox_wired_no_improvement",
+      "sandbox_quarantined",
+      "sandbox_guardrail_candidate",
+      "promoted"
+    ]
+  },
+  "non_causal_evidence_only": [
+    "HandoffPacket",
+    "SkillContractStats",
+    "ShadowStemCandidate",
+    "StructuralCandidate",
+    "GrowthGovernor_records",
+    "provider_promotion_events_until_applied",
+    "PlanCapsuleSpec",
+    "InternalTerminalSpec",
+    "StrategyMonitorRecord",
+    "StrategyProposalFrame",
+    "CandidateMoveFrame_until_explicitly_sandboxed_or_promoted"
+  ],
+  "plasticity_and_growth": {
+    "m1_m4": "bounded plasticity and consolidation; no gameplay topology mutation",
+    "m5": "offline structural growth via evidence, StructuralCandidate, GrowthGovernor, default-off sandbox, guardrails, promotion_or_quarantine"
+  },
+  "internal_terminals_and_plan_capsules": {
+    "internal_terminals": [
+      "local_provider_competition_failed",
+      "post_plan_stagnation",
+      "repair_needed_monitor",
+      "owner_exit_pressure",
+      "growth_pressure",
+      "phase_boundary_ambiguity"
+    ],
+    "plan_capsules": [
+      "visible_entry_terms",
+      "visible_progress_terms",
+      "visible_exit_terms",
+      "visible_abort_terms",
+      "bounded_ttl",
+      "explicit_handoff"
+    ],
+    "causal_use_requires": "reviewed_default_off_sandbox_guardrails_and_promotion"
+  },
+  "diagnostic_discipline": {
+    "rules": [
+      "diagnostics_must_force_decisions",
+      "no_broad_diagnostic_branch_without_decision_gate",
+      "no_more_stage7_local_micro_patches",
+      "if_evidence_review_ready_then_approve_or_reject_narrow_sandbox",
+      "if_target_smoke_fails_then_quarantine",
+      "do_not_run_guardrails_for_failed_target_smoke",
+      "do_not_tune_support_amounts_blindly",
+      "do_not_turn_failure_correlated_terms_into_affordances_without_maturity_validation",
+      "do_not_collapse_capacity_labels_into_ownership_labels"
+    ]
+  },
+  "avoid_next": [
+    "tune_progress_window_reconsideration_sandbox",
+    "run_guardrails_for_failed_sandbox",
+    "add_stage7_runtime_patch",
+    "promote_stage7",
+    "train_stage8_from_unresolved_stage7",
+    "add_broad_provider_bonus_or_penalty",
+    "add_stage0_suppression",
+    "use_runtime_dtm_or_tablebase",
+    "add_hidden_python_routing",
+    "mutate_topology_during_gameplay",
+    "train_selector_directly_from_forced_capacity_labels",
+    "start_open_ended_diagnostic_branch_without_decision_gate"
+  ]
+}

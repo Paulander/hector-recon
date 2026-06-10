@@ -13,7 +13,7 @@ Tests:
 import pytest
 import numpy as np
 import chess
-from recon_lite.learning.baseline import (
+from recon_lite_hector.learning.baseline import (
     Terminal, TerminalRole, SensorSpec, ActuatorSpec, GoalMemory,
     apply_sensor, compute_sensor_xp, should_promote_sensor,
     extract_actuator_patterns, spawn_sensor, BaselineLearner,
@@ -327,7 +327,7 @@ def test_baseline_learner_add_goal_memory():
 def test_krk_teacher_feature_dim():
     """Test KRK teacher feature dimension"""
     teacher = KRKTeacher()
-    assert teacher.feature_dim == 13
+    assert teacher.feature_dim == 15
 
 
 def test_krk_teacher_features():
@@ -337,7 +337,7 @@ def test_krk_teacher_features():
     
     features = teacher.features(board)
     
-    assert len(features) == 13
+    assert len(features) == 15
     assert all(0.0 <= f <= 1.0 for f in features)
 
 

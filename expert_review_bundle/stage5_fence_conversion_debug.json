@@ -1,0 +1,20 @@
+{
+  "total": 100,
+  "no_move": 0,
+  "improved": 100,
+  "flat": 0,
+  "worsened": 0,
+  "optimal": 100,
+  "avg_reward": 0.10249999999999992,
+  "avg_oracle_reward": 0.10249999999999992,
+  "playouts": {
+    "draw": 70,
+    "mate": 30
+  },
+  "label": "fence_established",
+  "source_stage_names": [
+    "Fence_Established",
+    "Anchored_Cut",
+    "Edge_Cut_Hold"
+  ]
+}

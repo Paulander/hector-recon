@@ -1,0 +1,561 @@
+{
+  "schema_version": "krk_dtm_oracle_probe.v1",
+  "causal_status": "non_causal_diagnostic",
+  "state_count": 399112,
+  "winning_state_count": 376868,
+  "records": [
+    {
+      "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "state_indexed": true,
+      "state_dtm": 27,
+      "best_winning_moves": [
+        {
+          "move": "a6a5",
+          "child_dtm": 26,
+          "forces_mate": true,
+          "dtm_after_move": 26,
+          "plies_to_mate_if_chosen": 27,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6d6",
+          "child_dtm": 26,
+          "forces_mate": true,
+          "dtm_after_move": 26,
+          "plies_to_mate_if_chosen": 27,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d1d2",
+          "child_dtm": 26,
+          "forces_mate": true,
+          "dtm_after_move": 26,
+          "plies_to_mate_if_chosen": 27,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6a1",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6a2",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6a3",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6a4",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": true,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6a7",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6a8",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6h6",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        }
+      ],
+      "winning_move_count": 19,
+      "legal_move_count": 19,
+      "legal_moves": [
+        {
+          "move": "a6a1",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6a2",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6a3",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6a4",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": true,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6a5",
+          "child_dtm": 26,
+          "forces_mate": true,
+          "dtm_after_move": 26,
+          "plies_to_mate_if_chosen": 27,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6a7",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6a8",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6b6",
+          "child_dtm": 30,
+          "forces_mate": true,
+          "dtm_after_move": 30,
+          "plies_to_mate_if_chosen": 31,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6c6",
+          "child_dtm": 30,
+          "forces_mate": true,
+          "dtm_after_move": 30,
+          "plies_to_mate_if_chosen": 31,
+          "is_check": true,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6d6",
+          "child_dtm": 26,
+          "forces_mate": true,
+          "dtm_after_move": 26,
+          "plies_to_mate_if_chosen": 27,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6e6",
+          "child_dtm": 30,
+          "forces_mate": true,
+          "dtm_after_move": 30,
+          "plies_to_mate_if_chosen": 31,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6f6",
+          "child_dtm": 30,
+          "forces_mate": true,
+          "dtm_after_move": 30,
+          "plies_to_mate_if_chosen": 31,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6g6",
+          "child_dtm": 30,
+          "forces_mate": true,
+          "dtm_after_move": 30,
+          "plies_to_mate_if_chosen": 31,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a6h6",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d1c1",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d1c2",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d1d2",
+          "child_dtm": 26,
+          "forces_mate": true,
+          "dtm_after_move": 26,
+          "plies_to_mate_if_chosen": 27,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d1e1",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d1e2",
+          "child_dtm": 28,
+          "forces_mate": true,
+          "dtm_after_move": 28,
+          "plies_to_mate_if_chosen": 29,
+          "is_check": false,
+          "is_checkmate": false
+        }
+      ]
+    },
+    {
+      "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "state_indexed": true,
+      "state_dtm": 21,
+      "best_winning_moves": [
+        {
+          "move": "d2c3",
+          "child_dtm": 20,
+          "forces_mate": true,
+          "dtm_after_move": 20,
+          "plies_to_mate_if_chosen": 21,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5b5",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5c5",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5g5",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5h5",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d2c2",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d2d1",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d2e1",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d2e2",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5a1",
+          "child_dtm": 26,
+          "forces_mate": true,
+          "dtm_after_move": 26,
+          "plies_to_mate_if_chosen": 27,
+          "is_check": false,
+          "is_checkmate": false
+        }
+      ],
+      "winning_move_count": 17,
+      "legal_move_count": 20,
+      "legal_moves": [
+        {
+          "move": "a5a1",
+          "child_dtm": 26,
+          "forces_mate": true,
+          "dtm_after_move": 26,
+          "plies_to_mate_if_chosen": 27,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5a2",
+          "child_dtm": 26,
+          "forces_mate": true,
+          "dtm_after_move": 26,
+          "plies_to_mate_if_chosen": 27,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5a3",
+          "child_dtm": 26,
+          "forces_mate": true,
+          "dtm_after_move": 26,
+          "plies_to_mate_if_chosen": 27,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5a4",
+          "child_dtm": 26,
+          "forces_mate": true,
+          "dtm_after_move": 26,
+          "plies_to_mate_if_chosen": 27,
+          "is_check": true,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5a6",
+          "child_dtm": 26,
+          "forces_mate": true,
+          "dtm_after_move": 26,
+          "plies_to_mate_if_chosen": 27,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5a7",
+          "child_dtm": 26,
+          "forces_mate": true,
+          "dtm_after_move": 26,
+          "plies_to_mate_if_chosen": 27,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5a8",
+          "child_dtm": 26,
+          "forces_mate": true,
+          "dtm_after_move": 26,
+          "plies_to_mate_if_chosen": 27,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5b5",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5c5",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5d5",
+          "child_dtm": -1,
+          "forces_mate": false,
+          "dtm_after_move": -1,
+          "plies_to_mate_if_chosen": null,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5e5",
+          "child_dtm": -1,
+          "forces_mate": false,
+          "dtm_after_move": -1,
+          "plies_to_mate_if_chosen": null,
+          "is_check": true,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5f5",
+          "child_dtm": -1,
+          "forces_mate": false,
+          "dtm_after_move": -1,
+          "plies_to_mate_if_chosen": null,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5g5",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "a5h5",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d2c1",
+          "child_dtm": 26,
+          "forces_mate": true,
+          "dtm_after_move": 26,
+          "plies_to_mate_if_chosen": 27,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d2c2",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d2c3",
+          "child_dtm": 20,
+          "forces_mate": true,
+          "dtm_after_move": 20,
+          "plies_to_mate_if_chosen": 21,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d2d1",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d2e1",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        },
+        {
+          "move": "d2e2",
+          "child_dtm": 24,
+          "forces_mate": true,
+          "dtm_after_move": 24,
+          "plies_to_mate_if_chosen": 25,
+          "is_check": false,
+          "is_checkmate": false
+        }
+      ]
+    }
+  ]
+}

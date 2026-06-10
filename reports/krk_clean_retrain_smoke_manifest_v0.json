@@ -1,0 +1,98 @@
+{
+  "blockers": [],
+  "causal_status": "bounded_smoke_manifest_only_not_run",
+  "commands": {
+    "compile_topology": [
+      "UV_CACHE_DIR=/tmp/uv-cache",
+      "uv",
+      "run",
+      "python",
+      "scripts/baseline_to_recon.py",
+      "--learner",
+      "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_smoke/stage2a_edge_trap_close_smoke/baseline/final_learner.pkl",
+      "--output",
+      "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_smoke/stage2a_edge_trap_close_smoke/topology/krk_entry_topology.json"
+    ],
+    "parse_topology": [
+      "UV_CACHE_DIR=/tmp/uv-cache",
+      "uv",
+      "run",
+      "python",
+      "-c",
+      "import json, pathlib; p=pathlib.Path('snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_smoke/stage2a_edge_trap_close_smoke/topology/krk_entry_topology.json'); d=json.loads(p.read_text()); assert 'nodes' in d and 'edges' in d"
+    ],
+    "train_smoke": [
+      "UV_CACHE_DIR=/tmp/uv-cache",
+      "uv",
+      "run",
+      "python",
+      "scripts/train_baseline_krk_chain.py",
+      "--stage0-cycles",
+      "1",
+      "--stage1-cycles",
+      "1",
+      "--samples-per-cycle",
+      "8",
+      "--output-dir",
+      "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_smoke/stage2a_edge_trap_close_smoke/baseline",
+      "--save-learner",
+      "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_smoke/stage2a_edge_trap_close_smoke/baseline/final_learner.pkl",
+      "--device",
+      "cpu",
+      "--seed",
+      "7",
+      "--snapshot-every",
+      "0",
+      "--min-mature-for-goals",
+      "6",
+      "--feature-set",
+      "krk_rich_v1",
+      "--max-curriculum-stage",
+      "1",
+      "--stage1-position-mode",
+      "mate_in_2",
+      "--stage0-balance-corners"
+    ]
+  },
+  "decision": {
+    "full_run_authorized_by_this_manifest": false,
+    "recommended_next_step": "request_explicit_smoke_run_approval",
+    "runtime_selector_allowed": false,
+    "safe_to_request_smoke_run_approval": true,
+    "smoke_run_authorized_by_this_manifest": false,
+    "status": "clean_retrain_smoke_manifest_ready_not_run"
+  },
+  "expected_outputs": [
+    "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_smoke/stage2a_edge_trap_close_smoke/baseline/final_learner.pkl",
+    "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_smoke/stage2a_edge_trap_close_smoke/topology/krk_entry_topology.json"
+  ],
+  "gameplay_topology_mutation": false,
+  "output_collisions": [],
+  "output_root": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_smoke",
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_clean_retrain_smoke_manifest.v0",
+  "selector_training_allowed": false,
+  "smoke_scope": {
+    "max_curriculum_stage": 1,
+    "purpose": "command_plumbing_only",
+    "samples_per_cycle": 8,
+    "stage0_cycles": 1,
+    "stage1_cycles": 1,
+    "stage7_rows": 0,
+    "stage8_training": false,
+    "stage_scope": [
+      "stage0_mate_in_1",
+      "stage1_backchain"
+    ]
+  },
+  "source_artifacts": [
+    "reports/krk_clean_retrain_preflight_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

@@ -1,0 +1,256 @@
+{
+  "blocked_next_work": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_label_plan",
+  "decision": {
+    "execute_labels_now": false,
+    "recommended_next_step": "review_label_plan_before_execution_or_replay_free_extraction",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "bounded_selector_stratified_label_plan_ready"
+  },
+  "existing_proposal_label_counts": {
+    "by_stage_label_source": {
+      "stage4": {
+        "unknown": 6
+      },
+      "stage5": {
+        "unknown": 16
+      },
+      "stage6": {
+        "unknown": 20
+      },
+      "stage7": {
+        "forced_provider_result": 24,
+        "unknown": 3
+      }
+    },
+    "by_stage_result": {
+      "stage4": {
+        "mate": 3,
+        "max_plies": 3
+      },
+      "stage5": {
+        "mate": 6,
+        "max_plies": 10
+      },
+      "stage6": {
+        "mate": 5,
+        "max_plies": 15
+      },
+      "stage7": {
+        "mate": 2,
+        "max_plies": 25
+      }
+    },
+    "unlabeled_by_stage": {
+      "stage7": 18
+    }
+  },
+  "existing_target_counts": {
+    "by_kind_label": {
+      "forced_provider_conversion": {
+        "negative": 3,
+        "positive": 9
+      },
+      "held_out_challenge": {
+        "none": 9
+      },
+      "selected_playout_success": {
+        "negative": 28,
+        "positive": 14
+      }
+    },
+    "by_kind_stage": {
+      "forced_provider_conversion": {
+        "stage5": 6,
+        "stage6": 6
+      },
+      "held_out_challenge": {
+        "stage7": 9
+      },
+      "selected_playout_success": {
+        "stage4": 6,
+        "stage5": 16,
+        "stage6": 20
+      }
+    }
+  },
+  "horizon": 40,
+  "jobs": [
+    {
+      "causal_status": "non_causal_label_job_plan",
+      "diagnostic_caches": true,
+      "fen": "8/1RK5/8/k7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.1e4f48a672e8",
+      "horizon": 40,
+      "job_id": "selector_label.stage4.state.1e4f48a672e8.selected_guardrail",
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.1e4f48a672e8",
+      "target_kind": "guardrail_safe_selected_playout",
+      "trace_mode": "failures_only"
+    },
+    {
+      "causal_status": "non_causal_label_job_plan",
+      "diagnostic_caches": true,
+      "fen": "8/8/8/8/8/3K4/3R4/6k1 w - - 2 2",
+      "frame_id": "cp.krk.state.f17117682948",
+      "horizon": 40,
+      "job_id": "selector_label.stage4.state.f17117682948.selected_guardrail",
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.f17117682948",
+      "target_kind": "guardrail_safe_selected_playout",
+      "trace_mode": "failures_only"
+    },
+    {
+      "causal_status": "non_causal_label_job_plan",
+      "diagnostic_caches": true,
+      "fen": "7k/8/5K2/4R3/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.02cfd843a2cf",
+      "horizon": 40,
+      "job_id": "selector_label.stage4.state.02cfd843a2cf.selected_guardrail",
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.02cfd843a2cf",
+      "target_kind": "guardrail_safe_selected_playout",
+      "trace_mode": "failures_only"
+    },
+    {
+      "causal_status": "non_causal_label_job_plan",
+      "diagnostic_caches": true,
+      "fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.256a3da30f0f",
+      "horizon": 40,
+      "job_id": "selector_label.stage4.state.256a3da30f0f.selected_guardrail",
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.256a3da30f0f",
+      "target_kind": "guardrail_safe_selected_playout",
+      "trace_mode": "failures_only"
+    },
+    {
+      "causal_status": "non_causal_label_job_plan",
+      "diagnostic_caches": true,
+      "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+      "frame_id": "cp.krk.state.7bd8961882ad",
+      "horizon": 40,
+      "job_id": "selector_label.stage5.state.7bd8961882ad.selected_guardrail",
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.7bd8961882ad",
+      "target_kind": "guardrail_safe_selected_playout",
+      "trace_mode": "failures_only"
+    },
+    {
+      "causal_status": "non_causal_label_job_plan",
+      "diagnostic_caches": true,
+      "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.87b1160e68b9",
+      "horizon": 40,
+      "job_id": "selector_label.stage5.state.87b1160e68b9.selected_guardrail",
+      "provider_id": "krk.edge_trap_close",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.87b1160e68b9",
+      "target_kind": "guardrail_safe_selected_playout",
+      "trace_mode": "failures_only"
+    },
+    {
+      "causal_status": "non_causal_label_job_plan",
+      "diagnostic_caches": true,
+      "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.87b1160e68b9",
+      "horizon": 40,
+      "job_id": "selector_label.stage5.state.87b1160e68b9.same_move_or_alt_provider",
+      "provider_id": "krk.edge_trap_enemy_between",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.87b1160e68b9",
+      "target_kind": "same_move_provider_compatibility_or_forced_alternative",
+      "trace_mode": "failures_only"
+    },
+    {
+      "causal_status": "non_causal_label_job_plan",
+      "diagnostic_caches": true,
+      "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "frame_id": "cp.krk.state.2c1d6da27ea1",
+      "horizon": 40,
+      "job_id": "selector_label.stage5.state.2c1d6da27ea1.selected_guardrail",
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.2c1d6da27ea1",
+      "target_kind": "guardrail_safe_selected_playout",
+      "trace_mode": "failures_only"
+    },
+    {
+      "causal_status": "non_causal_label_job_plan",
+      "diagnostic_caches": true,
+      "fen": "5k2/8/4K3/8/8/8/8/R7 w - - 2 2",
+      "frame_id": "cp.krk.state.d1f052d2cab2",
+      "horizon": 40,
+      "job_id": "selector_label.stage6.state.d1f052d2cab2.selected_guardrail",
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.d1f052d2cab2",
+      "target_kind": "guardrail_safe_selected_playout",
+      "trace_mode": "failures_only"
+    },
+    {
+      "causal_status": "non_causal_label_job_plan",
+      "diagnostic_caches": true,
+      "fen": "R7/7k/5K2/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.52085d244e9d",
+      "horizon": 40,
+      "job_id": "selector_label.stage6.state.52085d244e9d.selected_guardrail",
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.52085d244e9d",
+      "target_kind": "guardrail_safe_selected_playout",
+      "trace_mode": "failures_only"
+    },
+    {
+      "causal_status": "non_causal_label_job_plan",
+      "diagnostic_caches": true,
+      "fen": "2k5/8/1K6/8/8/8/8/R7 w - - 2 2",
+      "frame_id": "cp.krk.state.69711173114a",
+      "horizon": 40,
+      "job_id": "selector_label.stage6.state.69711173114a.selected_guardrail",
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.69711173114a",
+      "target_kind": "guardrail_safe_selected_playout",
+      "trace_mode": "failures_only"
+    }
+  ],
+  "max_new_states": 12,
+  "objective_review_status": "selector_objective_needs_stratified_label_expansion_before_sandbox",
+  "planned_job_count": 11,
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "schema_version": "krk_selector_stratified_label_plan.v1",
+  "source_artifacts": [
+    "reports/krk_selector_target_dataset_v0.json",
+    "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+    "reports/krk_selector_objective_architecture_review_v1.json"
+  ],
+  "stage7_training_rows": 0
+}

@@ -1,0 +1,43 @@
+{
+  "causal_status": "non_causal_output_validation",
+  "decision": {
+    "label_run_allowed": false,
+    "recommended_next_step": "rerun_passive_sequence_policy_gate_stack",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "stage7_additional_clean_sampling_outputs_not_applicable_success_gate_closed"
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "output_checks": [],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "stage7_additional_clean_sampling_output_validation.v0",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_additional_clean_sampling_manifest_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "all_outputs_present": false,
+    "all_outputs_valid": false,
+    "all_present_outputs_valid": true,
+    "issue_counts": {},
+    "job_count": 0,
+    "output_exists_count": 0,
+    "output_valid_count": 0,
+    "parse_error_count": 0,
+    "parsed_playout_count": 0,
+    "result_counts": {},
+    "runtime_authorization_row_count": 0,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0
+  }
+}

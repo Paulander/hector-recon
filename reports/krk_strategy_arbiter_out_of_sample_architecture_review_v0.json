@@ -1,0 +1,86 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_architecture_review",
+  "decision": {
+    "recommended_next_step": "design_selector_readiness_v2_or_strategy_owner_contrast_dataset",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "stage7_promotion_allowed": false,
+    "stage7_repair_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "selector_sandbox_blocked_out_of_sample_controls_not_selector_diverse"
+  },
+  "evidence_summary": {
+    "balanced_review_status": "selector_signal_promising_sandbox_blocked_pending_readiness_criteria",
+    "out_of_sample_forced_selected_result_counts": {
+      "mate": 11,
+      "max_plies": 1
+    },
+    "out_of_sample_label_count": 12,
+    "out_of_sample_probe_status": "out_of_sample_controls_guardrail_positive_selector_sandbox_blocked",
+    "out_of_sample_selected_provider_counts": {
+      "krk.stage0_basin": 12
+    },
+    "out_of_sample_selected_result_counts": {
+      "mate": 11,
+      "max_plies": 1
+    },
+    "out_of_sample_stage_result_counts": {
+      "stage4:mate": 3,
+      "stage4:max_plies": 1,
+      "stage5:mate": 4,
+      "stage6:mate": 4
+    },
+    "readiness_status": "readiness_criteria_defined_sandbox_still_blocked",
+    "sandbox_blockers": [
+      "class_imbalance",
+      "selected_provider_dominance"
+    ]
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "big_picture": "The evidence supports protected-provider preservation and current KRK handoff conversion on most controls, but does not yet establish a general strategy arbiter because selected-provider labels are dominated by stage0_basin.",
+    "protected_stack_status": "mostly_converts_on_bounded_out_of_sample_controls",
+    "selector_signal_status": "not_ready_due_to_class_imbalance_and_provider_dominance",
+    "stage4_caveat": "one_stage4_wrong_tempo_control_max_plies_h40",
+    "stage7_status": "local_valid_composition_quarantined_unchanged"
+  },
+  "recommended_options": [
+    {
+      "causal_status": "non_causal_only",
+      "option": "strategy_owner_contrast_dataset",
+      "purpose": "Collect or derive labels where multiple providers are plausible and at least one non-stage0 owner has conversion evidence."
+    },
+    {
+      "causal_status": "design_only",
+      "option": "selector_readiness_v2",
+      "purpose": "Revise readiness criteria to require provider diversity, balanced labels, and explicit selected-vs-forced label semantics."
+    },
+    {
+      "causal_status": "no_runtime_change",
+      "option": "pause_runtime_arbiter",
+      "purpose": "Keep strategy arbitration as an evidence pipeline until labels distinguish strategy ownership rather than mostly confirming stage0 finishing."
+    }
+  ],
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_strategy_arbiter_out_of_sample_architecture_review.v0",
+  "source_artifacts": [
+    "reports/krk_strategy_arbiter_out_of_sample_control_probe_v0.json",
+    "reports/krk_strategy_arbiter_sandbox_readiness_criteria_v0.json",
+    "reports/krk_selector_balanced_architecture_review_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

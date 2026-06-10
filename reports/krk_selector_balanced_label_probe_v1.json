@@ -1,0 +1,79 @@
+{
+  "baselines": [
+    {
+      "accuracy": 0.7777777777777778,
+      "correct": 14,
+      "fallback_count": 0,
+      "name": "provider_id_loo",
+      "total": 18
+    },
+    {
+      "accuracy": 0.7777777777777778,
+      "correct": 14,
+      "fallback_count": 0,
+      "name": "provider_family_loo",
+      "total": 18
+    },
+    {
+      "accuracy": 0.7777777777777778,
+      "correct": 14,
+      "fallback_count": 0,
+      "name": "provider_maturity_loo",
+      "total": 18
+    },
+    {
+      "accuracy": 0.16666666666666666,
+      "correct": 3,
+      "fallback_count": 0,
+      "name": "active_landmark_loo",
+      "total": 18
+    },
+    {
+      "accuracy": 0.16666666666666666,
+      "correct": 3,
+      "fallback_count": 0,
+      "name": "source_stage_loo",
+      "total": 18
+    },
+    {
+      "accuracy": 0.6111111111111112,
+      "correct": 11,
+      "fallback_count": 0,
+      "name": "provider_family_landmark_loo",
+      "total": 18
+    },
+    {
+      "accuracy": 0.6111111111111112,
+      "correct": 11,
+      "fallback_count": 0,
+      "name": "provider_maturity_landmark_loo",
+      "total": 18
+    }
+  ],
+  "best_baseline": {
+    "accuracy": 0.7777777777777778,
+    "name": "provider_id_loo"
+  },
+  "causal_status": "non_causal_probe",
+  "decision": {
+    "recommended_next_step": "architecture_review_before_any_selector_sandbox",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "balanced_labels_support_non_causal_selector_signal"
+  },
+  "interpretation": [
+    "Balanced replay-free labels are suitable for a small non-causal signal check.",
+    "A high score here is not sandbox evidence because the dataset is small and constructed from existing controls.",
+    "Runtime arbiter work remains blocked pending architecture review and guardrail criteria."
+  ],
+  "label_counts": {
+    "negative": 9,
+    "positive": 9
+  },
+  "row_count": 18,
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "schema_version": "krk_selector_balanced_label_probe.v1",
+  "source_artifact": "reports/krk_selector_balanced_label_dataset_v1.json"
+}

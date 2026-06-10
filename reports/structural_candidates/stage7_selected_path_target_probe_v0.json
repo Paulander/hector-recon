@@ -1,0 +1,106 @@
+{
+  "causal_status": "non_causal_offline_probe",
+  "decision": {
+    "blocked_runtime_work": [
+      "runtime arbiter",
+      "abstention selector tuning",
+      "plan capsule runtime repair",
+      "Stage 7 promotion",
+      "Stage 8 training"
+    ],
+    "recommended_next_step": "architecture_review_or_collect_clean_sequence_controls_before_runtime",
+    "status": "split_targets_separable_but_source_biased_no_runtime",
+    "why": "The split target framing is useful, but existing evidence is too small and source-biased to justify runtime behavior."
+  },
+  "gameplay_topology_mutation": false,
+  "ownership_target_probe": {
+    "control_role": "protected_safe_owner_control",
+    "feature_results": [
+      {
+        "feature": "local_provider_competition_failed",
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tn": 12,
+        "tp": 2
+      },
+      {
+        "feature": "selected_owner_failed_h40",
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tn": 12,
+        "tp": 2
+      },
+      {
+        "feature": "alternative_provider_known_conversion_h40",
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tn": 12,
+        "tp": 2
+      }
+    ],
+    "interpretation": "Ownership positives separate from protected safe controls, but there are only two Stage 7 positives.",
+    "positive_role": "stage7_selected_owner_failed_positive"
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "stage7_selected_path_target_probe.v0",
+  "sequence_target_probe": {
+    "feature_results": [
+      {
+        "feature": "post_plan_stagnation",
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tn": 16,
+        "tp": 2
+      },
+      {
+        "feature": "forced_providers_h40_no_mate",
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tn": 16,
+        "tp": 2
+      },
+      {
+        "feature": "legal_first_h40_no_mate",
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tn": 16,
+        "tp": 2
+      }
+    ],
+    "gap_role": "stage7_sequence_gap_unresolved",
+    "interpretation": "Sequence gap rows separate from recovered success controls, but recovered controls are prior-sandbox-sourced and may encode artifact/source bias.",
+    "success_control_role": "stage7_sequence_success_control_recovered"
+  },
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_selected_path_target_dataset_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "ownership_row_count": 14,
+    "ownership_state_count": 10,
+    "row_count": 32,
+    "sequence_row_count": 18,
+    "sequence_source_counts": {
+      "gap_or_unqualified": 2,
+      "sandbox_sourced_replay_free_success_control": 16
+    },
+    "sequence_state_count": 18,
+    "source_bias_detected": true
+  }
+}

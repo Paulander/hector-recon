@@ -1,0 +1,65 @@
+{
+  "baseline": {
+    "conversion_status_counts": {
+      "passed": 1
+    },
+    "improved": 1,
+    "krk_strategy_arbiter_sandbox_selected_supported_count": 0,
+    "krk_strategy_arbiter_sandbox_supported_count": 0,
+    "no_move": 0,
+    "one_ply_status_counts": {
+      "passed": 1
+    },
+    "optimal": 1,
+    "playouts": {
+      "mate": 1
+    },
+    "shadow_candidate_count": 0,
+    "total": 1,
+    "worsened": 0
+  },
+  "causal_status": "runtime_test_stage7_holdout_lock",
+  "decision": {
+    "recommended_next_step": "run_small_protected_control_matrix_or_explicit_stage7_challenge_review",
+    "status": "stage7_holdout_lock_passed"
+  },
+  "enabled_stage7_blocked": {
+    "conversion_status_counts": {
+      "passed": 1
+    },
+    "improved": 1,
+    "krk_strategy_arbiter_sandbox_selected_supported_count": 0,
+    "krk_strategy_arbiter_sandbox_supported_count": 0,
+    "no_move": 0,
+    "one_ply_status_counts": {
+      "passed": 1
+    },
+    "optimal": 1,
+    "playouts": {
+      "mate": 1
+    },
+    "shadow_candidate_count": 0,
+    "total": 1,
+    "worsened": 0
+  },
+  "equivalence": {
+    "enabled_blocked_matches_baseline": true,
+    "support_blocked": true
+  },
+  "gameplay_topology_mutation": false,
+  "profile": "handoff_composition_v1",
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "sample": {
+    "allow_stage7_challenge": false,
+    "label": "box_shrink",
+    "playout_max_plies": 20,
+    "samples": 1,
+    "seed": 7,
+    "support_amount": 0.05
+  },
+  "schema_version": "krk_strategy_arbiter_stage7_holdout_lock.v1",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json"
+}

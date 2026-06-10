@@ -1,0 +1,62 @@
+{
+  "schema_version": "stage7_0af_trace_role_support_summary.v1",
+  "causal_status": "sandbox_opt_in",
+  "stage7_status": "local_valid_composition_quarantined",
+  "inputs": {
+    "proposal": "reports/structural_candidates/stage7_family_0af_king_opposition_support_proposal.json",
+    "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_family_ff_drive_ac_fence_0af_king_support_trace_role_w005.json",
+    "family_balanced_off": "reports/structural_candidates/stage7_family_0af_trace_role_support_off_4_h40.json",
+    "family_balanced_on": "reports/structural_candidates/stage7_family_0af_trace_role_support_on_4_h40.json",
+    "smoke50_overfire_off": "reports/structural_candidates/stage7_smoke50_unique_maxplies_0af_trace_role_off_4_h40.json",
+    "smoke50_overfire_on": "reports/structural_candidates/stage7_smoke50_unique_maxplies_0af_trace_role_on_4_h40.json"
+  },
+  "important_correction": {
+    "issue": "The first 0af role proposal directly licensed krk.edge_trap_close and changed downstream ac0b7 continuation even when the adapter was not the selected first move.",
+    "fix": "Make krk.post_box_king_opposition_repair a trace role whose provider_skill_ids point to itself. The edge-trap provider receives support only through the move-shape-gated adapter.",
+    "recon_boundary": "Visible role confirmation is allowed as trace/internal state, but provider ownership must be caused by the explicit move-shape-gated adapter in this sandbox."
+  },
+  "family_balanced_h40": {
+    "off": {
+      "mate": 0,
+      "max_plies": 4
+    },
+    "on": {
+      "mate": 3,
+      "max_plies": 1
+    },
+    "results": {
+      "state.ff6652c8832c": "krk.drive_to_edge:e4h4:mate:7",
+      "state.ac0b7ed500ea": "krk.fence_established:d2e3:mate:13",
+      "state.0afbf11aa123": "krk.edge_trap_close:e4d4:mate:5",
+      "state.38aed2f35911": "krk.stage0_basin:d1e2:max_plies"
+    }
+  },
+  "smoke50_unique_maxplies_overfire_h40": {
+    "off": {
+      "mate": 0,
+      "max_plies": 4
+    },
+    "on": {
+      "mate": 0,
+      "max_plies": 4
+    },
+    "changed_families": 0,
+    "adapter_overfire_count": 0
+  },
+  "candidate_update": {
+    "candidate_id": "cand.krk.box_shrink.family_0afbf11aa123.king_opposition_edge_trap_support.v1",
+    "status": "family_balanced_sandbox_validated_for_0af",
+    "diagnosis": [
+      "legal_first_action_selection_gap",
+      "converting_move_exists_in_existing_edge_trap_provider",
+      "trace_role_plus_move_shape_adapter_selects_e4d4",
+      "no overfire observed on smoke50 unique max-plies families"
+    ],
+    "remaining_blocker": "state.38aed2f35911 remains no_legal_first_conversion_under_current_graph at h40/h50",
+    "next_action": [
+      "run a Stage 7 target smoke with the trace-role topology at h40 or h50",
+      "only if target improves, run Stage 6/5/1 guardrails",
+      "continue deeper state38 capacity/horizon probe separately"
+    ]
+  }
+}

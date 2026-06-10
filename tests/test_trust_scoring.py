@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from recon_lite.trust.scoring import (
+from recon_lite_hector.trust.scoring import (
     TrustConfig,
     TrustAction,
     NodeTrustScore,

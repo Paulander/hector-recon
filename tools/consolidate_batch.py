@@ -20,12 +20,12 @@ from typing import List, Optional
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.recon_lite.trace_db import EpisodeRecord, EpisodeSummary, TraceDB
-from src.recon_lite.plasticity.consolidate import (
+from recon_lite.trace_db import EpisodeRecord, EpisodeSummary, TraceDB
+from recon_lite_hector.plasticity.consolidate import (
     ConsolidationConfig,
     ConsolidationEngine,
 )
-from src.recon_lite.plasticity.bandit import (
+from recon_lite_hector.plasticity.bandit import (
     BanditPriors,
     merge_priors,
     save_priors,
@@ -49,7 +49,7 @@ def load_traces(paths: List[Path]) -> List[EpisodeRecord]:
 
 def aggregate_bandit_priors(episodes: List[EpisodeRecord]) -> BanditPriors:
     """Aggregate bandit statistics from episode summaries."""
-    from src.recon_lite.trace_db import BanditArmSummary
+    from recon_lite.trace_db import BanditArmSummary
 
     priors = BanditPriors()
 

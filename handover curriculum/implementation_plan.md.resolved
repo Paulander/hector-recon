@@ -1,0 +1,205 @@
+# Implementation Plan: 100% KRK Curriculum Win Rate (Purity-Preserving)
+
+## Goal
+
+Achieve **100% win rate on the full KRK curriculum** using a **discovery-driven, generic approach**:
+
+- **Triplets**: Precondition → Actuator → Postcondition micro-scripts
+- **Chaining**: Backward induction where Stage N learns to reach Stage N-1 states
+- **Automatic discovery/pruning**: Minimal stem cells, self-organizing system
+- **Purity principle**: Only seed goal signal; let discovery derive mid-level preferences
+
+---
+
+## Current State ✅
+
+| Metric | Value |
+|--------|-------|
+| Win rate (Mate-in-1) | **100%** ✅ |
+| Topology | 82 nodes, 125 edges |
+| Curriculum stages | 10 (Mate_In_1 → Full_KRK) |
+| Scaffolding | +10 checkmate bonus ⚠️ TEMPORARY |
+
+> [!WARNING]
+> The +10 checkmate bonus is **temporary scaffolding** that should be retired once discovery machinery can reliably derive "checkmate dominates" from correct wiring and goal-dimension retention.
+
+---
+
+## Purity Principle
+
+**Allowed (goal seeding)**:
+- `is_checkmate` in feature vector
+- [can_deliver_mate](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/src/recon_lite_chess/baseline_teacher.py#88-96) as derived property
+- Goal bank as terminal-space prototypes
+
+**Not allowed (mid-level shaping)**:
+- Hardcoded `if checkmate: +10` (retire once discovery works)
+- Domain-specific scoring preferences
+- Handcoded tactical patterns
+
+---
+
+## Phase 1A: Diagnose & Fix 9% Failure ✅ DONE
+
+- [x] Root cause: Actuators didn't target `is_checkmate` (feature 13)
+- [x] Fix: Added +10 checkmate bonus (temporary scaffolding)
+- [x] Result: 100/100 mates (100%), 7 ticks/pos
+
+---
+
+## Phase 1B: Fix Actuator→Sensor Wiring (CRITICAL)
+
+### Problem
+
+Actuator targets use `sensor_id`, but compiler may interpret as array index, causing silent miswiring.
+
+### Fix
+
+```python
+# WRONG: positional fallback causes miswiring
+if 0 <= idx < len(sensors):
+    sensor = sensors[idx]  # ← remove this
+elif idx in sensor_map:
+    sensor = sensor_map[idx]
+
+# RIGHT: only map via sensor_id
+sensor = sensor_map.get(idx)
+if sensor is None:
+    # Invalid reference - skip or error, don't fallback
+    continue
+```
+
+**File**: [baseline_to_recon.py](file:///\\wsl.localhost\Ubuntu\home\paulander\git\recon-lite\scripts\baseline_to_recon.py)
+
+### Outcome
+
+Discovery operates on correct terminals, not random mismatches.
+
+---
+
+## Phase 1C: Goal Dimension Retention
+
+### Problem
+
+Actuator extraction keeps top-K deltas by magnitude. If `is_checkmate` is rare or masked, it can be dropped.
+
+### Fix Options (Generic, not chess-specific)
+
+**Option A: Goal-dimension retention rule**
+```python
+# If goal bit flips during extraction, force it into delta set
+if delta_vec[GOAL_DIM] != 0:
+    force_include_dimension(GOAL_DIM)
+```
+
+**Option B: Curriculum sampling schedule**
+```python
+# Oversample transitions where goal bit flips
+if features_after[GOAL_DIM] != features_before[GOAL_DIM]:
+    sample_weight *= 3.0  # Balance rare events
+```
+
+### Outcome
+
+Discovery can find "checkmate dominates" without +10 bonus.
+
+---
+
+## Phase 1D: A/B Purity Test (Scaffold Retirement)
+
+### Test Protocol
+
+| Run | Configuration |
+|-----|---------------|
+| A | Current pipeline with +10 bonus |
+| B | After wiring+extraction fixes, bonus removed |
+
+### Retirement Criteria
+
+Remove +10 bonus when ALL conditions met:
+- [ ] B achieves ≥99% on mate-in-1 within 50 cycles
+- [ ] Actuator patterns include goal dimension (sensor_13)
+- [ ] Wiring audit passes (no positional fallbacks)
+- [ ] Win rate stable across 5 seeds
+
+---
+
+## Phase 2: Backward Chaining in Terminal Space
+
+### Core Concept
+
+```
+Stage 0: Goal = is_checkmate (environment provides)
+Stage 1: Goal = "reach Stage 0 terminal states" (learned)
+Stage N: Goal = "reach Stage N-1 states" (recursive)
+```
+
+This is the **purity-preserving recursive goal discovery**:
+- Last stage's learned terminal pattern becomes next stage's goal
+- No designer-specified mid-level goals
+- "We recognize this position as favorable based on learned terminals"
+
+### Implementation
+
+```python
+@dataclass
+class GoalMemory:
+    stage_id: int
+    terminal_vectors: List[np.ndarray]
+    centroid: np.ndarray
+    
+    def distance(self, v: np.ndarray) -> float:
+        return np.linalg.norm(v - self.centroid)
+```
+
+---
+
+## Phase 3: Automatic Stem Cell Discovery/Pruning
+
+Same as before - spawn on failure/affordance spike, prune low-XP, prefer minimal topology.
+
+---
+
+## Phase 4: Full Curriculum Integration
+
+### Run Mode
+
+```bash
+# After scaffolding retirement (Phase 1D passed)
+uv run python scripts/run_krk_curriculum.py \
+  --mode recon \
+  --topology topologies/krk_entry_topology.json \
+  --enable-chaining \
+  --no-checkmate-bonus  # Purity mode
+```
+
+---
+
+## Phase 5: Extension Design (KQK, KPK)
+
+Same infrastructure works for any endgame with:
+- Terminal "goal achieved" predicate
+- Learned sensors as masks/projections
+- Actuators matching deltas in terminal space
+
+---
+
+## Success Criteria
+
+- [x] **Phase 1A**: 100% win rate on Mate_In_1 ✅
+- [ ] **Phase 1B**: Wiring fix - no positional fallbacks
+- [ ] **Phase 1C**: Goal dimension always retained
+- [ ] **Phase 1D**: +10 bonus retired, ≥99% maintained
+- [ ] **Phase 2**: Curriculum passes with recursive goals
+- [ ] **Phase 3**: Topology stays minimal (<100 nodes)
+- [ ] **Phase 4**: Works with existing scripts
+- [ ] **Phase 5**: Design validated for KQK/KPK
+
+---
+
+## Immediate Next Steps
+
+1. **Phase 1B**: Fix positional fallback in [baseline_to_recon.py](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/scripts/baseline_to_recon.py)
+2. **Phase 1C**: Add goal dimension retention in extraction
+3. **Phase 1D**: Run A/B test, verify bonus can be removed
+4. **Phase 2**: Implement [GoalMemory](file://wsl.localhost/Ubuntu/home/paulander/git/recon-lite/src/recon_lite/learning/baseline.py#157-174) and recursive chaining

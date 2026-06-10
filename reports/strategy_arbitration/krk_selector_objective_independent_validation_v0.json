@@ -1,0 +1,274 @@
+{
+  "causal_status": "non_causal_independent_validation",
+  "decision": {
+    "recommended_next_step": "collect_more_independent_switch_rows_or_keep_selector_blocked",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "status": "selector_objective_independent_validation_underpowered"
+  },
+  "gameplay_topology_mutation": false,
+  "rows": [
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "label_semantics": "selected_owner_outcome_validation_not_capacity_label",
+      "predicted_action": "preserve",
+      "schema_version": "krk_selector_objective_independent_validation_row.v0",
+      "selected_move": "e7a7",
+      "selected_playout_result": "mate",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.6ed5d7581360",
+      "target_action": "preserve",
+      "visible_context_terms": [
+        "edge_bucket:edge",
+        "box_area_relevance:low",
+        "support_bucket:close",
+        "rook_safe_proxy:True",
+        "selected_piece:rook",
+        "king_distance_delta:same",
+        "rook_distance_delta:worsens",
+        "box_area_delta:worsens",
+        "rook_safe_after_proxy:True"
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "label_semantics": "selected_owner_outcome_validation_not_capacity_label",
+      "predicted_action": "preserve",
+      "schema_version": "krk_selector_objective_independent_validation_row.v0",
+      "selected_move": "b3b1",
+      "selected_playout_result": "mate",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.e99b2e731810",
+      "target_action": "preserve",
+      "visible_context_terms": [
+        "edge_bucket:edge",
+        "box_area_relevance:low",
+        "support_bucket:close",
+        "rook_safe_proxy:True",
+        "selected_piece:rook",
+        "king_distance_delta:same",
+        "rook_distance_delta:worsens",
+        "box_area_delta:worsens",
+        "rook_safe_after_proxy:True"
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "label_semantics": "selected_owner_outcome_validation_not_capacity_label",
+      "predicted_action": "preserve",
+      "schema_version": "krk_selector_objective_independent_validation_row.v0",
+      "selected_move": "d2d8",
+      "selected_playout_result": "mate",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.2f5f57c82e5b",
+      "target_action": "preserve",
+      "visible_context_terms": [
+        "edge_bucket:edge",
+        "box_area_relevance:low",
+        "support_bucket:close",
+        "rook_safe_proxy:True",
+        "selected_piece:rook",
+        "king_distance_delta:same",
+        "rook_distance_delta:worsens",
+        "box_area_delta:worsens",
+        "rook_safe_after_proxy:True"
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "label_semantics": "selected_owner_outcome_validation_not_capacity_label",
+      "predicted_action": "preserve",
+      "schema_version": "krk_selector_objective_independent_validation_row.v0",
+      "selected_move": "g7g4",
+      "selected_playout_result": "mate",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.cc83524289f3",
+      "target_action": "preserve",
+      "visible_context_terms": [
+        "edge_bucket:edge",
+        "box_area_relevance:low",
+        "support_bucket:close",
+        "rook_safe_proxy:True",
+        "selected_piece:rook",
+        "king_distance_delta:same",
+        "rook_distance_delta:worsens",
+        "box_area_delta:worsens",
+        "rook_safe_after_proxy:True"
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "label_semantics": "selected_owner_outcome_validation_not_capacity_label",
+      "predicted_action": "preserve",
+      "schema_version": "krk_selector_objective_independent_validation_row.v0",
+      "selected_move": "f6f7",
+      "selected_playout_result": "mate",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.aa04e7a0d891",
+      "target_action": "preserve",
+      "visible_context_terms": [
+        "edge_bucket:edge",
+        "box_area_relevance:low",
+        "support_bucket:close",
+        "rook_safe_proxy:True",
+        "selected_piece:king",
+        "king_distance_delta:same",
+        "rook_distance_delta:worsens",
+        "box_area_delta:same",
+        "rook_safe_after_proxy:True"
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "label_semantics": "selected_owner_outcome_validation_not_capacity_label",
+      "predicted_action": "preserve",
+      "schema_version": "krk_selector_objective_independent_validation_row.v0",
+      "selected_move": "d2e3",
+      "selected_playout_result": "mate",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.c732b2d6dc56",
+      "target_action": "preserve",
+      "visible_context_terms": [
+        "edge_bucket:edge",
+        "box_area_relevance:low",
+        "support_bucket:close",
+        "rook_safe_proxy:True",
+        "selected_piece:king",
+        "king_distance_delta:same",
+        "rook_distance_delta:worsens",
+        "box_area_delta:same",
+        "rook_safe_after_proxy:True"
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "label_semantics": "selected_owner_outcome_validation_not_capacity_label",
+      "predicted_action": "preserve",
+      "schema_version": "krk_selector_objective_independent_validation_row.v0",
+      "selected_move": "e7e3",
+      "selected_playout_result": "mate",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.545c508c6a40",
+      "target_action": "preserve",
+      "visible_context_terms": [
+        "edge_bucket:edge",
+        "box_area_relevance:low",
+        "support_bucket:close",
+        "rook_safe_proxy:True",
+        "selected_piece:rook",
+        "king_distance_delta:same",
+        "rook_distance_delta:worsens",
+        "box_area_delta:worsens",
+        "rook_safe_after_proxy:True"
+      ]
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "label_semantics": "selected_owner_outcome_validation_not_capacity_label",
+      "predicted_action": "preserve",
+      "schema_version": "krk_selector_objective_independent_validation_row.v0",
+      "selected_move": "a1a6",
+      "selected_playout_result": "mate",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage6",
+      "state_id": "state.df10abc0731f",
+      "target_action": "preserve",
+      "visible_context_terms": [
+        "edge_bucket:edge",
+        "box_area_relevance:low",
+        "support_bucket:close",
+        "rook_safe_proxy:True",
+        "selected_piece:rook",
+        "king_distance_delta:same",
+        "rook_distance_delta:improves",
+        "box_area_delta:improves",
+        "rook_safe_after_proxy:True"
+      ]
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "label_semantics": "selected_owner_outcome_validation_not_capacity_label",
+      "predicted_action": "preserve",
+      "schema_version": "krk_selector_objective_independent_validation_row.v0",
+      "selected_move": "a1f1",
+      "selected_playout_result": "mate",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage6",
+      "state_id": "state.e65bbd1e9f0c",
+      "target_action": "preserve",
+      "visible_context_terms": [
+        "edge_bucket:edge",
+        "box_area_relevance:low",
+        "support_bucket:close",
+        "rook_safe_proxy:True",
+        "selected_piece:rook",
+        "king_distance_delta:same",
+        "rook_distance_delta:same",
+        "box_area_delta:improves",
+        "rook_safe_after_proxy:True"
+      ]
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "label_semantics": "selected_owner_outcome_validation_not_capacity_label",
+      "predicted_action": "preserve",
+      "schema_version": "krk_selector_objective_independent_validation_row.v0",
+      "selected_move": "f6f7",
+      "selected_playout_result": "mate",
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage6",
+      "state_id": "state.cb9f8eea01fd",
+      "target_action": "preserve",
+      "visible_context_terms": [
+        "edge_bucket:edge",
+        "box_area_relevance:low",
+        "support_bucket:close",
+        "rook_safe_proxy:True",
+        "selected_piece:king",
+        "king_distance_delta:same",
+        "rook_distance_delta:worsens",
+        "box_area_delta:same",
+        "rook_safe_after_proxy:True"
+      ]
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_selector_objective_independent_validation.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_objective_independent_validation_labels_v0.json",
+    "reports/strategy_arbitration/krk_selector_objective_benchmark_review_packet_v2.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "accuracy": 1.0,
+    "correct_count": 10,
+    "prediction_counts": {
+      "preserve": 10
+    },
+    "preserve_recall": 1.0,
+    "row_count": 10,
+    "runtime_review_ready": false,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "switch_precision": null,
+    "switch_recall": 0.0,
+    "target_counts": {
+      "preserve": 10
+    },
+    "underpowered": true
+  }
+}

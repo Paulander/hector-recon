@@ -1,0 +1,64 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "selector_sandbox",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_manifest_review",
+  "decision": {
+    "bounded_label_run_allowed_after_review": true,
+    "execute_labels_now": false,
+    "recommended_next_step": "run_bounded_out_of_sample_control_labels",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "execution_manifest_review_passed_bounded_label_run_allowed"
+  },
+  "gameplay_topology_mutation": false,
+  "labels_generated_in_this_slice": false,
+  "risk_notes": [
+    "This review validates manifest structure only; it does not prove h40 execution cost.",
+    "The future label run should stop if runtime projects to hours.",
+    "Generated curriculum samples are protected controls, not selector training from Stage7."
+  ],
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_strategy_arbiter_out_of_sample_execution_manifest_review.v0",
+  "source_artifacts": [
+    "reports/krk_strategy_arbiter_out_of_sample_execution_manifest_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "invalid_job_count": 0,
+    "invalid_jobs": [],
+    "job_count": 12,
+    "job_count_by_source_kind": {
+      "deterministic_curriculum_sample": 10,
+      "replay_free_existing_control": 2
+    },
+    "job_count_by_stage": {
+      "stage4": 4,
+      "stage5": 4,
+      "stage6": 4
+    },
+    "missing_path_count": 0,
+    "missing_paths": [],
+    "missing_stage_coverage": [],
+    "missing_target_semantics": [],
+    "stage7_training_rows": 0,
+    "target_semantic_counts": {
+      "forced_provider_conversion_for_selected_provider": 12,
+      "guardrail_safe_ownership": 12,
+      "same_move_provider_compatibility_when_available": 12,
+      "selected_playout_success": 12,
+      "shadow_candidate_delta": 12
+    }
+  }
+}

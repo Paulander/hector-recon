@@ -1,0 +1,32 @@
+{
+  "created_at": "2026-05-25T11:32:27+02:00",
+  "invariants": {
+    "gameplay_topology_mutation": false,
+    "protected_stack_replacement_performed": false,
+    "runtime_behavior_changed": false,
+    "runtime_defaults_changed": false,
+    "runtime_direct_routing": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_score_changes": false,
+    "runtime_selector_implemented": false,
+    "stage7_promotion": false,
+    "stage8_training": false
+  },
+  "rationale": [
+    "The caveat reproduces exactly in paired base control, so it is not retry1 overlay regression.",
+    "Stage 4 candidate-generation cells are mixed and need companion context.",
+    "The selector-objective evidence gap is concentrated in Stage 4 selected-owner failures."
+  ],
+  "recommended_next_action": "explicit_approval_for_stage4_observation_only_trace_collection_or_keep_as_known_guardrail",
+  "rejected_decisions": [
+    "stage4_runtime_sandbox_review_ready",
+    "stage4_horizon_label_issue_as_primary"
+  ],
+  "runtime_or_training_authorized": false,
+  "schema_version": "krk_stage4_caveat_decision_gate.v0",
+  "selected_decisions": [
+    "stage4_candidate_generation_gap",
+    "stage4_known_residual_keep_as_guardrail"
+  ],
+  "status": "stage4_candidate_generation_gap_with_known_residual_guardrail"
+}

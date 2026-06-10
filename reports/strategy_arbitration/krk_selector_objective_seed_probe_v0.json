@@ -1,0 +1,89 @@
+{
+  "causal_status": "non_causal_seed_probe",
+  "decision": {
+    "recommended_next_step": "collect_more_joined_trace_ownership_evidence_non_causal",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "status": "selector_objective_seed_probe_underpowered_semantics_confirmed"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "reason": "The seed rows encode the intended switch-vs-preserve contrast, but the probe uses offline selected-owner outcome labels and is too small for runtime feature training or selector authorization.",
+    "runtime_selector_supported": false,
+    "selector_training_supported": false,
+    "semantics_confirmed": true
+  },
+  "predictions": [
+    {
+      "correct": true,
+      "objective_channel": "safe_preservation_contrast_seed",
+      "predicted_action": "preserve_selected_owner",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.fence_established",
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6",
+      "target_action": "preserve_selected_owner"
+    },
+    {
+      "correct": true,
+      "objective_channel": "safe_preservation_contrast_seed",
+      "predicted_action": "preserve_selected_owner",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.edge_trap_close",
+      "source_stage": "stage5",
+      "state_id": "state.326222aefdf1",
+      "target_action": "preserve_selected_owner"
+    },
+    {
+      "correct": true,
+      "objective_channel": "candidate_switch_contrast_seed",
+      "predicted_action": "prefer_visible_alternative",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca",
+      "target_action": "prefer_visible_alternative"
+    },
+    {
+      "correct": true,
+      "objective_channel": "candidate_switch_contrast_seed",
+      "predicted_action": "prefer_visible_alternative",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.edge_trap_close",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "target_action": "prefer_visible_alternative"
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_selector_objective_seed_probe.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "apparent_semantic_rule_accuracy": 1.0,
+    "benchmark_underpowered": true,
+    "correct_count": 4,
+    "has_switch_and_preserve_seeds": true,
+    "runtime_feature_eligible_prediction_count": 0,
+    "seed_row_count": 4,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "target_action_counts": {
+      "prefer_visible_alternative": 2,
+      "preserve_selected_owner": 2
+    }
+  }
+}

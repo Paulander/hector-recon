@@ -1,0 +1,383 @@
+{
+  "best_by_negative_suppression": {
+    "accuracy": 0.7058823529411765,
+    "error_counts": {
+      "false_negative_unsafe_owner_allowed": 3,
+      "false_positive_safe_owner_rejected": 12,
+      "true_negative_safe_owner_allowed": 22,
+      "true_positive_unsafe_owner_rejected": 14
+    },
+    "negative_suppression": 0.8235294117647058,
+    "objective_id": "king_support_provider_family__preserve_support_provider_family__u0.45_p0.6",
+    "preserve_features": [
+      "terminal_space_context.white_king_support_bucket",
+      "provider_family"
+    ],
+    "preserve_threshold": 0.6,
+    "row_count": 51,
+    "safe_preservation": 0.6470588235294118,
+    "safe_true_negative": 22,
+    "unsafe_false_negative": 3,
+    "unsafe_false_positive": 12,
+    "unsafe_features": [
+      "terminal_space_context.white_king_support_bucket",
+      "provider_family"
+    ],
+    "unsafe_precision": 0.5384615384615384,
+    "unsafe_recall": 0.8235294117647058,
+    "unsafe_threshold": 0.45,
+    "unsafe_true_positive": 14
+  },
+  "best_threshold_passing_result": {
+    "accuracy": 0.803921568627451,
+    "error_counts": {
+      "false_negative_unsafe_owner_allowed": 5,
+      "false_positive_safe_owner_rejected": 5,
+      "true_negative_safe_owner_allowed": 29,
+      "true_positive_unsafe_owner_rejected": 12
+    },
+    "negative_suppression": 0.7058823529411765,
+    "objective_id": "king_support_provider_family__preserve_monitor_provider_family__u0.45_p0.5",
+    "preserve_features": [
+      "monitor_context.monitor_signature",
+      "provider_family"
+    ],
+    "preserve_threshold": 0.5,
+    "row_count": 51,
+    "safe_preservation": 0.8529411764705882,
+    "safe_true_negative": 29,
+    "unsafe_false_negative": 5,
+    "unsafe_false_positive": 5,
+    "unsafe_features": [
+      "terminal_space_context.white_king_support_bucket",
+      "provider_family"
+    ],
+    "unsafe_precision": 0.7058823529411765,
+    "unsafe_recall": 0.7058823529411765,
+    "unsafe_threshold": 0.45,
+    "unsafe_true_positive": 12
+  },
+  "causal_status": "non_causal_offline_probe",
+  "decision": {
+    "recommended_next_step": "architecture_review_before_default_off_runtime_selector",
+    "runtime_test_allowed_next": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "two_stage_abstention_signal_present_runtime_review_required"
+  },
+  "gameplay_topology_mutation": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_two_stage_abstention_objective_probe.v0",
+  "source_artifacts": [
+    "reports/krk_abstention_context_feature_dataset_v0.json",
+    "reports/krk_abstention_safe_preservation_label_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "label_counts": {
+      "safe_owner": 34,
+      "unsafe_owner": 17
+    },
+    "objective_count": 192,
+    "row_count": 51,
+    "runtime_review_thresholds": {
+      "minimum_negative_suppression": 0.7,
+      "minimum_safe_preservation": 0.75
+    },
+    "stage_counts": {
+      "stage4": 9,
+      "stage5": 24,
+      "stage6": 18
+    },
+    "state_count": 15,
+    "threshold_passing_objective_count": 12
+  },
+  "top_results": [
+    {
+      "accuracy": 0.6078431372549019,
+      "error_counts": {
+        "false_negative_unsafe_owner_allowed": 17,
+        "false_positive_safe_owner_rejected": 3,
+        "true_negative_safe_owner_allowed": 31
+      },
+      "negative_suppression": 0.0,
+      "objective_id": "monitor_signature_provider_family__preserve_provider_family__u0.55_p0.5",
+      "preserve_features": [
+        "provider_family"
+      ],
+      "preserve_threshold": 0.5,
+      "row_count": 51,
+      "safe_preservation": 0.9117647058823529,
+      "safe_true_negative": 31,
+      "unsafe_false_negative": 17,
+      "unsafe_false_positive": 3,
+      "unsafe_features": [
+        "monitor_context.monitor_signature",
+        "provider_family"
+      ],
+      "unsafe_precision": 0.0,
+      "unsafe_recall": 0.0,
+      "unsafe_threshold": 0.55,
+      "unsafe_true_positive": 0
+    },
+    {
+      "accuracy": 0.6078431372549019,
+      "error_counts": {
+        "false_negative_unsafe_owner_allowed": 17,
+        "false_positive_safe_owner_rejected": 3,
+        "true_negative_safe_owner_allowed": 31
+      },
+      "negative_suppression": 0.0,
+      "objective_id": "monitor_signature_provider_family__preserve_provider_family__u0.6_p0.5",
+      "preserve_features": [
+        "provider_family"
+      ],
+      "preserve_threshold": 0.5,
+      "row_count": 51,
+      "safe_preservation": 0.9117647058823529,
+      "safe_true_negative": 31,
+      "unsafe_false_negative": 17,
+      "unsafe_false_positive": 3,
+      "unsafe_features": [
+        "monitor_context.monitor_signature",
+        "provider_family"
+      ],
+      "unsafe_precision": 0.0,
+      "unsafe_recall": 0.0,
+      "unsafe_threshold": 0.6,
+      "unsafe_true_positive": 0
+    },
+    {
+      "accuracy": 0.6078431372549019,
+      "error_counts": {
+        "false_negative_unsafe_owner_allowed": 17,
+        "false_positive_safe_owner_rejected": 3,
+        "true_negative_safe_owner_allowed": 31
+      },
+      "negative_suppression": 0.0,
+      "objective_id": "repair_monitor_provider_family__preserve_provider_family__u0.55_p0.5",
+      "preserve_features": [
+        "provider_family"
+      ],
+      "preserve_threshold": 0.5,
+      "row_count": 51,
+      "safe_preservation": 0.9117647058823529,
+      "safe_true_negative": 31,
+      "unsafe_false_negative": 17,
+      "unsafe_false_positive": 3,
+      "unsafe_features": [
+        "monitor_context.has_repair_needed_monitor",
+        "provider_family"
+      ],
+      "unsafe_precision": 0.0,
+      "unsafe_recall": 0.0,
+      "unsafe_threshold": 0.55,
+      "unsafe_true_positive": 0
+    },
+    {
+      "accuracy": 0.6078431372549019,
+      "error_counts": {
+        "false_negative_unsafe_owner_allowed": 17,
+        "false_positive_safe_owner_rejected": 3,
+        "true_negative_safe_owner_allowed": 31
+      },
+      "negative_suppression": 0.0,
+      "objective_id": "repair_monitor_provider_family__preserve_provider_family__u0.6_p0.5",
+      "preserve_features": [
+        "provider_family"
+      ],
+      "preserve_threshold": 0.5,
+      "row_count": 51,
+      "safe_preservation": 0.9117647058823529,
+      "safe_true_negative": 31,
+      "unsafe_false_negative": 17,
+      "unsafe_false_positive": 3,
+      "unsafe_features": [
+        "monitor_context.has_repair_needed_monitor",
+        "provider_family"
+      ],
+      "unsafe_precision": 0.0,
+      "unsafe_recall": 0.0,
+      "unsafe_threshold": 0.6,
+      "unsafe_true_positive": 0
+    },
+    {
+      "accuracy": 0.803921568627451,
+      "error_counts": {
+        "false_negative_unsafe_owner_allowed": 5,
+        "false_positive_safe_owner_rejected": 5,
+        "true_negative_safe_owner_allowed": 29,
+        "true_positive_unsafe_owner_rejected": 12
+      },
+      "negative_suppression": 0.7058823529411765,
+      "objective_id": "king_support_provider_family__preserve_monitor_provider_family__u0.45_p0.5",
+      "preserve_features": [
+        "monitor_context.monitor_signature",
+        "provider_family"
+      ],
+      "preserve_threshold": 0.5,
+      "row_count": 51,
+      "safe_preservation": 0.8529411764705882,
+      "safe_true_negative": 29,
+      "unsafe_false_negative": 5,
+      "unsafe_false_positive": 5,
+      "unsafe_features": [
+        "terminal_space_context.white_king_support_bucket",
+        "provider_family"
+      ],
+      "unsafe_precision": 0.7058823529411765,
+      "unsafe_recall": 0.7058823529411765,
+      "unsafe_threshold": 0.45,
+      "unsafe_true_positive": 12
+    },
+    {
+      "accuracy": 0.803921568627451,
+      "error_counts": {
+        "false_negative_unsafe_owner_allowed": 5,
+        "false_positive_safe_owner_rejected": 5,
+        "true_negative_safe_owner_allowed": 29,
+        "true_positive_unsafe_owner_rejected": 12
+      },
+      "negative_suppression": 0.7058823529411765,
+      "objective_id": "king_support_provider_family__preserve_monitor_provider_family__u0.5_p0.5",
+      "preserve_features": [
+        "monitor_context.monitor_signature",
+        "provider_family"
+      ],
+      "preserve_threshold": 0.5,
+      "row_count": 51,
+      "safe_preservation": 0.8529411764705882,
+      "safe_true_negative": 29,
+      "unsafe_false_negative": 5,
+      "unsafe_false_positive": 5,
+      "unsafe_features": [
+        "terminal_space_context.white_king_support_bucket",
+        "provider_family"
+      ],
+      "unsafe_precision": 0.7058823529411765,
+      "unsafe_recall": 0.7058823529411765,
+      "unsafe_threshold": 0.5,
+      "unsafe_true_positive": 12
+    },
+    {
+      "accuracy": 0.803921568627451,
+      "error_counts": {
+        "false_negative_unsafe_owner_allowed": 5,
+        "false_positive_safe_owner_rejected": 5,
+        "true_negative_safe_owner_allowed": 29,
+        "true_positive_unsafe_owner_rejected": 12
+      },
+      "negative_suppression": 0.7058823529411765,
+      "objective_id": "king_support_provider_family__preserve_repair_monitor_provider_family__u0.45_p0.5",
+      "preserve_features": [
+        "monitor_context.has_repair_needed_monitor",
+        "provider_family"
+      ],
+      "preserve_threshold": 0.5,
+      "row_count": 51,
+      "safe_preservation": 0.8529411764705882,
+      "safe_true_negative": 29,
+      "unsafe_false_negative": 5,
+      "unsafe_false_positive": 5,
+      "unsafe_features": [
+        "terminal_space_context.white_king_support_bucket",
+        "provider_family"
+      ],
+      "unsafe_precision": 0.7058823529411765,
+      "unsafe_recall": 0.7058823529411765,
+      "unsafe_threshold": 0.45,
+      "unsafe_true_positive": 12
+    },
+    {
+      "accuracy": 0.803921568627451,
+      "error_counts": {
+        "false_negative_unsafe_owner_allowed": 5,
+        "false_positive_safe_owner_rejected": 5,
+        "true_negative_safe_owner_allowed": 29,
+        "true_positive_unsafe_owner_rejected": 12
+      },
+      "negative_suppression": 0.7058823529411765,
+      "objective_id": "king_support_provider_family__preserve_repair_monitor_provider_family__u0.5_p0.5",
+      "preserve_features": [
+        "monitor_context.has_repair_needed_monitor",
+        "provider_family"
+      ],
+      "preserve_threshold": 0.5,
+      "row_count": 51,
+      "safe_preservation": 0.8529411764705882,
+      "safe_true_negative": 29,
+      "unsafe_false_negative": 5,
+      "unsafe_false_positive": 5,
+      "unsafe_features": [
+        "terminal_space_context.white_king_support_bucket",
+        "provider_family"
+      ],
+      "unsafe_precision": 0.7058823529411765,
+      "unsafe_recall": 0.7058823529411765,
+      "unsafe_threshold": 0.5,
+      "unsafe_true_positive": 12
+    },
+    {
+      "accuracy": 0.803921568627451,
+      "error_counts": {
+        "false_negative_unsafe_owner_allowed": 5,
+        "false_positive_safe_owner_rejected": 5,
+        "true_negative_safe_owner_allowed": 29,
+        "true_positive_unsafe_owner_rejected": 12
+      },
+      "negative_suppression": 0.7058823529411765,
+      "objective_id": "monitor_signature_provider_family__preserve_monitor_provider_family__u0.45_p0.5",
+      "preserve_features": [
+        "monitor_context.monitor_signature",
+        "provider_family"
+      ],
+      "preserve_threshold": 0.5,
+      "row_count": 51,
+      "safe_preservation": 0.8529411764705882,
+      "safe_true_negative": 29,
+      "unsafe_false_negative": 5,
+      "unsafe_false_positive": 5,
+      "unsafe_features": [
+        "monitor_context.monitor_signature",
+        "provider_family"
+      ],
+      "unsafe_precision": 0.7058823529411765,
+      "unsafe_recall": 0.7058823529411765,
+      "unsafe_threshold": 0.45,
+      "unsafe_true_positive": 12
+    },
+    {
+      "accuracy": 0.803921568627451,
+      "error_counts": {
+        "false_negative_unsafe_owner_allowed": 5,
+        "false_positive_safe_owner_rejected": 5,
+        "true_negative_safe_owner_allowed": 29,
+        "true_positive_unsafe_owner_rejected": 12
+      },
+      "negative_suppression": 0.7058823529411765,
+      "objective_id": "monitor_signature_provider_family__preserve_monitor_provider_family__u0.5_p0.5",
+      "preserve_features": [
+        "monitor_context.monitor_signature",
+        "provider_family"
+      ],
+      "preserve_threshold": 0.5,
+      "row_count": 51,
+      "safe_preservation": 0.8529411764705882,
+      "safe_true_negative": 29,
+      "unsafe_false_negative": 5,
+      "unsafe_false_positive": 5,
+      "unsafe_features": [
+        "monitor_context.monitor_signature",
+        "provider_family"
+      ],
+      "unsafe_precision": 0.7058823529411765,
+      "unsafe_recall": 0.7058823529411765,
+      "unsafe_threshold": 0.5,
+      "unsafe_true_positive": 12
+    }
+  ]
+}

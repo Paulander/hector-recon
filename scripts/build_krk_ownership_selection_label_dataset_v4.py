@@ -1,0 +1,255 @@
+#!/usr/bin/env python3
+"""Merge targeted current-profile non-stage0 ownership labels into v4.
+
+The targeted labels replay historical non-stage0 owners under the current
+handoff profile. For matching state/provider keys, they supersede older
+replay-free labels because they are fresh h40 observations of the current graph.
+"""
+
+from __future__ import annotations
+
+import json
+from collections import Counter
+from pathlib import Path
+from typing import Any
+
+
+ROOT = Path(__file__).resolve().parents[1]
+OWNERSHIP_V3 = Path("reports/krk_ownership_selection_label_dataset_v3.json")
+TARGETED_LABELS = Path("reports/krk_targeted_non_stage0_ownership_labels_v0.json")
+TARGETED_REVIEW = Path("reports/krk_targeted_non_stage0_ownership_review_v0.json")
+OUT_JSON = Path("reports/krk_ownership_selection_label_dataset_v4.json")
+OUT_MD = Path("reports/krk_ownership_selection_label_dataset_v4.md")
+
+
+def _load(path: Path) -> dict[str, Any]:
+    payload = json.loads((ROOT / path).read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"expected JSON object: {path}")
+    return payload
+
+
+def _provider_family(provider_id: str | None) -> str:
+    text = str(provider_id or "")
+    if text == "krk.stage0_basin":
+        return "stage0_basin"
+    if text == "krk.drive_to_edge":
+        return "drive_to_edge"
+    if text == "krk.fence_established":
+        return "fence_established"
+    if text.startswith("krk.edge_trap"):
+        return "edge_trap"
+    if text.startswith("krk.box_shrink"):
+        return "box_shrink"
+    return "other"
+
+
+def _targeted_row(label: dict[str, Any]) -> dict[str, Any]:
+    provider_id = str(label.get("current_profile_selected_provider") or label.get("selected_provider") or "")
+    result = (label.get("selected_playout_success") or {}).get("result")
+    converted = result == "mate"
+    same_move_providers = label.get("initial_same_move_providers") or []
+    provider_scores = [
+        item.get("score")
+        for item in same_move_providers
+        if item.get("provider_id") == provider_id and isinstance(item.get("score"), (int, float))
+    ]
+    return {
+        "schema_version": "krk_ownership_selection_label.v4",
+        "causal_status": "non_causal_ownership_label",
+        "objective_id": "krk.selector.ownership_selection.v0",
+        "objective_channel": "ownership_selection",
+        "state_id": label.get("state_id"),
+        "frame_id": label.get("frame_id"),
+        "source_stage": label.get("source_stage"),
+        "active_landmark_label": label.get("active_landmark_label"),
+        "provider_id": provider_id,
+        "provider_family": _provider_family(provider_id),
+        "move_uci": label.get("current_profile_selected_move") or label.get("selected_move"),
+        "target_label": "selected_owner_converted" if converted else "selected_owner_failed",
+        "owner_positive": converted,
+        "selected_provider_before_observation": provider_id,
+        "selected_provider_matches_target": True,
+        "target_provider_best_rank": 1,
+        "target_provider_best_raw_score": provider_scores[0] if provider_scores else None,
+        "target_provider_summary_count": sum(
+            1 for item in same_move_providers if item.get("provider_id") == provider_id
+        )
+        or None,
+        "unique_provider_count": label.get("initial_provider_count"),
+        "all_suggestion_count": None,
+        "source_terms": [],
+        "source_term_count": 0,
+        "label_source": "targeted_non_stage0_current_profile_h40",
+        "label_semantics": "normal_current_profile_selected_provider_outcome",
+        "selected_playout_success": label.get("selected_playout_success"),
+        "forced_provider_conversion_for_selected_provider": label.get(
+            "forced_provider_conversion_for_selected_provider"
+        ),
+        "historical_selected_provider": label.get("historical_selected_provider"),
+        "historical_selection_preserved": label.get("historical_selection_preserved"),
+        "supersedes_prior_replay_free_label": True,
+        "usable_for_offline_probe": True,
+        "usable_for_selector_training": False,
+        "training_block_reason": (
+            "targeted ownership labels are offline evidence pending source-diversity "
+            "and threshold review"
+        ),
+        "stage7_training_row": False,
+    }
+
+
+def build_dataset() -> dict[str, Any]:
+    base = _load(OWNERSHIP_V3)
+    labels_payload = _load(TARGETED_LABELS)
+    review = _load(TARGETED_REVIEW)
+    if base.get("causal_status") != "non_causal_ownership_label_dataset":
+        raise ValueError("ownership v3 must remain non-causal")
+    if labels_payload.get("causal_status") != "non_causal_label_run":
+        raise ValueError("targeted labels must remain non-causal")
+    if review.get("causal_status") != "non_causal_review":
+        raise ValueError("targeted review must remain non-causal")
+
+    rows_by_key: dict[tuple[str, str], dict[str, Any]] = {}
+    for row in base.get("rows") or []:
+        if row.get("source_stage") == "stage7":
+            continue
+        key = (str(row.get("state_id")), str(row.get("provider_id")))
+        rows_by_key[key] = {
+            **row,
+            "schema_version": "krk_ownership_selection_label.v4",
+            "usable_for_selector_training": False,
+        }
+
+    overrides = []
+    for label in labels_payload.get("labels") or []:
+        if label.get("source_stage") == "stage7":
+            continue
+        row = _targeted_row(label)
+        key = (str(row.get("state_id")), str(row.get("provider_id")))
+        prior = rows_by_key.get(key)
+        if prior:
+            row["prior_target_label"] = prior.get("target_label")
+            row["prior_label_source"] = prior.get("label_source")
+            row["prior_owner_positive"] = prior.get("owner_positive")
+        rows_by_key[key] = row
+        overrides.append(row)
+
+    rows = [rows_by_key[key] for key in sorted(rows_by_key)]
+    label_changes = [
+        row
+        for row in overrides
+        if row.get("prior_target_label") and row.get("prior_target_label") != row.get("target_label")
+    ]
+    summary = {
+        "input_v3_row_count": len(base.get("rows") or []),
+        "targeted_label_count": len(labels_payload.get("labels") or []),
+        "targeted_override_count": len(overrides),
+        "targeted_label_change_count": len(label_changes),
+        "merged_row_count": len(rows),
+        "target_label_counts": dict(Counter(str(row.get("target_label")) for row in rows)),
+        "source_stage_counts": dict(Counter(str(row.get("source_stage")) for row in rows)),
+        "provider_family_counts": dict(Counter(str(row.get("provider_family")) for row in rows)),
+        "label_source_counts": dict(Counter(str(row.get("label_source")) for row in rows)),
+        "state_count": len({row.get("state_id") for row in rows}),
+        "stage7_row_count": sum(1 for row in rows if row.get("source_stage") == "stage7"),
+        "selector_training_row_count": sum(1 for row in rows if row.get("usable_for_selector_training")),
+    }
+    payload = {
+        "schema_version": "krk_ownership_selection_label_dataset.v4",
+        "causal_status": "non_causal_ownership_label_dataset",
+        "runtime_behavior_changed": False,
+        "runtime_defaults_changed": False,
+        "runtime_selector_implemented": False,
+        "runtime_candidate_generator_implemented": False,
+        "runtime_terminals_added": False,
+        "runtime_dtm_or_tablebase_lookup": False,
+        "gameplay_topology_mutation": False,
+        "stage7_promotion_allowed": False,
+        "stage8_training_allowed": False,
+        "source_artifacts": [str(OWNERSHIP_V3), str(TARGETED_LABELS), str(TARGETED_REVIEW)],
+        "summary": summary,
+        "targeted_label_changes": [
+            {
+                "state_id": row.get("state_id"),
+                "provider_id": row.get("provider_id"),
+                "prior_target_label": row.get("prior_target_label"),
+                "new_target_label": row.get("target_label"),
+                "prior_label_source": row.get("prior_label_source"),
+            }
+            for row in label_changes
+        ],
+        "rows": rows,
+        "decision": {
+            "status": "ownership_selection_labels_refreshed_with_targeted_non_stage0_current_profile_h40",
+            "recommended_next_step": "rerun_context_enriched_probe_with_refreshed_non_stage0_labels",
+            "runtime_work_allowed": False,
+            "selector_training_allowed": False,
+            "stage7_promotion_allowed": False,
+            "stage8_training_allowed": False,
+        },
+    }
+    validate_dataset(payload)
+    return payload
+
+
+def validate_dataset(payload: dict[str, Any]) -> None:
+    if payload.get("causal_status") != "non_causal_ownership_label_dataset":
+        raise ValueError("dataset must remain non-causal")
+    for key in (
+        "runtime_behavior_changed",
+        "runtime_defaults_changed",
+        "runtime_selector_implemented",
+        "runtime_candidate_generator_implemented",
+        "runtime_terminals_added",
+        "runtime_dtm_or_tablebase_lookup",
+        "gameplay_topology_mutation",
+        "stage7_promotion_allowed",
+        "stage8_training_allowed",
+    ):
+        if payload.get(key) is not False:
+            raise ValueError(f"{key} must be false")
+    if payload["summary"]["stage7_row_count"] != 0:
+        raise ValueError("Stage 7 rows must remain excluded")
+    if payload["summary"]["selector_training_row_count"] != 0:
+        raise ValueError("selector training remains blocked")
+
+
+def render_markdown(payload: dict[str, Any]) -> str:
+    lines = [
+        "# KRK Ownership Selection Label Dataset v4",
+        "",
+        "Refreshes historical non-stage0 ownership labels with bounded current-profile "
+        "h40 observations. These labels remain offline evidence and do not authorize "
+        "selector training or runtime behavior changes.",
+        "",
+        "## Summary",
+        "",
+    ]
+    for key, value in payload["summary"].items():
+        lines.append(f"- `{key}`: `{value}`")
+    lines.extend(["", "## Changed Labels", ""])
+    for change in payload["targeted_label_changes"]:
+        lines.append(
+            f"- `{change['state_id']}` provider=`{change['provider_id']}` "
+            f"`{change['prior_target_label']}` -> `{change['new_target_label']}`"
+        )
+    lines.extend(["", "## Decision", ""])
+    for key, value in payload["decision"].items():
+        lines.append(f"- `{key}`: `{value}`")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def main() -> None:
+    payload = build_dataset()
+    (ROOT / OUT_JSON).write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    (ROOT / OUT_MD).write_text(render_markdown(payload), encoding="utf-8")
+    print(json.dumps(payload["summary"], indent=2, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

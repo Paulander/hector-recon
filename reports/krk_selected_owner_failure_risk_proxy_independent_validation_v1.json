@@ -1,0 +1,44 @@
+{
+  "causal_status": "non_causal_proxy_validation",
+  "decision": {
+    "recommended_next_step": "create_runtime_review_packet_only",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "status": "independent_proxy_validation_passed"
+  },
+  "gameplay_topology_mutation": false,
+  "implementation_allowed_by_this_validation": false,
+  "metrics": {
+    "false_negative": 0,
+    "false_negative_state_ids": [],
+    "false_positive": 0,
+    "false_positive_state_ids": [],
+    "precision": 1.0,
+    "recall": 1.0,
+    "row_count": 8,
+    "safe_preservation_recall": 1.0,
+    "true_negative": 7,
+    "true_positive": 1
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_selected_owner_failure_risk_proxy_independent_validation.v1",
+  "selected_proxy": "conservative_safe_preservation_gated_proxy",
+  "selector_training_allowed": false,
+  "source_artifacts": [
+    "reports/krk_selected_owner_failure_risk_evidence_v1.json",
+    "reports/krk_selected_owner_failure_risk_proxy_probe_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "label_count": 8,
+    "runtime_scope": "progress_window_monitor_or_reconsideration_only",
+    "stage7_row_count": 0,
+    "threshold_met": true
+  }
+}

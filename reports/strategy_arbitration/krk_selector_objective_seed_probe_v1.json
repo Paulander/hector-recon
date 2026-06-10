@@ -1,0 +1,180 @@
+{
+  "causal_status": "non_causal_seed_probe",
+  "decision": {
+    "recommended_next_step": "design_non_causal_selector_feature_probe",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "status": "selector_objective_seed_ready_for_non_causal_feature_probe"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "reason": "V1 improves switch-vs-preserve representation enough for a future non-causal feature probe, but predictions still use offline selected-owner labels and do not authorize runtime selector behavior.",
+    "runtime_feature_eligible_prediction_possible_now": false,
+    "runtime_selector_supported": false,
+    "selector_training_supported": false,
+    "semantics_confirmed": true
+  },
+  "predictions": [
+    {
+      "correct": true,
+      "objective_channel": "safe_preservation_contrast_seed",
+      "predicted_action": "preserve_selected_owner",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.fence_established",
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6",
+      "target_action": "preserve_selected_owner"
+    },
+    {
+      "correct": true,
+      "objective_channel": "candidate_switch_contrast_seed",
+      "predicted_action": "prefer_visible_alternative",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage5",
+      "state_id": "state.0b1f2153179b",
+      "target_action": "prefer_visible_alternative"
+    },
+    {
+      "correct": true,
+      "objective_channel": "safe_preservation_contrast_seed",
+      "predicted_action": "preserve_selected_owner",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage5",
+      "state_id": "state.18cfccc9c4c1",
+      "target_action": "preserve_selected_owner"
+    },
+    {
+      "correct": true,
+      "objective_channel": "safe_preservation_contrast_seed",
+      "predicted_action": "preserve_selected_owner",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage5",
+      "state_id": "state.2c1d6da27ea1",
+      "target_action": "preserve_selected_owner"
+    },
+    {
+      "correct": true,
+      "objective_channel": "safe_preservation_contrast_seed",
+      "predicted_action": "preserve_selected_owner",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.edge_trap_close",
+      "source_stage": "stage5",
+      "state_id": "state.326222aefdf1",
+      "target_action": "preserve_selected_owner"
+    },
+    {
+      "correct": true,
+      "objective_channel": "safe_preservation_contrast_seed",
+      "predicted_action": "preserve_selected_owner",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage5",
+      "state_id": "state.388d05197dd9",
+      "target_action": "preserve_selected_owner"
+    },
+    {
+      "correct": true,
+      "objective_channel": "candidate_switch_contrast_seed",
+      "predicted_action": "prefer_visible_alternative",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca",
+      "target_action": "prefer_visible_alternative"
+    },
+    {
+      "correct": true,
+      "objective_channel": "safe_preservation_contrast_seed",
+      "predicted_action": "preserve_selected_owner",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage6",
+      "state_id": "state.52085d244e9d",
+      "target_action": "preserve_selected_owner"
+    },
+    {
+      "correct": true,
+      "objective_channel": "candidate_switch_contrast_seed",
+      "predicted_action": "prefer_visible_alternative",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage6",
+      "state_id": "state.67a88e3b1dd2",
+      "target_action": "prefer_visible_alternative"
+    },
+    {
+      "correct": true,
+      "objective_channel": "safe_preservation_contrast_seed",
+      "predicted_action": "preserve_selected_owner",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage6",
+      "state_id": "state.69711173114a",
+      "target_action": "preserve_selected_owner"
+    },
+    {
+      "correct": true,
+      "objective_channel": "candidate_switch_contrast_seed",
+      "predicted_action": "prefer_visible_alternative",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.edge_trap_close",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "target_action": "prefer_visible_alternative"
+    },
+    {
+      "correct": true,
+      "objective_channel": "safe_preservation_contrast_seed",
+      "predicted_action": "preserve_selected_owner",
+      "reason": "uses offline selected-owner outcome labels",
+      "runtime_feature_eligible": false,
+      "selected_provider": "krk.stage0_basin",
+      "source_stage": "stage5",
+      "state_id": "state.6e84c77a4520",
+      "target_action": "preserve_selected_owner"
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_selector_objective_seed_probe.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "apparent_semantic_rule_accuracy": 1.0,
+    "benchmark_underpowered": false,
+    "correct_count": 12,
+    "runtime_feature_eligible_prediction_count": 0,
+    "seed_balanced_enough_for_next_non_causal_probe": true,
+    "seed_row_count": 12,
+    "selector_training_row_count": 0,
+    "semantics_consistent": true,
+    "stage7_training_row_count": 0,
+    "switch_preserve_contrast_better_represented": true,
+    "target_action_counts": {
+      "prefer_visible_alternative": 4,
+      "preserve_selected_owner": 8
+    }
+  }
+}

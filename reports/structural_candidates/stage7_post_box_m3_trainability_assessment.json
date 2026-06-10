@@ -1,0 +1,200 @@
+{
+  "schema_version": "stage7_post_box_m3_trainability_assessment.v1",
+  "causal_status": "non_causal",
+  "topology_source": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_guarded_retry/topology/krk_entry_topology_stage7_post_box_continuation_sandbox.json",
+  "diagnostic_source": "reports/structural_candidates/stage7_post_box_narrow_on_25_h40.json",
+  "target_role": "krk.post_box_shrink_continuation",
+  "target_provider": "krk.stage7_post_box_continuation",
+  "provider_nodes": [
+    "terminal.krk.stage7_post_box_continuation"
+  ],
+  "probe_result": "scripted_provider_selected_but_not_trainable_for_move_policy",
+  "recommended_next_action": "train_or_compile_learned_candidate_provider_before_m3_warmup",
+  "diagnostic_labels": [
+    "visible_provider_ownership_available",
+    "candidate_selected_but_all_selected_outcomes_failed",
+    "no_candidate_internal_m3_edges",
+    "expressive_but_untrained_or_capacity_limited"
+  ],
+  "counts": {
+    "visible_license_met": 6,
+    "candidate_provider_selected": 6,
+    "candidate_provider_selected_max_plies": 6,
+    "candidate_provider_selected_failed": 6
+  },
+  "trainable_internal_edge_count": 0,
+  "trainable_internal_edges": [],
+  "activation_edge_count": 1,
+  "activation_edges_observe_only": [
+    {
+      "src": "krk_hub",
+      "dst": "terminal.krk.stage7_post_box_continuation",
+      "type": "SUB",
+      "initial_weight": 1.0,
+      "reason": "candidate_provider_activation_observe_only",
+      "trainable_for_move_policy": false
+    }
+  ],
+  "sample_rows": [
+    {
+      "packet_id": "packet.09053ac71b3b",
+      "fen": "8/8/8/3k4/8/R7/8/3K4 w - - 0 1",
+      "post_reply_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "post_reply_state_signature": "state.2cc0b3e1033a",
+      "selected_successor": "krk.stage7_post_box_continuation",
+      "playout_result": "max_plies",
+      "licensed_move": "a6d6",
+      "source_terms": [
+        "black_king_escape_count_decreases_after_move",
+        "box_area_decreases_after_move",
+        "box_area_not_increased_after_move",
+        "box_area_not_increased_after_worst_reply",
+        "box_shrink_drive_repair_available",
+        "candidate_is_rook_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "enemy_king_not_at_edge",
+        "no_draw_after_move",
+        "no_draw_after_worst_reply",
+        "rook_box_confinement_followup",
+        "rook_safe",
+        "rook_safe_after_move"
+      ]
+    },
+    {
+      "packet_id": "packet.67a0ce8a1f39",
+      "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+      "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "post_reply_state_signature": "state.bace6f82b671",
+      "selected_successor": "krk.stage7_post_box_continuation",
+      "playout_result": "max_plies",
+      "licensed_move": "d2c3",
+      "source_terms": [
+        "box_area_not_increased_after_move",
+        "box_area_not_increased_after_worst_reply",
+        "box_shrink_drive_repair_available",
+        "candidate_is_king_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "enemy_king_not_at_edge",
+        "king_moves_toward_rook_support",
+        "king_support_followup",
+        "no_draw_after_move",
+        "no_draw_after_worst_reply",
+        "rook_safe",
+        "rook_safe_after_move",
+        "white_king_distance_to_rook_decreases"
+      ]
+    },
+    {
+      "packet_id": "packet.67a0ce8a1f39",
+      "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+      "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "post_reply_state_signature": "state.bace6f82b671",
+      "selected_successor": "krk.stage7_post_box_continuation",
+      "playout_result": "max_plies",
+      "licensed_move": "d2c3",
+      "source_terms": [
+        "box_area_not_increased_after_move",
+        "box_area_not_increased_after_worst_reply",
+        "box_shrink_drive_repair_available",
+        "candidate_is_king_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "enemy_king_not_at_edge",
+        "king_moves_toward_rook_support",
+        "king_support_followup",
+        "no_draw_after_move",
+        "no_draw_after_worst_reply",
+        "rook_safe",
+        "rook_safe_after_move",
+        "white_king_distance_to_rook_decreases"
+      ]
+    },
+    {
+      "packet_id": "packet.67a0ce8a1f39",
+      "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+      "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "post_reply_state_signature": "state.bace6f82b671",
+      "selected_successor": "krk.stage7_post_box_continuation",
+      "playout_result": "max_plies",
+      "licensed_move": "d2c3",
+      "source_terms": [
+        "box_area_not_increased_after_move",
+        "box_area_not_increased_after_worst_reply",
+        "box_shrink_drive_repair_available",
+        "candidate_is_king_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "enemy_king_not_at_edge",
+        "king_moves_toward_rook_support",
+        "king_support_followup",
+        "no_draw_after_move",
+        "no_draw_after_worst_reply",
+        "rook_safe",
+        "rook_safe_after_move",
+        "white_king_distance_to_rook_decreases"
+      ]
+    },
+    {
+      "packet_id": "packet.67a0ce8a1f39",
+      "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+      "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "post_reply_state_signature": "state.bace6f82b671",
+      "selected_successor": "krk.stage7_post_box_continuation",
+      "playout_result": "max_plies",
+      "licensed_move": "d2c3",
+      "source_terms": [
+        "box_area_not_increased_after_move",
+        "box_area_not_increased_after_worst_reply",
+        "box_shrink_drive_repair_available",
+        "candidate_is_king_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "enemy_king_not_at_edge",
+        "king_moves_toward_rook_support",
+        "king_support_followup",
+        "no_draw_after_move",
+        "no_draw_after_worst_reply",
+        "rook_safe",
+        "rook_safe_after_move",
+        "white_king_distance_to_rook_decreases"
+      ]
+    },
+    {
+      "packet_id": "packet.67a0ce8a1f39",
+      "fen": "8/8/8/8/3k4/8/3K4/R7 w - - 0 1",
+      "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "post_reply_state_signature": "state.bace6f82b671",
+      "selected_successor": "krk.stage7_post_box_continuation",
+      "playout_result": "max_plies",
+      "licensed_move": "d2c3",
+      "source_terms": [
+        "box_area_not_increased_after_move",
+        "box_area_not_increased_after_worst_reply",
+        "box_shrink_drive_repair_available",
+        "candidate_is_king_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "enemy_king_not_at_edge",
+        "king_moves_toward_rook_support",
+        "king_support_followup",
+        "no_draw_after_move",
+        "no_draw_after_worst_reply",
+        "rook_safe",
+        "rook_safe_after_move",
+        "white_king_distance_to_rook_decreases"
+      ]
+    }
+  ],
+  "safety": {
+    "m4_consolidation_enabled": false,
+    "topology_mutation_enabled": false,
+    "protected_provider_mutation_enabled": false,
+    "dtm_or_tablebase_runtime_enabled": false,
+    "hard_blocks": [
+      "do_not_train_stage8",
+      "do_not_promote_stage7",
+      "do_not_enable_by_default",
+      "do_not_make_candidates_causal"
+    ]
+  },
+  "performance": {
+    "wall_time_seconds": 0.011492418008856475,
+    "post_reply_packets": 25
+  }
+}

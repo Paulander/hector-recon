@@ -1,0 +1,55 @@
+{
+  "blocked_next_steps": [
+    "runtime_selector",
+    "selector_training",
+    "runtime_arbiter",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_architecture_review",
+  "decision": {
+    "recommended_next_step": "design_stronger_safe_preservation_features_before_runtime",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "status": "feature_model_insufficient"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": [
+    "Replay-free extraction now satisfies the pair-count and same-state-conflict thresholds, so no bounded h40 expansion was needed.",
+    "The paired objective is better aligned with the architecture than global provider-row classification because it keeps selected ownership and forced capacity in separate channels.",
+    "The current simple family/context feature model still over-selects capacity alternatives in safe-preservation cases; this blocks runtime work.",
+    "The next improvement should target safe-preservation features or pair-specific feature interactions, not more blind label collection."
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_state_local_paired_ownership_review.v0",
+  "selector_training_allowed": false,
+  "source_artifacts": [
+    "reports/krk_state_local_paired_ownership_work_package_v0.json",
+    "reports/krk_state_local_paired_ownership_inventory_v1.json",
+    "reports/krk_state_local_paired_ownership_probe_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "best_balanced_objective": "owner_family_pair@0.25",
+    "inventory_pair_count": 40,
+    "inventory_ready": true,
+    "inventory_state_count": 14,
+    "prefer_capacity_recall": 0.8571428571428571,
+    "safe_preservation_pair_count": 23,
+    "safe_preservation_recall": 0.7391304347826086,
+    "same_state_conflict_pair_count": 9,
+    "selected_failure_with_alternative_success_count": 7,
+    "selected_preservation_recall": 0.76,
+    "stage7_row_count": 0,
+    "strong_conflict_accuracy": 0.8888888888888888
+  }
+}

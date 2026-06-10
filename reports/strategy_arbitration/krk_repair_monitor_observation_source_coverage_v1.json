@@ -1,0 +1,38 @@
+{
+  "causal_status": "non_causal_runtime_observation_analysis",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "broaden_repair_monitor_observation_sample_non_causal",
+    "selector_allowed": false,
+    "status": "repair_monitor_observation_source_coverage_ready_for_guarded_analysis"
+  },
+  "gameplay_topology_mutation": false,
+  "invariant_failures": [],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_repair_monitor_observation_source_coverage.v1",
+  "source_artifact": "reports/strategy_arbitration/krk_repair_monitor_observation_source_smoke_v1.json",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "frame_count_by_stage": {
+      "stage4": 1,
+      "stage5": 1,
+      "stage6": 1
+    },
+    "invariant_failure_count": 0,
+    "repair_monitor_frame_count": 3,
+    "risk_term_counts": {
+      "post_fence_conversion_needed": 3,
+      "repair_or_reestablish_cut_available": 3,
+      "rook_safe": 3
+    },
+    "selected_move_provider_delta_count": 0,
+    "stage7_case_count": 0
+  }
+}

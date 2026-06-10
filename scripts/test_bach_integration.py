@@ -26,7 +26,7 @@ def test_gating_schedule():
 
 def test_binding_space():
     """Test BindingNodeSpace implementation."""
-    from recon_lite.nodes.binding_space import BindingNodeSpace, BindingSpaceRegistry
+    from recon_lite_hector.nodes.binding_space import BindingNodeSpace, BindingSpaceRegistry
     
     print("\nBindingNodeSpace Test:")
     

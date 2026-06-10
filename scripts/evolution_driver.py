@@ -35,20 +35,20 @@ import chess
 
 from recon_lite.graph import Graph, Node, NodeType, NodeState
 from recon_lite.trace_db import EpisodeRecord, TickRecord, TraceDB, EpisodeSummary
-from recon_lite.models.registry import TopologyRegistry
-from recon_lite.learning.m5_structure import (
+from recon_lite_hector.models.registry import TopologyRegistry
+from recon_lite_hector.learning.m5_structure import (
     StructureLearner,
     compute_branching_metrics,
     BACKBONE_NODES,
 )
-from recon_lite.viz.evolution_viz import (
+from recon_lite_hector.viz.evolution_viz import (
     diff_topologies,
     render_evolution_snapshot,
     save_topology_snapshot,
 )
 
 try:
-    from recon_lite.nodes.stem_cell import StemCellManager, StemCellConfig, StemCellState
+    from recon_lite_hector.nodes.stem_cell import StemCellManager, StemCellConfig, StemCellState
     HAS_STEM_CELL = True
 except ImportError:
     HAS_STEM_CELL = False
@@ -99,6 +99,56 @@ STAGE_CYCLES = {
     11: 50,  # CORNER_TRAP
     12: 50,  # ZUGZWANG
 }
+
+
+def _parse_threshold_value(raw: str) -> float:
+    """Parse threshold tokens like '0.8', '80', or '80%' into [0, 1]-style values."""
+    token = raw.strip()
+    if token.endswith("%"):
+        return float(token[:-1].strip()) / 100.0
+    value = float(token)
+    if value > 1.0:
+        return value / 100.0
+    return value
+
+
+def parse_stage_thresholds(spec: str, default_threshold: float, max_stage: int = 7) -> Dict[int, float]:
+    """
+    Parse stage threshold spec into a per-stage threshold map.
+
+    Format examples:
+      "0-4:1.0,5-7:0.8"
+      "0:1.0,1:1.0,2:1.0,3:1.0,4:1.0,5:0.8,6:0.8,7:0.8"
+    """
+    thresholds: Dict[int, float] = {i: default_threshold for i in range(max_stage + 1)}
+    if not spec.strip():
+        return thresholds
+
+    for chunk in spec.split(","):
+        part = chunk.strip()
+        if not part:
+            continue
+        if ":" not in part:
+            raise ValueError(f"Invalid stage threshold token '{part}' (missing ':').")
+        stage_expr, threshold_expr = part.split(":", 1)
+        stage_expr = stage_expr.strip()
+        threshold = _parse_threshold_value(threshold_expr)
+
+        if "-" in stage_expr:
+            lo_s, hi_s = stage_expr.split("-", 1)
+            lo = int(lo_s.strip())
+            hi = int(hi_s.strip())
+            if lo > hi:
+                lo, hi = hi, lo
+            for stage in range(lo, hi + 1):
+                if 0 <= stage <= max_stage:
+                    thresholds[stage] = threshold
+        else:
+            stage = int(stage_expr)
+            if 0 <= stage <= max_stage:
+                thresholds[stage] = threshold
+
+    return thresholds
 
 try:
     from recon_lite_chess.features.kpk_features import extract_kpk_features
@@ -335,6 +385,12 @@ class EvolutionConfig:
     stage_promotion_threshold: float = 0.8  # Win rate to advance
     min_games_per_stage: int = 50
     use_stockfish_rewards: bool = True
+    enable_stem_cells: bool = True
+    # Stage efficiency controls
+    perfect_cycle_threshold: float = 1.0  # Treat cycle as "perfect" at/above this
+    perfect_cycles_to_early_advance: int = 2  # Stop stage after N perfect cycles
+    near_threshold_extra_margin: float = 0.10  # Run one bonus cycle if this close
+    max_near_threshold_extra_cycles: int = 1
     
     # Engine tick settings (for TRIAL node activation)
     # min_internal_ticks: Mandatory propagation depth before allowing early exit.
@@ -406,7 +462,7 @@ def run_online_phase(
         (episodes, stats_dict)
     """
     from recon_lite.engine import ReConEngine
-    from recon_lite.plasticity import (
+    from recon_lite_hector.plasticity import (
         PlasticityConfig,
         init_plasticity_state,
         update_eligibility,
@@ -721,7 +777,7 @@ def _play_single_game(
         curiosity_spawn_count: Number of sensors to spawn per stall
         pure_cognitive_mode: If True, no random fallback - pure cognitive stall
     """
-    from recon_lite.plasticity import init_plasticity_state
+    from recon_lite_hector.plasticity import init_plasticity_state
     from recon_lite_chess.sensors.structure import summarize_kpk_material
     
     # Sentinel: stay locked while position is KPK
@@ -1134,7 +1190,7 @@ def save_cycle_snapshot(
                 "id": node_id,
                 "type": "TERMINAL",
                 "group": "trial",
-                "factory": "recon_lite.learning.m5_structure:create_pattern_sensor",
+                "factory": "recon_lite_hector.learning.m5_structure:create_pattern_sensor",
                 "meta": merged_meta,
                 "transient": True,
             }
@@ -1192,7 +1248,7 @@ def run_evolution_training(config: EvolutionConfig) -> List[CycleResult]:
     
     # Initialize stem cell manager
     stem_manager = None
-    if HAS_STEM_CELL:
+    if config.enable_stem_cells and HAS_STEM_CELL:
         # Load from previous stage if path exists
         if config.stem_cells_load_path and config.stem_cells_load_path.exists():
             try:
@@ -1217,6 +1273,8 @@ def run_evolution_training(config: EvolutionConfig) -> List[CycleResult]:
                 config=stem_cfg,
                 max_trial_slots=config.max_trial_slots,  # SPARSITY: Cap TRIAL tier
             )
+    elif not config.enable_stem_cells:
+        print("  Stem cells: DISABLED by config")
     
     # Create output directories
     config.snapshot_dir.mkdir(parents=True, exist_ok=True)
@@ -1235,10 +1293,16 @@ def run_evolution_training(config: EvolutionConfig) -> List[CycleResult]:
     emergent_spawn_counter = 0
     emergent_spawns_triggered = 0
     
-    for cycle in range(1, config.max_cycles + 1):
+    extra_cycles_used = 0
+    perfect_streak = 0
+    target_cycles = config.max_cycles
+    cycle = 0
+
+    while cycle < target_cycles:
+        cycle += 1
         cycle_start = time.time()
         
-        print(f"\n--- Cycle {cycle}/{config.max_cycles} ---")
+        print(f"\n--- Cycle {cycle}/{target_cycles} ---")
         
         # M5.1: Show stall recovery status
         if stall_recovery_active:
@@ -1281,6 +1345,10 @@ def run_evolution_training(config: EvolutionConfig) -> List[CycleResult]:
         # 2. Enable scent-based shaping for draws
         # =====================================================================
         current_win_rate = online_stats['win_rate']
+        if current_win_rate >= config.perfect_cycle_threshold:
+            perfect_streak += 1
+        else:
+            perfect_streak = 0
         
         if current_win_rate < STALL_THRESHOLD_WIN_RATE:
             stall_counter += 1
@@ -1470,6 +1538,33 @@ def run_evolution_training(config: EvolutionConfig) -> List[CycleResult]:
                     print(f"  🌿 Branching: spec_ANDs={spec_ands}  branch_factor={branch_factor}  POR_edges={por_count} ({por_ratio:.1%})")
         except Exception:
             pass  # Silent fail on hierarchy computation
+
+        # Stage-level efficiency shortcuts
+        if (
+            config.perfect_cycles_to_early_advance > 0
+            and perfect_streak >= config.perfect_cycles_to_early_advance
+            and cycle < target_cycles
+        ):
+            print(
+                "  ✅ Early stage advance: "
+                f"{perfect_streak} consecutive cycles >= "
+                f"{config.perfect_cycle_threshold:.1%}"
+            )
+            break
+
+        if (
+            cycle == config.max_cycles
+            and extra_cycles_used < config.max_near_threshold_extra_cycles
+        ):
+            stage_avg = sum(r.win_rate for r in results) / len(results) if results else 0.0
+            near_floor = max(0.0, config.stage_promotion_threshold - config.near_threshold_extra_margin)
+            if near_floor <= stage_avg < config.stage_promotion_threshold:
+                extra_cycles_used += 1
+                target_cycles += 1
+                print(
+                    "  ↪ Near-threshold bonus cycle: "
+                    f"stage_avg={stage_avg:.1%}, threshold={config.stage_promotion_threshold:.1%}"
+                )
     
     # M4 CONSOLIDATION: At stage-end, log and persist learned weights
     try:
@@ -1587,6 +1682,51 @@ def main():
         help="Win rate to advance to next stage (default: 0.9)"
     )
     parser.add_argument(
+        "--strict-stage-advance",
+        action="store_true",
+        help=(
+            "When running multiple stages, stop immediately if the completed "
+            "stage win rate is below --win-threshold."
+        ),
+    )
+    parser.add_argument(
+        "--stage-thresholds",
+        type=str,
+        default="",
+        help=(
+            "Optional per-stage threshold overrides. Format: "
+            "\"0-4:1.0,5-7:0.8\" or \"0:1.0,1:1.0,...\". "
+            "Used for stage promotion and strict-stage checks."
+        ),
+    )
+    parser.add_argument(
+        "--perfect-cycle-threshold",
+        type=float,
+        default=1.0,
+        help="Cycle win-rate threshold for counting a cycle as perfect (default: 1.0).",
+    )
+    parser.add_argument(
+        "--perfect-cycles-to-advance",
+        type=int,
+        default=2,
+        help="Advance stage early after N perfect cycles (0 disables, default: 2).",
+    )
+    parser.add_argument(
+        "--near-threshold-extra-margin",
+        type=float,
+        default=0.10,
+        help=(
+            "If stage average is within this margin below stage threshold at base cycle limit, "
+            "run one extra cycle (default: 0.10)."
+        ),
+    )
+    parser.add_argument(
+        "--max-near-threshold-extra-cycles",
+        type=int,
+        default=1,
+        help="Maximum near-threshold bonus cycles per stage (default: 1).",
+    )
+    parser.add_argument(
         "--quick",
         action="store_true",
         help="Quick test mode (10 games, 2 cycles)"
@@ -1602,6 +1742,11 @@ def main():
         "--no-snapshots",
         action="store_true",
         help="Skip saving topology snapshots (faster for pure metric testing)"
+    )
+    parser.add_argument(
+        "--disable-stem-cells",
+        action="store_true",
+        help="Disable stem-cell manager (no stem-cell sampling/spawning/promotions).",
     )
     
     args = parser.parse_args()
@@ -1620,6 +1765,13 @@ def main():
         end_stage = args.end_stage
     else:
         end_stage = args.stage
+
+    # Threshold policy per stage.
+    stage_thresholds = parse_stage_thresholds(
+        spec=args.stage_thresholds,
+        default_threshold=args.win_threshold,
+        max_stage=len(KPK_STAGES) - 1 if KPK_STAGES else 7,
+    )
     
     # Run stages sequentially
     prev_topology_path = args.topology
@@ -1627,6 +1779,7 @@ def main():
     
     for stage_idx in range(start_stage, end_stage + 1):
         stage_name = f"stage{stage_idx}"
+        stage_threshold = stage_thresholds.get(stage_idx, args.win_threshold)
         
         # Create stage-specific directories under run name
         base_snap = Path("snapshots/evolution") / run_name / stage_name
@@ -1644,7 +1797,12 @@ def main():
             snapshot_dir=base_snap,
             trace_dir=base_trace,
             current_stage_idx=stage_idx,
-            stage_promotion_threshold=args.win_threshold,
+            stage_promotion_threshold=stage_threshold,
+            enable_stem_cells=not args.disable_stem_cells,
+            perfect_cycle_threshold=args.perfect_cycle_threshold,
+            perfect_cycles_to_early_advance=args.perfect_cycles_to_advance,
+            near_threshold_extra_margin=args.near_threshold_extra_margin,
+            max_near_threshold_extra_cycles=args.max_near_threshold_extra_cycles,
             stem_cells_load_path=prev_stem_cells_path,  # Inherit stem cells
             min_internal_ticks=args.min_tick_depth,  # Mandatory tick depth for TRIAL activation
             skip_snapshots=args.no_snapshots,  # --no-snapshots for faster metric runs
@@ -1661,6 +1819,7 @@ def main():
         print(f"# {KPK_STAGES[stage_idx].description}")
         print(f"{'#'*60}")
         print(f"Run name: {run_name}/{stage_name}")
+        print(f"Stage threshold: {stage_threshold:.0%}")
         
         results = run_evolution_training(config)
         
@@ -1675,11 +1834,18 @@ def main():
         if stem_cells_snap.exists():
             prev_stem_cells_path = stem_cells_snap
         
-        # Check if we should stop early (win rate too low)
+        # Check if we should stop early (strict curriculum progression)
         if results:
             avg_win = sum(r.win_rate for r in results) / len(results)
-            if avg_win < 0.5 and stage_idx < end_stage:
-                print(f"\n⚠️  Average win rate {avg_win:.1%} < 50%. Consider more training before advancing.")
+            if avg_win < stage_threshold and stage_idx < end_stage:
+                msg = (
+                    f"\n⚠️  Average win rate {avg_win:.1%} < "
+                    f"{stage_threshold:.0%} threshold."
+                )
+                if args.strict_stage_advance:
+                    print(msg + " Stopping stage progression.")
+                    break
+                print(msg + " Consider more training before advancing.")
 
 
 if __name__ == "__main__":

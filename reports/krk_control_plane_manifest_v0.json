@@ -1,0 +1,310 @@
+{
+  "artifact_inventory": [
+    {
+      "exists": true,
+      "kind": "json",
+      "path": "reports/krk_protected_stage_status.json"
+    },
+    {
+      "exists": true,
+      "kind": "text",
+      "path": "reports/stage6_overlay_validation_manifest.md"
+    },
+    {
+      "exists": true,
+      "kind": "json",
+      "path": "reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json"
+    },
+    {
+      "exists": true,
+      "kind": "json",
+      "path": "reports/strategy_arbitration/krk_strategy_monitor_records_v0.json"
+    },
+    {
+      "exists": true,
+      "kind": "json",
+      "path": "reports/strategy_arbitration/krk_internal_terminal_evidence_v1.json"
+    },
+    {
+      "exists": true,
+      "kind": "json",
+      "path": "reports/structural_candidates/stage7_plan_capsule_owned_window_25_h40.json"
+    },
+    {
+      "exists": true,
+      "kind": "json",
+      "path": "reports/structural_candidates/stage7_post_box_plan_capsule_audit.json"
+    },
+    {
+      "exists": true,
+      "kind": "json",
+      "path": "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.json"
+    },
+    {
+      "exists": true,
+      "kind": "jsonl",
+      "path": "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.jsonl"
+    },
+    {
+      "exists": true,
+      "kind": "json",
+      "path": "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_expanded_h40.json"
+    },
+    {
+      "exists": true,
+      "kind": "jsonl",
+      "path": "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_expanded_h40.jsonl"
+    },
+    {
+      "exists": true,
+      "kind": "json",
+      "path": "reports/structural_candidates/stage7_training_objective_benchmark.json"
+    },
+    {
+      "exists": true,
+      "kind": "json",
+      "path": "reports/structural_candidates/stage7_training_objective_decision_gate.json"
+    },
+    {
+      "exists": true,
+      "kind": "json",
+      "path": "reports/structural_candidates/stage7_box_shrink_growth_governor_plan.json"
+    },
+    {
+      "exists": true,
+      "kind": "json",
+      "path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/promotion_eval_stage6_overlay.json"
+    },
+    {
+      "exists": true,
+      "kind": "json",
+      "path": "reports/structural_candidates/stage7_post_decision_closure.json"
+    }
+  ],
+  "blocked_next_steps": [
+    "stage7_runtime_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_arbiter",
+    "runtime_internal_terminal",
+    "support_adapter_or_score_bonus",
+    "provider_penalty_or_stage0_suppression",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "monolithic_later_stage_replacement"
+  ],
+  "causal_status": "non_causal_manifest",
+  "contract_artifact": "reports/krk_control_plane_evidence_contract_v0.json",
+  "field_coverage": [
+    {
+      "coverage_status": "covered_summary_level",
+      "field": "protected_provider_provenance",
+      "source_artifacts": [
+        "reports/krk_protected_stage_status.json",
+        "reports/stage6_overlay_validation_manifest.md"
+      ],
+      "summary": {
+        "cleanest_solved_components": [
+          "stage1_backchain",
+          "stage5_fence",
+          "stage6_drive_overlay"
+        ],
+        "protected_or_promoted_stages": [
+          "stage1_backchain",
+          "stage4_wrong_tempo",
+          "stage5_fence",
+          "stage6_drive_overlay"
+        ],
+        "solved_with_caveat": [
+          "stage4_wrong_tempo"
+        ]
+      }
+    },
+    {
+      "coverage_status": "covered_record_level",
+      "field": "strategy_proposal_frames",
+      "source_artifacts": [
+        "reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json"
+      ],
+      "summary": {
+        "proposal_count": 87,
+        "record_count": 33,
+        "records_by_source_stage": {
+          "stage4": 6,
+          "stage5": 8,
+          "stage6": 10,
+          "stage7": 9
+        }
+      }
+    },
+    {
+      "coverage_status": "covered_record_level",
+      "field": "internal_monitor_records",
+      "source_artifacts": [
+        "reports/strategy_arbitration/krk_strategy_monitor_records_v0.json",
+        "reports/strategy_arbitration/krk_internal_terminal_evidence_v1.json"
+      ],
+      "summary": {
+        "causal_ready_terminals": [],
+        "internal_terminal_count": 4,
+        "monitor_record_count": 108,
+        "strongest_candidates": [
+          "terminal.krk.local_provider_competition_failed",
+          "terminal.krk.post_plan_stagnation"
+        ]
+      }
+    },
+    {
+      "coverage_status": "covered_stage7_only",
+      "field": "plan_capsule_window_records",
+      "source_artifacts": [
+        "reports/structural_candidates/stage7_plan_capsule_owned_window_25_h40.json",
+        "reports/structural_candidates/stage7_post_box_plan_capsule_audit.json"
+      ],
+      "summary": {
+        "plan_audit_schema": "stage7_post_box_plan_capsule_audit.v1",
+        "window_count": 13
+      }
+    },
+    {
+      "coverage_status": "covered_stage7_only_offline",
+      "field": "sequence_training_examples",
+      "source_artifacts": [
+        "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.json",
+        "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.jsonl",
+        "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_expanded_h40.json",
+        "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_expanded_h40.jsonl",
+        "reports/structural_candidates/stage7_training_objective_benchmark.json"
+      ],
+      "summary": {
+        "benchmark_status": null,
+        "expanded_step_count": 195,
+        "expanded_trajectory_count": 18,
+        "seed_step_count": 25,
+        "seed_trajectory_count": 2
+      }
+    },
+    {
+      "coverage_status": "covered_summary_level",
+      "field": "guardrail_result_summaries",
+      "source_artifacts": [
+        "reports/krk_protected_stage_status.json",
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/promotion_eval_stage6_overlay.json"
+      ],
+      "summary": {
+        "protected_or_promoted_stages": [
+          "stage1_backchain",
+          "stage4_wrong_tempo",
+          "stage5_fence",
+          "stage6_drive_overlay"
+        ],
+        "stage6_promotion_status": "promoted",
+        "stage7_status": "local_valid_composition_quarantined"
+      }
+    },
+    {
+      "coverage_status": "partial_design_only",
+      "field": "growth_governor_status",
+      "source_artifacts": [
+        "reports/structural_candidates/stage7_box_shrink_growth_governor_plan.json"
+      ],
+      "summary": {
+        "gap": "No unified per-frame GrowthGovernorStatus export exists yet.",
+        "source_schema": "growth_governor_evaluation_plan.v1"
+      }
+    },
+    {
+      "coverage_status": "covered_summary_level",
+      "field": "promotion_gate_status",
+      "source_artifacts": [
+        "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/promotion_eval_stage6_overlay.json",
+        "reports/structural_candidates/stage7_training_objective_decision_gate.json",
+        "reports/structural_candidates/stage7_post_decision_closure.json"
+      ],
+      "summary": {
+        "stage6_promotion_status": "promoted",
+        "stage7_closure_status": {
+          "benchmark_status": "model_expression_gap_persists",
+          "next_implementation_requires_explicit_review": true,
+          "required_conclusion": "Stage 7 micro-work is stopped pending architecture review.",
+          "selected_outcome": "model_expression_gap_persists_stage7_micro_work_stops"
+        },
+        "stage7_training_gate": "model_expression_gap_persists_stage7_micro_work_stops"
+      }
+    }
+  ],
+  "gameplay_topology_mutation": false,
+  "gaps": [
+    {
+      "description": "Artifacts map to contract fields, but no per-state ControlPlaneEvidenceFrame export exists yet.",
+      "gap_id": "unified_frame_export_missing",
+      "next_step_class": "frame_exporter_design_or_replay_free_export"
+    },
+    {
+      "description": "GrowthGovernor evidence is available as design/status artifacts, not per-frame status.",
+      "gap_id": "growth_governor_status_not_frame_level",
+      "next_step_class": "non_causal_status_export"
+    },
+    {
+      "description": "Offline DTM/trajectory sequence labels are concentrated in Stage 7 residuals.",
+      "gap_id": "sequence_examples_stage7_only",
+      "next_step_class": "stratified_data_collection_plan"
+    },
+    {
+      "description": "Plan-capsule window evidence is mostly Stage 7-specific.",
+      "gap_id": "plan_windows_stage7_only",
+      "next_step_class": "cross_stage_window_evidence_design"
+    }
+  ],
+  "hidden_python_controller": false,
+  "runtime_arbiter_added": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_control_plane_manifest.v0",
+  "source_artifacts": [
+    "reports/krk_protected_stage_status.json",
+    "reports/stage6_overlay_validation_manifest.md",
+    "reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json",
+    "reports/strategy_arbitration/krk_strategy_monitor_records_v0.json",
+    "reports/strategy_arbitration/krk_internal_terminal_evidence_v1.json",
+    "reports/structural_candidates/stage7_plan_capsule_owned_window_25_h40.json",
+    "reports/structural_candidates/stage7_post_box_plan_capsule_audit.json",
+    "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.json",
+    "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_expanded_h40.json",
+    "reports/structural_candidates/stage7_training_objective_benchmark.json",
+    "reports/structural_candidates/stage7_training_objective_decision_gate.json",
+    "reports/structural_candidates/stage7_box_shrink_growth_governor_plan.json",
+    "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/promotion_eval_stage6_overlay.json",
+    "reports/structural_candidates/stage7_post_decision_closure.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "covered_contract_fields": [
+      "growth_governor_status",
+      "guardrail_result_summaries",
+      "internal_monitor_records",
+      "plan_capsule_window_records",
+      "promotion_gate_status",
+      "protected_provider_provenance",
+      "sequence_training_examples",
+      "strategy_proposal_frames"
+    ],
+    "missing_required_fields_after_manifest": [],
+    "monitor_record_count": 108,
+    "new_playouts_added": 0,
+    "plan_window_count": 13,
+    "recommended_next_slice": "stratified_control_plane_gap_report_v0",
+    "records_from_existing_artifacts_only": true,
+    "required_field_count": 17,
+    "sequence_expanded_step_count": 195,
+    "sequence_seed_step_count": 25,
+    "strategy_proposal_count": 87,
+    "strategy_record_count": 33
+  }
+}

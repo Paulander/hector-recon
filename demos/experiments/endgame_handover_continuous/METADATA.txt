@@ -1,0 +1,9 @@
+This demo folder snapshots weight packs from `weights/latest/` at the time it was created.
+
+Update the snapshot (optional):
+  cp -f weights/latest/{fullgame_consol.json,kpk_consol.json,kqk_consol.json,krk_consol.json} demos/experiments/endgame_handover_continuous/weights_snapshot/
+
+Notes:
+- Outputs are written under `demos/experiments/endgame_handover_continuous/_private/` and `demos/experiments/endgame_handover_continuous/outputs/`.
+- If you want to pin a specific repo state, record the git commit hash here.
+

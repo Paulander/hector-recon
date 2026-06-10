@@ -1,0 +1,52 @@
+{
+  "blocked_next_steps": [
+    "runtime_selector",
+    "score_changes",
+    "provider_routing",
+    "guardrail_campaign",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase"
+  ],
+  "causal_status": "non_causal_decision_gate",
+  "decision": {
+    "guardrails_allowed": false,
+    "more_blind_label_farming_allowed": false,
+    "recommended_next_step": "design_broader_strategy_sequence_candidate_sources",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "status": "candidate_proposal_quality_not_selector_ready"
+  },
+  "evidence": {
+    "best_balanced_score": 0.6291666666666667,
+    "best_negative_suppression": 0.625,
+    "best_positive_precision": 0.8636363636363636,
+    "best_positive_recall": 0.6333333333333333,
+    "best_probe": "candidate_move_frame_source",
+    "dataset_row_count": 569,
+    "quality_probe_row_count": 38,
+    "stage7_challenge_row_count": 111,
+    "stage7_readiness_training_row_count": 0
+  },
+  "gameplay_topology_mutation": false,
+  "rationale": [
+    "observation-only candidate generation is safe and visible",
+    "candidate proposal quality axes have some signal but do not jointly pass recall and negative-suppression thresholds",
+    "more blind candidate-move capacity labels are inefficient because candidate coverage is broad and sparse",
+    "PlanCapsule sequence and broader strategy candidates are still absent from runtime observation frames",
+    "candidate generation remains separate from selection"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_proposal_quality_decision.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_proposal_quality_dataset_v1.json",
+    "reports/strategy_arbitration/krk_candidate_proposal_quality_probe_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

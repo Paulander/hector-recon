@@ -1,0 +1,67 @@
+{
+  "blocked_next_steps": [
+    "runtime_selector",
+    "increase_broad_additive_support",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "blocking_results": [
+    "broad additive support is not effective at low support and unsafe to scale blindly",
+    "ranked-frame labels are frame-level and too coarse for owner selection",
+    "state-local contrast labels are sparse and do not suppress negative forced providers under leave-state-out",
+    "Stage7 remains held out and unresolved"
+  ],
+  "causal_status": "non_causal_readiness_review",
+  "decision": {
+    "recommended_next_step": "design_small_diverse_state_local_contrast_label_plan",
+    "runtime_test_allowed_next": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "runtime_selector_not_ready_collect_better_contrast_labels"
+  },
+  "evidence_statuses": {
+    "normalized_objective_probe": "normalized_objective_probe_underpowered_fields_available",
+    "objective_review": "additive_support_objective_rejected_design_normalized_selector_objective",
+    "ranked_frame_probe": "ranked_frames_available_label_semantics_too_coarse",
+    "runtime_test_review": "runtime_sandbox_safe_but_additive_support_not_ready_to_scale",
+    "state_local_contrast_probe": "state_local_contrast_signal_not_ready"
+  },
+  "gameplay_topology_mutation": false,
+  "minimum_next_evidence": [
+    "more diverse state-local contrast labels across protected Stage4/5/6 states",
+    "negative labels that are not dominated by one repeated provider family/state",
+    "proposal-level ownership labels, not only frame-level outcome labels",
+    "held-out Stage7 challenge evaluation after protected evidence improves"
+  ],
+  "positive_results": [
+    "default-off sandbox mechanics are trace-visible and default-safe",
+    "small protected-control runtime tests showed no conversion/no-move/draw regression",
+    "Stage7 challenge contexts are blocked by default",
+    "normalized rank/score proxy improved over provenance baseline in offline labels",
+    "ranked StrategyProposalFrame rows can be exported replay-free"
+  ],
+  "readiness_assessment": {
+    "more_additive_support_runtime_tests": "blocked",
+    "normalized_selector_objective": "promising_but_needs_better_state_local_labels",
+    "runtime_selector": "blocked",
+    "stage7_status": "local_valid_composition_quarantined",
+    "stage8_training": "blocked"
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_ready": false,
+  "schema_version": "krk_runtime_selector_readiness_review.v1",
+  "source_artifacts": [
+    "reports/krk_strategy_arbiter_runtime_test_review_v2.json",
+    "reports/krk_arbitration_objective_review_v1.json",
+    "reports/krk_normalized_strategy_selector_objective_probe_v1.json",
+    "reports/krk_ranked_strategy_proposal_frame_probe_v1.json",
+    "reports/krk_state_local_contrast_selector_probe_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

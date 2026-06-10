@@ -1,0 +1,54 @@
+{
+  "allowed_next_options": [
+    {
+      "description": "Design a new manifest with explicit disjoint source-stage/position diversity and a hard cap before any additional labels.",
+      "option_id": "reviewed_diverse_clean_sampling_manifest",
+      "runtime_behavior_allowed": false
+    },
+    {
+      "description": "Stop clean-control collection and review whether box_shrink should remain a held-out boundary/challenge rather than a standalone stage.",
+      "option_id": "stage7_curriculum_boundary_review",
+      "runtime_behavior_allowed": false
+    }
+  ],
+  "blocked_next_steps": [
+    "unreviewed additional Stage 7 label runs",
+    "runtime selector or arbiter changes",
+    "Stage 7 repair, support adapter, score bonus, or provider penalty",
+    "Stage 7 promotion",
+    "Stage 8 training"
+  ],
+  "causal_status": "non_causal_sampling_review",
+  "decision": {
+    "recommended_next_step": "build_clean_selected_path_dataset_and_source_bias_audit",
+    "runtime_work_allowed": false,
+    "status": "clean_success_collection_requirement_met"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": [
+    "Current replay-free clean artifacts provide enough h40 hard negatives but too few unique clean mate controls.",
+    "The single bounded current-default h40 label job produced mates but no novel de-duplicated clean controls.",
+    "Blindly running more Stage 7 current-default labels risks spending time on duplicate curriculum positions rather than resolving the architecture question."
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "stage7_clean_control_sampling_review.v0",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_clean_control_collection_plan_v0.json",
+    "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
+    "reports/structural_candidates/stage7_clean_h40_label_run_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "bounded_label_run_mates": 3,
+    "bounded_label_run_novel_controls": 0,
+    "clean_sequence_hard_negatives_have": 39,
+    "clean_sequence_success_controls_have": 11,
+    "clean_sequence_success_controls_required": 5,
+    "runtime_work_allowed": false,
+    "sampling_overlap_detected": true
+  }
+}

@@ -11,11 +11,72 @@ import chess
 from recon_lite import Graph, LinkType, Node, NodeType
 from recon_lite.trace_db import EpisodeRecord, TickRecord, TraceDB, pack_fingerprint
 from recon_lite_chess import create_wait_for_board_change
+from recon_lite_chess.routing import HandoffPacket
 from recon_lite_chess.sensors import structure as struct_sensors
 from recon_lite_chess.sensors import tactics as tactic_sensors
 
 # Shared config cache for KPK weights
 _CFG_CACHE = {"loaded": False, "weights": {"push_bias": 0.6, "king_distance_weight": 0.25, "safety_weight": 0.15}}
+
+
+def _material_signature(board: chess.Board) -> str:
+    counts: Dict[str, int] = {}
+    for piece in board.piece_map().values():
+        key = f"{'w' if piece.color == chess.WHITE else 'b'}{piece.symbol().lower()}"
+        counts[key] = counts.get(key, 0) + 1
+    return ",".join(f"{key}:{counts[key]}" for key in sorted(counts))
+
+
+def _emit_kpk_promotion_handoff_if_confirmed(board: chess.Board, env: Dict[str, Any]) -> None:
+    """Record KPK->KQK handoff evidence without causing routing."""
+    if not board or not board.move_stack:
+        return
+    last_move = board.move_stack[-1]
+    promoted_piece = board.piece_at(last_move.to_square)
+    pawn_promoted = bool(last_move.promotion)
+    promoted_piece_is_queen = bool(
+        promoted_piece
+        and promoted_piece.piece_type == chess.QUEEN
+        and promoted_piece.color != board.turn
+    )
+    if not (pawn_promoted and promoted_piece_is_queen):
+        return
+
+    try:
+        from recon_lite_chess.scripts.kqk import is_kqk_position
+
+        material_is_kqk, _attacker = is_kqk_position(board)
+    except Exception:
+        material_is_kqk = False
+    packet = HandoffPacket.create(
+        from_skill="kpk.promotion",
+        to_skill="domain.kqk",
+        phase="post_own_move",
+        status="confirmed" if material_is_kqk else "failed",
+        scope="endgame.domain",
+        evidence_terms={
+            "pawn_promoted": pawn_promoted,
+            "promoted_piece_is_queen": promoted_piece_is_queen,
+            "material_signature_changed": True,
+            "material_is_kqk": material_is_kqk,
+            "last_move": last_move.uci(),
+            "board_fen": board.fen(),
+            "material_signature": _material_signature(board),
+        },
+        achieved=["pawn_promoted", "queen_created", "material_signature_changed"]
+        if material_is_kqk
+        else ["pawn_promoted", "queen_created"],
+        failed=[] if material_is_kqk else ["material_is_kqk"],
+        continuation_exports={"domain.kqk": 1.0, "kqk.entry": 1.0}
+        if material_is_kqk
+        else {},
+        source_router="endgame_gate",
+        route_selected="kqk" if material_is_kqk else None,
+        observed_outcome="kqk_material_confirmed" if material_is_kqk else "promotion_without_kqk",
+    )
+    packets = env.setdefault("handoff_packets", [])
+    if not any(item.get("packet_id") == packet.packet_id for item in packets if isinstance(item, dict)):
+        packets.append(packet.to_dict())
 
 
 def _load_cfg():
@@ -96,6 +157,7 @@ def create_kpk_promotion_probe(nid: str) -> Node:
     def _predicate(node: Node, env: Dict[str, Any]):
         weights = _load_cfg()
         board = env.get("board")
+        _emit_kpk_promotion_handoff_if_confirmed(board, env)
         distance = struct_sensors.pawn_distance_to_promotion(board)
         node.meta["distance"] = distance
         env.setdefault("kpk", {}).setdefault("structure", {})["promotion_distance"] = distance
@@ -648,4 +710,3 @@ __all__ = [
     "create_kpk_king_leg",
     "create_kpk_arbiter",
 ]
-

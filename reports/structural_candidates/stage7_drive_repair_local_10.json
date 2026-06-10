@@ -1,0 +1,454 @@
+{
+  "total": 10,
+  "no_move": 0,
+  "improved": 7,
+  "flat": 0,
+  "worsened": 3,
+  "optimal": 4,
+  "avg_reward": 0.09573124999999996,
+  "avg_oracle_reward": 0.2002625,
+  "playouts": {},
+  "handoff_packets": [
+    {
+      "achieved": [
+        "reward_confirmed.box_shrink"
+      ],
+      "continuation_exports": {
+        "target_goal.box_shrink": 0.05
+      },
+      "evidence_terms": {
+        "box_area_after_own_move": 30,
+        "chosen_reward": 0.05,
+        "cut_axis_after_own_move": "none",
+        "enemy_king_boxed_after_own_move": false,
+        "fen": "8/2R5/1K6/8/8/3k4/8/8 w - - 0 1",
+        "fence_exists_after_own_move": false,
+        "fence_stable_after_own_move": false,
+        "label": "box_shrink",
+        "move": "c7f7",
+        "oracle_reward": 0.19687500000000002,
+        "reward_confirmed": true,
+        "reward_contract_mismatch": true,
+        "rook_safe_after_own_move": true,
+        "stage_filter": 7,
+        "visible_fence_contract_confirmed": false
+      },
+      "failed": [
+        "visible_fence_contract_confirmed"
+      ],
+      "from_skill": "krk.box_shrink",
+      "observed_outcome": "local_landmark_confirmed",
+      "packet_id": "packet.8c441391d135",
+      "phase": "post_own_move",
+      "route_selected": null,
+      "schema_version": "handoff_packet.v1",
+      "scope": "krk.landmark_eval",
+      "source_router": null,
+      "status": "confirmed",
+      "to_skill": null
+    },
+    {
+      "achieved": [
+        "reward_confirmed.box_shrink",
+        "visible_fence_contract_confirmed"
+      ],
+      "continuation_exports": {
+        "target_goal.box_shrink": 0.21849999999999997
+      },
+      "evidence_terms": {
+        "box_area_after_own_move": 4,
+        "chosen_reward": 0.21849999999999997,
+        "cut_axis_after_own_move": "edge",
+        "enemy_king_boxed_after_own_move": true,
+        "fen": "8/8/6K1/8/3R4/8/8/7k w - - 0 1",
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "label": "box_shrink",
+        "move": "d4d2",
+        "oracle_reward": 0.22943750000000002,
+        "reward_confirmed": true,
+        "reward_contract_mismatch": false,
+        "rook_safe_after_own_move": true,
+        "stage_filter": 7,
+        "visible_fence_contract_confirmed": true
+      },
+      "failed": [],
+      "from_skill": "krk.box_shrink",
+      "observed_outcome": "local_landmark_confirmed",
+      "packet_id": "packet.6243271b9cca",
+      "phase": "post_own_move",
+      "route_selected": null,
+      "schema_version": "handoff_packet.v1",
+      "scope": "krk.landmark_eval",
+      "source_router": null,
+      "status": "confirmed",
+      "to_skill": null
+    },
+    {
+      "achieved": [
+        "visible_fence_contract_confirmed"
+      ],
+      "continuation_exports": {
+        "target_goal.box_shrink": 0.0
+      },
+      "evidence_terms": {
+        "box_area_after_own_move": 12,
+        "chosen_reward": -0.046875000000000014,
+        "cut_axis_after_own_move": "edge",
+        "enemy_king_boxed_after_own_move": true,
+        "fen": "8/5K2/8/8/6R1/8/k7/8 w - - 0 1",
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "label": "box_shrink",
+        "move": "g4g3",
+        "oracle_reward": -0.046875000000000014,
+        "reward_confirmed": false,
+        "reward_contract_mismatch": false,
+        "rook_safe_after_own_move": true,
+        "stage_filter": 7,
+        "visible_fence_contract_confirmed": true
+      },
+      "failed": [
+        "reward_confirmed.box_shrink"
+      ],
+      "from_skill": "krk.box_shrink",
+      "observed_outcome": "local_landmark_failed",
+      "packet_id": "packet.9470a242bca4",
+      "phase": "post_own_move",
+      "route_selected": null,
+      "schema_version": "handoff_packet.v1",
+      "scope": "krk.landmark_eval",
+      "source_router": null,
+      "status": "failed",
+      "to_skill": null
+    },
+    {
+      "achieved": [
+        "reward_confirmed.box_shrink"
+      ],
+      "continuation_exports": {
+        "target_goal.box_shrink": 0.39218749999999997
+      },
+      "evidence_terms": {
+        "box_area_after_own_move": 28,
+        "chosen_reward": 0.39218749999999997,
+        "cut_axis_after_own_move": "none",
+        "enemy_king_boxed_after_own_move": false,
+        "fen": "8/6k1/8/8/8/8/3K4/7R w - - 0 1",
+        "fence_exists_after_own_move": false,
+        "fence_stable_after_own_move": false,
+        "label": "box_shrink",
+        "move": "h1h4",
+        "oracle_reward": 0.6203125,
+        "reward_confirmed": true,
+        "reward_contract_mismatch": true,
+        "rook_safe_after_own_move": true,
+        "stage_filter": 7,
+        "visible_fence_contract_confirmed": false
+      },
+      "failed": [
+        "visible_fence_contract_confirmed"
+      ],
+      "from_skill": "krk.box_shrink",
+      "observed_outcome": "local_landmark_confirmed",
+      "packet_id": "packet.96babe28b4e5",
+      "phase": "post_own_move",
+      "route_selected": null,
+      "schema_version": "handoff_packet.v1",
+      "scope": "krk.landmark_eval",
+      "source_router": null,
+      "status": "confirmed",
+      "to_skill": null
+    },
+    {
+      "achieved": [
+        "reward_confirmed.box_shrink"
+      ],
+      "continuation_exports": {
+        "target_goal.box_shrink": 0.39218749999999997
+      },
+      "evidence_terms": {
+        "box_area_after_own_move": 28,
+        "chosen_reward": 0.39218749999999997,
+        "cut_axis_after_own_move": "none",
+        "enemy_king_boxed_after_own_move": false,
+        "fen": "8/8/8/8/4k3/8/7K/7R w - - 0 1",
+        "fence_exists_after_own_move": false,
+        "fence_stable_after_own_move": false,
+        "label": "box_shrink",
+        "move": "h1d1",
+        "oracle_reward": 0.39218749999999997,
+        "reward_confirmed": true,
+        "reward_contract_mismatch": true,
+        "rook_safe_after_own_move": true,
+        "stage_filter": 7,
+        "visible_fence_contract_confirmed": false
+      },
+      "failed": [
+        "visible_fence_contract_confirmed"
+      ],
+      "from_skill": "krk.box_shrink",
+      "observed_outcome": "local_landmark_confirmed",
+      "packet_id": "packet.b3953ff97fcb",
+      "phase": "post_own_move",
+      "route_selected": null,
+      "schema_version": "handoff_packet.v1",
+      "scope": "krk.landmark_eval",
+      "source_router": null,
+      "status": "confirmed",
+      "to_skill": null
+    },
+    {
+      "achieved": [
+        "visible_fence_contract_confirmed"
+      ],
+      "continuation_exports": {
+        "target_goal.box_shrink": 0.0
+      },
+      "evidence_terms": {
+        "box_area_after_own_move": 6,
+        "chosen_reward": -0.07968750000000001,
+        "cut_axis_after_own_move": "edge",
+        "enemy_king_boxed_after_own_move": true,
+        "fen": "8/2K5/8/8/4R3/8/8/6k1 w - - 0 1",
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "label": "box_shrink",
+        "move": "e4f4",
+        "oracle_reward": -0.07968750000000001,
+        "reward_confirmed": false,
+        "reward_contract_mismatch": false,
+        "rook_safe_after_own_move": true,
+        "stage_filter": 7,
+        "visible_fence_contract_confirmed": true
+      },
+      "failed": [
+        "reward_confirmed.box_shrink"
+      ],
+      "from_skill": "krk.box_shrink",
+      "observed_outcome": "local_landmark_failed",
+      "packet_id": "packet.bb4658c99314",
+      "phase": "post_own_move",
+      "route_selected": null,
+      "schema_version": "handoff_packet.v1",
+      "scope": "krk.landmark_eval",
+      "source_router": null,
+      "status": "failed",
+      "to_skill": null
+    },
+    {
+      "achieved": [
+        "reward_confirmed.box_shrink"
+      ],
+      "continuation_exports": {
+        "target_goal.box_shrink": 0.05
+      },
+      "evidence_terms": {
+        "box_area_after_own_move": 20,
+        "chosen_reward": 0.05,
+        "cut_axis_after_own_move": "none",
+        "enemy_king_boxed_after_own_move": false,
+        "fen": "8/8/8/5R2/8/1k6/8/5K2 w - - 0 1",
+        "fence_exists_after_own_move": false,
+        "fence_stable_after_own_move": false,
+        "label": "box_shrink",
+        "move": "f1e1",
+        "oracle_reward": 0.14218750000000002,
+        "reward_confirmed": true,
+        "reward_contract_mismatch": true,
+        "rook_safe_after_own_move": true,
+        "stage_filter": 7,
+        "visible_fence_contract_confirmed": false
+      },
+      "failed": [
+        "visible_fence_contract_confirmed"
+      ],
+      "from_skill": "krk.box_shrink",
+      "observed_outcome": "local_landmark_confirmed",
+      "packet_id": "packet.edebaadf5c04",
+      "phase": "post_own_move",
+      "route_selected": null,
+      "schema_version": "handoff_packet.v1",
+      "scope": "krk.landmark_eval",
+      "source_router": null,
+      "status": "confirmed",
+      "to_skill": null
+    },
+    {
+      "achieved": [
+        "reward_confirmed.box_shrink"
+      ],
+      "continuation_exports": {
+        "target_goal.box_shrink": 0.21875
+      },
+      "evidence_terms": {
+        "box_area_after_own_move": 30,
+        "chosen_reward": 0.21875,
+        "cut_axis_after_own_move": "none",
+        "enemy_king_boxed_after_own_move": false,
+        "fen": "8/5K2/8/8/8/2k5/7R/8 w - - 0 1",
+        "fence_exists_after_own_move": false,
+        "fence_stable_after_own_move": false,
+        "label": "box_shrink",
+        "move": "h2f2",
+        "oracle_reward": 0.39218749999999997,
+        "reward_confirmed": true,
+        "reward_contract_mismatch": true,
+        "rook_safe_after_own_move": true,
+        "stage_filter": 7,
+        "visible_fence_contract_confirmed": false
+      },
+      "failed": [
+        "visible_fence_contract_confirmed"
+      ],
+      "from_skill": "krk.box_shrink",
+      "observed_outcome": "local_landmark_confirmed",
+      "packet_id": "packet.e634f56c09da",
+      "phase": "post_own_move",
+      "route_selected": null,
+      "schema_version": "handoff_packet.v1",
+      "scope": "krk.landmark_eval",
+      "source_router": null,
+      "status": "confirmed",
+      "to_skill": null
+    },
+    {
+      "achieved": [
+        "visible_fence_contract_confirmed"
+      ],
+      "continuation_exports": {
+        "target_goal.box_shrink": 0.0
+      },
+      "evidence_terms": {
+        "box_area_after_own_move": 12,
+        "chosen_reward": -0.5,
+        "cut_axis_after_own_move": "edge",
+        "enemy_king_boxed_after_own_move": true,
+        "fen": "8/8/8/7K/8/7k/5R2/8 w - - 0 1",
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": true,
+        "label": "box_shrink",
+        "move": "h5g5",
+        "oracle_reward": -0.10625,
+        "reward_confirmed": false,
+        "reward_contract_mismatch": false,
+        "rook_safe_after_own_move": true,
+        "stage_filter": 7,
+        "visible_fence_contract_confirmed": true
+      },
+      "failed": [
+        "reward_confirmed.box_shrink"
+      ],
+      "from_skill": "krk.box_shrink",
+      "observed_outcome": "local_landmark_failed",
+      "packet_id": "packet.7a7ab86270f5",
+      "phase": "post_own_move",
+      "route_selected": null,
+      "schema_version": "handoff_packet.v1",
+      "scope": "krk.landmark_eval",
+      "source_router": null,
+      "status": "failed",
+      "to_skill": null
+    },
+    {
+      "achieved": [
+        "reward_confirmed.box_shrink",
+        "visible_fence_contract_confirmed"
+      ],
+      "continuation_exports": {
+        "target_goal.box_shrink": 0.26225
+      },
+      "evidence_terms": {
+        "box_area_after_own_move": 6,
+        "chosen_reward": 0.26225,
+        "cut_axis_after_own_move": "edge",
+        "enemy_king_boxed_after_own_move": true,
+        "fen": "8/8/7k/8/K7/8/4R3/8 w - - 0 1",
+        "fence_exists_after_own_move": true,
+        "fence_stable_after_own_move": false,
+        "label": "box_shrink",
+        "move": "e2g2",
+        "oracle_reward": 0.26225,
+        "reward_confirmed": true,
+        "reward_contract_mismatch": false,
+        "rook_safe_after_own_move": true,
+        "stage_filter": 7,
+        "visible_fence_contract_confirmed": true
+      },
+      "failed": [],
+      "from_skill": "krk.box_shrink",
+      "observed_outcome": "local_landmark_confirmed",
+      "packet_id": "packet.e1f4ef15778e",
+      "phase": "post_own_move",
+      "route_selected": null,
+      "schema_version": "handoff_packet.v1",
+      "scope": "krk.landmark_eval",
+      "source_router": null,
+      "status": "confirmed",
+      "to_skill": null
+    }
+  ],
+  "one_ply_status_counts": {
+    "failed": 8,
+    "passed": 2
+  },
+  "conversion_status_counts": {
+    "not_checked": 10
+  },
+  "semantic_alignment_status_counts": {},
+  "conversion_by_semantic_alignment_status": {},
+  "semantic_alignment_confusion_counts": {},
+  "semantic_alignment_snapshots": {},
+  "one_ply_engine_decision_count": 10,
+  "one_ply_engine_ticks_total": 80,
+  "one_ply_engine_ticks_max": 8,
+  "one_ply_engine_early_stop_count": 10,
+  "playout_engine_decision_count": 0,
+  "playout_engine_ticks_total": 0,
+  "playout_engine_ticks_max": 0,
+  "playout_engine_early_stop_count": 0,
+  "adapter_fire_count": 0,
+  "adapter_supported_provider_by_outcome": {},
+  "adapter_supported_move_by_outcome": {},
+  "one_ply_status": "failed",
+  "conversion_status": "not_checked",
+  "label": "box_shrink",
+  "source_stage_names": [
+    "Box_Shrink"
+  ],
+  "successor_affordance_layer_enabled": true,
+  "successor_contract_gate_enabled": false,
+  "successor_role_license_enabled": true,
+  "successor_role_veto_penalty": 0.0,
+  "successor_stage0_drift_penalty": 6.0,
+  "successor_role_scoped_move_shape_enabled": true,
+  "successor_role_scoped_move_shape_bonus": 0.2,
+  "successor_role_scoped_move_shape_require_worst_reply": true,
+  "stagnation_breaker_enabled": true,
+  "stagnation_breaker_bonus": 3.0,
+  "stagnation_breaker_king_support_bonus": 0.0,
+  "post_break_continuation_enabled": true,
+  "post_break_continuation_bonus": 5.0,
+  "stage7_king_tempo_enabled": true,
+  "stage7_king_tempo_score": 25.0,
+  "stage7_drive_repair_enabled": true,
+  "stage7_drive_repair_score": 28.0,
+  "stage7_post_king_tempo_enabled": true,
+  "stage7_post_king_tempo_score": 30.0,
+  "early_stop_stable_suggestions": 2,
+  "lock_stage_filter_through_playout": false,
+  "diagnostic_caches_enabled": true,
+  "deterministic_sample_seeds": false,
+  "target_failure_trace_state_signatures": [],
+  "conversion_failure_count": 0,
+  "handoff_packet_count": 10,
+  "shadow_candidate_count": 0,
+  "counterfactual_successor_sweep_count": 0,
+  "handoff_packet_counts_by_phase": {
+    "post_own_move": {
+      "confirmed": 7,
+      "failed": 3
+    }
+  },
+  "shadow_candidate_counts_by_trigger": {}
+}

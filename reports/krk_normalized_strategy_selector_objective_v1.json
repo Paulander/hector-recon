@@ -1,0 +1,145 @@
+{
+  "candidate_objectives": [
+    {
+      "blocked_from_runtime_use": true,
+      "features": [
+        "provider_family",
+        "provider_maturity",
+        "provider_local_rank"
+      ],
+      "name": "family_maturity_ranked_logistic"
+    },
+    {
+      "blocked_from_runtime_use": true,
+      "features": [
+        "provider_local_rank",
+        "normalized_score",
+        "source_terms",
+        "move_shape_terms",
+        "post_move_terms",
+        "safety_terms"
+      ],
+      "name": "normalized_rank_plus_visible_terms"
+    },
+    {
+      "blocked_from_runtime_use": true,
+      "features": [
+        "same_state_provider_pair",
+        "forced_provider_conversion_delta",
+        "provider_family",
+        "provider_maturity",
+        "provider_local_rank_delta"
+      ],
+      "name": "contrastive_owner_pairwise"
+    }
+  ],
+  "causal_status": "non_causal_design_only",
+  "decision": {
+    "recommended_next_step": "run_offline_normalized_selector_objective_probe_v1",
+    "runtime_test_allowed_next": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "normalized_selector_objective_design_ready_for_offline_probe"
+  },
+  "evaluation_protocol": {
+    "metrics": [
+      "positive_owner_top1",
+      "positive_owner_top3",
+      "protected_negative_suppression",
+      "stage7_challenge_no_training_leakage",
+      "selected_stage0_dominance_reduction_offline",
+      "guardrail_label_no_regression_proxy"
+    ],
+    "minimum_before_runtime_review": [
+      "beats provider_family_maturity_prior on heldout protected rows",
+      "does not train on Stage7 challenge rows",
+      "can explain selected ownership with visible source terms",
+      "keeps label channels separate in artifacts"
+    ],
+    "splits": [
+      "protected_stage_family_holdout",
+      "leave_provider_family_out_if_feasible",
+      "stage7_challenge_holdout"
+    ]
+  },
+  "evidence_context": {
+    "contrast_heldout_row_count": 4,
+    "contrast_training_negative_label_count": 11,
+    "contrast_training_positive_label_count": 13,
+    "readiness_checks": []
+  },
+  "forbidden_uses": [
+    "runtime selector",
+    "runtime provider support",
+    "score bonus or provider penalty",
+    "Stage7 repair",
+    "Stage7 promotion",
+    "Stage8 training",
+    "runtime DTM/tablebase",
+    "gameplay topology mutation",
+    "hidden Python controller"
+  ],
+  "gameplay_topology_mutation": false,
+  "input_frame": "StrategyProposalFrame",
+  "label_channels": [
+    {
+      "label_channel": "selected_playout",
+      "meaning": "result when current normal arbitration selected this provider/move",
+      "use": "context, not sole target"
+    },
+    {
+      "label_channel": "forced_provider",
+      "meaning": "conversion result when a provider family is forced from the same state",
+      "use": "contrastive candidate ownership signal"
+    },
+    {
+      "label_channel": "same_move_provider_compatibility",
+      "meaning": "whether another provider can support the same move without conflict",
+      "use": "compatibility and guardrail-safety signal"
+    },
+    {
+      "label_channel": "heldout_stage7_challenge",
+      "meaning": "unresolved Stage7 residual family evidence",
+      "use": "evaluation only, never training in v1"
+    }
+  ],
+  "normalization_policy": {
+    "normalized_score": "required_if_available",
+    "provider_family_maturity_prior": "allowed_as_feature_not_hidden_router",
+    "provider_local_rank": "required",
+    "raw_global_score": "audit_only_not_selector_target",
+    "support_scale": "not_used_in_training_target"
+  },
+  "objective_id": "objective.krk.normalized_contrastive_strategy_selector.v1",
+  "purpose": "Learn strategy/provider ownership from normalized provider-local evidence and explicit label semantics, rather than raw global score or broad additive support.",
+  "required_input_fields": [
+    "state_id",
+    "active_landmark_label",
+    "provider_id",
+    "skill_id",
+    "provider_version",
+    "provider_family",
+    "provider_maturity",
+    "provider_local_rank",
+    "normalized_score",
+    "source_terms",
+    "role_licenses",
+    "plan_capsule_context",
+    "move_shape_terms",
+    "post_move_terms",
+    "safety_terms",
+    "known_outcome_label",
+    "causal_status=non_causal"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_normalized_strategy_selector_objective.v1",
+  "source_artifacts": [
+    "reports/krk_arbitration_objective_review_v1.json",
+    "reports/krk_strategy_owner_contrast_probe_v0.json",
+    "reports/krk_selector_readiness_v3_plan.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

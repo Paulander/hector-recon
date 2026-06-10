@@ -1,0 +1,49 @@
+"""Routing and handoff trace schemas for chess ReCoN subgraphs."""
+
+from .contracts import (
+    HandoffPacket,
+    CandidateMoveFrame,
+    MoveShapeRoleSpec,
+    PlanCapsuleSpec,
+    RouteDecision,
+    ShadowStemCandidate,
+    SkillContractSpec,
+    SkillContractStats,
+    StructuralCandidate,
+    record_handoff_composition_event,
+    record_plan_capsule_event,
+    record_provider_promotion_event,
+    record_structural_candidate_event,
+    stable_record_id,
+)
+from .handoff_analysis import HandoffAnalysis, analyze_handoff_files, analyze_handoff_records
+from .shadow_queue import (
+    ShadowStemQueue,
+    ShadowStemQueueItem,
+    build_shadow_stem_queue,
+    build_shadow_stem_queue_from_files,
+)
+
+__all__ = [
+    "HandoffAnalysis",
+    "HandoffPacket",
+    "CandidateMoveFrame",
+    "MoveShapeRoleSpec",
+    "PlanCapsuleSpec",
+    "RouteDecision",
+    "ShadowStemCandidate",
+    "ShadowStemQueue",
+    "ShadowStemQueueItem",
+    "SkillContractSpec",
+    "SkillContractStats",
+    "StructuralCandidate",
+    "analyze_handoff_files",
+    "analyze_handoff_records",
+    "build_shadow_stem_queue",
+    "build_shadow_stem_queue_from_files",
+    "record_handoff_composition_event",
+    "record_plan_capsule_event",
+    "record_provider_promotion_event",
+    "record_structural_candidate_event",
+    "stable_record_id",
+]

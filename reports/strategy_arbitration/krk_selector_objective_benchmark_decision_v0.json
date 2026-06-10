@@ -1,0 +1,45 @@
+{
+  "causal_status": "non_causal_benchmark_decision",
+  "decision": {
+    "implementation_authorized_by_this_packet": false,
+    "recommended_next_step": "write_runtime_review_packet_not_implementation",
+    "runtime_changes_allowed": false,
+    "runtime_review_packet_allowed_next": true,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "status": "selector_objective_benchmark_promising_non_causal"
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_provider_suppression": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_selector_objective_benchmark_decision.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_objective_benchmark_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "benchmark_status": "selector_objective_benchmark_promising_non_causal",
+    "best_abstain_recall": 1.0,
+    "best_accuracy": 0.9523809523809523,
+    "best_model": "combined_simple_rule",
+    "best_safe_preservation_recall": 1.0,
+    "best_switch_contrast_recall": 0.8,
+    "promising_runtime_feature_model_count": 1,
+    "runtime_authorization_row_count": 0,
+    "seed_row_count": 21,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "target_action_counts": {
+      "abstain_context_only": 5,
+      "prefer_visible_alternative": 5,
+      "preserve_selected_owner": 11
+    }
+  }
+}

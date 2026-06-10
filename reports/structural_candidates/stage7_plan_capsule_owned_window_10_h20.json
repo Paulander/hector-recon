@@ -1,0 +1,183 @@
+{
+  "schema_version": "plan_capsule_owned_window_analysis.v1",
+  "causal_status": "non_causal",
+  "capsule_id": "krk.post_box_shrink_continuation",
+  "ttl_white_moves": 3,
+  "window_count": 5,
+  "ttl_failure_count": 3,
+  "windows": [
+    {
+      "sample": 1,
+      "result": "max_plies",
+      "start_fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+      "moves": [
+        "e2d1",
+        "d1c1",
+        "c1c2"
+      ],
+      "owned_white_move_count": 3,
+      "ttl_white_moves": 3,
+      "start_metrics": {
+        "box_area": 21,
+        "enemy_edge_distance": 2,
+        "enemy_corner_distance": 2,
+        "white_king_enemy_distance": 2,
+        "white_king_rook_distance": 3
+      },
+      "end_metrics": {
+        "box_area": 21,
+        "enemy_edge_distance": 2,
+        "enemy_corner_distance": 3,
+        "white_king_enemy_distance": 2,
+        "white_king_rook_distance": 5
+      },
+      "progress_terms": [
+        "box_area_preserved_over_owned_window",
+        "enemy_edge_distance_not_worse_over_owned_window"
+      ],
+      "ttl_failure": true,
+      "entry_confirmed": true,
+      "abort_terms_at_entry": []
+    },
+    {
+      "sample": 2,
+      "result": "max_plies",
+      "start_fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+      "moves": [
+        "e4f3",
+        "f3g4",
+        "g4f3"
+      ],
+      "owned_white_move_count": 3,
+      "ttl_white_moves": 3,
+      "start_metrics": {
+        "box_area": 7,
+        "enemy_edge_distance": 0,
+        "enemy_corner_distance": 3,
+        "white_king_enemy_distance": 3,
+        "white_king_rook_distance": 4
+      },
+      "end_metrics": {
+        "box_area": 7,
+        "enemy_edge_distance": 0,
+        "enemy_corner_distance": 3,
+        "white_king_enemy_distance": 2,
+        "white_king_rook_distance": 5
+      },
+      "progress_terms": [
+        "box_area_preserved_over_owned_window",
+        "enemy_edge_distance_not_worse_over_owned_window",
+        "enemy_corner_distance_not_worse_over_owned_window",
+        "white_king_support_improved_over_owned_window"
+      ],
+      "ttl_failure": false,
+      "entry_confirmed": true,
+      "abort_terms_at_entry": []
+    },
+    {
+      "sample": 3,
+      "result": "max_plies",
+      "start_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "moves": [
+        "a6a8",
+        "a8d8",
+        "d1e2"
+      ],
+      "owned_white_move_count": 3,
+      "ttl_white_moves": 3,
+      "start_metrics": {
+        "box_area": 35,
+        "enemy_edge_distance": 2,
+        "enemy_corner_distance": 3,
+        "white_king_enemy_distance": 3,
+        "white_king_rook_distance": 5
+      },
+      "end_metrics": {
+        "box_area": 21,
+        "enemy_edge_distance": 2,
+        "enemy_corner_distance": 3,
+        "white_king_enemy_distance": 2,
+        "white_king_rook_distance": 6
+      },
+      "progress_terms": [
+        "box_area_decreased_over_owned_window",
+        "enemy_edge_distance_not_worse_over_owned_window",
+        "enemy_corner_distance_not_worse_over_owned_window",
+        "white_king_support_improved_over_owned_window"
+      ],
+      "ttl_failure": false,
+      "entry_confirmed": true,
+      "abort_terms_at_entry": []
+    },
+    {
+      "sample": 6,
+      "result": "max_plies",
+      "start_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "moves": [
+        "a5h5",
+        "h5h8",
+        "h8d8"
+      ],
+      "owned_white_move_count": 3,
+      "ttl_white_moves": 3,
+      "start_metrics": {
+        "box_area": 28,
+        "enemy_edge_distance": 3,
+        "enemy_corner_distance": 3,
+        "white_king_enemy_distance": 2,
+        "white_king_rook_distance": 3
+      },
+      "end_metrics": {
+        "box_area": 28,
+        "enemy_edge_distance": 3,
+        "enemy_corner_distance": 3,
+        "white_king_enemy_distance": 3,
+        "white_king_rook_distance": 6
+      },
+      "progress_terms": [
+        "box_area_preserved_over_owned_window",
+        "enemy_edge_distance_not_worse_over_owned_window",
+        "enemy_corner_distance_not_worse_over_owned_window"
+      ],
+      "ttl_failure": true,
+      "entry_confirmed": true,
+      "abort_terms_at_entry": []
+    },
+    {
+      "sample": 9,
+      "result": "max_plies",
+      "start_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "moves": [
+        "a5h5",
+        "h5h8",
+        "h8d8"
+      ],
+      "owned_white_move_count": 3,
+      "ttl_white_moves": 3,
+      "start_metrics": {
+        "box_area": 28,
+        "enemy_edge_distance": 3,
+        "enemy_corner_distance": 3,
+        "white_king_enemy_distance": 2,
+        "white_king_rook_distance": 3
+      },
+      "end_metrics": {
+        "box_area": 28,
+        "enemy_edge_distance": 3,
+        "enemy_corner_distance": 3,
+        "white_king_enemy_distance": 3,
+        "white_king_rook_distance": 6
+      },
+      "progress_terms": [
+        "box_area_preserved_over_owned_window",
+        "enemy_edge_distance_not_worse_over_owned_window",
+        "enemy_corner_distance_not_worse_over_owned_window"
+      ],
+      "ttl_failure": true,
+      "entry_confirmed": true,
+      "abort_terms_at_entry": []
+    }
+  ],
+  "diagnosis": "owned_window_progress_visible",
+  "next_action": "use_owned_window_monitor_as_non_causal_capsule_validation_signal"
+}

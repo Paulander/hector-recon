@@ -1,0 +1,76 @@
+{
+  "schema_version": "stage8_opposition_overlay_manifest.v1",
+  "created_at": "2026-05-16T13:41:36.754195+00:00",
+  "candidate": {
+    "label": "opposition_tempo",
+    "stage_index": 8,
+    "provider_version": "stage8_opposition_overlay_v1",
+    "promotion_status": "overlay_only",
+    "reason": "target passed and no paired guardrail deltas regressed, but existing control guardrail debt blocks full promotion",
+    "causal_status": "compiled_overlay_candidate",
+    "global_default": false
+  },
+  "training": {
+    "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_profile_overlay_smoke/baseline/best_by_stage/box_shrink.pkl",
+    "learner": "snapshots/krk_triplet_pipeline/adaptive_krk_stage8_opposition_overlay_candidate_guarded/baseline/final_learner.pkl",
+    "device": "cuda",
+    "prevent_cross_label_actuator_merge": true,
+    "opposition_tempo_actuators": 7,
+    "note": "Initial unguarded Stage 8 training merged all candidates into older box_shrink providers; the opt-in merge guard preserves new-stage provider identity."
+  },
+  "topology": {
+    "base_topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage7_box_drive_repair_sandbox/topology/krk_entry_topology_stage7_post_king_tempo_sandbox.json",
+    "composed_topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage8_opposition_overlay_candidate_guarded/topology/krk_entry_topology.json",
+    "overlay_label": "opposition_tempo",
+    "base_provider_version": "stage7_scoped_validated_v1",
+    "overlay_provider_version": "stage8_opposition_overlay_v1",
+    "overlay_actuator_id_remap": "recorded in topology meta.provider_preservation.overlay_actuator_id_remap"
+  },
+  "artifacts": {
+    "missing_provider_baseline": "reports/structural_candidates/stage8_opposition_tempo_baseline_25_h40.json",
+    "target_25": "reports/structural_candidates/stage8_opposition_overlay_target_25_h40.json",
+    "target_100": "reports/structural_candidates/stage8_opposition_overlay_target_100_h40.json",
+    "target_100_analysis": "reports/structural_candidates/stage8_opposition_overlay_target_100_h40_analysis.md",
+    "stage7_guard_candidate": "reports/structural_candidates/stage8_opposition_guard_stage7_box_50_h40.json",
+    "stage7_guard_control": "reports/structural_candidates/stage8_compare_base_stage7_box_50_h40.json",
+    "stage6_guard_candidate": "reports/structural_candidates/stage8_opposition_guard_stage6_drive_50_h40.json",
+    "stage5_guard_candidate": "reports/structural_candidates/stage8_opposition_guard_stage5_fence_50_h40.json",
+    "stage4_guard_candidate": "reports/structural_candidates/stage8_opposition_guard_stage4_wrong_tempo_50_h40.json",
+    "promotion_eval": "reports/structural_candidates/stage8_opposition_overlay_promotion_eval.json"
+  },
+  "results": {
+    "target_100": {
+      "mate": 100,
+      "max_plies": 0,
+      "shadow_candidates": 0,
+      "improved": 100,
+      "optimal": 100
+    },
+    "stage7_guard_delta_vs_control": {
+      "mate_rate_delta": 0.0,
+      "shadow_candidates_delta": 0,
+      "control_has_debt": true
+    },
+    "stage6_guard": {
+      "mate": 50,
+      "max_plies": 0,
+      "shadow_candidates": 0
+    },
+    "stage5_guard": {
+      "mate": 50,
+      "max_plies": 0,
+      "shadow_candidates": 0
+    },
+    "stage4_guard_delta_vs_control": {
+      "mate_rate_delta": 0.22,
+      "shadow_candidates_delta": -22,
+      "control_has_debt": true
+    }
+  },
+  "next_steps": [
+    "Do not promote Stage 8 globally yet.",
+    "Treat Stage 8 as overlay-only until Stage 7/Stage 4 control guardrail debt is resolved or explicitly scoped.",
+    "Investigate why the prior Stage 7 validated artifact is not reproduced by current command serialization.",
+    "Keep the cross-label actuator merge guard for future overlay candidate training."
+  ]
+}

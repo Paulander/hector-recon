@@ -1,0 +1,167 @@
+{
+  "causal_status": "non_causal_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "benchmark_stage_conditioned_candidate_generation_non_causal",
+    "runtime_candidate_generator_refresh_allowed": false,
+    "selector_allowed": false,
+    "status": "stage_conditioned_candidate_generation_scope_review_ready"
+  },
+  "forbidden_uses": [
+    "runtime_selector",
+    "provider_suppression",
+    "score_delta",
+    "direct_provider_routing",
+    "stage7_training_rows",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase"
+  ],
+  "future_benchmark_requirements": [
+    "benchmark stage-conditioned candidate emission separately from selection",
+    "do not suppress risk-scope providers at runtime from capacity labels alone",
+    "use mixed Stage 4 cells only with companion visible context terms",
+    "keep Stage 7 held out as challenge evidence",
+    "report candidate-generation recall and risk by protected stage",
+    "require separate runtime review before any candidate-generator refresh"
+  ],
+  "gameplay_topology_mutation": false,
+  "input_status": "cross_stage_capacity_labels_improve_in_sample_but_generalization_blocked",
+  "interpretation": {
+    "capacity_labels_are_not_ownership_labels": true,
+    "global_cross_stage_refresh_supported": false,
+    "runtime_refresh_supported": false,
+    "selector_supported": false,
+    "stage4_requires_companion_terms": true,
+    "stage5_has_positive_capacity_scopes": true,
+    "stage6_has_mixed_positive_and_risk_scopes": true,
+    "stage_conditioned_scope_supported_for_benchmark": true
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_stage_conditioned_scope_review.v3",
+  "scope_review_goal": "Decide whether the candidate-generation refresh should be scoped by active protected stage/landmark instead of treated as a global cross-stage candidate policy.",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_generation_cross_stage_label_outcome_review_v3.json",
+    "reports/strategy_arbitration/krk_candidate_generation_refresh_probe_v2_cross_stage_labels.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "stage_scopes": {
+    "stage4": {
+      "families": [
+        {
+          "family": "edge_trap",
+          "negative": 3,
+          "positive": 3,
+          "positive_rate": 0.5,
+          "scope_class": "mixed_needs_companion_terms",
+          "support": 6
+        },
+        {
+          "family": "stage0_basin",
+          "negative": 2,
+          "positive": 3,
+          "positive_rate": 0.6,
+          "scope_class": "mixed_needs_companion_terms",
+          "support": 5
+        }
+      ],
+      "mixed_scope_families": [
+        "edge_trap",
+        "stage0_basin"
+      ],
+      "positive_scope_families": [],
+      "risk_scope_families": [],
+      "underpowered_families": []
+    },
+    "stage5": {
+      "families": [
+        {
+          "family": "edge_trap",
+          "negative": 0,
+          "positive": 9,
+          "positive_rate": 1.0,
+          "scope_class": "candidate_generation_positive_scope",
+          "support": 9
+        },
+        {
+          "family": "fence_established",
+          "negative": 0,
+          "positive": 2,
+          "positive_rate": 1.0,
+          "scope_class": "candidate_generation_positive_scope",
+          "support": 2
+        },
+        {
+          "family": "stage0_basin",
+          "negative": 0,
+          "positive": 5,
+          "positive_rate": 1.0,
+          "scope_class": "candidate_generation_positive_scope",
+          "support": 5
+        }
+      ],
+      "mixed_scope_families": [],
+      "positive_scope_families": [
+        "edge_trap",
+        "fence_established",
+        "stage0_basin"
+      ],
+      "risk_scope_families": [],
+      "underpowered_families": []
+    },
+    "stage6": {
+      "families": [
+        {
+          "family": "drive_to_edge",
+          "negative": 1,
+          "positive": 0,
+          "positive_rate": 0.0,
+          "scope_class": "underpowered",
+          "support": 1
+        },
+        {
+          "family": "edge_trap",
+          "negative": 3,
+          "positive": 0,
+          "positive_rate": 0.0,
+          "scope_class": "candidate_generation_risk_scope",
+          "support": 3
+        },
+        {
+          "family": "fence_established",
+          "negative": 1,
+          "positive": 0,
+          "positive_rate": 0.0,
+          "scope_class": "underpowered",
+          "support": 1
+        },
+        {
+          "family": "stage0_basin",
+          "negative": 0,
+          "positive": 4,
+          "positive_rate": 1.0,
+          "scope_class": "candidate_generation_positive_scope",
+          "support": 4
+        }
+      ],
+      "mixed_scope_families": [],
+      "positive_scope_families": [
+        "stage0_basin"
+      ],
+      "risk_scope_families": [
+        "edge_trap"
+      ],
+      "underpowered_families": [
+        "drive_to_edge",
+        "fence_established"
+      ]
+    }
+  }
+}

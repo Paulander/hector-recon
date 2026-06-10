@@ -1,0 +1,1227 @@
+{
+  "causal_status": "non_causal_label_run",
+  "decision": {
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "status": "selector_objective_independent_validation_labels_collected"
+  },
+  "gameplay_topology_mutation": false,
+  "labels": [
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_owner_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "6k1/4R3/5K2/8/8/8/8/8 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 3,
+        "engine_early_stop_count": 3,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 27,
+        "final_fen": null,
+        "plies": 5,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.6ed5d7581360",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.03646259887238
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.03546306982041
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.03472660408822
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.03464066722393
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.03422244485468
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.0333599448204
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.0333599448204
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.0333599448204
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.0333599448204
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "e7a7",
+          "provider_id": "krk.stage0_basin",
+          "score": 68.0333599448204
+        }
+      ],
+      "job_id": "job.krk.selected_provider_diversity.a78631d2dea6",
+      "label_semantics": "normal_selected_owner_outcome_not_capacity_label",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_selector_objective_independent_validation_label.v0",
+      "selected_move": "e7a7",
+      "selected_playout_success": {
+        "engine_decision_count": 3,
+        "engine_early_stop_count": 3,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 27,
+        "final_fen": null,
+        "plies": 5,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_manifest": "reports/strategy_arbitration/krk_selector_objective_independent_validation_manifest_v0.json",
+      "source_stage": "stage4",
+      "state_id": "state.6ed5d7581360",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_owner_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "8/8/k7/2K5/8/1R6/8/8 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 4,
+        "engine_early_stop_count": 4,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 36,
+        "final_fen": null,
+        "plies": 7,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.e99b2e731810",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.662068956923672
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.661069427871706
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.660332962139517
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.66024702527523
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.659828802905977
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.658966302871704
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.658966302871704
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.658966302871704
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.658966302871704
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "b3b1",
+          "provider_id": "krk.stage0_basin",
+          "score": 30.658966302871704
+        }
+      ],
+      "job_id": "job.krk.selected_provider_diversity.e70f2c028dfd",
+      "label_semantics": "normal_selected_owner_outcome_not_capacity_label",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_selector_objective_independent_validation_label.v0",
+      "selected_move": "b3b1",
+      "selected_playout_success": {
+        "engine_decision_count": 4,
+        "engine_early_stop_count": 4,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 36,
+        "final_fen": null,
+        "plies": 7,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_manifest": "reports/strategy_arbitration/krk_selector_objective_independent_validation_manifest_v0.json",
+      "source_stage": "stage4",
+      "state_id": "state.e99b2e731810",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_owner_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "8/8/8/8/8/4K3/3R4/5k2 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 6,
+        "engine_early_stop_count": 6,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 54,
+        "final_fen": null,
+        "plies": 11,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.2f5f57c82e5b",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.531386011672204
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.53038648262024
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52965001688805
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52956408002377
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52914585765451
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52828335762024
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52828335762024
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52828335762024
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52828335762024
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "d2d8",
+          "provider_id": "krk.stage0_basin",
+          "score": 61.52828335762024
+        }
+      ],
+      "job_id": "job.krk.selected_provider_diversity.92d9c9e8e7a8",
+      "label_semantics": "normal_selected_owner_outcome_not_capacity_label",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_selector_objective_independent_validation_label.v0",
+      "selected_move": "d2d8",
+      "selected_playout_success": {
+        "engine_decision_count": 6,
+        "engine_early_stop_count": 6,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 54,
+        "final_fen": null,
+        "plies": 11,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_manifest": "reports/strategy_arbitration/krk_selector_objective_independent_validation_manifest_v0.json",
+      "source_stage": "stage4",
+      "state_id": "state.2f5f57c82e5b",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_owner_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "7k/5KR1/8/8/8/8/8/8 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.cc83524289f3",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "g7g4",
+          "provider_id": "krk.stage0_basin",
+          "score": 85.2941995946886
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "g7g4",
+          "provider_id": "krk.stage0_basin",
+          "score": 85.29320006563664
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "g7g4",
+          "provider_id": "krk.stage0_basin",
+          "score": 85.29246359990445
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "g7g4",
+          "provider_id": "krk.stage0_basin",
+          "score": 85.29237766304016
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "g7g4",
+          "provider_id": "krk.stage0_basin",
+          "score": 85.29195944067091
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "g7g4",
+          "provider_id": "krk.stage0_basin",
+          "score": 85.29109694063663
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "g7g4",
+          "provider_id": "krk.stage0_basin",
+          "score": 85.29109694063663
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "g7g4",
+          "provider_id": "krk.stage0_basin",
+          "score": 85.29109694063663
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "g7g4",
+          "provider_id": "krk.stage0_basin",
+          "score": 85.29109694063663
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "g7g4",
+          "provider_id": "krk.stage0_basin",
+          "score": 85.29109694063663
+        }
+      ],
+      "job_id": "job.krk.selected_provider_diversity.bebc41a68559",
+      "label_semantics": "normal_selected_owner_outcome_not_capacity_label",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_selector_objective_independent_validation_label.v0",
+      "selected_move": "g7g4",
+      "selected_playout_success": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_manifest": "reports/strategy_arbitration/krk_selector_objective_independent_validation_manifest_v0.json",
+      "source_stage": "stage4",
+      "state_id": "state.cc83524289f3",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_owner_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "8/7k/5K2/8/8/8/8/6R1 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 4,
+        "engine_early_stop_count": 4,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 36,
+        "final_fen": null,
+        "plies": 7,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.aa04e7a0d891",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.731953912806697
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.73095438375473
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.730217918022542
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.730131981158257
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.729713758789003
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.72885125875473
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.72885125875473
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.72885125875473
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.72885125875473
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 5.72885125875473
+        }
+      ],
+      "job_id": "job.krk.selected_provider_diversity.64ede1440eda",
+      "label_semantics": "normal_selected_owner_outcome_not_capacity_label",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_selector_objective_independent_validation_label.v0",
+      "selected_move": "f6f7",
+      "selected_playout_success": {
+        "engine_decision_count": 4,
+        "engine_early_stop_count": 4,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 36,
+        "final_fen": null,
+        "plies": 7,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_manifest": "reports/strategy_arbitration/krk_selector_objective_independent_validation_manifest_v0.json",
+      "source_stage": "stage4",
+      "state_id": "state.aa04e7a0d891",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_owner_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "8/8/8/8/8/8/R2K4/5k2 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 4,
+        "engine_early_stop_count": 4,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 36,
+        "final_fen": null,
+        "plies": 7,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.c732b2d6dc56",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "d2e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 12.17762255055923
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "d2e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 12.176623021507263
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "d2e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 12.175886555775076
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "d2e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 12.17580061891079
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "d2e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 12.175382396541536
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "d2e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 12.174519896507263
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "d2e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 12.174519896507263
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "d2e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 12.174519896507263
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "d2e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 12.174519896507263
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "d2e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 12.174519896507263
+        }
+      ],
+      "job_id": "job.krk.selected_provider_diversity.8f16ecdcae70",
+      "label_semantics": "normal_selected_owner_outcome_not_capacity_label",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_selector_objective_independent_validation_label.v0",
+      "selected_move": "d2e3",
+      "selected_playout_success": {
+        "engine_decision_count": 4,
+        "engine_early_stop_count": 4,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 36,
+        "final_fen": null,
+        "plies": 7,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_manifest": "reports/strategy_arbitration/krk_selector_objective_independent_validation_manifest_v0.json",
+      "source_stage": "stage4",
+      "state_id": "state.c732b2d6dc56",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_selected_owner_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "k7/2K1R3/8/8/8/8/8/8 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.545c508c6a40",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "e7e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 58.19503222538251
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "e7e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 58.194032696330545
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "e7e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 58.19329623059836
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "e7e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 58.193210293734076
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "e7e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 58.19279207136482
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "e7e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 58.19192957133055
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "e7e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 58.19192957133055
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "e7e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 58.19192957133055
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "e7e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 58.19192957133055
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "e7e3",
+          "provider_id": "krk.stage0_basin",
+          "score": 58.19192957133055
+        }
+      ],
+      "job_id": "job.krk.selected_provider_diversity.0d53a72313ba",
+      "label_semantics": "normal_selected_owner_outcome_not_capacity_label",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_selector_objective_independent_validation_label.v0",
+      "selected_move": "e7e3",
+      "selected_playout_success": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_manifest": "reports/strategy_arbitration/krk_selector_objective_independent_validation_manifest_v0.json",
+      "source_stage": "stage4",
+      "state_id": "state.545c508c6a40",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selected_owner_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "1k6/8/2K5/8/8/8/8/R7 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.df10abc0731f",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_9",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.74213240334578
+        },
+        {
+          "actuator": "actuator_4",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.74178999101134
+        },
+        {
+          "actuator": "actuator_16",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.739654696893695
+        },
+        {
+          "actuator": "actuator_14",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.739447120255235
+        },
+        {
+          "actuator": "actuator_15",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.73850336263953
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.73807969689369
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.73807969689369
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.73807969689369
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.73807969689369
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "a1a6",
+          "provider_id": "krk.stage0_basin",
+          "score": 40.73807969689369
+        }
+      ],
+      "job_id": "job.krk.selected_provider_diversity.727cb8fc6e3b",
+      "label_semantics": "normal_selected_owner_outcome_not_capacity_label",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_selector_objective_independent_validation_label.v0",
+      "selected_move": "a1a6",
+      "selected_playout_success": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_manifest": "reports/strategy_arbitration/krk_selector_objective_independent_validation_manifest_v0.json",
+      "source_stage": "stage6",
+      "state_id": "state.df10abc0731f",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selected_owner_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "4k3/8/3K4/8/8/8/8/R7 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.e65bbd1e9f0c",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_2",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_4",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_9",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_10",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "a1f1",
+          "provider_id": "krk.stage0_basin",
+          "score": 43.404825031757355
+        }
+      ],
+      "job_id": "job.krk.selected_provider_diversity.f344d32dc406",
+      "label_semantics": "normal_selected_owner_outcome_not_capacity_label",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_selector_objective_independent_validation_label.v0",
+      "selected_move": "a1f1",
+      "selected_playout_success": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_manifest": "reports/strategy_arbitration/krk_selector_objective_independent_validation_manifest_v0.json",
+      "source_stage": "stage6",
+      "state_id": "state.e65bbd1e9f0c",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_selected_owner_outcome_label",
+      "composition_profile": "handoff_composition_v1",
+      "fen": "7k/8/5K2/8/8/8/8/R7 w - - 0 1",
+      "forced_provider_conversion_for_selected_provider": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "frame_id": "cp.krk.state.cb9f8eea01fd",
+      "guardrail_safe_ownership": {
+        "basis": "selected_playout_success_h40",
+        "safe": true
+      },
+      "horizon": 40,
+      "initial_provider_count": 1,
+      "initial_same_move_providers": [
+        {
+          "actuator": "actuator_10",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.832160526347344
+        },
+        {
+          "actuator": "actuator_7",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.83116099729538
+        },
+        {
+          "actuator": "actuator_11",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.83042453156319
+        },
+        {
+          "actuator": "actuator_19",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.83033859469891
+        },
+        {
+          "actuator": "actuator_18",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.82992037232965
+        },
+        {
+          "actuator": "actuator_2",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.82905787229538
+        },
+        {
+          "actuator": "actuator_3",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.82905787229538
+        },
+        {
+          "actuator": "actuator_5",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.82905787229538
+        },
+        {
+          "actuator": "actuator_6",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.82905787229538
+        },
+        {
+          "actuator": "actuator_8",
+          "move_uci": "f6f7",
+          "provider_id": "krk.stage0_basin",
+          "score": 37.82905787229538
+        }
+      ],
+      "job_id": "job.krk.selected_provider_diversity.12735a378b9b",
+      "label_semantics": "normal_selected_owner_outcome_not_capacity_label",
+      "labels_generated": true,
+      "runtime_behavior_changed": false,
+      "same_move_provider_compatibility_when_available": {
+        "available": true,
+        "executed": false,
+        "provider_count": 1,
+        "reason": "recorded_initial_same_move_provider_set_only_to_keep_label_run_bounded"
+      },
+      "schema_version": "krk_selector_objective_independent_validation_label.v0",
+      "selected_move": "f6f7",
+      "selected_playout_success": {
+        "engine_decision_count": 2,
+        "engine_early_stop_count": 2,
+        "engine_ticks_max": 9,
+        "engine_ticks_total": 18,
+        "final_fen": null,
+        "plies": 3,
+        "result": "mate",
+        "stagnation_summary": null,
+        "trace_included": false
+      },
+      "selected_provider": "krk.stage0_basin",
+      "shadow_candidate_delta": {
+        "available": false,
+        "reason": "shadow deltas require paired selector intervention; no selector was run"
+      },
+      "source_manifest": "reports/strategy_arbitration/krk_selector_objective_independent_validation_manifest_v0.json",
+      "source_stage": "stage6",
+      "state_id": "state.cb9f8eea01fd",
+      "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+      "topology_version": "stage6_overlay_composed_v1"
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_selector_objective_independent_validation_labels.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_objective_independent_validation_manifest_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "label_count": 10,
+    "selected_result_counts": {
+      "mate": 10
+    },
+    "selected_result_counts_by_stage": {
+      "stage4:mate": 7,
+      "stage6:mate": 3
+    },
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "wall_time_sec": 22.151795
+  }
+}

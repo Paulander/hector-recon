@@ -1,0 +1,72 @@
+{
+  "causal_status": "non_causal_next_gate",
+  "decision": {
+    "future_behavior_changing_selector_review_packet_allowed": false,
+    "runtime_changes_allowed": false,
+    "selector_runtime_ready": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "selector_recommendations_need_more_observation_data"
+  },
+  "gameplay_topology_mutation": false,
+  "gate_findings": {
+    "abstain_recommendation_count": 0,
+    "capacity_label_used_as_ownership_label_count": 0,
+    "no_runtime_behavior_changes": true,
+    "offline_label_mismatch_count": 1,
+    "preserve_on_selected_owner_failure_count": 1,
+    "recommendation_count_by_class": {
+      "abstain_context_only": 0,
+      "prefer_visible_alternative": 3,
+      "preserve_selected_owner": 5
+    },
+    "rows_without_visible_alternatives": 0,
+    "stage7_remains_held_out": true,
+    "unsafe_if_made_causal_count": 1
+  },
+  "hidden_python_controller": false,
+  "next_bounded_evidence_recommendation": {
+    "execute_without_separate_approval": false,
+    "forbidden_actions": [
+      "behavior_changing_selector_implementation",
+      "routing_changes",
+      "score_changes",
+      "provider_selection_changes",
+      "provider_suppression",
+      "stage7_promotion",
+      "stage8_training",
+      "runtime_dtm_or_tablebase",
+      "gameplay_topology_mutation",
+      "treating_capacity_labels_as_ownership_labels"
+    ],
+    "name": "selector_objective_recommendation_observation_expansion_v0",
+    "purpose": "Collect more recommendation-only observations before any behavior-changing review packet, especially abstain/weak-evidence cases and the preserve false-negative pattern.",
+    "required_coverage_before_runtime_review_packet": {
+      "abstain_context_only_rows": "at_least_one_runtime_observation_with_zero_visible_positive_alternatives",
+      "preserve_false_negative_recheck": "no_preserve_selected_owner_on_selected_owner_failed_rows",
+      "safe_preservation_alignment": "all_preserve_recommendations_on_selected_owner_converted_rows",
+      "switch_failure_alignment": "all_switch_recommendations_on_selected_owner_failed_rows",
+      "visible_alternative_metadata": "present_for_all_non_abstain_recommendations"
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_provider_suppression": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_selector_objective_next_gate.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_objective_recommendation_analysis_v0.json",
+    "reports/strategy_arbitration/krk_selector_objective_observability_sandbox_v0.json",
+    "reports/strategy_arbitration/krk_selector_objective_benchmark_v0.json",
+    "reports/strategy_arbitration/krk_selector_objective_benchmark_decision_v0.json",
+    "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v2.json",
+    "reports/strategy_arbitration/krk_selector_objective_seed_probe_v2.json",
+    "reports/current_agent_brief.md"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

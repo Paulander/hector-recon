@@ -1,0 +1,135 @@
+{
+  "causal_status": "non_causal_label_recovery_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "build_non_causal_selector_objective_seed_manifest",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "status": "ownership_label_recovery_seed_manifest_ready_selector_blocked"
+  },
+  "forbidden_uses": [
+    "selector_training",
+    "score_changes",
+    "provider_routing",
+    "capacity_labels_as_ownership_labels",
+    "stage7_training_or_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "gameplay_topology_mutation": false,
+  "joined_records": [
+    {
+      "positive_trace_provider_candidate_count": 12,
+      "recovery_class": "safe_preservation_with_visible_positive_alternative",
+      "selected_provider": "krk.fence_established",
+      "selected_provider_family": "fence_established",
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6",
+      "target_label": "selected_owner_converted",
+      "trace_provider_candidate_count": 12,
+      "trace_sources": [
+        "candidate_generation_refresh_sandbox"
+      ],
+      "usable_for_selector_training": false
+    },
+    {
+      "positive_trace_provider_candidate_count": 12,
+      "recovery_class": "safe_preservation_with_visible_positive_alternative",
+      "selected_provider": "krk.edge_trap_close",
+      "selected_provider_family": "edge_trap",
+      "source_stage": "stage5",
+      "state_id": "state.326222aefdf1",
+      "target_label": "selected_owner_converted",
+      "trace_provider_candidate_count": 12,
+      "trace_sources": [
+        "candidate_generation_refresh_sandbox"
+      ],
+      "usable_for_selector_training": false
+    },
+    {
+      "positive_trace_provider_candidate_count": 3,
+      "recovery_class": "selected_failure_with_visible_positive_alternative",
+      "selected_provider": "krk.stage0_basin",
+      "selected_provider_family": "stage0_basin",
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca",
+      "target_label": "selected_owner_failed",
+      "trace_provider_candidate_count": 3,
+      "trace_sources": [
+        "exact_trace_enrichment_sandbox"
+      ],
+      "usable_for_selector_training": false
+    },
+    {
+      "positive_trace_provider_candidate_count": 1,
+      "recovery_class": "selected_failure_with_visible_positive_alternative",
+      "selected_provider": "krk.edge_trap_close",
+      "selected_provider_family": "edge_trap",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "target_label": "selected_owner_failed",
+      "trace_provider_candidate_count": 1,
+      "trace_sources": [
+        "candidate_generation_refresh_sandbox"
+      ],
+      "usable_for_selector_training": false
+    }
+  ],
+  "label_recovery_gaps": [
+    "ownership labels are still offline evidence and not selector-training rows",
+    "provider-family diversity remains narrow, especially stage0_basin-heavy",
+    "paired objective semantics pass only with offline outcome/channel labels",
+    "runtime feature translation remains unresolved for a general selector",
+    "progress-window sandbox failure showed candidate-set coverage can still be missing"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_ownership_label_recovery_review.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v5.json",
+    "reports/krk_ownership_selection_label_dataset_v5.json",
+    "reports/krk_state_local_paired_ownership_review_v1.json",
+    "reports/krk_progress_window_reconsideration_post_activation_audit_v0.json",
+    "reports/strategy_arbitration/krk_candidate_generation_v5_next_boundary_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "candidate_context_ready": true,
+    "joined_recovery_class_counts": {
+      "safe_preservation_with_visible_positive_alternative": 2,
+      "selected_failure_with_visible_positive_alternative": 2
+    },
+    "joined_state_count": 4,
+    "ownership_provider_family_counts": {
+      "edge_trap": 3,
+      "fence_established": 1,
+      "stage0_basin": 37
+    },
+    "ownership_row_count": 41,
+    "ownership_source_stage_counts": {
+      "stage4": 19,
+      "stage5": 14,
+      "stage6": 8
+    },
+    "ownership_target_label_counts": {
+      "selected_owner_converted": 31,
+      "selected_owner_failed": 10
+    },
+    "paired_runtime_feature_passing_model_count": 0,
+    "paired_threshold_passing_model_count": 2,
+    "progress_sandbox_primary_failure_class": "candidate_set_missing_good_alternative",
+    "runtime_trace_provider_candidate_row_count": 28,
+    "safe_preservation_with_visible_positive_alternative_count": 2,
+    "selected_failure_with_visible_positive_alternative_count": 2,
+    "selector_training_row_count": 0,
+    "stage7_row_count": 0
+  }
+}

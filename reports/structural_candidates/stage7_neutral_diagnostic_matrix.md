@@ -1,0 +1,201 @@
+# Stage 7 Neutral Diagnostic Matrix
+
+This report is non-causal. It does not change runtime behavior, promote Stage 7, train Stage 8, or add a repair path.
+
+## Current Best Interpretation
+
+Stage 7 is best treated as local_valid_composition_quarantined. The strongest current evidence is a training-objective/model-expression and closed-loop continuation gap in the learnable post-box capsule. Continuation capacity, missing ontology, and curriculum-boundary hypotheses remain plausible. The first unified strategy-arbitration probe is useful infrastructure but too small to justify causal arbitration.
+
+Next proposed step: Run one neutral, replay-free evidence merge that combines the diagnostic matrix with a small stratified arbitration/term/capacity table. Add only bounded h40 labels for missing cells; keep all outputs non-causal.
+
+Justification: It distinguishes the active hypotheses without optimizing a single favored repair path or changing runtime defaults.
+
+## Matrix
+
+### Strategy arbitration / phase-boundary issue
+
+- Confidence: medium
+- Next test causal status: non_causal
+
+Evidence for:
+- Earlier family diagnosis found 2 families where an existing provider could convert if selected.
+- The unified arbitration dataset now records provider suggestions, raw score, provider-local rank, normalized score, visible board terms, and move-shape terms in a shared evidence format.
+- Prior broad support adapters and role-owned arbitration work showed that provider ownership can matter, which keeps arbitration as a live hypothesis.
+
+Evidence against:
+- The first bounded unified arbitration probe did not identify a better owner: raw_global_top_conversion_rate=0.000, provider_local_rank1_oracle_coverage=0.000.
+- The small arbitration sample had box_area_relevance_outcome_counts={'high:any_mate=False': 3}, so low box relevance / near-edge ownership is not yet supported by the sampled residuals.
+- Probe answers were {'provider_selection_model_predicts_converting_provider': False, 'provider_local_normalization_outperforms_raw_global_score': False, 'box_area_relevance_explains_some_failures': False, 'failures_suggest_box_or_stage0_over_ownership': False}, so no causal arbitration change is justified.
+
+Missing evidence:
+- A stratified provider-suggestion dataset covering successful and failed Stage 7 states, not just three residual states.
+- Bounded h40 labels for at most the best provider-local candidate per provider across high/medium/low box-area relevance buckets.
+- A direct comparison of raw global score, provider-local rank, and role-owned arbitration on the same state set.
+
+Recommended next test: Extend the unified arbitration probe only as a small, stratified, non-causal dataset: success/failure states, capped provider-best labels, h40, caches/thin traces, no runtime arbitration.
+
+Forbidden next steps:
+- train_stage8
+- promote_stage7
+- add_broad_provider_bonus_or_penalty
+- add_runtime_dtm_or_tablebase_policy
+- mutate_topology_during_gameplay
+- make_trace_or_candidate_records_causal
+- change_runtime_defaults
+- make_role_owned_arbitration_causal
+- increase_support_bonus_to_overcome_raw_score_scale
+
+### Continuation-capacity issue
+
+- Confidence: medium
+- Next test causal status: non_causal
+
+Evidence for:
+- Family diagnosis found 2 families unresolved by existing forced providers at h80.
+- Remaining DTM summary reports 2 DTM-won-within-validation-horizon states where current continuation still failed.
+- The learnable post-box provider can be selected, but the expanded ranked replay still reports result_counts={'max_plies': 2} with selected_skill_counts={'krk.post_box_shrink_continuation': 2}.
+- M3 trainability assessment reports probe_result=scripted_provider_selected_but_not_trainable_for_move_policy and diagnostic labels=['visible_provider_ownership_available', 'candidate_selected_but_all_selected_outcomes_failed', 'no_candidate_internal_m3_edges', 'expressive_but_untrained_or_capacity_limited'].
+
+Evidence against:
+- Continuation capacity is not absent everywhere: family diagnosis found 2 families where existing providers could convert if selected.
+- Candidate-move / DTM alignment for 2cc reports all legal moves winning in tablebase terms, so the issue may be closed-loop policy quality rather than theoretical capacity.
+
+Missing evidence:
+- A compact residual-state table separating forced-provider failure, current-graph legal-first failure, and DTM-won-but-policy-failed cases under h40.
+- A closed-loop comparison showing whether provider ownership fails immediately, after the second/third move, or only after handoff.
+- Evidence that a narrow provider has trainable internal move-policy edges before any new training is justified.
+
+Recommended next test: Build a replay-free residual continuation-capacity table from existing forced-provider, legal-first, DTM, and capsule replay artifacts; only add tiny h40 labels for missing cells.
+
+Forbidden next steps:
+- train_stage8
+- promote_stage7
+- add_broad_provider_bonus_or_penalty
+- add_runtime_dtm_or_tablebase_policy
+- mutate_topology_during_gameplay
+- make_trace_or_candidate_records_causal
+- change_runtime_defaults
+- train_broad_full_krk_continuation
+- declare_missing_capacity_from_h80_forced_failure_alone
+
+### Missing-feature / ontology issue
+
+- Confidence: medium
+- Next test causal status: non_causal
+
+Evidence for:
+- The 0926 candidate-move role audit found a visible move-shape role with total_matching_moves=1, showing that better visible action terms can separate at least one family.
+- The 2cc DTM alignment artifact exposes DTM-positive trajectory terms that include box area, mobility, rook safety, and king-support deltas, which are richer than a plain box-shrink label.
+- Earlier reward-contract and role-boundary failures show that local reward confirmation can diverge from visible semantic continuation requirements.
+
+Evidence against:
+- Expanded Plan Capsule training used richer trajectory evidence but still failed closed-loop, so missing terms alone are not proven sufficient.
+- The latest arbitration sample did not support low box-area relevance as the missing phase-boundary term; sampled residuals were high relevance.
+- Visible plan/candidate layers can already fire in some cases; failure persists after ownership and visibility improvements.
+
+Missing evidence:
+- A term-contrast table between successful and failed post-box continuations across phase-boundary, edge-net pressure, king-support pressure, and box relevance terms.
+- Evidence that new terms separate residual families without overmatching successful-exit states.
+- Worst-reply safety/progress terms for the same candidate moves where feasible.
+
+Recommended next test: Run a replay-free visible-term contrast over existing success/failure artifacts, then add only small targeted labels for terms that are absent from current traces.
+
+Forbidden next steps:
+- train_stage8
+- promote_stage7
+- add_broad_provider_bonus_or_penalty
+- add_runtime_dtm_or_tablebase_policy
+- mutate_topology_during_gameplay
+- make_trace_or_candidate_records_causal
+- change_runtime_defaults
+- add_new_causal_visible_terms_without_separability_evidence
+- hardcode_state_hash_or_exact_move
+
+### Training-objective / model-expression issue
+
+- Confidence: high
+- Next test causal status: non_causal
+
+Evidence for:
+- The initial capsule trajectory audit reports DTM-positive top1=0.280 and top3=0.800.
+- After expanded DTM-margin supervision, fidelity improved only modestly to DTM-positive top1=0.360 and top3=0.800, while closed-loop replay remained max_plies.
+- Strict-negative and expanded-ranked probes changed neither the diagnosis nor closed-loop conversion enough; the first positive miss remains the same 2cc family in the fidelity audit.
+- M3 assessment indicates the previous scripted terminal path lacked useful trainable internal move-policy edges.
+
+Evidence against:
+- DTM-positive top3 around 0.800 means the representation contains partial ranking signal; the problem may be compounding/handoff rather than pure expressivity.
+- The offline seed is still narrow and biased toward residual families, so general model-expression conclusions remain provisional.
+- Some families were solvable by existing providers when forced, so not all Stage 7 failures require a learned post-box policy.
+
+Missing evidence:
+- A small offline benchmark comparing current scoring, pairwise/ranked preference loss, and visible-term heuristics on identical train/test trajectory states.
+- A DAgger-style closed-loop drift table that labels states visited by the learned capsule, without using DTM at runtime.
+- Train/test split fidelity metrics to avoid overreading a two-family residual seed.
+
+Recommended next test: Run an offline-only model-expression benchmark on existing DTM trajectory states: current learner versus ranked/pairwise scorer, with top-k fidelity and closed-loop drift diagnostics.
+
+Forbidden next steps:
+- train_stage8
+- promote_stage7
+- add_broad_provider_bonus_or_penalty
+- add_runtime_dtm_or_tablebase_policy
+- mutate_topology_during_gameplay
+- make_trace_or_candidate_records_causal
+- change_runtime_defaults
+- increase_runtime_owner_bonus
+- tune_plan_capsule_commitment_as_a_proxy_for_policy_quality
+
+### Bad standalone curriculum boundary
+
+- Confidence: medium
+- Next test causal status: non_causal
+
+Evidence for:
+- Stage 7 remains local_valid_composition_quarantined after local semantic improvements, support adapters, family-specific ownership, candidate-move roles, Plan Capsule ownership, and learnable overlay probes.
+- The 2cc artifact classifies the residual as a multi-step continuation policy gap rather than a single-move gap, which suggests box_shrink may be an unstable owner near phase transitions.
+- Plan Capsule and handoff evidence repeatedly point toward short continuation windows or edge-net/king-support concepts beyond a standalone box-shrink objective.
+
+Evidence against:
+- Box-shrink local behavior is not useless; local/one-ply semantics improved and some families can be routed to existing continuation providers.
+- The unified arbitration sample is too small to prove a global curriculum-boundary failure.
+- A better training objective or missing ontology terms might still make Stage 7 composable without redefining the curriculum boundary.
+
+Missing evidence:
+- A boundary audit comparing Stage 7 as standalone owner versus as a handoff trigger into edge-net, king-support, drive, fence, or mate-basin roles.
+- Evidence from broader KRK stages showing whether box_shrink failures disappear when embedded in a larger strategy objective.
+- A non-causal comparison of local reward labels against conversion-relevant ownership labels.
+
+Recommended next test: Create a non-causal curriculum-boundary audit that treats box_shrink as local evidence plus handoff trigger, not as a promoted independent owner.
+
+Forbidden next steps:
+- train_stage8
+- promote_stage7
+- add_broad_provider_bonus_or_penalty
+- add_runtime_dtm_or_tablebase_policy
+- mutate_topology_during_gameplay
+- make_trace_or_candidate_records_causal
+- change_runtime_defaults
+- train_stage8_to_paper_over_stage7
+- promote_box_shrink_as_independent_stage_from_local_success
+
+## Evidence Artifacts
+
+- family_diagnosis: present - `reports/structural_candidates/stage7_post_box_family_diagnosis.json`
+- remaining_dtm: present - `reports/structural_candidates/stage7_remaining_dtm_candidate_summary.json`
+- candidate_move_0926: present - `reports/structural_candidates/stage7_0926_move_shape_role_candidate_audit.json`
+- candidate_move_2cc: present - `reports/structural_candidates/stage7_2cc_candidate_move_dtm_alignment.json`
+- m3_trainability: present - `reports/structural_candidates/stage7_post_box_m3_trainability_assessment.json`
+- capsule_fidelity: present - `reports/structural_candidates/stage7_capsule_trajectory_fidelity_audit.json`
+- expanded_capsule_fidelity: present - `reports/structural_candidates/stage7_expanded_ranked_capsule_trajectory_fidelity_audit.json`
+- expanded_capsule_replay: present - `reports/structural_candidates/stage7_expanded_ranked_capsule_phase1_replay_h40.json`
+- strategy_arbitration: present - `reports/structural_candidates/stage7_unified_strategy_arbitration_probe.json`
+- strategy_arbitration_dataset: present - `reports/structural_candidates/stage7_unified_strategy_arbitration_dataset.json`
+
+## Performance Rules
+
+- prefer_replay_free_analysis
+- use_h40_as_practical_horizon
+- use_h80_plus_only_for_classification_not_promotion
+- avoid_exhaustive_legal_first_sweeps_by_default
+- use_caches_parallel_workers_and_thin_traces_for_new_labels
+- stop_if_projected_runtime_is_hours

@@ -1,0 +1,167 @@
+{
+  "allowed_next_slices": [
+    {
+      "allowed": true,
+      "causal": false,
+      "description": "Define non-causal ControlPlaneEvidenceFrame and validation requirements.",
+      "slice_id": "control_plane_schema_design_v0"
+    },
+    {
+      "allowed": true,
+      "causal": false,
+      "description": "Map existing reports into the control-plane evidence fields replay-free.",
+      "slice_id": "control_plane_manifest_from_existing_artifacts_v0"
+    },
+    {
+      "allowed": true,
+      "causal": false,
+      "description": "List missing evidence needed before strategy arbiter or sequence-policy sandbox review.",
+      "slice_id": "stratified_gap_report_v0"
+    }
+  ],
+  "architecture_diagnosis": {
+    "internal_terminal_status": "Internal terminals are useful monitor/evidence objects, not runtime controls. local_provider_competition_failed and post_plan_stagnation are the strongest but remain sparse and Stage7-only; repair_needed_monitor is broader but noisy; box_shrink_owner_exit_pressure needs companion handoff-target evidence.",
+    "sequence_policy_interpretation": "Simple visible/ranked objectives are insufficient; any future sequence learner needs state-local contrast, hard negatives, and closed-loop sequence supervision.",
+    "sequence_policy_status": "model_expression_gap_persists_stage7_micro_work_stops",
+    "stage7_boundary_status": "Stage 7 is not a local move-shape task anymore; it is a challenge set exposing strategy ownership, sequence-policy expression, and monitor/ontology gaps.",
+    "stage_stack_status": "The current architecture preserves useful KRK subskills through Stage 6 when later stages are additive overlays on frozen provider packs.",
+    "strategy_arbitration_interpretation": "The first strategy-arbitration probe points to missing or immature visible monitor/feature terms before any runtime arbiter should be considered.",
+    "strategy_arbitration_status": "missing_feature_first"
+  },
+  "causal_status": "non_causal_architecture_review",
+  "current_architecture_state": {
+    "cleanest_solved_components": [
+      "stage1_backchain",
+      "stage5_fence",
+      "stage6_drive_overlay"
+    ],
+    "protected_or_promoted_stages": [
+      "stage1_backchain",
+      "stage4_wrong_tempo",
+      "stage5_fence",
+      "stage6_drive_overlay"
+    ],
+    "solved_with_caveat": [
+      "stage4_wrong_tempo"
+    ],
+    "stage6_overlay_status": "promoted",
+    "stage7_status": "local_valid_composition_quarantined",
+    "validated_profile": "handoff_composition_v1"
+  },
+  "forbidden_next_steps": [
+    "stage7_runtime_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_arbiter",
+    "runtime_internal_terminal",
+    "support_adapter_or_score_bonus",
+    "provider_penalty_or_stage0_suppression",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "monolithic_later_stage_replacement"
+  ],
+  "future_data_requirements": {
+    "internal_monitors": "Broaden replay-free evidence by exporting the same non-causal monitor fields from future Stage 5/6/4/7 validations; do not add runtime terminals.",
+    "sequence_policy": [
+      "more_family_held_out_post_box_trajectories",
+      "successful_post_box_control_trajectories",
+      "closed_loop_labels_beyond_stage7",
+      "hard_negative_contrast_sets"
+    ],
+    "strategy_arbitration": [
+      "More successful Stage 5/6/7 provider-labeled records with terminal-space context.",
+      "A separability audit for candidate terminal/affordance terms before any sandbox.",
+      "Better visible heuristic features for edge-net, king-support, phase-boundary, and box-shrink exit conditions."
+    ]
+  },
+  "gameplay_topology_mutation": false,
+  "path_to_arbitrary_krk": [
+    {
+      "purpose": "Keep solved subgraphs stable while adding later capacity as overlays.",
+      "status": "complete_for_stage1_4_5_6_with_stage4_caveat",
+      "step": "preserve_validated_stack"
+    },
+    {
+      "purpose": "Unify provider proposals, monitors, plan windows, sequence labels, and guardrails into replay-free non-causal evidence records.",
+      "status": "next",
+      "step": "build_control_plane_evidence_contract"
+    },
+    {
+      "purpose": "Cover Stage 5/6 successes, Stage 4 caveats, Stage 7 challenge families, and future KRK/KQK/KPK analogues without overfitting to one stage.",
+      "status": "future_non_causal",
+      "step": "collect_stratified_control_plane_evidence"
+    },
+    {
+      "purpose": "Separate owner selection from move-sequence expression before any causal runtime mechanism is sandboxed.",
+      "status": "future_non_causal",
+      "step": "benchmark_strategy_selection_and_sequence_policy"
+    },
+    {
+      "purpose": "Only after offline evidence is strong, test a visible default-off strategy monitor/arbiter or sequence policy with explicit traces.",
+      "status": "future_requires_review",
+      "step": "default_off_sandbox_candidate"
+    },
+    {
+      "purpose": "Promote only overlays that improve target coverage while preserving Stage 1/4/5/6, bridge tests, and M1-M4 semantics.",
+      "status": "future_requires_sandbox_success",
+      "step": "guardrail_aware_promotion"
+    },
+    {
+      "purpose": "Apply the same monitor -> candidate -> sandbox -> guardrail loop to KQK, KPK->KQK, tactics, and similar domains.",
+      "status": "future",
+      "step": "cross_domain_transfer"
+    }
+  ],
+  "runtime_arbiter_added": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_self_expansion_architecture_gate.v0",
+  "selected_next_architecture_goal": {
+    "goal_id": "krk_control_plane_evidence_contract_v0",
+    "goal_type": "non_causal_data_contract_and_review",
+    "must_include": [
+      "protected_provider_provenance",
+      "strategy_proposal_frames",
+      "internal_monitor_records",
+      "plan_capsule_window_records",
+      "sequence_training_examples",
+      "guardrail_result_summaries",
+      "growth_governor_status",
+      "promotion_gate_status"
+    ],
+    "must_remain_non_causal": true,
+    "runtime_defaults_must_remain_unchanged": true,
+    "why_this_goal": "Strategy arbitration, internal monitors, and sequence-policy redesign need the same evidence boundary before any causal sandbox. A control-plane evidence contract prevents another Stage 7-specific repair loop."
+  },
+  "self_learning_recon_loop": [
+    "visible_runtime_trace_and_provider_proposals",
+    "non_causal_monitor_records",
+    "structural_candidate_or_sequence_candidate",
+    "growth_governor_plasticity_balance_check",
+    "offline_supervision_or_bounded_weight_probe",
+    "default_off_sandbox_only_after_review",
+    "guardrail_validation",
+    "overlay_promotion_or_quarantine",
+    "protected_stack_update"
+  ],
+  "source_artifacts": [
+    "reports/krk_protected_stage_status.json",
+    "reports/strategy_arbitration/krk_strategy_arbitration_decision_gate.json",
+    "reports/strategy_arbitration/krk_internal_terminal_design_review_v1.json",
+    "reports/structural_candidates/stage7_training_objective_decision_gate.json",
+    "reports/structural_candidates/stage7_sequence_policy_redesign_note.json",
+    "reports/current_agent_brief.md"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "stop_conditions": [
+    "any_runtime_behavior_change",
+    "any_runtime_dtm_or_tablebase_use",
+    "any_gameplay_topology_mutation",
+    "any_stage7_promotion_or_stage8_training",
+    "any_step_that_implements_a_runtime_arbiter_or_terminal",
+    "any_step_that_reopens_stage7_micro_repair"
+  ]
+}

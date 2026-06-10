@@ -1,0 +1,170 @@
+{
+  "causal_status": "non_causal_sequence_review",
+  "decision": {
+    "recommended_next_step": "review_stage4_sequence_candidates_or_keep_as_known_residual",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "status": "stage4_caveat_sequence_followup_gap_review_ready"
+  },
+  "diagnosis": {
+    "primary": "stage4_sequence_followup_gap_single_state",
+    "risk": [
+      "the target is a repeated curriculum state, so selector labels are too narrow",
+      "a direct state/move patch would violate the no exact-state runtime exception invariant",
+      "a broad stage0 penalty would risk protected safe-preservation cases"
+    ],
+    "support": [
+      "all Stage 4 h40 failures collapse to one unique state/move",
+      "same failure count reproduces in the paired Stage 5 base control",
+      "post-own move confirms visible fence but fails local reward confirmation",
+      "post-reply continuation selects stage0_basin by actuator score without a visible role license",
+      "failure is max_plies after follow-up, not immediate illegal move or runtime mutation"
+    ]
+  },
+  "gameplay_topology_mutation": false,
+  "phase_snapshots": {
+    "playout_summary": {
+      "achieved": [],
+      "black_reply": null,
+      "failed": [
+        "conversion_to_mate"
+      ],
+      "failure_classes": [],
+      "fen": "1R6/1K6/8/k7/8/8/8/8 w - - 0 1",
+      "fence_survived_reply": null,
+      "final_mate_in_one_available": false,
+      "handoff_gap": null,
+      "move": "b8h8",
+      "observed_outcome": "max_plies",
+      "phase": "playout_summary",
+      "playout_result": "max_plies",
+      "plies": 40,
+      "post_reply_fen": null,
+      "provider_selected_without_role_license": null,
+      "reward_confirmed": null,
+      "route_conflict": null,
+      "selected_skill_source": null,
+      "selected_successor_contract_met": null,
+      "semantic_alignment_status": "visible_contract_without_reward",
+      "stagnation_summary_present": false,
+      "status": "failed",
+      "successor_best_score": null,
+      "successor_second_score": null,
+      "successor_selected_skill": null,
+      "visible_fence_contract_confirmed": null
+    },
+    "post_opponent_reply": {
+      "achieved": [
+        "visible_fence_survived_reply"
+      ],
+      "black_reply": "a5a4",
+      "failed": [
+        "survived_opponent_reply"
+      ],
+      "failure_classes": [],
+      "fen": "1R6/1K6/8/k7/8/8/8/8 w - - 0 1",
+      "fence_survived_reply": true,
+      "final_mate_in_one_available": false,
+      "handoff_gap": false,
+      "move": "b8h8",
+      "observed_outcome": "max_plies",
+      "phase": "post_opponent_reply",
+      "playout_result": "max_plies",
+      "plies": 40,
+      "post_reply_fen": "7R/1K6/8/8/k7/8/8/8 w - - 2 2",
+      "provider_selected_without_role_license": true,
+      "reward_confirmed": false,
+      "route_conflict": false,
+      "selected_skill_source": "actuator_score",
+      "selected_successor_contract_met": false,
+      "semantic_alignment_status": "visible_contract_without_reward",
+      "stagnation_summary_present": false,
+      "status": "failed",
+      "successor_best_score": 7.45560371055603,
+      "successor_second_score": null,
+      "successor_selected_skill": "krk.stage0_basin",
+      "visible_fence_contract_confirmed": true
+    },
+    "post_own_move": {
+      "achieved": [
+        "visible_fence_contract_confirmed"
+      ],
+      "black_reply": null,
+      "failed": [
+        "reward_confirmed.edge_trap_wrong_tempo"
+      ],
+      "failure_classes": null,
+      "fen": "1R6/1K6/8/k7/8/8/8/8 w - - 0 1",
+      "fence_survived_reply": null,
+      "final_mate_in_one_available": null,
+      "handoff_gap": null,
+      "move": "b8h8",
+      "observed_outcome": "local_landmark_failed",
+      "phase": "post_own_move",
+      "playout_result": null,
+      "plies": null,
+      "post_reply_fen": null,
+      "provider_selected_without_role_license": null,
+      "reward_confirmed": false,
+      "route_conflict": null,
+      "selected_skill_source": null,
+      "selected_successor_contract_met": null,
+      "semantic_alignment_status": null,
+      "stagnation_summary_present": false,
+      "status": "failed",
+      "successor_best_score": null,
+      "successor_second_score": null,
+      "successor_selected_skill": null,
+      "visible_fence_contract_confirmed": true
+    }
+  },
+  "recommended_next_options": [
+    {
+      "causal_status": "non_causal_review_first",
+      "option": "stage4_sequence_candidate_review",
+      "why": "Need to identify visible follow-up candidates after b8h8/a5a4 before any runtime change."
+    },
+    {
+      "causal_status": "non_causal_data_design_first",
+      "option": "synthetic_stage4_contrast_generation",
+      "why": "One repeated failure state is not enough for selector validation; generate stratified variants without hand-authoring policy."
+    },
+    {
+      "causal_status": "no_runtime_change",
+      "option": "keep_stage4_known_residual_guardrail",
+      "why": "The caveat is isolated and non-regressive; selector work can stay blocked while broader KRK sequence work proceeds."
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_stage4_caveat_sequence_review.v0",
+  "source_artifacts": [
+    "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_overlay_300_seed7_h40_profile_bonus.json",
+    "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage4_wrong_tempo_stage5_base_control_300_seed7_h40_profile_bonus.json",
+    "reports/krk_stage4_failure_discovery_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "base_control_reproduces_failure_count": true,
+    "base_failure_packet_count": 32,
+    "overlay_failure_packet_count": 32,
+    "selector_training_row_count": 0,
+    "single_unique_failure": true,
+    "stage7_training_row_count": 0,
+    "target_fen": "1R6/1K6/8/k7/8/8/8/8 w - - 0 1",
+    "target_packet_count": 96,
+    "target_phase_counts": {
+      "('playout_summary', 'max_plies', 'failed')": 32,
+      "('post_opponent_reply', 'max_plies', 'failed')": 32,
+      "('post_own_move', 'local_landmark_failed', 'failed')": 32
+    },
+    "target_selected_move": "b8h8",
+    "target_state_id": "state.44938ccb8ab7"
+  }
+}

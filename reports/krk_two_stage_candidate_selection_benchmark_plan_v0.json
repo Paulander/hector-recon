@@ -1,0 +1,78 @@
+{
+  "acceptance": {
+    "candidate_generator_runtime_allowed": false,
+    "explicitly_separates_label_semantics": true,
+    "reports_candidate_generation_and_selection_separately": true,
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_training_rows": 0
+  },
+  "benchmark_tracks": {
+    "candidate_generation": {
+      "baselines": [
+        "current_runtime_proposal_frames",
+        "validated_provider_candidate_set_expansion"
+      ],
+      "metrics": [
+        "positive_capacity_recall",
+        "candidate_count_per_state",
+        "negative_capacity_inclusion_rate",
+        "stage7_leakage_count"
+      ],
+      "question": "Does the candidate set represent protected providers with conversion capacity?",
+      "training_allowed": false
+    },
+    "strategy_selection": {
+      "label_channels": [
+        "selected_playout_success",
+        "runtime_proposal_label",
+        "forced_provider_capacity_label"
+      ],
+      "metrics": [
+        "leave_state_out_positive_hit_rate",
+        "negative_capacity_suppression",
+        "false_positive_on_forced_capacity",
+        "stage7_heldout_suppression"
+      ],
+      "question": "Given a candidate set, can a selector suppress negative-capacity candidates while preserving positives?",
+      "training_allowed": false
+    }
+  },
+  "causal_status": "non_causal_benchmark_plan",
+  "decision": {
+    "candidate_generator_runtime_allowed": false,
+    "recommended_next_step": "build_two_stage_candidate_selection_benchmark_v0",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "two_stage_candidate_selection_benchmark_plan_ready"
+  },
+  "gameplay_topology_mutation": false,
+  "minimum_inputs": [
+    "krk_ranked_strategy_proposal_frames_v1",
+    "krk_protected_provider_coverage_frames_v0",
+    "krk_state_local_contrast_labels_v2",
+    "krk_candidate_generator_coverage_audit_v0",
+    "krk_validated_provider_candidate_set_audit_v0"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_two_stage_candidate_selection_benchmark_plan.v0",
+  "source_artifacts": [
+    "reports/krk_two_stage_candidate_selection_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "stop_conditions": [
+    "benchmark requires new runtime behavior",
+    "benchmark mixes forced-capacity labels as direct selected-success labels",
+    "Stage 7 rows become training rows",
+    "DTM/tablebase enters runtime policy",
+    "topology mutation is required"
+  ]
+}

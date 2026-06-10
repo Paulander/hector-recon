@@ -1,0 +1,66 @@
+{
+  "schema_version": "stage7_target_smoke_comparison.v1",
+  "causal_status": "sandbox_opt_in",
+  "inputs": {
+    "pre_0af_trace_role": "reports/structural_candidates/stage7_pre_0af_trace_role_target_smoke_25_h40.json",
+    "with_0af_trace_role": "reports/structural_candidates/stage7_0af_trace_role_target_smoke_25_h40.json"
+  },
+  "config": {
+    "samples": 25,
+    "seed": 7,
+    "horizon": 40,
+    "source_stage_names": [
+      "Box_Shrink",
+      "Drive_To_Edge",
+      "Fence_Established",
+      "Anchored_Cut",
+      "Edge_Cut_Hold"
+    ],
+    "role_owned_score_normalization_enabled": true,
+    "explicit_role_provider_support_enabled": true
+  },
+  "pre_0af_trace_role": {
+    "improved": 18,
+    "optimal": 14,
+    "worsened": 7,
+    "playouts": {
+      "mate": 4,
+      "max_plies": 21
+    },
+    "shadow_candidates": 28,
+    "semantic_alignment": {
+      "visible_contract_without_reward": 7,
+      "reward_visible_fence_aligned_survived": 18
+    }
+  },
+  "with_0af_trace_role": {
+    "improved": 18,
+    "optimal": 14,
+    "worsened": 7,
+    "playouts": {
+      "mate": 4,
+      "max_plies": 21
+    },
+    "shadow_candidates": 28,
+    "semantic_alignment": {
+      "visible_contract_without_reward": 7,
+      "reward_visible_fence_aligned_survived": 18
+    }
+  },
+  "comparison": {
+    "equivalent": true,
+    "candidate_regression_observed": false,
+    "candidate_target_improvement_observed": false,
+    "interpretation": "The corrected 0af trace-role candidate is neutral on this broader 25-sample Stage 7 target smoke. The smoke itself exposes a broader Stage 7 local/composition weakness unrelated to the 0af candidate."
+  },
+  "candidate_update": {
+    "candidate_id": "cand.krk.box_shrink.family_0afbf11aa123.king_opposition_edge_trap_support.v1",
+    "status": "family_balanced_validated_target_smoke_neutral",
+    "promotion_status": "sandboxed",
+    "next_action": [
+      "do not promote Stage 7 from this target smoke",
+      "keep the 0af candidate as a narrow sandbox repair",
+      "diagnose broader Stage 7 local visible_contract_without_reward and state38 continuation families separately"
+    ]
+  }
+}

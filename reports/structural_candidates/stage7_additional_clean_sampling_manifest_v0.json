@@ -1,0 +1,71 @@
+{
+  "causal_status": "non_causal_label_manifest_review_only",
+  "decision": {
+    "implementation_authorized_by_this_manifest": false,
+    "recommended_next_step": "rerun_passive_sequence_policy_gate_stack",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "stage7_additional_clean_sampling_manifest_not_applicable_success_gate_closed"
+  },
+  "explicitly_forbidden": [
+    "running_this_manifest_without_explicit_approval",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_selector_or_arbiter",
+    "stage7_support_adapter_or_score_bonus",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "jobs": [],
+  "review_basis": {
+    "duplicate_playout_count": 50,
+    "highest_yield_prior_job_ids": [
+      "stage7.diverse_clean.edge_fence_deep.seed107.samples8.h40"
+    ],
+    "label_distribution_review_status": "stage7_label_distribution_review_success_gate_closed",
+    "same_manifest_reuse_expected_to_help": false,
+    "success_gap": 0,
+    "unique_new_success_key_count_vs_pre_run": 2
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "sampling_policy": {
+    "closed_reason": "stage7_success_gate_closed",
+    "max_horizon": 40,
+    "max_jobs": 0,
+    "max_total_samples": 0,
+    "requires_explicit_approval_before_execution": false,
+    "samples_per_job": 8,
+    "source_bias": "edge_fence_deep_followup_from_distribution_review",
+    "stage7_rows_are_labels_only_not_training_rows": true
+  },
+  "schema_version": "stage7_additional_clean_sampling_manifest.v0",
+  "source_artifacts": [
+    "reports/krk_active_protected_stack_v0.json",
+    "reports/structural_candidates/stage7_diverse_clean_label_distribution_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "candidate_job_count_if_gap_reopens": 4,
+    "job_count": 0,
+    "label_run_allowed_by_this_manifest": false,
+    "max_total_samples": 0,
+    "runtime_authorization_row_count": 0,
+    "runtime_work_allowed": false,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "stage8_training_allowed": false,
+    "success_gap_target": 0,
+    "topology_exists": true
+  }
+}

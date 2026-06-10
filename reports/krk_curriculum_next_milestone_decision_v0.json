@@ -1,0 +1,51 @@
+{
+  "created_at": "2026-05-25T11:32:27+02:00",
+  "current_adopted_protected_stack_status": "retry1_protected_stage5_6_stack_adopted_manifest_only",
+  "decision_states": [
+    "clean_stack_adopted_and_validated",
+    "stage4_caveat_reduction_path_identified",
+    "stage7_unlock_path_identified",
+    "stage8_remains_blocked_with_review"
+  ],
+  "invariants": {
+    "active_stack_reference_updated": true,
+    "gameplay_topology_mutation": false,
+    "protected_stack_replacement_performed": false,
+    "runtime_behavior_changed": false,
+    "runtime_defaults_changed": false,
+    "runtime_direct_routing": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "runtime_score_changes": false,
+    "runtime_selector_implemented": false,
+    "stage7_promotion": false,
+    "stage8_training": false
+  },
+  "recommended_path_forward": [
+    "Use the active retry1 Stage 5/6 protected-stack manifest as the current protected reference.",
+    "Keep rollback paths preserved; do not copy, delete, or overwrite snapshot files.",
+    "For Stage 4, the next useful evidence is the already-reviewed observation-only trace collection scope, capped and non-causal.",
+    "For Stage 7, stop micro-repairs and build broader sequence-policy/strategy-arbitration evidence with Stage 7 held out."
+  ],
+  "schema_version": "krk_curriculum_next_milestone_decision.v0",
+  "source_artifacts": [
+    "reports/krk_clean_retrain_retry1_clean_stack_replacement_review_packet_v0.json",
+    "reports/krk_active_protected_stack_v0.json",
+    "reports/krk_clean_stack_post_replacement_validation_v0.json",
+    "reports/krk_stage4_caveat_decision_gate_v0.json",
+    "reports/structural_candidates/stage7_heldout_unlock_review_v0.json",
+    "reports/structural_candidates/stage7_to_stage8_blocker_review_v0.json"
+  ],
+  "stage4_status": "stage4_candidate_generation_gap_with_known_residual_guardrail",
+  "stage7_status": "stage7_unlock_path_identified_broader_sequence_control_not_micro_repair",
+  "stage8_status": "stage8_remains_blocked_with_review",
+  "status": "krk_curriculum_next_milestone_review_ready",
+  "what_remains_forbidden": [
+    "destructive snapshot replacement without rollback review",
+    "Stage 7 promotion",
+    "Stage 8 training",
+    "runtime selector implementation",
+    "runtime DTM/tablebase",
+    "gameplay topology mutation",
+    "capacity labels as ownership labels"
+  ]
+}

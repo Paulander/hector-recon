@@ -1,0 +1,94 @@
+{
+  "schema_version": "krk_clean_retrain_retry_guardrail_result.v1",
+  "created_at": "2026-05-24T12:50:27+02:00",
+  "source_artifacts": [
+    "reports/krk_clean_retrain_retry1_result_v1.json",
+    "reports/krk_stage6_overlay_compose_manifest_v0.json",
+    "reports/stage6_overlay_validation_manifest.md"
+  ],
+  "checkpoint_root": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1",
+  "status": "clean_retrain_retry1_stage6_overlay_quarantined_guardrails_partial",
+  "decision": {
+    "promotion_status": "quarantine",
+    "stage6_target_passed": false,
+    "stage5_overlay_conversion_preserved": true,
+    "stage5_overlay_regressed_vs_fresh_base_control": false,
+    "stage4_overlay_probe_run": false,
+    "retry1_can_replace_protected_stack": false,
+    "stage7_remains_quarantined": true,
+    "stage8_remains_blocked": true,
+    "runtime_behavior_changed": false,
+    "recommended_next_step": "inspect_retry1_stage6_candidate_quality_before_any_retrain_or_promotion_retry"
+  },
+  "artifacts": {
+    "stage6_candidate": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage6_drive_overlay_300_seed7_h40.json",
+    "stage5_overlay_guardrail": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40.json",
+    "stage5_fresh_base_control": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40.json",
+    "promotion_eval": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/promotion_eval_stage6_overlay.json"
+  },
+  "stage6_candidate": {
+    "label": "drive_to_edge",
+    "total": 300,
+    "improved": 300,
+    "worsened": 0,
+    "mate": 217,
+    "max_plies": 83,
+    "mate_rate": 0.7233333333333334,
+    "max_plies_rate": 0.27666666666666667,
+    "shadow_candidates": 166,
+    "one_ply_status": "failed",
+    "conversion_status": "failed",
+    "promotion_failure_reasons": [
+      "max_plies_rate=0.277 > 0.250",
+      "shadow_candidates=166 > 0"
+    ]
+  },
+  "stage5_overlay_guardrail": {
+    "label": "fence_established",
+    "total": 300,
+    "improved": 144,
+    "worsened": 156,
+    "mate": 300,
+    "max_plies": 0,
+    "mate_rate": 1.0,
+    "max_plies_rate": 0.0,
+    "shadow_candidates": 0,
+    "one_ply_status": "failed",
+    "conversion_status": "passed"
+  },
+  "stage5_fresh_base_control": {
+    "label": "fence_established",
+    "total": 300,
+    "improved": 144,
+    "worsened": 156,
+    "mate": 256,
+    "max_plies": 44,
+    "mate_rate": 0.8533333333333334,
+    "max_plies_rate": 0.14666666666666667,
+    "shadow_candidates": 88,
+    "one_ply_status": "failed",
+    "conversion_status": "failed"
+  },
+  "guardrail_delta_vs_fresh_base_control": {
+    "mate_rate_delta": 0.1466666666666666,
+    "max_plies_rate_delta": -0.14666666666666667,
+    "shadow_candidates_delta": -88,
+    "regressed_vs_control": false
+  },
+  "interpretation": [
+    "The retry1 chain can rebuild and compose Stage 6, but the resulting Stage 6 candidate is weaker than the existing protected overlay and is not promotable.",
+    "The Stage 5 overlay guardrail preserves conversion better than the fresh Stage 5 base control, so the composed overlay did not regress Stage 5 conversion relative to its own fresh base.",
+    "Both fresh Stage 5 overlay and base-control artifacts fail one-ply local reward thresholds, so retry1 exposes local reward/contract debt in the clean Stage 5 base path.",
+    "Stage 4 overlay probing was not run because the Stage 6 target already failed promotion thresholds."
+  ],
+  "invariants": {
+    "runtime_defaults_changed": false,
+    "runtime_selector_implemented": false,
+    "runtime_score_changes": false,
+    "runtime_direct_routing": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "gameplay_topology_mutation": false,
+    "stage7_promotion": false,
+    "stage8_training": false
+  }
+}

@@ -1,0 +1,172 @@
+# KRK Current Control-Plane Gate v0
+
+Status: `krk_control_plane_waiting_on_explicit_gate_choice`
+
+## Current State
+
+- protected_stack: `retry1_stage5_6_active_manifest_validated`
+- protected_stack_readiness_status: `retry1_protected_stage5_6_stack_adopted_manifest_only`
+- protected_stack_ready: `True`
+- protected_stack_rollback_paths_preserved: `True`
+- protected_stack_active_paths_safe: `True`
+- protected_stack_active_paths_exist: `True`
+- protected_stack_rollback_paths_safe: `True`
+- protected_stack_rollback_paths_exist: `True`
+- protected_stack_rollback_common_paths_distinct: `True`
+- protected_stack_filesystem_snapshots_replaced: `False`
+- protected_stack_hard_blockers: `[]`
+- readiness_checked_flag_count: `2912`
+- readiness_boundary_violation_count: `0`
+- readiness_source_artifact_count: `408`
+- stage4: `first_move_contrast_runtime_review_ready_pending_explicit_approval`
+- stage4_first_move_contrast_sandbox_approval_request: `stage4_first_move_contrast_sandbox_approval_request_ready`
+- stage4_first_move_contrast_sandbox_approval_request_blockers: `[]`
+- stage4_first_move_contrast_sandbox_approval_request_ready_for_runtime_approval: `True`
+- stage7: `heldout_clean_success_controls_ready_sequence_benchmark_available`
+- stage7_success_controls_ready: `True`
+- stage7_success_controls: `11`
+- stage7_success_controls_required: `5`
+- stage7_label_execution_readiness: `not_applicable_stage7_success_gate_closed`
+- stage7_label_historical_execution_readiness: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
+- stage7_label_output_integration: `stage7_diverse_clean_sampling_integration_success_controls_met`
+- stage7_label_runner: `stage7_diverse_clean_sampling_runner_executed_success`
+- stage7_label_runner_output_validation_status: `stage7_diverse_clean_sampling_outputs_valid_ready_for_integration`
+- stage7_label_output_validation_status: `stage7_diverse_clean_sampling_outputs_valid_ready_for_integration`
+- stage7_label_distribution_review: `stage7_label_distribution_review_success_gate_closed`
+- stage7_additional_label_manifest: `stage7_additional_clean_sampling_manifest_not_applicable_success_gate_closed`
+- stage7_additional_label_runner: `stage7_additional_clean_sampling_runner_not_applicable_success_gate_closed`
+- stage7_additional_label_runner_job_count: `0`
+- stage7_label_runner_execution_readiness_source: `live_recomputed`
+- stage7_label_runner_execution_readiness_status: `not_applicable_stage7_success_gate_closed`
+- stage7_label_runner_historical_execution_readiness_status: `stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval`
+- stage7_label_runner_execution_readiness_jobs_passing: `8`
+- stage7_label_runner_invalid_existing_output_count: `0`
+- stage7_label_runner_processed_job_count: `0`
+- stage7_label_runner_executed_job_count: `0`
+- stage7_label_runner_historical_processed_job_count: `8`
+- stage7_label_runner_historical_executed_job_count: `8`
+- stage7_label_runner_skipped_existing_output_count: `0`
+- stage7_label_runner_job_timeout_seconds: `900`
+- stage7_label_runner_timed_out_job_count: `0`
+- stage7_post_label_outcome: `post_label_outcome_manual_review_required`
+- protected_plan_window_evidence: `available_non_causal`
+- sequence_policy: `sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review`
+- sequence_policy_passive_design_without_new_labels: `non_causal_sequence_policy_design_review_needed`
+- sequence_policy_passive_design_current_evidence_limit: `None`
+- sequence_policy_passive_design_depends_on_new_label_execution: `False`
+- sequence_policy_passive_design_depends_on_protected_failure_contrast_collection: `False`
+- sequence_policy_cross_stage_requirements: `cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark`
+- sequence_policy_replay_free_protected_cross_stage_evidence: `True`
+- sequence_policy_cross_stage_sequence_evidence_met: `True`
+- sequence_policy_forbidden_training_or_runtime_input_blocked: `False`
+- sequence_policy_forbidden_training_or_runtime_input_blockers: `[]`
+- protected_plan_window_failure_contrast_plan: `protected_plan_window_failure_contrast_plan_ready_pending_explicit_collection_approval`
+- protected_plan_window_unique_failure_count: `1`
+- protected_plan_window_minimum_new_failures_needed: `4`
+- protected_plan_window_failure_contrast_manifest: `protected_plan_window_failure_contrast_manifest_ready_for_review`
+- protected_plan_window_failure_contrast_manifest_job_count: `6`
+- protected_plan_window_failure_contrast_manifest_review: `protected_plan_window_failure_contrast_manifest_review_passed_pending_control_plane_gate_review`
+- protected_plan_window_failure_contrast_execution_readiness: `protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review`
+- protected_plan_window_failure_contrast_execution_jobs_passing: `6`
+- protected_plan_window_failure_contrast_runner: `protected_plan_window_failure_contrast_runner_blocked`
+- protected_plan_window_failure_contrast_runner_manifest_status: `protected_plan_window_failure_contrast_manifest_ready_for_review`
+- protected_plan_window_failure_contrast_runner_manifest_declared_job_count: `6`
+- protected_plan_window_failure_contrast_runner_manifest_fingerprint: `5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038`
+- protected_plan_window_failure_contrast_runner_collection_run_allowed: `False`
+- protected_plan_window_failure_contrast_runner_processed_job_count: `0`
+- protected_plan_window_failure_contrast_runner_executed_job_count: `0`
+- protected_plan_window_failure_contrast_approval_request: `protected_plan_window_failure_contrast_approval_request_blocked`
+- protected_plan_window_failure_contrast_approval_request_blockers: `['protected_failure_contrast_execution_scope_not_ready']`
+- protected_plan_window_failure_contrast_approval_request_ready_for_collection: `False`
+- protected_plan_window_failure_contrast_approval_receipt_created: `False`
+- protected_plan_window_failure_contrast_approval_receipt_blockers: `['approval_receipt_readiness_fingerprint_mismatch', 'approval_receipt_readiness_status_mismatch', 'approval_receipt_current_control_plane_approval_option_ids_mismatch', 'approval_receipt_protected_failure_contrast_collection_option_available_mismatch', 'approval_receipt_protected_failure_contrast_collection_command_available_mismatch', 'approval_receipt_protected_failure_contrast_collection_option_id_mismatch', 'approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch']`
+- protected_plan_window_failure_contrast_post_success_refresh_required: `True`
+- protected_plan_window_failure_contrast_post_success_refresh_script: `scripts/advance_krk_suite_from_current_gates_v0.py`
+- protected_plan_window_failure_contrast_post_success_refresh_scope: `full_passive_krk_suite_gate_stack`
+- protected_plan_window_failure_contrast_output_validation: `protected_plan_window_failure_contrast_outputs_valid_ready_for_integration`
+- protected_plan_window_failure_contrast_output_exists_count: `6`
+- protected_plan_window_failure_contrast_output_valid_count: `6`
+- protected_plan_window_failure_contrast_integration: `protected_plan_window_failure_contrast_integration_underpowered_needs_more_valid_failures`
+- protected_plan_window_failure_contrast_integrated_new_failure_count: `0`
+- protected_plan_window_failure_contrast_integration_ready: `False`
+- sequence_policy_after_protected_failure_contrast_refresh: `sequence_policy_after_protected_failure_contrast_refresh_blocked_pending_protected_failure_contrast_control_plane_gate_review`
+- sequence_policy_after_protected_failure_contrast_rows: `0`
+- sequence_policy_after_protected_failure_contrast_boundaries_preserved: `True`
+- sequence_policy_after_protected_failure_contrast_boundary_violation_count: `0`
+- sequence_policy_after_protected_failure_contrast_stage7_training_row_count: `0`
+- sequence_policy_after_protected_failure_contrast_selector_training_row_count: `0`
+- sequence_policy_after_protected_failure_contrast_runtime_authorization_row_count: `0`
+- sequence_policy_inputs: `sequence_policy_benchmark_inputs_ready_non_causal`
+- stage8: `blocked`
+- runtime_selector: `blocked`
+
+## Approval Options
+
+### approve_stage4_first_move_contrast_sandbox
+
+- artifact: `reports/krk_stage4_first_move_contrast_runtime_review_packet_v0.md`
+- status: `stage4_first_move_contrast_runtime_review_ready_pending_explicit_approval`
+- allows: default-off Stage 4 CandidateMoveFrame first-move contrast sandbox only
+- recommended_if: you want to reduce the known Stage 4 h40 caveat now
+- approval_request_artifact: `reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md`
+- approval_request_status: `stage4_first_move_contrast_sandbox_approval_request_ready`
+- approval_request_ready_for_runtime_approval: `True`
+- safety_scope:
+  - approval_id: `approve_stage4_first_move_contrast_sandbox`
+  - approval_request_blockers: `[]`
+  - approval_request_ready_for_runtime_approval: `True`
+  - sandbox_scope_id: `default_off_stage4_candidate_move_first_move_contrast_sandbox_only`
+  - default_off: `True`
+  - default_enabled: `False`
+  - approval_request_created: `False`
+  - implementation_authorized_by_request: `False`
+  - runtime_change_class: `default_off_candidate_move_frame_sandbox_only`
+  - exact_state_or_exact_move_exception: `False`
+  - runtime_dtm_or_tablebase_lookup: `False`
+  - hidden_python_controller: `False`
+  - selector_training_allowed: `False`
+  - provider_suppression_allowed: `False`
+  - broad_stage0_penalty_allowed: `False`
+  - gameplay_topology_mutation: `False`
+  - stage7_promotion_allowed: `False`
+  - stage8_training_allowed: `False`
+  - readiness_audit: `reports/krk_full_suite_readiness_audit_v0.json`
+  - readiness_audit_status: `krk_suite_readiness_ready_for_next_runtime_or_training_review`
+  - readiness_checked_flag_count: `2912`
+  - readiness_boundary_violation_count: `0`
+  - readiness_source_artifact_count: `408`
+- does_not_allow:
+  - default enablement
+  - exact-state or exact-move runtime exception
+  - selector training
+  - broad stage0 penalty
+  - provider suppression
+  - Stage 7 promotion
+  - Stage 8 training
+
+### review_protected_plan_window_failure_contrast_manifest
+
+- artifact: `reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_manifest_v0.md`
+- status: `protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review`
+- allows: non-causal protected plan-window failure-contrast manifest review only
+- recommended_if: benchmark review found sparse protected plan-window failure evidence
+- approval_request_ready_for_collection: `None`
+- does_not_allow:
+  - runtime selector
+  - runtime direct routing
+  - hidden Python controller
+  - runtime default changes
+  - runtime DTM or tablebase lookup
+  - gameplay-time topology mutation
+  - unreviewed or unbounded label execution
+  - selector training
+  - Stage 7 promotion
+  - Stage 8 training
+
+## Recommendation
+
+- if_no_user_approval: `review_protected_plan_window_failure_contrast_manifest`
+- if_runtime_approved: `implement_stage4_default_off_first_move_contrast_sandbox`
+- if_collection_approved: `not_applicable_pending_protected_failure_contrast_manifest_review`
+- if_labels_approved: `not_applicable_stage7_success_gate_closed`
+- reason: Stage 7 held-out clean controls now satisfy the benchmark gate; the remaining work is non-causal benchmark review/protected plan-window contrast analysis, while Stage 4 runtime work still requires explicit sandbox approval.

@@ -1,0 +1,130 @@
+{
+  "acceptance_thresholds_for_future_review": {
+    "leave_stage_out_negative_suppression_min": 0.7,
+    "leave_stage_out_positive_recall_min": 0.7,
+    "protected_negative_suppression_min": 0.8,
+    "protected_positive_recall_min": 0.7,
+    "runtime_mutation_flags_required": false,
+    "selector_training_row_count_required": 0,
+    "stage7_training_row_count_required": 0
+  },
+  "candidate_policy_seed": {
+    "false_negative": 5,
+    "false_positive": 0,
+    "known_limitations": [
+      "capacity_labels_are_not_ownership_labels",
+      "leave_stage_out_generalization_is_weak",
+      "dataset_is_small",
+      "negative_capacity_candidates_remain_present",
+      "candidate_generation_does_not_select_or_score_candidates"
+    ],
+    "negative_suppression": 1.0,
+    "policy_name": "stage_family_pure_positive_with_support_2",
+    "policy_role": "analysis_seed_for_candidate_generation_only",
+    "positive_precision": 1.0,
+    "positive_recall": 0.7368421052631579
+  },
+  "causal_status": "non_causal_design",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "candidate_generation_training_refresh_benchmark_or_cross_stage_capacity_review",
+    "runtime_candidate_generator_refresh_allowed": false,
+    "selector_allowed": false,
+    "status": "candidate_generation_training_refresh_design_ready"
+  },
+  "design_goal": "Define a non-causal candidate-generation training refresh that can improve proposal recall from protected capacity evidence while preserving the capacity-vs-ownership label boundary.",
+  "forbidden_next_steps": [
+    "runtime_selector",
+    "provider_score_tuning",
+    "provider_suppression",
+    "direct_provider_routing",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "using_capacity_labels_as_ownership_labels"
+  ],
+  "gameplay_topology_mutation": false,
+  "input_evidence": {
+    "best_non_oracle_metrics": {
+      "balanced_recall_risk": 0.868421052631579,
+      "false_negative": 5,
+      "false_positive": 0,
+      "negative_count": 9,
+      "negative_suppression": 1.0,
+      "positive_count": 19,
+      "positive_precision": 1.0,
+      "positive_recall": 0.7368421052631579,
+      "predicted_count": 14,
+      "row_count": 28,
+      "true_negative": 9,
+      "true_positive": 14
+    },
+    "best_non_oracle_policy": "stage_family_pure_positive_with_support_2",
+    "candidate_generation_training_row_count": 19,
+    "capacity_label_counts": {
+      "negative_capacity": 9,
+      "positive_capacity": 19
+    },
+    "capacity_row_count": 28,
+    "dataset_status": "strategy_sequence_dataset_v2_capacity_merged_non_causal",
+    "leave_stage_out_aggregate": {
+      "balanced_recall_risk": 0.3450292397660819,
+      "false_negative": 8,
+      "false_positive": 8,
+      "negative_count": 9,
+      "negative_suppression": 0.1111111111111111,
+      "positive_count": 19,
+      "positive_precision": 0.5789473684210527,
+      "positive_recall": 0.5789473684210527,
+      "predicted_count": 19,
+      "row_count": 28,
+      "true_negative": 1,
+      "true_positive": 11
+    },
+    "probe_status": "candidate_generation_refresh_supported_selector_blocked",
+    "selector_training_row_count": 0,
+    "stage7_readiness_training_row_count": 0
+  },
+  "minimum_training_refresh_requirements": [
+    "preserve label_semantics on every row",
+    "train or fit only candidate-generation emission/risk features",
+    "produce no selector weights",
+    "produce no provider score deltas",
+    "emit no runtime routes or direct provider requests",
+    "keep Stage 7 challenge rows out of training/readiness metrics",
+    "evaluate leave-stage-out and report weak generalization explicitly",
+    "require a separate review before any runtime candidate-generator refresh"
+  ],
+  "readiness_assessment": {
+    "candidate_refresh_supported": true,
+    "cross_stage_generalization_supported": false,
+    "reason_runtime_blocked": "The protected in-sample candidate-generation signal improved, but leave-stage-out negative suppression remains too weak for runtime refresh or selector use.",
+    "runtime_candidate_generator_refresh_supported_now": false,
+    "selector_supported": false
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_training_refresh_design.v2",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v2_capacity_merged.json",
+    "reports/strategy_arbitration/krk_candidate_generation_refresh_probe_v2_after_labels.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "training_refresh_scope": {
+    "allowed_rows": "protected_non_stage7_positive_capacity_rows",
+    "allowed_target": "candidate_generation_recall_and_risk_filtering",
+    "default_behavior_change_allowed": false,
+    "negative_rows_use": "risk_filtering_and_ablation_only",
+    "ownership_labels_created": false,
+    "runtime_use_allowed": false,
+    "selector_rows_allowed": false,
+    "stage7_rows_use": "held_out_challenge_only"
+  }
+}

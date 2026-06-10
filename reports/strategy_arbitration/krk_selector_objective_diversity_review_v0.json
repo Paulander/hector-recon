@@ -1,0 +1,241 @@
+{
+  "causal_status": "non_causal_diversity_review",
+  "decision": {
+    "recommended_next_step": "write_selector_objective_diverse_collection_review_packet_v0",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "status": "selector_objective_diverse_collection_review_ready"
+  },
+  "future_collection_candidates": [
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_collection_candidate",
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.02feb8593cc6",
+      "objective_channel": "safe_preservation_contrast_seed",
+      "priority_reason": "non_stage0_safe_seed_needs_joined_observation",
+      "recovery_class": "safe_preservation_requires_joined_trace_observation",
+      "requires_explicit_collection_approval": true,
+      "schema_version": "krk_selector_objective_diverse_collection_candidate.v0",
+      "selected_owner_label": "selected_owner_converted",
+      "selected_provider": "krk.fence_established",
+      "selected_provider_family": "fence_established",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.02feb8593cc6",
+      "usable_for_selector_training": false
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_collection_candidate",
+      "fen": "5k2/7R/K7/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.326222aefdf1",
+      "objective_channel": "safe_preservation_contrast_seed",
+      "priority_reason": "non_stage0_safe_seed_needs_joined_observation",
+      "recovery_class": "safe_preservation_requires_joined_trace_observation",
+      "requires_explicit_collection_approval": true,
+      "schema_version": "krk_selector_objective_diverse_collection_candidate.v0",
+      "selected_owner_label": "selected_owner_converted",
+      "selected_provider": "krk.edge_trap_close",
+      "selected_provider_family": "edge_trap",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.326222aefdf1",
+      "usable_for_selector_training": false
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_collection_candidate",
+      "fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.3dca34326fca",
+      "objective_channel": "candidate_switch_contrast_seed",
+      "priority_reason": "switch_seed_needs_joined_observation",
+      "recovery_class": "selected_failure_requires_joined_trace_observation",
+      "requires_explicit_collection_approval": true,
+      "schema_version": "krk_selector_objective_diverse_collection_candidate.v0",
+      "selected_owner_label": "selected_owner_failed",
+      "selected_provider": "krk.stage0_basin",
+      "selected_provider_family": "stage0_basin",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.3dca34326fca",
+      "usable_for_selector_training": false
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_collection_candidate",
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "objective_channel": "candidate_switch_contrast_seed",
+      "priority_reason": "non_stage0_switch_seed_needs_joined_observation",
+      "recovery_class": "selected_failure_requires_joined_trace_observation",
+      "requires_explicit_collection_approval": true,
+      "schema_version": "krk_selector_objective_diverse_collection_candidate.v0",
+      "selected_owner_label": "selected_owner_failed",
+      "selected_provider": "krk.edge_trap_close",
+      "selected_provider_family": "edge_trap",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.699f0003a511",
+      "usable_for_selector_training": false
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_collection_candidate",
+      "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.87b1160e68b9",
+      "objective_channel": "safe_preservation_contrast_seed",
+      "priority_reason": "unseeded_non_stage0_safe_ownership_row",
+      "recovery_class": "safe_preservation_requires_joined_trace_observation",
+      "requires_explicit_collection_approval": true,
+      "schema_version": "krk_selector_objective_diverse_collection_candidate.v0",
+      "selected_owner_label": "selected_owner_converted",
+      "selected_provider": "krk.edge_trap_close",
+      "selected_provider_family": "edge_trap",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.87b1160e68b9",
+      "usable_for_selector_training": false
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_collection_candidate",
+      "fen": "4k3/8/8/8/R7/8/4K3/8 w - - 0 1",
+      "frame_id": "cp.krk.state.7b116c49a009",
+      "objective_channel": "safe_preservation_contrast_seed",
+      "priority_reason": "stage5_6_safe_preservation_fill_row",
+      "recovery_class": "safe_preservation_requires_joined_trace_observation",
+      "requires_explicit_collection_approval": true,
+      "schema_version": "krk_selector_objective_diverse_collection_candidate.v0",
+      "selected_owner_label": "selected_owner_converted",
+      "selected_provider": "krk.stage0_basin",
+      "selected_provider_family": "stage0_basin",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.7b116c49a009",
+      "usable_for_selector_training": false
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_collection_candidate",
+      "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+      "frame_id": "cp.krk.state.7bd8961882ad",
+      "objective_channel": "safe_preservation_contrast_seed",
+      "priority_reason": "stage5_6_safe_preservation_fill_row",
+      "recovery_class": "safe_preservation_requires_joined_trace_observation",
+      "requires_explicit_collection_approval": true,
+      "schema_version": "krk_selector_objective_diverse_collection_candidate.v0",
+      "selected_owner_label": "selected_owner_converted",
+      "selected_provider": "krk.stage0_basin",
+      "selected_provider_family": "stage0_basin",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.7bd8961882ad",
+      "usable_for_selector_training": false
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_collection_candidate",
+      "fen": "7k/8/8/8/R7/8/5K2/8 w - - 0 1",
+      "frame_id": "cp.krk.state.7cab65617cd8",
+      "objective_channel": "safe_preservation_contrast_seed",
+      "priority_reason": "stage5_6_safe_preservation_fill_row",
+      "recovery_class": "safe_preservation_requires_joined_trace_observation",
+      "requires_explicit_collection_approval": true,
+      "schema_version": "krk_selector_objective_diverse_collection_candidate.v0",
+      "selected_owner_label": "selected_owner_converted",
+      "selected_provider": "krk.stage0_basin",
+      "selected_provider_family": "stage0_basin",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "state_id": "state.7cab65617cd8",
+      "usable_for_selector_training": false
+    }
+  ],
+  "gameplay_topology_mutation": false,
+  "questions": {
+    "can_recover_more_replay_free_from_existing_artifacts": false,
+    "stage0_basin_dominance": true,
+    "too_few_failure_types": true,
+    "too_few_providers": true,
+    "too_few_rows": false,
+    "too_few_stages": false,
+    "what_evidence_is_missing": [
+      "more_selected_owner_failed_switch_rows",
+      "more_non_stage0_selected_owner_rows",
+      "joined_trace_observation_for_non_stage0_seed_rows",
+      "provider_family_diversity_beyond_stage0_basin",
+      "failure_type_diversity_beyond_current_stage0_basin_failures"
+    ],
+    "why_replay_free_recovery_is_not_enough": "Stage5/6 replay-free ownership rows not already in the seed set add safe-preservation rows but do not add enough switch or non-stage0 ownership evidence, and rows without joined trace observation should not be promoted into trace/ownership seeds."
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_provider_suppression": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_selector_objective_diversity_review.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_joined_trace_ownership_collection_v0.json",
+    "reports/strategy_arbitration/krk_selector_objective_seed_manifest_v1.json",
+    "reports/strategy_arbitration/krk_selector_objective_seed_probe_v1.json",
+    "reports/strategy_arbitration/krk_selector_objective_feature_probe_review_v0.json",
+    "reports/krk_ownership_selection_context_dataset_v3.json",
+    "current_agent_brief.md"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "brief_present": true,
+    "collection_status": "joined_trace_ownership_collection_complete_seed_improved",
+    "feature_review_status": "selector_feature_probe_blocks_runtime_needs_diverse_evidence",
+    "future_collection_candidate_count": 8,
+    "future_collection_owner_label_counts": {
+      "selected_owner_converted": 6,
+      "selected_owner_failed": 2
+    },
+    "future_collection_provider_family_counts": {
+      "edge_trap": 3,
+      "fence_established": 1,
+      "stage0_basin": 4
+    },
+    "future_collection_stage_counts": {
+      "stage5": 7,
+      "stage6": 1
+    },
+    "joined_collection_provider_counts": {
+      "krk.stage0_basin": 8
+    },
+    "replay_free_extra_owner_label_counts": {
+      "selected_owner_converted": 10
+    },
+    "replay_free_extra_provider_family_counts": {
+      "edge_trap": 1,
+      "stage0_basin": 9
+    },
+    "replay_free_extra_stage5_6_row_count": 10,
+    "replay_free_recovery_enough": false,
+    "seed_owner_label_counts": {
+      "selected_owner_converted": 8,
+      "selected_owner_failed": 4
+    },
+    "seed_probe_status": "selector_objective_seed_ready_for_non_causal_feature_probe",
+    "seed_provider_family_counts": {
+      "edge_trap": 2,
+      "fence_established": 1,
+      "stage0_basin": 9
+    },
+    "seed_row_count": 12,
+    "seed_stage0_basin_ratio": 0.75,
+    "seed_stage_counts": {
+      "stage5": 8,
+      "stage6": 4
+    },
+    "selector_training_row_count": 0,
+    "stage5_6_ownership_context_row_count": 22,
+    "stage7_training_row_count": 0
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "schema_version": "krk_strategy_arbiter_sandbox_design.v0",
+  "causal_status": "non_causal_design",
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_arbiter_implemented": false,
+  "runtime_terminals_added": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "gameplay_topology_mutation": false,
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "source_artifacts": [
+    "reports/krk_control_plane_evidence_contract_v0.json",
+    "reports/krk_control_plane_filtered_frames_v0.json",
+    "reports/krk_control_plane_strategy_arbitration_baseline_v1.json",
+    "reports/krk_strategy_arbitration_plan.json",
+    "reports/current_agent_brief.md"
+  ],
+  "design_status": "proposed_for_review",
+  "motivation": {
+    "baseline_status": "strategy_arbitration_promising",
+    "observations": [
+      "The filtered control-plane dataset now has provider-level labels for all 28 strategy benchmark frames.",
+      "Fourteen frames have at least one known provider-mate option and fourteen have only max_plies-labeled provider proposals.",
+      "Raw score, normalized score, provider-local rank, and stage-prior heuristics recover many converting providers when one is present.",
+      "Simple visible context heuristic remains weak because context terms alone do not map cleanly to provider ownership.",
+      "Stage 7 remains a held-out challenge set, not a local repair target."
+    ]
+  },
+  "proposed_future_sandbox": {
+    "arbiter_id": "sandbox.krk.strategy_arbiter_v0",
+    "default_enabled": false,
+    "domain_scope": "KRK only",
+    "profile_scope": "explicit sandbox profile only",
+    "inputs": [
+      "ControlPlaneEvidenceFrame.strategy_proposal_frames",
+      "protected_provider_provenance",
+      "terminal-space context terms",
+      "internal monitor records",
+      "plan capsule window records",
+      "promotion and guardrail status"
+    ],
+    "forbidden_inputs": [
+      "runtime DTM/tablebase lookup",
+      "state-hash exceptions",
+      "hidden Python router state",
+      "unpromoted StructuralCandidate as causal input",
+      "unpromoted InternalTerminalSpec as causal input"
+    ],
+    "candidate_outputs": [
+      "non-causal provider ownership recommendation",
+      "sandbox-only visible arbitration support record",
+      "explanation of source terms and proposals"
+    ],
+    "forbidden_outputs": [
+      "direct move selection",
+      "direct provider request edge",
+      "topology mutation during gameplay",
+      "Stage 7 promotion",
+      "Stage 8 training trigger"
+    ]
+  },
+  "minimum_before_implementation": [
+    "Architecture review explicitly authorizes a default-off sandbox implementation.",
+    "Provider-label semantics are documented for selected-vs-forced labels.",
+    "Positive-provider and max-only frames are separated in evaluation.",
+    "Stage 7 challenge cases remain held out from sandbox tuning.",
+    "The arbiter can explain every recommendation through visible terms and proposal metadata.",
+    "A default-off equivalence test plan exists before any runtime code is added.",
+    "Guardrails are listed before any candidate can move beyond sandbox."
+  ],
+  "future_evaluation_protocol": {
+    "phase_0": "default-off equivalence against current runtime",
+    "phase_1": "offline replay over ControlPlaneEvidenceFrame records",
+    "phase_2": "tiny default-off/on sandbox smoke only if explicitly approved",
+    "phase_3": "target KRK control-plane challenge validation",
+    "phase_4": "protected Stage 6/5/4/1 guardrails only if target improves",
+    "phase_5": "M1-M4 preservation suite before any promotion discussion"
+  },
+  "guardrails": [
+    "Stage 6 drive_to_edge",
+    "Stage 5 fence/handoff",
+    "Stage 4 wrong-tempo with paired controls",
+    "Stage 1 backchain / KRK entry if cheap",
+    "M1-M4 preservation",
+    "KPK->KQK bridge sanity if the arbiter generalizes beyond KRK"
+  ],
+  "open_risks": [
+    {
+      "risk": "provider_label_semantics_mixed",
+      "detail": "Some labels are selected-provider outcomes while others are forced-provider outcomes; a future arbiter must keep these separated."
+    },
+    {
+      "risk": "max_only_frames_need_classification",
+      "detail": "Half the current benchmark frames have no known converting provider proposal; this may indicate continuation capacity, missing proposals, or labeling limits."
+    },
+    {
+      "risk": "visible_context_heuristic_weak",
+      "detail": "Terminal-space context alone is insufficient; proposal-relative features and monitor evidence are likely required."
+    },
+    {
+      "risk": "stage7_overfit",
+      "detail": "Stage 7 residuals must remain challenge cases rather than the sole optimization target."
+    }
+  ],
+  "blocked_next_steps": [
+    "implement_runtime_arbiter_without_review",
+    "add_runtime_terminals",
+    "promote_stage7",
+    "train_stage8",
+    "add_stage7_repair",
+    "use_runtime_dtm_or_tablebase",
+    "mutate_topology_during_gameplay"
+  ],
+  "recommended_next_step": "architecture_review_before_any_runtime_sandbox"
+}

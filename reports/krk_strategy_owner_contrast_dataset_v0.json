@@ -1,0 +1,831 @@
+{
+  "causal_status": "non_causal_dataset",
+  "decision": {
+    "recommended_next_step": "run_non_causal_strategy_owner_contrast_probe",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "strategy_owner_contrast_dataset_ready_for_non_causal_probe_selector_sandbox_blocked"
+  },
+  "gameplay_topology_mutation": false,
+  "readiness_v2_assessment": {
+    "blockers": [
+      "insufficient_selected_provider_family_diversity"
+    ],
+    "contrast_probe_ready": true,
+    "held_out_challenge_boundary_preserved": true,
+    "schema_version": "krk_selector_readiness_v2_assessment.v0",
+    "selector_sandbox_ready": false,
+    "stage7_training_rows": 0
+  },
+  "rows": [
+    {
+      "active_landmark_label": "box_shrink",
+      "causal_status": "non_causal_contrast_row",
+      "contrast_summary": {
+        "all_labeled_providers_max_plies": true,
+        "has_non_stage0_positive": false,
+        "non_stage0_positive_provider_count": 0,
+        "positive_provider_count": 0,
+        "provider_count": 6,
+        "provider_families": [
+          "drive_to_edge",
+          "edge_trap",
+          "fence_established",
+          "stage0_basin"
+        ]
+      },
+      "fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+      "frame_id": "cp.krk.state.0afbf11aa123",
+      "held_out_challenge": true,
+      "provider_labels": [
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "e3a3",
+          "positive": false,
+          "provider_family": "drive_to_edge",
+          "provider_id": "krk.drive_to_edge",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "e4f4",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_close",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "e3d3",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_enemy_between",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "e4f4",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "e3a3",
+          "positive": false,
+          "provider_family": "fence_established",
+          "provider_id": "krk.fence_established",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "e3a3",
+          "positive": false,
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "result": "max_plies",
+          "selected": null
+        }
+      ],
+      "schema_version": "krk_strategy_owner_contrast_row.v0",
+      "source_stage": "stage7",
+      "state_id": "state.0afbf11aa123",
+      "training_eligible": false
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "causal_status": "non_causal_contrast_row",
+      "contrast_summary": {
+        "all_labeled_providers_max_plies": true,
+        "has_non_stage0_positive": false,
+        "non_stage0_positive_provider_count": 0,
+        "positive_provider_count": 0,
+        "provider_count": 6,
+        "provider_families": [
+          "drive_to_edge",
+          "edge_trap",
+          "fence_established",
+          "stage0_basin"
+        ]
+      },
+      "fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+      "frame_id": "cp.krk.state.38aed2f35911",
+      "held_out_challenge": true,
+      "provider_labels": [
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "a5a8",
+          "positive": false,
+          "provider_family": "drive_to_edge",
+          "provider_id": "krk.drive_to_edge",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "d1e2",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_close",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "d1e2",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_enemy_between",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "a5h5",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "d1e2",
+          "positive": false,
+          "provider_family": "fence_established",
+          "provider_id": "krk.fence_established",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "d1e2",
+          "positive": false,
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "result": "max_plies",
+          "selected": null
+        }
+      ],
+      "schema_version": "krk_strategy_owner_contrast_row.v0",
+      "source_stage": "stage7",
+      "state_id": "state.38aed2f35911",
+      "training_eligible": false
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "causal_status": "non_causal_contrast_row",
+      "contrast_summary": {
+        "all_labeled_providers_max_plies": false,
+        "has_non_stage0_positive": true,
+        "non_stage0_positive_provider_count": 1,
+        "positive_provider_count": 1,
+        "provider_count": 6,
+        "provider_families": [
+          "drive_to_edge",
+          "edge_trap",
+          "fence_established",
+          "stage0_basin"
+        ]
+      },
+      "fen": "8/8/8/4k3/R7/8/3K4/8 w - - 2 2",
+      "frame_id": "cp.krk.state.ac0b7ed500ea",
+      "held_out_challenge": true,
+      "provider_labels": [
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "a4a8",
+          "positive": false,
+          "provider_family": "drive_to_edge",
+          "provider_id": "krk.drive_to_edge",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "d2c3",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_close",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "a4b4",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_enemy_between",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "a4b4",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "d2e3",
+          "positive": true,
+          "provider_family": "fence_established",
+          "provider_id": "krk.fence_established",
+          "result": "mate",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "a4a8",
+          "positive": false,
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "result": "max_plies",
+          "selected": null
+        }
+      ],
+      "schema_version": "krk_strategy_owner_contrast_row.v0",
+      "source_stage": "stage7",
+      "state_id": "state.ac0b7ed500ea",
+      "training_eligible": false
+    },
+    {
+      "active_landmark_label": "box_shrink",
+      "causal_status": "non_causal_contrast_row",
+      "contrast_summary": {
+        "all_labeled_providers_max_plies": false,
+        "has_non_stage0_positive": true,
+        "non_stage0_positive_provider_count": 1,
+        "positive_provider_count": 1,
+        "provider_count": 6,
+        "provider_families": [
+          "drive_to_edge",
+          "edge_trap",
+          "fence_established",
+          "stage0_basin"
+        ]
+      },
+      "fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+      "frame_id": "cp.krk.state.ff6652c8832c",
+      "held_out_challenge": true,
+      "provider_labels": [
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "e4h4",
+          "positive": true,
+          "provider_family": "drive_to_edge",
+          "provider_id": "krk.drive_to_edge",
+          "result": "mate",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "e2e3",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_close",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "e2e3",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_enemy_between",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "e2e3",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "e4e8",
+          "positive": false,
+          "provider_family": "fence_established",
+          "provider_id": "krk.fence_established",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "label_source": "forced_provider_result",
+          "move_uci": "e4e8",
+          "positive": false,
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "result": "max_plies",
+          "selected": null
+        }
+      ],
+      "schema_version": "krk_strategy_owner_contrast_row.v0",
+      "source_stage": "stage7",
+      "state_id": "state.ff6652c8832c",
+      "training_eligible": false
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_contrast_row",
+      "contrast_summary": {
+        "all_labeled_providers_max_plies": false,
+        "has_non_stage0_positive": true,
+        "non_stage0_positive_provider_count": 3,
+        "positive_provider_count": 3,
+        "provider_count": 3,
+        "provider_families": [
+          "edge_trap"
+        ]
+      },
+      "fen": "6k1/4R3/6K1/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.87b1160e68b9",
+      "held_out_challenge": false,
+      "provider_labels": [
+        {
+          "label_source": "selected_playout",
+          "move_uci": "e7e8",
+          "positive": true,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_close",
+          "result": "mate",
+          "selected": true
+        },
+        {
+          "label_source": "same_move_or_existing_label",
+          "move_uci": "e7e8",
+          "positive": true,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_enemy_between",
+          "result": "mate",
+          "selected": false
+        },
+        {
+          "label_source": "same_move_or_existing_label",
+          "move_uci": "e7e8",
+          "positive": true,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "result": "mate",
+          "selected": false
+        }
+      ],
+      "schema_version": "krk_strategy_owner_contrast_row.v0",
+      "source_stage": "stage5",
+      "state_id": "state.87b1160e68b9",
+      "training_eligible": true
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_contrast_row",
+      "contrast_summary": {
+        "all_labeled_providers_max_plies": true,
+        "has_non_stage0_positive": false,
+        "non_stage0_positive_provider_count": 0,
+        "positive_provider_count": 0,
+        "provider_count": 3,
+        "provider_families": [
+          "edge_trap"
+        ]
+      },
+      "fen": "5k2/7R/1K6/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.02feb8593cc6",
+      "held_out_challenge": false,
+      "provider_labels": [
+        {
+          "label_source": "selected_playout",
+          "move_uci": "h7c7",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_close",
+          "result": "max_plies",
+          "selected": true
+        },
+        {
+          "label_source": "same_move_or_existing_label",
+          "move_uci": "h7c7",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_enemy_between",
+          "result": "max_plies",
+          "selected": false
+        },
+        {
+          "label_source": "same_move_or_existing_label",
+          "move_uci": "h7c7",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "result": "max_plies",
+          "selected": false
+        }
+      ],
+      "schema_version": "krk_strategy_owner_contrast_row.v0",
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6",
+      "training_eligible": true
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_contrast_row",
+      "contrast_summary": {
+        "all_labeled_providers_max_plies": true,
+        "has_non_stage0_positive": false,
+        "non_stage0_positive_provider_count": 0,
+        "positive_provider_count": 0,
+        "provider_count": 3,
+        "provider_families": [
+          "edge_trap"
+        ]
+      },
+      "fen": "5k2/7R/K7/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.326222aefdf1",
+      "held_out_challenge": false,
+      "provider_labels": [
+        {
+          "label_source": "selected_playout",
+          "move_uci": "h7c7",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_close",
+          "result": "max_plies",
+          "selected": true
+        },
+        {
+          "label_source": "same_move_or_existing_label",
+          "move_uci": "h7c7",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_enemy_between",
+          "result": "max_plies",
+          "selected": false
+        },
+        {
+          "label_source": "same_move_or_existing_label",
+          "move_uci": "h7c7",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "result": "max_plies",
+          "selected": false
+        }
+      ],
+      "schema_version": "krk_strategy_owner_contrast_row.v0",
+      "source_stage": "stage5",
+      "state_id": "state.326222aefdf1",
+      "training_eligible": true
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_contrast_row",
+      "contrast_summary": {
+        "all_labeled_providers_max_plies": true,
+        "has_non_stage0_positive": false,
+        "non_stage0_positive_provider_count": 0,
+        "positive_provider_count": 0,
+        "provider_count": 3,
+        "provider_families": [
+          "edge_trap"
+        ]
+      },
+      "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.699f0003a511",
+      "held_out_challenge": false,
+      "provider_labels": [
+        {
+          "label_source": "selected_playout",
+          "move_uci": "h7c7",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_close",
+          "result": "max_plies",
+          "selected": true
+        },
+        {
+          "label_source": "same_move_or_existing_label",
+          "move_uci": "h7c7",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_enemy_between",
+          "result": "max_plies",
+          "selected": false
+        },
+        {
+          "label_source": "same_move_or_existing_label",
+          "move_uci": "h7c7",
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "result": "max_plies",
+          "selected": false
+        }
+      ],
+      "schema_version": "krk_strategy_owner_contrast_row.v0",
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511",
+      "training_eligible": true
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_contrast_row",
+      "contrast_summary": {
+        "all_labeled_providers_max_plies": false,
+        "has_non_stage0_positive": true,
+        "non_stage0_positive_provider_count": 1,
+        "positive_provider_count": 1,
+        "provider_count": 3,
+        "provider_families": [
+          "edge_trap",
+          "fence_established"
+        ]
+      },
+      "fen": "8/1RK5/8/k7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.1e4f48a672e8",
+      "held_out_challenge": false,
+      "provider_labels": [
+        {
+          "job_id": "job.krk.strategy_owner_contrast.6ca3b85ce53a",
+          "label_source": "strategy_owner_contrast_control_label_run",
+          "move_uci": "b7b6",
+          "plies": 40,
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "job_id": "job.krk.strategy_owner_contrast.14c4d6d395bb",
+          "label_source": "strategy_owner_contrast_control_label_run",
+          "move_uci": "b7b6",
+          "plies": 40,
+          "positive": false,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_close",
+          "result": "max_plies",
+          "selected": null
+        },
+        {
+          "job_id": "job.krk.strategy_owner_contrast.1a9dfe565e76",
+          "label_source": "strategy_owner_contrast_control_label_run",
+          "move_uci": "b7b1",
+          "plies": 7,
+          "positive": true,
+          "provider_family": "fence_established",
+          "provider_id": "krk.fence_established",
+          "result": "mate",
+          "selected": null
+        }
+      ],
+      "schema_version": "krk_strategy_owner_contrast_row.v0",
+      "source_stage": "stage4",
+      "state_id": "state.1e4f48a672e8",
+      "training_eligible": true
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_contrast_row",
+      "contrast_summary": {
+        "all_labeled_providers_max_plies": false,
+        "has_non_stage0_positive": true,
+        "non_stage0_positive_provider_count": 1,
+        "positive_provider_count": 1,
+        "provider_count": 1,
+        "provider_families": [
+          "edge_trap"
+        ]
+      },
+      "fen": "8/8/8/8/8/3K4/3R4/6k1 w - - 2 2",
+      "frame_id": "cp.krk.state.f17117682948",
+      "held_out_challenge": false,
+      "provider_labels": [
+        {
+          "job_id": "job.krk.strategy_owner_contrast.d1744cd54930",
+          "label_source": "strategy_owner_contrast_control_label_run",
+          "move_uci": "d3e3",
+          "plies": 9,
+          "positive": true,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "result": "mate",
+          "selected": null
+        }
+      ],
+      "schema_version": "krk_strategy_owner_contrast_row.v0",
+      "source_stage": "stage4",
+      "state_id": "state.f17117682948",
+      "training_eligible": true
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_contrast_row",
+      "contrast_summary": {
+        "all_labeled_providers_max_plies": false,
+        "has_non_stage0_positive": true,
+        "non_stage0_positive_provider_count": 4,
+        "positive_provider_count": 4,
+        "provider_count": 4,
+        "provider_families": [
+          "edge_trap",
+          "fence_established"
+        ]
+      },
+      "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+      "frame_id": "cp.krk.state.7bd8961882ad",
+      "held_out_challenge": false,
+      "provider_labels": [
+        {
+          "job_id": "job.krk.strategy_owner_contrast.eae6955cdd41",
+          "label_source": "strategy_owner_contrast_control_label_run",
+          "move_uci": "f2f3",
+          "plies": 9,
+          "positive": true,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_close",
+          "result": "mate",
+          "selected": null
+        },
+        {
+          "job_id": "job.krk.strategy_owner_contrast.fca927c317d8",
+          "label_source": "strategy_owner_contrast_control_label_run",
+          "move_uci": "f2f3",
+          "plies": 9,
+          "positive": true,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_enemy_between",
+          "result": "mate",
+          "selected": null
+        },
+        {
+          "job_id": "job.krk.strategy_owner_contrast.40d0a6e04b05",
+          "label_source": "strategy_owner_contrast_control_label_run",
+          "move_uci": "f2f3",
+          "plies": 9,
+          "positive": true,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "result": "mate",
+          "selected": null
+        },
+        {
+          "job_id": "job.krk.strategy_owner_contrast.829c9b9fe98b",
+          "label_source": "strategy_owner_contrast_control_label_run",
+          "move_uci": "f2g3",
+          "plies": 9,
+          "positive": true,
+          "provider_family": "fence_established",
+          "provider_id": "krk.fence_established",
+          "result": "mate",
+          "selected": null
+        }
+      ],
+      "schema_version": "krk_strategy_owner_contrast_row.v0",
+      "source_stage": "stage5",
+      "state_id": "state.7bd8961882ad",
+      "training_eligible": true
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_contrast_row",
+      "contrast_summary": {
+        "all_labeled_providers_max_plies": false,
+        "has_non_stage0_positive": true,
+        "non_stage0_positive_provider_count": 3,
+        "positive_provider_count": 3,
+        "provider_count": 3,
+        "provider_families": [
+          "drive_to_edge",
+          "edge_trap",
+          "fence_established"
+        ]
+      },
+      "fen": "5k2/8/4K3/8/8/8/8/R7 w - - 2 2",
+      "frame_id": "cp.krk.state.d1f052d2cab2",
+      "held_out_challenge": false,
+      "provider_labels": [
+        {
+          "job_id": "job.krk.strategy_owner_contrast.e14d23798e77",
+          "label_source": "strategy_owner_contrast_control_label_run",
+          "move_uci": "e6f6",
+          "plies": 5,
+          "positive": true,
+          "provider_family": "drive_to_edge",
+          "provider_id": "krk.drive_to_edge",
+          "result": "mate",
+          "selected": null
+        },
+        {
+          "job_id": "job.krk.strategy_owner_contrast.5e053ab0baa8",
+          "label_source": "strategy_owner_contrast_control_label_run",
+          "move_uci": "a1g1",
+          "plies": 3,
+          "positive": true,
+          "provider_family": "fence_established",
+          "provider_id": "krk.fence_established",
+          "result": "mate",
+          "selected": null
+        },
+        {
+          "job_id": "job.krk.strategy_owner_contrast.4dcd4cc180e8",
+          "label_source": "strategy_owner_contrast_control_label_run",
+          "move_uci": "a1g1",
+          "plies": 3,
+          "positive": true,
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_close",
+          "result": "mate",
+          "selected": null
+        }
+      ],
+      "schema_version": "krk_strategy_owner_contrast_row.v0",
+      "source_stage": "stage6",
+      "state_id": "state.d1f052d2cab2",
+      "training_eligible": true
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_contrast_row",
+      "contrast_summary": {
+        "all_labeled_providers_max_plies": false,
+        "has_non_stage0_positive": true,
+        "non_stage0_positive_provider_count": 1,
+        "positive_provider_count": 1,
+        "provider_count": 1,
+        "provider_families": [
+          "drive_to_edge"
+        ]
+      },
+      "fen": "R7/7k/5K2/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.52085d244e9d",
+      "held_out_challenge": false,
+      "provider_labels": [
+        {
+          "job_id": "job.krk.strategy_owner_contrast.82e91a823777",
+          "label_source": "strategy_owner_contrast_control_label_run",
+          "move_uci": "f6f7",
+          "plies": 5,
+          "positive": true,
+          "provider_family": "drive_to_edge",
+          "provider_id": "krk.drive_to_edge",
+          "result": "mate",
+          "selected": null
+        }
+      ],
+      "schema_version": "krk_strategy_owner_contrast_row.v0",
+      "source_stage": "stage6",
+      "state_id": "state.52085d244e9d",
+      "training_eligible": true
+    }
+  ],
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_strategy_owner_contrast_dataset.v0",
+  "source_artifacts": [
+    "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json",
+    "reports/krk_selector_readiness_v2_plan.json",
+    "reports/krk_strategy_owner_contrast_control_labels_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "held_out_challenge_row_count": 4,
+    "heldout_non_stage0_positive_rows": 2,
+    "row_count": 13,
+    "row_count_by_stage": {
+      "stage4": 2,
+      "stage5": 4,
+      "stage6": 3,
+      "stage7": 4
+    },
+    "same_move_compatibility_training_rows": 4,
+    "selected_training_provider_families": [
+      "edge_trap"
+    ],
+    "stage7_training_rows": 0,
+    "training_eligible_row_count": 9,
+    "training_negative_provider_label_count": 11,
+    "training_non_stage0_positive_rows": 6,
+    "training_positive_provider_families": [
+      "drive_to_edge",
+      "edge_trap",
+      "fence_established"
+    ],
+    "training_positive_provider_label_count": 13
+  }
+}

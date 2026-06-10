@@ -20,7 +20,7 @@ from typing import Optional
 import chess
 import chess.engine
 
-from recon_lite.macro_engine import MacroEngine
+from recon_lite_hector.macro_engine import MacroEngine
 from recon_lite.trace_db import EpisodeRecord, TickRecord, TraceDB, pack_fingerprint
 
 

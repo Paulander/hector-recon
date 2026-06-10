@@ -8,9 +8,15 @@ Current medium‑term target: a ReCoN‑driven chess player that can play full g
 
 ## 1. What’s in this repo
 
-- **Core ReCoN engine** (`src/recon_lite`)
-  - Graph, node and edge types, request→confirm executor, POR/RET sequencing.
-  - Continuous activations + micro‑ticks, binding manager, and a lightweight `TraceDB`.
+- **Standalone ReCoN core workspace** (`libs/recon-lite`)
+  - The dependency-light core package intended to become the standalone
+    `recon-lite` repo. It owns the public `recon_lite` import namespace.
+  - Graph, node and edge types, request→confirm executor, POR/RET sequencing,
+    continuous activations + micro‑ticks, binding manager, and `TraceDB`.
+- **Hector compatibility namespace** (`src/recon_lite_hector`)
+  - Temporary/internal home for legacy learning, plasticity, motif, viz, and
+    macro-engine modules that are still useful to Hector but are not part of
+    the standalone core.
 - **Chess integration** (`src/recon_lite_chess`)
   - KRK (King + Rook vs King) and KPK (King + Pawn vs King) endgame scripts.
   - Helpers for evaluation, feature extraction, and phase/strategy logic.

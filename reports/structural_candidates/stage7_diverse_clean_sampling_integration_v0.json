@@ -1,0 +1,110 @@
+{
+  "causal_status": "non_causal_post_label_integration",
+  "decision": {
+    "label_run_allowed": false,
+    "recommended_next_step": "refresh_sequence_policy_inputs_with_integrated_stage7_controls",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "stage7_diverse_clean_sampling_integration_success_controls_met"
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "new_controls": [],
+  "output_checks": [
+    {
+      "job_id": "stage7.diverse_clean.box_small.seed101.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_box_small_seed101_8_h40.json",
+      "output_exists": true,
+      "parsed_control_count": 8,
+      "stage7_training_row": false
+    },
+    {
+      "job_id": "stage7.diverse_clean.box_medium.seed103.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_box_medium_seed103_8_h40.json",
+      "output_exists": true,
+      "parsed_control_count": 8,
+      "stage7_training_row": false
+    },
+    {
+      "job_id": "stage7.diverse_clean.edge_fence_deep.seed107.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_edge_fence_deep_seed107_8_h40.json",
+      "output_exists": true,
+      "parsed_control_count": 8,
+      "stage7_training_row": false
+    },
+    {
+      "job_id": "stage7.diverse_clean.box_small_medium.seed109.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_box_small_medium_seed109_8_h40.json",
+      "output_exists": true,
+      "parsed_control_count": 8,
+      "stage7_training_row": false
+    },
+    {
+      "job_id": "stage7.diverse_clean.box_medium_edge_deep.seed113.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_box_medium_edge_deep_seed113_8_h40.json",
+      "output_exists": true,
+      "parsed_control_count": 8,
+      "stage7_training_row": false
+    },
+    {
+      "job_id": "stage7.diverse_clean.all_stage7_sources_a.seed127.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_a_seed127_8_h40.json",
+      "output_exists": true,
+      "parsed_control_count": 8,
+      "stage7_training_row": false
+    },
+    {
+      "job_id": "stage7.diverse_clean.all_stage7_sources_b.seed131.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_b_seed131_8_h40.json",
+      "output_exists": true,
+      "parsed_control_count": 8,
+      "stage7_training_row": false
+    },
+    {
+      "job_id": "stage7.diverse_clean.all_stage7_sources_c.seed137.samples8.h40",
+      "json_output": "reports/structural_candidates/stage7_diverse_clean_all_stage7_sources_c_seed137_8_h40.json",
+      "output_exists": true,
+      "parsed_control_count": 8,
+      "stage7_training_row": false
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "stage7_diverse_clean_sampling_integration.v0",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
+    "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "all_outputs_present": true,
+    "base_failure_controls": 39,
+    "base_success_controls": 11,
+    "combined_failure_controls": 39,
+    "combined_success_controls": 11,
+    "failure_controls_met": true,
+    "failure_controls_required": 5,
+    "job_count": 8,
+    "new_control_count": 0,
+    "new_role_counts": {},
+    "outputs_present_count": 8,
+    "runtime_authorization_row_count": 0,
+    "selector_training_row_count": 0,
+    "skipped_counts": {
+      "duplicate_base_or_diverse_control": 64
+    },
+    "stage7_training_row_count": 0,
+    "success_controls_met": true,
+    "success_controls_required": 5,
+    "validation_blocks_integration": false,
+    "validation_status": "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration"
+  }
+}

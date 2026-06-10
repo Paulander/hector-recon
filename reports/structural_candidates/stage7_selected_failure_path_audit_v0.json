@@ -1,0 +1,478 @@
+{
+  "causal_status": "non_causal_replay_free_audit",
+  "decision": {
+    "forbidden_next_steps": [
+      "increase abstention penalty",
+      "scale runtime selector validation",
+      "promote Stage 7",
+      "train Stage 8",
+      "add support adapter or provider penalty",
+      "make internal terminals causal"
+    ],
+    "primary_interpretation": "The actual selected Stage 7 max-plies path is mostly stage0_basin ownership, but it splits into two different problem classes: some states have an existing forced provider that converts, while others remain unresolved even under forced providers/legal-first h40 evidence.",
+    "recommended_next_step": "do_not_tune_abstention; build a non-causal selected-path target spec that separately models strategy ownership gaps and sequence/continuation gaps",
+    "status": "mixed_selected_path_gap_no_runtime_patch",
+    "why_abstention_selector_did_not_help": "The runtime selector penalized suggestions in the Stage 7 smoke, but selected_penalized_count stayed 0. It therefore did not target the move/provider that actually won selection in the sampled failure path."
+  },
+  "gameplay_topology_mutation": false,
+  "rows": [
+    {
+      "best_forced_provider": null,
+      "coverage": {
+        "abstention_selector_selected_penalized": false,
+        "abstention_selector_state_level_only": true,
+        "all_tested_existing_providers_fail": true,
+        "existing_provider_can_convert": false,
+        "internal_terminal_hit_count": 3,
+        "strategy_monitor_hit_count": 4
+      },
+      "current_graph_result_h40": "max_plies",
+      "family_id": "stage7.post_box.family_0afbf11aa123",
+      "forced_mating_provider": null,
+      "forced_provider_result_h40": {
+        "result": "no_forced_provider_mate",
+        "tested_provider_count": 6
+      },
+      "hypothesis_labels": [
+        "continuation_capacity_candidate",
+        "unresolved_without_new_continuation_policy",
+        "phase_boundary_candidate",
+        "bad_curriculum_boundary_candidate"
+      ],
+      "internal_terminal_hits": [
+        {
+          "associated_outcome": "max_plies",
+          "confidence": "replay_free_existing_artifact",
+          "source_terms_met": [
+            "box_area_no_longer_decision_relevant",
+            "cut_or_fence_restored_after_move",
+            "post_plan_stagnation",
+            "safe_repair_move_exists"
+          ],
+          "terminal_id": "terminal.krk.post_plan_stagnation"
+        },
+        {
+          "associated_outcome": "max_plies",
+          "confidence": "replay_free_existing_artifact",
+          "source_terms_met": [
+            "box_area_no_longer_decision_relevant",
+            "cut_or_fence_restored_after_move",
+            "post_plan_stagnation",
+            "safe_repair_move_exists"
+          ],
+          "terminal_id": "terminal.krk.box_shrink_owner_exit_pressure"
+        },
+        {
+          "associated_outcome": "max_plies",
+          "confidence": "replay_free_existing_artifact",
+          "source_terms_met": [
+            "box_area_no_longer_decision_relevant",
+            "cut_or_fence_restored_after_move",
+            "post_plan_stagnation",
+            "safe_repair_move_exists"
+          ],
+          "terminal_id": "terminal.krk.repair_needed_monitor"
+        }
+      ],
+      "legal_first_or_dtm_label": {
+        "any_mate": false,
+        "mating_moves": [],
+        "outcome_counts": {
+          "h40:draw": 2,
+          "h40:max_plies": 5
+        },
+        "tested_move_count": 7
+      },
+      "post_reply_fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+      "raw_selected_move": "a3e3",
+      "raw_selected_provider": "krk.stage0_basin",
+      "recommended_next_evidence_class": "sequence_policy_or_continuation_capacity_target",
+      "selected_failure_path_class": "continuation_capacity_or_sequence_policy_gap",
+      "state_id": "state.0afbf11aa123",
+      "strategy_monitor_hits": [
+        {
+          "confidence": 0.48,
+          "missing_terms": [
+            "safe_edge_net_tighten_move_exists",
+            "king_support_conversion_affordance",
+            "draw_risk_absent"
+          ],
+          "monitor_id": "monitor.krk.edge_net_affordance.state.0afbf11aa123.1",
+          "monitor_type": "PhaseBoundaryMonitor",
+          "source_terms": [
+            "black_king_edge_bucket == at_edge",
+            "edge_net_pressure_proxy",
+            "edge_trap_shape_available",
+            "corner_net_pressure_proxy",
+            "rook_safe"
+          ],
+          "suggested_action_class": "audit_owner_phase"
+        },
+        {
+          "confidence": 0.48,
+          "missing_terms": [
+            "box_area_relevance",
+            "edge_net_pressure_proxy",
+            "current_owner",
+            "successful_next_provider"
+          ],
+          "monitor_id": "monitor.krk.phase_boundary_near_edge.state.0afbf11aa123.52",
+          "monitor_type": "PhaseBoundaryMonitor",
+          "source_terms": [
+            "black_king_edge_bucket in {at_edge, near_edge}",
+            "box_area_relevance in {low, medium}",
+            "edge_net_pressure_proxy or fence_exists"
+          ],
+          "suggested_action_class": "audit_owner_phase"
+        },
+        {
+          "confidence": 0.8421052631578947,
+          "missing_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe_after_repair",
+            "box_area_not_expanded_after_reply"
+          ],
+          "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.0afbf11aa123.82",
+          "monitor_type": "RepairNeededMonitor",
+          "source_terms": [
+            "fence_exists",
+            "not fence_stable",
+            "not cut_stable",
+            "rook_safe"
+          ],
+          "suggested_action_class": "record_repair_pressure"
+        },
+        {
+          "confidence": 1.0,
+          "missing_terms": [
+            "plan_capsule_context",
+            "handoff_success_after_plan",
+            "post_plan_stagnation"
+          ],
+          "monitor_id": "monitor.krk.plan_selection_needed.state.0afbf11aa123.104",
+          "monitor_type": "PlanSelectionNeededMonitor",
+          "source_terms": [
+            "stage7 residual",
+            "no visible heuristic hit",
+            "post_box continuation / capsule context",
+            "current_graph_h40 == max_plies"
+          ],
+          "suggested_action_class": "audit_plan_selection"
+        }
+      ]
+    },
+    {
+      "best_forced_provider": null,
+      "coverage": {
+        "abstention_selector_selected_penalized": false,
+        "abstention_selector_state_level_only": true,
+        "all_tested_existing_providers_fail": true,
+        "existing_provider_can_convert": false,
+        "internal_terminal_hit_count": 2,
+        "strategy_monitor_hit_count": 2
+      },
+      "current_graph_result_h40": "max_plies",
+      "family_id": "stage7.post_box.family_38aed2f35911",
+      "forced_mating_provider": null,
+      "forced_provider_result_h40": {
+        "result": "no_forced_provider_mate",
+        "tested_provider_count": 6
+      },
+      "hypothesis_labels": [
+        "continuation_capacity_candidate",
+        "unresolved_without_new_continuation_policy",
+        "phase_boundary_candidate",
+        "bad_curriculum_boundary_candidate"
+      ],
+      "internal_terminal_hits": [
+        {
+          "associated_outcome": "max_plies",
+          "confidence": "replay_free_existing_artifact",
+          "source_terms_met": [
+            "cut_or_fence_restored_after_move",
+            "king_support_improves_after_move",
+            "post_plan_stagnation",
+            "safe_repair_move_exists"
+          ],
+          "terminal_id": "terminal.krk.post_plan_stagnation"
+        },
+        {
+          "associated_outcome": "max_plies",
+          "confidence": "replay_free_existing_artifact",
+          "source_terms_met": [
+            "cut_or_fence_restored_after_move",
+            "king_support_improves_after_move",
+            "post_plan_stagnation",
+            "safe_repair_move_exists"
+          ],
+          "terminal_id": "terminal.krk.repair_needed_monitor"
+        }
+      ],
+      "legal_first_or_dtm_label": {
+        "any_mate": false,
+        "mating_moves": [],
+        "outcome_counts": {
+          "h40:draw": 3,
+          "h40:max_plies": 14
+        },
+        "tested_move_count": 17
+      },
+      "post_reply_fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+      "raw_selected_move": "a3a5",
+      "raw_selected_provider": "krk.stage0_basin",
+      "recommended_next_evidence_class": "sequence_policy_or_continuation_capacity_target",
+      "selected_failure_path_class": "continuation_capacity_or_sequence_policy_gap",
+      "state_id": "state.38aed2f35911",
+      "strategy_monitor_hits": [
+        {
+          "confidence": 0.8421052631578947,
+          "missing_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe_after_repair",
+            "box_area_not_expanded_after_reply"
+          ],
+          "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.38aed2f35911.83",
+          "monitor_type": "RepairNeededMonitor",
+          "source_terms": [
+            "fence_exists",
+            "not fence_stable",
+            "not cut_stable",
+            "rook_safe"
+          ],
+          "suggested_action_class": "record_repair_pressure"
+        },
+        {
+          "confidence": 1.0,
+          "missing_terms": [
+            "plan_capsule_context",
+            "handoff_success_after_plan",
+            "post_plan_stagnation"
+          ],
+          "monitor_id": "monitor.krk.plan_selection_needed.state.38aed2f35911.105",
+          "monitor_type": "PlanSelectionNeededMonitor",
+          "source_terms": [
+            "stage7 residual",
+            "no visible heuristic hit",
+            "post_box continuation / capsule context",
+            "current_graph_h40 == max_plies"
+          ],
+          "suggested_action_class": "audit_plan_selection"
+        }
+      ]
+    },
+    {
+      "best_forced_provider": "krk.fence_established",
+      "coverage": {
+        "abstention_selector_selected_penalized": false,
+        "abstention_selector_state_level_only": true,
+        "all_tested_existing_providers_fail": false,
+        "existing_provider_can_convert": true,
+        "internal_terminal_hit_count": 2,
+        "strategy_monitor_hit_count": 2
+      },
+      "current_graph_result_h40": "max_plies",
+      "family_id": "stage7.post_box.family_ac0b7ed500ea",
+      "forced_mating_provider": "krk.fence_established",
+      "forced_provider_result_h40": "krk.fence_established",
+      "hypothesis_labels": [
+        "already_solved_by_existing_provider_if_arbitrated",
+        "strategy_arbitration_candidate",
+        "phase_boundary_candidate",
+        "bad_curriculum_boundary_candidate"
+      ],
+      "internal_terminal_hits": [
+        {
+          "associated_outcome": "max_plies",
+          "confidence": "replay_free_existing_artifact",
+          "source_terms_met": [
+            "cut_or_fence_restored_after_move",
+            "king_support_improves_after_move",
+            "local_provider_competition_failed",
+            "safe_repair_move_exists"
+          ],
+          "terminal_id": "terminal.krk.local_provider_competition_failed"
+        },
+        {
+          "associated_outcome": "max_plies",
+          "confidence": "replay_free_existing_artifact",
+          "source_terms_met": [
+            "cut_or_fence_restored_after_move",
+            "king_support_improves_after_move",
+            "local_provider_competition_failed",
+            "safe_repair_move_exists"
+          ],
+          "terminal_id": "terminal.krk.repair_needed_monitor"
+        }
+      ],
+      "legal_first_or_dtm_label": null,
+      "post_reply_fen": "8/8/8/4k3/R7/8/3K4/8 w - - 2 2",
+      "raw_selected_move": "a1a4",
+      "raw_selected_provider": "krk.stage0_basin",
+      "recommended_next_evidence_class": "strategy_ownership_training_target",
+      "selected_failure_path_class": "strategy_ownership_gap_existing_provider_can_convert",
+      "state_id": "state.ac0b7ed500ea",
+      "strategy_monitor_hits": [
+        {
+          "confidence": 0.8421052631578947,
+          "missing_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe_after_repair",
+            "box_area_not_expanded_after_reply"
+          ],
+          "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.ac0b7ed500ea.84",
+          "monitor_type": "RepairNeededMonitor",
+          "source_terms": [
+            "fence_exists",
+            "not fence_stable",
+            "not cut_stable",
+            "rook_safe"
+          ],
+          "suggested_action_class": "record_repair_pressure"
+        },
+        {
+          "confidence": 1.0,
+          "missing_terms": [
+            "plan_capsule_context",
+            "handoff_success_after_plan",
+            "post_plan_stagnation"
+          ],
+          "monitor_id": "monitor.krk.plan_selection_needed.state.ac0b7ed500ea.106",
+          "monitor_type": "PlanSelectionNeededMonitor",
+          "source_terms": [
+            "stage7 residual",
+            "no visible heuristic hit",
+            "post_box continuation / capsule context",
+            "current_graph_h40 == max_plies"
+          ],
+          "suggested_action_class": "audit_plan_selection"
+        }
+      ]
+    },
+    {
+      "best_forced_provider": "krk.drive_to_edge",
+      "coverage": {
+        "abstention_selector_selected_penalized": false,
+        "abstention_selector_state_level_only": true,
+        "all_tested_existing_providers_fail": false,
+        "existing_provider_can_convert": true,
+        "internal_terminal_hit_count": 2,
+        "strategy_monitor_hit_count": 2
+      },
+      "current_graph_result_h40": "max_plies",
+      "family_id": "stage7.post_box.family_ff6652c8832c",
+      "forced_mating_provider": "krk.drive_to_edge",
+      "forced_provider_result_h40": "krk.drive_to_edge",
+      "hypothesis_labels": [
+        "already_solved_by_existing_provider_if_arbitrated",
+        "strategy_arbitration_candidate",
+        "phase_boundary_candidate",
+        "bad_curriculum_boundary_candidate"
+      ],
+      "internal_terminal_hits": [
+        {
+          "associated_outcome": "max_plies",
+          "confidence": "replay_free_existing_artifact",
+          "source_terms_met": [
+            "cut_or_fence_restored_after_move",
+            "king_support_improves_after_move",
+            "local_provider_competition_failed",
+            "safe_repair_move_exists"
+          ],
+          "terminal_id": "terminal.krk.local_provider_competition_failed"
+        },
+        {
+          "associated_outcome": "max_plies",
+          "confidence": "replay_free_existing_artifact",
+          "source_terms_met": [
+            "cut_or_fence_restored_after_move",
+            "king_support_improves_after_move",
+            "local_provider_competition_failed",
+            "safe_repair_move_exists"
+          ],
+          "terminal_id": "terminal.krk.repair_needed_monitor"
+        }
+      ],
+      "legal_first_or_dtm_label": null,
+      "post_reply_fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+      "raw_selected_move": "a4e4",
+      "raw_selected_provider": "krk.stage0_basin",
+      "recommended_next_evidence_class": "strategy_ownership_training_target",
+      "selected_failure_path_class": "strategy_ownership_gap_existing_provider_can_convert",
+      "state_id": "state.ff6652c8832c",
+      "strategy_monitor_hits": [
+        {
+          "confidence": 0.8421052631578947,
+          "missing_terms": [
+            "repair_or_reestablish_cut_available",
+            "rook_safe_after_repair",
+            "box_area_not_expanded_after_reply"
+          ],
+          "monitor_id": "monitor.krk.fence_or_cut_repair_affordance.state.ff6652c8832c.85",
+          "monitor_type": "RepairNeededMonitor",
+          "source_terms": [
+            "fence_exists",
+            "not fence_stable",
+            "not cut_stable",
+            "rook_safe"
+          ],
+          "suggested_action_class": "record_repair_pressure"
+        },
+        {
+          "confidence": 1.0,
+          "missing_terms": [
+            "plan_capsule_context",
+            "handoff_success_after_plan",
+            "post_plan_stagnation"
+          ],
+          "monitor_id": "monitor.krk.plan_selection_needed.state.ff6652c8832c.107",
+          "monitor_type": "PlanSelectionNeededMonitor",
+          "source_terms": [
+            "stage7 residual",
+            "no visible heuristic hit",
+            "post_box continuation / capsule context",
+            "current_graph_h40 == max_plies"
+          ],
+          "suggested_action_class": "audit_plan_selection"
+        }
+      ]
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented_by_this_slice": false,
+  "schema_version": "stage7_selected_failure_path_audit.v0",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_evidence_merge_table.json",
+    "reports/strategy_arbitration/krk_internal_terminal_validation_v0.json",
+    "reports/strategy_arbitration/krk_strategy_monitor_records_v0.json",
+    "reports/krk_two_stage_abstention_stage7_challenge_smoke_v0.json",
+    "reports/krk_two_stage_abstention_runtime_go_no_go_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "abstention_stage7_penalized_count": 12,
+    "abstention_stage7_selected_penalized_count": 0,
+    "abstention_target_conversion_delta_mates": 0,
+    "internal_terminal_hit_counts": {
+      "terminal.krk.box_shrink_owner_exit_pressure": 1,
+      "terminal.krk.local_provider_competition_failed": 2,
+      "terminal.krk.post_plan_stagnation": 2,
+      "terminal.krk.repair_needed_monitor": 4
+    },
+    "selected_failure_path_class_counts": {
+      "continuation_capacity_or_sequence_policy_gap": 2,
+      "strategy_ownership_gap_existing_provider_can_convert": 2
+    },
+    "selected_failure_state_count": 4,
+    "selected_provider_counts": {
+      "krk.stage0_basin": 4
+    },
+    "strategy_monitor_type_counts": {
+      "PhaseBoundaryMonitor": 2,
+      "PlanSelectionNeededMonitor": 4,
+      "RepairNeededMonitor": 4
+    }
+  }
+}

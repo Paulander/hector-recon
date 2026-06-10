@@ -1,0 +1,257 @@
+{
+  "schema_version": "stage7_post_box_plan_capsule_sandbox_protocol.v1",
+  "causal_status": "non_causal",
+  "runtime_behavior_changed": false,
+  "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+  "capsule_id": "krk.post_box_shrink_continuation",
+  "ttl_white_moves": 3,
+  "trajectory_count": 2,
+  "reference_supported_count": 2,
+  "reference_abort_count": 0,
+  "support_rate": 1.0,
+  "interpretation": "reference trajectories support a bounded commitment protocol",
+  "next_action": "compile_default_off_visible_capsule_sandbox",
+  "per_trajectory": [
+    {
+      "start_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "start_dtm": 27,
+      "dtm_after_owned_steps": 22,
+      "ttl_white_moves": 3,
+      "owned_step_count": 3,
+      "progress_ok": true,
+      "abort_free": true,
+      "dtm_progress": true,
+      "protocol_supported_by_reference": true,
+      "matched_progress_terms": [
+        "box_area_decreases_or_does_not_expand",
+        "corner_net_pressure_increases",
+        "enemy_king_mobility_decreases",
+        "mate_basin_proximity_improves",
+        "stagnation_avoided",
+        "white_king_support_improves"
+      ],
+      "abort_terms": [],
+      "owned_steps": [
+        {
+          "ply_index": 0,
+          "move": "a6a5",
+          "previous_dtm": 27,
+          "child_dtm": 26,
+          "matched_progress_terms": [
+            "box_area_decreases_or_does_not_expand",
+            "white_king_support_improves",
+            "enemy_king_mobility_decreases",
+            "corner_net_pressure_increases",
+            "mate_basin_proximity_improves",
+            "stagnation_avoided"
+          ],
+          "abort_terms": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_decreases_after_move",
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_split_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "ply_index": 2,
+          "move": "a5f5",
+          "previous_dtm": 26,
+          "child_dtm": 24,
+          "matched_progress_terms": [
+            "box_area_decreases_or_does_not_expand",
+            "corner_net_pressure_increases",
+            "mate_basin_proximity_improves",
+            "stagnation_avoided"
+          ],
+          "abort_terms": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate"
+          ],
+          "post_move_terms": [
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move"
+          ]
+        },
+        {
+          "ply_index": 4,
+          "move": "d1e2",
+          "previous_dtm": 24,
+          "child_dtm": 22,
+          "matched_progress_terms": [
+            "box_area_decreases_or_does_not_expand",
+            "white_king_support_improves",
+            "enemy_king_mobility_decreases",
+            "corner_net_pressure_increases",
+            "mate_basin_proximity_improves",
+            "stagnation_avoided"
+          ],
+          "abort_terms": [],
+          "move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_enemy",
+            "king_moves_toward_rook_support"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_decreases_after_move",
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move",
+            "white_king_distance_to_enemy_decreases",
+            "white_king_distance_to_rook_decreases"
+          ]
+        }
+      ],
+      "exit_status": "ttl_expired_with_dtm_progress"
+    },
+    {
+      "start_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "start_dtm": 21,
+      "dtm_after_owned_steps": 16,
+      "ttl_white_moves": 3,
+      "owned_step_count": 3,
+      "progress_ok": true,
+      "abort_free": true,
+      "dtm_progress": true,
+      "protocol_supported_by_reference": true,
+      "matched_progress_terms": [
+        "box_area_decreases_or_does_not_expand",
+        "corner_net_pressure_increases",
+        "enemy_king_mobility_decreases",
+        "mate_basin_proximity_improves",
+        "stagnation_avoided",
+        "white_king_support_improves"
+      ],
+      "abort_terms": [],
+      "owned_steps": [
+        {
+          "ply_index": 0,
+          "move": "d2c3",
+          "previous_dtm": 21,
+          "child_dtm": 20,
+          "matched_progress_terms": [
+            "box_area_decreases_or_does_not_expand",
+            "white_king_support_improves",
+            "enemy_king_mobility_decreases",
+            "corner_net_pressure_increases",
+            "mate_basin_proximity_improves",
+            "stagnation_avoided"
+          ],
+          "abort_terms": [],
+          "move_shape_terms": [
+            "candidate_is_king_move",
+            "king_moves_toward_rook_support"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_and_rook_split_rank_side_after_move",
+            "white_king_distance_to_rook_decreases"
+          ]
+        },
+        {
+          "ply_index": 2,
+          "move": "a5a4",
+          "previous_dtm": 20,
+          "child_dtm": 18,
+          "matched_progress_terms": [
+            "box_area_decreases_or_does_not_expand",
+            "enemy_king_mobility_decreases",
+            "corner_net_pressure_increases",
+            "mate_basin_proximity_improves",
+            "stagnation_avoided"
+          ],
+          "abort_terms": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "rook_destination_far_from_enemy",
+            "rook_destination_not_adjacent_enemy",
+            "rook_safe_after_candidate",
+            "rook_to_edge_file",
+            "rook_transfer_vertical"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_decreases_after_move",
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move"
+          ]
+        },
+        {
+          "ply_index": 4,
+          "move": "a4d4",
+          "previous_dtm": 18,
+          "child_dtm": 16,
+          "matched_progress_terms": [
+            "box_area_decreases_or_does_not_expand",
+            "white_king_support_improves",
+            "enemy_king_mobility_decreases",
+            "corner_net_pressure_increases",
+            "mate_basin_proximity_improves",
+            "stagnation_avoided"
+          ],
+          "abort_terms": [],
+          "move_shape_terms": [
+            "candidate_is_rook_move",
+            "candidate_is_rook_transfer",
+            "rook_lateral_transfer",
+            "rook_safe_after_candidate"
+          ],
+          "post_move_terms": [
+            "black_king_escape_count_not_increased_after_move",
+            "box_area_decreases_after_move",
+            "box_area_not_increased_after_move",
+            "enemy_corner_distance_not_increased_after_move",
+            "enemy_edge_distance_not_increased_after_move",
+            "rook_safe_after_move",
+            "white_king_and_rook_same_file_side_after_move",
+            "white_king_distance_to_rook_decreases",
+            "white_king_rank_opposition_distance_two_after_move"
+          ]
+        }
+      ],
+      "exit_status": "ttl_expired_with_dtm_progress"
+    }
+  ],
+  "hard_blocks": [
+    "do_not_train_stage8",
+    "do_not_promote_stage7",
+    "do_not_enable_runtime_capsule_by_default",
+    "do_not_mutate_topology_during_gameplay"
+  ]
+}

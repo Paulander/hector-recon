@@ -1,0 +1,87 @@
+{
+  "schema_version": "krk_strategy_arbiter_observability_smoke.v0",
+  "causal_status": "non_causal_smoke_test",
+  "skeleton": "krk_strategy_arbiter_observability_skeleton_v0",
+  "source_review": "reports/krk_strategy_arbiter_architecture_review_v1.json",
+  "topology": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_profile/topology/krk_entry_topology.json",
+  "profile": "handoff_composition_v1",
+  "sample": {
+    "label": "fence_established",
+    "samples": 1,
+    "seed": 7,
+    "sample_indices": [
+      0
+    ],
+    "playout_max_plies": 4
+  },
+  "default_off_result": {
+    "playouts": {
+      "max_plies": 1
+    },
+    "one_ply_status_counts": {
+      "failed": 1
+    },
+    "conversion_status_counts": {
+      "failed": 1
+    },
+    "avg_reward": -0.75,
+    "avg_oracle_reward": 0.14900000000000002,
+    "handoff_packet_count": 3,
+    "shadow_candidate_count": 0,
+    "krk_strategy_arbiter_observation_count": 0
+  },
+  "observability_enabled_result": {
+    "playouts": {
+      "max_plies": 1
+    },
+    "one_ply_status_counts": {
+      "failed": 1
+    },
+    "conversion_status_counts": {
+      "failed": 1
+    },
+    "avg_reward": -0.75,
+    "avg_oracle_reward": 0.14900000000000002,
+    "handoff_packet_count": 3,
+    "shadow_candidate_count": 0,
+    "krk_strategy_arbiter_observation_count": 1
+  },
+  "equivalence": {
+    "selected_behavior_metrics_match": true,
+    "outcome_metrics_match": true,
+    "observation_is_only_expected_delta": true
+  },
+  "metadata_shape_check": {
+    "schema_version": "krk_strategy_arbiter_observation.v0",
+    "causal_status": "non_causal_observation",
+    "direct_request": false,
+    "score_delta": 0.0,
+    "recommendation_only": true,
+    "proposal_count": 10,
+    "selected_provider_before_observation": "krk.stage0_basin",
+    "required_keys_present": [
+      "schema_version",
+      "arbiter_id",
+      "causal_status",
+      "direct_request",
+      "score_delta",
+      "selected_provider_before_observation",
+      "recommendation_only",
+      "source_terms",
+      "proposal_count",
+      "provider_candidates"
+    ]
+  },
+  "blocked_causal_actions": [
+    "provider_selection",
+    "score_adjustment",
+    "provider_request",
+    "topology_mutation",
+    "m3_m4_update"
+  ],
+  "decision": {
+    "status": "observability_skeleton_smoke_passed",
+    "runtime_arbiter_allowed": false,
+    "next_allowed_step": "collect_small_non_causal_observation_frames_on_protected_controls_and_stage7_holdouts"
+  }
+}

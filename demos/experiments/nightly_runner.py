@@ -193,7 +193,7 @@ def generate_combined_report(
     # Motif summary
     lines.append("## Motif Extraction")
     if motifs_path and motifs_path.exists():
-        from recon_lite.motifs.descriptors import MotifDataset
+        from recon_lite_hector.motifs.descriptors import MotifDataset
         dataset = MotifDataset.load(motifs_path)
         stats = dataset.statistics()
         lines.append(f"- Total motifs: {stats.get('count', 0)}")

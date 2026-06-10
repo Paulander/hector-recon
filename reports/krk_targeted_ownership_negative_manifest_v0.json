@@ -1,0 +1,520 @@
+{
+  "binding_summary": {
+    "all_bindings_valid": true,
+    "job_count": 6,
+    "job_count_by_stage": {
+      "stage4": 4,
+      "stage5": 2
+    },
+    "job_count_by_target_cell": {
+      "stage4_stage0_wrong_tempo_like": 4,
+      "stage5_stage0_fence_like": 2
+    },
+    "missing_path_count": 0,
+    "missing_paths": [],
+    "stage7_job_count": 0
+  },
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "runtime_selector",
+    "selector_training",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_execution_manifest",
+  "decision": {
+    "execute_labels_now": true,
+    "recommended_next_step": "run_bounded_targeted_ownership_negative_labels",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "status": "targeted_ownership_negative_manifest_ready"
+  },
+  "gameplay_topology_mutation": false,
+  "jobs": [
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_label_job",
+      "current_profile_preselected_move": "h1h8",
+      "current_profile_preselected_provider": "krk.stage0_basin",
+      "diagnostic_caches_required": true,
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_modes": [
+          "selected_playout_h40",
+          "force_selected_provider_first_white_move_then_release_h40",
+          "same_move_provider_compatibility_when_available",
+          "shadow_candidate_delta"
+        ],
+        "max_ticks": 200,
+        "primary_provider_skill_id": "krk.edge_trap_wrong_tempo",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "selected_provider_resolved_at_execution": true,
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/baseline/best_by_stage/edge_trap_wrong_tempo.pkl",
+        "suggestion_limit": 10,
+        "topology_component": "stage5_frozen_base_provider_pack_with_skill_ids",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "exhaustive_legal_first_sweeps": false,
+      "fen": "8/8/8/8/8/5k2/2K5/7R w - - 0 1",
+      "frame_id": "cp.krk.state.1d2ebedbbb30",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "hybrid",
+        "sample_index": 1,
+        "sample_seed": 2312852392,
+        "source_stage_names": [
+          "Edge_Trap_Wrong_Tempo"
+        ]
+      },
+      "horizon": 40,
+      "job_id": "job.krk.targeted_ownership_negative.63f4f3bdad40",
+      "labels_generated": false,
+      "parallel_workers_allowed": true,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_targeted_ownership_negative_job.v0",
+      "source_kind": "targeted_false_positive_risk_cell",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "stage_role": "stage4_wrong_tempo_control",
+      "state_id": "state.1d2ebedbbb30",
+      "target_cell_id": "stage4_stage0_wrong_tempo_like",
+      "target_cell_reason": "stage4 stage0 owns most current negatives and false positives",
+      "target_label_semantics": [
+        "current_profile_selected_owner_h40",
+        "targeted_false_positive_risk_cell_outcome"
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_label_job",
+      "current_profile_preselected_move": "d2c2",
+      "current_profile_preselected_provider": "krk.stage0_basin",
+      "diagnostic_caches_required": true,
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_modes": [
+          "selected_playout_h40",
+          "force_selected_provider_first_white_move_then_release_h40",
+          "same_move_provider_compatibility_when_available",
+          "shadow_candidate_delta"
+        ],
+        "max_ticks": 200,
+        "primary_provider_skill_id": "krk.edge_trap_wrong_tempo",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "selected_provider_resolved_at_execution": true,
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/baseline/best_by_stage/edge_trap_wrong_tempo.pkl",
+        "suggestion_limit": 10,
+        "topology_component": "stage5_frozen_base_provider_pack_with_skill_ids",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "exhaustive_legal_first_sweeps": false,
+      "fen": "5R2/8/8/8/8/8/3K4/k7 w - - 0 1",
+      "frame_id": "cp.krk.state.7501312e20f8",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "hybrid",
+        "sample_index": 2,
+        "sample_seed": 3915413071,
+        "source_stage_names": [
+          "Edge_Trap_Wrong_Tempo"
+        ]
+      },
+      "horizon": 40,
+      "job_id": "job.krk.targeted_ownership_negative.72bfea1ce918",
+      "labels_generated": false,
+      "parallel_workers_allowed": true,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_targeted_ownership_negative_job.v0",
+      "source_kind": "targeted_false_positive_risk_cell",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "stage_role": "stage4_wrong_tempo_control",
+      "state_id": "state.7501312e20f8",
+      "target_cell_id": "stage4_stage0_wrong_tempo_like",
+      "target_cell_reason": "stage4 stage0 owns most current negatives and false positives",
+      "target_label_semantics": [
+        "current_profile_selected_owner_h40",
+        "targeted_false_positive_risk_cell_outcome"
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_label_job",
+      "current_profile_preselected_move": "e2e8",
+      "current_profile_preselected_provider": "krk.stage0_basin",
+      "diagnostic_caches_required": true,
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_modes": [
+          "selected_playout_h40",
+          "force_selected_provider_first_white_move_then_release_h40",
+          "same_move_provider_compatibility_when_available",
+          "shadow_candidate_delta"
+        ],
+        "max_ticks": 200,
+        "primary_provider_skill_id": "krk.edge_trap_wrong_tempo",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "selected_provider_resolved_at_execution": true,
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/baseline/best_by_stage/edge_trap_wrong_tempo.pkl",
+        "suggestion_limit": 10,
+        "topology_component": "stage5_frozen_base_provider_pack_with_skill_ids",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "exhaustive_legal_first_sweeps": false,
+      "fen": "2k5/8/8/8/8/8/4R3/7K w - - 0 1",
+      "frame_id": "cp.krk.state.b09c954a787e",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "hybrid",
+        "sample_index": 4,
+        "sample_seed": 2721739182,
+        "source_stage_names": [
+          "Edge_Trap_Wrong_Tempo"
+        ]
+      },
+      "horizon": 40,
+      "job_id": "job.krk.targeted_ownership_negative.069bd4135abc",
+      "labels_generated": false,
+      "parallel_workers_allowed": true,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_targeted_ownership_negative_job.v0",
+      "source_kind": "targeted_false_positive_risk_cell",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "stage_role": "stage4_wrong_tempo_control",
+      "state_id": "state.b09c954a787e",
+      "target_cell_id": "stage4_stage0_wrong_tempo_like",
+      "target_cell_reason": "stage4 stage0 owns most current negatives and false positives",
+      "target_label_semantics": [
+        "current_profile_selected_owner_h40",
+        "targeted_false_positive_risk_cell_outcome"
+      ]
+    },
+    {
+      "active_landmark_label": "edge_trap_wrong_tempo",
+      "causal_status": "non_causal_label_job",
+      "current_profile_preselected_move": "c5g5",
+      "current_profile_preselected_provider": "krk.stage0_basin",
+      "diagnostic_caches_required": true,
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_modes": [
+          "selected_playout_h40",
+          "force_selected_provider_first_white_move_then_release_h40",
+          "same_move_provider_compatibility_when_available",
+          "shadow_candidate_delta"
+        ],
+        "max_ticks": 200,
+        "primary_provider_skill_id": "krk.edge_trap_wrong_tempo",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "selected_provider_resolved_at_execution": true,
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage2c_clean/baseline/best_by_stage/edge_trap_wrong_tempo.pkl",
+        "suggestion_limit": 10,
+        "topology_component": "stage5_frozen_base_provider_pack_with_skill_ids",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "exhaustive_legal_first_sweeps": false,
+      "fen": "5k2/8/8/2R5/K7/8/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.6b3211a9a90f",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "hybrid",
+        "sample_index": 6,
+        "sample_seed": 3966993985,
+        "source_stage_names": [
+          "Edge_Trap_Wrong_Tempo"
+        ]
+      },
+      "horizon": 40,
+      "job_id": "job.krk.targeted_ownership_negative.1746ef461a48",
+      "labels_generated": false,
+      "parallel_workers_allowed": true,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_targeted_ownership_negative_job.v0",
+      "source_kind": "targeted_false_positive_risk_cell",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "stage_role": "stage4_wrong_tempo_control",
+      "state_id": "state.6b3211a9a90f",
+      "target_cell_id": "stage4_stage0_wrong_tempo_like",
+      "target_cell_reason": "stage4 stage0 owns most current negatives and false positives",
+      "target_label_semantics": [
+        "current_profile_selected_owner_h40",
+        "targeted_false_positive_risk_cell_outcome"
+      ]
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_label_job",
+      "current_profile_preselected_move": "g2f1",
+      "current_profile_preselected_provider": "krk.stage0_basin",
+      "diagnostic_caches_required": true,
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_modes": [
+          "selected_playout_h40",
+          "force_selected_provider_first_white_move_then_release_h40",
+          "same_move_provider_compatibility_when_available",
+          "shadow_candidate_delta"
+        ],
+        "max_ticks": 200,
+        "primary_provider_skill_id": "krk.fence_established",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "selected_provider_resolved_at_execution": true,
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_component": "stage5_frozen_base_provider_pack_with_skill_ids",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "exhaustive_legal_first_sweeps": false,
+      "fen": "1R6/8/8/k7/8/8/6K1/8 w - - 0 1",
+      "frame_id": "cp.krk.state.6e84c77a4520",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "hybrid",
+        "sample_index": 0,
+        "sample_seed": 1112675273,
+        "source_stage_names": [
+          "Fence_Established",
+          "Anchored_Cut",
+          "Edge_Cut_Hold"
+        ]
+      },
+      "horizon": 40,
+      "job_id": "job.krk.targeted_ownership_negative.b038681bf18c",
+      "labels_generated": false,
+      "parallel_workers_allowed": true,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_targeted_ownership_negative_job.v0",
+      "source_kind": "targeted_false_positive_risk_cell",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "stage_role": "stage5_fence_handoff",
+      "state_id": "state.6e84c77a4520",
+      "target_cell_id": "stage5_stage0_fence_like",
+      "target_cell_reason": "stage5 stage0 has sparse true ownership negatives",
+      "target_label_semantics": [
+        "current_profile_selected_owner_h40",
+        "targeted_false_positive_risk_cell_outcome"
+      ]
+    },
+    {
+      "active_landmark_label": "fence_established",
+      "causal_status": "non_causal_label_job",
+      "current_profile_preselected_move": "c7a7",
+      "current_profile_preselected_provider": "krk.stage0_basin",
+      "diagnostic_caches_required": true,
+      "execution_binding": {
+        "black_policy": "adversarial",
+        "composition_profile": "handoff_composition_v1",
+        "early_stop_stable_suggestions": 3,
+        "enable_diagnostic_caches": true,
+        "execution_modes": [
+          "selected_playout_h40",
+          "force_selected_provider_first_white_move_then_release_h40",
+          "same_move_provider_compatibility_when_available",
+          "shadow_candidate_delta"
+        ],
+        "max_ticks": 200,
+        "primary_provider_skill_id": "krk.fence_established",
+        "profile_settings": {
+          "post_break_continuation_bonus": 0.25,
+          "post_break_continuation_enabled": true,
+          "stagnation_breaker_bonus": 0.5,
+          "stagnation_breaker_enabled": true,
+          "successor_affordance_layer_enabled": true,
+          "successor_role_license_enabled": true,
+          "successor_role_scoped_move_shape_bonus": 0.05,
+          "successor_role_scoped_move_shape_enabled": true,
+          "successor_stage0_drift_penalty": 6.0
+        },
+        "provider_version": "stage5_validated_v1",
+        "selected_provider_resolved_at_execution": true,
+        "source_checkpoint": "snapshots/krk_triplet_pipeline/adaptive_krk_stage5_fence_clean/baseline/best_by_stage/fence_established.pkl",
+        "suggestion_limit": 10,
+        "topology_component": "stage5_frozen_base_provider_pack_with_skill_ids",
+        "topology_path": "snapshots/krk_triplet_pipeline/adaptive_krk_stage6_drive_overlay_composed/topology/krk_entry_topology.json",
+        "topology_version": "stage6_overlay_composed_v1",
+        "trace_mode": "failures_only"
+      },
+      "exhaustive_legal_first_sweeps": false,
+      "fen": "8/2R5/5K2/8/8/1k6/8/8 w - - 0 1",
+      "frame_id": "cp.krk.state.0b1f2153179b",
+      "generation": {
+        "base_seed": 31,
+        "position_mode": "hybrid",
+        "sample_index": 3,
+        "sample_seed": 4071802395,
+        "source_stage_names": [
+          "Fence_Established",
+          "Anchored_Cut",
+          "Edge_Cut_Hold"
+        ]
+      },
+      "horizon": 40,
+      "job_id": "job.krk.targeted_ownership_negative.3f3e20785059",
+      "labels_generated": false,
+      "parallel_workers_allowed": true,
+      "runtime_behavior_changed": false,
+      "schema_version": "krk_targeted_ownership_negative_job.v0",
+      "source_kind": "targeted_false_positive_risk_cell",
+      "source_stage": "stage5",
+      "stage7_training_row": false,
+      "stage_role": "stage5_fence_handoff",
+      "state_id": "state.0b1f2153179b",
+      "target_cell_id": "stage5_stage0_fence_like",
+      "target_cell_reason": "stage5 stage0 has sparse true ownership negatives",
+      "target_label_semantics": [
+        "current_profile_selected_owner_h40",
+        "targeted_false_positive_risk_cell_outcome"
+      ]
+    }
+  ],
+  "labels_generated_in_this_slice": false,
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "scan_summary": {
+    "matched_by_target_cell": {
+      "stage4_stage0_wrong_tempo_like": 4,
+      "stage5_stage0_fence_like": 2
+    },
+    "scanned_by_target_cell": {
+      "stage4_stage0_wrong_tempo_like": 7,
+      "stage5_stage0_fence_like": 4
+    },
+    "selected_by_target_cell": {
+      "stage4_stage0_wrong_tempo_like": 4,
+      "stage5_stage0_fence_like": 2
+    }
+  },
+  "schema_version": "krk_targeted_ownership_negative_manifest.v0",
+  "selection_policy": {
+    "base_seed": 31,
+    "filter_by_current_profile_selected_owner": true,
+    "horizon": 40,
+    "max_jobs": 6,
+    "max_sample_index": 120,
+    "position_mode": "hybrid",
+    "stage7_training_rows": 0,
+    "target_cells": [
+      {
+        "active_landmark_label": "edge_trap_wrong_tempo",
+        "reason": "stage4 stage0 owns most current negatives and false positives",
+        "selected_provider": "krk.stage0_basin",
+        "source_stage": "stage4",
+        "target_cell_id": "stage4_stage0_wrong_tempo_like",
+        "target_count": 4
+      },
+      {
+        "active_landmark_label": "fence_established",
+        "reason": "stage5 stage0 has sparse true ownership negatives",
+        "selected_provider": "krk.stage0_basin",
+        "source_stage": "stage5",
+        "target_cell_id": "stage5_stage0_fence_like",
+        "target_count": 2
+      },
+      {
+        "active_landmark_label": "drive_to_edge",
+        "reason": "stage6 stage0 false-positive cell needs more direct labels",
+        "selected_provider": "krk.stage0_basin",
+        "source_stage": "stage6",
+        "target_cell_id": "stage6_stage0_drive_like",
+        "target_count": 2
+      }
+    ]
+  },
+  "source_artifacts": [
+    "reports/krk_ownership_selection_label_dataset_v4.json",
+    "reports/krk_ownership_selection_context_feature_probe_v2.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

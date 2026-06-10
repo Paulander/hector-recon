@@ -1,0 +1,436 @@
+{
+  "causal_status": "non_causal_replay_free_review",
+  "decision": {
+    "execute_labels_now": false,
+    "recommended_next_step": "build_replay_free_stratified_selector_label_dataset",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "planned_labels_replay_free_fillable"
+  },
+  "fill_status_counts": {
+    "compatible_target_label_available": 11
+  },
+  "missing_replay_free_label_count": 0,
+  "planned_job_count": 11,
+  "reviews": [
+    {
+      "execute_playout_needed": false,
+      "fill_status": "compatible_target_label_available",
+      "job_id": "selector_label.stage4.state.1e4f48a672e8.selected_guardrail",
+      "proposal_labels": [
+        {
+          "label": {
+            "playout_result": "mate",
+            "plies": 9,
+            "selected": true
+          },
+          "move_uci": "b7b1",
+          "result": "mate"
+        }
+      ],
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.1e4f48a672e8",
+      "target_kind": "guardrail_safe_selected_playout",
+      "target_labels": [
+        {
+          "label": "positive",
+          "label_source": "known_outcome_label.playout_result",
+          "target_kind": "selected_playout_success",
+          "usable_for_training": true
+        }
+      ]
+    },
+    {
+      "execute_playout_needed": false,
+      "fill_status": "compatible_target_label_available",
+      "job_id": "selector_label.stage4.state.f17117682948.selected_guardrail",
+      "proposal_labels": [
+        {
+          "label": {
+            "playout_result": "mate",
+            "plies": 11,
+            "selected": true
+          },
+          "move_uci": "d2a2",
+          "result": "mate"
+        }
+      ],
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.f17117682948",
+      "target_kind": "guardrail_safe_selected_playout",
+      "target_labels": [
+        {
+          "label": "positive",
+          "label_source": "known_outcome_label.playout_result",
+          "target_kind": "selected_playout_success",
+          "usable_for_training": true
+        }
+      ]
+    },
+    {
+      "execute_playout_needed": false,
+      "fill_status": "compatible_target_label_available",
+      "job_id": "selector_label.stage4.state.02cfd843a2cf.selected_guardrail",
+      "proposal_labels": [
+        {
+          "label": {
+            "playout_result": "mate",
+            "plies": 5,
+            "selected": true
+          },
+          "move_uci": "f6f7",
+          "result": "mate"
+        }
+      ],
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.02cfd843a2cf",
+      "target_kind": "guardrail_safe_selected_playout",
+      "target_labels": [
+        {
+          "label": "positive",
+          "label_source": "known_outcome_label.playout_result",
+          "target_kind": "selected_playout_success",
+          "usable_for_training": true
+        }
+      ]
+    },
+    {
+      "execute_playout_needed": false,
+      "fill_status": "compatible_target_label_available",
+      "job_id": "selector_label.stage4.state.256a3da30f0f.selected_guardrail",
+      "proposal_labels": [
+        {
+          "label": {
+            "playout_result": "max_plies",
+            "plies": 40,
+            "selected": true
+          },
+          "move_uci": "d6c7",
+          "result": "max_plies"
+        },
+        {
+          "label": {
+            "playout_result": "max_plies",
+            "plies": 40,
+            "selected": true
+          },
+          "move_uci": "d6c7",
+          "result": "max_plies"
+        }
+      ],
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f",
+      "target_kind": "guardrail_safe_selected_playout",
+      "target_labels": [
+        {
+          "label": "negative",
+          "label_source": "known_outcome_label.playout_result",
+          "target_kind": "selected_playout_success",
+          "usable_for_training": true
+        },
+        {
+          "label": "negative",
+          "label_source": "known_outcome_label.playout_result",
+          "target_kind": "selected_playout_success",
+          "usable_for_training": true
+        }
+      ]
+    },
+    {
+      "execute_playout_needed": false,
+      "fill_status": "compatible_target_label_available",
+      "job_id": "selector_label.stage5.state.7bd8961882ad.selected_guardrail",
+      "proposal_labels": [
+        {
+          "label": {
+            "playout_result": "mate",
+            "plies": 11,
+            "selected": true
+          },
+          "move_uci": "f2g3",
+          "result": "mate"
+        }
+      ],
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage5",
+      "state_id": "state.7bd8961882ad",
+      "target_kind": "guardrail_safe_selected_playout",
+      "target_labels": [
+        {
+          "label": "positive",
+          "label_source": "known_outcome_label.playout_result",
+          "target_kind": "selected_playout_success",
+          "usable_for_training": true
+        },
+        {
+          "label": "positive",
+          "label_source": "forced_control_outcome_label.result",
+          "target_kind": "forced_provider_conversion",
+          "usable_for_training": false
+        }
+      ]
+    },
+    {
+      "execute_playout_needed": false,
+      "fill_status": "compatible_target_label_available",
+      "job_id": "selector_label.stage5.state.87b1160e68b9.selected_guardrail",
+      "proposal_labels": [
+        {
+          "label": {
+            "playout_result": "mate",
+            "plies": 3,
+            "selected": true
+          },
+          "move_uci": "e7e8",
+          "result": "mate"
+        }
+      ],
+      "provider_id": "krk.edge_trap_close",
+      "source_stage": "stage5",
+      "state_id": "state.87b1160e68b9",
+      "target_kind": "guardrail_safe_selected_playout",
+      "target_labels": [
+        {
+          "label": "positive",
+          "label_source": "known_outcome_label.playout_result",
+          "target_kind": "selected_playout_success",
+          "usable_for_training": true
+        },
+        {
+          "label": "positive",
+          "label_source": "forced_control_outcome_label.result",
+          "target_kind": "forced_provider_conversion",
+          "usable_for_training": false
+        }
+      ]
+    },
+    {
+      "execute_playout_needed": false,
+      "fill_status": "compatible_target_label_available",
+      "job_id": "selector_label.stage5.state.87b1160e68b9.same_move_or_alt_provider",
+      "proposal_labels": [
+        {
+          "label": {
+            "playout_result": "mate",
+            "plies": 3,
+            "selected": false
+          },
+          "move_uci": "e7e8",
+          "result": "mate"
+        }
+      ],
+      "provider_id": "krk.edge_trap_enemy_between",
+      "source_stage": "stage5",
+      "state_id": "state.87b1160e68b9",
+      "target_kind": "same_move_provider_compatibility_or_forced_alternative",
+      "target_labels": [
+        {
+          "label": "positive",
+          "label_source": "known_outcome_label.playout_result",
+          "target_kind": "selected_playout_success",
+          "usable_for_training": true
+        },
+        {
+          "label": "positive",
+          "label_source": "forced_control_outcome_label.result",
+          "target_kind": "forced_provider_conversion",
+          "usable_for_training": false
+        }
+      ]
+    },
+    {
+      "execute_playout_needed": false,
+      "fill_status": "compatible_target_label_available",
+      "job_id": "selector_label.stage5.state.2c1d6da27ea1.selected_guardrail",
+      "proposal_labels": [
+        {
+          "label": {
+            "playout_result": "mate",
+            "plies": 19,
+            "selected": true
+          },
+          "move_uci": "a7a8",
+          "result": "mate"
+        },
+        {
+          "label": {
+            "playout_result": "mate",
+            "plies": 19,
+            "selected": true
+          },
+          "move_uci": "a7a8",
+          "result": "mate"
+        }
+      ],
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage5",
+      "state_id": "state.2c1d6da27ea1",
+      "target_kind": "guardrail_safe_selected_playout",
+      "target_labels": [
+        {
+          "label": "positive",
+          "label_source": "known_outcome_label.playout_result",
+          "target_kind": "selected_playout_success",
+          "usable_for_training": true
+        },
+        {
+          "label": "positive",
+          "label_source": "known_outcome_label.playout_result",
+          "target_kind": "selected_playout_success",
+          "usable_for_training": true
+        },
+        {
+          "label": "positive",
+          "label_source": "forced_control_outcome_label.result",
+          "target_kind": "forced_provider_conversion",
+          "usable_for_training": false
+        }
+      ]
+    },
+    {
+      "execute_playout_needed": false,
+      "fill_status": "compatible_target_label_available",
+      "job_id": "selector_label.stage6.state.d1f052d2cab2.selected_guardrail",
+      "proposal_labels": [
+        {
+          "label": {
+            "playout_result": "mate",
+            "plies": 5,
+            "selected": true
+          },
+          "move_uci": "a1g1",
+          "result": "mate"
+        },
+        {
+          "label": {
+            "playout_result": "mate",
+            "plies": 5,
+            "selected": true
+          },
+          "move_uci": "a1g1",
+          "result": "mate"
+        }
+      ],
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage6",
+      "state_id": "state.d1f052d2cab2",
+      "target_kind": "guardrail_safe_selected_playout",
+      "target_labels": [
+        {
+          "label": "positive",
+          "label_source": "known_outcome_label.playout_result",
+          "target_kind": "selected_playout_success",
+          "usable_for_training": true
+        },
+        {
+          "label": "positive",
+          "label_source": "known_outcome_label.playout_result",
+          "target_kind": "selected_playout_success",
+          "usable_for_training": true
+        },
+        {
+          "label": "positive",
+          "label_source": "forced_control_outcome_label.result",
+          "target_kind": "forced_provider_conversion",
+          "usable_for_training": false
+        }
+      ]
+    },
+    {
+      "execute_playout_needed": false,
+      "fill_status": "compatible_target_label_available",
+      "job_id": "selector_label.stage6.state.52085d244e9d.selected_guardrail",
+      "proposal_labels": [
+        {
+          "label": {
+            "playout_result": "mate",
+            "plies": 5,
+            "selected": true
+          },
+          "move_uci": "a8f8",
+          "result": "mate"
+        }
+      ],
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage6",
+      "state_id": "state.52085d244e9d",
+      "target_kind": "guardrail_safe_selected_playout",
+      "target_labels": [
+        {
+          "label": "positive",
+          "label_source": "known_outcome_label.playout_result",
+          "target_kind": "selected_playout_success",
+          "usable_for_training": true
+        },
+        {
+          "label": "positive",
+          "label_source": "forced_control_outcome_label.result",
+          "target_kind": "forced_provider_conversion",
+          "usable_for_training": false
+        }
+      ]
+    },
+    {
+      "execute_playout_needed": false,
+      "fill_status": "compatible_target_label_available",
+      "job_id": "selector_label.stage6.state.69711173114a.selected_guardrail",
+      "proposal_labels": [
+        {
+          "label": {
+            "playout_result": "mate",
+            "plies": 5,
+            "selected": true
+          },
+          "move_uci": "a1d1",
+          "result": "mate"
+        },
+        {
+          "label": {
+            "playout_result": "mate",
+            "plies": 5,
+            "selected": true
+          },
+          "move_uci": "a1d1",
+          "result": "mate"
+        }
+      ],
+      "provider_id": "krk.stage0_basin",
+      "source_stage": "stage6",
+      "state_id": "state.69711173114a",
+      "target_kind": "guardrail_safe_selected_playout",
+      "target_labels": [
+        {
+          "label": "positive",
+          "label_source": "known_outcome_label.playout_result",
+          "target_kind": "selected_playout_success",
+          "usable_for_training": true
+        },
+        {
+          "label": "positive",
+          "label_source": "known_outcome_label.playout_result",
+          "target_kind": "selected_playout_success",
+          "usable_for_training": true
+        },
+        {
+          "label": "positive",
+          "label_source": "forced_control_outcome_label.result",
+          "target_kind": "forced_provider_conversion",
+          "usable_for_training": false
+        }
+      ]
+    }
+  ],
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "schema_version": "krk_selector_label_plan_replay_free_review.v1",
+  "source_artifacts": [
+    "reports/krk_selector_stratified_label_plan_v1.json",
+    "reports/krk_selector_target_dataset_v0.json",
+    "reports/krk_control_plane_filtered_frames_with_forced_controls_v0.json"
+  ]
+}

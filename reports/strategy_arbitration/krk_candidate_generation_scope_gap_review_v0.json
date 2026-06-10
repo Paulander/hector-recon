@@ -1,0 +1,96 @@
+{
+  "candidate_next_non_causal_slices": [
+    {
+      "purpose": "Identify which positive-capacity stage/family cells lack exact runtime-observation trace coverage.",
+      "runtime_allowed": false,
+      "slice": "candidate_source_gap_manifest"
+    },
+    {
+      "purpose": "Decide whether Stage 4 can be added to candidate-generation observation scope without changing behavior.",
+      "runtime_allowed": false,
+      "slice": "protected_stage4_scope_review"
+    },
+    {
+      "purpose": "Review whether PlanCapsule/sequence candidates need observation frames distinct from provider-pack candidates.",
+      "runtime_allowed": false,
+      "slice": "plan_sequence_candidate_trace_review"
+    }
+  ],
+  "causal_status": "non_causal_scope_gap_review",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "candidate_source_gap_manifest_non_causal",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "status": "candidate_generation_scope_gap_review_blocks_new_runtime_boundary"
+  },
+  "gameplay_topology_mutation": false,
+  "gap_interpretation": {
+    "candidate_generation_context_promising": true,
+    "new_runtime_boundary_blocked": true,
+    "selection_blocked_by_label_semantics": true,
+    "stage4_requires_separate_review": false,
+    "stage7_remains_challenge_only": true
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_scope_gap_review.v1",
+  "scope_gaps": [
+    "exact_move_provider_coverage_partial",
+    "ownership_selector_labels_absent",
+    "plan_sequence_candidate_trace_missing",
+    "stage7_held_out_only"
+  ],
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v4.json",
+    "reports/strategy_arbitration/krk_candidate_generation_v4_context_benchmark.json",
+    "reports/strategy_arbitration/krk_candidate_generation_v4_next_runtime_boundary_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "still_forbidden": [
+    "selector_training",
+    "score_changes",
+    "provider_routing",
+    "new_runtime_sandbox_without_review_packet",
+    "guardrail_campaign_from_context_only",
+    "stage7_promotion",
+    "stage8_training"
+  ],
+  "summary": {
+    "capacity_by_family": {
+      "drive_to_edge": 1,
+      "edge_trap": 18,
+      "fence_established": 3,
+      "stage0_basin": 14
+    },
+    "capacity_by_stage": {
+      "stage4": 11,
+      "stage5": 16,
+      "stage6": 9
+    },
+    "capacity_row_count": 36,
+    "exact_positive_capacity_recall_from_refresh_trace": 0.19230769230769232,
+    "policy_cell_negative_capacity_exposure_from_refresh_trace": 0.0,
+    "policy_cell_positive_capacity_recall_from_refresh_trace": 0.7692307692307693,
+    "selector_training_row_count": 0,
+    "stage7_readiness_training_row_count": 0,
+    "trace_by_family": {
+      "edge_trap": 19,
+      "fence_established": 3,
+      "stage0_basin": 3,
+      "terminal.krk.repair_needed_monitor": 6
+    },
+    "trace_by_stage": {
+      "stage4": 1,
+      "stage5": 28,
+      "stage6": 2
+    },
+    "trace_row_count": 31
+  }
+}

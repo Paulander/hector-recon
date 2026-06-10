@@ -1,0 +1,93 @@
+{
+  "causal_status": "non_causal_design",
+  "decision": {
+    "guardrails_allowed": false,
+    "implementation_allowed_by_this_artifact": false,
+    "recommended_next_step": "implement_strategy_sequence_dataset_refresh_v2_non_causal",
+    "selector_allowed": false,
+    "status": "strategy_sequence_dataset_design_v2_ready"
+  },
+  "design_goal": "Make KRK strategy-sequence evidence channels explicit so future candidate generation, monitor, and selector work cannot conflate capacity labels, ownership labels, and trace-only context.",
+  "evidence_channels": [
+    {
+      "allowed_use": "candidate_generation_recall_benchmark",
+      "channel": "validated_provider_capacity",
+      "forbidden_use": "selector_training_label",
+      "label_semantics": "forced_provider_capacity_label"
+    },
+    {
+      "allowed_use": "proposal_context_and_score_scale_analysis",
+      "channel": "visible_provider_proposal",
+      "forbidden_use": "capacity_or_ownership_label_without_outcome",
+      "label_semantics": "normal_routing_proposal_context"
+    },
+    {
+      "allowed_use": "candidate_coverage_and_feature_quality",
+      "channel": "candidate_move_frame",
+      "forbidden_use": "runtime_move_suggestion_without_selector_review",
+      "label_semantics": "legal_move_hypothesis"
+    },
+    {
+      "allowed_use": "sequence_policy_evidence",
+      "channel": "plan_capsule_sequence_candidate",
+      "forbidden_use": "stage7_training_row_or_promotion_evidence",
+      "label_semantics": "heldout_or_plan_context"
+    },
+    {
+      "allowed_use": "self_monitoring_and_growth_pressure_analysis",
+      "channel": "internal_monitor_candidate",
+      "forbidden_use": "direct_provider_route",
+      "label_semantics": "internal_control_context"
+    },
+    {
+      "allowed_use": "future_strategy_sequence_dataset_context",
+      "channel": "runtime_observation_trace_feature",
+      "forbidden_use": "selector_training_or_guardrail_trigger",
+      "label_semantics": "trace_context_not_selector_label"
+    }
+  ],
+  "gameplay_topology_mutation": false,
+  "minimum_next_dataset_refresh_requirements": [
+    "keep channel-specific label_semantics",
+    "carry trace_feature_channel separately from candidate-generation labels",
+    "preserve stage7 held-out status",
+    "report selector_training_row_count by channel",
+    "report candidate_generation_training_row_count by channel",
+    "report trace-only context row count by channel",
+    "block selector review unless ownership labels are explicit"
+  ],
+  "partition_rules": {
+    "heldout_challenge_stages": [
+      "stage7"
+    ],
+    "protected_readiness_stages": [
+      "stage4",
+      "stage5",
+      "stage6"
+    ],
+    "stage7_training_rows_allowed": false,
+    "stage8_training_allowed": false
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_strategy_sequence_dataset_design.v2",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_sequence_trace_feature_integration_review_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "trace_feature_status": {
+    "integration_review_status": "strategy_sequence_trace_features_integrated_selector_still_blocked",
+    "selector_blockers": [
+      "trace_features_are_not_selector_labels",
+      "trace_feature_sample_too_small",
+      "repair_monitor_risk_terms_not_diverse",
+      "quality_signal_not_mature"
+    ],
+    "trace_frame_count": 6
+  }
+}

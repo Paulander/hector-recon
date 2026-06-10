@@ -1,0 +1,53 @@
+{
+  "schema_version": "stage7_unified_strategy_arbitration_probe.v1",
+  "causal_status": "non_causal",
+  "dataset_state_count": 3,
+  "labeled_state_count": 3,
+  "raw_global_top_conversion_rate": 0.0,
+  "provider_local_rank1_oracle_coverage": 0.0,
+  "provider_outcome_counts": {
+    "krk.drive_to_edge:max_plies": 2,
+    "krk.fence_established:max_plies": 1
+  },
+  "box_area_relevance_outcome_counts": {
+    "high:any_mate=False": 3
+  },
+  "box_or_stage0_failure_counts_by_relevance": {},
+  "best_visible_feature_rules": [],
+  "state_summaries": [
+    {
+      "state_id": "state.21581c0028b4",
+      "box_area_relevance": "high",
+      "raw_top_provider": "krk.drive_to_edge",
+      "raw_top_move": "a6a8",
+      "raw_top_result": "max_plies",
+      "converting_providers": [],
+      "provider_local_rank1_contains_converting": false
+    },
+    {
+      "state_id": "state.dc2b42aa9ebf",
+      "box_area_relevance": "high",
+      "raw_top_provider": "krk.fence_established",
+      "raw_top_move": "d2e2",
+      "raw_top_result": "max_plies",
+      "converting_providers": [],
+      "provider_local_rank1_contains_converting": false
+    },
+    {
+      "state_id": "state.4a464b782ecb",
+      "box_area_relevance": "high",
+      "raw_top_provider": "krk.drive_to_edge",
+      "raw_top_move": "a8d8",
+      "raw_top_result": "max_plies",
+      "converting_providers": [],
+      "provider_local_rank1_contains_converting": false
+    }
+  ],
+  "answers": {
+    "provider_selection_model_predicts_converting_provider": false,
+    "provider_local_normalization_outperforms_raw_global_score": false,
+    "box_area_relevance_explains_some_failures": false,
+    "failures_suggest_box_or_stage0_over_ownership": false
+  },
+  "recommended_next_action": "collect broader arbitration dataset before causal arbitration"
+}

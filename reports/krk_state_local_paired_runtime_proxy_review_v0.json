@@ -1,0 +1,171 @@
+{
+  "causal_status": "non_causal_architecture_review",
+  "decision": {
+    "recommended_next_step": "collect_or_design_more_visible_selected_owner_failure_risk_features",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "status": "runtime_proxy_translation_still_blocked"
+  },
+  "future_runtime_review_requirements": [
+    "default-off sandbox only after explicit approval",
+    "trace every proxy firing and every downstream selector decision",
+    "prove default-off equivalence",
+    "guardrail Stage 4/5/6 and M1-M4 preservation",
+    "keep Stage 7 as held-out challenge evaluation only",
+    "no DTM/tablebase runtime lookup",
+    "no direct provider routing from proxy metadata"
+  ],
+  "gameplay_topology_mutation": false,
+  "implementation_allowed_by_this_review": false,
+  "interpretation": [
+    "The offline semantic gate remains the clean target but uses forbidden outcome labels.",
+    "Selected-owner failure risk needs a visible proxy before any runtime selector can be reviewed.",
+    "Safe-preservation confidence can be approximated conservatively by protected normal-routing owner context, but this is not a selector.",
+    "Current visible terms describe context and provider family, but not selected-owner progress failure inside the control window.",
+    "The review does not authorize runtime behavior, selector training, topology mutation, or Stage 7 promotion."
+  ],
+  "proxy_gap_analysis": {
+    "interpretation": "The available visible proxy terms mostly describe board context and owner families. They do not expose why the selected owner is failing in the current local control window, so leave-state-out failure-risk recall collapses to zero.",
+    "missing_visible_failure_risk_terms": [
+      "selected_owner_progress_stagnation_visible",
+      "selected_owner_repeated_failure_family_visible",
+      "selected_owner_score_conflict_or_scale_gap_visible",
+      "alternative_provider_live_proposal_with_role_license",
+      "selected_owner_handoff_gap_visible",
+      "normal_routing_selected_owner_failure_risk_prior_by_context"
+    ],
+    "selected_owner_failure_risk_false_negative_count": 7,
+    "selected_owner_failure_risk_false_negative_examples": [
+      {
+        "comparison_label": "prefer_capacity_alternative",
+        "feature_key": [
+          "stage0_basin->edge_trap",
+          "stage4",
+          "low",
+          "king",
+          "same"
+        ],
+        "owner_a": "krk.stage0_basin",
+        "owner_b": "krk.edge_trap_close",
+        "score": 0.1111111111111111,
+        "source_stage": "stage4",
+        "state_id": "state.256a3da30f0f"
+      },
+      {
+        "comparison_label": "prefer_capacity_alternative",
+        "feature_key": [
+          "stage0_basin->edge_trap",
+          "stage4",
+          "low",
+          "king",
+          "same"
+        ],
+        "owner_a": "krk.stage0_basin",
+        "owner_b": "krk.edge_trap_enemy_between",
+        "score": 0.1111111111111111,
+        "source_stage": "stage4",
+        "state_id": "state.256a3da30f0f"
+      },
+      {
+        "comparison_label": "prefer_capacity_alternative",
+        "feature_key": [
+          "stage0_basin->edge_trap",
+          "stage4",
+          "low",
+          "king",
+          "same"
+        ],
+        "owner_a": "krk.stage0_basin",
+        "owner_b": "krk.edge_trap_wrong_tempo",
+        "score": 0.1111111111111111,
+        "source_stage": "stage4",
+        "state_id": "state.256a3da30f0f"
+      },
+      {
+        "comparison_label": "prefer_capacity_alternative",
+        "feature_key": [
+          "stage0_basin->edge_trap",
+          "stage5",
+          "low",
+          "king",
+          "same"
+        ],
+        "owner_a": "krk.stage0_basin",
+        "owner_b": "krk.edge_trap_close",
+        "score": 0.10810810810810811,
+        "source_stage": "stage5",
+        "state_id": "state.3dca34326fca"
+      },
+      {
+        "comparison_label": "prefer_capacity_alternative",
+        "feature_key": [
+          "stage0_basin->edge_trap",
+          "stage5",
+          "low",
+          "king",
+          "same"
+        ],
+        "owner_a": "krk.stage0_basin",
+        "owner_b": "krk.edge_trap_enemy_between",
+        "score": 0.10810810810810811,
+        "source_stage": "stage5",
+        "state_id": "state.3dca34326fca"
+      },
+      {
+        "comparison_label": "prefer_capacity_alternative",
+        "feature_key": [
+          "stage0_basin->edge_trap",
+          "stage5",
+          "low",
+          "king",
+          "same"
+        ],
+        "owner_a": "krk.stage0_basin",
+        "owner_b": "krk.edge_trap_wrong_tempo",
+        "score": 0.10810810810810811,
+        "source_stage": "stage5",
+        "state_id": "state.3dca34326fca"
+      },
+      {
+        "comparison_label": "prefer_capacity_alternative",
+        "feature_key": [
+          "edge_trap->stage0_basin",
+          "stage6",
+          "low",
+          "rook",
+          "worsens"
+        ],
+        "owner_a": "krk.edge_trap_close",
+        "owner_b": "krk.stage0_basin",
+        "score": 0.17142857142857143,
+        "source_stage": "stage6",
+        "state_id": "state.699f0003a511"
+      }
+    ]
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_state_local_paired_runtime_proxy_review.v0",
+  "selector_training_allowed": false,
+  "source_artifacts": [
+    "reports/krk_state_local_paired_runtime_proxy_design_v0.json",
+    "reports/krk_state_local_paired_runtime_proxy_dataset_v0.json",
+    "reports/krk_state_local_paired_runtime_proxy_probe_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "best_visible_failure_risk_precision": null,
+    "best_visible_failure_risk_recall": 0.0,
+    "best_visible_safe_preservation_precision": 0.825,
+    "best_visible_safe_preservation_recall": 1.0,
+    "dataset_row_count": 40,
+    "proxy_spec_count": 2,
+    "stage7_row_count": 0,
+    "visible_proxy_review_ready": false
+  }
+}

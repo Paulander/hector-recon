@@ -1,0 +1,136 @@
+{
+  "total": 25,
+  "no_move": 25,
+  "improved": 0,
+  "flat": 0,
+  "worsened": 0,
+  "optimal": 0,
+  "avg_reward": 0.0,
+  "avg_oracle_reward": 0.25,
+  "playouts": {},
+  "one_ply_status_counts": {
+    "no_move": 25
+  },
+  "conversion_status_counts": {},
+  "semantic_alignment_status_counts": {},
+  "conversion_by_semantic_alignment_status": {},
+  "semantic_alignment_confusion_counts": {},
+  "semantic_alignment_snapshots": {},
+  "one_ply_engine_decision_count": 25,
+  "one_ply_engine_ticks_total": 1000,
+  "one_ply_engine_ticks_max": 40,
+  "one_ply_engine_early_stop_count": 0,
+  "playout_engine_decision_count": 0,
+  "playout_engine_ticks_total": 0,
+  "playout_engine_ticks_max": 0,
+  "playout_engine_early_stop_count": 0,
+  "adapter_fire_count": 0,
+  "adapter_supported_provider_by_outcome": {},
+  "adapter_supported_move_by_outcome": {},
+  "one_ply_status": "failed",
+  "conversion_status": "not_checked",
+  "label": "opposition_tempo",
+  "source_stage_names": [
+    "Opposition_Approach",
+    "Tempo_Wait",
+    "Edge_Fence_Approach"
+  ],
+  "successor_affordance_layer_enabled": true,
+  "successor_contract_gate_enabled": false,
+  "successor_role_license_enabled": true,
+  "successor_role_veto_penalty": 0.0,
+  "successor_stage0_drift_penalty": 6.0,
+  "successor_role_scoped_move_shape_enabled": true,
+  "successor_role_scoped_move_shape_bonus": 0.05,
+  "successor_role_scoped_move_shape_require_worst_reply": false,
+  "stagnation_breaker_enabled": true,
+  "stagnation_breaker_bonus": 0.5,
+  "stagnation_breaker_king_support_bonus": 0.0,
+  "post_break_continuation_enabled": true,
+  "post_break_continuation_bonus": 0.25,
+  "stage7_king_tempo_enabled": true,
+  "stage7_king_tempo_score": 25.0,
+  "stage7_post_king_tempo_enabled": true,
+  "stage7_post_king_tempo_score": 30.0,
+  "early_stop_stable_suggestions": 2,
+  "diagnostic_caches_enabled": true,
+  "deterministic_sample_seeds": false,
+  "target_failure_trace_state_signatures": [],
+  "conversion_failure_count": 0,
+  "handoff_packet_count": 0,
+  "shadow_candidate_count": 0,
+  "counterfactual_successor_sweep_count": 0,
+  "handoff_packet_counts_by_phase": {},
+  "shadow_candidate_counts_by_trigger": {},
+  "handoff_packets_truncated": 0,
+  "shadow_candidates_truncated": 0,
+  "performance_profile": {
+    "schema_version": "krk_performance_profile.v1",
+    "timers_sec": {
+      "total_wall_time": 2.672335,
+      "choose_move_details_time": 1.33095,
+      "engine_step_time": 1.318229,
+      "actuator_scoring_time": 0.0,
+      "teacher_features_time": 0.006951,
+      "goal_distance_time": 0.0,
+      "worst_reply_reward_time": 0.063428,
+      "choose_black_reply_time": 0.0,
+      "move_shape_audit_time": 0.0,
+      "stagnation_summary_time": 0.0,
+      "json_trace_serialization_time": 0.000126
+    },
+    "timer_percentages_of_total": {
+      "total_wall_time": 100.0,
+      "choose_move_details_time": 49.805,
+      "engine_step_time": 49.329,
+      "actuator_scoring_time": 0.0,
+      "teacher_features_time": 0.26,
+      "goal_distance_time": 0.0,
+      "worst_reply_reward_time": 2.374,
+      "choose_black_reply_time": 0.0,
+      "move_shape_audit_time": 0.0,
+      "stagnation_summary_time": 0.0,
+      "json_trace_serialization_time": 0.005
+    },
+    "counts": {
+      "samples": 25,
+      "playout_decisions": 0,
+      "engine_ticks": 1000,
+      "actuator_evaluations": 0,
+      "legal_moves_scored": 0,
+      "board_copy_calls": 0,
+      "teacher_features_calls": 25,
+      "worst_reply_reward_calls": 61,
+      "oracle_best_reward_calls": 0,
+      "cache_hits": 28774,
+      "cache_misses": 111
+    },
+    "cache": {
+      "context_terms": {
+        "hits": 28322,
+        "misses": 25
+      },
+      "move_shape_audit": {
+        "hits": 0,
+        "misses": 0
+      },
+      "worst_reply_reward": {
+        "hits": 452,
+        "misses": 61
+      },
+      "oracle_best_reward": {
+        "hits": 0,
+        "misses": 0
+      },
+      "black_reply": {
+        "hits": 0,
+        "misses": 0
+      },
+      "teacher_features": {
+        "hits": 0,
+        "misses": 25
+      }
+    },
+    "diagnostic_caches_enabled": true
+  }
+}

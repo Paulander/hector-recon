@@ -1,0 +1,45 @@
+{
+  "causal_status": "non_causal_manifest_review",
+  "decision": {
+    "labels_allowed": true,
+    "recommended_next_step": "run_bounded_balanced_hard_negative_labels",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "status": "balanced_hard_negative_manifest_review_passed_labels_allowed"
+  },
+  "gameplay_topology_mutation": false,
+  "review_summary": {
+    "job_count": 12,
+    "labels_allowed": true,
+    "provider_counts": {
+      "krk.drive_to_edge": 4,
+      "krk.edge_trap_close": 3,
+      "krk.edge_trap_enemy_between": 1,
+      "krk.fence_established": 4
+    },
+    "provider_family_counts": {
+      "drive_to_edge": 4,
+      "edge_trap": 4,
+      "fence_established": 4
+    },
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage_counts": {
+      "stage4": 7,
+      "stage6": 5
+    },
+    "violation_count": 0,
+    "violations": []
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_balanced_hard_negative_execution_manifest_review.v0",
+  "source_artifacts": [
+    "reports/krk_balanced_hard_negative_execution_manifest_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

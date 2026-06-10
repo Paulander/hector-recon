@@ -1,0 +1,391 @@
+{
+  "backlog_missing_extraction": [
+    {
+      "causal_use_blocked": true,
+      "maturity_status": "backlog_missing_extraction",
+      "priority": "high",
+      "term": "edge_net_pressure_increases_after_move"
+    },
+    {
+      "causal_use_blocked": true,
+      "maturity_status": "backlog_missing_extraction",
+      "priority": "high",
+      "term": "handoff_success_after_plan"
+    },
+    {
+      "causal_use_blocked": true,
+      "maturity_status": "backlog_missing_extraction",
+      "priority": "high",
+      "term": "king_support_aligned_with_edge_net"
+    },
+    {
+      "causal_use_blocked": true,
+      "maturity_status": "backlog_missing_extraction",
+      "priority": "high",
+      "term": "multi_step_progress_required"
+    },
+    {
+      "causal_use_blocked": true,
+      "maturity_status": "backlog_missing_extraction",
+      "priority": "high",
+      "term": "safe_edge_net_tighten_move_exists"
+    },
+    {
+      "causal_use_blocked": true,
+      "maturity_status": "backlog_missing_extraction",
+      "priority": "backlog",
+      "term": "box_shrink_goal_satisfied"
+    },
+    {
+      "causal_use_blocked": true,
+      "maturity_status": "backlog_missing_extraction",
+      "priority": "backlog",
+      "term": "box_shrink_owner_repeats_without_progress"
+    },
+    {
+      "causal_use_blocked": true,
+      "maturity_status": "backlog_missing_extraction",
+      "priority": "backlog",
+      "term": "king_support_aligned_with_cut_or_edge_net"
+    },
+    {
+      "causal_use_blocked": true,
+      "maturity_status": "backlog_missing_extraction",
+      "priority": "lower_defer",
+      "term": "king_support_improves_after_reply"
+    },
+    {
+      "causal_use_blocked": true,
+      "maturity_status": "backlog_missing_extraction",
+      "priority": "lower_defer",
+      "term": "repair_needed_but_no_safe_repair_available"
+    },
+    {
+      "causal_use_blocked": true,
+      "maturity_status": "backlog_missing_extraction",
+      "priority": "lower_defer",
+      "term": "repair_preserves_mate_basin_progress"
+    }
+  ],
+  "blocked_next_steps": [
+    "runtime_terminals",
+    "causal_affordances",
+    "runtime_arbiter",
+    "stage7_repair",
+    "stage8_training",
+    "stage7_promotion",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "monitor_to_provider_routing"
+  ],
+  "causal_status": "non_causal_maturity_gate",
+  "gameplay_topology_mutation": false,
+  "monitor_class_maturity": [
+    {
+      "causal_use_blocked": true,
+      "failure_precision": 0.5,
+      "maturity_status": "needs_companion_terms",
+      "monitor_type": "OwnerExitMonitor",
+      "outcome_distribution": {
+        "mate": 12,
+        "max_plies": 12,
+        "unknown": 1
+      },
+      "success_precision": 0.5
+    },
+    {
+      "causal_use_blocked": true,
+      "failure_precision": 0.52,
+      "maturity_status": "needs_companion_terms",
+      "monitor_type": "PhaseBoundaryMonitor",
+      "outcome_distribution": {
+        "mate": 24,
+        "max_plies": 26,
+        "unknown": 2
+      },
+      "success_precision": 0.48
+    },
+    {
+      "causal_use_blocked": true,
+      "failure_precision": 1.0,
+      "maturity_status": "monitor_candidate",
+      "monitor_type": "PlanSelectionNeededMonitor",
+      "outcome_distribution": {
+        "max_plies": 6,
+        "unknown": 3
+      },
+      "success_precision": 0.0
+    },
+    {
+      "causal_use_blocked": true,
+      "failure_precision": 0.8421052631578947,
+      "maturity_status": "monitor_candidate",
+      "monitor_type": "RepairNeededMonitor",
+      "outcome_distribution": {
+        "mate": 3,
+        "max_plies": 16,
+        "unknown": 3
+      },
+      "success_precision": 0.15789473684210525
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_strategy_monitor_maturity_gate.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_monitor_records_v0.json",
+    "reports/strategy_arbitration/krk_strategy_monitor_companion_audit_v1.json",
+    "reports/strategy_arbitration/krk_visible_monitor_terms_v0.json",
+    "reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "backlog_priority_counts": {
+      "backlog": 3,
+      "high": 5,
+      "lower_defer": 3
+    },
+    "broad_context_terms": [
+      "king_support_improves_after_move",
+      "safe_repair_move_exists",
+      "box_area_no_longer_decision_relevant"
+    ],
+    "causal_ready_terms": [],
+    "maturity_status_counts": {
+      "context_feature": 2,
+      "internal_terminal_candidate": 2,
+      "monitor_candidate": 1,
+      "too_broad": 1
+    },
+    "recommended_next_step": "broader_evidence_collection_or_internal_monitor_design_review",
+    "strongest_internal_terminal_candidates": [
+      "post_plan_stagnation",
+      "local_provider_competition_failed"
+    ],
+    "term_count": 6
+  },
+  "term_maturity": [
+    {
+      "causal_use_blocked": true,
+      "failure_precision": 0.6296296296296297,
+      "is_broad": true,
+      "is_separable": false,
+      "is_sparse": false,
+      "mate_max_plies_unknown_distribution": {
+        "mate": 10,
+        "max_plies": 17,
+        "unknown": 3
+      },
+      "maturity_status": "context_feature",
+      "rationale": "Action-relevant improvement is better than static support, but still broad.",
+      "required_companion_terms": [
+        "king_support_needed_for_current_phase",
+        "king_support_aligned_with_cut_or_edge_net"
+      ],
+      "shape": "broad",
+      "source_stage_distribution": {
+        "stage4": 4,
+        "stage5": 8,
+        "stage6": 10,
+        "stage7": 8
+      },
+      "stage7_result_distribution": {
+        "max_plies": 5,
+        "unknown": 3
+      },
+      "stage7_support_count": 8,
+      "success_precision": 0.37037037037037035,
+      "support_count": 30,
+      "support_ratio": 0.9090909090909091,
+      "term": "king_support_improves_after_move",
+      "total_record_count": 33,
+      "use_as": [
+        "context feature"
+      ]
+    },
+    {
+      "causal_use_blocked": true,
+      "failure_precision": 0.8421052631578947,
+      "is_broad": false,
+      "is_separable": false,
+      "is_sparse": false,
+      "mate_max_plies_unknown_distribution": {
+        "mate": 3,
+        "max_plies": 16,
+        "unknown": 3
+      },
+      "maturity_status": "monitor_candidate",
+      "rationale": "Useful repair-progress evidence when paired with repair-needed context.",
+      "required_companion_terms": [
+        "fence_or_cut_repair_affordance",
+        "safe_repair_move_exists"
+      ],
+      "shape": "moderate",
+      "source_stage_distribution": {
+        "stage4": 2,
+        "stage5": 6,
+        "stage6": 5,
+        "stage7": 9
+      },
+      "stage7_result_distribution": {
+        "max_plies": 6,
+        "unknown": 3
+      },
+      "stage7_support_count": 9,
+      "success_precision": 0.15789473684210525,
+      "support_count": 22,
+      "support_ratio": 0.6666666666666666,
+      "term": "cut_or_fence_restored_after_move",
+      "total_record_count": 33,
+      "use_as": [
+        "failure/risk monitor"
+      ]
+    },
+    {
+      "causal_use_blocked": true,
+      "failure_precision": 0.6,
+      "is_broad": true,
+      "is_separable": false,
+      "is_sparse": false,
+      "mate_max_plies_unknown_distribution": {
+        "mate": 12,
+        "max_plies": 18,
+        "unknown": 3
+      },
+      "maturity_status": "too_broad",
+      "rationale": "True across the full current dataset, so it is not separable alone.",
+      "required_companion_terms": [
+        "repair_needed",
+        "cut_or_fence_restored_after_move",
+        "box_area_not_expanded_after_reply"
+      ],
+      "shape": "broad",
+      "source_stage_distribution": {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10,
+        "stage7": 9
+      },
+      "stage7_result_distribution": {
+        "max_plies": 6,
+        "unknown": 3
+      },
+      "stage7_support_count": 9,
+      "success_precision": 0.4,
+      "support_count": 33,
+      "support_ratio": 1.0,
+      "term": "safe_repair_move_exists",
+      "total_record_count": 33,
+      "use_as": [
+        "context feature"
+      ]
+    },
+    {
+      "causal_use_blocked": true,
+      "failure_precision": 0.52,
+      "is_broad": true,
+      "is_separable": false,
+      "is_sparse": false,
+      "mate_max_plies_unknown_distribution": {
+        "mate": 12,
+        "max_plies": 13,
+        "unknown": 1
+      },
+      "maturity_status": "context_feature",
+      "rationale": "Broad owner-exit companion; useful context but too common to trigger behavior alone.",
+      "required_companion_terms": [
+        "active_landmark_label == box_shrink",
+        "validated_handoff_target_available"
+      ],
+      "shape": "broad",
+      "source_stage_distribution": {
+        "stage4": 6,
+        "stage5": 8,
+        "stage6": 10,
+        "stage7": 2
+      },
+      "stage7_result_distribution": {
+        "max_plies": 1,
+        "unknown": 1
+      },
+      "stage7_support_count": 2,
+      "success_precision": 0.48,
+      "support_count": 26,
+      "support_ratio": 0.7878787878787878,
+      "term": "box_area_no_longer_decision_relevant",
+      "total_record_count": 33,
+      "use_as": [
+        "context feature",
+        "owner-exit monitor"
+      ]
+    },
+    {
+      "causal_use_blocked": true,
+      "failure_precision": 1.0,
+      "is_broad": false,
+      "is_separable": true,
+      "is_sparse": true,
+      "mate_max_plies_unknown_distribution": {
+        "max_plies": 4
+      },
+      "maturity_status": "internal_terminal_candidate",
+      "rationale": "Sparse and semantically strong trace-window signal for plan/capsule failure.",
+      "required_companion_terms": [
+        "plan_capsule_context",
+        "handoff_success_after_plan"
+      ],
+      "shape": "sparse",
+      "source_stage_distribution": {
+        "stage7": 4
+      },
+      "stage7_result_distribution": {
+        "max_plies": 4
+      },
+      "stage7_support_count": 4,
+      "success_precision": 0.0,
+      "support_count": 4,
+      "support_ratio": 0.12121212121212122,
+      "term": "post_plan_stagnation",
+      "total_record_count": 33,
+      "use_as": [
+        "plan-selection monitor",
+        "growth-pressure monitor"
+      ]
+    },
+    {
+      "causal_use_blocked": true,
+      "failure_precision": 1.0,
+      "is_broad": false,
+      "is_separable": true,
+      "is_sparse": true,
+      "mate_max_plies_unknown_distribution": {
+        "max_plies": 2
+      },
+      "maturity_status": "internal_terminal_candidate",
+      "rationale": "Sparse but directly expresses provider-arbitration failure.",
+      "required_companion_terms": [
+        "current_owner",
+        "alternative_provider_known_mate"
+      ],
+      "shape": "sparse",
+      "source_stage_distribution": {
+        "stage7": 2
+      },
+      "stage7_result_distribution": {
+        "max_plies": 2
+      },
+      "stage7_support_count": 2,
+      "success_precision": 0.0,
+      "support_count": 2,
+      "support_ratio": 0.06060606060606061,
+      "term": "local_provider_competition_failed",
+      "total_record_count": 33,
+      "use_as": [
+        "growth-pressure monitor",
+        "plan-selection monitor"
+      ]
+    }
+  ]
+}

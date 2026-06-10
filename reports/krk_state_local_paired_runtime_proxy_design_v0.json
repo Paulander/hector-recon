@@ -1,0 +1,103 @@
+{
+  "causal_status": "non_causal_proxy_design",
+  "decision": {
+    "recommended_next_step": "build_runtime_proxy_dataset_and_probe_visible_candidate_features",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "status": "proxy_design_ready_for_replay_free_validation"
+  },
+  "feature_classes": {
+    "lab_evidence_source_only": [
+      "forced_capacity_alternative_lab_visible",
+      "owner_b_source_artifact",
+      "evidence_channel"
+    ],
+    "offline_outcome_forbidden": [
+      "owner_a_positive",
+      "owner_b_positive",
+      "comparison_label",
+      "selected playout outcome",
+      "forced-provider playout outcome"
+    ],
+    "runtime_visible_candidate": [
+      "provider family/provenance",
+      "active landmark label",
+      "terminal-space buckets",
+      "move-shape/post-move proxy terms",
+      "future visible same-state proposal membership"
+    ]
+  },
+  "gameplay_topology_mutation": false,
+  "implementation_allowed_by_this_design": false,
+  "proxy_specs": [
+    {
+      "candidate_visible_terms": [
+        "current_selected_owner_provider_family",
+        "active_landmark_label",
+        "source_stage/profile scope",
+        "terminal_space_context buckets",
+        "selected_move_shape/post_move proxy terms",
+        "same-state competing provider proposal evidence if a future candidate set exposes it"
+      ],
+      "forbidden_causal_uses": [
+        "directly suppress selected owner",
+        "directly boost alternative provider",
+        "route to a provider",
+        "mutate topology"
+      ],
+      "forbidden_terms": [
+        "owner_a_positive",
+        "selected_playout_result",
+        "future h40 conversion result",
+        "DTM/tablebase label",
+        "forced-provider h40 result as direct runtime input"
+      ],
+      "meaning": "The currently selected owner may be unsafe in this state-local context; a competing owner may need review.",
+      "proxy_id": "terminal.krk.selected_owner_failure_risk_proxy",
+      "proxy_type": "visible_runtime_proxy_candidate",
+      "status": "proposed_proxy_not_runtime_authorized"
+    },
+    {
+      "candidate_visible_terms": [
+        "selected owner is normal-routing owner",
+        "selected owner provider family/provenance/maturity",
+        "protected stage/profile scope",
+        "selected move safety/progress context",
+        "alternative is only capacity/proposal evidence unless normal selected failure is visible"
+      ],
+      "forbidden_causal_uses": [
+        "hard lock current owner",
+        "hide competing suggestions",
+        "skip guardrails",
+        "mutate topology"
+      ],
+      "forbidden_terms": [
+        "owner_a_positive",
+        "owner_b_positive",
+        "selected_owner_converted label",
+        "forced_capacity_positive label as direct runtime preference",
+        "DTM/tablebase label"
+      ],
+      "meaning": "The selected owner is a protected/current-profile owner and should be preserved unless visible failure-risk evidence is strong.",
+      "proxy_id": "terminal.krk.safe_preservation_confidence_proxy",
+      "proxy_type": "visible_runtime_proxy_candidate",
+      "status": "proposed_proxy_not_runtime_authorized"
+    }
+  ],
+  "purpose": "Translate the offline safe-preservation semantic gate into candidate visible runtime proxies without changing routing, scoring, topology, or training.",
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_state_local_paired_runtime_proxy_design.v0",
+  "selector_training_allowed": false,
+  "source_artifacts": [
+    "reports/krk_state_local_paired_selector_runtime_review_packet_v0.json",
+    "reports/krk_state_local_paired_ownership_probe_v1.json",
+    "reports/krk_state_local_paired_ownership_error_audit_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

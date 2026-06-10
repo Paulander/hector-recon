@@ -1,0 +1,1615 @@
+{
+  "best_result": {
+    "accuracy": 0.6875,
+    "false_negative": 0,
+    "false_positive": 5,
+    "negative_suppression": 0.0,
+    "objective": "provider_family",
+    "positive_precision": 0.6875,
+    "positive_recall": 1.0,
+    "row_count": 16,
+    "true_negative": 0,
+    "true_positive": 11
+  },
+  "causal_status": "non_causal_feature_probe",
+  "decision": {
+    "candidate_generator_runtime_allowed": false,
+    "recommended_next_step": "collect_more_protected_capacity_rows_or_design_hard_negative_labels",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "geometry_augmented_features_underpowered"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "directed_fix_class": "expand protected hard-negative capacity evidence and geometry-aware selector scoring non-causally",
+    "primary": "Geometry features can be benchmarked, but the current protected capacity set is still too small for runtime conclusions."
+  },
+  "results": {
+    "edge_stage_provider_piece_delta": {
+      "accuracy": 0.6875,
+      "false_negative": 0,
+      "false_positive": 5,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6875,
+      "positive_recall": 1.0,
+      "predictions": [
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge",
+            "stage5",
+            "stage0_basin",
+            "king",
+            "improves",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.02feb8593cc6"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge",
+            "stage5",
+            "fence_established",
+            "rook",
+            "same",
+            "worsens"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 1.0,
+          "state_id": "state.02feb8593cc6"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge",
+            "stage4",
+            "edge_trap",
+            "king",
+            "same",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge",
+            "stage4",
+            "edge_trap",
+            "king",
+            "same",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.6153846153846154,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge",
+            "stage4",
+            "edge_trap",
+            "king",
+            "same",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.6153846153846154,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge",
+            "stage5",
+            "stage0_basin",
+            "king",
+            "improves",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge",
+            "stage5",
+            "fence_established",
+            "rook",
+            "same",
+            "worsens"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge",
+            "stage5",
+            "edge_trap",
+            "rook",
+            "same",
+            "improves"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge",
+            "stage5",
+            "edge_trap",
+            "rook",
+            "same",
+            "improves"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge",
+            "stage5",
+            "edge_trap",
+            "rook",
+            "same",
+            "improves"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge",
+            "stage6",
+            "stage0_basin",
+            "king",
+            "improves",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7692307692307693,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge",
+            "stage6",
+            "drive_to_edge",
+            "rook",
+            "same",
+            "worsens"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.drive_to_edge",
+          "score": 0.7692307692307693,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge",
+            "stage6",
+            "fence_established",
+            "rook",
+            "same",
+            "worsens"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 0.7692307692307693,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge",
+            "stage4",
+            "edge_trap",
+            "king",
+            "improves",
+            "same"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.8461538461538461,
+          "state_id": "state.b11124d658cf"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge",
+            "stage4",
+            "edge_trap",
+            "king",
+            "improves",
+            "same"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.8461538461538461,
+          "state_id": "state.b11124d658cf"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge",
+            "stage4",
+            "edge_trap",
+            "king",
+            "improves",
+            "same"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.8461538461538461,
+          "state_id": "state.b11124d658cf"
+        }
+      ],
+      "row_count": 16,
+      "true_negative": 0,
+      "true_positive": 11
+    },
+    "provider_family": {
+      "accuracy": 0.6875,
+      "false_negative": 0,
+      "false_positive": 5,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6875,
+      "positive_recall": 1.0,
+      "predictions": [
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.02feb8593cc6"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "fence_established"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 0.5,
+          "state_id": "state.02feb8593cc6"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.5,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.5,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "fence_established"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 0.5,
+          "state_id": "state.326222aefdf1"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.5,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.5,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.5,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "drive_to_edge"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.drive_to_edge",
+          "score": 0.7692307692307693,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "fence_established"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 1.0,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 1.0,
+          "state_id": "state.b11124d658cf"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 1.0,
+          "state_id": "state.b11124d658cf"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 1.0,
+          "state_id": "state.b11124d658cf"
+        }
+      ],
+      "row_count": 16,
+      "true_negative": 0,
+      "true_positive": 11
+    },
+    "provider_piece": {
+      "accuracy": 0.5,
+      "false_negative": 3,
+      "false_positive": 5,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6153846153846154,
+      "positive_recall": 0.7272727272727273,
+      "predictions": [
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage0_basin",
+            "king"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.02feb8593cc6"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "fence_established",
+            "rook"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 0.5,
+          "state_id": "state.02feb8593cc6"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.0,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.0,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage0_basin",
+            "king"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "fence_established",
+            "rook"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 0.5,
+          "state_id": "state.326222aefdf1"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "rook"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "rook"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "rook"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage0_basin",
+            "king"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "drive_to_edge",
+            "rook"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.drive_to_edge",
+          "score": 0.7692307692307693,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "fence_established",
+            "rook"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 1.0,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 1.0,
+          "state_id": "state.b11124d658cf"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 1.0,
+          "state_id": "state.b11124d658cf"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 1.0,
+          "state_id": "state.b11124d658cf"
+        }
+      ],
+      "row_count": 16,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "provider_piece_king_delta": {
+      "accuracy": 0.6875,
+      "false_negative": 0,
+      "false_positive": 5,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6875,
+      "positive_recall": 1.0,
+      "predictions": [
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage0_basin",
+            "king",
+            "improves"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.02feb8593cc6"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "fence_established",
+            "rook",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 0.5,
+          "state_id": "state.02feb8593cc6"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.6153846153846154,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.6153846153846154,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage0_basin",
+            "king",
+            "improves"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "fence_established",
+            "rook",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 0.5,
+          "state_id": "state.326222aefdf1"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "rook",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "rook",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "rook",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage0_basin",
+            "king",
+            "improves"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "drive_to_edge",
+            "rook",
+            "same"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.drive_to_edge",
+          "score": 0.7692307692307693,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "fence_established",
+            "rook",
+            "same"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 1.0,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king",
+            "improves"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.8461538461538461,
+          "state_id": "state.b11124d658cf"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king",
+            "improves"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.8461538461538461,
+          "state_id": "state.b11124d658cf"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king",
+            "improves"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.8461538461538461,
+          "state_id": "state.b11124d658cf"
+        }
+      ],
+      "row_count": 16,
+      "true_negative": 0,
+      "true_positive": 11
+    },
+    "provider_piece_rook_delta": {
+      "accuracy": 0.5,
+      "false_negative": 3,
+      "false_positive": 5,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6153846153846154,
+      "positive_recall": 0.7272727272727273,
+      "predictions": [
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage0_basin",
+            "king",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.02feb8593cc6"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "fence_established",
+            "rook",
+            "worsens"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 0.5,
+          "state_id": "state.02feb8593cc6"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.0,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.0,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage0_basin",
+            "king",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "fence_established",
+            "rook",
+            "worsens"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 0.5,
+          "state_id": "state.326222aefdf1"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "rook",
+            "improves"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "rook",
+            "improves"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "edge_trap",
+            "rook",
+            "improves"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage0_basin",
+            "king",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "drive_to_edge",
+            "rook",
+            "worsens"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.drive_to_edge",
+          "score": 0.7692307692307693,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "fence_established",
+            "rook",
+            "worsens"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 1.0,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king",
+            "same"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 1.0,
+          "state_id": "state.b11124d658cf"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king",
+            "same"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 1.0,
+          "state_id": "state.b11124d658cf"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "edge_trap",
+            "king",
+            "same"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 1.0,
+          "state_id": "state.b11124d658cf"
+        }
+      ],
+      "row_count": 16,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "stage_provider_family": {
+      "accuracy": 0.5,
+      "false_negative": 3,
+      "false_positive": 5,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6153846153846154,
+      "positive_recall": 0.7272727272727273,
+      "predictions": [
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage5",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.02feb8593cc6"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage5",
+            "fence_established"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 1.0,
+          "state_id": "state.02feb8593cc6"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage4",
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.0,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage4",
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.0,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage4",
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": false,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.0,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage5",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage5",
+            "fence_established"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage5",
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage5",
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage5",
+            "edge_trap"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage6",
+            "stage0_basin"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7692307692307693,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "stage6",
+            "drive_to_edge"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.drive_to_edge",
+          "score": 0.7692307692307693,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "stage6",
+            "fence_established"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 0.7692307692307693,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "stage4",
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 1.0,
+          "state_id": "state.b11124d658cf"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "stage4",
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 1.0,
+          "state_id": "state.b11124d658cf"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "stage4",
+            "edge_trap"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 1.0,
+          "state_id": "state.b11124d658cf"
+        }
+      ],
+      "row_count": 16,
+      "true_negative": 0,
+      "true_positive": 8
+    },
+    "stage_provider_piece_delta": {
+      "accuracy": 0.6875,
+      "false_negative": 0,
+      "false_positive": 5,
+      "negative_suppression": 0.0,
+      "positive_precision": 0.6875,
+      "positive_recall": 1.0,
+      "predictions": [
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage5",
+            "stage0_basin",
+            "king",
+            "improves",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.02feb8593cc6"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "rook",
+            "same",
+            "worsens"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 1.0,
+          "state_id": "state.02feb8593cc6"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage4",
+            "edge_trap",
+            "king",
+            "same",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage4",
+            "edge_trap",
+            "king",
+            "same",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.6153846153846154,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage4",
+            "edge_trap",
+            "king",
+            "same",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.6153846153846154,
+          "state_id": "state.256a3da30f0f"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage5",
+            "stage0_basin",
+            "king",
+            "improves",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage5",
+            "fence_established",
+            "rook",
+            "same",
+            "worsens"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 1.0,
+          "state_id": "state.326222aefdf1"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage5",
+            "edge_trap",
+            "rook",
+            "same",
+            "improves"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage5",
+            "edge_trap",
+            "rook",
+            "same",
+            "improves"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage5",
+            "edge_trap",
+            "rook",
+            "same",
+            "improves"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.6153846153846154,
+          "state_id": "state.3dca34326fca"
+        },
+        {
+          "capacity_label": "positive_capacity",
+          "feature_key": [
+            "stage6",
+            "stage0_basin",
+            "king",
+            "improves",
+            "same"
+          ],
+          "label_positive": true,
+          "predicted_positive": true,
+          "provider_id": "krk.stage0_basin",
+          "score": 0.7692307692307693,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "stage6",
+            "drive_to_edge",
+            "rook",
+            "same",
+            "worsens"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.drive_to_edge",
+          "score": 0.7692307692307693,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "stage6",
+            "fence_established",
+            "rook",
+            "same",
+            "worsens"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.fence_established",
+          "score": 0.7692307692307693,
+          "state_id": "state.699f0003a511"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "stage4",
+            "edge_trap",
+            "king",
+            "improves",
+            "same"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_close",
+          "score": 0.8461538461538461,
+          "state_id": "state.b11124d658cf"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "stage4",
+            "edge_trap",
+            "king",
+            "improves",
+            "same"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score": 0.8461538461538461,
+          "state_id": "state.b11124d658cf"
+        },
+        {
+          "capacity_label": "negative_capacity",
+          "feature_key": [
+            "stage4",
+            "edge_trap",
+            "king",
+            "improves",
+            "same"
+          ],
+          "label_positive": false,
+          "predicted_positive": true,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score": 0.8461538461538461,
+          "state_id": "state.b11124d658cf"
+        }
+      ],
+      "row_count": 16,
+      "true_negative": 0,
+      "true_positive": 11
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_geometry_augmented_selector_feature_probe.v0",
+  "source_artifacts": [
+    "reports/krk_capacity_geometry_feature_audit_v0.json",
+    "reports/krk_selector_negative_suppression_evidence_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "negative_count": 5,
+    "positive_count": 11,
+    "row_count": 16,
+    "stage7_row_count": 0,
+    "state_count": 6,
+    "underpowered": true
+  }
+}

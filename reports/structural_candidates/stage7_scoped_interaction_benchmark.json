@@ -1,0 +1,4263 @@
+{
+  "baseline_metrics": {
+    "current_learned_post_box_scorer": {
+      "draw_stalemate_candidate_top1_rate": 0.0,
+      "dtm_optimal_top1_accuracy": 0.35714285714285715,
+      "dtm_optimal_top3_accuracy": 0.6428571428571429,
+      "first_miss": {
+        "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+        "positive_rank": null,
+        "selected_move": "a6a8",
+        "selected_target_class": "winning_nonoptimal_move",
+        "step_index": 0,
+        "top_moves": [
+          {
+            "child_dtm": 28,
+            "label": 0,
+            "move": "a6a8",
+            "score": 1.418431847000122,
+            "skill_id": null,
+            "target_class": "winning_nonoptimal_move"
+          },
+          {
+            "child_dtm": 30,
+            "label": 0,
+            "move": "a6f6",
+            "score": 0.020982536690394897,
+            "skill_id": null,
+            "target_class": "winning_nonoptimal_move"
+          },
+          {
+            "child_dtm": 28,
+            "label": 0,
+            "move": "a6h6",
+            "score": 0.01880987303654353,
+            "skill_id": null,
+            "target_class": "winning_nonoptimal_move"
+          }
+        ],
+        "trajectory_index": 0
+      },
+      "hard_negative_above_positive_rate": 0.2857142857142857,
+      "sample_rows": [
+        {
+          "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+          "optimal_rank": null,
+          "positive_rank": null,
+          "step_index": 0,
+          "top3_moves": [
+            {
+              "child_dtm": 28,
+              "label": 0,
+              "move": "a6a8",
+              "score": 1.418431847000122,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 30,
+              "label": 0,
+              "move": "a6f6",
+              "score": 0.020982536690394897,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 28,
+              "label": 0,
+              "move": "a6h6",
+              "score": 0.01880987303654353,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": 28,
+            "label": 0,
+            "move": "a6a8",
+            "score": 1.418431847000122,
+            "skill_id": null,
+            "target_class": "winning_nonoptimal_move"
+          },
+          "trajectory_index": 0
+        },
+        {
+          "fen": "8/8/8/R7/1k6/8/8/3K4 w - - 4 3",
+          "optimal_rank": 2,
+          "positive_rank": 2,
+          "step_index": 1,
+          "top3_moves": [
+            {
+              "child_dtm": 28,
+              "label": 0,
+              "move": "a5a8",
+              "score": 8.783452956581115,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 24,
+              "label": 1,
+              "move": "a5h5",
+              "score": 0.13012893722057345,
+              "skill_id": null,
+              "target_class": "optimal_dtm_move"
+            },
+            {
+              "child_dtm": 26,
+              "label": 0,
+              "move": "a5e5",
+              "score": 0.08291364901016154,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": 28,
+            "label": 0,
+            "move": "a5a8",
+            "score": 8.783452956581115,
+            "skill_id": null,
+            "target_class": "winning_nonoptimal_move"
+          },
+          "trajectory_index": 0
+        },
+        {
+          "fen": "8/8/8/5R2/2k5/8/8/3K4 w - - 6 4",
+          "optimal_rank": null,
+          "positive_rank": null,
+          "step_index": 2,
+          "top3_moves": [
+            {
+              "child_dtm": 30,
+              "label": 0,
+              "move": "f5f8",
+              "score": 13.272099940681457,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 26,
+              "label": 0,
+              "move": "d1e1",
+              "score": 0.02537534387604478,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 26,
+              "label": 0,
+              "move": "f5h5",
+              "score": 0.0247134538213412,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": 30,
+            "label": 0,
+            "move": "f5f8",
+            "score": 13.272099940681457,
+            "skill_id": null,
+            "target_class": "winning_nonoptimal_move"
+          },
+          "trajectory_index": 0
+        },
+        {
+          "fen": "8/8/8/5R2/3k4/8/4K3/8 w - - 8 5",
+          "optimal_rank": 2,
+          "positive_rank": 2,
+          "step_index": 3,
+          "top3_moves": [
+            {
+              "child_dtm": 26,
+              "label": 0,
+              "move": "f5f8",
+              "score": 17.17951521148682,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 20,
+              "label": 1,
+              "move": "e2f3",
+              "score": 0.1063240895394236,
+              "skill_id": null,
+              "target_class": "optimal_dtm_move"
+            },
+            {
+              "child_dtm": 24,
+              "label": 0,
+              "move": "f5a5",
+              "score": 0.0198524239992102,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": 26,
+            "label": 0,
+            "move": "f5f8",
+            "score": 17.17951521148682,
+            "skill_id": null,
+            "target_class": "winning_nonoptimal_move"
+          },
+          "trajectory_index": 0
+        },
+        {
+          "fen": "8/8/8/5R2/8/3k1K2/8/8 w - - 10 6",
+          "optimal_rank": 2,
+          "positive_rank": 2,
+          "step_index": 4,
+          "top3_moves": [
+            {
+              "child_dtm": 22,
+              "label": 0,
+              "move": "f5a5",
+              "score": 30.921491234493256,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 18,
+              "label": 1,
+              "move": "f5f4",
+              "score": 0.026808861819723626,
+              "skill_id": null,
+              "target_class": "optimal_dtm_move"
+            },
+            {
+              "child_dtm": 24,
+              "label": 0,
+              "move": "f5f8",
+              "score": -0.969948434829712,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": 22,
+            "label": 0,
+            "move": "f5a5",
+            "score": 30.921491234493256,
+            "skill_id": null,
+            "target_class": "winning_nonoptimal_move"
+          },
+          "trajectory_index": 0
+        },
+        {
+          "fen": "8/8/8/8/5R2/5K2/3k4/8 w - - 12 7",
+          "optimal_rank": null,
+          "positive_rank": null,
+          "step_index": 5,
+          "top3_moves": [
+            {
+              "child_dtm": 18,
+              "label": 0,
+              "move": "f4a4",
+              "score": 54.85361739864349,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 20,
+              "label": 0,
+              "move": "f4f8",
+              "score": -0.020900628665187056,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 18,
+              "label": 0,
+              "move": "f4g4",
+              "score": -0.04069124893546104,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": 18,
+            "label": 0,
+            "move": "f4a4",
+            "score": 54.85361739864349,
+            "skill_id": null,
+            "target_class": "winning_nonoptimal_move"
+          },
+          "trajectory_index": 0
+        },
+        {
+          "fen": "8/8/8/8/4KR2/8/4k3/8 w - - 14 8",
+          "optimal_rank": 2,
+          "positive_rank": 2,
+          "step_index": 6,
+          "top3_moves": [
+            {
+              "child_dtm": 16,
+              "label": 0,
+              "move": "f4f8",
+              "score": 39.11586031217575,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 14,
+              "label": 1,
+              "move": "e4d4",
+              "score": 0.09799299688832049,
+              "skill_id": null,
+              "target_class": "optimal_dtm_move"
+            },
+            {
+              "child_dtm": 18,
+              "label": 0,
+              "move": "f4f3",
+              "score": 0.02680859562541854,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": 16,
+            "label": 0,
+            "move": "f4f8",
+            "score": 39.11586031217575,
+            "skill_id": null,
+            "target_class": "winning_nonoptimal_move"
+          },
+          "trajectory_index": 0
+        },
+        {
+          "fen": "8/8/8/8/3K1R2/8/3k4/8 w - - 16 9",
+          "optimal_rank": null,
+          "positive_rank": null,
+          "step_index": 7,
+          "top3_moves": [
+            {
+              "child_dtm": 16,
+              "label": 0,
+              "move": "f4h4",
+              "score": 17.519818990421296,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 16,
+              "label": 0,
+              "move": "f4f8",
+              "score": 0.0723264967410782,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 16,
+              "label": 0,
+              "move": "f4e4",
+              "score": 0.03195547844953835,
+              "skill_id": null,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": 16,
+            "label": 0,
+            "move": "f4h4",
+            "score": 17.519818990421296,
+            "skill_id": null,
+            "target_class": "winning_nonoptimal_move"
+          },
+          "trajectory_index": 0
+        }
+      ],
+      "state_count": 14,
+      "top1_dtm_positive_accuracy": 0.35714285714285715,
+      "top3_dtm_positive_accuracy": 0.6428571428571429
+    },
+    "visible_term_log_odds_scorer": {
+      "draw_stalemate_candidate_top1_rate": 0.034482758620689655,
+      "dtm_optimal_top1_accuracy": 0.4827586206896552,
+      "dtm_optimal_top3_accuracy": 0.7586206896551724,
+      "first_miss": {
+        "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+        "positive_rank": 2,
+        "selected_move": "d1c2",
+        "selected_target_class": "winning_nonoptimal_move",
+        "step_index": 0,
+        "top_moves": [
+          {
+            "child_dtm": 28,
+            "is_bad_safety": false,
+            "is_hard_negative": true,
+            "is_optimal": false,
+            "is_positive": false,
+            "label": 0,
+            "move": "d1c2",
+            "score": 7.585219148419794,
+            "target_class": "winning_nonoptimal_move"
+          },
+          {
+            "child_dtm": 26,
+            "is_bad_safety": false,
+            "is_hard_negative": false,
+            "is_optimal": true,
+            "is_positive": true,
+            "label": 1,
+            "move": "d1d2",
+            "score": 6.948418652164079,
+            "target_class": "optimal_dtm_move"
+          },
+          {
+            "child_dtm": 28,
+            "is_bad_safety": false,
+            "is_hard_negative": true,
+            "is_optimal": false,
+            "is_positive": false,
+            "label": 0,
+            "move": "d1e2",
+            "score": 6.948418652164079,
+            "target_class": "winning_nonoptimal_move"
+          },
+          {
+            "child_dtm": 28,
+            "is_bad_safety": false,
+            "is_hard_negative": true,
+            "is_optimal": false,
+            "is_positive": false,
+            "label": 0,
+            "move": "a6a4",
+            "score": 2.80707442185436,
+            "target_class": "winning_nonoptimal_move"
+          },
+          {
+            "child_dtm": 26,
+            "is_bad_safety": false,
+            "is_hard_negative": false,
+            "is_optimal": true,
+            "is_positive": true,
+            "label": 1,
+            "move": "a6a5",
+            "score": 2.156992479637883,
+            "target_class": "optimal_dtm_move"
+          }
+        ],
+        "trajectory_index": 0
+      },
+      "hard_negative_above_positive_rate": 0.5,
+      "sample_rows": [
+        {
+          "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+          "optimal_rank": 2,
+          "positive_rank": 2,
+          "step_index": 0,
+          "top3_moves": [
+            {
+              "child_dtm": 28,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d1c2",
+              "score": 7.585219148419794,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 26,
+              "is_bad_safety": false,
+              "is_hard_negative": false,
+              "is_optimal": true,
+              "is_positive": true,
+              "label": 1,
+              "move": "d1d2",
+              "score": 6.948418652164079,
+              "target_class": "optimal_dtm_move"
+            },
+            {
+              "child_dtm": 28,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d1e2",
+              "score": 6.948418652164079,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": 28,
+            "is_bad_safety": false,
+            "is_hard_negative": true,
+            "is_optimal": false,
+            "is_positive": false,
+            "label": 0,
+            "move": "d1c2",
+            "score": 7.585219148419794,
+            "target_class": "winning_nonoptimal_move"
+          },
+          "trajectory_index": 0
+        },
+        {
+          "fen": "8/8/8/R7/1k6/8/8/3K4 w - - 4 3",
+          "optimal_rank": 14,
+          "positive_rank": 14,
+          "step_index": 1,
+          "top3_moves": [
+            {
+              "child_dtm": -1,
+              "is_bad_safety": true,
+              "is_hard_negative": false,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d1c2",
+              "score": 6.790739083449929,
+              "target_class": "non_winning_move"
+            },
+            {
+              "child_dtm": -1,
+              "is_bad_safety": true,
+              "is_hard_negative": false,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d1d2",
+              "score": 6.790739083449929,
+              "target_class": "non_winning_move"
+            },
+            {
+              "child_dtm": -1,
+              "is_bad_safety": true,
+              "is_hard_negative": false,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d1c1",
+              "score": 1.2501209633762247,
+              "target_class": "non_winning_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": -1,
+            "is_bad_safety": true,
+            "is_hard_negative": false,
+            "is_optimal": false,
+            "is_positive": false,
+            "label": 0,
+            "move": "d1c2",
+            "score": 6.790739083449929,
+            "target_class": "non_winning_move"
+          },
+          "trajectory_index": 0
+        },
+        {
+          "fen": "8/8/8/5R2/2k5/8/8/3K4 w - - 6 4",
+          "optimal_rank": 3,
+          "positive_rank": 3,
+          "step_index": 2,
+          "top3_moves": [
+            {
+              "child_dtm": 28,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d1c2",
+              "score": 7.585219148419794,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 24,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d1d2",
+              "score": 6.343267096028642,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 22,
+              "is_bad_safety": false,
+              "is_hard_negative": false,
+              "is_optimal": true,
+              "is_positive": true,
+              "label": 1,
+              "move": "d1e2",
+              "score": 6.343267096028642,
+              "target_class": "optimal_dtm_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": 28,
+            "is_bad_safety": false,
+            "is_hard_negative": true,
+            "is_optimal": false,
+            "is_positive": false,
+            "label": 0,
+            "move": "d1c2",
+            "score": 7.585219148419794,
+            "target_class": "winning_nonoptimal_move"
+          },
+          "trajectory_index": 0
+        },
+        {
+          "fen": "8/8/8/5R2/3k4/8/4K3/8 w - - 8 5",
+          "optimal_rank": 4,
+          "positive_rank": 4,
+          "step_index": 3,
+          "top3_moves": [
+            {
+              "child_dtm": 26,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "e2d2",
+              "score": 3.366387776766029,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 26,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f5f4",
+              "score": 1.6081415457284904,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": -1,
+              "is_bad_safety": true,
+              "is_hard_negative": false,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f5c5",
+              "score": 0.6633355057137214,
+              "target_class": "non_winning_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": 26,
+            "is_bad_safety": false,
+            "is_hard_negative": true,
+            "is_optimal": false,
+            "is_positive": false,
+            "label": 0,
+            "move": "e2d2",
+            "score": 3.366387776766029,
+            "target_class": "winning_nonoptimal_move"
+          },
+          "trajectory_index": 0
+        },
+        {
+          "fen": "8/8/8/5R2/8/3k1K2/8/8 w - - 10 6",
+          "optimal_rank": 1,
+          "positive_rank": 1,
+          "step_index": 4,
+          "top3_moves": [
+            {
+              "child_dtm": 18,
+              "is_bad_safety": false,
+              "is_hard_negative": false,
+              "is_optimal": true,
+              "is_positive": true,
+              "label": 1,
+              "move": "f5f4",
+              "score": 3.066660543242117,
+              "target_class": "optimal_dtm_move"
+            },
+            {
+              "child_dtm": 20,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f5d5",
+              "score": 2.5815819817429113,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 22,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f5c5",
+              "score": 1.4569490489897168,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": 18,
+            "is_bad_safety": false,
+            "is_hard_negative": false,
+            "is_optimal": true,
+            "is_positive": true,
+            "label": 1,
+            "move": "f5f4",
+            "score": 3.066660543242117,
+            "target_class": "optimal_dtm_move"
+          },
+          "trajectory_index": 0
+        },
+        {
+          "fen": "8/8/8/8/5R2/5K2/3k4/8 w - - 12 7",
+          "optimal_rank": 2,
+          "positive_rank": 2,
+          "step_index": 5,
+          "top3_moves": [
+            {
+              "child_dtm": 18,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f3f2",
+              "score": 2.782556282823571,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 16,
+              "is_bad_safety": false,
+              "is_hard_negative": false,
+              "is_optimal": true,
+              "is_positive": true,
+              "label": 1,
+              "move": "f4d4",
+              "score": 2.5269104786862915,
+              "target_class": "optimal_dtm_move"
+            },
+            {
+              "child_dtm": 20,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f4e4",
+              "score": 1.8457753066127551,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": 18,
+            "is_bad_safety": false,
+            "is_hard_negative": true,
+            "is_optimal": false,
+            "is_positive": false,
+            "label": 0,
+            "move": "f3f2",
+            "score": 2.782556282823571,
+            "target_class": "winning_nonoptimal_move"
+          },
+          "trajectory_index": 0
+        },
+        {
+          "fen": "8/8/8/8/4KR2/8/4k3/8 w - - 14 8",
+          "optimal_rank": 2,
+          "positive_rank": 2,
+          "step_index": 6,
+          "top3_moves": [
+            {
+              "child_dtm": 18,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f4f3",
+              "score": 2.7908278165286036,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 14,
+              "is_bad_safety": false,
+              "is_hard_negative": false,
+              "is_optimal": true,
+              "is_positive": true,
+              "label": 1,
+              "move": "e4d4",
+              "score": 2.0112495874824496,
+              "target_class": "optimal_dtm_move"
+            },
+            {
+              "child_dtm": 22,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "e4d5",
+              "score": 1.636489709900834,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": 18,
+            "is_bad_safety": false,
+            "is_hard_negative": true,
+            "is_optimal": false,
+            "is_positive": false,
+            "label": 0,
+            "move": "f4f3",
+            "score": 2.7908278165286036,
+            "target_class": "winning_nonoptimal_move"
+          },
+          "trajectory_index": 0
+        },
+        {
+          "fen": "8/8/8/8/3K1R2/8/3k4/8 w - - 16 9",
+          "optimal_rank": 1,
+          "positive_rank": 1,
+          "step_index": 7,
+          "top3_moves": [
+            {
+              "child_dtm": 12,
+              "is_bad_safety": false,
+              "is_hard_negative": false,
+              "is_optimal": true,
+              "is_positive": true,
+              "label": 1,
+              "move": "f4f2",
+              "score": 3.521406581631571,
+              "target_class": "optimal_dtm_move"
+            },
+            {
+              "child_dtm": 16,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f4e4",
+              "score": 3.2750219886248177,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 16,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f4f3",
+              "score": 2.7448597145358007,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "top_move": {
+            "child_dtm": 12,
+            "is_bad_safety": false,
+            "is_hard_negative": false,
+            "is_optimal": true,
+            "is_positive": true,
+            "label": 1,
+            "move": "f4f2",
+            "score": 3.521406581631571,
+            "target_class": "optimal_dtm_move"
+          },
+          "trajectory_index": 0
+        }
+      ],
+      "state_count": 58,
+      "top1_dtm_positive_accuracy": 0.4827586206896552,
+      "top3_dtm_positive_accuracy": 0.7586206896551724
+    }
+  },
+  "blocked_next_steps": [
+    "implement_runtime_repair",
+    "promote_stage7",
+    "train_stage8",
+    "add_support_adapter",
+    "add_score_bonus_or_provider_penalty",
+    "use_runtime_dtm_or_tablebase",
+    "mutate_topology_during_gameplay"
+  ],
+  "causal_status": "non_causal_offline_benchmark",
+  "dataset": {
+    "hard_context_term_count": 25,
+    "interaction_pair_count": 25,
+    "positive_term_count": 25,
+    "step_count": 195,
+    "test_step_count": 58,
+    "train_step_count": 137
+  },
+  "decision": {
+    "best_hard_negative_delta_vs_current": 0.3004926108374384,
+    "best_hard_negative_delta_vs_visible": 0.08620689655172409,
+    "best_scoped_model": "scoped_interaction_log_odds_scorer",
+    "best_top1_improvement_over_current": 0.0394088669950739,
+    "best_top1_improvement_over_visible": -0.08620689655172414,
+    "candidate_status": "scoped_interaction_benchmark_inconclusive",
+    "next_action": "do not patch; pause Stage 7 runtime work or request architecture review"
+  },
+  "models": [
+    {
+      "contribution_summary": {
+        "negative": [
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.rook_to_edge_rank",
+            "weight": -0.9232938500939154
+          },
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.rook_to_edge_file",
+            "weight": -0.856699061290977
+          },
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.rook_lateral_transfer",
+            "weight": -0.693292623414556
+          },
+          {
+            "feature": "HARD_CONTEXT::post_move_terms.white_king_and_rook_split_rank_side_after_move",
+            "weight": -0.4684133824224007
+          },
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.candidate_is_rook_transfer",
+            "weight": -0.4572506220642767
+          },
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.king_moves_toward_rook_support",
+            "weight": -0.35486743247633784
+          },
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.rook_destination_far_from_enemy",
+            "weight": -0.182336417250887
+          },
+          {
+            "feature": "HARD_CONTEXT::piece.R",
+            "weight": -0.13738031679405455
+          },
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.candidate_is_rook_move",
+            "weight": -0.13738031679405455
+          },
+          {
+            "feature": "HARD_CONTEXT::post_move_terms.cut_created_after_move",
+            "weight": -0.11948110164645058
+          },
+          {
+            "feature": "HARD_CONTEXT::post_move_terms.white_king_and_rook_same_file_side_after_move",
+            "weight": -0.11925229487277211
+          },
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.rook_destination_not_adjacent_enemy",
+            "weight": -0.04596810199280282
+          },
+          {
+            "feature": "TERM::post_move_terms.enemy_edge_distance_not_increased_after_move",
+            "weight": -0.003040755432798193
+          },
+          {
+            "feature": "TERM::post_move_terms.enemy_corner_distance_not_increased_after_move",
+            "weight": -0.003040755432798193
+          },
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.rook_to_checking_line",
+            "weight": -0.0018880175529899582
+          },
+          {
+            "feature": "HARD_CONTEXT::post_move_terms.checking_line_created",
+            "weight": -0.0018880175529899582
+          },
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.rook_safe_after_candidate",
+            "weight": 0.023781518105953595
+          },
+          {
+            "feature": "PAIR::move_shape_terms.candidate_is_rook_transfer&&move_shape_terms.rook_transfer_vertical",
+            "weight": 0.09612139691300108
+          },
+          {
+            "feature": "HARD_CONTEXT::post_move_terms.white_king_and_rook_same_rank_side_after_move",
+            "weight": 0.13503567296967417
+          },
+          {
+            "feature": "TERM::post_move_terms.rook_safe_after_move",
+            "weight": 0.15767956871415018
+          }
+        ],
+        "positive": [
+          {
+            "feature": "PAIR::piece.K&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 2.1212285876295076
+          },
+          {
+            "feature": "PAIR::move_shape_terms.candidate_is_king_move&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 2.1212285876295076
+          },
+          {
+            "feature": "PAIR::post_move_terms.box_area_not_increased_after_move&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 1.616133638572502
+          },
+          {
+            "feature": "PAIR::post_move_terms.white_king_and_rook_same_rank_side_after_move&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 1.3327712272652372
+          },
+          {
+            "feature": "PAIR::post_move_terms.rook_safe_after_move&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 1.2457598502756075
+          },
+          {
+            "feature": "PAIR::post_move_terms.black_king_escape_count_not_increased_after_move&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 1.2106685304643376
+          },
+          {
+            "feature": "PAIR::move_shape_terms.rook_lateral_transfer&&post_move_terms.box_area_decreases_after_move",
+            "weight": 1.1796200477710626
+          },
+          {
+            "feature": "PAIR::move_shape_terms.rook_lateral_transfer&&post_move_terms.box_area_not_increased_after_move",
+            "weight": 1.1639298320279752
+          },
+          {
+            "feature": "PAIR::post_move_terms.enemy_edge_distance_not_increased_after_move&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 1.1226997575183804
+          },
+          {
+            "feature": "PAIR::post_move_terms.enemy_corner_distance_not_increased_after_move&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 1.1226997575183804
+          },
+          {
+            "feature": "PAIR::move_shape_terms.rook_safe_after_candidate&&post_move_terms.box_area_decreases_after_move",
+            "weight": 0.9499586533853225
+          },
+          {
+            "feature": "PAIR::move_shape_terms.rook_safe_after_candidate&&post_move_terms.box_area_not_increased_after_move",
+            "weight": 0.9023671708098208
+          },
+          {
+            "feature": "PAIR::move_shape_terms.rook_destination_not_adjacent_enemy&&post_move_terms.box_area_decreases_after_move",
+            "weight": 0.8640570888493735
+          },
+          {
+            "feature": "PAIR::move_shape_terms.rook_destination_not_adjacent_enemy&&post_move_terms.box_area_not_increased_after_move",
+            "weight": 0.8354047568732513
+          },
+          {
+            "feature": "PAIR::move_shape_terms.rook_destination_not_adjacent_enemy&&move_shape_terms.rook_transfer_vertical",
+            "weight": 0.5981752893942278
+          },
+          {
+            "feature": "HARD_CONTEXT::post_move_terms.box_area_decreases_after_move",
+            "weight": 0.5913986947508189
+          },
+          {
+            "feature": "PAIR::move_shape_terms.candidate_is_rook_move&&post_move_terms.box_area_decreases_after_move",
+            "weight": 0.5913986947508189
+          },
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.safe_check_created",
+            "weight": 0.585898647349129
+          },
+          {
+            "feature": "PAIR::move_shape_terms.rook_destination_far_from_enemy&&move_shape_terms.rook_transfer_vertical",
+            "weight": 0.5581837147651177
+          },
+          {
+            "feature": "PAIR::move_shape_terms.candidate_is_rook_move&&post_move_terms.box_area_not_increased_after_move",
+            "weight": 0.5474178528385584
+          }
+        ]
+      },
+      "model_id": "scoped_interaction_log_odds_scorer",
+      "test": {
+        "draw_stalemate_candidate_top1_rate": 0.06896551724137931,
+        "dtm_optimal_top1_accuracy": 0.39655172413793105,
+        "dtm_optimal_top3_accuracy": 0.5689655172413793,
+        "first_miss": {
+          "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+          "positive_rank": 7,
+          "selected_move": "d1c2",
+          "selected_target_class": "winning_nonoptimal_move",
+          "step_index": 0,
+          "top_moves": [
+            {
+              "child_dtm": 28,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d1c2",
+              "score": 11.314747177580506,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 28,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a6a4",
+              "score": 8.469712228336402,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 30,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a6c6",
+              "score": 7.748512682912521,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 30,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a6b6",
+              "score": 7.559845156242362,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 30,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a6f6",
+              "score": 7.116420498134128,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "trajectory_index": 0
+        },
+        "hard_negative_above_positive_rate": 0.5862068965517241,
+        "sample_rows": [
+          {
+            "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+            "optimal_rank": 7,
+            "positive_rank": 7,
+            "step_index": 0,
+            "top3_moves": [
+              {
+                "child_dtm": 28,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d1c2",
+                "score": 11.314747177580506,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 28,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a6a4",
+                "score": 8.469712228336402,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 30,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a6c6",
+                "score": 7.748512682912521,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 28,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d1c2",
+              "score": 11.314747177580506,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/R7/1k6/8/8/3K4 w - - 4 3",
+            "optimal_rank": 3,
+            "positive_rank": 3,
+            "step_index": 1,
+            "top3_moves": [
+              {
+                "child_dtm": 26,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5d5",
+                "score": 6.61558132859978,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 26,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5e5",
+                "score": 6.4332449113488925,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 24,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a5f5",
+                "score": 6.4332449113488925,
+                "target_class": "optimal_dtm_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 26,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5d5",
+              "score": 6.61558132859978,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/5R2/2k5/8/8/3K4 w - - 6 4",
+            "optimal_rank": 13,
+            "positive_rank": 13,
+            "step_index": 2,
+            "top3_moves": [
+              {
+                "child_dtm": 28,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d1c2",
+                "score": 11.314747177580506,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 28,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5e5",
+                "score": 6.954693600106924,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 28,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5f4",
+                "score": 5.166204077533095,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 28,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d1c2",
+              "score": 11.314747177580506,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/5R2/3k4/8/4K3/8 w - - 8 5",
+            "optimal_rank": 9,
+            "positive_rank": 9,
+            "step_index": 3,
+            "top3_moves": [
+              {
+                "child_dtm": 26,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "e2d2",
+                "score": 11.482319980435932,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 26,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5f4",
+                "score": 5.170571097425553,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": -1,
+                "is_bad_safety": true,
+                "is_hard_negative": false,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5e5",
+                "score": 3.2674129453618552,
+                "target_class": "non_winning_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 26,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "e2d2",
+              "score": 11.482319980435932,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/5R2/8/3k1K2/8/8 w - - 10 6",
+            "optimal_rank": 2,
+            "positive_rank": 2,
+            "step_index": 4,
+            "top3_moves": [
+              {
+                "child_dtm": 20,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5d5",
+                "score": 8.786847558767903,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "f5f4",
+                "score": 7.712717783504755,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 22,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5e5",
+                "score": 7.612814158555619,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 20,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f5d5",
+              "score": 8.786847558767903,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/8/5R2/5K2/3k4/8 w - - 12 7",
+            "optimal_rank": 1,
+            "positive_rank": 1,
+            "step_index": 5,
+            "top3_moves": [
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "f4d4",
+                "score": 8.732176055711284,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 20,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4e4",
+                "score": 7.558142655498999,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4c4",
+                "score": 3.746284034318872,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 16,
+              "is_bad_safety": false,
+              "is_hard_negative": false,
+              "is_optimal": true,
+              "is_positive": true,
+              "label": 1,
+              "move": "f4d4",
+              "score": 8.732176055711284,
+              "target_class": "optimal_dtm_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/8/4KR2/8/4k3/8 w - - 14 8",
+            "optimal_rank": 10,
+            "positive_rank": 10,
+            "step_index": 6,
+            "top3_moves": [
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f3",
+                "score": 12.595629672946465,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f5",
+                "score": 8.25273677115346,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f6",
+                "score": 7.8916075460021835,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 18,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f4f3",
+              "score": 12.595629672946465,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/8/3K1R2/8/3k4/8 w - - 16 9",
+            "optimal_rank": 7,
+            "positive_rank": 7,
+            "step_index": 7,
+            "top3_moves": [
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4e4",
+                "score": 15.908860342851055,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f3",
+                "score": 14.847298706070514,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f5",
+                "score": 8.25273677115346,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 16,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f4e4",
+              "score": 15.908860342851055,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          }
+        ],
+        "state_count": 58,
+        "top1_dtm_positive_accuracy": 0.39655172413793105,
+        "top3_dtm_positive_accuracy": 0.5689655172413793
+      },
+      "train": {
+        "draw_stalemate_candidate_top1_rate": 0.10218978102189781,
+        "dtm_optimal_top1_accuracy": 0.35766423357664234,
+        "dtm_optimal_top3_accuracy": 0.5255474452554745,
+        "first_miss": {
+          "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+          "positive_rank": 10,
+          "selected_move": "d2e2",
+          "selected_target_class": "winning_nonoptimal_move",
+          "step_index": 0,
+          "top_moves": [
+            {
+              "child_dtm": 24,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d2e2",
+              "score": 11.482319980435932,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 24,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5g5",
+              "score": 7.595492762316834,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 24,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5b5",
+              "score": 7.080772892059657,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 24,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5c5",
+              "score": 6.990341206181395,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 26,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5a4",
+              "score": 4.108986702783969,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "trajectory_index": 1
+        },
+        "hard_negative_above_positive_rate": 0.5693430656934306,
+        "sample_rows": [
+          {
+            "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+            "optimal_rank": 10,
+            "positive_rank": 10,
+            "step_index": 0,
+            "top3_moves": [
+              {
+                "child_dtm": 24,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d2e2",
+                "score": 11.482319980435932,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 24,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5g5",
+                "score": 7.595492762316834,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 24,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5b5",
+                "score": 7.080772892059657,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 24,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d2e2",
+              "score": 11.482319980435932,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/R7/8/2K2k2/8/8 w - - 4 3",
+            "optimal_rank": 7,
+            "positive_rank": 7,
+            "step_index": 1,
+            "top3_moves": [
+              {
+                "child_dtm": 22,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5f5",
+                "score": 8.216926065334922,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 24,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5g5",
+                "score": 8.063906144739233,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 22,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5c5",
+                "score": 7.58483388055653,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 22,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5f5",
+              "score": 8.216926065334922,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/R7/2K1k3/8/8 w - - 6 4",
+            "optimal_rank": 4,
+            "positive_rank": 4,
+            "step_index": 2,
+            "top3_moves": [
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4c4",
+                "score": 8.656755336662583,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4b4",
+                "score": 8.31962608137319,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 20,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4g4",
+                "score": 8.253613320765528,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 18,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a4c4",
+              "score": 8.656755336662583,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/3R4/2K5/5k2/8 w - - 8 5",
+            "optimal_rank": 3,
+            "positive_rank": 3,
+            "step_index": 3,
+            "top3_moves": [
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d4f4",
+                "score": 8.351961738304595,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d4e4",
+                "score": 7.558142655498999,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 14,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "d4d3",
+                "score": 7.077313649583298,
+                "target_class": "optimal_dtm_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 18,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d4f4",
+              "score": 8.351961738304595,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/3R4/5k2/3K4/8 w - - 10 6",
+            "optimal_rank": 14,
+            "positive_rank": 14,
+            "step_index": 4,
+            "top3_moves": [
+              {
+                "child_dtm": -1,
+                "is_bad_safety": true,
+                "is_hard_negative": false,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d4f4",
+                "score": 3.418536811203119,
+                "target_class": "non_winning_move"
+              },
+              {
+                "child_dtm": -1,
+                "is_bad_safety": true,
+                "is_hard_negative": false,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d4e4",
+                "score": 2.8926530677802393,
+                "target_class": "non_winning_move"
+              },
+              {
+                "child_dtm": 26,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d4d3",
+                "score": 2.5046929260994824,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": -1,
+              "is_bad_safety": true,
+              "is_hard_negative": false,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d4f4",
+              "score": 3.418536811203119,
+              "target_class": "non_winning_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/R7/8/3K2k1/8 w - - 12 7",
+            "optimal_rank": 9,
+            "positive_rank": 9,
+            "step_index": 5,
+            "top3_moves": [
+              {
+                "child_dtm": 14,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4c4",
+                "score": 8.593127452589021,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 14,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4d4",
+                "score": 8.593127452589021,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 14,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4e4",
+                "score": 8.467048160636288,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 14,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a4c4",
+              "score": 8.593127452589021,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/R7/6k1/4K3/8 w - - 14 8",
+            "optimal_rank": 1,
+            "positive_rank": 1,
+            "step_index": 6,
+            "top3_moves": [
+              {
+                "child_dtm": 8,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a4c4",
+                "score": 8.124714070166622,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 8,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a4d4",
+                "score": 8.124714070166622,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 8,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a4e4",
+                "score": 7.998634778213888,
+                "target_class": "optimal_dtm_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 8,
+              "is_bad_safety": false,
+              "is_hard_negative": false,
+              "is_optimal": true,
+              "is_positive": true,
+              "label": 1,
+              "move": "a4c4",
+              "score": 8.124714070166622,
+              "target_class": "optimal_dtm_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/1R6/8/4K1k1/8 w - - 16 9",
+            "optimal_rank": 6,
+            "positive_rank": 6,
+            "step_index": 7,
+            "top3_moves": [
+              {
+                "child_dtm": 8,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "b4g4",
+                "score": 9.795141130800396,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 10,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "b4d4",
+                "score": 8.782834628615316,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 10,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "b4e4",
+                "score": 8.656755336662583,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 8,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "b4g4",
+              "score": 9.795141130800396,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          }
+        ],
+        "state_count": 137,
+        "top1_dtm_positive_accuracy": 0.35766423357664234,
+        "top3_dtm_positive_accuracy": 0.5255474452554745
+      }
+    },
+    {
+      "contribution_summary": {
+        "negative": [
+          {
+            "feature": "HARD_CONTEXT::post_move_terms.checking_line_created",
+            "weight": -0.9304030996729702
+          },
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.rook_to_checking_line",
+            "weight": -0.9304030996729702
+          },
+          {
+            "feature": "HARD_CONTEXT::post_move_terms.white_king_and_rook_split_rank_side_after_move",
+            "weight": -0.6306489571429958
+          },
+          {
+            "feature": "PAIR::move_shape_terms.candidate_is_rook_transfer&&post_move_terms.box_area_not_increased_after_move",
+            "weight": -0.39390197943398597
+          },
+          {
+            "feature": "PAIR::move_shape_terms.candidate_is_rook_transfer&&post_move_terms.box_area_decreases_after_move",
+            "weight": -0.3895902187637297
+          },
+          {
+            "feature": "PAIR::move_shape_terms.candidate_is_rook_move&&post_move_terms.box_area_not_increased_after_move",
+            "weight": -0.27710600222235776
+          },
+          {
+            "feature": "PAIR::move_shape_terms.candidate_is_rook_move&&post_move_terms.box_area_decreases_after_move",
+            "weight": -0.26595016130698845
+          },
+          {
+            "feature": "HARD_CONTEXT::post_move_terms.box_area_decreases_after_move",
+            "weight": -0.26595016130698845
+          },
+          {
+            "feature": "PAIR::move_shape_terms.candidate_is_rook_transfer&&move_shape_terms.rook_transfer_vertical",
+            "weight": -0.23604547079510155
+          },
+          {
+            "feature": "PAIR::move_shape_terms.candidate_is_rook_move&&move_shape_terms.rook_transfer_vertical",
+            "weight": -0.1944217287842993
+          },
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.rook_transfer_vertical",
+            "weight": -0.1944217287842993
+          },
+          {
+            "feature": "HARD_CONTEXT::post_move_terms.white_king_and_rook_split_file_side_after_move",
+            "weight": -0.1771152584819033
+          },
+          {
+            "feature": "PAIR::move_shape_terms.candidate_is_rook_transfer&&post_move_terms.white_king_distance_to_rook_decreases",
+            "weight": -0.16708704220797665
+          },
+          {
+            "feature": "PAIR::move_shape_terms.candidate_is_rook_move&&post_move_terms.white_king_distance_to_rook_decreases",
+            "weight": -0.1638048920553452
+          },
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.candidate_is_rook_transfer",
+            "weight": -0.12261598244876698
+          },
+          {
+            "feature": "HARD_CONTEXT::post_move_terms.white_king_distance_to_rook_decreases",
+            "weight": -0.10927969800867154
+          },
+          {
+            "feature": "TERM::post_move_terms.box_area_not_increased_after_move",
+            "weight": -0.07122907697435743
+          },
+          {
+            "feature": "HARD_CONTEXT::piece.R",
+            "weight": -0.04414844023549147
+          },
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.candidate_is_rook_move",
+            "weight": -0.04414844023549147
+          },
+          {
+            "feature": "TERM::post_move_terms.enemy_corner_distance_not_increased_after_move",
+            "weight": 0.0
+          }
+        ],
+        "positive": [
+          {
+            "feature": "PAIR::post_move_terms.white_king_and_rook_same_rank_side_after_move&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 0.9812581114563259
+          },
+          {
+            "feature": "PAIR::move_shape_terms.candidate_is_king_move&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 0.9772228950219899
+          },
+          {
+            "feature": "PAIR::piece.K&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 0.9772228950219899
+          },
+          {
+            "feature": "PAIR::post_move_terms.rook_safe_after_move&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 0.9364772422073717
+          },
+          {
+            "feature": "PAIR::move_shape_terms.rook_destination_not_adjacent_enemy&&post_move_terms.box_area_decreases_after_move",
+            "weight": 0.7604402313079754
+          },
+          {
+            "feature": "PAIR::move_shape_terms.rook_destination_not_adjacent_enemy&&post_move_terms.box_area_not_increased_after_move",
+            "weight": 0.7483610466284896
+          },
+          {
+            "feature": "PAIR::move_shape_terms.rook_safe_after_candidate&&post_move_terms.box_area_decreases_after_move",
+            "weight": 0.7337418462901575
+          },
+          {
+            "feature": "PAIR::post_move_terms.box_area_not_increased_after_move&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 0.7209705267006561
+          },
+          {
+            "feature": "PAIR::move_shape_terms.rook_safe_after_candidate&&post_move_terms.box_area_not_increased_after_move",
+            "weight": 0.7176151034979046
+          },
+          {
+            "feature": "PAIR::move_shape_terms.rook_destination_not_adjacent_enemy&&move_shape_terms.rook_transfer_vertical",
+            "weight": 0.6550279553401281
+          },
+          {
+            "feature": "HARD_CONTEXT::move_shape_terms.safe_check_created",
+            "weight": 0.6426738234039528
+          },
+          {
+            "feature": "PAIR::move_shape_terms.rook_destination_far_from_enemy&&move_shape_terms.rook_transfer_vertical",
+            "weight": 0.639215854458745
+          },
+          {
+            "feature": "PAIR::post_move_terms.black_king_escape_count_not_increased_after_move&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 0.6266481823783117
+          },
+          {
+            "feature": "PAIR::post_move_terms.enemy_corner_distance_not_increased_after_move&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 0.5732627657116451
+          },
+          {
+            "feature": "PAIR::post_move_terms.enemy_edge_distance_not_increased_after_move&&post_move_terms.white_king_file_opposition_distance_two_after_move",
+            "weight": 0.5732627657116451
+          },
+          {
+            "feature": "PAIR::move_shape_terms.rook_destination_far_from_enemy&&post_move_terms.black_king_escape_count_not_increased_after_move",
+            "weight": 0.5580354079272138
+          },
+          {
+            "feature": "HARD_CONTEXT::post_move_terms.fence_stable_after_move",
+            "weight": 0.5440936652443553
+          },
+          {
+            "feature": "TERM::post_move_terms.rook_safe_after_move",
+            "weight": 0.5034597765812103
+          },
+          {
+            "feature": "TERM::post_move_terms.cut_preserved_after_move",
+            "weight": 0.5006898873767784
+          },
+          {
+            "feature": "HARD_CONTEXT::post_move_terms.fence_exists_after_move",
+            "weight": 0.4946745350556316
+          }
+        ]
+      },
+      "model_id": "scoped_interaction_ranked_scorer",
+      "test": {
+        "draw_stalemate_candidate_top1_rate": 0.017241379310344827,
+        "dtm_optimal_top1_accuracy": 0.39655172413793105,
+        "dtm_optimal_top3_accuracy": 0.6896551724137931,
+        "first_miss": {
+          "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+          "positive_rank": 6,
+          "selected_move": "d1c2",
+          "selected_target_class": "winning_nonoptimal_move",
+          "step_index": 0,
+          "top_moves": [
+            {
+              "child_dtm": 28,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d1c2",
+              "score": 5.366207267532231,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 30,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a6f6",
+              "score": 3.6481614330330023,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 30,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a6g6",
+              "score": 3.6481614330330023,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 30,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a6b6",
+              "score": 3.329448901442976,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 28,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a6h6",
+              "score": 2.9347654858783114,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "trajectory_index": 0
+        },
+        "hard_negative_above_positive_rate": 0.5862068965517241,
+        "sample_rows": [
+          {
+            "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+            "optimal_rank": 6,
+            "positive_rank": 6,
+            "step_index": 0,
+            "top3_moves": [
+              {
+                "child_dtm": 28,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d1c2",
+                "score": 5.366207267532231,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 30,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a6f6",
+                "score": 3.6481614330330023,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 30,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a6g6",
+                "score": 3.6481614330330023,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 28,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d1c2",
+              "score": 5.366207267532231,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/R7/1k6/8/8/3K4 w - - 4 3",
+            "optimal_rank": 2,
+            "positive_rank": 2,
+            "step_index": 1,
+            "top3_moves": [
+              {
+                "child_dtm": 26,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5e5",
+                "score": 2.9879338675949114,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 24,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a5f5",
+                "score": 2.9879338675949114,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 24,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a5g5",
+                "score": 2.9879338675949114,
+                "target_class": "optimal_dtm_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 26,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5e5",
+              "score": 2.9879338675949114,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/5R2/2k5/8/8/3K4 w - - 6 4",
+            "optimal_rank": 16,
+            "positive_rank": 16,
+            "step_index": 2,
+            "top3_moves": [
+              {
+                "child_dtm": 28,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d1c2",
+                "score": 5.366207267532231,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 28,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5e5",
+                "score": 3.5610073733590917,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 28,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5f4",
+                "score": 3.2894444846419835,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 28,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d1c2",
+              "score": 5.366207267532231,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/5R2/3k4/8/4K3/8 w - - 8 5",
+            "optimal_rank": 16,
+            "positive_rank": 16,
+            "step_index": 3,
+            "top3_moves": [
+              {
+                "child_dtm": 26,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "e2d2",
+                "score": 5.469209153532961,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 26,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5f4",
+                "score": 2.759095463034414,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 28,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5f1",
+                "score": 2.232248374633062,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 26,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "e2d2",
+              "score": 5.469209153532961,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/5R2/8/3k1K2/8/8 w - - 10 6",
+            "optimal_rank": 2,
+            "positive_rank": 2,
+            "step_index": 4,
+            "top3_moves": [
+              {
+                "child_dtm": 22,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5e5",
+                "score": 4.63881733339322,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "f5f4",
+                "score": 4.019524803056818,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 20,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5d5",
+                "score": 3.929471514676287,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 22,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f5e5",
+              "score": 4.63881733339322,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/8/5R2/5K2/3k4/8 w - - 12 7",
+            "optimal_rank": 2,
+            "positive_rank": 2,
+            "step_index": 5,
+            "top3_moves": [
+              {
+                "child_dtm": 20,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4e4",
+                "score": 4.472862917438804,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "f4d4",
+                "score": 3.763517098721871,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 20,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f5",
+                "score": 3.6792102460317215,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 20,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f4e4",
+              "score": 4.472862917438804,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/8/4KR2/8/4k3/8 w - - 14 8",
+            "optimal_rank": 10,
+            "positive_rank": 10,
+            "step_index": 6,
+            "top3_moves": [
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f5",
+                "score": 7.3156761000628086,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f8",
+                "score": 6.969113426374234,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f6",
+                "score": 6.957014646818941,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 16,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f4f5",
+              "score": 7.3156761000628086,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/8/3K1R2/8/3k4/8 w - - 16 9",
+            "optimal_rank": 9,
+            "positive_rank": 9,
+            "step_index": 7,
+            "top3_moves": [
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4e4",
+                "score": 8.55721470810653,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f3",
+                "score": 8.484091357898162,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f5",
+                "score": 7.3156761000628086,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 16,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f4e4",
+              "score": 8.55721470810653,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          }
+        ],
+        "state_count": 58,
+        "top1_dtm_positive_accuracy": 0.39655172413793105,
+        "top3_dtm_positive_accuracy": 0.6896551724137931
+      },
+      "train": {
+        "draw_stalemate_candidate_top1_rate": 0.058394160583941604,
+        "dtm_optimal_top1_accuracy": 0.32116788321167883,
+        "dtm_optimal_top3_accuracy": 0.5328467153284672,
+        "first_miss": {
+          "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+          "positive_rank": 16,
+          "selected_move": "d2e2",
+          "selected_target_class": "winning_nonoptimal_move",
+          "step_index": 0,
+          "top_moves": [
+            {
+              "child_dtm": 24,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d2e2",
+              "score": 5.469209153532961,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 24,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5b5",
+              "score": 4.554269613679485,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 26,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5a4",
+              "score": 4.230644370275181,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 26,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5a1",
+              "score": 2.796441637229881,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 26,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5a2",
+              "score": 2.784342857674588,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "trajectory_index": 1
+        },
+        "hard_negative_above_positive_rate": 0.6204379562043796,
+        "sample_rows": [
+          {
+            "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+            "optimal_rank": 16,
+            "positive_rank": 16,
+            "step_index": 0,
+            "top3_moves": [
+              {
+                "child_dtm": 24,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d2e2",
+                "score": 5.469209153532961,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 24,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5b5",
+                "score": 4.554269613679485,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 26,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5a4",
+                "score": 4.230644370275181,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 24,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d2e2",
+              "score": 5.469209153532961,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/R7/8/2K2k2/8/8 w - - 4 3",
+            "optimal_rank": 1,
+            "positive_rank": 1,
+            "step_index": 1,
+            "top3_moves": [
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a5a4",
+                "score": 5.601948115333666,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 22,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5b5",
+                "score": 5.1849185708224805,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 24,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5a3",
+                "score": 4.632701787481712,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 18,
+              "is_bad_safety": false,
+              "is_hard_negative": false,
+              "is_optimal": true,
+              "is_positive": true,
+              "label": 1,
+              "move": "a5a4",
+              "score": 5.601948115333666,
+              "target_class": "optimal_dtm_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/R7/2K1k3/8/8 w - - 6 4",
+            "optimal_rank": 12,
+            "positive_rank": 12,
+            "step_index": 2,
+            "top3_moves": [
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4b4",
+                "score": 5.3589949836495965,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 24,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4a3",
+                "score": 4.778296678178622,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4h4",
+                "score": 3.7810169739963237,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 18,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a4b4",
+              "score": 5.3589949836495965,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/3R4/2K5/5k2/8 w - - 8 5",
+            "optimal_rank": 2,
+            "positive_rank": 2,
+            "step_index": 3,
+            "top3_moves": [
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d4e4",
+                "score": 4.472862917438804,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 14,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "d4d3",
+                "score": 4.126654977166418,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 20,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d4d5",
+                "score": 3.6792102460317215,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 16,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d4e4",
+              "score": 4.472862917438804,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/3R4/5k2/3K4/8 w - - 10 6",
+            "optimal_rank": 1,
+            "positive_rank": 1,
+            "step_index": 4,
+            "top3_moves": [
+              {
+                "child_dtm": 12,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "d4a4",
+                "score": 1.9552932446840452,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 12,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "d4c4",
+                "score": 1.9538875968079865,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 12,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "d4b4",
+                "score": 1.8312716143592196,
+                "target_class": "optimal_dtm_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 12,
+              "is_bad_safety": false,
+              "is_hard_negative": false,
+              "is_optimal": true,
+              "is_positive": true,
+              "label": 1,
+              "move": "d4a4",
+              "score": 1.9552932446840452,
+              "target_class": "optimal_dtm_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/R7/8/3K2k1/8 w - - 12 7",
+            "optimal_rank": 15,
+            "positive_rank": 15,
+            "step_index": 5,
+            "top3_moves": [
+              {
+                "child_dtm": 12,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4a3",
+                "score": 5.601948115333666,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 14,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4b4",
+                "score": 4.911833980758464,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4a2",
+                "score": 4.088608122237357,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 12,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a4a3",
+              "score": 5.601948115333666,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/R7/6k1/4K3/8 w - - 14 8",
+            "optimal_rank": 1,
+            "positive_rank": 1,
+            "step_index": 6,
+            "top3_moves": [
+              {
+                "child_dtm": 8,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a4b4",
+                "score": 4.2811850236154685,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 8,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a4c4",
+                "score": 3.207989800761009,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 8,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a4d4",
+                "score": 3.207989800761009,
+                "target_class": "optimal_dtm_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 8,
+              "is_bad_safety": false,
+              "is_hard_negative": false,
+              "is_optimal": true,
+              "is_positive": true,
+              "label": 1,
+              "move": "a4b4",
+              "score": 4.2811850236154685,
+              "target_class": "optimal_dtm_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/1R6/8/4K1k1/8 w - - 16 9",
+            "optimal_rank": 1,
+            "positive_rank": 1,
+            "step_index": 7,
+            "top3_moves": [
+              {
+                "child_dtm": 6,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "b4b3",
+                "score": 5.925087487899972,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 10,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "b4c4",
+                "score": 5.3589949836495965,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 10,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "b4b2",
+                "score": 4.955841160048019,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 6,
+              "is_bad_safety": false,
+              "is_hard_negative": false,
+              "is_optimal": true,
+              "is_positive": true,
+              "label": 1,
+              "move": "b4b3",
+              "score": 5.925087487899972,
+              "target_class": "optimal_dtm_move"
+            },
+            "trajectory_index": 1
+          }
+        ],
+        "state_count": 137,
+        "top1_dtm_positive_accuracy": 0.32116788321167883,
+        "top3_dtm_positive_accuracy": 0.5328467153284672
+      }
+    },
+    {
+      "contribution_summary": {
+        "hard_context_term_count": 25,
+        "interaction_pair_count": 25,
+        "positive_term_count": 25
+      },
+      "model_id": "state_local_refinement_vote_scorer",
+      "test": {
+        "draw_stalemate_candidate_top1_rate": 0.05172413793103448,
+        "dtm_optimal_top1_accuracy": 0.3103448275862069,
+        "dtm_optimal_top3_accuracy": 0.6206896551724138,
+        "first_miss": {
+          "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+          "positive_rank": 5,
+          "selected_move": "a6a4",
+          "selected_target_class": "winning_nonoptimal_move",
+          "step_index": 0,
+          "top_moves": [
+            {
+              "child_dtm": 28,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a6a4",
+              "score": 33.0,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 30,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a6c6",
+              "score": 24.8,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 30,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a6f6",
+              "score": 23.0,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 30,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a6g6",
+              "score": 23.0,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 26,
+              "is_bad_safety": false,
+              "is_hard_negative": false,
+              "is_optimal": true,
+              "is_positive": true,
+              "label": 1,
+              "move": "a6d6",
+              "score": 22.4,
+              "target_class": "optimal_dtm_move"
+            }
+          ],
+          "trajectory_index": 0
+        },
+        "hard_negative_above_positive_rate": 0.6896551724137931,
+        "sample_rows": [
+          {
+            "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+            "optimal_rank": 5,
+            "positive_rank": 5,
+            "step_index": 0,
+            "top3_moves": [
+              {
+                "child_dtm": 28,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a6a4",
+                "score": 33.0,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 30,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a6c6",
+                "score": 24.8,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 30,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a6f6",
+                "score": 23.0,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 28,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a6a4",
+              "score": 33.0,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/R7/1k6/8/8/3K4 w - - 4 3",
+            "optimal_rank": 3,
+            "positive_rank": 3,
+            "step_index": 1,
+            "top3_moves": [
+              {
+                "child_dtm": 26,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5d5",
+                "score": 20.4,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 26,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5e5",
+                "score": 20.0,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 24,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a5f5",
+                "score": 20.0,
+                "target_class": "optimal_dtm_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 26,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5d5",
+              "score": 20.4,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/5R2/2k5/8/8/3K4 w - - 6 4",
+            "optimal_rank": 10,
+            "positive_rank": 10,
+            "step_index": 2,
+            "top3_moves": [
+              {
+                "child_dtm": 28,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d1c2",
+                "score": 22.0,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 28,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5e5",
+                "score": 17.8,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 28,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5f4",
+                "score": 17.8,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 28,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d1c2",
+              "score": 22.0,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/5R2/3k4/8/4K3/8 w - - 8 5",
+            "optimal_rank": 11,
+            "positive_rank": 11,
+            "step_index": 3,
+            "top3_moves": [
+              {
+                "child_dtm": 26,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "e2d2",
+                "score": 18.8,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 26,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5f4",
+                "score": 16.8,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": -1,
+                "is_bad_safety": true,
+                "is_hard_negative": false,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5d5",
+                "score": 13.8,
+                "target_class": "non_winning_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 26,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "e2d2",
+              "score": 18.8,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/5R2/8/3k1K2/8/8 w - - 10 6",
+            "optimal_rank": 2,
+            "positive_rank": 2,
+            "step_index": 4,
+            "top3_moves": [
+              {
+                "child_dtm": 20,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5d5",
+                "score": 26.8,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "f5f4",
+                "score": 22.8,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 22,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f5e5",
+                "score": 19.2,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 20,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f5d5",
+              "score": 26.8,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/8/5R2/5K2/3k4/8 w - - 12 7",
+            "optimal_rank": 1,
+            "positive_rank": 1,
+            "step_index": 5,
+            "top3_moves": [
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "f4d4",
+                "score": 26.4,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 20,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4e4",
+                "score": 19.8,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4c4",
+                "score": 12.8,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 16,
+              "is_bad_safety": false,
+              "is_hard_negative": false,
+              "is_optimal": true,
+              "is_positive": true,
+              "label": 1,
+              "move": "f4d4",
+              "score": 26.4,
+              "target_class": "optimal_dtm_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/8/4KR2/8/4k3/8 w - - 14 8",
+            "optimal_rank": 10,
+            "positive_rank": 10,
+            "step_index": 6,
+            "top3_moves": [
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f3",
+                "score": 25.6,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f8",
+                "score": 21.4,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f6",
+                "score": 20.8,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 18,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f4f3",
+              "score": 25.6,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          },
+          {
+            "fen": "8/8/8/8/3K1R2/8/3k4/8 w - - 16 9",
+            "optimal_rank": 6,
+            "positive_rank": 6,
+            "step_index": 7,
+            "top3_moves": [
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4e4",
+                "score": 34.8,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f3",
+                "score": 31.2,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "f4f8",
+                "score": 21.4,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 16,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "f4e4",
+              "score": 34.8,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 0
+          }
+        ],
+        "state_count": 58,
+        "top1_dtm_positive_accuracy": 0.3103448275862069,
+        "top3_dtm_positive_accuracy": 0.6206896551724138
+      },
+      "train": {
+        "draw_stalemate_candidate_top1_rate": 0.0948905109489051,
+        "dtm_optimal_top1_accuracy": 0.3284671532846715,
+        "dtm_optimal_top3_accuracy": 0.5328467153284672,
+        "first_miss": {
+          "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+          "positive_rank": 16,
+          "selected_move": "a5c5",
+          "selected_target_class": "winning_nonoptimal_move",
+          "step_index": 0,
+          "top_moves": [
+            {
+              "child_dtm": 24,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5c5",
+              "score": 21.4,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 24,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5g5",
+              "score": 21.4,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 24,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5b5",
+              "score": 19.4,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 24,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d2e2",
+              "score": 18.8,
+              "target_class": "winning_nonoptimal_move"
+            },
+            {
+              "child_dtm": 26,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5a4",
+              "score": 16.4,
+              "target_class": "winning_nonoptimal_move"
+            }
+          ],
+          "trajectory_index": 1
+        },
+        "hard_negative_above_positive_rate": 0.6058394160583942,
+        "sample_rows": [
+          {
+            "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+            "optimal_rank": 16,
+            "positive_rank": 16,
+            "step_index": 0,
+            "top3_moves": [
+              {
+                "child_dtm": 24,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5c5",
+                "score": 21.4,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 24,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5g5",
+                "score": 21.4,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 24,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5b5",
+                "score": 19.4,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 24,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5c5",
+              "score": 21.4,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/R7/8/2K2k2/8/8 w - - 4 3",
+            "optimal_rank": 2,
+            "positive_rank": 2,
+            "step_index": 1,
+            "top3_moves": [
+              {
+                "child_dtm": 22,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5f5",
+                "score": 25.2,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a5a4",
+                "score": 23.4,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 22,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a5c5",
+                "score": 23.4,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 22,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a5f5",
+              "score": 25.2,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/R7/2K1k3/8/8 w - - 6 4",
+            "optimal_rank": 2,
+            "positive_rank": 2,
+            "step_index": 2,
+            "top3_moves": [
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4c4",
+                "score": 27.4,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a4d4",
+                "score": 23.8,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4b4",
+                "score": 23.4,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 18,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a4c4",
+              "score": 27.4,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/3R4/2K5/5k2/8 w - - 8 5",
+            "optimal_rank": 2,
+            "positive_rank": 2,
+            "step_index": 3,
+            "top3_moves": [
+              {
+                "child_dtm": 18,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d4f4",
+                "score": 25.8,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 14,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "d4d3",
+                "score": 19.8,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 16,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d4e4",
+                "score": 19.8,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 18,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d4f4",
+              "score": 25.8,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/3R4/5k2/3K4/8 w - - 10 6",
+            "optimal_rank": 14,
+            "positive_rank": 14,
+            "step_index": 4,
+            "top3_moves": [
+              {
+                "child_dtm": -1,
+                "is_bad_safety": true,
+                "is_hard_negative": false,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d4f4",
+                "score": 14.8,
+                "target_class": "non_winning_move"
+              },
+              {
+                "child_dtm": 26,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d4d3",
+                "score": 9.8,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": -1,
+                "is_bad_safety": true,
+                "is_hard_negative": false,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "d4e4",
+                "score": 9.6,
+                "target_class": "non_winning_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": -1,
+              "is_bad_safety": true,
+              "is_hard_negative": false,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "d4f4",
+              "score": 14.8,
+              "target_class": "non_winning_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/R7/8/3K2k1/8 w - - 12 7",
+            "optimal_rank": 15,
+            "positive_rank": 15,
+            "step_index": 5,
+            "top3_moves": [
+              {
+                "child_dtm": 14,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4c4",
+                "score": 28.0,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 14,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4d4",
+                "score": 28.0,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 12,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "a4f4",
+                "score": 27.4,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 14,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "a4c4",
+              "score": 28.0,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/R7/6k1/4K3/8 w - - 14 8",
+            "optimal_rank": 1,
+            "positive_rank": 1,
+            "step_index": 6,
+            "top3_moves": [
+              {
+                "child_dtm": 8,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a4c4",
+                "score": 27.6,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 8,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a4d4",
+                "score": 27.6,
+                "target_class": "optimal_dtm_move"
+              },
+              {
+                "child_dtm": 8,
+                "is_bad_safety": false,
+                "is_hard_negative": false,
+                "is_optimal": true,
+                "is_positive": true,
+                "label": 1,
+                "move": "a4e4",
+                "score": 26.0,
+                "target_class": "optimal_dtm_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 8,
+              "is_bad_safety": false,
+              "is_hard_negative": false,
+              "is_optimal": true,
+              "is_positive": true,
+              "label": 1,
+              "move": "a4c4",
+              "score": 27.6,
+              "target_class": "optimal_dtm_move"
+            },
+            "trajectory_index": 1
+          },
+          {
+            "fen": "8/8/8/8/1R6/8/4K1k1/8 w - - 16 9",
+            "optimal_rank": 5,
+            "positive_rank": 5,
+            "step_index": 7,
+            "top3_moves": [
+              {
+                "child_dtm": 8,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "b4g4",
+                "score": 31.4,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 10,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "b4d4",
+                "score": 29.0,
+                "target_class": "winning_nonoptimal_move"
+              },
+              {
+                "child_dtm": 10,
+                "is_bad_safety": false,
+                "is_hard_negative": true,
+                "is_optimal": false,
+                "is_positive": false,
+                "label": 0,
+                "move": "b4e4",
+                "score": 27.4,
+                "target_class": "winning_nonoptimal_move"
+              }
+            ],
+            "top_move": {
+              "child_dtm": 8,
+              "is_bad_safety": false,
+              "is_hard_negative": true,
+              "is_optimal": false,
+              "is_positive": false,
+              "label": 0,
+              "move": "b4g4",
+              "score": 31.4,
+              "target_class": "winning_nonoptimal_move"
+            },
+            "trajectory_index": 1
+          }
+        ],
+        "state_count": 137,
+        "top1_dtm_positive_accuracy": 0.3284671532846715,
+        "top3_dtm_positive_accuracy": 0.5328467153284672
+      }
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "stage7_scoped_interaction_benchmark.v1",
+  "source_artifacts": {
+    "expanded_trajectory_seed": "reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_expanded_h40.json",
+    "training_objective_benchmark": "reports/structural_candidates/stage7_training_objective_benchmark.json",
+    "visible_term_refinement_audit": "reports/structural_candidates/stage7_visible_term_refinement_audit.json"
+  },
+  "stage7_promotion_allowed": false,
+  "stage7_status": "local_valid_composition_quarantined",
+  "stage8_training_allowed": false
+}

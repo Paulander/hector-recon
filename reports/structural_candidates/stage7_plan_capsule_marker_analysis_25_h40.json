@@ -1,0 +1,868 @@
+{
+  "schema_version": "plan_capsule_marker_analysis.v1",
+  "causal_status": "non_causal",
+  "capsule_id": "krk.post_box_shrink_continuation",
+  "marker_record_count": 23,
+  "outcome_counts": {
+    "max_plies": 13,
+    "mate": 10
+  },
+  "entry_abort_status_by_outcome": {
+    "entry=True|abort=False|outcome=max_plies": 13,
+    "entry=False|abort=False|outcome=mate": 10
+  },
+  "term_by_outcome": {
+    "entry_terms_met": {
+      "active_landmark_label.box_shrink": {
+        "max_plies": 13,
+        "mate": 10
+      },
+      "box_shrink_attempt_confirmed_or_candidate_confirmed": {
+        "max_plies": 13,
+        "mate": 10
+      },
+      "conversion_not_immediate": {
+        "max_plies": 13
+      },
+      "enemy_king_constrained_or_recoverable": {
+        "max_plies": 13,
+        "mate": 10
+      },
+      "no_stronger_mate_or_tactic_interrupt_available": {
+        "max_plies": 13
+      },
+      "post_reply_state_reached": {
+        "max_plies": 13,
+        "mate": 10
+      },
+      "rook_safe": {
+        "max_plies": 13,
+        "mate": 10
+      }
+    },
+    "progress_terms_met": {
+      "box_area_decreases_or_does_not_expand": {
+        "max_plies": 13,
+        "mate": 10
+      },
+      "corner_net_pressure_increases": {
+        "max_plies": 4
+      },
+      "cut_or_fence_preserved_or_restored": {
+        "max_plies": 13,
+        "mate": 10
+      },
+      "enemy_king_mobility_decreases": {
+        "max_plies": 4,
+        "mate": 10
+      },
+      "mate_basin_proximity_improves": {
+        "max_plies": 4,
+        "mate": 10
+      },
+      "safe_check_or_cut_created": {
+        "max_plies": 13,
+        "mate": 10
+      },
+      "stagnation_avoided": {
+        "max_plies": 9
+      },
+      "white_king_support_improves": {
+        "max_plies": 13,
+        "mate": 10
+      }
+    },
+    "exit_terms_met": {
+      "drive_to_edge_role_confirmed": {
+        "max_plies": 9
+      },
+      "edge_trap_role_confirmed": {
+        "max_plies": 4
+      },
+      "fence_or_cut_restored": {
+        "max_plies": 4,
+        "mate": 10
+      },
+      "mate_in_one_available": {
+        "mate": 10
+      }
+    },
+    "abort_terms_met": {}
+  },
+  "representative_rows": [
+    {
+      "phase": "post_opponent_reply",
+      "outcome": "max_plies",
+      "selected_successor": "krk.stage0_basin",
+      "post_reply_state_signature": "state.069e81a609ed",
+      "post_reply_fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+      "marker": {
+        "abort_confirmed": false,
+        "abort_terms": [
+          "rook_unsafe",
+          "draw_or_stalemate_risk",
+          "box_expands_badly",
+          "cut_or_fence_lost_without_repair",
+          "repeated_abstract_state_or_stagnation_loop",
+          "no_progress_after_owned_moves",
+          "stronger_interrupt_available",
+          "illegal_or_no_move_failure"
+        ],
+        "abort_terms_met": [],
+        "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+        "capsule_id": "krk.post_box_shrink_continuation",
+        "causal_status": "sandbox_opt_in_non_requesting",
+        "direct_request": false,
+        "enabled": true,
+        "entry_confirmed": true,
+        "entry_terms": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "entry_terms_met": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "exit_terms": [
+          "mate_in_one_available",
+          "mate_basin_or_stage0_finish_visibly_licensed",
+          "edge_trap_role_confirmed",
+          "drive_to_edge_role_confirmed",
+          "fence_or_cut_restored",
+          "full_krk_continuation_role_confirmed",
+          "ttl_expired_with_successful_handoff"
+        ],
+        "exit_terms_met": [
+          "drive_to_edge_role_confirmed"
+        ],
+        "progress_terms": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "enemy_king_mobility_decreases",
+          "corner_net_pressure_increases",
+          "mate_basin_proximity_improves",
+          "safe_check_or_cut_created",
+          "stagnation_avoided"
+        ],
+        "progress_terms_met": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "safe_check_or_cut_created"
+        ],
+        "schema_version": "plan_capsule_runtime_marker.v1",
+        "ttl_white_moves": 3
+      }
+    },
+    {
+      "phase": "post_opponent_reply",
+      "outcome": "max_plies",
+      "selected_successor": "krk.stage0_basin",
+      "post_reply_state_signature": "state.0926f12f8e8f",
+      "post_reply_fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+      "marker": {
+        "abort_confirmed": false,
+        "abort_terms": [
+          "rook_unsafe",
+          "draw_or_stalemate_risk",
+          "box_expands_badly",
+          "cut_or_fence_lost_without_repair",
+          "repeated_abstract_state_or_stagnation_loop",
+          "no_progress_after_owned_moves",
+          "stronger_interrupt_available",
+          "illegal_or_no_move_failure"
+        ],
+        "abort_terms_met": [],
+        "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+        "capsule_id": "krk.post_box_shrink_continuation",
+        "causal_status": "sandbox_opt_in_non_requesting",
+        "direct_request": false,
+        "enabled": true,
+        "entry_confirmed": true,
+        "entry_terms": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "entry_terms_met": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "exit_terms": [
+          "mate_in_one_available",
+          "mate_basin_or_stage0_finish_visibly_licensed",
+          "edge_trap_role_confirmed",
+          "drive_to_edge_role_confirmed",
+          "fence_or_cut_restored",
+          "full_krk_continuation_role_confirmed",
+          "ttl_expired_with_successful_handoff"
+        ],
+        "exit_terms_met": [
+          "edge_trap_role_confirmed",
+          "fence_or_cut_restored"
+        ],
+        "progress_terms": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "enemy_king_mobility_decreases",
+          "corner_net_pressure_increases",
+          "mate_basin_proximity_improves",
+          "safe_check_or_cut_created",
+          "stagnation_avoided"
+        ],
+        "progress_terms_met": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "enemy_king_mobility_decreases",
+          "corner_net_pressure_increases",
+          "mate_basin_proximity_improves",
+          "safe_check_or_cut_created",
+          "stagnation_avoided"
+        ],
+        "schema_version": "plan_capsule_runtime_marker.v1",
+        "ttl_white_moves": 3
+      }
+    },
+    {
+      "phase": "post_opponent_reply",
+      "outcome": "max_plies",
+      "selected_successor": "krk.stage0_basin",
+      "post_reply_state_signature": "state.2cc0b3e1033a",
+      "post_reply_fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+      "marker": {
+        "abort_confirmed": false,
+        "abort_terms": [
+          "rook_unsafe",
+          "draw_or_stalemate_risk",
+          "box_expands_badly",
+          "cut_or_fence_lost_without_repair",
+          "repeated_abstract_state_or_stagnation_loop",
+          "no_progress_after_owned_moves",
+          "stronger_interrupt_available",
+          "illegal_or_no_move_failure"
+        ],
+        "abort_terms_met": [],
+        "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+        "capsule_id": "krk.post_box_shrink_continuation",
+        "causal_status": "sandbox_opt_in_non_requesting",
+        "direct_request": false,
+        "enabled": true,
+        "entry_confirmed": true,
+        "entry_terms": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "entry_terms_met": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "exit_terms": [
+          "mate_in_one_available",
+          "mate_basin_or_stage0_finish_visibly_licensed",
+          "edge_trap_role_confirmed",
+          "drive_to_edge_role_confirmed",
+          "fence_or_cut_restored",
+          "full_krk_continuation_role_confirmed",
+          "ttl_expired_with_successful_handoff"
+        ],
+        "exit_terms_met": [
+          "drive_to_edge_role_confirmed"
+        ],
+        "progress_terms": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "enemy_king_mobility_decreases",
+          "corner_net_pressure_increases",
+          "mate_basin_proximity_improves",
+          "safe_check_or_cut_created",
+          "stagnation_avoided"
+        ],
+        "progress_terms_met": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "safe_check_or_cut_created"
+        ],
+        "schema_version": "plan_capsule_runtime_marker.v1",
+        "ttl_white_moves": 3
+      }
+    },
+    {
+      "phase": "post_opponent_reply",
+      "outcome": "mate",
+      "selected_successor": "krk.edge_trap_close",
+      "post_reply_state_signature": "state.5960816004d8",
+      "post_reply_fen": "8/8/8/8/8/6K1/5R2/7k w - - 2 2",
+      "marker": {
+        "abort_confirmed": false,
+        "abort_terms": [
+          "rook_unsafe",
+          "draw_or_stalemate_risk",
+          "box_expands_badly",
+          "cut_or_fence_lost_without_repair",
+          "repeated_abstract_state_or_stagnation_loop",
+          "no_progress_after_owned_moves",
+          "stronger_interrupt_available",
+          "illegal_or_no_move_failure"
+        ],
+        "abort_terms_met": [],
+        "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+        "capsule_id": "krk.post_box_shrink_continuation",
+        "causal_status": "sandbox_opt_in_non_requesting",
+        "direct_request": false,
+        "enabled": true,
+        "entry_confirmed": false,
+        "entry_terms": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "entry_terms_met": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable"
+        ],
+        "exit_terms": [
+          "mate_in_one_available",
+          "mate_basin_or_stage0_finish_visibly_licensed",
+          "edge_trap_role_confirmed",
+          "drive_to_edge_role_confirmed",
+          "fence_or_cut_restored",
+          "full_krk_continuation_role_confirmed",
+          "ttl_expired_with_successful_handoff"
+        ],
+        "exit_terms_met": [
+          "mate_in_one_available",
+          "fence_or_cut_restored"
+        ],
+        "progress_terms": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "enemy_king_mobility_decreases",
+          "corner_net_pressure_increases",
+          "mate_basin_proximity_improves",
+          "safe_check_or_cut_created",
+          "stagnation_avoided"
+        ],
+        "progress_terms_met": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "enemy_king_mobility_decreases",
+          "mate_basin_proximity_improves",
+          "safe_check_or_cut_created"
+        ],
+        "schema_version": "plan_capsule_runtime_marker.v1",
+        "ttl_white_moves": 3
+      }
+    },
+    {
+      "phase": "post_opponent_reply",
+      "outcome": "mate",
+      "selected_successor": "krk.edge_trap_close",
+      "post_reply_state_signature": "state.5960816004d8",
+      "post_reply_fen": "8/8/8/8/8/6K1/5R2/7k w - - 2 2",
+      "marker": {
+        "abort_confirmed": false,
+        "abort_terms": [
+          "rook_unsafe",
+          "draw_or_stalemate_risk",
+          "box_expands_badly",
+          "cut_or_fence_lost_without_repair",
+          "repeated_abstract_state_or_stagnation_loop",
+          "no_progress_after_owned_moves",
+          "stronger_interrupt_available",
+          "illegal_or_no_move_failure"
+        ],
+        "abort_terms_met": [],
+        "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+        "capsule_id": "krk.post_box_shrink_continuation",
+        "causal_status": "sandbox_opt_in_non_requesting",
+        "direct_request": false,
+        "enabled": true,
+        "entry_confirmed": false,
+        "entry_terms": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "entry_terms_met": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable"
+        ],
+        "exit_terms": [
+          "mate_in_one_available",
+          "mate_basin_or_stage0_finish_visibly_licensed",
+          "edge_trap_role_confirmed",
+          "drive_to_edge_role_confirmed",
+          "fence_or_cut_restored",
+          "full_krk_continuation_role_confirmed",
+          "ttl_expired_with_successful_handoff"
+        ],
+        "exit_terms_met": [
+          "mate_in_one_available",
+          "fence_or_cut_restored"
+        ],
+        "progress_terms": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "enemy_king_mobility_decreases",
+          "corner_net_pressure_increases",
+          "mate_basin_proximity_improves",
+          "safe_check_or_cut_created",
+          "stagnation_avoided"
+        ],
+        "progress_terms_met": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "enemy_king_mobility_decreases",
+          "mate_basin_proximity_improves",
+          "safe_check_or_cut_created"
+        ],
+        "schema_version": "plan_capsule_runtime_marker.v1",
+        "ttl_white_moves": 3
+      }
+    },
+    {
+      "phase": "post_opponent_reply",
+      "outcome": "max_plies",
+      "selected_successor": "krk.stage0_basin",
+      "post_reply_state_signature": "state.bace6f82b671",
+      "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "marker": {
+        "abort_confirmed": false,
+        "abort_terms": [
+          "rook_unsafe",
+          "draw_or_stalemate_risk",
+          "box_expands_badly",
+          "cut_or_fence_lost_without_repair",
+          "repeated_abstract_state_or_stagnation_loop",
+          "no_progress_after_owned_moves",
+          "stronger_interrupt_available",
+          "illegal_or_no_move_failure"
+        ],
+        "abort_terms_met": [],
+        "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+        "capsule_id": "krk.post_box_shrink_continuation",
+        "causal_status": "sandbox_opt_in_non_requesting",
+        "direct_request": false,
+        "enabled": true,
+        "entry_confirmed": true,
+        "entry_terms": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "entry_terms_met": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "exit_terms": [
+          "mate_in_one_available",
+          "mate_basin_or_stage0_finish_visibly_licensed",
+          "edge_trap_role_confirmed",
+          "drive_to_edge_role_confirmed",
+          "fence_or_cut_restored",
+          "full_krk_continuation_role_confirmed",
+          "ttl_expired_with_successful_handoff"
+        ],
+        "exit_terms_met": [
+          "drive_to_edge_role_confirmed"
+        ],
+        "progress_terms": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "enemy_king_mobility_decreases",
+          "corner_net_pressure_increases",
+          "mate_basin_proximity_improves",
+          "safe_check_or_cut_created",
+          "stagnation_avoided"
+        ],
+        "progress_terms_met": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "safe_check_or_cut_created",
+          "stagnation_avoided"
+        ],
+        "schema_version": "plan_capsule_runtime_marker.v1",
+        "ttl_white_moves": 3
+      }
+    },
+    {
+      "phase": "post_opponent_reply",
+      "outcome": "mate",
+      "selected_successor": "krk.edge_trap_close",
+      "post_reply_state_signature": "state.5960816004d8",
+      "post_reply_fen": "8/8/8/8/8/6K1/5R2/7k w - - 2 2",
+      "marker": {
+        "abort_confirmed": false,
+        "abort_terms": [
+          "rook_unsafe",
+          "draw_or_stalemate_risk",
+          "box_expands_badly",
+          "cut_or_fence_lost_without_repair",
+          "repeated_abstract_state_or_stagnation_loop",
+          "no_progress_after_owned_moves",
+          "stronger_interrupt_available",
+          "illegal_or_no_move_failure"
+        ],
+        "abort_terms_met": [],
+        "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+        "capsule_id": "krk.post_box_shrink_continuation",
+        "causal_status": "sandbox_opt_in_non_requesting",
+        "direct_request": false,
+        "enabled": true,
+        "entry_confirmed": false,
+        "entry_terms": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "entry_terms_met": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable"
+        ],
+        "exit_terms": [
+          "mate_in_one_available",
+          "mate_basin_or_stage0_finish_visibly_licensed",
+          "edge_trap_role_confirmed",
+          "drive_to_edge_role_confirmed",
+          "fence_or_cut_restored",
+          "full_krk_continuation_role_confirmed",
+          "ttl_expired_with_successful_handoff"
+        ],
+        "exit_terms_met": [
+          "mate_in_one_available",
+          "fence_or_cut_restored"
+        ],
+        "progress_terms": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "enemy_king_mobility_decreases",
+          "corner_net_pressure_increases",
+          "mate_basin_proximity_improves",
+          "safe_check_or_cut_created",
+          "stagnation_avoided"
+        ],
+        "progress_terms_met": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "enemy_king_mobility_decreases",
+          "mate_basin_proximity_improves",
+          "safe_check_or_cut_created"
+        ],
+        "schema_version": "plan_capsule_runtime_marker.v1",
+        "ttl_white_moves": 3
+      }
+    },
+    {
+      "phase": "post_opponent_reply",
+      "outcome": "max_plies",
+      "selected_successor": "krk.stage0_basin",
+      "post_reply_state_signature": "state.bace6f82b671",
+      "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "marker": {
+        "abort_confirmed": false,
+        "abort_terms": [
+          "rook_unsafe",
+          "draw_or_stalemate_risk",
+          "box_expands_badly",
+          "cut_or_fence_lost_without_repair",
+          "repeated_abstract_state_or_stagnation_loop",
+          "no_progress_after_owned_moves",
+          "stronger_interrupt_available",
+          "illegal_or_no_move_failure"
+        ],
+        "abort_terms_met": [],
+        "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+        "capsule_id": "krk.post_box_shrink_continuation",
+        "causal_status": "sandbox_opt_in_non_requesting",
+        "direct_request": false,
+        "enabled": true,
+        "entry_confirmed": true,
+        "entry_terms": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "entry_terms_met": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "exit_terms": [
+          "mate_in_one_available",
+          "mate_basin_or_stage0_finish_visibly_licensed",
+          "edge_trap_role_confirmed",
+          "drive_to_edge_role_confirmed",
+          "fence_or_cut_restored",
+          "full_krk_continuation_role_confirmed",
+          "ttl_expired_with_successful_handoff"
+        ],
+        "exit_terms_met": [
+          "drive_to_edge_role_confirmed"
+        ],
+        "progress_terms": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "enemy_king_mobility_decreases",
+          "corner_net_pressure_increases",
+          "mate_basin_proximity_improves",
+          "safe_check_or_cut_created",
+          "stagnation_avoided"
+        ],
+        "progress_terms_met": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "safe_check_or_cut_created",
+          "stagnation_avoided"
+        ],
+        "schema_version": "plan_capsule_runtime_marker.v1",
+        "ttl_white_moves": 3
+      }
+    },
+    {
+      "phase": "post_opponent_reply",
+      "outcome": "mate",
+      "selected_successor": "krk.edge_trap_close",
+      "post_reply_state_signature": "state.5960816004d8",
+      "post_reply_fen": "8/8/8/8/8/6K1/5R2/7k w - - 2 2",
+      "marker": {
+        "abort_confirmed": false,
+        "abort_terms": [
+          "rook_unsafe",
+          "draw_or_stalemate_risk",
+          "box_expands_badly",
+          "cut_or_fence_lost_without_repair",
+          "repeated_abstract_state_or_stagnation_loop",
+          "no_progress_after_owned_moves",
+          "stronger_interrupt_available",
+          "illegal_or_no_move_failure"
+        ],
+        "abort_terms_met": [],
+        "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+        "capsule_id": "krk.post_box_shrink_continuation",
+        "causal_status": "sandbox_opt_in_non_requesting",
+        "direct_request": false,
+        "enabled": true,
+        "entry_confirmed": false,
+        "entry_terms": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "entry_terms_met": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable"
+        ],
+        "exit_terms": [
+          "mate_in_one_available",
+          "mate_basin_or_stage0_finish_visibly_licensed",
+          "edge_trap_role_confirmed",
+          "drive_to_edge_role_confirmed",
+          "fence_or_cut_restored",
+          "full_krk_continuation_role_confirmed",
+          "ttl_expired_with_successful_handoff"
+        ],
+        "exit_terms_met": [
+          "mate_in_one_available",
+          "fence_or_cut_restored"
+        ],
+        "progress_terms": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "enemy_king_mobility_decreases",
+          "corner_net_pressure_increases",
+          "mate_basin_proximity_improves",
+          "safe_check_or_cut_created",
+          "stagnation_avoided"
+        ],
+        "progress_terms_met": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "enemy_king_mobility_decreases",
+          "mate_basin_proximity_improves",
+          "safe_check_or_cut_created"
+        ],
+        "schema_version": "plan_capsule_runtime_marker.v1",
+        "ttl_white_moves": 3
+      }
+    },
+    {
+      "phase": "post_opponent_reply",
+      "outcome": "max_plies",
+      "selected_successor": "krk.stage0_basin",
+      "post_reply_state_signature": "state.bace6f82b671",
+      "post_reply_fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+      "marker": {
+        "abort_confirmed": false,
+        "abort_terms": [
+          "rook_unsafe",
+          "draw_or_stalemate_risk",
+          "box_expands_badly",
+          "cut_or_fence_lost_without_repair",
+          "repeated_abstract_state_or_stagnation_loop",
+          "no_progress_after_owned_moves",
+          "stronger_interrupt_available",
+          "illegal_or_no_move_failure"
+        ],
+        "abort_terms_met": [],
+        "candidate_id": "cand.krk.box_shrink.post_box_continuation_capsule.v1",
+        "capsule_id": "krk.post_box_shrink_continuation",
+        "causal_status": "sandbox_opt_in_non_requesting",
+        "direct_request": false,
+        "enabled": true,
+        "entry_confirmed": true,
+        "entry_terms": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "entry_terms_met": [
+          "active_landmark_label.box_shrink",
+          "box_shrink_attempt_confirmed_or_candidate_confirmed",
+          "post_reply_state_reached",
+          "conversion_not_immediate",
+          "rook_safe",
+          "enemy_king_constrained_or_recoverable",
+          "no_stronger_mate_or_tactic_interrupt_available"
+        ],
+        "exit_terms": [
+          "mate_in_one_available",
+          "mate_basin_or_stage0_finish_visibly_licensed",
+          "edge_trap_role_confirmed",
+          "drive_to_edge_role_confirmed",
+          "fence_or_cut_restored",
+          "full_krk_continuation_role_confirmed",
+          "ttl_expired_with_successful_handoff"
+        ],
+        "exit_terms_met": [
+          "drive_to_edge_role_confirmed"
+        ],
+        "progress_terms": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "enemy_king_mobility_decreases",
+          "corner_net_pressure_increases",
+          "mate_basin_proximity_improves",
+          "safe_check_or_cut_created",
+          "stagnation_avoided"
+        ],
+        "progress_terms_met": [
+          "box_area_decreases_or_does_not_expand",
+          "cut_or_fence_preserved_or_restored",
+          "white_king_support_improves",
+          "safe_check_or_cut_created",
+          "stagnation_avoided"
+        ],
+        "schema_version": "plan_capsule_runtime_marker.v1",
+        "ttl_white_moves": 3
+      }
+    }
+  ],
+  "diagnosis": {
+    "entry_confirmed_max_plies_count": 13,
+    "entry_confirmed_mate_count": 0,
+    "mate_exit_count": 10,
+    "max_plies_without_abort_count": 13
+  },
+  "recommendations": [
+    "entry_terms_separate_candidate_ownership_from_already_successful_exit_states",
+    "treat_mate_in_one_or_finish_terms_as_exit_interrupts",
+    "add_owned_move_progress_or_ttl_failure_monitor_before_causal_capsule"
+  ],
+  "next_action": "design_non_causal_owned_move_progress_monitor"
+}

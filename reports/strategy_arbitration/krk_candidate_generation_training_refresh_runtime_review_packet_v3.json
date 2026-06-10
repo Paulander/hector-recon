@@ -1,0 +1,128 @@
+{
+  "approved_scope_if_later_authorized": {
+    "allowed_effect": "emit_extra_candidate_generation_frames_only",
+    "candidate_generation_cells": {
+      "stage5": [
+        "edge_trap",
+        "fence_established",
+        "stage0_basin"
+      ],
+      "stage6": [
+        "stage0_basin"
+      ]
+    },
+    "candidate_generation_policy": "trace_stage_family_context",
+    "causal_status_for_frames": "candidate_generation_only",
+    "direct_request": false,
+    "excluded_from_training_or_readiness": [
+      "stage7",
+      "stage8"
+    ],
+    "protected_stages": [
+      "stage5",
+      "stage6"
+    ],
+    "sandbox_type": "default_off_candidate_generation_refresh",
+    "score_delta": 0.0,
+    "stage4_status": "positive_capacity_exists_but_not_covered_by_current_trace_stage_family_policy",
+    "stage7_use": "held_out_challenge_visibility_only"
+  },
+  "causal_status": "non_causal_runtime_review_packet",
+  "decision": {
+    "guardrails_allowed": false,
+    "implementation_authorized_by_this_packet": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "explicit_approval_required_for_default_off_candidate_generation_refresh_sandbox",
+    "runtime_candidate_generation_allowed_by_this_packet": false,
+    "runtime_review_ready": true,
+    "selector_allowed": false,
+    "status": "candidate_generation_training_refresh_runtime_review_ready"
+  },
+  "evidence_summary": {
+    "benchmark_status": "candidate_generation_training_refresh_v3_benchmark_passed_runtime_review_needed",
+    "best_policy": "trace_stage_family_context",
+    "best_policy_leave_stage_out_metrics": {
+      "balanced_recall_risk": 0.8846153846153846,
+      "false_negative": 6,
+      "false_positive": 0,
+      "negative_capacity_suppression": 1.0,
+      "negative_count": 10,
+      "positive_capacity_recall": 0.7692307692307693,
+      "positive_count": 26,
+      "positive_precision": 1.0,
+      "predicted_count": 20,
+      "row_count": 36,
+      "true_negative": 10,
+      "true_positive": 20
+    },
+    "best_policy_metrics": {
+      "balanced_recall_risk": 0.8846153846153846,
+      "false_negative": 6,
+      "false_positive": 0,
+      "negative_capacity_suppression": 1.0,
+      "negative_count": 10,
+      "positive_capacity_recall": 0.7692307692307693,
+      "positive_count": 26,
+      "positive_precision": 1.0,
+      "predicted_count": 20,
+      "row_count": 36,
+      "true_negative": 10,
+      "true_positive": 20
+    },
+    "thresholds": {
+      "leave_stage_out_positive_capacity_recall": 0.65,
+      "negative_capacity_suppression": 0.8,
+      "positive_capacity_recall": 0.75,
+      "selector_training_rows": 0,
+      "stage7_training_rows": 0
+    },
+    "thresholds_met": true
+  },
+  "explicitly_forbidden": [
+    "selector_training",
+    "provider_selection",
+    "move_selection",
+    "score_changes",
+    "provider_suppression",
+    "direct_provider_routing",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "stage7_training_rows",
+    "stage7_promotion",
+    "stage8_training",
+    "stage4_runtime_scope_without_separate_review",
+    "guardrails_before_target_smoke"
+  ],
+  "gameplay_topology_mutation": false,
+  "implementation_requirements_if_explicitly_approved_later": [
+    "explicit opt-in flag",
+    "default-off equivalence before enabled smoke",
+    "bounded candidate count per decision",
+    "zero selected move/provider delta in observation-only mode",
+    "zero score delta",
+    "direct_request=false on every generated frame",
+    "source terms and policy cell recorded on every frame",
+    "Stage 7 frames marked held_out_challenge if diagnostic sampling is enabled",
+    "target smoke before guardrails",
+    "separate selector review before generated frames can affect routing or scoring"
+  ],
+  "risk_register": [
+    "capacity labels are not ownership labels",
+    "current best policy misses protected Stage 4 positive-capacity rows",
+    "current best policy is a candidate-generation scope, not a sequence policy",
+    "candidate generation can increase trace volume if unbounded",
+    "selector remains blocked"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_training_refresh_runtime_review_packet.v3",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_generation_training_refresh_benchmark_v3.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

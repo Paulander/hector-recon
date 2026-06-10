@@ -1,0 +1,151 @@
+{
+  "blockers": [
+    "protected_plan_window_failure_contrast_underpowered_after_collection"
+  ],
+  "causal_status": "non_causal_underpowered_pilot_review",
+  "decision": {
+    "label_run_allowed": false,
+    "recommended_next_step": "review_current_control_plane_gate_for_protected_failure_contrast_collection",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "sequence_policy_pilot_blocked_pending_protected_failure_contrast_control_plane_gate_review"
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "pilot_findings": [
+    "stage4_state_local_topk_signal_present",
+    "stage4_one_term_binary_rule_insufficient"
+  ],
+  "protected_plan_window_signal": {
+    "failure_evidence_sparse": true,
+    "row_count": 20,
+    "target_label_counts": {
+      "conversion_failure": 1,
+      "conversion_positive": 19
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_sequence_policy_underpowered_pilot.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_v0.json",
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_inputs_v0.json",
+    "reports/structural_candidates/stage7_clean_success_backfill_audit_v0.json",
+    "reports/krk_full_suite_readiness_audit_v0.json"
+  ],
+  "stage4_signal": {
+    "interpretation": "state_local_ranking_signal_present_but_one_term_binary_rule_insufficient",
+    "negative_suppression": 0.8636363636363636,
+    "precision": 0.75,
+    "recall": 0.34615384615384615,
+    "row_count": 48,
+    "state_count": 4,
+    "top1_conversion_positive_by_state": 0.75,
+    "top3_conversion_positive_by_state": 1.0
+  },
+  "stage7_heldout_signal": {
+    "failure_controls_met": true,
+    "replay_free_backfill_exhausted": false,
+    "row_count": 50,
+    "success_controls_met": true,
+    "target_label_counts": {
+      "conversion_failure": 39,
+      "conversion_positive": 11
+    }
+  },
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "benchmark_executed_as_ready": true,
+    "benchmark_preflight_blockers": [],
+    "benchmark_review_blockers": [
+      "protected_plan_window_failure_evidence_sparse"
+    ],
+    "benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review",
+    "benchmark_status": "sequence_policy_benchmark_ready_non_causal_results_available",
+    "forbidden_training_or_runtime_input_blocked": false,
+    "input_row_count": 118,
+    "protected_failure_contrast_approval_receipt_blockers": [
+      "approval_receipt_readiness_fingerprint_mismatch",
+      "approval_receipt_readiness_status_mismatch",
+      "approval_receipt_current_control_plane_approval_option_ids_mismatch",
+      "approval_receipt_protected_failure_contrast_collection_option_available_mismatch",
+      "approval_receipt_protected_failure_contrast_collection_command_available_mismatch",
+      "approval_receipt_protected_failure_contrast_collection_option_id_mismatch",
+      "approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch"
+    ],
+    "protected_failure_contrast_approval_receipt_created_by_request": false,
+    "protected_failure_contrast_approval_receipt_present": true,
+    "protected_failure_contrast_approval_receipt_valid": false,
+    "protected_failure_contrast_approval_request_artifact": "reports/strategy_arbitration/krk_protected_plan_window_failure_contrast_approval_request_v0.json",
+    "protected_failure_contrast_approval_request_blockers": [
+      "protected_failure_contrast_execution_scope_not_ready"
+    ],
+    "protected_failure_contrast_approval_request_ready_for_collection": false,
+    "protected_failure_contrast_approval_request_status": "protected_plan_window_failure_contrast_approval_request_blocked",
+    "protected_failure_contrast_collection_blocked_by_option_id": "review_protected_plan_window_failure_contrast_manifest",
+    "protected_failure_contrast_collection_command_available": false,
+    "protected_failure_contrast_collection_option_available": false,
+    "protected_failure_contrast_collection_option_id": null,
+    "protected_failure_contrast_command_if_explicitly_approved": null,
+    "protected_failure_contrast_gameplay_topology_mutation": false,
+    "protected_failure_contrast_hidden_python_controller": false,
+    "protected_failure_contrast_integration_ready": false,
+    "protected_failure_contrast_post_success_refresh_required": true,
+    "protected_failure_contrast_post_success_refresh_scope": "full_passive_krk_suite_gate_stack",
+    "protected_failure_contrast_post_success_refresh_script": "scripts/advance_krk_suite_from_current_gates_v0.py",
+    "protected_failure_contrast_ready_for_explicit_approval": false,
+    "protected_failure_contrast_runner_collection_run_allowed": false,
+    "protected_failure_contrast_runner_executed_job_count": 0,
+    "protected_failure_contrast_runner_manifest_declared_job_count": 6,
+    "protected_failure_contrast_runner_manifest_fingerprint": "5f6c196f2257a577c9a631959479219c03def25cea4506028f84a20350a55038",
+    "protected_failure_contrast_runner_manifest_status": "protected_plan_window_failure_contrast_manifest_ready_for_review",
+    "protected_failure_contrast_runner_processed_job_count": 0,
+    "protected_failure_contrast_runner_status": "protected_plan_window_failure_contrast_runner_blocked",
+    "protected_failure_contrast_runtime_behavior_changed": false,
+    "protected_failure_contrast_runtime_defaults_changed": false,
+    "protected_failure_contrast_runtime_direct_routing": false,
+    "protected_failure_contrast_runtime_dtm_or_tablebase_lookup": false,
+    "protected_failure_contrast_runtime_score_changes": false,
+    "protected_failure_contrast_runtime_selector_implemented": false,
+    "protected_failure_contrast_selector_training_allowed": false,
+    "protected_failure_contrast_stage7_promotion_allowed": false,
+    "protected_failure_contrast_stage8_training_allowed": false,
+    "protected_plan_window_failure_evidence_sparse": true,
+    "protected_stack_active_paths_exist": true,
+    "protected_stack_active_paths_safe": true,
+    "protected_stack_filesystem_snapshots_replaced": false,
+    "protected_stack_ready": true,
+    "protected_stack_rollback_common_paths_distinct": true,
+    "protected_stack_rollback_paths_exist": true,
+    "protected_stack_rollback_paths_preserved": true,
+    "protected_stack_rollback_paths_safe": true,
+    "protected_stack_status": "retry1_protected_stage5_6_stack_adopted_manifest_only",
+    "readiness_boundary_violation_count": 0,
+    "readiness_checked_flag_count": 2912,
+    "readiness_source_artifact_count": 408,
+    "runtime_authorization_row_count": 0,
+    "selector_training_row_count": 0,
+    "sequence_policy_after_protected_failure_contrast_boundaries_preserved": true,
+    "sequence_policy_after_protected_failure_contrast_boundary_violation_count": 0,
+    "sequence_policy_after_protected_failure_contrast_refresh_status": "sequence_policy_after_protected_failure_contrast_refresh_blocked_pending_protected_failure_contrast_control_plane_gate_review",
+    "sequence_policy_after_protected_failure_contrast_rows": 0,
+    "sequence_policy_after_protected_failure_contrast_stage7_training_row_count": 0,
+    "stage4_binary_rule_insufficient": true,
+    "stage4_topk_signal": true,
+    "stage7_backfillable_success_controls": 0,
+    "stage7_failure_controls": 39,
+    "stage7_replay_free_backfill_exhausted": false,
+    "stage7_success_controls": 11,
+    "stage7_success_gap": 0,
+    "stage7_training_row_count": 0
+  }
+}

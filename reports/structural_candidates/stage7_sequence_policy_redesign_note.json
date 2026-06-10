@@ -1,0 +1,65 @@
+{
+  "candidate_objective_classes": [
+    {
+      "class": "state_local_contrastive_sequence_ranking",
+      "purpose": "rank DTM-positive or conversion-positive continuation moves above winning-nonoptimal hard negatives within the same state family"
+    },
+    {
+      "class": "closed_loop_sequence_loss",
+      "purpose": "penalize compounding drift across a bounded plan window, not just first-move mismatch"
+    },
+    {
+      "class": "hard_negative_curriculum",
+      "purpose": "explicitly contrast positive moves with safe-looking but slow/stagnating moves"
+    },
+    {
+      "class": "handoff_exit_supervision",
+      "purpose": "label when a sequence policy should hand off to validated providers rather than continue owning"
+    }
+  ],
+  "causal_status": "non_causal_design_note",
+  "design_principles": [
+    "optimize multi-step sequence behavior rather than one-ply local score only",
+    "train against state-local hard negatives that share broad visible terms",
+    "separate move ranking from ownership/routing decisions",
+    "keep DTM/tablebase labels offline-only",
+    "preserve frozen Stage 5/6 providers and M1-M4 semantics",
+    "require default-off sandbox plus guardrails before any future causal use"
+  ],
+  "design_scope": "future ranked sequence-policy / model-expression redesign only",
+  "future_review_questions": [
+    "Can a state-local contrastive objective improve top-1 without increasing hard-negative ranking?",
+    "Does sequence-level supervision reduce closed-loop drift on held-out families?",
+    "Which data should be collected outside Stage 7 so the model is not overfit to the post-box residual set?",
+    "What default-off sandbox and guardrails would be required before any future causal evaluation?"
+  ],
+  "gameplay_topology_mutation": false,
+  "minimum_future_data_requirements": [
+    "more_family_held_out_post_box_trajectories",
+    "successful_post_box_control_trajectories",
+    "closed_loop_labels_beyond_stage7",
+    "hard_negative_contrast_sets"
+  ],
+  "not_authorized": [
+    "training_new_model_in_this_slice",
+    "runtime_sandbox",
+    "runtime_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "recommended_next_status": "architecture_review_required_before_implementation",
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "stage7_sequence_policy_redesign_note.v1",
+  "source_artifacts": [
+    "reports/structural_candidates/stage7_training_objective_benchmark.json",
+    "reports/structural_candidates/stage7_training_objective_decision_gate.json",
+    "reports/structural_candidates/stage7_post_decision_closure.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage7_status": "local_valid_composition_quarantined",
+  "stage8_training_allowed": false
+}

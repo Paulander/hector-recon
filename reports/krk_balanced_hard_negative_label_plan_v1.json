@@ -1,0 +1,277 @@
+{
+  "causal_status": "non_causal_label_plan",
+  "decision": {
+    "recommended_next_step": "bind_and_review_balanced_hard_negative_execution_manifest_v1",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "status": "balanced_hard_negative_label_plan_v1_ready"
+  },
+  "gameplay_topology_mutation": false,
+  "jobs": [
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_label_plan",
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "5k2/8/4K3/8/8/8/8/R7 w - - 2 2",
+      "frame_id": "cp.krk.state.d1f052d2cab2",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.v1.f79f3b4d2c46",
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "provider_family": "edge_trap",
+      "provider_id": "krk.edge_trap_close",
+      "purpose": "second_pass_collect_underrepresented_protected_hard_negative_capacity_label",
+      "schema_version": "krk_balanced_hard_negative_label_job.v1",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.d1f052d2cab2"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_label_plan",
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "R7/7k/5K2/8/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.52085d244e9d",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.v1.e3b37b037793",
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "provider_family": "edge_trap",
+      "provider_id": "krk.edge_trap_close",
+      "purpose": "second_pass_collect_underrepresented_protected_hard_negative_capacity_label",
+      "schema_version": "krk_balanced_hard_negative_label_job.v1",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.52085d244e9d"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_label_plan",
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "2k5/8/1K6/8/8/8/8/R7 w - - 2 2",
+      "frame_id": "cp.krk.state.69711173114a",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.v1.541c77a6b895",
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "provider_family": "edge_trap",
+      "provider_id": "krk.edge_trap_close",
+      "purpose": "second_pass_collect_underrepresented_protected_hard_negative_capacity_label",
+      "schema_version": "krk_balanced_hard_negative_label_job.v1",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.69711173114a"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_label_plan",
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "5k2/8/4K3/8/8/8/8/R7 w - - 2 2",
+      "frame_id": "cp.krk.state.d1f052d2cab2",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.v1.7fedb9faad85",
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "provider_family": "edge_trap",
+      "provider_id": "krk.edge_trap_enemy_between",
+      "purpose": "second_pass_collect_underrepresented_protected_hard_negative_capacity_label",
+      "schema_version": "krk_balanced_hard_negative_label_job.v1",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.d1f052d2cab2"
+    },
+    {
+      "active_landmark_label": "drive_to_edge",
+      "causal_status": "non_causal_label_plan",
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "2k5/8/1K6/8/8/8/8/R7 w - - 2 2",
+      "frame_id": "cp.krk.state.69711173114a",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.v1.05c7b9ebbed5",
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "provider_family": "fence_established",
+      "provider_id": "krk.fence_established",
+      "purpose": "second_pass_collect_underrepresented_protected_hard_negative_capacity_label",
+      "schema_version": "krk_balanced_hard_negative_label_job.v1",
+      "source_stage": "stage6",
+      "stage7_training_row": false,
+      "state_id": "state.69711173114a"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_label_plan",
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "8/1RK5/8/k7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.1e4f48a672e8",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.v1.ab83a1469ea3",
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "provider_family": "drive_to_edge",
+      "provider_id": "krk.drive_to_edge",
+      "purpose": "second_pass_collect_underrepresented_protected_hard_negative_capacity_label",
+      "schema_version": "krk_balanced_hard_negative_label_job.v1",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.1e4f48a672e8"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_label_plan",
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "8/8/8/8/8/3K4/3R4/6k1 w - - 2 2",
+      "frame_id": "cp.krk.state.f17117682948",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.v1.7302037c73ad",
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "provider_family": "drive_to_edge",
+      "provider_id": "krk.drive_to_edge",
+      "purpose": "second_pass_collect_underrepresented_protected_hard_negative_capacity_label",
+      "schema_version": "krk_balanced_hard_negative_label_job.v1",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.f17117682948"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_label_plan",
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "7k/8/5K2/4R3/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.02cfd843a2cf",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.v1.dd6af4d5f28d",
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "provider_family": "drive_to_edge",
+      "provider_id": "krk.drive_to_edge",
+      "purpose": "second_pass_collect_underrepresented_protected_hard_negative_capacity_label",
+      "schema_version": "krk_balanced_hard_negative_label_job.v1",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.02cfd843a2cf"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_label_plan",
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "8/k7/3K4/8/8/1R6/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.256a3da30f0f",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.v1.bc8f0a66fbdb",
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "provider_family": "drive_to_edge",
+      "provider_id": "krk.drive_to_edge",
+      "purpose": "second_pass_collect_underrepresented_protected_hard_negative_capacity_label",
+      "schema_version": "krk_balanced_hard_negative_label_job.v1",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.256a3da30f0f"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_label_plan",
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "8/1RK5/8/k7/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.1e4f48a672e8",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.v1.48aca50a3a9f",
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "provider_family": "fence_established",
+      "provider_id": "krk.fence_established",
+      "purpose": "second_pass_collect_underrepresented_protected_hard_negative_capacity_label",
+      "schema_version": "krk_balanced_hard_negative_label_job.v1",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.1e4f48a672e8"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_label_plan",
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "8/8/8/8/8/3K4/3R4/6k1 w - - 2 2",
+      "frame_id": "cp.krk.state.f17117682948",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.v1.448a86bb8c90",
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "provider_family": "fence_established",
+      "provider_id": "krk.fence_established",
+      "purpose": "second_pass_collect_underrepresented_protected_hard_negative_capacity_label",
+      "schema_version": "krk_balanced_hard_negative_label_job.v1",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.f17117682948"
+    },
+    {
+      "active_landmark_label": "wrong_tempo_control",
+      "causal_status": "non_causal_label_plan",
+      "existing_runtime_providers": [
+        "krk.stage0_basin"
+      ],
+      "fen": "7k/8/5K2/4R3/8/8/8/8 w - - 2 2",
+      "frame_id": "cp.krk.state.02cfd843a2cf",
+      "horizon": 40,
+      "job_id": "job.krk.balanced_hard_negative.v1.97960937a39a",
+      "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+      "provider_family": "fence_established",
+      "provider_id": "krk.fence_established",
+      "purpose": "second_pass_collect_underrepresented_protected_hard_negative_capacity_label",
+      "schema_version": "krk_balanced_hard_negative_label_job.v1",
+      "source_stage": "stage4",
+      "stage7_training_row": false,
+      "state_id": "state.02cfd843a2cf"
+    }
+  ],
+  "label_budget": {
+    "diagnostic_caches": true,
+    "expensive_sweeps_allowed": false,
+    "horizon": 40,
+    "max_jobs": 12,
+    "stage7_jobs": 0,
+    "trace_failures_only": true
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_balanced_hard_negative_label_plan.v1",
+  "source_artifacts": [
+    "reports/krk_ranked_strategy_proposal_frames_v1.json",
+    "reports/krk_hard_negative_selector_target_dataset_v1.json",
+    "reports/krk_balanced_hard_negative_labels_v0.json",
+    "reports/krk_hard_negative_selector_feature_ablation_v1.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "job_count": 12,
+    "provider_family_counts": {
+      "drive_to_edge": 4,
+      "edge_trap": 4,
+      "fence_established": 4
+    },
+    "runtime_work_allowed": false,
+    "source_state_count": 7,
+    "stage7_jobs": 0,
+    "stage_counts": {
+      "stage4": 7,
+      "stage6": 5
+    }
+  }
+}

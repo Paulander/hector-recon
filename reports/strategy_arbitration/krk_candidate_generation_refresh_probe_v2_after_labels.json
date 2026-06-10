@@ -1,0 +1,308 @@
+{
+  "causal_status": "non_causal_candidate_generation_probe",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "design_candidate_generation_training_refresh_non_causal",
+    "selector_allowed": false,
+    "status": "candidate_generation_refresh_supported_selector_blocked"
+  },
+  "family_rates": {
+    "drive_to_edge": {
+      "negative": 1,
+      "positive": 0,
+      "positive_rate": 0.0,
+      "support": 1
+    },
+    "edge_trap": {
+      "negative": 6,
+      "positive": 9,
+      "positive_rate": 0.6,
+      "support": 15
+    },
+    "fence_established": {
+      "negative": 1,
+      "positive": 2,
+      "positive_rate": 0.6666666666666666,
+      "support": 3
+    },
+    "stage0_basin": {
+      "negative": 1,
+      "positive": 8,
+      "positive_rate": 0.8888888888888888,
+      "support": 9
+    }
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "candidate_generation_refresh_supported": true,
+    "capacity_labels_are_not_ownership_labels": true,
+    "risk": "Candidate-generation recall can be improved from protected capacity labels, but negative-capacity candidates remain present and must not be converted into ownership labels.",
+    "selector_supported": false,
+    "stage7_training_allowed": false
+  },
+  "leave_stage_out": {
+    "aggregate": {
+      "balanced_recall_risk": 0.3450292397660819,
+      "false_negative": 8,
+      "false_positive": 8,
+      "negative_count": 9,
+      "negative_suppression": 0.1111111111111111,
+      "positive_count": 19,
+      "positive_precision": 0.5789473684210527,
+      "positive_recall": 0.5789473684210527,
+      "predicted_count": 19,
+      "row_count": 28,
+      "true_negative": 1,
+      "true_positive": 11
+    },
+    "fold_count": 3,
+    "folds": {
+      "stage4": {
+        "balanced_recall_risk": 0.5,
+        "false_negative": 0,
+        "false_positive": 4,
+        "negative_count": 4,
+        "negative_suppression": 0.0,
+        "positive_count": 5,
+        "positive_precision": 0.5555555555555556,
+        "positive_recall": 1.0,
+        "predicted_count": 9,
+        "row_count": 9,
+        "true_negative": 0,
+        "true_positive": 5
+      },
+      "stage5": {
+        "balanced_recall_risk": 0.16666666666666666,
+        "false_negative": 8,
+        "false_positive": 0,
+        "negative_count": 0,
+        "negative_suppression": 0.0,
+        "positive_count": 12,
+        "positive_precision": 1.0,
+        "positive_recall": 0.3333333333333333,
+        "predicted_count": 4,
+        "row_count": 12,
+        "true_negative": 0,
+        "true_positive": 4
+      },
+      "stage6": {
+        "balanced_recall_risk": 0.6,
+        "false_negative": 0,
+        "false_positive": 4,
+        "negative_count": 5,
+        "negative_suppression": 0.2,
+        "positive_count": 2,
+        "positive_precision": 0.3333333333333333,
+        "positive_recall": 1.0,
+        "predicted_count": 6,
+        "row_count": 7,
+        "true_negative": 1,
+        "true_positive": 2
+      }
+    }
+  },
+  "policy_metrics": {
+    "emit_all_capacity_candidates": {
+      "balanced_recall_risk": 0.5,
+      "false_negative": 0,
+      "false_positive": 9,
+      "negative_count": 9,
+      "negative_suppression": 0.0,
+      "positive_count": 19,
+      "positive_precision": 0.6785714285714286,
+      "positive_recall": 1.0,
+      "predicted_count": 28,
+      "row_count": 28,
+      "true_negative": 0,
+      "true_positive": 19
+    },
+    "family_positive_rate_at_least_half": {
+      "balanced_recall_risk": 0.5555555555555556,
+      "false_negative": 0,
+      "false_positive": 8,
+      "negative_count": 9,
+      "negative_suppression": 0.1111111111111111,
+      "positive_count": 19,
+      "positive_precision": 0.7037037037037037,
+      "positive_recall": 1.0,
+      "predicted_count": 27,
+      "row_count": 28,
+      "true_negative": 1,
+      "true_positive": 19
+    },
+    "family_pure_positive_with_support_2": {
+      "balanced_recall_risk": 0.5,
+      "false_negative": 19,
+      "false_positive": 0,
+      "negative_count": 9,
+      "negative_suppression": 1.0,
+      "positive_count": 19,
+      "positive_precision": 0.0,
+      "positive_recall": 0.0,
+      "predicted_count": 0,
+      "row_count": 28,
+      "true_negative": 9,
+      "true_positive": 0
+    },
+    "oracle_positive_capacity_ceiling": {
+      "balanced_recall_risk": 1.0,
+      "false_negative": 0,
+      "false_positive": 0,
+      "negative_count": 9,
+      "negative_suppression": 1.0,
+      "positive_count": 19,
+      "positive_precision": 1.0,
+      "positive_recall": 1.0,
+      "predicted_count": 19,
+      "row_count": 28,
+      "true_negative": 9,
+      "true_positive": 19
+    },
+    "stage_family_positive_rate_at_least_half": {
+      "balanced_recall_risk": 0.7777777777777778,
+      "false_negative": 0,
+      "false_positive": 4,
+      "negative_count": 9,
+      "negative_suppression": 0.5555555555555556,
+      "positive_count": 19,
+      "positive_precision": 0.8260869565217391,
+      "positive_recall": 1.0,
+      "predicted_count": 23,
+      "row_count": 28,
+      "true_negative": 5,
+      "true_positive": 19
+    },
+    "stage_family_pure_positive_with_support_2": {
+      "balanced_recall_risk": 0.868421052631579,
+      "false_negative": 5,
+      "false_positive": 0,
+      "negative_count": 9,
+      "negative_suppression": 1.0,
+      "positive_count": 19,
+      "positive_precision": 1.0,
+      "positive_recall": 0.7368421052631579,
+      "predicted_count": 14,
+      "row_count": 28,
+      "true_negative": 9,
+      "true_positive": 14
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_refresh_probe.v2",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v2_capacity_merged.json",
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v2_quality_probe.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "stage_family_rates": {
+    "stage4|edge_trap": {
+      "negative": 3,
+      "positive": 3,
+      "positive_rate": 0.5,
+      "support": 6
+    },
+    "stage4|stage0_basin": {
+      "negative": 1,
+      "positive": 2,
+      "positive_rate": 0.6666666666666666,
+      "support": 3
+    },
+    "stage5|edge_trap": {
+      "negative": 0,
+      "positive": 6,
+      "positive_rate": 1.0,
+      "support": 6
+    },
+    "stage5|fence_established": {
+      "negative": 0,
+      "positive": 2,
+      "positive_rate": 1.0,
+      "support": 2
+    },
+    "stage5|stage0_basin": {
+      "negative": 0,
+      "positive": 4,
+      "positive_rate": 1.0,
+      "support": 4
+    },
+    "stage6|drive_to_edge": {
+      "negative": 1,
+      "positive": 0,
+      "positive_rate": 0.0,
+      "support": 1
+    },
+    "stage6|edge_trap": {
+      "negative": 3,
+      "positive": 0,
+      "positive_rate": 0.0,
+      "support": 3
+    },
+    "stage6|fence_established": {
+      "negative": 1,
+      "positive": 0,
+      "positive_rate": 0.0,
+      "support": 1
+    },
+    "stage6|stage0_basin": {
+      "negative": 0,
+      "positive": 2,
+      "positive_rate": 1.0,
+      "support": 2
+    }
+  },
+  "summary": {
+    "best_non_oracle_metrics": {
+      "balanced_recall_risk": 0.868421052631579,
+      "false_negative": 5,
+      "false_positive": 0,
+      "negative_count": 9,
+      "negative_suppression": 1.0,
+      "positive_count": 19,
+      "positive_precision": 1.0,
+      "positive_recall": 0.7368421052631579,
+      "predicted_count": 14,
+      "row_count": 28,
+      "true_negative": 9,
+      "true_positive": 14
+    },
+    "best_non_oracle_policy": "stage_family_pure_positive_with_support_2",
+    "candidate_family_counts": {
+      "drive_to_edge": 1,
+      "edge_trap": 15,
+      "fence_established": 3,
+      "stage0_basin": 9
+    },
+    "capacity_label_counts": {
+      "negative_capacity": 9,
+      "positive_capacity": 19
+    },
+    "capacity_row_count": 28,
+    "dataset_v2_quality_status": "strategy_sequence_dataset_v2_quality_candidate_generation_ready_selector_blocked",
+    "leave_stage_out_aggregate": {
+      "balanced_recall_risk": 0.3450292397660819,
+      "false_negative": 8,
+      "false_positive": 8,
+      "negative_count": 9,
+      "negative_suppression": 0.1111111111111111,
+      "positive_count": 19,
+      "positive_precision": 0.5789473684210527,
+      "positive_recall": 0.5789473684210527,
+      "predicted_count": 19,
+      "row_count": 28,
+      "true_negative": 1,
+      "true_positive": 11
+    },
+    "source_stage_counts": {
+      "stage4": 9,
+      "stage5": 12,
+      "stage6": 7
+    }
+  }
+}

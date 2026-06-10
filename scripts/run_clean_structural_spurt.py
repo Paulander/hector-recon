@@ -238,8 +238,8 @@ def run_clean_structural_spurt():
         # Check for forced pruning at Stage 5
         if stage_idx == 5:
             # Load and check max_depth
-            from recon_lite.models.registry import TopologyRegistry
-            from recon_lite.learning.m5_structure import compute_branching_metrics
+            from recon_lite_hector.models.registry import TopologyRegistry
+            from recon_lite_hector.learning.m5_structure import compute_branching_metrics
             from recon_lite_chess.graph.builder import build_graph_from_topology
             
             final_topo = stage_dir / "snapshots" / "cycle_0015.json"

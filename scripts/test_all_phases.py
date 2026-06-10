@@ -21,7 +21,7 @@ print("✓ Phase 1 passed")
 
 # Test Phase 2: Pack Templates
 print("\n=== Phase 2: Pack Templates ===")
-from recon_lite.nodes.pack_template import (
+from recon_lite_hector.nodes.pack_template import (
     spawn_and_gate_pack, 
     spawn_or_gate_pack, 
     spawn_sequence_pack
@@ -43,7 +43,7 @@ print("✓ Phase 4 passed")
 # Test Feature Vector (41 features)
 print("\n=== Feature Vector Enhancement ===")
 import chess
-from recon_lite.nodes.stem_cell import StemCellManager
+from recon_lite_hector.nodes.stem_cell import StemCellManager
 mgr = StemCellManager()
 board = chess.Board()
 board.clear()

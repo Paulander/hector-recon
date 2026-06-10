@@ -1,0 +1,224 @@
+{
+  "blocked_next_steps": [
+    "runtime_arbiter",
+    "runtime_internal_terminal",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_probe",
+  "decision": {
+    "causal_next_step_allowed": false,
+    "interpretation": "Provider labels are sufficient for a small non-causal arbitration benchmark.",
+    "recommended_next_slice": "offline_strategy_arbitration_baseline_v1",
+    "selected_status": "provider_labels_sufficient_for_small_probe"
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "label_coverage": {
+    "frames_with_known_provider_mate": 12,
+    "frames_with_normalized_scores": 24,
+    "frames_with_raw_scores": 24,
+    "label_status": "provider_labels_sufficient_for_small_probe",
+    "provider_labeled_frame_count": 24,
+    "strategy_benchmark_frame_count": 24
+  },
+  "oracle_ceilings": {
+    "known_provider_mate_available_count": 12,
+    "known_provider_mate_available_rate": 0.5
+  },
+  "runtime_arbiter_added": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_control_plane_strategy_arbitration_probe.v0",
+  "selector_results": [
+    {
+      "known_selected_count": 24,
+      "known_selected_mate_rate": 0.5,
+      "selected_count": 24,
+      "selected_examples": [
+        {
+          "frame_id": "cp.krk.state.7bd8961882ad",
+          "known_provider_result": "mate",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.87b1160e68b9",
+          "known_provider_result": "mate",
+          "move_uci": "e7e8",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.2c1d6da27ea1",
+          "known_provider_result": "mate",
+          "move_uci": "a7a8",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.2c1d6da27ea1",
+          "known_provider_result": "mate",
+          "move_uci": "a7a8",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.02feb8593cc6",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.326222aefdf1",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.3dca34326fca",
+          "known_provider_result": "max_plies",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.02feb8593cc6",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        }
+      ],
+      "selected_mate_count": 12,
+      "selected_max_plies_count": 12,
+      "selected_unknown_count": 0,
+      "selector": "raw_global_score"
+    },
+    {
+      "known_selected_count": 24,
+      "known_selected_mate_rate": 0.5,
+      "selected_count": 24,
+      "selected_examples": [
+        {
+          "frame_id": "cp.krk.state.7bd8961882ad",
+          "known_provider_result": "mate",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.87b1160e68b9",
+          "known_provider_result": "mate",
+          "move_uci": "e7e8",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.2c1d6da27ea1",
+          "known_provider_result": "mate",
+          "move_uci": "a7a8",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.2c1d6da27ea1",
+          "known_provider_result": "mate",
+          "move_uci": "a7a8",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.02feb8593cc6",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.326222aefdf1",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.3dca34326fca",
+          "known_provider_result": "max_plies",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.02feb8593cc6",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        }
+      ],
+      "selected_mate_count": 12,
+      "selected_max_plies_count": 12,
+      "selected_unknown_count": 0,
+      "selector": "normalized_score"
+    },
+    {
+      "known_selected_count": 24,
+      "known_selected_mate_rate": 0.5,
+      "selected_count": 24,
+      "selected_examples": [
+        {
+          "frame_id": "cp.krk.state.7bd8961882ad",
+          "known_provider_result": "mate",
+          "move_uci": "f2g3",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.87b1160e68b9",
+          "known_provider_result": "mate",
+          "move_uci": "e7e8",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.2c1d6da27ea1",
+          "known_provider_result": "mate",
+          "move_uci": "a7a8",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.2c1d6da27ea1",
+          "known_provider_result": "mate",
+          "move_uci": "a7a8",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.02feb8593cc6",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.326222aefdf1",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        },
+        {
+          "frame_id": "cp.krk.state.3dca34326fca",
+          "known_provider_result": "max_plies",
+          "move_uci": "c6b6",
+          "provider_id": "krk.stage0_basin"
+        },
+        {
+          "frame_id": "cp.krk.state.02feb8593cc6",
+          "known_provider_result": "max_plies",
+          "move_uci": "h7c7",
+          "provider_id": "krk.edge_trap_close"
+        }
+      ],
+      "selected_mate_count": 12,
+      "selected_max_plies_count": 12,
+      "selected_unknown_count": 0,
+      "selector": "provider_local_rank"
+    }
+  ],
+  "source_artifacts": [
+    "reports/krk_control_plane_filtered_frames_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

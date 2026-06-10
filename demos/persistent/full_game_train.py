@@ -47,7 +47,7 @@ from recon_lite.graph import Graph, Node, NodeType, NodeState, LinkType
 from recon_lite.engine import ReConEngine
 from recon_lite.logger import RunLogger
 from recon_lite.trace_db import EpisodeRecord, TickRecord, TraceDB, pack_fingerprint, EpisodeSummary
-from recon_lite.plasticity import (
+from recon_lite_hector.plasticity import (
     PlasticityConfig,
     init_plasticity_state,
     update_eligibility,
@@ -55,12 +55,12 @@ from recon_lite.plasticity import (
     reset_episode as reset_plasticity_episode,
     extract_episode_summary,
 )
-from recon_lite.plasticity.consolidate import (
+from recon_lite_hector.plasticity.consolidate import (
     ConsolidationConfig,
     ConsolidationEngine,
 )
-from recon_lite.nodes.stem_cell import StemCellManager, StemCellConfig
-from recon_lite.dynamics.persistence import (
+from recon_lite_hector.nodes.stem_cell import StemCellManager, StemCellConfig
+from recon_lite_hector.dynamics.persistence import (
     PersistenceConfig,
     apply_persistence_to_node,
     get_active_plans,
@@ -105,6 +105,7 @@ from recon_lite_chess.scripts.kqk import is_kqk_position
 from recon_lite_chess.sensors.structure import summarize_kpk_material
 from recon_lite_chess.graph import (
     build_unified_graph,
+    compute_subgraph_gates,
     load_all_weights,
     get_active_edge_traces,
     reset_edge_traces,
@@ -247,6 +248,10 @@ DEFAULT_PLASTICITY_LAMBDA = 0.8
 DEFAULT_CONSOLIDATE_ETA = 0.01
 DEFAULT_CONSOLIDATE_MIN_EPISODES = 10
 
+ROUTER_MODE_BINARY = "binary_active_endgame"
+ROUTER_MODE_LEARNED = "learned_affordance"
+ROUTER_SUBGRAPHS = ("kpk", "kqk", "krk")
+
 
 # =============================================================================
 # ENDGAME SENTINELS FOR SUBGRAPH LOCKING
@@ -306,6 +311,67 @@ _TACTICS_NODE_PREFIXES = (
 
 def _is_non_fullgame_node_id(node_id: str) -> bool:
     return node_id.startswith(_SUBGRAPH_NODE_PREFIXES) or node_id.startswith(_TACTICS_NODE_PREFIXES)
+
+
+def _get_gate_edge_weights(graph: Graph) -> Dict[str, float]:
+    """
+    Read learnable gate edge weights used by the router.
+
+    Weights come from SUB edges: endgame_gate -> {kpk_root,kqk_root,krk_root}.
+    """
+    weights: Dict[str, float] = {subgraph: 1.0 for subgraph in ROUTER_SUBGRAPHS}
+    for edge in graph.edges:
+        if edge.src != "endgame_gate" or edge.ltype != LinkType.SUB:
+            continue
+        for subgraph in ROUTER_SUBGRAPHS:
+            if edge.dst == f"{subgraph}_root":
+                try:
+                    weights[subgraph] = float(edge.w[0]) if hasattr(edge.w, "__len__") else float(edge.w)
+                except Exception:
+                    weights[subgraph] = 1.0
+                break
+    return weights
+
+
+def _router_choice_from_scores(
+    signals: Dict[str, float],
+    weights: Dict[str, float],
+    *,
+    min_signal: float,
+    epsilon: float,
+) -> Tuple[Optional[str], Dict[str, float]]:
+    """
+    Select subgraph by score = signal * learned_weight.
+
+    Returns (chosen_subgraph_or_none, score_dict).
+    """
+    scores = {
+        subgraph: float(signals.get(subgraph, 0.0)) * float(weights.get(subgraph, 1.0))
+        for subgraph in ROUTER_SUBGRAPHS
+    }
+    candidates = [name for name, score in scores.items() if score >= min_signal]
+    if not candidates:
+        return None, scores
+
+    if epsilon > 0.0 and random.random() < epsilon:
+        return random.choice(candidates), scores
+
+    best = max(candidates, key=lambda name: scores[name])
+    return best, scores
+
+
+def _mark_router_edge_trace(graph: Graph, subgraph: str) -> Dict[str, str]:
+    """
+    Mark the selected routing edge as fired to give the router learning credit.
+
+    Returns a fired-edge record compatible with plasticity update code.
+    """
+    dst = f"{subgraph}_root"
+    for edge in graph.edges:
+        if edge.src == "endgame_gate" and edge.dst == dst and edge.ltype == LinkType.SUB:
+            edge.trace = getattr(edge, "trace", 0.0) + 1.0
+            break
+    return {"src": "endgame_gate", "dst": dst, "ltype": LinkType.SUB.name}
 
 
 def _fullgame_edge_whitelist(graph: Graph) -> List[str]:
@@ -384,6 +450,9 @@ def play_training_game(
     snapshot_hook: Optional[callable] = None,
     debug_draws: bool = False,
     weights_dir: Path = Path("weights/latest"),
+    router_mode: str = ROUTER_MODE_BINARY,
+    router_min_signal: float = 0.05,
+    router_epsilon: float = 0.0,
 ) -> Dict[str, Any]:
     """
     Play a single training game.
@@ -466,6 +535,7 @@ def play_training_game(
             "kqk": kqk_sentinel,
             "krk": krk_sentinel,
         }
+        forced_fired_edges: List[Dict[str, str]] = []
         
         # If not already locked, check if gate wants us to lock into a subgraph
         if not engine.subgraph_lock:
@@ -473,17 +543,38 @@ def play_training_game(
             gate_node = g.nodes.get("endgame_gate")
             if gate_node and gate_node.predicate:
                 gate_node.predicate(gate_node, env)
-            
-            # Check gate's routing decision
-            gate_data = env.get("endgame_gate", {})
-            active_endgame = gate_data.get("active_endgame")
-            
+
+            gate_data = env.setdefault("endgame_gate", {})
+            active_endgame: Optional[str] = None
+            if router_mode == ROUTER_MODE_LEARNED:
+                phase_for_router = estimate_phase(state.board)
+                signals = compute_subgraph_gates(
+                    state.board,
+                    phase=phase_for_router.as_dict(),
+                    use_affordance=True,
+                )
+                weights = _get_gate_edge_weights(g)
+                active_endgame, router_scores = _router_choice_from_scores(
+                    signals,
+                    weights,
+                    min_signal=router_min_signal,
+                    epsilon=router_epsilon,
+                )
+                gate_data["signals"] = signals
+                gate_data["router_weights"] = weights
+                gate_data["router_scores"] = router_scores
+                gate_data["active_endgame"] = active_endgame
+                gate_data["router_mode"] = ROUTER_MODE_LEARNED
+            else:
+                active_endgame = gate_data.get("active_endgame")
+                gate_data["router_mode"] = ROUTER_MODE_BINARY
+
             if active_endgame:
-                # Lock into the gate's recommended subgraph
                 subgraph_root = f"{active_endgame}_root"
                 sentinel = sentinels.get(active_endgame)
                 if sentinel and subgraph_root in g.nodes:
                     engine.lock_subgraph(subgraph_root, sentinel)
+                    forced_fired_edges.append(_mark_router_edge_trace(g, active_endgame))
         
         # Get evaluation before move
         eval_before = None
@@ -493,7 +584,7 @@ def play_training_game(
             eval_before = eval_position(state.board)
         
         # Run engine step (if subgraph locked, this runs internal ticks)
-        fired_edges = []
+        fired_edges = list(forced_fired_edges)
         now_requested = engine.step(env)
         state.tick += 1
         
@@ -824,6 +915,10 @@ def run_batch_training(
     debug_draws: bool = False,
     # Weights
     weights_dir: Path = Path("weights/latest"),
+    # Router
+    router_mode: str = ROUTER_MODE_BINARY,
+    router_min_signal: float = 0.05,
+    router_epsilon: float = 0.0,
 ) -> Dict[str, Any]:
     """
     Run batch training with multiple games.
@@ -920,8 +1015,10 @@ def run_batch_training(
     for i in range(n_games):
         # Get initial FEN if provided
         game_fen = None
-        if initial_fens and i < len(initial_fens):
-            game_fen = initial_fens[i]
+        if initial_fens:
+            # Cycle through (possibly small) FEN sets so bridge training can run
+            # for any batch size without requiring huge files.
+            game_fen = initial_fens[i % len(initial_fens)]
         
         # Snapshot hook (per game) if enabled
         snapshot_hook = None
@@ -946,6 +1043,9 @@ def run_batch_training(
             snapshot_hook=snapshot_hook,
             debug_draws=debug_draws,
             weights_dir=weights_dir,
+            router_mode=router_mode,
+            router_min_signal=router_min_signal,
+            router_epsilon=router_epsilon,
         )
         
         # Save episode to trace if enabled
@@ -1078,6 +1178,25 @@ def main():
     parser.add_argument("--snapshot-interval", type=int, default=50, help="Save snapshot every N games (default: 50)")
     parser.add_argument("--debug-draws", action="store_true", help="Print FEN/claim result when a game ends in draw")
     parser.add_argument("--weights-dir", type=Path, default=Path("weights/latest"), help="Directory to load per-subgraph weights (default: weights/latest)")
+    parser.add_argument(
+        "--router-mode",
+        type=str,
+        choices=[ROUTER_MODE_BINARY, ROUTER_MODE_LEARNED],
+        default=ROUTER_MODE_BINARY,
+        help="Subgraph router mode: legacy binary routing or learned affordance routing",
+    )
+    parser.add_argument(
+        "--router-min-signal",
+        type=float,
+        default=0.05,
+        help="Minimum router score to lock a subgraph in learned router mode",
+    )
+    parser.add_argument(
+        "--router-epsilon",
+        type=float,
+        default=0.0,
+        help="Epsilon-greedy exploration for learned router mode",
+    )
     
     args = parser.parse_args()
     
@@ -1092,9 +1211,7 @@ def main():
     if args.fen_file and args.fen_file.exists():
         with open(args.fen_file) as f:
             initial_fens = [line.strip() for line in f if line.strip()]
-        # Adjust batch size to match FEN count if FENs are provided
-        if initial_fens:
-            args.batch = min(args.batch, len(initial_fens))
+        # Note: training cycles through FENs if --batch > number of FENs.
     
     verbose = not args.quiet
     
@@ -1120,6 +1237,9 @@ def main():
         snapshot_interval=args.snapshot_interval,
         debug_draws=args.debug_draws,
         weights_dir=args.weights_dir,
+        router_mode=args.router_mode,
+        router_min_signal=args.router_min_signal,
+        router_epsilon=args.router_epsilon,
     )
     
     # Save stats if requested

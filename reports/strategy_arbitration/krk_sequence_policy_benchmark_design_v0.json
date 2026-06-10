@@ -1,0 +1,160 @@
+{
+  "benchmark_design": {
+    "candidate_objectives": [
+      {
+        "objective_id": "state_local_first_move_contrast",
+        "runtime_ready": false,
+        "target": "rank converting visible candidate moves above h40-failing drift moves within same state family",
+        "uses": "Stage 4 forced-first-move contrast rows"
+      },
+      {
+        "objective_id": "post_box_sequence_success_vs_hard_negative",
+        "runtime_ready": false,
+        "target": "distinguish closed-loop sequence controls from hard negatives without using Stage 7 as promotion base",
+        "uses": "clean Stage 7 controls when enough success controls exist"
+      },
+      {
+        "objective_id": "plan_capsule_entry_progress_exit_abort",
+        "runtime_ready": false,
+        "target": "predict when a bounded plan should enter, continue, hand off, or abort",
+        "uses": "PlanCapsule marker/source terms plus protected plan-window frames where available"
+      },
+      {
+        "objective_id": "cross_stage_owner_preservation_vs_switch",
+        "runtime_ready": false,
+        "target": "preserve safe owners while identifying switch/abstain contexts",
+        "uses": "protected Stage 4/5/6 ownership-seed context rows"
+      }
+    ],
+    "metrics": [
+      "family-held-out top1/top3 conversion-positive ranking",
+      "hard-negative suppression",
+      "safe-owner preservation",
+      "plan entry/progress/exit/abort classification",
+      "first miss per sequence",
+      "stage7 held-out challenge result"
+    ],
+    "minimum_data_before_benchmark": [
+      "at least 5 clean Stage 7 success controls and 5 clean Stage 7 hard negatives",
+      "explicit held-out split by source family and state id",
+      "PlanCapsule sequence fields represented outside Stage 7 or protected plan-window evidence marked as non-causal",
+      "no row marked as selector-training or runtime-authorization evidence"
+    ],
+    "name": "krk_sequence_policy_benchmark_v0",
+    "purpose": "evaluate sequence-policy objectives without routing, scoring, promotion, or Stage 8 training"
+  },
+  "blocked_or_pending": [
+    {
+      "approval_request_blockers": [],
+      "approval_request_ready_for_runtime_approval": true,
+      "approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
+      "item": "stage4_first_move_contrast_sandbox",
+      "status": "review_ready_pending_explicit_approval"
+    },
+    {
+      "item": "stage7_diverse_clean_sampling_manifest",
+      "status": "stage7_diverse_clean_sampling_manifest_review_ready_pending_explicit_approval"
+    },
+    {
+      "item": "sequence_policy_benchmark",
+      "status": "ready_non_causal"
+    },
+    {
+      "item": "protected_plan_window_frames",
+      "status": "available_non_causal"
+    }
+  ],
+  "causal_status": "non_causal_sequence_policy_design",
+  "decision": {
+    "recommended_next_step": "implement_non_causal_sequence_policy_benchmark",
+    "runtime_changes_allowed": false,
+    "selector_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "sequence_policy_benchmark_design_ready_non_causal"
+  },
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "passive_design_without_new_labels": {
+    "allowed_work": [
+      "refine objective definitions against existing non-causal benchmark rows",
+      "draft abstain-or-review criteria for plan-window entry/progress/exit/abort",
+      "define held-out reporting tables and failure-slice diagnostics",
+      "prepare a review packet template for a future explicit runtime-or-training decision"
+    ],
+    "blocked_work_without_explicit_approval": [
+      "protected plan-window failure-contrast collection",
+      "new Stage 7 label execution",
+      "selector training",
+      "runtime selector implementation",
+      "runtime default or score changes",
+      "Stage 7 promotion",
+      "Stage 8 training"
+    ],
+    "current_evidence_limit": null,
+    "depends_on_new_label_execution": false,
+    "depends_on_protected_failure_contrast_collection": false,
+    "exit_criteria_for_causal_work": [
+      "matching approval receipt and completed protected failure-contrast integration, or separate explicit runtime sandbox approval",
+      "separate reviewed packet authorizing any training or runtime change",
+      "no selector-training or runtime-authorization rows in passive benchmark inputs"
+    ],
+    "status": "non_causal_sequence_policy_design_review_needed"
+  },
+  "readiness": {
+    "benchmark_ready": true,
+    "cross_stage_sequence_evidence_met": true,
+    "current_benchmark_review_available": false,
+    "current_benchmark_review_next_step": "review_current_control_plane_gate_for_protected_failure_contrast_collection",
+    "current_benchmark_review_status": "sequence_policy_benchmark_mixed_plan_window_underpowered_blocked_pending_protected_failure_contrast_control_plane_gate_review",
+    "current_control_plane_approval_option_ids": [
+      "approve_stage4_first_move_contrast_sandbox",
+      "review_protected_plan_window_failure_contrast_manifest"
+    ],
+    "current_control_plane_gate_status": "krk_control_plane_waiting_on_explicit_gate_choice",
+    "forbidden_training_or_runtime_input_blocked": false,
+    "forbidden_training_or_runtime_input_blockers": [],
+    "plan_capsule_policy_succeeded": false,
+    "plan_capsule_stage7_only_evidence": true,
+    "post_box_controls_runtime_authorization_eligible": false,
+    "post_box_sandbox_sourced_success_controls": 16,
+    "protected_failure_contrast_collection_blocked_by_option_id": "review_protected_plan_window_failure_contrast_manifest",
+    "protected_failure_contrast_collection_command_available": false,
+    "protected_failure_contrast_collection_option_available": false,
+    "protected_failure_contrast_collection_option_id": null,
+    "protected_failure_contrast_control_plane_gate_review_required": false,
+    "protected_plan_window_evidence_met": true,
+    "protected_plan_window_frame_count": 20,
+    "stage4_first_move_contrast_sandbox_approval_request_blockers": [],
+    "stage4_first_move_contrast_sandbox_approval_request_ready": true,
+    "stage4_first_move_contrast_sandbox_approval_request_ready_for_runtime_approval": true,
+    "stage4_first_move_contrast_sandbox_approval_request_status": "stage4_first_move_contrast_sandbox_approval_request_ready",
+    "stage4_first_move_contrast_sandbox_review_ready": true,
+    "stage7_clean_failure_controls": 39,
+    "stage7_clean_failure_controls_met": true,
+    "stage7_clean_success_controls": 11,
+    "stage7_clean_success_controls_met": true,
+    "stage7_clean_success_controls_required": 5
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_sequence_policy_benchmark_design.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_sequence_control_contrast_probe_v0.json",
+    "reports/strategy_arbitration/krk_sequence_control_contrast_dataset_v0.json",
+    "reports/strategy_arbitration/krk_plan_capsule_sequence_candidate_observation_review_v1.json",
+    "reports/structural_candidates/stage7_post_box_sequence_control_recovery_v0.json",
+    "reports/structural_candidates/stage7_clean_sequence_control_recovery_v0.json",
+    "reports/structural_candidates/stage7_diverse_clean_sampling_manifest_v0.json",
+    "reports/strategy_arbitration/krk_protected_plan_window_frames_v0.json",
+    "reports/strategy_arbitration/krk_sequence_policy_benchmark_review_v0.json",
+    "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

@@ -27,7 +27,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from recon_lite.motifs.descriptors import BindingDescriptor, MotifDataset
+from recon_lite_hector.motifs.descriptors import BindingDescriptor, MotifDataset
 
 
 def compute_context_signature(context: Dict[str, Any]) -> str:

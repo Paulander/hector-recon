@@ -1,0 +1,816 @@
+#!/usr/bin/env python3
+"""Tests for the KRK full-suite unblocker packet."""
+
+import importlib.util
+import json
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def _load_module(name: str, relative: str):
+    spec = importlib.util.spec_from_file_location(name, ROOT / relative)
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+_packet = _load_module(
+    "write_krk_full_suite_unblocker_packet_v0",
+    "scripts/write_krk_full_suite_unblocker_packet_v0.py",
+)
+
+
+def _read_report() -> dict:
+    payload = json.loads((ROOT / "reports/krk_full_suite_unblocker_packet_v0.json").read_text())
+    assert isinstance(payload, dict)
+    return payload
+
+
+def test_unblocker_packet_identifies_primary_gate_without_authorizing_it():
+    payload = _read_report()
+
+    assert payload["schema_version"] == "krk_full_suite_unblocker_packet.v0"
+    assert payload["causal_status"] == "non_causal_approval_packet"
+    assert payload["runtime_behavior_changed"] is False
+    assert payload["runtime_defaults_changed"] is False
+    assert payload["runtime_selector_implemented"] is False
+    assert payload["runtime_score_changes"] is False
+    assert payload["runtime_direct_routing"] is False
+    assert payload["runtime_dtm_or_tablebase_lookup"] is False
+    assert payload["hidden_python_controller"] is False
+    assert payload["gameplay_topology_mutation"] is False
+    assert payload["stage7_promotion_allowed"] is False
+    assert payload["stage8_training_allowed"] is False
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_protected_failure_contrast_unblocker_blocked_pending_control_plane_gate_review"
+    )
+    assert payload["decision"]["label_run_allowed"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["stage7_promotion_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+    assert (
+        "Passive benchmark and cross-stage design summaries are current; "
+        "the next useful gate-moving work is current control-plane review for "
+        "protected plan-window failure-contrast evidence, or separately explicit Stage 4 "
+        "runtime-sandbox approval."
+        in payload["low_value_safe_work_remaining"]
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+    )
+
+    primary = payload["primary_unblocker"]
+    assert primary["id"] == "protected_plan_window_failure_contrast_collection"
+    assert primary["approval_required"] is True
+    assert primary["implementation_allowed_by_this_packet"] is False
+    assert primary["status"] == (
+        "blocked_pending_protected_failure_contrast_control_plane_gate_review"
+    )
+    assert primary["command_if_explicitly_approved"] is None
+    assert primary["scope"]["resume_safe"] is True
+    assert primary["scope"]["max_jobs"] == 6
+    assert primary["scope"]["manifest_job_count"] == 6
+    assert primary["scope"]["runner_max_jobs_option"] is None
+    assert primary["scope"]["horizon"] == "h40"
+    assert primary["scope"]["stage"] == "protected_plan_window_failure_contrast_evidence_only"
+    assert primary["scope"]["protected_stack_readiness_required"] is True
+    assert (
+        primary["scope"]["protected_stack_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert primary["scope"]["protected_stack_ready"] is True
+    assert primary["scope"]["protected_stack_rollback_paths_preserved"] is True
+    assert primary["scope"]["protected_stack_active_paths_safe"] is True
+    assert primary["scope"]["protected_stack_active_paths_exist"] is True
+    assert primary["scope"]["protected_stack_rollback_paths_safe"] is True
+    assert primary["scope"]["protected_stack_rollback_paths_exist"] is True
+    assert primary["scope"]["protected_stack_rollback_common_paths_distinct"] is True
+    assert primary["scope"]["protected_stack_filesystem_snapshots_replaced"] is False
+    assert payload["current_state"]["readiness_checked_flag_count"] >= 430
+    assert payload["current_state"]["readiness_boundary_violation_count"] == 0
+    assert payload["current_state"]["readiness_source_artifact_count"] >= 44
+    assert primary["scope"]["source_stage_counts"] == {
+        "stage4": 2,
+        "stage5": 2,
+        "stage6": 2,
+    }
+    assert primary["scope"]["stop_after_unique_failures"] == 4
+    assert primary["scope"]["observation_only"] is True
+    assert primary["scope"]["skip_existing_outputs_by_default"] is True
+    assert primary["scope"]["invalid_existing_outputs_block_without_overwrite"] is True
+    assert primary["scope"]["execution_readiness_recomputed_live"] is True
+    assert primary["scope"]["per_job_timeout_seconds"] == 900
+    assert primary["scope"]["refresh_after_run"] is True
+    assert primary["scope"]["approval_receipt_required"] is True
+    assert primary["scope"]["approval_receipt_path"] == (
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json"
+    )
+    assert primary["scope"]["approval_receipt_present"] is True
+    assert primary["scope"]["approval_receipt_valid"] is False
+    assert set(primary["scope"]["approval_receipt_blockers"]) == {
+        "approval_receipt_readiness_fingerprint_mismatch",
+        "approval_receipt_readiness_status_mismatch",
+        "approval_receipt_current_control_plane_approval_option_ids_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_command_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_id_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch",
+    }
+    assert primary["scope"]["approval_request_artifact"] == (
+        "reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_approval_request_v0.json"
+    )
+    assert (
+        primary["scope"]["approval_request_status"]
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
+    )
+    assert primary["scope"]["approval_request_blockers"] == [
+        "protected_failure_contrast_execution_scope_not_ready"
+    ]
+    assert primary["scope"]["approval_request_ready_for_collection"] is False
+    assert primary["scope"]["collection_option_available"] is False
+    assert primary["scope"]["collection_command_available"] is False
+    assert primary["scope"]["collection_option_id"] is None
+    assert (
+        primary["scope"]["collection_blocked_by_option_id"]
+        == "review_protected_plan_window_failure_contrast_manifest"
+    )
+    assert primary["scope"]["approval_receipt_created_by_request"] is False
+    assert len(primary["scope"]["expected_manifest_fingerprint"]) == 64
+    assert len(primary["scope"]["expected_readiness_fingerprint"]) == 64
+    assert primary["scope"]["timed_out_job_count"] == 0
+    assert primary["scope"]["post_success_refresh"] == "full_passive_krk_suite_gate_stack"
+    assert primary["scope"]["runtime_behavior_changed"] is False
+    assert primary["scope"]["runtime_direct_routing"] is False
+    assert primary["scope"]["hidden_python_controller"] is False
+    assert primary["scope"]["stage7_training_rows"] == 0
+    assert primary["scope"]["stage7_promotion_allowed"] is False
+    assert primary["scope"]["stage8_training_allowed"] is False
+    assert (
+        payload["current_state"]["protected_stack_status"]
+        == "retry1_protected_stage5_6_stack_adopted_manifest_only"
+    )
+    assert payload["current_state"]["protected_stack_ready"] is True
+    assert payload["current_state"]["protected_stack_rollback_paths_preserved"] is True
+    assert payload["current_state"]["protected_stack_active_paths_safe"] is True
+    assert payload["current_state"]["protected_stack_active_paths_exist"] is True
+    assert payload["current_state"]["protected_stack_rollback_paths_safe"] is True
+    assert payload["current_state"]["protected_stack_rollback_paths_exist"] is True
+    assert payload["current_state"]["protected_stack_rollback_common_paths_distinct"] is True
+    assert payload["current_state"]["protected_stack_filesystem_snapshots_replaced"] is False
+    assert (
+        payload["current_state"]["stage7_output_validation_status"]
+        == "stage7_diverse_clean_sampling_outputs_valid_ready_for_integration"
+    )
+    assert payload["current_state"]["stage7_execution_readiness_source"] == "live_recomputed"
+    assert (
+        payload["current_state"]["stage7_execution_readiness_status"]
+        == "not_applicable_stage7_success_gate_closed"
+    )
+    assert (
+        payload["current_state"]["stage7_historical_execution_readiness_status"]
+        == "stage7_diverse_clean_sampling_execution_ready_pending_explicit_approval"
+    )
+    assert payload["current_state"]["stage7_execution_readiness_jobs_passing"] == 8
+    assert payload["current_state"]["stage7_invalid_existing_output_count"] == 0
+    assert payload["current_state"]["stage7_job_timeout_seconds"] == 900
+    assert payload["current_state"]["stage7_timed_out_job_count"] == 0
+    assert payload["current_state"]["stage7_overwrite_existing_outputs"] is False
+    assert payload["current_state"]["stage7_processed_job_count"] == 0
+    assert payload["current_state"]["stage7_executed_job_count"] == 0
+    assert payload["current_state"]["stage7_historical_processed_job_count"] == 8
+    assert payload["current_state"]["stage7_historical_executed_job_count"] == 8
+    assert payload["current_state"]["stage7_skipped_existing_output_count"] == 0
+    assert (
+        payload["current_state"]["stage7_label_distribution_review_status"]
+        == "stage7_label_distribution_review_success_gate_closed"
+    )
+    assert payload["current_state"]["stage7_label_distribution_unique_new_success"] == 2
+    assert payload["current_state"]["stage7_label_distribution_duplicate_playouts"] == 50
+    assert (
+        payload["current_state"]["stage7_additional_clean_sampling_manifest_status"]
+        == "stage7_additional_clean_sampling_manifest_not_applicable_success_gate_closed"
+    )
+    assert (
+        payload["current_state"]["stage7_additional_clean_sampling_runner_status"]
+        == "stage7_additional_clean_sampling_runner_not_applicable_success_gate_closed"
+    )
+    assert payload["current_state"]["stage7_additional_clean_sampling_job_count"] == 0
+    assert (
+        payload["current_state"]["protected_plan_window_failure_contrast_plan_status"]
+        == "protected_plan_window_failure_contrast_plan_ready_pending_explicit_collection_approval"
+    )
+    assert payload["current_state"]["protected_plan_window_unique_failure_count"] == 1
+    assert payload["current_state"]["protected_plan_window_minimum_new_failures_needed"] == 4
+    assert (
+        payload["current_state"]["protected_plan_window_failure_contrast_manifest_status"]
+        == "protected_plan_window_failure_contrast_manifest_ready_for_review"
+    )
+    assert payload["current_state"]["protected_plan_window_failure_contrast_manifest_job_count"] == 6
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_manifest_review_status"
+        ]
+        == "protected_plan_window_failure_contrast_manifest_review_passed_pending_control_plane_gate_review"
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_execution_readiness_status"
+        ]
+        == "protected_plan_window_failure_contrast_execution_readiness_blocked_pending_control_plane_gate_review"
+    )
+    assert payload["current_state"]["protected_plan_window_failure_contrast_execution_jobs_passing"] == 6
+    assert (
+        payload["current_state"]["protected_plan_window_failure_contrast_runner_status"]
+        == "protected_plan_window_failure_contrast_runner_blocked"
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_runner_manifest_status"
+        ]
+        == "protected_plan_window_failure_contrast_manifest_ready_for_review"
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_runner_manifest_declared_job_count"
+        ]
+        == 6
+    )
+    assert (
+        len(
+            payload["current_state"][
+                "protected_plan_window_failure_contrast_runner_manifest_fingerprint"
+            ]
+        )
+        == 64
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_runner_collection_run_allowed"
+        ]
+        is False
+    )
+    assert payload["current_state"]["protected_plan_window_failure_contrast_runner_processed_job_count"] == 0
+    assert payload["current_state"]["protected_plan_window_failure_contrast_runner_executed_job_count"] == 0
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_approval_request_status"
+        ]
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_approval_request_blockers"
+        ]
+        == ["protected_failure_contrast_execution_scope_not_ready"]
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_approval_request_ready_for_collection"
+        ]
+        is False
+    )
+    assert payload["current_state"]["current_control_plane_approval_option_ids"] == [
+        "approve_stage4_first_move_contrast_sandbox",
+        "review_protected_plan_window_failure_contrast_manifest",
+    ]
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_collection_option_available"
+        ]
+        is False
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_collection_command_available"
+        ]
+        is False
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_collection_option_id"
+        ]
+        is None
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_collection_blocked_by_option_id"
+        ]
+        == "review_protected_plan_window_failure_contrast_manifest"
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_approval_receipt_created"
+        ]
+        is False
+    )
+    assert payload["current_state"][
+        "protected_plan_window_failure_contrast_approval_receipt_blockers"
+    ] == [
+        "approval_receipt_readiness_fingerprint_mismatch",
+        "approval_receipt_readiness_status_mismatch",
+        "approval_receipt_current_control_plane_approval_option_ids_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_command_available_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_option_id_mismatch",
+        "approval_receipt_protected_failure_contrast_collection_blocked_by_option_id_mismatch",
+    ]
+    assert (
+        payload["current_state"]["protected_plan_window_failure_contrast_output_validation_status"]
+        == "protected_plan_window_failure_contrast_outputs_valid_ready_for_integration"
+    )
+    assert payload["current_state"]["protected_plan_window_failure_contrast_output_exists_count"] == 6
+    assert payload["current_state"]["protected_plan_window_failure_contrast_output_valid_count"] == 6
+    assert (
+        payload["current_state"]["protected_plan_window_failure_contrast_integration_status"]
+        == "protected_plan_window_failure_contrast_integration_underpowered_needs_more_valid_failures"
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_integrated_new_failure_count"
+        ]
+        == 0
+    )
+    assert payload["current_state"]["protected_plan_window_failure_contrast_integration_ready"] is False
+    assert (
+        payload["current_state"]["sequence_policy_benchmark_design_status"]
+        == "sequence_policy_benchmark_design_ready_non_causal"
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_passive_design_without_new_labels_status"
+        ]
+        == "non_causal_sequence_policy_design_review_needed"
+    )
+    assert (
+        payload["current_state"]["sequence_policy_passive_design_current_evidence_limit"]
+        is None
+    )
+    assert (
+        payload["current_state"]["sequence_policy_cross_stage_requirements_status"]
+        == "cross_stage_plan_capsule_evidence_ready_for_non_causal_benchmark"
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_replay_free_protected_cross_stage_evidence"
+        ]
+        is True
+    )
+    assert (
+        payload["current_state"]["sequence_policy_cross_stage_sequence_evidence_met"]
+        is True
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_refresh_status"
+        ]
+        == "sequence_policy_after_protected_failure_contrast_refresh_blocked_"
+        "pending_protected_failure_contrast_control_plane_gate_review"
+    )
+    assert payload["current_state"]["sequence_policy_after_protected_failure_contrast_rows"] == 0
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_boundaries_preserved"
+        ]
+        is True
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_boundary_violation_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_stage7_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_selector_training_row_count"
+        ]
+        == 0
+    )
+    assert (
+        payload["current_state"][
+            "sequence_policy_after_protected_failure_contrast_runtime_authorization_row_count"
+        ]
+        == 0
+    )
+
+
+def test_unblocker_packet_keeps_stage4_as_secondary_gate():
+    payload = _read_report()
+    secondary = payload["secondary_unblocker"]
+
+    assert secondary["id"] == "stage4_first_move_contrast_sandbox"
+    assert secondary["status"] == "stage4_caveat_unblocker_ready_pending_explicit_runtime_approval"
+    assert secondary["approval_request_artifact"] == (
+        "reports/krk_stage4_first_move_contrast_sandbox_approval_request_v0.md"
+    )
+    assert (
+        secondary["approval_request_status"]
+        == "stage4_first_move_contrast_sandbox_approval_request_ready"
+    )
+    assert secondary["approval_request_blockers"] == []
+    assert secondary["approval_request_ready_for_runtime_approval"] is True
+    assert secondary["approval_request_created"] is False
+    assert secondary["implementation_authorized_by_approval_request"] is False
+    assert (
+        secondary["scope"]["sandbox_scope_id"]
+        == "default_off_stage4_candidate_move_first_move_contrast_sandbox_only"
+    )
+    assert secondary["scope"]["approval_request_blockers"] == []
+    assert (
+        secondary["scope"]["approval_request_ready_for_runtime_approval"]
+        is True
+    )
+    assert secondary["scope"]["default_off"] is True
+    assert secondary["scope"]["default_enabled"] is False
+    assert secondary["scope"]["implementation_authorized_by_request"] is False
+    assert (
+        secondary["scope"]["runtime_change_class"]
+        == "default_off_candidate_move_frame_sandbox_only"
+    )
+    assert secondary["scope"]["exact_state_or_exact_move_exception"] is False
+    assert secondary["scope"]["runtime_dtm_or_tablebase_lookup"] is False
+    assert secondary["scope"]["hidden_python_controller"] is False
+    assert secondary["scope"]["selector_training_allowed"] is False
+    assert secondary["scope"]["provider_suppression_allowed"] is False
+    assert secondary["scope"]["broad_stage0_penalty_allowed"] is False
+    assert secondary["scope"]["gameplay_topology_mutation"] is False
+    assert secondary["scope"]["stage7_promotion_allowed"] is False
+    assert secondary["scope"]["stage8_training_allowed"] is False
+    assert (
+        secondary["scope"]["readiness_audit"]
+        == "reports/krk_full_suite_readiness_audit_v0.json"
+    )
+    assert secondary["scope"]["readiness_checked_flag_count"] >= 430
+    assert secondary["scope"]["readiness_boundary_violation_count"] == 0
+    assert secondary["scope"]["readiness_source_artifact_count"] >= 44
+    assert secondary["approval_required"] is True
+    assert secondary["implementation_allowed_by_this_packet"] is False
+
+
+def test_unblocker_packet_writer_mentions_exact_command_but_still_blocks_execution():
+    payload = _packet.build_payload()
+    rendered = _packet.write_markdown(payload)
+
+    assert "protected_plan_window_failure_contrast_collection" in rendered
+    assert "command_if_explicitly_approved: `None`" in rendered
+    assert "collection_command_available: `False`" in rendered
+    assert "max_jobs: `6`" in rendered
+    assert "manifest_job_count: `6`" in rendered
+    assert "runner_max_jobs_option: `None`" in rendered
+    assert "stage: `protected_plan_window_failure_contrast_evidence_only`" in rendered
+    assert "stop_after_unique_failures: `4`" in rendered
+    assert "observation_only: `True`" in rendered
+    assert "resume_safe: `True`" in rendered
+    assert "invalid_existing_outputs_block_without_overwrite: `True`" in rendered
+    assert "per_job_timeout_seconds: `900`" in rendered
+    assert "approval_receipt_required: `True`" in rendered
+    assert "approval_receipt_readiness_fingerprint_mismatch" in rendered
+    assert (
+        "approval_request_status: "
+        "`protected_plan_window_failure_contrast_approval_request_blocked`"
+        in rendered
+    )
+    assert "approval_receipt_created_by_request: `False`" in rendered
+    assert "protected_stack_readiness_required: `True`" in rendered
+    assert (
+        "protected_stack_status: "
+        "`retry1_protected_stage5_6_stack_adopted_manifest_only`" in rendered
+    )
+    assert "protected_stack_rollback_paths_preserved: `True`" in rendered
+    assert "protected_stack_filesystem_snapshots_replaced: `False`" in rendered
+    assert (
+        "source_stage_counts: `{'stage4': 2, 'stage5': 2, 'stage6': 2}`"
+        in rendered
+    )
+    assert (
+        "approval_request_status: "
+        "`stage4_first_move_contrast_sandbox_approval_request_ready`"
+        in rendered
+    )
+    assert "implementation_authorized_by_approval_request: `False`" in rendered
+    assert (
+        "sandbox_scope_id: "
+        "`default_off_stage4_candidate_move_first_move_contrast_sandbox_only`"
+        in rendered
+    )
+    assert "default_off: `True`" in rendered
+    assert "default_enabled: `False`" in rendered
+    assert (
+        "runtime_change_class: `default_off_candidate_move_frame_sandbox_only`"
+        in rendered
+    )
+    assert "exact_state_or_exact_move_exception: `False`" in rendered
+    assert "runtime_dtm_or_tablebase_lookup: `False`" in rendered
+    assert "hidden_python_controller: `False`" in rendered
+    assert "selector_training_allowed: `False`" in rendered
+    assert "provider_suppression_allowed: `False`" in rendered
+    assert "broad_stage0_penalty_allowed: `False`" in rendered
+    assert "gameplay_topology_mutation: `False`" in rendered
+    assert "stage7_promotion_allowed: `False`" in rendered
+    assert "stage8_training_allowed: `False`" in rendered
+    assert (
+        "protected_plan_window_failure_contrast_approval_request_status: "
+        "`protected_plan_window_failure_contrast_approval_request_blocked`"
+        in rendered
+    )
+    assert (
+        "protected_plan_window_failure_contrast_approval_receipt_created: `False`"
+        in rendered
+    )
+    assert (
+        "sequence_policy_after_protected_failure_contrast_boundaries_preserved: `True`"
+        in rendered
+    )
+    assert (
+        "sequence_policy_after_protected_failure_contrast_stage7_training_row_count: `0`"
+        in rendered
+    )
+    assert (
+        "approval_receipt_path: `reports/strategy_arbitration/"
+        "krk_protected_plan_window_failure_contrast_collection_approval_v0.json`"
+        in rendered
+    )
+    assert "execution_readiness_recomputed_live: `True`" in rendered
+    assert "refresh_after_run: `True`" in rendered
+    assert "timed_out_job_count: `0`" in rendered
+    assert "post_success_refresh: `full_passive_krk_suite_gate_stack`" in rendered
+    assert "runtime_behavior_changed: `False`" in rendered
+    assert "runtime_direct_routing: `False`" in rendered
+    assert "hidden_python_controller: `False`" in rendered
+    assert "stage7_training_rows: `0`" in rendered
+    assert "stage7_promotion_allowed: `False`" in rendered
+    assert "stage8_training_allowed: `False`" in rendered
+    assert (
+        "sequence_policy_passive_design_without_new_labels_status: "
+        "`non_causal_sequence_policy_design_review_needed`"
+        in rendered
+    )
+    assert "approval_required: `True`" in rendered
+    assert "implementation_allowed_by_this_packet: `False`" in rendered
+    assert payload["primary_unblocker"]["implementation_allowed_by_this_packet"] is False
+
+
+def test_unblocker_packet_routes_forbidden_training_rows_to_input_repair(monkeypatch):
+    real_load = _packet._load
+
+    def tainted_load(path: Path):
+        payload = json.loads(json.dumps(real_load(path)))
+        if path == _packet.READINESS:
+            payload.setdefault("sequence_policy", {})[
+                "forbidden_training_or_runtime_input_blocked"
+            ] = True
+            payload.setdefault("sequence_policy", {})[
+                "forbidden_training_or_runtime_input_blockers"
+            ] = ["selector_training_rows_forbidden"]
+            payload.setdefault("hard_blockers", []).append(
+                "sequence_policy_forbidden_training_or_runtime_rows"
+            )
+            payload.setdefault("decision", {})["status"] = (
+                "krk_suite_readiness_blocked_forbidden_training_or_runtime_rows"
+            )
+        return payload
+
+    monkeypatch.setattr(_packet, "_load", tainted_load)
+
+    payload = _packet.build_payload()
+
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_unblocker_blocked_forbidden_training_or_runtime_rows"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "repair_sequence_policy_inputs_remove_training_or_runtime_rows"
+    )
+    assert payload["primary_unblocker"]["id"] == "sequence_policy_input_repair"
+    assert payload["primary_unblocker"]["command_if_explicitly_approved"] is None
+    assert payload["primary_unblocker"]["scope"]["max_jobs"] == 0
+    assert payload["primary_unblocker"]["scope"]["stage"] == "sequence_policy_input_repair_only"
+    assert payload["current_state"][
+        "sequence_policy_forbidden_training_or_runtime_input_blocked"
+    ] is True
+    assert payload["decision"]["selector_training_allowed"] is False
+
+
+def test_unblocker_packet_blocks_collection_when_approval_request_blocked(monkeypatch):
+    real_load = _packet._load
+
+    def tainted_load(path: Path):
+        payload = json.loads(json.dumps(real_load(path)))
+        if path == _packet.FAILURE_CONTRAST_APPROVAL_REQUEST:
+            payload["blockers"] = ["full_suite_readiness_audit_not_clean"]
+            payload["approval_request_ready_for_collection"] = False
+            payload.setdefault("summary", {})["request_ready"] = False
+            payload.setdefault("decision", {})["status"] = (
+                "protected_plan_window_failure_contrast_approval_request_blocked"
+            )
+        return payload
+
+    monkeypatch.setattr(_packet, "_load", tainted_load)
+
+    payload = _packet.build_payload()
+    primary = payload["primary_unblocker"]
+
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_protected_failure_contrast_unblocker_blocked_pending_"
+        "control_plane_gate_review"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+    )
+    assert (
+        primary["status"]
+        == "blocked_pending_protected_failure_contrast_control_plane_gate_review"
+    )
+    assert primary["command_if_explicitly_approved"] is None
+    assert (
+        primary["scope"]["approval_request_status"]
+        == "protected_plan_window_failure_contrast_approval_request_blocked"
+    )
+    assert primary["scope"]["approval_request_blockers"] == [
+        "full_suite_readiness_audit_not_clean"
+    ]
+    assert primary["scope"]["approval_request_ready_for_collection"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
+def test_unblocker_packet_blocks_collection_when_execution_not_ready(monkeypatch):
+    real_load = _packet._load
+
+    def tainted_load(path: Path):
+        payload = json.loads(json.dumps(real_load(path)))
+        if path == _packet.FAILURE_CONTRAST_EXECUTION_READINESS:
+            payload.setdefault("decision", {})["status"] = (
+                "protected_plan_window_failure_contrast_execution_blocked"
+            )
+            payload.setdefault("summary", {})["jobs_passing_readiness"] = False
+        return payload
+
+    monkeypatch.setattr(_packet, "_load", tainted_load)
+
+    payload = _packet.build_payload()
+    primary = payload["primary_unblocker"]
+
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_protected_failure_contrast_unblocker_blocked_pending_"
+        "control_plane_gate_review"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+    )
+    assert (
+        primary["status"]
+        == "blocked_pending_protected_failure_contrast_control_plane_gate_review"
+    )
+    assert primary["command_if_explicitly_approved"] is None
+    assert primary["scope"]["approval_request_ready_for_collection"] is False
+    assert primary["scope"]["protected_stack_ready"] is True
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_execution_readiness_status"
+        ]
+        == "protected_plan_window_failure_contrast_execution_blocked"
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
+def test_unblocker_packet_blocks_collection_when_control_plane_option_not_exposed(monkeypatch):
+    real_load = _packet._load
+
+    def tainted_load(path: Path):
+        payload = json.loads(json.dumps(real_load(path)))
+        if path == _packet.READINESS:
+            current_gate = payload.setdefault("current_control_plane_gate", {})
+            current_gate["approval_option_ids"] = [
+                "review_protected_plan_window_failure_contrast_execution_readiness"
+            ]
+            current_gate[
+                "protected_failure_contrast_collection_option_available"
+            ] = False
+            current_gate[
+                "protected_failure_contrast_collection_command_available"
+            ] = False
+            current_gate["protected_failure_contrast_collection_option_id"] = None
+            current_gate[
+                "protected_failure_contrast_collection_blocked_by_option_id"
+            ] = "review_protected_plan_window_failure_contrast_execution_readiness"
+        return payload
+
+    monkeypatch.setattr(_packet, "_load", tainted_load)
+
+    payload = _packet.build_payload()
+    primary = payload["primary_unblocker"]
+
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_protected_failure_contrast_unblocker_blocked_pending_"
+        "control_plane_gate_review"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "review_current_control_plane_gate_for_protected_failure_contrast_collection"
+    )
+    assert (
+        primary["status"]
+        == "blocked_pending_protected_failure_contrast_control_plane_gate_review"
+    )
+    assert primary["command_if_explicitly_approved"] is None
+    assert primary["scope"]["approval_request_ready_for_collection"] is False
+    assert primary["scope"]["collection_option_available"] is False
+    assert primary["scope"]["collection_command_available"] is False
+    assert primary["scope"]["collection_option_id"] is None
+    assert (
+        primary["scope"]["collection_blocked_by_option_id"]
+        == "review_protected_plan_window_failure_contrast_execution_readiness"
+    )
+    assert (
+        payload["current_state"][
+            "protected_plan_window_failure_contrast_collection_command_available"
+        ]
+        is False
+    )
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
+def test_unblocker_packet_blocks_collection_when_protected_stack_not_ready(monkeypatch):
+    real_load = _packet._load
+
+    def tainted_load(path: Path):
+        payload = json.loads(json.dumps(real_load(path)))
+        if path == _packet.READINESS:
+            protected = payload.setdefault("protected_stack", {})
+            protected["ready"] = False
+            protected["rollback_paths_preserved"] = False
+            protected.setdefault("active_stack_path_status", {})[
+                "all_paths_safe"
+            ] = False
+            payload.setdefault("hard_blockers", []).append(
+                "protected_retry1_stage5_6_stack_not_validated"
+            )
+        return payload
+
+    monkeypatch.setattr(_packet, "_load", tainted_load)
+
+    payload = _packet.build_payload()
+    primary = payload["primary_unblocker"]
+
+    assert (
+        payload["decision"]["status"]
+        == "krk_suite_protected_failure_contrast_unblocker_blocked_pending_"
+        "protected_stack_repair"
+    )
+    assert (
+        payload["decision"]["recommended_next_step"]
+        == "repair_protected_stack_validation"
+    )
+    assert primary["status"] == "blocked_pending_protected_stack_repair"
+    assert primary["command_if_explicitly_approved"] is None
+    assert primary["scope"]["protected_stack_ready"] is False
+    assert primary["scope"]["protected_stack_rollback_paths_preserved"] is False
+    assert primary["scope"]["protected_stack_active_paths_safe"] is False
+    assert payload["decision"]["runtime_changes_allowed"] is False
+    assert payload["decision"]["stage8_training_allowed"] is False
+
+
+def test_unblocker_packet_falls_back_when_stage4_request_ready_is_null(monkeypatch):
+    real_load = _packet._load
+
+    def tainted_load(path: Path):
+        payload = json.loads(json.dumps(real_load(path)))
+        if path == _packet.STAGE4_UNBLOCKER:
+            payload.setdefault("current_stage4_status", {})[
+                "approval_request_ready_for_runtime_approval"
+            ] = None
+        return payload
+
+    monkeypatch.setattr(_packet, "_load", tainted_load)
+
+    payload = _packet.build_payload()
+    secondary = payload["secondary_unblocker"]
+
+    assert secondary["approval_request_status"] == (
+        "stage4_first_move_contrast_sandbox_approval_request_ready"
+    )
+    assert secondary["approval_request_blockers"] == []
+    assert secondary["approval_request_ready_for_runtime_approval"] is True
+    assert secondary["scope"]["approval_request_ready_for_runtime_approval"] is True

@@ -18,20 +18,20 @@ import chess
 
 from recon_lite.graph import Graph, NodeState
 from recon_lite.engine import ReConEngine
-from recon_lite.plasticity import (
+from recon_lite_hector.plasticity import (
     PlasticityConfig,
     init_plasticity_state,
     update_eligibility,
     apply_fast_update,
     reset_episode,
 )
-from recon_lite.plasticity.bandit import (
+from recon_lite_hector.plasticity.bandit import (
     BanditConfig,
     init_bandit_state,
     assign_reward,
     reset_bandit_episode,
 )
-from recon_lite.plasticity.modulation import (
+from recon_lite_hector.plasticity.modulation import (
     ModulationConfig,
     compute_modulators,
     compute_modulators_from_board,
@@ -257,7 +257,7 @@ def test_bandit_selection_over_time():
             continue
 
         # Now UCB should prefer good_arm
-        from recon_lite.plasticity.bandit import choose_child
+        from recon_lite_hector.plasticity.bandit import choose_child
         chosen = choose_child("p1_move", state, c_explore_eff=0.5, config=config)
 
         if chosen == "good_arm":

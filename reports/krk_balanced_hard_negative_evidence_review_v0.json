@@ -1,0 +1,47 @@
+{
+  "causal_status": "non_causal_evidence_review",
+  "decision": {
+    "more_blind_label_farming_recommended": false,
+    "recommended_next_step": "review_label_semantics_or_design_stronger_selector_features_before_more_label_jobs",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "balanced_hard_negative_signal_promising_but_underpowered"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "what_remains_blocked": "The label set is still hard-negative sparse and state-narrow. A simple offline rule now has nonzero suppression, but the evidence is not robust enough for selector training or runtime use.",
+    "what_was_fixed": "The original evidence defect was real: hard negatives expanded from five rows to nine rows, and protected rows expanded to forty without Stage 7 training rows.",
+    "why_not_more_blind_labels": "The second bounded slice produced only one hard negative from twelve jobs. More blind forced-provider labels are likely inefficient unless guided by sharper semantics or candidate features."
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_balanced_hard_negative_evidence_review.v0",
+  "source_artifacts": [
+    "reports/krk_balanced_hard_negative_labels_v0.json",
+    "reports/krk_balanced_hard_negative_labels_v1.json",
+    "reports/krk_hard_negative_selector_target_dataset_v2.json",
+    "reports/krk_hard_negative_selector_feature_ablation_v2.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "best_negative_suppression": 0.2222222222222222,
+    "best_objective": "provider_piece_king_delta@0.5",
+    "best_positive_recall": 1.0,
+    "expanded_hard_negative_count": 9,
+    "expanded_hard_negative_state_count": 4,
+    "expanded_positive_context_count": 31,
+    "expanded_row_count": 40,
+    "new_label_count": 24,
+    "new_negative_capacity_count": 4,
+    "new_positive_capacity_count": 20,
+    "stage7_row_count": 0,
+    "underpowered": true
+  }
+}

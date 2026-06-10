@@ -1,0 +1,1135 @@
+{
+  "causal_status": "non_causal_preserve_failure_risk_audit",
+  "decision": {
+    "recommended_next_step": "write_future_runtime_review_packet_recommendation_only",
+    "runtime_changes_allowed": false,
+    "selector_runtime_ready": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "preserve_failure_risk_resolved_non_causal"
+  },
+  "failing_rows": [
+    {
+      "active_landmark": "fence_established",
+      "box_area_relevance": "low",
+      "confidence": 5.731953912806697,
+      "decision_reason": "high_positive_trace_count_bucket",
+      "edge_bucket": "at_edge",
+      "explanation_terms": [
+        "selector_model.combined_simple_rule",
+        "positive_trace_provider_candidate_count.16",
+        "positive_trace_count_bucket.high",
+        "edge_bucket.at_edge",
+        "support_bucket.close",
+        "box_area_relevance.low",
+        "selected_piece.king",
+        "source_stage.stage5",
+        "active_landmark_label.fence_established"
+      ],
+      "fen": "1k6/7R/2K5/8/8/8/8/8 w - - 2 2",
+      "positive_trace_count_bucket": "high",
+      "positive_trace_provider_candidate_count": 16,
+      "provider_family": "stage0_basin",
+      "recommendation": "preserve_selected_owner",
+      "row_id": "selector_objective_fresh_diversity.02",
+      "selected_move": "c6b6",
+      "selected_owner_label": "selected_owner_failed",
+      "selected_piece": "king",
+      "selected_provider": "krk.stage0_basin",
+      "source_terms": [
+        "active_landmark_label.fence_established",
+        "candidate_strategy_family.edge_trap",
+        "candidate_strategy_family.stage0_basin",
+        "offline_validated_provider_capacity_evidence",
+        "runtime_review_packet.krk_candidate_generation_training_refresh_runtime_review_packet_v3",
+        "source_stage.stage5",
+        "stage5_6_candidate_generation_refresh_scope"
+      ],
+      "stage": "stage5",
+      "state_id": "state.3dca34326fca",
+      "support_bucket": "close",
+      "target_label": "prefer_visible_alternative",
+      "visible_alternative_count": 10,
+      "visible_alternatives": [
+        {
+          "candidate_source": "validated_provider_pack",
+          "capacity_evidence_kind": "positive_capacity",
+          "causal_status": "observation_only",
+          "direct_request": false,
+          "label_semantics": null,
+          "move_id": "h7d7",
+          "policy_cell": null,
+          "provider_family": null,
+          "provider_id": "krk.edge_trap_close",
+          "score_delta": 0.0,
+          "stage": null
+        },
+        {
+          "candidate_source": "validated_provider_pack",
+          "capacity_evidence_kind": "positive_capacity",
+          "causal_status": "observation_only",
+          "direct_request": false,
+          "label_semantics": null,
+          "move_id": "h7d7",
+          "policy_cell": null,
+          "provider_family": null,
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score_delta": 0.0,
+          "stage": null
+        },
+        {
+          "candidate_source": "validated_provider_pack",
+          "capacity_evidence_kind": "positive_capacity",
+          "causal_status": "observation_only",
+          "direct_request": false,
+          "label_semantics": null,
+          "move_id": "h7b7",
+          "policy_cell": null,
+          "provider_family": null,
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score_delta": 0.0,
+          "stage": null
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+          "move_id": "h7d7",
+          "policy_cell": "stage5|edge_trap",
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_close",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+          "move_id": "h7d7",
+          "policy_cell": "stage5|edge_trap",
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+          "move_id": "h7b7",
+          "policy_cell": "stage5|edge_trap",
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "c6b6",
+          "policy_cell": "stage5|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "c6b6",
+          "policy_cell": "stage5|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "c6b6",
+          "policy_cell": "stage5|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "c6b6",
+          "policy_cell": "stage5|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        }
+      ]
+    }
+  ],
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "refinement_results": [
+    {
+      "confidence_floor": null,
+      "description": "Existing recommendation record; no refinement.",
+      "does_not_reduce_switch_contrast_recall_too_much": true,
+      "eliminates_preserve_on_failure": false,
+      "keeps_switch_on_safe_owner_zero": true,
+      "metrics": {
+        "abstain_recall": 1.0,
+        "offline_accuracy": 0.9285714285714286,
+        "prediction_counts": {
+          "abstain_context_only": 5,
+          "prefer_visible_alternative": 4,
+          "preserve_selected_owner": 5
+        },
+        "preserve_on_failure_count": 1,
+        "safe_preservation_recall": 1.0,
+        "switch_contrast_recall": 0.8,
+        "switch_on_safe_owner_count": 0
+      },
+      "preserves_safe_preservation_recall": true,
+      "refinement_id": "baseline_combined_simple_rule_runtime_observation",
+      "runtime_feature_eligible": true,
+      "uses_offline_only_labels": false
+    },
+    {
+      "confidence_floor": null,
+      "description": "Abstain instead of preserve when runtime-visible failure-risk pattern terms are present.",
+      "does_not_reduce_switch_contrast_recall_too_much": true,
+      "eliminates_preserve_on_failure": true,
+      "keeps_switch_on_safe_owner_zero": true,
+      "metrics": {
+        "abstain_recall": 1.0,
+        "offline_accuracy": 0.9285714285714286,
+        "prediction_counts": {
+          "abstain_context_only": 6,
+          "prefer_visible_alternative": 4,
+          "preserve_selected_owner": 4
+        },
+        "preserve_on_failure_count": 0,
+        "safe_preservation_recall": 1.0,
+        "switch_contrast_recall": 0.8,
+        "switch_on_safe_owner_count": 0
+      },
+      "preserves_safe_preservation_recall": true,
+      "refinement_id": "preserve_only_if_no_selected_owner_failure_risk_terms",
+      "runtime_feature_eligible": true,
+      "uses_offline_only_labels": false
+    },
+    {
+      "confidence_floor": null,
+      "description": "Abstain instead of preserve when the positive trace count bucket is high.",
+      "does_not_reduce_switch_contrast_recall_too_much": true,
+      "eliminates_preserve_on_failure": true,
+      "keeps_switch_on_safe_owner_zero": true,
+      "metrics": {
+        "abstain_recall": 1.0,
+        "offline_accuracy": 0.8571428571428571,
+        "prediction_counts": {
+          "abstain_context_only": 7,
+          "prefer_visible_alternative": 4,
+          "preserve_selected_owner": 3
+        },
+        "preserve_on_failure_count": 0,
+        "safe_preservation_recall": 0.75,
+        "switch_contrast_recall": 0.8,
+        "switch_on_safe_owner_count": 0
+      },
+      "preserves_safe_preservation_recall": false,
+      "refinement_id": "preserve_only_if_positive_alternative_count_below_high",
+      "runtime_feature_eligible": true,
+      "uses_offline_only_labels": false
+    },
+    {
+      "confidence_floor": null,
+      "description": "Abstain instead of preserve for the exact runtime-visible failing pattern.",
+      "does_not_reduce_switch_contrast_recall_too_much": true,
+      "eliminates_preserve_on_failure": true,
+      "keeps_switch_on_safe_owner_zero": true,
+      "metrics": {
+        "abstain_recall": 1.0,
+        "offline_accuracy": 0.9285714285714286,
+        "prediction_counts": {
+          "abstain_context_only": 6,
+          "prefer_visible_alternative": 4,
+          "preserve_selected_owner": 4
+        },
+        "preserve_on_failure_count": 0,
+        "safe_preservation_recall": 1.0,
+        "switch_contrast_recall": 0.8,
+        "switch_on_safe_owner_count": 0
+      },
+      "preserves_safe_preservation_recall": true,
+      "refinement_id": "abstain_for_exact_preserve_failure_pattern",
+      "runtime_feature_eligible": true,
+      "uses_offline_only_labels": false
+    },
+    {
+      "confidence_floor": -0.013539902069667974,
+      "description": "Abstain instead of preserve when confidence is below the minimum safe-preserve confidence observed in controls.",
+      "does_not_reduce_switch_contrast_recall_too_much": true,
+      "eliminates_preserve_on_failure": false,
+      "keeps_switch_on_safe_owner_zero": true,
+      "metrics": {
+        "abstain_recall": 1.0,
+        "offline_accuracy": 0.9285714285714286,
+        "prediction_counts": {
+          "abstain_context_only": 5,
+          "prefer_visible_alternative": 4,
+          "preserve_selected_owner": 5
+        },
+        "preserve_on_failure_count": 1,
+        "safe_preservation_recall": 1.0,
+        "switch_contrast_recall": 0.8,
+        "switch_on_safe_owner_count": 0
+      },
+      "preserves_safe_preservation_recall": true,
+      "refinement_id": "require_stronger_safe_preservation_confidence",
+      "runtime_feature_eligible": true,
+      "uses_offline_only_labels": false
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_provider_suppression": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "safe_preserve_rows": [
+    {
+      "active_landmark": "fence_established",
+      "box_area_relevance": "low",
+      "confidence": -0.013539902069667974,
+      "decision_reason": "high_positive_trace_count_bucket",
+      "edge_bucket": "at_edge",
+      "explanation_terms": [
+        "selector_model.combined_simple_rule",
+        "positive_trace_provider_candidate_count.14",
+        "positive_trace_count_bucket.high",
+        "edge_bucket.at_edge",
+        "support_bucket.far",
+        "box_area_relevance.low",
+        "selected_piece.rook",
+        "source_stage.stage5",
+        "active_landmark_label.fence_established"
+      ],
+      "positive_trace_count_bucket": "high",
+      "positive_trace_provider_candidate_count": 14,
+      "provider_family": "fence_established",
+      "recommendation": "preserve_selected_owner",
+      "row_id": "selector_objective_fresh_diversity.03",
+      "selected_move": "h7c7",
+      "selected_owner_label": "selected_owner_converted",
+      "selected_piece": "rook",
+      "selected_provider": "krk.fence_established",
+      "source_terms": [
+        "active_landmark_label.fence_established",
+        "candidate_strategy_family.edge_trap",
+        "candidate_strategy_family.fence_established",
+        "candidate_strategy_family.stage0_basin",
+        "offline_validated_provider_capacity_evidence",
+        "runtime_review_packet.krk_candidate_generation_training_refresh_runtime_review_packet_v3",
+        "source_stage.stage5",
+        "stage5_6_candidate_generation_refresh_scope"
+      ],
+      "stage": "stage5",
+      "support_bucket": "far",
+      "target_label": "preserve_selected_owner",
+      "visible_alternative_count": 10,
+      "visible_alternatives": [
+        {
+          "candidate_source": "validated_provider_pack",
+          "capacity_evidence_kind": "positive_capacity",
+          "causal_status": "observation_only",
+          "direct_request": false,
+          "label_semantics": null,
+          "move_id": "b6c7",
+          "policy_cell": null,
+          "provider_family": null,
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": null
+        },
+        {
+          "candidate_source": "validated_provider_pack",
+          "capacity_evidence_kind": "positive_capacity",
+          "causal_status": "observation_only",
+          "direct_request": false,
+          "label_semantics": null,
+          "move_id": "h7c7",
+          "policy_cell": null,
+          "provider_family": null,
+          "provider_id": "krk.fence_established",
+          "score_delta": 0.0,
+          "stage": null
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+          "move_id": "b6c7",
+          "policy_cell": "stage5|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+          "move_id": "h7c7",
+          "policy_cell": "stage5|fence_established",
+          "provider_family": "fence_established",
+          "provider_id": "krk.fence_established",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "h7c7",
+          "policy_cell": "stage5|fence_established",
+          "provider_family": "fence_established",
+          "provider_id": "krk.fence_established",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "h7c7",
+          "policy_cell": "stage5|edge_trap",
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_close",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "h7c7",
+          "policy_cell": "stage5|edge_trap",
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "h7c7",
+          "policy_cell": "stage5|edge_trap",
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_close",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "h7c7",
+          "policy_cell": "stage5|edge_trap",
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_enemy_between",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "h7c7",
+          "policy_cell": "stage5|edge_trap",
+          "provider_family": "edge_trap",
+          "provider_id": "krk.edge_trap_wrong_tempo",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        }
+      ]
+    },
+    {
+      "active_landmark": "drive_to_edge",
+      "box_area_relevance": "low",
+      "confidence": 39.800501242280006,
+      "decision_reason": "default_preserve_selected_owner",
+      "edge_bucket": "at_edge",
+      "explanation_terms": [
+        "selector_model.combined_simple_rule",
+        "positive_trace_provider_candidate_count.10",
+        "positive_trace_count_bucket.medium",
+        "edge_bucket.at_edge",
+        "support_bucket.close",
+        "box_area_relevance.low",
+        "selected_piece.rook",
+        "source_stage.stage6",
+        "active_landmark_label.drive_to_edge"
+      ],
+      "positive_trace_count_bucket": "medium",
+      "positive_trace_provider_candidate_count": 10,
+      "provider_family": "stage0_basin",
+      "recommendation": "preserve_selected_owner",
+      "row_id": "selector_objective_fresh_diversity.06",
+      "selected_move": "a1g1",
+      "selected_owner_label": "selected_owner_converted",
+      "selected_piece": "rook",
+      "selected_provider": "krk.stage0_basin",
+      "source_terms": [
+        "active_landmark_label.drive_to_edge",
+        "candidate_strategy_family.stage0_basin",
+        "runtime_review_packet.krk_candidate_generation_training_refresh_runtime_review_packet_v3",
+        "stage5_6_candidate_generation_refresh_scope"
+      ],
+      "stage": "stage6",
+      "support_bucket": "close",
+      "target_label": "preserve_selected_owner",
+      "visible_alternative_count": 10,
+      "visible_alternatives": [
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1g1",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1g1",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1g1",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1g1",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1g1",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1g1",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1g1",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1g1",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1g1",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1g1",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        }
+      ]
+    },
+    {
+      "active_landmark": "fence_established",
+      "box_area_relevance": "low",
+      "confidence": 85.68969578428288,
+      "decision_reason": "default_preserve_selected_owner",
+      "edge_bucket": "at_edge",
+      "explanation_terms": [
+        "selector_model.combined_simple_rule",
+        "positive_trace_provider_candidate_count.10",
+        "positive_trace_count_bucket.medium",
+        "edge_bucket.at_edge",
+        "support_bucket.close",
+        "box_area_relevance.low",
+        "selected_piece.rook",
+        "source_stage.stage5",
+        "active_landmark_label.fence_established"
+      ],
+      "positive_trace_count_bucket": "medium",
+      "positive_trace_provider_candidate_count": 10,
+      "provider_family": "edge_trap_enemy_between",
+      "recommendation": "preserve_selected_owner",
+      "row_id": "selector_objective_fresh_diversity.07",
+      "selected_move": "e7e1",
+      "selected_owner_label": "selected_owner_converted",
+      "selected_piece": "rook",
+      "selected_provider": "krk.edge_trap_enemy_between",
+      "source_terms": [
+        "active_landmark_label.fence_established",
+        "candidate_strategy_family.stage0_basin",
+        "runtime_review_packet.krk_candidate_generation_training_refresh_runtime_review_packet_v3",
+        "stage5_6_candidate_generation_refresh_scope"
+      ],
+      "stage": "stage5",
+      "support_bucket": "close",
+      "target_label": "preserve_selected_owner",
+      "visible_alternative_count": 10,
+      "visible_alternatives": [
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "e7e1",
+          "policy_cell": "stage5|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "e7e1",
+          "policy_cell": "stage5|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "e7e1",
+          "policy_cell": "stage5|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "e7e1",
+          "policy_cell": "stage5|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "e7e1",
+          "policy_cell": "stage5|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "e7e1",
+          "policy_cell": "stage5|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "e7e1",
+          "policy_cell": "stage5|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "e7e1",
+          "policy_cell": "stage5|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "e7e1",
+          "policy_cell": "stage5|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "e7e1",
+          "policy_cell": "stage5|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        }
+      ]
+    },
+    {
+      "active_landmark": "drive_to_edge",
+      "box_area_relevance": "low",
+      "confidence": 40.74213240334578,
+      "decision_reason": "default_preserve_selected_owner",
+      "edge_bucket": "at_edge",
+      "explanation_terms": [
+        "selector_model.combined_simple_rule",
+        "positive_trace_provider_candidate_count.10",
+        "positive_trace_count_bucket.medium",
+        "edge_bucket.at_edge",
+        "support_bucket.close",
+        "box_area_relevance.low",
+        "selected_piece.rook",
+        "source_stage.stage6",
+        "active_landmark_label.drive_to_edge"
+      ],
+      "positive_trace_count_bucket": "medium",
+      "positive_trace_provider_candidate_count": 10,
+      "provider_family": "stage0_basin",
+      "recommendation": "preserve_selected_owner",
+      "row_id": "selector_objective_fresh_diversity.08",
+      "selected_move": "a1a6",
+      "selected_owner_label": "selected_owner_converted",
+      "selected_piece": "rook",
+      "selected_provider": "krk.stage0_basin",
+      "source_terms": [
+        "active_landmark_label.drive_to_edge",
+        "candidate_strategy_family.stage0_basin",
+        "runtime_review_packet.krk_candidate_generation_training_refresh_runtime_review_packet_v3",
+        "stage5_6_candidate_generation_refresh_scope"
+      ],
+      "stage": "stage6",
+      "support_bucket": "close",
+      "target_label": "preserve_selected_owner",
+      "visible_alternative_count": 10,
+      "visible_alternatives": [
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1a6",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1a6",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1a6",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1a6",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1a6",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1a6",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1a6",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1a6",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1a6",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a1a6",
+          "policy_cell": "stage6|stage0_basin",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage6"
+        }
+      ]
+    }
+  ],
+  "schema_version": "krk_selector_preserve_failure_risk_audit.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_observability_expanded_recommendations_v0.json",
+    "reports/strategy_arbitration/krk_selector_observability_readiness_review_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "capacity_label_used_as_ownership_label_count": 0,
+    "failing_row_count": 1,
+    "prior_readiness_status": "selector_observability_blocked_by_preserve_failure_risk",
+    "routing_delta_count": 0,
+    "runtime_behavior_changed": false,
+    "safe_preserve_row_count": 4,
+    "score_delta_count": 0,
+    "selected_move_delta_count": 0,
+    "selected_provider_delta_count": 0,
+    "selector_training_row_count": 0,
+    "stage7_training_row_count": 0,
+    "viable_refinement_count": 2
+  },
+  "term_comparison": {
+    "active_landmark": {
+      "collides_with_safe": true,
+      "failing_value": "fence_established",
+      "safe_values": [
+        "drive_to_edge",
+        "fence_established"
+      ]
+    },
+    "box_area_relevance": {
+      "collides_with_safe": true,
+      "failing_value": "low",
+      "safe_values": [
+        "low"
+      ]
+    },
+    "edge_bucket": {
+      "collides_with_safe": true,
+      "failing_value": "at_edge",
+      "safe_values": [
+        "at_edge"
+      ]
+    },
+    "positive_trace_count_bucket": {
+      "collides_with_safe": true,
+      "failing_value": "high",
+      "safe_values": [
+        "high",
+        "medium"
+      ]
+    },
+    "provider_family": {
+      "collides_with_safe": true,
+      "failing_value": "stage0_basin",
+      "safe_values": [
+        "edge_trap_enemy_between",
+        "fence_established",
+        "stage0_basin"
+      ]
+    },
+    "selected_piece": {
+      "collides_with_safe": false,
+      "failing_value": "king",
+      "safe_values": [
+        "rook"
+      ]
+    },
+    "support_bucket": {
+      "collides_with_safe": true,
+      "failing_value": "close",
+      "safe_values": [
+        "close",
+        "far"
+      ]
+    },
+    "visible_alternative_count": {
+      "collides_with_safe": true,
+      "failing_value": 10,
+      "safe_values": [
+        "10"
+      ]
+    }
+  },
+  "viable_refinements": [
+    {
+      "confidence_floor": null,
+      "description": "Abstain instead of preserve when runtime-visible failure-risk pattern terms are present.",
+      "does_not_reduce_switch_contrast_recall_too_much": true,
+      "eliminates_preserve_on_failure": true,
+      "keeps_switch_on_safe_owner_zero": true,
+      "metrics": {
+        "abstain_recall": 1.0,
+        "offline_accuracy": 0.9285714285714286,
+        "prediction_counts": {
+          "abstain_context_only": 6,
+          "prefer_visible_alternative": 4,
+          "preserve_selected_owner": 4
+        },
+        "preserve_on_failure_count": 0,
+        "safe_preservation_recall": 1.0,
+        "switch_contrast_recall": 0.8,
+        "switch_on_safe_owner_count": 0
+      },
+      "preserves_safe_preservation_recall": true,
+      "refinement_id": "preserve_only_if_no_selected_owner_failure_risk_terms",
+      "runtime_feature_eligible": true,
+      "uses_offline_only_labels": false
+    },
+    {
+      "confidence_floor": null,
+      "description": "Abstain instead of preserve for the exact runtime-visible failing pattern.",
+      "does_not_reduce_switch_contrast_recall_too_much": true,
+      "eliminates_preserve_on_failure": true,
+      "keeps_switch_on_safe_owner_zero": true,
+      "metrics": {
+        "abstain_recall": 1.0,
+        "offline_accuracy": 0.9285714285714286,
+        "prediction_counts": {
+          "abstain_context_only": 6,
+          "prefer_visible_alternative": 4,
+          "preserve_selected_owner": 4
+        },
+        "preserve_on_failure_count": 0,
+        "safe_preservation_recall": 1.0,
+        "switch_contrast_recall": 0.8,
+        "switch_on_safe_owner_count": 0
+      },
+      "preserves_safe_preservation_recall": true,
+      "refinement_id": "abstain_for_exact_preserve_failure_pattern",
+      "runtime_feature_eligible": true,
+      "uses_offline_only_labels": false
+    }
+  ]
+}

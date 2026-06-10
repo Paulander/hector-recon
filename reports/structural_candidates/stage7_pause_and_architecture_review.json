@@ -1,0 +1,214 @@
+{
+  "schema_version": "stage7_pause_and_architecture_review.v1",
+  "causal_status": "non_causal_documentation_review",
+  "runtime_behavior_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "gameplay_topology_mutation": false,
+  "stage7_status": "local_valid_composition_quarantined",
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "runtime_defaults_changed": false,
+  "current_status": {
+    "summary": "Stage 7 box_shrink is locally useful but remains composition-quarantined. The latest scoped interaction benchmark did not justify another runtime sandbox.",
+    "not_promoted": true,
+    "stage8_blocked": true,
+    "runtime_repairs_paused": true
+  },
+  "validated_mechanisms": [
+    {
+      "mechanism": "Growth Monitor / StructuralCandidate / GrowthGovernor path",
+      "status": "validated_as_non_causal_scaffolding",
+      "note": "Stage 7 failures can produce structured non-causal candidate evidence without mutating gameplay topology."
+    },
+    {
+      "mechanism": "Frozen-provider plus overlay discipline",
+      "status": "validated_architecture_guardrail",
+      "note": "Later-stage candidates are overlays and do not replace validated Stage 5/6 providers."
+    },
+    {
+      "mechanism": "Role-owned arbitration",
+      "status": "validated_as_diagnostic_and_limited_sandbox_pattern",
+      "note": "Useful for inspecting ownership, but current evidence does not justify another Stage 7 causal arbitration change."
+    },
+    {
+      "mechanism": "CandidateMoveFrame layer",
+      "status": "validated_visibility_layer",
+      "note": "Legal moves can be represented as ephemeral visible action hypotheses without creating persistent topology nodes."
+    },
+    {
+      "mechanism": "Plan Capsule marker / owned-window instrumentation",
+      "status": "validated_auditability_upgrade",
+      "note": "Plan entry, progress, exit, abort, and TTL evidence made multi-ply failure windows inspectable."
+    },
+    {
+      "mechanism": "Default-off sandbox discipline",
+      "status": "validated_safety_pattern",
+      "note": "Experimental behavior remained opt-in and traceable."
+    },
+    {
+      "mechanism": "Non-causal DTM / trajectory supervision boundary",
+      "status": "validated_boundary",
+      "note": "DTM/tablebase evidence was used only offline for labels and diagnostics, not runtime policy."
+    },
+    {
+      "mechanism": "Guardrail-aware promotion / quarantine",
+      "status": "validated",
+      "note": "Stage 7 remains quarantined despite local improvements."
+    }
+  ],
+  "rejected_or_insufficient_paths": [
+    "more local box_shrink move-shape tuning",
+    "broad drive repair",
+    "broad provider support adapters",
+    "broad stage0 suppression",
+    "direct role_to_provider_sub_edges",
+    "M3 on scripted_or_non_trainable_terminal",
+    "current learned post_box overlay",
+    "current Plan Capsule micro_tuning",
+    "simple visible_term linear scorer",
+    "simple pairwise_or_ranked scorer",
+    "scoped interaction benchmark as currently implemented",
+    "runtime DTM_or_tablebase",
+    "training Stage 8 from unresolved Stage 7"
+  ],
+  "hypotheses": [
+    {
+      "hypothesis": "strategy_arbitration_phase_boundary_issue",
+      "confidence": "medium",
+      "evidence_for": [
+        "Some Stage 7 families were solved when existing providers were forced or arbitrated differently.",
+        "Provider-score comparability and ownership repeatedly affected post-box behavior.",
+        "Stage 7 residuals look like strategic phase-boundary cases rather than pure local move failures."
+      ],
+      "evidence_against": [
+        "The first unified strategy arbitration probe was small and did not identify a better owner.",
+        "Provider-local normalization and scoped interaction benchmarks did not justify causal arbitration."
+      ],
+      "current_read": "Still plausible at the architecture level, but not solved by the Stage 7-local arbitration variants tried so far."
+    },
+    {
+      "hypothesis": "continuation_capacity_issue",
+      "confidence": "medium",
+      "evidence_for": [
+        "The learnable post-box provider can own residual states but still max-plies.",
+        "Some families were unresolved by existing forced providers within diagnostic horizons.",
+        "Failures persisted after first-move visibility and ownership improvements."
+      ],
+      "evidence_against": [
+        "Some failed families converted when existing providers were forced.",
+        "DTM evidence shows theoretical wins within practical horizons, so the issue is not always absent chess capacity."
+      ],
+      "current_read": "Post-box continuation capacity remains plausible, but it is entangled with strategy ownership and sequence-policy quality."
+    },
+    {
+      "hypothesis": "missing_feature_ontology_issue",
+      "confidence": "medium",
+      "evidence_for": [
+        "The 0926 CandidateMoveFrame role found exactly one converting move with visible terms.",
+        "State-local contrast found positives separable from hard negatives by single terms or interactions in many states.",
+        "Visible-term refinement identified useful candidates around king support, box progress, cut/fence, and rook geometry."
+      ],
+      "evidence_against": [
+        "Simple visible-term scorers and scoped interaction benchmark did not cleanly solve ranking.",
+        "Several high-value terms are globally ambiguous and need context rather than standalone causal use."
+      ],
+      "current_read": "Missing or under-scoped ontology is likely part of the problem, but current visible-term refinements are not sufficient as a runtime patch."
+    },
+    {
+      "hypothesis": "training_objective_model_expression_issue",
+      "confidence": "high",
+      "evidence_for": [
+        "Learnable capsule ownership was achieved, but closed-loop conversion still failed.",
+        "Expanded DTM-margin supervision improved top-1 only modestly and left hard-negative ranking unresolved.",
+        "Simple pairwise/ranked and scoped interaction objectives failed to beat baseline cleanly."
+      ],
+      "evidence_against": [
+        "Top-k signals and state-local separability show some useful representation exists.",
+        "A broader strategy or curriculum-boundary issue could be causing the training objective to chase the wrong target."
+      ],
+      "current_read": "The current ReCoN-visible representation/training objective is insufficient to learn the post-box continuation policy cleanly."
+    },
+    {
+      "hypothesis": "bad_standalone_curriculum_boundary",
+      "confidence": "medium_high",
+      "evidence_for": [
+        "Stage 7 remains local-valid but composition-quarantined after many distinct diagnostic paths.",
+        "Box_shrink near the edge appears noisy as an owner and may be better treated as local evidence or handoff trigger.",
+        "Residuals increasingly point to strategy/plan selection rather than a standalone box_shrink actuator."
+      ],
+      "evidence_against": [
+        "Box_shrink local semantics are not useless and should remain available as evidence.",
+        "A stronger strategy arbiter or sequence policy might make the existing boundary usable."
+      ],
+      "current_read": "Stage 7 should not be promoted as an independent stage now; it may need reframing as a handoff signal inside a broader KRK strategy layer."
+    }
+  ],
+  "main_conclusion": {
+    "summary": "The strongest conclusion is not that Stage 7 needs another patch. The current ReCoN-visible representation and training objective are insufficient for clean post-box continuation learning, and box_shrink may be a noisy strategic boundary rather than a stable independent promoted stage.",
+    "implications": [
+      "Pause Stage 7-specific runtime repairs.",
+      "Keep Stage 7 residuals as held-out challenge cases.",
+      "Move the next experiment up one architecture level."
+    ]
+  },
+  "architecture_level_options": [
+    {
+      "option": "A",
+      "name": "Strategy Arbiter Track",
+      "description": "Train/evaluate a domain-level KRK strategy arbiter over existing provider suggestions and terminal-space features.",
+      "purpose": "Learn when box_shrink should yield to fence, edge-net, king-support, drive, or mate-basin strategies.",
+      "causal_status": "future_non_causal_first"
+    },
+    {
+      "option": "B",
+      "name": "Sequence Policy Track",
+      "description": "Develop a stronger Plan Capsule sequence-policy learner.",
+      "purpose": "Learn multi-step continuation from offline trajectories and closed-loop feedback, not one-ply ranking.",
+      "causal_status": "future_non_causal_first"
+    },
+    {
+      "option": "C",
+      "name": "Curriculum Boundary Track",
+      "description": "Reclassify Stage 7 as an unstable boundary and redesign box_shrink as a handoff trigger rather than a promoted independent skill.",
+      "purpose": "Preserve local box evidence while avoiding a brittle stage owner.",
+      "causal_status": "future_design_review"
+    },
+    {
+      "option": "D",
+      "name": "Broader KRK Integration Track",
+      "description": "Freeze Stage 7 as a known residual and train/evaluate a broader KRK continuation layer while preserving validated Stage 5/6.",
+      "purpose": "Treat Stage 7 residuals as regression cases for broader KRK plan learning.",
+      "causal_status": "future_non_causal_first"
+    }
+  ],
+  "recommended_next_architecture_direction": {
+    "recommendation": "Pause Stage 7 repairs and design a general KRK strategy-arbitration / plan-selection experiment outside the Stage 7 local-repair loop.",
+    "rationale": [
+      "Stage 7 has become too narrow as an implementation target but valuable as a benchmark for strategy arbitration and plan learning.",
+      "Continuing to patch Stage 7 risks overfitting the virtual lab.",
+      "A higher-level KRK strategy experiment can use Stage 7 residuals as held-out challenge cases while preserving the validated Stage 5/6 stack."
+    ],
+    "implementation_status": "not_implemented"
+  },
+  "stop_conditions": [
+    "no_runtime_behavior_changes",
+    "no_stage7_promotion",
+    "no_stage8_training",
+    "no_hidden_controller",
+    "no_gameplay_time_topology_mutation",
+    "no_runtime_dtm_or_tablebase",
+    "preserve_m1_m4_semantics",
+    "validated_providers_remain_protected"
+  ],
+  "source_artifacts": [
+    "reports/current_agent_brief.md",
+    "reports/structural_candidates/stage7_neutral_diagnostic_matrix.json",
+    "reports/structural_candidates/stage7_evidence_merge_table.json",
+    "reports/structural_candidates/stage7_decision_gate.json",
+    "reports/structural_candidates/stage7_training_objective_benchmark.json",
+    "reports/structural_candidates/stage7_ranking_calibration_audit.json",
+    "reports/structural_candidates/stage7_state_local_contrast_audit.json",
+    "reports/structural_candidates/stage7_visible_term_refinement_audit.json",
+    "reports/structural_candidates/stage7_scoped_interaction_benchmark.json"
+  ]
+}

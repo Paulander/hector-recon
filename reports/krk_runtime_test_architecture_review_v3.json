@@ -1,0 +1,88 @@
+{
+  "accepted_findings": [
+    "Default-off observability and reporting infrastructure is useful and safe.",
+    "Broad additive support is not a viable scaling mechanism.",
+    "Normalized/provenance selector objectives are not runtime-ready.",
+    "Diverse contrast labels confirm Stage7 residual providers remain max_plies under forced ownership.",
+    "Protected non-Stage7 training evidence is still too sparse and positive-heavy.",
+    "The best current contrast selector has negative_suppression=0.0."
+  ],
+  "blocked_next_steps": [
+    "runtime_selector",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "m3_m4_arbitration_update"
+  ],
+  "causal_status": "non_causal_architecture_review",
+  "gameplay_topology_mutation": false,
+  "next_options": [
+    {
+      "causal_status": "non_causal_only",
+      "cons": [
+        "May require slow h40 traces unless a cheaper targeted runner is designed"
+      ],
+      "description": "Collect or reconstruct protected Stage4/5/6 negative ownership labels with the same semantics as positives.",
+      "name": "targeted_negative_control_evidence",
+      "option_id": "A",
+      "pros": [
+        "Directly addresses negative_suppression=0.0",
+        "Keeps Stage7 held out"
+      ]
+    },
+    {
+      "causal_status": "design_only",
+      "cons": [
+        "Still needs validation before runtime use"
+      ],
+      "description": "Redesign the selector target around abstention/risk detection before ownership selection.",
+      "name": "selector_objective_redesign",
+      "option_id": "B",
+      "pros": [
+        "Matches observed failure mode: inability to reject bad owners",
+        "Could use existing negative evidence"
+      ]
+    },
+    {
+      "causal_status": "review_decision",
+      "cons": [
+        "Does not move causal runtime behavior forward immediately"
+      ],
+      "description": "Stop selector work and return to broader curriculum integration / provider-capacity planning.",
+      "name": "pause_runtime_selector_track",
+      "option_id": "C",
+      "pros": [
+        "Avoids overfitting a small lab dataset",
+        "Keeps architecture clean"
+      ]
+    }
+  ],
+  "recommended_next_class": {
+    "implementation_allowed": "design_only",
+    "next_artifacts": [
+      "reports/krk_abstention_first_selector_objective_v0.json",
+      "reports/krk_abstention_first_selector_objective_v0.md"
+    ],
+    "rationale": "The blocker is not selecting positives; it is failing to suppress negatives. Before collecting more expensive labels or implementing runtime behavior, define a selector objective that can abstain/reject unsafe ownership using non-causal protected controls.",
+    "status": "design_abstention_first_selector_objective"
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_readiness": {
+    "reason": "No candidate can suppress known negative ownership examples in leave-state-out evaluation.",
+    "runtime_internal_terminal_ready": false,
+    "runtime_selector_ready": false,
+    "runtime_stage7_repair_ready": false
+  },
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_runtime_test_architecture_review.v3",
+  "source_artifacts": [
+    "reports/krk_state_local_contrast_readiness_review_v2.json",
+    "reports/krk_state_local_contrast_labels_v2.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

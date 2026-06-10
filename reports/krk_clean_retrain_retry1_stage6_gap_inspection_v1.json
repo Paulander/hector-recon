@@ -1,0 +1,93 @@
+{
+  "schema_version": "krk_clean_retrain_retry_stage6_gap_inspection.v1",
+  "created_at": "2026-05-24T16:15:19+02:00",
+  "checkpoint_root": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1",
+  "status": "stage6_gap_explained_by_validation_profile_mismatch",
+  "decision": {
+    "retry1_stage6_learner_quality_issue": false,
+    "overlay_extraction_issue": false,
+    "current_harness_without_profile_bonus_reproduces_failure_on_protected_overlay": true,
+    "corrected_profile_bonus_restores_stage6_conversion": true,
+    "promotion_eval_status_with_corrected_profile": "overlay_only",
+    "retry1_can_replace_protected_stack": false,
+    "stage7_remains_quarantined": true,
+    "stage8_remains_blocked": true,
+    "runtime_behavior_changed": false,
+    "recommended_next_step": "review_stage5_one_ply_guardrail_semantics_or_accept_as_base_control_debt_before_any_replacement_promotion"
+  },
+  "core_finding": "The apparent retry1 Stage 6 weakness came from omitting the historical Stage 6 handoff validation flag --stagnation-breaker-king-support-bonus 2.0. With that explicit profile-scoped validation flag, retry1 Stage 6 returns to 300/300 h40 mates and 0 shadow candidates.",
+  "comparisons": {
+    "without_king_support_bonus": {
+      "retry1_stage6_overlay": {
+        "artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage6_drive_overlay_300_seed7_h40.json",
+        "mate": 217,
+        "max_plies": 83,
+        "shadow_candidates": 166,
+        "stagnation_breaker_king_support_bonus": 0.0
+      },
+      "historical_protected_overlay_rerun_current_harness": {
+        "artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_historical_protected_rerun_current/stage6_drive_historical_protected_current_harness_300_seed7_h40.json",
+        "mate": 217,
+        "max_plies": 83,
+        "shadow_candidates": 166,
+        "stagnation_breaker_king_support_bonus": 0.0
+      },
+      "interpretation": "The same failure appears on the existing protected topology when rerun with current h40 validation defaults but without the king-support bonus, so retry1 is not uniquely defective."
+    },
+    "with_explicit_king_support_bonus": {
+      "retry1_stage6_overlay": {
+        "artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage6_drive_overlay_300_seed7_h40_profile_bonus.json",
+        "mate": 300,
+        "max_plies": 0,
+        "shadow_candidates": 0,
+        "stagnation_breaker_king_support_bonus": 2.0,
+        "early_stop_stable_suggestions": 2
+      },
+      "retry1_stage5_overlay_guardrail": {
+        "artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_overlay_300_seed7_h40_profile_bonus.json",
+        "mate": 300,
+        "max_plies": 0,
+        "shadow_candidates": 0,
+        "improved": 144,
+        "worsened": 156,
+        "stagnation_breaker_king_support_bonus": 2.0
+      },
+      "retry1_stage5_base_control": {
+        "artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/stage5_fence_stage5_base_control_300_seed7_h40_profile_bonus.json",
+        "mate": 300,
+        "max_plies": 0,
+        "shadow_candidates": 0,
+        "improved": 144,
+        "worsened": 156,
+        "stagnation_breaker_king_support_bonus": 2.0
+      },
+      "promotion_eval": {
+        "artifact": "snapshots/krk_triplet_pipeline/clean_retrain_checkpoint_v0_retry1/stage6_overlay_composed/promotion_eval_stage6_overlay_profile_bonus.json",
+        "promotion_status": "overlay_only",
+        "failures": [],
+        "guardrail_control_debt": true
+      }
+    }
+  },
+  "semantic_notes": [
+    "The Stage 6 training command used --adaptive-stagnation-breaker-king-support-bonus 2.0.",
+    "The stored historical passing Stage 6 artifact also records stagnation_breaker_king_support_bonus = 2.0.",
+    "The handoff_composition_v1 profile settings do not currently include that bonus, so --use-profile-validation-defaults alone is insufficient to reproduce the historical validation behavior.",
+    "The remaining retry1 blocker is Stage 5 one-ply local reward debt: both Stage 5 overlay and Stage 5 base control convert 300/300 but show only 144/300 improved and 156/300 worsened under current one-ply reward semantics.",
+    "Because the overlay does not regress Stage 5 relative to its own base control, this is control debt rather than Stage 6 overlay interference."
+  ],
+  "updated_artifacts": [
+    "reports/krk_stage6_overlay_compose_manifest_v0.json",
+    "reports/krk_stage6_overlay_compose_manifest_v0.md"
+  ],
+  "invariants": {
+    "runtime_defaults_changed": false,
+    "runtime_selector_implemented": false,
+    "runtime_score_changes": false,
+    "runtime_direct_routing": false,
+    "runtime_dtm_or_tablebase_lookup": false,
+    "gameplay_topology_mutation": false,
+    "stage7_promotion": false,
+    "stage8_training": false
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "blocked_next_steps": [
+    "implement_runtime_arbiter_without_review",
+    "enable_selector_sandbox_without_review",
+    "stage7_repair",
+    "stage7_promotion",
+    "stage8_training",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation"
+  ],
+  "causal_status": "non_causal_review_packet",
+  "current_stack_summary": {
+    "profile": "handoff_composition_v1",
+    "protected_components": [
+      {
+        "caveat": "Evidence is local/backchain-focused; Stage 1 is protected as a subskill.",
+        "solved_under_current_architecture": true,
+        "stage": "stage1_backchain",
+        "status": "protected_solved_local_regression"
+      },
+      {
+        "caveat": "The 500-sample handoff_composition_v1 profile is clean, but the later 300-sample overlay/control guardrail has 247 mate / 53 max_plies on both overlay and frozen Stage 5 base. This is not Stage 6 overlay interference; it remains a horizon/guardrail-definition diagnostic.",
+        "solved_under_current_architecture": true,
+        "stage": "stage4_wrong_tempo",
+        "status": "protected_profile_solved_with_overlay_guardrail_caveat"
+      },
+      {
+        "caveat": "Opt-in experimental profile; default policy remains unchanged.",
+        "solved_under_current_architecture": true,
+        "stage": "stage5_fence",
+        "status": "protected_solved_conversion_profile"
+      },
+      {
+        "caveat": "Stage 6 is solved as an overlay, not as a monolithic replacement topology. Use frozen-provider plus overlay composition for later stages.",
+        "solved_under_current_architecture": true,
+        "stage": "stage6_drive_overlay",
+        "status": "promoted_overlay_solved_against_stage5_guardrail"
+      }
+    ],
+    "stage7_status": "local_valid_composition_quarantined"
+  },
+  "decision": {
+    "implementation_allowed": false,
+    "recommended_next_step": "external_architecture_review_decision",
+    "runtime_arbiter_allowed": false,
+    "selector_sandbox_ready": false,
+    "status": "runtime_review_packet_ready"
+  },
+  "evidence_summary": {
+    "contrast_probe_status": "strategy_owner_contrast_signal_present_selector_sandbox_blocked",
+    "conversion_positive_provider_families": [
+      "drive_to_edge",
+      "edge_trap",
+      "fence_established"
+    ],
+    "default_off_design_status": "default_off_strategy_arbiter_design_ready_for_external_review",
+    "readiness_v3_status": "selector_readiness_v3_sandbox_design_review_allowed",
+    "stage7_heldout_row_count": 4,
+    "training_negative_label_count": 11,
+    "training_positive_label_count": 13
+  },
+  "gameplay_topology_mutation": false,
+  "implementation_blocked_until_review": true,
+  "non_negotiable_runtime_invariants": [
+    "no hidden Python controller",
+    "no runtime DTM/tablebase policy",
+    "no gameplay-time topology mutation",
+    "unpromoted StructuralCandidate/InternalTerminalSpec/PlanCapsuleSpec remain non-causal",
+    "preserve M1-M4 plasticity/consolidation semantics",
+    "validated Stage5/6 providers remain protected/frozen unless an explicit sandbox says otherwise"
+  ],
+  "review_options": [
+    {
+      "allowed_next_step": "implement default-off trace-only or bounded-support sandbox according to the v1 contract",
+      "option": "approve_default_off_sandbox_implementation",
+      "required_conditions": [
+        "default-off equivalence tests are implemented before enabled tests",
+        "Stage7 remains held out from training and tuning",
+        "no runtime DTM/tablebase input",
+        "no gameplay topology mutation",
+        "every recommendation cites StrategyProposalFrame and provider metadata"
+      ]
+    },
+    {
+      "allowed_next_step": "collect one bounded non-causal evidence slice identified by review",
+      "option": "request_more_non_causal_evidence",
+      "required_conditions": [
+        "no runtime selector implementation",
+        "no Stage7 repair",
+        "no Stage8 training",
+        "evidence gap must be specific and bounded"
+      ]
+    },
+    {
+      "allowed_next_step": "return to curriculum or sequence-policy architecture planning without runtime selector work",
+      "option": "reject_sandbox_path_for_now",
+      "required_conditions": [
+        "record rejection reason",
+        "keep existing observability and evidence artifacts non-causal"
+      ]
+    }
+  ],
+  "review_question": "Should the project implement a default-off, traceable KRK strategy-arbiter sandbox using the v1 contract, or require additional non-causal evidence first?",
+  "runtime_arbiter_implemented": false,
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_strategy_arbiter_runtime_review_packet.v1",
+  "selector_sandbox_implemented": false,
+  "source_artifacts": [
+    "reports/krk_protected_stage_status.json",
+    "reports/krk_selector_readiness_v3_plan.json",
+    "reports/krk_strategy_arbiter_default_off_design_review_v1.json",
+    "reports/krk_strategy_owner_contrast_probe_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

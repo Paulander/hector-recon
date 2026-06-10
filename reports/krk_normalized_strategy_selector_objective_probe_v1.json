@@ -1,0 +1,304 @@
+{
+  "benchmark_underpowered": true,
+  "best_results": {
+    "balanced": {
+      "accuracy": 0.8888888888888888,
+      "objective": "family_maturity_target_kind"
+    },
+    "provenance": {
+      "accuracy": 0.8888888888888888,
+      "objective": "family_rank_score_bucket"
+    }
+  },
+  "causal_status": "non_causal_offline_probe",
+  "dataset_summary": {
+    "balanced": {
+      "heldout_stage7_rows": 0,
+      "label_counts": {
+        "negative": 9,
+        "positive": 9
+      },
+      "provider_family_counts": {
+        "edge_trap": 9,
+        "stage0_basin": 9
+      },
+      "row_count": 18,
+      "stage7_training_rows": 0,
+      "target_kind_counts": {
+        "guardrail_safe_selected_playout": 8,
+        "same_move_provider_compatibility_or_forced_alternative": 1,
+        "selected_playout_success": 9
+      }
+    },
+    "heldout_stage7": {
+      "heldout_stage7_rows": 9,
+      "label_counts": {
+        "None": 9
+      },
+      "provider_family_counts": {
+        "None": 9
+      },
+      "row_count": 9,
+      "stage7_training_rows": 0,
+      "target_kind_counts": {
+        "held_out_challenge": 9
+      }
+    },
+    "provenance_labeled": {
+      "heldout_stage7_rows": 0,
+      "label_counts": {
+        "negative": 31,
+        "positive": 23
+      },
+      "provider_family_counts": {
+        "edge_trap": 34,
+        "stage0_basin": 20
+      },
+      "row_count": 54,
+      "stage7_training_rows": 0,
+      "target_kind_counts": {
+        "forced_provider_conversion": 12,
+        "selected_playout_success": 42
+      }
+    }
+  },
+  "decision": {
+    "recommended_next_step": "review_normalized_probe_before_runtime_tests",
+    "runtime_test_allowed_next": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "normalized_objective_probe_underpowered_fields_available"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "finding": "Existing provenance labels can test normalized rank/score proxies via target_provider_best_rank and target_provider_best_raw_score, but the dataset is still too small and Stage7 remains held out.",
+    "probe_can_test_full_normalized_objective": true,
+    "stage7_training_leakage": false
+  },
+  "normalized_fields_available": true,
+  "required_field_gaps": {
+    "balanced": {
+      "normalized_score": 18,
+      "provider_local_rank": 18
+    },
+    "provenance_labeled": {
+      "normalized_score": 0,
+      "provider_local_rank": 0
+    }
+  },
+  "results": {
+    "balanced_leave_one_out": {
+      "family_maturity": {
+        "accuracy": 0.7777777777777778,
+        "false_negative": 2,
+        "false_positive": 2,
+        "negative_suppression": 0.7777777777777778,
+        "positive_precision": 0.7777777777777778,
+        "positive_recall": 0.7777777777777778,
+        "row_count": 18,
+        "true_negative": 7,
+        "true_positive": 7
+      },
+      "family_maturity_rank_target_kind": {
+        "accuracy": 0.8888888888888888,
+        "false_negative": 2,
+        "false_positive": 0,
+        "negative_suppression": 1.0,
+        "positive_precision": 1.0,
+        "positive_recall": 0.7777777777777778,
+        "row_count": 18,
+        "true_negative": 9,
+        "true_positive": 7
+      },
+      "family_maturity_target_kind": {
+        "accuracy": 0.8888888888888888,
+        "false_negative": 2,
+        "false_positive": 0,
+        "negative_suppression": 1.0,
+        "positive_precision": 1.0,
+        "positive_recall": 0.7777777777777778,
+        "row_count": 18,
+        "true_negative": 9,
+        "true_positive": 7
+      },
+      "family_rank_bucket": {
+        "accuracy": 0.7777777777777778,
+        "false_negative": 2,
+        "false_positive": 2,
+        "negative_suppression": 0.7777777777777778,
+        "positive_precision": 0.7777777777777778,
+        "positive_recall": 0.7777777777777778,
+        "row_count": 18,
+        "true_negative": 7,
+        "true_positive": 7
+      },
+      "family_rank_score_bucket": {
+        "accuracy": 0.7777777777777778,
+        "false_negative": 2,
+        "false_positive": 2,
+        "negative_suppression": 0.7777777777777778,
+        "positive_precision": 0.7777777777777778,
+        "positive_recall": 0.7777777777777778,
+        "row_count": 18,
+        "true_negative": 7,
+        "true_positive": 7
+      },
+      "provider_family": {
+        "accuracy": 0.7777777777777778,
+        "false_negative": 2,
+        "false_positive": 2,
+        "negative_suppression": 0.7777777777777778,
+        "positive_precision": 0.7777777777777778,
+        "positive_recall": 0.7777777777777778,
+        "row_count": 18,
+        "true_negative": 7,
+        "true_positive": 7
+      },
+      "provider_maturity": {
+        "accuracy": 0.7777777777777778,
+        "false_negative": 2,
+        "false_positive": 2,
+        "negative_suppression": 0.7777777777777778,
+        "positive_precision": 0.7777777777777778,
+        "positive_recall": 0.7777777777777778,
+        "row_count": 18,
+        "true_negative": 7,
+        "true_positive": 7
+      },
+      "provider_rank_bucket": {
+        "accuracy": 0.0,
+        "false_negative": 9,
+        "false_positive": 9,
+        "negative_suppression": 0.0,
+        "positive_precision": 0.0,
+        "positive_recall": 0.0,
+        "row_count": 18,
+        "true_negative": 0,
+        "true_positive": 0
+      },
+      "source_stage_family": {
+        "accuracy": 0.7777777777777778,
+        "false_negative": 2,
+        "false_positive": 2,
+        "negative_suppression": 0.7777777777777778,
+        "positive_precision": 0.7777777777777778,
+        "positive_recall": 0.7777777777777778,
+        "row_count": 18,
+        "true_negative": 7,
+        "true_positive": 7
+      }
+    },
+    "provenance_leave_one_out": {
+      "family_maturity": {
+        "accuracy": 0.7962962962962963,
+        "false_negative": 7,
+        "false_positive": 4,
+        "negative_suppression": 0.8709677419354839,
+        "positive_precision": 0.8,
+        "positive_recall": 0.6956521739130435,
+        "row_count": 54,
+        "true_negative": 27,
+        "true_positive": 16
+      },
+      "family_maturity_rank_target_kind": {
+        "accuracy": 0.8148148148148148,
+        "false_negative": 3,
+        "false_positive": 7,
+        "negative_suppression": 0.7741935483870968,
+        "positive_precision": 0.7407407407407407,
+        "positive_recall": 0.8695652173913043,
+        "row_count": 54,
+        "true_negative": 24,
+        "true_positive": 20
+      },
+      "family_maturity_target_kind": {
+        "accuracy": 0.8148148148148148,
+        "false_negative": 3,
+        "false_positive": 7,
+        "negative_suppression": 0.7741935483870968,
+        "positive_precision": 0.7407407407407407,
+        "positive_recall": 0.8695652173913043,
+        "row_count": 54,
+        "true_negative": 24,
+        "true_positive": 20
+      },
+      "family_rank_bucket": {
+        "accuracy": 0.7962962962962963,
+        "false_negative": 7,
+        "false_positive": 4,
+        "negative_suppression": 0.8709677419354839,
+        "positive_precision": 0.8,
+        "positive_recall": 0.6956521739130435,
+        "row_count": 54,
+        "true_negative": 27,
+        "true_positive": 16
+      },
+      "family_rank_score_bucket": {
+        "accuracy": 0.8888888888888888,
+        "false_negative": 2,
+        "false_positive": 4,
+        "negative_suppression": 0.8709677419354839,
+        "positive_precision": 0.84,
+        "positive_recall": 0.9130434782608695,
+        "row_count": 54,
+        "true_negative": 27,
+        "true_positive": 21
+      },
+      "provider_family": {
+        "accuracy": 0.7962962962962963,
+        "false_negative": 7,
+        "false_positive": 4,
+        "negative_suppression": 0.8709677419354839,
+        "positive_precision": 0.8,
+        "positive_recall": 0.6956521739130435,
+        "row_count": 54,
+        "true_negative": 27,
+        "true_positive": 16
+      },
+      "provider_maturity": {
+        "accuracy": 0.7962962962962963,
+        "false_negative": 7,
+        "false_positive": 4,
+        "negative_suppression": 0.8709677419354839,
+        "positive_precision": 0.8,
+        "positive_recall": 0.6956521739130435,
+        "row_count": 54,
+        "true_negative": 27,
+        "true_positive": 16
+      },
+      "provider_rank_bucket": {
+        "accuracy": 0.5740740740740741,
+        "false_negative": 23,
+        "false_positive": 0,
+        "negative_suppression": 1.0,
+        "positive_precision": null,
+        "positive_recall": 0.0,
+        "row_count": 54,
+        "true_negative": 31,
+        "true_positive": 0
+      },
+      "source_stage_family": {
+        "accuracy": 0.7407407407407407,
+        "false_negative": 10,
+        "false_positive": 4,
+        "negative_suppression": 0.8709677419354839,
+        "positive_precision": 0.7647058823529411,
+        "positive_recall": 0.5652173913043478,
+        "row_count": 54,
+        "true_negative": 27,
+        "true_positive": 13
+      }
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_normalized_strategy_selector_objective_probe.v1",
+  "source_artifacts": [
+    "reports/krk_normalized_strategy_selector_objective_v1.json",
+    "reports/krk_selector_balanced_label_dataset_v1.json",
+    "reports/krk_selector_provenance_feature_dataset_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

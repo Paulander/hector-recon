@@ -1,0 +1,129 @@
+{
+  "schema_version": "role_provider_support_proposal.v1",
+  "causal_status": "non_causal",
+  "target_role": "krk.post_box_king_opposition_repair",
+  "target_provider": "krk.edge_trap_close",
+  "source_family_id": "stage7.post_box.family_0afbf11aa123",
+  "source_state_id": "state.0afbf11aa123",
+  "source_legal_first_result": {
+    "post_reply_fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+    "move": "e4d4",
+    "result": "mate",
+    "plies": 5,
+    "provider_suggestions": [
+      {"provider": "krk.edge_trap_close", "move": "e4d4", "observed_ranks": [49, 51]},
+      {"provider": "krk.edge_trap_enemy_between", "move": "e4d4", "observed_ranks": [52, 54]}
+    ]
+  },
+  "proposal_status": "sandbox_ready",
+  "candidate_id": "cand.krk.box_shrink.family_0afbf11aa123.king_opposition_edge_trap_support.v1",
+  "proposed_role": {
+    "role_id": "krk.post_box_king_opposition_repair",
+    "node_id": "script.krk.successor.post_box_king_opposition_repair_affordance",
+    "marker_id": "terminal.krk.successor.post_box_king_opposition_repair_marker",
+    "provider_skill_ids": ["krk.post_box_king_opposition_repair"],
+    "source_terms": [
+      "enemy_king_near_edge",
+      "enemy_king_not_at_edge",
+      "enemy_king_restricted",
+      "fence_or_cut_not_preserved",
+      "repair_or_reestablish_cut_available",
+      "rook_safe",
+      "safe_check_available",
+      "white_king_support_available"
+    ],
+    "required_terms": [
+      "enemy_king_near_edge",
+      "enemy_king_not_at_edge",
+      "enemy_king_restricted",
+      "fence_or_cut_not_preserved",
+      "repair_or_reestablish_cut_available",
+      "rook_safe",
+      "white_king_support_available"
+    ],
+    "veto_terms": ["mate_in_one_available"],
+    "description": "Sandbox-only visible post-box king opposition repair role for the 0af Stage 7 family. The role is trace-only; edge-trap support is provided only through the move-shape-gated adapter."
+  },
+  "term_separation": {
+    "status": "legal_first_terms_candidate",
+    "target_matches": true,
+    "known_nonmatching_families": [
+      "state.38aed2f35911",
+      "state.ff6652c8832c",
+      "state.ac0b7ed500ea"
+    ],
+    "requires_overfire_validation": true
+  },
+  "proposed_support_relations": [
+    {
+      "source_role_script": "script.krk.successor.post_box_king_opposition_repair_affordance",
+      "target_provider_skill": "skill.krk.edge_trap_close",
+      "relation_type": "visible_role_provider_support",
+      "initial_weight": 0.05,
+      "trainable": true,
+      "causal_status": "non_causal_scaffold",
+      "direct_graph_edge_emitted": false,
+      "requires_support_adapter": true,
+      "support_required_terms": [
+        "enemy_king_near_edge",
+        "enemy_king_not_at_edge",
+        "enemy_king_restricted",
+        "fence_or_cut_not_preserved",
+        "repair_or_reestablish_cut_available",
+        "rook_safe",
+        "white_king_support_available"
+      ],
+      "support_veto_terms": ["mate_in_one_available"],
+      "support_move_shape_required_terms": ["candidate_is_king_move"],
+      "support_post_move_required_terms": [
+        "black_king_escape_count_not_increased_after_move",
+        "box_area_not_increased_after_move",
+        "enemy_edge_distance_not_increased_after_move",
+        "rook_safe_after_move",
+        "white_king_and_rook_same_rank_side_after_move",
+        "white_king_file_opposition_distance_two_after_move"
+      ],
+      "source_terms": [
+        "legal_first_e4d4_converts",
+        "candidate_is_king_move",
+        "white_king_file_opposition_distance_two_after_move",
+        "white_king_and_rook_same_rank_side_after_move"
+      ],
+      "adapter_contract": {
+        "kind": "gated_visible_support_adapter",
+        "confirm_when": [
+          "source_role_script_confirmed",
+          "role_contract_met",
+          "candidate_move_shape_terms_met",
+          "candidate_post_move_terms_met",
+          "provider_execution_eligible"
+        ],
+        "must_not": [
+          "request_provider_before_role_confirmation",
+          "bypass visible provider eligibility",
+          "mutate default_topology"
+        ]
+      }
+    }
+  ],
+  "proposed_relation_count": 1,
+  "unsafe_direct_graph_edges_emitted": false,
+  "sandbox_compile_strategy": "compile_sandbox_visible_role_plus_gated_support_adapter_not_direct_sub_edge",
+  "requires_role_provider_augmentation": false,
+  "required_validation": [
+    "compile_sandbox_topology_with_gated_support_adapter",
+    "default_off_equivalence",
+    "targeted_state_0af_probe",
+    "family_balanced_overfire_check",
+    "stage7_target_smoke",
+    "stage6_drive_guardrail",
+    "stage5_fence_guardrail",
+    "m1_m4_preservation"
+  ],
+  "hard_blocks": [
+    "do_not_insert_into_default_topology",
+    "do_not_train_stage8",
+    "do_not_promote_stage7_without_guardrails",
+    "do_not_make_candidate_causal_without_sandbox_validation"
+  ]
+}

@@ -11,6 +11,7 @@ from .move_generators import (
     select_weighted_move,
     PlanMoveCandidate,
 )
+from recon_lite_chess.krk_strategy import SCRIPT_BY_PHASE, compute_phase_logits
 
 __all__ = [
     "get_moves_for_plan",
@@ -22,5 +23,7 @@ __all__ = [
     "get_king_activation_moves",
     "select_weighted_move",
     "PlanMoveCandidate",
+    "SCRIPT_BY_PHASE",
+    "compute_phase_logits",
 ]
 

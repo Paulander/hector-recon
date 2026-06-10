@@ -1,0 +1,549 @@
+{
+  "causal_status": "non_causal_post_validation_regression_audit",
+  "decision_recommendation": "selector_behavior_quarantined_due_to_safe_regression",
+  "fix_implemented": false,
+  "gameplay_topology_mutation": false,
+  "hidden_python_controller": false,
+  "non_causal_fix_evaluation": [
+    {
+      "assessment": "promising_but_not_sufficient_from_current_data",
+      "fix": "add safe-preservation veto",
+      "reason": "The regressed row is an offline safe-preservation control, but using that label directly at runtime would violate label semantics. A runtime-visible proxy needs a separate review."
+    },
+    {
+      "assessment": "needs_more_continuation_observability",
+      "fix": "require stronger failure-risk evidence before switch",
+      "reason": "The first-row decision did not switch, so stronger first-row evidence would not explain the h40 continuation regression without tracing later enabled decisions."
+    },
+    {
+      "assessment": "not_runtime_eligible_as_stated",
+      "fix": "require target row class / switch-contrast scope",
+      "reason": "Target row class is an audit label, not a runtime-visible ownership label. It can scope future tests but should not become behavior logic."
+    },
+    {
+      "assessment": "promising_only_after_terms_are_identified",
+      "fix": "abstain instead of switching on ambiguous patterns",
+      "reason": "Ambiguity terms must be runtime-visible and must capture the later continuation switch, not just the protected row's first decision."
+    },
+    {
+      "assessment": "overfit_risk",
+      "fix": "restrict to exact recommendation/evidence class that improved earlier",
+      "reason": "The two successful switches are a tiny sample and do not cover h40 continuation behavior on protected safe controls."
+    },
+    {
+      "assessment": "recommended_now",
+      "fix": "quarantine behavior selector if separation is not clean",
+      "reason": "Protected validation produced one safe-control regression and no h40 improvements. Quarantine prevents promoting an unsafe causal path."
+    }
+  ],
+  "possible_decisions": [
+    "selector_behavior_quarantined_due_to_safe_regression",
+    "selector_behavior_can_be_narrowed_with_veto_review",
+    "selector_behavior_needs_more_observability_data",
+    "selector_behavior_regression_due_to_bug",
+    "selector_behavior_path_architecture_review_required"
+  ],
+  "regressed_safe_control_rows": [
+    {
+      "baseline_outcome": {
+        "engine_decision_count": 9,
+        "engine_ticks_max": 8,
+        "engine_ticks_total": 72,
+        "plies": 17,
+        "result": "mate"
+      },
+      "case_id": "joined_trace_ownership_4",
+      "direct_safe_regression": false,
+      "enabled_outcome": {
+        "engine_decision_count": 20,
+        "engine_ticks_max": 8,
+        "engine_ticks_total": 160,
+        "plies": 40,
+        "result": "max_plies"
+      },
+      "explanation_terms": [
+        "selector_model.combined_simple_rule",
+        "positive_trace_provider_candidate_count.10",
+        "positive_trace_count_bucket.medium",
+        "edge_bucket.at_edge",
+        "support_bucket.far",
+        "box_area_relevance.low",
+        "selected_piece.rook",
+        "source_stage.stage5",
+        "active_landmark_label.fence_established"
+      ],
+      "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
+      "first_row_switch_observed": false,
+      "frame_id": "cp.krk.state.2c1d6da27ea1",
+      "h40_improved": false,
+      "h40_regressed": true,
+      "h40_safe_regression": true,
+      "h40_validation_role": "safe_preservation",
+      "interpretation": "The protected safe-control state did not switch on the first selector decision; it preserved the selected owner. The regression appears only in the enabled h40 continuation, so the saved data is insufficient to name a specific replacement move/provider as the direct cause.",
+      "recommendation_class": "preserve_selected_owner",
+      "row_id": "joined_trace_ownership_4",
+      "sandbox_action": "no_op",
+      "sandbox_replacement_move": null,
+      "sandbox_replacement_owner": null,
+      "sandbox_veto_reason": "recommendation_not_prefer_visible_alternative",
+      "selected_move_before_sandbox": "a7a8",
+      "selected_owner_before_sandbox": "selected_owner_converted",
+      "selected_provider_before_sandbox": "krk.stage0_basin",
+      "source_terms": [
+        "active_landmark_label.fence_established",
+        "candidate_strategy_family.stage0_basin",
+        "runtime_review_packet.krk_candidate_generation_training_refresh_runtime_review_packet_v3",
+        "stage5_6_candidate_generation_refresh_scope"
+      ],
+      "stage": "stage5",
+      "state_id": "state.2c1d6da27ea1",
+      "terms": {
+        "active_landmark_label": "fence_established",
+        "box_area_relevance": "low",
+        "candidate_source_values": [
+          "stage_conditioned_candidate_generation_refresh"
+        ],
+        "edge_bucket": "at_edge",
+        "explanation_terms": [
+          "selector_model.combined_simple_rule",
+          "positive_trace_provider_candidate_count.10",
+          "positive_trace_count_bucket.medium",
+          "edge_bucket.at_edge",
+          "support_bucket.far",
+          "box_area_relevance.low",
+          "selected_piece.rook",
+          "source_stage.stage5",
+          "active_landmark_label.fence_established"
+        ],
+        "positive_trace_count_bucket": "medium",
+        "positive_trace_provider_candidate_count": 10,
+        "selected_owner_family": "selected_owner_converted",
+        "selected_piece": "rook",
+        "selected_provider_family": "stage0_basin",
+        "source_terms": [
+          "active_landmark_label.fence_established",
+          "candidate_strategy_family.stage0_basin",
+          "runtime_review_packet.krk_candidate_generation_training_refresh_runtime_review_packet_v3",
+          "stage5_6_candidate_generation_refresh_scope"
+        ],
+        "support_bucket": "far"
+      },
+      "visible_alternatives": [
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a7a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a7a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a7a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a7a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a7a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a7a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a7a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a7a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a7a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        },
+        {
+          "candidate_source": "stage_conditioned_candidate_generation_refresh",
+          "capacity_evidence_kind": "positive_capacity_scope",
+          "causal_status": "candidate_generation_only",
+          "direct_request": false,
+          "label_semantics": "stage_conditioned_capacity_scope_not_ownership_label",
+          "move_id": "a7a8",
+          "provider_family": "stage0_basin",
+          "provider_id": "krk.stage0_basin",
+          "score_delta": 0.0,
+          "stage": "stage5"
+        }
+      ]
+    }
+  ],
+  "regression_cause_classification": {
+    "allowed_classes": [
+      "recommendation_wrong",
+      "alternative_selection_wrong",
+      "safe_preservation_veto_missing",
+      "visible_alternative_overtrusted",
+      "label_semantics_mismatch",
+      "horizon/noise issue",
+      "implementation bug"
+    ],
+    "explanation": "The regression is a protected h40 safe-control regression without a first-position switch. The cause is therefore classified as a missing safe-preservation/continuation veto plus overtrust in visible alternatives under limited-horizon validation, not as a demonstrated implementation bug.",
+    "primary_causes": [
+      "safe_preservation_veto_missing",
+      "visible_alternative_overtrusted",
+      "horizon/noise issue"
+    ],
+    "rejected_or_unproven_causes": {
+      "alternative_selection_wrong": "Unproven from saved row data because no first-row replacement was selected on the regressed row.",
+      "implementation bug": "No invalid switch, score delta, routing delta, DTM/tablebase lookup, or topology mutation was observed.",
+      "label_semantics_mismatch": "A risk for any future veto design, but the validation artifact kept capacity labels separate from ownership labels.",
+      "recommendation_wrong": "Unproven for the protected first row because the recommendation was preserve_selected_owner."
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_provider_suppression": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_selector_behavior_regression_audit.v0",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_selector_behavior_sandbox_v0.json",
+    "reports/strategy_arbitration/krk_selector_behavior_sandbox_validation_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "successful_switch_comparison": {
+    "observed_separators": {
+      "first_row_action": {
+        "assessment": "Successful rows had prefer_visible_alternative and a first-row switch; the regression row preserved selected owner on the first decision and regressed later in h40.",
+        "regressed_values": [
+          "preserve_selected_owner"
+        ],
+        "successful_switch_values": [
+          "prefer_visible_alternative"
+        ]
+      },
+      "owner_label": {
+        "assessment": "Successful switches came from selected_owner_failed rows; the regression row was selected_owner_converted.",
+        "regressed_values": [
+          "selected_owner_converted"
+        ],
+        "successful_switch_values": [
+          "selected_owner_failed"
+        ]
+      },
+      "positive_trace_and_source": {
+        "regressed_candidate_sources": [
+          "stage_conditioned_candidate_generation_refresh"
+        ],
+        "regressed_positive_count_buckets": [
+          "medium"
+        ],
+        "successful_candidate_sources": [
+          "stage_conditioned_candidate_generation_refresh",
+          "validated_provider_pack"
+        ],
+        "successful_positive_count_buckets": [
+          "low"
+        ]
+      },
+      "stage_and_landmark": {
+        "regressed_landmarks": [
+          "fence_established"
+        ],
+        "regressed_stages": [
+          "stage5"
+        ],
+        "successful_landmarks": [
+          "drive_to_edge",
+          "wrong_tempo_control"
+        ],
+        "successful_stages": [
+          "stage4",
+          "stage6"
+        ]
+      },
+      "support_edge_box_king_terms": {
+        "regressed_box_area_relevance": [
+          "low"
+        ],
+        "regressed_edge_buckets": [
+          "at_edge"
+        ],
+        "regressed_selected_pieces": [
+          "rook"
+        ],
+        "regressed_support_buckets": [
+          "far"
+        ],
+        "successful_box_area_relevance": [
+          "low"
+        ],
+        "successful_edge_buckets": [
+          "at_edge"
+        ],
+        "successful_selected_pieces": [
+          "king",
+          "rook"
+        ],
+        "successful_support_buckets": [
+          "far",
+          "medium"
+        ]
+      }
+    },
+    "regressed_safe_control_count": 1,
+    "separation_assessment": "The available first-row metadata separates successful target switches from the safe-control row, but the actual regression is a later h40 continuation effect. That prevents a clean causal narrowing rule from this artifact alone.",
+    "successful_switch_count": 2,
+    "successful_switches": [
+      {
+        "case_id": "stage4_joined_trace_ownership_1",
+        "recommendation_class": "prefer_visible_alternative",
+        "row_id": "stage4_joined_trace_ownership_1",
+        "sandbox_replacement_move": "d6d5",
+        "sandbox_replacement_owner": "krk.edge_trap_close",
+        "selected_move_before_sandbox": "d6c7",
+        "selected_owner_before_sandbox": "selected_owner_failed",
+        "selected_provider_before_sandbox": "krk.stage0_basin",
+        "stage": "stage4",
+        "state_id": "state.256a3da30f0f",
+        "target_improved": true,
+        "terms": {
+          "active_landmark_label": "wrong_tempo_control",
+          "box_area_relevance": "low",
+          "candidate_source_values": [
+            "validated_provider_pack"
+          ],
+          "edge_bucket": "at_edge",
+          "explanation_terms": [
+            "selector_model.combined_simple_rule",
+            "positive_trace_provider_candidate_count.3",
+            "positive_trace_count_bucket.low",
+            "edge_bucket.at_edge",
+            "support_bucket.medium",
+            "box_area_relevance.low",
+            "selected_piece.king",
+            "source_stage.stage4",
+            "active_landmark_label.wrong_tempo_control"
+          ],
+          "positive_trace_count_bucket": "low",
+          "positive_trace_provider_candidate_count": 3,
+          "selected_owner_family": "selected_owner_failed",
+          "selected_piece": "king",
+          "selected_provider_family": "stage0_basin",
+          "source_terms": [
+            "offline_validated_provider_capacity_evidence"
+          ],
+          "support_bucket": "medium"
+        },
+        "visible_alternatives": [
+          {
+            "candidate_source": "validated_provider_pack",
+            "capacity_evidence_kind": "positive_capacity",
+            "causal_status": "observation_only",
+            "direct_request": false,
+            "label_semantics": null,
+            "move_id": "d6d5",
+            "provider_family": null,
+            "provider_id": "krk.edge_trap_close",
+            "score_delta": 0.0,
+            "stage": null
+          },
+          {
+            "candidate_source": "validated_provider_pack",
+            "capacity_evidence_kind": "positive_capacity",
+            "causal_status": "observation_only",
+            "direct_request": false,
+            "label_semantics": null,
+            "move_id": "d6d5",
+            "provider_family": null,
+            "provider_id": "krk.edge_trap_wrong_tempo",
+            "score_delta": 0.0,
+            "stage": null
+          },
+          {
+            "candidate_source": "validated_provider_pack",
+            "capacity_evidence_kind": "positive_capacity",
+            "causal_status": "observation_only",
+            "direct_request": false,
+            "label_semantics": null,
+            "move_id": "d6d5",
+            "provider_family": null,
+            "provider_id": "krk.edge_trap_enemy_between",
+            "score_delta": 0.0,
+            "stage": null
+          }
+        ]
+      },
+      {
+        "case_id": "fresh_selector_objective_diversity_5",
+        "recommendation_class": "prefer_visible_alternative",
+        "row_id": "selector_objective_fresh_diversity.05",
+        "sandbox_replacement_move": "a5b6",
+        "sandbox_replacement_owner": "krk.stage0_basin",
+        "selected_move_before_sandbox": "h7c7",
+        "selected_owner_before_sandbox": "selected_owner_failed",
+        "selected_provider_before_sandbox": "krk.edge_trap_close",
+        "stage": "stage6",
+        "state_id": "state.699f0003a511",
+        "target_improved": true,
+        "terms": {
+          "active_landmark_label": "drive_to_edge",
+          "box_area_relevance": "low",
+          "candidate_source_values": [
+            "stage_conditioned_candidate_generation_refresh",
+            "validated_provider_pack"
+          ],
+          "edge_bucket": "at_edge",
+          "explanation_terms": [
+            "selector_model.combined_simple_rule",
+            "positive_trace_provider_candidate_count.2",
+            "positive_trace_count_bucket.low",
+            "edge_bucket.at_edge",
+            "support_bucket.far",
+            "box_area_relevance.low",
+            "selected_piece.rook",
+            "source_stage.stage6",
+            "active_landmark_label.drive_to_edge"
+          ],
+          "positive_trace_count_bucket": "low",
+          "positive_trace_provider_candidate_count": 2,
+          "selected_owner_family": "selected_owner_failed",
+          "selected_piece": "rook",
+          "selected_provider_family": "edge_trap_close",
+          "source_terms": [
+            "candidate_strategy_family.stage0_basin",
+            "offline_validated_provider_capacity_evidence",
+            "runtime_review_packet.krk_candidate_generation_training_refresh_runtime_review_packet_v3",
+            "source_stage.stage6",
+            "stage5_6_candidate_generation_refresh_scope"
+          ],
+          "support_bucket": "far"
+        },
+        "visible_alternatives": [
+          {
+            "candidate_source": "validated_provider_pack",
+            "capacity_evidence_kind": "positive_capacity",
+            "causal_status": "observation_only",
+            "direct_request": false,
+            "label_semantics": null,
+            "move_id": "a5b6",
+            "provider_family": null,
+            "provider_id": "krk.stage0_basin",
+            "score_delta": 0.0,
+            "stage": null
+          },
+          {
+            "candidate_source": "stage_conditioned_candidate_generation_refresh",
+            "capacity_evidence_kind": "positive_capacity",
+            "causal_status": "candidate_generation_only",
+            "direct_request": false,
+            "label_semantics": "forced_provider_capacity_not_runtime_ownership",
+            "move_id": "a5b6",
+            "provider_family": "stage0_basin",
+            "provider_id": "krk.stage0_basin",
+            "score_delta": 0.0,
+            "stage": "stage6"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "abstain_noop_count": 0,
+    "capacity_label_used_as_ownership_label_count": 0,
+    "enabled_switch_count": 0,
+    "h40_improvement_count": 0,
+    "h40_regression_count": 1,
+    "preserve_noop_count": 6,
+    "regressed_safe_control_count": 1,
+    "safe_regression_count": 1,
+    "sample_count": 8,
+    "sample_scope": "stage5_6_protected_joined_trace_h40",
+    "selector_training_row_count": 0,
+    "smoke_decision_status": "selector_behavior_sandbox_target_improved",
+    "smoke_safe_regression_count": 0,
+    "smoke_target_improvement_count": 2,
+    "stage7_training_row_count": 0,
+    "successful_switch_count": 2,
+    "target_improvement_count": 0,
+    "validation_decision_status": "selector_behavior_sandbox_regresses_safe_controls"
+  }
+}

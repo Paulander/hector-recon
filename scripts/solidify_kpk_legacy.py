@@ -16,7 +16,7 @@ from typing import Optional
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.recon_lite.nodes.stem_cell import StemCellManager, StemCellState
+from recon_lite_hector.nodes.stem_cell import StemCellManager, StemCellState
 
 
 def solidify_top_sensors(

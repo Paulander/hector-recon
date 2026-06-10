@@ -1,0 +1,107 @@
+{
+  "causal_status": "non_causal_schema_design",
+  "decision": {
+    "recommended_next_step": "populate_strategy_sequence_candidate_frames_replay_free_v1",
+    "runtime_sandbox_allowed": false,
+    "status": "strategy_sequence_candidate_frame_schema_defined"
+  },
+  "forbidden_causal_uses": [
+    "direct_provider_request",
+    "direct_move_selection",
+    "runtime_dtm_or_tablebase_lookup",
+    "gameplay_topology_mutation",
+    "stage7_promotion",
+    "stage8_training_from_stage7",
+    "default_policy_change"
+  ],
+  "frame_types": [
+    {
+      "causal_status": "non_causal",
+      "frame_type": "validated_provider_candidate",
+      "future_consumer": "candidate_generator_dataset",
+      "label_semantics": "capacity_evidence_not_ownership_label",
+      "meaning": "Existing provider has offline capacity evidence in this state/context.",
+      "source_channel": "protected_forced_provider_capacity"
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_type": "candidate_move_hypothesis",
+      "future_consumer": "proposal_coverage_and_move_ranking_benchmark",
+      "label_semantics": "move_hypothesis_not_selector_decision",
+      "meaning": "Legal move has visible move-shape/post-move terms worth evaluating.",
+      "source_channel": "CandidateMoveFrame"
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_type": "plan_capsule_sequence_candidate",
+      "future_consumer": "sequence_policy_benchmark",
+      "label_semantics": "sequence_candidate_not_runtime_commitment",
+      "meaning": "A bounded multi-step continuation may be needed.",
+      "source_channel": "PlanCapsuleSpec_or_sequence_window"
+    },
+    {
+      "causal_status": "non_causal",
+      "frame_type": "broader_krk_strategy_candidate",
+      "future_consumer": "strategy_arbitration_dataset",
+      "label_semantics": "strategy_candidate_not_provider_route",
+      "meaning": "Current local stage may need handoff to a broader strategy family.",
+      "source_channel": "phase_boundary_or_internal_monitor"
+    }
+  ],
+  "future_runtime_sandbox_requirements": [
+    "candidate-generation candidate set exists",
+    "selection semantics separate capacity from ownership",
+    "sequence-policy candidates have clean success and hard-negative controls",
+    "default-off review packet",
+    "target smoke improvement before guardrails"
+  ],
+  "gameplay_topology_mutation": false,
+  "label_semantics": {
+    "capacity_evidence": "Provider or candidate can convert when forced/offline; not direct ownership.",
+    "ownership_evidence": "Normal routing selected/failed/succeeded; still requires safe-preservation split.",
+    "sequence_evidence": "Multi-step continuation outcome or plan-window label.",
+    "stage7_challenge_row": "Held-out evaluation/challenge only, not training/readiness row."
+  },
+  "purpose": "Represent visible candidate-generation hypotheses for KRK strategy/sequence control without treating capacity evidence as selector labels.",
+  "required_fields": [
+    "schema_version",
+    "frame_id",
+    "state_id",
+    "fen",
+    "source_stage",
+    "active_landmark_label",
+    "frame_type",
+    "candidate_id",
+    "candidate_provider_id",
+    "candidate_move_uci",
+    "candidate_plan_id",
+    "candidate_strategy_family",
+    "source_terms",
+    "move_shape_terms",
+    "post_move_terms",
+    "safety_terms",
+    "internal_monitor_terms",
+    "capacity_evidence",
+    "ownership_evidence",
+    "sequence_evidence",
+    "label_semantics",
+    "stage7_challenge_row",
+    "usable_for_selector_training",
+    "usable_for_candidate_generation_training",
+    "causal_status"
+  ],
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_strategy_sequence_candidate_frame_spec.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_candidate_proposal_coverage_v0.json",
+    "reports/strategy_arbitration/krk_candidate_generation_strategy_review_v0.json",
+    "reports/krk_strategy_sequence_inventory_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false
+}

@@ -1,0 +1,147 @@
+{
+  "candidate_set_policy": {
+    "causal_status": "non_causal_policy_audit_only",
+    "description": "Offline audit policy that adds validated/frozen provider candidates for protected states when current proposal frames omit them.",
+    "name": "validated_provider_pack_candidates_for_protected_contexts",
+    "runtime_default": "not_implemented"
+  },
+  "causal_status": "non_causal_candidate_set_audit",
+  "decision": {
+    "candidate_generator_runtime_allowed": false,
+    "recommended_next_step": "design_two_stage_candidate_generation_and_selection_review",
+    "runtime_work_allowed": false,
+    "selector_training_allowed": false,
+    "stage7_promotion_allowed": false,
+    "stage8_training_allowed": false,
+    "status": "validated_provider_candidate_set_recall_promising_requires_selector_semantics"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "architecture_split": "Treat candidate generation and strategy selection as separate non-causal evidence tracks before runtime work.",
+    "benefit": "A validated-provider candidate-set expansion would recover the currently missing protected positive-capacity providers.",
+    "risk": "The same expansion also introduces negative-capacity providers; candidate generation cannot replace selection/scoring."
+  },
+  "runtime_behavior_changed": false,
+  "runtime_candidate_generator_implemented": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_selector_implemented": false,
+  "runtime_terminals_added": false,
+  "schema_version": "krk_validated_provider_candidate_set_audit.v0",
+  "source_artifacts": [
+    "reports/krk_candidate_generator_coverage_audit_v0.json",
+    "reports/krk_protected_provider_coverage_frames_v0.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "state_summaries": [
+    {
+      "added_negative_capacity_count": 0,
+      "added_positive_capacity_count": 2,
+      "added_validated_providers": [
+        "krk.fence_established",
+        "krk.stage0_basin"
+      ],
+      "existing_frame_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "source_stage": "stage5",
+      "state_id": "state.02feb8593cc6"
+    },
+    {
+      "added_negative_capacity_count": 0,
+      "added_positive_capacity_count": 3,
+      "added_validated_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "existing_frame_providers": [
+        "krk.stage0_basin"
+      ],
+      "source_stage": "stage4",
+      "state_id": "state.256a3da30f0f"
+    },
+    {
+      "added_negative_capacity_count": 0,
+      "added_positive_capacity_count": 2,
+      "added_validated_providers": [
+        "krk.fence_established",
+        "krk.stage0_basin"
+      ],
+      "existing_frame_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "source_stage": "stage5",
+      "state_id": "state.326222aefdf1"
+    },
+    {
+      "added_negative_capacity_count": 0,
+      "added_positive_capacity_count": 3,
+      "added_validated_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "existing_frame_providers": [
+        "krk.stage0_basin"
+      ],
+      "source_stage": "stage5",
+      "state_id": "state.3dca34326fca"
+    },
+    {
+      "added_negative_capacity_count": 2,
+      "added_positive_capacity_count": 1,
+      "added_validated_providers": [
+        "krk.drive_to_edge",
+        "krk.fence_established",
+        "krk.stage0_basin"
+      ],
+      "existing_frame_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "source_stage": "stage6",
+      "state_id": "state.699f0003a511"
+    },
+    {
+      "added_negative_capacity_count": 3,
+      "added_positive_capacity_count": 0,
+      "added_validated_providers": [
+        "krk.edge_trap_close",
+        "krk.edge_trap_enemy_between",
+        "krk.edge_trap_wrong_tempo"
+      ],
+      "existing_frame_providers": [
+        "krk.stage0_basin"
+      ],
+      "source_stage": "stage4",
+      "state_id": "state.b11124d658cf"
+    }
+  ],
+  "summary": {
+    "added_candidate_count": 16,
+    "added_negative_capacity_count": 5,
+    "added_positive_capacity_count": 11,
+    "negative_capacity_inclusion_rate": 0.3125,
+    "positive_capacity_recall_if_included": 1.0,
+    "provider_family_counts": {
+      "drive_to_edge": 1,
+      "edge_trap": 9,
+      "fence_established": 3,
+      "stage0_basin": 3
+    },
+    "source_stage_counts": {
+      "stage4": 6,
+      "stage5": 7,
+      "stage6": 3
+    },
+    "stage7_row_count": 0,
+    "state_count": 6
+  }
+}

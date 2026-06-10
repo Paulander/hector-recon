@@ -31,12 +31,12 @@ try:
 except ImportError:
     chess = None
 
-from recon_lite.motifs.descriptors import (
+from recon_lite_hector.motifs.descriptors import (
     BindingDescriptor,
     MotifDataset,
     MotifType,
 )
-from recon_lite.motifs.extractors import (
+from recon_lite_hector.motifs.extractors import (
     extract_all_features,
     extract_hanging_pieces,
     extract_tactical_features,

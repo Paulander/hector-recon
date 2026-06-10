@@ -1,0 +1,79 @@
+{
+  "schema_version": "role_provider_support_proposal.v1",
+  "causal_status": "non_causal",
+  "target_role": "krk.box_shrink_to_drive_repair",
+  "target_provider": "krk.fence_established",
+  "source_family_id": "stage7.post_box.family_ac0b7ed500ea",
+  "source_state_id": "state.ac0b7ed500ea",
+  "proposal_status": "sandbox_ready",
+  "candidate_id": "cand.krk.box_shrink.family_ac0b7ed500ea.fence_established_visible_support.v1",
+  "term_separation_source": "reports/structural_candidates/stage7_fence_support_term_separation.json",
+  "proposed_support_relations": [
+    {
+      "source_role_script": "script.krk.successor.box_shrink_to_drive_repair_affordance",
+      "target_provider_skill": "skill.krk.fence_established",
+      "relation_type": "visible_role_provider_support",
+      "initial_weight": 0.05,
+      "trainable": true,
+      "causal_status": "non_causal_scaffold",
+      "direct_graph_edge_emitted": false,
+      "requires_support_adapter": true,
+      "support_required_terms": [
+        "box_shrink_drive_repair_available"
+      ],
+      "support_veto_terms": [
+        "mate_in_one_available"
+      ],
+      "support_move_shape_required_terms": [
+        "king_moves_toward_enemy"
+      ],
+      "support_post_move_required_terms": [
+        "rook_safe_after_move",
+        "box_area_not_increased_after_move",
+        "white_king_and_rook_same_rank_side_after_move"
+      ],
+      "source_terms": [
+        "box_shrink_drive_repair_available",
+        "king_moves_toward_enemy",
+        "rook_safe_after_move",
+        "box_area_not_increased_after_move",
+        "white_king_and_rook_same_rank_side_after_move",
+        "forced_fence_established_converted"
+      ],
+      "adapter_contract": {
+        "kind": "gated_visible_support_adapter",
+        "confirm_when": [
+          "source_role_script_confirmed",
+          "role_contract_met",
+          "box_shrink_drive_repair_available",
+          "provider_execution_eligible",
+          "candidate_move_confirms_move_shape_terms",
+          "candidate_move_confirms_post_move_terms"
+        ],
+        "must_not": [
+          "request_provider_before_role_confirmation",
+          "bypass visible provider eligibility",
+          "mutate default_topology"
+        ]
+      }
+    }
+  ],
+  "proposed_relation_count": 1,
+  "unsafe_direct_graph_edges_emitted": false,
+  "sandbox_compile_strategy": "compile_gated_support_adapter_not_direct_sub_edge",
+  "requires_role_provider_augmentation": true,
+  "required_validation": [
+    "compile_sandbox_topology_with_gated_support_adapter",
+    "default_off_equivalence",
+    "stage7_target_smoke",
+    "stage6_drive_guardrail",
+    "stage5_fence_guardrail",
+    "m1_m4_preservation"
+  ],
+  "hard_blocks": [
+    "do_not_insert_into_default_topology",
+    "do_not_train_stage8",
+    "do_not_promote_stage7_without_guardrails",
+    "do_not_make_candidate_causal_without_sandbox_validation"
+  ]
+}

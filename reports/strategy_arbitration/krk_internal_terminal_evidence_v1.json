@@ -1,0 +1,711 @@
+{
+  "blocked_next_steps": [
+    "runtime_terminals",
+    "causal_affordances",
+    "runtime_arbiter",
+    "stage7_repair",
+    "stage8_training",
+    "stage7_promotion",
+    "runtime_dtm_or_tablebase",
+    "gameplay_topology_mutation",
+    "monitor_to_provider_routing"
+  ],
+  "causal_status": "non_causal_evidence",
+  "gameplay_topology_mutation": false,
+  "monitor_class_evidence": {
+    "OwnerExitMonitor": {
+      "failure_precision": 0.5,
+      "outcome_distribution": {
+        "mate": 12,
+        "max_plies": 12,
+        "unknown": 1
+      },
+      "record_count": 25,
+      "success_precision": 0.5
+    },
+    "PhaseBoundaryMonitor": {
+      "failure_precision": 0.52,
+      "outcome_distribution": {
+        "mate": 24,
+        "max_plies": 26,
+        "unknown": 2
+      },
+      "record_count": 52,
+      "success_precision": 0.48
+    },
+    "PlanSelectionNeededMonitor": {
+      "failure_precision": 1.0,
+      "outcome_distribution": {
+        "max_plies": 6,
+        "unknown": 3
+      },
+      "record_count": 9,
+      "success_precision": 0.0
+    },
+    "RepairNeededMonitor": {
+      "failure_precision": 0.8421052631578947,
+      "outcome_distribution": {
+        "mate": 3,
+        "max_plies": 16,
+        "unknown": 3
+      },
+      "record_count": 22,
+      "success_precision": 0.15789473684210525
+    }
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "schema_version": "krk_internal_terminal_evidence.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_internal_terminal_candidates_v0.json",
+    "reports/strategy_arbitration/krk_internal_terminal_validation_v0.json",
+    "reports/strategy_arbitration/krk_visible_monitor_terms_v0.json",
+    "reports/strategy_arbitration/krk_strategy_monitor_records_v0.json",
+    "reports/strategy_arbitration/krk_strategy_arbitration_dataset_v0.json",
+    "reports/structural_candidates/stage7_neutral_diagnostic_matrix.json",
+    "reports/structural_candidates/stage7_evidence_merge_table.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "causal_ready_terminals": [],
+    "combined_record_count": 24,
+    "monitoring_only_candidates": [
+      "terminal.krk.box_shrink_owner_exit_pressure",
+      "terminal.krk.repair_needed_monitor"
+    ],
+    "recommended_next_step": "internal_terminal_design_review_before_any_runtime_work",
+    "stage7_only_candidates": [
+      "terminal.krk.local_provider_competition_failed",
+      "terminal.krk.post_plan_stagnation",
+      "terminal.krk.box_shrink_owner_exit_pressure"
+    ],
+    "strongest_internal_terminal_candidates": [
+      "terminal.krk.local_provider_competition_failed",
+      "terminal.krk.post_plan_stagnation"
+    ],
+    "terminal_count": 4
+  },
+  "terminal_evidence": [
+    {
+      "associated_failure_classes": {
+        "already_solved_by_existing_provider_if_arbitrated": 2,
+        "bad_curriculum_boundary_candidate": 2,
+        "phase_boundary_candidate": 2,
+        "strategy_arbitration_candidate": 2
+      },
+      "associated_provider_strategy_patterns": {
+        "move_counts": {
+          "a4a8": 2,
+          "a4b4": 2,
+          "d2c3": 1,
+          "d2e3": 1,
+          "e2e3": 3,
+          "e4e8": 2,
+          "e4h4": 1
+        },
+        "providers_seen": {
+          "krk.drive_to_edge": 2,
+          "krk.edge_trap_close": 2,
+          "krk.edge_trap_enemy_between": 2,
+          "krk.edge_trap_wrong_tempo": 2,
+          "krk.fence_established": 2,
+          "krk.stage0_basin": 2
+        },
+        "raw_top_provider_counts": {
+          "krk.drive_to_edge": 2
+        }
+      },
+      "candidate_maturity": "internal_terminal_candidate",
+      "causal_ready": false,
+      "cross_stage_fire_count": 0,
+      "examples_of_firing_states": [
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/4k3/R7/8/3K4/8 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.ac0b7ed500ea"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.ff6652c8832c"
+        }
+      ],
+      "examples_of_non_firing_relevant_failure_states": [
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.0afbf11aa123"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.38aed2f35911"
+        }
+      ],
+      "failure_count": 2,
+      "failure_precision": 1.0,
+      "false_negative_examples": [
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.0afbf11aa123"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.38aed2f35911"
+        }
+      ],
+      "false_negative_where_inferable_count": 2,
+      "false_positive_count": 0,
+      "false_positive_examples": [],
+      "fire_count": 2,
+      "label_scope_distribution": {
+        "box_shrink": 2
+      },
+      "missing_companion_terms": [
+        "current_owner",
+        "failed_owner",
+        "alternative_provider_known_mate",
+        "alternative_provider_known_conversion",
+        "route_conflict",
+        "selected_owner_failed_h40",
+        "forced_alternative_succeeded_h40",
+        "provider_score_scale_gap"
+      ],
+      "monitor_type": "internal_control_arbitration_failure_monitor",
+      "previous_v0_validation": {
+        "causal_use_blocked": true,
+        "failure_precision": 1.0,
+        "generalizes_across_stages": false,
+        "mate_max_plies_unknown_distribution": {
+          "max_plies": 2
+        },
+        "recommended_maturity_status": "internal_terminal_candidate",
+        "record_count": 2,
+        "required_missing_terms": [
+          "current_owner",
+          "alternative_provider_known_mate",
+          "route_conflict"
+        ],
+        "shape": "too_sparse",
+        "source_stage_distribution": {
+          "stage7": 2
+        },
+        "stage5_6_4_count": 0,
+        "stage7_count": 2,
+        "stage7_only": true,
+        "success_precision": 0.0,
+        "terminal_id": "terminal.krk.local_provider_competition_failed",
+        "total_record_count": 33
+      },
+      "sparsity_or_overbreadth": "sparse",
+      "stage7_fire_count": 2,
+      "stage7_only": true,
+      "stage_distribution": {
+        "stage7": 2
+      },
+      "success_count": 0,
+      "success_precision": 0.0,
+      "terminal_id": "terminal.krk.local_provider_competition_failed",
+      "total_record_count": 24,
+      "unknown_count": 0
+    },
+    {
+      "associated_failure_classes": {
+        "bad_curriculum_boundary_candidate": 4,
+        "continuation_capacity_candidate": 4,
+        "missing_feature_candidate": 1,
+        "phase_boundary_candidate": 2,
+        "training_objective_model_expression_candidate": 2,
+        "unresolved_without_new_continuation_policy": 4
+      },
+      "associated_provider_strategy_patterns": {
+        "move_counts": {
+          "a5a8": 1,
+          "a5h5": 3,
+          "a6a7": 3,
+          "a6a8": 2,
+          "a6f6": 1,
+          "a6h6": 1,
+          "d1e2": 4,
+          "d2c3": 4,
+          "d2e2": 1,
+          "e3a3": 3,
+          "e3d3": 1,
+          "e4f4": 2
+        },
+        "providers_seen": {
+          "krk.box_shrink": 2,
+          "krk.drive_to_edge": 4,
+          "krk.edge_trap_close": 4,
+          "krk.edge_trap_enemy_between": 4,
+          "krk.edge_trap_wrong_tempo": 4,
+          "krk.fence_established": 4,
+          "krk.stage0_basin": 4
+        },
+        "raw_top_provider_counts": {
+          "krk.drive_to_edge": 2,
+          "krk.stage0_basin": 2
+        }
+      },
+      "candidate_maturity": "internal_terminal_candidate",
+      "causal_ready": false,
+      "cross_stage_fire_count": 0,
+      "examples_of_firing_states": [
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.4e34ad0b2f29"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.b6796dfb62ff"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.0afbf11aa123"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.38aed2f35911"
+        }
+      ],
+      "examples_of_non_firing_relevant_failure_states": [],
+      "failure_count": 4,
+      "failure_precision": 1.0,
+      "false_negative_examples": [],
+      "false_negative_where_inferable_count": 0,
+      "false_positive_count": 0,
+      "false_positive_examples": [],
+      "fire_count": 4,
+      "label_scope_distribution": {
+        "box_shrink": 4
+      },
+      "missing_companion_terms": [
+        "plan_id",
+        "plan_ttl_expired",
+        "plan_owned_move_count",
+        "plan_progress_window",
+        "handoff_success_after_plan",
+        "multi_step_progress_required",
+        "repeated_abstract_state",
+        "post_plan_max_plies",
+        "no_progress_after_owned_window"
+      ],
+      "monitor_type": "internal_plan_progress_stagnation_monitor",
+      "previous_v0_validation": {
+        "causal_use_blocked": true,
+        "failure_precision": 1.0,
+        "generalizes_across_stages": false,
+        "mate_max_plies_unknown_distribution": {
+          "max_plies": 4
+        },
+        "recommended_maturity_status": "internal_terminal_candidate",
+        "record_count": 4,
+        "required_missing_terms": [
+          "handoff_success_after_plan",
+          "multi_step_progress_required",
+          "repeated_abstract_state"
+        ],
+        "shape": "too_sparse",
+        "source_stage_distribution": {
+          "stage7": 4
+        },
+        "stage5_6_4_count": 0,
+        "stage7_count": 4,
+        "stage7_only": true,
+        "success_precision": 0.0,
+        "terminal_id": "terminal.krk.post_plan_stagnation",
+        "total_record_count": 33
+      },
+      "sparsity_or_overbreadth": "sparse",
+      "stage7_fire_count": 4,
+      "stage7_only": true,
+      "stage_distribution": {
+        "stage7": 4
+      },
+      "success_count": 0,
+      "success_precision": 0.0,
+      "terminal_id": "terminal.krk.post_plan_stagnation",
+      "total_record_count": 24,
+      "unknown_count": 0
+    },
+    {
+      "associated_failure_classes": {
+        "bad_curriculum_boundary_candidate": 1,
+        "continuation_capacity_candidate": 1,
+        "missing_feature_candidate": 1,
+        "phase_boundary_candidate": 1,
+        "unresolved_without_new_continuation_policy": 1
+      },
+      "associated_provider_strategy_patterns": {
+        "move_counts": {
+          "e3a3": 3,
+          "e3d3": 1,
+          "e4f4": 2
+        },
+        "providers_seen": {
+          "krk.drive_to_edge": 1,
+          "krk.edge_trap_close": 1,
+          "krk.edge_trap_enemy_between": 1,
+          "krk.edge_trap_wrong_tempo": 1,
+          "krk.fence_established": 1,
+          "krk.stage0_basin": 1
+        },
+        "raw_top_provider_counts": {
+          "krk.drive_to_edge": 1
+        }
+      },
+      "candidate_maturity": "monitoring_only",
+      "causal_ready": false,
+      "cross_stage_fire_count": 0,
+      "examples_of_firing_states": [
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+          "outcome": "unknown",
+          "stage": "stage7",
+          "state_id": "state.0926f12f8e8f"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/8/4K3/4R3/3k4/8 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.0afbf11aa123"
+        }
+      ],
+      "examples_of_non_firing_relevant_failure_states": [
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.4e34ad0b2f29"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.b6796dfb62ff"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.38aed2f35911"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/4k3/R7/8/3K4/8 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.ac0b7ed500ea"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.ff6652c8832c"
+        }
+      ],
+      "failure_count": 1,
+      "failure_precision": 1.0,
+      "false_negative_examples": [
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.4e34ad0b2f29"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.b6796dfb62ff"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/R7/4k3/8/8/3K4 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.38aed2f35911"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/4k3/R7/8/3K4/8 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.ac0b7ed500ea"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/8/4R3/2k5/4K3/8 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.ff6652c8832c"
+        }
+      ],
+      "false_negative_where_inferable_count": 5,
+      "false_positive_count": 0,
+      "false_positive_examples": [],
+      "fire_count": 2,
+      "label_scope_distribution": {
+        "box_shrink": 2
+      },
+      "missing_companion_terms": [
+        "box_shrink_goal_satisfied",
+        "box_area_relevance_low",
+        "black_king_near_edge",
+        "edge_net_affordance_high",
+        "king_support_affordance_high",
+        "validated_handoff_target_available",
+        "box_shrink_should_handoff",
+        "box_shrink_low_affordance"
+      ],
+      "monitor_type": "owner_exit_monitor_candidate",
+      "previous_v0_validation": {
+        "causal_use_blocked": true,
+        "failure_precision": 1.0,
+        "generalizes_across_stages": false,
+        "mate_max_plies_unknown_distribution": {
+          "max_plies": 1,
+          "unknown": 1
+        },
+        "recommended_maturity_status": "monitoring_only",
+        "record_count": 2,
+        "required_missing_terms": [
+          "box_shrink_goal_satisfied",
+          "validated_handoff_target_available"
+        ],
+        "shape": "too_sparse",
+        "source_stage_distribution": {
+          "stage7": 2
+        },
+        "stage5_6_4_count": 0,
+        "stage7_count": 2,
+        "stage7_only": true,
+        "success_precision": 0.0,
+        "terminal_id": "terminal.krk.box_shrink_owner_exit_pressure",
+        "total_record_count": 33
+      },
+      "sparsity_or_overbreadth": "sparse",
+      "stage7_fire_count": 2,
+      "stage7_only": true,
+      "stage_distribution": {
+        "stage7": 2
+      },
+      "success_count": 0,
+      "success_precision": 0.0,
+      "terminal_id": "terminal.krk.box_shrink_owner_exit_pressure",
+      "total_record_count": 24,
+      "unknown_count": 1
+    },
+    {
+      "associated_failure_classes": {
+        "already_solved_by_existing_provider_if_arbitrated": 2,
+        "bad_curriculum_boundary_candidate": 6,
+        "continuation_capacity_candidate": 4,
+        "missing_feature_candidate": 4,
+        "phase_boundary_candidate": 4,
+        "strategy_arbitration_candidate": 2,
+        "training_objective_model_expression_candidate": 2,
+        "unresolved_without_new_continuation_policy": 4
+      },
+      "associated_provider_strategy_patterns": {
+        "move_counts": {
+          "a4a8": 2,
+          "a4b4": 2,
+          "a5a8": 1,
+          "a5h5": 3,
+          "a6a7": 3,
+          "a6a8": 2,
+          "a6f6": 1,
+          "a6h6": 1,
+          "a7a8": 1,
+          "a8b8": 1,
+          "a8d8": 6,
+          "d1e2": 4,
+          "d2c3": 5,
+          "d2e2": 1,
+          "d2e3": 1,
+          "d6c7": 1,
+          "e2e3": 3,
+          "e3a3": 3,
+          "e3d3": 1,
+          "e4e8": 2,
+          "e4f4": 2,
+          "e4h4": 1,
+          "f2g3": 1,
+          "h7c7": 9
+        },
+        "providers_seen": {
+          "krk.box_shrink": 3,
+          "krk.drive_to_edge": 7,
+          "krk.edge_trap_close": 10,
+          "krk.edge_trap_enemy_between": 10,
+          "krk.edge_trap_wrong_tempo": 10,
+          "krk.fence_established": 7,
+          "krk.stage0_basin": 10
+        },
+        "raw_top_provider_counts": {
+          "krk.drive_to_edge": 4,
+          "krk.edge_trap_close": 3,
+          "krk.stage0_basin": 6
+        }
+      },
+      "candidate_maturity": "monitoring_only",
+      "causal_ready": false,
+      "cross_stage_fire_count": 6,
+      "examples_of_firing_states": [
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/8/7R/2k5/4K3/8 w - - 2 2",
+          "outcome": "unknown",
+          "stage": "stage7",
+          "state_id": "state.069e81a609ed"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/8/4K3/8/R7/4k3 w - - 2 2",
+          "outcome": "unknown",
+          "stage": "stage7",
+          "state_id": "state.0926f12f8e8f"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "R7/8/8/8/8/2k5/8/3K4 w - - 4 3",
+          "outcome": "unknown",
+          "stage": "stage7",
+          "state_id": "state.4a464b782ecb"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/8/R7/4k3/8/3K4/8 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.4e34ad0b2f29"
+        },
+        {
+          "active_landmark_label": "box_shrink",
+          "fen": "8/8/R7/8/2k5/8/8/3K4 w - - 2 2",
+          "outcome": "max_plies",
+          "stage": "stage7",
+          "state_id": "state.b6796dfb62ff"
+        }
+      ],
+      "examples_of_non_firing_relevant_failure_states": [],
+      "failure_count": 10,
+      "failure_precision": 0.8333333333333334,
+      "false_negative_examples": [],
+      "false_negative_where_inferable_count": 0,
+      "false_positive_count": 2,
+      "false_positive_examples": [
+        {
+          "active_landmark_label": "fence_established",
+          "fen": "6k1/R7/8/8/8/8/5K2/8 w - - 2 2",
+          "outcome": "mate",
+          "stage": "stage5",
+          "state_id": "state.7bd8961882ad"
+        },
+        {
+          "active_landmark_label": "fence_established",
+          "fen": "5k2/R7/8/8/8/8/4K3/8 w - - 2 2",
+          "outcome": "mate",
+          "stage": "stage5",
+          "state_id": "state.2c1d6da27ea1"
+        }
+      ],
+      "fire_count": 15,
+      "label_scope_distribution": {
+        "box_shrink": 9,
+        "drive_to_edge": 1,
+        "fence_established": 4,
+        "wrong_tempo_control": 1
+      },
+      "missing_companion_terms": [
+        "repair_needed_but_no_safe_repair_available",
+        "safe_repair_move_exists",
+        "box_area_not_expanded_after_reply",
+        "repair_move_preserves_rook_safety",
+        "repair_move_leads_to_conversion",
+        "cut_or_fence_broken_after_reply"
+      ],
+      "monitor_type": "repair_risk_monitor",
+      "previous_v0_validation": {
+        "causal_use_blocked": true,
+        "failure_precision": 0.8421052631578947,
+        "generalizes_across_stages": true,
+        "mate_max_plies_unknown_distribution": {
+          "mate": 3,
+          "max_plies": 16,
+          "unknown": 3
+        },
+        "recommended_maturity_status": "monitoring_only",
+        "record_count": 22,
+        "required_missing_terms": [
+          "repair_needed_but_no_safe_repair_available",
+          "box_area_not_expanded_after_reply"
+        ],
+        "shape": "moderate",
+        "source_stage_distribution": {
+          "stage4": 2,
+          "stage5": 6,
+          "stage6": 5,
+          "stage7": 9
+        },
+        "stage5_6_4_count": 13,
+        "stage7_count": 9,
+        "stage7_only": false,
+        "success_precision": 0.15789473684210525,
+        "terminal_id": "terminal.krk.repair_needed_monitor",
+        "total_record_count": 33
+      },
+      "sparsity_or_overbreadth": "moderate",
+      "stage7_fire_count": 9,
+      "stage7_only": false,
+      "stage_distribution": {
+        "stage4": 1,
+        "stage5": 4,
+        "stage6": 1,
+        "stage7": 9
+      },
+      "success_count": 2,
+      "success_precision": 0.16666666666666666,
+      "terminal_id": "terminal.krk.repair_needed_monitor",
+      "total_record_count": 24,
+      "unknown_count": 3
+    }
+  ]
+}

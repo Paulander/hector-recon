@@ -38,7 +38,7 @@ from recon_lite.graph import NodeState, LinkType
 from recon_lite.logger import RunLogger
 from recon_lite.trace_db import EpisodeRecord, TickRecord, TraceDB, pack_fingerprint
 from recon_lite_chess.scripts.kqk import build_kqk_network, create_random_kqk_board
-from recon_lite.plasticity import (
+from recon_lite_hector.plasticity import (
     PlasticityConfig,
     init_plasticity_state,
     update_eligibility,
@@ -55,11 +55,11 @@ from recon_lite_chess.eval.heuristic import (
     compute_kqk_efficiency_bonus,
     KQK_STEP_PENALTY,
 )
-from recon_lite.plasticity.consolidate import (
+from recon_lite_hector.plasticity.consolidate import (
     ConsolidationConfig,
     ConsolidationEngine,
 )
-from recon_lite.nodes.stem_cell import (
+from recon_lite_hector.nodes.stem_cell import (
     StemCellManager,
     StemCellConfig,
 )

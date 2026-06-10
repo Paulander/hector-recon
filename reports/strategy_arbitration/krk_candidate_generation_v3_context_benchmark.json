@@ -1,0 +1,51 @@
+{
+  "causal_status": "non_causal_context_benchmark",
+  "decision": {
+    "guardrails_allowed": false,
+    "promotion_allowed": false,
+    "recommended_next_step": "architecture_review_candidate_generation_context_to_runtime_boundary",
+    "selector_allowed": false,
+    "status": "candidate_generation_v3_context_useful_selector_still_blocked"
+  },
+  "gameplay_topology_mutation": false,
+  "interpretation": {
+    "capacity_labels_are_not_ownership_labels": true,
+    "context_useful_for_candidate_generation_analysis": true,
+    "risk": "Trace context improves visibility of Stage 5/6 proposal scope, but stage-family coverage also overlaps negative-capacity families; it cannot become a selector without explicit ownership labels.",
+    "selector_supported": false,
+    "trace_rows_are_not_training_labels": true
+  },
+  "runtime_behavior_changed": false,
+  "runtime_defaults_changed": false,
+  "runtime_direct_routing": false,
+  "runtime_dtm_or_tablebase_lookup": false,
+  "runtime_score_changes": false,
+  "runtime_selector_implemented": false,
+  "schema_version": "krk_candidate_generation_v3_context_benchmark.v1",
+  "source_artifacts": [
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v3.json",
+    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v3_quality_probe.json"
+  ],
+  "stage7_promotion_allowed": false,
+  "stage8_training_allowed": false,
+  "summary": {
+    "capacity_row_count": 36,
+    "exact_positive_capacity_covered_count": 8,
+    "exact_positive_capacity_recall_from_trace": 0.3076923076923077,
+    "negative_capacity_count": 10,
+    "positive_capacity_count": 26,
+    "runtime_trace_row_count": 44,
+    "runtime_trace_row_count_by_source": {
+      "repair_monitor_observation": 6,
+      "stage5_6_candidate_generation_refresh": 38
+    },
+    "selector_training_row_count": 0,
+    "stage7_readiness_training_row_count": 0,
+    "stage_family_negative_capacity_exposed_count": 0,
+    "stage_family_negative_capacity_exposure_from_trace": 0.0,
+    "stage_family_positive_capacity_covered_count": 20,
+    "stage_family_positive_capacity_recall_from_trace": 0.7692307692307693,
+    "state_provider_positive_capacity_covered_count": 8,
+    "state_provider_positive_capacity_recall_from_trace": 0.3076923076923077
+  }
+}
