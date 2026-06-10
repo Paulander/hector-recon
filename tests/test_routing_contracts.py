@@ -93,7 +93,10 @@ def test_schema_round_trips():
             owned_roles=["krk.post_box_shrink_continuation"],
             owned_providers=["krk.drive_to_edge", "krk.edge_trap_close"],
             handoff_exports={"krk.edge_trap_close": 0.4},
-            training_source="reports/structural_candidates/stage7_post_box_dtm_trajectory_seed_h40.json",
+            training_source=(
+                "archive/pre_autogrowth_2026_06_10/reports/structural_candidates/"
+                "stage7_post_box_dtm_trajectory_seed_h40.json"
+            ),
             validation_protocol={"target": "Stage 7 h40"},
             guardrails=["stage6_drive_to_edge", "stage5_fence_established"],
             notes=["non-causal candidate only"],

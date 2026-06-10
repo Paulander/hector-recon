@@ -701,15 +701,15 @@ def _krk_strategy_arbiter_observation_for_suggestions(
 
 
 _KRK_CANDIDATE_GENERATION_CAPACITY_FRAMES_PATH = (
-    Path("reports/krk_protected_provider_coverage_frames_v0.json")
+    Path("archive/pre_autogrowth_2026_06_10/reports/krk_protected_provider_coverage_frames_v0.json")
 )
 _KRK_CANDIDATE_GENERATION_CAPACITY_CACHE: dict[str, list[dict]] | None = None
 _KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_PATH = Path(
-    "reports/strategy_arbitration/krk_strategy_sequence_dataset_v3.json"
+    "archive/pre_autogrowth_2026_06_10/reports/strategy_arbitration/krk_strategy_sequence_dataset_v3.json"
 )
 _KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_CACHE: dict[str, list[dict]] | None = None
 _KRK_EXACT_TRACE_ENRICHMENT_GAP_PATH = Path(
-    "reports/strategy_arbitration/krk_candidate_source_gap_manifest_v0.json"
+    "archive/pre_autogrowth_2026_06_10/reports/strategy_arbitration/krk_candidate_source_gap_manifest_v0.json"
 )
 _KRK_EXACT_TRACE_ENRICHMENT_CACHE: dict[str, list[dict]] | None = None
 _KRK_STAGE5_6_CANDIDATE_GENERATION_REFRESH_SCOPE = {

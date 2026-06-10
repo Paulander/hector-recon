@@ -1,9 +1,15 @@
 # Current Agent Brief Pointer
 
-Canonical current-agent brief:
+Canonical active brief for this branch:
 
 ```text
-reports/current_agent_brief.md
+docs/autogrowth/ACTIVE_BRIEF.md
 ```
 
-Do not treat this root file as an independent source of truth.
+Historical report-era briefs are archived under:
+
+```text
+archive/pre_autogrowth_2026_06_10/reports/
+```
+
+Do not treat archived briefs as active instructions.

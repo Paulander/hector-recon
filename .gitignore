@@ -35,6 +35,12 @@ weights/demo_backups/
 reports/bridge*
 *.POLLUTED.json
 
+# Active autogrowth run outputs: commit concise summaries, not bulk traces.
+reports/autogrowth/runs/
+reports/autogrowth/*.jsonl
+reports/autogrowth/*.pkl
+snapshots/autogrowth/
+
 # =============================================================================
 # EVOLUTION TRAINING DATA (large, should be backed up externally)
 # TODO: Set up data backup pipeline (AWS S3, Google Drive, etc.)
