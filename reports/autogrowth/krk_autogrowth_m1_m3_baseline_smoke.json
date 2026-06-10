@@ -1,0 +1,144 @@
+{
+  "arms": {
+    "baseline": {
+      "40": {
+        "arm": "baseline",
+        "conversion_rate": 0.0,
+        "draws": 10,
+        "horizon": 40,
+        "illegal_moves": 0,
+        "mates": 0,
+        "max_plies": 0,
+        "other_failures": 0,
+        "rook_losses": 0,
+        "stalemates": 0,
+        "total": 10
+      },
+      "80": {
+        "arm": "baseline",
+        "conversion_rate": 0.0,
+        "draws": 10,
+        "horizon": 80,
+        "illegal_moves": 0,
+        "mates": 0,
+        "max_plies": 0,
+        "other_failures": 0,
+        "rook_losses": 0,
+        "stalemates": 0,
+        "total": 10
+      }
+    },
+    "sham_growth": {
+      "40": {
+        "arm": "sham_growth",
+        "conversion_rate": 0.0,
+        "draws": 10,
+        "horizon": 40,
+        "illegal_moves": 0,
+        "mates": 0,
+        "max_plies": 0,
+        "other_failures": 0,
+        "rook_losses": 0,
+        "stalemates": 0,
+        "total": 10
+      },
+      "80": {
+        "arm": "sham_growth",
+        "conversion_rate": 0.0,
+        "draws": 10,
+        "horizon": 80,
+        "illegal_moves": 0,
+        "mates": 0,
+        "max_plies": 0,
+        "other_failures": 0,
+        "rook_losses": 0,
+        "stalemates": 0,
+        "total": 10
+      }
+    }
+  },
+  "config": {
+    "heldout_broader_count": 5,
+    "heldout_weakness_count": 5,
+    "horizons": [
+      40,
+      80
+    ],
+    "seed": 20260610,
+    "train_count": 20
+  },
+  "dataset": {
+    "digest": "71c074db2ce069a2a9ccd418fc6564c3162517d2d016c560db2d8fbcd019b392",
+    "heldout_broader": [
+      "7K/4k3/8/8/3R4/8/8/8 w - - 0 1",
+      "8/8/8/1R6/4K3/k7/8/8 w - - 0 1",
+      "8/8/8/2R5/3k4/8/8/K7 w - - 0 1",
+      "6K1/8/8/8/8/8/3R4/5k2 w - - 0 1",
+      "5K2/2R5/7k/8/8/8/8/8 w - - 0 1"
+    ],
+    "heldout_broader_count": 5,
+    "heldout_count": 10,
+    "heldout_weakness": [
+      "6K1/8/8/8/6k1/8/8/R7 w - - 0 1",
+      "8/8/1R6/8/5k2/8/2K5/8 w - - 0 1",
+      "6K1/8/6R1/8/8/2k5/8/8 w - - 0 1",
+      "8/6k1/2R5/8/8/6K1/8/8 w - - 0 1",
+      "8/6k1/8/8/8/5R2/8/1K6 w - - 0 1"
+    ],
+    "heldout_weakness_count": 5,
+    "seed": 20260610,
+    "train": [
+      "8/8/8/8/2k5/7K/8/6R1 w - - 0 1",
+      "4K3/4R3/8/8/3k4/8/8/8 w - - 0 1",
+      "6K1/3k4/6R1/8/8/8/8/8 w - - 0 1",
+      "8/8/6R1/8/8/3k4/8/1K6 w - - 0 1",
+      "8/8/8/1K2k3/8/8/8/R7 w - - 0 1",
+      "2R5/8/1K4k1/8/8/8/8/8 w - - 0 1",
+      "8/8/2R5/8/4K3/8/3k4/8 w - - 0 1",
+      "5k2/8/3R4/8/K7/8/8/8 w - - 0 1",
+      "5k2/3K4/8/8/8/3R4/8/8 w - - 0 1",
+      "8/6K1/8/8/8/3R4/8/4k3 w - - 0 1",
+      "2k5/8/6R1/8/8/8/6K1/8 w - - 0 1",
+      "8/7k/8/8/8/8/4R3/4K3 w - - 0 1",
+      "8/4R3/8/8/4K3/8/8/1k6 w - - 0 1",
+      "K6R/8/8/8/8/5k2/8/8 w - - 0 1",
+      "7R/8/4k3/8/8/8/K7/8 w - - 0 1",
+      "8/8/8/1R6/8/8/K7/3k4 w - - 0 1",
+      "8/8/8/2k5/R7/8/7K/8 w - - 0 1",
+      "8/8/6k1/8/3K4/8/8/4R3 w - - 0 1",
+      "2R5/8/8/8/8/3k4/8/5K2 w - - 0 1",
+      "6K1/8/8/8/4k3/8/1R6/8 w - - 0 1"
+    ],
+    "train_count": 20
+  },
+  "decision": {
+    "autogrowth_candidate_enabled": false,
+    "runtime_tablebase_or_dtm_provider": false,
+    "selector_behavior_enabled": false,
+    "stage_label_learner_features": false,
+    "status": "baseline_and_sham_ready"
+  },
+  "learning_counters": {
+    "candidate_activation_rate": 0.0,
+    "candidate_nodes_promoted": 0,
+    "candidate_nodes_spawned": 0,
+    "deleted_candidate_count": 0,
+    "m3_update_count": 0,
+    "m4_consolidation_event_count": 0,
+    "negative_credit_count": 0,
+    "positive_credit_count": 0
+  },
+  "paired_deltas": {
+    "40": {
+      "candidate_fails_where_baseline_succeeds": 0,
+      "candidate_succeeds_where_baseline_fails": 0,
+      "outcome_changed_count": 0
+    },
+    "80": {
+      "candidate_fails_where_baseline_succeeds": 0,
+      "candidate_succeeds_where_baseline_fails": 0,
+      "outcome_changed_count": 0
+    }
+  },
+  "schema_version": "krk_autogrowth_m1_m3_baseline.v0"
+}

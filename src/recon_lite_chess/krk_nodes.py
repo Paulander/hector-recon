@@ -931,10 +931,6 @@ def create_krk_arbiter(nid: str) -> Node:
             winner = "fallback"
             reason = "no_proposal"
         
-        # DEBUG: Trace Arbiter Decision (with stem info)
-        stem_info = f" STEM={stem_cells_active}" if stem_cells_active > 0 else ""
-        print(f"DEBUG: ARBITER | R_Act={rook_act:.2f} | K_Act={king_act:.2f} | Winner={winner} | Prop={proposal}{stem_info}")
-
         # Store final decision (using helper to write to correct location)
         if proposal:
             _set_suggested_move(env, proposal)
@@ -1046,12 +1042,7 @@ def wire_default_krk(g, root_id: str, ids: Dict[str, str]) -> None:
     g.add_edge(ids["phase2"], ids["phase3"], LinkType.POR)
     g.add_edge(ids["phase3"], ids["phase4"], LinkType.POR)
 
-
-
-print("DEBUG: KRK_NODES MODULE LOADED")
-
 def create_krk_execute(nid: str) -> Node:
-    print(f"DEBUG: create_krk_execute CALLED for {nid}")
     """
     Execution Node:
     - Acts as a synchronization barrier.
@@ -1072,7 +1063,6 @@ def create_krk_execute(nid: str) -> Node:
                 break
         
         if all_confirmed:
-            print("DEBUG: KRK_EXECUTE finished (all children confirmed)")
             return True, True
         
         # Still waiting for children
