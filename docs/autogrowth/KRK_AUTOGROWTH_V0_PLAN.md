@@ -285,6 +285,82 @@ Current result:
 - Broader run: `reports/autogrowth/krk_autogrowth_m8_training_12c8.json`, 12 candidates spawned, 370 M3 updates, 12 candidates quarantined.
 - Decision: the lifecycle loop is alive, but the current mined action schemas are unsafe/low-quality. More cycles alone are not the next lever; candidate mining/action construction needs better learner-visible risk evidence.
 
+### M9: Normalize Existing Candidate Nodes
+
+Do not create another candidate lifecycle beside the existing stem-cell/TRIAL machinery. The current repo already has candidate-node substrate in:
+
+- `src/recon_lite_hector/nodes/stem_cell.py`
+- `src/recon_lite_hector/learning/m5_structure.py`
+- `src/recon_lite_hector/nodes/pack_template.py`
+
+M9 is a constraint/instrumentation pass on that machinery.
+
+Required split:
+
+- Relevance stats: request exposure, activation count, confirmation count, parent locality, sibling contrast, context precision, context coverage.
+- Credit stats: positive/negative/neutral correlation and positive/negative/neutral causal intervention.
+- Survival stats: maturity, prune pressure, quarantine reason, last confirmation cycle.
+
+Rules:
+
+- Correlation may nominate a candidate.
+- Relevance can keep a candidate alive locally.
+- Maturity/promotion requires at least one causal intervention.
+- Negative causal credit on a relevant node should inhibit or convert it into a local suppressor, not automatically erase the evidence.
+- XP alone must not be the only survival score.
+
+### M10: Local Survival Rules
+
+Implement survival/maturity decisions under the candidate's current parent, not through global promotion bypasses.
+
+For the KRK proof experiment, disable or mark non-causal:
+
+- KRK box-method discovery as a promotion path.
+- forced hoisting.
+- perfect-success, survivor, extreme-failure, and sample bypasses.
+- stage/provider labels as learner causes.
+- random fallback outcomes credited to candidate nodes.
+
+Survival matrix:
+
+- high relevance + positive causal credit: mature locally and strengthen local edges.
+- high relevance + negative causal credit: inhibit, suppress, or quarantine under the same parent.
+- low relevance + positive credit elsewhere: keep dormant/local nursery only; do not globally promote.
+- low relevance + neutral/negative credit: prune.
+
+### M11: One Local Suppressor Experiment
+
+Do not broaden candidate types yet. Test exactly one candidate type:
+
+```text
+parent script/action leg
+  existing sibling action
+  learned suppressor terminal
+```
+
+The suppressor confirms when generic local context predicts bad continuation and inhibits only the sibling action under the same parent. It must not choose moves directly.
+
+Bad continuation labels for trainer/evaluator only:
+
+- rook captured within N plies.
+- stalemate caused.
+- no move/stall.
+- no mate/progress within h40.
+
+Learner-visible records must not use `rook_loss_risk`, `box_shrink`, `opposition_tempo`, stage labels, provider labels, or KRK tactical phase strings.
+
+Pass the single suppressor experiment only if:
+
+- h40 and h80 improve by at least +10 percentage points absolute on locked heldout KRK.
+- rook-loss count drops by at least 50%.
+- protected regressions, illegal moves, and stalemate/blunder regressions are zero.
+- candidate trigger rate is at least 10%.
+- removing the candidate returns behavior to baseline.
+
+### M12: Long Training Gate
+
+Long training remains blocked until M11 shows one causal, heldout-safe KRK candidate improvement. More cycles over the current unsafe action-schema pool mostly measure candidate collapse and scaffold behavior, not autonomous KRK competence.
+
 ## Long-Run Protocol
 
 Agents should be willing to run multi-hour local experiments when useful. A valid long run must:

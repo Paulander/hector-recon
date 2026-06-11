@@ -37,6 +37,21 @@ repeat
 
 If a change does not move this loop forward, it is probably not branch-critical.
 
+## Candidate Node Direction
+
+Do not create a parallel candidate-node lifecycle system unless there is a concrete reason the existing one cannot be tightened. The repo already has first-class structural-growth machinery under:
+
+- `src/recon_lite_hector/nodes/stem_cell.py`
+- `src/recon_lite_hector/learning/m5_structure.py`
+- `src/recon_lite_hector/nodes/pack_template.py`
+
+For the next KRK autogrowth work, treat `StemCellTerminal` / TRIAL / MATURE / PRUNED lifecycle as the candidate-node substrate to normalize and instrument. Keep relevance and outcome credit separate:
+
+- Relevance/context fit: request exposure, activation, confirmation, parent locality, sibling contrast, context precision/coverage.
+- Outcome valence/credit: positive/negative/neutral causal interventions and correlation evidence.
+
+Correlation may nominate a candidate, but promotion/maturity requires causal intervention evidence. Negative causal credit should not automatically erase a relevant node; it may become a local suppressor/inhibitor under the same parent. Avoid global bypasses or hand-authored KRK tactical managers as promotion paths for autonomy claims.
+
 ## Learner Vocabulary Boundary
 
 Runtime/evaluation may use:
