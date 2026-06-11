@@ -44,6 +44,15 @@ from .fragment_chain_curriculum import (
     evaluate_fragment_chain_arm,
     run_fragment_chain_curriculum,
 )
+from .lag_terminals import (
+    LagFragmentChainMetrics,
+    LagTerminalConfig,
+    LagTerminalResult,
+    choose_lag_fragment_chain_action,
+    evaluate_lag_fragment_chain_arm,
+    evaluate_lag_terminal,
+    run_lag_terminal_experiment,
+)
 from .mining import (
     CandidateMiningConfig,
     CandidateMiningResult,
@@ -119,6 +128,9 @@ __all__ = [
     "FORBIDDEN_LEARNER_TERMS",
     "FragmentChainCurriculumConfig",
     "FragmentChainCurriculumResult",
+    "LagFragmentChainMetrics",
+    "LagTerminalConfig",
+    "LagTerminalResult",
     "CandidateLifecycle",
     "GrowthTrainingConfig",
     "GrowthTrainingResult",
@@ -154,6 +166,8 @@ __all__ = [
     "evaluate_baseline_and_sham",
     "evaluate_candidate_sandbox",
     "evaluate_fragment_chain_arm",
+    "evaluate_lag_fragment_chain_arm",
+    "evaluate_lag_terminal",
     "evaluate_local_arbitration_arm",
     "evaluate_local_suppressor_arm",
     "evaluate_sandbox_arm",
@@ -179,9 +193,11 @@ __all__ = [
     "run_topological_growth_runway",
     "run_context_specialized_candidate_experiment",
     "run_fragment_chain_curriculum",
+    "run_lag_terminal_experiment",
     "run_risk_aware_candidate_experiment",
     "suppressor_confirms",
     "choose_local_script_action",
+    "choose_lag_fragment_chain_action",
     "train_growth_candidates",
     "validate_learner_record",
 ]

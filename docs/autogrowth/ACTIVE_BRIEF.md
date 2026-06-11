@@ -69,7 +69,9 @@ The old `M` labels in this file are subcheckpoints inside one larger milestone: 
 - Current TG17 result allows only a bounded partial curriculum: 11 train starts, 5 train mates, 10 heldout starts, 42 chain edges, zero heldout rook losses/illegal moves/stalemates, and 0/200 heldout mates. `bounded_partial_curriculum_allowed=true`, `broad_curriculum_allowed=false`.
 - TG18 bounded fragment-chain curriculum is implemented. `reports/autogrowth/krk_autogrowth_tg18_fragment_chain_curriculum.json` runs protected baseline, sham fragment-chain, and real fragment-chain arms over the locked TG17/M16 runway.
 - Current TG18 result is a clean failure with rollback/quarantine: h40 real chain remains 0/200 mates and reduces repetition events from 2,600 to 2,574, but causes 2 rook-loss regressions. Training M3 updates: 16; heldout M3 updates: 10; heldout chain starts: 8; completions: 1; M4 consolidation: 0.
-- Next checkpoint should be an isolated TG19-LAG experiment. Do not run longer over the same fragment-chain representation; test whether local temporal/LAG terminals improve activation precision and dead-loop detection without adding direct move choice.
+- TG19 isolated LAG terminal checkpoint is implemented. `reports/autogrowth/krk_autogrowth_tg19_lag_terminals.json` adds a local temporal TERMINAL over generic feature deltas (`rook_attacked_by_black`, `rook_present`, repetition seen) that can inhibit a candidate transition but cannot choose a replacement move.
+- Current TG19 result is partial-continue, not competence: h40 LAG keeps 0/200 mates, removes the 2 no-LAG rook losses, triggers 2 local suppressions, and keeps safety clean, but chain completions drop from 1 to 0 and repetition only improves by 1 event vs baseline. Training M3 updates: 16; heldout M3 updates: 9; M4 consolidation: 0.
+- Next checkpoint should improve local continuation construction/activation precision using the TG19 safety evidence. Do not run broad long training until a local mechanism both preserves safety and increases useful chain completion or conversion.
 
 ## Current Architecture Guardrail
 

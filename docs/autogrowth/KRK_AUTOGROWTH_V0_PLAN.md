@@ -531,9 +531,27 @@ Current result:
 
 Decision: fail and quarantine. TG18 produced a weak continuation signal by reducing repetition events, but it violated the safety gate with rook-loss regressions and did not produce heldout conversion. Do not run longer over the same fragment-chain representation. The next checkpoint should isolate LAG/temporal terminals to see whether local change detection improves activation precision and dead-loop avoidance without direct move choice.
 
+### TG19: Isolated LAG Terminal Checkpoint
+
+Status: implemented as a partial-continue safety signal.
+
+This checkpoint adds one bounded temporal primitive to the TG18 fragment-chain runway. The LAG terminal compares before/after generic features for a candidate transition and may inhibit that local transition through RET-style structure. It does not rank actions, choose replacement moves, use tablebase/DTM, or add stage/box/opposition labels.
+
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_tg19_lag_terminals.json`
+- 12 candidates and 42 chain edges, matching the TG18 runway.
+- Training LAG triggers/suppressions: 2; training M3 updates: 16.
+- Heldout h40 no-LAG arm: 0/200 mates, 2 rook losses, 1 chain completion, 2,574 repetition events.
+- Heldout h40 LAG arm: 0/200 mates, 0 rook losses, 0 chain completions, 2 LAG suppressions, 2,599 repetition events.
+- Heldout h80 LAG arm: 0/200 mates, 0 rook losses, 0 chain completions, 2 LAG suppressions, 2,600 repetition events.
+- M4 consolidation events: 0.
+
+Decision: partial-continue only. LAG proves that a local temporal terminal can remove the known rook-loss regression without direct move choice, but it also suppresses the only observed completion and still does not move KRK conversion. The next checkpoint should improve local continuation construction or activation precision before any broad long training run.
+
 ### Future TG: Sensor/Circuit Growth Primitives
 
-Status: direction recorded, not yet implemented in TG18.
+Status: direction recorded; LAG has one isolated TG19 checkpoint, AND/OR/XOR and broader sensor circuits are still not implemented in this runway.
 
 Topological growth should not stay limited to triplet candidates. A mature ReCoN learner likely needs to spawn and test stand-alone sensors and minimal local sensor circuits:
 
@@ -544,7 +562,7 @@ Topological growth should not stay limited to triplet candidates. A mature ReCoN
 
 Training may use a shared sensor implementation for performance. That is acceptable only if it is equivalent to per-SCRIPT terminal instantiation in the saved ReCoN graph or clearly marked as a performance compression of that topology.
 
-Decision boundary: do not mix these primitives into the immediate bounded fragment-chain curriculum unless the run explicitly tests one primitive family with isolated metrics. The next curriculum run should remain narrow; the following TG checkpoint can test whether LAG or simple boolean composition improves activation precision without adding direct move choice.
+Decision boundary: do not mix multiple primitive families into one broad curriculum run. Test one primitive family at a time with isolated metrics, and require behavior-changing use to stay mediated through local ReCoN TERMINAL/SCRIPT/ACTION/stem-cell structure.
 
 ## Long-Run Protocol
 
