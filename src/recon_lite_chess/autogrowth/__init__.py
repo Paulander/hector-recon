@@ -38,6 +38,12 @@ from .features import (
     make_trace_record,
     validate_learner_record,
 )
+from .fragment_chain_curriculum import (
+    FragmentChainCurriculumConfig,
+    FragmentChainCurriculumResult,
+    evaluate_fragment_chain_arm,
+    run_fragment_chain_curriculum,
+)
 from .mining import (
     CandidateMiningConfig,
     CandidateMiningResult,
@@ -111,6 +117,8 @@ __all__ = [
     "EvaluationConfig",
     "EvaluationResult",
     "FORBIDDEN_LEARNER_TERMS",
+    "FragmentChainCurriculumConfig",
+    "FragmentChainCurriculumResult",
     "CandidateLifecycle",
     "GrowthTrainingConfig",
     "GrowthTrainingResult",
@@ -145,6 +153,7 @@ __all__ = [
     "evaluate_arm",
     "evaluate_baseline_and_sham",
     "evaluate_candidate_sandbox",
+    "evaluate_fragment_chain_arm",
     "evaluate_local_arbitration_arm",
     "evaluate_local_suppressor_arm",
     "evaluate_sandbox_arm",
@@ -169,6 +178,7 @@ __all__ = [
     "run_script_fragment_experiment",
     "run_topological_growth_runway",
     "run_context_specialized_candidate_experiment",
+    "run_fragment_chain_curriculum",
     "run_risk_aware_candidate_experiment",
     "suppressor_confirms",
     "choose_local_script_action",

@@ -67,7 +67,9 @@ The old `M` labels in this file are subcheckpoints inside one larger milestone: 
 - Current M16 result opens only a narrow partial-curriculum runway: `reports/autogrowth/krk_autogrowth_m16_script_fragments.json` gives 11 train starts, 10 heldout starts, 12 heldout steps, 2 completions, zero heldout rook losses, and 0/200 mates. `partial_curriculum_ready=true`, `broad_curriculum_ready=false`.
 - TG17 triplet-chain runway is implemented. `reports/autogrowth/krk_autogrowth_tg17_triplet_chain_runway.json` inventories four ready/formally validated legacy predefined-topology KRK control runs, exposes current candidates as before-terminal -> ACTION delta -> after-terminal triplets, and finds 42 after-to-before chain edges.
 - Current TG17 result allows only a bounded partial curriculum: 11 train starts, 5 train mates, 10 heldout starts, 42 chain edges, zero heldout rook losses/illegal moves/stalemates, and 0/200 heldout mates. `bounded_partial_curriculum_allowed=true`, `broad_curriculum_allowed=false`.
-- Next checkpoint should run the bounded fragment-chain curriculum over activating local triplets only, with safety rollback and no KPK/KQK transfer claims until KRK shows nonzero heldout conversion movement.
+- TG18 bounded fragment-chain curriculum is implemented. `reports/autogrowth/krk_autogrowth_tg18_fragment_chain_curriculum.json` runs protected baseline, sham fragment-chain, and real fragment-chain arms over the locked TG17/M16 runway.
+- Current TG18 result is a clean failure with rollback/quarantine: h40 real chain remains 0/200 mates and reduces repetition events from 2,600 to 2,574, but causes 2 rook-loss regressions. Training M3 updates: 16; heldout M3 updates: 10; heldout chain starts: 8; completions: 1; M4 consolidation: 0.
+- Next checkpoint should be an isolated TG19-LAG experiment. Do not run longer over the same fragment-chain representation; test whether local temporal/LAG terminals improve activation precision and dead-loop detection without adding direct move choice.
 
 ## Current Architecture Guardrail
 

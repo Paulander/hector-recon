@@ -505,9 +505,35 @@ Current result:
 
 Decision: proceed to a bounded fragment-chain curriculum over activating local triplets only. This is not a broad KRK curriculum, and it is not a KPK/KQK transfer claim. The curriculum must preserve the current boundary: behavior-changing learning has to flow through local TERMINAL/SCRIPT/ACTION/stem-cell structure, with rollback on rook loss, illegal move, or stalemate.
 
+### TG18: Bounded Fragment-Chain Curriculum
+
+Status: implemented as a clean failure with rollback/quarantine.
+
+This checkpoint runs the TG17/M16 runway as an actual bounded curriculum with three arms:
+
+- protected baseline
+- sham fragment-chain
+- real fragment-chain autogrowth
+
+Only the real fragment-chain arm can change behavior. It uses the existing fixed fragment SCRIPT/triplet candidates and chain edges; it does not add LAG, boolean composition, standalone sensor growth, selector behavior, runtime tablebase/DTM, or direct move/provider override.
+
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_tg18_fragment_chain_curriculum.json`
+- short summary: `reports/autogrowth/krk_autogrowth_tg18_fragment_chain_curriculum.md`
+- 12 candidates and 42 chain edges.
+- Training M3 updates: 16.
+- Heldout h40 real chain: 8 starts, 10 steps, 1 completion, 10 M3 updates.
+- Baseline h40: 0/200 mates, 2,600 repetition events, 0 rook losses.
+- Sham h40: identical to baseline on mate/repetition/safety.
+- Real chain h40: 0/200 mates, 2,574 repetition events, 2 rook losses.
+- M4 consolidation events: 0.
+
+Decision: fail and quarantine. TG18 produced a weak continuation signal by reducing repetition events, but it violated the safety gate with rook-loss regressions and did not produce heldout conversion. Do not run longer over the same fragment-chain representation. The next checkpoint should isolate LAG/temporal terminals to see whether local change detection improves activation precision and dead-loop avoidance without direct move choice.
+
 ### Future TG: Sensor/Circuit Growth Primitives
 
-Status: direction recorded, not yet implemented in the active TG17 curriculum.
+Status: direction recorded, not yet implemented in TG18.
 
 Topological growth should not stay limited to triplet candidates. A mature ReCoN learner likely needs to spawn and test stand-alone sensors and minimal local sensor circuits:
 
