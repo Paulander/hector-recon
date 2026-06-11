@@ -38,7 +38,9 @@ Archived under `archive/pre_autogrowth_2026_06_10/`:
 
 Do not rebuild those as the mainline workflow.
 
-## Current Checkpoint State
+## Current Topological-Growth Checkpoint State
+
+The old `M` labels in this file are subcheckpoints inside one larger milestone: **TG: topological growth works**. They should not be read as separate research milestones.
 
 - M0-M3 are implemented as the active baseline: cleaned branch guidance, feature firewall, locked KRK generation, and baseline/sham evaluation.
 - M4 is implemented as non-behavior-changing evidence preparation: train traces plus mechanical triplet candidate mining under `reports/autogrowth/`.
@@ -61,7 +63,9 @@ Do not rebuild those as the mainline workflow.
 - Current M15 result is a safe activation failure: `reports/autogrowth/krk_autogrowth_m15_local_scripts.json` generates 12 SCRIPT candidates, but heldout starts/steps/completions are all 0; result is 0 rook losses and 0/200 mates.
 - M16 reusable SCRIPT fragments are implemented. M15 exact starts are generalized through local TERMINAL subcondition fragments over generic KRK features, still under SCRIPT/ACTION/stem-cell structure.
 - Current M16 result opens only a narrow partial-curriculum runway: `reports/autogrowth/krk_autogrowth_m16_script_fragments.json` gives 11 train starts, 10 heldout starts, 12 heldout steps, 2 completions, zero heldout rook losses, and 0/200 mates. `partial_curriculum_ready=true`, `broad_curriculum_ready=false`.
-- Next checkpoint should run a bounded partial curriculum over fragment-gated SCRIPT candidates, with safety rollback and no KPK/KQK transfer claims until KRK shows nonzero conversion movement.
+- TG17 triplet-chain runway is implemented. `reports/autogrowth/krk_autogrowth_tg17_triplet_chain_runway.json` inventories four ready/formally validated legacy predefined-topology KRK control runs, exposes current candidates as before-terminal -> ACTION delta -> after-terminal triplets, and finds 42 after-to-before chain edges.
+- Current TG17 result allows only a bounded partial curriculum: 11 train starts, 5 train mates, 10 heldout starts, 42 chain edges, zero heldout rook losses/illegal moves/stalemates, and 0/200 heldout mates. `bounded_partial_curriculum_allowed=true`, `broad_curriculum_allowed=false`.
+- Next checkpoint should run the bounded fragment-chain curriculum over activating local triplets only, with safety rollback and no KPK/KQK transfer claims until KRK shows nonzero heldout conversion movement.
 
 ## Current Architecture Guardrail
 

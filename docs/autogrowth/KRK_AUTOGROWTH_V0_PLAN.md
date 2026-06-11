@@ -136,7 +136,9 @@ Disabled in this experiment:
 - stage-label learner features
 - old report-row IDs as training examples
 
-## Implementation Milestones
+## Topological-Growth Subcheckpoints
+
+The `M` labels below are historical subcheckpoint names inside one larger milestone: **TG: learned topological growth works**. They are not separate research milestones. Future work should prefer TG checkpoint names when the work is about the same topological-growth objective.
 
 ### M0: Clean Reset Baseline
 
@@ -468,6 +470,30 @@ Current result:
 - Decision flags: `partial_curriculum_ready=true`, `broad_curriculum_ready=false`.
 
 Decision: narrow partial-curriculum runway. Fragment generalization solves the zero-activation problem without heldout safety regression on the locked full set, but it does not move KRK conversion. Do not launch broad long training yet. The next checkpoint should run a bounded partial curriculum over these fragment-gated SCRIPT candidates and require rollback if rook loss, illegal moves, or stalemates reappear.
+
+### TG17: Triplet-Chain Runway
+
+Status: implemented as a bounded partial-curriculum gate.
+
+This checkpoint makes the old triplet idea explicit again:
+
+```text
+before TERMINAL -> ACTION delta vector -> after TERMINAL
+after TERMINAL -> local request/confirmation for another before TERMINAL
+```
+
+It also inventories old predefined-topology KRK runs as controls only. Those runs prove the supplied-topology path can learn useful KRK behavior, but they are not evidence that current autogrowth has solved topology discovery.
+
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_tg17_triplet_chain_runway.json`
+- 4 ready/formally validated legacy predefined-topology control runs found.
+- 12 current fragment SCRIPT candidates represented as terminal-space triplets.
+- 42 after-to-before chain edges found at chain distance <= 1.5.
+- Current fragment result remains safe but incomplete: 10 heldout starts, 0 rook losses, 0 illegal moves, 0 stalemates, and 0/200 mates.
+- Decision flags: `bounded_partial_curriculum_allowed=true`, `broad_curriculum_allowed=false`.
+
+Decision: proceed to a bounded fragment-chain curriculum over activating local triplets only. This is not a broad KRK curriculum, and it is not a KPK/KQK transfer claim. The curriculum must preserve the current boundary: behavior-changing learning has to flow through local TERMINAL/SCRIPT/ACTION/stem-cell structure, with rollback on rook loss, illegal move, or stalemate.
 
 ## Long-Run Protocol
 

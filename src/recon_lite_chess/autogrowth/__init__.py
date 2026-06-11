@@ -93,6 +93,13 @@ from .training import (
     load_candidate_pool,
     train_growth_candidates,
 )
+from .topological_growth import (
+    TopologicalGrowthRunwayConfig,
+    TopologicalGrowthRunwayResult,
+    build_triplet_chain_view,
+    inventory_legacy_predefined_topology_runs,
+    run_topological_growth_runway,
+)
 
 __all__ = [
     "ArmMetrics",
@@ -128,8 +135,11 @@ __all__ = [
     "ScriptFragmentResult",
     "TraceCollectionConfig",
     "TraceCollectionResult",
+    "TopologicalGrowthRunwayConfig",
+    "TopologicalGrowthRunwayResult",
     "arbitrate_local_action",
     "build_local_action_nodes",
+    "build_triplet_chain_view",
     "can_mate_in_one",
     "collect_trace_records",
     "evaluate_arm",
@@ -145,6 +155,7 @@ __all__ = [
     "generate_risk_aware_candidates",
     "generate_position_sets",
     "is_valid_krk_seed",
+    "inventory_legacy_predefined_topology_runs",
     "load_selected_candidate",
     "load_candidate_pool",
     "make_trace_record",
@@ -156,6 +167,7 @@ __all__ = [
     "run_local_script_experiment",
     "run_local_suppressor_experiment",
     "run_script_fragment_experiment",
+    "run_topological_growth_runway",
     "run_context_specialized_candidate_experiment",
     "run_risk_aware_candidate_experiment",
     "suppressor_confirms",
