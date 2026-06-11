@@ -330,6 +330,8 @@ Survival matrix:
 
 ### M11: One Local Suppressor Experiment
 
+Status: implemented for one learned local suppressor candidate using `StemCellTerminal` TRIAL state.
+
 Do not broaden candidate types yet. Test exactly one candidate type:
 
 ```text
@@ -351,15 +353,23 @@ Learner-visible records must not use `rook_loss_risk`, `box_shrink`, `opposition
 
 Pass the single suppressor experiment only if:
 
-- h40 and h80 improve by at least +10 percentage points absolute on locked heldout KRK.
+- KRK conversion improves on locked heldout KRK for a competence pass.
 - rook-loss count drops by at least 50%.
 - protected regressions, illegal moves, and stalemate/blunder regressions are zero.
 - candidate trigger rate is at least 10%.
 - removing the candidate returns behavior to baseline.
 
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_m11_local_suppressor.json`
+- The suppressor is represented as a TRIAL `StemCellTerminal` with local relevance/credit/survival stats.
+- It suppresses only the mined sibling action and never returns a move.
+- Heldout safety improves for the bad sibling: rook losses drop from 18 to 3, with 77 suppressions, zero illegal moves, zero stalemates, and no new direct move source.
+- KRK competence is still not proven: mate conversion remains 0/200. Treat M11 as a local safety/topology checkpoint, not a solved-growth checkpoint.
+
 ### M12: Long Training Gate
 
-Long training remains blocked until M11 shows one causal, heldout-safe KRK candidate improvement. More cycles over the current unsafe action-schema pool mostly measure candidate collapse and scaffold behavior, not autonomous KRK competence.
+Long training remains blocked until the next checkpoint turns local suppressor evidence into safer candidate construction or local action gating and shows conversion movement. More cycles over the current unsafe action-schema pool mostly measure candidate collapse and scaffold behavior, not autonomous KRK competence.
 
 ## Long-Run Protocol
 

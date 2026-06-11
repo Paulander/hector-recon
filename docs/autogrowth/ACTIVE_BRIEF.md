@@ -49,7 +49,9 @@ Do not rebuild those as the mainline workflow.
 - M8 multi-candidate lifecycle training is implemented: multiple mined candidates can gain experience, receive M3 fast credit, mature, or be quarantined.
 - Current M8 result is also a useful fail: 8/8 default candidates and 12/12 broader candidates quarantine under negative credit/rook-loss evidence, leaving no heldout candidate.
 - External review clarified the next step: do not add a second candidate architecture. Normalize the existing `StemCellTerminal` / TRIAL / MATURE lifecycle into a stricter local candidate contract with separate relevance and outcome-credit stats.
-- Next research checkpoint is one learned local suppressor/risk candidate under the existing stem-cell/pack-template machinery. It should inhibit one sibling action/leg under the same parent after negative continuation evidence, without directly choosing moves or seeing stage/box/provider labels.
+- M9-M11 local suppressor checkpoint is implemented. `StemCellTerminal` now carries separate candidate-local relevance, credit, and survival stats; XP alone cannot mature a candidate.
+- Current M11 result is a safety improvement, not KRK competence: `reports/autogrowth/krk_autogrowth_m11_local_suppressor.json` reduces heldout rook losses from 18 to 3 for the bad M4 sibling action, with 77 local suppressions, zero illegal moves, zero stalemates, and no conversion gain.
+- Next checkpoint should use the survived suppressor/risk terminal to improve candidate construction or local action gating, then test whether conversion can improve without reintroducing direct move choice.
 
 ## Current Architecture Guardrail
 

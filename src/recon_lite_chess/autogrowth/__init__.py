@@ -38,6 +38,15 @@ from .sandbox import (
     evaluate_sandbox_arm,
     load_selected_candidate,
 )
+from .suppressor import (
+    LocalSuppressorConfig,
+    LocalSuppressorMetrics,
+    LocalSuppressorResult,
+    derive_local_suppressor,
+    evaluate_local_suppressor_arm,
+    run_local_suppressor_experiment,
+    suppressor_confirms,
+)
 from .traces import (
     TraceCollectionConfig,
     TraceCollectionResult,
@@ -64,6 +73,9 @@ __all__ = [
     "GrowthTrainingConfig",
     "GrowthTrainingResult",
     "KRKPositionSet",
+    "LocalSuppressorConfig",
+    "LocalSuppressorMetrics",
+    "LocalSuppressorResult",
     "SandboxConfig",
     "SandboxMetrics",
     "SandboxResult",
@@ -74,6 +86,7 @@ __all__ = [
     "evaluate_arm",
     "evaluate_baseline_and_sham",
     "evaluate_candidate_sandbox",
+    "evaluate_local_suppressor_arm",
     "evaluate_sandbox_arm",
     "extract_learner_features",
     "generate_position_sets",
@@ -83,7 +96,10 @@ __all__ = [
     "make_trace_record",
     "mine_triplet_candidates_from_artifact",
     "mine_triplet_candidates_from_records",
+    "derive_local_suppressor",
     "run_autogrowth_experiment",
+    "run_local_suppressor_experiment",
+    "suppressor_confirms",
     "train_growth_candidates",
     "validate_learner_record",
 ]

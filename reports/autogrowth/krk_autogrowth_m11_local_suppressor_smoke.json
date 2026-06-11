@@ -1,0 +1,303 @@
+{
+  "arms": {
+    "baseline": {
+      "action_vitality_rate": 0.49,
+      "arm": "baseline",
+      "conversion_rate": 0.0,
+      "draw_reasons": {
+        "draw_fivefold_repetition": 2
+      },
+      "draws": 2,
+      "horizon": 20,
+      "horizon_no_mate": 8,
+      "illegal_moves": 0,
+      "mates": 0,
+      "max_plies": 8,
+      "other_failures": 0,
+      "repeated_white_action_events": 51,
+      "repetition_events": 110,
+      "rook_losses": 0,
+      "stalemates": 0,
+      "total": 10,
+      "white_action_count": 100,
+      "white_unique_action_total": 49
+    },
+    "candidate_unsuppressed": {
+      "after_condition_match_count": 0,
+      "after_condition_match_rate": 0.0,
+      "arm": "autogrowth_sandbox",
+      "candidate_action_matches": 18,
+      "candidate_activated_position_count": 9,
+      "candidate_activation_rate": 0.9,
+      "candidate_behavior_change_rate": 0.1,
+      "candidate_behavior_changed_position_count": 1,
+      "candidate_changed_move_count": 1,
+      "candidate_move_count": 18,
+      "candidate_terminal_activations": 40,
+      "conversion_rate": 0.0,
+      "draw_reasons": {
+        "draw_fivefold_repetition": 2
+      },
+      "draws": 2,
+      "horizon": 20,
+      "horizon_no_mate": 7,
+      "illegal_moves": 0,
+      "m3_fast_weight_delta": -0.02,
+      "m3_update_count": 1,
+      "mates": 0,
+      "negative_credit_count": 1,
+      "other_failures": 0,
+      "positive_credit_count": 0,
+      "repeated_white_action_events": 48,
+      "repetition_events": 102,
+      "rook_losses": 1,
+      "stalemates": 0,
+      "total": 10
+    },
+    "local_suppressor": {
+      "after_condition_match_count": 0,
+      "arm": "local_suppressor",
+      "candidate_action_matches": 18,
+      "candidate_activated_position_count": 9,
+      "candidate_behavior_changed_position_count": 1,
+      "candidate_changed_move_count": 1,
+      "candidate_move_count": 18,
+      "candidate_terminal_activations": 40,
+      "conversion_rate": 0.0,
+      "draw_reasons": {
+        "draw_fivefold_repetition": 2
+      },
+      "draws": 2,
+      "false_suppression_count": 0,
+      "horizon": 20,
+      "horizon_no_mate": 7,
+      "illegal_moves": 0,
+      "m3_fast_weight_delta": -0.02,
+      "m3_update_count": 1,
+      "mates": 0,
+      "negative_credit_count": 1,
+      "no_move_regression_count": 0,
+      "other_failures": 0,
+      "positive_credit_count": 0,
+      "repeated_white_action_events": 48,
+      "repetition_events": 102,
+      "rook_losses": 1,
+      "stalemates": 0,
+      "suppressed_position_count": 0,
+      "suppressed_sibling_action_count": 0,
+      "suppression_precision": 0.0,
+      "suppression_trigger_rate": 0.0,
+      "suppressor_request_count": 18,
+      "suppressor_trigger_count": 0,
+      "total": 10
+    }
+  },
+  "candidate": {
+    "candidate_key": "m4_triplet_0056_18544923df2b",
+    "source_candidate_status": "m4_mined_not_spawned",
+    "suppressed_sibling_key": "m4_triplet_0056_18544923df2b"
+  },
+  "config": {
+    "activation_max_distance": 1.5,
+    "candidate_path": "reports/autogrowth/krk_autogrowth_m4_candidates_smoke.json",
+    "heldout_broader_count": 5,
+    "heldout_weakness_count": 5,
+    "horizon": 20,
+    "min_failure_evidence": 1,
+    "seed": 20260610,
+    "suppressor_max_distance": 0.75,
+    "train_count": 20
+  },
+  "dataset": {
+    "digest": "71c074db2ce069a2a9ccd418fc6564c3162517d2d016c560db2d8fbcd019b392",
+    "heldout_broader_count": 5,
+    "heldout_count": 10,
+    "heldout_weakness_count": 5,
+    "seed": 20260610,
+    "train_count": 20
+  },
+  "decision": {
+    "behavior_mediated_by_stem_cell_trial_structure": true,
+    "candidate_survival_decision": "trial",
+    "chooses_moves_directly": false,
+    "conversion_improved_vs_candidate_unsuppressed": false,
+    "direct_move_override": false,
+    "krk_competence_passed": false,
+    "local_suppressor_decision": {
+      "candidate_action_promotion_not_applicable": true,
+      "decision": "quarantine",
+      "delete_or_quarantine_event_count": 1,
+      "m4_consolidation_event_count": 0,
+      "reasons": [
+        "candidate_state_not_local_suppressor",
+        "suppressor_never_triggered"
+      ]
+    },
+    "passed": false,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "safety_checkpoint_passed": false,
+    "safety_delta_vs_candidate_unsuppressed": {
+      "horizon_no_mate_delta": 0,
+      "illegal_delta": 0,
+      "rook_loss_delta": 0,
+      "stalemate_delta": 0
+    },
+    "status": "quarantined_local_suppressor",
+    "stem_cell_state": "TRIAL",
+    "suppresses_only_sibling_action": true,
+    "suppressor_triggered": false
+  },
+  "paired_deltas": {
+    "baseline_vs_candidate_unsuppressed": {
+      "behavior_changed_count": 1,
+      "candidate_fails_where_baseline_succeeds": 0,
+      "candidate_succeeds_where_baseline_fails": 0,
+      "outcome_changed_count": 1
+    },
+    "baseline_vs_local_suppressor": {
+      "behavior_changed_count": 1,
+      "candidate_fails_where_baseline_succeeds": 0,
+      "candidate_succeeds_where_baseline_fails": 0,
+      "outcome_changed_count": 1
+    },
+    "candidate_unsuppressed_vs_local_suppressor": {
+      "behavior_changed_count": 1,
+      "candidate_fails_where_baseline_succeeds": 0,
+      "candidate_succeeds_where_baseline_fails": 0,
+      "outcome_changed_count": 0
+    }
+  },
+  "safety": {
+    "candidate_unsuppressed": {
+      "blunder_regression_count": 1,
+      "illegal_regression_count": 0,
+      "protected_baseline_regression_count": 0,
+      "rook_loss_regression_count": 1,
+      "stalemate_regression_count": 0
+    },
+    "local_suppressor": {
+      "blunder_regression_count": 1,
+      "illegal_regression_count": 0,
+      "protected_baseline_regression_count": 0,
+      "rook_loss_regression_count": 1,
+      "stalemate_regression_count": 0
+    }
+  },
+  "schema_version": "krk_autogrowth_m11_local_suppressor.v0",
+  "suppressor": {
+    "cell": {
+      "candidate_stats": {
+        "credit_stats": {
+          "causal_balance": 0.0,
+          "has_causal_intervention": false,
+          "negative_correlation": 0,
+          "negative_intervention": 0,
+          "neutral_correlation": 0,
+          "neutral_intervention": 0,
+          "positive_correlation": 0,
+          "positive_intervention": 0,
+          "total_correlations": 0,
+          "total_interventions": 0
+        },
+        "relevance_stats": {
+          "activation_count": 0,
+          "confirm_count": 0,
+          "context_coverage": 0.0,
+          "context_precision": 0.0,
+          "parent_locality": 0.0,
+          "request_exposures": 0,
+          "sibling_contrast": 1.0
+        },
+        "survival_stats": {
+          "last_confirm_cycle": null,
+          "maturity": 0.30000000000000004,
+          "parent_locality": null,
+          "prune_pressure": 0.0,
+          "quarantine_reason": "insufficient_negative_continuation_evidence",
+          "suppressed_sibling": "m4_triplet_0056_18544923df2b"
+        }
+      },
+      "cell_id": "suppress_m4_triplet_0056_18544923df2b",
+      "children": [],
+      "config": {
+        "exploration_budget": 100,
+        "max_samples": 500,
+        "min_samples": 50,
+        "reward_threshold": 0.3,
+        "specialization_threshold": 0.5
+      },
+      "depth": 0,
+      "exploration_ticks": 0,
+      "grace_games": 20,
+      "is_composition": false,
+      "last_confirm_cycle": null,
+      "metadata": {},
+      "min_exposure_threshold": 50,
+      "parent_xp_owner": null,
+      "pattern_centroid": null,
+      "pattern_signature": null,
+      "samples": [],
+      "state": "TRIAL",
+      "total_exposures": 0,
+      "trial_consistency": 0.0,
+      "trial_edge_key": null,
+      "trial_node_id": "TRIAL_suppress_m4_triplet_0056_18544923df2b",
+      "trial_parent_id": "autogrowth_candidate_parent",
+      "trial_signature": null,
+      "trial_tick": 0,
+      "trust_score": 0.0,
+      "xp": 50,
+      "xp_failures": 0,
+      "xp_successes": 0
+    },
+    "diagnostics": {
+      "candidate_survival_decision": "trial",
+      "direct_move_override": false,
+      "failure_evidence_count": 0,
+      "runtime_tablebase_or_dtm_move_source": false,
+      "stem_cell_state": "TRIAL",
+      "suppresses_only_sibling_action": true
+    },
+    "learner_visible": {
+      "candidate_role": "local_suppressor",
+      "feature_names": [
+        "rook_attacked_by_black",
+        "white_king_to_rook_distance",
+        "white_rook_to_black_king_distance",
+        "white_king_to_black_king_distance",
+        "black_reply_mobility",
+        "black_king_nearest_edge_distance",
+        "is_check",
+        "is_stalemate"
+      ],
+      "node_type": "TERMINAL",
+      "parent_id": "autogrowth_candidate_parent",
+      "projected_after_prototype": {
+        "black_king_nearest_edge_distance": 0.0,
+        "black_reply_mobility": 0.0,
+        "is_check": 0.0,
+        "is_stalemate": 0.0,
+        "rook_attacked_by_black": 0.0,
+        "white_king_to_black_king_distance": 0.0,
+        "white_king_to_rook_distance": 0.0,
+        "white_rook_to_black_king_distance": 0.0
+      },
+      "relation_plan": {
+        "attach_relation": "SUB",
+        "chooses_move_directly": false,
+        "inhibit_relation": "RET",
+        "inhibits_only_sibling_action": true
+      },
+      "suppressed_action_schema": {
+        "file_delta_magnitude": 0,
+        "file_delta_sign": 0,
+        "gives_check": 1,
+        "is_capture": 0,
+        "piece_type": 4,
+        "rank_delta_magnitude": 1,
+        "rank_delta_sign": 1
+      },
+      "suppressed_sibling_key": "m4_triplet_0056_18544923df2b"
+    }
+  }
+}

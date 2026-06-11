@@ -154,6 +154,294 @@ class StemCellSample:
         )
 
 
+@dataclass
+class CandidateRelevanceStats:
+    """Local context-fit counters for a stem-cell candidate."""
+
+    request_exposures: int = 0
+    activation_count: int = 0
+    confirm_count: int = 0
+    parent_locality: float = 0.0
+    sibling_contrast: float = 0.0
+
+    @property
+    def context_precision(self) -> float:
+        if self.activation_count == 0:
+            return 0.0
+        return self.confirm_count / self.activation_count
+
+    @property
+    def context_coverage(self) -> float:
+        if self.request_exposures == 0:
+            return 0.0
+        return self.activation_count / self.request_exposures
+
+    @property
+    def is_relevant(self) -> bool:
+        return (
+            self.request_exposures > 0
+            and self.activation_count > 0
+            and (
+                self.confirm_count > 0
+                or self.parent_locality > 0.0
+                or self.sibling_contrast > 0.0
+            )
+        )
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "request_exposures": self.request_exposures,
+            "activation_count": self.activation_count,
+            "confirm_count": self.confirm_count,
+            "parent_locality": self.parent_locality,
+            "sibling_contrast": self.sibling_contrast,
+            "context_precision": self.context_precision,
+            "context_coverage": self.context_coverage,
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "CandidateRelevanceStats":
+        return cls(
+            request_exposures=int(data.get("request_exposures", 0)),
+            activation_count=int(data.get("activation_count", 0)),
+            confirm_count=int(data.get("confirm_count", 0)),
+            parent_locality=float(data.get("parent_locality", 0.0)),
+            sibling_contrast=float(data.get("sibling_contrast", 0.0)),
+        )
+
+
+@dataclass
+class CandidateCreditStats:
+    """Separate outcome correlation from causal intervention evidence."""
+
+    positive_correlation: int = 0
+    negative_correlation: int = 0
+    neutral_correlation: int = 0
+    positive_intervention: int = 0
+    negative_intervention: int = 0
+    neutral_intervention: int = 0
+
+    @property
+    def total_correlations(self) -> int:
+        return self.positive_correlation + self.negative_correlation + self.neutral_correlation
+
+    @property
+    def total_interventions(self) -> int:
+        return self.positive_intervention + self.negative_intervention + self.neutral_intervention
+
+    @property
+    def has_causal_intervention(self) -> bool:
+        return self.total_interventions > 0
+
+    @property
+    def causal_balance(self) -> float:
+        total = self.total_interventions
+        if total == 0:
+            return 0.0
+        return (self.positive_intervention - self.negative_intervention) / total
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "positive_correlation": self.positive_correlation,
+            "negative_correlation": self.negative_correlation,
+            "neutral_correlation": self.neutral_correlation,
+            "positive_intervention": self.positive_intervention,
+            "negative_intervention": self.negative_intervention,
+            "neutral_intervention": self.neutral_intervention,
+            "total_correlations": self.total_correlations,
+            "total_interventions": self.total_interventions,
+            "has_causal_intervention": self.has_causal_intervention,
+            "causal_balance": self.causal_balance,
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "CandidateCreditStats":
+        return cls(
+            positive_correlation=int(data.get("positive_correlation", 0)),
+            negative_correlation=int(data.get("negative_correlation", 0)),
+            neutral_correlation=int(data.get("neutral_correlation", 0)),
+            positive_intervention=int(data.get("positive_intervention", 0)),
+            negative_intervention=int(data.get("negative_intervention", 0)),
+            neutral_intervention=int(data.get("neutral_intervention", 0)),
+        )
+
+
+@dataclass
+class CandidateSurvivalStats:
+    """Promotion/pruning state kept on the candidate node itself."""
+
+    maturity: float = 0.0
+    prune_pressure: float = 0.0
+    quarantine_reason: Optional[str] = None
+    last_confirm_cycle: Optional[int] = None
+    parent_locality: Optional[str] = None
+    suppressed_sibling: Optional[str] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "maturity": self.maturity,
+            "prune_pressure": self.prune_pressure,
+            "quarantine_reason": self.quarantine_reason,
+            "last_confirm_cycle": self.last_confirm_cycle,
+            "parent_locality": self.parent_locality,
+            "suppressed_sibling": self.suppressed_sibling,
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "CandidateSurvivalStats":
+        return cls(
+            maturity=float(data.get("maturity", 0.0)),
+            prune_pressure=float(data.get("prune_pressure", 0.0)),
+            quarantine_reason=data.get("quarantine_reason"),
+            last_confirm_cycle=data.get("last_confirm_cycle"),
+            parent_locality=data.get("parent_locality"),
+            suppressed_sibling=data.get("suppressed_sibling"),
+        )
+
+
+@dataclass
+class CandidateLocalStats:
+    """First-class stem-cell candidate statistics for M9-M11 autogrowth."""
+
+    relevance_stats: CandidateRelevanceStats = field(default_factory=CandidateRelevanceStats)
+    credit_stats: CandidateCreditStats = field(default_factory=CandidateCreditStats)
+    survival_stats: CandidateSurvivalStats = field(default_factory=CandidateSurvivalStats)
+
+    def record_request(self, parent_id: Optional[str] = None) -> None:
+        self.relevance_stats.request_exposures += 1
+        if parent_id:
+            self.survival_stats.parent_locality = parent_id
+            self.relevance_stats.parent_locality = 1.0
+        self.recompute_survival()
+
+    def record_activation(self, parent_id: Optional[str] = None) -> None:
+        self.relevance_stats.activation_count += 1
+        if parent_id:
+            self.survival_stats.parent_locality = parent_id
+            self.relevance_stats.parent_locality = 1.0
+        self.recompute_survival()
+
+    def record_confirm(self, cycle: int, parent_id: Optional[str] = None) -> None:
+        self.relevance_stats.confirm_count += 1
+        self.survival_stats.last_confirm_cycle = int(cycle)
+        if parent_id:
+            self.survival_stats.parent_locality = parent_id
+            self.relevance_stats.parent_locality = 1.0
+        self.recompute_survival()
+
+    def record_correlation(self, valence: str) -> None:
+        normalized = _normalize_candidate_valence(valence)
+        setattr(
+            self.credit_stats,
+            f"{normalized}_correlation",
+            getattr(self.credit_stats, f"{normalized}_correlation") + 1,
+        )
+        self.recompute_survival()
+
+    def record_intervention(self, valence: str) -> None:
+        normalized = _normalize_candidate_valence(valence)
+        setattr(
+            self.credit_stats,
+            f"{normalized}_intervention",
+            getattr(self.credit_stats, f"{normalized}_intervention") + 1,
+        )
+        self.recompute_survival()
+
+    def mark_sibling_contrast(
+        self,
+        score: float = 1.0,
+        *,
+        suppressed_sibling: Optional[str] = None,
+    ) -> None:
+        self.relevance_stats.sibling_contrast = max(
+            self.relevance_stats.sibling_contrast,
+            max(0.0, float(score)),
+        )
+        if suppressed_sibling:
+            self.survival_stats.suppressed_sibling = suppressed_sibling
+        self.recompute_survival()
+
+    @property
+    def has_causal_intervention(self) -> bool:
+        return self.credit_stats.has_causal_intervention
+
+    @property
+    def has_negative_causal_evidence(self) -> bool:
+        return self.credit_stats.negative_intervention > 0
+
+    def recompute_survival(self, xp: Optional[int] = None, solidify_xp: int = 100) -> None:
+        relevance = 0.0
+        relevance += 0.35 * self.relevance_stats.context_precision
+        relevance += 0.25 * min(1.0, self.relevance_stats.context_coverage)
+        relevance += 0.20 * min(1.0, self.relevance_stats.parent_locality)
+        relevance += 0.20 * min(1.0, self.relevance_stats.sibling_contrast)
+        if self.credit_stats.has_causal_intervention:
+            relevance += 0.25
+        if xp is not None and solidify_xp > 0:
+            relevance += 0.20 * min(1.0, max(0.0, float(xp) / float(solidify_xp)))
+        self.survival_stats.maturity = min(1.0, relevance)
+
+        pressure = 0.0
+        if self.credit_stats.negative_intervention > self.credit_stats.positive_intervention:
+            pressure += 0.35
+        if self.relevance_stats.request_exposures >= 3 and self.relevance_stats.activation_count == 0:
+            pressure += 0.25
+        if xp is not None and xp <= 0:
+            pressure += 0.40
+        self.survival_stats.prune_pressure = min(1.0, pressure)
+
+        if (
+            self.relevance_stats.is_relevant
+            and self.credit_stats.negative_intervention > 0
+            and self.credit_stats.positive_intervention == 0
+        ):
+            self.survival_stats.quarantine_reason = "local_suppressor_candidate"
+
+    def decision(self, *, xp: int = 0, solidify_xp: int = 100) -> str:
+        self.recompute_survival(xp=xp, solidify_xp=solidify_xp)
+        if not self.credit_stats.has_causal_intervention:
+            if xp >= solidify_xp:
+                return "needs_intervention"
+            return "trial"
+        if (
+            self.relevance_stats.is_relevant
+            and self.credit_stats.negative_intervention > 0
+            and self.credit_stats.positive_intervention == 0
+        ):
+            return "suppress"
+        if xp >= solidify_xp and self.survival_stats.maturity >= 0.50:
+            return "mature"
+        if xp <= 0 and not self.relevance_stats.is_relevant:
+            return "demote"
+        return "trial"
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "relevance_stats": self.relevance_stats.to_dict(),
+            "credit_stats": self.credit_stats.to_dict(),
+            "survival_stats": self.survival_stats.to_dict(),
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "CandidateLocalStats":
+        return cls(
+            relevance_stats=CandidateRelevanceStats.from_dict(data.get("relevance_stats", {})),
+            credit_stats=CandidateCreditStats.from_dict(data.get("credit_stats", {})),
+            survival_stats=CandidateSurvivalStats.from_dict(data.get("survival_stats", {})),
+        )
+
+
+def _normalize_candidate_valence(valence: str) -> str:
+    normalized = str(valence).strip().lower()
+    if normalized in {"positive", "success", "good", "reward"}:
+        return "positive"
+    if normalized in {"negative", "failure", "bad", "penalty"}:
+        return "negative"
+    if normalized in {"neutral", "none", "zero"}:
+        return "neutral"
+    raise ValueError(f"unknown candidate valence: {valence}")
+
+
 class StemCellTerminal:
     """
     A stem cell terminal with three-tier lifecycle and XP system.
@@ -243,6 +531,10 @@ class StemCellTerminal:
         self.tier_variance_high: float = 100.0  # XP variance for VOLATILE
         self.tier_variance_low: float = 25.0    # XP variance for INERT
         self.tier_xp_low: int = 20              # XP threshold for forced VOLATILE
+
+        # M9-M11 candidate-local lifecycle evidence. These counters keep
+        # relevance, credit, and survival separate on the stem cell itself.
+        self.candidate_stats = CandidateLocalStats()
     
     def activate(self) -> None:
         """Start exploration."""
@@ -663,6 +955,7 @@ class StemCellTerminal:
         self.trial_consistency = consistency
         self.trial_signature = signature
         self.trial_tick = current_tick
+        self.candidate_stats.record_request(parent_id=parent_id)
         
         # =========================================================================
         # MANIFEST: Inject TRIAL node into registry immediately
@@ -683,6 +976,7 @@ class StemCellTerminal:
             "consistency": consistency,
             "promoted_tick": current_tick,
             "subgraph": subgraph_name,  # CRITICAL: Required for subgraph execution
+            "candidate_local_stats": self.candidate_stats.to_dict(),
         }
         feature_mask = self.metadata.get("feature_mask")
         if feature_mask:
@@ -784,6 +1078,7 @@ class StemCellTerminal:
             "consistency": consistency,
             "promoted_tick": current_tick,
             "sample_count": len(self.samples),
+            "candidate_local_stats": self.candidate_stats.to_dict(),
         }
         
         return True
@@ -806,15 +1101,18 @@ class StemCellTerminal:
             xp_change = self.XP_SUCCESS
             self.xp_successes += 1
             result = "success"
+            self.candidate_stats.record_intervention("positive")
         elif affordance_delta <= -0.05:
             # Failure: negative affordance delta
             xp_change = self.XP_FAILURE
             self.xp_failures += 1
             result = "failure"
+            self.candidate_stats.record_intervention("negative")
         else:
             # Neutral: no significant change
             xp_change = 0
             result = "neutral"
+            self.candidate_stats.record_intervention("neutral")
         
         self.xp += xp_change
         
@@ -825,6 +1123,7 @@ class StemCellTerminal:
         
         # Reclassify tier based on updated history
         self.classify_tier()
+        self.candidate_stats.recompute_survival(xp=self.xp, solidify_xp=self.XP_SOLIDIFY)
         
         return xp_change, result
 
@@ -999,6 +1298,7 @@ class StemCellTerminal:
         if was_active:
             xp_gain += self.ENGAGEMENT_XP_ACTIVATION
             self.metadata["engagement_activations"] = self.metadata.get("engagement_activations", 0) + 1
+            self.candidate_stats.record_activation(parent_id=self.trial_parent_id)
         
         # +0.2 for consistent pattern matching
         if pattern_matched:
@@ -1016,9 +1316,49 @@ class StemCellTerminal:
         # Apply XP gain
         self.xp += int(xp_gain)  # Convert to int for consistency with XP system
         self.metadata["total_engagement_xp"] = self.metadata.get("total_engagement_xp", 0.0) + xp_gain
+        self.candidate_stats.recompute_survival(xp=self.xp, solidify_xp=self.XP_SOLIDIFY)
         
         return xp_gain
     
+    def record_candidate_request(self, parent_id: Optional[str] = None) -> None:
+        """Record candidate exposure in its local parent context."""
+        self.candidate_stats.record_request(parent_id=parent_id or self.trial_parent_id)
+
+    def record_candidate_activation(self, parent_id: Optional[str] = None) -> None:
+        """Record that this candidate activated in its local context."""
+        self.candidate_stats.record_activation(parent_id=parent_id or self.trial_parent_id)
+
+    def record_candidate_correlation(self, valence: str) -> None:
+        """Record non-causal outcome correlation evidence."""
+        self.candidate_stats.record_correlation(valence)
+
+    def record_candidate_intervention(self, valence: str, cycle: Optional[int] = None) -> None:
+        """Record causal intervention evidence used for survival decisions."""
+        self.candidate_stats.record_intervention(valence)
+        if cycle is not None:
+            self.candidate_stats.survival_stats.last_confirm_cycle = int(cycle)
+        self.candidate_stats.recompute_survival(xp=self.xp, solidify_xp=self.XP_SOLIDIFY)
+
+    def mark_sibling_contrast(
+        self,
+        score: float = 1.0,
+        *,
+        suppressed_sibling: Optional[str] = None,
+    ) -> None:
+        """Record local sibling contrast for suppressor/inhibitor candidates."""
+        self.candidate_stats.mark_sibling_contrast(
+            score,
+            suppressed_sibling=suppressed_sibling,
+        )
+
+    def candidate_survival_decision(self) -> str:
+        """Return the local candidate lifecycle decision."""
+        return self.candidate_stats.decision(xp=self.xp, solidify_xp=self.XP_SOLIDIFY)
+
+    def candidate_can_mature(self) -> bool:
+        """Promotion requires causal intervention, not XP alone."""
+        return self.candidate_survival_decision() == "mature"
+
     def check_solidification(self) -> Tuple[bool, str]:
         """
         Check if cell should be solidified (MATURE) or demoted (EXPLORING).
@@ -1029,8 +1369,13 @@ class StemCellTerminal:
         if self.state != StemCellState.TRIAL:
             return False, "not_trial"
         
-        if self.xp >= self.XP_SOLIDIFY:
+        decision = self.candidate_survival_decision()
+        if decision == "mature":
             return True, "mature"
+        elif decision == "needs_intervention":
+            return False, "needs_intervention"
+        elif decision == "suppress":
+            return False, "suppress"
         elif self.xp <= 0:
             return True, "demoted"
         else:
@@ -1051,6 +1396,7 @@ class StemCellTerminal:
             cycle: Current training cycle number
         """
         self.last_confirm_cycle = cycle
+        self.candidate_stats.record_confirm(cycle, parent_id=self.trial_parent_id)
     
     def is_inert(self, current_cycle: int, max_inactive: int = 20) -> bool:
         """
@@ -1088,6 +1434,10 @@ class StemCellTerminal:
         """
         if self.state != StemCellState.TRIAL or not self.trial_node_id:
             return False
+
+        if not self.candidate_can_mature():
+            self.metadata["solidify_error"] = self.candidate_survival_decision()
+            return False
         
         if not self.trial_parent_id:
             self.metadata["solidify_error"] = "No trial parent ID stored"
@@ -1112,6 +1462,7 @@ class StemCellTerminal:
                     "xp_successes": self.xp_successes,
                     "xp_failures": self.xp_failures,
                     "tier": "mature",
+                    "candidate_local_stats": self.candidate_stats.to_dict(),
                 }
             }
             
@@ -1716,6 +2067,11 @@ class StemCellTerminal:
             "trial_node_id": self.trial_node_id,
             "trial_edge_key": self.trial_edge_key,
             "pattern_centroid": self.pattern_centroid,
+            "trial_parent_id": self.trial_parent_id,
+            "trial_consistency": self.trial_consistency,
+            "trial_signature": self.trial_signature,
+            "trial_tick": self.trial_tick,
+            "candidate_stats": self.candidate_stats.to_dict(),
             # Inertia Pruning tracking
             "last_confirm_cycle": self.last_confirm_cycle,
             # M5.1 Composition fields
@@ -1755,8 +2111,15 @@ class StemCellTerminal:
         cell.trial_node_id = data.get("trial_node_id")
         cell.trial_edge_key = data.get("trial_edge_key")
         cell.pattern_centroid = data.get("pattern_centroid")
+        cell.trial_parent_id = data.get("trial_parent_id")
+        cell.trial_consistency = data.get("trial_consistency", 0.0)
+        cell.trial_signature = data.get("trial_signature")
+        cell.trial_tick = data.get("trial_tick", 0)
+        cell.candidate_stats = CandidateLocalStats.from_dict(data.get("candidate_stats", {}))
         # Inertia Pruning tracking
         cell.last_confirm_cycle = data.get("last_confirm_cycle")
+        if cell.last_confirm_cycle is not None and cell.candidate_stats.survival_stats.last_confirm_cycle is None:
+            cell.candidate_stats.survival_stats.last_confirm_cycle = cell.last_confirm_cycle
         # M5.1 Composition fields
         cell.parent_xp_owner = data.get("parent_xp_owner")
         cell.grace_games = data.get("grace_games", 20)

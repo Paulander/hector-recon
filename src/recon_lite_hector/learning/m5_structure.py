@@ -1748,6 +1748,7 @@ class StructureLearner:
                         "xp_successes": cell.xp_successes,
                         "xp_failures": cell.xp_failures,
                         "total_engagement_xp": cell.metadata.get("total_engagement_xp", 0),
+                        "candidate_local_stats": cell.candidate_stats.to_dict(),
                     })
                 
                 should_change, new_state = cell.check_solidification()
