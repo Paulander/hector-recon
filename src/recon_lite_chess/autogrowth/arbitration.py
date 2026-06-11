@@ -823,7 +823,8 @@ def _arbitration_decision(
     return {
         "status": "competence_candidate_found" if competence_passed else "local_arbitration_checkpoint_failed",
         "passed": competence_passed,
-        "safety_checkpoint_passed": safety_ok and improved_vs_selected,
+        "safety_checkpoint_passed": safety_ok,
+        "safety_improved_vs_selected_candidate": improved_vs_selected,
         "krk_competence_passed": competence_passed,
         "conversion_improved_vs_baseline": conversion_improved,
         "rook_loss_delta_vs_selected_candidate": arbitration_metrics.rook_losses - selected_candidate_metrics.rook_losses,

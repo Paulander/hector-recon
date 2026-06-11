@@ -10,9 +10,14 @@ from .arbitration import (
     run_local_arbitration_experiment,
 )
 from .candidate_generation import (
+    CONTEXT_SPECIALIZED_FEATURES,
+    ContextSpecializedCandidateConfig,
+    ContextSpecializedCandidateResult,
     RiskAwareCandidateConfig,
     RiskAwareCandidateResult,
+    generate_context_specialized_candidates,
     generate_risk_aware_candidates,
+    run_context_specialized_candidate_experiment,
     run_risk_aware_candidate_experiment,
 )
 from .evaluate import (
@@ -81,6 +86,7 @@ __all__ = [
     "AutogrowthExperimentResult",
     "CandidateMiningConfig",
     "CandidateMiningResult",
+    "CONTEXT_SPECIALIZED_FEATURES",
     "EvaluationConfig",
     "EvaluationResult",
     "FORBIDDEN_LEARNER_TERMS",
@@ -94,6 +100,8 @@ __all__ = [
     "LocalSuppressorConfig",
     "LocalSuppressorMetrics",
     "LocalSuppressorResult",
+    "ContextSpecializedCandidateConfig",
+    "ContextSpecializedCandidateResult",
     "RiskAwareCandidateConfig",
     "RiskAwareCandidateResult",
     "SandboxConfig",
@@ -112,6 +120,7 @@ __all__ = [
     "evaluate_local_suppressor_arm",
     "evaluate_sandbox_arm",
     "extract_learner_features",
+    "generate_context_specialized_candidates",
     "generate_risk_aware_candidates",
     "generate_position_sets",
     "is_valid_krk_seed",
@@ -124,6 +133,7 @@ __all__ = [
     "run_autogrowth_experiment",
     "run_local_arbitration_experiment",
     "run_local_suppressor_experiment",
+    "run_context_specialized_candidate_experiment",
     "run_risk_aware_candidate_experiment",
     "suppressor_confirms",
     "train_growth_candidates",

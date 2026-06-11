@@ -406,6 +406,23 @@ Current result:
 
 Decision: safe candidate-generation failure. The current action-schema representation is too coarse: even candidates generated from safe-looking legal actions do not survive local rollout credit. Long training remains blocked until candidate representation becomes more discriminative or structural candidates include richer local context without direct move choice.
 
+### M14: Context-Specialized ACTION Candidates
+
+Status: implemented as a safe-fail checkpoint.
+
+This checkpoint tests whether M13 failed because the candidate terminal context was too broad. It uses the same offline legal-action generation boundary, but each candidate terminal includes 18 generic before-context features and heldout arbitration uses exact-match activation.
+
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_m14_context_specialized_candidates.json`
+- 3,841 legal white actions considered.
+- 316 actions rejected by projected negative continuation.
+- 12 context-specialized ACTION candidates emitted.
+- Local arbitration selected 0 heldout ACTION moves after training.
+- Heldout result: 0 rook losses, 0 illegal moves, 0 stalemates, but 0/200 mates.
+
+Decision: safe representation failure. Making one-step ACTION candidates more context-specific still does not produce competence-improving structure. The next checkpoint should test local multi-step SCRIPT/subgraph candidates rather than more one-step ACTION bucket variants.
+
 ## Long-Run Protocol
 
 Agents should be willing to run multi-hour local experiments when useful. A valid long run must:

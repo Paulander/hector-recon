@@ -55,7 +55,9 @@ Do not rebuild those as the mainline workflow.
 - Current M12 result is a safe fail: `reports/autogrowth/krk_autogrowth_m12_local_arbitration.json` rejects every trained M4 ACTION sibling because each receives negative causal intervention evidence. Arbitration falls back to baseline, giving 0 rook losses but still 0/200 mates.
 - M13 risk-aware candidate generation is implemented. It enumerates legal training actions offline, rejects projected negative continuations, emits ReCoN-compatible ACTION candidates, and then evaluates them through M12 local arbitration.
 - Current M13 result is still a safe fail: `reports/autogrowth/krk_autogrowth_m13_risk_aware_candidates.json` generates 12 candidates from 3,841 legal actions, but arbitration selects 0 heldout actions after local negative-evidence gating; result is 0 rook losses and 0/200 mates.
-- Next checkpoint should improve candidate representation quality, not loosen the safety gate or just run longer over the same action-schema buckets.
+- M14 context-specialized candidate generation is implemented. It uses 18 generic before-context features with exact-match activation to test whether one-step ACTION candidates were failing from overly broad context.
+- Current M14 result is another safe fail: `reports/autogrowth/krk_autogrowth_m14_context_specialized_candidates.json` generates 12 context-specific candidates, but arbitration selects 0 heldout actions; result is 0 rook losses and 0/200 mates.
+- Next checkpoint should move beyond one-step ACTION buckets toward local multi-step SCRIPT/subgraph candidates. Do not loosen the safety gate or just run longer over the same representation.
 
 ## Current Architecture Guardrail
 

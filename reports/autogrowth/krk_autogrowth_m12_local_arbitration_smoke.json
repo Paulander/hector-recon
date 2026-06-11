@@ -530,6 +530,7 @@
     "rook_loss_delta_vs_selected_candidate": 1,
     "runtime_tablebase_or_dtm_move_source": false,
     "safety_checkpoint_passed": false,
+    "safety_improved_vs_selected_candidate": false,
     "status": "local_arbitration_checkpoint_failed",
     "suppressed_candidate_survival_decision": "trial",
     "suppressor_mediated_sibling_inhibition": false
