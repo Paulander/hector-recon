@@ -38,16 +38,15 @@ Archived under `archive/pre_autogrowth_2026_06_10/`:
 
 Do not rebuild those as the mainline workflow.
 
-## Immediate Checkpoints
+## Current Checkpoint State
 
-1. Keep the cleaned branch runnable with the core test suite.
-2. Create a learner-visible feature firewall: generic board features only, no stage labels.
-3. Generate locked train/dev/held-out KRK position sets.
-4. Implement baseline and sham-growth arms.
-5. Implement trace mining for before/action/after triplets.
-6. Allow exactly one candidate topology addition in sandbox.
-7. Wire M3/M4 into candidate scoring and promotion.
-8. Run the three-arm held-out experiment and commit the result.
+- M0-M3 are implemented as the active baseline: cleaned branch guidance, feature firewall, locked KRK generation, and baseline/sham evaluation.
+- M4 is implemented as non-behavior-changing evidence preparation: train traces plus mechanical triplet candidate mining under `reports/autogrowth/`.
+- M5/M6 now run one mined candidate in sandbox-only ReCoN topology, record M3 fast-credit updates, and automatically quarantine on failure.
+- Current selected candidate activates on heldout but is rejected: 0/200 mates, 18 rook-loss regressions at h40/h80, M3 updates nonzero, M4 consolidation zero.
+- M7 full three-arm artifact is generated: baseline, sham-growth, and autogrowth sandbox are compared in `reports/autogrowth/krk_autogrowth_v0_experiment.json`.
+- Current v0 result is a useful fail, not a promotion: candidate is quarantined after 0/200 h40/h80 mates, 18 blunder regressions, M3 updates nonzero, and M4 consolidation zero.
+- Next research checkpoint is to improve the miner/sandbox action construction so the next candidate can act without rook-loss regressions before rerunning v0.
 
 ## Current No-Go List
 

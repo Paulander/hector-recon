@@ -1,0 +1,1638 @@
+{
+  "candidates": [
+    {
+      "action_schema": {
+        "file_delta_magnitude": 2,
+        "file_delta_sign": 1,
+        "gives_check": 1,
+        "is_capture": 0,
+        "piece_type": 4,
+        "rank_delta_magnitude": 0,
+        "rank_delta_sign": 0
+      },
+      "after_cluster": {
+        "feature_names": [
+          "black_king_file",
+          "black_king_nearest_edge_distance",
+          "black_king_rank",
+          "black_reply_mobility",
+          "is_check",
+          "is_checkmate",
+          "is_stalemate",
+          "legal_move_count",
+          "rook_attacked_by_black",
+          "rook_present",
+          "side_white_to_move",
+          "white_king_file",
+          "white_king_rank",
+          "white_king_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "white_rook_file",
+          "white_rook_rank",
+          "white_rook_to_black_king_distance"
+        ],
+        "prototype": {
+          "black_king_file": 6.0,
+          "black_king_nearest_edge_distance": 1.0,
+          "black_king_rank": 4.571428571428571,
+          "black_reply_mobility": 6.0,
+          "is_check": 1.0,
+          "is_checkmate": 0.0,
+          "is_stalemate": 0.0,
+          "legal_move_count": 6.0,
+          "rook_attacked_by_black": 0.0,
+          "rook_present": 1.0,
+          "side_white_to_move": 0.0,
+          "white_king_file": 3.4285714285714284,
+          "white_king_rank": 3.2857142857142856,
+          "white_king_to_black_king_distance": 3.0,
+          "white_king_to_rook_distance": 2.5714285714285716,
+          "white_rook_file": 6.0,
+          "white_rook_rank": 3.7142857142857144,
+          "white_rook_to_black_king_distance": 2.0
+        }
+      },
+      "after_delta_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "black_reply_mobility",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check",
+          "is_stalemate"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 0.0,
+          "black_reply_mobility": -2.0,
+          "is_check": 1.0,
+          "is_stalemate": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 0.0,
+          "white_king_to_rook_distance": 1.5714285714285714,
+          "white_rook_to_black_king_distance": 0.0
+        }
+      },
+      "before_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 1.0,
+          "is_check": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 3.0,
+          "white_king_to_rook_distance": 1.0,
+          "white_rook_to_black_king_distance": 2.0
+        }
+      },
+      "behavior_change_applied": false,
+      "candidate_active_in_runtime": false,
+      "candidate_key": "m4_triplet_0595_4e1278ddb4d9",
+      "evidence": {
+        "example_trace_keys": [
+          "train_0017_white_003",
+          "train_0044_white_002",
+          "train_0044_white_004",
+          "train_0044_white_006",
+          "train_0044_white_008",
+          "train_0080_white_006",
+          "train_0149_white_006"
+        ],
+        "mean_candidate_credit": 0.10285714285714287,
+        "mean_generic_progress_credit": 0.10285714285714287,
+        "mean_terminal_reward": 0.0,
+        "negative_credit_count": 2,
+        "position_count": 4,
+        "positive_credit_count": 5,
+        "support_count": 7
+      },
+      "rank": 1,
+      "recon_topology_plan": {
+        "m3_update_count": 0,
+        "m4_event_count": 0,
+        "node_types": [
+          "TERMINAL",
+          "ACTION",
+          "TERMINAL",
+          "SCRIPT"
+        ],
+        "relation_types": [
+          "SUB",
+          "SUR",
+          "POR",
+          "RET"
+        ],
+        "spawn_count": 1,
+        "spawned_now": false
+      },
+      "selected_for_m5": true,
+      "source_split": "train",
+      "status": "m4_mined_not_spawned"
+    },
+    {
+      "action_schema": {
+        "file_delta_magnitude": 3,
+        "file_delta_sign": -1,
+        "gives_check": 1,
+        "is_capture": 0,
+        "piece_type": 4,
+        "rank_delta_magnitude": 0,
+        "rank_delta_sign": 0
+      },
+      "after_cluster": {
+        "feature_names": [
+          "black_king_file",
+          "black_king_nearest_edge_distance",
+          "black_king_rank",
+          "black_reply_mobility",
+          "is_check",
+          "is_checkmate",
+          "is_stalemate",
+          "legal_move_count",
+          "rook_attacked_by_black",
+          "rook_present",
+          "side_white_to_move",
+          "white_king_file",
+          "white_king_rank",
+          "white_king_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "white_rook_file",
+          "white_rook_rank",
+          "white_rook_to_black_king_distance"
+        ],
+        "prototype": {
+          "black_king_file": 3.0,
+          "black_king_nearest_edge_distance": 3.0,
+          "black_king_rank": 4.0,
+          "black_reply_mobility": 6.0,
+          "is_check": 1.0,
+          "is_checkmate": 0.0,
+          "is_stalemate": 0.0,
+          "legal_move_count": 6.0,
+          "rook_attacked_by_black": 0.0,
+          "rook_present": 1.0,
+          "side_white_to_move": 0.0,
+          "white_king_file": 7.0,
+          "white_king_rank": 7.0,
+          "white_king_to_black_king_distance": 4.0,
+          "white_king_to_rook_distance": 5.0,
+          "white_rook_file": 3.0,
+          "white_rook_rank": 2.0,
+          "white_rook_to_black_king_distance": 2.0
+        }
+      },
+      "after_delta_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "black_reply_mobility",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check",
+          "is_stalemate"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 0.0,
+          "black_reply_mobility": -2.0,
+          "is_check": 1.0,
+          "is_stalemate": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 0.0,
+          "white_king_to_rook_distance": 0.0,
+          "white_rook_to_black_king_distance": -1.0
+        }
+      },
+      "before_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 3.0,
+          "is_check": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 4.0,
+          "white_king_to_rook_distance": 5.0,
+          "white_rook_to_black_king_distance": 3.0
+        }
+      },
+      "behavior_change_applied": false,
+      "candidate_active_in_runtime": false,
+      "candidate_key": "m4_triplet_0142_b91c6def8101",
+      "evidence": {
+        "example_trace_keys": [
+          "train_0062_white_004",
+          "train_0062_white_006",
+          "train_0062_white_008",
+          "train_0062_white_010"
+        ],
+        "mean_candidate_credit": 0.10000000000000003,
+        "mean_generic_progress_credit": 0.10000000000000003,
+        "mean_terminal_reward": 0.0,
+        "negative_credit_count": 1,
+        "position_count": 1,
+        "positive_credit_count": 3,
+        "support_count": 4
+      },
+      "rank": 2,
+      "recon_topology_plan": {
+        "m3_update_count": 0,
+        "m4_event_count": 0,
+        "node_types": [
+          "TERMINAL",
+          "ACTION",
+          "TERMINAL",
+          "SCRIPT"
+        ],
+        "relation_types": [
+          "SUB",
+          "SUR",
+          "POR",
+          "RET"
+        ],
+        "spawn_count": 1,
+        "spawned_now": false
+      },
+      "selected_for_m5": false,
+      "source_split": "train",
+      "status": "m4_mined_not_spawned"
+    },
+    {
+      "action_schema": {
+        "file_delta_magnitude": 1,
+        "file_delta_sign": -1,
+        "gives_check": 1,
+        "is_capture": 0,
+        "piece_type": 4,
+        "rank_delta_magnitude": 0,
+        "rank_delta_sign": 0
+      },
+      "after_cluster": {
+        "feature_names": [
+          "black_king_file",
+          "black_king_nearest_edge_distance",
+          "black_king_rank",
+          "black_reply_mobility",
+          "is_check",
+          "is_checkmate",
+          "is_stalemate",
+          "legal_move_count",
+          "rook_attacked_by_black",
+          "rook_present",
+          "side_white_to_move",
+          "white_king_file",
+          "white_king_rank",
+          "white_king_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "white_rook_file",
+          "white_rook_rank",
+          "white_rook_to_black_king_distance"
+        ],
+        "prototype": {
+          "black_king_file": 5.0,
+          "black_king_nearest_edge_distance": 2.0,
+          "black_king_rank": 3.0,
+          "black_reply_mobility": 4.0,
+          "is_check": 1.0,
+          "is_checkmate": 0.0,
+          "is_stalemate": 0.0,
+          "legal_move_count": 4.0,
+          "rook_attacked_by_black": 1.0,
+          "rook_present": 1.0,
+          "side_white_to_move": 0.0,
+          "white_king_file": 4.0,
+          "white_king_rank": 3.6666666666666665,
+          "white_king_to_black_king_distance": 2.0,
+          "white_king_to_rook_distance": 1.0,
+          "white_rook_file": 5.0,
+          "white_rook_rank": 3.3333333333333335,
+          "white_rook_to_black_king_distance": 1.0
+        }
+      },
+      "after_delta_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "black_reply_mobility",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check",
+          "is_stalemate"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 0.0,
+          "black_reply_mobility": 0.0,
+          "is_check": 1.0,
+          "is_stalemate": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 0.0,
+          "white_king_to_rook_distance": -1.0,
+          "white_rook_to_black_king_distance": 0.0
+        }
+      },
+      "before_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 2.0,
+          "is_check": 0.0,
+          "rook_attacked_by_black": 1.0,
+          "white_king_to_black_king_distance": 2.0,
+          "white_king_to_rook_distance": 2.0,
+          "white_rook_to_black_king_distance": 1.0
+        }
+      },
+      "behavior_change_applied": false,
+      "candidate_active_in_runtime": false,
+      "candidate_key": "m4_triplet_0029_bbd5e049cbc5",
+      "evidence": {
+        "example_trace_keys": [
+          "train_0017_white_004",
+          "train_0080_white_007",
+          "train_0149_white_007"
+        ],
+        "mean_candidate_credit": 0.1,
+        "mean_generic_progress_credit": 0.1,
+        "mean_terminal_reward": 0.0,
+        "negative_credit_count": 0,
+        "position_count": 3,
+        "positive_credit_count": 3,
+        "support_count": 3
+      },
+      "rank": 3,
+      "recon_topology_plan": {
+        "m3_update_count": 0,
+        "m4_event_count": 0,
+        "node_types": [
+          "TERMINAL",
+          "ACTION",
+          "TERMINAL",
+          "SCRIPT"
+        ],
+        "relation_types": [
+          "SUB",
+          "SUR",
+          "POR",
+          "RET"
+        ],
+        "spawn_count": 1,
+        "spawned_now": false
+      },
+      "selected_for_m5": false,
+      "source_split": "train",
+      "status": "m4_mined_not_spawned"
+    },
+    {
+      "action_schema": {
+        "file_delta_magnitude": 0,
+        "file_delta_sign": 0,
+        "gives_check": 1,
+        "is_capture": 0,
+        "piece_type": 4,
+        "rank_delta_magnitude": 2,
+        "rank_delta_sign": -1
+      },
+      "after_cluster": {
+        "feature_names": [
+          "black_king_file",
+          "black_king_nearest_edge_distance",
+          "black_king_rank",
+          "black_reply_mobility",
+          "is_check",
+          "is_checkmate",
+          "is_stalemate",
+          "legal_move_count",
+          "rook_attacked_by_black",
+          "rook_present",
+          "side_white_to_move",
+          "white_king_file",
+          "white_king_rank",
+          "white_king_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "white_rook_file",
+          "white_rook_rank",
+          "white_rook_to_black_king_distance"
+        ],
+        "prototype": {
+          "black_king_file": 6.0,
+          "black_king_nearest_edge_distance": 1.0,
+          "black_king_rank": 4.0,
+          "black_reply_mobility": 4.0,
+          "is_check": 1.0,
+          "is_checkmate": 0.0,
+          "is_stalemate": 0.0,
+          "legal_move_count": 4.0,
+          "rook_attacked_by_black": 1.0,
+          "rook_present": 1.0,
+          "side_white_to_move": 0.0,
+          "white_king_file": 4.0,
+          "white_king_rank": 5.0,
+          "white_king_to_black_king_distance": 2.0,
+          "white_king_to_rook_distance": 1.0,
+          "white_rook_file": 5.0,
+          "white_rook_rank": 4.0,
+          "white_rook_to_black_king_distance": 1.0
+        }
+      },
+      "after_delta_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "black_reply_mobility",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check",
+          "is_stalemate"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 0.0,
+          "black_reply_mobility": -1.0,
+          "is_check": 1.0,
+          "is_stalemate": 0.0,
+          "rook_attacked_by_black": 1.0,
+          "white_king_to_black_king_distance": 0.0,
+          "white_king_to_rook_distance": 0.0,
+          "white_rook_to_black_king_distance": -1.0
+        }
+      },
+      "before_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 1.0,
+          "is_check": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 2.0,
+          "white_king_to_rook_distance": 1.0,
+          "white_rook_to_black_king_distance": 2.0
+        }
+      },
+      "behavior_change_applied": false,
+      "candidate_active_in_runtime": false,
+      "candidate_key": "m4_triplet_0262_7ee4c3590be6",
+      "evidence": {
+        "example_trace_keys": [
+          "train_0073_white_001",
+          "train_0102_white_003",
+          "train_0191_white_002"
+        ],
+        "mean_candidate_credit": 0.09000000000000001,
+        "mean_generic_progress_credit": 0.09000000000000001,
+        "mean_terminal_reward": 0.0,
+        "negative_credit_count": 0,
+        "position_count": 3,
+        "positive_credit_count": 3,
+        "support_count": 3
+      },
+      "rank": 4,
+      "recon_topology_plan": {
+        "m3_update_count": 0,
+        "m4_event_count": 0,
+        "node_types": [
+          "TERMINAL",
+          "ACTION",
+          "TERMINAL",
+          "SCRIPT"
+        ],
+        "relation_types": [
+          "SUB",
+          "SUR",
+          "POR",
+          "RET"
+        ],
+        "spawn_count": 1,
+        "spawned_now": false
+      },
+      "selected_for_m5": false,
+      "source_split": "train",
+      "status": "m4_mined_not_spawned"
+    },
+    {
+      "action_schema": {
+        "file_delta_magnitude": 2,
+        "file_delta_sign": 1,
+        "gives_check": 1,
+        "is_capture": 0,
+        "piece_type": 4,
+        "rank_delta_magnitude": 0,
+        "rank_delta_sign": 0
+      },
+      "after_cluster": {
+        "feature_names": [
+          "black_king_file",
+          "black_king_nearest_edge_distance",
+          "black_king_rank",
+          "black_reply_mobility",
+          "is_check",
+          "is_checkmate",
+          "is_stalemate",
+          "legal_move_count",
+          "rook_attacked_by_black",
+          "rook_present",
+          "side_white_to_move",
+          "white_king_file",
+          "white_king_rank",
+          "white_king_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "white_rook_file",
+          "white_rook_rank",
+          "white_rook_to_black_king_distance"
+        ],
+        "prototype": {
+          "black_king_file": 5.0,
+          "black_king_nearest_edge_distance": 2.0,
+          "black_king_rank": 4.0,
+          "black_reply_mobility": 6.0,
+          "is_check": 1.0,
+          "is_checkmate": 0.0,
+          "is_stalemate": 0.0,
+          "legal_move_count": 6.0,
+          "rook_attacked_by_black": 0.0,
+          "rook_present": 1.0,
+          "side_white_to_move": 0.0,
+          "white_king_file": 2.3333333333333335,
+          "white_king_rank": 4.333333333333333,
+          "white_king_to_black_king_distance": 3.0,
+          "white_king_to_rook_distance": 2.6666666666666665,
+          "white_rook_file": 5.0,
+          "white_rook_rank": 3.3333333333333335,
+          "white_rook_to_black_king_distance": 2.0
+        }
+      },
+      "after_delta_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "black_reply_mobility",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check",
+          "is_stalemate"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 0.0,
+          "black_reply_mobility": -2.0,
+          "is_check": 1.0,
+          "is_stalemate": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 0.0,
+          "white_king_to_rook_distance": 1.6666666666666667,
+          "white_rook_to_black_king_distance": 0.0
+        }
+      },
+      "before_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 2.0,
+          "is_check": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 3.0,
+          "white_king_to_rook_distance": 1.0,
+          "white_rook_to_black_king_distance": 2.0
+        }
+      },
+      "behavior_change_applied": false,
+      "candidate_active_in_runtime": false,
+      "candidate_key": "m4_triplet_0599_202e7e39ce3f",
+      "evidence": {
+        "example_trace_keys": [
+          "train_0096_white_007",
+          "train_0156_white_003",
+          "train_0156_white_005",
+          "train_0156_white_007",
+          "train_0156_white_009",
+          "train_0178_white_006"
+        ],
+        "mean_candidate_credit": 0.08666666666666667,
+        "mean_generic_progress_credit": 0.08666666666666667,
+        "mean_terminal_reward": 0.0,
+        "negative_credit_count": 2,
+        "position_count": 3,
+        "positive_credit_count": 4,
+        "support_count": 6
+      },
+      "rank": 5,
+      "recon_topology_plan": {
+        "m3_update_count": 0,
+        "m4_event_count": 0,
+        "node_types": [
+          "TERMINAL",
+          "ACTION",
+          "TERMINAL",
+          "SCRIPT"
+        ],
+        "relation_types": [
+          "SUB",
+          "SUR",
+          "POR",
+          "RET"
+        ],
+        "spawn_count": 1,
+        "spawned_now": false
+      },
+      "selected_for_m5": false,
+      "source_split": "train",
+      "status": "m4_mined_not_spawned"
+    },
+    {
+      "action_schema": {
+        "file_delta_magnitude": 0,
+        "file_delta_sign": 0,
+        "gives_check": 1,
+        "is_capture": 0,
+        "piece_type": 4,
+        "rank_delta_magnitude": 1,
+        "rank_delta_sign": -1
+      },
+      "after_cluster": {
+        "feature_names": [
+          "black_king_file",
+          "black_king_nearest_edge_distance",
+          "black_king_rank",
+          "black_reply_mobility",
+          "is_check",
+          "is_checkmate",
+          "is_stalemate",
+          "legal_move_count",
+          "rook_attacked_by_black",
+          "rook_present",
+          "side_white_to_move",
+          "white_king_file",
+          "white_king_rank",
+          "white_king_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "white_rook_file",
+          "white_rook_rank",
+          "white_rook_to_black_king_distance"
+        ],
+        "prototype": {
+          "black_king_file": 2.3333333333333335,
+          "black_king_nearest_edge_distance": 2.0,
+          "black_king_rank": 3.3333333333333335,
+          "black_reply_mobility": 6.0,
+          "is_check": 1.0,
+          "is_checkmate": 0.0,
+          "is_stalemate": 0.0,
+          "legal_move_count": 6.0,
+          "rook_attacked_by_black": 0.0,
+          "rook_present": 1.0,
+          "side_white_to_move": 0.0,
+          "white_king_file": 5.333333333333333,
+          "white_king_rank": 4.166666666666667,
+          "white_king_to_black_king_distance": 3.0,
+          "white_king_to_rook_distance": 1.0,
+          "white_rook_file": 4.333333333333333,
+          "white_rook_rank": 3.3333333333333335,
+          "white_rook_to_black_king_distance": 2.0
+        }
+      },
+      "after_delta_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "black_reply_mobility",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check",
+          "is_stalemate"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 0.0,
+          "black_reply_mobility": 1.0,
+          "is_check": 1.0,
+          "is_stalemate": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 0.0,
+          "white_king_to_rook_distance": 0.0,
+          "white_rook_to_black_king_distance": 0.0
+        }
+      },
+      "before_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 2.0,
+          "is_check": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 3.0,
+          "white_king_to_rook_distance": 1.0,
+          "white_rook_to_black_king_distance": 2.0
+        }
+      },
+      "behavior_change_applied": false,
+      "candidate_active_in_runtime": false,
+      "candidate_key": "m4_triplet_0185_790972deaf63",
+      "evidence": {
+        "example_trace_keys": [
+          "train_0048_white_006",
+          "train_0073_white_007",
+          "train_0102_white_009",
+          "train_0130_white_007",
+          "train_0171_white_002",
+          "train_0191_white_008"
+        ],
+        "mean_candidate_credit": 0.05,
+        "mean_generic_progress_credit": 0.05,
+        "mean_terminal_reward": 0.0,
+        "negative_credit_count": 0,
+        "position_count": 6,
+        "positive_credit_count": 6,
+        "support_count": 6
+      },
+      "rank": 6,
+      "recon_topology_plan": {
+        "m3_update_count": 0,
+        "m4_event_count": 0,
+        "node_types": [
+          "TERMINAL",
+          "ACTION",
+          "TERMINAL",
+          "SCRIPT"
+        ],
+        "relation_types": [
+          "SUB",
+          "SUR",
+          "POR",
+          "RET"
+        ],
+        "spawn_count": 1,
+        "spawned_now": false
+      },
+      "selected_for_m5": false,
+      "source_split": "train",
+      "status": "m4_mined_not_spawned"
+    },
+    {
+      "action_schema": {
+        "file_delta_magnitude": 1,
+        "file_delta_sign": 1,
+        "gives_check": 1,
+        "is_capture": 0,
+        "piece_type": 4,
+        "rank_delta_magnitude": 0,
+        "rank_delta_sign": 0
+      },
+      "after_cluster": {
+        "feature_names": [
+          "black_king_file",
+          "black_king_nearest_edge_distance",
+          "black_king_rank",
+          "black_reply_mobility",
+          "is_check",
+          "is_checkmate",
+          "is_stalemate",
+          "legal_move_count",
+          "rook_attacked_by_black",
+          "rook_present",
+          "side_white_to_move",
+          "white_king_file",
+          "white_king_rank",
+          "white_king_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "white_rook_file",
+          "white_rook_rank",
+          "white_rook_to_black_king_distance"
+        ],
+        "prototype": {
+          "black_king_file": 6.0,
+          "black_king_nearest_edge_distance": 1.0,
+          "black_king_rank": 3.0,
+          "black_reply_mobility": 6.0,
+          "is_check": 1.0,
+          "is_checkmate": 0.0,
+          "is_stalemate": 0.0,
+          "legal_move_count": 6.0,
+          "rook_attacked_by_black": 0.0,
+          "rook_present": 1.0,
+          "side_white_to_move": 0.0,
+          "white_king_file": 5.25,
+          "white_king_rank": 4.5,
+          "white_king_to_black_king_distance": 3.0,
+          "white_king_to_rook_distance": 1.0,
+          "white_rook_file": 6.0,
+          "white_rook_rank": 4.0,
+          "white_rook_to_black_king_distance": 2.0
+        }
+      },
+      "after_delta_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "black_reply_mobility",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check",
+          "is_stalemate"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 0.0,
+          "black_reply_mobility": 1.0,
+          "is_check": 1.0,
+          "is_stalemate": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 0.0,
+          "white_king_to_rook_distance": 0.0,
+          "white_rook_to_black_king_distance": 0.0
+        }
+      },
+      "before_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 1.0,
+          "is_check": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 3.0,
+          "white_king_to_rook_distance": 1.0,
+          "white_rook_to_black_king_distance": 2.0
+        }
+      },
+      "behavior_change_applied": false,
+      "candidate_active_in_runtime": false,
+      "candidate_key": "m4_triplet_0495_1db11fc64f57",
+      "evidence": {
+        "example_trace_keys": [
+          "train_0067_white_004",
+          "train_0073_white_003",
+          "train_0102_white_005",
+          "train_0191_white_004"
+        ],
+        "mean_candidate_credit": 0.05,
+        "mean_generic_progress_credit": 0.05,
+        "mean_terminal_reward": 0.0,
+        "negative_credit_count": 0,
+        "position_count": 4,
+        "positive_credit_count": 4,
+        "support_count": 4
+      },
+      "rank": 7,
+      "recon_topology_plan": {
+        "m3_update_count": 0,
+        "m4_event_count": 0,
+        "node_types": [
+          "TERMINAL",
+          "ACTION",
+          "TERMINAL",
+          "SCRIPT"
+        ],
+        "relation_types": [
+          "SUB",
+          "SUR",
+          "POR",
+          "RET"
+        ],
+        "spawn_count": 1,
+        "spawned_now": false
+      },
+      "selected_for_m5": false,
+      "source_split": "train",
+      "status": "m4_mined_not_spawned"
+    },
+    {
+      "action_schema": {
+        "file_delta_magnitude": 0,
+        "file_delta_sign": 0,
+        "gives_check": 1,
+        "is_capture": 0,
+        "piece_type": 4,
+        "rank_delta_magnitude": 1,
+        "rank_delta_sign": 1
+      },
+      "after_cluster": {
+        "feature_names": [
+          "black_king_file",
+          "black_king_nearest_edge_distance",
+          "black_king_rank",
+          "black_reply_mobility",
+          "is_check",
+          "is_checkmate",
+          "is_stalemate",
+          "legal_move_count",
+          "rook_attacked_by_black",
+          "rook_present",
+          "side_white_to_move",
+          "white_king_file",
+          "white_king_rank",
+          "white_king_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "white_rook_file",
+          "white_rook_rank",
+          "white_rook_to_black_king_distance"
+        ],
+        "prototype": {
+          "black_king_file": 3.0,
+          "black_king_nearest_edge_distance": 3.0,
+          "black_king_rank": 3.0,
+          "black_reply_mobility": 6.0,
+          "is_check": 1.0,
+          "is_checkmate": 0.0,
+          "is_stalemate": 0.0,
+          "legal_move_count": 6.0,
+          "rook_attacked_by_black": 0.0,
+          "rook_present": 1.0,
+          "side_white_to_move": 0.0,
+          "white_king_file": 4.5,
+          "white_king_rank": 7.0,
+          "white_king_to_black_king_distance": 4.0,
+          "white_king_to_rook_distance": 4.0,
+          "white_rook_file": 6.0,
+          "white_rook_rank": 3.0,
+          "white_rook_to_black_king_distance": 3.0
+        }
+      },
+      "after_delta_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "black_reply_mobility",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check",
+          "is_stalemate"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 0.0,
+          "black_reply_mobility": 1.0,
+          "is_check": 1.0,
+          "is_stalemate": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 0.0,
+          "white_king_to_rook_distance": -1.0,
+          "white_rook_to_black_king_distance": 0.0
+        }
+      },
+      "before_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 3.0,
+          "is_check": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 4.0,
+          "white_king_to_rook_distance": 5.0,
+          "white_rook_to_black_king_distance": 3.0
+        }
+      },
+      "behavior_change_applied": false,
+      "candidate_active_in_runtime": false,
+      "candidate_key": "m4_triplet_0413_1ce8d5c8bb2f",
+      "evidence": {
+        "example_trace_keys": [
+          "train_0031_white_004",
+          "train_0034_white_004",
+          "train_0043_white_003",
+          "train_0125_white_006"
+        ],
+        "mean_candidate_credit": 0.05,
+        "mean_generic_progress_credit": 0.05,
+        "mean_terminal_reward": 0.0,
+        "negative_credit_count": 0,
+        "position_count": 4,
+        "positive_credit_count": 4,
+        "support_count": 4
+      },
+      "rank": 8,
+      "recon_topology_plan": {
+        "m3_update_count": 0,
+        "m4_event_count": 0,
+        "node_types": [
+          "TERMINAL",
+          "ACTION",
+          "TERMINAL",
+          "SCRIPT"
+        ],
+        "relation_types": [
+          "SUB",
+          "SUR",
+          "POR",
+          "RET"
+        ],
+        "spawn_count": 1,
+        "spawned_now": false
+      },
+      "selected_for_m5": false,
+      "source_split": "train",
+      "status": "m4_mined_not_spawned"
+    },
+    {
+      "action_schema": {
+        "file_delta_magnitude": 0,
+        "file_delta_sign": 0,
+        "gives_check": 1,
+        "is_capture": 0,
+        "piece_type": 4,
+        "rank_delta_magnitude": 1,
+        "rank_delta_sign": 1
+      },
+      "after_cluster": {
+        "feature_names": [
+          "black_king_file",
+          "black_king_nearest_edge_distance",
+          "black_king_rank",
+          "black_reply_mobility",
+          "is_check",
+          "is_checkmate",
+          "is_stalemate",
+          "legal_move_count",
+          "rook_attacked_by_black",
+          "rook_present",
+          "side_white_to_move",
+          "white_king_file",
+          "white_king_rank",
+          "white_king_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "white_rook_file",
+          "white_rook_rank",
+          "white_rook_to_black_king_distance"
+        ],
+        "prototype": {
+          "black_king_file": 5.5,
+          "black_king_nearest_edge_distance": 1.0,
+          "black_king_rank": 1.0,
+          "black_reply_mobility": 6.0,
+          "is_check": 1.0,
+          "is_checkmate": 0.0,
+          "is_stalemate": 0.0,
+          "legal_move_count": 6.0,
+          "rook_attacked_by_black": 0.0,
+          "rook_present": 1.0,
+          "side_white_to_move": 0.0,
+          "white_king_file": 4.5,
+          "white_king_rank": 7.0,
+          "white_king_to_black_king_distance": 6.0,
+          "white_king_to_rook_distance": 6.0,
+          "white_rook_file": 4.0,
+          "white_rook_rank": 1.0,
+          "white_rook_to_black_king_distance": 3.0
+        }
+      },
+      "after_delta_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "black_reply_mobility",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check",
+          "is_stalemate"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 0.0,
+          "black_reply_mobility": 1.0,
+          "is_check": 1.0,
+          "is_stalemate": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 0.0,
+          "white_king_to_rook_distance": -1.0,
+          "white_rook_to_black_king_distance": 0.0
+        }
+      },
+      "before_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 1.0,
+          "is_check": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 6.0,
+          "white_king_to_rook_distance": 7.0,
+          "white_rook_to_black_king_distance": 3.0
+        }
+      },
+      "behavior_change_applied": false,
+      "candidate_active_in_runtime": false,
+      "candidate_key": "m4_triplet_0330_0c47b9060a63",
+      "evidence": {
+        "example_trace_keys": [
+          "train_0031_white_001",
+          "train_0034_white_001",
+          "train_0062_white_001",
+          "train_0066_white_001"
+        ],
+        "mean_candidate_credit": 0.05,
+        "mean_generic_progress_credit": 0.05,
+        "mean_terminal_reward": 0.0,
+        "negative_credit_count": 0,
+        "position_count": 4,
+        "positive_credit_count": 4,
+        "support_count": 4
+      },
+      "rank": 9,
+      "recon_topology_plan": {
+        "m3_update_count": 0,
+        "m4_event_count": 0,
+        "node_types": [
+          "TERMINAL",
+          "ACTION",
+          "TERMINAL",
+          "SCRIPT"
+        ],
+        "relation_types": [
+          "SUB",
+          "SUR",
+          "POR",
+          "RET"
+        ],
+        "spawn_count": 1,
+        "spawned_now": false
+      },
+      "selected_for_m5": false,
+      "source_split": "train",
+      "status": "m4_mined_not_spawned"
+    },
+    {
+      "action_schema": {
+        "file_delta_magnitude": 0,
+        "file_delta_sign": 0,
+        "gives_check": 1,
+        "is_capture": 0,
+        "piece_type": 4,
+        "rank_delta_magnitude": 1,
+        "rank_delta_sign": -1
+      },
+      "after_cluster": {
+        "feature_names": [
+          "black_king_file",
+          "black_king_nearest_edge_distance",
+          "black_king_rank",
+          "black_reply_mobility",
+          "is_check",
+          "is_checkmate",
+          "is_stalemate",
+          "legal_move_count",
+          "rook_attacked_by_black",
+          "rook_present",
+          "side_white_to_move",
+          "white_king_file",
+          "white_king_rank",
+          "white_king_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "white_rook_file",
+          "white_rook_rank",
+          "white_rook_to_black_king_distance"
+        ],
+        "prototype": {
+          "black_king_file": 3.25,
+          "black_king_nearest_edge_distance": 3.0,
+          "black_king_rank": 4.0,
+          "black_reply_mobility": 6.0,
+          "is_check": 1.0,
+          "is_checkmate": 0.0,
+          "is_stalemate": 0.0,
+          "legal_move_count": 6.0,
+          "rook_attacked_by_black": 0.0,
+          "rook_present": 1.0,
+          "side_white_to_move": 0.0,
+          "white_king_file": 4.5,
+          "white_king_rank": 0.0,
+          "white_king_to_black_king_distance": 4.0,
+          "white_king_to_rook_distance": 4.0,
+          "white_rook_file": 6.25,
+          "white_rook_rank": 4.0,
+          "white_rook_to_black_king_distance": 3.0
+        }
+      },
+      "after_delta_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "black_reply_mobility",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check",
+          "is_stalemate"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 0.0,
+          "black_reply_mobility": 1.0,
+          "is_check": 1.0,
+          "is_stalemate": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 0.0,
+          "white_king_to_rook_distance": -1.0,
+          "white_rook_to_black_king_distance": 0.0
+        }
+      },
+      "before_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 3.0,
+          "is_check": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 4.0,
+          "white_king_to_rook_distance": 5.0,
+          "white_rook_to_black_king_distance": 3.0
+        }
+      },
+      "behavior_change_applied": false,
+      "candidate_active_in_runtime": false,
+      "candidate_key": "m4_triplet_0252_e0733f662806",
+      "evidence": {
+        "example_trace_keys": [
+          "train_0011_white_003",
+          "train_0094_white_005",
+          "train_0139_white_004",
+          "train_0166_white_004"
+        ],
+        "mean_candidate_credit": 0.05,
+        "mean_generic_progress_credit": 0.05,
+        "mean_terminal_reward": 0.0,
+        "negative_credit_count": 0,
+        "position_count": 4,
+        "positive_credit_count": 4,
+        "support_count": 4
+      },
+      "rank": 10,
+      "recon_topology_plan": {
+        "m3_update_count": 0,
+        "m4_event_count": 0,
+        "node_types": [
+          "TERMINAL",
+          "ACTION",
+          "TERMINAL",
+          "SCRIPT"
+        ],
+        "relation_types": [
+          "SUB",
+          "SUR",
+          "POR",
+          "RET"
+        ],
+        "spawn_count": 1,
+        "spawned_now": false
+      },
+      "selected_for_m5": false,
+      "source_split": "train",
+      "status": "m4_mined_not_spawned"
+    },
+    {
+      "action_schema": {
+        "file_delta_magnitude": 0,
+        "file_delta_sign": 0,
+        "gives_check": 1,
+        "is_capture": 0,
+        "piece_type": 4,
+        "rank_delta_magnitude": 1,
+        "rank_delta_sign": -1
+      },
+      "after_cluster": {
+        "feature_names": [
+          "black_king_file",
+          "black_king_nearest_edge_distance",
+          "black_king_rank",
+          "black_reply_mobility",
+          "is_check",
+          "is_checkmate",
+          "is_stalemate",
+          "legal_move_count",
+          "rook_attacked_by_black",
+          "rook_present",
+          "side_white_to_move",
+          "white_king_file",
+          "white_king_rank",
+          "white_king_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "white_rook_file",
+          "white_rook_rank",
+          "white_rook_to_black_king_distance"
+        ],
+        "prototype": {
+          "black_king_file": 3.25,
+          "black_king_nearest_edge_distance": 1.0,
+          "black_king_rank": 1.25,
+          "black_reply_mobility": 6.0,
+          "is_check": 1.0,
+          "is_checkmate": 0.0,
+          "is_stalemate": 0.0,
+          "legal_move_count": 6.0,
+          "rook_attacked_by_black": 0.0,
+          "rook_present": 1.0,
+          "side_white_to_move": 0.0,
+          "white_king_file": 4.5,
+          "white_king_rank": 6.25,
+          "white_king_to_black_king_distance": 5.0,
+          "white_king_to_rook_distance": 5.0,
+          "white_rook_file": 4.75,
+          "white_rook_rank": 1.25,
+          "white_rook_to_black_king_distance": 3.0
+        }
+      },
+      "after_delta_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "black_reply_mobility",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check",
+          "is_stalemate"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 0.0,
+          "black_reply_mobility": 1.0,
+          "is_check": 1.0,
+          "is_stalemate": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 0.0,
+          "white_king_to_rook_distance": 1.0,
+          "white_rook_to_black_king_distance": 0.0
+        }
+      },
+      "before_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 1.0,
+          "is_check": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 5.0,
+          "white_king_to_rook_distance": 4.0,
+          "white_rook_to_black_king_distance": 3.0
+        }
+      },
+      "behavior_change_applied": false,
+      "candidate_active_in_runtime": false,
+      "candidate_key": "m4_triplet_0169_b90b600448fb",
+      "evidence": {
+        "example_trace_keys": [
+          "train_0009_white_002",
+          "train_0065_white_002",
+          "train_0074_white_000",
+          "train_0157_white_000"
+        ],
+        "mean_candidate_credit": 0.05,
+        "mean_generic_progress_credit": 0.05,
+        "mean_terminal_reward": 0.0,
+        "negative_credit_count": 0,
+        "position_count": 4,
+        "positive_credit_count": 4,
+        "support_count": 4
+      },
+      "rank": 11,
+      "recon_topology_plan": {
+        "m3_update_count": 0,
+        "m4_event_count": 0,
+        "node_types": [
+          "TERMINAL",
+          "ACTION",
+          "TERMINAL",
+          "SCRIPT"
+        ],
+        "relation_types": [
+          "SUB",
+          "SUR",
+          "POR",
+          "RET"
+        ],
+        "spawn_count": 1,
+        "spawned_now": false
+      },
+      "selected_for_m5": false,
+      "source_split": "train",
+      "status": "m4_mined_not_spawned"
+    },
+    {
+      "action_schema": {
+        "file_delta_magnitude": 1,
+        "file_delta_sign": -1,
+        "gives_check": 1,
+        "is_capture": 0,
+        "piece_type": 4,
+        "rank_delta_magnitude": 0,
+        "rank_delta_sign": 0
+      },
+      "after_cluster": {
+        "feature_names": [
+          "black_king_file",
+          "black_king_nearest_edge_distance",
+          "black_king_rank",
+          "black_reply_mobility",
+          "is_check",
+          "is_checkmate",
+          "is_stalemate",
+          "legal_move_count",
+          "rook_attacked_by_black",
+          "rook_present",
+          "side_white_to_move",
+          "white_king_file",
+          "white_king_rank",
+          "white_king_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "white_rook_file",
+          "white_rook_rank",
+          "white_rook_to_black_king_distance"
+        ],
+        "prototype": {
+          "black_king_file": 3.25,
+          "black_king_nearest_edge_distance": 2.0,
+          "black_king_rank": 2.25,
+          "black_reply_mobility": 6.0,
+          "is_check": 1.0,
+          "is_checkmate": 0.0,
+          "is_stalemate": 0.0,
+          "legal_move_count": 6.0,
+          "rook_attacked_by_black": 0.0,
+          "rook_present": 1.0,
+          "side_white_to_move": 0.0,
+          "white_king_file": 5.25,
+          "white_king_rank": 5.25,
+          "white_king_to_black_king_distance": 3.0,
+          "white_king_to_rook_distance": 2.0,
+          "white_rook_file": 3.25,
+          "white_rook_rank": 4.25,
+          "white_rook_to_black_king_distance": 2.0
+        }
+      },
+      "after_delta_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "black_reply_mobility",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check",
+          "is_stalemate"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 0.0,
+          "black_reply_mobility": 1.0,
+          "is_check": 1.0,
+          "is_stalemate": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 0.0,
+          "white_king_to_rook_distance": 1.0,
+          "white_rook_to_black_king_distance": 0.0
+        }
+      },
+      "before_cluster": {
+        "feature_names": [
+          "black_king_nearest_edge_distance",
+          "white_king_to_black_king_distance",
+          "white_rook_to_black_king_distance",
+          "white_king_to_rook_distance",
+          "rook_attacked_by_black",
+          "is_check"
+        ],
+        "prototype": {
+          "black_king_nearest_edge_distance": 2.0,
+          "is_check": 0.0,
+          "rook_attacked_by_black": 0.0,
+          "white_king_to_black_king_distance": 3.0,
+          "white_king_to_rook_distance": 1.0,
+          "white_rook_to_black_king_distance": 2.0
+        }
+      },
+      "behavior_change_applied": false,
+      "candidate_active_in_runtime": false,
+      "candidate_key": "m4_triplet_0036_352f1ca1028f",
+      "evidence": {
+        "example_trace_keys": [
+          "train_0048_white_003",
+          "train_0069_white_001",
+          "train_0107_white_002",
+          "train_0130_white_004"
+        ],
+        "mean_candidate_credit": 0.05,
+        "mean_generic_progress_credit": 0.05,
+        "mean_terminal_reward": 0.0,
+        "negative_credit_count": 0,
+        "position_count": 4,
+        "positive_credit_count": 4,
+        "support_count": 4
+      },
+      "rank": 12,
+      "recon_topology_plan": {
+        "m3_update_count": 0,
+        "m4_event_count": 0,
+        "node_types": [
+          "TERMINAL",
+          "ACTION",
+          "TERMINAL",
+          "SCRIPT"
+        ],
+        "relation_types": [
+          "SUB",
+          "SUR",
+          "POR",
+          "RET"
+        ],
+        "spawn_count": 1,
+        "spawned_now": false
+      },
+      "selected_for_m5": false,
+      "source_split": "train",
+      "status": "m4_mined_not_spawned"
+    }
+  ],
+  "config": {
+    "max_candidates": 12,
+    "min_support": 3,
+    "source_trace_path": "reports/autogrowth/krk_autogrowth_m4_traces.json"
+  },
+  "schema_version": "krk_autogrowth_m4_candidates.v0",
+  "source_summary": {
+    "action_vitality_rate": 0.45252613240418116,
+    "behavior_change_applied": false,
+    "candidate_behavior_enabled": false,
+    "heldout_used_for_trace": false,
+    "horizon": 40,
+    "repeated_white_action_events": 1257,
+    "repetition_events": 2600,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "terminal_outcomes": {
+      "draw_fivefold_repetition": 200
+    },
+    "trace_record_count": 2296,
+    "train_position_count": 200,
+    "white_action_count": 2296,
+    "white_unique_action_total": 1039
+  },
+  "summary": {
+    "behavior_change_applied": false,
+    "candidate_active_in_runtime": false,
+    "candidate_count": 12,
+    "candidate_spawned": false,
+    "ready_for_m5_sandbox": true,
+    "selected_candidate_key": "m4_triplet_0595_4e1278ddb4d9"
+  },
+  "trace_digest": "85d8870a7f4d443c632ff3a05091f6c40c7dfdc33ff3eba040b6b657faebfc1d",
+  "trace_schema_version": "krk_autogrowth_m4_traces.v0"
+}

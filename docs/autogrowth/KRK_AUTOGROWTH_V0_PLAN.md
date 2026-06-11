@@ -192,15 +192,27 @@ Checkpoint:
 
 Implement trace collection and candidate triplet mining.
 
+Status: implemented as non-behavior-changing evidence preparation.
+
 Checkpoint:
 
 - Candidate records are generated mechanically from traces.
 - Candidate records include before/action/after summaries and credit evidence.
 - No stage labels or archived report IDs appear in candidate records.
 
+Artifacts:
+
+- `reports/autogrowth/krk_autogrowth_m4_traces.json`
+- `reports/autogrowth/krk_autogrowth_m4_candidates.json`
+- Smoke variants with `_smoke` suffix.
+
+Important boundary: M4 candidates are mined records only. They are not spawned, active, promoted, or allowed to change behavior until M5 sandbox wiring.
+
 ### M5: Candidate Sandbox
 
 Compile exactly one candidate node/subgraph and evaluate it in sandbox.
+
+Status: implemented for the selected M4 candidate.
 
 Checkpoint:
 
@@ -208,9 +220,17 @@ Checkpoint:
 - Candidate may affect sandbox behavior.
 - Illegal/stalemate/blunder regressions are counted.
 
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_m5_sandbox.json`
+- Selected candidate activates on 150/200 held-out positions and changes behavior on 19/200.
+- Result is a failure: 0/200 mates, 18 rook-loss regressions, no held-out conversion gain.
+
 ### M6: M3/M4 Wiring
 
 Wire M3 fast updates and M4 consolidation into candidate scoring and promotion.
+
+Status: implemented as sandbox scoring and promotion/deletion decision.
 
 Checkpoint:
 
@@ -218,15 +238,31 @@ Checkpoint:
 - M4 consolidation event is recorded only on promotion.
 - Candidate deletion/quarantine happens automatically on failure.
 
+Current result:
+
+- M3 updates fire when the candidate changes behavior: 19 updates at h40 and h80.
+- M4 consolidation events are zero because the candidate fails promotion.
+- Candidate is quarantined automatically for no conversion gain and safety regression.
+
 ### M7: Full Three-Arm Run
 
 Run Arm A/B/C on locked held-out data.
+
+Status: implemented for the current selected M4 candidate.
 
 Checkpoint:
 
 - One result JSON under `reports/autogrowth/`.
 - Optional short summary markdown.
 - Decision: promote, quarantine, or reset the growth mechanism.
+
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_v0_experiment.json`
+- Arm A baseline: 0/200 h40 mates, 0/200 h80 mates.
+- Arm B sham-growth: identical to baseline.
+- Arm C autogrowth sandbox: candidate activates but remains 0/200 h40/h80 mates and causes 18 rook-loss regressions.
+- Decision: fail and quarantine the current candidate. This proves the v0 loop can act and reject a bad topology, but does not prove useful KRK improvement yet.
 
 ## Long-Run Protocol
 

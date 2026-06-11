@@ -1,0 +1,441 @@
+{
+  "arms": {
+    "autogrowth_sandbox": {
+      "40": {
+        "after_condition_match_count": 0,
+        "after_condition_match_rate": 0.0,
+        "arm": "autogrowth_sandbox",
+        "candidate_action_matches": 19,
+        "candidate_activated_position_count": 9,
+        "candidate_activation_rate": 0.9,
+        "candidate_behavior_change_rate": 0.1,
+        "candidate_behavior_changed_position_count": 1,
+        "candidate_changed_move_count": 1,
+        "candidate_move_count": 19,
+        "candidate_terminal_activations": 43,
+        "conversion_rate": 0.0,
+        "draw_reasons": {
+          "draw_fivefold_repetition": 9
+        },
+        "draws": 9,
+        "horizon": 40,
+        "horizon_no_mate": 0,
+        "illegal_moves": 0,
+        "m3_fast_weight_delta": -0.02,
+        "m3_update_count": 1,
+        "mates": 0,
+        "negative_credit_count": 1,
+        "other_failures": 0,
+        "positive_credit_count": 0,
+        "repeated_white_action_events": 57,
+        "repetition_events": 117,
+        "rook_losses": 1,
+        "stalemates": 0,
+        "total": 10
+      },
+      "80": {
+        "after_condition_match_count": 0,
+        "after_condition_match_rate": 0.0,
+        "arm": "autogrowth_sandbox",
+        "candidate_action_matches": 19,
+        "candidate_activated_position_count": 9,
+        "candidate_activation_rate": 0.9,
+        "candidate_behavior_change_rate": 0.1,
+        "candidate_behavior_changed_position_count": 1,
+        "candidate_changed_move_count": 1,
+        "candidate_move_count": 19,
+        "candidate_terminal_activations": 43,
+        "conversion_rate": 0.0,
+        "draw_reasons": {
+          "draw_fivefold_repetition": 9
+        },
+        "draws": 9,
+        "horizon": 80,
+        "horizon_no_mate": 0,
+        "illegal_moves": 0,
+        "m3_fast_weight_delta": -0.02,
+        "m3_update_count": 1,
+        "mates": 0,
+        "negative_credit_count": 1,
+        "other_failures": 0,
+        "positive_credit_count": 0,
+        "repeated_white_action_events": 57,
+        "repetition_events": 117,
+        "rook_losses": 1,
+        "stalemates": 0,
+        "total": 10
+      }
+    },
+    "baseline": {
+      "40": {
+        "action_vitality_rate": 0.4375,
+        "arm": "baseline",
+        "conversion_rate": 0.0,
+        "draw_reasons": {
+          "draw_fivefold_repetition": 10
+        },
+        "draws": 10,
+        "horizon": 40,
+        "horizon_no_mate": 0,
+        "illegal_moves": 0,
+        "mates": 0,
+        "max_plies": 0,
+        "other_failures": 0,
+        "repeated_white_action_events": 63,
+        "repetition_events": 130,
+        "rook_losses": 0,
+        "stalemates": 0,
+        "total": 10,
+        "white_action_count": 112,
+        "white_unique_action_total": 49
+      },
+      "80": {
+        "action_vitality_rate": 0.4375,
+        "arm": "baseline",
+        "conversion_rate": 0.0,
+        "draw_reasons": {
+          "draw_fivefold_repetition": 10
+        },
+        "draws": 10,
+        "horizon": 80,
+        "horizon_no_mate": 0,
+        "illegal_moves": 0,
+        "mates": 0,
+        "max_plies": 0,
+        "other_failures": 0,
+        "repeated_white_action_events": 63,
+        "repetition_events": 130,
+        "rook_losses": 0,
+        "stalemates": 0,
+        "total": 10,
+        "white_action_count": 112,
+        "white_unique_action_total": 49
+      }
+    },
+    "sham_growth": {
+      "40": {
+        "action_vitality_rate": 0.4375,
+        "arm": "sham_growth",
+        "conversion_rate": 0.0,
+        "draw_reasons": {
+          "draw_fivefold_repetition": 10
+        },
+        "draws": 10,
+        "horizon": 40,
+        "horizon_no_mate": 0,
+        "illegal_moves": 0,
+        "mates": 0,
+        "max_plies": 0,
+        "other_failures": 0,
+        "repeated_white_action_events": 63,
+        "repetition_events": 130,
+        "rook_losses": 0,
+        "stalemates": 0,
+        "total": 10,
+        "white_action_count": 112,
+        "white_unique_action_total": 49
+      },
+      "80": {
+        "action_vitality_rate": 0.4375,
+        "arm": "sham_growth",
+        "conversion_rate": 0.0,
+        "draw_reasons": {
+          "draw_fivefold_repetition": 10
+        },
+        "draws": 10,
+        "horizon": 80,
+        "horizon_no_mate": 0,
+        "illegal_moves": 0,
+        "mates": 0,
+        "max_plies": 0,
+        "other_failures": 0,
+        "repeated_white_action_events": 63,
+        "repetition_events": 130,
+        "rook_losses": 0,
+        "stalemates": 0,
+        "total": 10,
+        "white_action_count": 112,
+        "white_unique_action_total": 49
+      }
+    }
+  },
+  "candidate": {
+    "action_schema": {
+      "file_delta_magnitude": 0,
+      "file_delta_sign": 0,
+      "gives_check": 1,
+      "is_capture": 0,
+      "piece_type": 4,
+      "rank_delta_magnitude": 1,
+      "rank_delta_sign": 1
+    },
+    "after_cluster": {
+      "feature_names": [
+        "black_king_file",
+        "black_king_nearest_edge_distance",
+        "black_king_rank",
+        "black_reply_mobility",
+        "is_check",
+        "is_checkmate",
+        "is_stalemate",
+        "legal_move_count",
+        "rook_attacked_by_black",
+        "rook_present",
+        "side_white_to_move",
+        "white_king_file",
+        "white_king_rank",
+        "white_king_to_black_king_distance",
+        "white_king_to_rook_distance",
+        "white_rook_file",
+        "white_rook_rank",
+        "white_rook_to_black_king_distance"
+      ],
+      "prototype": {
+        "black_king_file": 3.6,
+        "black_king_nearest_edge_distance": 3.0,
+        "black_king_rank": 3.8,
+        "black_reply_mobility": 6.0,
+        "is_check": 1.0,
+        "is_checkmate": 0.0,
+        "is_stalemate": 0.0,
+        "legal_move_count": 6.0,
+        "rook_attacked_by_black": 0.0,
+        "rook_present": 1.0,
+        "side_white_to_move": 0.0,
+        "white_king_file": 2.8,
+        "white_king_rank": 4.6,
+        "white_king_to_black_king_distance": 4.0,
+        "white_king_to_rook_distance": 7.0,
+        "white_rook_file": 4.2,
+        "white_rook_rank": 3.8,
+        "white_rook_to_black_king_distance": 3.0
+      }
+    },
+    "after_delta_cluster": {
+      "feature_names": [
+        "black_king_nearest_edge_distance",
+        "black_reply_mobility",
+        "white_king_to_black_king_distance",
+        "white_rook_to_black_king_distance",
+        "white_king_to_rook_distance",
+        "rook_attacked_by_black",
+        "is_check",
+        "is_stalemate"
+      ],
+      "prototype": {
+        "black_king_nearest_edge_distance": 0.0,
+        "black_reply_mobility": 1.0,
+        "is_check": 1.0,
+        "is_stalemate": 0.0,
+        "rook_attacked_by_black": 0.0,
+        "white_king_to_black_king_distance": 0.0,
+        "white_king_to_rook_distance": 0.0,
+        "white_rook_to_black_king_distance": 0.0
+      }
+    },
+    "before_cluster": {
+      "feature_names": [
+        "black_king_nearest_edge_distance",
+        "white_king_to_black_king_distance",
+        "white_rook_to_black_king_distance",
+        "white_king_to_rook_distance",
+        "rook_attacked_by_black",
+        "is_check"
+      ],
+      "prototype": {
+        "black_king_nearest_edge_distance": 3.0,
+        "is_check": 0.0,
+        "rook_attacked_by_black": 0.0,
+        "white_king_to_black_king_distance": 4.0,
+        "white_king_to_rook_distance": 7.0,
+        "white_rook_to_black_king_distance": 3.0
+      }
+    },
+    "behavior_change_applied": true,
+    "candidate_active_in_runtime": false,
+    "candidate_active_in_sandbox": true,
+    "candidate_key": "m4_triplet_0056_18544923df2b",
+    "evidence": {
+      "example_trace_keys": [
+        "train_0013_white_001",
+        "train_0013_white_002",
+        "train_0013_white_004",
+        "train_0016_white_002",
+        "train_0016_white_004"
+      ],
+      "mean_candidate_credit": 0.006000000000000003,
+      "mean_generic_progress_credit": 0.006000000000000003,
+      "mean_terminal_reward": 0.0,
+      "negative_credit_count": 2,
+      "position_count": 2,
+      "positive_credit_count": 3,
+      "support_count": 5
+    },
+    "rank": 1,
+    "recon_topology_plan": {
+      "m3_update_count": 0,
+      "m4_event_count": 0,
+      "node_types": [
+        "TERMINAL",
+        "ACTION",
+        "TERMINAL",
+        "SCRIPT"
+      ],
+      "relation_types": [
+        "SUB",
+        "SUR",
+        "POR",
+        "RET"
+      ],
+      "spawn_count": 1,
+      "spawned_now": true
+    },
+    "selected_for_m5": true,
+    "source_split": "train",
+    "status": "m5_spawned_sandbox_only"
+  },
+  "config": {
+    "activation_max_distance": 1.5,
+    "candidate_path": "reports/autogrowth/krk_autogrowth_m4_candidates_smoke.json",
+    "heldout_broader_count": 5,
+    "heldout_weakness_count": 5,
+    "horizons": [
+      40,
+      80
+    ],
+    "seed": 20260610,
+    "train_count": 20
+  },
+  "dataset": {
+    "digest": "71c074db2ce069a2a9ccd418fc6564c3162517d2d016c560db2d8fbcd019b392",
+    "heldout_broader_count": 5,
+    "heldout_count": 10,
+    "heldout_weakness_count": 5,
+    "seed": 20260610,
+    "train_count": 20
+  },
+  "decision": {
+    "candidate_nodes_promoted": 0,
+    "candidate_nodes_spawned": 1,
+    "candidate_promoted": false,
+    "deleted_candidate_count": 1,
+    "direct_move_override": false,
+    "m3_update_count": 2,
+    "m4_event_count": 0,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "status": "fail_quarantine_candidate"
+  },
+  "learning_decisions": {
+    "40": {
+      "candidate_score": -1,
+      "decision": "quarantine",
+      "delete_or_quarantine_event_count": 1,
+      "m3_fast_weight_delta": -0.02,
+      "m3_update_count": 1,
+      "m4_consolidation_event_count": 0,
+      "negative_credit_count": 1,
+      "positive_credit_count": 0,
+      "reasons": [
+        "no_heldout_conversion_gain",
+        "safety_regression"
+      ]
+    },
+    "80": {
+      "candidate_score": -1,
+      "decision": "quarantine",
+      "delete_or_quarantine_event_count": 1,
+      "m3_fast_weight_delta": -0.02,
+      "m3_update_count": 1,
+      "m4_consolidation_event_count": 0,
+      "negative_credit_count": 1,
+      "positive_credit_count": 0,
+      "reasons": [
+        "no_heldout_conversion_gain",
+        "safety_regression"
+      ]
+    }
+  },
+  "paired_deltas": {
+    "baseline_vs_autogrowth_sandbox": {
+      "40": {
+        "behavior_changed_count": 1,
+        "candidate_fails_where_baseline_succeeds": 0,
+        "candidate_succeeds_where_baseline_fails": 0,
+        "outcome_changed_count": 1
+      },
+      "80": {
+        "behavior_changed_count": 1,
+        "candidate_fails_where_baseline_succeeds": 0,
+        "candidate_succeeds_where_baseline_fails": 0,
+        "outcome_changed_count": 1
+      }
+    },
+    "baseline_vs_sham": {
+      "40": {
+        "candidate_fails_where_baseline_succeeds": 0,
+        "candidate_succeeds_where_baseline_fails": 0,
+        "outcome_changed_count": 0
+      },
+      "80": {
+        "candidate_fails_where_baseline_succeeds": 0,
+        "candidate_succeeds_where_baseline_fails": 0,
+        "outcome_changed_count": 0
+      }
+    }
+  },
+  "safety": {
+    "40": {
+      "blunder_regression_count": 1,
+      "illegal_regression_count": 0,
+      "protected_baseline_regression_count": 0,
+      "rook_loss_regression_count": 1,
+      "stalemate_regression_count": 0
+    },
+    "80": {
+      "blunder_regression_count": 1,
+      "illegal_regression_count": 0,
+      "protected_baseline_regression_count": 0,
+      "rook_loss_regression_count": 1,
+      "stalemate_regression_count": 0
+    }
+  },
+  "schema_version": "krk_autogrowth_v0_experiment.v0",
+  "threshold_evaluation": {
+    "checks": {
+      "candidate_activation_at_least_10pct": true,
+      "h40_conversion_plus_10pp": false,
+      "h40_horizon_failures_drop_20pct": false,
+      "h80_conversion_plus_5pp": false,
+      "illegal_regressions_zero": true,
+      "m3_updates_nonzero": true,
+      "m4_consolidation_persisted_candidate": false,
+      "protected_regressions_zero": true,
+      "sham_did_not_match_candidate_improvement": true,
+      "stalemate_blunder_regressions_zero": false
+    },
+    "failed_checks": [
+      "h40_conversion_plus_10pp",
+      "h80_conversion_plus_5pp",
+      "h40_horizon_failures_drop_20pct",
+      "stalemate_blunder_regressions_zero",
+      "m4_consolidation_persisted_candidate"
+    ],
+    "h40": {
+      "baseline_conversion_rate": 0.0,
+      "baseline_horizon_no_mate": 0.0,
+      "candidate_conversion_rate": 0.0,
+      "candidate_horizon_no_mate": 0.0,
+      "conversion_delta_pp": 0.0,
+      "horizon_failure_drop_pct": 0.0
+    },
+    "h80": {
+      "baseline_conversion_rate": 0.0,
+      "baseline_horizon_no_mate": 0.0,
+      "candidate_conversion_rate": 0.0,
+      "candidate_horizon_no_mate": 0.0,
+      "conversion_delta_pp": 0.0,
+      "horizon_failure_drop_pct": 0.0
+    },
+    "passed": false
+  }
+}
