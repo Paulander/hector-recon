@@ -43,6 +43,13 @@ from .traces import (
     TraceCollectionResult,
     collect_trace_records,
 )
+from .training import (
+    CandidateLifecycle,
+    GrowthTrainingConfig,
+    GrowthTrainingResult,
+    load_candidate_pool,
+    train_growth_candidates,
+)
 
 __all__ = [
     "ArmMetrics",
@@ -53,6 +60,9 @@ __all__ = [
     "EvaluationConfig",
     "EvaluationResult",
     "FORBIDDEN_LEARNER_TERMS",
+    "CandidateLifecycle",
+    "GrowthTrainingConfig",
+    "GrowthTrainingResult",
     "KRKPositionSet",
     "SandboxConfig",
     "SandboxMetrics",
@@ -69,9 +79,11 @@ __all__ = [
     "generate_position_sets",
     "is_valid_krk_seed",
     "load_selected_candidate",
+    "load_candidate_pool",
     "make_trace_record",
     "mine_triplet_candidates_from_artifact",
     "mine_triplet_candidates_from_records",
     "run_autogrowth_experiment",
+    "train_growth_candidates",
     "validate_learner_record",
 ]

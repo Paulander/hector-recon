@@ -264,6 +264,27 @@ Current result:
 - Arm C autogrowth sandbox: candidate activates but remains 0/200 h40/h80 mates and causes 18 rook-loss regressions.
 - Decision: fail and quarantine the current candidate. This proves the v0 loop can act and reject a bad topology, but does not prove useful KRK improvement yet.
 
+### M8: Multi-Candidate Growth Training
+
+Run multiple mined candidates through lifecycle training with early structural exploration and M3 fast-credit feedback.
+
+Status: implemented for the current M4 candidate pool.
+
+Checkpoint:
+
+- Multiple candidates are spawned from trace-mined topology records.
+- Candidate experience, fast weight, credit counts, and lifecycle state are tracked.
+- Negative credit suppresses future candidate choice through fast weights.
+- Unsafe candidates are quarantined; safe candidates may mature.
+- Held-out evaluation uses the best surviving candidate, if any.
+
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_m8_training.json`
+- Default run: 8 candidates spawned, 271 M3 updates, 8 candidates quarantined, no heldout candidate survives.
+- Broader run: `reports/autogrowth/krk_autogrowth_m8_training_12c8.json`, 12 candidates spawned, 370 M3 updates, 12 candidates quarantined.
+- Decision: the lifecycle loop is alive, but the current mined action schemas are unsafe/low-quality. More cycles alone are not the next lever; candidate mining/action construction needs better learner-visible risk evidence.
+
 ## Long-Run Protocol
 
 Agents should be willing to run multi-hour local experiments when useful. A valid long run must:

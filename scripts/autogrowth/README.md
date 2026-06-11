@@ -9,6 +9,7 @@ Planned scripts:
 - `mine_triplet_candidates.py`: mine M4 trace-derived candidate records for M5 sandboxing.
 - `run_growth_sandbox.py`: run one mined candidate in sandbox-only ReCoN topology.
 - `run_autogrowth_experiment.py`: write the full three-arm v0 result and threshold decision.
+- `run_growth_training.py`: run M8 multi-candidate lifecycle training.
 - `generate_krk_positions.py`
 - `evaluate_krk_competence.py`
 

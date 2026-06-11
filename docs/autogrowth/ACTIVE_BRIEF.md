@@ -46,7 +46,9 @@ Do not rebuild those as the mainline workflow.
 - Current selected candidate activates on heldout but is rejected: 0/200 mates, 18 rook-loss regressions at h40/h80, M3 updates nonzero, M4 consolidation zero.
 - M7 full three-arm artifact is generated: baseline, sham-growth, and autogrowth sandbox are compared in `reports/autogrowth/krk_autogrowth_v0_experiment.json`.
 - Current v0 result is a useful fail, not a promotion: candidate is quarantined after 0/200 h40/h80 mates, 18 blunder regressions, M3 updates nonzero, and M4 consolidation zero.
-- Next research checkpoint is to improve the miner/sandbox action construction so the next candidate can act without rook-loss regressions before rerunning v0.
+- M8 multi-candidate lifecycle training is implemented: multiple mined candidates can gain experience, receive M3 fast credit, mature, or be quarantined.
+- Current M8 result is also a useful fail: 8/8 default candidates and 12/12 broader candidates quarantine under negative credit/rook-loss evidence, leaving no heldout candidate.
+- Next research checkpoint is to improve candidate mining/action construction so at least one candidate can survive training without rook-loss regressions before rerunning v0.
 
 ## Current No-Go List
 
