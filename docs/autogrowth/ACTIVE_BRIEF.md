@@ -51,7 +51,9 @@ Do not rebuild those as the mainline workflow.
 - External review clarified the next step: do not add a second candidate architecture. Normalize the existing `StemCellTerminal` / TRIAL / MATURE lifecycle into a stricter local candidate contract with separate relevance and outcome-credit stats.
 - M9-M11 local suppressor checkpoint is implemented. `StemCellTerminal` now carries separate candidate-local relevance, credit, and survival stats; XP alone cannot mature a candidate.
 - Current M11 result is a safety improvement, not KRK competence: `reports/autogrowth/krk_autogrowth_m11_local_suppressor.json` reduces heldout rook losses from 18 to 3 for the bad M4 sibling action, with 77 local suppressions, zero illegal moves, zero stalemates, and no conversion gain.
-- Next checkpoint should use the survived suppressor/risk terminal to improve candidate construction or local action gating, then test whether conversion can improve without reintroducing direct move choice.
+- M12 local ACTION arbitration is implemented. Move choice may occur through first-class local ACTION sibling nodes, but the harness cannot install an external move selector or direct override.
+- Current M12 result is a safe fail: `reports/autogrowth/krk_autogrowth_m12_local_arbitration.json` rejects every trained M4 ACTION sibling because each receives negative causal intervention evidence. Arbitration falls back to baseline, giving 0 rook losses but still 0/200 mates.
+- Next checkpoint should improve candidate generation, not loosen the safety gate. The current M4 action schemas are too unsafe or too weak to prove KRK competence.
 
 ## Current Architecture Guardrail
 

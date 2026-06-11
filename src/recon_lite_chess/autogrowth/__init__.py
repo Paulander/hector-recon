@@ -1,5 +1,14 @@
 """Learning-first KRK autogrowth utilities."""
 
+from .arbitration import (
+    LocalArbitrationConfig,
+    LocalArbitrationMetrics,
+    LocalArbitrationResult,
+    arbitrate_local_action,
+    build_local_action_nodes,
+    evaluate_local_arbitration_arm,
+    run_local_arbitration_experiment,
+)
 from .evaluate import (
     ArmMetrics,
     EvaluationConfig,
@@ -73,6 +82,9 @@ __all__ = [
     "GrowthTrainingConfig",
     "GrowthTrainingResult",
     "KRKPositionSet",
+    "LocalArbitrationConfig",
+    "LocalArbitrationMetrics",
+    "LocalArbitrationResult",
     "LocalSuppressorConfig",
     "LocalSuppressorMetrics",
     "LocalSuppressorResult",
@@ -81,11 +93,14 @@ __all__ = [
     "SandboxResult",
     "TraceCollectionConfig",
     "TraceCollectionResult",
+    "arbitrate_local_action",
+    "build_local_action_nodes",
     "can_mate_in_one",
     "collect_trace_records",
     "evaluate_arm",
     "evaluate_baseline_and_sham",
     "evaluate_candidate_sandbox",
+    "evaluate_local_arbitration_arm",
     "evaluate_local_suppressor_arm",
     "evaluate_sandbox_arm",
     "extract_learner_features",
@@ -98,6 +113,7 @@ __all__ = [
     "mine_triplet_candidates_from_records",
     "derive_local_suppressor",
     "run_autogrowth_experiment",
+    "run_local_arbitration_experiment",
     "run_local_suppressor_experiment",
     "suppressor_confirms",
     "train_growth_candidates",

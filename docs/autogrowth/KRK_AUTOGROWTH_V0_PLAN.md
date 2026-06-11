@@ -367,7 +367,29 @@ Current result:
 - Heldout safety improves for the bad sibling: rook losses drop from 18 to 3, with 77 suppressions, zero illegal moves, zero stalemates, and no new direct move source.
 - KRK competence is still not proven: mate conversion remains 0/200. Treat M11 as a local safety/topology checkpoint, not a solved-growth checkpoint.
 
-### M12: Long Training Gate
+### M12: Local ACTION Arbitration
+
+Status: implemented as a safe-fail checkpoint.
+
+This checkpoint allows learned move choice, but only through local ReCoN-style structure:
+
+- candidate ACTION siblings under one local SCRIPT parent
+- stem-cell/TRIAL relevance, credit, and survival stats on each ACTION candidate
+- local weights updated from training rollout credit
+- suppressor/risk terminals inhibiting unsafe siblings
+- fallback to baseline when no local ACTION sibling survives
+
+The harness may train local weights and evaluate outcomes. Runtime heldout behavior must not use an external move selector, direct move override, or tablebase/DTM move source.
+
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_m12_local_arbitration.json`
+- 12 M4 ACTION siblings were evaluated under local arbitration.
+- Every trained ACTION sibling received negative causal intervention evidence, so the local survival gate made them non-selectable.
+- Heldout arbitration selected 0 local ACTION moves, caused 0 rook losses, 0 illegal moves, and 0 stalemates, but also produced 0/200 mates.
+- Decision: safe local-arbitration failure. The substrate can refuse unsafe learned actions, but the current M4 candidate generator is not producing competence-improving actions.
+
+### M13: Candidate Generation Gate
 
 Long training remains blocked until the next checkpoint turns local suppressor evidence into safer candidate construction or local action gating and shows conversion movement. More cycles over the current unsafe action-schema pool mostly measure candidate collapse and scaffold behavior, not autonomous KRK competence.
 
