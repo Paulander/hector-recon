@@ -9,6 +9,12 @@ from .arbitration import (
     evaluate_local_arbitration_arm,
     run_local_arbitration_experiment,
 )
+from .candidate_generation import (
+    RiskAwareCandidateConfig,
+    RiskAwareCandidateResult,
+    generate_risk_aware_candidates,
+    run_risk_aware_candidate_experiment,
+)
 from .evaluate import (
     ArmMetrics,
     EvaluationConfig,
@@ -88,6 +94,8 @@ __all__ = [
     "LocalSuppressorConfig",
     "LocalSuppressorMetrics",
     "LocalSuppressorResult",
+    "RiskAwareCandidateConfig",
+    "RiskAwareCandidateResult",
     "SandboxConfig",
     "SandboxMetrics",
     "SandboxResult",
@@ -104,6 +112,7 @@ __all__ = [
     "evaluate_local_suppressor_arm",
     "evaluate_sandbox_arm",
     "extract_learner_features",
+    "generate_risk_aware_candidates",
     "generate_position_sets",
     "is_valid_krk_seed",
     "load_selected_candidate",
@@ -115,6 +124,7 @@ __all__ = [
     "run_autogrowth_experiment",
     "run_local_arbitration_experiment",
     "run_local_suppressor_experiment",
+    "run_risk_aware_candidate_experiment",
     "suppressor_confirms",
     "train_growth_candidates",
     "validate_learner_record",

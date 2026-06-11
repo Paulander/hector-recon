@@ -391,7 +391,20 @@ Current result:
 
 ### M13: Candidate Generation Gate
 
-Long training remains blocked until the next checkpoint turns local suppressor evidence into safer candidate construction or local action gating and shows conversion movement. More cycles over the current unsafe action-schema pool mostly measure candidate collapse and scaffold behavior, not autonomous KRK competence.
+Status: implemented as a safe-fail checkpoint.
+
+This checkpoint tests whether candidate generation, rather than arbitration, is the bottleneck. It enumerates legal white training actions offline, rejects projected negative continuations, scores only generic progress/risk features, emits ReCoN-compatible ACTION candidates, and then evaluates them through M12 local arbitration.
+
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_m13_risk_aware_candidates.json`
+- 3,841 legal white actions considered.
+- 316 actions rejected by projected negative continuation.
+- 12 risk-aware ACTION candidates emitted.
+- Local arbitration selected 0 heldout ACTION moves after training because the generated candidates still received negative causal intervention evidence.
+- Heldout result: 0 rook losses, 0 illegal moves, 0 stalemates, but 0/200 mates.
+
+Decision: safe candidate-generation failure. The current action-schema representation is too coarse: even candidates generated from safe-looking legal actions do not survive local rollout credit. Long training remains blocked until candidate representation becomes more discriminative or structural candidates include richer local context without direct move choice.
 
 ## Long-Run Protocol
 
