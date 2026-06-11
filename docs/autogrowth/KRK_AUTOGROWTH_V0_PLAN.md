@@ -423,6 +423,24 @@ Current result:
 
 Decision: safe representation failure. Making one-step ACTION candidates more context-specific still does not produce competence-improving structure. The next checkpoint should test local multi-step SCRIPT/subgraph candidates rather than more one-step ACTION bucket variants.
 
+### M15: Local Multi-Step SCRIPT Candidates
+
+Status: implemented as a safe activation-fail checkpoint.
+
+This checkpoint tests whether one-step ACTION candidates are the wrong structural unit. It generates local SCRIPT candidates with two sequential ACTION children, a generic before-context terminal, POR-like step ordering, and local stem-cell/TRIAL survival stats.
+
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_m15_local_scripts.json`
+- 3,841 first-step legal white actions considered.
+- 12 local SCRIPT candidates emitted.
+- Heldout SCRIPT starts: 0.
+- Heldout SCRIPT steps: 0.
+- Heldout SCRIPT completions: 0.
+- Heldout result: 0 rook losses, 0 illegal moves, 0 stalemates, but 0/200 mates.
+
+Decision: safe activation failure. Multi-step SCRIPT structure is now represented, but exact full-context script starts do not generalize to heldout. The next checkpoint should improve activation/generalization through reusable subconditions or script fragments without weakening local causal survival rules.
+
 ## Long-Run Protocol
 
 Agents should be willing to run multi-hour local experiments when useful. A valid long run must:

@@ -50,6 +50,14 @@ from .positions import (
     generate_position_sets,
     is_valid_krk_seed,
 )
+from .script_candidates import (
+    LocalScriptConfig,
+    LocalScriptMetrics,
+    LocalScriptResult,
+    choose_local_script_action,
+    generate_local_script_candidates,
+    run_local_script_experiment,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -97,6 +105,9 @@ __all__ = [
     "LocalArbitrationConfig",
     "LocalArbitrationMetrics",
     "LocalArbitrationResult",
+    "LocalScriptConfig",
+    "LocalScriptMetrics",
+    "LocalScriptResult",
     "LocalSuppressorConfig",
     "LocalSuppressorMetrics",
     "LocalSuppressorResult",
@@ -121,6 +132,7 @@ __all__ = [
     "evaluate_sandbox_arm",
     "extract_learner_features",
     "generate_context_specialized_candidates",
+    "generate_local_script_candidates",
     "generate_risk_aware_candidates",
     "generate_position_sets",
     "is_valid_krk_seed",
@@ -132,10 +144,12 @@ __all__ = [
     "derive_local_suppressor",
     "run_autogrowth_experiment",
     "run_local_arbitration_experiment",
+    "run_local_script_experiment",
     "run_local_suppressor_experiment",
     "run_context_specialized_candidate_experiment",
     "run_risk_aware_candidate_experiment",
     "suppressor_confirms",
+    "choose_local_script_action",
     "train_growth_candidates",
     "validate_learner_record",
 ]

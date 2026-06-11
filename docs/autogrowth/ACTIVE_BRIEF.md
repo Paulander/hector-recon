@@ -57,7 +57,9 @@ Do not rebuild those as the mainline workflow.
 - Current M13 result is still a safe fail: `reports/autogrowth/krk_autogrowth_m13_risk_aware_candidates.json` generates 12 candidates from 3,841 legal actions, but arbitration selects 0 heldout actions after local negative-evidence gating; result is 0 rook losses and 0/200 mates.
 - M14 context-specialized candidate generation is implemented. It uses 18 generic before-context features with exact-match activation to test whether one-step ACTION candidates were failing from overly broad context.
 - Current M14 result is another safe fail: `reports/autogrowth/krk_autogrowth_m14_context_specialized_candidates.json` generates 12 context-specific candidates, but arbitration selects 0 heldout actions; result is 0 rook losses and 0/200 mates.
-- Next checkpoint should move beyond one-step ACTION buckets toward local multi-step SCRIPT/subgraph candidates. Do not loosen the safety gate or just run longer over the same representation.
+- M15 local multi-step SCRIPT candidates are implemented. Candidates contain one SCRIPT with two sequential ACTION children and local TRIAL/survival stats.
+- Current M15 result is a safe activation failure: `reports/autogrowth/krk_autogrowth_m15_local_scripts.json` generates 12 SCRIPT candidates, but heldout starts/steps/completions are all 0; result is 0 rook losses and 0/200 mates.
+- Next checkpoint should address candidate generalization/activation without loosening the safety gate, likely by learning reusable subconditions or script fragments rather than exact full-context script starts.
 
 ## Current Architecture Guardrail
 
