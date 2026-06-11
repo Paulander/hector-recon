@@ -549,9 +549,27 @@ Current result:
 
 Decision: partial-continue only. LAG proves that a local temporal terminal can remove the known rook-loss regression without direct move choice, but it also suppresses the only observed completion and still does not move KRK conversion. The next checkpoint should improve local continuation construction or activation precision before any broad long training run.
 
+### TG20: Local Continuation Retry
+
+Status: implemented as a partial-continue conversion signal.
+
+This checkpoint uses the TG19 safety evidence locally. When an active SCRIPT's completion action is inhibited by the LAG terminal, TG20 may retry another SCRIPT sibling under the same local parent on the same tick. The retry still uses local before-terminal confirmation, local SCRIPT/ACTION weights, and the same LAG terminal inhibition. It does not choose a move through an external provider, tablebase/DTM, or direct override.
+
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_tg20_continuation_retry.json`
+- 12 candidates and 42 chain edges, matching TG18/TG19.
+- Training retries: 6; training M3 updates: 22.
+- Heldout h40 LAG-only: 0/200 mates, 0 rook losses, 0 chain completions, 2,599 repetition events.
+- Heldout h40 retry: 1/200 mates, 0 rook losses, 0 illegal moves, 0 stalemates, 1 chain completion, 2 retry successes, 2,584 repetition events.
+- Heldout h80 retry: 1/200 mates, 0 rook losses, 0 illegal moves, 0 stalemates, 1 chain completion.
+- M4 consolidation events: 0.
+
+Decision: partial-continue. This is not KRK competence, but it is the first heldout conversion movement on the current autogrowth runway while preserving the TG19 safety gain. The next checkpoint should mine/reinforce safer continuation candidates from retry traces and test whether the signal scales beyond 1/200 without broad hand-authored curriculum or direct move choice.
+
 ### Future TG: Sensor/Circuit Growth Primitives
 
-Status: direction recorded; LAG has one isolated TG19 checkpoint, AND/OR/XOR and broader sensor circuits are still not implemented in this runway.
+Status: direction recorded; LAG has one isolated TG19 checkpoint and one TG20 local-continuation use, AND/OR/XOR and broader sensor circuits are still not implemented in this runway.
 
 Topological growth should not stay limited to triplet candidates. A mature ReCoN learner likely needs to spawn and test stand-alone sensors and minimal local sensor circuits:
 

@@ -20,6 +20,14 @@ from .candidate_generation import (
     run_context_specialized_candidate_experiment,
     run_risk_aware_candidate_experiment,
 )
+from .continuation_retry import (
+    ContinuationRetryConfig,
+    ContinuationRetryMetrics,
+    ContinuationRetryResult,
+    choose_continuation_retry_action,
+    evaluate_continuation_retry_arm,
+    run_continuation_retry_experiment,
+)
 from .evaluate import (
     ArmMetrics,
     EvaluationConfig,
@@ -123,6 +131,9 @@ __all__ = [
     "CandidateMiningConfig",
     "CandidateMiningResult",
     "CONTEXT_SPECIALIZED_FEATURES",
+    "ContinuationRetryConfig",
+    "ContinuationRetryMetrics",
+    "ContinuationRetryResult",
     "EvaluationConfig",
     "EvaluationResult",
     "FORBIDDEN_LEARNER_TERMS",
@@ -167,6 +178,7 @@ __all__ = [
     "evaluate_candidate_sandbox",
     "evaluate_fragment_chain_arm",
     "evaluate_lag_fragment_chain_arm",
+    "evaluate_continuation_retry_arm",
     "evaluate_lag_terminal",
     "evaluate_local_arbitration_arm",
     "evaluate_local_suppressor_arm",
@@ -192,12 +204,14 @@ __all__ = [
     "run_script_fragment_experiment",
     "run_topological_growth_runway",
     "run_context_specialized_candidate_experiment",
+    "run_continuation_retry_experiment",
     "run_fragment_chain_curriculum",
     "run_lag_terminal_experiment",
     "run_risk_aware_candidate_experiment",
     "suppressor_confirms",
     "choose_local_script_action",
     "choose_lag_fragment_chain_action",
+    "choose_continuation_retry_action",
     "train_growth_candidates",
     "validate_learner_record",
 ]
