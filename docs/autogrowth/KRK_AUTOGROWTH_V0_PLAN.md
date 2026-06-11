@@ -12,7 +12,7 @@ Can ReCoN autonomously grow one useful topology addition from traces that improv
 
 ## Mechanism Under Test
 
-The minimum real loop:
+The minimum real loop currently uses triplets because they are measurable and easy to audit:
 
 1. Run protected baseline ReCoN on generated KRK positions.
 2. Record traces:
@@ -32,6 +32,16 @@ before_feature_cluster -> action_or_action_schema -> after_feature_cluster
 6. Use M3 fast plasticity to update local edge/action weights during sandbox evaluation.
 7. Use M4 consolidation to persist the candidate only if it improves held-out performance.
 8. Delete/quarantine the candidate if it fails.
+
+Triplets are not the whole topological-growth space. Future stem-cell/TRIAL candidates may also be:
+
+- stand-alone input TERMINAL sensors;
+- shared sensor implementations used as a performance shortcut, if saved/real ReCoN topology preserves equivalence to each consuming SCRIPT owning its own terminal instance;
+- local sensor-composition terminals such as AND, OR, and XOR;
+- LAG/temporal terminals that compare a sensor value with prior tick values, enabling change detection, low-pass filtering, persistence tests, and derivative-like signals;
+- small subgraphs/circuits built from these primitives and then attached locally under SCRIPT/ACTION parents.
+
+These primitives are central to the long-term learning direction: the network should be able to discover useful intermediate sensors and temporal circuits, not only before/action/after triplet chains. They also complicate credit assignment, so they should be introduced as bounded TG subcheckpoints rather than mixed into the current fragment-chain curriculum run.
 
 ## Arms
 
@@ -494,6 +504,21 @@ Current result:
 - Decision flags: `bounded_partial_curriculum_allowed=true`, `broad_curriculum_allowed=false`.
 
 Decision: proceed to a bounded fragment-chain curriculum over activating local triplets only. This is not a broad KRK curriculum, and it is not a KPK/KQK transfer claim. The curriculum must preserve the current boundary: behavior-changing learning has to flow through local TERMINAL/SCRIPT/ACTION/stem-cell structure, with rollback on rook loss, illegal move, or stalemate.
+
+### Future TG: Sensor/Circuit Growth Primitives
+
+Status: direction recorded, not yet implemented in the active TG17 curriculum.
+
+Topological growth should not stay limited to triplet candidates. A mature ReCoN learner likely needs to spawn and test stand-alone sensors and minimal local sensor circuits:
+
+- input TERMINAL candidates that read generic feature-space coordinates;
+- AND/OR/XOR composition terminals over existing sensor outputs;
+- LAG terminals over one or more prior ticks;
+- small combinations of the above that can become SCRIPT-requestable context terminals.
+
+Training may use a shared sensor implementation for performance. That is acceptable only if it is equivalent to per-SCRIPT terminal instantiation in the saved ReCoN graph or clearly marked as a performance compression of that topology.
+
+Decision boundary: do not mix these primitives into the immediate bounded fragment-chain curriculum unless the run explicitly tests one primitive family with isolated metrics. The next curriculum run should remain narrow; the following TG checkpoint can test whether LAG or simple boolean composition improves activation precision without adding direct move choice.
 
 ## Long-Run Protocol
 

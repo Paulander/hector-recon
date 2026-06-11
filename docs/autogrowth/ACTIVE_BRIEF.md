@@ -6,7 +6,7 @@ The previous branch mode over-optimized for not approving bad mechanisms. This b
 
 ## Current Direction
 
-Build and evaluate one causal trace-derived topology-growth loop:
+Build and evaluate one causal trace-derived topology-growth loop. Triplets are the current narrow proof pattern, not the full candidate space:
 
 ```text
 rollout -> trace -> triplet candidate -> sandbox activation -> credit ->
@@ -21,6 +21,8 @@ The experiment is not "finish Stage7" or "prepare Stage8". It is:
 
 - Core ReCoN graph/request-confirmation engine.
 - Triplet representation.
+- Stand-alone or shared-performance sensor TERMINAL candidates, when they are equivalent to per-script terminal instantiations in saved/real ReCoN topology.
+- Primitive local sensor-composition candidates: AND, OR, XOR, and LAG/temporal terminals that compare current sensor values against prior ticks to expose change, low-pass behavior, and derivative-like signals.
 - Baseline-to-ReCoN compiler.
 - KRK evaluation harness, refactored toward competence metrics.
 - M3 fast plasticity and M4 consolidation as active experimental variables.
@@ -70,6 +72,9 @@ The old `M` labels in this file are subcheckpoints inside one larger milestone: 
 ## Current Architecture Guardrail
 
 - Reuse `src/recon_lite_hector/nodes/stem_cell.py`, `src/recon_lite_hector/learning/m5_structure.py`, and `src/recon_lite_hector/nodes/pack_template.py` before adding new lifecycle concepts.
+- Do not reduce topological growth to triplets only. Valid candidate nodes/subgraphs include stand-alone input terminals, local sensor-composition terminals, and small circuits built from generic primitives, as long as behavior-changing use is mediated through ReCoN graph structure.
+- Shared sensor implementations are allowed as a training/runtime performance shortcut only when semantically equivalent to each consuming SCRIPT owning its own TERMINAL instance; saved topology and trace audit should make that equivalence explicit.
+- LAG terminals are important future primitives because they add temporal resolution: they can compare a sensor with one or more previous ticks and let local circuits detect change, persistence, low-pass filtered state, or derivative-like movement.
 - Keep relevance separate from valence. Relevance can keep a candidate alive; causal intervention credit is required for maturity/promotion.
 - Disable or label as non-causal for autonomy claims: KRK box-method discovery, forced hoisting, perfect/survivor/extreme-failure/sample bypasses, random fallback credited as success, selector/arbiter special modes, and runtime tablebase/DTM.
 - Before claiming KRK structural growth, verify the KRK online path runs evolved registry/topology causally rather than rebuilding a fresh demo graph that ignores candidates.
