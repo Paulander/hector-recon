@@ -58,6 +58,12 @@ from .script_candidates import (
     generate_local_script_candidates,
     run_local_script_experiment,
 )
+from .script_fragments import (
+    ScriptFragmentConfig,
+    ScriptFragmentResult,
+    generalize_script_candidates_to_fragments,
+    run_script_fragment_experiment,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -118,6 +124,8 @@ __all__ = [
     "SandboxConfig",
     "SandboxMetrics",
     "SandboxResult",
+    "ScriptFragmentConfig",
+    "ScriptFragmentResult",
     "TraceCollectionConfig",
     "TraceCollectionResult",
     "arbitrate_local_action",
@@ -133,6 +141,7 @@ __all__ = [
     "extract_learner_features",
     "generate_context_specialized_candidates",
     "generate_local_script_candidates",
+    "generalize_script_candidates_to_fragments",
     "generate_risk_aware_candidates",
     "generate_position_sets",
     "is_valid_krk_seed",
@@ -146,6 +155,7 @@ __all__ = [
     "run_local_arbitration_experiment",
     "run_local_script_experiment",
     "run_local_suppressor_experiment",
+    "run_script_fragment_experiment",
     "run_context_specialized_candidate_experiment",
     "run_risk_aware_candidate_experiment",
     "suppressor_confirms",

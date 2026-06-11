@@ -59,7 +59,9 @@ Do not rebuild those as the mainline workflow.
 - Current M14 result is another safe fail: `reports/autogrowth/krk_autogrowth_m14_context_specialized_candidates.json` generates 12 context-specific candidates, but arbitration selects 0 heldout actions; result is 0 rook losses and 0/200 mates.
 - M15 local multi-step SCRIPT candidates are implemented. Candidates contain one SCRIPT with two sequential ACTION children and local TRIAL/survival stats.
 - Current M15 result is a safe activation failure: `reports/autogrowth/krk_autogrowth_m15_local_scripts.json` generates 12 SCRIPT candidates, but heldout starts/steps/completions are all 0; result is 0 rook losses and 0/200 mates.
-- Next checkpoint should address candidate generalization/activation without loosening the safety gate, likely by learning reusable subconditions or script fragments rather than exact full-context script starts.
+- M16 reusable SCRIPT fragments are implemented. M15 exact starts are generalized through local TERMINAL subcondition fragments over generic KRK features, still under SCRIPT/ACTION/stem-cell structure.
+- Current M16 result opens only a narrow partial-curriculum runway: `reports/autogrowth/krk_autogrowth_m16_script_fragments.json` gives 11 train starts, 10 heldout starts, 12 heldout steps, 2 completions, zero heldout rook losses, and 0/200 mates. `partial_curriculum_ready=true`, `broad_curriculum_ready=false`.
+- Next checkpoint should run a bounded partial curriculum over fragment-gated SCRIPT candidates, with safety rollback and no KPK/KQK transfer claims until KRK shows nonzero conversion movement.
 
 ## Current Architecture Guardrail
 

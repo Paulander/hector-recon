@@ -441,6 +441,34 @@ Current result:
 
 Decision: safe activation failure. Multi-step SCRIPT structure is now represented, but exact full-context script starts do not generalize to heldout. The next checkpoint should improve activation/generalization through reusable subconditions or script fragments without weakening local causal survival rules.
 
+### M16: Reusable SCRIPT Fragment Readiness
+
+Status: implemented as a partial-curriculum readiness checkpoint.
+
+This checkpoint tests whether M15 failed because the entire before-context was too brittle. It converts exact M15 SCRIPT starts into local SCRIPT candidates confirmed by a reusable TERMINAL fragment over generic features:
+
+- black king edge distance
+- white king to black king distance
+- white rook to black king distance
+- white king to rook distance
+- rook attacked flag
+- check flag
+
+The fragment confirms the SCRIPT locally through ReCoN-style structure. It does not choose moves directly.
+
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_m16_script_fragments.json`
+- 12 fragment-confirmed SCRIPT candidates emitted.
+- Train replay starts: 11.
+- Heldout starts: 10.
+- Heldout steps: 12.
+- Heldout completions: 2.
+- Heldout result: 0 rook losses, 0 illegal moves, 0 stalemates, but 0/200 mates.
+- Decision flags: `partial_curriculum_ready=true`, `broad_curriculum_ready=false`.
+
+Decision: narrow partial-curriculum runway. Fragment generalization solves the zero-activation problem without heldout safety regression on the locked full set, but it does not move KRK conversion. Do not launch broad long training yet. The next checkpoint should run a bounded partial curriculum over these fragment-gated SCRIPT candidates and require rollback if rook loss, illegal moves, or stalemates reappear.
+
 ## Long-Run Protocol
 
 Agents should be willing to run multi-hour local experiments when useful. A valid long run must:
