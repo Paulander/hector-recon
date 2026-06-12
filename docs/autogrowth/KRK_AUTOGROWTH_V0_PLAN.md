@@ -611,9 +611,28 @@ Current result:
 
 Decision: do not tune retry-edge bonus and do not run longer over the same exact mechanism. The failure is not that the edge is absent; the edge fires but usually reinforces the same sibling already chosen, while the dominant failure mode is no local retry sibling. The next checkpoint should improve local continuation candidate construction or mine richer retry context terminals. A single isolated sensor-composition primitive is reasonable only if it directly addresses this retry-context gap.
 
+### TG23: Retry-Context Candidate Expansion
+
+Status: implemented as a clean precision failure.
+
+This checkpoint responds directly to TG22's no-local-sibling finding. It mines additional train-only SCRIPT sibling candidates from retry contexts where the active SCRIPT was suppressed and no local sibling was available. These candidates are ordinary local ReCoN SCRIPT/TERMINAL/ACTION structures and compete only through the existing local retry path.
+
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_tg23_retry_candidate_expansion.json`
+- 8 expansion candidates mined from 6 train retry contexts.
+- Combined candidate count: 20.
+- Chain edges: 56.
+- Heldout h40 base retry: 1/200 mates, 1 completion, 2 retry successes, 0 rook losses, 2,584 repetition events.
+- Heldout h40 expanded retry: 0/200 mates, 0 completions, 1 retry success, 0 rook losses, 2,600 repetition events.
+- Heldout h80 shows the same regression: base retry 1/200 mates, expanded retry 0/200.
+- Training M3 updates: 39; heldout M3 updates: 16; M4 consolidation events: 0.
+
+Decision: fail cleanly. TG23 proves the no-sibling gap can be filled mechanically, but ungated retry-context expansion worsens the only current conversion signal. The problem is not merely missing candidate count; it is missing precision in when new candidates should compete. Do not add more ungated retry candidates. The next checkpoint should either add a local context terminal/composition primitive for retry precision, or require stronger train support before expansion candidates can enter local competition.
+
 ### Future TG: Sensor/Circuit Growth Primitives
 
-Status: direction recorded; LAG has one isolated TG19 checkpoint, TG20 local-continuation use, and TG21 retry-edge transfer test. AND/OR/XOR and broader sensor circuits are still not implemented in this runway.
+Status: direction recorded; LAG has one isolated TG19 checkpoint, TG20 local-continuation use, TG21 retry-edge transfer test, and TG23 shows ungated candidate expansion is too imprecise. AND/OR/XOR and broader sensor circuits are still not implemented in this runway.
 
 Topological growth should not stay limited to triplet candidates. A mature ReCoN learner likely needs to spawn and test stand-alone sensors and minimal local sensor circuits:
 

@@ -77,7 +77,9 @@ The old `M` labels in this file are subcheckpoints inside one larger milestone: 
 - Current TG21 result is a clean no-scale failure: 4 retry edges were mined, 2 edge bonuses fired on heldout, and safety stayed clean, but h40/h80 remained identical to TG20 retry at 1/200 mates, 1 chain completion, 0 rook losses, and the same repetition counts. M4 consolidation: 0.
 - TG22 retry diagnostics is implemented. `reports/autogrowth/krk_autogrowth_tg22_retry_diagnostics.json` traces TG20/TG21 retry events without changing behavior.
 - Current TG22 diagnosis: retry edges are redundant. The artifact records 43 retry events and 18 heldout no-edge/edge comparisons; edge bonuses fired in 4 comparisons but changed the chosen sibling 0 times. Most retry requests had no local sibling available: 34 no-sibling events vs 4 completion/mate-linked events.
-- Next checkpoint should not tune retry-edge bonus or run longer over this exact mechanism. The evidence points to a local candidate-construction gap or too-coarse retry context; mine richer retry contexts or test one isolated local sensor/composition primitive.
+- TG23 retry-candidate expansion is implemented. `reports/autogrowth/krk_autogrowth_tg23_retry_candidate_expansion.json` mines additional train-only SCRIPT siblings from retry contexts where TG22 saw no local sibling.
+- Current TG23 result is a clean precision failure: 8 expansion candidates were generated from 6 train retry contexts, but heldout h40/h80 dropped from TG20's 1/200 mates to 0/200, completions dropped from 1 to 0, retry successes dropped from 2 to 1, repetition returned to baseline, and safety stayed clean. The new candidates created more starts/steps and negative credit, not better continuation.
+- Next checkpoint should not add more ungated retry candidates. The evidence points to missing precision/gating for expansion candidates; either add one isolated local context terminal/composition primitive over retry contexts or require stronger train support before expansion candidates can compete.
 
 ## Current Architecture Guardrail
 
