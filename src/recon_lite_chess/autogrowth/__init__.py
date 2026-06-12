@@ -41,6 +41,11 @@ from .evaluate import (
     evaluate_arm,
     evaluate_baseline_and_sham,
 )
+from .fence_boundary_rehearsal import (
+    FenceBoundaryRehearsalConfig,
+    FenceBoundaryRehearsalResult,
+    run_fence_boundary_rehearsal,
+)
 from .edge_fence_curriculum import (
     EdgeFenceCurriculumConfig,
     EdgeFenceCurriculumResult,
@@ -191,6 +196,8 @@ __all__ = [
     "EvaluationResult",
     "EdgeFenceCurriculumConfig",
     "EdgeFenceCurriculumResult",
+    "FenceBoundaryRehearsalConfig",
+    "FenceBoundaryRehearsalResult",
     "FORBIDDEN_LEARNER_TERMS",
     "ActionRanker",
     "FoundationCurriculumConfig",
@@ -278,6 +285,7 @@ __all__ = [
     "run_continuation_retry_experiment",
     "run_curriculum_reward_recovery",
     "run_edge_fence_curriculum",
+    "run_fence_boundary_rehearsal",
     "run_fragment_chain_curriculum",
     "run_foundation_curriculum",
     "run_handoff_filter_validation",

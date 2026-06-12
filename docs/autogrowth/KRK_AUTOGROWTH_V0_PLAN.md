@@ -161,6 +161,12 @@ handoff type, safety flags, break reply when known, and cached feature/action
 keys. Keep edge and fence separate, and keep filtered/unfiltered/boundary slices
 separate; do not collapse them into one score.
 
+If fence boundary/near-miss transfer stays at zero after rehearsal, do not scale
+the same loop blindly. Inspect boundary failure slices and improve the local
+generic feature or credit signal that distinguishes useful fence-preserving
+progress from harmless-looking no-progress moves. Keep the change local to
+ReCoN ACTION/TERMINAL credit; do not introduce a direct strategy provider.
+
 ## Metrics
 
 Primary:
