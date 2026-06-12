@@ -72,7 +72,8 @@ def main() -> int:
     primary = str(payload["decision"]["primary_horizon"])
     baseline = payload["heldout_metrics"][primary]["baseline"]
     candidate = payload["heldout_metrics"][primary]["continuation_retry_on"]
-    paired = payload["heldout_metrics"][primary]["paired_deltas"]
+    paired = payload["heldout_metrics"][primary]["paired_deltas"]["baseline_vs_candidate_on"]
+    yoked = payload["heldout_metrics"][primary]["paired_deltas"]["baseline_vs_yoked_random"]
     decision = payload["decision"]
     print(f"wrote {path}")
     print(f"dataset_digest={payload['dataset']['digest']}")
@@ -89,6 +90,7 @@ def main() -> int:
         f"candidate_mates={candidate['mates']}/{candidate['total']} "
         f"graded_delta={paired['graded_credit_delta_sum']} "
         f"progress_delta={paired['non_terminal_progress_delta_sum']} "
+        f"yoked_graded_delta={yoked['graded_credit_delta_sum']} "
         f"rook_loss_regressions={paired['rook_loss_regression_count']} "
         f"confinement_regressions={paired['confinement_regression_count']}"
     )

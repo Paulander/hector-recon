@@ -87,6 +87,16 @@ Safety belongs at the promotion boundary:
 
 Do not use safety language to prevent the learner from acting in its own sandbox.
 
+## Credit and Confirmation Rules
+
+- Runtime purity claim means learned behavior executes through ReCoN request/confirmation structure and respects the learner-visible feature boundary. The training/evolution machinery may be global, but should stay task-agnostic/content-blind where possible.
+- While held-out KRK conversion is near 0/200, expose graded progress before adding broad new candidate families. Mate/no-mate alone is too sparse to guide growth.
+- Prefer paired candidate-on/off rollouts for causal credit: same FEN, same opponent policy/seed, candidate enabled versus gated off.
+- Separate selection from confirmation: M3 may update during training/selection chunks, but confirmation/promotion chunks must freeze M3. M4 may consolidate only from fresh confirmation evidence.
+- Compare generated candidates against yoked random candidates with matched budget and shape when evaluating whether the miner adds signal.
+- Offline tablebase/DTM labels may be used only for training/evaluation labels when clearly marked. Runtime tablebase/DTM move provision remains forbidden.
+- Before treating repeated failures as proof that learning failed, check the expressivity ceiling: exact ReCoN runtime semantics must be able to express the target policy. Hand-authored topology is an expressivity control only, not autogrowth evidence.
+
 ## Default Work Cycle
 
 1. Implement or adjust one piece of the autogrowth loop.

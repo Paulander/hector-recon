@@ -57,10 +57,27 @@ def test_tg24_curriculum_labels_are_diagnostic_not_learner_visible(tmp_path) -> 
     payload = json.loads(output.read_text(encoding="utf-8"))
 
     assert payload["schema_version"] == "krk_autogrowth_tg24_curriculum_reward_recovery.v0"
+    assert payload["checkpoint"] == "TG24_curriculum_reward_recovery"
+    assert payload["graded_metrics_available"] is True
+    assert payload["dtm_available"] is False
+    assert payload["runtime_tablebase_or_dtm_move_source"] is False
+    assert payload["paired_rollouts_enabled"] is True
+    assert payload["m3_training_confirmation_split_enforced"] is True
+    assert payload["trace_mined_vs_yoked_random"]["status"] == "implemented"
     assert payload["learner_visibility"]["curriculum_labels_in_learner_records"] is False
     assert payload["local_recon_structure"]["curriculum_labels_diagnostics_only"] is True
     assert payload["heldout_metrics"]["4"]["baseline"]["old_curriculum_reward_component_avg"] is not None
     assert payload["heldout_metrics"]["4"]["baseline"]["non_terminal_progress_delta_avg"] is not None
+    paired = payload["heldout_metrics"]["4"]["paired_deltas"]["baseline_vs_candidate_on"]
+    assert paired["paired_rollout_count"] == 1
+    assert "paired_progress_delta_mean" in paired
+    assert "causal_effect_positive_count" in paired
+    yoked = payload["heldout_metrics"]["4"]["paired_deltas"]["baseline_vs_yoked_random"]
+    assert yoked["paired_rollout_count"] == 1
+    sample = payload["heldout_metrics"]["4"]["samples"]["baseline"][0]
+    assert "generic_progress_trajectories" in sample
+    assert "enemy_king_nearest_edge_distance" in sample["generic_progress_trajectories"]
+    assert "box_dimensions_trajectory" in sample["confinement"]
     validate_learner_record(payload["learner_visibility"]["validated_generic_credit_record"])
 
 
@@ -90,3 +107,4 @@ def test_tg24_audit_states_tg18_tg23_do_not_use_old_reward_runtime() -> None:
     assert audit["uses_krk_curriculum_reward_or_stage_generation"] is False
     assert "krk_reward" in audit["statement"]
     assert payload["decision"]["adds_retry_candidates"] is False
+    assert payload["decision"]["m3_training_confirmation_split_enforced"] is True

@@ -88,6 +88,14 @@ Primary:
 - paired delta:
   - candidate succeeds where baseline fails
   - candidate fails where baseline succeeds
+- graded non-terminal progress:
+  - old curriculum reward component when exact stage/template is known
+  - excess moves versus curriculum `optimal_moves` when applicable
+  - box/confinement trajectory and box escape count
+  - enemy king edge-distance trajectory
+  - black mobility trajectory
+  - king/rook coordination distance trajectories
+  - repetition/fivefold and repeated-action metrics
 
 Learning-specific:
 
@@ -101,6 +109,30 @@ Learning-specific:
 - deleted candidate count
 
 If M3/M4 do not fire, the run fails as a learning experiment even if behavior improves.
+
+## Credit Protocol
+
+Selection/training and confirmation are separate.
+
+1. During training/selection chunks, M3 may update fast weights and nominate candidates.
+2. During confirmation chunks, M3 is frozen and candidate-on/off rollouts are paired by FEN and opponent policy/seed.
+3. M4 may consolidate only from fresh confirmation evidence, not from a moving M3 target.
+4. Passive activation is not causal credit. Credit requires a requested/started candidate, behavior-changing ACTION/inhibition/retry, after-terminal confirmation/failure, or measurable continuation effect.
+5. Candidate generation should be compared against yoked random controls with matched candidate count, shape, and evaluation budget.
+
+## Purity Boundary
+
+The strict purity claim is runtime execution plus learner-visible feature discipline: learned topology must execute through ReCoN request/confirmation structure at runtime, without direct move override or hidden phase control.
+
+Learning/evolution machinery may be global: trace miners, budget allocators, promotion evaluators, and random/yoked controls are allowed as instrumentation and candidate-management machinery. Do not pretend the whole learning process is purely local.
+
+Curriculum labels, stage names/IDs, hand-authored tactical labels, provider labels, and report row IDs are diagnostic/evaluation-only. They must not enter candidate input features or learner-visible causal records.
+
+Offline tablebase/DTM labels may be recorded as evaluation/training labels if clearly marked. Runtime tablebase/DTM move provision remains forbidden, and DTM-distilled runtime progress sensors require future explicit review.
+
+## Expressivity Ceiling Control
+
+Before interpreting repeated null results as a learning failure, establish whether the exact ReCoN runtime semantics can express a complete KRK-winning policy. A hand-authored KRK ReCoN topology is allowed only as an expressivity control. It must be quarantined from learner training data and cannot count as autogrowth evidence.
 
 ## Pass Threshold
 

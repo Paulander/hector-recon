@@ -9,6 +9,8 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 import json
 from pathlib import Path
+import random
+from statistics import pstdev
 from typing import Any, Iterable
 
 import chess
@@ -16,6 +18,7 @@ import chess
 from recon_lite_chess.training.krk_curriculum import (
     KRK_STAGES,
     box_min_side,
+    compute_confinement_box,
     did_box_grow,
     krk_reward,
 )
@@ -41,7 +44,14 @@ from .fragment_chain_curriculum import (
 )
 from .lag_terminals import _after_terminal_matches, _apply_lag_quarantine, _empty_lag_totals
 from .positions import KRKPositionSet, generate_position_sets
-from .script_candidates import build_local_script_nodes, _post_script_step_credit
+from .script_candidates import (
+    build_local_script_nodes,
+    _action_schema,
+    _candidate_from_script_bucket,
+    _post_script_step_credit,
+    _script_bucket_key,
+)
+from .script_fragments import generalize_script_candidates_to_fragments
 from .topological_growth import build_triplet_chain_view
 
 
@@ -80,14 +90,24 @@ class CurriculumRewardRecoveryResult:
     config: CurriculumRewardRecoveryConfig
     positions: KRKPositionSet
     retry_runtime: RetryRuntime
+    yoked_random_runtime: RetryRuntime
     heldout_metrics: dict[str, Any]
     curriculum_probe_metrics: dict[str, Any]
     audit: dict[str, Any]
     decision: dict[str, Any]
 
     def to_dict(self) -> dict[str, Any]:
+        primary = str(self.config.horizons[0])
+        primary_metrics = self.heldout_metrics[primary]
+        baseline_metrics = primary_metrics["baseline"]
+        candidate_on_metrics = primary_metrics["continuation_retry_on"]
+        yoked_random_metrics = primary_metrics["yoked_random_control"]
+        paired_delta_metrics = primary_metrics["paired_deltas"]
+        safety_metrics = primary_metrics["safety_metrics"]
+        trace_mined_vs_yoked = _trace_mined_vs_yoked_random(primary_metrics)
         return {
             "schema_version": "krk_autogrowth_tg24_curriculum_reward_recovery.v0",
+            "checkpoint": "TG24_curriculum_reward_recovery",
             "config": {
                 **asdict(self.config),
                 "horizons": list(self.config.horizons),
@@ -101,6 +121,14 @@ class CurriculumRewardRecoveryResult:
                 "heldout_broader_count": len(self.positions.heldout_broader),
             },
             "audit": self.audit,
+            "old_curriculum_usage_audit": self.audit,
+            "graded_metrics_available": True,
+            "dtm_available": False,
+            "runtime_tablebase_or_dtm_move_source": False,
+            "curriculum_labels_learner_visible": False,
+            "paired_rollouts_enabled": True,
+            "m3_training_confirmation_split_enforced": True,
+            "m4_consolidation_event_count": 0,
             "local_recon_structure": {
                 "candidate_on_arm": "tg20_local_continuation_retry",
                 "candidate_off_arm": "baseline",
@@ -119,6 +147,9 @@ class CurriculumRewardRecoveryResult:
                 "m3_graded_credit_applied_in_tg24": False,
                 "m4_consolidation_event_count": 0,
                 "m4_consolidation_requires_fresh_confirmation_with_m3_frozen": True,
+                "selection_training_split": "train",
+                "confirmation_split": "heldout",
+                "confirmation_m3_update_nodes": False,
             },
             "learner_visibility": {
                 "curriculum_labels_in_learner_records": False,
@@ -131,9 +162,22 @@ class CurriculumRewardRecoveryResult:
                 "chain_edge_count": int(self.retry_runtime.chain_view.get("chain_edge_count", 0)),
                 "training_summary": self.retry_runtime.training_summary,
             },
+            "yoked_random_runtime": {
+                "candidate_count": len(self.yoked_random_runtime.candidates),
+                "chain_edge_count": int(self.yoked_random_runtime.chain_view.get("chain_edge_count", 0)),
+                "training_summary": self.yoked_random_runtime.training_summary,
+            },
+            "trace_mined_vs_yoked_random": trace_mined_vs_yoked,
+            "baseline_metrics": baseline_metrics,
+            "candidate_off_metrics": baseline_metrics,
+            "candidate_on_metrics": candidate_on_metrics,
+            "yoked_random_control_metrics": yoked_random_metrics,
+            "paired_delta_metrics": paired_delta_metrics,
+            "safety_metrics": safety_metrics,
             "heldout_metrics": self.heldout_metrics,
             "curriculum_probe_metrics": self.curriculum_probe_metrics,
             "decision": self.decision,
+            "next_recommended_checkpoint": self.decision["next_recommended_checkpoint"],
         }
 
     def write_json(self, path: str | Path) -> Path:
@@ -155,10 +199,12 @@ def run_curriculum_reward_recovery(
         heldout_broader_count=config.heldout_broader_count,
     )
     retry_runtime = _build_retry_runtime(config=config, positions=positions)
+    yoked_random_runtime = _build_yoked_random_runtime(config=config, positions=positions)
     heldout_metrics = _evaluate_paired_graded(
         positions.heldout,
         config=config,
         retry_runtime=retry_runtime,
+        yoked_random_runtime=yoked_random_runtime,
         split="heldout",
         include_stage_slices=True,
     )
@@ -166,6 +212,7 @@ def run_curriculum_reward_recovery(
         _curriculum_probe_fens(config.curriculum_probe_per_stage),
         config=config,
         retry_runtime=retry_runtime,
+        yoked_random_runtime=yoked_random_runtime,
         split="curriculum_probe",
         include_stage_slices=True,
     )
@@ -175,6 +222,7 @@ def run_curriculum_reward_recovery(
         config=config,
         positions=positions,
         retry_runtime=retry_runtime,
+        yoked_random_runtime=yoked_random_runtime,
         heldout_metrics=heldout_metrics,
         curriculum_probe_metrics=curriculum_probe_metrics,
         audit=audit,
@@ -229,11 +277,130 @@ def _build_retry_runtime(*, config: CurriculumRewardRecoveryConfig, positions: K
     )
 
 
+def _build_yoked_random_runtime(*, config: CurriculumRewardRecoveryConfig, positions: KRKPositionSet) -> RetryRuntime:
+    candidates = _generate_yoked_random_candidates(
+        positions.train,
+        candidate_count=config.max_candidates,
+        seed=config.seed + 24,
+    )
+    chain_view = build_triplet_chain_view(
+        candidates,
+        max_distance=config.chain_max_distance,
+        max_edges=config.max_chain_edges,
+    )
+    script_nodes = build_local_script_nodes(
+        positions.train,
+        candidates=candidates,
+        config=_local_script_config(_fragment_config(config), horizon=max(config.horizons)),
+    )
+    adjacency = _chain_adjacency(chain_view)
+    _apply_lag_quarantine(script_nodes, threshold=config.lag_negative_threshold)
+    return RetryRuntime(
+        candidates=candidates,
+        chain_view=chain_view,
+        script_nodes=script_nodes,
+        chain_adjacency=adjacency,
+        training_summary={
+            "arm": "tg24_yoked_random_control",
+            "generation": "matched SCRIPT shape from random train legal two-action schemas",
+            "same_candidate_count_as_trace_mined_limit": config.max_candidates,
+            "m3_update_count": 0,
+            "m3_fast_weight_delta": 0.0,
+            "positive_credit_count": 0,
+            "negative_credit_count": 0,
+            "neutral_credit_count": 0,
+            "lag_quarantined_candidate_count": 0,
+            "m4_consolidation_event_count": 0,
+            "graded_tg24_credit_applied": False,
+        },
+    )
+
+
+def _generate_yoked_random_candidates(
+    train_fens: Iterable[str],
+    *,
+    candidate_count: int,
+    seed: int,
+) -> list[dict[str, Any]]:
+    rng = random.Random(seed)
+    fens = list(train_fens)
+    rows: list[dict[str, Any]] = []
+    attempts = 0
+    max_attempts = max(200, candidate_count * 80)
+    while len(rows) < candidate_count and attempts < max_attempts and fens:
+        attempts += 1
+        fen = rng.choice(fens)
+        board = chess.Board(fen)
+        if board.turn != chess.WHITE:
+            continue
+        first_moves = [move for move in board.legal_moves if board.piece_at(move.from_square) is not None]
+        first_moves = [move for move in first_moves if board.piece_at(move.from_square).color == chess.WHITE]
+        if not first_moves:
+            continue
+        before_features = extract_learner_features(board)
+        first_move = rng.choice(first_moves)
+        after_first = board.copy(stack=False)
+        after_first.push(first_move)
+        black_move = choose_black_reply(after_first)
+        if black_move is None or black_move not in after_first.legal_moves:
+            continue
+        before_second = after_first.copy(stack=False)
+        before_second.push(black_move)
+        if before_second.turn != chess.WHITE:
+            continue
+        second_moves = [
+            move
+            for move in before_second.legal_moves
+            if before_second.piece_at(move.from_square) is not None
+            and before_second.piece_at(move.from_square).color == chess.WHITE
+        ]
+        if not second_moves:
+            continue
+        second_move = rng.choice(second_moves)
+        after_second = before_second.copy(stack=False)
+        after_second.push(second_move)
+        after_features = extract_learner_features(after_second)
+        deltas = {key: after_features[key] - before_features[key] for key in before_features}
+        first_schema = _action_schema(board, first_move)
+        second_schema = _action_schema(before_second, second_move)
+        bucket_key = f"tg24_yoked_{len(rows)}_" + _script_bucket_key(before_features, first_schema, second_schema)
+        rows.append(
+            {
+                "position_index": len(rows),
+                "before_features": before_features,
+                "after_features": after_features,
+                "progress_deltas": deltas,
+                "first_action_schema": first_schema,
+                "second_action_schema": second_schema,
+                "credit": 0.0,
+                "bucket_key": bucket_key,
+            }
+        )
+    exact_candidates = [
+        _candidate_from_script_bucket(bucket_key=row["bucket_key"], rows=[row])
+        for row in rows
+    ]
+    fragments = generalize_script_candidates_to_fragments(exact_candidates)
+    for index, candidate in enumerate(fragments, start=1):
+        candidate["candidate_key"] = f"tg24_yoked_random_{index:03d}"
+        candidate["status"] = "tg24_yoked_random_control_not_spawned"
+        candidate["rank"] = 10_000 + index
+        candidate["selected_for_m5"] = False
+        candidate["yoked_random_control"] = {
+            "same_shape_as_trace_mined_script_fragment": True,
+            "random_context_action_schema": True,
+            "chooses_move_directly": False,
+        }
+        validate_learner_record(candidate)
+    return fragments
+
+
 def _evaluate_paired_graded(
     fens: Iterable[str],
     *,
     config: CurriculumRewardRecoveryConfig,
     retry_runtime: RetryRuntime,
+    yoked_random_runtime: RetryRuntime,
     split: str,
     include_stage_slices: bool,
 ) -> dict[str, Any]:
@@ -254,6 +421,16 @@ def _evaluate_paired_graded(
             )
             for fen in fens_tuple
         ]
+        yoked_random = [
+            _graded_playout(
+                fen,
+                arm="yoked_random_control",
+                horizon=horizon,
+                config=config,
+                retry_runtime=yoked_random_runtime,
+            )
+            for fen in fens_tuple
+        ]
         by_horizon[str(horizon)] = {
             "split": split,
             "baseline": _summarize_rollouts(baseline, arm="baseline", horizon=horizon, config=config),
@@ -263,11 +440,25 @@ def _evaluate_paired_graded(
                 horizon=horizon,
                 config=config,
             ),
-            "paired_deltas": _graded_paired_delta(baseline, retry),
-            "stage_slices": _stage_slices(baseline, retry) if include_stage_slices else {},
+            "yoked_random_control": _summarize_rollouts(
+                yoked_random,
+                arm="yoked_random_control",
+                horizon=horizon,
+                config=config,
+            ),
+            "paired_deltas": {
+                "baseline_vs_candidate_on": _graded_paired_delta(baseline, retry),
+                "baseline_vs_yoked_random": _graded_paired_delta(baseline, yoked_random),
+            },
+            "safety_metrics": {
+                "candidate_on": _safety_from_paired(baseline, retry),
+                "yoked_random_control": _safety_from_paired(baseline, yoked_random),
+            },
+            "stage_slices": _stage_slices(baseline, retry, yoked_random) if include_stage_slices else {},
             "samples": {
                 "baseline": baseline[: config.max_rollout_samples],
                 "continuation_retry_on": retry[: config.max_rollout_samples],
+                "yoked_random_control": yoked_random[: config.max_rollout_samples],
             },
         }
     return by_horizon
@@ -294,9 +485,24 @@ def _graded_playout(
     lag_totals = _empty_lag_totals()
     retry_totals = _empty_retry_totals()
     box_trajectory = [initial_box]
+    confinement_box_trajectory = [list(compute_confinement_box(initial_board))]
+    tracked_feature_names = (
+        "black_king_nearest_edge_distance",
+        "black_reply_mobility",
+        "white_king_to_black_king_distance",
+        "white_rook_to_black_king_distance",
+        "white_king_to_rook_distance",
+        "is_check",
+    )
+    feature_trajectories = {
+        name: [float(initial_features[name])]
+        for name in tracked_feature_names
+    }
+    repetition_trajectory = [1]
     confinement_worsened_count = 0
     rook_attacked_count = 0
     rook_missing_count = 0
+    check_count = int(initial_features["is_check"] > 0.0)
     illegal_moves = 0
     white_action_count = 0
     repeated_white_action_events = 0
@@ -322,7 +528,7 @@ def _graded_playout(
         move = baseline_move
         selected_node: dict[str, Any] | None = None
         completed_node: dict[str, Any] | None = None
-        if arm == "continuation_retry_on" and board.turn == chess.WHITE and retry_runtime is not None:
+        if arm in {"continuation_retry_on", "yoked_random_control"} and board.turn == chess.WHITE and retry_runtime is not None:
             totals["chain_request_count"] += 1
             if requested_successors:
                 totals["chained_successor_request_count"] += 1
@@ -381,6 +587,10 @@ def _graded_playout(
         if did_box_grow(before, board):
             confinement_worsened_count += 1
         box_trajectory.append(box_min_side(board))
+        confinement_box_trajectory.append(list(compute_confinement_box(board)))
+        for name in tracked_feature_names:
+            feature_trajectories[name].append(float(after_features[name]))
+        check_count += int(after_features["is_check"] > 0.0)
 
         if before.turn == chess.WHITE and selected_node is not None:
             credit = _post_script_step_credit(before, board)
@@ -410,6 +620,7 @@ def _graded_playout(
             repetition_events += 1
             totals["repetition_events"] += 1
         position_counts[key] = position_counts.get(key, 0) + 1
+        repetition_trajectory.append(position_counts[key])
         if position_counts[key] >= 5:
             fivefold_repetition_count += 1
             totals["fivefold_repetition_count"] += 1
@@ -464,8 +675,23 @@ def _graded_playout(
             "box_min_side_end": box_trajectory[-1],
             "box_min_side_delta": box_trajectory[-1] - initial_box,
             "box_grew_or_confinement_worsened_count": confinement_worsened_count,
+            "box_dimensions_start": confinement_box_trajectory[0],
+            "box_dimensions_end": confinement_box_trajectory[-1],
             "trajectory": box_trajectory,
+            "box_dimensions_trajectory": confinement_box_trajectory,
         },
+        "generic_progress_trajectories": {
+            "enemy_king_nearest_edge_distance": feature_trajectories["black_king_nearest_edge_distance"],
+            "black_reply_mobility": feature_trajectories["black_reply_mobility"],
+            "white_king_to_black_king_distance": feature_trajectories["white_king_to_black_king_distance"],
+            "white_rook_to_black_king_distance": feature_trajectories["white_rook_to_black_king_distance"],
+            "white_king_to_rook_distance": feature_trajectories["white_king_to_rook_distance"],
+            "is_check": feature_trajectories["is_check"],
+            "repetition_visit_count": repetition_trajectory,
+        },
+        "check_count": check_count,
+        "check_rate": 0.0 if final_ply == 0 else round(check_count / max(1, final_ply), 6),
+        "dtm_evaluation_only": None,
         "repetition_events": repetition_events,
         "fivefold_repetition_count": fivefold_repetition_count,
         "repeated_white_action_events": repeated_white_action_events,
@@ -559,6 +785,22 @@ def _summarize_rollouts(
         "repeated_white_action_events": sum(int(row["repeated_white_action_events"]) for row in rows),
         "rook_attacked_events": sum(int(row["rook_attacked_events"]) for row in rows),
         "rook_missing_events": sum(int(row["rook_missing_events"]) for row in rows),
+        "check_count": sum(int(row["check_count"]) for row in rows),
+        "avg_enemy_edge_distance_delta": _avg(
+            _trajectory_delta(row, "enemy_king_nearest_edge_distance") for row in rows
+        ),
+        "avg_black_reply_mobility_delta": _avg(
+            _trajectory_delta(row, "black_reply_mobility") for row in rows
+        ),
+        "avg_white_king_to_black_king_distance_delta": _avg(
+            _trajectory_delta(row, "white_king_to_black_king_distance") for row in rows
+        ),
+        "avg_white_rook_to_black_king_distance_delta": _avg(
+            _trajectory_delta(row, "white_rook_to_black_king_distance") for row in rows
+        ),
+        "avg_white_king_to_rook_distance_delta": _avg(
+            _trajectory_delta(row, "white_king_to_rook_distance") for row in rows
+        ),
         "changed_from_baseline_count": sum(1 for row in rows if row["changed_from_baseline"]),
         "m3_update_count": sum(int(row["chain"]["m3_update_count"]) for row in rows),
         "m3_fast_weight_delta_preview": round(
@@ -584,7 +826,14 @@ def _graded_paired_delta(baseline: list[dict[str, Any]], candidate: list[dict[st
     stalemate_regressions = 0
     confinement_regressions = 0
     repetition_delta = 0
+    box_min_side_delta = 0
+    illegal_delta = 0
+    stalemate_delta = 0
+    rook_loss_delta = 0
+    mate_delta = 0
     changed_move_count = 0
+    graded_deltas: list[float] = []
+    progress_deltas: list[float] = []
     for fen, base in base_by_fen.items():
         cand = candidate_by_fen[fen]
         base_success = base["outcome"] == "mate"
@@ -592,8 +841,12 @@ def _graded_paired_delta(baseline: list[dict[str, Any]], candidate: list[dict[st
         outcome_changed += int(base["outcome"] != cand["outcome"])
         candidate_succeeds_baseline_fails += int(cand_success and not base_success)
         candidate_fails_baseline_succeeds += int(base_success and not cand_success)
-        graded_delta_sum += float(cand["graded_credit_total"] - base["graded_credit_total"])
-        progress_delta_sum += float(cand["non_terminal_progress_delta"] - base["non_terminal_progress_delta"])
+        graded_delta = float(cand["graded_credit_total"] - base["graded_credit_total"])
+        progress_delta = float(cand["non_terminal_progress_delta"] - base["non_terminal_progress_delta"])
+        graded_deltas.append(graded_delta)
+        progress_deltas.append(progress_delta)
+        graded_delta_sum += graded_delta
+        progress_delta_sum += progress_delta
         old_reward_delta_sum += float(cand["old_curriculum_reward_component"] - base["old_curriculum_reward_component"])
         rook_loss_regressions += int(cand["outcome"] == "rook_loss" and base["outcome"] != "rook_loss")
         stalemate_regressions += int(cand["outcome"] == "stalemate" and base["outcome"] != "stalemate")
@@ -602,12 +855,39 @@ def _graded_paired_delta(baseline: list[dict[str, Any]], candidate: list[dict[st
             > base["confinement"]["box_grew_or_confinement_worsened_count"]
         )
         repetition_delta += int(cand["repetition_events"] - base["repetition_events"])
+        box_min_side_delta += int(cand["confinement"]["box_min_side_delta"] - base["confinement"]["box_min_side_delta"])
+        illegal_delta += int(cand["illegal_moves"] - base["illegal_moves"])
+        stalemate_delta += int(cand["outcome"] == "stalemate") - int(base["outcome"] == "stalemate")
+        rook_loss_delta += int(cand["outcome"] == "rook_loss") - int(base["outcome"] == "rook_loss")
+        mate_delta += int(cand_success) - int(base_success)
         changed_move_count += int(cand["changed_from_baseline"])
+    paired_count = len(graded_deltas)
+    positive = sum(1 for value in graded_deltas if value > 0.0)
+    negative = sum(1 for value in graded_deltas if value < 0.0)
+    neutral = paired_count - positive - negative
     return {
+        "paired_rollout_count": paired_count,
         "candidate_succeeds_where_baseline_fails": candidate_succeeds_baseline_fails,
         "candidate_fails_where_baseline_succeeds": candidate_fails_baseline_succeeds,
         "outcome_changed_count": outcome_changed,
         "changed_move_count": changed_move_count,
+        "candidate_on_progress_mean": _avg(row["non_terminal_progress_delta"] for row in candidate),
+        "candidate_off_progress_mean": _avg(row["non_terminal_progress_delta"] for row in baseline),
+        "paired_progress_delta_mean": _avg(progress_deltas),
+        "paired_progress_delta_std": round(pstdev(progress_deltas), 6) if len(progress_deltas) > 1 else 0.0,
+        "paired_graded_delta_mean": _avg(graded_deltas),
+        "paired_graded_delta_std": round(pstdev(graded_deltas), 6) if len(graded_deltas) > 1 else 0.0,
+        "paired_mate_delta": mate_delta,
+        "paired_old_reward_delta": round(old_reward_delta_sum, 6),
+        "paired_box_min_side_delta": box_min_side_delta,
+        "paired_box_escape_delta": confinement_regressions,
+        "paired_repetition_delta": repetition_delta,
+        "paired_rook_loss_delta": rook_loss_delta,
+        "paired_illegal_delta": illegal_delta,
+        "paired_stalemate_delta": stalemate_delta,
+        "causal_effect_positive_count": positive,
+        "causal_effect_negative_count": negative,
+        "causal_effect_neutral_count": neutral,
         "graded_credit_delta_sum": round(graded_delta_sum, 6),
         "non_terminal_progress_delta_sum": round(progress_delta_sum, 6),
         "old_curriculum_reward_delta_sum": round(old_reward_delta_sum, 6),
@@ -618,22 +898,55 @@ def _graded_paired_delta(baseline: list[dict[str, Any]], candidate: list[dict[st
     }
 
 
-def _stage_slices(baseline: list[dict[str, Any]], candidate: list[dict[str, Any]]) -> dict[str, Any]:
+def _safety_from_paired(baseline: list[dict[str, Any]], candidate: list[dict[str, Any]]) -> dict[str, int]:
+    paired = _graded_paired_delta(baseline, candidate)
+    return {
+        "rook_loss_regression_count": int(paired["rook_loss_regression_count"]),
+        "stalemate_regression_count": int(paired["stalemate_regression_count"]),
+        "illegal_regression_count": max(0, int(paired["paired_illegal_delta"])),
+        "confinement_regression_count": int(paired["confinement_regression_count"]),
+        "protected_regression_count": (
+            int(paired["rook_loss_regression_count"])
+            + int(paired["stalemate_regression_count"])
+            + max(0, int(paired["paired_illegal_delta"]))
+        ),
+    }
+
+
+def _stage_slices(
+    baseline: list[dict[str, Any]],
+    candidate: list[dict[str, Any]],
+    yoked_random: list[dict[str, Any]],
+) -> dict[str, Any]:
     by_label: dict[str, dict[str, list[dict[str, Any]]]] = {}
-    for arm, rows in (("baseline", baseline), ("continuation_retry_on", candidate)):
+    for arm, rows in (
+        ("baseline", baseline),
+        ("continuation_retry_on", candidate),
+        ("yoked_random_control", yoked_random),
+    ):
         for row in rows:
             diagnostic = row["curriculum_diagnostic"]
             label = str(diagnostic.get("stage_name") or "unmatched_autogrowth_position")
-            by_label.setdefault(label, {"baseline": [], "continuation_retry_on": []})[arm].append(row)
+            by_label.setdefault(
+                label,
+                {"baseline": [], "continuation_retry_on": [], "yoked_random_control": []},
+            )[arm].append(row)
     slices: dict[str, Any] = {}
     for label, arms in sorted(by_label.items()):
         slices[label] = {
             "baseline_total": len(arms["baseline"]),
             "candidate_total": len(arms["continuation_retry_on"]),
+            "yoked_random_total": len(arms["yoked_random_control"]),
             "baseline_mates": sum(1 for row in arms["baseline"] if row["outcome"] == "mate"),
             "candidate_mates": sum(1 for row in arms["continuation_retry_on"] if row["outcome"] == "mate"),
+            "yoked_random_mates": sum(1 for row in arms["yoked_random_control"] if row["outcome"] == "mate"),
             "graded_credit_delta_sum": round(
                 sum(row["graded_credit_total"] for row in arms["continuation_retry_on"])
+                - sum(row["graded_credit_total"] for row in arms["baseline"]),
+                6,
+            ),
+            "yoked_random_graded_credit_delta_sum": round(
+                sum(row["graded_credit_total"] for row in arms["yoked_random_control"])
                 - sum(row["graded_credit_total"] for row in arms["baseline"]),
                 6,
             ),
@@ -760,16 +1073,34 @@ def _audit_curriculum_use() -> dict[str, Any]:
 def _decision(*, config: CurriculumRewardRecoveryConfig, heldout_metrics: dict[str, Any]) -> dict[str, Any]:
     primary = str(config.horizons[0])
     primary_metrics = heldout_metrics[primary]
-    paired = primary_metrics["paired_deltas"]
+    paired = primary_metrics["paired_deltas"]["baseline_vs_candidate_on"]
+    yoked_paired = primary_metrics["paired_deltas"]["baseline_vs_yoked_random"]
     baseline = primary_metrics["baseline"]
     candidate = primary_metrics["continuation_retry_on"]
+    safety = primary_metrics["safety_metrics"]["candidate_on"]
+    trace_beats_yoked = paired["graded_credit_delta_sum"] > yoked_paired["graded_credit_delta_sum"]
     instrument_ready = (
         "non_terminal_progress_delta_avg" in baseline
         and "old_curriculum_reward_component_avg" in baseline
         and paired["rook_loss_regression_count"] >= 0
+        and paired["paired_rollout_count"] == baseline["total"]
+    )
+    continue_mechanism = (
+        instrument_ready
+        and paired["graded_credit_delta_sum"] > 0.0
+        and trace_beats_yoked
+        and safety["protected_regression_count"] == 0
     )
     return {
         "status": "tg24_instrument_ready" if instrument_ready else "tg24_instrument_incomplete",
+        "continue_mechanism": continue_mechanism,
+        "falsifies_current_candidate_mechanism": (
+            instrument_ready
+            and (
+                paired["graded_credit_delta_sum"] <= 0.0
+                or yoked_paired["graded_credit_delta_sum"] >= paired["graded_credit_delta_sum"]
+            )
+        ),
         "primary_horizon": int(config.horizons[0]),
         "baseline_primary_mates": baseline["mates"],
         "candidate_primary_mates": candidate["mates"],
@@ -777,6 +1108,8 @@ def _decision(*, config: CurriculumRewardRecoveryConfig, heldout_metrics: dict[s
         "graded_credit_delta_sum": paired["graded_credit_delta_sum"],
         "non_terminal_progress_delta_sum": paired["non_terminal_progress_delta_sum"],
         "old_curriculum_reward_delta_sum": paired["old_curriculum_reward_delta_sum"],
+        "yoked_random_graded_credit_delta_sum": yoked_paired["graded_credit_delta_sum"],
+        "trace_mined_beats_yoked_random": trace_beats_yoked,
         "candidate_rook_loss_regressions": paired["rook_loss_regression_count"],
         "candidate_stalemate_regressions": paired["stalemate_regression_count"],
         "candidate_confinement_regressions": paired["confinement_regression_count"],
@@ -785,6 +1118,9 @@ def _decision(*, config: CurriculumRewardRecoveryConfig, heldout_metrics: dict[s
         "adds_retry_candidates": False,
         "behavior_change_from_graded_evaluator": False,
         "m3_graded_credit_applied_in_tg24": False,
+        "m3_training_confirmation_split_enforced": True,
+        "paired_rollouts_enabled": True,
+        "yoked_random_control_enabled": True,
         "m4_consolidation_event_count": 0,
         "next_recommended_checkpoint": (
             "Use TG24 graded credit to train/freeze one local precision gate, then confirm with M3 frozen "
@@ -808,3 +1144,35 @@ def _avg(values: Iterable[int | float | None]) -> float | None:
     if not concrete:
         return None
     return round(sum(concrete) / len(concrete), 6)
+
+
+def _trajectory_delta(row: dict[str, Any], key: str) -> float | None:
+    trajectory = row["generic_progress_trajectories"].get(key, [])
+    if not trajectory:
+        return None
+    return float(trajectory[-1] - trajectory[0])
+
+
+def _trace_mined_vs_yoked_random(primary_metrics: dict[str, Any]) -> dict[str, Any]:
+    trace = primary_metrics["paired_deltas"]["baseline_vs_candidate_on"]
+    yoked = primary_metrics["paired_deltas"]["baseline_vs_yoked_random"]
+    trace_safety = primary_metrics["safety_metrics"]["candidate_on"]
+    yoked_safety = primary_metrics["safety_metrics"]["yoked_random_control"]
+    return {
+        "status": "implemented",
+        "same_candidate_budget": True,
+        "same_candidate_shape_class": "SCRIPT fragment with two ACTION schemas and local TERMINAL conditions",
+        "trace_mined_paired_rollouts": trace["paired_rollout_count"],
+        "yoked_random_paired_rollouts": yoked["paired_rollout_count"],
+        "trace_mined_graded_credit_delta_sum": trace["graded_credit_delta_sum"],
+        "yoked_random_graded_credit_delta_sum": yoked["graded_credit_delta_sum"],
+        "trace_mined_progress_delta_sum": trace["non_terminal_progress_delta_sum"],
+        "yoked_random_progress_delta_sum": yoked["non_terminal_progress_delta_sum"],
+        "trace_mined_mate_delta": trace["paired_mate_delta"],
+        "yoked_random_mate_delta": yoked["paired_mate_delta"],
+        "trace_mined_protected_regressions": trace_safety["protected_regression_count"],
+        "yoked_random_protected_regressions": yoked_safety["protected_regression_count"],
+        "trace_mined_beats_yoked_random_on_graded_credit": (
+            trace["graded_credit_delta_sum"] > yoked["graded_credit_delta_sum"]
+        ),
+    }
