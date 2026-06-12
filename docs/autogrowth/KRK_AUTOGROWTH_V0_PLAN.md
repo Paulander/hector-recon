@@ -75,6 +75,63 @@ Held-out:
 
 Offline tablebase/DTM labels may be used as training/evaluation labels if needed, but never as runtime move providers.
 
+## Foundation Curriculum Advancement
+
+Curriculum is the training distribution, not a cheat. The trainer may select
+progressively harder KRK exercises, while learner-visible records stay generic:
+board/action/graph/outcome features only. Stage names, tactical names, and
+curriculum IDs are schedule and diagnostic metadata, never causal inputs.
+
+Mate_In_1 and Mate_In_2 are classification-like:
+
+- Mate_In_1 correct move: immediate checkmate.
+- Mate_In_2 correct first move: preserves forced mate over black replies; the
+  second white move mates after the reply.
+- Harsh wrong-move credit is acceptable because the correct action is sharply
+  defined.
+
+Edge/fence/cut/box stages must use graded reward, not flat non-mate failure:
+
+- checkmate remains dominant;
+- faster mate is better, but do not over-reward beating the declared ideal;
+- reaching a previously solved earlier-stage region is positive;
+- preserved/improved confinement is useful but lower priority;
+- king approach is useful only when confinement/fence is preserved;
+- repetition/no progress is bad;
+- confinement regression or king escape is worse;
+- stalemate, rook loss, and illegal/no-move are catastrophic.
+
+Use ideal count `M` from curated curriculum, tablebase label, or evaluator only
+as training/evaluation scaffolding. If actual count is `m`:
+
+```text
+reward = max(mate_reward_floor, R_mate - delta_moves * max(0, m - M))
+```
+
+Default starting values: `R_mate=1.0`, `delta_moves=0.02`,
+`mate_reward_floor=0.3`. Clamp faster-than-ideal bonus to zero or tiny; if
+`m < M`, assume the ideal label may be wrong.
+
+Do not train each stage from scratch. A harder stage should learn:
+
+```text
+current harder position -> move into known earlier solved region ->
+earlier learned Mate_In_1/Mate_In_2 structure finishes
+```
+
+Advancement should be chunked:
+
+- train chunk: normally 500-2000 games when throughput permits;
+- eval window: at least 100 heldout positions for production advancement;
+- require two consecutive passing eval windows before advancing;
+- allow early stop at 100% success for two consecutive windows;
+- for harder/noisier stages, 90-95% success may be acceptable if justified.
+
+Do not advance unless current stage passes, Mate_In_1 regression remains at
+least 99%, Mate_In_2 regression remains at least 90-95%, rook loss/stalemate/
+illegal regressions are zero, M3 updates are nonzero, and M4 consolidation
+happens only after heldout confirmation.
+
 ## Metrics
 
 Primary:

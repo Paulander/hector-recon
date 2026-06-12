@@ -41,6 +41,11 @@ from .evaluate import (
     evaluate_arm,
     evaluate_baseline_and_sham,
 )
+from .edge_fence_curriculum import (
+    EdgeFenceCurriculumConfig,
+    EdgeFenceCurriculumResult,
+    run_edge_fence_curriculum,
+)
 from .foundation_curriculum import (
     ActionRanker,
     FoundationCurriculumConfig,
@@ -174,6 +179,8 @@ __all__ = [
     "CurriculumRewardRecoveryResult",
     "EvaluationConfig",
     "EvaluationResult",
+    "EdgeFenceCurriculumConfig",
+    "EdgeFenceCurriculumResult",
     "FORBIDDEN_LEARNER_TERMS",
     "ActionRanker",
     "FoundationCurriculumConfig",
@@ -256,6 +263,7 @@ __all__ = [
     "run_context_specialized_candidate_experiment",
     "run_continuation_retry_experiment",
     "run_curriculum_reward_recovery",
+    "run_edge_fence_curriculum",
     "run_fragment_chain_curriculum",
     "run_foundation_curriculum",
     "run_lag_terminal_experiment",

@@ -95,9 +95,16 @@ class ActionRanker:
         return node
 
     def train_position(self, board: chess.Board, *, positive_moves: set[str]) -> dict[str, int]:
+        rewards = {
+            move.uci(): _move_reward(board, move, positive_moves=positive_moves)
+            for move in board.legal_moves
+        }
+        return self.train_position_rewards(board, move_rewards=rewards)
+
+    def train_position_rewards(self, board: chess.Board, *, move_rewards: dict[str, float]) -> dict[str, int]:
         updates = {"positive": 0, "negative": 0, "neutral": 0}
         for move in sorted(board.legal_moves, key=lambda item: item.uci()):
-            reward = _move_reward(board, move, positive_moves=positive_moves)
+            reward = move_rewards.get(move.uci(), 0.0)
             for key in _action_feature_keys(board, move):
                 node = self.get_node(key)
                 node.update(reward, self.eta_m3)
