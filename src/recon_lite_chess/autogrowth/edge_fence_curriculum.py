@@ -405,6 +405,7 @@ def _evaluate_stage(
     rows: list[dict[str, Any]] = []
     conversions = 0
     handoffs = 0
+    direct_mates = 0
     mate1_handoffs = 0
     mate2_handoffs = 0
     rook_losses = 0
@@ -448,6 +449,7 @@ def _evaluate_stage(
             )
         conversions += int(outcome["conversion"])
         handoffs += int(outcome["handoff"] != "none")
+        direct_mates += int(outcome["reason"] == "mate")
         mate1_handoffs += int(outcome["handoff"] == "mate_in_one")
         mate2_handoffs += int(outcome["handoff"] == "mate_in_two")
         rook_losses += int(outcome["reason"] == "rook_loss")
@@ -489,11 +491,13 @@ def _evaluate_stage(
         "conversion_rate": 0.0 if total == 0 else conversions / total,
         "earlier_region_handoff_count": handoffs,
         "earlier_region_handoff_rate": 0.0 if total == 0 else handoffs / total,
+        "direct_mate_count": direct_mates,
         "mate1_handoff_count": mate1_handoffs,
         "mate2_handoff_count": mate2_handoffs,
         "avg_reward": 0.0 if total == 0 else reward_sum / total,
         "rook_loss_count": rook_losses,
         "stalemate_count": stalemates,
+        "illegal_count": illegal,
         "illegal_or_no_move_count": illegal,
         "confinement_regression_count": confinement_regressions,
         "repetition_or_no_progress_count": repetition_no_progress,

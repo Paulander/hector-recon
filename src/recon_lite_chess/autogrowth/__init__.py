@@ -52,6 +52,11 @@ from .foundation_curriculum import (
     FoundationCurriculumResult,
     run_foundation_curriculum,
 )
+from .handoff_filter_validation import (
+    HandoffFilterValidationConfig,
+    HandoffFilterValidationResult,
+    run_handoff_filter_validation,
+)
 from .experiment import (
     AutogrowthExperimentConfig,
     AutogrowthExperimentResult,
@@ -193,6 +198,8 @@ __all__ = [
     "CandidateLifecycle",
     "GrowthTrainingConfig",
     "GrowthTrainingResult",
+    "HandoffFilterValidationConfig",
+    "HandoffFilterValidationResult",
     "KRKPositionSet",
     "LocalArbitrationConfig",
     "LocalArbitrationMetrics",
@@ -266,6 +273,7 @@ __all__ = [
     "run_edge_fence_curriculum",
     "run_fragment_chain_curriculum",
     "run_foundation_curriculum",
+    "run_handoff_filter_validation",
     "run_lag_terminal_experiment",
     "run_risk_aware_candidate_experiment",
     "run_retry_edge_experiment",

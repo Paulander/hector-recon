@@ -146,6 +146,14 @@ schedule-side exercise selection, not a learner-visible causal feature. If this
 filter is used beyond smoke scale, precompute or cache handoff-eligible position
 pools so generator search does not dominate training runtime.
 
+Do not interpret handoff-filtered heldout as stage competence by itself. Report
+filtered train-like, unfiltered curriculum, and boundary/near-miss heldout
+separately. Filtered success means the curriculum runway is useful; unfiltered
+success is the first stage-generalization signal; boundary success is evidence
+that the learner is starting to bridge beyond obvious handoff. M4 consolidation
+is blocked until larger unfiltered or boundary confirmation is safe and
+foundation regression remains clean.
+
 ## Metrics
 
 Primary:
