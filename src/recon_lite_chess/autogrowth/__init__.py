@@ -79,6 +79,14 @@ from .positions import (
     generate_position_sets,
     is_valid_krk_seed,
 )
+from .precision_gate import (
+    LocalPrecisionGate,
+    PrecisionGateConfig,
+    PrecisionGateResult,
+    audit_confinement_sign_semantics,
+    derive_local_precision_gate,
+    run_precision_gate_experiment,
+)
 from .retry_edges import (
     RetryEdgeConfig,
     RetryEdgeResult,
@@ -179,6 +187,9 @@ __all__ = [
     "LocalSuppressorConfig",
     "LocalSuppressorMetrics",
     "LocalSuppressorResult",
+    "LocalPrecisionGate",
+    "PrecisionGateConfig",
+    "PrecisionGateResult",
     "ContextSpecializedCandidateConfig",
     "ContextSpecializedCandidateResult",
     "RiskAwareCandidateConfig",
@@ -242,7 +253,10 @@ __all__ = [
     "run_retry_edge_experiment",
     "run_retry_diagnostics",
     "run_retry_candidate_expansion",
+    "run_precision_gate_experiment",
     "mine_retry_expansion_candidates",
+    "derive_local_precision_gate",
+    "audit_confinement_sign_semantics",
     "suppressor_confirms",
     "choose_local_script_action",
     "choose_lag_fragment_chain_action",

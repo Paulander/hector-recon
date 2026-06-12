@@ -471,6 +471,7 @@ def _graded_playout(
     horizon: int,
     config: CurriculumRewardRecoveryConfig,
     retry_runtime: RetryRuntime | None,
+    precision_gate: Any | None = None,
 ) -> dict[str, Any]:
     board = chess.Board(fen)
     initial_board = board.copy(stack=False)
@@ -484,6 +485,13 @@ def _graded_playout(
     totals = _empty_chain_totals()
     lag_totals = _empty_lag_totals()
     retry_totals = _empty_retry_totals()
+    precision_gate_totals = {
+        "gate_request_count": 0,
+        "gate_suppression_count": 0,
+        "gate_confinement_suppression_count": 0,
+        "gate_negative_progress_suppression_count": 0,
+        "gate_rook_safety_suppression_count": 0,
+    }
     box_trajectory = [initial_box]
     confinement_box_trajectory = [list(compute_confinement_box(initial_board))]
     tracked_feature_names = (
@@ -557,18 +565,37 @@ def _graded_playout(
                 active_script = None
                 requested_successors = []
             else:
-                move = decision["move"]
-                selected_node = decision["node"]
-                totals["chain_step_count"] += 1
-                if decision["started"]:
-                    totals["chain_start_count"] += 1
-                    active_script = {"candidate_key": selected_node["candidate_key"]}
-                    requested_successors = []
-                if decision["completed"]:
-                    completed_node = selected_node
+                gate_result = None
+                if precision_gate is not None:
+                    precision_gate_totals["gate_request_count"] += 1
+                    gate_result = precision_gate.evaluate(board, decision["move"], decision["node"])
+                if gate_result is not None and gate_result["suppress"]:
+                    precision_gate_totals["gate_suppression_count"] += 1
+                    precision_gate_totals["gate_confinement_suppression_count"] += int(
+                        gate_result["reason"] == "confinement_would_worsen"
+                    )
+                    precision_gate_totals["gate_negative_progress_suppression_count"] += int(
+                        gate_result["reason"] == "negative_immediate_progress"
+                    )
+                    precision_gate_totals["gate_rook_safety_suppression_count"] += int(
+                        gate_result["reason"] == "rook_safety_regression"
+                    )
+                    totals["baseline_fallback_count"] += 1
                     active_script = None
-                if move != baseline_move:
-                    changed_from_baseline = True
+                    requested_successors = []
+                else:
+                    move = decision["move"]
+                    selected_node = decision["node"]
+                    totals["chain_step_count"] += 1
+                    if decision["started"]:
+                        totals["chain_start_count"] += 1
+                        active_script = {"candidate_key": selected_node["candidate_key"]}
+                        requested_successors = []
+                    if decision["completed"]:
+                        completed_node = selected_node
+                        active_script = None
+                    if move != baseline_move:
+                        changed_from_baseline = True
 
         if before.turn == chess.WHITE:
             white_action_count += 1
@@ -700,6 +727,7 @@ def _graded_playout(
         "chain": {key: totals[key] for key in sorted(totals)},
         "lag": {key: lag_totals[key] for key in sorted(lag_totals)},
         "retry": {key: retry_totals[key] for key in sorted(retry_totals)},
+        "precision_gate": precision_gate_totals,
     }
 
 
@@ -802,6 +830,19 @@ def _summarize_rollouts(
             _trajectory_delta(row, "white_king_to_rook_distance") for row in rows
         ),
         "changed_from_baseline_count": sum(1 for row in rows if row["changed_from_baseline"]),
+        "precision_gate_request_count": sum(int(row.get("precision_gate", {}).get("gate_request_count", 0)) for row in rows),
+        "precision_gate_suppression_count": sum(
+            int(row.get("precision_gate", {}).get("gate_suppression_count", 0)) for row in rows
+        ),
+        "precision_gate_confinement_suppression_count": sum(
+            int(row.get("precision_gate", {}).get("gate_confinement_suppression_count", 0)) for row in rows
+        ),
+        "precision_gate_negative_progress_suppression_count": sum(
+            int(row.get("precision_gate", {}).get("gate_negative_progress_suppression_count", 0)) for row in rows
+        ),
+        "precision_gate_rook_safety_suppression_count": sum(
+            int(row.get("precision_gate", {}).get("gate_rook_safety_suppression_count", 0)) for row in rows
+        ),
         "m3_update_count": sum(int(row["chain"]["m3_update_count"]) for row in rows),
         "m3_fast_weight_delta_preview": round(
             sum(int(row["chain"]["m3_fast_weight_delta_scaled"]) for row in rows) / 1000.0,
