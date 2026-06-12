@@ -154,6 +154,13 @@ that the learner is starting to bridge beyond obvious handoff. M4 consolidation
 is blocked until larger unfiltered or boundary confirmation is safe and
 foundation regression remains clean.
 
+For scaled edge/fence validation, persist the generated pools and their entry
+metadata before interpreting results. Pool entries should include FEN, slice
+type, acceptance reason, cheap/deep candidate scores, best candidate action,
+handoff type, safety flags, break reply when known, and cached feature/action
+keys. Keep edge and fence separate, and keep filtered/unfiltered/boundary slices
+separate; do not collapse them into one score.
+
 ## Metrics
 
 Primary:

@@ -103,6 +103,11 @@ from .precision_gate import (
     derive_local_precision_gate,
     run_precision_gate_experiment,
 )
+from .persisted_pool_validation import (
+    PersistedPoolValidationConfig,
+    PersistedPoolValidationResult,
+    run_persisted_pool_validation,
+)
 from .retry_edges import (
     RetryEdgeConfig,
     RetryEdgeResult,
@@ -213,6 +218,8 @@ __all__ = [
     "LocalPrecisionGate",
     "PrecisionGateConfig",
     "PrecisionGateResult",
+    "PersistedPoolValidationConfig",
+    "PersistedPoolValidationResult",
     "ContextSpecializedCandidateConfig",
     "ContextSpecializedCandidateResult",
     "RiskAwareCandidateConfig",
@@ -280,6 +287,7 @@ __all__ = [
     "run_retry_diagnostics",
     "run_retry_candidate_expansion",
     "run_precision_gate_experiment",
+    "run_persisted_pool_validation",
     "mine_retry_expansion_candidates",
     "derive_local_precision_gate",
     "audit_confinement_sign_semantics",
