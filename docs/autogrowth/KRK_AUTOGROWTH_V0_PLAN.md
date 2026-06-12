@@ -140,6 +140,12 @@ foundation-handoff checks only for a configurable top-K of plausible actions and
 cache by FEN/action/ideal-count. Report cheap-scored, deep-scored, pruned,
 safety-rejected, and cache-hit counts in the artifact.
 
+Curriculum generators may also require a generic candidate handoff to an earlier
+solved foundation region before admitting a harder edge/fence position. This is
+schedule-side exercise selection, not a learner-visible causal feature. If this
+filter is used beyond smoke scale, precompute or cache handoff-eligible position
+pools so generator search does not dominate training runtime.
+
 ## Metrics
 
 Primary:

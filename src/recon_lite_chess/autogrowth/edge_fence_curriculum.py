@@ -48,6 +48,8 @@ class EdgeFenceCurriculumConfig:
     top_k_deep_score: int = 6
     strict_safety_gate: bool = True
     previous_tg26_artifact_path: str = "reports/autogrowth/krk_autogrowth_tg26_edge_fence_curriculum.json"
+    edge_generation_requires_handoff_candidate: bool = True
+    fence_generation_requires_handoff_candidate: bool = False
 
 
 @dataclass(frozen=True)
@@ -73,11 +75,12 @@ class EdgeFenceCurriculumResult:
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "schema_version": "krk_autogrowth_tg26b_edge_fence_failure_repair.v0",
-            "checkpoint": "TG26b_edge_fence_failure_repair",
+            "schema_version": "krk_autogrowth_tg26c_edge_fence_handoff_curriculum.v0",
+            "checkpoint": "TG26c_edge_fence_handoff_curriculum",
             "config": asdict(self.config),
             "training_runway": {
                 "uses_curriculum_as_experience_distribution": True,
+                "handoff_candidate_filter_is_schedule_only": True,
                 "curriculum_is_not_cheating": True,
                 "stage_labels_learner_visible": False,
                 "curriculum_labels_learner_visible": False,
@@ -1288,6 +1291,18 @@ def _generate_stage_positions(
             continue
         if not _has_promising_candidate(board):
             continue
+        if (
+            (generator == "edge" and config.edge_generation_requires_handoff_candidate)
+            or (generator == "fence" and config.fence_generation_requires_handoff_candidate)
+        ):
+            if not _has_deep_handoff_candidate(
+                board,
+                config=config,
+                mate_ranker=mate_ranker,
+                mate2_ranker=mate2_ranker,
+                ideal_white_moves=3 if generator == "edge" else 4,
+            ):
+                continue
         fen = board.fen()
         if fen in used:
             continue
@@ -1296,6 +1311,46 @@ def _generate_stage_positions(
     if len(positions) < count:
         raise RuntimeError(f"generated {len(positions)} {generator} positions, needed {count}")
     return positions
+
+
+def _has_deep_handoff_candidate(
+    board: chess.Board,
+    *,
+    config: EdgeFenceCurriculumConfig,
+    mate_ranker: ActionRanker,
+    mate2_ranker: ActionRanker,
+    ideal_white_moves: int,
+) -> bool:
+    cheap_cache: dict[tuple[str, str, int], dict[str, Any]] = {}
+    runtime_stats = _empty_runtime_stats()
+    cheap_scores = {
+        move.uci(): _cached_cheap_action_assessment(
+            board,
+            move,
+            config=config,
+            ideal_white_moves=ideal_white_moves,
+            cheap_cache=cheap_cache,
+            runtime_stats=runtime_stats,
+        )
+        for move in board.legal_moves
+    }
+    top = _top_k_deep_candidates(cheap_scores, config=config)
+    score_cache: dict[tuple[str, str, int], dict[str, Any]] = {}
+    for uci in top:
+        move = chess.Move.from_uci(uci)
+        scored = _cached_score_first_move(
+            board,
+            move,
+            config=config,
+            mate_ranker=mate_ranker,
+            mate2_ranker=mate2_ranker,
+            ideal_white_moves=ideal_white_moves,
+            score_cache=score_cache,
+            runtime_stats=runtime_stats,
+        )
+        if scored.get("conversion"):
+            return True
+    return False
 
 
 def _random_stage_board(rng: random.Random, *, generator: str) -> chess.Board:
@@ -1415,7 +1470,7 @@ def _decision(
     passed = all_stages_passed and safety_passed and m3_nonzero and m4_confirmed and regression_passed
     return {
         "status": "tg26_edge_fence_passed" if passed else "tg26_edge_fence_partial_or_failed",
-        "checkpoint": "TG26b_edge_fence_failure_repair",
+        "checkpoint": "TG26c_edge_fence_handoff_curriculum",
         "stage_advancement_passed": all_stages_passed,
         "safety_passed": safety_passed,
         "m3_updates_nonzero": m3_nonzero,
@@ -1430,7 +1485,10 @@ def _decision(
         "next_recommended_checkpoint": (
             "Continue staged curriculum into cut/box slices with the same graded handoff credit"
             if passed
-            else "Run a larger TG26b chunk if continue conditions pass; otherwise inspect remaining edge/fence failure slices before broad KRK"
+            else (
+                "Precompute/cache handoff-eligible edge/fence position pools, then scale the "
+                "handoff-filtered curriculum before broad KRK"
+            )
         ),
     }
 

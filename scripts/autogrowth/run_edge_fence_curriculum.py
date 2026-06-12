@@ -31,6 +31,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-samples", type=int, default=12)
     parser.add_argument("--top-k-deep-score", type=int, default=6)
     parser.add_argument("--disable-strict-safety-gate", action="store_true")
+    parser.add_argument("--disable-edge-handoff-generation", action="store_true")
+    parser.add_argument("--fence-handoff-generation", action="store_true")
     parser.add_argument(
         "--output",
         type=Path,
@@ -82,6 +84,8 @@ def main() -> int:
             max_samples=args.max_samples,
             top_k_deep_score=max(3, min(args.top_k_deep_score, 4)) if args.smoke else args.top_k_deep_score,
             strict_safety_gate=not args.disable_strict_safety_gate,
+            edge_generation_requires_handoff_candidate=not args.disable_edge_handoff_generation,
+            fence_generation_requires_handoff_candidate=args.fence_handoff_generation,
         )
     )
     path = result.write_json(output)

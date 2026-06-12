@@ -85,10 +85,13 @@ def test_tg26_smoke_artifact_contract_and_firewall(tmp_path) -> None:
     output = result.write_json(tmp_path / "tg26_edge_fence.json")
     payload = json.loads(output.read_text(encoding="utf-8"))
 
-    assert payload["schema_version"] == "krk_autogrowth_tg26b_edge_fence_failure_repair.v0"
+    assert payload["schema_version"] == "krk_autogrowth_tg26c_edge_fence_handoff_curriculum.v0"
     assert payload["training_runway"]["uses_curriculum_as_experience_distribution"] is True
+    assert payload["training_runway"]["handoff_candidate_filter_is_schedule_only"] is True
     assert payload["training_runway"]["curriculum_labels_learner_visible"] is False
     assert payload["training_runway"]["broad_random_krk_enabled"] is False
+    assert payload["config"]["edge_generation_requires_handoff_candidate"] is True
+    assert payload["config"]["fence_generation_requires_handoff_candidate"] is False
     assert payload["reward_policy"]["non_mate_uses_small_graded_shaping_only"] is True
     assert payload["local_recon_structure"]["foundation_reused"] is True
     assert len(payload["stages"]) == 2
