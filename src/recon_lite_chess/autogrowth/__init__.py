@@ -28,6 +28,12 @@ from .continuation_retry import (
     evaluate_continuation_retry_arm,
     run_continuation_retry_experiment,
 )
+from .curriculum_reward_recovery import (
+    CurriculumRewardRecoveryConfig,
+    CurriculumRewardRecoveryResult,
+    run_curriculum_reward_recovery,
+    score_non_terminal_progress,
+)
 from .evaluate import (
     ArmMetrics,
     EvaluationConfig,
@@ -150,6 +156,8 @@ __all__ = [
     "ContinuationRetryConfig",
     "ContinuationRetryMetrics",
     "ContinuationRetryResult",
+    "CurriculumRewardRecoveryConfig",
+    "CurriculumRewardRecoveryResult",
     "EvaluationConfig",
     "EvaluationResult",
     "FORBIDDEN_LEARNER_TERMS",
@@ -227,6 +235,7 @@ __all__ = [
     "run_topological_growth_runway",
     "run_context_specialized_candidate_experiment",
     "run_continuation_retry_experiment",
+    "run_curriculum_reward_recovery",
     "run_fragment_chain_curriculum",
     "run_lag_terminal_experiment",
     "run_risk_aware_candidate_experiment",
@@ -238,6 +247,7 @@ __all__ = [
     "choose_local_script_action",
     "choose_lag_fragment_chain_action",
     "choose_continuation_retry_action",
+    "score_non_terminal_progress",
     "train_growth_candidates",
     "validate_learner_record",
 ]
