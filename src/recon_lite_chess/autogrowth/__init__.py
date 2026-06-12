@@ -78,6 +78,11 @@ from .retry_edges import (
     RetryEdgeResult,
     run_retry_edge_experiment,
 )
+from .retry_diagnostics import (
+    RetryDiagnosticsConfig,
+    RetryDiagnosticsResult,
+    run_retry_diagnostics,
+)
 from .script_candidates import (
     LocalScriptConfig,
     LocalScriptMetrics,
@@ -166,6 +171,8 @@ __all__ = [
     "RiskAwareCandidateResult",
     "RetryEdgeConfig",
     "RetryEdgeResult",
+    "RetryDiagnosticsConfig",
+    "RetryDiagnosticsResult",
     "SandboxConfig",
     "SandboxMetrics",
     "SandboxResult",
@@ -216,6 +223,7 @@ __all__ = [
     "run_lag_terminal_experiment",
     "run_risk_aware_candidate_experiment",
     "run_retry_edge_experiment",
+    "run_retry_diagnostics",
     "suppressor_confirms",
     "choose_local_script_action",
     "choose_lag_fragment_chain_action",

@@ -592,6 +592,25 @@ Current result:
 
 Decision: fail cleanly. TG21 proves train-mined local retry edges can be represented and activated without breaking safety, but they are behaviorally redundant on the locked heldout split. Do not run longer over the same edge-bonus mechanism. Inspect retry-edge transfer failure or change the local candidate representation before broad training.
 
+### TG22: Retry-Event Diagnostics
+
+Status: implemented as diagnostic-only evidence.
+
+This checkpoint does not change behavior. It traces TG20/TG21 retry contexts and compares no-edge vs edge-weighted retry choices to explain why TG21 did not scale the TG20 signal.
+
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_tg22_retry_diagnostics.json`
+- 43 retry event records captured.
+- 18 heldout no-edge/edge comparisons captured.
+- 4 edge-bonus hits in heldout comparisons.
+- 0 edge-bonus choice changes.
+- 34 retry events had no local sibling available.
+- 4 retry events were linked to completion/mate.
+- Diagnosis: `retry_edges_redundant`.
+
+Decision: do not tune retry-edge bonus and do not run longer over the same exact mechanism. The failure is not that the edge is absent; the edge fires but usually reinforces the same sibling already chosen, while the dominant failure mode is no local retry sibling. The next checkpoint should improve local continuation candidate construction or mine richer retry context terminals. A single isolated sensor-composition primitive is reasonable only if it directly addresses this retry-context gap.
+
 ### Future TG: Sensor/Circuit Growth Primitives
 
 Status: direction recorded; LAG has one isolated TG19 checkpoint, TG20 local-continuation use, and TG21 retry-edge transfer test. AND/OR/XOR and broader sensor circuits are still not implemented in this runway.
