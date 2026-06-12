@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run TG26 KRK edge/fence foundation curriculum checkpoint."""
+"""Run TG26b KRK edge/fence failure repair checkpoint."""
 
 from __future__ import annotations
 
@@ -18,9 +18,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--foundation-mate1-mirror-count", type=int, default=120)
     parser.add_argument("--foundation-mate2-train-count", type=int, default=300)
     parser.add_argument("--foundation-mate2-heldout-count", type=int, default=100)
-    parser.add_argument("--train-chunk-size", type=int, default=500)
-    parser.add_argument("--eval-window-size", type=int, default=100)
-    parser.add_argument("--max-chunks-per-stage", type=int, default=4)
+    parser.add_argument("--train-chunk-size", type=int, default=160)
+    parser.add_argument("--eval-window-size", type=int, default=48)
+    parser.add_argument("--max-chunks-per-stage", type=int, default=2)
     parser.add_argument("--consecutive-pass-windows-required", type=int, default=2)
     parser.add_argument("--edge-success-threshold", type=float, default=0.95)
     parser.add_argument("--fence-success-threshold", type=float, default=0.90)
@@ -29,10 +29,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--eta-m3", type=float, default=0.06)
     parser.add_argument("--max-generation-attempts", type=int, default=250_000)
     parser.add_argument("--max-samples", type=int, default=12)
+    parser.add_argument("--top-k-deep-score", type=int, default=6)
+    parser.add_argument("--disable-strict-safety-gate", action="store_true")
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("reports/autogrowth/krk_autogrowth_tg26_edge_fence_curriculum.json"),
+        default=Path("reports/autogrowth/krk_autogrowth_tg26b_edge_fence_failure_repair.json"),
     )
     parser.add_argument("--smoke", action="store_true")
     return parser.parse_args()
@@ -40,9 +42,9 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    default_output = Path("reports/autogrowth/krk_autogrowth_tg26_edge_fence_curriculum.json")
+    default_output = Path("reports/autogrowth/krk_autogrowth_tg26b_edge_fence_failure_repair.json")
     output = (
-        Path("reports/autogrowth/krk_autogrowth_tg26_edge_fence_curriculum_smoke.json")
+        Path("reports/autogrowth/krk_autogrowth_tg26b_edge_fence_failure_repair_smoke.json")
         if args.smoke and args.output == default_output
         else args.output
     )
@@ -55,8 +57,8 @@ def main() -> int:
             foundation_mate1_mirror_count=6 if args.smoke else args.foundation_mate1_mirror_count,
             foundation_mate2_train_count=8 if args.smoke else args.foundation_mate2_train_count,
             foundation_mate2_heldout_count=4 if args.smoke else args.foundation_mate2_heldout_count,
-            train_chunk_size=20 if args.smoke else args.train_chunk_size,
-            eval_window_size=8 if args.smoke else args.eval_window_size,
+            train_chunk_size=30 if args.smoke else args.train_chunk_size,
+            eval_window_size=12 if args.smoke else args.eval_window_size,
             max_chunks_per_stage=1 if args.smoke else args.max_chunks_per_stage,
             consecutive_pass_windows_required=1
             if args.smoke
@@ -78,6 +80,8 @@ def main() -> int:
             if args.smoke
             else args.max_generation_attempts,
             max_samples=args.max_samples,
+            top_k_deep_score=max(3, min(args.top_k_deep_score, 4)) if args.smoke else args.top_k_deep_score,
+            strict_safety_gate=not args.disable_strict_safety_gate,
         )
     )
     path = result.write_json(output)
@@ -89,6 +93,8 @@ def main() -> int:
             f"{stage['label']}: "
             f"conversion={final['conversion_count']}/{final['position_count']} "
             f"handoff={final['earlier_region_handoff_count']}/{final['position_count']} "
+            f"rook_loss={final['rook_loss_count']} "
+            f"confinement_regression={final['confinement_regression_count']} "
             f"avg_reward={final['avg_reward']:.3f} "
             f"m3={stage['m3_update_count']} "
             f"m4={stage['m4_consolidation_event_count']} "
@@ -98,6 +104,7 @@ def main() -> int:
     print(
         "decision: "
         f"status={decision['status']} "
+        f"continue={decision['continue_conditions_passed']} "
         f"foundation_regression={decision['foundation_regression_passed']} "
         f"labels_visible={decision['curriculum_labels_learner_visible']} "
         f"direct_provider_override={decision['direct_provider_override']}"

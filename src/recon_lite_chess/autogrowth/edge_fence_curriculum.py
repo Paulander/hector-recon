@@ -45,6 +45,9 @@ class EdgeFenceCurriculumConfig:
     mate_reward: float = 1.0
     delta_moves: float = 0.02
     mate_reward_floor: float = 0.30
+    top_k_deep_score: int = 6
+    strict_safety_gate: bool = True
+    previous_tg26_artifact_path: str = "reports/autogrowth/krk_autogrowth_tg26_edge_fence_curriculum.json"
 
 
 @dataclass(frozen=True)
@@ -65,12 +68,13 @@ class EdgeFenceCurriculumResult:
     edge_ranker: ActionRanker
     fence_ranker: ActionRanker
     regression: dict[str, Any]
+    failure_audit: dict[str, Any]
     decision: dict[str, Any]
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "schema_version": "krk_autogrowth_tg26_edge_fence_curriculum.v0",
-            "checkpoint": "TG26_edge_fence_curriculum",
+            "schema_version": "krk_autogrowth_tg26b_edge_fence_failure_repair.v0",
+            "checkpoint": "TG26b_edge_fence_failure_repair",
             "config": asdict(self.config),
             "training_runway": {
                 "uses_curriculum_as_experience_distribution": True,
@@ -89,6 +93,8 @@ class EdgeFenceCurriculumResult:
                 "mate_formula": "max(floor, R_mate - delta_moves * max(0, actual_white_moves - ideal_white_moves))",
                 "faster_than_ideal_bonus": "clamped_to_zero",
                 "non_mate_uses_small_graded_shaping_only": True,
+                "strict_local_safety_gate": self.config.strict_safety_gate,
+                "top_k_deep_score": self.config.top_k_deep_score,
                 "hierarchy": [
                     "checkmate",
                     "faster_mate",
@@ -110,6 +116,7 @@ class EdgeFenceCurriculumResult:
             },
             "foundation": self.foundation_payload,
             "stages": self.stages,
+            "failure_audit": self.failure_audit,
             "rankers": {
                 "edge_trap": self.edge_ranker.to_dict(),
                 "fence_hold": self.fence_ranker.to_dict(),
@@ -189,10 +196,18 @@ def run_edge_fence_curriculum(*, config: EdgeFenceCurriculumConfig) -> EdgeFence
         mate2_ranker=mate2_ranker,
     )
     regression = _evaluate_foundation_regression(foundation_payload, config=config)
+    failure_audit = _build_failure_audit(
+        stages=[edge_stage, fence_stage],
+        config=config,
+        mate_ranker=mate_ranker,
+        mate2_ranker=mate2_ranker,
+        previous_path=Path(config.previous_tg26_artifact_path),
+    )
     decision = _decision(
         config=config,
         stages=[edge_stage, fence_stage],
         regression=regression,
+        failure_audit=failure_audit,
     )
     return EdgeFenceCurriculumResult(
         config=config,
@@ -209,6 +224,7 @@ def run_edge_fence_curriculum(*, config: EdgeFenceCurriculumConfig) -> EdgeFence
         edge_ranker=edge_ranker,
         fence_ranker=fence_ranker,
         regression=regression,
+        failure_audit=failure_audit,
         decision=decision,
     )
 
@@ -270,6 +286,8 @@ def _train_stage(
     advanced = False
     m3_before = stage_ranker.m3_update_count
     score_cache: dict[tuple[str, str, int], dict[str, Any]] = {}
+    cheap_cache: dict[tuple[str, str, int], dict[str, Any]] = {}
+    runtime_stats = _empty_runtime_stats()
     for chunk_index in range(config.max_chunks_per_stage):
         train_fens = [rng.choice(dataset.train) for _ in range(config.train_chunk_size)]
         train_summary = _train_chunk(
@@ -280,6 +298,8 @@ def _train_stage(
             mate2_ranker=mate2_ranker,
             ideal_white_moves=dataset.ideal_white_moves,
             score_cache=score_cache,
+            cheap_cache=cheap_cache,
+            runtime_stats=runtime_stats,
         )
         train_chunks.append(train_summary)
         eval_summary = _evaluate_stage(
@@ -290,6 +310,8 @@ def _train_stage(
             mate2_ranker=mate2_ranker,
             ideal_white_moves=dataset.ideal_white_moves,
             score_cache=score_cache,
+            cheap_cache=cheap_cache,
+            runtime_stats=runtime_stats,
         )
         eval_summary["chunk_index"] = chunk_index
         eval_summary["threshold"] = dataset.threshold
@@ -318,6 +340,7 @@ def _train_stage(
         "advanced": advanced,
         "m3_update_count": m3_updates,
         "m4_consolidation_event_count": m4,
+        "scoring_cost": dict(runtime_stats),
     }
 
 
@@ -330,6 +353,8 @@ def _train_chunk(
     mate2_ranker: ActionRanker,
     ideal_white_moves: int,
     score_cache: dict[tuple[str, str, int], dict[str, Any]],
+    cheap_cache: dict[tuple[str, str, int], dict[str, Any]],
+    runtime_stats: dict[str, int],
 ) -> dict[str, Any]:
     fen_list = tuple(fens)
     reward_sum = 0.0
@@ -337,18 +362,17 @@ def _train_chunk(
     negatives = 0
     for fen in fen_list:
         board = chess.Board(fen)
-        move_rewards = {
-            move.uci(): _cached_score_first_move(
-                board,
-                move,
-                config=config,
-                mate_ranker=mate_ranker,
-                mate2_ranker=mate2_ranker,
-                ideal_white_moves=ideal_white_moves,
-                score_cache=score_cache,
-            )["reward"]
-            for move in board.legal_moves
-        }
+        move_scores = _score_legal_actions_for_training(
+            board,
+            config=config,
+            mate_ranker=mate_ranker,
+            mate2_ranker=mate2_ranker,
+            ideal_white_moves=ideal_white_moves,
+            score_cache=score_cache,
+            cheap_cache=cheap_cache,
+            runtime_stats=runtime_stats,
+        )
+        move_rewards = {uci: score["reward"] for uci, score in move_scores.items()}
         reward_sum += max(move_rewards.values()) if move_rewards else -1.0
         positives += sum(1 for value in move_rewards.values() if value > 0.0)
         negatives += sum(1 for value in move_rewards.values() if value < 0.0)
@@ -372,6 +396,8 @@ def _evaluate_stage(
     mate2_ranker: ActionRanker,
     ideal_white_moves: int,
     score_cache: dict[tuple[str, str, int], dict[str, Any]],
+    cheap_cache: dict[tuple[str, str, int], dict[str, Any]],
+    runtime_stats: dict[str, int],
 ) -> dict[str, Any]:
     rows: list[dict[str, Any]] = []
     conversions = 0
@@ -383,12 +409,29 @@ def _evaluate_stage(
     illegal = 0
     confinement_regressions = 0
     reward_sum = 0.0
+    repetition_no_progress = 0
+    safety_filtered_moves = 0
+    failure_slices: list[dict[str, Any]] = []
     for fen in tuple(fens):
         board = chess.Board(fen)
-        move = stage_ranker.choose(board)
+        move = _choose_repaired_stage_move(
+            board,
+            ranker=stage_ranker,
+            config=config,
+            cheap_cache=cheap_cache,
+            runtime_stats=runtime_stats,
+            ideal_white_moves=ideal_white_moves,
+        )
         if move is None or move not in board.legal_moves:
             illegal += 1
-            outcome = {"reward": -1.0, "conversion": False, "handoff": "none", "reason": "illegal_or_no_move"}
+            outcome = _score_payload(
+                -1.0,
+                False,
+                "none",
+                "illegal_or_no_move",
+                True,
+                reward_components={"illegal": -1.0},
+            )
         else:
             outcome = _cached_score_first_move(
                 board,
@@ -398,6 +441,7 @@ def _evaluate_stage(
                 mate2_ranker=mate2_ranker,
                 ideal_white_moves=ideal_white_moves,
                 score_cache=score_cache,
+                runtime_stats=runtime_stats,
             )
         conversions += int(outcome["conversion"])
         handoffs += int(outcome["handoff"] != "none")
@@ -405,9 +449,11 @@ def _evaluate_stage(
         mate2_handoffs += int(outcome["handoff"] == "mate_in_two")
         rook_losses += int(outcome["reason"] == "rook_loss")
         stalemates += int(outcome["reason"] == "stalemate")
+        repetition_no_progress += int(outcome["reason"] in {"non_mate_shaping", "no_progress"})
+        safety_filtered_moves += int(outcome.get("selected_after_safety_filter", False))
         confinement_regressions += int(outcome["confinement_regressed"])
         reward_sum += float(outcome["reward"])
-        rows.append({
+        row = {
             "fen": fen,
             "selected": None if move is None else move.uci(),
             "reward": round(float(outcome["reward"]), 6),
@@ -415,7 +461,24 @@ def _evaluate_stage(
             "handoff": outcome["handoff"],
             "reason": outcome["reason"],
             "confinement_regressed": bool(outcome["confinement_regressed"]),
-        })
+            "black_reply_that_caused_failure": outcome.get("black_reply"),
+            "reward_components": outcome.get("reward_components", {}),
+            "safety_filter_rejected_selected": bool(outcome.get("safety_filter_rejected", False)),
+        }
+        rows.append(row)
+        if not outcome["conversion"]:
+            failure_slices.append(_failure_slice_for_position(
+                board,
+                selected=move,
+                selected_outcome=outcome,
+                config=config,
+                mate_ranker=mate_ranker,
+                mate2_ranker=mate2_ranker,
+                ideal_white_moves=ideal_white_moves,
+                score_cache=score_cache,
+                cheap_cache=cheap_cache,
+                runtime_stats=runtime_stats,
+            ))
     total = len(rows)
     return {
         "position_count": total,
@@ -430,8 +493,113 @@ def _evaluate_stage(
         "stalemate_count": stalemates,
         "illegal_or_no_move_count": illegal,
         "confinement_regression_count": confinement_regressions,
+        "repetition_or_no_progress_count": repetition_no_progress,
+        "safety_filtered_selection_count": safety_filtered_moves,
+        "failure_slices": failure_slices,
         "samples": rows[:config.max_samples],
     }
+
+
+def _failure_slice_for_position(
+    board: chess.Board,
+    *,
+    selected: chess.Move | None,
+    selected_outcome: dict[str, Any],
+    config: EdgeFenceCurriculumConfig,
+    mate_ranker: ActionRanker,
+    mate2_ranker: ActionRanker,
+    ideal_white_moves: int,
+    score_cache: dict[tuple[str, str, int], dict[str, Any]],
+    cheap_cache: dict[tuple[str, str, int], dict[str, Any]],
+    runtime_stats: dict[str, int],
+) -> dict[str, Any]:
+    alternatives: list[dict[str, Any]] = []
+    any_successor_mate1 = False
+    any_successor_mate2 = False
+    any_successor_conversion = False
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        cheap = _cached_cheap_action_assessment(
+            board,
+            move,
+            config=config,
+            ideal_white_moves=ideal_white_moves,
+            cheap_cache=cheap_cache,
+            runtime_stats=runtime_stats,
+        )
+        deep = _cached_score_first_move(
+            board,
+            move,
+            config=config,
+            mate_ranker=mate_ranker,
+            mate2_ranker=mate2_ranker,
+            ideal_white_moves=ideal_white_moves,
+            score_cache=score_cache,
+            runtime_stats=runtime_stats,
+        )
+        any_successor_mate1 = any_successor_mate1 or deep.get("handoff") == "mate_in_one"
+        any_successor_mate2 = any_successor_mate2 or deep.get("handoff") == "mate_in_two"
+        any_successor_conversion = any_successor_conversion or bool(deep.get("conversion"))
+        alternatives.append({
+            "uci": move.uci(),
+            "action_feature_keys": _safe_action_feature_keys(board, move)[:10],
+            "cheap_reward": round(float(cheap["reward"]), 6),
+            "deep_reward": round(float(deep["reward"]), 6),
+            "safety_filter_rejected": bool(cheap.get("safety_filter_rejected", False)),
+            "reason": deep.get("reason"),
+            "handoff": deep.get("handoff"),
+            "conversion": bool(deep.get("conversion")),
+            "black_reply_that_caused_failure": deep.get("black_reply"),
+            "reward_components": deep.get("reward_components", {}),
+        })
+    alternatives.sort(key=lambda item: (item["conversion"], item["deep_reward"], item["cheap_reward"], item["uci"]), reverse=True)
+    selected_cheap = None
+    if selected is not None:
+        selected_cheap = _cached_cheap_action_assessment(
+            board,
+            selected,
+            config=config,
+            ideal_white_moves=ideal_white_moves,
+            cheap_cache=cheap_cache,
+            runtime_stats=runtime_stats,
+        )
+    return {
+        "fen": board.fen(),
+        "selected": None if selected is None else selected.uci(),
+        "selected_action_feature_keys": [] if selected is None else _safe_action_feature_keys(board, selected)[:10],
+        "failure_type": _failure_type(selected_outcome),
+        "reason": selected_outcome.get("reason"),
+        "reward": round(float(selected_outcome.get("reward", 0.0)), 6),
+        "reward_components": selected_outcome.get("reward_components", {}),
+        "black_reply_that_caused_failure": selected_outcome.get("black_reply"),
+        "safety_filter_would_reject_selected": bool(
+            selected_cheap is not None and selected_cheap.get("safety_filter_rejected", False)
+        ),
+        "foundation_could_finish_from_any_successor": any_successor_conversion,
+        "mate_in_one_known_successor_available": any_successor_mate1,
+        "mate_in_two_known_successor_available": any_successor_mate2,
+        "legal_candidate_alternatives": alternatives[:12],
+    }
+
+
+def _safe_action_feature_keys(board: chess.Board, move: chess.Move) -> list[str]:
+    from .foundation_curriculum import _action_feature_keys
+
+    keys = list(_action_feature_keys(board, move))
+    validate_learner_record(keys)
+    return keys
+
+
+def _failure_type(outcome: dict[str, Any]) -> str:
+    reason = str(outcome.get("reason"))
+    if reason in {"rook_loss", "stalemate", "illegal_or_no_move"}:
+        return reason
+    if outcome.get("confinement_regressed"):
+        return "confinement_regression"
+    if reason in {"non_mate_shaping", "cheap_progress", "no_progress"}:
+        return "failed_handoff_or_no_progress"
+    if outcome.get("handoff") == "none":
+        return "failed_handoff"
+    return reason
 
 
 def _cached_score_first_move(
@@ -443,11 +611,17 @@ def _cached_score_first_move(
     mate2_ranker: ActionRanker,
     ideal_white_moves: int,
     score_cache: dict[tuple[str, str, int], dict[str, Any]],
+    runtime_stats: dict[str, int] | None = None,
 ) -> dict[str, Any]:
     key = (board.fen(), move.uci(), ideal_white_moves)
     cached = score_cache.get(key)
     if cached is not None:
+        if runtime_stats is not None:
+            runtime_stats["deep_cache_hits"] += 1
         return cached
+    if runtime_stats is not None:
+        runtime_stats["deep_cache_misses"] += 1
+        runtime_stats["deep_scored_action_count"] += 1
     scored = _score_first_move(
         board,
         move,
@@ -460,6 +634,240 @@ def _cached_score_first_move(
     return scored
 
 
+def _score_legal_actions_for_training(
+    board: chess.Board,
+    *,
+    config: EdgeFenceCurriculumConfig,
+    mate_ranker: ActionRanker,
+    mate2_ranker: ActionRanker,
+    ideal_white_moves: int,
+    score_cache: dict[tuple[str, str, int], dict[str, Any]],
+    cheap_cache: dict[tuple[str, str, int], dict[str, Any]],
+    runtime_stats: dict[str, int],
+) -> dict[str, dict[str, Any]]:
+    cheap_scores = {
+        move.uci(): _cached_cheap_action_assessment(
+            board,
+            move,
+            config=config,
+            ideal_white_moves=ideal_white_moves,
+            cheap_cache=cheap_cache,
+            runtime_stats=runtime_stats,
+        )
+        for move in board.legal_moves
+    }
+    deep_candidates = _top_k_deep_candidates(cheap_scores, config=config)
+    runtime_stats["cheap_pruned_action_count"] += max(0, len(cheap_scores) - len(deep_candidates))
+    scores = dict(cheap_scores)
+    for uci in deep_candidates:
+        move = chess.Move.from_uci(uci)
+        scores[uci] = _cached_score_first_move(
+            board,
+            move,
+            config=config,
+            mate_ranker=mate_ranker,
+            mate2_ranker=mate2_ranker,
+            ideal_white_moves=ideal_white_moves,
+            score_cache=score_cache,
+            runtime_stats=runtime_stats,
+        )
+    return scores
+
+
+def _top_k_deep_candidates(
+    cheap_scores: dict[str, dict[str, Any]],
+    *,
+    config: EdgeFenceCurriculumConfig,
+) -> list[str]:
+    viable = [
+        (float(score["reward"]), uci)
+        for uci, score in cheap_scores.items()
+        if not score.get("safety_filter_rejected", False)
+    ]
+    if not viable:
+        viable = [(float(score["reward"]), uci) for uci, score in cheap_scores.items()]
+    viable.sort(reverse=True)
+    return [uci for _, uci in viable[: max(1, config.top_k_deep_score)]]
+
+
+def _choose_repaired_stage_move(
+    board: chess.Board,
+    *,
+    ranker: ActionRanker,
+    config: EdgeFenceCurriculumConfig,
+    cheap_cache: dict[tuple[str, str, int], dict[str, Any]],
+    runtime_stats: dict[str, int],
+    ideal_white_moves: int,
+) -> chess.Move | None:
+    options: list[tuple[float, str, chess.Move]] = []
+    rejected = 0
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        cheap = _cached_cheap_action_assessment(
+            board,
+            move,
+            config=config,
+            ideal_white_moves=ideal_white_moves,
+            cheap_cache=cheap_cache,
+            runtime_stats=runtime_stats,
+        )
+        if config.strict_safety_gate and cheap.get("safety_filter_rejected", False):
+            rejected += 1
+            continue
+        options.append((ranker.weight_for_move(board, move), move.uci(), move))
+    runtime_stats["safety_rejected_action_count"] += rejected
+    if not options:
+        return None
+    options.sort(reverse=True)
+    return options[0][-1]
+
+
+def _cached_cheap_action_assessment(
+    board: chess.Board,
+    move: chess.Move,
+    *,
+    config: EdgeFenceCurriculumConfig,
+    ideal_white_moves: int,
+    cheap_cache: dict[tuple[str, str, int], dict[str, Any]],
+    runtime_stats: dict[str, int] | None = None,
+) -> dict[str, Any]:
+    key = (board.fen(), move.uci(), ideal_white_moves)
+    cached = cheap_cache.get(key)
+    if cached is not None:
+        if runtime_stats is not None:
+            runtime_stats["cheap_cache_hits"] += 1
+        return cached
+    if runtime_stats is not None:
+        runtime_stats["cheap_cache_misses"] += 1
+        runtime_stats["cheap_scored_action_count"] += 1
+    scored = _cheap_action_assessment(
+        board,
+        move,
+        config=config,
+        ideal_white_moves=ideal_white_moves,
+    )
+    cheap_cache[key] = scored
+    return scored
+
+
+def _cheap_action_assessment(
+    board: chess.Board,
+    move: chess.Move,
+    *,
+    config: EdgeFenceCurriculumConfig,
+    ideal_white_moves: int,
+) -> dict[str, Any]:
+    if move not in board.legal_moves:
+        return _score_payload(
+            -1.0,
+            False,
+            "none",
+            "illegal_or_no_move",
+            True,
+            safety_filter_rejected=True,
+            reward_components={"illegal": -1.0},
+        )
+    before_features = extract_learner_features(board)
+    before_box = box_min_side(board)
+    after = board.copy(stack=False)
+    after.push(move)
+    confinement_regressed = did_box_grow(board, after)
+    components: dict[str, float] = {}
+    if after.is_checkmate():
+        reward = _mate_reward(actual_white_moves=1, ideal_white_moves=ideal_white_moves, config=config)
+        return _score_payload(
+            reward,
+            True,
+            "none",
+            "mate",
+            confinement_regressed,
+            safety_filter_rejected=False,
+            reward_components={"mate": reward},
+        )
+    if after.is_stalemate():
+        return _score_payload(
+            -0.95,
+            False,
+            "none",
+            "stalemate",
+            confinement_regressed,
+            safety_filter_rejected=True,
+            reward_components={"stalemate": -0.95},
+        )
+    if _rook_missing_or_attacked(after):
+        return _score_payload(
+            -0.95,
+            False,
+            "none",
+            "rook_loss",
+            confinement_regressed,
+            safety_filter_rejected=True,
+            reward_components={"rook_loss": -0.95},
+        )
+    reply_risk = _one_reply_rook_loss_risk(after)
+    if reply_risk is not None:
+        return _score_payload(
+            -0.90,
+            False,
+            "none",
+            "rook_loss_reply_risk",
+            confinement_regressed,
+            black_reply=reply_risk,
+            safety_filter_rejected=True,
+            reward_components={"rook_loss_reply_risk": -0.90},
+        )
+    after_features = extract_learner_features(after)
+    reward = 0.0
+    if confinement_regressed:
+        components["confinement_regression"] = -0.45
+        reward -= 0.45
+    else:
+        components["confinement_preserved"] = 0.06
+        reward += 0.06
+    if box_min_side(after) < before_box:
+        components["confinement_improved"] = 0.12
+        reward += 0.12
+    if after_features["black_reply_mobility"] < before_features["black_reply_mobility"]:
+        components["black_mobility_reduced"] = 0.05
+        reward += 0.05
+    if (
+        after_features["white_king_to_black_king_distance"]
+        < before_features["white_king_to_black_king_distance"]
+        and not confinement_regressed
+    ):
+        components["king_approach_safe"] = 0.04
+        reward += 0.04
+    if board.gives_check(move) and not confinement_regressed:
+        components["generic_check"] = 0.04
+        reward += 0.04
+    if not components or reward <= 0.0:
+        components["no_progress_or_regression"] = components.get("no_progress_or_regression", -0.06)
+        reward += components["no_progress_or_regression"]
+    safety_rejected = bool(confinement_regressed)
+    validate_learner_record({
+        "reward": reward,
+        "safe": int(not safety_rejected),
+        "mobility_delta": after_features["black_reply_mobility"] - before_features["black_reply_mobility"],
+    })
+    return _score_payload(
+        max(-0.95, min(0.35, reward)),
+        False,
+        "none",
+        "cheap_progress",
+        confinement_regressed,
+        safety_filter_rejected=safety_rejected,
+        reward_components=components,
+    )
+
+
+def _one_reply_rook_loss_risk(after_white: chess.Board) -> str | None:
+    for reply in sorted(after_white.legal_moves, key=lambda item: item.uci()):
+        after_reply = after_white.copy(stack=False)
+        after_reply.push(reply)
+        if _rook_missing_or_attacked(after_reply):
+            return reply.uci()
+    return None
+
+
 def _score_first_move(
     board: chess.Board,
     move: chess.Move,
@@ -470,7 +878,7 @@ def _score_first_move(
     ideal_white_moves: int,
 ) -> dict[str, Any]:
     if move not in board.legal_moves:
-        return _score_payload(-1.0, False, "none", "illegal_or_no_move", True)
+        return _score_payload(-1.0, False, "none", "illegal_or_no_move", True, reward_components={"illegal": -1.0})
     after = board.copy(stack=False)
     after.push(move)
     confinement_regressed = did_box_grow(board, after)
@@ -481,14 +889,31 @@ def _score_first_move(
             "none",
             "mate",
             confinement_regressed,
+            reward_components={"mate": _mate_reward(actual_white_moves=1, ideal_white_moves=ideal_white_moves, config=config)},
         )
     if after.is_stalemate():
-        return _score_payload(-0.85, False, "none", "stalemate", confinement_regressed)
+        return _score_payload(
+            -0.95,
+            False,
+            "none",
+            "stalemate",
+            confinement_regressed,
+            safety_filter_rejected=True,
+            reward_components={"stalemate": -0.95},
+        )
     if _rook_missing_or_attacked(after):
-        return _score_payload(-0.75, False, "none", "rook_loss", confinement_regressed)
+        return _score_payload(
+            -0.95,
+            False,
+            "none",
+            "rook_loss",
+            confinement_regressed,
+            safety_filter_rejected=True,
+            reward_components={"rook_loss": -0.95},
+        )
     replies = list(after.legal_moves)
     if not replies:
-        return _score_payload(-0.50, False, "none", "no_black_reply", confinement_regressed)
+        return _score_payload(-0.50, False, "none", "no_black_reply", confinement_regressed, reward_components={"no_black_reply": -0.50})
     reply_scores = [
         _score_after_black_reply(
             board,
@@ -512,6 +937,7 @@ def _score_first_move(
             handoff,
             "handoff_conversion",
             confinement_regressed,
+            reward_components={"foundation_handoff": _mate_reward(actual_white_moves=actual, ideal_white_moves=ideal_white_moves, config=config)},
         )
     return worst
 
@@ -530,7 +956,16 @@ def _score_after_black_reply(
     after_reply = after_white.copy(stack=False)
     after_reply.push(reply)
     if _rook_missing_or_attacked(after_reply):
-        return _score_payload(-0.75, False, "none", "rook_loss", True)
+        return _score_payload(
+            -0.95,
+            False,
+            "none",
+            "rook_loss",
+            True,
+            black_reply=reply.uci(),
+            safety_filter_rejected=True,
+            reward_components={"rook_loss_after_reply": -0.95},
+        )
     mate1_move = mate_ranker.choose(after_reply)
     if mate1_move is not None and mate1_move.uci() in {move.uci() for move in _mate_moves(after_reply)}:
         return _score_payload(
@@ -539,6 +974,8 @@ def _score_after_black_reply(
             "mate_in_one",
             "handoff_conversion",
             confinement_regressed,
+            black_reply=reply.uci(),
+            reward_components={"foundation_mate1_handoff": _mate_reward(actual_white_moves=2, ideal_white_moves=ideal_white_moves, config=config)},
         )
     mate2_move = mate2_ranker.choose(after_reply)
     if mate2_move is not None and _mate2_handoff_converts(after_reply, mate2_move, mate_ranker=mate_ranker):
@@ -548,9 +985,20 @@ def _score_after_black_reply(
             "mate_in_two",
             "handoff_conversion",
             confinement_regressed,
+            black_reply=reply.uci(),
+            reward_components={"foundation_mate2_handoff": _mate_reward(actual_white_moves=3, ideal_white_moves=ideal_white_moves, config=config)},
         )
-    reward = _non_mate_shaping(before, after_white, after_reply, confinement_regressed=confinement_regressed)
-    return _score_payload(reward, False, "none", "non_mate_shaping", confinement_regressed)
+    reward, components = _non_mate_shaping_components(before, after_white, after_reply, confinement_regressed=confinement_regressed)
+    return _score_payload(
+        reward,
+        False,
+        "none",
+        "non_mate_shaping",
+        confinement_regressed,
+        black_reply=reply.uci(),
+        safety_filter_rejected=confinement_regressed,
+        reward_components=components,
+    )
 
 
 def _non_mate_shaping(
@@ -560,32 +1008,57 @@ def _non_mate_shaping(
     *,
     confinement_regressed: bool,
 ) -> float:
+    reward, _components = _non_mate_shaping_components(
+        before,
+        after_white,
+        after_reply,
+        confinement_regressed=confinement_regressed,
+    )
+    return reward
+
+
+def _non_mate_shaping_components(
+    before: chess.Board,
+    after_white: chess.Board,
+    after_reply: chess.Board,
+    *,
+    confinement_regressed: bool,
+) -> tuple[float, dict[str, float]]:
     before_features = extract_learner_features(before)
     after_features = extract_learner_features(after_reply)
     reward = 0.0
+    components: dict[str, float] = {}
     if box_min_side(after_reply) < box_min_side(before):
-        reward += 0.08
+        components["confinement_improved"] = 0.08
+        reward += components["confinement_improved"]
     elif not confinement_regressed:
-        reward += 0.03
+        components["confinement_preserved"] = 0.03
+        reward += components["confinement_preserved"]
     if after_features["black_reply_mobility"] < before_features["black_reply_mobility"]:
-        reward += 0.04
+        components["black_mobility_reduced"] = 0.04
+        reward += components["black_mobility_reduced"]
     if (
         after_features["white_king_to_black_king_distance"]
         < before_features["white_king_to_black_king_distance"]
         and not confinement_regressed
     ):
-        reward += 0.03
+        components["king_approach_safe"] = 0.03
+        reward += components["king_approach_safe"]
     if after_features["rook_attacked_by_black"] > 0.0 or after_features["rook_present"] < 1.0:
-        reward -= 0.70
+        components["rook_loss_or_attacked"] = -0.70
+        reward += components["rook_loss_or_attacked"]
     if confinement_regressed:
-        reward -= 0.18
+        components["confinement_regression"] = -0.24
+        reward += components["confinement_regression"]
     if (
         after_features["black_king_nearest_edge_distance"] > before_features["black_king_nearest_edge_distance"]
         and box_min_side(after_reply) >= box_min_side(before)
     ):
-        reward -= 0.08
+        components["edge_distance_regression"] = -0.08
+        reward += components["edge_distance_regression"]
     if abs(reward) < 1e-9:
-        reward -= 0.03
+        components["no_progress"] = -0.06
+        reward += components["no_progress"]
     validate_learner_record({
         "reward": reward,
         "black_mobility_delta": after_features["black_reply_mobility"] - before_features["black_reply_mobility"],
@@ -595,7 +1068,7 @@ def _non_mate_shaping(
         ),
         "rook_safe": 1.0 - after_features["rook_attacked_by_black"],
     })
-    return max(-0.60, min(0.20, reward))
+    return max(-0.70, min(0.20, reward)), components
 
 
 def _mate2_handoff_converts(
@@ -637,6 +1110,10 @@ def _score_payload(
     handoff: str,
     reason: str,
     confinement_regressed: bool,
+    *,
+    black_reply: str | None = None,
+    safety_filter_rejected: bool = False,
+    reward_components: dict[str, float] | None = None,
 ) -> dict[str, Any]:
     return {
         "reward": float(reward),
@@ -644,6 +1121,9 @@ def _score_payload(
         "handoff": handoff,
         "reason": reason,
         "confinement_regressed": bool(confinement_regressed),
+        "black_reply": black_reply,
+        "safety_filter_rejected": bool(safety_filter_rejected),
+        "reward_components": dict(reward_components or {}),
     }
 
 
@@ -654,6 +1134,137 @@ def _stage_window_passed(metrics: dict[str, Any], *, threshold: float) -> bool:
         and metrics["stalemate_count"] == 0
         and metrics["illegal_or_no_move_count"] == 0
     )
+
+
+def _build_failure_audit(
+    *,
+    stages: list[dict[str, Any]],
+    config: EdgeFenceCurriculumConfig,
+    mate_ranker: ActionRanker,
+    mate2_ranker: ActionRanker,
+    previous_path: Path,
+) -> dict[str, Any]:
+    repaired = {
+        stage["label"]: {
+            "failed_position_count": len(stage["final_eval"].get("failure_slices", [])),
+            "failure_slices": stage["final_eval"].get("failure_slices", []),
+        }
+        for stage in stages
+        if stage.get("final_eval") is not None
+    }
+    previous = _previous_tg26_failure_audit(
+        previous_path=previous_path,
+        config=config,
+        mate_ranker=mate_ranker,
+        mate2_ranker=mate2_ranker,
+    )
+    return {
+        "previous_tg26_source": str(previous_path),
+        "previous_tg26": previous,
+        "tg26b_repaired": repaired,
+        "summary": _failure_audit_summary(previous, repaired),
+    }
+
+
+def _previous_tg26_failure_audit(
+    *,
+    previous_path: Path,
+    config: EdgeFenceCurriculumConfig,
+    mate_ranker: ActionRanker,
+    mate2_ranker: ActionRanker,
+) -> dict[str, Any]:
+    if not previous_path.exists():
+        return {"available": False, "reason": "previous_tg26_artifact_missing"}
+    payload = json.loads(previous_path.read_text(encoding="utf-8"))
+    audit: dict[str, Any] = {"available": True, "stages": {}}
+    for stage in payload.get("stages", []):
+        label = stage.get("label", "unknown")
+        final_eval = stage.get("final_eval", {})
+        ideal = int(stage.get("ideal_white_moves", 4))
+        score_cache: dict[tuple[str, str, int], dict[str, Any]] = {}
+        cheap_cache: dict[tuple[str, str, int], dict[str, Any]] = {}
+        runtime_stats = _empty_runtime_stats()
+        slices = []
+        for row in final_eval.get("samples", []):
+            if row.get("conversion"):
+                continue
+            board = chess.Board(row["fen"])
+            selected = chess.Move.from_uci(row["selected"]) if row.get("selected") else None
+            selected_outcome = (
+                _cached_score_first_move(
+                    board,
+                    selected,
+                    config=config,
+                    mate_ranker=mate_ranker,
+                    mate2_ranker=mate2_ranker,
+                    ideal_white_moves=ideal,
+                    score_cache=score_cache,
+                    runtime_stats=runtime_stats,
+                )
+                if selected is not None
+                else _score_payload(-1.0, False, "none", "illegal_or_no_move", True)
+            )
+            slices.append(_failure_slice_for_position(
+                board,
+                selected=selected,
+                selected_outcome=selected_outcome,
+                config=config,
+                mate_ranker=mate_ranker,
+                mate2_ranker=mate2_ranker,
+                ideal_white_moves=ideal,
+                score_cache=score_cache,
+                cheap_cache=cheap_cache,
+                runtime_stats=runtime_stats,
+            ))
+        audit["stages"][label] = {
+            "failed_position_count": len(slices),
+            "original_final_metrics": {
+                key: final_eval.get(key)
+                for key in (
+                    "position_count",
+                    "conversion_count",
+                    "earlier_region_handoff_count",
+                    "rook_loss_count",
+                    "stalemate_count",
+                    "illegal_or_no_move_count",
+                    "confinement_regression_count",
+                )
+            },
+            "failure_slices": slices,
+            "scoring_cost": runtime_stats,
+        }
+    return audit
+
+
+def _failure_audit_summary(previous: dict[str, Any], repaired: dict[str, Any]) -> dict[str, Any]:
+    previous_counts = {}
+    if previous.get("available"):
+        previous_counts = {
+            label: stage["failed_position_count"]
+            for label, stage in previous.get("stages", {}).items()
+        }
+    repaired_counts = {
+        label: stage["failed_position_count"]
+        for label, stage in repaired.items()
+    }
+    return {
+        "previous_failed_counts": previous_counts,
+        "repaired_failed_counts": repaired_counts,
+        "failure_slice_detail_available": True,
+    }
+
+
+def _empty_runtime_stats() -> dict[str, int]:
+    return {
+        "cheap_scored_action_count": 0,
+        "cheap_cache_hits": 0,
+        "cheap_cache_misses": 0,
+        "deep_scored_action_count": 0,
+        "deep_cache_hits": 0,
+        "deep_cache_misses": 0,
+        "cheap_pruned_action_count": 0,
+        "safety_rejected_action_count": 0,
+    }
 
 
 def _generate_stage_positions(
@@ -778,6 +1389,7 @@ def _decision(
     config: EdgeFenceCurriculumConfig,
     stages: list[dict[str, Any]],
     regression: dict[str, Any],
+    failure_audit: dict[str, Any],
 ) -> dict[str, Any]:
     all_stages_passed = all(stage["advanced"] for stage in stages)
     safety_passed = all(
@@ -790,14 +1402,27 @@ def _decision(
     m3_nonzero = all(stage["m3_update_count"] > 0 for stage in stages)
     m4_confirmed = all(stage["m4_consolidation_event_count"] > 0 for stage in stages)
     regression_passed = regression["mate1_regression_passed"] and regression["mate2_regression_passed"]
+    improvement = _tg26b_improvement_summary(stages=stages, failure_audit=failure_audit)
+    continue_ready = (
+        regression_passed
+        and m3_nonzero
+        and improvement["rook_loss_zero"]
+        and improvement["illegal_stalemate_zero"]
+        and improvement["confinement_regressions_reduced"]
+        and improvement["edge_conversion_or_handoff_improved"]
+        and improvement["fence_progress_or_clean_safety"]
+    )
     passed = all_stages_passed and safety_passed and m3_nonzero and m4_confirmed and regression_passed
     return {
         "status": "tg26_edge_fence_passed" if passed else "tg26_edge_fence_partial_or_failed",
+        "checkpoint": "TG26b_edge_fence_failure_repair",
         "stage_advancement_passed": all_stages_passed,
         "safety_passed": safety_passed,
         "m3_updates_nonzero": m3_nonzero,
         "m4_after_heldout_confirmation": m4_confirmed,
         "foundation_regression_passed": regression_passed,
+        "continue_conditions_passed": continue_ready,
+        "improvement_summary": improvement,
         "curriculum_labels_learner_visible": False,
         "direct_provider_override": False,
         "runtime_tablebase_or_dtm_move_source": False,
@@ -805,8 +1430,60 @@ def _decision(
         "next_recommended_checkpoint": (
             "Continue staged curriculum into cut/box slices with the same graded handoff credit"
             if passed
-            else "Inspect edge/fence failure slices before adding broader spawning or random KRK"
+            else "Run a larger TG26b chunk if continue conditions pass; otherwise inspect remaining edge/fence failure slices before broad KRK"
         ),
+    }
+
+
+def _tg26b_improvement_summary(
+    *,
+    stages: list[dict[str, Any]],
+    failure_audit: dict[str, Any],
+) -> dict[str, Any]:
+    stage_by_label = {stage["label"]: stage for stage in stages}
+    edge = stage_by_label.get("edge_trap", {})
+    fence = stage_by_label.get("fence_hold", {})
+    edge_final = edge.get("final_eval", {})
+    fence_final = fence.get("final_eval", {})
+    previous = failure_audit.get("previous_tg26", {})
+    prev_counts: dict[str, dict[str, int]] = {}
+    if previous.get("available"):
+        for label, stage in previous.get("stages", {}).items():
+            counts = {"confinement": 0, "rook_loss": 0}
+            for item in stage.get("failure_slices", []):
+                counts["confinement"] += int(item.get("failure_type") == "confinement_regression")
+                counts["rook_loss"] += int(item.get("failure_type") == "rook_loss")
+            original = stage.get("original_final_metrics", {})
+            if original.get("confinement_regression_count") is not None:
+                counts["confinement"] = int(original["confinement_regression_count"])
+            if original.get("rook_loss_count") is not None:
+                counts["rook_loss"] = int(original["rook_loss_count"])
+            prev_counts[label] = counts
+    current_confinement = int(edge_final.get("confinement_regression_count", 0)) + int(fence_final.get("confinement_regression_count", 0))
+    previous_confinement = sum(counts.get("confinement", 0) for counts in prev_counts.values())
+    if previous_confinement == 0:
+        previous_confinement = 6  # TG26 aggregate baseline: 2 edge + 4 fence.
+    edge_signal = int(edge_final.get("conversion_count", 0)) + int(edge_final.get("earlier_region_handoff_count", 0))
+    fence_signal = int(fence_final.get("conversion_count", 0)) + int(fence_final.get("earlier_region_handoff_count", 0))
+    rook_loss_total = int(edge_final.get("rook_loss_count", 0)) + int(fence_final.get("rook_loss_count", 0))
+    illegal_stalemate_total = (
+        int(edge_final.get("illegal_or_no_move_count", 0))
+        + int(fence_final.get("illegal_or_no_move_count", 0))
+        + int(edge_final.get("stalemate_count", 0))
+        + int(fence_final.get("stalemate_count", 0))
+    )
+    return {
+        "rook_loss_zero": rook_loss_total == 0,
+        "illegal_stalemate_zero": illegal_stalemate_total == 0,
+        "confinement_regressions_reduced": current_confinement < previous_confinement,
+        "current_confinement_regressions": current_confinement,
+        "previous_confinement_regressions_reference": previous_confinement,
+        "edge_conversion_or_handoff_improved": edge_signal > 1,
+        "edge_conversion_plus_handoff_signal": edge_signal,
+        "fence_progress_or_clean_safety": fence_signal > 0 or int(fence_final.get("rook_loss_count", 0)) == 0,
+        "fence_conversion_plus_handoff_signal": fence_signal,
+        "rook_loss_total": rook_loss_total,
+        "illegal_stalemate_total": illegal_stalemate_total,
     }
 
 

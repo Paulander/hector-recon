@@ -132,6 +132,14 @@ least 99%, Mate_In_2 regression remains at least 90-95%, rook loss/stalemate/
 illegal regressions are zero, M3 updates are nonzero, and M4 consolidation
 happens only after heldout confirmation.
 
+Throughput rule for harder stages: split cheap and expensive credit. Score all
+legal actions first with generic local safety/progress checks; reject or heavily
+penalize rook-loss, one-reply rook-loss risk, stalemate, confinement regression,
+and no-progress actions before deeper rollout. Run expensive all-reply
+foundation-handoff checks only for a configurable top-K of plausible actions and
+cache by FEN/action/ideal-count. Report cheap-scored, deep-scored, pruned,
+safety-rejected, and cache-hit counts in the artifact.
+
 ## Metrics
 
 Primary:

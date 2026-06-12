@@ -8,6 +8,7 @@ from recon_lite_chess.autogrowth import (
     validate_learner_record,
 )
 from recon_lite_chess.autogrowth.edge_fence_curriculum import (
+    _cheap_action_assessment,
     _mate_reward,
     _non_mate_shaping,
 )
@@ -45,6 +46,21 @@ def test_tg26_non_mate_shaping_is_small_and_penalizes_regression() -> None:
     assert regressed_score < preserved_score
 
 
+def test_tg26b_cheap_safety_rejects_one_reply_rook_loss() -> None:
+    board = chess.Board("4k3/8/3R4/6K1/8/8/8/8 w - - 0 1")
+    move = chess.Move.from_uci("g5h4")
+    score = _cheap_action_assessment(
+        board,
+        move,
+        config=EdgeFenceCurriculumConfig(),
+        ideal_white_moves=3,
+    )
+
+    assert score["safety_filter_rejected"] is True
+    assert score["reason"] == "rook_loss_reply_risk"
+    assert score["black_reply"] == "e8e7"
+
+
 def test_tg26_smoke_artifact_contract_and_firewall(tmp_path) -> None:
     result = run_edge_fence_curriculum(
         config=EdgeFenceCurriculumConfig(
@@ -69,7 +85,7 @@ def test_tg26_smoke_artifact_contract_and_firewall(tmp_path) -> None:
     output = result.write_json(tmp_path / "tg26_edge_fence.json")
     payload = json.loads(output.read_text(encoding="utf-8"))
 
-    assert payload["schema_version"] == "krk_autogrowth_tg26_edge_fence_curriculum.v0"
+    assert payload["schema_version"] == "krk_autogrowth_tg26b_edge_fence_failure_repair.v0"
     assert payload["training_runway"]["uses_curriculum_as_experience_distribution"] is True
     assert payload["training_runway"]["curriculum_labels_learner_visible"] is False
     assert payload["training_runway"]["broad_random_krk_enabled"] is False
@@ -78,6 +94,10 @@ def test_tg26_smoke_artifact_contract_and_firewall(tmp_path) -> None:
     assert len(payload["stages"]) == 2
     assert payload["stages"][0]["m3_update_count"] > 0
     assert payload["stages"][1]["m3_update_count"] > 0
+    assert "scoring_cost" in payload["stages"][0]
+    assert payload["stages"][0]["scoring_cost"]["cheap_scored_action_count"] > 0
+    assert "failure_audit" in payload
+    assert payload["failure_audit"]["summary"]["failure_slice_detail_available"] is True
     assert payload["decision"]["runtime_tablebase_or_dtm_move_source"] is False
     validate_learner_record(payload["rankers"]["edge_trap"]["top_nodes"])
     validate_learner_record(payload["rankers"]["fence_hold"]["top_nodes"])
