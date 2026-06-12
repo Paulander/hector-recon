@@ -1,0 +1,4642 @@
+{
+  "checkpoint": "TG25_foundation_curriculum",
+  "config": {
+    "eta_m3": 0.1,
+    "mate1_heldout_count": 300,
+    "mate1_mirror_count": 120,
+    "mate1_pass_threshold": 0.95,
+    "mate1_train_count": 1000,
+    "mate2_enabled": true,
+    "mate2_heldout_count": 100,
+    "mate2_pass_threshold": 0.8,
+    "mate2_train_count": 300,
+    "max_generation_attempts": 500000,
+    "max_samples": 12,
+    "seed": 20260612
+  },
+  "dataset": {
+    "mate1_heldout_count": 300,
+    "mate1_mirror_count": 120,
+    "mate1_train_count": 1000,
+    "mate2_heldout_count": 100,
+    "mate2_train_count": 300
+  },
+  "decision": {
+    "curriculum_labels_learner_visible": false,
+    "direct_provider_override": false,
+    "mate1_heldout_accuracy": 1.0,
+    "mate1_m3_update_count": 591698,
+    "mate1_m4_consolidation_event_count": 1,
+    "mate1_mirror_accuracy": 1.0,
+    "mate1_passed": true,
+    "mate2_conversion_rate": 0.83,
+    "mate2_enabled": true,
+    "mate2_m4_consolidation_event_count": 1,
+    "mate2_passed": true,
+    "next_recommended_checkpoint": "Continue foundation curriculum into edge-trap/fence small slices",
+    "runtime_tablebase_or_dtm_move_source": false,
+    "status": "tg25_foundation_mate1_mate2_passed"
+  },
+  "local_recon_structure": {
+    "action_nodes_receive_m3_credit": true,
+    "candidate_node_type": "ACTION",
+    "direct_move_override": false,
+    "move_choice_mediated_by_local_action_nodes": true,
+    "parent_node_type": "SCRIPT",
+    "relation_types": [
+      "SUB",
+      "POR",
+      "SUR"
+    ]
+  },
+  "mate1": {
+    "curriculum_labels_learner_visible": false,
+    "heldout": {
+      "accuracy": 1.0,
+      "avg_legal_move_count": 18.51,
+      "candidate_activation_rate": 1.0,
+      "correct_count": 300,
+      "position_count": 300,
+      "samples": [
+        {
+          "correct": true,
+          "correct_moves": [
+            "b2b1"
+          ],
+          "fen": "8/8/8/8/8/6K1/1R6/7k w - - 0 1",
+          "legal_move_count": 20,
+          "selected": "b2b1"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "h7h1"
+          ],
+          "fen": "8/7R/8/8/8/1K6/8/k7 w - - 0 1",
+          "legal_move_count": 20,
+          "selected": "h7h1"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "c2a2"
+          ],
+          "fen": "k1K5/8/8/8/8/8/2R5/8 w - - 0 1",
+          "legal_move_count": 16,
+          "selected": "c2a2"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "c3h3"
+          ],
+          "fen": "8/8/8/8/8/2R5/8/5K1k w - - 0 1",
+          "legal_move_count": 17,
+          "selected": "c3h3"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "b2h2"
+          ],
+          "fen": "8/8/8/5K1k/8/8/1R6/8 w - - 0 1",
+          "legal_move_count": 19,
+          "selected": "b2h2"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "d4d1"
+          ],
+          "fen": "8/8/8/8/3R4/5K2/8/5k2 w - - 0 1",
+          "legal_move_count": 19,
+          "selected": "d4d1"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "c6c1"
+          ],
+          "fen": "8/8/2R5/8/8/7K/8/7k w - - 0 1",
+          "legal_move_count": 17,
+          "selected": "c6c1"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "f3f8"
+          ],
+          "fen": "1k6/8/1K6/8/8/5R2/8/8 w - - 0 1",
+          "legal_move_count": 19,
+          "selected": "f3f8"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "e1a1"
+          ],
+          "fen": "8/8/8/8/k1K5/8/8/4R3 w - - 0 1",
+          "legal_move_count": 19,
+          "selected": "e1a1"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "f1a1"
+          ],
+          "fen": "8/8/8/8/8/k1K5/8/5R2 w - - 0 1",
+          "legal_move_count": 19,
+          "selected": "f1a1"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "g1g8"
+          ],
+          "fen": "2k5/8/2K5/8/8/8/8/6R1 w - - 0 1",
+          "legal_move_count": 19,
+          "selected": "g1g8"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "c2c8"
+          ],
+          "fen": "5k2/8/5K2/8/8/8/2R5/8 w - - 0 1",
+          "legal_move_count": 19,
+          "selected": "c2c8"
+        }
+      ],
+      "top_ranked_action_correctness": 1.0,
+      "wrong_action_available_count": 5253,
+      "wrong_action_count": 0,
+      "wrong_action_suppressed_count": 5179,
+      "wrong_action_suppression_rate": 0.9859128117266324
+    },
+    "m3_effect_on_accuracy": 0.906667,
+    "m3_update_count": 591698,
+    "m4_consolidation_event_count": 1,
+    "mirror_generalization": {
+      "accuracy": 1.0,
+      "avg_legal_move_count": 18.833333,
+      "candidate_activation_rate": 1.0,
+      "correct_count": 120,
+      "position_count": 120,
+      "samples": [
+        {
+          "correct": true,
+          "correct_moves": [
+            "g2g1"
+          ],
+          "fen": "8/8/8/8/8/1K6/6R1/k7 w - - 0 1",
+          "legal_move_count": 20,
+          "selected": "g2g1"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "b7b8"
+          ],
+          "fen": "7k/1R6/6K1/8/8/8/8/8 w - - 0 1",
+          "legal_move_count": 20,
+          "selected": "b7b8"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "b2a2"
+          ],
+          "fen": "k7/2K5/8/8/8/8/1R6/8 w - - 0 1",
+          "legal_move_count": 20,
+          "selected": "b2a2"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "g7h7"
+          ],
+          "fen": "8/6R1/8/8/8/8/5K2/7k w - - 0 1",
+          "legal_move_count": 20,
+          "selected": "g7h7"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "a7a1"
+          ],
+          "fen": "8/R7/8/8/8/6K1/8/7k w - - 0 1",
+          "legal_move_count": 20,
+          "selected": "a7a1"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "h2h8"
+          ],
+          "fen": "k7/8/1K6/8/8/8/7R/8 w - - 0 1",
+          "legal_move_count": 20,
+          "selected": "h2h8"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "g8a8"
+          ],
+          "fen": "6R1/8/8/8/8/8/2K5/k7 w - - 0 1",
+          "legal_move_count": 20,
+          "selected": "g8a8"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "b1h1"
+          ],
+          "fen": "7k/5K2/8/8/8/8/8/1R6 w - - 0 1",
+          "legal_move_count": 20,
+          "selected": "b1h1"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "f2h2"
+          ],
+          "fen": "5K1k/8/8/8/8/8/5R2/8 w - - 0 1",
+          "legal_move_count": 16,
+          "selected": "f2h2"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "c7a7"
+          ],
+          "fen": "8/2R5/8/8/8/8/8/k1K5 w - - 0 1",
+          "legal_move_count": 16,
+          "selected": "c7a7"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "b3b1"
+          ],
+          "fen": "8/8/8/8/8/1R5K/8/7k w - - 0 1",
+          "legal_move_count": 16,
+          "selected": "b3b1"
+        },
+        {
+          "correct": true,
+          "correct_moves": [
+            "g6g8"
+          ],
+          "fen": "k7/8/K5R1/8/8/8/8/8 w - - 0 1",
+          "legal_move_count": 16,
+          "selected": "g6g8"
+        }
+      ],
+      "top_ranked_action_correctness": 1.0,
+      "wrong_action_available_count": 2140,
+      "wrong_action_count": 0,
+      "wrong_action_suppressed_count": 2108,
+      "wrong_action_suppression_rate": 0.9850467289719627
+    },
+    "pre_training_heldout": {
+      "accuracy": 0.09333333333333334,
+      "avg_legal_move_count": 18.51,
+      "candidate_activation_rate": 0.0,
+      "correct_count": 28,
+      "position_count": 300,
+      "samples": [
+        {
+          "correct": false,
+          "correct_moves": [
+            "b2b1"
+          ],
+          "fen": "8/8/8/8/8/6K1/1R6/7k w - - 0 1",
+          "legal_move_count": 20,
+          "selected": "g3h4"
+        },
+        {
+          "correct": false,
+          "correct_moves": [
+            "h7h1"
+          ],
+          "fen": "8/7R/8/8/8/1K6/8/k7 w - - 0 1",
+          "legal_move_count": 20,
+          "selected": "h7h8"
+        },
+        {
+          "correct": false,
+          "correct_moves": [
+            "c2a2"
+          ],
+          "fen": "k1K5/8/8/8/8/8/2R5/8 w - - 0 1",
+          "legal_move_count": 16,
+          "selected": "c8d8"
+        },
+        {
+          "correct": false,
+          "correct_moves": [
+            "c3h3"
+          ],
+          "fen": "8/8/8/8/8/2R5/8/5K1k w - - 0 1",
+          "legal_move_count": 17,
+          "selected": "f1f2"
+        },
+        {
+          "correct": false,
+          "correct_moves": [
+            "b2h2"
+          ],
+          "fen": "8/8/8/5K1k/8/8/1R6/8 w - - 0 1",
+          "legal_move_count": 19,
+          "selected": "f5f6"
+        },
+        {
+          "correct": false,
+          "correct_moves": [
+            "d4d1"
+          ],
+          "fen": "8/8/8/8/3R4/5K2/8/5k2 w - - 0 1",
+          "legal_move_count": 19,
+          "selected": "f3g4"
+        },
+        {
+          "correct": false,
+          "correct_moves": [
+            "c6c1"
+          ],
+          "fen": "8/8/2R5/8/8/7K/8/7k w - - 0 1",
+          "legal_move_count": 17,
+          "selected": "h3h4"
+        },
+        {
+          "correct": false,
+          "correct_moves": [
+            "f3f8"
+          ],
+          "fen": "1k6/8/1K6/8/8/5R2/8/8 w - - 0 1",
+          "legal_move_count": 19,
+          "selected": "f3h3"
+        },
+        {
+          "correct": false,
+          "correct_moves": [
+            "e1a1"
+          ],
+          "fen": "8/8/8/8/k1K5/8/8/4R3 w - - 0 1",
+          "legal_move_count": 19,
+          "selected": "e1h1"
+        },
+        {
+          "correct": false,
+          "correct_moves": [
+            "f1a1"
+          ],
+          "fen": "8/8/8/8/8/k1K5/8/5R2 w - - 0 1",
+          "legal_move_count": 19,
+          "selected": "f1h1"
+        },
+        {
+          "correct": false,
+          "correct_moves": [
+            "g1g8"
+          ],
+          "fen": "2k5/8/2K5/8/8/8/8/6R1 w - - 0 1",
+          "legal_move_count": 19,
+          "selected": "g1h1"
+        },
+        {
+          "correct": false,
+          "correct_moves": [
+            "c2c8"
+          ],
+          "fen": "5k2/8/5K2/8/8/8/2R5/8 w - - 0 1",
+          "legal_move_count": 19,
+          "selected": "f6g6"
+        }
+      ],
+      "top_ranked_action_correctness": 0.09333333333333334,
+      "wrong_action_available_count": 5253,
+      "wrong_action_count": 272,
+      "wrong_action_suppressed_count": 0,
+      "wrong_action_suppression_rate": 0.0
+    },
+    "stage_diagnostic": "Mate_In_1",
+    "training": {
+      "m3_update_count": 422717,
+      "negative_updates": 17379,
+      "neutral_updates": 0,
+      "position_count": 1000,
+      "positive_updates": 1000
+    }
+  },
+  "mate1_ranker": {
+    "m3_update_count": 591698,
+    "node_count": 90,
+    "top_nodes": [
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00065",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00065",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1398,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 139.8,
+          "negative_credit": 0,
+          "neutral_credit": 0,
+          "positive_credit": 1398
+        },
+        "learner_visible": {
+          "action_key": "pair:gives_check:black_reply_mobility_after=1:0",
+          "chooses_move_directly": false,
+          "local_weight": 139.8,
+          "negative_credit": 0,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 1398
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00054",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00054",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1570,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 138.94,
+          "negative_credit": 172,
+          "neutral_credit": 0,
+          "positive_credit": 1398
+        },
+        "learner_visible": {
+          "action_key": "pair:rook_safety:gives_check=0:1",
+          "chooses_move_directly": false,
+          "local_weight": 138.94,
+          "negative_credit": 172,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 1398
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00046",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00046",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1733,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 130.79,
+          "negative_credit": 335,
+          "neutral_credit": 0,
+          "positive_credit": 1398
+        },
+        "learner_visible": {
+          "action_key": "gives_check=1",
+          "chooses_move_directly": false,
+          "local_weight": 130.79,
+          "negative_credit": 335,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 1398
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00051",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00051",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1733,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 130.79,
+          "negative_credit": 335,
+          "neutral_credit": 0,
+          "positive_credit": 1398
+        },
+        "learner_visible": {
+          "action_key": "pair:gives_check:black_king_edge_after=1:0",
+          "chooses_move_directly": false,
+          "local_weight": 130.79,
+          "negative_credit": 335,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 1398
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00052",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00052",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1733,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 130.79,
+          "negative_credit": 335,
+          "neutral_credit": 0,
+          "positive_credit": 1398
+        },
+        "learner_visible": {
+          "action_key": "pair:piece:gives_check=4:1",
+          "chooses_move_directly": false,
+          "local_weight": 130.79,
+          "negative_credit": 335,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 1398
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00064",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00064",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1685,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 111.1,
+          "negative_credit": 287,
+          "neutral_credit": 0,
+          "positive_credit": 1398
+        },
+        "learner_visible": {
+          "action_key": "black_reply_mobility_after=0",
+          "chooses_move_directly": false,
+          "local_weight": 111.1,
+          "negative_credit": 287,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 1398
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00013",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00013",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 4928,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 60.95,
+          "negative_credit": 4077,
+          "neutral_credit": 0,
+          "positive_credit": 851
+        },
+        "learner_visible": {
+          "action_key": "to_file_edge_distance=0",
+          "chooses_move_directly": false,
+          "local_weight": 60.95,
+          "negative_credit": 4077,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 851
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00059",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00059",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 4951,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 60.36,
+          "negative_credit": 4097,
+          "neutral_credit": 0,
+          "positive_credit": 854
+        },
+        "learner_visible": {
+          "action_key": "to_rank_edge_distance=0",
+          "chooses_move_directly": false,
+          "local_weight": 60.36,
+          "negative_credit": 4097,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 854
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00072",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00072",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 2820,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 47.16,
+          "negative_credit": 2204,
+          "neutral_credit": 0,
+          "positive_credit": 616
+        },
+        "learner_visible": {
+          "action_key": "white_rook_to_black_king_after=2",
+          "chooses_move_directly": false,
+          "local_weight": 47.16,
+          "negative_credit": 2204,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 616
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00069",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00069",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 5130,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 39.6,
+          "negative_credit": 4476,
+          "neutral_credit": 0,
+          "positive_credit": 654
+        },
+        "learner_visible": {
+          "action_key": "white_king_to_rook_after=2",
+          "chooses_move_directly": false,
+          "local_weight": 39.6,
+          "negative_credit": 4476,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 654
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00063",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00063",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 4808,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 17.83,
+          "negative_credit": 4285,
+          "neutral_credit": 0,
+          "positive_credit": 523
+        },
+        "learner_visible": {
+          "action_key": "rank_delta_magnitude=3",
+          "chooses_move_directly": false,
+          "local_weight": 17.83,
+          "negative_credit": 4285,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 523
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00045",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00045",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 4822,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 15.585,
+          "negative_credit": 4315,
+          "neutral_credit": 0,
+          "positive_credit": 507
+        },
+        "learner_visible": {
+          "action_key": "file_delta_magnitude=3",
+          "chooses_move_directly": false,
+          "local_weight": 15.585,
+          "negative_credit": 4315,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 507
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00047",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00047",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 19020,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 8.99,
+          "negative_credit": 17622,
+          "neutral_credit": 0,
+          "positive_credit": 1398
+        },
+        "learner_visible": {
+          "action_key": "piece_type=4",
+          "chooses_move_directly": false,
+          "local_weight": 8.99,
+          "negative_credit": 17622,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 1398
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00008",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00008",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 25439,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 4.16,
+          "negative_credit": 24041,
+          "neutral_credit": 0,
+          "positive_credit": 1398
+        },
+        "learner_visible": {
+          "action_key": "is_stalemate_after=0",
+          "chooses_move_directly": false,
+          "local_weight": 4.16,
+          "negative_credit": 24041,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 1398
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00061",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00061",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 4857,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 3.025,
+          "negative_credit": 4497,
+          "neutral_credit": 0,
+          "positive_credit": 360
+        },
+        "learner_visible": {
+          "action_key": "pair:piece:file_rank_delta=4:0:-1",
+          "chooses_move_directly": false,
+          "local_weight": 3.025,
+          "negative_credit": 4497,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 360
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00070",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00070",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 3631,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 2.91,
+          "negative_credit": 3396,
+          "neutral_credit": 0,
+          "positive_credit": 235
+        },
+        "learner_visible": {
+          "action_key": "white_rook_to_black_king_after=3",
+          "chooses_move_directly": false,
+          "local_weight": 2.91,
+          "negative_credit": 3396,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 235
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00016",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00016",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1980,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 2.595,
+          "negative_credit": 1861,
+          "neutral_credit": 0,
+          "positive_credit": 119
+        },
+        "learner_visible": {
+          "action_key": "white_king_to_rook_after=6",
+          "chooses_move_directly": false,
+          "local_weight": 2.595,
+          "negative_credit": 1861,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 119
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00066",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00066",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 4755,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 2.47,
+          "negative_credit": 4413,
+          "neutral_credit": 0,
+          "positive_credit": 342
+        },
+        "learner_visible": {
+          "action_key": "pair:piece:file_rank_delta=4:1:0",
+          "chooses_move_directly": false,
+          "local_weight": 2.47,
+          "negative_credit": 4413,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 342
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00088",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00088",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 4008,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 2.365,
+          "negative_credit": 3745,
+          "neutral_credit": 0,
+          "positive_credit": 263
+        },
+        "learner_visible": {
+          "action_key": "from_file_edge_distance=0",
+          "chooses_move_directly": false,
+          "local_weight": 2.365,
+          "negative_credit": 3745,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 263
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00053",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00053",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 4762,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 1.8,
+          "negative_credit": 4409,
+          "neutral_credit": 0,
+          "positive_credit": 353
+        },
+        "learner_visible": {
+          "action_key": "pair:piece:file_rank_delta=4:-1:0",
+          "chooses_move_directly": false,
+          "local_weight": 1.8,
+          "negative_credit": 4409,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 353
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00086",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00086",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 6522,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 1.765,
+          "negative_credit": 6105,
+          "neutral_credit": 0,
+          "positive_credit": 417
+        },
+        "learner_visible": {
+          "action_key": "from_file_edge_distance=3",
+          "chooses_move_directly": false,
+          "local_weight": 1.765,
+          "negative_credit": 6105,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 417
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00062",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00062",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 4646,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 1.695,
+          "negative_credit": 4303,
+          "neutral_credit": 0,
+          "positive_credit": 343
+        },
+        "learner_visible": {
+          "action_key": "pair:piece:file_rank_delta=4:0:1",
+          "chooses_move_directly": false,
+          "local_weight": 1.695,
+          "negative_credit": 4303,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 343
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00082",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00082",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 3926,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 1.625,
+          "negative_credit": 3666,
+          "neutral_credit": 0,
+          "positive_credit": 260
+        },
+        "learner_visible": {
+          "action_key": "from_rank_edge_distance=0",
+          "chooses_move_directly": false,
+          "local_weight": 1.625,
+          "negative_credit": 3666,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 260
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00067",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00067",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 6360,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 0.675,
+          "negative_credit": 5957,
+          "neutral_credit": 0,
+          "positive_credit": 403
+        },
+        "learner_visible": {
+          "action_key": "from_rank_edge_distance=3",
+          "chooses_move_directly": false,
+          "local_weight": 0.675,
+          "negative_credit": 5957,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 403
+        }
+      }
+    ]
+  },
+  "mate2": {
+    "curriculum_labels_learner_visible": false,
+    "enabled": true,
+    "heldout": {
+      "chain_completion_count": 83,
+      "chain_request_count": 100,
+      "chain_step_count": 100,
+      "conversion_count": 83,
+      "conversion_rate": 0.83,
+      "first_move_success_count": 83,
+      "first_move_success_rate": 0.83,
+      "forced_mate_reply_coverage": 0.83,
+      "position_count": 100,
+      "samples": [
+        {
+          "all_replies_mated": true,
+          "fen": "8/5R2/8/8/8/7k/5K2/8 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "f7f4"
+          ],
+          "reply_checks": [
+            {
+              "black_reply": "h3h2",
+              "correct_mates": [
+                "f4h4"
+              ],
+              "mated": true,
+              "selected_mate": "f4h4"
+            }
+          ],
+          "selected_first": "f7f4"
+        },
+        {
+          "all_replies_mated": true,
+          "fen": "R7/8/8/8/8/3K4/8/4k3 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "a8f8"
+          ],
+          "reply_checks": [
+            {
+              "black_reply": "e1d1",
+              "correct_mates": [
+                "f8f1"
+              ],
+              "mated": true,
+              "selected_mate": "f8f1"
+            }
+          ],
+          "selected_first": "a8f8"
+        },
+        {
+          "all_replies_mated": true,
+          "fen": "8/8/8/8/8/R6K/8/6k1 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "a3f3"
+          ],
+          "reply_checks": [
+            {
+              "black_reply": "g1h1",
+              "correct_mates": [
+                "f3f1"
+              ],
+              "mated": true,
+              "selected_mate": "f3f1"
+            }
+          ],
+          "selected_first": "a3f3"
+        },
+        {
+          "all_replies_mated": true,
+          "fen": "8/8/8/8/3R4/2K5/8/k7 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "c3b3",
+            "c3c2"
+          ],
+          "reply_checks": [
+            {
+              "black_reply": "a1a2",
+              "correct_mates": [
+                "d4a4"
+              ],
+              "mated": true,
+              "selected_mate": "d4a4"
+            }
+          ],
+          "selected_first": "c3c2"
+        },
+        {
+          "all_replies_mated": true,
+          "fen": "5R2/8/8/8/2K5/k7/8/8 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "f8f2"
+          ],
+          "reply_checks": [
+            {
+              "black_reply": "a3a4",
+              "correct_mates": [
+                "f2a2"
+              ],
+              "mated": true,
+              "selected_mate": "f2a2"
+            }
+          ],
+          "selected_first": "f8f2"
+        },
+        {
+          "all_replies_mated": true,
+          "fen": "4k3/8/3K4/7R/8/8/8/8 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "h5f5"
+          ],
+          "reply_checks": [
+            {
+              "black_reply": "e8d8",
+              "correct_mates": [
+                "f5f8"
+              ],
+              "mated": true,
+              "selected_mate": "f5f8"
+            }
+          ],
+          "selected_first": "h5f5"
+        },
+        {
+          "all_replies_mated": false,
+          "fen": "8/8/4R3/8/6K1/8/8/7k w - - 0 1",
+          "first_move_success": false,
+          "forced_first_moves": [
+            "g4g3"
+          ],
+          "reply_checks": [
+            {
+              "black_reply": "h1g1",
+              "correct_mates": [],
+              "mated": false,
+              "selected_mate": "e6e1"
+            }
+          ],
+          "selected_first": "g4h3"
+        },
+        {
+          "all_replies_mated": false,
+          "fen": "8/8/8/8/R7/8/4K3/7k w - - 0 1",
+          "first_move_success": false,
+          "forced_first_moves": [
+            "e2f2"
+          ],
+          "reply_checks": [
+            {
+              "black_reply": "h1h2",
+              "correct_mates": [],
+              "mated": false,
+              "selected_mate": "a4h4"
+            }
+          ],
+          "selected_first": "e2f1"
+        },
+        {
+          "all_replies_mated": true,
+          "fen": "8/8/5R2/8/K7/8/8/k7 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "a4b3"
+          ],
+          "reply_checks": [
+            {
+              "black_reply": "a1b1",
+              "correct_mates": [
+                "f6f1"
+              ],
+              "mated": true,
+              "selected_mate": "f6f1"
+            }
+          ],
+          "selected_first": "a4b3"
+        },
+        {
+          "all_replies_mated": true,
+          "fen": "k2K4/8/8/8/8/1R6/8/8 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "d8c7"
+          ],
+          "reply_checks": [
+            {
+              "black_reply": "a8a7",
+              "correct_mates": [
+                "b3a3"
+              ],
+              "mated": true,
+              "selected_mate": "b3a3"
+            }
+          ],
+          "selected_first": "d8c7"
+        },
+        {
+          "all_replies_mated": true,
+          "fen": "6k1/8/7K/8/8/8/2R5/8 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "c2f2"
+          ],
+          "reply_checks": [
+            {
+              "black_reply": "g8h8",
+              "correct_mates": [
+                "f2f8"
+              ],
+              "mated": true,
+              "selected_mate": "f2f8"
+            }
+          ],
+          "selected_first": "c2f2"
+        },
+        {
+          "all_replies_mated": true,
+          "fen": "8/8/8/8/4K3/8/7k/2R5 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "e4f3"
+          ],
+          "reply_checks": [
+            {
+              "black_reply": "h2h3",
+              "correct_mates": [
+                "c1h1"
+              ],
+              "mated": true,
+              "selected_mate": "c1h1"
+            }
+          ],
+          "selected_first": "e4f3"
+        }
+      ],
+      "wrong_first_move_count": 17
+    },
+    "m4_consolidation_event_count": 1,
+    "stage_diagnostic": "Mate_In_2",
+    "training": {
+      "first_move_negative_updates": 5495,
+      "first_move_positive_updates": 398,
+      "first_ranker_m3_update_count": 135539,
+      "position_count": 300,
+      "second_mate_ranker_extra_m3_updates": 168981
+    }
+  },
+  "mate2_first_ranker": {
+    "m3_update_count": 135539,
+    "node_count": 95,
+    "top_nodes": [
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00040",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00040",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 917,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 35.36,
+          "negative_credit": 519,
+          "neutral_credit": 0,
+          "positive_credit": 398
+        },
+        "learner_visible": {
+          "action_key": "pair:gives_check:black_reply_mobility_after=0:1",
+          "chooses_move_directly": false,
+          "local_weight": 35.36,
+          "negative_credit": 519,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 398
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00039",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00039",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1073,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 32.96,
+          "negative_credit": 675,
+          "neutral_credit": 0,
+          "positive_credit": 398
+        },
+        "learner_visible": {
+          "action_key": "black_reply_mobility_after=1",
+          "chooses_move_directly": false,
+          "local_weight": 32.96,
+          "negative_credit": 675,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 398
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00030",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00030",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 3261,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 19.395,
+          "negative_credit": 2863,
+          "neutral_credit": 0,
+          "positive_credit": 398
+        },
+        "learner_visible": {
+          "action_key": "white_king_to_black_king_after=2",
+          "chooses_move_directly": false,
+          "local_weight": 19.395,
+          "negative_credit": 2863,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 398
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00022",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00022",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 5205,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 15.555,
+          "negative_credit": 4809,
+          "neutral_credit": 0,
+          "positive_credit": 396
+        },
+        "learner_visible": {
+          "action_key": "pair:rook_safety:gives_check=0:0",
+          "chooses_move_directly": false,
+          "local_weight": 15.555,
+          "negative_credit": 4809,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 396
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00012",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00012",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 5614,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 13.51,
+          "negative_credit": 5218,
+          "neutral_credit": 0,
+          "positive_credit": 396
+        },
+        "learner_visible": {
+          "action_key": "rook_attacked_after=0",
+          "chooses_move_directly": false,
+          "local_weight": 13.51,
+          "negative_credit": 5218,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 396
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00020",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00020",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1848,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 9.0,
+          "negative_credit": 1666,
+          "neutral_credit": 0,
+          "positive_credit": 182
+        },
+        "learner_visible": {
+          "action_key": "pair:piece:gives_check=6:0",
+          "chooses_move_directly": false,
+          "local_weight": 9.0,
+          "negative_credit": 1666,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 182
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00009",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00009",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1864,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 8.92,
+          "negative_credit": 1682,
+          "neutral_credit": 0,
+          "positive_credit": 182
+        },
+        "learner_visible": {
+          "action_key": "piece_type=6",
+          "chooses_move_directly": false,
+          "local_weight": 8.92,
+          "negative_credit": 1682,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 182
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00043",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00043",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1578,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 8.81,
+          "negative_credit": 1403,
+          "neutral_credit": 0,
+          "positive_credit": 175
+        },
+        "learner_visible": {
+          "action_key": "to_file_edge_distance=2",
+          "chooses_move_directly": false,
+          "local_weight": 8.81,
+          "negative_credit": 1403,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 175
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00006",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00006",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 5351,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 8.405,
+          "negative_credit": 4953,
+          "neutral_credit": 0,
+          "positive_credit": 398
+        },
+        "learner_visible": {
+          "action_key": "gives_check=0",
+          "chooses_move_directly": false,
+          "local_weight": 8.405,
+          "negative_credit": 4953,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 398
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00019",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00019",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 5351,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 8.405,
+          "negative_credit": 4953,
+          "neutral_credit": 0,
+          "positive_credit": 398
+        },
+        "learner_visible": {
+          "action_key": "pair:gives_check:black_king_edge_after=0:0",
+          "chooses_move_directly": false,
+          "local_weight": 8.405,
+          "negative_credit": 4953,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 398
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00029",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00029",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1592,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 8.335,
+          "negative_credit": 1420,
+          "neutral_credit": 0,
+          "positive_credit": 172
+        },
+        "learner_visible": {
+          "action_key": "to_rank_edge_distance=2",
+          "chooses_move_directly": false,
+          "local_weight": 8.335,
+          "negative_credit": 1420,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 172
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00010",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00010",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1906,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 6.43,
+          "negative_credit": 1741,
+          "neutral_credit": 0,
+          "positive_credit": 165
+        },
+        "learner_visible": {
+          "action_key": "rank_delta_magnitude=1",
+          "chooses_move_directly": false,
+          "local_weight": 6.43,
+          "negative_credit": 1741,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 165
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00002",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00002",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1910,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 6.225,
+          "negative_credit": 1749,
+          "neutral_credit": 0,
+          "positive_credit": 161
+        },
+        "learner_visible": {
+          "action_key": "file_delta_magnitude=1",
+          "chooses_move_directly": false,
+          "local_weight": 6.225,
+          "negative_credit": 1749,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 161
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00037",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00037",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1088,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 5.885,
+          "negative_credit": 927,
+          "neutral_credit": 0,
+          "positive_credit": 161
+        },
+        "learner_visible": {
+          "action_key": "white_king_to_rook_after=2",
+          "chooses_move_directly": false,
+          "local_weight": 5.885,
+          "negative_credit": 927,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 161
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00080",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00080",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 943,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 4.63,
+          "negative_credit": 854,
+          "neutral_credit": 0,
+          "positive_credit": 89
+        },
+        "learner_visible": {
+          "action_key": "white_king_to_rook_after=5",
+          "chooses_move_directly": false,
+          "local_weight": 4.63,
+          "negative_credit": 854,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 89
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00065",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00065",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1182,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 3.33,
+          "negative_credit": 1094,
+          "neutral_credit": 0,
+          "positive_credit": 88
+        },
+        "learner_visible": {
+          "action_key": "white_rook_to_black_king_after=7",
+          "chooses_move_directly": false,
+          "local_weight": 3.33,
+          "negative_credit": 1094,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 88
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00072",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00072",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 764,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 3.11,
+          "negative_credit": 698,
+          "neutral_credit": 0,
+          "positive_credit": 66
+        },
+        "learner_visible": {
+          "action_key": "white_rook_to_black_king_after=3",
+          "chooses_move_directly": false,
+          "local_weight": 3.11,
+          "negative_credit": 698,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 66
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00049",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00049",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 2088,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 3.045,
+          "negative_credit": 1915,
+          "neutral_credit": 0,
+          "positive_credit": 173
+        },
+        "learner_visible": {
+          "action_key": "from_file_edge_distance=3",
+          "chooses_move_directly": false,
+          "local_weight": 3.045,
+          "negative_credit": 1915,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 173
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00028",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00028",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1635,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 2.99,
+          "negative_credit": 1499,
+          "neutral_credit": 0,
+          "positive_credit": 136
+        },
+        "learner_visible": {
+          "action_key": "rank_delta_sign=1",
+          "chooses_move_directly": false,
+          "local_weight": 2.99,
+          "negative_credit": 1499,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 136
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00073",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00073",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 483,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 2.205,
+          "negative_credit": 439,
+          "neutral_credit": 0,
+          "positive_credit": 44
+        },
+        "learner_visible": {
+          "action_key": "white_rook_to_black_king_after=2",
+          "chooses_move_directly": false,
+          "local_weight": 2.205,
+          "negative_credit": 439,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 44
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00017",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00017",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1085,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 2.135,
+          "negative_credit": 1013,
+          "neutral_credit": 0,
+          "positive_credit": 72
+        },
+        "learner_visible": {
+          "action_key": "white_rook_to_black_king_after=6",
+          "chooses_move_directly": false,
+          "local_weight": 2.135,
+          "negative_credit": 1013,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 72
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00021",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00021",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 217,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 1.915,
+          "negative_credit": 188,
+          "neutral_credit": 0,
+          "positive_credit": 29
+        },
+        "learner_visible": {
+          "action_key": "pair:piece:file_rank_delta=6:-1:-1",
+          "chooses_move_directly": false,
+          "local_weight": 1.915,
+          "negative_credit": 188,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 29
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00067",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00067",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 1004,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 1.49,
+          "negative_credit": 942,
+          "neutral_credit": 0,
+          "positive_credit": 62
+        },
+        "learner_visible": {
+          "action_key": "white_rook_to_black_king_after=5",
+          "chooses_move_directly": false,
+          "local_weight": 1.49,
+          "negative_credit": 942,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 62
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.0,
+              "has_causal_intervention": false,
+              "negative_correlation": 0,
+              "negative_intervention": 0,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 0
+            },
+            "relevance_stats": {
+              "activation_count": 0,
+              "confirm_count": 0,
+              "context_coverage": 0.0,
+              "context_precision": 0.0,
+              "parent_locality": 0.0,
+              "request_exposures": 0,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.0,
+              "parent_locality": null,
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "foundation_action_00026",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {},
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 0,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_foundation_action_00026",
+          "trial_parent_id": "foundation_local_action_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 247,
+          "xp_failures": 0,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": 1.45,
+          "negative_credit": 221,
+          "neutral_credit": 0,
+          "positive_credit": 26
+        },
+        "learner_visible": {
+          "action_key": "pair:piece:file_rank_delta=6:-1:0",
+          "chooses_move_directly": false,
+          "local_weight": 1.45,
+          "negative_credit": 221,
+          "neutral_credit": 0,
+          "node_type": "ACTION",
+          "positive_credit": 26
+        }
+      }
+    ]
+  },
+  "schema_version": "krk_autogrowth_tg25_foundation_curriculum.v0",
+  "training_runway": {
+    "curriculum_labels_learner_visible": false,
+    "direct_provider_override": false,
+    "mate1_source": "generated legal KRK mate-in-1 variants",
+    "mate2_source": "generated legal KRK forced mate-in-2 variants",
+    "runtime_tablebase_or_dtm_move_source": false,
+    "stage_labels_diagnostics_only": true,
+    "uses_curriculum_as_experience_distribution": true
+  }
+}

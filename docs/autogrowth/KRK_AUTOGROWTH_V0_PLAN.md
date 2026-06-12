@@ -57,20 +57,20 @@ Only Arm C may change behavior.
 
 Training:
 
-- 200 generated legal KRK positions.
+- TG25 foundation curriculum first: generated legal Mate_In_1 positions, then mechanically verified forced Mate_In_2 positions.
+- Curriculum scheduling is the actual experience distribution. This is allowed training scaffolding, equivalent to progressive KRK exercises.
 - White to move.
 - Kings non-adjacent.
 - Rook present and legal.
 - Not already mate/stalemate.
-- Exclude immediate mate-in-1.
+- Stage/curriculum labels can select the exercise distribution and slice diagnostics, but must not enter learner-visible candidate features.
+- After Mate_In_1 and Mate_In_2 are strong, continue into edge-trap/fence/cut/box positions before broader random KRK conversion.
 - Exclude positions appearing in archived reports/snapshots/traces where practical.
-- Bias toward nontrivial conversion rather than easy edge mates.
 
 Held-out:
 
-- 200 generated legal KRK positions.
-- 100 weakness-zone positions.
-- 100 broader random legal positions.
+- For foundation: separately generated Mate_In_1, mirrored/transformed Mate_In_1, and verified forced Mate_In_2 heldout sets.
+- For broader KRK: 200 generated legal KRK positions, 100 weakness-zone positions, and 100 broader random legal positions.
 - Lock seed before running learner.
 
 Offline tablebase/DTM labels may be used as training/evaluation labels if needed, but never as runtime move providers.

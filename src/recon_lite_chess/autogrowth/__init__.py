@@ -41,6 +41,12 @@ from .evaluate import (
     evaluate_arm,
     evaluate_baseline_and_sham,
 )
+from .foundation_curriculum import (
+    ActionRanker,
+    FoundationCurriculumConfig,
+    FoundationCurriculumResult,
+    run_foundation_curriculum,
+)
 from .experiment import (
     AutogrowthExperimentConfig,
     AutogrowthExperimentResult,
@@ -169,6 +175,9 @@ __all__ = [
     "EvaluationConfig",
     "EvaluationResult",
     "FORBIDDEN_LEARNER_TERMS",
+    "ActionRanker",
+    "FoundationCurriculumConfig",
+    "FoundationCurriculumResult",
     "FragmentChainCurriculumConfig",
     "FragmentChainCurriculumResult",
     "LagFragmentChainMetrics",
@@ -248,6 +257,7 @@ __all__ = [
     "run_continuation_retry_experiment",
     "run_curriculum_reward_recovery",
     "run_fragment_chain_curriculum",
+    "run_foundation_curriculum",
     "run_lag_terminal_experiment",
     "run_risk_aware_candidate_experiment",
     "run_retry_edge_experiment",
