@@ -87,6 +87,8 @@ class ContinuationRetryMetrics:
     retry_no_local_sibling_count: int
     retry_suppressed_active_completion_count: int
     retry_sibling_lag_suppression_count: int
+    retry_edge_request_count: int = 0
+    retry_edge_bonus_hit_count: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         payload = self.chain.to_dict()
@@ -104,6 +106,8 @@ class ContinuationRetryMetrics:
                 "retry_no_local_sibling_count": self.retry_no_local_sibling_count,
                 "retry_suppressed_active_completion_count": self.retry_suppressed_active_completion_count,
                 "retry_sibling_lag_suppression_count": self.retry_sibling_lag_suppression_count,
+                "retry_edge_request_count": self.retry_edge_request_count,
+                "retry_edge_bonus_hit_count": self.retry_edge_bonus_hit_count,
             }
         )
         return payload
@@ -332,6 +336,9 @@ def evaluate_continuation_retry_arm(
     lag_negative_threshold: int,
     update_nodes: bool,
     arm: str,
+    retry_edge_weights: dict[str, float] | None = None,
+    retry_edge_learning: dict[str, int] | None = None,
+    retry_edge_bonus: float = 0.0,
 ) -> tuple[ContinuationRetryMetrics, list[dict[str, Any]]]:
     outcomes: list[dict[str, Any]] = []
     counts = {"mate": 0, "horizon_no_mate": 0, "stalemate": 0, "rook_loss": 0, "illegal_move": 0, "other_failure": 0}
@@ -351,6 +358,9 @@ def evaluate_continuation_retry_arm(
             eta_m3=eta_m3,
             lag_negative_threshold=lag_negative_threshold,
             update_nodes=update_nodes,
+            retry_edge_weights=retry_edge_weights,
+            retry_edge_learning=retry_edge_learning,
+            retry_edge_bonus=retry_edge_bonus,
         )
         outcome = str(result["outcome"])
         if outcome.startswith("draw_"):
@@ -418,6 +428,9 @@ def choose_continuation_retry_action(
     lag_negative_threshold: int,
     update_nodes: bool,
     position_counts: dict[str, int],
+    retry_edge_weights: dict[str, float] | None = None,
+    retry_edge_learning: dict[str, int] | None = None,
+    retry_edge_bonus: float = 0.0,
 ) -> dict[str, Any]:
     lag_counts = _empty_lag_totals()
     retry_counts = _empty_retry_totals()
@@ -436,6 +449,7 @@ def choose_continuation_retry_action(
                 if update_nodes:
                     _record_lag_negative(node, sibling_action=move.uci())
         retry_counts["retry_request_count"] += 1
+        retry_counts["retry_edge_request_count"] += int(bool(retry_edge_weights))
         retry = _choose_lag_start_action(
             board,
             script_nodes=script_nodes,
@@ -446,13 +460,20 @@ def choose_continuation_retry_action(
             update_nodes=update_nodes,
             position_counts=position_counts,
             exclude_candidate_key=active_key,
+            retry_edge_source_key=active_key,
+            retry_edge_weights=retry_edge_weights,
+            retry_edge_bonus=retry_edge_bonus,
         )
         _merge_lag_counts(lag_counts, retry["lag_counts"])
         retry_counts["retry_sibling_lag_suppression_count"] += int(retry["lag_counts"]["lag_suppression_count"])
+        retry_counts["retry_edge_bonus_hit_count"] += int(retry.get("retry_edge_bonus_hit", False))
         if retry["move"] is None:
             retry_counts["retry_no_local_sibling_count"] += 1
             return _decision(move=None, node=None, started=False, completed=False, aborted=True, lag_counts=lag_counts, retry_counts=retry_counts)
         retry_counts["retry_success_count"] += 1
+        if update_nodes and retry_edge_learning is not None:
+            edge_key = f"{active_key}->{retry['node']['candidate_key']}"
+            retry_edge_learning[edge_key] = int(retry_edge_learning.get(edge_key, 0)) + 1
         return _decision(move=retry["move"], node=retry["node"], started=True, completed=False, lag_counts=lag_counts, retry_counts=retry_counts)
 
     retry = _choose_lag_start_action(
@@ -465,6 +486,9 @@ def choose_continuation_retry_action(
         update_nodes=update_nodes,
         position_counts=position_counts,
         exclude_candidate_key=None,
+        retry_edge_source_key=None,
+        retry_edge_weights=retry_edge_weights,
+        retry_edge_bonus=retry_edge_bonus,
     )
     return _decision(
         move=retry["move"],
@@ -488,6 +512,9 @@ def _retry_chain_playout(
     eta_m3: float,
     lag_negative_threshold: int,
     update_nodes: bool,
+    retry_edge_weights: dict[str, float] | None = None,
+    retry_edge_learning: dict[str, int] | None = None,
+    retry_edge_bonus: float = 0.0,
 ) -> dict[str, Any]:
     board = chess.Board(fen)
     active_script: dict[str, Any] | None = None
@@ -541,6 +568,9 @@ def _retry_chain_playout(
                 lag_negative_threshold=lag_negative_threshold,
                 update_nodes=update_nodes,
                 position_counts=position_counts,
+                retry_edge_weights=retry_edge_weights,
+                retry_edge_learning=retry_edge_learning,
+                retry_edge_bonus=retry_edge_bonus,
             )
             for key in lag_totals:
                 lag_totals[key] += int(decision["lag_counts"].get(key, 0))
@@ -625,10 +655,13 @@ def _choose_lag_start_action(
     update_nodes: bool,
     position_counts: dict[str, int],
     exclude_candidate_key: str | None,
+    retry_edge_source_key: str | None,
+    retry_edge_weights: dict[str, float] | None,
+    retry_edge_bonus: float,
 ) -> dict[str, Any]:
     lag_counts = _empty_lag_totals()
     requested = set(requested_successors)
-    options: list[tuple[float, int, str, dict[str, Any], chess.Move]] = []
+    options: list[tuple[float, int, str, bool, dict[str, Any], chess.Move]] = []
     for node in script_nodes:
         if exclude_candidate_key is not None and node["candidate_key"] == exclude_candidate_key:
             continue
@@ -650,12 +683,19 @@ def _choose_lag_start_action(
         score = float(node["local_weight"])
         if node["candidate_key"] in requested:
             score += float(chain_request_bonus)
-        options.append((score, -int(node["rank"]), move.uci(), node, move))
+        edge_hit = False
+        if retry_edge_source_key is not None and retry_edge_weights:
+            edge_key = f"{retry_edge_source_key}->{node['candidate_key']}"
+            edge_support = float(retry_edge_weights.get(edge_key, 0.0))
+            if edge_support > 0.0:
+                score += float(retry_edge_bonus) * edge_support
+                edge_hit = True
+        options.append((score, -int(node["rank"]), move.uci(), edge_hit, node, move))
     if not options:
-        return {"move": None, "node": None, "lag_counts": lag_counts}
+        return {"move": None, "node": None, "lag_counts": lag_counts, "retry_edge_bonus_hit": False}
     options.sort(reverse=True)
-    _score, _rank, _uci, node, move = options[0]
-    return {"move": move, "node": node, "lag_counts": lag_counts}
+    _score, _rank, _uci, edge_hit, node, move = options[0]
+    return {"move": move, "node": node, "lag_counts": lag_counts, "retry_edge_bonus_hit": edge_hit}
 
 
 def _decision(
@@ -686,6 +726,8 @@ def _empty_retry_totals() -> dict[str, int]:
         "retry_no_local_sibling_count": 0,
         "retry_suppressed_active_completion_count": 0,
         "retry_sibling_lag_suppression_count": 0,
+        "retry_edge_request_count": 0,
+        "retry_edge_bonus_hit_count": 0,
     }
 
 
@@ -696,6 +738,8 @@ def _retry_chain_result(
     retry_no_local_sibling_count: int,
     retry_suppressed_active_completion_count: int,
     retry_sibling_lag_suppression_count: int,
+    retry_edge_request_count: int,
+    retry_edge_bonus_hit_count: int,
     lag_request_count: int,
     lag_trigger_count: int,
     lag_suppression_count: int,
@@ -720,6 +764,8 @@ def _retry_chain_result(
             "retry_no_local_sibling_count": retry_no_local_sibling_count,
             "retry_suppressed_active_completion_count": retry_suppressed_active_completion_count,
             "retry_sibling_lag_suppression_count": retry_sibling_lag_suppression_count,
+            "retry_edge_request_count": retry_edge_request_count,
+            "retry_edge_bonus_hit_count": retry_edge_bonus_hit_count,
         }
     )
     return payload

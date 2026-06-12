@@ -73,7 +73,9 @@ The old `M` labels in this file are subcheckpoints inside one larger milestone: 
 - Current TG19 result is partial-continue, not competence: h40 LAG keeps 0/200 mates, removes the 2 no-LAG rook losses, triggers 2 local suppressions, and keeps safety clean, but chain completions drop from 1 to 0 and repetition only improves by 1 event vs baseline. Training M3 updates: 16; heldout M3 updates: 9; M4 consolidation: 0.
 - TG20 local continuation retry is implemented. `reports/autogrowth/krk_autogrowth_tg20_continuation_retry.json` lets a LAG-suppressed active SCRIPT completion locally retry another same-parent SCRIPT sibling if that sibling passes the same local TERMINAL checks.
 - Current TG20 result is the first small conversion signal on this autogrowth runway, but still only partial-continue: h40/h80 retry reaches 1/200 mates, keeps 0 rook losses/illegal moves/stalemates, restores 1 chain completion vs TG19 LAG-only, reduces h40 repetition by 16 vs baseline, and records 2 heldout retry successes. Training M3 updates: 22; heldout M3 updates: 11; M4 consolidation: 0.
-- Next checkpoint should mine or reinforce safer continuation candidates from retry traces, then test whether the 1/200 signal scales without reintroducing direct move choice or safety regressions.
+- TG21 local retry-edge reinforcement is implemented. `reports/autogrowth/krk_autogrowth_tg21_retry_edges.json` mines train-only active-SCRIPT -> sibling-SCRIPT retry edges and applies their bonus only inside the same local LAG-suppressed retry context.
+- Current TG21 result is a clean no-scale failure: 4 retry edges were mined, 2 edge bonuses fired on heldout, and safety stayed clean, but h40/h80 remained identical to TG20 retry at 1/200 mates, 1 chain completion, 0 rook losses, and the same repetition counts. M4 consolidation: 0.
+- Next checkpoint should inspect why retry-edge transfer is behaviorally redundant before broad training. Reasonable options are to mine richer retry traces, add one isolated sensor-composition primitive, or improve continuation candidate construction; do not just increase runtime over the same edge-bonus mechanism.
 
 ## Current Architecture Guardrail
 

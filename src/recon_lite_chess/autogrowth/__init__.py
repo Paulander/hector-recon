@@ -73,6 +73,11 @@ from .positions import (
     generate_position_sets,
     is_valid_krk_seed,
 )
+from .retry_edges import (
+    RetryEdgeConfig,
+    RetryEdgeResult,
+    run_retry_edge_experiment,
+)
 from .script_candidates import (
     LocalScriptConfig,
     LocalScriptMetrics,
@@ -159,6 +164,8 @@ __all__ = [
     "ContextSpecializedCandidateResult",
     "RiskAwareCandidateConfig",
     "RiskAwareCandidateResult",
+    "RetryEdgeConfig",
+    "RetryEdgeResult",
     "SandboxConfig",
     "SandboxMetrics",
     "SandboxResult",
@@ -208,6 +215,7 @@ __all__ = [
     "run_fragment_chain_curriculum",
     "run_lag_terminal_experiment",
     "run_risk_aware_candidate_experiment",
+    "run_retry_edge_experiment",
     "suppressor_confirms",
     "choose_local_script_action",
     "choose_lag_fragment_chain_action",
