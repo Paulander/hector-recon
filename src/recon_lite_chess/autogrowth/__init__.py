@@ -166,6 +166,7 @@ from .suppressor import (
     suppressor_confirms,
 )
 from .terminal_substrate import (
+    TerminalFoundationBundle,
     TerminalAffordanceLearner,
     TerminalSubstrateConfig,
     TerminalSubstrateResult,
@@ -174,6 +175,12 @@ from .terminal_substrate import (
     feature_substrate_coverage_sample,
     run_terminal_substrate_revival,
     terminal_action_feature_keys,
+    train_terminal_foundation_bundle,
+)
+from .terminal_edge_fence_validation import (
+    TerminalEdgeFenceValidationConfig,
+    TerminalEdgeFenceValidationResult,
+    run_terminal_edge_fence_validation,
 )
 from .traces import (
     TraceCollectionConfig,
@@ -259,6 +266,9 @@ __all__ = [
     "SandboxResult",
     "ScriptFragmentConfig",
     "ScriptFragmentResult",
+    "TerminalEdgeFenceValidationConfig",
+    "TerminalEdgeFenceValidationResult",
+    "TerminalFoundationBundle",
     "TerminalAffordanceLearner",
     "TerminalSubstrateConfig",
     "TerminalSubstrateResult",
@@ -329,7 +339,9 @@ __all__ = [
     "feature_substrate_coverage_sample",
     "score_non_terminal_progress",
     "run_terminal_substrate_revival",
+    "run_terminal_edge_fence_validation",
     "terminal_action_feature_keys",
     "train_growth_candidates",
+    "train_terminal_foundation_bundle",
     "validate_learner_record",
 ]

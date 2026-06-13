@@ -789,6 +789,40 @@ do not M4-consolidate fence, and do not proceed to broad KRK or ecological
 spawning. Keep `ActionRanker` as an ablation baseline until the edge/fence rerun
 proves whether the terminal substrate changes transfer.
 
+### TG26i: Terminal-Native Edge/Fence Validation
+
+Status: implemented as a useful failure.
+
+This checkpoint reruns bounded edge/fence validation with the TG26h terminal
+foundation and terminal-native stage learners. `ActionRanker`/TG26g is retained
+only as reference scaffolding. The validation keeps filtered, unfiltered, and
+boundary/near-miss slices separate.
+
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_tg26i_terminal_edge_fence_validation.json`
+- Bounded run: 32 filtered train-pool positions, 16 heldout positions per slice,
+  16 fence rehearsal positions per rehearsal slice, top-K 3 deep scoring, and 2
+  train chunks.
+- Foundation regression passes: Mate_In_1 1.0, Mate_In_2 0.90.
+- Edge: filtered 13/16, unfiltered 8/16, boundary 4/16, safety clean.
+- Fence: filtered 8/16, unfiltered 1/16, boundary 0/16, safety clean.
+- M3 updates: edge 418,528; fence 432,784.
+- M4 consolidation events: 0.
+- Compared with TG26g, edge boundary is unchanged, edge unfiltered drops by 4,
+  fence unfiltered drops by 2, and fence boundary remains 0.
+- A larger 64/32/top-K 6 run was stopped after roughly 16 minutes because
+  terminal-native handoff scoring needs persisted/progress-aware pools before
+  scale-up.
+
+Decision: fail/continue only after audit. TG26h fixed the foundation substrate,
+but TG26i shows that terminal-native one-step feature terminals do not by
+themselves solve fence boundary transfer. Do not add more one-step candidates or
+run broad KRK from this state. The next decision should inspect fence boundary
+failures and decide whether the missing primitive is temporal/compositional
+TERMINAL structure, better handoff-region terminals, or pool/scoring
+throughput.
+
 ### Future TG: Sensor/Circuit Growth Primitives
 
 Status: direction recorded; LAG has one isolated TG19 checkpoint, TG20 local-continuation use, TG21 retry-edge transfer test, and TG23 shows ungated candidate expansion is too imprecise. AND/OR/XOR and broader sensor circuits are still not implemented in this runway.

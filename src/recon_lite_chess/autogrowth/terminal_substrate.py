@@ -326,10 +326,57 @@ class TerminalSubstrateResult:
         return output
 
 
+@dataclass(frozen=True)
+class TerminalFoundationBundle:
+    """Reusable trained TG26h foundation learners for downstream curriculum."""
+
+    config: TerminalSubstrateConfig
+    mate1_train: tuple[str, ...]
+    mate1_heldout: tuple[str, ...]
+    mate1_mirror: tuple[str, ...]
+    mate2_train: tuple[str, ...]
+    mate2_heldout: tuple[str, ...]
+    mate1_learner: TerminalAffordanceLearner
+    mate2_first_learner: TerminalAffordanceLearner | None
+    payload: dict[str, Any]
+
+
 def run_terminal_substrate_revival(
     *,
     config: TerminalSubstrateConfig,
 ) -> TerminalSubstrateResult:
+    bundle = train_terminal_foundation_bundle(config=config)
+    action_baseline = _run_action_ranker_baseline(
+        config=config,
+        mate1_train=bundle.mate1_train,
+        mate1_heldout=bundle.mate1_heldout,
+        mate1_mirror=bundle.mate1_mirror,
+    )
+    terminal_native = bundle.payload
+    decision = _decision(config=config, terminal_native=terminal_native)
+    return TerminalSubstrateResult(
+        config=config,
+        action_ranker_audit=action_ranker_behavior_audit(),
+        feature_coverage=feature_substrate_coverage_sample(bundle.mate1_train[0]),
+        dataset={
+            "mate1_train_count": len(bundle.mate1_train),
+            "mate1_heldout_count": len(bundle.mate1_heldout),
+            "mate1_mirror_count": len(bundle.mate1_mirror),
+            "mate2_train_count": terminal_native["mate2"]["dataset"]["train_count"],
+            "mate2_heldout_count": terminal_native["mate2"]["dataset"]["heldout_count"],
+        },
+        action_ranker_baseline=action_baseline,
+        terminal_native=terminal_native,
+        decision=decision,
+    )
+
+
+def train_terminal_foundation_bundle(
+    *,
+    config: TerminalSubstrateConfig,
+) -> TerminalFoundationBundle:
+    """Train TG26h Mate_In_1/Mate_In_2 terminal learners and keep objects."""
+
     mate1_train = tuple(_generate_mate_in_one_positions(
         count=config.mate1_train_count,
         seed=config.seed,
@@ -344,33 +391,22 @@ def run_terminal_substrate_revival(
     ))
     mate1_mirror = tuple(_mirrored_positions(mate1_heldout, limit=config.mate1_mirror_count))
 
-    action_baseline = _run_action_ranker_baseline(
-        config=config,
-        mate1_train=mate1_train,
-        mate1_heldout=mate1_heldout,
-        mate1_mirror=mate1_mirror,
-    )
     terminal_native = _run_terminal_native(
         config=config,
         mate1_train=mate1_train,
         mate1_heldout=mate1_heldout,
         mate1_mirror=mate1_mirror,
     )
-    decision = _decision(config=config, terminal_native=terminal_native)
-    return TerminalSubstrateResult(
+    return TerminalFoundationBundle(
         config=config,
-        action_ranker_audit=action_ranker_behavior_audit(),
-        feature_coverage=feature_substrate_coverage_sample(mate1_train[0]),
-        dataset={
-            "mate1_train_count": len(mate1_train),
-            "mate1_heldout_count": len(mate1_heldout),
-            "mate1_mirror_count": len(mate1_mirror),
-            "mate2_train_count": terminal_native["mate2"]["dataset"]["train_count"],
-            "mate2_heldout_count": terminal_native["mate2"]["dataset"]["heldout_count"],
-        },
-        action_ranker_baseline=action_baseline,
-        terminal_native=terminal_native,
-        decision=decision,
+        mate1_train=mate1_train,
+        mate1_heldout=mate1_heldout,
+        mate1_mirror=mate1_mirror,
+        mate2_train=tuple(terminal_native["mate2"].get("train_fens", ())),
+        mate2_heldout=tuple(terminal_native["mate2"].get("heldout_fens", ())),
+        mate1_learner=terminal_native["_mate1_learner"],
+        mate2_first_learner=terminal_native["_mate2_first_learner"],
+        payload=_strip_runtime_learners(terminal_native),
     )
 
 
@@ -645,6 +681,8 @@ def _run_action_ranker_baseline(
         mate2_metrics = {
             "enabled": True,
             "dataset": {"train_count": len(mate2_train), "heldout_count": len(mate2_heldout)},
+            "train_fens": mate2_train,
+            "heldout_fens": mate2_heldout,
             "training": train,
             "heldout": heldout,
             "m4_consolidation_event_count": int(
@@ -756,7 +794,16 @@ def _run_terminal_native(
         "mate2": mate2_metrics,
         "terminal_substrate": mate1_learner.to_dict(max_terminals=12),
         "mate2_first_terminal_substrate": None if mate2_learner is None else mate2_learner.to_dict(max_terminals=12),
+        "_mate1_learner": mate1_learner,
+        "_mate2_first_learner": mate2_learner,
     }
+
+
+def _strip_runtime_learners(payload: dict[str, Any]) -> dict[str, Any]:
+    stripped = dict(payload)
+    stripped.pop("_mate1_learner", None)
+    stripped.pop("_mate2_first_learner", None)
+    return stripped
 
 
 def _train_terminal_mate_in_one(
