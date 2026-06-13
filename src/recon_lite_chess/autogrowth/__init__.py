@@ -165,6 +165,16 @@ from .suppressor import (
     run_local_suppressor_experiment,
     suppressor_confirms,
 )
+from .terminal_substrate import (
+    TerminalAffordanceLearner,
+    TerminalSubstrateConfig,
+    TerminalSubstrateResult,
+    action_ranker_behavior_audit,
+    extract_terminal_feature_vector,
+    feature_substrate_coverage_sample,
+    run_terminal_substrate_revival,
+    terminal_action_feature_keys,
+)
 from .traces import (
     TraceCollectionConfig,
     TraceCollectionResult,
@@ -249,6 +259,9 @@ __all__ = [
     "SandboxResult",
     "ScriptFragmentConfig",
     "ScriptFragmentResult",
+    "TerminalAffordanceLearner",
+    "TerminalSubstrateConfig",
+    "TerminalSubstrateResult",
     "TraceCollectionConfig",
     "TraceCollectionResult",
     "TopologicalGrowthRunwayConfig",
@@ -307,11 +320,16 @@ __all__ = [
     "mine_retry_expansion_candidates",
     "derive_local_precision_gate",
     "audit_confinement_sign_semantics",
+    "action_ranker_behavior_audit",
     "suppressor_confirms",
     "choose_local_script_action",
     "choose_lag_fragment_chain_action",
     "choose_continuation_retry_action",
+    "extract_terminal_feature_vector",
+    "feature_substrate_coverage_sample",
     "score_non_terminal_progress",
+    "run_terminal_substrate_revival",
+    "terminal_action_feature_keys",
     "train_growth_candidates",
     "validate_learner_record",
 ]

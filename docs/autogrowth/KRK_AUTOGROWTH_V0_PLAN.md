@@ -760,6 +760,35 @@ Current result:
 
 Decision: fail cleanly. TG23 proves the no-sibling gap can be filled mechanically, but ungated retry-context expansion worsens the only current conversion signal. The problem is not merely missing candidate count; it is missing precision in when new candidates should compete. Do not add more ungated retry candidates. The next checkpoint should either add a local context terminal/composition primitive for retry precision, or require stronger train support before expansion candidates can enter local competition.
 
+### TG26h: FeatureHub / Terminal Substrate Revival
+
+Status: implemented as a foundation reset before returning to edge/fence.
+
+This checkpoint responds to the TG26g failure by separating the old `ActionRanker`
+scaffold from the intended ReCoN terminal substrate. The trainer still uses the
+dense Mate_In_1/Mate_In_2 curriculum distribution, but behavior-changing credit
+is represented by first-class `StemCellTerminal` feature-vector TERMINALs with
+local M3 weights. The legal-move list remains an environment interface; the
+artifact marks the remaining synchronous Python batch loop as scaffold.
+
+Current result:
+
+- `reports/autogrowth/krk_autogrowth_tg26h_terminal_substrate_revival.json`
+- Terminal-native Mate_In_1: 100/100 heldout, 40/40 mirrored, M4 event count 1.
+- Terminal-native Mate_In_2: 90/100 heldout conversion, M4 event count 1.
+- Same-split diagnostic ActionRanker baseline: Mate_In_2 83/100.
+- `ActionRanker.choose()` paths are audited and classified as scaffold/baseline,
+  not the primary learning claim.
+- Learner-visible terminal features remain generic board/action/graph features;
+  schedule labels, runtime tablebase/DTM move source, and direct provider
+  override remain false.
+
+Decision: continue, but only back into bounded edge/fence validation through the
+terminal-native foundation path. Do not use TG26h to claim edge/fence competence,
+do not M4-consolidate fence, and do not proceed to broad KRK or ecological
+spawning. Keep `ActionRanker` as an ablation baseline until the edge/fence rerun
+proves whether the terminal substrate changes transfer.
+
 ### Future TG: Sensor/Circuit Growth Primitives
 
 Status: direction recorded; LAG has one isolated TG19 checkpoint, TG20 local-continuation use, TG21 retry-edge transfer test, and TG23 shows ungated candidate expansion is too imprecise. AND/OR/XOR and broader sensor circuits are still not implemented in this runway.
