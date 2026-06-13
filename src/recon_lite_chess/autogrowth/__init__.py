@@ -46,6 +46,11 @@ from .fence_boundary_rehearsal import (
     FenceBoundaryRehearsalResult,
     run_fence_boundary_rehearsal,
 )
+from .fence_boundary_signal import (
+    FenceBoundarySignalConfig,
+    FenceBoundarySignalResult,
+    run_fence_boundary_signal,
+)
 from .edge_fence_curriculum import (
     EdgeFenceCurriculumConfig,
     EdgeFenceCurriculumResult,
@@ -198,6 +203,8 @@ __all__ = [
     "EdgeFenceCurriculumResult",
     "FenceBoundaryRehearsalConfig",
     "FenceBoundaryRehearsalResult",
+    "FenceBoundarySignalConfig",
+    "FenceBoundarySignalResult",
     "FORBIDDEN_LEARNER_TERMS",
     "ActionRanker",
     "FoundationCurriculumConfig",
@@ -286,6 +293,7 @@ __all__ = [
     "run_curriculum_reward_recovery",
     "run_edge_fence_curriculum",
     "run_fence_boundary_rehearsal",
+    "run_fence_boundary_signal",
     "run_fragment_chain_curriculum",
     "run_foundation_curriculum",
     "run_handoff_filter_validation",

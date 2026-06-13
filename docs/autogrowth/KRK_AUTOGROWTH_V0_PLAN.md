@@ -167,6 +167,12 @@ generic feature or credit signal that distinguishes useful fence-preserving
 progress from harmless-looking no-progress moves. Keep the change local to
 ReCoN ACTION/TERMINAL credit; do not introduce a direct strategy provider.
 
+If a bounded local delta ACTION signal still leaves fence boundary transfer at
+zero, pause for external audit before adding more mechanisms. The audit should
+check whether the current ACTION feature/credit representation is expressive
+enough for fence boundary bridging, or whether the next step should be a local
+sensor/temporal primitive rather than another reward tweak.
+
 ## Metrics
 
 Primary:
