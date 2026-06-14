@@ -34,6 +34,13 @@ from .curriculum_reward_recovery import (
     run_curriculum_reward_recovery,
     score_non_terminal_progress,
 )
+from .curated_terminal_curriculum import (
+    CuratedTerminalCurriculumConfig,
+    CuratedTerminalCurriculumResult,
+    curated_stage_entries,
+    run_curated_terminal_curriculum,
+    stage_inventory,
+)
 from .evaluate import (
     ArmMetrics,
     EvaluationConfig,
@@ -214,6 +221,8 @@ __all__ = [
     "ContinuationRetryResult",
     "CurriculumRewardRecoveryConfig",
     "CurriculumRewardRecoveryResult",
+    "CuratedTerminalCurriculumConfig",
+    "CuratedTerminalCurriculumResult",
     "EvaluationConfig",
     "EvaluationResult",
     "EdgeFenceCurriculumConfig",
@@ -281,6 +290,7 @@ __all__ = [
     "build_triplet_chain_view",
     "can_mate_in_one",
     "collect_trace_records",
+    "curated_stage_entries",
     "evaluate_arm",
     "evaluate_baseline_and_sham",
     "evaluate_candidate_sandbox",
@@ -314,6 +324,7 @@ __all__ = [
     "run_context_specialized_candidate_experiment",
     "run_continuation_retry_experiment",
     "run_curriculum_reward_recovery",
+    "run_curated_terminal_curriculum",
     "run_edge_fence_curriculum",
     "run_fence_boundary_rehearsal",
     "run_fence_boundary_signal",
@@ -338,6 +349,7 @@ __all__ = [
     "extract_terminal_feature_vector",
     "feature_substrate_coverage_sample",
     "score_non_terminal_progress",
+    "stage_inventory",
     "run_terminal_substrate_revival",
     "run_terminal_edge_fence_validation",
     "terminal_action_feature_keys",

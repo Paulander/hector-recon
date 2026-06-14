@@ -774,6 +774,8 @@ def _run_terminal_native(
         mate2_metrics = {
             "enabled": True,
             "dataset": {"train_count": len(mate2_train), "heldout_count": len(mate2_heldout)},
+            "train_fens": mate2_train,
+            "heldout_fens": mate2_heldout,
             "training": train,
             "heldout": heldout,
             "m4_consolidation_event_count": int(
