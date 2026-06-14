@@ -1,0 +1,51 @@
+"""Run TG26l context-gated curated Mate_In_2 checkpoint."""
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+from recon_lite_chess.autogrowth import (
+    ContextGatedCurriculumConfig,
+    run_context_gated_curriculum,
+)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--output",
+        default="reports/autogrowth/krk_autogrowth_tg26l_context_gated_curriculum.json",
+    )
+    parser.add_argument("--train-repetitions", type=int, default=5)
+    parser.add_argument("--gate-min-overlap", type=float, default=0.72)
+    parser.add_argument("--gate-granularity", choices=("position", "bucket"), default="position")
+    parser.add_argument("--max-samples", type=int, default=32)
+    parser.add_argument("--no-symmetries", action="store_true")
+    args = parser.parse_args()
+
+    result = run_context_gated_curriculum(
+        config=ContextGatedCurriculumConfig(
+            train_repetitions=args.train_repetitions,
+            gate_min_overlap=args.gate_min_overlap,
+            gate_granularity=args.gate_granularity,
+            max_samples=args.max_samples,
+            include_symmetries=not args.no_symmetries,
+        )
+    )
+    output = result.write_json(Path(args.output))
+    payload = result.to_dict()
+    evaluation = payload["evaluation"]
+    print(f"wrote {output}")
+    print(
+        "mate2",
+        evaluation["conversion_count"],
+        "/",
+        evaluation["position_count"],
+    )
+    print("checkpoint_pass", payload["decision"]["checkpoint_pass"])
+    print("m4_mate2", payload["decision"]["m4_mate2_consolidation_event_count"])
+
+
+if __name__ == "__main__":
+    main()

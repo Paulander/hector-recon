@@ -3,9 +3,12 @@ import json
 import chess
 
 from recon_lite_chess.autogrowth import (
+    ContextGatedCurriculumConfig,
     CuratedReplayCurriculumConfig,
     CuratedTerminalCurriculumConfig,
+    context_terminal_keys,
     curated_stage_entries,
+    run_context_gated_curriculum,
     run_curated_replay_curriculum,
     run_curated_terminal_curriculum,
     stage_inventory,
@@ -113,3 +116,32 @@ def test_tg26k_curated_replay_curriculum_records_growth_and_replay(tmp_path) -> 
     assert payload["mate2_bucket_sequence"][0]["growth"]["m3_update_delta"] > 0
     assert payload["mate2_bucket_sequence"][1]["replay"]["prior_replay_position_count"] > 0
     assert payload["final_evaluation"]["terminal_substrate"]["mate2_first_terminal_count"] > 0
+
+
+def test_tg26l_context_gated_curriculum_uses_generic_terminal_gates(tmp_path) -> None:
+    board = chess.Board("1k6/8/K7/8/8/8/8/R7 w - - 0 1")
+    keys = context_terminal_keys(board)
+    assert keys
+    assert all(key.startswith("before_terminal:") for key in keys)
+
+    result = run_context_gated_curriculum(
+        config=ContextGatedCurriculumConfig(
+            include_symmetries=False,
+            train_repetitions=1,
+            gate_granularity="position",
+            gate_min_overlap=0.72,
+            mate2_threshold=0.0,
+            max_samples=8,
+        )
+    )
+    payload = result.to_dict()
+    output = result.write_json(tmp_path / "tg26l.json")
+
+    assert output.exists()
+    assert payload["schema_version"] == "krk_autogrowth_tg26l_context_gated_curriculum.v0"
+    assert payload["purity_boundary"]["stage_labels_learner_visible"] is False
+    assert payload["purity_boundary"]["direct_provider_override"] is False
+    assert payload["dataset"]["gate_granularity"] == "position"
+    assert payload["dataset"]["mate2_gate_context_count"] >= payload["dataset"]["mate2_bucket_count"]
+    assert payload["evaluation"]["gate_activation_summary"]["no_confirmed_gate_count"] == 0
+    assert payload["training"]["mate2_first_terminal_count_by_bucket"]

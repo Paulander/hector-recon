@@ -28,6 +28,12 @@ from .continuation_retry import (
     evaluate_continuation_retry_arm,
     run_continuation_retry_experiment,
 )
+from .context_gated_curriculum import (
+    ContextGatedCurriculumConfig,
+    ContextGatedCurriculumResult,
+    context_terminal_keys,
+    run_context_gated_curriculum,
+)
 from .curriculum_reward_recovery import (
     CurriculumRewardRecoveryConfig,
     CurriculumRewardRecoveryResult,
@@ -224,6 +230,8 @@ __all__ = [
     "ContinuationRetryConfig",
     "ContinuationRetryMetrics",
     "ContinuationRetryResult",
+    "ContextGatedCurriculumConfig",
+    "ContextGatedCurriculumResult",
     "CurriculumRewardRecoveryConfig",
     "CurriculumRewardRecoveryResult",
     "CuratedTerminalCurriculumConfig",
@@ -297,6 +305,7 @@ __all__ = [
     "build_triplet_chain_view",
     "can_mate_in_one",
     "collect_trace_records",
+    "context_terminal_keys",
     "curated_stage_entries",
     "evaluate_arm",
     "evaluate_baseline_and_sham",
@@ -329,6 +338,7 @@ __all__ = [
     "run_script_fragment_experiment",
     "run_topological_growth_runway",
     "run_context_specialized_candidate_experiment",
+    "run_context_gated_curriculum",
     "run_continuation_retry_experiment",
     "run_curriculum_reward_recovery",
     "run_curated_terminal_curriculum",
