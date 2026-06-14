@@ -1,0 +1,5592 @@
+{
+  "config": {
+    "depth": 16,
+    "hash_mb": 32,
+    "include_symmetries": true,
+    "stockfish_path": "/tmp/stockfish-local/usr/games/stockfish",
+    "threads": 1
+  },
+  "engine": {
+    "author": "the Stockfish developers (see AUTHORS file)",
+    "name": "Stockfish 16"
+  },
+  "rows": [
+    {
+      "agrees_strict_mate_in_two": true,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Kb6 (approach) 2.Ra1#",
+      "exact": {
+        "classification": "strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [
+          "c5b6"
+        ],
+        "mate_in_one_moves": []
+      },
+      "fen": "k7/8/8/2K5/8/8/8/7R w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": true,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": "c5b6",
+        "centipawn_score": 99998,
+        "classification": "stockfish_mate_in_2",
+        "depth": 16,
+        "mate_score": 2,
+        "nodes": 595,
+        "pv": [
+          "c5b6",
+          "a8b8",
+          "h1h8"
+        ],
+        "seldepth": 4
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": true,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Kb6 (approach) 2.Ra1#",
+      "exact": {
+        "classification": "strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [
+          "f5g6"
+        ],
+        "mate_in_one_moves": []
+      },
+      "fen": "7k/8/8/5K2/8/8/8/R7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": true,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": "f5g6",
+        "centipawn_score": 99998,
+        "classification": "stockfish_mate_in_2",
+        "depth": 16,
+        "mate_score": 2,
+        "nodes": 643,
+        "pv": [
+          "f5g6",
+          "h8g8",
+          "a1a8"
+        ],
+        "seldepth": 4
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": true,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Kb6 (approach) 2.Ra1#",
+      "exact": {
+        "classification": "strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [
+          "c4b3"
+        ],
+        "mate_in_one_moves": []
+      },
+      "fen": "7R/8/8/8/2K5/8/8/k7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": true,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": "c4b3",
+        "centipawn_score": 99998,
+        "classification": "stockfish_mate_in_2",
+        "depth": 16,
+        "mate_score": 2,
+        "nodes": 821,
+        "pv": [
+          "c4b3",
+          "a1b1",
+          "h8h1"
+        ],
+        "seldepth": 4
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": true,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Kb6 (approach) 2.Ra1#",
+      "exact": {
+        "classification": "strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [
+          "e3f2"
+        ],
+        "mate_in_one_moves": []
+      },
+      "fen": "R7/8/8/8/8/4K3/8/7k w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": true,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": "e3f2",
+        "centipawn_score": 99998,
+        "classification": "stockfish_mate_in_2",
+        "depth": 16,
+        "mate_score": 2,
+        "nodes": 2023,
+        "pv": [
+          "e3f2",
+          "h1h2",
+          "a8h8"
+        ],
+        "seldepth": 4
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": true,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Kb6 (approach) 2.Ra1#",
+      "exact": {
+        "classification": "strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [
+          "d6c7"
+        ],
+        "mate_in_one_moves": []
+      },
+      "fen": "k7/8/3K4/8/8/8/8/7R w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": true,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": "d6c7",
+        "centipawn_score": 99998,
+        "classification": "stockfish_mate_in_2",
+        "depth": 16,
+        "mate_score": 2,
+        "nodes": 555,
+        "pv": [
+          "d6c7",
+          "a8a7",
+          "h1a1"
+        ],
+        "seldepth": 4
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/k7/1K6/8/8/8/8/7R w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/7k/6K1/8/8/8/8/R7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "7R/8/8/8/8/1K6/k7/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "R7/8/8/8/8/8/5K2/6k1 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "1k6/2K5/8/8/8/8/8/7R w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Kb6 (any) 2.Ra8# (approach + mate)",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k7/8/1K6/8/8/8/8/R7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Kb6 (any) 2.Ra8# (approach + mate)",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "7k/8/6K1/8/8/8/8/7R w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Kb6 (any) 2.Ra8# (approach + mate)",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "R7/8/8/8/8/1K6/8/k7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Kb6 (any) 2.Ra8# (approach + mate)",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/8/5K2/R6k w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Kb6 (any) 2.Ra8# (approach + mate)",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k6R/2K5/8/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Kg6 (opposition) 2.Rh1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "7k/8/5K2/8/8/8/8/7R w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 3,
+      "python_chess_valid": false,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Kg6 (opposition) 2.Rh1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k7/8/2K5/8/8/8/8/R7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 3,
+      "python_chess_valid": false,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Kg6 (opposition) 2.Rh1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "7R/8/8/8/8/5K2/8/7k w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 3,
+      "python_chess_valid": false,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Kg6 (opposition) 2.Rh1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "R6k/8/5K2/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 3,
+      "python_chess_valid": false,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Kg6 (opposition) 2.Rh1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/2K5/8/k6R w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 3,
+      "python_chess_valid": false,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k7/8/8/8/8/K7/8/R7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": true,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": "a1b1",
+        "centipawn_score": 99993,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 7,
+        "nodes": 22977,
+        "pv": [
+          "a1b1",
+          "a8a7",
+          "b1b3",
+          "a7a6",
+          "a3a4",
+          "a6a7",
+          "a4a5",
+          "a7a8",
+          "a5b6",
+          "a8b8",
+          "b3c3",
+          "b8a8",
+          "c3c8"
+        ],
+        "seldepth": 14
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "7k/8/8/8/8/7K/8/7R w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": true,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": "h1g1",
+        "centipawn_score": 99993,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 7,
+        "nodes": 37658,
+        "pv": [
+          "h1g1",
+          "h8h7",
+          "h3h4",
+          "h7h6",
+          "g1g3",
+          "h6h7",
+          "h4h5",
+          "h7h8",
+          "h5g6",
+          "h8g8",
+          "g3f3",
+          "g8h8",
+          "f3f8"
+        ],
+        "seldepth": 14
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "R7/8/K7/8/8/8/8/k7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": true,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": "a6b5",
+        "centipawn_score": 99991,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 9,
+        "nodes": 133771,
+        "pv": [
+          "a6b5",
+          "a1b1",
+          "b5b4",
+          "b1b2",
+          "b4c4",
+          "b2c2",
+          "a8d8",
+          "c2b2",
+          "d8d2",
+          "b2c1",
+          "c4c3",
+          "c1b1",
+          "c3b3",
+          "b1c1"
+        ],
+        "seldepth": 17
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/8/8/R1K4k w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": true,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": "c1d2",
+        "centipawn_score": 99989,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 11,
+        "nodes": 83413,
+        "pv": [
+          "c1d2",
+          "h1g2",
+          "d2e3",
+          "g2g3",
+          "a1a5",
+          "g3g4",
+          "a5d5",
+          "g4g3",
+          "d5g5",
+          "g3h4",
+          "e3f4",
+          "h4h3",
+          "f4f3",
+          "h3h2",
+          "g5a5",
+          "h2h1",
+          "a5h5",
+          "h1g1"
+        ],
+        "seldepth": 17
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "stage_name_mate_in_2",
+        "optimal_moves_2"
+      ],
+      "description": "1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k4K1R/8/8/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": true,
+      "stage_id": 1,
+      "stage_index": 1,
+      "stage_name": "Mate_In_2",
+      "stockfish": {
+        "bestmove": "f8e7",
+        "centipawn_score": 99989,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 11,
+        "nodes": 35928,
+        "pv": [
+          "f8e7",
+          "a8a7",
+          "h8h5",
+          "a7b7",
+          "e7d6",
+          "b7b6",
+          "h5e5",
+          "b6b7",
+          "e5b5",
+          "b7a7",
+          "d6c7",
+          "a7a6",
+          "c7c6",
+          "a6a7",
+          "b5b3"
+        ],
+        "seldepth": 20
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge\u2011trap close; king inside, no immediate mate.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "1R6/8/8/8/2K5/8/k7/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "c4c3",
+        "centipawn_score": 99995,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 5,
+        "nodes": 2509,
+        "pv": [
+          "c4c3",
+          "a2a1",
+          "b8a8",
+          "a1b1",
+          "c3b3",
+          "b1c1",
+          "a8d8",
+          "c1b1",
+          "d8d1"
+        ],
+        "seldepth": 10
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge\u2011trap close; king inside, no immediate mate.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "6R1/8/8/8/5K2/8/7k/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "f4f3",
+        "centipawn_score": 99996,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 4,
+        "nodes": 3501,
+        "pv": [
+          "f4f3",
+          "h2h1",
+          "g8h8",
+          "h1g1",
+          "h8h5",
+          "g1f1",
+          "h5h1"
+        ],
+        "seldepth": 8
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge\u2011trap close; king inside, no immediate mate.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/k7/8/2K5/8/8/8/1R6 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "c5c6",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 1138,
+        "pv": [
+          "c5c6",
+          "a7a8",
+          "c6c7",
+          "a8a7",
+          "b1a1"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge\u2011trap close; king inside, no immediate mate.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/3K4/7R/1k6 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "d3c3",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 3334,
+        "pv": [
+          "d3c3",
+          "b1a1",
+          "c3b3",
+          "a1b1",
+          "h2h1"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge\u2011trap close; king inside, no immediate mate.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "6k1/R7/4K3/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "e6f6",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 2055,
+        "pv": [
+          "e6f6",
+          "g8h8",
+          "f6g6",
+          "h8g8",
+          "a7a8"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Bottom edge trap with rook fence; approach conversion.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/5K2/5R2/3k4 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "f3e3",
+        "centipawn_score": 99994,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 6,
+        "nodes": 34486,
+        "pv": [
+          "f3e3",
+          "d1c1",
+          "e3d3",
+          "c1b1",
+          "d3c3",
+          "b1a1",
+          "f2f1",
+          "a1a2",
+          "f1g1",
+          "a2a3",
+          "g1a1"
+        ],
+        "seldepth": 12
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Bottom edge trap with rook fence; approach conversion.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/2K5/2R5/4k3 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "c3d3",
+        "centipawn_score": 99994,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 6,
+        "nodes": 19452,
+        "pv": [
+          "c3d3",
+          "e1d1",
+          "c2c5",
+          "d1e1",
+          "d3e3",
+          "e1f1",
+          "e3f3",
+          "f1e1",
+          "c5d5",
+          "e1f1",
+          "d5d1"
+        ],
+        "seldepth": 12
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Bottom edge trap with rook fence; approach conversion.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "3k4/5R2/5K2/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "f7h7",
+        "centipawn_score": 99986,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 14,
+        "nodes": 27537,
+        "pv": [
+          "f7h7",
+          "d8c8",
+          "f6e5",
+          "c8b8",
+          "e5d6",
+          "b8a8",
+          "d6c7",
+          "a8a7",
+          "c7c6",
+          "a7a8",
+          "h7h8",
+          "a8a7",
+          "h8h5",
+          "a7a8",
+          "h5e5",
+          "a8b8"
+        ],
+        "seldepth": 16
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Bottom edge trap with rook fence; approach conversion.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/1RK5/8/k7/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "c6c5",
+        "centipawn_score": 99993,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 7,
+        "nodes": 28217,
+        "pv": [
+          "c6c5",
+          "a4a3",
+          "c5c4",
+          "a3a2",
+          "c4c3",
+          "a2a1",
+          "c3b3",
+          "a1b1",
+          "b6d6",
+          "b1c1",
+          "d6d7",
+          "c1b1"
+        ],
+        "seldepth": 16
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Bottom edge trap with rook fence; approach conversion.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/7k/8/5KR1/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "f3f2",
+        "centipawn_score": 99992,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 8,
+        "nodes": 10317,
+        "pv": [
+          "f3f2",
+          "h5h6",
+          "f2g2",
+          "h6h7",
+          "g2h3",
+          "h7h6",
+          "h3h4",
+          "h6h7",
+          "h4h5",
+          "h7h8",
+          "h5g6",
+          "h8g8",
+          "g3f3",
+          "g8h8",
+          "f3f8"
+        ],
+        "seldepth": 16
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Bottom edge trap; rook on g2, king close.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/5K2/6R1/3k4 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "f3e3",
+        "centipawn_score": 99995,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 5,
+        "nodes": 9675,
+        "pv": [
+          "f3e3",
+          "d1c1",
+          "e3d3",
+          "c1b1",
+          "d3c3",
+          "b1a1",
+          "c3b3",
+          "a1b1",
+          "g2g1"
+        ],
+        "seldepth": 10
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Bottom edge trap; rook on g2, king close.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/2K5/1R6/4k3 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "c3d3",
+        "centipawn_score": 99994,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 6,
+        "nodes": 10499,
+        "pv": [
+          "c3d3",
+          "e1f1",
+          "d3e3",
+          "f1g1",
+          "e3f3",
+          "g1h1",
+          "b2b1",
+          "h1h2",
+          "b1a1",
+          "h2h3",
+          "a1h1"
+        ],
+        "seldepth": 12
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Bottom edge trap; rook on g2, king close.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "3k4/6R1/5K2/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "f6e6",
+        "centipawn_score": 99994,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 6,
+        "nodes": 3409,
+        "pv": [
+          "f6e6",
+          "d8c8",
+          "e6d6",
+          "c8b8",
+          "d6c6",
+          "b8a8",
+          "g7g8",
+          "a8a7",
+          "g8h8",
+          "a7a6",
+          "h8a8"
+        ],
+        "seldepth": 12
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Bottom edge trap; rook on g2, king close.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/1R6/2K5/8/k7/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "c6c5",
+        "centipawn_score": 99993,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 7,
+        "nodes": 4899,
+        "pv": [
+          "c6c5",
+          "a4a3",
+          "c5c4",
+          "a3a2",
+          "c4c3",
+          "a2a1",
+          "c3b3",
+          "a1b1",
+          "b7d7",
+          "b1c1",
+          "d7d8",
+          "c1b1",
+          "d8d1"
+        ],
+        "seldepth": 14
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Bottom edge trap; rook on g2, king close.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/7k/8/5K2/6R1/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "g2g3",
+        "centipawn_score": 99992,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 8,
+        "nodes": 4101,
+        "pv": [
+          "g2g3",
+          "h5h6",
+          "f3g2",
+          "h6h7",
+          "g2h3",
+          "h7h6",
+          "h3h4",
+          "h6h7",
+          "h4h5",
+          "h7h8",
+          "h5g6",
+          "h8g8",
+          "g3f3",
+          "g8h8",
+          "f3f8"
+        ],
+        "seldepth": 16
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Corner\u2011adjacent trap; king inside, rook fence.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/2K5/1R6/2k5 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 3,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "b2b8",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 1185,
+        "pv": [
+          "b2b8",
+          "c1d1",
+          "b8e8",
+          "d1c1",
+          "e8e1"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Corner\u2011adjacent trap; king inside, rook fence.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/5K2/6R1/5k2 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 3,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "g2g5",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 883,
+        "pv": [
+          "g2g5",
+          "f1e1",
+          "g5d5",
+          "e1f1",
+          "d5d1"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Corner\u2011adjacent trap; king inside, rook fence.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "2k5/1R6/2K5/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 3,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "b7b4",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 1244,
+        "pv": [
+          "b7b4",
+          "c8d8",
+          "b4e4",
+          "d8c8",
+          "e4e8"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Corner\u2011adjacent trap; king inside, rook fence.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/k1K5/1R6/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 3,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "b2f2",
+        "centipawn_score": 99996,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 4,
+        "nodes": 1760,
+        "pv": [
+          "b2f2",
+          "a3a4",
+          "c3c4",
+          "a4a3",
+          "f2h2",
+          "a3a4",
+          "h2a2"
+        ],
+        "seldepth": 8
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Corner\u2011adjacent trap; king inside, rook fence.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/6R1/5K1k/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 3,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "g7b7",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 1386,
+        "pv": [
+          "g7b7",
+          "h6h5",
+          "b7b4",
+          "h5h6",
+          "b4h4"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge trap with rook fence on 2nd rank.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/4K3/4R3/2k5 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "e2d2",
+        "centipawn_score": 99994,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 6,
+        "nodes": 3879,
+        "pv": [
+          "e2d2",
+          "c1b1",
+          "e3d3",
+          "b1a1",
+          "d3c3",
+          "a1b1",
+          "c3b3",
+          "b1c1",
+          "d2d6",
+          "c1b1",
+          "d6d1"
+        ],
+        "seldepth": 14
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge trap with rook fence on 2nd rank.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/3K4/3R4/5k2 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "d3e3",
+        "centipawn_score": 99995,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 5,
+        "nodes": 4093,
+        "pv": [
+          "d3e3",
+          "f1g1",
+          "e3f3",
+          "g1h1",
+          "d2d1",
+          "h1h2",
+          "d1a1",
+          "h2h3",
+          "a1h1"
+        ],
+        "seldepth": 10
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge trap with rook fence on 2nd rank.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "2k5/4R3/4K3/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "e6d6",
+        "centipawn_score": 99988,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 12,
+        "nodes": 4683,
+        "pv": [
+          "e6d6",
+          "c8d8",
+          "e7e4",
+          "d8c8",
+          "e4h4",
+          "c8b8",
+          "d6c6",
+          "b8a8",
+          "h4h8",
+          "a8a7",
+          "h8h5",
+          "a7b8",
+          "h5b5",
+          "b8a8",
+          "b5b1",
+          "a8a7",
+          "b1b3"
+        ],
+        "seldepth": 18
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge trap with rook fence on 2nd rank.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/1RK5/8/k7/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "c5c4",
+        "centipawn_score": 99993,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 7,
+        "nodes": 2736,
+        "pv": [
+          "c5c4",
+          "a3a2",
+          "c4c3",
+          "a2a1",
+          "b5h5",
+          "a1b1",
+          "h5e5",
+          "b1a1",
+          "e5e1",
+          "a1a2",
+          "e1g1",
+          "a2a3",
+          "g1a1"
+        ],
+        "seldepth": 14
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge trap with rook fence on 2nd rank.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/7k/8/5KR1/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "f4f3",
+        "centipawn_score": 99991,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 9,
+        "nodes": 8310,
+        "pv": [
+          "f4f3",
+          "h6h5",
+          "f3g3",
+          "h5h6",
+          "g3h4",
+          "h6h7",
+          "h4h5",
+          "h7h8",
+          "g4g1",
+          "h8h7",
+          "g1g3",
+          "h7h8",
+          "h5g6",
+          "h8g8",
+          "g3f3",
+          "g8h8"
+        ],
+        "seldepth": 18
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge trap (top edge), king inside, rook fence.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/k7/8/2K5/1R6/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 5,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "c5c6",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 4926,
+        "pv": [
+          "c5c6",
+          "a7a8",
+          "c6c7",
+          "a8a7",
+          "b4a4"
+        ],
+        "seldepth": 10
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge trap (top edge), king inside, rook fence.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/7k/8/5K2/6R1/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 5,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "f5f6",
+        "centipawn_score": 99995,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 5,
+        "nodes": 3277,
+        "pv": [
+          "f5f6",
+          "h7h8",
+          "f6g6",
+          "h8g8",
+          "g4e4",
+          "g8f8",
+          "e4e2",
+          "f8g8",
+          "e2e8"
+        ],
+        "seldepth": 10
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge trap (top edge), king inside, rook fence.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/1R6/2K5/8/k7/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 5,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "c4c3",
+        "centipawn_score": 99995,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 5,
+        "nodes": 2066,
+        "pv": [
+          "c4c3",
+          "a2a1",
+          "b5a5",
+          "a1b1",
+          "a5h5",
+          "b1a2",
+          "h5h1",
+          "a2a3",
+          "h1a1"
+        ],
+        "seldepth": 10
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge trap (top edge), king inside, rook fence.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/4K3/3R4/6k1 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 5,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "e3f3",
+        "centipawn_score": 99996,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 4,
+        "nodes": 1495,
+        "pv": [
+          "e3f3",
+          "g1h1",
+          "d2d1",
+          "h1h2",
+          "d1a1",
+          "h2h3",
+          "a1h1"
+        ],
+        "seldepth": 8
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge trap (top edge), king inside, rook fence.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "1k6/4R3/3K4/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 5,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "d6c6",
+        "centipawn_score": 99996,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 4,
+        "nodes": 1655,
+        "pv": [
+          "d6c6",
+          "b8a8",
+          "e7e8",
+          "a8a7",
+          "e8h8",
+          "a7a6",
+          "h8a8"
+        ],
+        "seldepth": 8
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Side edge trap; king inside, rook fence on g2.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/7k/8/5K2/8/8/6R1/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 6,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "g2g4",
+        "centipawn_score": 99995,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 5,
+        "nodes": 3034,
+        "pv": [
+          "g2g4",
+          "h7h6",
+          "f5f6",
+          "h6h7",
+          "g4e4",
+          "h7g8",
+          "e4h4",
+          "g8f8",
+          "h4h8"
+        ],
+        "seldepth": 10
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Side edge trap; king inside, rook fence on g2.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/k7/8/2K5/8/8/1R6/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 6,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "c5c6",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 3243,
+        "pv": [
+          "c5c6",
+          "a7a8",
+          "c6c7",
+          "a8a7",
+          "b2a2"
+        ],
+        "seldepth": 10
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Side edge trap; king inside, rook fence on g2.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/6R1/8/8/5K2/8/7k/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 6,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "f4f3",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 2201,
+        "pv": [
+          "f4f3",
+          "h2h1",
+          "f3f2",
+          "h1h2",
+          "g7h7"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Side edge trap; king inside, rook fence on g2.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "6k1/1R6/4K3/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 6,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "e6f6",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 1924,
+        "pv": [
+          "e6f6",
+          "g8h8",
+          "f6g6",
+          "h8g8",
+          "b7b8"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Side edge trap; king inside, rook fence on g2.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/3K4/6R1/1k6 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 6,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "d3c3",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 1050,
+        "pv": [
+          "d3c3",
+          "b1a1",
+          "c3b3",
+          "a1b1",
+          "g2g1"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge trap with king near corner; rook fence on b5.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "2K5/8/k7/1R6/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 7,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "b5e5",
+        "centipawn_score": 99993,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 7,
+        "nodes": 5113,
+        "pv": [
+          "b5e5",
+          "a6b6",
+          "c8d7",
+          "b6b7",
+          "e5e6",
+          "b7b8",
+          "d7c6",
+          "b8a8",
+          "e6e8",
+          "a8a7",
+          "e8h8",
+          "a7a6",
+          "h8a8"
+        ],
+        "seldepth": 14
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge trap with king near corner; rook fence on b5.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "5K2/8/7k/6R1/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 7,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "g5c5",
+        "centipawn_score": 99992,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 8,
+        "nodes": 6646,
+        "pv": [
+          "g5c5",
+          "h6g6",
+          "f8e7",
+          "g6g7",
+          "c5g5",
+          "g7h6",
+          "e7f6",
+          "h6h7",
+          "g5g3",
+          "h7h8",
+          "f6g6",
+          "h8g8",
+          "g3f3",
+          "g8h8",
+          "f3f8"
+        ],
+        "seldepth": 16
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge trap with king near corner; rook fence on b5.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/1R6/k7/8/2K5 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 7,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "b4b6",
+        "centipawn_score": 99988,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 12,
+        "nodes": 50501,
+        "pv": [
+          "b4b6",
+          "a3a2",
+          "c1c2",
+          "a2a3",
+          "c2c3",
+          "a3a4",
+          "c3b2",
+          "a4a5",
+          "b6b7",
+          "a5a4",
+          "b7b3",
+          "a4a5",
+          "b2a3"
+        ],
+        "seldepth": 14
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge trap with king near corner; rook fence on b5.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/7K/4R3/5k2 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 7,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "e2b2",
+        "centipawn_score": 99991,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 9,
+        "nodes": 10780,
+        "pv": [
+          "e2b2",
+          "f1e1",
+          "h3g3",
+          "e1f1",
+          "g3f3",
+          "f1e1",
+          "b2f2",
+          "e1d1",
+          "f3e3",
+          "d1c1",
+          "e3d3",
+          "c1b1",
+          "d3c3",
+          "b1a1",
+          "c3b3"
+        ],
+        "seldepth": 18
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Edge trap with king near corner; rook fence on b5.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "2k5/3R4/K7/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 7,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "d7h7",
+        "centipawn_score": 99984,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 16,
+        "nodes": 21399,
+        "pv": [
+          "d7h7",
+          "c8b8",
+          "a6b6",
+          "b8c8",
+          "b6c6",
+          "c8d8",
+          "c6d6",
+          "d8c8",
+          "h7h8",
+          "c8b7",
+          "d6d7",
+          "b7a7",
+          "d7c7",
+          "a7a6",
+          "c7c6"
+        ],
+        "seldepth": 16
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Classic edge trap; king close, rook on 7th.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "1k6/2R5/3K4/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 8,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "d6c6",
+        "centipawn_score": 99996,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 4,
+        "nodes": 1950,
+        "pv": [
+          "d6c6",
+          "b8a8",
+          "c7c8",
+          "a8a7",
+          "c8h8",
+          "a7a6",
+          "h8a8"
+        ],
+        "seldepth": 8
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Classic edge trap; king close, rook on 7th.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "6k1/5R2/4K3/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 8,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "e6f6",
+        "centipawn_score": 99996,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 4,
+        "nodes": 2497,
+        "pv": [
+          "e6f6",
+          "g8h8",
+          "f6g6",
+          "h8g8",
+          "f7f4",
+          "g8h8",
+          "f4f8"
+        ],
+        "seldepth": 8
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Classic edge trap; king close, rook on 7th.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/3K4/2R5/1k6 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 8,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "d3c3",
+        "centipawn_score": 99996,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 4,
+        "nodes": 2249,
+        "pv": [
+          "d3c3",
+          "b1a1",
+          "c2c1",
+          "a1a2",
+          "c1g1",
+          "a2a3",
+          "g1a1"
+        ],
+        "seldepth": 10
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Classic edge trap; king close, rook on 7th.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/5K2/6R1/7k/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 8,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "g3g5",
+        "centipawn_score": 99995,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 5,
+        "nodes": 2951,
+        "pv": [
+          "g3g5",
+          "h2h1",
+          "f4f3",
+          "h1h2",
+          "g5a5",
+          "h2h1",
+          "f3f2",
+          "h1h2",
+          "a5h5"
+        ],
+        "seldepth": 10
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Classic edge trap; king close, rook on 7th.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/k7/1R6/2K5/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 8,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "c5b5",
+        "centipawn_score": 99996,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 4,
+        "nodes": 3038,
+        "pv": [
+          "c5b5",
+          "a7a8",
+          "b5c6",
+          "a8a7",
+          "c6c7",
+          "a7a8",
+          "b6a6"
+        ],
+        "seldepth": 12
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Bottom edge trap; king inside, rook fence on f2.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/3K4/5R2/1k6 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 9,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "d3c3",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 3025,
+        "pv": [
+          "d3c3",
+          "b1a1",
+          "c3b3",
+          "a1b1",
+          "f2f1"
+        ],
+        "seldepth": 8
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Bottom edge trap; king inside, rook fence on f2.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/4K3/2R5/6k1 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 9,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "e3f3",
+        "centipawn_score": 99996,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 4,
+        "nodes": 1795,
+        "pv": [
+          "e3f3",
+          "g1h1",
+          "c2c1",
+          "h1h2",
+          "c1a1",
+          "h2h3",
+          "a1h1"
+        ],
+        "seldepth": 8
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Bottom edge trap; king inside, rook fence on f2.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "1k6/5R2/3K4/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 9,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "d6c6",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 2556,
+        "pv": [
+          "d6c6",
+          "b8a8",
+          "c6b6",
+          "a8b8",
+          "f7f8"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Bottom edge trap; king inside, rook fence on f2.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/1R6/8/2K5/8/k7/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 9,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "c4c3",
+        "centipawn_score": 99995,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 5,
+        "nodes": 1614,
+        "pv": [
+          "c4c3",
+          "a2a1",
+          "c3b3",
+          "a1b1",
+          "b6d6",
+          "b1c1",
+          "d6d7",
+          "c1b1",
+          "d7d1"
+        ],
+        "seldepth": 10
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Bottom edge trap; king inside, rook fence on f2.",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/7k/8/5K2/8/6R1/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 9,
+      "python_chess_valid": true,
+      "stage_id": 2,
+      "stage_index": 2,
+      "stage_name": "Edge_Trap_Close",
+      "stockfish": {
+        "bestmove": "f5f6",
+        "centipawn_score": 99996,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 4,
+        "nodes": 1577,
+        "pv": [
+          "f5f6",
+          "h7h8",
+          "f6g6",
+          "h8g8",
+          "g3f3",
+          "g8h8",
+          "f3f8"
+        ],
+        "seldepth": 8
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance: Ke6 then Re8# or immediate threat",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "4k3/4R3/3K4/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance: Ke6 then Re8# or immediate threat",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "3k4/3R4/4K3/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance: Ke6 then Re8# or immediate threat",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/3K4/4R3/4k3 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance: Ke6 then Re8# or immediate threat",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/6Rk/5K2/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance: Ke6 then Re8# or immediate threat",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/2K5/kR6/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance right: Ke6 then Re8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "4k3/4R3/5K2/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance right: Ke6 then Re8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "3k4/3R4/2K5/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance right: Ke6 then Re8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/5K2/4R3/4k3 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance right: Ke6 then Re8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/5K2/6Rk/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance right: Ke6 then Re8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/kR6/2K5/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance corner: Kb6 then Ra8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "1k6/1R6/2K5/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance corner: Kb6 then Ra8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "6k1/6R1/5K2/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance corner: Kb6 then Ra8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/2K5/1R6/1k6 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance corner: Kb6 then Ra8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/5K2/6Rk/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance corner: Kb6 then Ra8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/kR6/2K5/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance bottom: Kf2 then Rh1# or threats",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/6K1/7R/7k w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 3,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance bottom: Kf2 then Rh1# or threats",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/1K6/R7/k7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 3,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance bottom: Kf2 then Rh1# or threats",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "7k/7R/6K1/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 3,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance bottom: Kf2 then Rh1# or threats",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "kR6/2K5/8/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 3,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance bottom: Kf2 then Rh1# or threats",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/8/5K2/6Rk w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 3,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance corner: Ka2 or Kc2 then Ra1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/1K6/R7/k7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance corner: Ka2 or Kc2 then Ra1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/6K1/7R/7k w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance corner: Ka2 or Kc2 then Ra1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k7/R7/1K6/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance corner: Ka2 or Kc2 then Ra1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/8/2K5/kR6 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Knight distance corner: Ka2 or Kc2 then Ra1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "6Rk/5K2/8/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 5,
+      "stage_name": "Edge_Fence_Knight",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Kb6 forces Ka8, then Ra1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k7/8/2K5/8/8/8/8/R7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 21,
+      "stage_index": 8,
+      "stage_name": "Opposition_Approach",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Kb6 forces Ka8, then Ra1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "7k/8/5K2/8/8/8/8/7R w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 21,
+      "stage_index": 8,
+      "stage_name": "Opposition_Approach",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Kb6 forces Ka8, then Ra1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "R7/8/8/8/8/2K5/8/k7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 21,
+      "stage_index": 8,
+      "stage_name": "Opposition_Approach",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Kb6 forces Ka8, then Ra1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/5K2/8/R6k w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 21,
+      "stage_index": 8,
+      "stage_name": "Opposition_Approach",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Kb6 forces Ka8, then Ra1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k6R/8/2K5/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 21,
+      "stage_index": 8,
+      "stage_name": "Opposition_Approach",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Ra2 waits, then Ka6 Ra8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k7/8/1K6/8/8/8/8/R7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": false,
+      "stage_id": 22,
+      "stage_index": 9,
+      "stage_name": "Tempo_Wait",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Ra2 waits, then Ka6 Ra8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "7k/8/6K1/8/8/8/8/7R w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": false,
+      "stage_id": 22,
+      "stage_index": 9,
+      "stage_name": "Tempo_Wait",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Ra2 waits, then Ka6 Ra8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "R7/8/8/8/8/1K6/8/k7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": false,
+      "stage_id": 22,
+      "stage_index": 9,
+      "stage_name": "Tempo_Wait",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Ra2 waits, then Ka6 Ra8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/8/5K2/R6k w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": false,
+      "stage_id": 22,
+      "stage_index": 9,
+      "stage_name": "Tempo_Wait",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Ra2 waits, then Ka6 Ra8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k6R/2K5/8/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": false,
+      "stage_id": 22,
+      "stage_index": 9,
+      "stage_name": "Tempo_Wait",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": true,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Rb1 tempo, then approach",
+      "exact": {
+        "classification": "strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [
+          "a1a2",
+          "a1a3",
+          "a1a4",
+          "a1a5",
+          "a1a6"
+        ],
+        "mate_in_one_moves": []
+      },
+      "fen": "1k6/8/2K5/8/8/8/8/R7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": true,
+      "stage_id": 22,
+      "stage_index": 9,
+      "stage_name": "Tempo_Wait",
+      "stockfish": {
+        "bestmove": "a1a4",
+        "centipawn_score": 99998,
+        "classification": "stockfish_mate_in_2",
+        "depth": 16,
+        "mate_score": 2,
+        "nodes": 519,
+        "pv": [
+          "a1a4",
+          "b8c8",
+          "a4a8"
+        ],
+        "seldepth": 4
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": true,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Rb1 tempo, then approach",
+      "exact": {
+        "classification": "strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [
+          "h1h2",
+          "h1h3",
+          "h1h4",
+          "h1h5",
+          "h1h6"
+        ],
+        "mate_in_one_moves": []
+      },
+      "fen": "6k1/8/5K2/8/8/8/8/7R w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": true,
+      "stage_id": 22,
+      "stage_index": 9,
+      "stage_name": "Tempo_Wait",
+      "stockfish": {
+        "bestmove": "h1h3",
+        "centipawn_score": 99998,
+        "classification": "stockfish_mate_in_2",
+        "depth": 16,
+        "mate_score": 2,
+        "nodes": 464,
+        "pv": [
+          "h1h3",
+          "g8f8",
+          "h3h8"
+        ],
+        "seldepth": 4
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": true,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Rb1 tempo, then approach",
+      "exact": {
+        "classification": "strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [
+          "a8a3",
+          "a8a4",
+          "a8a5",
+          "a8a6",
+          "a8a7"
+        ],
+        "mate_in_one_moves": []
+      },
+      "fen": "R7/8/8/8/8/2K5/8/1k6 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": true,
+      "stage_id": 22,
+      "stage_index": 9,
+      "stage_name": "Tempo_Wait",
+      "stockfish": {
+        "bestmove": "a8a3",
+        "centipawn_score": 99998,
+        "classification": "stockfish_mate_in_2",
+        "depth": 16,
+        "mate_score": 2,
+        "nodes": 555,
+        "pv": [
+          "a8a3",
+          "b1c1",
+          "a3a1"
+        ],
+        "seldepth": 4
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": true,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Rb1 tempo, then approach",
+      "exact": {
+        "classification": "strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [
+          "a1b1",
+          "a1c1",
+          "a1d1",
+          "a1e1",
+          "a1f1"
+        ],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/5K2/7k/R7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": true,
+      "stage_id": 22,
+      "stage_index": 9,
+      "stage_name": "Tempo_Wait",
+      "stockfish": {
+        "bestmove": "a1c1",
+        "centipawn_score": 99998,
+        "classification": "stockfish_mate_in_2",
+        "depth": 16,
+        "mate_score": 2,
+        "nodes": 652,
+        "pv": [
+          "a1c1",
+          "h2h3",
+          "c1h1"
+        ],
+        "seldepth": 4
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": true,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Rb1 tempo, then approach",
+      "exact": {
+        "classification": "strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [
+          "h8c8",
+          "h8d8",
+          "h8e8",
+          "h8f8",
+          "h8g8"
+        ],
+        "mate_in_one_moves": []
+      },
+      "fen": "7R/k7/2K5/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": true,
+      "stage_id": 22,
+      "stage_index": 9,
+      "stage_name": "Tempo_Wait",
+      "stockfish": {
+        "bestmove": "h8e8",
+        "centipawn_score": 99998,
+        "classification": "stockfish_mate_in_2",
+        "depth": 16,
+        "mate_score": 2,
+        "nodes": 463,
+        "pv": [
+          "h8e8",
+          "a7a6",
+          "e8a8"
+        ],
+        "seldepth": 4
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Ra7+ forces Ka8, then Ra1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/k7/8/1K6/R7/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 22,
+      "stage_index": 9,
+      "stage_name": "Tempo_Wait",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Ra7+ forces Ka8, then Ra1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/7k/8/6K1/7R/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 22,
+      "stage_index": 9,
+      "stage_name": "Tempo_Wait",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Ra7+ forces Ka8, then Ra1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/R7/1K6/8/k7/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 22,
+      "stage_index": 9,
+      "stage_name": "Tempo_Wait",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Ra7+ forces Ka8, then Ra1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/8/4K3/3R2k1 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 22,
+      "stage_index": 9,
+      "stage_name": "Tempo_Wait",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Ra7+ forces Ka8, then Ra1#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "1k2R3/3K4/8/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 22,
+      "stage_index": 9,
+      "stage_name": "Tempo_Wait",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Ra8# or approach then Ra8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k7/8/1K6/R7/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": false,
+      "stage_id": 20,
+      "stage_index": 10,
+      "stage_name": "Fence_Established",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Ra8# or approach then Ra8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "7k/8/6K1/7R/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": false,
+      "stage_id": 20,
+      "stage_index": 10,
+      "stage_name": "Fence_Established",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Ra8# or approach then Ra8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/R7/1K6/8/k7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": false,
+      "stage_id": 20,
+      "stage_index": 10,
+      "stage_name": "Fence_Established",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Ra8# or approach then Ra8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/8/5K2/4R2k w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": false,
+      "stage_id": 20,
+      "stage_index": 10,
+      "stage_name": "Fence_Established",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Ra8# or approach then Ra8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k2R4/2K5/8/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": false,
+      "stage_id": 20,
+      "stage_index": 10,
+      "stage_name": "Fence_Established",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Kg7 then Rh8# or Rh8+ first",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "7k/8/5K2/7R/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 20,
+      "stage_index": 10,
+      "stage_name": "Fence_Established",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Kg7 then Rh8# or Rh8+ first",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k7/8/2K5/R7/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 20,
+      "stage_index": 10,
+      "stage_name": "Fence_Established",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Kg7 then Rh8# or Rh8+ first",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/7R/5K2/8/7k w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 20,
+      "stage_index": 10,
+      "stage_name": "Fence_Established",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Kg7 then Rh8# or Rh8+ first",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "4R2k/8/5K2/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 20,
+      "stage_index": 10,
+      "stage_name": "Fence_Established",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Kg7 then Rh8# or Rh8+ first",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/2K5/8/k2R4 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 20,
+      "stage_index": 10,
+      "stage_name": "Fence_Established",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored: Kc6 then Rb8#",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "4k3/1R6/1K6/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": true,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": "b6c5",
+        "centipawn_score": 99993,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 7,
+        "nodes": 4667,
+        "pv": [
+          "b6c5",
+          "e8d8",
+          "c5d6",
+          "d8e8",
+          "b7a7",
+          "e8f8",
+          "d6e6",
+          "f8g8",
+          "e6f6",
+          "g8h8",
+          "f6g6",
+          "h8g8",
+          "a7a8"
+        ],
+        "seldepth": 14
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored: Kc6 then Rb8#",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "3k4/6R1/6K1/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": true,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": "g7f7",
+        "centipawn_score": 99990,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 10,
+        "nodes": 7423,
+        "pv": [
+          "g7f7",
+          "d8c8",
+          "g6f6",
+          "c8d8",
+          "f7h7",
+          "d8c8",
+          "f6e5",
+          "c8d8",
+          "e5d6",
+          "d8c8",
+          "h7g7",
+          "c8b8",
+          "d6c6",
+          "b8a8",
+          "g7g8",
+          "a8a7",
+          "g8h8"
+        ],
+        "seldepth": 16
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored: Kc6 then Rb8#",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/1K6/1R6/4k3 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": true,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": "b3c4",
+        "centipawn_score": 99992,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 8,
+        "nodes": 3737,
+        "pv": [
+          "b3c4",
+          "e1d1",
+          "c4d3",
+          "d1e1",
+          "d3e3",
+          "e1f1",
+          "b2c2",
+          "f1g1",
+          "e3f3",
+          "g1h1",
+          "c2c1",
+          "h1h2",
+          "c1a1",
+          "h2h3",
+          "a1h1"
+        ],
+        "seldepth": 16
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored: Kc6 then Rb8#",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/7k/8/8/5KR1/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": true,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": "g2g3",
+        "centipawn_score": 99992,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 8,
+        "nodes": 1872,
+        "pv": [
+          "g2g3",
+          "h5h6",
+          "f2g2",
+          "h6h5",
+          "g2h3",
+          "h5h6",
+          "h3h4",
+          "h6h7",
+          "h4h5",
+          "h7h8",
+          "h5g6",
+          "h8g8",
+          "g3f3",
+          "g8h8",
+          "f3f8"
+        ],
+        "seldepth": 16
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored: Kc6 then Rb8#",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/1RK5/8/8/k7/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 0,
+      "python_chess_valid": true,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": "c7d6",
+        "centipawn_score": 99987,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 13,
+        "nodes": 5507,
+        "pv": [
+          "c7d6",
+          "a4a5",
+          "b7b8",
+          "a5a6",
+          "d6c5",
+          "a6a7",
+          "b8h8",
+          "a7b7",
+          "c5d6",
+          "b7b6",
+          "h8h5",
+          "b6b7",
+          "h5b5",
+          "b7a7",
+          "d6d7"
+        ],
+        "seldepth": 16
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored corner: Ka2 then Ra3#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/RK6/8/k7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored corner: Ka2 then Ra3#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/6KR/8/7k w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored corner: Ka2 then Ra3#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k7/8/RK6/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored corner: Ka2 then Ra3#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/8/2K5/k1R5 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored corner: Ka2 then Ra3#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "5R1k/5K2/8/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 1,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored edge: Kh6 then Rh1-h8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/7k/8/6KR/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored edge: Kh6 then Rh1-h8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/k7/8/RK6/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored edge: Kh6 then Rh1-h8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/6KR/8/7k/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored edge: Kh6 then Rh1-h8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "4R1k1/4K3/8/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored edge: Kh6 then Rh1-h8#",
+      "exact": {
+        "classification": "invalid_or_terminal",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/8/3K4/1k1R4 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 2,
+      "python_chess_valid": false,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": null,
+        "centipawn_score": null,
+        "classification": "invalid_fen",
+        "mate_score": null,
+        "pv": []
+      },
+      "symmetry": "flip_anti_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored: Kb6 then Ra7#",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k7/2R5/2K5/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": true,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": "c7c8",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 764,
+        "pv": [
+          "c7c8",
+          "a8a7",
+          "c8h8",
+          "a7a6",
+          "h8a8"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "identity"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored: Kb6 then Ra7#",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "7k/5R2/5K2/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": true,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": "f6g6",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 670,
+        "pv": [
+          "f6g6",
+          "h8g8",
+          "f7f4",
+          "g8h8",
+          "f4f8"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "flip_horizontal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored: Kb6 then Ra7#",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/2K5/2R5/k7 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": true,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": "c2c1",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 585,
+        "pv": [
+          "c2c1",
+          "a1a2",
+          "c1g1",
+          "a2a3",
+          "g1a1"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "flip_vertical"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored: Kb6 then Ra7#",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "8/8/8/8/8/5KR1/8/7k w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": true,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": "g3h3",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 832,
+        "pv": [
+          "g3h3",
+          "h1g1",
+          "h3h7",
+          "g1f1",
+          "h7h1"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "flip_diagonal"
+    },
+    {
+      "agrees_strict_mate_in_two": false,
+      "claim_types": [
+        "optimal_moves_2"
+      ],
+      "description": "Anchored: Kb6 then Ra7#",
+      "exact": {
+        "classification": "not_strict_forced_mate_in_two",
+        "forced_mate_in_two_first_moves": [],
+        "mate_in_one_moves": []
+      },
+      "fen": "k7/8/1RK5/8/8/8/8/8 w - - 0 1",
+      "optimal_moves": 2,
+      "position_index": 4,
+      "python_chess_valid": true,
+      "stage_id": 3,
+      "stage_index": 13,
+      "stage_name": "Anchored_Cut",
+      "stockfish": {
+        "bestmove": "c6d6",
+        "centipawn_score": 99997,
+        "classification": "stockfish_mate_longer",
+        "depth": 16,
+        "mate_score": 3,
+        "nodes": 631,
+        "pv": [
+          "c6d6",
+          "a8a7",
+          "d6c7",
+          "a7a8",
+          "b6a6"
+        ],
+        "seldepth": 6
+      },
+      "symmetry": "flip_anti_diagonal"
+    }
+  ],
+  "schema_version": "krk_autogrowth_tg26j_stockfish_mate2_validation.v0",
+  "scope": {
+    "include_symmetries": true,
+    "included_entries": [
+      "stage_name == Mate_In_2",
+      "optimal_moves == 2"
+    ],
+    "note": "Stockfish is a cross-check. Exact KRK forced-mate-in-two status is also computed by enumerating all legal first moves, black replies, and mate moves.",
+    "source": "src/recon_lite_chess/training/krk_curriculum.py::KRK_STAGES"
+  },
+  "summary": {
+    "by_stage": {
+      "Anchored_Cut": {
+        "stockfish_mate_in_2": 0,
+        "strict_exact_mate_in_2": 0,
+        "total": 20
+      },
+      "Edge_Fence_Knight": {
+        "stockfish_mate_in_2": 0,
+        "strict_exact_mate_in_2": 0,
+        "total": 25
+      },
+      "Edge_Trap_Close": {
+        "stockfish_mate_in_2": 0,
+        "strict_exact_mate_in_2": 0,
+        "total": 50
+      },
+      "Fence_Established": {
+        "stockfish_mate_in_2": 0,
+        "strict_exact_mate_in_2": 0,
+        "total": 10
+      },
+      "Mate_In_2": {
+        "stockfish_mate_in_2": 5,
+        "strict_exact_mate_in_2": 5,
+        "total": 25
+      },
+      "Opposition_Approach": {
+        "stockfish_mate_in_2": 0,
+        "strict_exact_mate_in_2": 0,
+        "total": 5
+      },
+      "Tempo_Wait": {
+        "stockfish_mate_in_2": 5,
+        "strict_exact_mate_in_2": 5,
+        "total": 15
+      }
+    },
+    "exact_classification_counts": {
+      "invalid_or_terminal": 75,
+      "not_strict_forced_mate_in_two": 65,
+      "strict_forced_mate_in_two": 10
+    },
+    "non_strict_or_disagreeing_count": 140,
+    "non_strict_or_disagreeing_examples": [
+      {
+        "bestmove": null,
+        "description": "1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
+        "exact": "invalid_or_terminal",
+        "fen": "8/k7/1K6/8/8/8/8/7R w - - 0 1",
+        "mate_score": null,
+        "position_index": 1,
+        "stage_name": "Mate_In_2",
+        "stockfish": "invalid_fen",
+        "symmetry": "identity"
+      },
+      {
+        "bestmove": null,
+        "description": "1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
+        "exact": "invalid_or_terminal",
+        "fen": "8/7k/6K1/8/8/8/8/R7 w - - 0 1",
+        "mate_score": null,
+        "position_index": 1,
+        "stage_name": "Mate_In_2",
+        "stockfish": "invalid_fen",
+        "symmetry": "flip_horizontal"
+      },
+      {
+        "bestmove": null,
+        "description": "1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
+        "exact": "invalid_or_terminal",
+        "fen": "7R/8/8/8/8/1K6/k7/8 w - - 0 1",
+        "mate_score": null,
+        "position_index": 1,
+        "stage_name": "Mate_In_2",
+        "stockfish": "invalid_fen",
+        "symmetry": "flip_vertical"
+      },
+      {
+        "bestmove": null,
+        "description": "1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
+        "exact": "invalid_or_terminal",
+        "fen": "R7/8/8/8/8/8/5K2/6k1 w - - 0 1",
+        "mate_score": null,
+        "position_index": 1,
+        "stage_name": "Mate_In_2",
+        "stockfish": "invalid_fen",
+        "symmetry": "flip_diagonal"
+      },
+      {
+        "bestmove": null,
+        "description": "1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
+        "exact": "invalid_or_terminal",
+        "fen": "1k6/2K5/8/8/8/8/8/7R w - - 0 1",
+        "mate_score": null,
+        "position_index": 1,
+        "stage_name": "Mate_In_2",
+        "stockfish": "invalid_fen",
+        "symmetry": "flip_anti_diagonal"
+      },
+      {
+        "bestmove": null,
+        "description": "1.Kb6 (any) 2.Ra8# (approach + mate)",
+        "exact": "invalid_or_terminal",
+        "fen": "k7/8/1K6/8/8/8/8/R7 w - - 0 1",
+        "mate_score": null,
+        "position_index": 2,
+        "stage_name": "Mate_In_2",
+        "stockfish": "invalid_fen",
+        "symmetry": "identity"
+      },
+      {
+        "bestmove": null,
+        "description": "1.Kb6 (any) 2.Ra8# (approach + mate)",
+        "exact": "invalid_or_terminal",
+        "fen": "7k/8/6K1/8/8/8/8/7R w - - 0 1",
+        "mate_score": null,
+        "position_index": 2,
+        "stage_name": "Mate_In_2",
+        "stockfish": "invalid_fen",
+        "symmetry": "flip_horizontal"
+      },
+      {
+        "bestmove": null,
+        "description": "1.Kb6 (any) 2.Ra8# (approach + mate)",
+        "exact": "invalid_or_terminal",
+        "fen": "R7/8/8/8/8/1K6/8/k7 w - - 0 1",
+        "mate_score": null,
+        "position_index": 2,
+        "stage_name": "Mate_In_2",
+        "stockfish": "invalid_fen",
+        "symmetry": "flip_vertical"
+      },
+      {
+        "bestmove": null,
+        "description": "1.Kb6 (any) 2.Ra8# (approach + mate)",
+        "exact": "invalid_or_terminal",
+        "fen": "8/8/8/8/8/8/5K2/R6k w - - 0 1",
+        "mate_score": null,
+        "position_index": 2,
+        "stage_name": "Mate_In_2",
+        "stockfish": "invalid_fen",
+        "symmetry": "flip_diagonal"
+      },
+      {
+        "bestmove": null,
+        "description": "1.Kb6 (any) 2.Ra8# (approach + mate)",
+        "exact": "invalid_or_terminal",
+        "fen": "k6R/2K5/8/8/8/8/8/8 w - - 0 1",
+        "mate_score": null,
+        "position_index": 2,
+        "stage_name": "Mate_In_2",
+        "stockfish": "invalid_fen",
+        "symmetry": "flip_anti_diagonal"
+      },
+      {
+        "bestmove": null,
+        "description": "1.Kg6 (opposition) 2.Rh1#",
+        "exact": "invalid_or_terminal",
+        "fen": "7k/8/5K2/8/8/8/8/7R w - - 0 1",
+        "mate_score": null,
+        "position_index": 3,
+        "stage_name": "Mate_In_2",
+        "stockfish": "invalid_fen",
+        "symmetry": "identity"
+      },
+      {
+        "bestmove": null,
+        "description": "1.Kg6 (opposition) 2.Rh1#",
+        "exact": "invalid_or_terminal",
+        "fen": "k7/8/2K5/8/8/8/8/R7 w - - 0 1",
+        "mate_score": null,
+        "position_index": 3,
+        "stage_name": "Mate_In_2",
+        "stockfish": "invalid_fen",
+        "symmetry": "flip_horizontal"
+      },
+      {
+        "bestmove": null,
+        "description": "1.Kg6 (opposition) 2.Rh1#",
+        "exact": "invalid_or_terminal",
+        "fen": "7R/8/8/8/8/5K2/8/7k w - - 0 1",
+        "mate_score": null,
+        "position_index": 3,
+        "stage_name": "Mate_In_2",
+        "stockfish": "invalid_fen",
+        "symmetry": "flip_vertical"
+      },
+      {
+        "bestmove": null,
+        "description": "1.Kg6 (opposition) 2.Rh1#",
+        "exact": "invalid_or_terminal",
+        "fen": "R6k/8/5K2/8/8/8/8/8 w - - 0 1",
+        "mate_score": null,
+        "position_index": 3,
+        "stage_name": "Mate_In_2",
+        "stockfish": "invalid_fen",
+        "symmetry": "flip_diagonal"
+      },
+      {
+        "bestmove": null,
+        "description": "1.Kg6 (opposition) 2.Rh1#",
+        "exact": "invalid_or_terminal",
+        "fen": "8/8/8/8/8/2K5/8/k6R w - - 0 1",
+        "mate_score": null,
+        "position_index": 3,
+        "stage_name": "Mate_In_2",
+        "stockfish": "invalid_fen",
+        "symmetry": "flip_anti_diagonal"
+      },
+      {
+        "bestmove": "a1b1",
+        "description": "1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "k7/8/8/8/8/K7/8/R7 w - - 0 1",
+        "mate_score": 7,
+        "position_index": 4,
+        "stage_name": "Mate_In_2",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "identity"
+      },
+      {
+        "bestmove": "h1g1",
+        "description": "1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "7k/8/8/8/8/7K/8/7R w - - 0 1",
+        "mate_score": 7,
+        "position_index": 4,
+        "stage_name": "Mate_In_2",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_horizontal"
+      },
+      {
+        "bestmove": "a6b5",
+        "description": "1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "R7/8/K7/8/8/8/8/k7 w - - 0 1",
+        "mate_score": 9,
+        "position_index": 4,
+        "stage_name": "Mate_In_2",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_vertical"
+      },
+      {
+        "bestmove": "c1d2",
+        "description": "1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "8/8/8/8/8/8/8/R1K4k w - - 0 1",
+        "mate_score": 11,
+        "position_index": 4,
+        "stage_name": "Mate_In_2",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_diagonal"
+      },
+      {
+        "bestmove": "f8e7",
+        "description": "1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "k4K1R/8/8/8/8/8/8/8 w - - 0 1",
+        "mate_score": 11,
+        "position_index": 4,
+        "stage_name": "Mate_In_2",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_anti_diagonal"
+      },
+      {
+        "bestmove": "c4c3",
+        "description": "Edge\u2011trap close; king inside, no immediate mate.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "1R6/8/8/8/2K5/8/k7/8 w - - 0 1",
+        "mate_score": 5,
+        "position_index": 0,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "identity"
+      },
+      {
+        "bestmove": "f4f3",
+        "description": "Edge\u2011trap close; king inside, no immediate mate.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "6R1/8/8/8/5K2/8/7k/8 w - - 0 1",
+        "mate_score": 4,
+        "position_index": 0,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_horizontal"
+      },
+      {
+        "bestmove": "c5c6",
+        "description": "Edge\u2011trap close; king inside, no immediate mate.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "8/k7/8/2K5/8/8/8/1R6 w - - 0 1",
+        "mate_score": 3,
+        "position_index": 0,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_vertical"
+      },
+      {
+        "bestmove": "d3c3",
+        "description": "Edge\u2011trap close; king inside, no immediate mate.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "8/8/8/8/8/3K4/7R/1k6 w - - 0 1",
+        "mate_score": 3,
+        "position_index": 0,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_diagonal"
+      },
+      {
+        "bestmove": "e6f6",
+        "description": "Edge\u2011trap close; king inside, no immediate mate.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "6k1/R7/4K3/8/8/8/8/8 w - - 0 1",
+        "mate_score": 3,
+        "position_index": 0,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_anti_diagonal"
+      },
+      {
+        "bestmove": "f3e3",
+        "description": "Bottom edge trap with rook fence; approach conversion.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "8/8/8/8/8/5K2/5R2/3k4 w - - 0 1",
+        "mate_score": 6,
+        "position_index": 1,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "identity"
+      },
+      {
+        "bestmove": "c3d3",
+        "description": "Bottom edge trap with rook fence; approach conversion.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "8/8/8/8/8/2K5/2R5/4k3 w - - 0 1",
+        "mate_score": 6,
+        "position_index": 1,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_horizontal"
+      },
+      {
+        "bestmove": "f7h7",
+        "description": "Bottom edge trap with rook fence; approach conversion.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "3k4/5R2/5K2/8/8/8/8/8 w - - 0 1",
+        "mate_score": 14,
+        "position_index": 1,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_vertical"
+      },
+      {
+        "bestmove": "c6c5",
+        "description": "Bottom edge trap with rook fence; approach conversion.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "8/8/1RK5/8/k7/8/8/8 w - - 0 1",
+        "mate_score": 7,
+        "position_index": 1,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_diagonal"
+      },
+      {
+        "bestmove": "f3f2",
+        "description": "Bottom edge trap with rook fence; approach conversion.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "8/8/8/7k/8/5KR1/8/8 w - - 0 1",
+        "mate_score": 8,
+        "position_index": 1,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_anti_diagonal"
+      },
+      {
+        "bestmove": "f3e3",
+        "description": "Bottom edge trap; rook on g2, king close.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "8/8/8/8/8/5K2/6R1/3k4 w - - 0 1",
+        "mate_score": 5,
+        "position_index": 2,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "identity"
+      },
+      {
+        "bestmove": "c3d3",
+        "description": "Bottom edge trap; rook on g2, king close.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "8/8/8/8/8/2K5/1R6/4k3 w - - 0 1",
+        "mate_score": 6,
+        "position_index": 2,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_horizontal"
+      },
+      {
+        "bestmove": "f6e6",
+        "description": "Bottom edge trap; rook on g2, king close.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "3k4/6R1/5K2/8/8/8/8/8 w - - 0 1",
+        "mate_score": 6,
+        "position_index": 2,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_vertical"
+      },
+      {
+        "bestmove": "c6c5",
+        "description": "Bottom edge trap; rook on g2, king close.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "8/1R6/2K5/8/k7/8/8/8 w - - 0 1",
+        "mate_score": 7,
+        "position_index": 2,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_diagonal"
+      },
+      {
+        "bestmove": "g2g3",
+        "description": "Bottom edge trap; rook on g2, king close.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "8/8/8/7k/8/5K2/6R1/8 w - - 0 1",
+        "mate_score": 8,
+        "position_index": 2,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_anti_diagonal"
+      },
+      {
+        "bestmove": "b2b8",
+        "description": "Corner\u2011adjacent trap; king inside, rook fence.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "8/8/8/8/8/2K5/1R6/2k5 w - - 0 1",
+        "mate_score": 3,
+        "position_index": 3,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "identity"
+      },
+      {
+        "bestmove": "g2g5",
+        "description": "Corner\u2011adjacent trap; king inside, rook fence.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "8/8/8/8/8/5K2/6R1/5k2 w - - 0 1",
+        "mate_score": 3,
+        "position_index": 3,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_horizontal"
+      },
+      {
+        "bestmove": "b7b4",
+        "description": "Corner\u2011adjacent trap; king inside, rook fence.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "2k5/1R6/2K5/8/8/8/8/8 w - - 0 1",
+        "mate_score": 3,
+        "position_index": 3,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_vertical"
+      },
+      {
+        "bestmove": "b2f2",
+        "description": "Corner\u2011adjacent trap; king inside, rook fence.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "8/8/8/8/8/k1K5/1R6/8 w - - 0 1",
+        "mate_score": 4,
+        "position_index": 3,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_diagonal"
+      },
+      {
+        "bestmove": "g7b7",
+        "description": "Corner\u2011adjacent trap; king inside, rook fence.",
+        "exact": "not_strict_forced_mate_in_two",
+        "fen": "8/6R1/5K1k/8/8/8/8/8 w - - 0 1",
+        "mate_score": 3,
+        "position_index": 3,
+        "stage_name": "Edge_Trap_Close",
+        "stockfish": "stockfish_mate_longer",
+        "symmetry": "flip_anti_diagonal"
+      }
+    ],
+    "stockfish_classification_counts": {
+      "invalid_fen": 75,
+      "stockfish_mate_in_2": 10,
+      "stockfish_mate_longer": 65
+    },
+    "strict_stockfish_and_exact_mate_in_2_count": 10,
+    "total_claim_entries": 150
+  }
+}

@@ -1,11 +1,18 @@
 import json
 
+import chess
+
 from recon_lite_chess.autogrowth import (
     CuratedTerminalCurriculumConfig,
     curated_stage_entries,
     run_curated_terminal_curriculum,
     stage_inventory,
     validate_learner_record,
+)
+from recon_lite_chess.autogrowth.curated_stockfish_validation import (
+    _exact_classification,
+    _mate_two_claim_entries,
+    _stockfish_classification,
 )
 from recon_lite_chess.autogrowth.terminal_substrate import (
     TerminalSubstrateConfig,
@@ -67,3 +74,14 @@ def test_tg26h_terminal_bundle_preserves_mate2_fen_provenance() -> None:
     assert len(bundle.mate2_heldout) == 2
     assert bundle.payload["mate2"]["dataset"]["train_count"] == 3
     assert bundle.payload["mate2"]["dataset"]["heldout_count"] == 2
+
+
+def test_tg26j_stockfish_validator_scope_and_exact_classification() -> None:
+    claims = _mate_two_claim_entries(include_symmetries=False)
+    mate_stage_claims = [entry for entry in claims if entry.stage_name == "Mate_In_2"]
+
+    assert len(mate_stage_claims) == 5
+    assert _exact_classification(chess.Board(mate_stage_claims[0].fen))["classification"] == "strict_forced_mate_in_two"
+    assert _exact_classification(chess.Board(mate_stage_claims[1].fen))["classification"] == "invalid_or_terminal"
+    assert _exact_classification(chess.Board(mate_stage_claims[4].fen))["classification"] == "not_strict_forced_mate_in_two"
+    assert _stockfish_classification(2) == "stockfish_mate_in_2"
