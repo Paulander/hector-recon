@@ -15,6 +15,12 @@ def main() -> int:
     parser.add_argument("--train-repetitions", type=int, default=5)
     parser.add_argument("--continuation-repetitions", type=int, default=2)
     parser.add_argument("--max-samples", type=int, default=32)
+    parser.add_argument(
+        "--score-context-free-action-terminals",
+        action="store_true",
+        help="Restore the older flat action-pattern terminal contribution to move scores.",
+    )
+    parser.add_argument("--max-abs-local-weight", type=float, default=1.0)
     parser.add_argument("--no-symmetries", action="store_true")
     parser.add_argument("--smoke", action="store_true")
     args = parser.parse_args()
@@ -30,6 +36,8 @@ def main() -> int:
             include_symmetries=not args.no_symmetries,
             train_repetitions=1 if args.smoke else args.train_repetitions,
             continuation_repetitions=1 if args.smoke else args.continuation_repetitions,
+            score_context_free_action_terminals=args.score_context_free_action_terminals,
+            max_abs_local_weight=args.max_abs_local_weight,
             mate1_threshold=0.0 if args.smoke else 0.98,
             mate2_threshold=0.0 if args.smoke else 0.95,
             max_samples=args.max_samples,

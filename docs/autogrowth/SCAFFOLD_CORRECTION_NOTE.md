@@ -59,3 +59,19 @@ TG26n is the current baseline direction:
 - no hardcoded Mate_In_1 handoff.
 
 TG26n currently gets Mate_In_1 `18/18` and Mate_In_2 `13/23` after normalizing terminal activation so mature Mate_In_1 fan-in cannot dominate only by terminal count. This is not good enough, but it is the right failure: it exposes missing single-graph chain activation and credit propagation instead of hiding it behind a scaffold.
+
+## TG26n 50-Repetition Correction
+
+Longer replay exposed two additional anti-scaffold rules:
+
+- Flat context-free `action_pattern:*` terminals must not contribute directly to the global move score. They remain valid inside before/action-delta/after triplets, but a bare "rook checks" or "rook goes to edge" terminal acts like a disguised action ranker when shared across stages.
+- M3 local weights must be bounded before M4 confirmation. Repeating the same curated position 50 times should increase experience and confidence, not let terminal/triplet weights grow without limit until they drown out context.
+
+The failed artifacts are useful guardrails:
+
+- `reports/autogrowth/krk_autogrowth_tg26n_single_graph_curriculum_reps50.json`: flat action scoring and unbounded weights, Mate_In_2 `0/23`.
+- `reports/autogrowth/krk_autogrowth_tg26n_single_graph_curriculum_no_flat_action_reps50.json`: no flat action scoring but unbounded weights, Mate_In_2 `0/23`.
+
+The current clean foundation artifact is:
+
+- `reports/autogrowth/krk_autogrowth_tg26n_single_graph_curriculum_bounded_reps50.json`: one graph, no hardcoded handoff, no flat context-free action terminal scoring, bounded local weights, Mate_In_1 `18/18`, Mate_In_2 `23/23`.

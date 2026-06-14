@@ -28,6 +28,8 @@ def test_tg26n_single_graph_curriculum_contract(tmp_path) -> None:
     assert payload["purity_boundary"]["direct_provider_override"] is False
     assert payload["purity_boundary"]["runtime_tablebase_or_dtm_move_source"] is False
     assert payload["config"]["normalize_terminal_activation"] is True
+    assert payload["config"]["score_context_free_action_terminals"] is False
+    assert payload["config"]["max_abs_local_weight"] == 1.0
     assert payload["maturation"]["matured_terminal_count"] > 0
     assert payload["maturation"]["matured_triplet_count"] > 0
     assert payload["mate2"]["training"]["continuation_experience_uses_same_graph"] is True

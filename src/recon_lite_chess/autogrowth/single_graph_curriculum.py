@@ -7,7 +7,7 @@ curriculum and the same graph chooses every white move.
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 import hashlib
 import json
 from pathlib import Path
@@ -43,7 +43,9 @@ class SingleGraphCurriculumConfig:
     rich_feature_credit_scale: float = 0.25
     normalize_terminal_activation: bool = True
     terminal_score_scale: float = 1.0
+    score_context_free_action_terminals: bool = False
     triplet_credit_scale: float = 0.35
+    max_abs_local_weight: float = 1.0
     triplet_mature_min_abs_weight: float = 0.20
     mate1_threshold: float = 0.98
     mate2_threshold: float = 0.95
@@ -126,6 +128,10 @@ class SingleGraphKRKNetwork:
     learner: TerminalAffordanceLearner
     triplets: dict[str, SingleGraphTriplet]
     cycle: int = 0
+    triplet_key_cache: dict[
+        tuple[str, str],
+        tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]],
+    ] = field(default_factory=dict)
 
     @classmethod
     def create(cls, *, config: SingleGraphCurriculumConfig) -> "SingleGraphKRKNetwork":
@@ -148,14 +154,42 @@ class SingleGraphKRKNetwork:
         return options[0][-1]
 
     def score_move(self, board: chess.Board, move: chess.Move, *, config: SingleGraphCurriculumConfig) -> float:
-        terminal_score = self.learner.weight_for_move(board, move)
+        terminal_score, active_terminal_count = self._terminal_score_for_move(
+            board,
+            move,
+            include_context_free_action_terminals=config.score_context_free_action_terminals,
+        )
         if config.normalize_terminal_activation:
-            terminal_score /= max(1, self.learner.active_terminal_count(board, move))
+            terminal_score /= max(1, active_terminal_count)
         terminal_score *= config.terminal_score_scale
-        before_keys, action_delta_keys, after_keys = _triplet_keys(board, move)
+        before_keys, action_delta_keys, after_keys = self._cached_triplet_keys(board, move)
         triplet = self.triplets.get(_triplet_id(before_keys, action_delta_keys, after_keys))
         triplet_score = 0.0 if triplet is None else triplet.local_weight
         return terminal_score + config.triplet_credit_scale * triplet_score
+
+    def _terminal_score_for_move(
+        self,
+        board: chess.Board,
+        move: chess.Move,
+        *,
+        include_context_free_action_terminals: bool,
+    ) -> tuple[float, int]:
+        terminal_score = 0.0
+        active_terminal_count = 0
+        for terminal_key, _scale in terminal_action_feature_keys(
+            board,
+            move,
+            hub=self.learner.hub,
+            feature_cache=self.learner.feature_cache,
+        ):
+            if not include_context_free_action_terminals and terminal_key.startswith("action_pattern:"):
+                continue
+            terminal = self.learner.terminals.get(terminal_key)
+            if terminal is None:
+                continue
+            terminal_score += terminal.local_weight
+            active_terminal_count += 1
+        return terminal_score, active_terminal_count
 
     def train_action_rewards(
         self,
@@ -171,10 +205,11 @@ class SingleGraphKRKNetwork:
             triplet = self.get_triplet(board, move)
             self.cycle += 1
             triplet.update(reward=reward, eta=config.eta_m3, cycle=self.cycle, stage=stage)
+        self._clip_local_weights(config=config)
         return updates
 
     def get_triplet(self, board: chess.Board, move: chess.Move) -> SingleGraphTriplet:
-        before_keys, action_delta_keys, after_keys = _triplet_keys(board, move)
+        before_keys, action_delta_keys, after_keys = self._cached_triplet_keys(board, move)
         triplet_id = _triplet_id(before_keys, action_delta_keys, after_keys)
         triplet = self.triplets.get(triplet_id)
         if triplet is None:
@@ -197,6 +232,25 @@ class SingleGraphKRKNetwork:
             )
             self.triplets[triplet_id] = triplet
         return triplet
+
+    def _cached_triplet_keys(
+        self,
+        board: chess.Board,
+        move: chess.Move,
+    ) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+        cache_key = (board.fen(), move.uci())
+        cached = self.triplet_key_cache.get(cache_key)
+        if cached is None:
+            cached = _triplet_keys(board, move)
+        self.triplet_key_cache[cache_key] = cached
+        return cached
+
+    def _clip_local_weights(self, *, config: SingleGraphCurriculumConfig) -> None:
+        max_abs = config.max_abs_local_weight
+        for terminal in self.learner.terminals.values():
+            terminal.local_weight = max(-max_abs, min(max_abs, terminal.local_weight))
+        for triplet in self.triplets.values():
+            triplet.local_weight = max(-max_abs, min(max_abs, triplet.local_weight))
 
     def mature_existing_graph(self, *, config: SingleGraphCurriculumConfig) -> dict[str, Any]:
         matured_terminals = 0
@@ -227,6 +281,7 @@ class SingleGraphKRKNetwork:
             "terminal_substrate": self.learner.to_dict(max_terminals=12),
             "triplet_count": len(self.triplets),
             "mature_triplet_count": sum(1 for item in self.triplets.values() if item.cell.state == StemCellState.MATURE),
+            "triplet_key_cache_size": len(self.triplet_key_cache),
             "top_positive_triplets": [item.to_dict() for item in triplets[:max_triplets]],
             "top_negative_triplets": [
                 item.to_dict()
