@@ -173,6 +173,12 @@ from .script_fragments import (
     generalize_script_candidates_to_fragments,
     run_script_fragment_experiment,
 )
+from .single_graph_curriculum import (
+    SingleGraphCurriculumConfig,
+    SingleGraphCurriculumResult,
+    SingleGraphKRKNetwork,
+    run_single_graph_curriculum,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -300,6 +306,9 @@ __all__ = [
     "SandboxResult",
     "ScriptFragmentConfig",
     "ScriptFragmentResult",
+    "SingleGraphCurriculumConfig",
+    "SingleGraphCurriculumResult",
+    "SingleGraphKRKNetwork",
     "TerminalEdgeFenceValidationConfig",
     "TerminalEdgeFenceValidationResult",
     "TerminalFoundationBundle",
@@ -346,6 +355,7 @@ __all__ = [
     "run_local_script_experiment",
     "run_local_suppressor_experiment",
     "run_script_fragment_experiment",
+    "run_single_graph_curriculum",
     "run_topological_growth_runway",
     "run_context_specialized_candidate_experiment",
     "run_context_gated_curriculum",
