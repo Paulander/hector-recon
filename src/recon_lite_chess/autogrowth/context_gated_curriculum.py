@@ -16,6 +16,7 @@ from .foundation_curriculum import _mate_moves
 from .terminal_substrate import (
     TerminalAffordanceLearner,
     _bucket,
+    _evaluate_terminal_mate_in_one,
     _train_terminal_mate_in_one,
     _train_terminal_mate_in_two,
     extract_terminal_feature_vector,
@@ -87,6 +88,10 @@ class ContextGatedMate2Learner:
     first_learners: dict[str, TerminalAffordanceLearner]
     mate_learner: TerminalAffordanceLearner
 
+    def choose(self, board: chess.Board) -> chess.Move | None:
+        move, _info = self.choose_first(board)
+        return move
+
     def choose_first(self, board: chess.Board) -> tuple[chess.Move | None, dict[str, Any]]:
         activations = [gate.activation(board) for gate in self.gates]
         confirmed = [item for item in activations if item["confirmed"]]
@@ -148,10 +153,31 @@ class ContextGatedCurriculumResult:
         return output
 
 
+@dataclass(frozen=True)
+class ContextGatedFoundationBundle:
+    config: ContextGatedCurriculumConfig
+    mate1_fens: tuple[str, ...]
+    mate2_fens: tuple[str, ...]
+    mate1_learner: TerminalAffordanceLearner
+    mate2_first_learner: ContextGatedMate2Learner
+    result: ContextGatedCurriculumResult
+
+    @property
+    def payload(self) -> dict[str, Any]:
+        return self.result.to_dict()
+
+
 def run_context_gated_curriculum(
     *,
     config: ContextGatedCurriculumConfig | None = None,
 ) -> ContextGatedCurriculumResult:
+    return train_context_gated_foundation_bundle(config=config).result
+
+
+def train_context_gated_foundation_bundle(
+    *,
+    config: ContextGatedCurriculumConfig | None = None,
+) -> ContextGatedFoundationBundle:
     cfg = config or ContextGatedCurriculumConfig()
     entries = curated_stage_entries(include_symmetries=cfg.include_symmetries)
     mate1_fens = _unique(
@@ -228,7 +254,7 @@ def run_context_gated_curriculum(
             else "tighten context gates before edge/fence"
         ),
     }
-    return ContextGatedCurriculumResult(
+    result = ContextGatedCurriculumResult(
         config=cfg,
         dataset={
             "source": "src/recon_lite_chess/training/krk_curriculum.py::KRK_STAGES",
@@ -243,6 +269,11 @@ def run_context_gated_curriculum(
         gates=tuple(gate.to_dict() for gate in gates),
         training={
             "mate1": mate1_training,
+            "mate1_self_evaluation": _evaluate_terminal_mate_in_one(
+                mate1_fens,
+                learner=mate_learner,
+                max_samples=cfg.max_samples,
+            ),
             "mate2_buckets": bucket_training,
             "mate1_terminal_count": len(mate_learner.terminals),
             "mate1_m3_update_count": mate_learner.m3_update_count,
@@ -260,6 +291,14 @@ def run_context_gated_curriculum(
             "gate_activation_summary": gate_activation_summary,
         },
         decision=decision,
+    )
+    return ContextGatedFoundationBundle(
+        config=cfg,
+        mate1_fens=mate1_fens,
+        mate2_fens=mate2_fens,
+        mate1_learner=mate_learner,
+        mate2_first_learner=gated,
+        result=result,
     )
 
 

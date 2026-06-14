@@ -30,9 +30,16 @@ from .continuation_retry import (
 )
 from .context_gated_curriculum import (
     ContextGatedCurriculumConfig,
+    ContextGatedFoundationBundle,
     ContextGatedCurriculumResult,
     context_terminal_keys,
     run_context_gated_curriculum,
+    train_context_gated_foundation_bundle,
+)
+from .context_gated_edge_fence_validation import (
+    ContextGatedEdgeFenceValidationConfig,
+    ContextGatedEdgeFenceValidationResult,
+    run_context_gated_edge_fence_validation,
 )
 from .curriculum_reward_recovery import (
     CurriculumRewardRecoveryConfig,
@@ -231,6 +238,9 @@ __all__ = [
     "ContinuationRetryMetrics",
     "ContinuationRetryResult",
     "ContextGatedCurriculumConfig",
+    "ContextGatedEdgeFenceValidationConfig",
+    "ContextGatedEdgeFenceValidationResult",
+    "ContextGatedFoundationBundle",
     "ContextGatedCurriculumResult",
     "CurriculumRewardRecoveryConfig",
     "CurriculumRewardRecoveryResult",
@@ -339,6 +349,7 @@ __all__ = [
     "run_topological_growth_runway",
     "run_context_specialized_candidate_experiment",
     "run_context_gated_curriculum",
+    "run_context_gated_edge_fence_validation",
     "run_continuation_retry_experiment",
     "run_curriculum_reward_recovery",
     "run_curated_terminal_curriculum",
@@ -371,6 +382,7 @@ __all__ = [
     "run_terminal_substrate_revival",
     "run_terminal_edge_fence_validation",
     "terminal_action_feature_keys",
+    "train_context_gated_foundation_bundle",
     "train_growth_candidates",
     "train_terminal_foundation_bundle",
     "validate_learner_record",

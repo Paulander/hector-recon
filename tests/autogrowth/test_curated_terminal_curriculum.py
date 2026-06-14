@@ -12,6 +12,7 @@ from recon_lite_chess.autogrowth import (
     run_curated_replay_curriculum,
     run_curated_terminal_curriculum,
     stage_inventory,
+    train_context_gated_foundation_bundle,
     validate_learner_record,
 )
 from recon_lite_chess.autogrowth.curated_stockfish_validation import (
@@ -145,3 +146,23 @@ def test_tg26l_context_gated_curriculum_uses_generic_terminal_gates(tmp_path) ->
     assert payload["dataset"]["mate2_gate_context_count"] >= payload["dataset"]["mate2_bucket_count"]
     assert payload["evaluation"]["gate_activation_summary"]["no_confirmed_gate_count"] == 0
     assert payload["training"]["mate2_first_terminal_count_by_bucket"]
+
+
+def test_tg26l_context_gated_foundation_bundle_exposes_runtime_handoff() -> None:
+    bundle = train_context_gated_foundation_bundle(
+        config=ContextGatedCurriculumConfig(
+            include_symmetries=False,
+            train_repetitions=1,
+            gate_granularity="position",
+            gate_min_overlap=0.72,
+            mate2_threshold=0.0,
+            max_samples=4,
+        )
+    )
+    board = chess.Board(bundle.mate2_fens[0])
+    first = bundle.mate2_first_learner.choose(board)
+
+    assert bundle.payload["schema_version"] == "krk_autogrowth_tg26l_context_gated_curriculum.v0"
+    assert bundle.payload["training"]["mate1_self_evaluation"]["accuracy"] >= 0.0
+    assert first is not None
+    assert bundle.mate2_first_learner.choose_first(board)[1]["had_confirmed_gate"] is True
