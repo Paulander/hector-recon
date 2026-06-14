@@ -7,7 +7,9 @@
     "mate1_threshold": 0.0,
     "mate2_threshold": 0.0,
     "max_samples": 32,
+    "normalize_terminal_activation": true,
     "rich_feature_credit_scale": 0.25,
+    "terminal_score_scale": 1.0,
     "train_repetitions": 1,
     "triplet_credit_scale": 0.35,
     "triplet_mature_min_abs_weight": 0.2

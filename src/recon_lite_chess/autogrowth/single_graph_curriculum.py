@@ -41,6 +41,8 @@ class SingleGraphCurriculumConfig:
     continuation_repetitions: int = 2
     eta_m3: float = 0.10
     rich_feature_credit_scale: float = 0.25
+    normalize_terminal_activation: bool = True
+    terminal_score_scale: float = 1.0
     triplet_credit_scale: float = 0.35
     triplet_mature_min_abs_weight: float = 0.20
     mate1_threshold: float = 0.98
@@ -147,6 +149,9 @@ class SingleGraphKRKNetwork:
 
     def score_move(self, board: chess.Board, move: chess.Move, *, config: SingleGraphCurriculumConfig) -> float:
         terminal_score = self.learner.weight_for_move(board, move)
+        if config.normalize_terminal_activation:
+            terminal_score /= max(1, self.learner.active_terminal_count(board, move))
+        terminal_score *= config.terminal_score_scale
         before_keys, action_delta_keys, after_keys = _triplet_keys(board, move)
         triplet = self.triplets.get(_triplet_id(before_keys, action_delta_keys, after_keys))
         triplet_score = 0.0 if triplet is None else triplet.local_weight

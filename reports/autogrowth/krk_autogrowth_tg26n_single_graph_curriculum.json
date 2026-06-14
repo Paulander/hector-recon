@@ -7,7 +7,9 @@
     "mate1_threshold": 0.98,
     "mate2_threshold": 0.95,
     "max_samples": 32,
+    "normalize_terminal_activation": true,
     "rich_feature_credit_scale": 0.25,
+    "terminal_score_scale": 1.0,
     "train_repetitions": 5,
     "triplet_credit_scale": 0.35,
     "triplet_mature_min_abs_weight": 0.2
@@ -3446,14 +3448,14 @@
   },
   "mate2": {
     "evaluation": {
-      "conversion_count": 8,
-      "conversion_rate": 0.34782608695652173,
-      "first_move_success_count": 8,
-      "first_move_success_rate": 0.34782608695652173,
+      "conversion_count": 13,
+      "conversion_rate": 0.5652173913043478,
+      "first_move_success_count": 13,
+      "first_move_success_rate": 0.5652173913043478,
       "hardcoded_mate1_handoff": false,
       "position_count": 23,
-      "same_graph_reply_mate_rate": 0.21052631578947367,
-      "same_graph_second_move_count": 38,
+      "same_graph_reply_mate_rate": 0.4642857142857143,
+      "same_graph_second_move_count": 28,
       "samples": [
         {
           "all_replies_mated_by_same_graph": false,
@@ -3571,149 +3573,99 @@
           "same_graph_selected_first": "h1h8"
         },
         {
-          "all_replies_mated_by_same_graph": false,
+          "all_replies_mated_by_same_graph": true,
           "fen": "1k6/8/K7/8/8/8/8/R7 w - - 0 1",
-          "first_move_success": false,
+          "first_move_success": true,
           "forced_first_moves": [
             "a1c1"
           ],
           "reply_checks": [
             {
               "black_reply": "b8a8",
-              "correct_mates": [],
-              "mated": false,
-              "same_graph_selected_second": "b1b8"
-            },
-            {
-              "black_reply": "b8c7",
-              "correct_mates": [],
-              "mated": false,
-              "same_graph_selected_second": "b1c1"
-            },
-            {
-              "black_reply": "b8c8",
-              "correct_mates": [],
-              "mated": false,
-              "same_graph_selected_second": "b1c1"
+              "correct_mates": [
+                "c1c8"
+              ],
+              "mated": true,
+              "same_graph_selected_second": "c1c8"
             }
           ],
-          "same_graph_selected_first": "a1b1"
+          "same_graph_selected_first": "a1c1"
         },
         {
-          "all_replies_mated_by_same_graph": false,
+          "all_replies_mated_by_same_graph": true,
           "fen": "6k1/8/7K/8/8/8/8/7R w - - 0 1",
-          "first_move_success": false,
+          "first_move_success": true,
           "forced_first_moves": [
             "h1f1"
           ],
           "reply_checks": [
             {
-              "black_reply": "g8f7",
-              "correct_mates": [],
-              "mated": false,
-              "same_graph_selected_second": "g1f1"
-            },
-            {
-              "black_reply": "g8f8",
-              "correct_mates": [],
-              "mated": false,
-              "same_graph_selected_second": "g1f1"
-            },
-            {
               "black_reply": "g8h8",
-              "correct_mates": [],
-              "mated": false,
-              "same_graph_selected_second": "g1g8"
+              "correct_mates": [
+                "f1f8"
+              ],
+              "mated": true,
+              "same_graph_selected_second": "f1f8"
             }
           ],
-          "same_graph_selected_first": "h1g1"
+          "same_graph_selected_first": "h1f1"
         },
         {
-          "all_replies_mated_by_same_graph": false,
+          "all_replies_mated_by_same_graph": true,
           "fen": "R7/8/8/8/8/K7/8/1k6 w - - 0 1",
-          "first_move_success": false,
+          "first_move_success": true,
           "forced_first_moves": [
             "a8c8"
           ],
           "reply_checks": [
             {
               "black_reply": "b1a1",
-              "correct_mates": [],
-              "mated": false,
-              "same_graph_selected_second": "b8h8"
-            },
-            {
-              "black_reply": "b1c1",
-              "correct_mates": [],
-              "mated": false,
-              "same_graph_selected_second": "b8c8"
-            },
-            {
-              "black_reply": "b1c2",
-              "correct_mates": [],
-              "mated": false,
-              "same_graph_selected_second": "b8c8"
+              "correct_mates": [
+                "c8c1"
+              ],
+              "mated": true,
+              "same_graph_selected_second": "c8c1"
             }
           ],
-          "same_graph_selected_first": "a8b8"
+          "same_graph_selected_first": "a8c8"
         },
         {
-          "all_replies_mated_by_same_graph": false,
+          "all_replies_mated_by_same_graph": true,
           "fen": "8/8/8/8/8/8/7k/R4K2 w - - 0 1",
-          "first_move_success": false,
+          "first_move_success": true,
           "forced_first_moves": [
             "a1a3"
           ],
           "reply_checks": [
             {
-              "black_reply": "h2g3",
-              "correct_mates": [],
-              "mated": false,
-              "same_graph_selected_second": "a2a3"
-            },
-            {
               "black_reply": "h2h1",
-              "correct_mates": [],
-              "mated": false,
-              "same_graph_selected_second": "a2a8"
-            },
-            {
-              "black_reply": "h2h3",
-              "correct_mates": [],
-              "mated": false,
-              "same_graph_selected_second": "a2a3"
+              "correct_mates": [
+                "a3h3"
+              ],
+              "mated": true,
+              "same_graph_selected_second": "a3h3"
             }
           ],
-          "same_graph_selected_first": "a1a2"
+          "same_graph_selected_first": "a1a3"
         },
         {
-          "all_replies_mated_by_same_graph": false,
+          "all_replies_mated_by_same_graph": true,
           "fen": "2K4R/k7/8/8/8/8/8/8 w - - 0 1",
-          "first_move_success": false,
+          "first_move_success": true,
           "forced_first_moves": [
             "h8h6"
           ],
           "reply_checks": [
             {
-              "black_reply": "a7a6",
-              "correct_mates": [],
-              "mated": false,
-              "same_graph_selected_second": "h7h6"
-            },
-            {
               "black_reply": "a7a8",
-              "correct_mates": [],
-              "mated": false,
-              "same_graph_selected_second": "h7h1"
-            },
-            {
-              "black_reply": "a7b6",
-              "correct_mates": [],
-              "mated": false,
-              "same_graph_selected_second": "h7h6"
+              "correct_mates": [
+                "h6a6"
+              ],
+              "mated": true,
+              "same_graph_selected_second": "h6a6"
             }
           ],
-          "same_graph_selected_first": "h8h7"
+          "same_graph_selected_first": "h8h6"
         },
         {
           "all_replies_mated_by_same_graph": false,
