@@ -125,9 +125,11 @@ def _validate_entry(
             "pv": [],
         }
     else:
-        info = engine.analyse(board, chess.engine.Limit(depth=depth))
+        info = engine.analyse(board, chess.engine.Limit(mate=2))
+        depth_info = engine.analyse(board, chess.engine.Limit(depth=depth))
         score = info["score"].pov(board.turn)
         pv = [move.uci() for move in info.get("pv", [])]
+        depth_score = depth_info["score"].pov(board.turn)
         mate_score = score.mate()
         stockfish = {
             "classification": _stockfish_classification(mate_score),
@@ -135,9 +137,16 @@ def _validate_entry(
             "centipawn_score": score.score(mate_score=100000),
             "bestmove": pv[0] if pv else None,
             "pv": pv,
-            "depth": info.get("depth"),
-            "seldepth": info.get("seldepth"),
-            "nodes": info.get("nodes"),
+            "proof_limit": "mate=2",
+            "depth": depth_info.get("depth"),
+            "depth_mate_score": depth_score.mate(),
+            "depth_bestmove": (
+                depth_info.get("pv", [None])[0].uci()
+                if depth_info.get("pv")
+                else None
+            ),
+            "seldepth": depth_info.get("seldepth"),
+            "nodes": depth_info.get("nodes"),
         }
     return {
         "stage_index": entry.stage_index,

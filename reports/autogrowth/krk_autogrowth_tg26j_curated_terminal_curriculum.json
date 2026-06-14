@@ -1,7 +1,7 @@
 {
   "config": {
     "eta_m3": 0.1,
-    "max_samples": 24,
+    "max_samples": 32,
     "rich_feature_credit_scale": 0.25,
     "train_repetitions": 3
   },
@@ -11,14 +11,14 @@
     "m4_policy": "consolidate only per bucket after heldout/symmetry confirmation, not from labels alone",
     "old_curriculum_reuse_status": "active_curated_terminal_runway_added",
     "stage2_decision": "old edge/fence stages are inventoried, but positions that are not immediate mate-in-one or forced mate-in-two remain later graded-rollout curriculum rather than classifier data",
-    "symmetry_interference_flag": false
+    "symmetry_interference_flag": true
   },
   "original_position_run": {
     "dataset": {
       "mate1_train_records": 15,
       "mate1_unique_positions": 5,
-      "mate2_train_records": 3,
-      "mate2_unique_positions": 1,
+      "mate2_train_records": 15,
+      "mate2_unique_positions": 5,
       "source_labels_learner_visible": false
     },
     "mate1": {
@@ -99,15 +99,15 @@
     },
     "mate2": {
       "evaluation": {
-        "chain_completion_count": 1,
-        "chain_request_count": 1,
-        "chain_step_count": 1,
-        "conversion_count": 1,
-        "conversion_rate": 1.0,
-        "first_move_success_count": 1,
-        "first_move_success_rate": 1.0,
-        "forced_mate_reply_coverage": 1.0,
-        "position_count": 1,
+        "chain_completion_count": 4,
+        "chain_request_count": 5,
+        "chain_step_count": 5,
+        "conversion_count": 4,
+        "conversion_rate": 0.8,
+        "first_move_success_count": 4,
+        "first_move_success_rate": 0.8,
+        "forced_mate_reply_coverage": 0.8,
+        "position_count": 5,
         "samples": [
           {
             "all_replies_mated": true,
@@ -127,24 +127,106 @@
               }
             ],
             "selected_first": "c5b6"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "1k6/8/K7/8/8/8/8/R7 w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "a1c1"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "b8a8",
+                "correct_mates": [
+                  "c1c8"
+                ],
+                "mated": true,
+                "selected_mate": "c1c8"
+              }
+            ],
+            "selected_first": "a1c1"
+          },
+          {
+            "all_replies_mated": false,
+            "fen": "7k/R7/5K2/8/8/8/8/8 w - - 0 1",
+            "first_move_success": false,
+            "forced_first_moves": [
+              "f6g6"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "h8g8",
+                "correct_mates": [],
+                "mated": false,
+                "selected_mate": "f7f8"
+              }
+            ],
+            "selected_first": "a7f7"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "1k6/8/2K5/8/8/8/8/R7 w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "a1a2",
+              "a1a3",
+              "a1a4",
+              "a1a5",
+              "a1a6"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "b8c8",
+                "correct_mates": [
+                  "a6a8"
+                ],
+                "mated": true,
+                "selected_mate": "a6a8"
+              }
+            ],
+            "selected_first": "a1a6"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "8/8/8/8/8/5K2/7k/R7 w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "a1b1",
+              "a1c1",
+              "a1d1",
+              "a1e1",
+              "a1f1"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "h2h3",
+                "correct_mates": [
+                  "c1h1"
+                ],
+                "mated": true,
+                "selected_mate": "c1h1"
+              }
+            ],
+            "selected_first": "a1c1"
           }
         ],
-        "wrong_first_move_count": 0
+        "wrong_first_move_count": 1
       },
-      "m4_consolidation_event_count": 1,
+      "m4_consolidation_event_count": 0,
       "training": {
-        "first_learner_m3_update_count": 11616,
-        "first_move_negative_updates": 63,
-        "first_move_positive_updates": 3,
-        "first_terminal_count": 340,
-        "mate_terminal_count": 461,
-        "position_count": 3,
-        "second_mate_learner_extra_m3_updates": 10032
+        "first_learner_m3_update_count": 51216,
+        "first_move_negative_updates": 252,
+        "first_move_positive_updates": 39,
+        "first_terminal_count": 497,
+        "mate_terminal_count": 567,
+        "position_count": 15,
+        "second_mate_learner_extra_m3_updates": 123024
       }
     },
     "terminal_counts": {
-      "mate1": 461,
-      "mate2_first": 340
+      "mate1": 567,
+      "mate2_first": 497
     }
   },
   "purity_boundary": {
@@ -303,9 +385,9 @@
         "stage_index": 0
       },
       "Mate_In_2": {
-        "forced_mate_in_two_count": 5,
-        "invalid_count": 15,
-        "later_graded_rollout_count": 5,
+        "forced_mate_in_two_count": 25,
+        "invalid_count": 0,
+        "later_graded_rollout_count": 0,
         "mate_in_one_count": 0,
         "position_count": 25,
         "stage_id": 1,
@@ -334,7 +416,7 @@
     "examples": {
       "forced_mate_in_two": [
         {
-          "description": "1.Kb6 (approach) 2.Ra1#",
+          "description": "1.Kb6 (approach), then rook mates on h8.",
           "fen": "k7/8/8/2K5/8/8/8/7R w - - 0 1",
           "forced_mate_in_two_first_moves": [
             "c5b6"
@@ -350,7 +432,7 @@
           "valid": true
         },
         {
-          "description": "1.Kb6 (approach) 2.Ra1#",
+          "description": "1.Kb6 (approach), then rook mates on h8.",
           "fen": "7k/8/8/5K2/8/8/8/R7 w - - 0 1",
           "forced_mate_in_two_first_moves": [
             "f5g6"
@@ -366,7 +448,7 @@
           "valid": true
         },
         {
-          "description": "1.Kb6 (approach) 2.Ra1#",
+          "description": "1.Kb6 (approach), then rook mates on h8.",
           "fen": "7R/8/8/8/2K5/8/8/k7 w - - 0 1",
           "forced_mate_in_two_first_moves": [
             "c4b3"
@@ -382,7 +464,7 @@
           "valid": true
         },
         {
-          "description": "1.Kb6 (approach) 2.Ra1#",
+          "description": "1.Kb6 (approach), then rook mates on h8.",
           "fen": "R7/8/8/8/8/4K3/8/7k w - - 0 1",
           "forced_mate_in_two_first_moves": [
             "e3f2"
@@ -398,7 +480,7 @@
           "valid": true
         },
         {
-          "description": "1.Kb6 (approach) 2.Ra1#",
+          "description": "1.Kb6 (approach), then rook mates on h8.",
           "fen": "k7/8/3K4/8/8/8/8/7R w - - 0 1",
           "forced_mate_in_two_first_moves": [
             "d6c7"
@@ -414,150 +496,113 @@
           "valid": true
         },
         {
-          "description": "Enemy between; avoid rook capture.",
-          "fen": "8/8/5K2/7k/6R1/8/8/8 w - - 0 1",
+          "description": "1.Rc1 (sideways rook tempo), then rook mates on c8.",
+          "fen": "1k6/8/K7/8/8/8/8/R7 w - - 0 1",
           "forced_mate_in_two_first_moves": [
-            "g4a4",
-            "g4b4",
-            "g4c4",
-            "g4d4",
-            "g4e4",
-            "g4f4"
+            "a1c1"
           ],
           "mate_in_one_moves": [],
-          "optimal_moves": 3,
-          "position_index": 4,
-          "stage_id": 3,
-          "stage_index": 3,
-          "stage_name": "Edge_Trap_Enemy_Between",
+          "optimal_moves": 2,
+          "position_index": 1,
+          "stage_id": 1,
+          "stage_index": 1,
+          "stage_name": "Mate_In_2",
           "symmetry": "identity",
           "training_role": "forced_mate_in_two",
           "valid": true
         },
         {
-          "description": "Enemy between; avoid rook capture.",
-          "fen": "8/8/2K5/k7/1R6/8/8/8 w - - 0 1",
+          "description": "1.Rc1 (sideways rook tempo), then rook mates on c8.",
+          "fen": "6k1/8/7K/8/8/8/8/7R w - - 0 1",
           "forced_mate_in_two_first_moves": [
-            "b4c4",
-            "b4d4",
-            "b4e4",
-            "b4f4",
-            "b4g4",
-            "b4h4"
+            "h1f1"
           ],
           "mate_in_one_moves": [],
-          "optimal_moves": 3,
-          "position_index": 4,
-          "stage_id": 3,
-          "stage_index": 3,
-          "stage_name": "Edge_Trap_Enemy_Between",
+          "optimal_moves": 2,
+          "position_index": 1,
+          "stage_id": 1,
+          "stage_index": 1,
+          "stage_name": "Mate_In_2",
           "symmetry": "flip_horizontal",
           "training_role": "forced_mate_in_two",
           "valid": true
         },
         {
-          "description": "Enemy between; avoid rook capture.",
-          "fen": "8/8/8/6R1/7k/5K2/8/8 w - - 0 1",
+          "description": "1.Rc1 (sideways rook tempo), then rook mates on c8.",
+          "fen": "R7/8/8/8/8/K7/8/1k6 w - - 0 1",
           "forced_mate_in_two_first_moves": [
-            "g5a5",
-            "g5b5",
-            "g5c5",
-            "g5d5",
-            "g5e5",
-            "g5f5"
+            "a8c8"
           ],
           "mate_in_one_moves": [],
-          "optimal_moves": 3,
-          "position_index": 4,
-          "stage_id": 3,
-          "stage_index": 3,
-          "stage_name": "Edge_Trap_Enemy_Between",
+          "optimal_moves": 2,
+          "position_index": 1,
+          "stage_id": 1,
+          "stage_index": 1,
+          "stage_name": "Mate_In_2",
           "symmetry": "flip_vertical",
           "training_role": "forced_mate_in_two",
           "valid": true
         },
         {
-          "description": "Enemy between; avoid rook capture.",
-          "fen": "4k3/3R4/5K2/8/8/8/8/8 w - - 0 1",
+          "description": "1.Rc1 (sideways rook tempo), then rook mates on c8.",
+          "fen": "8/8/8/8/8/8/7k/R4K2 w - - 0 1",
           "forced_mate_in_two_first_moves": [
-            "d7d1",
-            "d7d2",
-            "d7d3",
-            "d7d4",
-            "d7d5",
-            "d7d6"
+            "a1a3"
           ],
           "mate_in_one_moves": [],
-          "optimal_moves": 3,
-          "position_index": 4,
-          "stage_id": 3,
-          "stage_index": 3,
-          "stage_name": "Edge_Trap_Enemy_Between",
+          "optimal_moves": 2,
+          "position_index": 1,
+          "stage_id": 1,
+          "stage_index": 1,
+          "stage_name": "Mate_In_2",
           "symmetry": "flip_diagonal",
           "training_role": "forced_mate_in_two",
           "valid": true
         },
         {
-          "description": "Enemy between; avoid rook capture.",
-          "fen": "8/8/8/8/8/2K5/4R3/3k4 w - - 0 1",
+          "description": "1.Rc1 (sideways rook tempo), then rook mates on c8.",
+          "fen": "2K4R/k7/8/8/8/8/8/8 w - - 0 1",
           "forced_mate_in_two_first_moves": [
-            "e2e3",
-            "e2e4",
-            "e2e5",
-            "e2e6",
-            "e2e7",
-            "e2e8"
+            "h8h6"
           ],
           "mate_in_one_moves": [],
-          "optimal_moves": 3,
-          "position_index": 4,
-          "stage_id": 3,
-          "stage_index": 3,
-          "stage_name": "Edge_Trap_Enemy_Between",
+          "optimal_moves": 2,
+          "position_index": 1,
+          "stage_id": 1,
+          "stage_index": 1,
+          "stage_name": "Mate_In_2",
           "symmetry": "flip_anti_diagonal",
           "training_role": "forced_mate_in_two",
           "valid": true
         },
         {
-          "description": "Left edge trap; waiting move likely.",
-          "fen": "8/8/8/8/8/1R6/k7/2K5 w - - 0 1",
+          "description": "1.Kg6 (opposition), then rook mates on h7/a8 pattern.",
+          "fen": "7k/R7/5K2/8/8/8/8/8 w - - 0 1",
           "forced_mate_in_two_first_moves": [
-            "b3c3",
-            "b3d3",
-            "b3e3",
-            "b3f3",
-            "b3g3",
-            "b3h3",
-            "c1c2"
+            "f6g6"
           ],
           "mate_in_one_moves": [],
-          "optimal_moves": 3,
-          "position_index": 7,
-          "stage_id": 3,
-          "stage_index": 3,
-          "stage_name": "Edge_Trap_Enemy_Between",
+          "optimal_moves": 2,
+          "position_index": 2,
+          "stage_id": 1,
+          "stage_index": 1,
+          "stage_name": "Mate_In_2",
           "symmetry": "identity",
           "training_role": "forced_mate_in_two",
           "valid": true
         },
         {
-          "description": "Left edge trap; waiting move likely.",
-          "fen": "8/8/8/8/8/6R1/7k/5K2 w - - 0 1",
+          "description": "1.Kg6 (opposition), then rook mates on h7/a8 pattern.",
+          "fen": "k7/7R/2K5/8/8/8/8/8 w - - 0 1",
           "forced_mate_in_two_first_moves": [
-            "f1f2",
-            "g3a3",
-            "g3b3",
-            "g3c3",
-            "g3d3",
-            "g3e3",
-            "g3f3"
+            "c6b6"
           ],
           "mate_in_one_moves": [],
-          "optimal_moves": 3,
-          "position_index": 7,
-          "stage_id": 3,
-          "stage_index": 3,
-          "stage_name": "Edge_Trap_Enemy_Between",
+          "optimal_moves": 2,
+          "position_index": 2,
+          "stage_id": 1,
+          "stage_index": 1,
+          "stage_name": "Mate_In_2",
           "symmetry": "flip_horizontal",
           "training_role": "forced_mate_in_two",
           "valid": true
@@ -565,245 +610,175 @@
       ],
       "invalid": [
         {
-          "description": "1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
-          "fen": "8/k7/1K6/8/8/8/8/7R w - - 0 1",
+          "description": "Knight distance: Ke6 then Re8# or immediate threat",
+          "fen": "4k3/4R3/3K4/8/8/8/8/8 w - - 0 1",
           "forced_mate_in_two_first_moves": [],
           "mate_in_one_moves": [],
           "optimal_moves": 2,
-          "position_index": 1,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
+          "position_index": 0,
+          "stage_id": 3,
+          "stage_index": 5,
+          "stage_name": "Edge_Fence_Knight",
           "symmetry": "identity",
           "training_role": "invalid",
           "valid": false
         },
         {
-          "description": "1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
-          "fen": "8/7k/6K1/8/8/8/8/R7 w - - 0 1",
+          "description": "Knight distance: Ke6 then Re8# or immediate threat",
+          "fen": "3k4/3R4/4K3/8/8/8/8/8 w - - 0 1",
           "forced_mate_in_two_first_moves": [],
           "mate_in_one_moves": [],
           "optimal_moves": 2,
-          "position_index": 1,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
+          "position_index": 0,
+          "stage_id": 3,
+          "stage_index": 5,
+          "stage_name": "Edge_Fence_Knight",
           "symmetry": "flip_horizontal",
           "training_role": "invalid",
           "valid": false
         },
         {
-          "description": "1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
-          "fen": "7R/8/8/8/8/1K6/k7/8 w - - 0 1",
+          "description": "Knight distance: Ke6 then Re8# or immediate threat",
+          "fen": "8/8/8/8/8/3K4/4R3/4k3 w - - 0 1",
           "forced_mate_in_two_first_moves": [],
           "mate_in_one_moves": [],
           "optimal_moves": 2,
-          "position_index": 1,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
+          "position_index": 0,
+          "stage_id": 3,
+          "stage_index": 5,
+          "stage_name": "Edge_Fence_Knight",
           "symmetry": "flip_vertical",
           "training_role": "invalid",
           "valid": false
         },
         {
-          "description": "1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
-          "fen": "R7/8/8/8/8/8/5K2/6k1 w - - 0 1",
+          "description": "Knight distance: Ke6 then Re8# or immediate threat",
+          "fen": "8/8/8/6Rk/5K2/8/8/8 w - - 0 1",
           "forced_mate_in_two_first_moves": [],
           "mate_in_one_moves": [],
           "optimal_moves": 2,
-          "position_index": 1,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
+          "position_index": 0,
+          "stage_id": 3,
+          "stage_index": 5,
+          "stage_name": "Edge_Fence_Knight",
           "symmetry": "flip_diagonal",
           "training_role": "invalid",
           "valid": false
         },
         {
-          "description": "1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
-          "fen": "1k6/2K5/8/8/8/8/8/7R w - - 0 1",
+          "description": "Knight distance: Ke6 then Re8# or immediate threat",
+          "fen": "8/8/8/2K5/kR6/8/8/8 w - - 0 1",
           "forced_mate_in_two_first_moves": [],
           "mate_in_one_moves": [],
           "optimal_moves": 2,
-          "position_index": 1,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
+          "position_index": 0,
+          "stage_id": 3,
+          "stage_index": 5,
+          "stage_name": "Edge_Fence_Knight",
           "symmetry": "flip_anti_diagonal",
           "training_role": "invalid",
           "valid": false
         },
         {
-          "description": "1.Kb6 (any) 2.Ra8# (approach + mate)",
-          "fen": "k7/8/1K6/8/8/8/8/R7 w - - 0 1",
+          "description": "Knight distance right: Ke6 then Re8#",
+          "fen": "4k3/4R3/5K2/8/8/8/8/8 w - - 0 1",
           "forced_mate_in_two_first_moves": [],
           "mate_in_one_moves": [],
           "optimal_moves": 2,
-          "position_index": 2,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
+          "position_index": 1,
+          "stage_id": 3,
+          "stage_index": 5,
+          "stage_name": "Edge_Fence_Knight",
           "symmetry": "identity",
           "training_role": "invalid",
           "valid": false
         },
         {
-          "description": "1.Kb6 (any) 2.Ra8# (approach + mate)",
-          "fen": "7k/8/6K1/8/8/8/8/7R w - - 0 1",
+          "description": "Knight distance right: Ke6 then Re8#",
+          "fen": "3k4/3R4/2K5/8/8/8/8/8 w - - 0 1",
           "forced_mate_in_two_first_moves": [],
           "mate_in_one_moves": [],
           "optimal_moves": 2,
-          "position_index": 2,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
+          "position_index": 1,
+          "stage_id": 3,
+          "stage_index": 5,
+          "stage_name": "Edge_Fence_Knight",
           "symmetry": "flip_horizontal",
           "training_role": "invalid",
           "valid": false
         },
         {
-          "description": "1.Kb6 (any) 2.Ra8# (approach + mate)",
-          "fen": "R7/8/8/8/8/1K6/8/k7 w - - 0 1",
+          "description": "Knight distance right: Ke6 then Re8#",
+          "fen": "8/8/8/8/8/5K2/4R3/4k3 w - - 0 1",
           "forced_mate_in_two_first_moves": [],
           "mate_in_one_moves": [],
           "optimal_moves": 2,
-          "position_index": 2,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
+          "position_index": 1,
+          "stage_id": 3,
+          "stage_index": 5,
+          "stage_name": "Edge_Fence_Knight",
           "symmetry": "flip_vertical",
           "training_role": "invalid",
           "valid": false
         },
         {
-          "description": "1.Kb6 (any) 2.Ra8# (approach + mate)",
-          "fen": "8/8/8/8/8/8/5K2/R6k w - - 0 1",
+          "description": "Knight distance right: Ke6 then Re8#",
+          "fen": "8/8/5K2/6Rk/8/8/8/8 w - - 0 1",
           "forced_mate_in_two_first_moves": [],
           "mate_in_one_moves": [],
           "optimal_moves": 2,
-          "position_index": 2,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
+          "position_index": 1,
+          "stage_id": 3,
+          "stage_index": 5,
+          "stage_name": "Edge_Fence_Knight",
           "symmetry": "flip_diagonal",
           "training_role": "invalid",
           "valid": false
         },
         {
-          "description": "1.Kb6 (any) 2.Ra8# (approach + mate)",
-          "fen": "k6R/2K5/8/8/8/8/8/8 w - - 0 1",
+          "description": "Knight distance right: Ke6 then Re8#",
+          "fen": "8/8/8/8/kR6/2K5/8/8 w - - 0 1",
           "forced_mate_in_two_first_moves": [],
           "mate_in_one_moves": [],
           "optimal_moves": 2,
-          "position_index": 2,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
+          "position_index": 1,
+          "stage_id": 3,
+          "stage_index": 5,
+          "stage_name": "Edge_Fence_Knight",
           "symmetry": "flip_anti_diagonal",
           "training_role": "invalid",
           "valid": false
         },
         {
-          "description": "1.Kg6 (opposition) 2.Rh1#",
-          "fen": "7k/8/5K2/8/8/8/8/7R w - - 0 1",
+          "description": "Knight distance corner: Kb6 then Ra8#",
+          "fen": "1k6/1R6/2K5/8/8/8/8/8 w - - 0 1",
           "forced_mate_in_two_first_moves": [],
           "mate_in_one_moves": [],
           "optimal_moves": 2,
-          "position_index": 3,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
+          "position_index": 2,
+          "stage_id": 3,
+          "stage_index": 5,
+          "stage_name": "Edge_Fence_Knight",
           "symmetry": "identity",
           "training_role": "invalid",
           "valid": false
         },
         {
-          "description": "1.Kg6 (opposition) 2.Rh1#",
-          "fen": "k7/8/2K5/8/8/8/8/R7 w - - 0 1",
+          "description": "Knight distance corner: Kb6 then Ra8#",
+          "fen": "6k1/6R1/5K2/8/8/8/8/8 w - - 0 1",
           "forced_mate_in_two_first_moves": [],
           "mate_in_one_moves": [],
           "optimal_moves": 2,
-          "position_index": 3,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
+          "position_index": 2,
+          "stage_id": 3,
+          "stage_index": 5,
+          "stage_name": "Edge_Fence_Knight",
           "symmetry": "flip_horizontal",
           "training_role": "invalid",
           "valid": false
         }
       ],
       "later_graded_rollout": [
-        {
-          "description": "1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
-          "fen": "k7/8/8/8/8/K7/8/R7 w - - 0 1",
-          "forced_mate_in_two_first_moves": [],
-          "mate_in_one_moves": [],
-          "optimal_moves": 2,
-          "position_index": 4,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
-          "symmetry": "identity",
-          "training_role": "later_graded_rollout",
-          "valid": true
-        },
-        {
-          "description": "1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
-          "fen": "7k/8/8/8/8/7K/8/7R w - - 0 1",
-          "forced_mate_in_two_first_moves": [],
-          "mate_in_one_moves": [],
-          "optimal_moves": 2,
-          "position_index": 4,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
-          "symmetry": "flip_horizontal",
-          "training_role": "later_graded_rollout",
-          "valid": true
-        },
-        {
-          "description": "1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
-          "fen": "R7/8/K7/8/8/8/8/k7 w - - 0 1",
-          "forced_mate_in_two_first_moves": [],
-          "mate_in_one_moves": [],
-          "optimal_moves": 2,
-          "position_index": 4,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
-          "symmetry": "flip_vertical",
-          "training_role": "later_graded_rollout",
-          "valid": true
-        },
-        {
-          "description": "1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
-          "fen": "8/8/8/8/8/8/8/R1K4k w - - 0 1",
-          "forced_mate_in_two_first_moves": [],
-          "mate_in_one_moves": [],
-          "optimal_moves": 2,
-          "position_index": 4,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
-          "symmetry": "flip_diagonal",
-          "training_role": "later_graded_rollout",
-          "valid": true
-        },
-        {
-          "description": "1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
-          "fen": "k4K1R/8/8/8/8/8/8/8 w - - 0 1",
-          "forced_mate_in_two_first_moves": [],
-          "mate_in_one_moves": [],
-          "optimal_moves": 2,
-          "position_index": 4,
-          "stage_id": 1,
-          "stage_index": 1,
-          "stage_name": "Mate_In_2",
-          "symmetry": "flip_anti_diagonal",
-          "training_role": "later_graded_rollout",
-          "valid": true
-        },
         {
           "description": "Edge\u2011trap close; king inside, no immediate mate.",
           "fen": "1R6/8/8/8/2K5/8/k7/8 w - - 0 1",
@@ -895,6 +870,76 @@
           "mate_in_one_moves": [],
           "optimal_moves": 2,
           "position_index": 1,
+          "stage_id": 2,
+          "stage_index": 2,
+          "stage_name": "Edge_Trap_Close",
+          "symmetry": "flip_horizontal",
+          "training_role": "later_graded_rollout",
+          "valid": true
+        },
+        {
+          "description": "Bottom edge trap with rook fence; approach conversion.",
+          "fen": "3k4/5R2/5K2/8/8/8/8/8 w - - 0 1",
+          "forced_mate_in_two_first_moves": [],
+          "mate_in_one_moves": [],
+          "optimal_moves": 2,
+          "position_index": 1,
+          "stage_id": 2,
+          "stage_index": 2,
+          "stage_name": "Edge_Trap_Close",
+          "symmetry": "flip_vertical",
+          "training_role": "later_graded_rollout",
+          "valid": true
+        },
+        {
+          "description": "Bottom edge trap with rook fence; approach conversion.",
+          "fen": "8/8/1RK5/8/k7/8/8/8 w - - 0 1",
+          "forced_mate_in_two_first_moves": [],
+          "mate_in_one_moves": [],
+          "optimal_moves": 2,
+          "position_index": 1,
+          "stage_id": 2,
+          "stage_index": 2,
+          "stage_name": "Edge_Trap_Close",
+          "symmetry": "flip_diagonal",
+          "training_role": "later_graded_rollout",
+          "valid": true
+        },
+        {
+          "description": "Bottom edge trap with rook fence; approach conversion.",
+          "fen": "8/8/8/7k/8/5KR1/8/8 w - - 0 1",
+          "forced_mate_in_two_first_moves": [],
+          "mate_in_one_moves": [],
+          "optimal_moves": 2,
+          "position_index": 1,
+          "stage_id": 2,
+          "stage_index": 2,
+          "stage_name": "Edge_Trap_Close",
+          "symmetry": "flip_anti_diagonal",
+          "training_role": "later_graded_rollout",
+          "valid": true
+        },
+        {
+          "description": "Bottom edge trap; rook on g2, king close.",
+          "fen": "8/8/8/8/8/5K2/6R1/3k4 w - - 0 1",
+          "forced_mate_in_two_first_moves": [],
+          "mate_in_one_moves": [],
+          "optimal_moves": 2,
+          "position_index": 2,
+          "stage_id": 2,
+          "stage_index": 2,
+          "stage_name": "Edge_Trap_Close",
+          "symmetry": "identity",
+          "training_role": "later_graded_rollout",
+          "valid": true
+        },
+        {
+          "description": "Bottom edge trap; rook on g2, king close.",
+          "fen": "8/8/8/8/8/2K5/1R6/4k3 w - - 0 1",
+          "forced_mate_in_two_first_moves": [],
+          "mate_in_one_moves": [],
+          "optimal_moves": 2,
+          "position_index": 2,
           "stage_id": 2,
           "stage_index": 2,
           "stage_name": "Edge_Trap_Close",
@@ -1105,8 +1150,8 @@
     "dataset": {
       "mate1_train_records": 54,
       "mate1_unique_positions": 18,
-      "mate2_train_records": 15,
-      "mate2_unique_positions": 5,
+      "mate2_train_records": 69,
+      "mate2_unique_positions": 23,
       "source_labels_learner_visible": false
     },
     "mate1": {
@@ -1317,15 +1362,15 @@
     },
     "mate2": {
       "evaluation": {
-        "chain_completion_count": 5,
-        "chain_request_count": 5,
-        "chain_step_count": 5,
-        "conversion_count": 5,
-        "conversion_rate": 1.0,
-        "first_move_success_count": 5,
-        "first_move_success_rate": 1.0,
-        "forced_mate_reply_coverage": 1.0,
-        "position_count": 5,
+        "chain_completion_count": 18,
+        "chain_request_count": 23,
+        "chain_step_count": 23,
+        "conversion_count": 18,
+        "conversion_rate": 0.782608695652174,
+        "first_move_success_count": 18,
+        "first_move_success_rate": 0.782608695652174,
+        "forced_mate_reply_coverage": 0.782608695652174,
+        "position_count": 23,
         "samples": [
           {
             "all_replies_mated": true,
@@ -1421,24 +1466,388 @@
               }
             ],
             "selected_first": "d6c7"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "1k6/8/K7/8/8/8/8/R7 w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "a1c1"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "b8a8",
+                "correct_mates": [
+                  "c1c8"
+                ],
+                "mated": true,
+                "selected_mate": "c1c8"
+              }
+            ],
+            "selected_first": "a1c1"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "6k1/8/7K/8/8/8/8/7R w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "h1f1"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "g8h8",
+                "correct_mates": [
+                  "f1f8"
+                ],
+                "mated": true,
+                "selected_mate": "f1f8"
+              }
+            ],
+            "selected_first": "h1f1"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "R7/8/8/8/8/K7/8/1k6 w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "a8c8"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "b1a1",
+                "correct_mates": [
+                  "c8c1"
+                ],
+                "mated": true,
+                "selected_mate": "c8c1"
+              }
+            ],
+            "selected_first": "a8c8"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "8/8/8/8/8/8/7k/R4K2 w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "a1a3"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "h2h1",
+                "correct_mates": [
+                  "a3h3"
+                ],
+                "mated": true,
+                "selected_mate": "a3h3"
+              }
+            ],
+            "selected_first": "a1a3"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "2K4R/k7/8/8/8/8/8/8 w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "h8h6"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "a7a8",
+                "correct_mates": [
+                  "h6a6"
+                ],
+                "mated": true,
+                "selected_mate": "h6a6"
+              }
+            ],
+            "selected_first": "h8h6"
+          },
+          {
+            "all_replies_mated": false,
+            "fen": "7k/R7/5K2/8/8/8/8/8 w - - 0 1",
+            "first_move_success": false,
+            "forced_first_moves": [
+              "f6g6"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "h8g8",
+                "correct_mates": [],
+                "mated": false,
+                "selected_mate": "f7f8"
+              }
+            ],
+            "selected_first": "a7f7"
+          },
+          {
+            "all_replies_mated": false,
+            "fen": "k7/7R/2K5/8/8/8/8/8 w - - 0 1",
+            "first_move_success": false,
+            "forced_first_moves": [
+              "c6b6"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "a8b8",
+                "correct_mates": [],
+                "mated": false,
+                "selected_mate": "c7c8"
+              }
+            ],
+            "selected_first": "h7c7"
+          },
+          {
+            "all_replies_mated": false,
+            "fen": "8/8/8/8/8/5K2/R7/7k w - - 0 1",
+            "first_move_success": false,
+            "forced_first_moves": [
+              "f3g3"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "h1g1",
+                "correct_mates": [],
+                "mated": false,
+                "selected_mate": "f2f1"
+              }
+            ],
+            "selected_first": "a2f2"
+          },
+          {
+            "all_replies_mated": false,
+            "fen": "7k/8/5K2/8/8/8/8/6R1 w - - 0 1",
+            "first_move_success": false,
+            "forced_first_moves": [
+              "f6f7"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "h8h7",
+                "correct_mates": [],
+                "mated": false,
+                "selected_mate": "g6h6"
+              }
+            ],
+            "selected_first": "g1g6"
+          },
+          {
+            "all_replies_mated": false,
+            "fen": "1R6/8/8/8/8/2K5/8/k7 w - - 0 1",
+            "first_move_success": false,
+            "forced_first_moves": [
+              "c3c2"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "a1a2",
+                "correct_mates": [],
+                "mated": false,
+                "selected_mate": "b3a3"
+              }
+            ],
+            "selected_first": "b8b3"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "1k6/8/2K5/8/8/8/8/R7 w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "a1a2",
+              "a1a3",
+              "a1a4",
+              "a1a5",
+              "a1a6"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "b8c8",
+                "correct_mates": [
+                  "a6a8"
+                ],
+                "mated": true,
+                "selected_mate": "a6a8"
+              }
+            ],
+            "selected_first": "a1a6"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "6k1/8/5K2/8/8/8/8/7R w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "h1h2",
+              "h1h3",
+              "h1h4",
+              "h1h5",
+              "h1h6"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "g8f8",
+                "correct_mates": [
+                  "h6h8"
+                ],
+                "mated": true,
+                "selected_mate": "h6h8"
+              }
+            ],
+            "selected_first": "h1h6"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "R7/8/8/8/8/2K5/8/1k6 w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "a8a3",
+              "a8a4",
+              "a8a5",
+              "a8a6",
+              "a8a7"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "b1c1",
+                "correct_mates": [
+                  "a3a1"
+                ],
+                "mated": true,
+                "selected_mate": "a3a1"
+              }
+            ],
+            "selected_first": "a8a3"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "8/8/8/8/8/5K2/7k/R7 w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "a1b1",
+              "a1c1",
+              "a1d1",
+              "a1e1",
+              "a1f1"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "h2h3",
+                "correct_mates": [
+                  "f1h1"
+                ],
+                "mated": true,
+                "selected_mate": "f1h1"
+              }
+            ],
+            "selected_first": "a1f1"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "7R/k7/2K5/8/8/8/8/8 w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "h8c8",
+              "h8d8",
+              "h8e8",
+              "h8f8",
+              "h8g8"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "a7a6",
+                "correct_mates": [
+                  "c8a8"
+                ],
+                "mated": true,
+                "selected_mate": "c8a8"
+              }
+            ],
+            "selected_first": "h8c8"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "8/8/8/8/8/2K5/k7/7R w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "h1c1",
+              "h1d1",
+              "h1e1",
+              "h1f1",
+              "h1g1"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "a2a3",
+                "correct_mates": [
+                  "c1a1"
+                ],
+                "mated": true,
+                "selected_mate": "c1a1"
+              }
+            ],
+            "selected_first": "h1c1"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "R7/7k/5K2/8/8/8/8/8 w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "a8b8",
+              "a8c8",
+              "a8d8",
+              "a8e8",
+              "a8f8"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "h7h6",
+                "correct_mates": [
+                  "f8h8"
+                ],
+                "mated": true,
+                "selected_mate": "f8h8"
+              }
+            ],
+            "selected_first": "a8f8"
+          },
+          {
+            "all_replies_mated": true,
+            "fen": "7R/8/8/8/8/5K2/8/6k1 w - - 0 1",
+            "first_move_success": true,
+            "forced_first_moves": [
+              "h8h3",
+              "h8h4",
+              "h8h5",
+              "h8h6",
+              "h8h7"
+            ],
+            "reply_checks": [
+              {
+                "black_reply": "g1f1",
+                "correct_mates": [
+                  "h3h1"
+                ],
+                "mated": true,
+                "selected_mate": "h3h1"
+              }
+            ],
+            "selected_first": "h8h3"
           }
         ],
-        "wrong_first_move_count": 0
+        "wrong_first_move_count": 5
       },
-      "m4_consolidation_event_count": 1,
+      "m4_consolidation_event_count": 0,
       "training": {
-        "first_learner_m3_update_count": 58080,
-        "first_move_negative_updates": 315,
-        "first_move_positive_updates": 15,
-        "first_terminal_count": 391,
-        "mate_terminal_count": 499,
-        "position_count": 15,
-        "second_mate_learner_extra_m3_updates": 50160
+        "first_learner_m3_update_count": 234960,
+        "first_move_negative_updates": 1170,
+        "first_move_positive_updates": 165,
+        "first_terminal_count": 536,
+        "mate_terminal_count": 602,
+        "position_count": 69,
+        "second_mate_learner_extra_m3_updates": 521136
       }
     },
     "terminal_counts": {
-      "mate1": 499,
-      "mate2_first": 391
+      "mate1": 602,
+      "mate2_first": 536
     }
   }
 }

@@ -41,6 +41,11 @@ from .curated_terminal_curriculum import (
     run_curated_terminal_curriculum,
     stage_inventory,
 )
+from .curated_replay_curriculum import (
+    CuratedReplayCurriculumConfig,
+    CuratedReplayCurriculumResult,
+    run_curated_replay_curriculum,
+)
 from .evaluate import (
     ArmMetrics,
     EvaluationConfig,
@@ -223,6 +228,8 @@ __all__ = [
     "CurriculumRewardRecoveryResult",
     "CuratedTerminalCurriculumConfig",
     "CuratedTerminalCurriculumResult",
+    "CuratedReplayCurriculumConfig",
+    "CuratedReplayCurriculumResult",
     "EvaluationConfig",
     "EvaluationResult",
     "EdgeFenceCurriculumConfig",
@@ -325,6 +332,7 @@ __all__ = [
     "run_continuation_retry_experiment",
     "run_curriculum_reward_recovery",
     "run_curated_terminal_curriculum",
+    "run_curated_replay_curriculum",
     "run_edge_fence_curriculum",
     "run_fence_boundary_rehearsal",
     "run_fence_boundary_signal",

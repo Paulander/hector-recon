@@ -3,8 +3,10 @@ import json
 import chess
 
 from recon_lite_chess.autogrowth import (
+    CuratedReplayCurriculumConfig,
     CuratedTerminalCurriculumConfig,
     curated_stage_entries,
+    run_curated_replay_curriculum,
     run_curated_terminal_curriculum,
     stage_inventory,
     validate_learner_record,
@@ -81,7 +83,33 @@ def test_tg26j_stockfish_validator_scope_and_exact_classification() -> None:
     mate_stage_claims = [entry for entry in claims if entry.stage_name == "Mate_In_2"]
 
     assert len(mate_stage_claims) == 5
-    assert _exact_classification(chess.Board(mate_stage_claims[0].fen))["classification"] == "strict_forced_mate_in_two"
-    assert _exact_classification(chess.Board(mate_stage_claims[1].fen))["classification"] == "invalid_or_terminal"
-    assert _exact_classification(chess.Board(mate_stage_claims[4].fen))["classification"] == "not_strict_forced_mate_in_two"
+    assert {
+        _exact_classification(chess.Board(entry.fen))["classification"]
+        for entry in mate_stage_claims
+    } == {"strict_forced_mate_in_two"}
     assert _stockfish_classification(2) == "stockfish_mate_in_2"
+
+
+def test_tg26k_curated_replay_curriculum_records_growth_and_replay(tmp_path) -> None:
+    result = run_curated_replay_curriculum(
+        config=CuratedReplayCurriculumConfig(
+            include_symmetries=False,
+            train_repetitions=1,
+            replay_repetitions=1,
+            mate1_regression_threshold=0.80,
+            mate2_bucket_threshold=0.0,
+            mate2_cumulative_threshold=0.0,
+            max_samples=8,
+        )
+    )
+    payload = result.to_dict()
+    output = result.write_json(tmp_path / "tg26k.json")
+
+    assert output.exists()
+    assert payload["schema_version"] == "krk_autogrowth_tg26k_curated_replay_curriculum.v0"
+    assert payload["purity_boundary"]["stage_labels_learner_visible"] is False
+    assert payload["dataset"]["mate2_bucket_count"] == 5
+    assert payload["mate1_foundation"]["training"]["m3_update_count"] > 0
+    assert payload["mate2_bucket_sequence"][0]["growth"]["m3_update_delta"] > 0
+    assert payload["mate2_bucket_sequence"][1]["replay"]["prior_replay_position_count"] > 0
+    assert payload["final_evaluation"]["terminal_substrate"]["mate2_first_terminal_count"] > 0

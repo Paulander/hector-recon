@@ -131,46 +131,40 @@ STAGE_0_MATE_IN_1 = KRKStage(
 STAGE_1_MATE_IN_2 = KRKStage(
     stage_id=1,
     name="Mate_In_2",
-    description="Mate in 2 moves with varied patterns - no shortcuts",
+    description="Verified mate in 2 moves with varied approach and tempo patterns",
     distance_to_mate="2 moves",
     key_lesson="King-rook coordination",
     target_win_rate=0.95,  # Raised from 0.90 to ensure mastery
     positions=[
-        # a) King approach needed, then mate (FIXED: king on b6 blocks Rh8#)
-        # Old was: k7/8/K7 - Rh8# was instant mate!
-        # Now: White king on c5, must approach to b6 then Ra1#
+        # a) King approach needed, then mate.
         KRKStagePosition(
             fen="k7/8/8/2K5/8/8/8/7R w - - 0 1",
             optimal_moves=2,
-            description="1.Kb6 (approach) 2.Ra1#",
+            description="1.Kb6 (approach), then rook mates on h8.",
         ),
-        # b) Rook check forces king to edge, then mate (TRUE MATE-IN-2)
-        # 1.Rh8+ Ka7 2.Ra8# (rook cuts then delivers)
+        # b) Quiet sideways rook tempo with the king acting as perpendicular fence.
         KRKStagePosition(
-            fen="8/k7/1K6/8/8/8/8/7R w - - 0 1",
+            fen="1k6/8/K7/8/8/8/8/R7 w - - 0 1",
             optimal_moves=2,
-            description="1.Rh8+ Ka7 2.Ra8# (check forces edge, then mate)",
+            description="1.Rc1 (sideways rook tempo), then rook mates on c8.",
         ),
-        # c) King approach gives opposition, then rook mates (TRUE MATE-IN-2)
-        # 1.Kb6 (opposition) 2.Ra8# regardless of black's reply
+        # c) King opposition/tempo preserves the mating net.
         KRKStagePosition(
-            fen="k7/8/1K6/8/8/8/8/R7 w - - 0 1",
+            fen="7k/R7/5K2/8/8/8/8/8 w - - 0 1",
             optimal_moves=2,
-            description="1.Kb6 (any) 2.Ra8# (approach + mate)",
+            description="1.Kg6 (opposition), then rook mates on h7/a8 pattern.",
         ),
-        # d) Tempo/waiting move required (TRUE MATE-IN-2)
-        # 1.Kg6 (opposition) 2.Rh1# (king has no escape)
+        # d) Rook file tempo; several rook moves preserve mate-in-two.
         KRKStagePosition(
-            fen="7k/8/5K2/8/8/8/8/7R w - - 0 1",
+            fen="1k6/8/2K5/8/8/8/8/R7 w - - 0 1",
             optimal_moves=2,
-            description="1.Kg6 (opposition) 2.Rh1#",
+            description="Rook file tempo, then rook mates after the forced king move.",
         ),
-        # e) Rook tempo then mate (TRUE MATE-IN-2)
-        # 1.Ra6+ Kb8 2.Ra8# (rook cuts file, delivers mate)
+        # e) Rook rank tempo; several rook moves preserve mate-in-two.
         KRKStagePosition(
-            fen="k7/8/8/8/8/K7/8/R7 w - - 0 1",
+            fen="8/8/8/8/8/5K2/7k/R7 w - - 0 1",
             optimal_moves=2,
-            description="1.Ra6+ Kb8 2.Ra8# (rook drives + mates)",
+            description="Rook rank tempo, then rook mates after the forced king move.",
         ),
     ]
 )
