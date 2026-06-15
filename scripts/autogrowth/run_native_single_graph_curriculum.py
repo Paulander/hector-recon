@@ -16,6 +16,8 @@ def main() -> int:
     parser.add_argument("--continuation-repetitions", type=int, default=2)
     parser.add_argument("--max-ticks", type=int, default=18)
     parser.add_argument("--max-samples", type=int, default=32)
+    parser.add_argument("--max-mate1-positions", type=int, default=None)
+    parser.add_argument("--max-mate2-positions", type=int, default=None)
     parser.add_argument("--no-symmetries", action="store_true")
     parser.add_argument("--smoke", action="store_true")
     args = parser.parse_args()
@@ -35,6 +37,8 @@ def main() -> int:
             mate2_threshold=0.0 if args.smoke else 0.95,
             max_ticks=args.max_ticks,
             max_samples=args.max_samples,
+            max_mate1_positions=args.max_mate1_positions,
+            max_mate2_positions=args.max_mate2_positions,
         )
     )
     path = result.write_json(output)

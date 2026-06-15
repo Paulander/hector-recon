@@ -13,6 +13,7 @@ from dataclasses import asdict, dataclass
 import hashlib
 import json
 from pathlib import Path
+from time import perf_counter
 from typing import Any, Iterable, Mapping
 
 import chess
@@ -45,6 +46,10 @@ class NativeSingleGraphConfig:
     mate2_threshold: float = 0.95
     max_ticks: int = 18
     max_samples: int = 32
+    indexed_scheduler: bool = True
+    tick_feature_terminals: bool = False
+    max_mate1_positions: int | None = None
+    max_mate2_positions: int | None = None
 
     @classmethod
     def from_tg26n(cls, config: SingleGraphCurriculumConfig) -> "NativeSingleGraphConfig":
@@ -75,12 +80,14 @@ class NativeSingleGraphResult:
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "schema_version": "krk_autogrowth_tg26o_native_single_graph.v0",
-            "checkpoint": "TG26o_native_single_graph_runtime",
+            "schema_version": "krk_autogrowth_tg26p_native_scheduler.v0",
+            "checkpoint": "TG26p_native_scheduler_foundation",
             "config": asdict(self.config),
             "purity_boundary": {
                 "native_recon_graph_execution": True,
                 "feature_terminals_are_NodeType_TERMINAL": True,
+                "feature_terminals_remain_graph_nodes": True,
+                "runtime_ticks_individual_feature_terminals": self.config.tick_feature_terminals,
                 "actuator_affordances_are_NodeType_TERMINAL": True,
                 "triplets_are_SCRIPT_TERMINAL_subgraphs_with_actuator_terminals": True,
                 "sub_sur_por_ret_are_real_edges": True,
@@ -117,20 +124,57 @@ class NativeReConKRKGraph:
             "tier": "mature",
         }))
         self.triplet_ids: set[str] = set()
+        self.triplet_nodes: dict[str, set[str]] = {}
+        self.triplet_trainable_edges: dict[str, list[Any]] = {}
         self.m3_update_count = 0
         self.m4_event_count = 0
         self.runtime_choice_count = 0
+        self.scheduler_stats = {
+            "indexed_scheduler_used": self.config.indexed_scheduler,
+            "choose_calls": 0,
+            "empty_candidate_calls": 0,
+            "candidate_triplets_ticked": 0,
+            "triplets_skipped_by_index": 0,
+            "active_nodes_ticked": 0,
+            "feature_terminals_skipped_by_scheduler": 0,
+            "full_graph_node_resets_avoided": 0,
+            "formal_ticks_run": 0,
+        }
 
     def choose(self, board: chess.Board) -> chess.Move | None:
         legal = {move.uci(): move for move in board.legal_moves}
         if not legal:
             return None
-        self._reset_runtime_states()
+        candidate_triplets = self._candidate_triplets_for_board(board, legal)
+        self.scheduler_stats["choose_calls"] += 1
+        self.scheduler_stats["candidate_triplets_ticked"] += len(candidate_triplets)
+        self.scheduler_stats["triplets_skipped_by_index"] += max(0, len(self.triplet_ids) - len(candidate_triplets))
+        if self.config.indexed_scheduler:
+            if not candidate_triplets:
+                self.scheduler_stats["empty_candidate_calls"] += 1
+                return None
+            active_nodes = self._active_nodes_for_triplets(candidate_triplets)
+            self.scheduler_stats["active_nodes_ticked"] += len(active_nodes)
+            self.scheduler_stats["full_graph_node_resets_avoided"] += max(0, len(self.graph.nodes) - len(active_nodes))
+            self._reset_runtime_states(active_nodes)
+        else:
+            active_nodes = None
+            self._reset_runtime_states()
         env: dict[str, Any] = {"board": board}
-        engine = FormalReConEngine(self.graph, validate_pairs=False)
+        engine = FormalReConEngine(self.graph, validate_pairs=False, record_trace=False)
         engine.request(ROOT_ID)
-        engine.run(max_ticks=self.config.max_ticks, env=env)
-        candidates = self._confirmed_action_candidates(legal)
+        engine.run(
+            max_ticks=self.config.max_ticks,
+            env=env,
+            active_nodes=active_nodes,
+            until=(
+                (lambda _engine: self._candidate_triplets_settled(candidate_triplets))
+                if self.config.indexed_scheduler
+                else None
+            ),
+        )
+        self.scheduler_stats["formal_ticks_run"] += engine.tick
+        candidates = self._confirmed_action_candidates(legal, candidate_triplets if self.config.indexed_scheduler else None)
         if not candidates:
             return None
         candidates.sort(reverse=True)
@@ -158,6 +202,7 @@ class NativeReConKRKGraph:
             return triplet_id
 
         ids = _TripletNodeIds(triplet_id)
+        created_node_ids: set[str] = set()
         for node in (
             Node(ids.triplet, NodeType.SCRIPT, meta=_candidate_meta("SCRIPT", stage, role="triplet", action_uci=move.uci())),
             Node(ids.before_script, NodeType.SCRIPT, meta=_candidate_meta("SCRIPT", stage, role="before_script", action_uci=move.uci())),
@@ -169,15 +214,17 @@ class NativeReConKRKGraph:
             Node(ids.action, NodeType.TERMINAL, predicate=_action_predicate(move.uci()), meta=_action_meta(stage, move.uci())),
         ):
             self.graph.add_node(node)
+            created_node_ids.add(node.nid)
 
-        self._add_hierarchy_pair(ROOT_ID, ids.triplet, trainable=True, weight=0.0)
-        self._add_hierarchy_pair(ids.triplet, ids.before_script, trainable=True, weight=0.0)
-        self._add_hierarchy_pair(ids.triplet, ids.action_script, trainable=True, weight=0.0)
-        self._add_hierarchy_pair(ids.triplet, ids.after_script, trainable=True, weight=0.0)
-        self._add_hierarchy_pair(ids.before_script, ids.before_terminal, trainable=True, weight=0.0)
-        self._add_hierarchy_pair(ids.action_script, ids.delta_terminal, trainable=True, weight=0.0)
-        self._add_hierarchy_pair(ids.action_script, ids.action, trainable=True, weight=0.0)
-        self._add_hierarchy_pair(ids.after_script, ids.after_terminal, trainable=True, weight=0.0)
+        created_edges: list[Any] = []
+        created_edges.extend(self._add_hierarchy_pair(ROOT_ID, ids.triplet, trainable=True, weight=0.0))
+        created_edges.extend(self._add_hierarchy_pair(ids.triplet, ids.before_script, trainable=True, weight=0.0))
+        created_edges.extend(self._add_hierarchy_pair(ids.triplet, ids.action_script, trainable=True, weight=0.0))
+        created_edges.extend(self._add_hierarchy_pair(ids.triplet, ids.after_script, trainable=True, weight=0.0))
+        created_edges.extend(self._add_hierarchy_pair(ids.before_script, ids.before_terminal, trainable=True, weight=0.0))
+        created_edges.extend(self._add_hierarchy_pair(ids.action_script, ids.delta_terminal, trainable=True, weight=0.0))
+        created_edges.extend(self._add_hierarchy_pair(ids.action_script, ids.action, trainable=True, weight=0.0))
+        created_edges.extend(self._add_hierarchy_pair(ids.after_script, ids.after_terminal, trainable=True, weight=0.0))
         for role, parent_id, keys in (
             ("before_feature", ids.before_script, before_keys),
             ("delta_feature", ids.action_script, action_delta_keys),
@@ -193,13 +240,15 @@ class NativeReConKRKGraph:
                         meta=_feature_terminal_meta(stage, role, move.uci(), key),
                     )
                 )
-                self._add_hierarchy_pair(parent_id, feature_id, trainable=True, weight=0.0)
-        self._add_sequence_pair(ids.before_script, ids.action_script, trainable=True, weight=0.0)
-        self._add_sequence_pair(ids.action_script, ids.after_script, trainable=True, weight=0.0)
-        for node in self.graph.nodes.values():
-            if node.nid == triplet_id or node.nid.startswith(f"{triplet_id}_"):
-                node.meta["triplet_id"] = triplet_id
+                created_node_ids.add(feature_id)
+                created_edges.extend(self._add_hierarchy_pair(parent_id, feature_id, trainable=True, weight=0.0))
+        created_edges.extend(self._add_sequence_pair(ids.before_script, ids.action_script, trainable=True, weight=0.0))
+        created_edges.extend(self._add_sequence_pair(ids.action_script, ids.after_script, trainable=True, weight=0.0))
+        for node_id in created_node_ids:
+            self.graph.nodes[node_id].meta["triplet_id"] = triplet_id
         self.triplet_ids.add(triplet_id)
+        self.triplet_nodes[triplet_id] = created_node_ids
+        self.triplet_trainable_edges[triplet_id] = created_edges
         return triplet_id
 
     def mature_existing_graph(self) -> dict[str, Any]:
@@ -267,29 +316,38 @@ class NativeReConKRKGraph:
             "mature_edge_count": sum(1 for edge in self.graph.edges if edge.meta.get("tier") == "mature"),
             "m3_update_count": self.m3_update_count,
             "runtime_choice_count": self.runtime_choice_count,
+            "scheduler_stats": dict(self.scheduler_stats),
             "top_positive_trainable_edges": top_edges[:24],
             "top_negative_trainable_edges": sorted(top_edges, key=lambda item: item["weight"])[:24],
         }
 
-    def _add_hierarchy_pair(self, parent: str, child: str, *, trainable: bool, weight: float) -> None:
+    def _add_hierarchy_pair(self, parent: str, child: str, *, trainable: bool, weight: float) -> list[Any]:
+        trainable_edges: list[Any] = []
         self.graph.add_hierarchy_pair(parent, child)
         sub = self.graph.get_edge(parent, child, LinkType.SUB)
         sur = self.graph.get_edge(child, parent, LinkType.SUR)
         if sub is not None:
             sub.w = float(weight)
             sub.meta.update({"trainable": trainable, "tier": "trial", "stem_cell_state": StemCellState.TRIAL.name})
+            if trainable:
+                trainable_edges.append(sub)
         if sur is not None:
             sur.meta.update({"structural_fixed": True})
+        return trainable_edges
 
-    def _add_sequence_pair(self, predecessor: str, successor: str, *, trainable: bool, weight: float) -> None:
+    def _add_sequence_pair(self, predecessor: str, successor: str, *, trainable: bool, weight: float) -> list[Any]:
+        trainable_edges: list[Any] = []
         self.graph.add_sequence_pair(predecessor, successor)
         por = self.graph.get_edge(predecessor, successor, LinkType.POR)
         ret = self.graph.get_edge(successor, predecessor, LinkType.RET)
         if por is not None:
             por.w = float(weight)
             por.meta.update({"trainable": trainable, "tier": "trial", "stem_cell_state": StemCellState.TRIAL.name})
+            if trainable:
+                trainable_edges.append(por)
         if ret is not None:
             ret.meta.update({"structural_fixed": True})
+        return trainable_edges
 
     def _apply_m3(self, triplet_id: str, *, reward: float) -> None:
         ids = _TripletNodeIds(triplet_id)
@@ -304,8 +362,9 @@ class NativeReConKRKGraph:
             ids.after_terminal,
             ids.action,
         ]
-        for node in self.graph.nodes.values():
-            if node.meta.get("triplet_id") == triplet_id and node.ntype == NodeType.TERMINAL:
+        for node_id in self.triplet_nodes.get(triplet_id, set()):
+            node = self.graph.nodes[node_id]
+            if node.ntype == NodeType.TERMINAL:
                 node_ids.append(node.nid)
         for node_id in node_ids:
             node = self.graph.nodes[node_id]
@@ -316,22 +375,55 @@ class NativeReConKRKGraph:
                 float(node.meta.get("local_weight", 0.0)) + self.config.eta_m3 * bounded_reward,
                 self.config.max_abs_local_weight,
             )
-        for edge in self.graph.edges:
-            if triplet_id not in edge.src and triplet_id not in edge.dst:
-                continue
-            if not edge.meta.get("trainable"):
-                continue
+        for edge in self.triplet_trainable_edges.get(triplet_id, []):
             edge.w = _bounded(float(edge.w) + self.config.eta_m3 * bounded_reward, self.config.max_abs_local_weight)
             self.m3_update_count += 1
 
-    def _reset_runtime_states(self) -> None:
-        for node in self.graph.nodes.values():
+    def _reset_runtime_states(self, node_ids: Iterable[str] | None = None) -> None:
+        nodes = self.graph.nodes.values() if node_ids is None else (self.graph.nodes[nid] for nid in node_ids if nid in self.graph.nodes)
+        for node in nodes:
             node.state = NodeState.INACTIVE
             node.tick_entered = -1
 
-    def _confirmed_action_candidates(self, legal: Mapping[str, chess.Move]) -> list[tuple[float, str, str]]:
+    def _candidate_triplets_for_board(self, board: chess.Board, legal: Mapping[str, chess.Move]) -> set[str]:
+        triplets: set[str] = set()
+        for move in legal.values():
+            triplet_id = _triplet_id(*_triplet_keys(board, move))
+            if triplet_id in self.triplet_ids:
+                triplets.add(triplet_id)
+        return triplets
+
+    def _active_nodes_for_triplets(self, triplet_ids: Iterable[str]) -> set[str]:
+        active = {ROOT_ID}
+        for triplet_id in triplet_ids:
+            for node_id in self.triplet_nodes.get(triplet_id, set()):
+                node = self.graph.nodes[node_id]
+                if (
+                    not self.config.tick_feature_terminals
+                    and node.meta.get("role") in {"before_feature", "delta_feature", "after_feature"}
+                ):
+                    self.scheduler_stats["feature_terminals_skipped_by_scheduler"] += 1
+                    continue
+                active.add(node_id)
+        return active
+
+    def _candidate_triplets_settled(self, triplet_ids: Iterable[str]) -> bool:
+        terminal_states = {NodeState.TRUE, NodeState.CONFIRMED, NodeState.FAILED}
+        for triplet_id in triplet_ids:
+            ids = _TripletNodeIds(triplet_id)
+            if self.graph.nodes[ids.triplet].state not in terminal_states:
+                return False
+            if self.graph.nodes[ids.action].state not in terminal_states:
+                return False
+        return True
+
+    def _confirmed_action_candidates(
+        self,
+        legal: Mapping[str, chess.Move],
+        triplet_ids: Iterable[str] | None = None,
+    ) -> list[tuple[float, str, str]]:
         candidates: list[tuple[float, str, str]] = []
-        for triplet_id in self.triplet_ids:
+        for triplet_id in (self.triplet_ids if triplet_ids is None else triplet_ids):
             ids = _TripletNodeIds(triplet_id)
             triplet = self.graph.nodes[ids.triplet]
             action = self.graph.nodes[ids.action]
@@ -418,13 +510,29 @@ def run_native_single_graph_curriculum(
     )
     buckets = _mate2_buckets(entries)
     mate2_fens = _unique(fen for bucket in buckets for fen in bucket["fens"])
+    raw_mate1_count = len(mate1_fens)
+    raw_mate2_count = len(mate2_fens)
+    if cfg.max_mate1_positions is not None:
+        mate1_fens = mate1_fens[: cfg.max_mate1_positions]
+    if cfg.max_mate2_positions is not None:
+        mate2_fens = mate2_fens[: cfg.max_mate2_positions]
     graph = NativeReConKRKGraph(config=cfg)
 
+    started = perf_counter()
     mate1_training = _train_mate1_stage(graph, mate1_fens, config=cfg)
+    mate1_training["duration_seconds"] = round(perf_counter() - started, 6)
+    started = perf_counter()
     mate1_eval = _evaluate_mate1_stage(graph, mate1_fens, config=cfg)
+    mate1_eval["duration_seconds"] = round(perf_counter() - started, 6)
+    started = perf_counter()
     maturation = graph.mature_existing_graph()
+    maturation["duration_seconds"] = round(perf_counter() - started, 6)
+    started = perf_counter()
     mate2_training = _train_mate2_stage(graph, mate2_fens, config=cfg)
+    mate2_training["duration_seconds"] = round(perf_counter() - started, 6)
+    started = perf_counter()
     mate2_eval = _evaluate_mate2_stage(graph, mate2_fens, config=cfg)
+    mate2_eval["duration_seconds"] = round(perf_counter() - started, 6)
     if mate2_eval["conversion_rate"] >= cfg.mate2_threshold:
         graph.m4_event_count += 1
     decision = {
@@ -450,9 +558,16 @@ def run_native_single_graph_curriculum(
             "source": "src/recon_lite_chess/training/krk_curriculum.py::KRK_STAGES",
             "include_symmetries": cfg.include_symmetries,
             "mate1_position_count": len(mate1_fens),
+            "raw_mate1_position_count": raw_mate1_count,
+            "max_mate1_positions": cfg.max_mate1_positions,
             "mate2_bucket_count": len(buckets),
             "mate2_position_count": len(mate2_fens),
+            "raw_mate2_position_count": raw_mate2_count,
+            "max_mate2_positions": cfg.max_mate2_positions,
             "raw_mate2_bucket_entry_count": sum(len(bucket["fens"]) for bucket in buckets),
+            "bounded_position_cap_active": (
+                cfg.max_mate1_positions is not None or cfg.max_mate2_positions is not None
+            ),
         },
         mate1={"training": mate1_training, "evaluation": mate1_eval},
         maturation=maturation,
@@ -516,8 +631,8 @@ def _train_mate2_stage(
                     rewards = {move.uci(): _move_reward(before_mate, move, positive_moves=positives) for move in before_mate.legal_moves}
                     graph.train_action_rewards(before_mate, rewards=rewards, stage="Mate_In_2_continuation_experience")
                     continuation_records += 1
+        chain_positives = _same_graph_chain_positive_first_moves(graph, board)
         for _ in range(config.train_repetitions):
-            chain_positives = _same_graph_chain_positive_first_moves(graph, board)
             chain_positive_total += len(chain_positives)
             no_chain_positive += int(not chain_positives)
             rewards = {move.uci(): _move_reward(board, move, positive_moves=chain_positives) for move in board.legal_moves}

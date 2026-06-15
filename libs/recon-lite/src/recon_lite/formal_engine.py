@@ -62,6 +62,7 @@ class FormalReConEngine:
         graph: Graph,
         *,
         validate_pairs: bool = True,
+        record_trace: bool = True,
     ) -> None:
         if validate_pairs:
             graph.validate_formal_pairs()
@@ -69,6 +70,7 @@ class FormalReConEngine:
         self.tick = 0
         self.trace: List[Dict[str, Any]] = []
         self._external_requests = set()
+        self.record_trace = record_trace
 
     def request(self, nid: str) -> None:
         """Request validation of a root script."""
@@ -86,14 +88,32 @@ class FormalReConEngine:
 
     def step(self, env: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Run one formal two-phase tick and return its trace frame."""
+        return self.step_subset(env=env, active_nodes=None)
+
+    def step_subset(
+        self,
+        env: Optional[Dict[str, Any]] = None,
+        *,
+        active_nodes: Optional[Iterable[str]] = None,
+    ) -> Dict[str, Any]:
+        """Run one formal tick, optionally restricted to an active node set.
+
+        The subset mode is a scheduler optimization: messages still travel only
+        on real graph edges and node transitions use the same state machine.
+        Nodes outside the set are left untouched.
+        """
         env = env or {}
+        active_set = None if active_nodes is None else set(active_nodes)
         self.tick += 1
-        states_before = self._node_states()
-        messages = self._emit_messages()
+        states_before = self._node_states(active_set) if self.record_trace else {}
+        messages = self._emit_messages(active_set)
         incoming = self._group_by_target(messages)
+        node_items = self.g.nodes.items() if active_set is None else (
+            (nid, self.g.nodes[nid]) for nid in active_set if nid in self.g.nodes
+        )
         next_states = {
             nid: self._next_state(node, incoming.get(nid, []), env)
-            for nid, node in self.g.nodes.items()
+            for nid, node in node_items
         }
 
         for nid, state in next_states.items():
@@ -102,17 +122,19 @@ class FormalReConEngine:
                 node.state = state
                 node.tick_entered = self.tick
 
-        frame = {
-            "tick": self.tick,
-            "states_before": states_before,
-            "messages": [message.to_dict() for message in messages],
-            "states_after": self._node_states(),
-            "activations": {
-                nid: round(float(node.activation.value), 6)
-                for nid, node in self.g.nodes.items()
-            },
-        }
-        self.trace.append(frame)
+        frame = {"tick": self.tick}
+        if self.record_trace:
+            frame = {
+                "tick": self.tick,
+                "states_before": states_before,
+                "messages": [message.to_dict() for message in messages],
+                "states_after": self._node_states(active_set),
+                "activations": {
+                    nid: round(float(node.activation.value), 6)
+                    for nid, node in self._iter_nodes(active_set)
+                },
+            }
+            self.trace.append(frame)
         return frame
 
     def run(
@@ -121,10 +143,12 @@ class FormalReConEngine:
         max_ticks: int = 32,
         env: Optional[Dict[str, Any]] = None,
         until: Optional[Callable[["FormalReConEngine"], bool]] = None,
+        active_nodes: Optional[Iterable[str]] = None,
     ) -> List[Dict[str, Any]]:
         """Run formal ticks until ``max_ticks`` or an optional stop predicate."""
+        active_set = None if active_nodes is None else set(active_nodes)
         for _ in range(max(0, max_ticks)):
-            self.step(env)
+            self.step_subset(env, active_nodes=active_set)
             if until is not None and until(self):
                 break
         return self.trace
@@ -139,8 +163,28 @@ class FormalReConEngine:
             "frames": list(self.trace),
         }
 
-    def _emit_messages(self) -> List[EdgeMessage]:
+    def _emit_messages(self, active_nodes: Optional[set[str]] = None) -> List[EdgeMessage]:
         messages: List[EdgeMessage] = []
+        if active_nodes is not None:
+            for src in active_nodes:
+                if src not in self.g.nodes:
+                    continue
+                for link_type in LinkType:
+                    for dst in self.g.out.get((src, link_type), []):
+                        if dst not in active_nodes:
+                            continue
+                        message = self._message_for(link_type, self.g.nodes[src].state)
+                        if message is not None:
+                            messages.append(
+                                EdgeMessage(
+                                    tick=self.tick,
+                                    src=src,
+                                    dst=dst,
+                                    link_type=link_type,
+                                    message=message,
+                                )
+                            )
+            return messages
         for edge in self.g.edges:
             message = self._message_for(edge.ltype, self.g.nodes[edge.src].state)
             if message is not None:
@@ -257,8 +301,13 @@ class FormalReConEngine:
             return NodeState.WAITING
         return NodeState.TRUE if success else NodeState.FAILED
 
-    def _node_states(self) -> Dict[str, str]:
-        return {nid: node.state.name for nid, node in self.g.nodes.items()}
+    def _node_states(self, active_nodes: Optional[set[str]] = None) -> Dict[str, str]:
+        return {nid: node.state.name for nid, node in self._iter_nodes(active_nodes)}
+
+    def _iter_nodes(self, active_nodes: Optional[set[str]] = None) -> Iterable[tuple[str, Node]]:
+        if active_nodes is None:
+            return self.g.nodes.items()
+        return ((nid, self.g.nodes[nid]) for nid in active_nodes if nid in self.g.nodes)
 
     def _has(self, incoming: List[EdgeMessage], message: FormalMessage) -> bool:
         return any(edge_message.message == message for edge_message in incoming)

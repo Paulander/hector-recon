@@ -68,6 +68,29 @@ def test_tg26o_native_runtime_learns_mate_one_smoke() -> None:
     assert network.to_dict()["runtime_choice_count"] > 0
 
 
+def test_tg26p_indexed_scheduler_uses_native_choice_and_skips_irrelevant_triplets() -> None:
+    indexed = NativeReConKRKGraph(config=NativeSingleGraphConfig(include_symmetries=False, train_repetitions=1, max_ticks=80, indexed_scheduler=True))
+    board = chess.Board(MATE_ONE_FEN)
+    extra_board = chess.Board("k7/8/8/8/8/8/1K6/7R w - - 0 1")
+    positives = {move.uci() for move in _mate_moves(board)}
+    rewards = {move.uci(): _move_reward(board, move, positive_moves=positives) for move in board.legal_moves}
+    extra_rewards = {move.uci(): 0.0 for move in extra_board.legal_moves}
+
+    for _ in range(5):
+        indexed.train_action_rewards(board, rewards=rewards, stage="Mate_In_1")
+    indexed.train_action_rewards(extra_board, rewards=extra_rewards, stage="Mate_In_1_extra_neutral")
+
+    indexed_move = indexed.choose(board)
+
+    assert indexed_move is not None
+    assert indexed_move.uci() in positives
+    stats = indexed.to_dict()["scheduler_stats"]
+    assert stats["indexed_scheduler_used"] is True
+    assert stats["candidate_triplets_ticked"] > 0
+    assert stats["triplets_skipped_by_index"] > 0
+    assert stats["full_graph_node_resets_avoided"] > 0
+
+
 def test_tg26o_native_graph_contract_without_full_curriculum() -> None:
     network = NativeReConKRKGraph(config=NativeSingleGraphConfig(include_symmetries=False, train_repetitions=1))
     board = chess.Board(MATE_ONE_FEN)

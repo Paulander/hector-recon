@@ -1,0 +1,566 @@
+{
+  "checkpoint": "TG26o_native_single_graph_runtime",
+  "config": {
+    "continuation_repetitions": 2,
+    "eta_m3": 0.1,
+    "include_symmetries": false,
+    "indexed_scheduler": true,
+    "mate1_threshold": 0.98,
+    "mate2_threshold": 0.95,
+    "mature_min_abs_weight": 0.2,
+    "max_abs_local_weight": 1.0,
+    "max_mate1_positions": 5,
+    "max_mate2_positions": 2,
+    "max_samples": 32,
+    "max_ticks": 80,
+    "terminal_score_scale": 1.0,
+    "tick_feature_terminals": false,
+    "train_repetitions": 5,
+    "triplet_credit_scale": 0.35
+  },
+  "dataset": {
+    "bounded_position_cap_active": true,
+    "include_symmetries": false,
+    "mate1_position_count": 5,
+    "mate2_bucket_count": 5,
+    "mate2_position_count": 2,
+    "max_mate1_positions": 5,
+    "max_mate2_positions": 2,
+    "raw_mate1_position_count": 5,
+    "raw_mate2_bucket_entry_count": 5,
+    "raw_mate2_position_count": 5,
+    "source": "src/recon_lite_chess/training/krk_curriculum.py::KRK_STAGES"
+  },
+  "decision": {
+    "checkpoint_pass": true,
+    "m4_mate1_maturation_event_count": 1,
+    "m4_mate2_consolidation_event_count": 1,
+    "mate1_threshold": 0.98,
+    "mate2_threshold": 0.95,
+    "next_step": "use native graph runtime as early KRK foundation"
+  },
+  "graph": {
+    "actuator_terminal_count": 170,
+    "edge_count": 64940,
+    "edge_type_counts": {
+      "POR": 340,
+      "RET": 340,
+      "SUB": 32130,
+      "SUR": 32130
+    },
+    "formal_pairs_valid": true,
+    "m3_update_count": 141722,
+    "mature_edge_count": 955,
+    "mature_node_count": 946,
+    "native_recon_graph": true,
+    "node_count": 32131,
+    "node_type_counts": {
+      "SCRIPT": 681,
+      "TERMINAL": 31450
+    },
+    "root_id": "tg26o_root",
+    "runtime_choice_count": 11,
+    "scheduler_stats": {
+      "active_nodes_ticked": 1659,
+      "candidate_triplets_ticked": 206,
+      "choose_calls": 45,
+      "empty_candidate_calls": 34,
+      "feature_terminals_skipped_by_scheduler": 37286,
+      "formal_ticks_run": 286,
+      "full_graph_node_resets_avoided": 271079,
+      "indexed_scheduler_used": true,
+      "triplets_skipped_by_index": 5722
+    },
+    "top_negative_trainable_edges": [
+      {
+        "dst": "tg26o_triplet_da434a21fe672177",
+        "src": "tg26o_root",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_script",
+        "src": "tg26o_triplet_da434a21fe672177",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_action_script",
+        "src": "tg26o_triplet_da434a21fe672177",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_after_script",
+        "src": "tg26o_triplet_da434a21fe672177",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_terminal",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_delta_terminal",
+        "src": "tg26o_triplet_da434a21fe672177_action_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_action",
+        "src": "tg26o_triplet_da434a21fe672177_action_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_after_terminal",
+        "src": "tg26o_triplet_da434a21fe672177_after_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_8376ad4f8db44b39",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_edeb60dcdc4576c3",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_782472996fcd4df7",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_77008cae414e7c44",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_c878f8d81ee7aacd",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_ef1f998dcc7fac2a",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_6be13c4bcbf9129c",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_8337eefdfd75677f",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_73b4fa905ace040a",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_433cd60505e5206f",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_c0b4460f3add3f1b",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_f3e17bfa26f9311f",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_45806d8402d88d71",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_bab8633ccf0c2f22",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_ba55a2fadce125f4",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      },
+      {
+        "dst": "tg26o_triplet_da434a21fe672177_before_feature_f4d4cc06ae48485a",
+        "src": "tg26o_triplet_da434a21fe672177_before_script",
+        "tier": "trial",
+        "type": "SUB",
+        "weight": -0.2
+      }
+    ],
+    "top_positive_trainable_edges": [
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9",
+        "src": "tg26o_root",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "src": "tg26o_triplet_1e120c3f183e13e9",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_action_script",
+        "src": "tg26o_triplet_1e120c3f183e13e9",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_after_script",
+        "src": "tg26o_triplet_1e120c3f183e13e9",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_terminal",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_delta_terminal",
+        "src": "tg26o_triplet_1e120c3f183e13e9_action_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_action",
+        "src": "tg26o_triplet_1e120c3f183e13e9_action_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_after_terminal",
+        "src": "tg26o_triplet_1e120c3f183e13e9_after_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_78e22e4c9626c1e3",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_e40a7f62524a7e77",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_0bb0eb64e49c98f4",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_bd8b7064df588d2a",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_ea937cc66149cee3",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_f3d548872999803b",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_c952950fca3adabb",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_9289459f051f7d0e",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_bfbbb04feb1b80d2",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_d3fa58218c0f5010",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_952e12e9e05bf699",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_8ae047b21d2dd509",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_13b47ecb3d96d9c4",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_a3a5b4abd2269a21",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_bc2f356cc895fdd8",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      },
+      {
+        "dst": "tg26o_triplet_1e120c3f183e13e9_before_feature_173141513ef0db34",
+        "src": "tg26o_triplet_1e120c3f183e13e9_before_script",
+        "tier": "mature",
+        "type": "SUB",
+        "weight": 0.5
+      }
+    ],
+    "triplet_count": 170
+  },
+  "mate1": {
+    "evaluation": {
+      "accuracy": 1.0,
+      "correct_count": 5,
+      "duration_seconds": 2.185631,
+      "position_count": 5,
+      "samples": [
+        {
+          "correct": true,
+          "correct_mates": [
+            "h1h8"
+          ],
+          "fen": "k7/8/1K6/8/8/8/8/7R w - - 0 1",
+          "selected": "h1h8"
+        },
+        {
+          "correct": true,
+          "correct_mates": [
+            "a1h1"
+          ],
+          "fen": "7k/5K2/8/8/8/8/8/R7 w - - 0 1",
+          "selected": "a1h1"
+        },
+        {
+          "correct": true,
+          "correct_mates": [
+            "a1h1"
+          ],
+          "fen": "8/8/8/8/5K1k/8/8/R7 w - - 0 1",
+          "selected": "a1h1"
+        },
+        {
+          "correct": true,
+          "correct_mates": [
+            "a1a8"
+          ],
+          "fen": "7k/8/6K1/8/8/8/8/R7 w - - 0 1",
+          "selected": "a1a8"
+        },
+        {
+          "correct": true,
+          "correct_mates": [
+            "a1a8"
+          ],
+          "fen": "4k3/8/4K3/8/8/8/8/R7 w - - 0 1",
+          "selected": "a1a8"
+        }
+      ]
+    },
+    "training": {
+      "duration_seconds": 2.881771,
+      "edge_count": 37436,
+      "m3_update_count": 93590,
+      "negative_updates": 465,
+      "neutral_updates": 0,
+      "node_count": 18523,
+      "positive_updates": 25,
+      "train_records": 25,
+      "triplet_count": 98
+    }
+  },
+  "mate2": {
+    "evaluation": {
+      "conversion_count": 2,
+      "conversion_rate": 1.0,
+      "duration_seconds": 1.666941,
+      "first_move_success_count": 2,
+      "first_move_success_rate": 1.0,
+      "hardcoded_mate1_handoff": false,
+      "native_graph_reply_mate_rate": 1.0,
+      "position_count": 2,
+      "same_graph_second_move_count": 2,
+      "samples": [
+        {
+          "all_replies_mated_by_native_graph": true,
+          "fen": "k7/8/8/2K5/8/8/8/7R w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "c5b6"
+          ],
+          "native_graph_selected_first": "c5b6",
+          "reply_checks": [
+            {
+              "black_reply": "a8b8",
+              "correct_mates": [
+                "h1h8"
+              ],
+              "mated": true,
+              "native_graph_selected_second": "h1h8"
+            }
+          ]
+        },
+        {
+          "all_replies_mated_by_native_graph": true,
+          "fen": "1k6/8/K7/8/8/8/8/R7 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "a1c1"
+          ],
+          "native_graph_selected_first": "a1c1",
+          "reply_checks": [
+            {
+              "black_reply": "b8a8",
+              "correct_mates": [
+                "c1c8"
+              ],
+              "mated": true,
+              "native_graph_selected_second": "c1c8"
+            }
+          ]
+        }
+      ]
+    },
+    "training": {
+      "chain_positive_total": 10,
+      "continuation_experience_records": 4,
+      "continuation_experience_uses_same_native_graph": true,
+      "duration_seconds": 5.548828,
+      "edge_count": 64940,
+      "first_move_train_records": 10,
+      "m3_update_count": 141722,
+      "negative_updates": 170,
+      "neutral_updates": 0,
+      "no_chain_positive_record_count": 0,
+      "node_count": 32131,
+      "positive_updates": 10,
+      "triplet_count": 170
+    }
+  },
+  "maturation": {
+    "duration_seconds": 0.006307,
+    "m4_event_count": 1,
+    "matured_edge_count": 955,
+    "matured_node_count": 945,
+    "total_edge_count": 37436,
+    "total_node_count": 18523
+  },
+  "purity_boundary": {
+    "actuator_affordances_are_NodeType_TERMINAL": true,
+    "direct_provider_override": false,
+    "feature_terminals_are_NodeType_TERMINAL": true,
+    "hardcoded_mate1_handoff": false,
+    "native_recon_graph_execution": true,
+    "python_batch_scorer_used_for_runtime_choice": false,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "stage_labels_learner_visible": false,
+    "sub_sur_por_ret_are_real_edges": true,
+    "triplets_are_SCRIPT_TERMINAL_subgraphs_with_actuator_terminals": true
+  },
+  "schema_version": "krk_autogrowth_tg26o_native_single_graph.v0"
+}

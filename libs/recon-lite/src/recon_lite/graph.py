@@ -62,6 +62,7 @@ class Graph:
     def __init__(self):
         self.nodes: Dict[str, Node] = {}
         self.edges: List[Edge] = []
+        self.edge_by_key: Dict[Tuple[str, str, LinkType], Edge] = {}
         self.out: Dict[Tuple[str, LinkType], List[str]] = {}
         self.inc: Dict[Tuple[str, LinkType], List[str]] = {}
         # Single parent for scripts (1:1), but terminals can have multiple (fan-in)
@@ -106,6 +107,7 @@ class Graph:
 
         e = Edge(src, dst, ltype)
         self.edges.append(e)
+        self.edge_by_key[(src, dst, ltype)] = e
         self.out.setdefault((src, ltype), []).append(dst)
         self.inc.setdefault((dst, ltype), []).append(src)
         if ltype == LinkType.SUB:
@@ -319,9 +321,14 @@ class Graph:
         
         # Remove edges involving this node
         self.edges = [
-            e for e in self.edges
+            e for e in self.edges 
             if e.src != node_id and e.dst != node_id
         ]
+        self.edge_by_key = {
+            key: edge
+            for key, edge in self.edge_by_key.items()
+            if edge.src != node_id and edge.dst != node_id
+        }
         
         # Update out index
         keys_to_remove = [k for k in self.out.keys() if k[0] == node_id]
@@ -366,10 +373,7 @@ class Graph:
 
     def get_edge(self, src: str, dst: str, ltype: LinkType) -> Optional[Edge]:
         """Get an edge by source, destination, and type."""
-        for e in self.edges:
-            if e.src == src and e.dst == dst and e.ltype == ltype:
-                return e
-        return None
+        return self.edge_by_key.get((src, dst, ltype))
 
     def to_snapshot(self) -> Dict[str, Any]:
         """

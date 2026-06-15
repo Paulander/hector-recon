@@ -32,6 +32,28 @@ def test_single_terminal_child_confirms_parent_through_sur():
     assert _message_seen(engine.trace, "sensor", "root", LinkType.SUR, FormalMessage.CONFIRM)
 
 
+def test_subset_scheduler_updates_only_active_real_edges():
+    graph = Graph()
+    graph.add_node(Node("root", NodeType.SCRIPT))
+    graph.add_node(success_terminal("active_sensor"))
+    graph.add_node(success_terminal("inactive_sensor"))
+    graph.add_hierarchy_pair("root", "active_sensor")
+    graph.add_hierarchy_pair("root", "inactive_sensor")
+
+    engine = FormalReConEngine(graph)
+    engine.request("root")
+    engine.run(
+        max_ticks=12,
+        active_nodes={"root", "active_sensor"},
+        until=lambda formal: formal.g.nodes["active_sensor"].state == NodeState.CONFIRMED,
+    )
+
+    assert graph.nodes["active_sensor"].state == NodeState.CONFIRMED
+    assert graph.nodes["inactive_sensor"].state == NodeState.INACTIVE
+    assert _message_seen(engine.trace, "root", "active_sensor", LinkType.SUB, FormalMessage.REQUEST)
+    assert not _message_seen(engine.trace, "root", "inactive_sensor", LinkType.SUB, FormalMessage.REQUEST)
+
+
 def test_ret_blocks_parent_confirmation_until_final_sequence_element_confirms():
     graph = _sequence_graph()
     engine = FormalReConEngine(graph)
