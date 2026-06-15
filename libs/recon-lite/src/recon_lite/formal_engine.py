@@ -201,7 +201,7 @@ class FormalReConEngine:
         fail = self._has(incoming, FormalMessage.FAIL)
         wait = self._has(incoming, FormalMessage.WAIT)
 
-        if node.ntype == NodeType.TERMINAL:
+        if node.ntype in (NodeType.TERMINAL, NodeType.ACTION):
             return self._next_terminal_state(node, request, inhibit_request, env)
 
         if node.state == NodeState.INACTIVE:

@@ -1,0 +1,65 @@
+{
+  "schema_version": "krk_autogrowth_tg26o_native_recon_partial.v0",
+  "checkpoint": "TG26o_native_recon_runtime_migration",
+  "status": "partial_blocked_on_throughput",
+  "date": "2026-06-15",
+  "implemented": {
+    "node_type_action_added": true,
+    "action_nodes_are_native_recon_leaves": true,
+    "feature_terminals_are_actual_NodeType_TERMINAL_nodes": true,
+    "triplets_materialized_as_script_terminal_action_subgraphs": true,
+    "sub_sur_por_ret_are_real_graph_edges": true,
+    "runtime_choice_uses_formal_recon_engine": true,
+    "python_batch_scorer_used_for_runtime_choice": false,
+    "candidate_trial_state_lives_on_graph_nodes": true,
+    "m3_updates_graph_node_and_edge_weights": true,
+    "m4_matures_graph_node_and_edge_metadata": true
+  },
+  "purity_boundary": {
+    "hardcoded_mate1_handoff": false,
+    "direct_provider_override": false,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "stage_labels_learner_visible": false,
+    "legal_moves_are_environment_action_affordances": true
+  },
+  "evidence": {
+    "native_tests": {
+      "command": "uv run pytest tests/autogrowth/test_native_single_graph_curriculum.py libs/recon-lite/tests/test_formal_engine.py libs/recon-lite/tests/test_core_engine.py tests/test_fanin_terminals.py tests/test_engine.py",
+      "result": "16 passed in 27.22s"
+    },
+    "mate_in_1_native_probe": {
+      "configuration": {
+        "include_symmetries": false,
+        "train_repetitions": 5,
+        "continuation_repetitions": 0,
+        "max_ticks": 80,
+        "runtime_engine": "FormalReConEngine"
+      },
+      "result": "5/5",
+      "node_count": 18523,
+      "edge_count": 37436,
+      "triplet_count": 98
+    },
+    "earlier_pragmatic_engine_failure": {
+      "result": "3/5 Mate_In_1",
+      "cause": "legacy ReConEngine could confirm SCRIPT nodes after children started, before failed child terminals blocked the triplet"
+    },
+    "mate_in_2_native_attempt": {
+      "configuration": {
+        "include_symmetries": false,
+        "train_repetitions": 5,
+        "continuation_repetitions": 2,
+        "max_ticks": 80,
+        "runtime_engine": "FormalReConEngine"
+      },
+      "result": "not_completed_with_current_all_node_tick_loop",
+      "blocker": "fully materialized feature-terminal graph is too slow for Mate_In_2 parity using the generic FormalReConEngine all-node tick loop"
+    }
+  },
+  "next_required_work": [
+    "Add an indexed native formal scheduler that still uses real graph nodes and SUB/SUR/POR/RET messages but only ticks candidate subgraphs whose before/action affordance can be requested for the current board.",
+    "Keep ACTION/TERMINAL/SCRIPT node state, M3 weights, and M4 maturity on the graph; do not reintroduce TG26n batch scoring as runtime.",
+    "Rerun no-symmetry Mate_In_1 plus Mate_In_2 parity, then symmetry-expanded 18/23, then bounded 50x replay."
+  ],
+  "interpretation": "TG26o has migrated the representation into native ReCoN graph structures and proves native Mate_In_1 parity on the curated originals. It does not yet prove Mate_In_2 native parity because the honest formal runtime is currently too slow at the materialized graph size."
+}

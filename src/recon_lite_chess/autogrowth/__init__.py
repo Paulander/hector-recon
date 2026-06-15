@@ -179,6 +179,12 @@ from .single_graph_curriculum import (
     SingleGraphKRKNetwork,
     run_single_graph_curriculum,
 )
+from .native_single_graph_curriculum import (
+    NativeReConKRKGraph,
+    NativeSingleGraphConfig,
+    NativeSingleGraphResult,
+    run_native_single_graph_curriculum,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
