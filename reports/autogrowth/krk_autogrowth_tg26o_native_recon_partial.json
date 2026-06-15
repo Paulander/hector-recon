@@ -3,11 +3,16 @@
   "checkpoint": "TG26o_native_recon_runtime_migration",
   "status": "partial_blocked_on_throughput",
   "date": "2026-06-15",
+  "correction": {
+    "reason": "Article.md defines ReCoN nodes as script nodes plus terminal nodes. Actuator/action affordances are terminal leaves that interact with the environment, not a third core node type.",
+    "supersedes": "The earlier TG26o partial wording that introduced NodeType.ACTION was a formalism error.",
+    "runtime_effect": "Chess move affordances remain graph leaves requested by SCRIPT nodes and returning through SUR, but their node type is TERMINAL with actuator metadata."
+  },
   "implemented": {
-    "node_type_action_added": true,
-    "action_nodes_are_native_recon_leaves": true,
+    "node_type_action_added": false,
+    "actuator_affordances_are_terminal_leaves": true,
     "feature_terminals_are_actual_NodeType_TERMINAL_nodes": true,
-    "triplets_materialized_as_script_terminal_action_subgraphs": true,
+    "triplets_materialized_as_script_terminal_subgraphs_with_actuator_terminals": true,
     "sub_sur_por_ret_are_real_graph_edges": true,
     "runtime_choice_uses_formal_recon_engine": true,
     "python_batch_scorer_used_for_runtime_choice": false,
@@ -20,7 +25,7 @@
     "direct_provider_override": false,
     "runtime_tablebase_or_dtm_move_source": false,
     "stage_labels_learner_visible": false,
-    "legal_moves_are_environment_action_affordances": true
+    "legal_moves_are_environment_actuator_terminal_affordances": true
   },
   "evidence": {
     "native_tests": {
@@ -58,7 +63,7 @@
   },
   "next_required_work": [
     "Add an indexed native formal scheduler that still uses real graph nodes and SUB/SUR/POR/RET messages but only ticks candidate subgraphs whose before/action affordance can be requested for the current board.",
-    "Keep ACTION/TERMINAL/SCRIPT node state, M3 weights, and M4 maturity on the graph; do not reintroduce TG26n batch scoring as runtime.",
+    "Keep SCRIPT/TERMINAL node state, M3 weights, and M4 maturity on the graph; actuator affordances are terminal metadata, not a separate core type. Do not reintroduce TG26n batch scoring as runtime.",
     "Rerun no-symmetry Mate_In_1 plus Mate_In_2 parity, then symmetry-expanded 18/23, then bounded 50x replay."
   ],
   "interpretation": "TG26o has migrated the representation into native ReCoN graph structures and proves native Mate_In_1 parity on the curated originals. It does not yet prove Mate_In_2 native parity because the honest formal runtime is currently too slow at the materialized graph size."

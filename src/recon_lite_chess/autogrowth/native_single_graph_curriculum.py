@@ -1,10 +1,10 @@
 """TG26o native ReCoN graph version of the TG26n curriculum.
 
 This module intentionally does not reuse ``SingleGraphKRKNetwork.choose``.
-It materializes learned terminals, ACTION affordances, SCRIPT wrappers, and
-SUB/SUR/POR/RET pairs as a real ``recon_lite.Graph``. Runtime evaluation uses
-``ReConEngine`` ticks; the only trainer-side duties are curriculum scheduling
-and reward labels.
+It materializes learned sensor terminals, actuator affordance terminals, SCRIPT
+wrappers, and SUB/SUR/POR/RET pairs as a real ``recon_lite.Graph``. Runtime
+evaluation uses ``FormalReConEngine`` ticks; the only trainer-side duties are
+curriculum scheduling and reward labels.
 """
 
 from __future__ import annotations
@@ -81,8 +81,8 @@ class NativeSingleGraphResult:
             "purity_boundary": {
                 "native_recon_graph_execution": True,
                 "feature_terminals_are_NodeType_TERMINAL": True,
-                "actions_are_NodeType_ACTION": True,
-                "triplets_are_SCRIPT_TERMINAL_ACTION_subgraphs": True,
+                "actuator_affordances_are_NodeType_TERMINAL": True,
+                "triplets_are_SCRIPT_TERMINAL_subgraphs_with_actuator_terminals": True,
                 "sub_sur_por_ret_are_real_edges": True,
                 "python_batch_scorer_used_for_runtime_choice": False,
                 "hardcoded_mate1_handoff": False,
@@ -166,7 +166,7 @@ class NativeReConKRKGraph:
             Node(ids.before_terminal, NodeType.TERMINAL, predicate=_pattern_predicate("before", move.uci(), before_keys), meta=_terminal_meta(stage, "before", move.uci(), before_keys)),
             Node(ids.delta_terminal, NodeType.TERMINAL, predicate=_pattern_predicate("delta", move.uci(), action_delta_keys), meta=_terminal_meta(stage, "delta", move.uci(), action_delta_keys)),
             Node(ids.after_terminal, NodeType.TERMINAL, predicate=_pattern_predicate("after", move.uci(), after_keys), meta=_terminal_meta(stage, "after", move.uci(), after_keys)),
-            Node(ids.action, NodeType.ACTION, predicate=_action_predicate(move.uci()), meta=_action_meta(stage, move.uci())),
+            Node(ids.action, NodeType.TERMINAL, predicate=_action_predicate(move.uci()), meta=_action_meta(stage, move.uci())),
         ):
             self.graph.add_node(node)
 
@@ -258,6 +258,9 @@ class NativeReConKRKGraph:
             "edge_count": len(self.graph.edges),
             "triplet_count": len(self.triplet_ids),
             "node_type_counts": node_type_counts,
+            "actuator_terminal_count": sum(
+                1 for node in self.graph.nodes.values() if node.meta.get("terminal_kind") == "actuator_affordance"
+            ),
             "edge_type_counts": edge_type_counts,
             "formal_pairs_valid": _formal_pairs_valid(self.graph),
             "mature_node_count": sum(1 for node in self.graph.nodes.values() if node.meta.get("tier") == "mature"),
@@ -302,7 +305,7 @@ class NativeReConKRKGraph:
             ids.action,
         ]
         for node in self.graph.nodes.values():
-            if node.meta.get("triplet_id") == triplet_id and node.ntype in (NodeType.TERMINAL, NodeType.ACTION):
+            if node.meta.get("triplet_id") == triplet_id and node.ntype == NodeType.TERMINAL:
                 node_ids.append(node.nid)
         for node_id in node_ids:
             node = self.graph.nodes[node_id]
@@ -670,8 +673,10 @@ def _terminal_meta(stage: str, role: str, action_uci: str, keys: tuple[str, ...]
 
 
 def _action_meta(stage: str, action_uci: str) -> dict[str, Any]:
-    payload = _candidate_meta("ACTION", stage, role="action_affordance", action_uci=action_uci)
+    payload = _candidate_meta("TERMINAL", stage, role="action_affordance", action_uci=action_uci)
+    payload["terminal_kind"] = "actuator_affordance"
     payload["environment_affordance"] = True
+    payload["actuator_terminal"] = True
     payload["chooses_move_directly"] = False
     return payload
 

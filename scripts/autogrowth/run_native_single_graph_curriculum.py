@@ -62,6 +62,8 @@ def main() -> int:
         payload["graph"]["edge_count"],
         "triplets",
         payload["graph"]["triplet_count"],
+        "actuator_terminals",
+        payload["graph"]["actuator_terminal_count"],
         "formal_pairs_valid",
         payload["graph"]["formal_pairs_valid"],
     )

@@ -389,7 +389,7 @@ class ReConEngine:
         - This ensures POR sequences have a chance to run to completion
         """
         for nid, node in self.g.nodes.items():
-            if node.ntype in (NodeType.TERMINAL, NodeType.ACTION, NodeType.SCRIPT):
+            if node.ntype in (NodeType.TERMINAL, NodeType.SCRIPT):
                 if node.state == NodeState.REQUESTED:
                     node.state = NodeState.WAITING
                     node.tick_entered = self.tick
@@ -734,7 +734,7 @@ class ReConEngine:
         for nid, node in self.g.nodes.items():
             if nid not in allowed_nodes:
                 continue
-            if node.ntype in (NodeType.TERMINAL, NodeType.ACTION, NodeType.SCRIPT):
+            if node.ntype in (NodeType.TERMINAL, NodeType.SCRIPT):
                 if node.state == NodeState.REQUESTED:
                     node.state = NodeState.WAITING
                     node.tick_entered = self.tick

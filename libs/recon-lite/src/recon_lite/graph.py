@@ -11,8 +11,7 @@ from .core.activations import ActivationState
 
 class NodeType(Enum):
     SCRIPT = auto()
-    TERMINAL = auto() #"Sensors", Leaf nodes. Could be anything from physical photo detector/thermometer to or a sophisticated AI model connected to a virtual world. 
-    ACTION = auto()    # Environment affordance leaf nodes. Requested by SCRIPT, confirm/fail via predicate, and return through SUR.
+    TERMINAL = auto()  # Leaf nodes: sensors and actuator/environment terminals.
 
 
 class NodeState(Enum):
@@ -86,13 +85,13 @@ class Graph:
         dst_node = self.nodes[dst]
 
         # --- Article compliance enforcement for link types ---
-        # Leaf nodes: can only be TARGETED by SUB, and ORIGINATE SUR
-        if src_node.ntype in (NodeType.TERMINAL, NodeType.ACTION):
+        # Terminal leaves: can only be TARGETED by SUB, and ORIGINATE SUR.
+        if src_node.ntype == NodeType.TERMINAL:
             if ltype != LinkType.SUR:
                 raise ValueError(
                     f"Illegal edge: leaf node '{src}' may only originate SUR links (got {ltype.name})."
                 )
-        if dst_node.ntype in (NodeType.TERMINAL, NodeType.ACTION):
+        if dst_node.ntype == NodeType.TERMINAL:
             if ltype != LinkType.SUB:
                 raise ValueError(
                     f"Illegal edge: leaf node '{dst}' may only be targeted by SUB links (got {ltype.name})."
@@ -181,11 +180,11 @@ class Graph:
         for e in self.edges:
             src_node = self.nodes[e.src]
             dst_node = self.nodes[e.dst]
-            if src_node.ntype in (NodeType.TERMINAL, NodeType.ACTION) and e.ltype != LinkType.SUR:
+            if src_node.ntype == NodeType.TERMINAL and e.ltype != LinkType.SUR:
                 raise ValueError(
                     f"Article violation: leaf '{e.src}' originates non-SUR link {e.ltype.name} to '{e.dst}'."
                 )
-            if dst_node.ntype in (NodeType.TERMINAL, NodeType.ACTION) and e.ltype != LinkType.SUB:
+            if dst_node.ntype == NodeType.TERMINAL and e.ltype != LinkType.SUB:
                 raise ValueError(
                     f"Article violation: leaf '{e.dst}' targeted by non-SUB link {e.ltype.name} from '{e.src}'."
                 )

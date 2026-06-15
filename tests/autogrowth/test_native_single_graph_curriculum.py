@@ -1,6 +1,6 @@
 import chess
 
-from recon_lite import Graph, LinkType, Node, NodeState, NodeType, ReConEngine
+from recon_lite import Graph, Node, NodeState, NodeType, ReConEngine
 from recon_lite_chess.autogrowth import (
     NativeReConKRKGraph,
     NativeSingleGraphConfig,
@@ -11,10 +11,17 @@ from recon_lite_chess.autogrowth.foundation_curriculum import _mate_moves, _move
 MATE_ONE_FEN = "k7/8/1K6/8/8/8/8/7R w - - 0 1"
 
 
-def test_action_nodes_are_native_recon_leaves() -> None:
+def test_actuator_affordances_are_terminal_leaves() -> None:
     graph = Graph()
     graph.add_node(Node("root", NodeType.SCRIPT))
-    graph.add_node(Node("act", NodeType.ACTION, predicate=lambda _node, _env: (True, True)))
+    graph.add_node(
+        Node(
+            "act",
+            NodeType.TERMINAL,
+            predicate=lambda _node, _env: (True, True),
+            meta={"terminal_kind": "actuator_affordance"},
+        )
+    )
     graph.add_hierarchy_pair("root", "act")
     graph.validate_formal_pairs()
 
@@ -38,7 +45,8 @@ def test_tg26o_materializes_real_nodes_and_edges() -> None:
     assert payload["formal_pairs_valid"] is True
     assert payload["node_type_counts"]["SCRIPT"] > 0
     assert payload["node_type_counts"]["TERMINAL"] > 0
-    assert payload["node_type_counts"]["ACTION"] > 0
+    assert "ACTION" not in payload["node_type_counts"]
+    assert payload["actuator_terminal_count"] > 0
     assert payload["edge_type_counts"]["SUB"] > 8
     assert payload["edge_type_counts"]["SUR"] > 8
     assert payload["edge_type_counts"]["POR"] == 2
@@ -70,7 +78,8 @@ def test_tg26o_native_graph_contract_without_full_curriculum() -> None:
     payload = network.to_dict()
     assert payload["native_recon_graph"] is True
     assert payload["formal_pairs_valid"] is True
-    assert payload["node_type_counts"]["ACTION"] > 0
-    assert payload["node_type_counts"]["TERMINAL"] > payload["node_type_counts"]["ACTION"]
+    assert "ACTION" not in payload["node_type_counts"]
+    assert payload["actuator_terminal_count"] > 0
+    assert payload["node_type_counts"]["TERMINAL"] > payload["actuator_terminal_count"]
     assert payload["edge_type_counts"]["SUB"] == payload["edge_type_counts"]["SUR"]
     assert payload["edge_type_counts"]["POR"] == payload["edge_type_counts"]["RET"]
