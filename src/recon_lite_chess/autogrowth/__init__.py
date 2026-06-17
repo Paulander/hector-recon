@@ -195,6 +195,11 @@ from .native_foundation_generalization import (
     NativeFoundationGeneralizationResult,
     run_native_foundation_generalization,
 )
+from .shared_feature_atoms import (
+    SharedFeatureAtomConfig,
+    SharedFeatureAtomResult,
+    run_shared_feature_atom_experiment,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -322,6 +327,8 @@ __all__ = [
     "SandboxResult",
     "ScriptFragmentConfig",
     "ScriptFragmentResult",
+    "SharedFeatureAtomConfig",
+    "SharedFeatureAtomResult",
     "SingleGraphCurriculumConfig",
     "SingleGraphCurriculumResult",
     "SingleGraphKRKNetwork",
@@ -371,6 +378,7 @@ __all__ = [
     "run_local_script_experiment",
     "run_local_suppressor_experiment",
     "run_script_fragment_experiment",
+    "run_shared_feature_atom_experiment",
     "run_single_graph_curriculum",
     "run_topological_growth_runway",
     "run_context_specialized_candidate_experiment",

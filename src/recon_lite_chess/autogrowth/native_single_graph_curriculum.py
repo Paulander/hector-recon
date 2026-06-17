@@ -52,6 +52,12 @@ class NativeSingleGraphConfig:
     prototype_distance_threshold: int = 12
     max_prototype_candidates_per_move: int = 3
     max_prototype_scan_triplets: int = 256
+    shared_feature_atoms: bool = False
+    shared_projection_atoms: bool = False
+    include_grouped_cache_terminals: bool = True
+    shared_atom_min_overlap: int = 2
+    max_shared_atom_candidates_per_choice: int = 12
+    prune_redundant_exact_terminals: bool = False
     max_mate1_positions: int | None = None
     max_mate2_positions: int | None = None
 
@@ -131,6 +137,11 @@ class NativeReConKRKGraph:
         self.triplet_nodes: dict[str, set[str]] = {}
         self.triplet_trainable_edges: dict[str, list[Any]] = {}
         self.triplet_pattern_key_cache: dict[str, set[str]] = {}
+        self.shared_atom_ids_by_key: dict[tuple[str, str], str] = {}
+        self.shared_atom_triplets: dict[str, set[str]] = {}
+        self.shared_atom_key_by_id: dict[str, tuple[str, str]] = {}
+        self.pruned_terminal_ids: set[str] = set()
+        self.pruned_triplet_ids: set[str] = set()
         self.m3_update_count = 0
         self.m4_event_count = 0
         self.runtime_choice_count = 0
@@ -146,6 +157,8 @@ class NativeReConKRKGraph:
             "formal_ticks_run": 0,
             "prototype_distance_evaluations": 0,
             "prototype_scan_truncated_calls": 0,
+            "shared_atom_retrieval_calls": 0,
+            "shared_atom_retrieved_triplets": 0,
         }
 
     def choose(self, board: chess.Board, *, masked_triplets: set[str] | None = None) -> chess.Move | None:
@@ -164,6 +177,8 @@ class NativeReConKRKGraph:
                 "confirmed_candidate_count": 0,
                 "confirmed_candidates": [],
             }
+        if self.config.shared_feature_atoms:
+            return self._audit_choice_shared_atoms(board, legal, masked_triplets=masked_triplets)
         candidate_moves = self._candidate_triplets_for_board(board, legal)
         if masked_triplets:
             candidate_moves = {triplet_id: move for triplet_id, move in candidate_moves.items() if triplet_id not in masked_triplets}
@@ -227,6 +242,84 @@ class NativeReConKRKGraph:
             ],
         }
 
+    def _audit_choice_shared_atoms(
+        self,
+        board: chess.Board,
+        legal: Mapping[str, chess.Move],
+        *,
+        masked_triplets: set[str] | None = None,
+    ) -> dict[str, Any]:
+        candidate_moves = self._candidate_triplets_for_board(board, legal)
+        if masked_triplets:
+            candidate_moves = {
+                triplet_id: move for triplet_id, move in candidate_moves.items() if triplet_id not in masked_triplets
+            }
+        if len(candidate_moves) > self.config.max_shared_atom_candidates_per_choice:
+            ranked = sorted(
+                candidate_moves.items(),
+                key=lambda item: (self._triplet_root_weight(item[0]), item[0]),
+                reverse=True,
+            )
+            candidate_moves = dict(ranked[: self.config.max_shared_atom_candidates_per_choice])
+        self.scheduler_stats["choose_calls"] += 1
+        self.scheduler_stats["candidate_triplets_ticked"] += len(candidate_moves)
+        self.scheduler_stats["triplets_skipped_by_index"] += max(0, len(self.triplet_ids) - len(candidate_moves))
+        if not candidate_moves:
+            self.scheduler_stats["empty_candidate_calls"] += 1
+            return {
+                "selected_move": None,
+                "candidate_triplet_count": 0,
+                "confirmed_candidate_count": 0,
+                "confirmed_candidates": [],
+            }
+        candidates: list[tuple[float, str, str]] = []
+        for triplet_id, move_uci in candidate_moves.items():
+            active_nodes = self._active_nodes_for_triplets({triplet_id})
+            self.scheduler_stats["active_nodes_ticked"] += len(active_nodes)
+            self.scheduler_stats["full_graph_node_resets_avoided"] += max(0, len(self.graph.nodes) - len(active_nodes))
+            self._reset_runtime_states(active_nodes)
+            env: dict[str, Any] = {
+                "board": board,
+                "candidate_move_by_triplet": {triplet_id: move_uci},
+                "shared_atom_move_uci": move_uci,
+            }
+            engine = FormalReConEngine(self.graph, validate_pairs=False, record_trace=False)
+            engine.request(ROOT_ID)
+            engine.run(
+                max_ticks=self.config.max_ticks,
+                env=env,
+                active_nodes=active_nodes,
+                until=lambda _engine, current_triplet=triplet_id: self._candidate_triplets_settled({current_triplet}),
+            )
+            self.scheduler_stats["formal_ticks_run"] += engine.tick
+            candidates.extend(
+                self._confirmed_action_candidates(
+                    legal,
+                    {triplet_id},
+                    candidate_move_by_triplet={triplet_id: move_uci},
+                )
+            )
+        if not candidates:
+            return {
+                "selected_move": None,
+                "candidate_triplet_count": len(candidate_moves),
+                "confirmed_candidate_count": 0,
+                "confirmed_candidates": [],
+            }
+        candidates.sort(reverse=True)
+        self.runtime_choice_count += 1
+        return {
+            "selected_move": candidates[0][1],
+            "selected_triplet": candidates[0][2],
+            "selected_score": round(float(candidates[0][0]), 6),
+            "candidate_triplet_count": len(candidate_moves),
+            "confirmed_candidate_count": len(candidates),
+            "confirmed_candidates": [
+                {"score": round(float(score), 6), "move": move_uci, "triplet_id": triplet_id}
+                for score, move_uci, triplet_id in candidates[:16]
+            ],
+        }
+
     def train_action_rewards(self, board: chess.Board, *, rewards: Mapping[str, float], stage: str) -> dict[str, int]:
         updates = {"positive": 0, "negative": 0, "neutral": 0}
         for move in sorted(board.legal_moves, key=lambda item: item.uci()):
@@ -248,55 +341,93 @@ class NativeReConKRKGraph:
             return triplet_id
 
         ids = _TripletNodeIds(triplet_id)
-        created_node_ids: set[str] = set()
-        for node in (
+        created_private_node_ids: set[str] = set()
+        active_node_ids: set[str] = set()
+        base_nodes = [
             Node(ids.triplet, NodeType.SCRIPT, meta=_candidate_meta("SCRIPT", stage, role="triplet", action_uci=move.uci())),
             Node(ids.before_script, NodeType.SCRIPT, meta=_candidate_meta("SCRIPT", stage, role="before_script", action_uci=move.uci())),
             Node(ids.action_script, NodeType.SCRIPT, meta=_candidate_meta("SCRIPT", stage, role="action_script", action_uci=move.uci())),
             Node(ids.after_script, NodeType.SCRIPT, meta=_candidate_meta("SCRIPT", stage, role="after_script", action_uci=move.uci())),
-            Node(ids.before_terminal, NodeType.TERMINAL, predicate=_pattern_predicate("before", move.uci(), before_keys, self.config.key_mode, self.config.prototype_distance_threshold), meta=_terminal_meta(stage, "before", move.uci(), before_keys)),
-            Node(ids.delta_terminal, NodeType.TERMINAL, predicate=_pattern_predicate("delta", move.uci(), action_delta_keys, self.config.key_mode, self.config.prototype_distance_threshold), meta=_terminal_meta(stage, "delta", move.uci(), action_delta_keys)),
-            Node(ids.after_terminal, NodeType.TERMINAL, predicate=_pattern_predicate("after", move.uci(), after_keys, self.config.key_mode, self.config.prototype_distance_threshold), meta=_terminal_meta(stage, "after", move.uci(), after_keys)),
             Node(ids.action, NodeType.TERMINAL, predicate=_action_predicate(move.uci()), meta=_action_meta(stage, move.uci())),
-        ):
+        ]
+        if self.config.include_grouped_cache_terminals:
+            base_nodes.extend([
+                Node(ids.before_terminal, NodeType.TERMINAL, predicate=_pattern_predicate("before", move.uci(), before_keys, self.config.key_mode, self.config.prototype_distance_threshold), meta=_terminal_meta(stage, "before", move.uci(), before_keys)),
+                Node(ids.delta_terminal, NodeType.TERMINAL, predicate=_pattern_predicate("delta", move.uci(), action_delta_keys, self.config.key_mode, self.config.prototype_distance_threshold), meta=_terminal_meta(stage, "delta", move.uci(), action_delta_keys)),
+                Node(ids.after_terminal, NodeType.TERMINAL, predicate=_pattern_predicate("after", move.uci(), after_keys, self.config.key_mode, self.config.prototype_distance_threshold), meta=_terminal_meta(stage, "after", move.uci(), after_keys)),
+            ])
+        for node in base_nodes:
             self.graph.add_node(node)
-            created_node_ids.add(node.nid)
+            created_private_node_ids.add(node.nid)
+            active_node_ids.add(node.nid)
 
         created_edges: list[Any] = []
         created_edges.extend(self._add_hierarchy_pair(ROOT_ID, ids.triplet, trainable=True, weight=0.0))
         created_edges.extend(self._add_hierarchy_pair(ids.triplet, ids.before_script, trainable=True, weight=0.0))
         created_edges.extend(self._add_hierarchy_pair(ids.triplet, ids.action_script, trainable=True, weight=0.0))
         created_edges.extend(self._add_hierarchy_pair(ids.triplet, ids.after_script, trainable=True, weight=0.0))
-        created_edges.extend(self._add_hierarchy_pair(ids.before_script, ids.before_terminal, trainable=True, weight=0.0))
-        created_edges.extend(self._add_hierarchy_pair(ids.action_script, ids.delta_terminal, trainable=True, weight=0.0))
         created_edges.extend(self._add_hierarchy_pair(ids.action_script, ids.action, trainable=True, weight=0.0))
-        created_edges.extend(self._add_hierarchy_pair(ids.after_script, ids.after_terminal, trainable=True, weight=0.0))
+        if self.config.include_grouped_cache_terminals:
+            created_edges.extend(self._add_hierarchy_pair(ids.before_script, ids.before_terminal, trainable=True, weight=0.0))
+            created_edges.extend(self._add_hierarchy_pair(ids.action_script, ids.delta_terminal, trainable=True, weight=0.0))
+            created_edges.extend(self._add_hierarchy_pair(ids.after_script, ids.after_terminal, trainable=True, weight=0.0))
         for role, parent_id, keys in (
             ("before_feature", ids.before_script, before_keys),
             ("delta_feature", ids.action_script, action_delta_keys),
             ("after_feature", ids.after_script, after_keys),
         ):
             for key in keys:
-                feature_id = _feature_terminal_id(triplet_id, role, key)
-                self.graph.add_node(
-                    Node(
-                        feature_id,
-                        NodeType.TERMINAL,
-                        predicate=_single_key_predicate(role, move.uci(), key, self.config.key_mode, self.config.prototype_distance_threshold),
-                        meta=_feature_terminal_meta(stage, role, move.uci(), key),
+                if self.config.shared_feature_atoms:
+                    feature_id = self._ensure_shared_feature_atom(role, key, stage=stage, action_uci=move.uci())
+                    self.shared_atom_triplets.setdefault(feature_id, set()).add(triplet_id)
+                    self.graph.nodes[feature_id].meta["reuse_count"] = len(self.shared_atom_triplets[feature_id])
+                else:
+                    feature_id = _feature_terminal_id(triplet_id, role, key)
+                    self.graph.add_node(
+                        Node(
+                            feature_id,
+                            NodeType.TERMINAL,
+                            predicate=_single_key_predicate(role, move.uci(), key, self.config.key_mode, self.config.prototype_distance_threshold),
+                            meta=_feature_terminal_meta(stage, role, move.uci(), key),
+                        )
                     )
-                )
-                created_node_ids.add(feature_id)
+                    created_private_node_ids.add(feature_id)
                 created_edges.extend(self._add_hierarchy_pair(parent_id, feature_id, trainable=True, weight=0.0))
+                active_node_ids.add(feature_id)
+        if self.config.shared_feature_atoms and self.config.shared_projection_atoms:
+            for key in _projection_atom_keys(before_keys, action_delta_keys, after_keys):
+                feature_id = self._ensure_shared_feature_atom("projection_feature", key, stage=stage, action_uci=move.uci())
+                self.shared_atom_triplets.setdefault(feature_id, set()).add(triplet_id)
+                self.graph.nodes[feature_id].meta["reuse_count"] = len(self.shared_atom_triplets[feature_id])
+                created_edges.extend(self._add_hierarchy_pair(ids.action_script, feature_id, trainable=True, weight=0.0))
+                active_node_ids.add(feature_id)
         created_edges.extend(self._add_sequence_pair(ids.before_script, ids.action_script, trainable=True, weight=0.0))
         created_edges.extend(self._add_sequence_pair(ids.action_script, ids.after_script, trainable=True, weight=0.0))
-        for node_id in created_node_ids:
+        for node_id in created_private_node_ids:
             self.graph.nodes[node_id].meta["triplet_id"] = triplet_id
         self.triplet_ids.add(triplet_id)
-        self.triplet_nodes[triplet_id] = created_node_ids
+        self.triplet_nodes[triplet_id] = active_node_ids
         self.triplet_trainable_edges[triplet_id] = created_edges
         self.triplet_pattern_key_cache[triplet_id] = set((*before_keys, *action_delta_keys, *after_keys))
         return triplet_id
+
+    def _ensure_shared_feature_atom(self, role: str, key: str, *, stage: str, action_uci: str) -> str:
+        atom_key = (role, key)
+        existing = self.shared_atom_ids_by_key.get(atom_key)
+        if existing is not None:
+            return existing
+        atom_id = _shared_feature_atom_id(role, key)
+        self.graph.add_node(
+            Node(
+                atom_id,
+                NodeType.TERMINAL,
+                predicate=_shared_atom_predicate(role, key, self.config.key_mode),
+                meta=_shared_feature_atom_meta(stage, role, action_uci, key),
+            )
+        )
+        self.shared_atom_ids_by_key[atom_key] = atom_id
+        self.shared_atom_key_by_id[atom_id] = atom_key
+        return atom_id
 
     def mature_existing_graph(self) -> dict[str, Any]:
         matured_nodes = 0
@@ -323,6 +454,48 @@ class NativeReConKRKGraph:
             "total_node_count": len(self.graph.nodes),
             "total_edge_count": len(self.graph.edges),
             "m4_event_count": self.m4_event_count,
+        }
+
+    def apply_shared_atom_pruning(self, *, terminal_threshold: float = -0.20, triplet_threshold: float = -0.25) -> dict[str, Any]:
+        pruned_shared_atoms = 0
+        pruned_exact_terminals = 0
+        for node in self.graph.nodes.values():
+            if node.ntype != NodeType.TERMINAL:
+                continue
+            utility = float(node.meta.get("survival_utility", node.meta.get("local_weight", 0.0)))
+            if utility > terminal_threshold:
+                continue
+            if int(node.meta.get("confirm_count", 0)) > 0:
+                continue
+            if node.meta.get("shared_feature_atom"):
+                pruned_shared_atoms += int(node.nid not in self.pruned_terminal_ids)
+            elif node.meta.get("role") in {"before_feature", "delta_feature", "after_feature", "projection_feature"}:
+                pruned_exact_terminals += int(node.nid not in self.pruned_terminal_ids)
+            else:
+                continue
+            node.meta["tier"] = "dead"
+            node.meta["stem_cell_state"] = StemCellState.PRUNED.name
+            node.meta["quarantine_reason"] = "low_generic_utility_without_positive_confirmation"
+            self.pruned_terminal_ids.add(node.nid)
+        pruned_triplets = 0
+        for triplet_id in self.triplet_ids:
+            if self._triplet_root_weight(triplet_id) > triplet_threshold:
+                continue
+            ids = _TripletNodeIds(triplet_id)
+            node = self.graph.nodes[ids.triplet]
+            if int(node.meta.get("confirm_count", 0)) > 0:
+                continue
+            pruned_triplets += int(triplet_id not in self.pruned_triplet_ids)
+            node.meta["tier"] = "dead"
+            node.meta["stem_cell_state"] = StemCellState.PRUNED.name
+            node.meta["quarantine_reason"] = "low_root_weight_without_positive_confirmation"
+            self.pruned_triplet_ids.add(triplet_id)
+        return {
+            "pruned_shared_atom_count": pruned_shared_atoms,
+            "pruned_exact_terminal_count": pruned_exact_terminals,
+            "pruned_triplet_count": pruned_triplets,
+            "terminal_threshold": terminal_threshold,
+            "triplet_threshold": triplet_threshold,
         }
 
     def to_dict(self) -> dict[str, Any]:
@@ -397,17 +570,45 @@ class NativeReConKRKGraph:
         equivalent_keys: dict[tuple[str, str, str], int] = {}
         for triplet_id in self.triplet_ids:
             ids = _TripletNodeIds(triplet_id)
-            key = (
-                str(self.graph.nodes[ids.before_terminal].meta.get("pattern_hash")),
-                str(self.graph.nodes[ids.delta_terminal].meta.get("pattern_hash")),
-                str(self.graph.nodes[ids.after_terminal].meta.get("pattern_hash")),
-            )
+            if all(node_id in self.graph.nodes for node_id in (ids.before_terminal, ids.delta_terminal, ids.after_terminal)):
+                key = (
+                    str(self.graph.nodes[ids.before_terminal].meta.get("pattern_hash")),
+                    str(self.graph.nodes[ids.delta_terminal].meta.get("pattern_hash")),
+                    str(self.graph.nodes[ids.after_terminal].meta.get("pattern_hash")),
+                )
+            else:
+                key = tuple(sorted(self.triplet_pattern_key_cache.get(triplet_id, set())))  # type: ignore[assignment]
             equivalent_keys[key] = equivalent_keys.get(key, 0) + 1
         duplicate_equivalent = sum(count - 1 for count in equivalent_keys.values() if count > 1)
+        shared_atoms = [node for node in self.graph.nodes.values() if node.meta.get("shared_feature_atom")]
+        pruned_shared_atom_count = sum(
+            1 for node_id in self.pruned_terminal_ids if self.graph.nodes[node_id].meta.get("shared_feature_atom")
+        )
+        pruned_exact_terminal_count = len(self.pruned_terminal_ids) - pruned_shared_atom_count
+        triplet_local_feature_terminal_count = sum(
+            1
+            for node in self.graph.nodes.values()
+            if node.ntype == NodeType.TERMINAL
+            and node.meta.get("role") in {"before_feature", "delta_feature", "after_feature", "projection_feature"}
+            and not node.meta.get("shared_feature_atom")
+        )
+        grouped_cache_terminal_count = sum(
+            1
+            for node in self.graph.nodes.values()
+            if node.ntype == NodeType.TERMINAL and node.meta.get("grouped_cache_terminal")
+        )
         return {
             "node_count": len(self.graph.nodes),
             "edge_count": len(self.graph.edges),
             "triplet_count": len(self.triplet_ids),
+            "shared_atom_count": len(shared_atoms),
+            "reused_atom_count": sum(1 for node in shared_atoms if int(node.meta.get("reuse_count", 0)) > 1),
+            "triplet_local_feature_terminal_count": triplet_local_feature_terminal_count,
+            "grouped_cache_terminal_count": grouped_cache_terminal_count,
+            "shared_atom_stats": self.shared_atom_diagnostics(),
+            "pruned_exact_terminal_count": pruned_exact_terminal_count,
+            "pruned_shared_atom_count": pruned_shared_atom_count,
+            "pruned_triplet_count": len(self.pruned_triplet_ids),
             "tier_counts": tier_counts,
             "stem_cell_state_counts": state_counts,
             "dead_node_count": tier_counts.get("dead", 0) + state_counts.get("DEAD", 0),
@@ -432,6 +633,45 @@ class NativeReConKRKGraph:
             "prune_candidate_triplets": prune_candidates[:64],
             "prune_weight_threshold": prune_weight_threshold,
             "scheduler_stats": dict(self.scheduler_stats),
+        }
+
+    def shared_atom_diagnostics(self, *, max_atoms: int = 24) -> dict[str, Any]:
+        atoms = [node for node in self.graph.nodes.values() if node.meta.get("shared_feature_atom")]
+
+        def row(node: Node) -> dict[str, Any]:
+            request_exposures = int(node.meta.get("request_exposures", 0))
+            confirm_count = int(node.meta.get("confirm_count", 0))
+            negative_count = int(node.meta.get("negative_confirm_count", 0))
+            false_positive_count = int(node.meta.get("false_positive_count", 0))
+            return {
+                "node_id": node.nid,
+                "terminal_key": node.meta.get("terminal_key"),
+                "role": node.meta.get("role"),
+                "reuse_count": int(node.meta.get("reuse_count", 0)),
+                "activation_count": int(node.meta.get("activation_count", 0)),
+                "request_exposures": request_exposures,
+                "confirm_count": confirm_count,
+                "negative_confirm_count": negative_count,
+                "false_positive_count": false_positive_count,
+                "positive_correlation": 0.0 if request_exposures == 0 else round(confirm_count / request_exposures, 6),
+                "negative_correlation": 0.0 if request_exposures == 0 else round(negative_count / request_exposures, 6),
+                "context_coverage": int(node.meta.get("reuse_count", 0)),
+                "context_precision": 0.0
+                if confirm_count + false_positive_count == 0
+                else round(confirm_count / (confirm_count + false_positive_count), 6),
+                "local_weight": round(float(node.meta.get("local_weight", 0.0)), 6),
+                "survival_utility": round(float(node.meta.get("survival_utility", 0.0)), 6),
+                "tier": node.meta.get("tier", "trial"),
+            }
+
+        rows = [row(node) for node in atoms]
+        return {
+            "atom_activation_distribution": _distribution([item["activation_count"] for item in rows]),
+            "atom_confirmation_distribution": _distribution([item["confirm_count"] for item in rows]),
+            "atom_false_positive_distribution": _distribution([item["false_positive_count"] for item in rows]),
+            "top_positive_atoms": sorted(rows, key=lambda item: (item["local_weight"], item["confirm_count"]), reverse=True)[:max_atoms],
+            "top_negative_atoms": sorted(rows, key=lambda item: (item["local_weight"], item["negative_confirm_count"]))[:max_atoms],
+            "top_reused_atoms": sorted(rows, key=lambda item: item["reuse_count"], reverse=True)[:max_atoms],
         }
 
     def triplets_by_stage(self, stage_predicate) -> set[str]:
@@ -481,24 +721,45 @@ class NativeReConKRKGraph:
             ids.before_script,
             ids.action_script,
             ids.after_script,
-            ids.before_terminal,
-            ids.delta_terminal,
-            ids.after_terminal,
             ids.action,
         ]
+        for maybe_id in (ids.before_terminal, ids.delta_terminal, ids.after_terminal):
+            if maybe_id in self.graph.nodes:
+                node_ids.append(maybe_id)
         for node_id in self.triplet_nodes.get(triplet_id, set()):
             node = self.graph.nodes[node_id]
             if node.ntype == NodeType.TERMINAL:
                 node_ids.append(node.nid)
-        for node_id in node_ids:
+        for node_id in dict.fromkeys(node_ids):
             node = self.graph.nodes[node_id]
             node.meta["request_exposures"] = int(node.meta.get("request_exposures", 0)) + 1
             if bounded_reward > 0.0:
                 node.meta["confirm_count"] = int(node.meta.get("confirm_count", 0)) + 1
+            elif bounded_reward < 0.0:
+                node.meta["negative_confirm_count"] = int(node.meta.get("negative_confirm_count", 0)) + 1
+                if node.meta.get("shared_feature_atom"):
+                    node.meta["false_positive_count"] = int(node.meta.get("false_positive_count", 0)) + 1
             node.meta["local_weight"] = _bounded(
                 float(node.meta.get("local_weight", 0.0)) + self.config.eta_m3 * bounded_reward,
                 self.config.max_abs_local_weight,
             )
+            if node.meta.get("shared_feature_atom"):
+                node.meta["positive_correlation"] = (
+                    int(node.meta.get("confirm_count", 0)) / max(1, int(node.meta.get("request_exposures", 0)))
+                )
+                node.meta["negative_correlation"] = (
+                    int(node.meta.get("negative_confirm_count", 0)) / max(1, int(node.meta.get("request_exposures", 0)))
+                )
+                node.meta["context_coverage"] = int(node.meta.get("reuse_count", 0))
+                node.meta["context_precision"] = (
+                    int(node.meta.get("confirm_count", 0))
+                    / max(1, int(node.meta.get("confirm_count", 0)) + int(node.meta.get("false_positive_count", 0)))
+                )
+                node.meta["survival_utility"] = (
+                    float(node.meta.get("local_weight", 0.0))
+                    + 0.01 * int(node.meta.get("reuse_count", 0))
+                    - 0.02 * int(node.meta.get("false_positive_count", 0))
+                )
         for edge in self.triplet_trainable_edges.get(triplet_id, []):
             edge.w = _bounded(float(edge.w) + self.config.eta_m3 * bounded_reward, self.config.max_abs_local_weight)
             self.m3_update_count += 1
@@ -516,10 +777,59 @@ class NativeReConKRKGraph:
             triplet_id = _triplet_id(*keys)
             if triplet_id in self.triplet_ids:
                 triplets[triplet_id] = move.uci()
+            elif self.config.shared_feature_atoms:
+                for candidate_id in self._triplets_from_active_shared_atoms(keys):
+                    triplets.setdefault(candidate_id, move.uci())
             elif self.config.key_mode != "exact":
                 for candidate_id, _distance in self._nearest_triplets_for_keys(keys):
                     triplets.setdefault(candidate_id, move.uci())
         return triplets
+
+    def _triplets_from_active_shared_atoms(
+        self,
+        keys: tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]],
+    ) -> tuple[str, ...]:
+        active_atoms = self._shared_atom_ids_for_keys(keys)
+        overlap: dict[str, int] = {}
+        for atom_id in active_atoms:
+            for triplet_id in self.shared_atom_triplets.get(atom_id, set()):
+                overlap[triplet_id] = overlap.get(triplet_id, 0) + 1
+        self.scheduler_stats["shared_atom_retrieval_calls"] += 1
+        self.scheduler_stats["shared_atom_retrieved_triplets"] += len(overlap)
+        selected = sorted(
+            (
+                (count, self._triplet_root_weight(triplet_id), triplet_id)
+                for triplet_id, count in overlap.items()
+                if count >= self.config.shared_atom_min_overlap and triplet_id not in self.pruned_triplet_ids
+            ),
+            reverse=True,
+        )
+        return tuple(triplet_id for _count, _weight, triplet_id in selected[: self.config.max_prototype_candidates_per_move])
+
+    def _shared_atom_ids_for_keys(
+        self,
+        keys: tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]],
+    ) -> set[str]:
+        active: set[str] = set()
+        for role, role_keys in (
+            ("before_feature", keys[0]),
+            ("delta_feature", keys[1]),
+            ("after_feature", keys[2]),
+        ):
+            for key in role_keys:
+                atom_id = self.shared_atom_ids_by_key.get((role, key))
+                if atom_id is not None:
+                    active.add(atom_id)
+        if self.config.shared_projection_atoms:
+            for key in _projection_atom_keys(*keys):
+                atom_id = self.shared_atom_ids_by_key.get(("projection_feature", key))
+                if atom_id is not None:
+                    active.add(atom_id)
+        return active
+
+    def _triplet_root_weight(self, triplet_id: str) -> float:
+        edge = self.graph.get_edge(ROOT_ID, triplet_id, LinkType.SUB)
+        return float(edge.w) if edge is not None else 0.0
 
     def _nearest_triplets_for_keys(
         self,
@@ -567,7 +877,8 @@ class NativeReConKRKGraph:
                 node = self.graph.nodes[node_id]
                 if (
                     not self.config.tick_feature_terminals
-                    and node.meta.get("role") in {"before_feature", "delta_feature", "after_feature"}
+                    and node.meta.get("role") in {"before_feature", "delta_feature", "after_feature", "projection_feature"}
+                    and not node.meta.get("shared_feature_atom")
                 ):
                     self.scheduler_stats["feature_terminals_skipped_by_scheduler"] += 1
                     continue
@@ -612,12 +923,13 @@ class NativeReConKRKGraph:
     def _confirmed_terminal_score(self, triplet_id: str) -> tuple[float, int]:
         score = 0.0
         count = 0
-        for node in self.graph.nodes.values():
-            if node.meta.get("triplet_id") != triplet_id:
+        for node_id in self.triplet_nodes.get(triplet_id, set()):
+            node = self.graph.nodes[node_id]
+            if node.nid in self.pruned_terminal_ids:
                 continue
             if node.ntype != NodeType.TERMINAL:
                 continue
-            if node.meta.get("role") not in {"before_feature", "delta_feature", "after_feature"}:
+            if node.meta.get("role") not in {"before_feature", "delta_feature", "after_feature", "projection_feature"}:
                 continue
             if str(node.meta.get("terminal_key", "")).startswith("action_pattern:"):
                 continue
@@ -952,6 +1264,7 @@ def _terminal_meta(stage: str, role: str, action_uci: str, keys: tuple[str, ...]
         "pattern_key_count": len(keys),
         "pattern_hash": _hash_keys(keys),
         "pattern_keys": list(keys),
+        "grouped_cache_terminal": True,
     })
     return payload
 
@@ -970,6 +1283,29 @@ def _feature_terminal_meta(stage: str, role: str, action_uci: str, key: str) -> 
     payload.update({
         "terminal_key": key,
         "pattern_hash": _hash_keys((key,)),
+        "shared_feature_atom": False,
+    })
+    return payload
+
+
+def _shared_feature_atom_meta(stage: str, role: str, action_uci: str, key: str) -> dict[str, Any]:
+    payload = _candidate_meta("TERMINAL", stage, role=role, action_uci=action_uci)
+    payload.update({
+        "terminal_key": key,
+        "pattern_hash": _hash_keys((role, key)),
+        "shared_feature_atom": True,
+        "terminal_kind": "shared_feature_atom",
+        "fan_in_allowed": True,
+        "reuse_count": 0,
+        "activation_count": 0,
+        "negative_confirm_count": 0,
+        "false_positive_count": 0,
+        "positive_correlation": 0.0,
+        "negative_correlation": 0.0,
+        "context_coverage": 0,
+        "context_precision": 0.0,
+        "last_confirm_cycle": -1,
+        "survival_utility": 0.0,
     })
     return payload
 
@@ -1016,6 +1352,32 @@ def _single_key_predicate(role: str, action_uci: str, expected_key: str, key_mod
             "after": after_keys,
         }[key_role]
         success = expected_key in actual if key_mode == "exact" else True
+        node.activation.value = 1.0 if success else 0.0
+        return True, success
+
+    return predicate
+
+
+def _shared_atom_predicate(role: str, expected_key: str, key_mode: str):
+    def predicate(node: Node, env: dict[str, Any]) -> tuple[bool, bool]:
+        board = env["board"]
+        if "shared_atom_move_uci" in env:
+            move = chess.Move.from_uci(str(env["shared_atom_move_uci"]))
+        else:
+            move = _resolve_runtime_move(node, env, str(node.meta.get("action_uci", "0000")))
+        if move not in board.legal_moves:
+            node.activation.value = 0.0
+            return True, False
+        before_keys, action_delta_keys, after_keys = _triplet_keys(board, move, key_mode=key_mode)
+        actual = {
+            "before_feature": before_keys,
+            "delta_feature": action_delta_keys,
+            "after_feature": after_keys,
+            "projection_feature": _projection_atom_keys(before_keys, action_delta_keys, after_keys),
+        }[role]
+        success = expected_key in actual
+        if success:
+            node.meta["activation_count"] = int(node.meta.get("activation_count", 0)) + 1
         node.activation.value = 1.0 if success else 0.0
         return True, success
 
@@ -1136,6 +1498,41 @@ def _keep_generalized_action_key(key: str) -> bool:
     return not any(part in key for part in forbidden_parts)
 
 
+def _projection_atom_keys(
+    before_keys: tuple[str, ...],
+    action_delta_keys: tuple[str, ...],
+    after_keys: tuple[str, ...],
+) -> tuple[str, ...]:
+    before = set(before_keys)
+    delta = set(action_delta_keys)
+    after = set(after_keys)
+    projections: list[str] = []
+    if "before_terminal:feature_hub_enemy_king_at_edge=1" in before and "before_terminal:king_same_rank=1" in before:
+        projections.append("projection_atom:before:edge_and_same_rank_relation")
+    if "before_terminal:feature_hub_enemy_king_at_edge=1" in before and "before_terminal:king_same_file=1" in before:
+        projections.append("projection_atom:before:edge_and_same_file_relation")
+    if "before_terminal:rook_safe=1" in before and any(key == "before_terminal:black_reply_mobility=1" or key == "before_terminal:black_reply_mobility=0" for key in before):
+        projections.append("projection_atom:before:rook_safe_low_reply_mobility")
+    if "action_pattern:gives_check=1" in delta and "action_pattern:rook_attacked_after=0" in delta:
+        projections.append("projection_atom:action:gives_check_and_rook_safe_after")
+    if "action_pattern:gives_check=1" in delta and "action_pattern:black_reply_mobility_after=0" in delta:
+        projections.append("projection_atom:action:gives_check_and_zero_reply_mobility")
+    if "delta_terminal:black_reply_mobility=negative" in delta:
+        projections.append("projection_atom:delta:reply_mobility_decreases")
+    if "delta_terminal:black_king_nearest_edge_distance=negative" in delta:
+        projections.append("projection_atom:delta:edge_distance_decreases")
+    if "delta_terminal:confinement_area=negative" in delta:
+        projections.append("projection_atom:delta:confinement_area_decreases")
+    if "after_terminal:black_reply_mobility=0" in after and "after_terminal:is_stalemate=0" in after:
+        projections.append("projection_atom:after:zero_reply_mobility_not_stalemate")
+    if "after_terminal:is_check=1" in after and "after_terminal:rook_safe=1" in after:
+        projections.append("projection_atom:after:check_and_rook_safe")
+    if "after_terminal:rook_attacked_by_black=0" in after and "after_terminal:is_stalemate=0" in after:
+        projections.append("projection_atom:after:safe_rook_non_stalemate")
+    validate_learner_record(projections)
+    return tuple(sorted(dict.fromkeys(projections)))
+
+
 def _native_precise_action_keys(board: chess.Board, move: chess.Move) -> list[str]:
     piece = board.piece_at(move.from_square)
     return [
@@ -1157,6 +1554,11 @@ def _feature_terminal_id(triplet_id: str, role: str, key: str) -> str:
     return f"{triplet_id}_{role}_{digest}"
 
 
+def _shared_feature_atom_id(role: str, key: str) -> str:
+    digest = _hash_keys((role, key))[:20]
+    return f"tg26s_shared_atom_{digest}"
+
+
 def _hash_keys(keys: tuple[str, ...]) -> str:
     return hashlib.sha1("\n".join(keys).encode("utf-8")).hexdigest()
 
@@ -1175,3 +1577,21 @@ def _formal_pairs_valid(graph: Graph) -> bool:
 
 def _unique(values: Iterable[str]) -> tuple[str, ...]:
     return tuple(dict.fromkeys(values))
+
+
+def _distribution(values: Iterable[int]) -> dict[str, Any]:
+    ordered = sorted(int(value) for value in values)
+    if not ordered:
+        return {"count": 0, "min": 0, "p50": 0, "p90": 0, "max": 0}
+
+    def percentile(fraction: float) -> int:
+        index = min(len(ordered) - 1, int(round((len(ordered) - 1) * fraction)))
+        return ordered[index]
+
+    return {
+        "count": len(ordered),
+        "min": ordered[0],
+        "p50": percentile(0.50),
+        "p90": percentile(0.90),
+        "max": ordered[-1],
+    }
