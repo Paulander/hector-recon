@@ -48,6 +48,10 @@ class NativeSingleGraphConfig:
     max_samples: int = 32
     indexed_scheduler: bool = True
     tick_feature_terminals: bool = False
+    key_mode: str = "exact"
+    prototype_distance_threshold: int = 12
+    max_prototype_candidates_per_move: int = 3
+    max_prototype_scan_triplets: int = 256
     max_mate1_positions: int | None = None
     max_mate2_positions: int | None = None
 
@@ -126,6 +130,7 @@ class NativeReConKRKGraph:
         self.triplet_ids: set[str] = set()
         self.triplet_nodes: dict[str, set[str]] = {}
         self.triplet_trainable_edges: dict[str, list[Any]] = {}
+        self.triplet_pattern_key_cache: dict[str, set[str]] = {}
         self.m3_update_count = 0
         self.m4_event_count = 0
         self.runtime_choice_count = 0
@@ -139,6 +144,8 @@ class NativeReConKRKGraph:
             "feature_terminals_skipped_by_scheduler": 0,
             "full_graph_node_resets_avoided": 0,
             "formal_ticks_run": 0,
+            "prototype_distance_evaluations": 0,
+            "prototype_scan_truncated_calls": 0,
         }
 
     def choose(self, board: chess.Board, *, masked_triplets: set[str] | None = None) -> chess.Move | None:
@@ -157,9 +164,10 @@ class NativeReConKRKGraph:
                 "confirmed_candidate_count": 0,
                 "confirmed_candidates": [],
             }
-        candidate_triplets = self._candidate_triplets_for_board(board, legal)
+        candidate_moves = self._candidate_triplets_for_board(board, legal)
         if masked_triplets:
-            candidate_triplets = candidate_triplets - masked_triplets
+            candidate_moves = {triplet_id: move for triplet_id, move in candidate_moves.items() if triplet_id not in masked_triplets}
+        candidate_triplets = set(candidate_moves)
         self.scheduler_stats["choose_calls"] += 1
         self.scheduler_stats["candidate_triplets_ticked"] += len(candidate_triplets)
         self.scheduler_stats["triplets_skipped_by_index"] += max(0, len(self.triplet_ids) - len(candidate_triplets))
@@ -179,7 +187,7 @@ class NativeReConKRKGraph:
         else:
             active_nodes = None
             self._reset_runtime_states()
-        env: dict[str, Any] = {"board": board}
+        env: dict[str, Any] = {"board": board, "candidate_move_by_triplet": candidate_moves}
         engine = FormalReConEngine(self.graph, validate_pairs=False, record_trace=False)
         engine.request(ROOT_ID)
         engine.run(
@@ -193,7 +201,11 @@ class NativeReConKRKGraph:
             ),
         )
         self.scheduler_stats["formal_ticks_run"] += engine.tick
-        candidates = self._confirmed_action_candidates(legal, candidate_triplets if self.config.indexed_scheduler else None)
+        candidates = self._confirmed_action_candidates(
+            legal,
+            candidate_triplets if self.config.indexed_scheduler else None,
+            candidate_move_by_triplet=candidate_moves,
+        )
         if not candidates:
             return {
                 "selected_move": None,
@@ -230,7 +242,7 @@ class NativeReConKRKGraph:
         return updates
 
     def ensure_triplet(self, board: chess.Board, move: chess.Move, *, stage: str) -> str:
-        before_keys, action_delta_keys, after_keys = _triplet_keys(board, move)
+        before_keys, action_delta_keys, after_keys = _triplet_keys(board, move, key_mode=self.config.key_mode)
         triplet_id = _triplet_id(before_keys, action_delta_keys, after_keys)
         if triplet_id in self.triplet_ids:
             return triplet_id
@@ -242,9 +254,9 @@ class NativeReConKRKGraph:
             Node(ids.before_script, NodeType.SCRIPT, meta=_candidate_meta("SCRIPT", stage, role="before_script", action_uci=move.uci())),
             Node(ids.action_script, NodeType.SCRIPT, meta=_candidate_meta("SCRIPT", stage, role="action_script", action_uci=move.uci())),
             Node(ids.after_script, NodeType.SCRIPT, meta=_candidate_meta("SCRIPT", stage, role="after_script", action_uci=move.uci())),
-            Node(ids.before_terminal, NodeType.TERMINAL, predicate=_pattern_predicate("before", move.uci(), before_keys), meta=_terminal_meta(stage, "before", move.uci(), before_keys)),
-            Node(ids.delta_terminal, NodeType.TERMINAL, predicate=_pattern_predicate("delta", move.uci(), action_delta_keys), meta=_terminal_meta(stage, "delta", move.uci(), action_delta_keys)),
-            Node(ids.after_terminal, NodeType.TERMINAL, predicate=_pattern_predicate("after", move.uci(), after_keys), meta=_terminal_meta(stage, "after", move.uci(), after_keys)),
+            Node(ids.before_terminal, NodeType.TERMINAL, predicate=_pattern_predicate("before", move.uci(), before_keys, self.config.key_mode, self.config.prototype_distance_threshold), meta=_terminal_meta(stage, "before", move.uci(), before_keys)),
+            Node(ids.delta_terminal, NodeType.TERMINAL, predicate=_pattern_predicate("delta", move.uci(), action_delta_keys, self.config.key_mode, self.config.prototype_distance_threshold), meta=_terminal_meta(stage, "delta", move.uci(), action_delta_keys)),
+            Node(ids.after_terminal, NodeType.TERMINAL, predicate=_pattern_predicate("after", move.uci(), after_keys, self.config.key_mode, self.config.prototype_distance_threshold), meta=_terminal_meta(stage, "after", move.uci(), after_keys)),
             Node(ids.action, NodeType.TERMINAL, predicate=_action_predicate(move.uci()), meta=_action_meta(stage, move.uci())),
         ):
             self.graph.add_node(node)
@@ -270,7 +282,7 @@ class NativeReConKRKGraph:
                     Node(
                         feature_id,
                         NodeType.TERMINAL,
-                        predicate=_single_key_predicate(role, move.uci(), key),
+                        predicate=_single_key_predicate(role, move.uci(), key, self.config.key_mode, self.config.prototype_distance_threshold),
                         meta=_feature_terminal_meta(stage, role, move.uci(), key),
                     )
                 )
@@ -283,6 +295,7 @@ class NativeReConKRKGraph:
         self.triplet_ids.add(triplet_id)
         self.triplet_nodes[triplet_id] = created_node_ids
         self.triplet_trainable_edges[triplet_id] = created_edges
+        self.triplet_pattern_key_cache[triplet_id] = set((*before_keys, *action_delta_keys, *after_keys))
         return triplet_id
 
     def mature_existing_graph(self) -> dict[str, Any]:
@@ -418,6 +431,7 @@ class NativeReConKRKGraph:
             "prune_candidate_count": len(prune_candidates),
             "prune_candidate_triplets": prune_candidates[:64],
             "prune_weight_threshold": prune_weight_threshold,
+            "scheduler_stats": dict(self.scheduler_stats),
         }
 
     def triplets_by_stage(self, stage_predicate) -> set[str]:
@@ -495,13 +509,56 @@ class NativeReConKRKGraph:
             node.state = NodeState.INACTIVE
             node.tick_entered = -1
 
-    def _candidate_triplets_for_board(self, board: chess.Board, legal: Mapping[str, chess.Move]) -> set[str]:
-        triplets: set[str] = set()
+    def _candidate_triplets_for_board(self, board: chess.Board, legal: Mapping[str, chess.Move]) -> dict[str, str]:
+        triplets: dict[str, str] = {}
         for move in legal.values():
-            triplet_id = _triplet_id(*_triplet_keys(board, move))
+            keys = _triplet_keys(board, move, key_mode=self.config.key_mode)
+            triplet_id = _triplet_id(*keys)
             if triplet_id in self.triplet_ids:
-                triplets.add(triplet_id)
+                triplets[triplet_id] = move.uci()
+            elif self.config.key_mode != "exact":
+                for candidate_id, _distance in self._nearest_triplets_for_keys(keys):
+                    triplets.setdefault(candidate_id, move.uci())
         return triplets
+
+    def _nearest_triplets_for_keys(
+        self,
+        keys: tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]],
+    ) -> list[tuple[str, int]]:
+        target = set((*keys[0], *keys[1], *keys[2]))
+        candidates: list[tuple[int, str]] = []
+        scan_triplets = self._prototype_scan_triplets()
+        if len(scan_triplets) < len(self.triplet_ids):
+            self.scheduler_stats["prototype_scan_truncated_calls"] += 1
+        for triplet_id in scan_triplets:
+            candidate_keys = self._triplet_pattern_key_set(triplet_id)
+            distance = len(target ^ candidate_keys)
+            self.scheduler_stats["prototype_distance_evaluations"] += 1
+            if distance <= self.config.prototype_distance_threshold * 3:
+                candidates.append((distance, triplet_id))
+        candidates.sort()
+        return [(triplet_id, distance) for distance, triplet_id in candidates[: self.config.max_prototype_candidates_per_move]]
+
+    def _prototype_scan_triplets(self) -> tuple[str, ...]:
+        if len(self.triplet_ids) <= self.config.max_prototype_scan_triplets:
+            return tuple(self.triplet_ids)
+
+        def root_weight(triplet_id: str) -> float:
+            edge = self.graph.get_edge(ROOT_ID, triplet_id, LinkType.SUB)
+            return abs(float(edge.w)) if edge is not None else 0.0
+
+        ranked = sorted(self.triplet_ids, key=lambda item: (root_weight(item), item), reverse=True)
+        return tuple(ranked[: self.config.max_prototype_scan_triplets])
+
+    def _triplet_pattern_key_set(self, triplet_id: str) -> set[str]:
+        if triplet_id in self.triplet_pattern_key_cache:
+            return self.triplet_pattern_key_cache[triplet_id]
+        ids = _TripletNodeIds(triplet_id)
+        keys: set[str] = set()
+        for node_id in (ids.before_terminal, ids.delta_terminal, ids.after_terminal):
+            keys.update(self.graph.nodes[node_id].meta.get("pattern_keys", []))
+        self.triplet_pattern_key_cache[triplet_id] = keys
+        return keys
 
     def _active_nodes_for_triplets(self, triplet_ids: Iterable[str]) -> set[str]:
         active = {ROOT_ID}
@@ -531,6 +588,7 @@ class NativeReConKRKGraph:
         self,
         legal: Mapping[str, chess.Move],
         triplet_ids: Iterable[str] | None = None,
+        candidate_move_by_triplet: Mapping[str, str] | None = None,
     ) -> list[tuple[float, str, str]]:
         candidates: list[tuple[float, str, str]] = []
         for triplet_id in (self.triplet_ids if triplet_ids is None else triplet_ids):
@@ -541,7 +599,7 @@ class NativeReConKRKGraph:
                 continue
             if action.state not in (NodeState.TRUE, NodeState.CONFIRMED):
                 continue
-            move_uci = str(action.meta["action_uci"])
+            move_uci = str((candidate_move_by_triplet or {}).get(triplet_id, action.meta["action_uci"]))
             if move_uci not in legal:
                 continue
             triplet_weight = float(self.graph.get_edge(ROOT_ID, ids.triplet, LinkType.SUB).w)  # type: ignore[union-attr]
@@ -893,6 +951,7 @@ def _terminal_meta(stage: str, role: str, action_uci: str, keys: tuple[str, ...]
     payload.update({
         "pattern_key_count": len(keys),
         "pattern_hash": _hash_keys(keys),
+        "pattern_keys": list(keys),
     })
     return payload
 
@@ -915,29 +974,29 @@ def _feature_terminal_meta(stage: str, role: str, action_uci: str, key: str) -> 
     return payload
 
 
-def _pattern_predicate(role: str, action_uci: str, expected_keys: tuple[str, ...]):
+def _pattern_predicate(role: str, action_uci: str, expected_keys: tuple[str, ...], key_mode: str, distance_threshold: int):
     expected = frozenset(expected_keys)
 
     def predicate(node: Node, env: dict[str, Any]) -> tuple[bool, bool]:
         board = env["board"]
-        move = chess.Move.from_uci(action_uci)
+        move = _resolve_runtime_move(node, env, action_uci)
         if move not in board.legal_moves:
             node.activation.value = 0.0
             return True, False
-        before_keys, action_delta_keys, after_keys = _triplet_keys(board, move)
+        before_keys, action_delta_keys, after_keys = _triplet_keys(board, move, key_mode=key_mode)
         actual = {
             "before": frozenset(before_keys),
             "delta": frozenset(action_delta_keys),
             "after": frozenset(after_keys),
         }[role]
-        success = expected == actual
-        node.activation.value = 1.0 if success else 0.0
+        success = _prototype_match(expected, actual, key_mode=key_mode, distance_threshold=distance_threshold)
+        node.activation.value = _prototype_activation(expected, actual, key_mode=key_mode, distance_threshold=distance_threshold)
         return True, success
 
     return predicate
 
 
-def _single_key_predicate(role: str, action_uci: str, expected_key: str):
+def _single_key_predicate(role: str, action_uci: str, expected_key: str, key_mode: str, distance_threshold: int):
     key_role = {
         "before_feature": "before",
         "delta_feature": "delta",
@@ -946,27 +1005,52 @@ def _single_key_predicate(role: str, action_uci: str, expected_key: str):
 
     def predicate(node: Node, env: dict[str, Any]) -> tuple[bool, bool]:
         board = env["board"]
-        move = chess.Move.from_uci(action_uci)
+        move = _resolve_runtime_move(node, env, action_uci)
         if move not in board.legal_moves:
             node.activation.value = 0.0
             return True, False
-        before_keys, action_delta_keys, after_keys = _triplet_keys(board, move)
+        before_keys, action_delta_keys, after_keys = _triplet_keys(board, move, key_mode=key_mode)
         actual = {
             "before": before_keys,
             "delta": action_delta_keys,
             "after": after_keys,
         }[key_role]
-        success = expected_key in actual
+        success = expected_key in actual if key_mode == "exact" else True
         node.activation.value = 1.0 if success else 0.0
         return True, success
 
     return predicate
 
 
+def _prototype_match(
+    expected: frozenset[str],
+    actual: frozenset[str],
+    *,
+    key_mode: str,
+    distance_threshold: int,
+) -> bool:
+    if key_mode == "exact":
+        return expected == actual
+    return len(expected ^ actual) <= distance_threshold
+
+
+def _prototype_activation(
+    expected: frozenset[str],
+    actual: frozenset[str],
+    *,
+    key_mode: str,
+    distance_threshold: int,
+) -> float:
+    if key_mode == "exact":
+        return 1.0 if expected == actual else 0.0
+    distance = len(expected ^ actual)
+    return max(0.0, 1.0 - (distance / max(1, distance_threshold + 1)))
+
+
 def _action_predicate(action_uci: str):
     def predicate(node: Node, env: dict[str, Any]) -> tuple[bool, bool]:
         board = env["board"]
-        move = chess.Move.from_uci(action_uci)
+        move = _resolve_runtime_move(node, env, action_uci)
         success = move in board.legal_moves
         node.activation.value = 1.0 if success else 0.0
         return True, success
@@ -974,23 +1058,82 @@ def _action_predicate(action_uci: str):
     return predicate
 
 
-def _triplet_keys(board: chess.Board, move: chess.Move) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+def _resolve_runtime_move(node: Node, env: dict[str, Any], fallback_uci: str) -> chess.Move:
+    triplet_id = node.meta.get("triplet_id")
+    move_uci = env.get("candidate_move_by_triplet", {}).get(triplet_id, fallback_uci)
+    return chess.Move.from_uci(str(move_uci))
+
+
+def _triplet_keys(board: chess.Board, move: chess.Move, *, key_mode: str = "exact") -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
     after = board.copy(stack=False)
     after.push(move)
     before_features = extract_terminal_feature_vector(board)
     after_features = extract_terminal_feature_vector(after)
-    before_keys = tuple(f"before_terminal:{key}={_bucket(value)}" for key, value in sorted(before_features.items()))
-    after_keys = tuple(f"after_terminal:{key}={_bucket(value)}" for key, value in sorted(after_features.items()))
+    before_keys = tuple(
+        f"before_terminal:{key}={_bucket(value)}"
+        for key, value in sorted(_mode_features(before_features, key_mode=key_mode).items())
+    )
+    after_keys = tuple(
+        f"after_terminal:{key}={_bucket(value)}"
+        for key, value in sorted(_mode_features(after_features, key_mode=key_mode).items())
+    )
     action_delta_keys = [
         key
         for key, _scale in terminal_action_feature_keys(board, move)
         if key.startswith("action_pattern:")
     ]
-    action_delta_keys.extend(_native_precise_action_keys(board, move))
-    for key in sorted(before_features.keys() & after_features.keys()):
-        action_delta_keys.append(f"delta_terminal:{key}={_delta_bucket(after_features[key] - before_features[key])}")
+    if key_mode == "exact":
+        action_delta_keys.extend(_native_precise_action_keys(board, move))
+    else:
+        action_delta_keys = [key for key in action_delta_keys if _keep_generalized_action_key(key)]
+    before_mode = _mode_features(before_features, key_mode=key_mode)
+    after_mode = _mode_features(after_features, key_mode=key_mode)
+    for key in sorted(before_mode.keys() & after_mode.keys()):
+        action_delta_keys.append(f"delta_terminal:{key}={_delta_bucket(after_mode[key] - before_mode[key])}")
     validate_learner_record([*before_keys, *action_delta_keys, *after_keys])
     return before_keys, tuple(action_delta_keys), after_keys
+
+
+def _mode_features(features: Mapping[str, float], *, key_mode: str) -> dict[str, float]:
+    if key_mode == "exact":
+        return dict(features)
+    payload = {
+        key: value
+        for key, value in features.items()
+        if key not in {
+            "white_king_file",
+            "white_king_rank",
+            "white_rook_file",
+            "white_rook_rank",
+            "black_king_file",
+            "black_king_rank",
+        }
+    }
+    if key_mode == "canonical":
+        for key in (
+            "black_king_nearest_edge_distance",
+            "white_king_to_black_king_distance",
+            "white_rook_to_black_king_distance",
+            "white_king_to_rook_distance",
+            "black_reply_mobility",
+            "rook_attacked_by_black",
+            "is_check",
+            "is_checkmate",
+            "is_stalemate",
+        ):
+            if key in features:
+                payload[f"canonical:{key}"] = features[key]
+    return payload
+
+
+def _keep_generalized_action_key(key: str) -> bool:
+    forbidden_parts = (
+        "from_file_edge_distance",
+        "from_rank_edge_distance",
+        "to_file_edge_distance",
+        "to_rank_edge_distance",
+    )
+    return not any(part in key for part in forbidden_parts)
 
 
 def _native_precise_action_keys(board: chess.Board, move: chess.Move) -> list[str]:

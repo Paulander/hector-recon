@@ -1,0 +1,3544 @@
+{
+  "canonical_arm": {
+    "generated_mate1_train_count": 12,
+    "generated_mate2_train_count": 6,
+    "graph_diagnostics": {
+      "collapse_indicators": {
+        "negative_saturated_total": 0,
+        "positive_saturated_total": 0,
+        "zero_weight_total": 0
+      },
+      "dead_node_count": 0,
+      "duplicate_equivalent_triplet_count": 0,
+      "edge_count": 166568,
+      "no_op_edge_count": 0,
+      "no_op_node_count": 0,
+      "node_count": 82399,
+      "prune_candidate_count": 0,
+      "prune_candidate_triplets": [],
+      "prune_weight_threshold": -0.2,
+      "scheduler_stats": {
+        "active_nodes_ticked": 1090,
+        "candidate_triplets_ticked": 134,
+        "choose_calls": 143,
+        "empty_candidate_calls": 125,
+        "feature_terminals_skipped_by_scheduler": 23852,
+        "formal_ticks_run": 740,
+        "full_graph_node_resets_avoided": 1007048,
+        "indexed_scheduler_used": true,
+        "prototype_distance_evaluations": 84064,
+        "prototype_scan_truncated_calls": 2627,
+        "triplets_skipped_by_index": 47095
+      },
+      "stem_cell_state_counts": {
+        "TRIAL": 82398,
+        "UNLABELED": 1
+      },
+      "tier_counts": {
+        "mature": 1,
+        "trial": 82398
+      },
+      "trainable_edge_count": 83284,
+      "triplet_count": 443,
+      "weight_saturation": {
+        "edge_negative_saturated": 0,
+        "edge_positive_saturated": 0,
+        "max_abs_local_weight": 1.0,
+        "node_negative_saturated": 0,
+        "node_positive_saturated": 0
+      }
+    },
+    "key_mode": "canonical",
+    "mate1": {
+      "heldout": {
+        "accuracy": 0.16666666666666666,
+        "correct_count": 1,
+        "duration_seconds": 0.711214,
+        "position_count": 6,
+        "samples": [
+          {
+            "correct": false,
+            "correct_mates": [
+              "c1h1"
+            ],
+            "fen": "7k/5K2/8/8/8/8/8/2R5 w - - 0 1",
+            "selected": null
+          },
+          {
+            "correct": false,
+            "correct_mates": [
+              "b2b8"
+            ],
+            "fen": "3k4/8/3K4/8/8/8/1R6/8 w - - 0 1",
+            "selected": null
+          },
+          {
+            "correct": false,
+            "correct_mates": [
+              "e4e1"
+            ],
+            "fen": "8/8/8/8/4R3/1K6/8/1k6 w - - 0 1",
+            "selected": null
+          },
+          {
+            "correct": false,
+            "correct_mates": [
+              "e1e8"
+            ],
+            "fen": "k7/8/1K6/8/8/8/8/4R3 w - - 0 1",
+            "selected": null
+          },
+          {
+            "correct": false,
+            "correct_mates": [
+              "b7h7"
+            ],
+            "fen": "8/1R6/8/8/8/8/8/5K1k w - - 0 1",
+            "selected": null
+          },
+          {
+            "correct": true,
+            "correct_mates": [
+              "f7f1"
+            ],
+            "fen": "8/5R2/8/8/8/1K6/8/1k6 w - - 0 1",
+            "selected": "f7f1"
+          }
+        ]
+      },
+      "training": {
+        "duration_seconds": 1.89066,
+        "edge_count": 79336,
+        "m3_update_count": 39668,
+        "negative_updates": 199,
+        "neutral_updates": 0,
+        "node_count": 39247,
+        "positive_updates": 12,
+        "train_records": 12,
+        "triplet_count": 211
+      }
+    },
+    "mate2": {
+      "heldout": {
+        "conversion_count": 0,
+        "conversion_rate": 0.0,
+        "duration_seconds": 0.349911,
+        "first_move_success_count": 0,
+        "first_move_success_rate": 0.0,
+        "hardcoded_mate1_handoff": false,
+        "native_graph_reply_mate_rate": 0.0,
+        "position_count": 3,
+        "same_graph_second_move_count": 0,
+        "samples": [
+          {
+            "all_replies_mated_by_native_graph": false,
+            "fen": "5k2/7K/8/8/8/8/4R3/8 w - - 0 1",
+            "first_move_success": false,
+            "forced_first_moves": [
+              "h7g6"
+            ],
+            "native_graph_selected_first": null,
+            "reply_checks": []
+          },
+          {
+            "all_replies_mated_by_native_graph": false,
+            "fen": "8/8/8/8/5R2/4K3/8/3k4 w - - 0 1",
+            "first_move_success": false,
+            "forced_first_moves": [
+              "f4c4"
+            ],
+            "native_graph_selected_first": null,
+            "reply_checks": []
+          },
+          {
+            "all_replies_mated_by_native_graph": false,
+            "fen": "8/8/8/2R5/8/4K3/8/3k4 w - - 0 1",
+            "first_move_success": false,
+            "forced_first_moves": [
+              "c5c3",
+              "c5c4",
+              "c5c6",
+              "c5c7",
+              "c5c8"
+            ],
+            "native_graph_selected_first": null,
+            "reply_checks": []
+          }
+        ]
+      },
+      "training": {
+        "chain_positive_total": 6,
+        "continuation_experience_records": 6,
+        "continuation_experience_uses_same_native_graph": true,
+        "duration_seconds": 18.999183,
+        "edge_count": 166568,
+        "first_move_train_records": 6,
+        "m3_update_count": 83284,
+        "negative_updates": 116,
+        "neutral_updates": 0,
+        "no_chain_positive_record_count": 0,
+        "node_count": 82399,
+        "positive_updates": 6,
+        "triplet_count": 443
+      }
+    },
+    "nearest_triplet_diagnostics": [
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_04d09e6dbca3545f",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "7k/5K2/8/8/8/8/8/2R5 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 28,
+          "extra_feature_keys": [
+            "action_pattern:file_delta_magnitude=2",
+            "action_pattern:white_rook_to_black_king_after=6",
+            "after_terminal:canonical:white_rook_to_black_king_distance=6",
+            "after_terminal:direct_rank_opposition=1",
+            "after_terminal:feature_hub_enemy_king_mobility=0.50",
+            "after_terminal:feature_hub_enemy_king_mobility_raw=5",
+            "after_terminal:feature_hub_enemy_king_rank=0.25",
+            "after_terminal:feature_hub_opposition_status=1",
+            "after_terminal:halfmove_clock_bucket=3",
+            "after_terminal:king_knight_distance_like=0",
+            "after_terminal:king_rank_delta=0",
+            "after_terminal:king_rank_delta_abs=0",
+            "after_terminal:king_same_rank=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=6",
+            "after_terminal:white_rook_to_black_king_distance=6",
+            "before_terminal:black_reply_mobility=2",
+            "before_terminal:canonical:black_reply_mobility=2",
+            "before_terminal:canonical:white_rook_to_black_king_distance=6",
+            "before_terminal:confinement_area=14",
+            "before_terminal:confinement_file_span=2",
+            "before_terminal:direct_rank_opposition=1",
+            "before_terminal:feature_hub_enemy_king_in_corner=0.50",
+            "before_terminal:feature_hub_enemy_king_mobility=0.25",
+            "before_terminal:feature_hub_enemy_king_mobility_raw=2"
+          ],
+          "feature_distance": 72,
+          "missing_feature_keys": [
+            "action_pattern:file_delta_magnitude=3",
+            "action_pattern:white_rook_to_black_king_after=7",
+            "after_terminal:canonical:white_rook_to_black_king_distance=7",
+            "after_terminal:direct_rank_opposition=0",
+            "after_terminal:feature_hub_enemy_king_mobility=0.75",
+            "after_terminal:feature_hub_enemy_king_mobility_raw=6",
+            "after_terminal:feature_hub_enemy_king_rank=0.75",
+            "after_terminal:feature_hub_opposition_status=0",
+            "after_terminal:halfmove_clock_bucket=1",
+            "after_terminal:king_knight_distance_like=1",
+            "after_terminal:king_rank_delta=-1",
+            "after_terminal:king_rank_delta_abs=1",
+            "after_terminal:king_same_rank=0",
+            "after_terminal:rook_to_black_king_rank_delta_abs=7",
+            "after_terminal:white_rook_to_black_king_distance=7",
+            "before_terminal:black_reply_mobility=1",
+            "before_terminal:canonical:black_reply_mobility=1",
+            "before_terminal:canonical:white_rook_to_black_king_distance=7",
+            "before_terminal:confinement_area=35",
+            "before_terminal:confinement_file_span=5",
+            "before_terminal:direct_rank_opposition=0",
+            "before_terminal:feature_hub_enemy_king_in_corner=1",
+            "before_terminal:feature_hub_enemy_king_mobility=0.00",
+            "before_terminal:feature_hub_enemy_king_mobility_raw=1"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_e19b8fc2b8e76bb3"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "c1h1"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": true,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_1218d3f67ac68a13",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "candidate_indexed_but_no_confirmation",
+        "fen": "3k4/8/3K4/8/8/8/1R6/8 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 16,
+          "extra_feature_keys": [
+            "action_pattern:pair:piece:file_rank_delta=4:0:-1",
+            "action_pattern:rank_delta_sign=-1",
+            "after_terminal:feature_hub_enemy_king_rank=0.25",
+            "after_terminal:halfmove_clock_bucket=3",
+            "after_terminal:king_rank_delta=2",
+            "before_terminal:canonical:white_king_to_rook_distance=5",
+            "before_terminal:canonical:white_rook_to_black_king_distance=7",
+            "before_terminal:confinement_area=42",
+            "before_terminal:confinement_rank_span=7",
+            "before_terminal:feature_hub_enemy_king_rank=0",
+            "before_terminal:halfmove_clock_bucket=2",
+            "before_terminal:king_rank_delta=2",
+            "before_terminal:rook_to_black_king_rank_delta_abs=7",
+            "before_terminal:white_king_to_rook_distance=5",
+            "before_terminal:white_rook_to_black_king_distance=7",
+            "delta_terminal:feature_hub_enemy_king_rank=positive"
+          ],
+          "feature_distance": 32,
+          "missing_feature_keys": [
+            "action_pattern:pair:piece:file_rank_delta=4:0:1",
+            "action_pattern:rank_delta_sign=1",
+            "after_terminal:feature_hub_enemy_king_rank=0.75",
+            "after_terminal:halfmove_clock_bucket=1",
+            "after_terminal:king_rank_delta=-2",
+            "before_terminal:canonical:white_king_to_rook_distance=4",
+            "before_terminal:canonical:white_rook_to_black_king_distance=6",
+            "before_terminal:confinement_area=36",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:feature_hub_enemy_king_rank=1",
+            "before_terminal:halfmove_clock_bucket=0",
+            "before_terminal:king_rank_delta=-2",
+            "before_terminal:rook_to_black_king_rank_delta_abs=6",
+            "before_terminal:white_king_to_rook_distance=4",
+            "before_terminal:white_rook_to_black_king_distance=6",
+            "delta_terminal:feature_hub_enemy_king_rank=negative"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_d18a95b4f4ccec36"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": false,
+        "selected_move": null,
+        "target_move": "b2b8"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_4c1f6d1bf7aa8f06",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "8/8/8/8/4R3/1K6/8/1k6 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 12,
+          "extra_feature_keys": [
+            "action_pattern:white_king_to_rook_after=4",
+            "action_pattern:white_rook_to_black_king_after=4",
+            "after_terminal:canonical:white_king_to_rook_distance=4",
+            "after_terminal:canonical:white_rook_to_black_king_distance=4",
+            "after_terminal:confinement_area=40",
+            "after_terminal:confinement_file_span=5",
+            "after_terminal:rook_to_black_king_file_delta_abs=4",
+            "after_terminal:white_king_to_rook_distance=4",
+            "after_terminal:white_rook_to_black_king_distance=4",
+            "before_terminal:canonical:white_king_to_rook_distance=4",
+            "before_terminal:canonical:white_rook_to_black_king_distance=5",
+            "before_terminal:confinement_area=25",
+            "before_terminal:confinement_file_span=5",
+            "before_terminal:confinement_rank_span=5",
+            "before_terminal:rook_to_black_king_file_delta_abs=4",
+            "before_terminal:rook_to_black_king_rank_delta_abs=5",
+            "before_terminal:white_king_to_rook_distance=4",
+            "before_terminal:white_rook_to_black_king_distance=5",
+            "delta_terminal:canonical:white_rook_to_black_king_distance=negative",
+            "delta_terminal:white_rook_to_black_king_distance=negative"
+          ],
+          "feature_distance": 40,
+          "missing_feature_keys": [
+            "action_pattern:white_king_to_rook_after=3",
+            "action_pattern:white_rook_to_black_king_after=3",
+            "after_terminal:canonical:white_king_to_rook_distance=3",
+            "after_terminal:canonical:white_rook_to_black_king_distance=3",
+            "after_terminal:confinement_area=32",
+            "after_terminal:confinement_file_span=4",
+            "after_terminal:rook_to_black_king_file_delta_abs=3",
+            "after_terminal:white_king_to_rook_distance=3",
+            "after_terminal:white_rook_to_black_king_distance=3",
+            "before_terminal:canonical:white_king_to_rook_distance=3",
+            "before_terminal:canonical:white_rook_to_black_king_distance=3",
+            "before_terminal:confinement_area=12",
+            "before_terminal:confinement_file_span=4",
+            "before_terminal:confinement_rank_span=3",
+            "before_terminal:rook_to_black_king_file_delta_abs=3",
+            "before_terminal:rook_to_black_king_rank_delta_abs=3",
+            "before_terminal:white_king_to_rook_distance=3",
+            "before_terminal:white_rook_to_black_king_distance=3",
+            "delta_terminal:canonical:white_rook_to_black_king_distance=zero",
+            "delta_terminal:white_rook_to_black_king_distance=zero"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_fe6f88243f203381"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "e4e1"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_cd016e50fe58c163",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "k7/8/1K6/8/8/8/8/4R3 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 22,
+          "extra_feature_keys": [
+            "action_pattern:black_reply_mobility_after=2",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=1:2",
+            "action_pattern:rank_delta_magnitude=1",
+            "after_terminal:black_reply_mobility=2",
+            "after_terminal:canonical:black_reply_mobility=2",
+            "after_terminal:feature_hub_enemy_king_file=0.75",
+            "after_terminal:feature_hub_enemy_king_rank=0.50",
+            "after_terminal:feature_hub_mobility=0.00",
+            "after_terminal:king_file_delta=-1",
+            "after_terminal:king_rank_delta=2",
+            "after_terminal:legal_move_count=2",
+            "before_terminal:canonical:white_king_to_rook_distance=3",
+            "before_terminal:canonical:white_rook_to_black_king_distance=4",
+            "before_terminal:confinement_area=24",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:feature_hub_enemy_king_file=1",
+            "before_terminal:feature_hub_enemy_king_in_corner=0",
+            "before_terminal:feature_hub_enemy_king_rank=0.25",
+            "before_terminal:king_file_delta=-1",
+            "before_terminal:king_rank_delta=2",
+            "before_terminal:rook_to_black_king_rank_delta_abs=1",
+            "before_terminal:white_king_to_rook_distance=3",
+            "before_terminal:white_rook_to_black_king_distance=4",
+            "delta_terminal:black_reply_mobility=positive"
+          ],
+          "feature_distance": 62,
+          "missing_feature_keys": [
+            "action_pattern:black_reply_mobility_after=0",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=1:0",
+            "action_pattern:rank_delta_magnitude=3",
+            "after_terminal:black_reply_mobility=0",
+            "after_terminal:canonical:black_reply_mobility=0",
+            "after_terminal:feature_hub_enemy_king_file=0.25",
+            "after_terminal:feature_hub_enemy_king_rank=0.75",
+            "after_terminal:feature_hub_mobility=0",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:king_rank_delta=-2",
+            "after_terminal:legal_move_count=0",
+            "before_terminal:canonical:white_king_to_rook_distance=5",
+            "before_terminal:canonical:white_rook_to_black_king_distance=7",
+            "before_terminal:confinement_area=28",
+            "before_terminal:confinement_rank_span=7",
+            "before_terminal:feature_hub_enemy_king_file=0",
+            "before_terminal:feature_hub_enemy_king_in_corner=1",
+            "before_terminal:feature_hub_enemy_king_rank=1",
+            "before_terminal:king_file_delta=1",
+            "before_terminal:king_rank_delta=-2",
+            "before_terminal:rook_to_black_king_rank_delta_abs=7",
+            "before_terminal:white_king_to_rook_distance=5",
+            "before_terminal:white_rook_to_black_king_distance=7",
+            "delta_terminal:black_reply_mobility=negative"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_9a1c21967d75031f"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "e1e8"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_747879d0021c57cd",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "8/1R6/8/8/8/8/8/5K1k w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 12,
+          "extra_feature_keys": [
+            "action_pattern:white_king_to_rook_after=4",
+            "action_pattern:white_rook_to_black_king_after=4",
+            "after_terminal:canonical:white_king_to_rook_distance=4",
+            "after_terminal:canonical:white_rook_to_black_king_distance=4",
+            "after_terminal:confinement_area=32",
+            "after_terminal:confinement_rank_span=4",
+            "after_terminal:rook_to_black_king_rank_delta_abs=4",
+            "after_terminal:white_king_to_rook_distance=4",
+            "after_terminal:white_rook_to_black_king_distance=4",
+            "before_terminal:canonical:white_king_to_rook_distance=5",
+            "before_terminal:canonical:white_rook_to_black_king_distance=7",
+            "before_terminal:confinement_area=28",
+            "before_terminal:confinement_file_span=7",
+            "before_terminal:confinement_rank_span=4",
+            "before_terminal:rook_to_black_king_file_delta_abs=7",
+            "before_terminal:rook_to_black_king_rank_delta_abs=4",
+            "before_terminal:white_king_to_rook_distance=5",
+            "before_terminal:white_rook_to_black_king_distance=7",
+            "delta_terminal:canonical:white_king_to_rook_distance=negative",
+            "delta_terminal:canonical:white_rook_to_black_king_distance=negative",
+            "delta_terminal:white_king_to_rook_distance=negative",
+            "delta_terminal:white_rook_to_black_king_distance=negative"
+          ],
+          "feature_distance": 44,
+          "missing_feature_keys": [
+            "action_pattern:white_king_to_rook_after=6",
+            "action_pattern:white_rook_to_black_king_after=6",
+            "after_terminal:canonical:white_king_to_rook_distance=6",
+            "after_terminal:canonical:white_rook_to_black_king_distance=6",
+            "after_terminal:confinement_area=48",
+            "after_terminal:confinement_rank_span=6",
+            "after_terminal:rook_to_black_king_rank_delta_abs=6",
+            "after_terminal:white_king_to_rook_distance=6",
+            "after_terminal:white_rook_to_black_king_distance=6",
+            "before_terminal:canonical:white_king_to_rook_distance=6",
+            "before_terminal:canonical:white_rook_to_black_king_distance=6",
+            "before_terminal:confinement_area=36",
+            "before_terminal:confinement_file_span=6",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:rook_to_black_king_file_delta_abs=6",
+            "before_terminal:rook_to_black_king_rank_delta_abs=6",
+            "before_terminal:white_king_to_rook_distance=6",
+            "before_terminal:white_rook_to_black_king_distance=6",
+            "delta_terminal:canonical:white_king_to_rook_distance=zero",
+            "delta_terminal:canonical:white_rook_to_black_king_distance=zero",
+            "delta_terminal:white_king_to_rook_distance=zero",
+            "delta_terminal:white_rook_to_black_king_distance=zero"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_3016828e924ae2b8"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "b7h7"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": true,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_84f2f545599b69b6",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "candidate_confirmed_but_wrong_selection",
+        "fen": "8/5R2/8/8/8/1K6/8/1k6 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 4,
+          "extra_feature_keys": [
+            "before_terminal:canonical:white_rook_to_black_king_distance=5",
+            "before_terminal:confinement_area=25",
+            "before_terminal:confinement_rank_span=5",
+            "before_terminal:rook_to_black_king_rank_delta_abs=5",
+            "before_terminal:white_rook_to_black_king_distance=5"
+          ],
+          "feature_distance": 10,
+          "missing_feature_keys": [
+            "before_terminal:canonical:white_rook_to_black_king_distance=6",
+            "before_terminal:confinement_area=30",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:rook_to_black_king_rank_delta_abs=6",
+            "before_terminal:white_rook_to_black_king_distance=6"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_fe6f88243f203381"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": false,
+        "selected_move": "f7f1",
+        "target_move": "f7f1"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_e0ce4bfef3dbd3db",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "5k2/7K/8/8/8/8/4R3/8 w - - 0 1",
+        "kind": "generated_mate2_first",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 42,
+          "extra_feature_keys": [
+            "action_pattern:white_king_to_rook_after=2",
+            "action_pattern:white_rook_to_black_king_after=4",
+            "after_terminal:canonical:white_king_to_rook_distance=2",
+            "after_terminal:canonical:white_rook_to_black_king_distance=4",
+            "after_terminal:confinement_area=24",
+            "after_terminal:confinement_file_span=4",
+            "after_terminal:feature_hub_enemy_king_rank=0.50",
+            "after_terminal:king_file_delta=-2",
+            "after_terminal:king_file_delta_abs=2",
+            "after_terminal:king_rank_delta=1",
+            "after_terminal:king_rank_delta_abs=1",
+            "after_terminal:rook_to_black_king_file_delta_abs=4",
+            "after_terminal:rook_to_black_king_rank_delta_abs=1",
+            "after_terminal:white_king_to_rook_distance=2",
+            "after_terminal:white_rook_to_black_king_distance=4",
+            "before_terminal:canonical:white_king_to_rook_distance=3",
+            "before_terminal:canonical:white_rook_to_black_king_distance=4",
+            "before_terminal:confinement_area=24",
+            "before_terminal:confinement_file_span=4",
+            "before_terminal:feature_hub_enemy_king_file=1",
+            "before_terminal:feature_hub_enemy_king_rank=0.25",
+            "before_terminal:king_file_delta=-1",
+            "before_terminal:king_file_delta_abs=1",
+            "before_terminal:king_rank_delta=2"
+          ],
+          "feature_distance": 68,
+          "missing_feature_keys": [
+            "action_pattern:white_king_to_rook_after=4",
+            "action_pattern:white_rook_to_black_king_after=6",
+            "after_terminal:canonical:white_king_to_rook_distance=4",
+            "after_terminal:canonical:white_rook_to_black_king_distance=6",
+            "after_terminal:confinement_area=18",
+            "after_terminal:confinement_file_span=3",
+            "after_terminal:feature_hub_enemy_king_rank=0.75",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:king_file_delta_abs=1",
+            "after_terminal:king_rank_delta=-2",
+            "after_terminal:king_rank_delta_abs=2",
+            "after_terminal:rook_to_black_king_file_delta_abs=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=6",
+            "after_terminal:white_king_to_rook_distance=4",
+            "after_terminal:white_rook_to_black_king_distance=6",
+            "before_terminal:canonical:white_king_to_rook_distance=5",
+            "before_terminal:canonical:white_rook_to_black_king_distance=6",
+            "before_terminal:confinement_area=18",
+            "before_terminal:confinement_file_span=3",
+            "before_terminal:feature_hub_enemy_king_file=0.75",
+            "before_terminal:feature_hub_enemy_king_rank=1",
+            "before_terminal:king_file_delta=2",
+            "before_terminal:king_file_delta_abs=2",
+            "before_terminal:king_rank_delta=-1"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_92bf8e992ffacae4"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "h7g6"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_85f5abe46ce74719",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "8/8/8/8/5R2/4K3/8/3k4 w - - 0 1",
+        "kind": "generated_mate2_first",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 26,
+          "extra_feature_keys": [
+            "action_pattern:file_delta_magnitude=2",
+            "action_pattern:file_delta_sign=1",
+            "action_pattern:pair:piece:file_rank_delta=4:1:0",
+            "action_pattern:white_king_to_rook_after=5",
+            "action_pattern:white_rook_to_black_king_after=7",
+            "after_terminal:canonical:white_king_to_rook_distance=5",
+            "after_terminal:canonical:white_rook_to_black_king_distance=7",
+            "after_terminal:confinement_area=42",
+            "after_terminal:confinement_file_span=6",
+            "after_terminal:confinement_rank_span=7",
+            "after_terminal:king_file_delta=-1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=7",
+            "after_terminal:white_king_to_rook_distance=5",
+            "after_terminal:white_rook_to_black_king_distance=7",
+            "before_terminal:canonical:white_king_to_rook_distance=5",
+            "before_terminal:canonical:white_rook_to_black_king_distance=7",
+            "before_terminal:confinement_area=21",
+            "before_terminal:confinement_file_span=3",
+            "before_terminal:confinement_rank_span=7",
+            "before_terminal:feature_hub_enemy_king_file=0.75",
+            "before_terminal:king_file_delta=-1",
+            "before_terminal:legal_move_count=17",
+            "before_terminal:rook_to_black_king_file_delta_abs=1",
+            "before_terminal:rook_to_black_king_rank_delta_abs=7"
+          ],
+          "feature_distance": 62,
+          "missing_feature_keys": [
+            "action_pattern:file_delta_magnitude=3",
+            "action_pattern:file_delta_sign=-1",
+            "action_pattern:pair:piece:file_rank_delta=4:-1:0",
+            "action_pattern:white_king_to_rook_after=2",
+            "action_pattern:white_rook_to_black_king_after=3",
+            "after_terminal:canonical:white_king_to_rook_distance=2",
+            "after_terminal:canonical:white_rook_to_black_king_distance=3",
+            "after_terminal:confinement_area=15",
+            "after_terminal:confinement_file_span=5",
+            "after_terminal:confinement_rank_span=3",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=3",
+            "after_terminal:white_king_to_rook_distance=2",
+            "after_terminal:white_rook_to_black_king_distance=3",
+            "before_terminal:canonical:white_king_to_rook_distance=1",
+            "before_terminal:canonical:white_rook_to_black_king_distance=3",
+            "before_terminal:confinement_area=15",
+            "before_terminal:confinement_file_span=5",
+            "before_terminal:confinement_rank_span=3",
+            "before_terminal:feature_hub_enemy_king_file=0.50",
+            "before_terminal:king_file_delta=1",
+            "before_terminal:legal_move_count=19",
+            "before_terminal:rook_to_black_king_file_delta_abs=2",
+            "before_terminal:rook_to_black_king_rank_delta_abs=3"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_a65973503f0bde06"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "f4c4"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_480dbfe8091e8fcc",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "8/8/8/2R5/8/4K3/8/3k4 w - - 0 1",
+        "kind": "generated_mate2_first",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 38,
+          "extra_feature_keys": [
+            "action_pattern:file_delta_magnitude=2",
+            "action_pattern:file_delta_sign=1",
+            "action_pattern:pair:piece:file_rank_delta=4:1:0",
+            "action_pattern:rank_delta_magnitude=0",
+            "action_pattern:rank_delta_sign=0",
+            "action_pattern:white_king_to_rook_after=3",
+            "after_terminal:canonical:white_king_to_rook_distance=3",
+            "after_terminal:confinement_area=12",
+            "after_terminal:confinement_file_span=2",
+            "after_terminal:confinement_rank_span=6",
+            "after_terminal:feature_hub_enemy_king_file=0.75",
+            "after_terminal:feature_hub_enemy_king_rank=0.50",
+            "after_terminal:king_file_delta=-1",
+            "after_terminal:rook_to_black_king_file_delta_abs=2",
+            "after_terminal:rook_to_black_king_rank_delta_abs=1",
+            "after_terminal:white_king_to_rook_distance=3",
+            "before_terminal:canonical:white_king_to_rook_distance=3",
+            "before_terminal:confinement_area=24",
+            "before_terminal:confinement_file_span=4",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:feature_hub_enemy_king_file=1",
+            "before_terminal:feature_hub_enemy_king_rank=0.25",
+            "before_terminal:king_file_delta=-1",
+            "before_terminal:rook_to_black_king_file_delta_abs=4"
+          ],
+          "feature_distance": 60,
+          "missing_feature_keys": [
+            "action_pattern:file_delta_magnitude=0",
+            "action_pattern:file_delta_sign=0",
+            "action_pattern:pair:piece:file_rank_delta=4:0:-1",
+            "action_pattern:rank_delta_magnitude=2",
+            "action_pattern:rank_delta_sign=-1",
+            "action_pattern:white_king_to_rook_after=2",
+            "after_terminal:canonical:white_king_to_rook_distance=2",
+            "after_terminal:confinement_area=10",
+            "after_terminal:confinement_file_span=5",
+            "after_terminal:confinement_rank_span=2",
+            "after_terminal:feature_hub_enemy_king_file=0.50",
+            "after_terminal:feature_hub_enemy_king_rank=0.25",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:rook_to_black_king_file_delta_abs=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=2",
+            "after_terminal:white_king_to_rook_distance=2",
+            "before_terminal:canonical:white_king_to_rook_distance=2",
+            "before_terminal:confinement_area=20",
+            "before_terminal:confinement_file_span=5",
+            "before_terminal:confinement_rank_span=4",
+            "before_terminal:feature_hub_enemy_king_file=0.50",
+            "before_terminal:feature_hub_enemy_king_rank=0",
+            "before_terminal:king_file_delta=1",
+            "before_terminal:rook_to_black_king_file_delta_abs=1"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_14d989db0b8e2a37"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "c5c3"
+      }
+    ],
+    "null_selection_count": 8,
+    "runtime": {
+      "actuator_affordances_are_terminal_leaves": true,
+      "formal_recon_engine_runtime_choice": true,
+      "python_batch_scorer_used_for_runtime_choice": false
+    }
+  },
+  "checkpoint": "TG26r_native_foundation_generalization_repair",
+  "config": {
+    "continuation_repetitions": 1,
+    "equivalence_mate1_count": 3,
+    "equivalence_mate2_count": 2,
+    "eta_m3": 0.1,
+    "mate1_heldout_count": 6,
+    "mate1_train_count": 12,
+    "mate2_heldout_count": 3,
+    "mate2_train_count": 6,
+    "mature_min_abs_weight": 0.2,
+    "max_abs_local_weight": 1.0,
+    "max_generation_attempts": 500000,
+    "max_prototype_candidates_per_move": 2,
+    "max_prototype_scan_triplets": 32,
+    "max_samples": 16,
+    "max_ticks": 60,
+    "prototype_distance_threshold": 12,
+    "seed": 20260618,
+    "train_repetitions": 1
+  },
+  "dataset": {
+    "curriculum_labels_learner_visible": false,
+    "mate1_heldout_count": 6,
+    "mate1_train_count": 12,
+    "mate2_heldout_count": 3,
+    "mate2_train_count": 6,
+    "source": "generated legal KRK mate-in-1 and forced mate-in-2 positions"
+  },
+  "decision": {
+    "best_arm": "prototype",
+    "checkpoint_pass": false,
+    "exact_vs_prototype_comparison": {
+      "baseline_key_mode": "exact",
+      "interpretation": "variant improves heldout or reduces nulls",
+      "mate1_accuracy_delta": 0.333333,
+      "mate2_conversion_delta": 0.0,
+      "null_selection_delta": -2,
+      "prototype_distance_evaluation_delta": 85344,
+      "variant_key_mode": "prototype"
+    },
+    "generated_mate1_heldout_accuracy": 0.3333333333333333,
+    "generated_mate1_train_count": 12,
+    "generated_mate2_heldout_conversion": 0.0,
+    "generated_mate2_train_count": 6,
+    "m4_true_promotion_count": 0,
+    "mature_materialized_count": 1,
+    "nearest_triplet_diagnostics": [
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_bc67b1ebce72b216",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "7k/5K2/8/8/8/8/8/2R5 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 26,
+          "extra_feature_keys": [
+            "action_pattern:white_king_to_rook_after=5",
+            "action_pattern:white_rook_to_black_king_after=5",
+            "after_terminal:direct_rank_opposition=1",
+            "after_terminal:feature_hub_enemy_king_mobility=0.50",
+            "after_terminal:feature_hub_enemy_king_mobility_raw=5",
+            "after_terminal:feature_hub_opposition_status=1",
+            "after_terminal:king_knight_distance_like=0",
+            "after_terminal:king_rank_delta=0",
+            "after_terminal:king_rank_delta_abs=0",
+            "after_terminal:king_same_rank=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=5",
+            "after_terminal:white_king_to_rook_distance=5",
+            "after_terminal:white_rook_to_black_king_distance=5",
+            "before_terminal:black_reply_mobility=2",
+            "before_terminal:confinement_area=21",
+            "before_terminal:confinement_file_span=3",
+            "before_terminal:direct_rank_opposition=1",
+            "before_terminal:feature_hub_enemy_king_in_corner=0",
+            "before_terminal:feature_hub_enemy_king_mobility=0.25",
+            "before_terminal:feature_hub_enemy_king_mobility_raw=2",
+            "before_terminal:feature_hub_enemy_king_rank=0.75",
+            "before_terminal:feature_hub_mating_net_present=0.50",
+            "before_terminal:feature_hub_opposition_status=1",
+            "before_terminal:king_knight_distance_like=0"
+          ],
+          "feature_distance": 66,
+          "missing_feature_keys": [
+            "action_pattern:white_king_to_rook_after=6",
+            "action_pattern:white_rook_to_black_king_after=7",
+            "after_terminal:direct_rank_opposition=0",
+            "after_terminal:feature_hub_enemy_king_mobility=0.75",
+            "after_terminal:feature_hub_enemy_king_mobility_raw=6",
+            "after_terminal:feature_hub_opposition_status=0",
+            "after_terminal:king_knight_distance_like=1",
+            "after_terminal:king_rank_delta=-1",
+            "after_terminal:king_rank_delta_abs=1",
+            "after_terminal:king_same_rank=0",
+            "after_terminal:rook_to_black_king_rank_delta_abs=7",
+            "after_terminal:white_king_to_rook_distance=6",
+            "after_terminal:white_rook_to_black_king_distance=7",
+            "before_terminal:black_reply_mobility=1",
+            "before_terminal:confinement_area=35",
+            "before_terminal:confinement_file_span=5",
+            "before_terminal:direct_rank_opposition=0",
+            "before_terminal:feature_hub_enemy_king_in_corner=1",
+            "before_terminal:feature_hub_enemy_king_mobility=0.00",
+            "before_terminal:feature_hub_enemy_king_mobility_raw=1",
+            "before_terminal:feature_hub_enemy_king_rank=1",
+            "before_terminal:feature_hub_mating_net_present=0.75",
+            "before_terminal:feature_hub_opposition_status=0",
+            "before_terminal:king_knight_distance_like=1"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_1636103404179aeb"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "c1h1"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": true,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_117a695307ee53dc",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "candidate_confirmed_but_wrong_selection",
+        "fen": "3k4/8/3K4/8/8/8/1R6/8 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 8,
+          "extra_feature_keys": [
+            "action_pattern:white_king_to_rook_after=3",
+            "action_pattern:white_rook_to_black_king_after=3",
+            "after_terminal:rook_to_black_king_file_delta_abs=3",
+            "after_terminal:white_king_to_rook_distance=3",
+            "after_terminal:white_rook_to_black_king_distance=3",
+            "before_terminal:confinement_area=30",
+            "before_terminal:confinement_rank_span=5",
+            "before_terminal:rook_to_black_king_file_delta_abs=3",
+            "before_terminal:rook_to_black_king_rank_delta_abs=5",
+            "before_terminal:white_king_to_rook_distance=3",
+            "before_terminal:white_rook_to_black_king_distance=5",
+            "delta_terminal:white_king_to_rook_distance=zero"
+          ],
+          "feature_distance": 24,
+          "missing_feature_keys": [
+            "action_pattern:white_king_to_rook_after=2",
+            "action_pattern:white_rook_to_black_king_after=2",
+            "after_terminal:rook_to_black_king_file_delta_abs=2",
+            "after_terminal:white_king_to_rook_distance=2",
+            "after_terminal:white_rook_to_black_king_distance=2",
+            "before_terminal:confinement_area=36",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:rook_to_black_king_file_delta_abs=2",
+            "before_terminal:rook_to_black_king_rank_delta_abs=6",
+            "before_terminal:white_king_to_rook_distance=4",
+            "before_terminal:white_rook_to_black_king_distance=6",
+            "delta_terminal:white_king_to_rook_distance=negative"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_6d42622abefa53b2"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": false,
+        "selected_move": "b2b8",
+        "target_move": "b2b8"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": true,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_3fc1a07f89934b5c",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "candidate_indexed_but_no_confirmation",
+        "fen": "8/8/8/8/4R3/1K6/8/1k6 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 12,
+          "extra_feature_keys": [
+            "action_pattern:white_king_to_rook_after=4",
+            "action_pattern:white_rook_to_black_king_after=4",
+            "after_terminal:confinement_area=40",
+            "after_terminal:confinement_file_span=5",
+            "after_terminal:rook_to_black_king_file_delta_abs=4",
+            "after_terminal:white_king_to_rook_distance=4",
+            "after_terminal:white_rook_to_black_king_distance=4",
+            "before_terminal:confinement_area=25",
+            "before_terminal:confinement_file_span=5",
+            "before_terminal:confinement_rank_span=5",
+            "before_terminal:rook_to_black_king_file_delta_abs=4",
+            "before_terminal:rook_to_black_king_rank_delta_abs=5",
+            "before_terminal:white_king_to_rook_distance=4",
+            "before_terminal:white_rook_to_black_king_distance=5",
+            "delta_terminal:white_rook_to_black_king_distance=negative"
+          ],
+          "feature_distance": 30,
+          "missing_feature_keys": [
+            "action_pattern:white_king_to_rook_after=3",
+            "action_pattern:white_rook_to_black_king_after=3",
+            "after_terminal:confinement_area=32",
+            "after_terminal:confinement_file_span=4",
+            "after_terminal:rook_to_black_king_file_delta_abs=3",
+            "after_terminal:white_king_to_rook_distance=3",
+            "after_terminal:white_rook_to_black_king_distance=3",
+            "before_terminal:confinement_area=12",
+            "before_terminal:confinement_file_span=4",
+            "before_terminal:confinement_rank_span=3",
+            "before_terminal:rook_to_black_king_file_delta_abs=3",
+            "before_terminal:rook_to_black_king_rank_delta_abs=3",
+            "before_terminal:white_king_to_rook_distance=3",
+            "before_terminal:white_rook_to_black_king_distance=3",
+            "delta_terminal:white_rook_to_black_king_distance=zero"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_236920b575580bd8"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": false,
+        "selected_move": null,
+        "target_move": "e4e1"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_f64000bb2d40a5f3",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "k7/8/1K6/8/8/8/8/4R3 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 22,
+          "extra_feature_keys": [
+            "action_pattern:black_reply_mobility_after=2",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=1:2",
+            "action_pattern:rank_delta_magnitude=1",
+            "after_terminal:black_reply_mobility=2",
+            "after_terminal:feature_hub_enemy_king_file=0.75",
+            "after_terminal:feature_hub_enemy_king_rank=0.50",
+            "after_terminal:feature_hub_mobility=0.00",
+            "after_terminal:king_file_delta=-1",
+            "after_terminal:king_rank_delta=2",
+            "after_terminal:legal_move_count=2",
+            "before_terminal:confinement_area=24",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:feature_hub_enemy_king_file=1",
+            "before_terminal:feature_hub_enemy_king_in_corner=0",
+            "before_terminal:feature_hub_enemy_king_rank=0.25",
+            "before_terminal:king_file_delta=-1",
+            "before_terminal:king_rank_delta=2",
+            "before_terminal:rook_to_black_king_rank_delta_abs=1",
+            "before_terminal:white_king_to_rook_distance=3",
+            "before_terminal:white_rook_to_black_king_distance=4",
+            "delta_terminal:black_reply_mobility=positive",
+            "delta_terminal:feature_hub_enemy_king_in_corner=zero",
+            "delta_terminal:feature_hub_enemy_king_rank=positive",
+            "delta_terminal:white_king_to_rook_distance=zero"
+          ],
+          "feature_distance": 50,
+          "missing_feature_keys": [
+            "action_pattern:black_reply_mobility_after=0",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=1:0",
+            "action_pattern:rank_delta_magnitude=3",
+            "after_terminal:black_reply_mobility=0",
+            "after_terminal:feature_hub_enemy_king_file=0.25",
+            "after_terminal:feature_hub_enemy_king_rank=0.75",
+            "after_terminal:feature_hub_mobility=0",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:king_rank_delta=-2",
+            "after_terminal:legal_move_count=0",
+            "before_terminal:confinement_area=28",
+            "before_terminal:confinement_rank_span=7",
+            "before_terminal:feature_hub_enemy_king_file=0",
+            "before_terminal:feature_hub_enemy_king_in_corner=1",
+            "before_terminal:feature_hub_enemy_king_rank=1",
+            "before_terminal:king_file_delta=1",
+            "before_terminal:king_rank_delta=-2",
+            "before_terminal:rook_to_black_king_rank_delta_abs=7",
+            "before_terminal:white_king_to_rook_distance=5",
+            "before_terminal:white_rook_to_black_king_distance=7",
+            "delta_terminal:black_reply_mobility=negative",
+            "delta_terminal:feature_hub_enemy_king_in_corner=negative",
+            "delta_terminal:feature_hub_enemy_king_rank=negative",
+            "delta_terminal:white_king_to_rook_distance=negative"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_5699d87ac3c374da"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "e1e8"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": true,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_e6a8a7e5bde4bb48",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "candidate_indexed_but_no_confirmation",
+        "fen": "8/1R6/8/8/8/8/8/5K1k w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 12,
+          "extra_feature_keys": [
+            "action_pattern:white_king_to_rook_after=4",
+            "action_pattern:white_rook_to_black_king_after=4",
+            "after_terminal:confinement_area=32",
+            "after_terminal:confinement_rank_span=4",
+            "after_terminal:rook_to_black_king_rank_delta_abs=4",
+            "after_terminal:white_king_to_rook_distance=4",
+            "after_terminal:white_rook_to_black_king_distance=4",
+            "before_terminal:confinement_area=28",
+            "before_terminal:confinement_file_span=7",
+            "before_terminal:confinement_rank_span=4",
+            "before_terminal:rook_to_black_king_file_delta_abs=7",
+            "before_terminal:rook_to_black_king_rank_delta_abs=4",
+            "before_terminal:white_king_to_rook_distance=5",
+            "before_terminal:white_rook_to_black_king_distance=7",
+            "delta_terminal:white_king_to_rook_distance=negative",
+            "delta_terminal:white_rook_to_black_king_distance=negative"
+          ],
+          "feature_distance": 32,
+          "missing_feature_keys": [
+            "action_pattern:white_king_to_rook_after=6",
+            "action_pattern:white_rook_to_black_king_after=6",
+            "after_terminal:confinement_area=48",
+            "after_terminal:confinement_rank_span=6",
+            "after_terminal:rook_to_black_king_rank_delta_abs=6",
+            "after_terminal:white_king_to_rook_distance=6",
+            "after_terminal:white_rook_to_black_king_distance=6",
+            "before_terminal:confinement_area=36",
+            "before_terminal:confinement_file_span=6",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:rook_to_black_king_file_delta_abs=6",
+            "before_terminal:rook_to_black_king_rank_delta_abs=6",
+            "before_terminal:white_king_to_rook_distance=6",
+            "before_terminal:white_rook_to_black_king_distance=6",
+            "delta_terminal:white_king_to_rook_distance=zero",
+            "delta_terminal:white_rook_to_black_king_distance=zero"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_8353f9150644a24c"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": false,
+        "selected_move": null,
+        "target_move": "b7h7"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": true,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_93e71f88177062a2",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "candidate_confirmed_but_wrong_selection",
+        "fen": "8/5R2/8/8/8/1K6/8/1k6 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 4,
+          "extra_feature_keys": [
+            "before_terminal:confinement_area=25",
+            "before_terminal:confinement_rank_span=5",
+            "before_terminal:rook_to_black_king_rank_delta_abs=5",
+            "before_terminal:white_rook_to_black_king_distance=5"
+          ],
+          "feature_distance": 8,
+          "missing_feature_keys": [
+            "before_terminal:confinement_area=30",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:rook_to_black_king_rank_delta_abs=6",
+            "before_terminal:white_rook_to_black_king_distance=6"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_236920b575580bd8"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": false,
+        "selected_move": "f7f1",
+        "target_move": "f7f1"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_6a676c448539e964",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "5k2/7K/8/8/8/8/4R3/8 w - - 0 1",
+        "kind": "generated_mate2_first",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 42,
+          "extra_feature_keys": [
+            "action_pattern:white_king_to_rook_after=2",
+            "action_pattern:white_rook_to_black_king_after=4",
+            "after_terminal:confinement_area=24",
+            "after_terminal:confinement_file_span=4",
+            "after_terminal:feature_hub_enemy_king_rank=0.50",
+            "after_terminal:king_file_delta=-2",
+            "after_terminal:king_file_delta_abs=2",
+            "after_terminal:king_rank_delta=1",
+            "after_terminal:king_rank_delta_abs=1",
+            "after_terminal:rook_to_black_king_file_delta_abs=4",
+            "after_terminal:rook_to_black_king_rank_delta_abs=1",
+            "after_terminal:white_king_to_rook_distance=2",
+            "after_terminal:white_rook_to_black_king_distance=4",
+            "before_terminal:confinement_area=24",
+            "before_terminal:confinement_file_span=4",
+            "before_terminal:feature_hub_enemy_king_file=1",
+            "before_terminal:feature_hub_enemy_king_rank=0.25",
+            "before_terminal:king_file_delta=-1",
+            "before_terminal:king_file_delta_abs=1",
+            "before_terminal:king_rank_delta=2",
+            "before_terminal:king_rank_delta_abs=2",
+            "before_terminal:legal_move_count=20",
+            "before_terminal:rook_to_black_king_file_delta_abs=4",
+            "before_terminal:rook_to_black_king_rank_delta_abs=1"
+          ],
+          "feature_distance": 60,
+          "missing_feature_keys": [
+            "action_pattern:white_king_to_rook_after=4",
+            "action_pattern:white_rook_to_black_king_after=6",
+            "after_terminal:confinement_area=18",
+            "after_terminal:confinement_file_span=3",
+            "after_terminal:feature_hub_enemy_king_rank=0.75",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:king_file_delta_abs=1",
+            "after_terminal:king_rank_delta=-2",
+            "after_terminal:king_rank_delta_abs=2",
+            "after_terminal:rook_to_black_king_file_delta_abs=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=6",
+            "after_terminal:white_king_to_rook_distance=4",
+            "after_terminal:white_rook_to_black_king_distance=6",
+            "before_terminal:confinement_area=18",
+            "before_terminal:confinement_file_span=3",
+            "before_terminal:feature_hub_enemy_king_file=0.75",
+            "before_terminal:feature_hub_enemy_king_rank=1",
+            "before_terminal:king_file_delta=2",
+            "before_terminal:king_file_delta_abs=2",
+            "before_terminal:king_rank_delta=-1",
+            "before_terminal:king_rank_delta_abs=1",
+            "before_terminal:legal_move_count=17",
+            "before_terminal:rook_to_black_king_file_delta_abs=1",
+            "before_terminal:rook_to_black_king_rank_delta_abs=6"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_12ca274806181575"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "h7g6"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_22f9ebd3007a719e",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "8/8/8/8/5R2/4K3/8/3k4 w - - 0 1",
+        "kind": "generated_mate2_first",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 26,
+          "extra_feature_keys": [
+            "action_pattern:file_delta_magnitude=2",
+            "action_pattern:file_delta_sign=1",
+            "action_pattern:pair:piece:file_rank_delta=4:1:0",
+            "action_pattern:white_king_to_rook_after=5",
+            "action_pattern:white_rook_to_black_king_after=7",
+            "after_terminal:confinement_area=42",
+            "after_terminal:confinement_file_span=6",
+            "after_terminal:confinement_rank_span=7",
+            "after_terminal:king_file_delta=-1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=7",
+            "after_terminal:white_king_to_rook_distance=5",
+            "after_terminal:white_rook_to_black_king_distance=7",
+            "before_terminal:confinement_area=21",
+            "before_terminal:confinement_file_span=3",
+            "before_terminal:confinement_rank_span=7",
+            "before_terminal:feature_hub_enemy_king_file=0.75",
+            "before_terminal:king_file_delta=-1",
+            "before_terminal:legal_move_count=17",
+            "before_terminal:rook_to_black_king_file_delta_abs=1",
+            "before_terminal:rook_to_black_king_rank_delta_abs=7",
+            "before_terminal:white_king_to_rook_distance=5",
+            "before_terminal:white_rook_to_black_king_distance=7",
+            "delta_terminal:confinement_area=positive",
+            "delta_terminal:confinement_file_span=positive"
+          ],
+          "feature_distance": 52,
+          "missing_feature_keys": [
+            "action_pattern:file_delta_magnitude=3",
+            "action_pattern:file_delta_sign=-1",
+            "action_pattern:pair:piece:file_rank_delta=4:-1:0",
+            "action_pattern:white_king_to_rook_after=2",
+            "action_pattern:white_rook_to_black_king_after=3",
+            "after_terminal:confinement_area=15",
+            "after_terminal:confinement_file_span=5",
+            "after_terminal:confinement_rank_span=3",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=3",
+            "after_terminal:white_king_to_rook_distance=2",
+            "after_terminal:white_rook_to_black_king_distance=3",
+            "before_terminal:confinement_area=15",
+            "before_terminal:confinement_file_span=5",
+            "before_terminal:confinement_rank_span=3",
+            "before_terminal:feature_hub_enemy_king_file=0.50",
+            "before_terminal:king_file_delta=1",
+            "before_terminal:legal_move_count=19",
+            "before_terminal:rook_to_black_king_file_delta_abs=2",
+            "before_terminal:rook_to_black_king_rank_delta_abs=3",
+            "before_terminal:white_king_to_rook_distance=1",
+            "before_terminal:white_rook_to_black_king_distance=3",
+            "delta_terminal:confinement_area=zero",
+            "delta_terminal:confinement_file_span=zero"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_e275f81ae56e23b0"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "f4c4"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_5a5ae91c47f15259",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "8/8/8/2R5/8/4K3/8/3k4 w - - 0 1",
+        "kind": "generated_mate2_first",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 18,
+          "extra_feature_keys": [
+            "action_pattern:black_reply_mobility_after=3",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=0:3",
+            "action_pattern:rank_delta_magnitude=3",
+            "action_pattern:white_rook_to_black_king_after=4",
+            "after_terminal:black_reply_mobility=3",
+            "after_terminal:confinement_area=12",
+            "after_terminal:confinement_file_span=3",
+            "after_terminal:confinement_rank_span=4",
+            "after_terminal:king_file_delta=-1",
+            "after_terminal:legal_move_count=3",
+            "after_terminal:rook_to_black_king_rank_delta_abs=4",
+            "after_terminal:white_rook_to_black_king_distance=4",
+            "before_terminal:black_reply_mobility=3",
+            "before_terminal:confinement_area=21",
+            "before_terminal:confinement_file_span=3",
+            "before_terminal:confinement_rank_span=7",
+            "before_terminal:feature_hub_enemy_king_file=0.75",
+            "before_terminal:feature_hub_enemy_king_mobility=0.50",
+            "before_terminal:feature_hub_enemy_king_mobility_raw=3",
+            "before_terminal:feature_hub_mating_net_present=0.50",
+            "before_terminal:feature_hub_stalemate_danger=0.75",
+            "before_terminal:king_file_delta=-1",
+            "before_terminal:legal_move_count=17",
+            "before_terminal:rook_to_black_king_rank_delta_abs=7"
+          ],
+          "feature_distance": 54,
+          "missing_feature_keys": [
+            "action_pattern:black_reply_mobility_after=1",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=0:1",
+            "action_pattern:rank_delta_magnitude=2",
+            "action_pattern:white_rook_to_black_king_after=2",
+            "after_terminal:black_reply_mobility=1",
+            "after_terminal:confinement_area=10",
+            "after_terminal:confinement_file_span=5",
+            "after_terminal:confinement_rank_span=2",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:legal_move_count=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=2",
+            "after_terminal:white_rook_to_black_king_distance=2",
+            "before_terminal:black_reply_mobility=1",
+            "before_terminal:confinement_area=20",
+            "before_terminal:confinement_file_span=5",
+            "before_terminal:confinement_rank_span=4",
+            "before_terminal:feature_hub_enemy_king_file=0.50",
+            "before_terminal:feature_hub_enemy_king_mobility=0.00",
+            "before_terminal:feature_hub_enemy_king_mobility_raw=1",
+            "before_terminal:feature_hub_mating_net_present=0.75",
+            "before_terminal:feature_hub_stalemate_danger=1",
+            "before_terminal:king_file_delta=1",
+            "before_terminal:legal_move_count=20",
+            "before_terminal:rook_to_black_king_rank_delta_abs=4"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_193e5a9c2c8bbd18"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "c5c3"
+      }
+    ],
+    "next_step": "Continue native foundation generalization repair; do not return to edge/fence.",
+    "null_selection_count": 7,
+    "raw_vs_canonical_comparison": {
+      "baseline_key_mode": "prototype",
+      "interpretation": "no measured variant improvement",
+      "mate1_accuracy_delta": -0.166667,
+      "mate2_conversion_delta": 0.0,
+      "null_selection_delta": 1,
+      "prototype_distance_evaluation_delta": -1280,
+      "variant_key_mode": "canonical"
+    },
+    "scheduler_equivalence_mismatch_count": 0
+  },
+  "exact_arm": {
+    "generated_mate1_train_count": 12,
+    "generated_mate2_train_count": 6,
+    "graph_diagnostics": {
+      "collapse_indicators": {
+        "negative_saturated_total": 0,
+        "positive_saturated_total": 0,
+        "zero_weight_total": 0
+      },
+      "dead_node_count": 0,
+      "duplicate_equivalent_triplet_count": 0,
+      "edge_count": 169226,
+      "no_op_edge_count": 0,
+      "no_op_node_count": 0,
+      "node_count": 83728,
+      "prune_candidate_count": 0,
+      "prune_candidate_triplets": [],
+      "prune_weight_threshold": -0.2,
+      "scheduler_stats": {
+        "active_nodes_ticked": 886,
+        "candidate_triplets_ticked": 110,
+        "choose_calls": 140,
+        "empty_candidate_calls": 134,
+        "feature_terminals_skipped_by_scheduler": 19910,
+        "formal_ticks_run": 156,
+        "full_graph_node_resets_avoided": 369560,
+        "indexed_scheduler_used": true,
+        "prototype_distance_evaluations": 0,
+        "prototype_scan_truncated_calls": 0,
+        "triplets_skipped_by_index": 46312
+      },
+      "stem_cell_state_counts": {
+        "TRIAL": 83727,
+        "UNLABELED": 1
+      },
+      "tier_counts": {
+        "mature": 1,
+        "trial": 83727
+      },
+      "trainable_edge_count": 84613,
+      "triplet_count": 443,
+      "weight_saturation": {
+        "edge_negative_saturated": 0,
+        "edge_positive_saturated": 0,
+        "max_abs_local_weight": 1.0,
+        "node_negative_saturated": 0,
+        "node_positive_saturated": 0
+      }
+    },
+    "key_mode": "exact",
+    "mate1": {
+      "heldout": {
+        "accuracy": 0.0,
+        "correct_count": 0,
+        "duration_seconds": 0.573563,
+        "position_count": 6,
+        "samples": [
+          {
+            "correct": false,
+            "correct_mates": [
+              "c1h1"
+            ],
+            "fen": "7k/5K2/8/8/8/8/8/2R5 w - - 0 1",
+            "selected": null
+          },
+          {
+            "correct": false,
+            "correct_mates": [
+              "b2b8"
+            ],
+            "fen": "3k4/8/3K4/8/8/8/1R6/8 w - - 0 1",
+            "selected": null
+          },
+          {
+            "correct": false,
+            "correct_mates": [
+              "e4e1"
+            ],
+            "fen": "8/8/8/8/4R3/1K6/8/1k6 w - - 0 1",
+            "selected": null
+          },
+          {
+            "correct": false,
+            "correct_mates": [
+              "e1e8"
+            ],
+            "fen": "k7/8/1K6/8/8/8/8/4R3 w - - 0 1",
+            "selected": null
+          },
+          {
+            "correct": false,
+            "correct_mates": [
+              "b7h7"
+            ],
+            "fen": "8/1R6/8/8/8/8/8/5K1k w - - 0 1",
+            "selected": null
+          },
+          {
+            "correct": false,
+            "correct_mates": [
+              "f7f1"
+            ],
+            "fen": "8/5R2/8/8/8/1K6/8/1k6 w - - 0 1",
+            "selected": null
+          }
+        ]
+      },
+      "training": {
+        "duration_seconds": 2.009946,
+        "edge_count": 80602,
+        "m3_update_count": 40301,
+        "negative_updates": 199,
+        "neutral_updates": 0,
+        "node_count": 39880,
+        "positive_updates": 12,
+        "train_records": 12,
+        "triplet_count": 211
+      }
+    },
+    "mate2": {
+      "heldout": {
+        "conversion_count": 0,
+        "conversion_rate": 0.0,
+        "duration_seconds": 0.288744,
+        "first_move_success_count": 0,
+        "first_move_success_rate": 0.0,
+        "hardcoded_mate1_handoff": false,
+        "native_graph_reply_mate_rate": 0.0,
+        "position_count": 3,
+        "same_graph_second_move_count": 0,
+        "samples": [
+          {
+            "all_replies_mated_by_native_graph": false,
+            "fen": "5k2/7K/8/8/8/8/4R3/8 w - - 0 1",
+            "first_move_success": false,
+            "forced_first_moves": [
+              "h7g6"
+            ],
+            "native_graph_selected_first": null,
+            "reply_checks": []
+          },
+          {
+            "all_replies_mated_by_native_graph": false,
+            "fen": "8/8/8/8/5R2/4K3/8/3k4 w - - 0 1",
+            "first_move_success": false,
+            "forced_first_moves": [
+              "f4c4"
+            ],
+            "native_graph_selected_first": null,
+            "reply_checks": []
+          },
+          {
+            "all_replies_mated_by_native_graph": false,
+            "fen": "8/8/8/2R5/8/4K3/8/3k4 w - - 0 1",
+            "first_move_success": false,
+            "forced_first_moves": [
+              "c5c3",
+              "c5c4",
+              "c5c6",
+              "c5c7",
+              "c5c8"
+            ],
+            "native_graph_selected_first": null,
+            "reply_checks": []
+          }
+        ]
+      },
+      "training": {
+        "chain_positive_total": 6,
+        "continuation_experience_records": 6,
+        "continuation_experience_uses_same_native_graph": true,
+        "duration_seconds": 16.885973,
+        "edge_count": 169226,
+        "first_move_train_records": 6,
+        "m3_update_count": 84613,
+        "negative_updates": 116,
+        "neutral_updates": 0,
+        "no_chain_positive_record_count": 0,
+        "node_count": 83728,
+        "positive_updates": 6,
+        "triplet_count": 443
+      }
+    },
+    "nearest_triplet_diagnostics": [
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_20d5a6b2f64295fa",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "7k/5K2/8/8/8/8/8/2R5 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 40,
+          "extra_feature_keys": [
+            "action_pattern:from_file_edge_distance=3",
+            "action_pattern:white_king_to_rook_after=5",
+            "action_pattern:white_rook_to_black_king_after=5",
+            "after_terminal:black_king_rank=5",
+            "after_terminal:direct_rank_opposition=1",
+            "after_terminal:feature_hub_enemy_king_mobility=0.50",
+            "after_terminal:feature_hub_enemy_king_mobility_raw=5",
+            "after_terminal:feature_hub_opposition_status=1",
+            "after_terminal:king_knight_distance_like=0",
+            "after_terminal:king_rank_delta=0",
+            "after_terminal:king_rank_delta_abs=0",
+            "after_terminal:king_same_rank=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=5",
+            "after_terminal:white_king_rank=5",
+            "after_terminal:white_king_to_rook_distance=5",
+            "after_terminal:white_rook_to_black_king_distance=5",
+            "before_terminal:black_king_rank=5",
+            "before_terminal:black_reply_mobility=2",
+            "before_terminal:confinement_area=21",
+            "before_terminal:confinement_file_span=3",
+            "before_terminal:direct_rank_opposition=1",
+            "before_terminal:feature_hub_enemy_king_in_corner=0",
+            "before_terminal:feature_hub_enemy_king_mobility=0.25",
+            "before_terminal:feature_hub_enemy_king_mobility_raw=2"
+          ],
+          "feature_distance": 80,
+          "missing_feature_keys": [
+            "action_pattern:from_file_edge_distance=2",
+            "action_pattern:white_king_to_rook_after=6",
+            "action_pattern:white_rook_to_black_king_after=7",
+            "after_terminal:black_king_rank=7",
+            "after_terminal:direct_rank_opposition=0",
+            "after_terminal:feature_hub_enemy_king_mobility=0.75",
+            "after_terminal:feature_hub_enemy_king_mobility_raw=6",
+            "after_terminal:feature_hub_opposition_status=0",
+            "after_terminal:king_knight_distance_like=1",
+            "after_terminal:king_rank_delta=-1",
+            "after_terminal:king_rank_delta_abs=1",
+            "after_terminal:king_same_rank=0",
+            "after_terminal:rook_to_black_king_rank_delta_abs=7",
+            "after_terminal:white_king_rank=6",
+            "after_terminal:white_king_to_rook_distance=6",
+            "after_terminal:white_rook_to_black_king_distance=7",
+            "before_terminal:black_king_rank=7",
+            "before_terminal:black_reply_mobility=1",
+            "before_terminal:confinement_area=35",
+            "before_terminal:confinement_file_span=5",
+            "before_terminal:direct_rank_opposition=0",
+            "before_terminal:feature_hub_enemy_king_in_corner=1",
+            "before_terminal:feature_hub_enemy_king_mobility=0.00",
+            "before_terminal:feature_hub_enemy_king_mobility_raw=1"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_4a7b9d0d4776c887"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "c1h1"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_eb8864133fff3fbe",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "3k4/8/3K4/8/8/8/1R6/8 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 22,
+          "extra_feature_keys": [
+            "action_pattern:from_rank_edge_distance=2",
+            "action_pattern:white_king_to_rook_after=3",
+            "action_pattern:white_rook_to_black_king_after=3",
+            "after_terminal:black_king_file=4",
+            "after_terminal:rook_to_black_king_file_delta_abs=3",
+            "after_terminal:white_king_file=4",
+            "after_terminal:white_king_to_rook_distance=3",
+            "after_terminal:white_rook_to_black_king_distance=3",
+            "before_terminal:black_king_file=4",
+            "before_terminal:confinement_area=30",
+            "before_terminal:confinement_rank_span=5",
+            "before_terminal:rook_to_black_king_file_delta_abs=3",
+            "before_terminal:rook_to_black_king_rank_delta_abs=5",
+            "before_terminal:white_king_file=4",
+            "before_terminal:white_king_to_rook_distance=3",
+            "before_terminal:white_rook_rank=2",
+            "before_terminal:white_rook_to_black_king_distance=5",
+            "delta_terminal:white_king_to_rook_distance=zero",
+            "native_action_exact:from_rank=2"
+          ],
+          "feature_distance": 38,
+          "missing_feature_keys": [
+            "action_pattern:from_rank_edge_distance=1",
+            "action_pattern:white_king_to_rook_after=2",
+            "action_pattern:white_rook_to_black_king_after=2",
+            "after_terminal:black_king_file=3",
+            "after_terminal:rook_to_black_king_file_delta_abs=2",
+            "after_terminal:white_king_file=3",
+            "after_terminal:white_king_to_rook_distance=2",
+            "after_terminal:white_rook_to_black_king_distance=2",
+            "before_terminal:black_king_file=3",
+            "before_terminal:confinement_area=36",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:rook_to_black_king_file_delta_abs=2",
+            "before_terminal:rook_to_black_king_rank_delta_abs=6",
+            "before_terminal:white_king_file=3",
+            "before_terminal:white_king_to_rook_distance=4",
+            "before_terminal:white_rook_rank=1",
+            "before_terminal:white_rook_to_black_king_distance=6",
+            "delta_terminal:white_king_to_rook_distance=negative",
+            "native_action_exact:from_rank=1"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_a78ad6aa7d1ad293"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "b2b8"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_d0772cc4743ff5b6",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "8/8/8/8/4R3/1K6/8/1k6 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 20,
+          "extra_feature_keys": [
+            "action_pattern:white_king_to_rook_after=2",
+            "action_pattern:white_rook_to_black_king_after=2",
+            "after_terminal:black_king_file=2",
+            "after_terminal:halfmove_clock_bucket=3",
+            "after_terminal:rook_to_black_king_file_delta_abs=2",
+            "after_terminal:white_king_file=2",
+            "after_terminal:white_king_to_rook_distance=2",
+            "after_terminal:white_rook_to_black_king_distance=2",
+            "before_terminal:black_king_file=2",
+            "before_terminal:confinement_area=16",
+            "before_terminal:confinement_rank_span=4",
+            "before_terminal:feature_hub_enemy_king_in_corner=0",
+            "before_terminal:halfmove_clock_bucket=2",
+            "before_terminal:rook_to_black_king_file_delta_abs=2",
+            "before_terminal:rook_to_black_king_rank_delta_abs=4",
+            "before_terminal:white_king_file=2",
+            "before_terminal:white_king_to_rook_distance=2",
+            "before_terminal:white_rook_rank=4",
+            "before_terminal:white_rook_to_black_king_distance=4",
+            "delta_terminal:feature_hub_enemy_king_in_corner=zero",
+            "delta_terminal:white_rook_to_black_king_distance=negative",
+            "native_action_exact:from_rank=4"
+          ],
+          "feature_distance": 44,
+          "missing_feature_keys": [
+            "action_pattern:white_king_to_rook_after=3",
+            "action_pattern:white_rook_to_black_king_after=3",
+            "after_terminal:black_king_file=1",
+            "after_terminal:halfmove_clock_bucket=1",
+            "after_terminal:rook_to_black_king_file_delta_abs=3",
+            "after_terminal:white_king_file=1",
+            "after_terminal:white_king_to_rook_distance=3",
+            "after_terminal:white_rook_to_black_king_distance=3",
+            "before_terminal:black_king_file=1",
+            "before_terminal:confinement_area=12",
+            "before_terminal:confinement_rank_span=3",
+            "before_terminal:feature_hub_enemy_king_in_corner=0.50",
+            "before_terminal:halfmove_clock_bucket=0",
+            "before_terminal:rook_to_black_king_file_delta_abs=3",
+            "before_terminal:rook_to_black_king_rank_delta_abs=3",
+            "before_terminal:white_king_file=1",
+            "before_terminal:white_king_to_rook_distance=3",
+            "before_terminal:white_rook_rank=3",
+            "before_terminal:white_rook_to_black_king_distance=3",
+            "delta_terminal:feature_hub_enemy_king_in_corner=negative",
+            "delta_terminal:white_rook_to_black_king_distance=zero",
+            "native_action_exact:from_rank=3"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_399a56168b42dccf"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "e4e1"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_73a4a6bd92325287",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "k7/8/1K6/8/8/8/8/4R3 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 58,
+          "extra_feature_keys": [
+            "action_pattern:black_reply_mobility_after=2",
+            "action_pattern:from_rank_edge_distance=1",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=1:2",
+            "action_pattern:rank_delta_magnitude=1",
+            "action_pattern:to_rank_edge_distance=2",
+            "after_terminal:black_king_file=7",
+            "after_terminal:black_king_rank=2",
+            "after_terminal:black_reply_mobility=2",
+            "after_terminal:feature_hub_enemy_king_file=0.75",
+            "after_terminal:feature_hub_enemy_king_rank=0.50",
+            "after_terminal:feature_hub_mobility=0.00",
+            "after_terminal:king_file_delta=-1",
+            "after_terminal:king_rank_delta=2",
+            "after_terminal:legal_move_count=2",
+            "after_terminal:white_king_file=6",
+            "after_terminal:white_king_rank=4",
+            "after_terminal:white_rook_file=3",
+            "after_terminal:white_rook_rank=2",
+            "before_terminal:black_king_file=7",
+            "before_terminal:black_king_rank=2",
+            "before_terminal:confinement_area=24",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:feature_hub_enemy_king_file=1",
+            "before_terminal:feature_hub_enemy_king_in_corner=0"
+          ],
+          "feature_distance": 86,
+          "missing_feature_keys": [
+            "action_pattern:black_reply_mobility_after=0",
+            "action_pattern:from_rank_edge_distance=0",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=1:0",
+            "action_pattern:rank_delta_magnitude=3",
+            "action_pattern:to_rank_edge_distance=0",
+            "after_terminal:black_king_file=0",
+            "after_terminal:black_king_rank=7",
+            "after_terminal:black_reply_mobility=0",
+            "after_terminal:feature_hub_enemy_king_file=0.25",
+            "after_terminal:feature_hub_enemy_king_rank=0.75",
+            "after_terminal:feature_hub_mobility=0",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:king_rank_delta=-2",
+            "after_terminal:legal_move_count=0",
+            "after_terminal:white_king_file=1",
+            "after_terminal:white_king_rank=5",
+            "after_terminal:white_rook_file=4",
+            "after_terminal:white_rook_rank=7",
+            "before_terminal:black_king_file=0",
+            "before_terminal:black_king_rank=7",
+            "before_terminal:confinement_area=28",
+            "before_terminal:confinement_rank_span=7",
+            "before_terminal:feature_hub_enemy_king_file=0",
+            "before_terminal:feature_hub_enemy_king_in_corner=1"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_8aac5409e50fc63f"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "e1e8"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_f79d836fbf21c835",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "8/1R6/8/8/8/8/8/5K1k w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 30,
+          "extra_feature_keys": [
+            "action_pattern:from_file_edge_distance=0",
+            "action_pattern:from_rank_edge_distance=3",
+            "action_pattern:to_rank_edge_distance=3",
+            "action_pattern:white_king_to_rook_after=4",
+            "action_pattern:white_rook_to_black_king_after=4",
+            "after_terminal:confinement_area=32",
+            "after_terminal:confinement_rank_span=4",
+            "after_terminal:rook_to_black_king_rank_delta_abs=4",
+            "after_terminal:white_king_to_rook_distance=4",
+            "after_terminal:white_rook_rank=4",
+            "after_terminal:white_rook_to_black_king_distance=4",
+            "before_terminal:confinement_area=28",
+            "before_terminal:confinement_file_span=7",
+            "before_terminal:confinement_rank_span=4",
+            "before_terminal:rook_to_black_king_file_delta_abs=7",
+            "before_terminal:rook_to_black_king_rank_delta_abs=4",
+            "before_terminal:white_king_to_rook_distance=5",
+            "before_terminal:white_rook_file=0",
+            "before_terminal:white_rook_rank=4",
+            "before_terminal:white_rook_to_black_king_distance=7",
+            "delta_terminal:white_king_to_rook_distance=negative",
+            "delta_terminal:white_rook_to_black_king_distance=negative",
+            "native_action_exact:from_file=0",
+            "native_action_exact:from_rank=4"
+          ],
+          "feature_distance": 50,
+          "missing_feature_keys": [
+            "action_pattern:from_file_edge_distance=1",
+            "action_pattern:from_rank_edge_distance=1",
+            "action_pattern:to_rank_edge_distance=1",
+            "action_pattern:white_king_to_rook_after=6",
+            "action_pattern:white_rook_to_black_king_after=6",
+            "after_terminal:confinement_area=48",
+            "after_terminal:confinement_rank_span=6",
+            "after_terminal:rook_to_black_king_rank_delta_abs=6",
+            "after_terminal:white_king_to_rook_distance=6",
+            "after_terminal:white_rook_rank=6",
+            "after_terminal:white_rook_to_black_king_distance=6",
+            "before_terminal:confinement_area=36",
+            "before_terminal:confinement_file_span=6",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:rook_to_black_king_file_delta_abs=6",
+            "before_terminal:rook_to_black_king_rank_delta_abs=6",
+            "before_terminal:white_king_to_rook_distance=6",
+            "before_terminal:white_rook_file=1",
+            "before_terminal:white_rook_rank=6",
+            "before_terminal:white_rook_to_black_king_distance=6",
+            "delta_terminal:white_king_to_rook_distance=zero",
+            "delta_terminal:white_rook_to_black_king_distance=zero",
+            "native_action_exact:from_file=1",
+            "native_action_exact:from_rank=6"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_f3bdd6c0c6fc8d9f"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "b7h7"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_19b363fecd77fa92",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "8/5R2/8/8/8/1K6/8/1k6 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 10,
+          "extra_feature_keys": [
+            "action_pattern:from_rank_edge_distance=2",
+            "before_terminal:confinement_area=25",
+            "before_terminal:confinement_rank_span=5",
+            "before_terminal:rook_to_black_king_rank_delta_abs=5",
+            "before_terminal:white_rook_rank=5",
+            "before_terminal:white_rook_to_black_king_distance=5",
+            "native_action_exact:from_rank=5"
+          ],
+          "feature_distance": 14,
+          "missing_feature_keys": [
+            "action_pattern:from_rank_edge_distance=1",
+            "before_terminal:confinement_area=30",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:rook_to_black_king_rank_delta_abs=6",
+            "before_terminal:white_rook_rank=6",
+            "before_terminal:white_rook_to_black_king_distance=6",
+            "native_action_exact:from_rank=6"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_58a334b12e56c6a3"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "f7f1"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_3d0f730f7e81c2ab",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "5k2/7K/8/8/8/8/4R3/8 w - - 0 1",
+        "kind": "generated_mate2_first",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 64,
+          "extra_feature_keys": [
+            "action_pattern:from_rank_edge_distance=2",
+            "action_pattern:pair:piece:file_rank_delta=6:-1:0",
+            "action_pattern:rank_delta_magnitude=0",
+            "action_pattern:rank_delta_sign=0",
+            "action_pattern:white_king_to_rook_after=5",
+            "after_terminal:black_king_file=7",
+            "after_terminal:confinement_area=6",
+            "after_terminal:confinement_file_span=6",
+            "after_terminal:confinement_rank_span=1",
+            "after_terminal:king_file_delta=-1",
+            "after_terminal:rook_to_black_king_file_delta_abs=6",
+            "after_terminal:rook_to_black_king_rank_delta_abs=1",
+            "after_terminal:white_king_to_rook_distance=5",
+            "after_terminal:white_rook_file=1",
+            "after_terminal:white_rook_rank=6",
+            "before_terminal:black_king_file=7",
+            "before_terminal:confinement_area=6",
+            "before_terminal:confinement_file_span=6",
+            "before_terminal:confinement_rank_span=1",
+            "before_terminal:direct_file_opposition=1",
+            "before_terminal:feature_hub_enemy_king_file=1",
+            "before_terminal:feature_hub_enemy_king_in_corner=1",
+            "before_terminal:feature_hub_opposition_status=1",
+            "before_terminal:king_file_delta=0"
+          ],
+          "feature_distance": 90,
+          "missing_feature_keys": [
+            "action_pattern:from_rank_edge_distance=1",
+            "action_pattern:pair:piece:file_rank_delta=6:-1:-1",
+            "action_pattern:rank_delta_magnitude=1",
+            "action_pattern:rank_delta_sign=-1",
+            "action_pattern:white_king_to_rook_after=4",
+            "after_terminal:black_king_file=5",
+            "after_terminal:confinement_area=18",
+            "after_terminal:confinement_file_span=3",
+            "after_terminal:confinement_rank_span=6",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:rook_to_black_king_file_delta_abs=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=6",
+            "after_terminal:white_king_to_rook_distance=4",
+            "after_terminal:white_rook_file=4",
+            "after_terminal:white_rook_rank=1",
+            "before_terminal:black_king_file=5",
+            "before_terminal:confinement_area=18",
+            "before_terminal:confinement_file_span=3",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:direct_file_opposition=0",
+            "before_terminal:feature_hub_enemy_king_file=0.75",
+            "before_terminal:feature_hub_enemy_king_in_corner=0",
+            "before_terminal:feature_hub_opposition_status=0",
+            "before_terminal:king_file_delta=2"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_f2f34c8e30851b35"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "h7g6"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_3f601e6eee18ec54",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "8/8/8/8/5R2/4K3/8/3k4 w - - 0 1",
+        "kind": "generated_mate2_first",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 46,
+          "extra_feature_keys": [
+            "action_pattern:black_reply_mobility_after=3",
+            "action_pattern:file_delta_magnitude=2",
+            "action_pattern:from_file_edge_distance=3",
+            "action_pattern:from_rank_edge_distance=0",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=0:3",
+            "action_pattern:to_rank_edge_distance=0",
+            "action_pattern:white_king_to_rook_after=5",
+            "action_pattern:white_rook_to_black_king_after=7",
+            "after_terminal:black_king_file=5",
+            "after_terminal:black_reply_mobility=3",
+            "after_terminal:confinement_area=35",
+            "after_terminal:confinement_rank_span=7",
+            "after_terminal:king_file_delta=-1",
+            "after_terminal:legal_move_count=3",
+            "after_terminal:rook_to_black_king_file_delta_abs=3",
+            "after_terminal:rook_to_black_king_rank_delta_abs=7",
+            "after_terminal:white_king_to_rook_distance=5",
+            "after_terminal:white_rook_rank=7",
+            "after_terminal:white_rook_to_black_king_distance=7",
+            "before_terminal:black_king_file=5",
+            "before_terminal:confinement_area=21",
+            "before_terminal:confinement_file_span=3",
+            "before_terminal:confinement_rank_span=7",
+            "before_terminal:feature_hub_enemy_king_file=0.75"
+          ],
+          "feature_distance": 80,
+          "missing_feature_keys": [
+            "action_pattern:black_reply_mobility_after=1",
+            "action_pattern:file_delta_magnitude=3",
+            "action_pattern:from_file_edge_distance=2",
+            "action_pattern:from_rank_edge_distance=3",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=0:1",
+            "action_pattern:to_rank_edge_distance=3",
+            "action_pattern:white_king_to_rook_after=2",
+            "action_pattern:white_rook_to_black_king_after=3",
+            "after_terminal:black_king_file=3",
+            "after_terminal:black_reply_mobility=1",
+            "after_terminal:confinement_area=15",
+            "after_terminal:confinement_rank_span=3",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:legal_move_count=1",
+            "after_terminal:rook_to_black_king_file_delta_abs=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=3",
+            "after_terminal:white_king_to_rook_distance=2",
+            "after_terminal:white_rook_rank=3",
+            "after_terminal:white_rook_to_black_king_distance=3",
+            "before_terminal:black_king_file=3",
+            "before_terminal:confinement_area=15",
+            "before_terminal:confinement_file_span=5",
+            "before_terminal:confinement_rank_span=3",
+            "before_terminal:feature_hub_enemy_king_file=0.50"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_66a475edeb2a2133"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "f4c4"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_eb88402692a48d90",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "8/8/8/2R5/8/4K3/8/3k4 w - - 0 1",
+        "kind": "generated_mate2_first",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 46,
+          "extra_feature_keys": [
+            "action_pattern:black_reply_mobility_after=3",
+            "action_pattern:from_file_edge_distance=3",
+            "action_pattern:from_rank_edge_distance=0",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=0:3",
+            "action_pattern:rank_delta_magnitude=3",
+            "action_pattern:to_file_edge_distance=3",
+            "action_pattern:to_rank_edge_distance=3",
+            "action_pattern:white_rook_to_black_king_after=4",
+            "after_terminal:black_king_file=5",
+            "after_terminal:black_reply_mobility=3",
+            "after_terminal:confinement_area=12",
+            "after_terminal:confinement_file_span=3",
+            "after_terminal:confinement_rank_span=4",
+            "after_terminal:king_file_delta=-1",
+            "after_terminal:legal_move_count=3",
+            "after_terminal:rook_to_black_king_rank_delta_abs=4",
+            "after_terminal:white_rook_file=4",
+            "after_terminal:white_rook_rank=4",
+            "after_terminal:white_rook_to_black_king_distance=4",
+            "before_terminal:black_king_file=5",
+            "before_terminal:black_reply_mobility=3",
+            "before_terminal:confinement_area=21",
+            "before_terminal:confinement_file_span=3",
+            "before_terminal:confinement_rank_span=7"
+          ],
+          "feature_distance": 82,
+          "missing_feature_keys": [
+            "action_pattern:black_reply_mobility_after=1",
+            "action_pattern:from_file_edge_distance=2",
+            "action_pattern:from_rank_edge_distance=3",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=0:1",
+            "action_pattern:rank_delta_magnitude=2",
+            "action_pattern:to_file_edge_distance=2",
+            "action_pattern:to_rank_edge_distance=2",
+            "action_pattern:white_rook_to_black_king_after=2",
+            "after_terminal:black_king_file=3",
+            "after_terminal:black_reply_mobility=1",
+            "after_terminal:confinement_area=10",
+            "after_terminal:confinement_file_span=5",
+            "after_terminal:confinement_rank_span=2",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:legal_move_count=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=2",
+            "after_terminal:white_rook_file=2",
+            "after_terminal:white_rook_rank=2",
+            "after_terminal:white_rook_to_black_king_distance=2",
+            "before_terminal:black_king_file=3",
+            "before_terminal:black_reply_mobility=1",
+            "before_terminal:confinement_area=20",
+            "before_terminal:confinement_file_span=5",
+            "before_terminal:confinement_rank_span=4"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_b6cc28c66ecf1f9a"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "c5c3"
+      }
+    ],
+    "null_selection_count": 9,
+    "runtime": {
+      "actuator_affordances_are_terminal_leaves": true,
+      "formal_recon_engine_runtime_choice": true,
+      "python_batch_scorer_used_for_runtime_choice": false
+    }
+  },
+  "exact_vs_prototype_comparison": {
+    "baseline_key_mode": "exact",
+    "interpretation": "variant improves heldout or reduces nulls",
+    "mate1_accuracy_delta": 0.333333,
+    "mate2_conversion_delta": 0.0,
+    "null_selection_delta": -2,
+    "prototype_distance_evaluation_delta": 85344,
+    "variant_key_mode": "prototype"
+  },
+  "m4_audit": {
+    "m4_requires_heldout_confirmation_under_frozen_m3": true,
+    "m4_true_promotion_count": 0,
+    "mature_materialized_count": 1,
+    "reason": "TG26r does not promote generated structures because heldout thresholds are not yet met."
+  },
+  "prototype_arm": {
+    "generated_mate1_train_count": 12,
+    "generated_mate2_train_count": 6,
+    "graph_diagnostics": {
+      "collapse_indicators": {
+        "negative_saturated_total": 0,
+        "positive_saturated_total": 0,
+        "zero_weight_total": 0
+      },
+      "dead_node_count": 0,
+      "duplicate_equivalent_triplet_count": 0,
+      "edge_count": 145304,
+      "no_op_edge_count": 0,
+      "no_op_node_count": 0,
+      "node_count": 71767,
+      "prune_candidate_count": 0,
+      "prune_candidate_triplets": [],
+      "prune_weight_threshold": -0.2,
+      "scheduler_stats": {
+        "active_nodes_ticked": 1263,
+        "candidate_triplets_ticked": 155,
+        "choose_calls": 145,
+        "empty_candidate_calls": 122,
+        "feature_terminals_skipped_by_scheduler": 23870,
+        "formal_ticks_run": 1074,
+        "full_graph_node_resets_avoided": 1132274,
+        "indexed_scheduler_used": true,
+        "prototype_distance_evaluations": 85344,
+        "prototype_scan_truncated_calls": 2667,
+        "triplets_skipped_by_index": 47612
+      },
+      "stem_cell_state_counts": {
+        "TRIAL": 71766,
+        "UNLABELED": 1
+      },
+      "tier_counts": {
+        "mature": 1,
+        "trial": 71766
+      },
+      "trainable_edge_count": 72652,
+      "triplet_count": 443,
+      "weight_saturation": {
+        "edge_negative_saturated": 0,
+        "edge_positive_saturated": 0,
+        "max_abs_local_weight": 1.0,
+        "node_negative_saturated": 0,
+        "node_positive_saturated": 0
+      }
+    },
+    "key_mode": "prototype",
+    "mate1": {
+      "heldout": {
+        "accuracy": 0.3333333333333333,
+        "correct_count": 2,
+        "duration_seconds": 0.786727,
+        "position_count": 6,
+        "samples": [
+          {
+            "correct": false,
+            "correct_mates": [
+              "c1h1"
+            ],
+            "fen": "7k/5K2/8/8/8/8/8/2R5 w - - 0 1",
+            "selected": null
+          },
+          {
+            "correct": true,
+            "correct_mates": [
+              "b2b8"
+            ],
+            "fen": "3k4/8/3K4/8/8/8/1R6/8 w - - 0 1",
+            "selected": "b2b8"
+          },
+          {
+            "correct": false,
+            "correct_mates": [
+              "e4e1"
+            ],
+            "fen": "8/8/8/8/4R3/1K6/8/1k6 w - - 0 1",
+            "selected": null
+          },
+          {
+            "correct": false,
+            "correct_mates": [
+              "e1e8"
+            ],
+            "fen": "k7/8/1K6/8/8/8/8/4R3 w - - 0 1",
+            "selected": null
+          },
+          {
+            "correct": false,
+            "correct_mates": [
+              "b7h7"
+            ],
+            "fen": "8/1R6/8/8/8/8/8/5K1k w - - 0 1",
+            "selected": null
+          },
+          {
+            "correct": true,
+            "correct_mates": [
+              "f7f1"
+            ],
+            "fen": "8/5R2/8/8/8/1K6/8/1k6 w - - 0 1",
+            "selected": "f7f1"
+          }
+        ]
+      },
+      "training": {
+        "duration_seconds": 1.722363,
+        "edge_count": 69208,
+        "m3_update_count": 34604,
+        "negative_updates": 199,
+        "neutral_updates": 0,
+        "node_count": 34183,
+        "positive_updates": 12,
+        "train_records": 12,
+        "triplet_count": 211
+      }
+    },
+    "mate2": {
+      "heldout": {
+        "conversion_count": 0,
+        "conversion_rate": 0.0,
+        "duration_seconds": 0.33491,
+        "first_move_success_count": 0,
+        "first_move_success_rate": 0.0,
+        "hardcoded_mate1_handoff": false,
+        "native_graph_reply_mate_rate": 0.0,
+        "position_count": 3,
+        "same_graph_second_move_count": 0,
+        "samples": [
+          {
+            "all_replies_mated_by_native_graph": false,
+            "fen": "5k2/7K/8/8/8/8/4R3/8 w - - 0 1",
+            "first_move_success": false,
+            "forced_first_moves": [
+              "h7g6"
+            ],
+            "native_graph_selected_first": null,
+            "reply_checks": []
+          },
+          {
+            "all_replies_mated_by_native_graph": false,
+            "fen": "8/8/8/8/5R2/4K3/8/3k4 w - - 0 1",
+            "first_move_success": false,
+            "forced_first_moves": [
+              "f4c4"
+            ],
+            "native_graph_selected_first": null,
+            "reply_checks": []
+          },
+          {
+            "all_replies_mated_by_native_graph": false,
+            "fen": "8/8/8/2R5/8/4K3/8/3k4 w - - 0 1",
+            "first_move_success": false,
+            "forced_first_moves": [
+              "c5c3",
+              "c5c4",
+              "c5c6",
+              "c5c7",
+              "c5c8"
+            ],
+            "native_graph_selected_first": null,
+            "reply_checks": []
+          }
+        ]
+      },
+      "training": {
+        "chain_positive_total": 6,
+        "continuation_experience_records": 6,
+        "continuation_experience_uses_same_native_graph": true,
+        "duration_seconds": 18.837859,
+        "edge_count": 145304,
+        "first_move_train_records": 6,
+        "m3_update_count": 72652,
+        "negative_updates": 116,
+        "neutral_updates": 0,
+        "no_chain_positive_record_count": 0,
+        "node_count": 71767,
+        "positive_updates": 6,
+        "triplet_count": 443
+      }
+    },
+    "nearest_triplet_diagnostics": [
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_bc67b1ebce72b216",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "7k/5K2/8/8/8/8/8/2R5 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 26,
+          "extra_feature_keys": [
+            "action_pattern:white_king_to_rook_after=5",
+            "action_pattern:white_rook_to_black_king_after=5",
+            "after_terminal:direct_rank_opposition=1",
+            "after_terminal:feature_hub_enemy_king_mobility=0.50",
+            "after_terminal:feature_hub_enemy_king_mobility_raw=5",
+            "after_terminal:feature_hub_opposition_status=1",
+            "after_terminal:king_knight_distance_like=0",
+            "after_terminal:king_rank_delta=0",
+            "after_terminal:king_rank_delta_abs=0",
+            "after_terminal:king_same_rank=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=5",
+            "after_terminal:white_king_to_rook_distance=5",
+            "after_terminal:white_rook_to_black_king_distance=5",
+            "before_terminal:black_reply_mobility=2",
+            "before_terminal:confinement_area=21",
+            "before_terminal:confinement_file_span=3",
+            "before_terminal:direct_rank_opposition=1",
+            "before_terminal:feature_hub_enemy_king_in_corner=0",
+            "before_terminal:feature_hub_enemy_king_mobility=0.25",
+            "before_terminal:feature_hub_enemy_king_mobility_raw=2",
+            "before_terminal:feature_hub_enemy_king_rank=0.75",
+            "before_terminal:feature_hub_mating_net_present=0.50",
+            "before_terminal:feature_hub_opposition_status=1",
+            "before_terminal:king_knight_distance_like=0"
+          ],
+          "feature_distance": 66,
+          "missing_feature_keys": [
+            "action_pattern:white_king_to_rook_after=6",
+            "action_pattern:white_rook_to_black_king_after=7",
+            "after_terminal:direct_rank_opposition=0",
+            "after_terminal:feature_hub_enemy_king_mobility=0.75",
+            "after_terminal:feature_hub_enemy_king_mobility_raw=6",
+            "after_terminal:feature_hub_opposition_status=0",
+            "after_terminal:king_knight_distance_like=1",
+            "after_terminal:king_rank_delta=-1",
+            "after_terminal:king_rank_delta_abs=1",
+            "after_terminal:king_same_rank=0",
+            "after_terminal:rook_to_black_king_rank_delta_abs=7",
+            "after_terminal:white_king_to_rook_distance=6",
+            "after_terminal:white_rook_to_black_king_distance=7",
+            "before_terminal:black_reply_mobility=1",
+            "before_terminal:confinement_area=35",
+            "before_terminal:confinement_file_span=5",
+            "before_terminal:direct_rank_opposition=0",
+            "before_terminal:feature_hub_enemy_king_in_corner=1",
+            "before_terminal:feature_hub_enemy_king_mobility=0.00",
+            "before_terminal:feature_hub_enemy_king_mobility_raw=1",
+            "before_terminal:feature_hub_enemy_king_rank=1",
+            "before_terminal:feature_hub_mating_net_present=0.75",
+            "before_terminal:feature_hub_opposition_status=0",
+            "before_terminal:king_knight_distance_like=1"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_1636103404179aeb"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "c1h1"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": true,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_117a695307ee53dc",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "candidate_confirmed_but_wrong_selection",
+        "fen": "3k4/8/3K4/8/8/8/1R6/8 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 8,
+          "extra_feature_keys": [
+            "action_pattern:white_king_to_rook_after=3",
+            "action_pattern:white_rook_to_black_king_after=3",
+            "after_terminal:rook_to_black_king_file_delta_abs=3",
+            "after_terminal:white_king_to_rook_distance=3",
+            "after_terminal:white_rook_to_black_king_distance=3",
+            "before_terminal:confinement_area=30",
+            "before_terminal:confinement_rank_span=5",
+            "before_terminal:rook_to_black_king_file_delta_abs=3",
+            "before_terminal:rook_to_black_king_rank_delta_abs=5",
+            "before_terminal:white_king_to_rook_distance=3",
+            "before_terminal:white_rook_to_black_king_distance=5",
+            "delta_terminal:white_king_to_rook_distance=zero"
+          ],
+          "feature_distance": 24,
+          "missing_feature_keys": [
+            "action_pattern:white_king_to_rook_after=2",
+            "action_pattern:white_rook_to_black_king_after=2",
+            "after_terminal:rook_to_black_king_file_delta_abs=2",
+            "after_terminal:white_king_to_rook_distance=2",
+            "after_terminal:white_rook_to_black_king_distance=2",
+            "before_terminal:confinement_area=36",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:rook_to_black_king_file_delta_abs=2",
+            "before_terminal:rook_to_black_king_rank_delta_abs=6",
+            "before_terminal:white_king_to_rook_distance=4",
+            "before_terminal:white_rook_to_black_king_distance=6",
+            "delta_terminal:white_king_to_rook_distance=negative"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_6d42622abefa53b2"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": false,
+        "selected_move": "b2b8",
+        "target_move": "b2b8"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": true,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_3fc1a07f89934b5c",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "candidate_indexed_but_no_confirmation",
+        "fen": "8/8/8/8/4R3/1K6/8/1k6 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 12,
+          "extra_feature_keys": [
+            "action_pattern:white_king_to_rook_after=4",
+            "action_pattern:white_rook_to_black_king_after=4",
+            "after_terminal:confinement_area=40",
+            "after_terminal:confinement_file_span=5",
+            "after_terminal:rook_to_black_king_file_delta_abs=4",
+            "after_terminal:white_king_to_rook_distance=4",
+            "after_terminal:white_rook_to_black_king_distance=4",
+            "before_terminal:confinement_area=25",
+            "before_terminal:confinement_file_span=5",
+            "before_terminal:confinement_rank_span=5",
+            "before_terminal:rook_to_black_king_file_delta_abs=4",
+            "before_terminal:rook_to_black_king_rank_delta_abs=5",
+            "before_terminal:white_king_to_rook_distance=4",
+            "before_terminal:white_rook_to_black_king_distance=5",
+            "delta_terminal:white_rook_to_black_king_distance=negative"
+          ],
+          "feature_distance": 30,
+          "missing_feature_keys": [
+            "action_pattern:white_king_to_rook_after=3",
+            "action_pattern:white_rook_to_black_king_after=3",
+            "after_terminal:confinement_area=32",
+            "after_terminal:confinement_file_span=4",
+            "after_terminal:rook_to_black_king_file_delta_abs=3",
+            "after_terminal:white_king_to_rook_distance=3",
+            "after_terminal:white_rook_to_black_king_distance=3",
+            "before_terminal:confinement_area=12",
+            "before_terminal:confinement_file_span=4",
+            "before_terminal:confinement_rank_span=3",
+            "before_terminal:rook_to_black_king_file_delta_abs=3",
+            "before_terminal:rook_to_black_king_rank_delta_abs=3",
+            "before_terminal:white_king_to_rook_distance=3",
+            "before_terminal:white_rook_to_black_king_distance=3",
+            "delta_terminal:white_rook_to_black_king_distance=zero"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_236920b575580bd8"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": false,
+        "selected_move": null,
+        "target_move": "e4e1"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_f64000bb2d40a5f3",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "k7/8/1K6/8/8/8/8/4R3 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 22,
+          "extra_feature_keys": [
+            "action_pattern:black_reply_mobility_after=2",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=1:2",
+            "action_pattern:rank_delta_magnitude=1",
+            "after_terminal:black_reply_mobility=2",
+            "after_terminal:feature_hub_enemy_king_file=0.75",
+            "after_terminal:feature_hub_enemy_king_rank=0.50",
+            "after_terminal:feature_hub_mobility=0.00",
+            "after_terminal:king_file_delta=-1",
+            "after_terminal:king_rank_delta=2",
+            "after_terminal:legal_move_count=2",
+            "before_terminal:confinement_area=24",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:feature_hub_enemy_king_file=1",
+            "before_terminal:feature_hub_enemy_king_in_corner=0",
+            "before_terminal:feature_hub_enemy_king_rank=0.25",
+            "before_terminal:king_file_delta=-1",
+            "before_terminal:king_rank_delta=2",
+            "before_terminal:rook_to_black_king_rank_delta_abs=1",
+            "before_terminal:white_king_to_rook_distance=3",
+            "before_terminal:white_rook_to_black_king_distance=4",
+            "delta_terminal:black_reply_mobility=positive",
+            "delta_terminal:feature_hub_enemy_king_in_corner=zero",
+            "delta_terminal:feature_hub_enemy_king_rank=positive",
+            "delta_terminal:white_king_to_rook_distance=zero"
+          ],
+          "feature_distance": 50,
+          "missing_feature_keys": [
+            "action_pattern:black_reply_mobility_after=0",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=1:0",
+            "action_pattern:rank_delta_magnitude=3",
+            "after_terminal:black_reply_mobility=0",
+            "after_terminal:feature_hub_enemy_king_file=0.25",
+            "after_terminal:feature_hub_enemy_king_rank=0.75",
+            "after_terminal:feature_hub_mobility=0",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:king_rank_delta=-2",
+            "after_terminal:legal_move_count=0",
+            "before_terminal:confinement_area=28",
+            "before_terminal:confinement_rank_span=7",
+            "before_terminal:feature_hub_enemy_king_file=0",
+            "before_terminal:feature_hub_enemy_king_in_corner=1",
+            "before_terminal:feature_hub_enemy_king_rank=1",
+            "before_terminal:king_file_delta=1",
+            "before_terminal:king_rank_delta=-2",
+            "before_terminal:rook_to_black_king_rank_delta_abs=7",
+            "before_terminal:white_king_to_rook_distance=5",
+            "before_terminal:white_rook_to_black_king_distance=7",
+            "delta_terminal:black_reply_mobility=negative",
+            "delta_terminal:feature_hub_enemy_king_in_corner=negative",
+            "delta_terminal:feature_hub_enemy_king_rank=negative",
+            "delta_terminal:white_king_to_rook_distance=negative"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_5699d87ac3c374da"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "e1e8"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": true,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_e6a8a7e5bde4bb48",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "candidate_indexed_but_no_confirmation",
+        "fen": "8/1R6/8/8/8/8/8/5K1k w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 12,
+          "extra_feature_keys": [
+            "action_pattern:white_king_to_rook_after=4",
+            "action_pattern:white_rook_to_black_king_after=4",
+            "after_terminal:confinement_area=32",
+            "after_terminal:confinement_rank_span=4",
+            "after_terminal:rook_to_black_king_rank_delta_abs=4",
+            "after_terminal:white_king_to_rook_distance=4",
+            "after_terminal:white_rook_to_black_king_distance=4",
+            "before_terminal:confinement_area=28",
+            "before_terminal:confinement_file_span=7",
+            "before_terminal:confinement_rank_span=4",
+            "before_terminal:rook_to_black_king_file_delta_abs=7",
+            "before_terminal:rook_to_black_king_rank_delta_abs=4",
+            "before_terminal:white_king_to_rook_distance=5",
+            "before_terminal:white_rook_to_black_king_distance=7",
+            "delta_terminal:white_king_to_rook_distance=negative",
+            "delta_terminal:white_rook_to_black_king_distance=negative"
+          ],
+          "feature_distance": 32,
+          "missing_feature_keys": [
+            "action_pattern:white_king_to_rook_after=6",
+            "action_pattern:white_rook_to_black_king_after=6",
+            "after_terminal:confinement_area=48",
+            "after_terminal:confinement_rank_span=6",
+            "after_terminal:rook_to_black_king_rank_delta_abs=6",
+            "after_terminal:white_king_to_rook_distance=6",
+            "after_terminal:white_rook_to_black_king_distance=6",
+            "before_terminal:confinement_area=36",
+            "before_terminal:confinement_file_span=6",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:rook_to_black_king_file_delta_abs=6",
+            "before_terminal:rook_to_black_king_rank_delta_abs=6",
+            "before_terminal:white_king_to_rook_distance=6",
+            "before_terminal:white_rook_to_black_king_distance=6",
+            "delta_terminal:white_king_to_rook_distance=zero",
+            "delta_terminal:white_rook_to_black_king_distance=zero"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_8353f9150644a24c"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": false,
+        "selected_move": null,
+        "target_move": "b7h7"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": true,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_93e71f88177062a2",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "candidate_confirmed_but_wrong_selection",
+        "fen": "8/5R2/8/8/8/1K6/8/1k6 w - - 0 1",
+        "kind": "generated_mate1",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 4,
+          "extra_feature_keys": [
+            "before_terminal:confinement_area=25",
+            "before_terminal:confinement_rank_span=5",
+            "before_terminal:rook_to_black_king_rank_delta_abs=5",
+            "before_terminal:white_rook_to_black_king_distance=5"
+          ],
+          "feature_distance": 8,
+          "missing_feature_keys": [
+            "before_terminal:confinement_area=30",
+            "before_terminal:confinement_rank_span=6",
+            "before_terminal:rook_to_black_king_rank_delta_abs=6",
+            "before_terminal:white_rook_to_black_king_distance=6"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_236920b575580bd8"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": false,
+        "selected_move": "f7f1",
+        "target_move": "f7f1"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_6a676c448539e964",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "5k2/7K/8/8/8/8/4R3/8 w - - 0 1",
+        "kind": "generated_mate2_first",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 42,
+          "extra_feature_keys": [
+            "action_pattern:white_king_to_rook_after=2",
+            "action_pattern:white_rook_to_black_king_after=4",
+            "after_terminal:confinement_area=24",
+            "after_terminal:confinement_file_span=4",
+            "after_terminal:feature_hub_enemy_king_rank=0.50",
+            "after_terminal:king_file_delta=-2",
+            "after_terminal:king_file_delta_abs=2",
+            "after_terminal:king_rank_delta=1",
+            "after_terminal:king_rank_delta_abs=1",
+            "after_terminal:rook_to_black_king_file_delta_abs=4",
+            "after_terminal:rook_to_black_king_rank_delta_abs=1",
+            "after_terminal:white_king_to_rook_distance=2",
+            "after_terminal:white_rook_to_black_king_distance=4",
+            "before_terminal:confinement_area=24",
+            "before_terminal:confinement_file_span=4",
+            "before_terminal:feature_hub_enemy_king_file=1",
+            "before_terminal:feature_hub_enemy_king_rank=0.25",
+            "before_terminal:king_file_delta=-1",
+            "before_terminal:king_file_delta_abs=1",
+            "before_terminal:king_rank_delta=2",
+            "before_terminal:king_rank_delta_abs=2",
+            "before_terminal:legal_move_count=20",
+            "before_terminal:rook_to_black_king_file_delta_abs=4",
+            "before_terminal:rook_to_black_king_rank_delta_abs=1"
+          ],
+          "feature_distance": 60,
+          "missing_feature_keys": [
+            "action_pattern:white_king_to_rook_after=4",
+            "action_pattern:white_rook_to_black_king_after=6",
+            "after_terminal:confinement_area=18",
+            "after_terminal:confinement_file_span=3",
+            "after_terminal:feature_hub_enemy_king_rank=0.75",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:king_file_delta_abs=1",
+            "after_terminal:king_rank_delta=-2",
+            "after_terminal:king_rank_delta_abs=2",
+            "after_terminal:rook_to_black_king_file_delta_abs=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=6",
+            "after_terminal:white_king_to_rook_distance=4",
+            "after_terminal:white_rook_to_black_king_distance=6",
+            "before_terminal:confinement_area=18",
+            "before_terminal:confinement_file_span=3",
+            "before_terminal:feature_hub_enemy_king_file=0.75",
+            "before_terminal:feature_hub_enemy_king_rank=1",
+            "before_terminal:king_file_delta=2",
+            "before_terminal:king_file_delta_abs=2",
+            "before_terminal:king_rank_delta=-1",
+            "before_terminal:king_rank_delta_abs=1",
+            "before_terminal:legal_move_count=17",
+            "before_terminal:rook_to_black_king_file_delta_abs=1",
+            "before_terminal:rook_to_black_king_rank_delta_abs=6"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_12ca274806181575"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "h7g6"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_22f9ebd3007a719e",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "8/8/8/8/5R2/4K3/8/3k4 w - - 0 1",
+        "kind": "generated_mate2_first",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 26,
+          "extra_feature_keys": [
+            "action_pattern:file_delta_magnitude=2",
+            "action_pattern:file_delta_sign=1",
+            "action_pattern:pair:piece:file_rank_delta=4:1:0",
+            "action_pattern:white_king_to_rook_after=5",
+            "action_pattern:white_rook_to_black_king_after=7",
+            "after_terminal:confinement_area=42",
+            "after_terminal:confinement_file_span=6",
+            "after_terminal:confinement_rank_span=7",
+            "after_terminal:king_file_delta=-1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=7",
+            "after_terminal:white_king_to_rook_distance=5",
+            "after_terminal:white_rook_to_black_king_distance=7",
+            "before_terminal:confinement_area=21",
+            "before_terminal:confinement_file_span=3",
+            "before_terminal:confinement_rank_span=7",
+            "before_terminal:feature_hub_enemy_king_file=0.75",
+            "before_terminal:king_file_delta=-1",
+            "before_terminal:legal_move_count=17",
+            "before_terminal:rook_to_black_king_file_delta_abs=1",
+            "before_terminal:rook_to_black_king_rank_delta_abs=7",
+            "before_terminal:white_king_to_rook_distance=5",
+            "before_terminal:white_rook_to_black_king_distance=7",
+            "delta_terminal:confinement_area=positive",
+            "delta_terminal:confinement_file_span=positive"
+          ],
+          "feature_distance": 52,
+          "missing_feature_keys": [
+            "action_pattern:file_delta_magnitude=3",
+            "action_pattern:file_delta_sign=-1",
+            "action_pattern:pair:piece:file_rank_delta=4:-1:0",
+            "action_pattern:white_king_to_rook_after=2",
+            "action_pattern:white_rook_to_black_king_after=3",
+            "after_terminal:confinement_area=15",
+            "after_terminal:confinement_file_span=5",
+            "after_terminal:confinement_rank_span=3",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=3",
+            "after_terminal:white_king_to_rook_distance=2",
+            "after_terminal:white_rook_to_black_king_distance=3",
+            "before_terminal:confinement_area=15",
+            "before_terminal:confinement_file_span=5",
+            "before_terminal:confinement_rank_span=3",
+            "before_terminal:feature_hub_enemy_king_file=0.50",
+            "before_terminal:king_file_delta=1",
+            "before_terminal:legal_move_count=19",
+            "before_terminal:rook_to_black_king_file_delta_abs=2",
+            "before_terminal:rook_to_black_king_rank_delta_abs=3",
+            "before_terminal:white_king_to_rook_distance=1",
+            "before_terminal:white_rook_to_black_king_distance=3",
+            "delta_terminal:confinement_area=zero",
+            "delta_terminal:confinement_file_span=zero"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_e275f81ae56e23b0"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "f4c4"
+      },
+      {
+        "action_terminal_matched": false,
+        "after_terminal_blocked": true,
+        "any_triplet_candidate_indexed": false,
+        "before_terminal_matched": false,
+        "correct_target_candidate_triplet": "tg26o_triplet_5a5ae91c47f15259",
+        "correct_triplet_indexed": false,
+        "failure_bucket": "no_candidate_indexed",
+        "fen": "8/8/8/2R5/8/4K3/8/3k4 w - - 0 1",
+        "kind": "generated_mate2_first",
+        "nearest_matching_triplet": {
+          "absolute_coordinate_mismatch_count": 18,
+          "extra_feature_keys": [
+            "action_pattern:black_reply_mobility_after=3",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=0:3",
+            "action_pattern:rank_delta_magnitude=3",
+            "action_pattern:white_rook_to_black_king_after=4",
+            "after_terminal:black_reply_mobility=3",
+            "after_terminal:confinement_area=12",
+            "after_terminal:confinement_file_span=3",
+            "after_terminal:confinement_rank_span=4",
+            "after_terminal:king_file_delta=-1",
+            "after_terminal:legal_move_count=3",
+            "after_terminal:rook_to_black_king_rank_delta_abs=4",
+            "after_terminal:white_rook_to_black_king_distance=4",
+            "before_terminal:black_reply_mobility=3",
+            "before_terminal:confinement_area=21",
+            "before_terminal:confinement_file_span=3",
+            "before_terminal:confinement_rank_span=7",
+            "before_terminal:feature_hub_enemy_king_file=0.75",
+            "before_terminal:feature_hub_enemy_king_mobility=0.50",
+            "before_terminal:feature_hub_enemy_king_mobility_raw=3",
+            "before_terminal:feature_hub_mating_net_present=0.50",
+            "before_terminal:feature_hub_stalemate_danger=0.75",
+            "before_terminal:king_file_delta=-1",
+            "before_terminal:legal_move_count=17",
+            "before_terminal:rook_to_black_king_rank_delta_abs=7"
+          ],
+          "feature_distance": 54,
+          "missing_feature_keys": [
+            "action_pattern:black_reply_mobility_after=1",
+            "action_pattern:pair:gives_check:black_reply_mobility_after=0:1",
+            "action_pattern:rank_delta_magnitude=2",
+            "action_pattern:white_rook_to_black_king_after=2",
+            "after_terminal:black_reply_mobility=1",
+            "after_terminal:confinement_area=10",
+            "after_terminal:confinement_file_span=5",
+            "after_terminal:confinement_rank_span=2",
+            "after_terminal:king_file_delta=1",
+            "after_terminal:legal_move_count=1",
+            "after_terminal:rook_to_black_king_rank_delta_abs=2",
+            "after_terminal:white_rook_to_black_king_distance=2",
+            "before_terminal:black_reply_mobility=1",
+            "before_terminal:confinement_area=20",
+            "before_terminal:confinement_file_span=5",
+            "before_terminal:confinement_rank_span=4",
+            "before_terminal:feature_hub_enemy_king_file=0.50",
+            "before_terminal:feature_hub_enemy_king_mobility=0.00",
+            "before_terminal:feature_hub_enemy_king_mobility_raw=1",
+            "before_terminal:feature_hub_mating_net_present=0.75",
+            "before_terminal:feature_hub_stalemate_danger=1",
+            "before_terminal:king_file_delta=1",
+            "before_terminal:legal_move_count=20",
+            "before_terminal:rook_to_black_king_rank_delta_abs=4"
+          ],
+          "tier": "trial",
+          "triplet_id": "tg26o_triplet_193e5a9c2c8bbd18"
+        },
+        "scheduler_active_set_excluded_useful_nodes": false,
+        "scheduler_returned_empty_candidate_set": true,
+        "selected_move": null,
+        "target_move": "c5c3"
+      }
+    ],
+    "null_selection_count": 7,
+    "runtime": {
+      "actuator_affordances_are_terminal_leaves": true,
+      "formal_recon_engine_runtime_choice": true,
+      "python_batch_scorer_used_for_runtime_choice": false
+    }
+  },
+  "purity_boundary": {
+    "action_ranker_used_for_runtime": false,
+    "actuator_affordances_are_NodeType_TERMINAL": true,
+    "edge_fence_touched": false,
+    "formal_recon_engine_runtime_choice": true,
+    "native_recon_graph_execution": true,
+    "python_batch_scorer_used_for_runtime_choice": false,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "script_lag_or_ecological_spawning_added": false,
+    "stage_labels_learner_visible": false
+  },
+  "raw_vs_canonical_comparison": {
+    "baseline_key_mode": "prototype",
+    "interpretation": "no measured variant improvement",
+    "mate1_accuracy_delta": -0.166667,
+    "mate2_conversion_delta": 0.0,
+    "null_selection_delta": 1,
+    "prototype_distance_evaluation_delta": -1280,
+    "variant_key_mode": "canonical"
+  },
+  "scheduler_equivalence": {
+    "full_feature_terminal_ticking": true,
+    "grouped_scheduler_ticks_feature_terminals": false,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "position_count": 7,
+    "rows": [
+      {
+        "confirmed_candidates_match": true,
+        "fen": "8/8/8/R7/8/8/8/5K1k w - - 0 1",
+        "full_feature_confirmed": [
+          [
+            "a5h5",
+            "tg26o_triplet_f3bdd6c0c6fc8d9f"
+          ],
+          [
+            "f1f2",
+            "tg26o_triplet_f059fe0ed9c55dbf"
+          ],
+          [
+            "f1e2",
+            "tg26o_triplet_8325f7d628bb3946"
+          ],
+          [
+            "f1e1",
+            "tg26o_triplet_81fd5fc46c5cc2e2"
+          ],
+          [
+            "a5g5",
+            "tg26o_triplet_4585574c741fa065"
+          ],
+          [
+            "a5f5",
+            "tg26o_triplet_96e5180f66521ae3"
+          ],
+          [
+            "a5e5",
+            "tg26o_triplet_e714c3c3a803cec8"
+          ],
+          [
+            "a5d5",
+            "tg26o_triplet_38e33cc86eeb8867"
+          ]
+        ],
+        "full_feature_confirmed_count": 17,
+        "full_feature_selected": "a5h5",
+        "grouped_confirmed": [
+          [
+            "a5h5",
+            "tg26o_triplet_f3bdd6c0c6fc8d9f"
+          ],
+          [
+            "f1f2",
+            "tg26o_triplet_f059fe0ed9c55dbf"
+          ],
+          [
+            "f1e2",
+            "tg26o_triplet_8325f7d628bb3946"
+          ],
+          [
+            "f1e1",
+            "tg26o_triplet_81fd5fc46c5cc2e2"
+          ],
+          [
+            "a5g5",
+            "tg26o_triplet_4585574c741fa065"
+          ],
+          [
+            "a5f5",
+            "tg26o_triplet_96e5180f66521ae3"
+          ],
+          [
+            "a5e5",
+            "tg26o_triplet_e714c3c3a803cec8"
+          ],
+          [
+            "a5d5",
+            "tg26o_triplet_38e33cc86eeb8867"
+          ]
+        ],
+        "grouped_confirmed_count": 17,
+        "grouped_selected": "a5h5",
+        "selected_match": true
+      },
+      {
+        "confirmed_candidates_match": true,
+        "fen": "k7/8/K7/8/8/8/7R/8 w - - 0 1",
+        "full_feature_confirmed": [
+          [
+            "h2h8",
+            "tg26o_triplet_67e8f5c34f3183a7"
+          ],
+          [
+            "h2h7",
+            "tg26o_triplet_a8b8b59d19330da5"
+          ],
+          [
+            "h2h6",
+            "tg26o_triplet_951a304751c83c05"
+          ],
+          [
+            "h2h5",
+            "tg26o_triplet_160a20ebea4f07b8"
+          ],
+          [
+            "h2h4",
+            "tg26o_triplet_6096a42da9343ea0"
+          ],
+          [
+            "h2h3",
+            "tg26o_triplet_457849c8d3ec1fb4"
+          ],
+          [
+            "h2h1",
+            "tg26o_triplet_ac43e28786b10a03"
+          ],
+          [
+            "h2g2",
+            "tg26o_triplet_11043a9a3302a578"
+          ]
+        ],
+        "full_feature_confirmed_count": 17,
+        "full_feature_selected": "h2h8",
+        "grouped_confirmed": [
+          [
+            "h2h8",
+            "tg26o_triplet_67e8f5c34f3183a7"
+          ],
+          [
+            "h2h7",
+            "tg26o_triplet_a8b8b59d19330da5"
+          ],
+          [
+            "h2h6",
+            "tg26o_triplet_951a304751c83c05"
+          ],
+          [
+            "h2h5",
+            "tg26o_triplet_160a20ebea4f07b8"
+          ],
+          [
+            "h2h4",
+            "tg26o_triplet_6096a42da9343ea0"
+          ],
+          [
+            "h2h3",
+            "tg26o_triplet_457849c8d3ec1fb4"
+          ],
+          [
+            "h2h1",
+            "tg26o_triplet_ac43e28786b10a03"
+          ],
+          [
+            "h2g2",
+            "tg26o_triplet_11043a9a3302a578"
+          ]
+        ],
+        "grouped_confirmed_count": 17,
+        "grouped_selected": "h2h8",
+        "selected_match": true
+      },
+      {
+        "confirmed_candidates_match": true,
+        "fen": "3k4/8/3K3R/8/8/8/8/8 w - - 0 1",
+        "full_feature_confirmed": [
+          [
+            "h6h8",
+            "tg26o_triplet_32102642a85b1c2b"
+          ],
+          [
+            "h6h7",
+            "tg26o_triplet_ee00280e019a3b54"
+          ],
+          [
+            "h6h5",
+            "tg26o_triplet_4df4ba9c976353e3"
+          ],
+          [
+            "h6h4",
+            "tg26o_triplet_a857105ce4d1fc2b"
+          ],
+          [
+            "h6h3",
+            "tg26o_triplet_060c7fde533a8f3d"
+          ],
+          [
+            "h6h2",
+            "tg26o_triplet_06c5f5be9e24030c"
+          ],
+          [
+            "h6h1",
+            "tg26o_triplet_34763091569e2dfd"
+          ],
+          [
+            "h6g6",
+            "tg26o_triplet_fcfc480e82d3bad3"
+          ]
+        ],
+        "full_feature_confirmed_count": 15,
+        "full_feature_selected": "h6h8",
+        "grouped_confirmed": [
+          [
+            "h6h8",
+            "tg26o_triplet_32102642a85b1c2b"
+          ],
+          [
+            "h6h7",
+            "tg26o_triplet_ee00280e019a3b54"
+          ],
+          [
+            "h6h5",
+            "tg26o_triplet_4df4ba9c976353e3"
+          ],
+          [
+            "h6h4",
+            "tg26o_triplet_a857105ce4d1fc2b"
+          ],
+          [
+            "h6h3",
+            "tg26o_triplet_060c7fde533a8f3d"
+          ],
+          [
+            "h6h2",
+            "tg26o_triplet_06c5f5be9e24030c"
+          ],
+          [
+            "h6h1",
+            "tg26o_triplet_34763091569e2dfd"
+          ],
+          [
+            "h6g6",
+            "tg26o_triplet_fcfc480e82d3bad3"
+          ]
+        ],
+        "grouped_confirmed_count": 15,
+        "grouped_selected": "h6h8",
+        "selected_match": true
+      },
+      {
+        "confirmed_candidates_match": true,
+        "fen": "8/8/8/6K1/8/7k/3R4/8 w - - 0 1",
+        "full_feature_confirmed": [
+          [
+            "g5f4",
+            "tg26o_triplet_fb764a3d7215c5ac"
+          ],
+          [
+            "g5h6",
+            "tg26o_triplet_59500b8d852e7a08"
+          ],
+          [
+            "g5h5",
+            "tg26o_triplet_16299b910ebaf2a8"
+          ],
+          [
+            "g5g6",
+            "tg26o_triplet_038d6e22da389c04"
+          ],
+          [
+            "g5f6",
+            "tg26o_triplet_5041f45c719abf2e"
+          ],
+          [
+            "g5f5",
+            "tg26o_triplet_6b0c27329bce4698"
+          ],
+          [
+            "d2f2",
+            "tg26o_triplet_e76b99d68a100f20"
+          ],
+          [
+            "d2e2",
+            "tg26o_triplet_39df3c8936bc3ea3"
+          ]
+        ],
+        "full_feature_confirmed_count": 20,
+        "full_feature_selected": "g5f4",
+        "grouped_confirmed": [
+          [
+            "g5f4",
+            "tg26o_triplet_fb764a3d7215c5ac"
+          ],
+          [
+            "g5h6",
+            "tg26o_triplet_59500b8d852e7a08"
+          ],
+          [
+            "g5h5",
+            "tg26o_triplet_16299b910ebaf2a8"
+          ],
+          [
+            "g5g6",
+            "tg26o_triplet_038d6e22da389c04"
+          ],
+          [
+            "g5f6",
+            "tg26o_triplet_5041f45c719abf2e"
+          ],
+          [
+            "g5f5",
+            "tg26o_triplet_6b0c27329bce4698"
+          ],
+          [
+            "d2f2",
+            "tg26o_triplet_e76b99d68a100f20"
+          ],
+          [
+            "d2e2",
+            "tg26o_triplet_39df3c8936bc3ea3"
+          ]
+        ],
+        "grouped_confirmed_count": 20,
+        "grouped_selected": "g5f4",
+        "selected_match": true
+      },
+      {
+        "confirmed_candidates_match": true,
+        "fen": "8/8/8/8/5K1k/8/3R4/8 w - - 2 2",
+        "full_feature_confirmed": [
+          [
+            "d2h2",
+            "tg26o_triplet_960e84b9af9a3877"
+          ],
+          [
+            "f4f5",
+            "tg26o_triplet_06575f6217fc8448"
+          ],
+          [
+            "f4f3",
+            "tg26o_triplet_677b4feae43d90f7"
+          ],
+          [
+            "f4e5",
+            "tg26o_triplet_88d16cf8f403b45a"
+          ],
+          [
+            "f4e4",
+            "tg26o_triplet_e2309e70f9458bb7"
+          ],
+          [
+            "f4e3",
+            "tg26o_triplet_49be64cfa8f7e19e"
+          ],
+          [
+            "d2g2",
+            "tg26o_triplet_40c2cea30d98ab04"
+          ],
+          [
+            "d2f2",
+            "tg26o_triplet_7e6d63c45b1a8ae3"
+          ]
+        ],
+        "full_feature_confirmed_count": 19,
+        "full_feature_selected": "d2h2",
+        "grouped_confirmed": [
+          [
+            "d2h2",
+            "tg26o_triplet_960e84b9af9a3877"
+          ],
+          [
+            "f4f5",
+            "tg26o_triplet_06575f6217fc8448"
+          ],
+          [
+            "f4f3",
+            "tg26o_triplet_677b4feae43d90f7"
+          ],
+          [
+            "f4e5",
+            "tg26o_triplet_88d16cf8f403b45a"
+          ],
+          [
+            "f4e4",
+            "tg26o_triplet_e2309e70f9458bb7"
+          ],
+          [
+            "f4e3",
+            "tg26o_triplet_49be64cfa8f7e19e"
+          ],
+          [
+            "d2g2",
+            "tg26o_triplet_40c2cea30d98ab04"
+          ],
+          [
+            "d2f2",
+            "tg26o_triplet_7e6d63c45b1a8ae3"
+          ]
+        ],
+        "grouped_confirmed_count": 19,
+        "grouped_selected": "d2h2",
+        "selected_match": true
+      },
+      {
+        "confirmed_candidates_match": true,
+        "fen": "3R4/8/8/8/2K5/k7/8/8 w - - 0 1",
+        "full_feature_confirmed": [
+          [
+            "d8d2",
+            "tg26o_triplet_4d9b9f48e7589587"
+          ],
+          [
+            "d8h8",
+            "tg26o_triplet_69b01c7daae76c0d"
+          ],
+          [
+            "d8g8",
+            "tg26o_triplet_f647ad2c253c26bc"
+          ],
+          [
+            "d8f8",
+            "tg26o_triplet_9e6e3dac291f5cc7"
+          ],
+          [
+            "d8e8",
+            "tg26o_triplet_cb70c8884a800071"
+          ],
+          [
+            "d8d7",
+            "tg26o_triplet_08db2f198f062839"
+          ],
+          [
+            "d8d6",
+            "tg26o_triplet_e08161a8f5bf7b57"
+          ],
+          [
+            "d8d5",
+            "tg26o_triplet_d42d2a28779f7dc2"
+          ]
+        ],
+        "full_feature_confirmed_count": 20,
+        "full_feature_selected": "d8d2",
+        "grouped_confirmed": [
+          [
+            "d8d2",
+            "tg26o_triplet_4d9b9f48e7589587"
+          ],
+          [
+            "d8h8",
+            "tg26o_triplet_69b01c7daae76c0d"
+          ],
+          [
+            "d8g8",
+            "tg26o_triplet_f647ad2c253c26bc"
+          ],
+          [
+            "d8f8",
+            "tg26o_triplet_9e6e3dac291f5cc7"
+          ],
+          [
+            "d8e8",
+            "tg26o_triplet_cb70c8884a800071"
+          ],
+          [
+            "d8d7",
+            "tg26o_triplet_08db2f198f062839"
+          ],
+          [
+            "d8d6",
+            "tg26o_triplet_e08161a8f5bf7b57"
+          ],
+          [
+            "d8d5",
+            "tg26o_triplet_d42d2a28779f7dc2"
+          ]
+        ],
+        "grouped_confirmed_count": 20,
+        "grouped_selected": "d8d2",
+        "selected_match": true
+      },
+      {
+        "confirmed_candidates_match": true,
+        "fen": "8/8/8/8/k1K5/8/3R4/8 w - - 2 2",
+        "full_feature_confirmed": [
+          [
+            "d2a2",
+            "tg26o_triplet_76281285433c0468"
+          ],
+          [
+            "d2h2",
+            "tg26o_triplet_43cae1559bece75f"
+          ],
+          [
+            "d2g2",
+            "tg26o_triplet_e63827b44df44120"
+          ],
+          [
+            "d2f2",
+            "tg26o_triplet_939bf50a3699ef41"
+          ],
+          [
+            "d2e2",
+            "tg26o_triplet_491248c8605cc51c"
+          ],
+          [
+            "d2d8",
+            "tg26o_triplet_00cc29ad5b167a50"
+          ],
+          [
+            "d2d7",
+            "tg26o_triplet_4a2fce31159277e4"
+          ],
+          [
+            "d2d6",
+            "tg26o_triplet_97b772db4a2533df"
+          ]
+        ],
+        "full_feature_confirmed_count": 19,
+        "full_feature_selected": "d2a2",
+        "grouped_confirmed": [
+          [
+            "d2a2",
+            "tg26o_triplet_76281285433c0468"
+          ],
+          [
+            "d2h2",
+            "tg26o_triplet_43cae1559bece75f"
+          ],
+          [
+            "d2g2",
+            "tg26o_triplet_e63827b44df44120"
+          ],
+          [
+            "d2f2",
+            "tg26o_triplet_939bf50a3699ef41"
+          ],
+          [
+            "d2e2",
+            "tg26o_triplet_491248c8605cc51c"
+          ],
+          [
+            "d2d8",
+            "tg26o_triplet_00cc29ad5b167a50"
+          ],
+          [
+            "d2d7",
+            "tg26o_triplet_4a2fce31159277e4"
+          ],
+          [
+            "d2d6",
+            "tg26o_triplet_97b772db4a2533df"
+          ]
+        ],
+        "grouped_confirmed_count": 19,
+        "grouped_selected": "d2a2",
+        "selected_match": true
+      }
+    ],
+    "source": "generated_mate1_and_mate2_subset",
+    "tiny_subset_only": true
+  },
+  "schema_version": "krk_autogrowth_tg26r_native_foundation_generalization.v0"
+}

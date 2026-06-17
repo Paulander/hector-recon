@@ -190,6 +190,11 @@ from .native_scheduler_replay_audit import (
     NativeSchedulerReplayAuditResult,
     run_native_scheduler_replay_audit,
 )
+from .native_foundation_generalization import (
+    NativeFoundationGeneralizationConfig,
+    NativeFoundationGeneralizationResult,
+    run_native_foundation_generalization,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
