@@ -185,6 +185,11 @@ from .native_single_graph_curriculum import (
     NativeSingleGraphResult,
     run_native_single_graph_curriculum,
 )
+from .native_scheduler_replay_audit import (
+    NativeSchedulerReplayAuditConfig,
+    NativeSchedulerReplayAuditResult,
+    run_native_scheduler_replay_audit,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,

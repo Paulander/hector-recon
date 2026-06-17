@@ -141,18 +141,37 @@ class NativeReConKRKGraph:
             "formal_ticks_run": 0,
         }
 
-    def choose(self, board: chess.Board) -> chess.Move | None:
+    def choose(self, board: chess.Board, *, masked_triplets: set[str] | None = None) -> chess.Move | None:
+        audit = self.audit_choice(board, masked_triplets=masked_triplets)
+        selected = audit.get("selected_move")
+        if selected is None:
+            return None
+        return chess.Move.from_uci(str(selected))
+
+    def audit_choice(self, board: chess.Board, *, masked_triplets: set[str] | None = None) -> dict[str, Any]:
         legal = {move.uci(): move for move in board.legal_moves}
         if not legal:
-            return None
+            return {
+                "selected_move": None,
+                "candidate_triplet_count": 0,
+                "confirmed_candidate_count": 0,
+                "confirmed_candidates": [],
+            }
         candidate_triplets = self._candidate_triplets_for_board(board, legal)
+        if masked_triplets:
+            candidate_triplets = candidate_triplets - masked_triplets
         self.scheduler_stats["choose_calls"] += 1
         self.scheduler_stats["candidate_triplets_ticked"] += len(candidate_triplets)
         self.scheduler_stats["triplets_skipped_by_index"] += max(0, len(self.triplet_ids) - len(candidate_triplets))
         if self.config.indexed_scheduler:
             if not candidate_triplets:
                 self.scheduler_stats["empty_candidate_calls"] += 1
-                return None
+                return {
+                    "selected_move": None,
+                    "candidate_triplet_count": 0,
+                    "confirmed_candidate_count": 0,
+                    "confirmed_candidates": [],
+                }
             active_nodes = self._active_nodes_for_triplets(candidate_triplets)
             self.scheduler_stats["active_nodes_ticked"] += len(active_nodes)
             self.scheduler_stats["full_graph_node_resets_avoided"] += max(0, len(self.graph.nodes) - len(active_nodes))
@@ -176,10 +195,25 @@ class NativeReConKRKGraph:
         self.scheduler_stats["formal_ticks_run"] += engine.tick
         candidates = self._confirmed_action_candidates(legal, candidate_triplets if self.config.indexed_scheduler else None)
         if not candidates:
-            return None
+            return {
+                "selected_move": None,
+                "candidate_triplet_count": len(candidate_triplets),
+                "confirmed_candidate_count": 0,
+                "confirmed_candidates": [],
+            }
         candidates.sort(reverse=True)
         self.runtime_choice_count += 1
-        return legal[candidates[0][1]]
+        return {
+            "selected_move": candidates[0][1],
+            "selected_triplet": candidates[0][2],
+            "selected_score": round(float(candidates[0][0]), 6),
+            "candidate_triplet_count": len(candidate_triplets),
+            "confirmed_candidate_count": len(candidates),
+            "confirmed_candidates": [
+                {"score": round(float(score), 6), "move": move_uci, "triplet_id": triplet_id}
+                for score, move_uci, triplet_id in candidates[:16]
+            ],
+        }
 
     def train_action_rewards(self, board: chess.Board, *, rewards: Mapping[str, float], stage: str) -> dict[str, int]:
         updates = {"positive": 0, "negative": 0, "neutral": 0}
@@ -320,6 +354,82 @@ class NativeReConKRKGraph:
             "top_positive_trainable_edges": top_edges[:24],
             "top_negative_trainable_edges": sorted(top_edges, key=lambda item: item["weight"])[:24],
         }
+
+    def graph_diagnostics(self, *, prune_weight_threshold: float = -0.20) -> dict[str, Any]:
+        tier_counts: dict[str, int] = {}
+        state_counts: dict[str, int] = {}
+        local_weights: list[float] = []
+        for node in self.graph.nodes.values():
+            tier = str(node.meta.get("tier", "unlabeled"))
+            tier_counts[tier] = tier_counts.get(tier, 0) + 1
+            state_name = str(node.meta.get("stem_cell_state", "UNLABELED"))
+            state_counts[state_name] = state_counts.get(state_name, 0) + 1
+            if "local_weight" in node.meta:
+                local_weights.append(float(node.meta.get("local_weight", 0.0)))
+        trainable_edges = [edge for edge in self.graph.edges if edge.meta.get("trainable")]
+        edge_weights = [float(edge.w) for edge in trainable_edges]
+        saturated_nodes_pos = sum(1 for weight in local_weights if weight >= self.config.max_abs_local_weight)
+        saturated_nodes_neg = sum(1 for weight in local_weights if weight <= -self.config.max_abs_local_weight)
+        saturated_edges_pos = sum(1 for weight in edge_weights if weight >= self.config.max_abs_local_weight)
+        saturated_edges_neg = sum(1 for weight in edge_weights if weight <= -self.config.max_abs_local_weight)
+        root_weights: dict[str, float] = {}
+        for triplet_id in self.triplet_ids:
+            edge = self.graph.get_edge(ROOT_ID, triplet_id, LinkType.SUB)
+            if edge is not None:
+                root_weights[triplet_id] = float(edge.w)
+        prune_candidates = sorted(
+            (triplet_id for triplet_id, weight in root_weights.items() if weight <= prune_weight_threshold),
+            key=lambda item: root_weights[item],
+        )
+        equivalent_keys: dict[tuple[str, str, str], int] = {}
+        for triplet_id in self.triplet_ids:
+            ids = _TripletNodeIds(triplet_id)
+            key = (
+                str(self.graph.nodes[ids.before_terminal].meta.get("pattern_hash")),
+                str(self.graph.nodes[ids.delta_terminal].meta.get("pattern_hash")),
+                str(self.graph.nodes[ids.after_terminal].meta.get("pattern_hash")),
+            )
+            equivalent_keys[key] = equivalent_keys.get(key, 0) + 1
+        duplicate_equivalent = sum(count - 1 for count in equivalent_keys.values() if count > 1)
+        return {
+            "node_count": len(self.graph.nodes),
+            "edge_count": len(self.graph.edges),
+            "triplet_count": len(self.triplet_ids),
+            "tier_counts": tier_counts,
+            "stem_cell_state_counts": state_counts,
+            "dead_node_count": tier_counts.get("dead", 0) + state_counts.get("DEAD", 0),
+            "no_op_node_count": sum(1 for weight in local_weights if abs(weight) < 1e-12),
+            "trainable_edge_count": len(trainable_edges),
+            "no_op_edge_count": sum(1 for weight in edge_weights if abs(weight) < 1e-12),
+            "weight_saturation": {
+                "node_positive_saturated": saturated_nodes_pos,
+                "node_negative_saturated": saturated_nodes_neg,
+                "edge_positive_saturated": saturated_edges_pos,
+                "edge_negative_saturated": saturated_edges_neg,
+                "max_abs_local_weight": self.config.max_abs_local_weight,
+            },
+            "collapse_indicators": {
+                "positive_saturated_total": saturated_nodes_pos + saturated_edges_pos,
+                "negative_saturated_total": saturated_nodes_neg + saturated_edges_neg,
+                "zero_weight_total": sum(1 for weight in local_weights if abs(weight) < 1e-12)
+                + sum(1 for weight in edge_weights if abs(weight) < 1e-12),
+            },
+            "duplicate_equivalent_triplet_count": duplicate_equivalent,
+            "prune_candidate_count": len(prune_candidates),
+            "prune_candidate_triplets": prune_candidates[:64],
+            "prune_weight_threshold": prune_weight_threshold,
+        }
+
+    def triplets_by_stage(self, stage_predicate) -> set[str]:
+        selected: set[str] = set()
+        for triplet_id in self.triplet_ids:
+            stages = {
+                str(self.graph.nodes[node_id].meta.get("stage_diagnostic", ""))
+                for node_id in self.triplet_nodes.get(triplet_id, set())
+            }
+            if any(stage_predicate(stage) for stage in stages):
+                selected.add(triplet_id)
+        return selected
 
     def _add_hierarchy_pair(self, parent: str, child: str, *, trainable: bool, weight: float) -> list[Any]:
         trainable_edges: list[Any] = []
