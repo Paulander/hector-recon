@@ -58,6 +58,7 @@ class NativeSingleGraphConfig:
     shared_atom_min_overlap: int = 2
     max_shared_atom_candidates_per_choice: int = 12
     prune_redundant_exact_terminals: bool = False
+    score_action_pattern_atoms: bool = False
     max_mate1_positions: int | None = None
     max_mate2_positions: int | None = None
 
@@ -167,6 +168,49 @@ class NativeReConKRKGraph:
         if selected is None:
             return None
         return chess.Move.from_uci(str(selected))
+
+    def confirm_candidate(self, board: chess.Board, *, triplet_id: str, move_uci: str) -> dict[str, Any]:
+        legal = {move.uci(): move for move in board.legal_moves}
+        if move_uci not in legal or triplet_id not in self.triplet_ids:
+            return {
+                "selected_move": None,
+                "candidate_triplet_count": 0,
+                "confirmed_candidate_count": 0,
+                "confirmed_candidates": [],
+            }
+        active_nodes = self._active_nodes_for_triplets({triplet_id})
+        self._reset_runtime_states(active_nodes)
+        env: dict[str, Any] = {
+            "board": board,
+            "candidate_move_by_triplet": {triplet_id: move_uci},
+            "shared_atom_move_uci": move_uci,
+        }
+        engine = FormalReConEngine(self.graph, validate_pairs=False, record_trace=False)
+        engine.request(ROOT_ID)
+        engine.run(
+            max_ticks=self.config.max_ticks,
+            env=env,
+            active_nodes=active_nodes,
+            until=lambda _engine: self._candidate_triplets_settled({triplet_id}),
+        )
+        candidates = self._confirmed_action_candidates(
+            legal,
+            {triplet_id},
+            candidate_move_by_triplet={triplet_id: move_uci},
+        )
+        candidates.sort(reverse=True)
+        return {
+            "selected_move": None if not candidates else candidates[0][1],
+            "selected_triplet": None if not candidates else candidates[0][2],
+            "selected_score": None if not candidates else round(float(candidates[0][0]), 6),
+            "candidate_triplet_count": 1,
+            "confirmed_candidate_count": len(candidates),
+            "confirmed_candidates": [
+                {"score": round(float(score), 6), "move": candidate_move, "triplet_id": candidate_triplet}
+                for score, candidate_move, candidate_triplet in candidates[:16]
+            ],
+            "formal_ticks_run": engine.tick,
+        }
 
     def audit_choice(self, board: chess.Board, *, masked_triplets: set[str] | None = None) -> dict[str, Any]:
         legal = {move.uci(): move for move in board.legal_moves}
@@ -931,7 +975,10 @@ class NativeReConKRKGraph:
                 continue
             if node.meta.get("role") not in {"before_feature", "delta_feature", "after_feature", "projection_feature"}:
                 continue
-            if str(node.meta.get("terminal_key", "")).startswith("action_pattern:"):
+            if (
+                str(node.meta.get("terminal_key", "")).startswith("action_pattern:")
+                and not self.config.score_action_pattern_atoms
+            ):
                 continue
             if node.state not in (NodeState.TRUE, NodeState.CONFIRMED):
                 continue

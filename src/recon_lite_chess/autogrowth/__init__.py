@@ -200,6 +200,11 @@ from .shared_feature_atoms import (
     SharedFeatureAtomResult,
     run_shared_feature_atom_experiment,
 )
+from .shared_atom_utility_voting import (
+    SharedAtomUtilityVotingConfig,
+    SharedAtomUtilityVotingResult,
+    run_shared_atom_utility_voting,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -329,6 +334,8 @@ __all__ = [
     "ScriptFragmentResult",
     "SharedFeatureAtomConfig",
     "SharedFeatureAtomResult",
+    "SharedAtomUtilityVotingConfig",
+    "SharedAtomUtilityVotingResult",
     "SingleGraphCurriculumConfig",
     "SingleGraphCurriculumResult",
     "SingleGraphKRKNetwork",
@@ -379,6 +386,7 @@ __all__ = [
     "run_local_suppressor_experiment",
     "run_script_fragment_experiment",
     "run_shared_feature_atom_experiment",
+    "run_shared_atom_utility_voting",
     "run_single_graph_curriculum",
     "run_topological_growth_runway",
     "run_context_specialized_candidate_experiment",
