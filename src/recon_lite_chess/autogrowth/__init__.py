@@ -210,6 +210,11 @@ from .native_quorum_materialization import (
     NativeQuorumMaterializationResult,
     run_native_quorum_materialization,
 )
+from .native_quorum_mate2_chaining import (
+    NativeQuorumMate2ChainingConfig,
+    NativeQuorumMate2ChainingResult,
+    run_native_quorum_mate2_chaining,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -343,6 +348,8 @@ __all__ = [
     "SharedAtomUtilityVotingResult",
     "NativeQuorumMaterializationConfig",
     "NativeQuorumMaterializationResult",
+    "NativeQuorumMate2ChainingConfig",
+    "NativeQuorumMate2ChainingResult",
     "SingleGraphCurriculumConfig",
     "SingleGraphCurriculumResult",
     "SingleGraphKRKNetwork",
@@ -395,6 +402,7 @@ __all__ = [
     "run_shared_feature_atom_experiment",
     "run_shared_atom_utility_voting",
     "run_native_quorum_materialization",
+    "run_native_quorum_mate2_chaining",
     "run_single_graph_curriculum",
     "run_topological_growth_runway",
     "run_context_specialized_candidate_experiment",
