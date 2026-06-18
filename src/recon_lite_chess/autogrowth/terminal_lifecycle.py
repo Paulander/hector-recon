@@ -18,6 +18,8 @@ class TerminalKindPolicy:
     minimum_exposures_before_pruning: int
     confirmation_threshold: float
     false_positive_penalty: float
+    false_positive_penalty_delay_exposures: int
+    false_negative_penalty: float
     m4_promotion_threshold: float
     survival_utility_formula: str
     pruning_reason: str
@@ -30,6 +32,8 @@ TERMINAL_LIFECYCLE_POLICY: dict[str, TerminalKindPolicy] = {
         minimum_exposures_before_pruning=8,
         confirmation_threshold=0.45,
         false_positive_penalty=0.055,
+        false_positive_penalty_delay_exposures=0,
+        false_negative_penalty=0.25,
         m4_promotion_threshold=0.70,
         survival_utility_formula="local_weight + 0.35*precision + 0.10*coverage - false_positive_penalty*false_positives - decay",
         pruning_reason="low precision/coverage after sufficient exposure",
@@ -40,6 +44,8 @@ TERMINAL_LIFECYCLE_POLICY: dict[str, TerminalKindPolicy] = {
         minimum_exposures_before_pruning=10,
         confirmation_threshold=0.50,
         false_positive_penalty=0.080,
+        false_positive_penalty_delay_exposures=0,
+        false_negative_penalty=0.30,
         m4_promotion_threshold=0.72,
         survival_utility_formula="local_weight + 0.45*precision + 0.20*contrast - false_positive_penalty*false_positives - decay",
         pruning_reason="poor good-vs-bad legal-action contrast",
@@ -50,6 +56,8 @@ TERMINAL_LIFECYCLE_POLICY: dict[str, TerminalKindPolicy] = {
         minimum_exposures_before_pruning=14,
         confirmation_threshold=0.58,
         false_positive_penalty=0.070,
+        false_positive_penalty_delay_exposures=2,
+        false_negative_penalty=0.35,
         m4_promotion_threshold=0.78,
         survival_utility_formula="local_weight + 0.55*precision_gain + 0.15*coverage - 0.08*complexity - false_positive_penalty*false_positives - decay",
         pruning_reason="does not improve precision over child/shared atoms",
@@ -60,6 +68,8 @@ TERMINAL_LIFECYCLE_POLICY: dict[str, TerminalKindPolicy] = {
         minimum_exposures_before_pruning=20,
         confirmation_threshold=0.62,
         false_positive_penalty=0.045,
+        false_positive_penalty_delay_exposures=8,
+        false_negative_penalty=0.65,
         m4_promotion_threshold=0.82,
         survival_utility_formula="local_weight + 0.50*attention_precision + 0.25*saved_checks - 0.20*missed_true_positive_rate - delayed_false_positive_penalty - decay",
         pruning_reason="attention does not reduce checks or preserve true positives after exposure",
@@ -70,6 +80,8 @@ TERMINAL_LIFECYCLE_POLICY: dict[str, TerminalKindPolicy] = {
         minimum_exposures_before_pruning=24,
         confirmation_threshold=0.65,
         false_positive_penalty=0.040,
+        false_positive_penalty_delay_exposures=10,
+        false_negative_penalty=0.85,
         m4_promotion_threshold=0.84,
         survival_utility_formula="local_weight + 0.55*handoff_precision + 0.25*reply_check_reduction - 0.30*false_negative_rate - delayed_false_positive_penalty - decay",
         pruning_reason="handoff gate fails to preserve conversion or reduce unnecessary continuation checks",
@@ -80,6 +92,8 @@ TERMINAL_LIFECYCLE_POLICY: dict[str, TerminalKindPolicy] = {
         minimum_exposures_before_pruning=20,
         confirmation_threshold=0.65,
         false_positive_penalty=0.050,
+        false_positive_penalty_delay_exposures=6,
+        false_negative_penalty=0.55,
         m4_promotion_threshold=0.84,
         survival_utility_formula="local_weight + 0.55*chain_precision + 0.20*reply_coverage - false_positive_penalty*false_positives - decay",
         pruning_reason="chain confidence fails heldout continuation confirmation",
@@ -90,6 +104,8 @@ TERMINAL_LIFECYCLE_POLICY: dict[str, TerminalKindPolicy] = {
         minimum_exposures_before_pruning=30,
         confirmation_threshold=0.55,
         false_positive_penalty=0.020,
+        false_positive_penalty_delay_exposures=12,
+        false_negative_penalty=0.90,
         m4_promotion_threshold=0.80,
         survival_utility_formula="local_weight + 0.35*safety_precision - 0.60*false_negative_rate - mild_false_positive_penalty - decay",
         pruning_reason="safety veto misses catastrophic cases after sufficient exposure",
@@ -100,6 +116,8 @@ TERMINAL_LIFECYCLE_POLICY: dict[str, TerminalKindPolicy] = {
         minimum_exposures_before_pruning=50,
         confirmation_threshold=0.35,
         false_positive_penalty=0.100,
+        false_positive_penalty_delay_exposures=0,
+        false_negative_penalty=0.20,
         m4_promotion_threshold=0.70,
         survival_utility_formula="legal_confirm_rate + causal_contribution - illegal_or_unsafe_penalty",
         pruning_reason="consistently illegal, unsafe, or non-causal",
@@ -125,20 +143,22 @@ def apply_terminal_lifecycle(
         exposures = _exposures(node.meta)
         confirmations = int(node.meta.get("confirm_count", 0)) + int(node.meta.get("handoff_positive_count", 0))
         false_positives = int(node.meta.get("false_positive_count", 0)) + int(node.meta.get("handoff_negative_count", 0))
+        false_negatives = int(node.meta.get("false_negative_count", 0)) + int(node.meta.get("handoff_false_negative_count", 0))
         precision = confirmations / max(1, confirmations + false_positives)
         coverage = min(1.0, exposures / max(1, policy.minimum_exposures_before_pruning))
         decay = policy.inactivity_decay_rate * max(0, policy.minimum_exposures_before_pruning - exposures)
         contrast = max(0.0, float(node.meta.get("positive_correlation", 0.0)) - float(node.meta.get("negative_correlation", 0.0)))
         saved_checks = float(node.meta.get("handoff_positive_count", 0)) / max(1, exposures)
-        missed_true_positive_rate = float(node.meta.get("handoff_false_negative_count", 0)) / max(1, exposures)
+        missed_true_positive_rate = false_negatives / max(1, exposures)
+        delayed_false_positives = max(0, false_positives - policy.false_positive_penalty_delay_exposures)
         utility = (
             float(node.meta.get("local_weight", 0.0))
             + 0.35 * precision
             + 0.10 * coverage
             + 0.15 * contrast
             + (0.15 * saved_checks if kind in {"internal_attention_terminal", "handoff_gate_terminal"} else 0.0)
-            - policy.false_positive_penalty * false_positives
-            - 0.30 * missed_true_positive_rate
+            - policy.false_positive_penalty * delayed_false_positives
+            - policy.false_negative_penalty * missed_true_positive_rate
             - decay
         )
         node.meta["terminal_lifecycle_kind"] = kind
@@ -230,4 +250,3 @@ def _initial_stats() -> dict[str, dict[str, Any]]:
         }
         for kind, policy in TERMINAL_LIFECYCLE_POLICY.items()
     }
-

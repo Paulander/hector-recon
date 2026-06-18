@@ -230,6 +230,11 @@ from .terminal_lifecycle_modest_scale import (
     TerminalLifecycleModestScaleResult,
     run_terminal_lifecycle_modest_scale,
 )
+from .continuous_handoff_attention import (
+    ContinuousHandoffAttentionConfig,
+    ContinuousHandoffAttentionResult,
+    run_continuous_handoff_attention,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -369,6 +374,8 @@ __all__ = [
     "InternalHandoffAffordanceResult",
     "TerminalLifecycleModestScaleConfig",
     "TerminalLifecycleModestScaleResult",
+    "ContinuousHandoffAttentionConfig",
+    "ContinuousHandoffAttentionResult",
     "SingleGraphCurriculumConfig",
     "SingleGraphCurriculumResult",
     "SingleGraphKRKNetwork",
@@ -424,6 +431,7 @@ __all__ = [
     "run_native_quorum_mate2_chaining",
     "run_internal_handoff_affordance_guard_audit",
     "run_terminal_lifecycle_modest_scale",
+    "run_continuous_handoff_attention",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",

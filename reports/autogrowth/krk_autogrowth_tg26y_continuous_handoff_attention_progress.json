@@ -1,0 +1,16 @@
+{
+  "phase": "repetition_2_comparison_complete",
+  "primary": {
+    "deep_reply_checks_run": 314,
+    "false_negative_count": 0,
+    "mate2_conversion_rate": 0.16666666666666666,
+    "selected_attention_mode": "high_recall_threshold_gate"
+  },
+  "repetition_2": {
+    "deep_reply_checks_run": 206,
+    "false_negative_count": 2,
+    "m3_update_count": 185368,
+    "mate2_conversion_rate": 0.16666666666666666,
+    "selected_attention_mode": "high_recall_threshold_gate"
+  }
+}
