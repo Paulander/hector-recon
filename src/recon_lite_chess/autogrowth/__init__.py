@@ -220,6 +220,16 @@ from .internal_handoff_affordance_guard_audit import (
     InternalHandoffAffordanceResult,
     run_internal_handoff_affordance_guard_audit,
 )
+from .terminal_lifecycle import (
+    TERMINAL_LIFECYCLE_POLICY,
+    classify_terminal_kind,
+    apply_terminal_lifecycle,
+)
+from .terminal_lifecycle_modest_scale import (
+    TerminalLifecycleModestScaleConfig,
+    TerminalLifecycleModestScaleResult,
+    run_terminal_lifecycle_modest_scale,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -357,6 +367,8 @@ __all__ = [
     "NativeQuorumMate2ChainingResult",
     "InternalHandoffAffordanceConfig",
     "InternalHandoffAffordanceResult",
+    "TerminalLifecycleModestScaleConfig",
+    "TerminalLifecycleModestScaleResult",
     "SingleGraphCurriculumConfig",
     "SingleGraphCurriculumResult",
     "SingleGraphKRKNetwork",
@@ -411,6 +423,10 @@ __all__ = [
     "run_native_quorum_materialization",
     "run_native_quorum_mate2_chaining",
     "run_internal_handoff_affordance_guard_audit",
+    "run_terminal_lifecycle_modest_scale",
+    "TERMINAL_LIFECYCLE_POLICY",
+    "apply_terminal_lifecycle",
+    "classify_terminal_kind",
     "run_single_graph_curriculum",
     "run_topological_growth_runway",
     "run_context_specialized_candidate_experiment",

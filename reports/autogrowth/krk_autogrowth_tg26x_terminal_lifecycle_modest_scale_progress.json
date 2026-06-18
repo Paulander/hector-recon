@@ -1,0 +1,25 @@
+{
+  "modest_scale": {
+    "approved": 35,
+    "false_negative": 4,
+    "false_positive": 33,
+    "mate1_accuracy": 1.0,
+    "mate1_null_count": 0,
+    "mate2_conversion_rate": 0.3333333333333333,
+    "mate2_first_move_success_rate": 0.3333333333333333,
+    "rejected": 89,
+    "same_graph_second_move_count": 2
+  },
+  "phase": "modest_scale_complete",
+  "tiny_calibration": {
+    "approved": 15,
+    "false_negative": 0,
+    "false_positive": 12,
+    "mate1_accuracy": 1.0,
+    "mate1_null_count": 0,
+    "mate2_conversion_rate": 1.0,
+    "mate2_first_move_success_rate": 1.0,
+    "rejected": 47,
+    "same_graph_second_move_count": 3
+  }
+}
