@@ -205,6 +205,11 @@ from .shared_atom_utility_voting import (
     SharedAtomUtilityVotingResult,
     run_shared_atom_utility_voting,
 )
+from .native_quorum_materialization import (
+    NativeQuorumMaterializationConfig,
+    NativeQuorumMaterializationResult,
+    run_native_quorum_materialization,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -336,6 +341,8 @@ __all__ = [
     "SharedFeatureAtomResult",
     "SharedAtomUtilityVotingConfig",
     "SharedAtomUtilityVotingResult",
+    "NativeQuorumMaterializationConfig",
+    "NativeQuorumMaterializationResult",
     "SingleGraphCurriculumConfig",
     "SingleGraphCurriculumResult",
     "SingleGraphKRKNetwork",
@@ -387,6 +394,7 @@ __all__ = [
     "run_script_fragment_experiment",
     "run_shared_feature_atom_experiment",
     "run_shared_atom_utility_voting",
+    "run_native_quorum_materialization",
     "run_single_graph_curriculum",
     "run_topological_growth_runway",
     "run_context_specialized_candidate_experiment",
