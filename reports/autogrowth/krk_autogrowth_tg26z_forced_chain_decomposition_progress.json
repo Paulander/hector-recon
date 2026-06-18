@@ -1,0 +1,19 @@
+{
+  "decision": {
+    "checkpoint_pass": true,
+    "continuation_mate1_accuracy": 1.0,
+    "failure_bucket_counts": {
+      "attention_gate_admitted_candidate": 7,
+      "attention_gate_rejected_candidate": 17,
+      "chain_terminal_succeeded_but_first_move_quorum_failed": 0,
+      "compute_budget_or_candidate_cap_blocked": 0,
+      "first_move_quorum_succeeded_but_selection_lost": 0,
+      "mate1_continuation_failed_after_reply": 0,
+      "mate1_continuation_succeeded_but_chain_terminal_failed": 0,
+      "no_failure": 10
+    },
+    "failure_mode": "none",
+    "mate2_conversion_rate": 1.0
+  },
+  "phase": "complete"
+}

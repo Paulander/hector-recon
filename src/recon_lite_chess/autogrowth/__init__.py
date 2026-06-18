@@ -235,6 +235,11 @@ from .continuous_handoff_attention import (
     ContinuousHandoffAttentionResult,
     run_continuous_handoff_attention,
 )
+from .forced_chain_decomposition import (
+    ForcedChainDecompositionConfig,
+    ForcedChainDecompositionResult,
+    run_forced_chain_decomposition,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -376,6 +381,8 @@ __all__ = [
     "TerminalLifecycleModestScaleResult",
     "ContinuousHandoffAttentionConfig",
     "ContinuousHandoffAttentionResult",
+    "ForcedChainDecompositionConfig",
+    "ForcedChainDecompositionResult",
     "SingleGraphCurriculumConfig",
     "SingleGraphCurriculumResult",
     "SingleGraphKRKNetwork",
@@ -432,6 +439,7 @@ __all__ = [
     "run_internal_handoff_affordance_guard_audit",
     "run_terminal_lifecycle_modest_scale",
     "run_continuous_handoff_attention",
+    "run_forced_chain_decomposition",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
