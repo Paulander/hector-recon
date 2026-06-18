@@ -215,6 +215,11 @@ from .native_quorum_mate2_chaining import (
     NativeQuorumMate2ChainingResult,
     run_native_quorum_mate2_chaining,
 )
+from .internal_handoff_affordance_guard_audit import (
+    InternalHandoffAffordanceConfig,
+    InternalHandoffAffordanceResult,
+    run_internal_handoff_affordance_guard_audit,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -350,6 +355,8 @@ __all__ = [
     "NativeQuorumMaterializationResult",
     "NativeQuorumMate2ChainingConfig",
     "NativeQuorumMate2ChainingResult",
+    "InternalHandoffAffordanceConfig",
+    "InternalHandoffAffordanceResult",
     "SingleGraphCurriculumConfig",
     "SingleGraphCurriculumResult",
     "SingleGraphKRKNetwork",
@@ -403,6 +410,7 @@ __all__ = [
     "run_shared_atom_utility_voting",
     "run_native_quorum_materialization",
     "run_native_quorum_mate2_chaining",
+    "run_internal_handoff_affordance_guard_audit",
     "run_single_graph_curriculum",
     "run_topological_growth_runway",
     "run_context_specialized_candidate_experiment",
