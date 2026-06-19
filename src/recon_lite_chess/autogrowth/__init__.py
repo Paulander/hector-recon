@@ -240,6 +240,11 @@ from .forced_chain_decomposition import (
     ForcedChainDecompositionResult,
     run_forced_chain_decomposition,
 )
+from .native_foundation_scale_replay import (
+    NativeFoundationScaleReplayConfig,
+    NativeFoundationScaleReplayResult,
+    run_native_foundation_scale_replay,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -440,6 +445,9 @@ __all__ = [
     "run_terminal_lifecycle_modest_scale",
     "run_continuous_handoff_attention",
     "run_forced_chain_decomposition",
+    "NativeFoundationScaleReplayConfig",
+    "NativeFoundationScaleReplayResult",
+    "run_native_foundation_scale_replay",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
