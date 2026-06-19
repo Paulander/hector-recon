@@ -245,6 +245,11 @@ from .native_foundation_scale_replay import (
     NativeFoundationScaleReplayResult,
     run_native_foundation_scale_replay,
 )
+from .single_miss_repair import (
+    SingleMissRepairConfig,
+    SingleMissRepairResult,
+    run_single_miss_repair,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -448,6 +453,9 @@ __all__ = [
     "NativeFoundationScaleReplayConfig",
     "NativeFoundationScaleReplayResult",
     "run_native_foundation_scale_replay",
+    "SingleMissRepairConfig",
+    "SingleMissRepairResult",
+    "run_single_miss_repair",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
