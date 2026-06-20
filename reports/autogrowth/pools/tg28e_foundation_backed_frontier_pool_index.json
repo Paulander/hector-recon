@@ -1,0 +1,51 @@
+{
+  "cache_config_hash": "f031dab2edb0ec78",
+  "entry_count": 8,
+  "entry_ids_by_split": {
+    "heldout": [
+      "9e2fa087217603dc1f99",
+      "ed869a5da95ef02e714c"
+    ],
+    "regression": [
+      "f9286febb34778adc31c",
+      "31bd78118c9512d30012"
+    ],
+    "train": [
+      "bd81b6cadf192eef7e1f",
+      "493a962b5f9e72a79728",
+      "258c34122c67207673d7",
+      "5d3786d315bba2f8c49b"
+    ]
+  },
+  "foundation_config_hash": "500410626d0d8c5e",
+  "pool_path": "reports/autogrowth/pools/tg28e_foundation_backed_frontier_pool.jsonl",
+  "schema_version": "tg28e_foundation_backed_frontier_pool_index.v0",
+  "split_counts": {
+    "heldout": 2,
+    "regression": 2,
+    "train": 4
+  },
+  "stats": {
+    "accepted_pool_entries": 8,
+    "all_reply_bridge_count": 8,
+    "any_reply_bridge_count": 8,
+    "average_generation_attempts_per_accepted_entry": 11.625,
+    "duplicate_count": 2,
+    "generation_attempts": 93,
+    "generation_timeout_count": 0,
+    "loaded_existing_entries": 0,
+    "no_bridge_predecessor_found": 0,
+    "no_foundation_positive_anchor_available": 0,
+    "partial_reply_bridge_count": 0,
+    "pool_entry_count": 8,
+    "pool_heldout_count": 2,
+    "pool_regression_count": 2,
+    "pool_train_count": 4,
+    "rejected_direct_foundation": 49,
+    "rejected_duplicate": 2,
+    "rejected_invalid": 0,
+    "rejected_no_foundation_response": 34,
+    "rejected_no_legal_safe_candidate": 0,
+    "seed_pool_exhaustion_count": 3
+  }
+}
