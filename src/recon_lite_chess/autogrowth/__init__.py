@@ -275,6 +275,11 @@ from .persisted_foundation_backed_frontier_pool import (
     PersistedFoundationBackedFrontierPoolResult,
     run_persisted_foundation_backed_frontier_pool,
 )
+from .full_foundation_frontier_pool_resume import (
+    FullFoundationFrontierPoolResumeConfig,
+    FullFoundationFrontierPoolResumeResult,
+    run_full_foundation_frontier_pool_resume,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -495,7 +500,10 @@ __all__ = [
     "run_foundation_backed_bridge_frontier",
     "PersistedFoundationBackedFrontierPoolConfig",
     "PersistedFoundationBackedFrontierPoolResult",
+    "FullFoundationFrontierPoolResumeConfig",
+    "FullFoundationFrontierPoolResumeResult",
     "run_persisted_foundation_backed_frontier_pool",
+    "run_full_foundation_frontier_pool_resume",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",

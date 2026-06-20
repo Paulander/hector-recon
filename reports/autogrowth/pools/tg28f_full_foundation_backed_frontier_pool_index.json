@@ -1,0 +1,68 @@
+{
+  "cache_config_hash": "c466f1aad59bb52e",
+  "entry_count": 16,
+  "entry_ids_by_split": {
+    "heldout": [
+      "de0b330e6f5afdbaf4db",
+      "d62223c2ee76dff90858",
+      "66d38cabc8bdeb9969d4",
+      "dd9f3bdf589b9eee3653"
+    ],
+    "regression": [
+      "ec2b21ec5df9dcdb93f5",
+      "445cb3decb3dfcad5b38",
+      "884f7dadf03c61686485",
+      "63d89108f02681cc5743"
+    ],
+    "train": [
+      "cea80091fc9c6e1ba1dc",
+      "ca02fa00adcdbdd880fb",
+      "578c9c0ebfc3ab8a3dc1",
+      "abeb8c12c9d15c4fdc4c",
+      "f6edb3c9377590f8a886",
+      "69aee20cf19f01ddaf91",
+      "3e7ae458a986369ddb0a",
+      "8ed77d64ac41618047b8"
+    ]
+  },
+  "foundation_config_hash": "2de8f15a8e0e5786",
+  "pool_path": "reports/autogrowth/pools/tg28f_full_foundation_backed_frontier_pool.jsonl",
+  "schema_version": "tg28f_full_foundation_frontier_pool_index.v0",
+  "split_counts": {
+    "heldout": 4,
+    "regression": 4,
+    "train": 8
+  },
+  "stats": {
+    "acceptance_rate": 0.1553398058252427,
+    "accepted_pool_entries": 16,
+    "all_reply_bridge_count": 16,
+    "any_reply_bridge_count": 16,
+    "average_generation_attempts_per_accepted_entry": 6.4375,
+    "cache_queries_run": 298,
+    "deep_reply_checks_run": 149,
+    "duplicate_rejections": 16,
+    "full_pool_entry_count": 16,
+    "full_pool_heldout_count": 4,
+    "full_pool_regression_count": 4,
+    "full_pool_train_count": 8,
+    "generation_attempts": 103,
+    "live_foundation_queries_run": 394,
+    "loaded_existing_entries": 0,
+    "minimum_full_pool_completed": true,
+    "no_foundation_response_rejections": 9,
+    "partial_reply_bridge_count": 0,
+    "pool_resume_seconds": 0.00013783597387373447,
+    "rejected_direct_foundation": 62,
+    "resumed_pool_entries": 0,
+    "safety_filter_rejections": 0,
+    "seed_pool_exhaustion_count": 2,
+    "target_full_pool_completed": true,
+    "timeout_count": 0,
+    "top_rejection_buckets": {
+      "direct_foundation": 62,
+      "duplicate": 16,
+      "safe_candidates_exist_but_no_foundation_response": 9
+    }
+  }
+}
