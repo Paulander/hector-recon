@@ -265,6 +265,11 @@ from .frozen_foundation_response_cache_bridge_retrieval import (
     FrozenFoundationResponseCacheBridgeRetrievalResult,
     run_frozen_foundation_response_cache_bridge_retrieval,
 )
+from .foundation_backed_bridge_frontier import (
+    FoundationBackedBridgeFrontierConfig,
+    FoundationBackedBridgeFrontierResult,
+    run_foundation_backed_bridge_frontier,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -480,6 +485,9 @@ __all__ = [
     "FrozenFoundationResponseCacheBridgeRetrievalConfig",
     "FrozenFoundationResponseCacheBridgeRetrievalResult",
     "run_frozen_foundation_response_cache_bridge_retrieval",
+    "FoundationBackedBridgeFrontierConfig",
+    "FoundationBackedBridgeFrontierResult",
+    "run_foundation_backed_bridge_frontier",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
