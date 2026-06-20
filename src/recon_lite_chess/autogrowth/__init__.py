@@ -255,6 +255,11 @@ from .frozen_foundation_edge_fence_reentry import (
     FrozenFoundationEdgeFenceReentryResult,
     run_frozen_foundation_edge_fence_reentry,
 )
+from .frozen_foundation_bridge_pressure import (
+    FrozenFoundationBridgePressureConfig,
+    FrozenFoundationBridgePressureResult,
+    run_frozen_foundation_bridge_pressure,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -464,6 +469,9 @@ __all__ = [
     "FrozenFoundationEdgeFenceReentryConfig",
     "FrozenFoundationEdgeFenceReentryResult",
     "run_frozen_foundation_edge_fence_reentry",
+    "FrozenFoundationBridgePressureConfig",
+    "FrozenFoundationBridgePressureResult",
+    "run_frozen_foundation_bridge_pressure",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
