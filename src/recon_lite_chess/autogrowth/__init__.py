@@ -250,6 +250,11 @@ from .single_miss_repair import (
     SingleMissRepairResult,
     run_single_miss_repair,
 )
+from .frozen_foundation_edge_fence_reentry import (
+    FrozenFoundationEdgeFenceReentryConfig,
+    FrozenFoundationEdgeFenceReentryResult,
+    run_frozen_foundation_edge_fence_reentry,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -456,6 +461,9 @@ __all__ = [
     "SingleMissRepairConfig",
     "SingleMissRepairResult",
     "run_single_miss_repair",
+    "FrozenFoundationEdgeFenceReentryConfig",
+    "FrozenFoundationEdgeFenceReentryResult",
+    "run_frozen_foundation_edge_fence_reentry",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
