@@ -1,0 +1,9 @@
+{
+  "decision": {
+    "checkpoint_interpretation": "full_frontier_validated_with_clean_near_miss_and_dependency_audit",
+    "checkpoint_pass": true,
+    "frontier_heldout_selected_count": 4,
+    "near_miss_false_positive_count": 0
+  },
+  "phase": "complete"
+}

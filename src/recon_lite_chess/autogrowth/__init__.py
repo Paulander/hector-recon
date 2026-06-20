@@ -280,6 +280,11 @@ from .full_foundation_frontier_pool_resume import (
     FullFoundationFrontierPoolResumeResult,
     run_full_foundation_frontier_pool_resume,
 )
+from .full_frontier_validation_near_miss import (
+    FullFrontierValidationNearMissConfig,
+    FullFrontierValidationNearMissResult,
+    run_full_frontier_validation_near_miss,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -502,8 +507,11 @@ __all__ = [
     "PersistedFoundationBackedFrontierPoolResult",
     "FullFoundationFrontierPoolResumeConfig",
     "FullFoundationFrontierPoolResumeResult",
+    "FullFrontierValidationNearMissConfig",
+    "FullFrontierValidationNearMissResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
+    "run_full_frontier_validation_near_miss",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",

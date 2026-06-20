@@ -542,9 +542,10 @@ def _cache_candidate_rows(
     output = []
     for row in materialized_rows:
         move = chess.Move.from_uci(row["move"])
+        reply_envelope_disabled = masks.get("disable_reply_envelope_foundation_checks", False)
         envelope = (
             _empty_reply_envelope(row["move"], reason="cache_retrieval_disabled")
-            if not cache_retrieval_enabled or masks.get("disable_live_foundation_response_query", False)
+            if not cache_retrieval_enabled or masks.get("disable_live_foundation_response_query", False) or reply_envelope_disabled
             else cache.reply_envelope(board, move)
         )
         chain = _chain_from_envelope(envelope)
