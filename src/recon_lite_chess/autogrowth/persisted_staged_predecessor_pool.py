@@ -208,7 +208,7 @@ def run_persisted_staged_predecessor_pool(
     pool_by_split = _entries_by_split(persisted["entries"])
     staged_train = _examples_from_entries(pool_by_split["train"])
     staged_heldout = _examples_from_entries(pool_by_split["heldout"])
-    near_miss_heldout = tuple(entry["start_fen"] for entry in pool_by_split["near_miss"][: cfg.near_miss_heldout_count])
+    near_miss_heldout = tuple(entry["s1_fen"] for entry in pool_by_split["near_miss"][: cfg.near_miss_heldout_count])
     foundation_before_training = _foundation_counts(graph)
     start = time.perf_counter()
     schedules = _run_schedule_comparison(
@@ -257,7 +257,7 @@ def run_persisted_staged_predecessor_pool(
     timings["ablation_eval_seconds"] = round(time.perf_counter() - start, 6)
     timings["total_seconds"] = round(time.perf_counter() - total_start, 6)
 
-    pool_summary = _pool_summary(cfg, persisted, timings)
+    pool_summary = _pool_summary(cfg, persisted, timings, foundation_hash=foundation_hash, cache_hash=cache_hash)
     decision = _decision(
         cfg,
         pool_summary=pool_summary,
@@ -670,13 +670,23 @@ def _examples_from_entries(entries: list[dict[str, Any]]) -> tuple[dict[str, Any
     return tuple(out)
 
 
-def _pool_summary(cfg, persisted, timings) -> dict[str, Any]:
+def _pool_summary(cfg, persisted, timings, *, foundation_hash: str, cache_hash: str) -> dict[str, Any]:
     entries = persisted["entries"]
     by_split = _entries_by_split(entries)
+    foundation_hashes = sorted({entry.get("foundation_config_hash") for entry in entries})
+    cache_hashes = sorted({entry.get("cache_config_hash") for entry in entries})
     return {
         "staged_pool_path": cfg.staged_pool_path,
         "staged_pool_index_path": cfg.staged_pool_index_path,
         "staged_pool_entry_count": len(entries),
+        "current_foundation_config_hash": foundation_hash,
+        "current_cache_config_hash": cache_hash,
+        "pool_foundation_config_hashes": foundation_hashes,
+        "pool_cache_config_hashes": cache_hashes,
+        "pool_foundation_hash_match_count": sum(1 for entry in entries if entry.get("foundation_config_hash") == foundation_hash),
+        "pool_cache_hash_match_count": sum(1 for entry in entries if entry.get("cache_config_hash") == cache_hash),
+        "pool_foundation_hash_mixed": len(foundation_hashes) > 1,
+        "pool_cache_hash_mixed": len(cache_hashes) > 1,
         "staged_train_count": len(by_split["train"]),
         "staged_heldout_count": len(by_split["heldout"]),
         "staged_regression_count": len(by_split["regression"]),
@@ -730,6 +740,10 @@ def _decision(cfg, *, pool_summary, foundation_sanity, selected, schedules, equi
             "staged_pool_path", "staged_pool_index_path", "staged_pool_entry_count", "staged_train_count", "staged_heldout_count",
             "staged_regression_count", "staged_near_miss_count", "all_reply_staged_count", "partial_reply_staged_count",
             "any_reply_staged_count", "negative_near_miss_count", "generation_attempts", "accepted_staged_entries", "timeout_count",
+        )},
+        **{key: pool_summary[key] for key in (
+            "current_foundation_config_hash", "current_cache_config_hash", "pool_foundation_config_hashes", "pool_cache_config_hashes",
+            "pool_foundation_hash_match_count", "pool_cache_hash_match_count", "pool_foundation_hash_mixed", "pool_cache_hash_mixed",
         )},
         "staged_selected_first_move_count": selected["staged_selected_first_move_count"],
         "staged_s1_bridge_selected_count": selected["staged_s1_bridge_selected_count"],

@@ -1,12 +1,12 @@
 {
   "counts_by_split": {
     "heldout": 2,
-    "near_miss": 0,
+    "near_miss": 2,
     "regression": 2,
     "train": 4
   },
-  "duplicate_rejections": 2,
-  "entry_count": 8,
+  "duplicate_rejections": 0,
+  "entry_count": 10,
   "entry_ids": [
     "0dec649a3b22663dc615",
     "1cc4bef7d37a4232d0ce",
@@ -15,7 +15,9 @@
     "262ad2155615ac664f5a",
     "b408b4c0adabfc4b8e68",
     "f2467335839b9273e2b8",
-    "2a428fdb55ed23ac14ad"
+    "2a428fdb55ed23ac14ad",
+    "3cb0a40553b0f008ebbb",
+    "c9721b474b40b60d10b8"
   ],
   "generation_attempts": 0,
   "rejection_counts": {},
