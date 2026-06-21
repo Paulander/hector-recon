@@ -1,0 +1,9 @@
+{
+  "decision": {
+    "checkpoint_interpretation": "mixed_curriculum_preserved_frontier_and_improved_generic_edge",
+    "checkpoint_pass": true,
+    "generic_edge_fence_success_rate": 1.0,
+    "selected_training_schedule": "mixed_balanced"
+  },
+  "phase": "complete"
+}

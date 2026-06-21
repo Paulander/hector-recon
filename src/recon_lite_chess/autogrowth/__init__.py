@@ -285,6 +285,11 @@ from .full_frontier_validation_near_miss import (
     FullFrontierValidationNearMissResult,
     run_full_frontier_validation_near_miss,
 )
+from .controlled_mixed_frontier_edge_curriculum import (
+    ControlledMixedFrontierEdgeCurriculumConfig,
+    ControlledMixedFrontierEdgeCurriculumResult,
+    run_controlled_mixed_frontier_edge_curriculum,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -509,9 +514,12 @@ __all__ = [
     "FullFoundationFrontierPoolResumeResult",
     "FullFrontierValidationNearMissConfig",
     "FullFrontierValidationNearMissResult",
+    "ControlledMixedFrontierEdgeCurriculumConfig",
+    "ControlledMixedFrontierEdgeCurriculumResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
+    "run_controlled_mixed_frontier_edge_curriculum",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
