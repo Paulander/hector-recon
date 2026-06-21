@@ -537,24 +537,111 @@ def _bootstrap_examples_from_tg28i(path: Path) -> list[dict[str, Any]]:
     examples = []
     for sample in samples:
         for row in sample.get("reply_rows", []):
-            reply_rows = [{
-                "black_reply": row["black_reply"],
-                "s1_fen": row["s1_fen"],
-                "bridge_candidate_count": row.get("bridge_candidate_count", 0),
-                "bridge_opportunity": bool(row.get("foundation_continuation_success")) or row.get("bridge_candidate_count", 0) > 0,
-                "bridge_selected_move": row.get("bridge_selected_move"),
-                "bridge_selected_foundation_reachable": bool(row.get("foundation_continuation_success")),
-                "same_graph_foundation_continuation_count": sum(int(item.get("foundation_solved", False)) for item in row.get("foundation_reply_rows", [])),
-                "foundation_handoff_conversion": bool(row.get("foundation_continuation_success")),
-                "failure_bucket": row.get("bridge_failure_bucket", "none"),
-            }]
-            examples.append({
-                "fen": sample["fen"],
-                "trainer_edge_move": sample.get("selected_edge_move") or sample.get("trainer_edge_move"),
-                "reply_rows": reply_rows,
-                "summary": {"fen": sample["fen"], "trainer_edge_move": sample.get("selected_edge_move") or sample.get("trainer_edge_move")},
-            })
+            base = _bootstrap_example_from_sample_row(sample, row)
+            for transform in ("identity", "flip_file", "flip_rank", "rotate_180"):
+                transformed = _transform_bootstrap_example(base, transform)
+                if transformed is not None and _bootstrap_example_is_legal(transformed):
+                    examples.append(transformed)
     return examples
+
+
+def _bootstrap_example_from_sample_row(sample: dict[str, Any], row: dict[str, Any]) -> dict[str, Any]:
+    move = sample.get("selected_edge_move") or sample.get("trainer_edge_move")
+    return {
+        "fen": sample["fen"],
+        "trainer_edge_move": move,
+        "reply_rows": [{
+            "black_reply": row["black_reply"],
+            "s1_fen": row["s1_fen"],
+            "bridge_candidate_count": row.get("bridge_candidate_count", 0),
+            "bridge_opportunity": bool(row.get("foundation_continuation_success")) or row.get("bridge_candidate_count", 0) > 0,
+            "bridge_selected_move": row.get("bridge_selected_move"),
+            "bridge_selected_foundation_reachable": bool(row.get("foundation_continuation_success")),
+            "same_graph_foundation_continuation_count": sum(int(item.get("foundation_solved", False)) for item in row.get("foundation_reply_rows", [])),
+            "foundation_handoff_conversion": bool(row.get("foundation_continuation_success")),
+            "failure_bucket": row.get("bridge_failure_bucket", "none"),
+        }],
+        "summary": {"fen": sample["fen"], "trainer_edge_move": move},
+    }
+
+
+def _transform_bootstrap_example(example: dict[str, Any], transform: str) -> dict[str, Any] | None:
+    try:
+        fen = _transform_fen(example["fen"], transform)
+        move = _transform_uci(example["trainer_edge_move"], transform)
+        reply_rows = []
+        for row in example["reply_rows"]:
+            reply_rows.append({
+                **row,
+                "black_reply": _transform_uci(row["black_reply"], transform),
+                "s1_fen": _transform_fen(row["s1_fen"], transform),
+                "bridge_selected_move": None if row.get("bridge_selected_move") is None else _transform_uci(row["bridge_selected_move"], transform),
+            })
+        return {
+            "fen": fen,
+            "trainer_edge_move": move,
+            "reply_rows": reply_rows,
+            "summary": {"fen": fen, "trainer_edge_move": move, "accepted_entry_mutation": transform},
+        }
+    except ValueError:
+        return None
+
+
+def _bootstrap_example_is_legal(example: dict[str, Any]) -> bool:
+    board = chess.Board(example["fen"])
+    first = chess.Move.from_uci(example["trainer_edge_move"])
+    if first not in board.legal_moves:
+        return False
+    after_first = board.copy(stack=False)
+    after_first.push(first)
+    for row in example["reply_rows"]:
+        reply = chess.Move.from_uci(row["black_reply"])
+        if reply not in after_first.legal_moves:
+            return False
+        s1 = after_first.copy(stack=False)
+        s1.push(reply)
+        if chess.Board(row["s1_fen"]).board_fen() != s1.board_fen():
+            return False
+        bridge = row.get("bridge_selected_move")
+        if bridge is not None and chess.Move.from_uci(bridge) not in s1.legal_moves:
+            return False
+    return True
+
+
+def _transform_fen(fen: str, transform: str) -> str:
+    board = chess.Board(fen)
+    out = chess.Board.empty()
+    out.turn = board.turn
+    out.clear_stack()
+    out.halfmove_clock = board.halfmove_clock
+    out.fullmove_number = board.fullmove_number
+    for square, piece in board.piece_map().items():
+        out.set_piece_at(_transform_square(square, transform), piece)
+    if board.ep_square is not None:
+        out.ep_square = _transform_square(board.ep_square, transform)
+    if not out.is_valid():
+        raise ValueError(f"invalid transformed board for {transform}")
+    return out.fen()
+
+
+def _transform_uci(uci: str, transform: str) -> str:
+    move = chess.Move.from_uci(uci)
+    promoted = "" if move.promotion is None else chess.piece_symbol(move.promotion)
+    return chess.square_name(_transform_square(move.from_square, transform)) + chess.square_name(_transform_square(move.to_square, transform)) + promoted
+
+
+def _transform_square(square: int, transform: str) -> int:
+    file = chess.square_file(square)
+    rank = chess.square_rank(square)
+    if transform == "identity":
+        return square
+    if transform == "flip_file":
+        return chess.square(7 - file, rank)
+    if transform == "flip_rank":
+        return chess.square(file, 7 - rank)
+    if transform == "rotate_180":
+        return chess.square(7 - file, 7 - rank)
+    raise ValueError(f"unknown transform {transform}")
 
 
 def _examples_from_entries(entries: list[dict[str, Any]]) -> tuple[dict[str, Any], ...]:
