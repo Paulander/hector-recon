@@ -295,6 +295,11 @@ from .staged_edge_bridge_foundation_rollout import (
     StagedEdgeBridgeFoundationRolloutResult,
     run_staged_edge_bridge_foundation_rollout,
 )
+from .persisted_staged_predecessor_pool import (
+    PersistedStagedPredecessorPoolConfig,
+    PersistedStagedPredecessorPoolResult,
+    run_persisted_staged_predecessor_pool,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -523,11 +528,14 @@ __all__ = [
     "ControlledMixedFrontierEdgeCurriculumResult",
     "StagedEdgeBridgeFoundationRolloutConfig",
     "StagedEdgeBridgeFoundationRolloutResult",
+    "PersistedStagedPredecessorPoolConfig",
+    "PersistedStagedPredecessorPoolResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
     "run_controlled_mixed_frontier_edge_curriculum",
     "run_staged_edge_bridge_foundation_rollout",
+    "run_persisted_staged_predecessor_pool",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
