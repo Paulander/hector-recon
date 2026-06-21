@@ -310,6 +310,11 @@ from .staged_pool_integrity_modest_scale import (
     StagedPoolIntegrityModestScaleResult,
     run_staged_pool_integrity_modest_scale,
 )
+from .tiny_online_krk_episode_runner import (
+    TinyOnlineKRKEpisodeRunnerConfig,
+    TinyOnlineKRKEpisodeRunnerResult,
+    run_tiny_online_krk_episode_runner,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -544,6 +549,8 @@ __all__ = [
     "StagedNearMissAblationRestorationResult",
     "StagedPoolIntegrityModestScaleConfig",
     "StagedPoolIntegrityModestScaleResult",
+    "TinyOnlineKRKEpisodeRunnerConfig",
+    "TinyOnlineKRKEpisodeRunnerResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -552,6 +559,7 @@ __all__ = [
     "run_persisted_staged_predecessor_pool",
     "run_staged_near_miss_ablation_restoration",
     "run_staged_pool_integrity_modest_scale",
+    "run_tiny_online_krk_episode_runner",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
