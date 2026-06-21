@@ -1,0 +1,39 @@
+{
+  "counts_by_split": {
+    "heldout": 4,
+    "near_miss": 8,
+    "regression": 4,
+    "train": 8
+  },
+  "duplicate_rejections": 0,
+  "entry_count": 24,
+  "entry_ids": [
+    "0dec649a3b22663dc615",
+    "6f7d19ae0ca4bc18963e",
+    "974d041923ec13c704b2",
+    "262ad2155615ac664f5a",
+    "13d754d6174868667b71",
+    "c051a43224b9c767789a",
+    "8cf60d9e675a44c7d596",
+    "500c599755e0bc2db3e1",
+    "3ded926a91aa2701e5dd",
+    "1cc4bef7d37a4232d0ce",
+    "b408b4c0adabfc4b8e68",
+    "f2467335839b9273e2b8",
+    "2a428fdb55ed23ac14ad",
+    "c7d8426e76cb7aea04df",
+    "96fcc715a3dd17e41613",
+    "55c72500f3db8f462b5e",
+    "b4ccaf9057fe16b836ec",
+    "3c06e6573469f9eb4927",
+    "04f0b94a6beea1a8e739",
+    "ae94b2e624671aedad41",
+    "6d367ddbce445ec41881",
+    "3ed1d468eab8b5b263c6",
+    "843347ec8fd8a3de0887",
+    "6fb2f21652c2a8717db4"
+  ],
+  "generation_attempts": 8,
+  "rejection_counts": {},
+  "schema_version": "tg28j_staged_predecessor_pool_index.v0"
+}

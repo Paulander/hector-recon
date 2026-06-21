@@ -305,6 +305,11 @@ from .staged_near_miss_ablation_restoration import (
     StagedNearMissAblationRestorationResult,
     run_staged_near_miss_ablation_restoration,
 )
+from .staged_pool_integrity_modest_scale import (
+    StagedPoolIntegrityModestScaleConfig,
+    StagedPoolIntegrityModestScaleResult,
+    run_staged_pool_integrity_modest_scale,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -537,6 +542,8 @@ __all__ = [
     "PersistedStagedPredecessorPoolResult",
     "StagedNearMissAblationRestorationConfig",
     "StagedNearMissAblationRestorationResult",
+    "StagedPoolIntegrityModestScaleConfig",
+    "StagedPoolIntegrityModestScaleResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -544,6 +551,7 @@ __all__ = [
     "run_staged_edge_bridge_foundation_rollout",
     "run_persisted_staged_predecessor_pool",
     "run_staged_near_miss_ablation_restoration",
+    "run_staged_pool_integrity_modest_scale",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",

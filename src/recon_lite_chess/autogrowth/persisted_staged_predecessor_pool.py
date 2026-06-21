@@ -366,6 +366,9 @@ def _ensure_pool_entries(
         while split != "near_miss" and bootstrap_examples and sum(1 for entry in entries if entry["split"] == split) < target:
             example = bootstrap_examples.pop(0)
             entry = _pool_entry_from_example(example, split, cfg.seed, foundation_hash, cache_hash, cache, tg28c_cfg, edge_weights, bridge_weights)
+            if not _entry_current_foundation_positive(entry):
+                rejection_counts["recertification_failed"] = rejection_counts.get("recertification_failed", 0) + 1
+                continue
             entry["generation_method"] = "accepted_entry_mutation"
             key = _dedupe_key(entry)
             if key in dedupe:
@@ -397,6 +400,7 @@ def _ensure_pool_entries(
                     _pool_entry_from_example(example, split, cfg.seed, foundation_hash, cache_hash, cache, tg28c_cfg, edge_weights, bridge_weights)
                     for example in staged
                 ]
+                new_entries = [entry for entry in new_entries if _entry_current_foundation_positive(entry)]
             generation_attempts += stats.get("generation_attempts", 0)
             for key, value in stats.get("rejection_counts", {}).items():
                 rejection_counts[key] = rejection_counts.get(key, 0) + value
@@ -455,6 +459,9 @@ def _pool_entry_from_example(example, split, seed, foundation_hash, cache_hash, 
     after_first_metrics = _board_metrics(after_first)
     after_bridge_metrics = _board_metrics(after_bridge)
     staged_type = _staged_success_type(example)
+    current_foundation_positive = foundation_state["foundation_selected_move"] is not None and foundation_state["graph_confirmation_state"] == "CONFIRMED"
+    if staged_type != "negative_near_miss" and not current_foundation_positive:
+        staged_type = "negative_near_miss"
     payload = {
         "schema_version": "tg28j_staged_predecessor_pool_entry.v0",
         "split": split,
@@ -475,6 +482,7 @@ def _pool_entry_from_example(example, split, seed, foundation_hash, cache_hash, 
         "foundation_query_fen": foundation_query.fen(),
         "foundation_selected_move": foundation_state["foundation_selected_move"],
         "final_graph_confirmation_state": foundation_state["graph_confirmation_state"],
+        "current_foundation_response_recognized": current_foundation_positive,
         "staged_success_type": staged_type,
         "rook_blunder": not after_first_metrics["rook_safe"] or not after_bridge_metrics["rook_safe"],
         "stalemate_after_first": after_first.is_stalemate(),
@@ -529,6 +537,15 @@ def _generate_negative_entries(cfg, cache, tg28c_cfg, edge_cfg, edge_weights, br
     return entries, {"generation_attempts": attempts, "rejection_counts": rejected}
 
 
+def _entry_current_foundation_positive(entry: dict[str, Any]) -> bool:
+    return (
+        entry.get("staged_success_type") != "negative_near_miss"
+        and entry.get("current_foundation_response_recognized", False)
+        and entry.get("foundation_selected_move") is not None
+        and entry.get("final_graph_confirmation_state") == "CONFIRMED"
+    )
+
+
 def _bootstrap_examples_from_tg28i(path: Path) -> list[dict[str, Any]]:
     if not path.exists():
         return []
@@ -538,7 +555,20 @@ def _bootstrap_examples_from_tg28i(path: Path) -> list[dict[str, Any]]:
     for sample in samples:
         for row in sample.get("reply_rows", []):
             base = _bootstrap_example_from_sample_row(sample, row)
-            for transform in ("identity", "flip_file", "flip_rank", "rotate_180"):
+            for transform in (
+                "identity",
+                "flip_file",
+                "flip_rank",
+                "rotate_180",
+                "shift_file_plus",
+                "shift_file_minus",
+                "shift_rank_plus",
+                "shift_rank_minus",
+                "shift_file_plus_rank_plus",
+                "shift_file_plus_rank_minus",
+                "shift_file_minus_rank_plus",
+                "shift_file_minus_rank_minus",
+            ):
                 transformed = _transform_bootstrap_example(base, transform)
                 if transformed is not None and _bootstrap_example_is_legal(transformed):
                     examples.append(transformed)
@@ -641,6 +671,23 @@ def _transform_square(square: int, transform: str) -> int:
         return chess.square(file, 7 - rank)
     if transform == "rotate_180":
         return chess.square(7 - file, 7 - rank)
+    shifts = {
+        "shift_file_plus": (1, 0),
+        "shift_file_minus": (-1, 0),
+        "shift_rank_plus": (0, 1),
+        "shift_rank_minus": (0, -1),
+        "shift_file_plus_rank_plus": (1, 1),
+        "shift_file_plus_rank_minus": (1, -1),
+        "shift_file_minus_rank_plus": (-1, 1),
+        "shift_file_minus_rank_minus": (-1, -1),
+    }
+    if transform in shifts:
+        dx, dy = shifts[transform]
+        shifted_file = file + dx
+        shifted_rank = rank + dy
+        if not (0 <= shifted_file <= 7 and 0 <= shifted_rank <= 7):
+            raise ValueError(f"shifted square off board for {transform}")
+        return chess.square(shifted_file, shifted_rank)
     raise ValueError(f"unknown transform {transform}")
 
 
