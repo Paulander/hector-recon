@@ -557,6 +557,14 @@ def _select_black_reply(cache: _FoundationResponseCache, board: chess.Board, pol
     replies = sorted(board.legal_moves, key=lambda item: item.uci())
     if not replies:
         return None
+    if policy == "mobility_maximizing":
+        ranked = []
+        for reply in replies:
+            after = board.copy(stack=False)
+            after.push(reply)
+            mobility = len(list(after.legal_moves)) if after.turn == chess.WHITE else 0
+            ranked.append((mobility, reply.uci(), reply))
+        return sorted(ranked, key=lambda item: (item[0], item[1]), reverse=True)[0][2]
     if policy != "deterministic_worst_foundation_reply":
         return replies[0]
     ranked = []

@@ -315,6 +315,11 @@ from .tiny_online_krk_episode_runner import (
     TinyOnlineKRKEpisodeRunnerResult,
     run_tiny_online_krk_episode_runner,
 )
+from .online_failure_decomposition import (
+    OnlineFailureDecompositionConfig,
+    OnlineFailureDecompositionResult,
+    run_online_failure_decomposition,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -551,6 +556,8 @@ __all__ = [
     "StagedPoolIntegrityModestScaleResult",
     "TinyOnlineKRKEpisodeRunnerConfig",
     "TinyOnlineKRKEpisodeRunnerResult",
+    "OnlineFailureDecompositionConfig",
+    "OnlineFailureDecompositionResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -560,6 +567,7 @@ __all__ = [
     "run_staged_near_miss_ablation_restoration",
     "run_staged_pool_integrity_modest_scale",
     "run_tiny_online_krk_episode_runner",
+    "run_online_failure_decomposition",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
