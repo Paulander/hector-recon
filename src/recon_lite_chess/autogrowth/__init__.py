@@ -330,6 +330,11 @@ from .online_low_progress_repair import (
     OnlineLowProgressRepairResult,
     run_online_low_progress_repair,
 )
+from .reply_robust_progress_pool import (
+    ReplyRobustProgressPoolConfig,
+    ReplyRobustProgressPoolResult,
+    run_reply_robust_progress_pool,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -572,6 +577,8 @@ __all__ = [
     "ReplyRobustBridgePressureResult",
     "OnlineLowProgressRepairConfig",
     "OnlineLowProgressRepairResult",
+    "ReplyRobustProgressPoolConfig",
+    "ReplyRobustProgressPoolResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -584,6 +591,7 @@ __all__ = [
     "run_online_failure_decomposition",
     "run_reply_robust_bridge_pressure",
     "run_online_low_progress_repair",
+    "run_reply_robust_progress_pool",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
