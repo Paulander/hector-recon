@@ -335,6 +335,11 @@ from .reply_robust_progress_pool import (
     ReplyRobustProgressPoolResult,
     run_reply_robust_progress_pool,
 )
+from .progress_candidate_selection_repair import (
+    ProgressCandidateSelectionRepairConfig,
+    ProgressCandidateSelectionRepairResult,
+    run_progress_candidate_selection_repair,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -579,6 +584,8 @@ __all__ = [
     "OnlineLowProgressRepairResult",
     "ReplyRobustProgressPoolConfig",
     "ReplyRobustProgressPoolResult",
+    "ProgressCandidateSelectionRepairConfig",
+    "ProgressCandidateSelectionRepairResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -592,6 +599,7 @@ __all__ = [
     "run_reply_robust_bridge_pressure",
     "run_online_low_progress_repair",
     "run_reply_robust_progress_pool",
+    "run_progress_candidate_selection_repair",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",

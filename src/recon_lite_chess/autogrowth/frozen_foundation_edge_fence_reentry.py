@@ -821,7 +821,10 @@ def _feature_keys(move, before, after, delta_edge, delta_mobility, delta_area) -
         f"move_piece={move.uci()[0]}",
         f"delta_black_king_edge_distance_sign={_sign(delta_edge)}",
         f"delta_black_king_mobility_sign={_sign(delta_mobility)}",
+        f"delta_black_king_mobility_gain_bucket={_gain_bucket(-delta_mobility)}",
         f"delta_confinement_area_sign={_sign(delta_area)}",
+        f"delta_confinement_area_gain_bucket={_gain_bucket(-delta_area)}",
+        f"combined_progress_gain_bucket={_gain_bucket(max(0.0, -delta_area) + (2.0 * max(0.0, -delta_mobility)) + (2.0 * max(0.0, -delta_edge)))}",
         f"rook_safe_after={int(after['rook_safe'] > 0.0)}",
         f"rook_attacked_after={int(after['rook_attacked_after'] > 0.0)}",
         f"gives_check={int(after['gives_check'] > 0.0)}",
@@ -934,6 +937,19 @@ def _confinement_area(board: chess.Board, rook: int | None, black_king: int) -> 
 
 def _sign(value: float) -> int:
     return -1 if value < 0 else (1 if value > 0 else 0)
+
+
+def _gain_bucket(value: float) -> int:
+    gain = max(0.0, float(value))
+    if gain <= 0.0:
+        return 0
+    if gain <= 2.0:
+        return 1
+    if gain <= 5.0:
+        return 2
+    if gain <= 12.0:
+        return 3
+    return 4
 
 
 def _foundation_counts(graph: NativeReConKRKGraph) -> dict[str, int]:

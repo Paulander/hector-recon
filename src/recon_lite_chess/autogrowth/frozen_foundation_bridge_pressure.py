@@ -938,7 +938,10 @@ def _bridge_feature_keys(row: dict[str, Any], reply_total: int, reply_solved: in
         f"reply_envelope_rate_bucket={min(4, int(reply_rate * 4))}",
         f"bounded_bridge_foundation={int(bounded_reachable)}",
         f"bridge_delta_confinement_sign={_sign(row['delta_confinement_area'])}",
+        f"bridge_delta_confinement_gain_bucket={_gain_bucket(-float(row['delta_confinement_area']))}",
         f"bridge_delta_mobility_sign={_sign(row['delta_black_king_legal_mobility'])}",
+        f"bridge_delta_mobility_gain_bucket={_gain_bucket(-float(row['delta_black_king_legal_mobility']))}",
+        f"bridge_combined_progress_gain_bucket={_gain_bucket(max(0.0, -float(row['delta_confinement_area'])) + (2.0 * max(0.0, -float(row['delta_black_king_legal_mobility']))) + (2.0 * max(0.0, -float(row['delta_black_king_edge_distance']))))}",
         f"bridge_rook_safe={int(row['after_features']['rook_safe'] > 0.0)}",
     ]
 
@@ -1224,6 +1227,19 @@ def _failure_bucket(candidate_rows: list[dict[str, Any]], selected: dict[str, An
 
 def _sign(value: float) -> int:
     return -1 if value < 0 else (1 if value > 0 else 0)
+
+
+def _gain_bucket(value: float) -> int:
+    gain = max(0.0, float(value))
+    if gain <= 0.0:
+        return 0
+    if gain <= 2.0:
+        return 1
+    if gain <= 5.0:
+        return 2
+    if gain <= 12.0:
+        return 3
+    return 4
 
 
 @dataclass(frozen=True)
