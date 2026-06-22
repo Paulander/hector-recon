@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections import Counter
 from dataclasses import asdict, dataclass
+import hashlib
 import json
 import time
 from pathlib import Path
@@ -535,7 +536,10 @@ def _bridge_masks(masks: dict[str, bool]) -> dict[str, bool]:
     return {
         "mask_bridge_pressure_terminals": masks.get("mask_bridge_pressure_terminals", False),
         "mask_frozen_foundation_response_terminals": masks.get("mask_foundation_response_terminals", False),
+        "mask_internal_attention_request_strength_terminals": masks.get("mask_internal_attention_request_strength_terminals", False),
         "disable_reply_envelope_foundation_checks": masks.get("disable_reply_envelope_foundation_checks", False),
+        "mask_frozen_mate1_foundation_quorum": masks.get("mask_frozen_mate1_foundation_quorum", False),
+        "mask_frozen_mate2_foundation_quorum": masks.get("mask_frozen_mate2_foundation_quorum", False),
         "mask_actuator_terminals": masks.get("mask_actuator_terminals", False),
     }
 
@@ -565,6 +569,9 @@ def _select_black_reply(cache: _FoundationResponseCache, board: chess.Board, pol
             mobility = len(list(after.legal_moves)) if after.turn == chess.WHITE else 0
             ranked.append((mobility, reply.uci(), reply))
         return sorted(ranked, key=lambda item: (item[0], item[1]), reverse=True)[0][2]
+    if policy == "fixed_seed_random":
+        key = hashlib.sha256(board.fen().encode("utf-8")).hexdigest()
+        return replies[int(key[:8], 16) % len(replies)]
     if policy != "deterministic_worst_foundation_reply":
         return replies[0]
     ranked = []
@@ -771,6 +778,8 @@ def _compact_eval(eval_row: dict[str, Any]) -> dict[str, Any]:
 def _compact_component(component: dict[str, Any] | None) -> dict[str, Any] | None:
     if component is None:
         return None
+    reply_total = int(component.get("reply_total") or 0)
+    reply_solved = int(component.get("reply_solved") or 0)
     return {
         "move": component.get("move"),
         "evidence_score": component.get("evidence_score"),
@@ -786,6 +795,15 @@ def _compact_component(component: dict[str, Any] | None) -> dict[str, Any] | Non
         "foundation_handoff_reachable": component.get("foundation_handoff_reachable") or component.get("reply_envelope_foundation_reachable"),
         "foundation_handoff_conversion": component.get("foundation_handoff_conversion"),
         "same_graph_foundation_continuation_count": component.get("same_graph_foundation_continuation_count", 0),
+        "reply_total": reply_total,
+        "reply_solved": reply_solved,
+        "reply_envelope_foundation_coverage_rate": component.get("reply_envelope_foundation_coverage_rate"),
+        "all_replies_solved": reply_total > 0 and reply_solved == reply_total,
+        "worst_reply_success": reply_total > 0 and reply_solved == reply_total,
+        "foundation_frontier_request_strength": component.get("foundation_frontier_request_strength"),
+        "delta_foundation_proximity": component.get("delta_foundation_proximity"),
+        "bridge_confidence": component.get("bridge_confidence"),
+        "worst_reply_failure_reason": component.get("cache_reply_envelope", {}).get("worst_reply_failure_reason") if isinstance(component.get("cache_reply_envelope"), dict) else component.get("chain", {}).get("worst_reply_failure_reason"),
     }
 
 

@@ -320,6 +320,11 @@ from .online_failure_decomposition import (
     OnlineFailureDecompositionResult,
     run_online_failure_decomposition,
 )
+from .reply_robust_bridge_pressure import (
+    ReplyRobustBridgePressureConfig,
+    ReplyRobustBridgePressureResult,
+    run_reply_robust_bridge_pressure,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -558,6 +563,8 @@ __all__ = [
     "TinyOnlineKRKEpisodeRunnerResult",
     "OnlineFailureDecompositionConfig",
     "OnlineFailureDecompositionResult",
+    "ReplyRobustBridgePressureConfig",
+    "ReplyRobustBridgePressureResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -568,6 +575,7 @@ __all__ = [
     "run_staged_pool_integrity_modest_scale",
     "run_tiny_online_krk_episode_runner",
     "run_online_failure_decomposition",
+    "run_reply_robust_bridge_pressure",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
