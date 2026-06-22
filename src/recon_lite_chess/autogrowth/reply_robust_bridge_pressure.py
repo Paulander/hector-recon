@@ -288,6 +288,56 @@ def _repair_weight_delta(arm: str) -> dict[str, float]:
             "reply_envelope_rate_bucket=0": -1.00,
             "bounded_bridge_foundation=1": 0.30,
         }
+    if arm == "progress_delta_only":
+        return {
+            "bridge_delta_confinement_sign=-1": 1.10,
+            "bridge_delta_mobility_sign=-1": 0.90,
+            "bridge_delta_confinement_sign=0": -0.55,
+            "bridge_delta_mobility_sign=0": -0.40,
+            "bridge_delta_confinement_sign=1": -0.85,
+            "bridge_delta_mobility_sign=1": -0.65,
+        }
+    if arm == "low_progress_veto_only":
+        return {
+            "bridge_delta_confinement_sign=0": -1.00,
+            "bridge_delta_mobility_sign=0": -0.90,
+            "reply_envelope_rate_bucket=0": -0.45,
+        }
+    if arm == "repeated_no_progress_veto":
+        return {
+            "bridge_delta_confinement_sign=0": -0.90,
+            "bridge_delta_mobility_sign=0": -0.90,
+            "reply_envelope_any_foundation=0": -0.65,
+            "reply_envelope_rate_bucket=0": -0.65,
+        }
+    if arm == "balanced_reply_robust_plus_progress":
+        return {
+            "reply_envelope_all_foundation=1": 1.60,
+            "reply_envelope_all_foundation=0": -0.25,
+            "reply_envelope_any_foundation=0": -0.55,
+            "reply_envelope_rate_bucket=4": 0.75,
+            "reply_envelope_rate_bucket=3": 0.35,
+            "reply_envelope_rate_bucket=0": -0.35,
+            "bridge_delta_confinement_sign=-1": 0.85,
+            "bridge_delta_mobility_sign=-1": 0.70,
+            "bridge_delta_confinement_sign=0": -0.35,
+            "bridge_delta_mobility_sign=0": -0.25,
+            "bounded_bridge_foundation=1": 0.20,
+        }
+    if arm == "balanced_reply_robust_plus_progress_with_favorable_regression_replay":
+        return {
+            "reply_envelope_all_foundation=1": 1.25,
+            "reply_envelope_all_foundation=0": -0.15,
+            "reply_envelope_any_foundation=0": -0.35,
+            "reply_envelope_rate_bucket=4": 0.60,
+            "reply_envelope_rate_bucket=3": 0.30,
+            "reply_envelope_rate_bucket=0": -0.20,
+            "bridge_delta_confinement_sign=-1": 0.90,
+            "bridge_delta_mobility_sign=-1": 0.80,
+            "bridge_delta_confinement_sign=0": -0.20,
+            "bridge_delta_mobility_sign=0": -0.15,
+            "bounded_bridge_foundation=1": 0.20,
+        }
     raise ValueError(f"unknown TG29c arm: {arm}")
 
 

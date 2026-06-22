@@ -804,6 +804,9 @@ def _compact_component(component: dict[str, Any] | None) -> dict[str, Any] | Non
         "delta_foundation_proximity": component.get("delta_foundation_proximity"),
         "bridge_confidence": component.get("bridge_confidence"),
         "worst_reply_failure_reason": component.get("cache_reply_envelope", {}).get("worst_reply_failure_reason") if isinstance(component.get("cache_reply_envelope"), dict) else component.get("chain", {}).get("worst_reply_failure_reason"),
+        "delta_black_king_edge_distance": component.get("delta_black_king_edge_distance"),
+        "delta_black_king_legal_mobility": component.get("delta_black_king_legal_mobility"),
+        "delta_confinement_area": component.get("delta_confinement_area"),
     }
 
 
