@@ -345,6 +345,11 @@ from .trajectory_positive_prefix_audit import (
     TrajectoryPositivePrefixAuditResult,
     run_trajectory_positive_prefix_audit,
 )
+from .cached_trajectory_selection_repair import (
+    CachedTrajectorySelectionRepairConfig,
+    CachedTrajectorySelectionRepairResult,
+    run_cached_trajectory_selection_repair,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -593,6 +598,8 @@ __all__ = [
     "ProgressCandidateSelectionRepairResult",
     "TrajectoryPositivePrefixAuditConfig",
     "TrajectoryPositivePrefixAuditResult",
+    "CachedTrajectorySelectionRepairConfig",
+    "CachedTrajectorySelectionRepairResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -608,6 +615,7 @@ __all__ = [
     "run_reply_robust_progress_pool",
     "run_progress_candidate_selection_repair",
     "run_trajectory_positive_prefix_audit",
+    "run_cached_trajectory_selection_repair",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",

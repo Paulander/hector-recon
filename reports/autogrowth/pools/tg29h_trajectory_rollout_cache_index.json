@@ -1,0 +1,13 @@
+{
+  "cache_live_mismatch_count": 0,
+  "cache_used_as_provider": false,
+  "initial_entry_count": 44,
+  "live_rollout_count": 16,
+  "schema_version": "tg29h_trajectory_rollout_cache_index.v0",
+  "seeded_entry_count": 0,
+  "trajectory_cache_entry_count": 60,
+  "trajectory_cache_hit_count": 16,
+  "trajectory_cache_index_path": "reports/autogrowth/pools/tg29h_trajectory_rollout_cache_index.json",
+  "trajectory_cache_miss_count": 16,
+  "trajectory_cache_path": "reports/autogrowth/pools/tg29h_trajectory_rollout_cache.jsonl"
+}
