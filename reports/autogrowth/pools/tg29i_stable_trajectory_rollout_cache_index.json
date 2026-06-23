@@ -1,0 +1,9 @@
+{
+  "audit_version": "tg29i_stable_trajectory_cache.v1",
+  "schema_version": "tg29i_stable_trajectory_cache_index.v0",
+  "source_cache_path": "reports/autogrowth/pools/tg29h_trajectory_rollout_cache.jsonl",
+  "stable_cache_key_mismatch_count": 0,
+  "trajectory_cache_entry_count": 32,
+  "trajectory_cache_index_path": "reports/autogrowth/pools/tg29i_stable_trajectory_rollout_cache_index.json",
+  "trajectory_cache_path": "reports/autogrowth/pools/tg29i_stable_trajectory_rollout_cache.jsonl"
+}
