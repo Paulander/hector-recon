@@ -355,6 +355,11 @@ from .stable_trajectory_cache_selection_microprobe import (
     StableTrajectoryCacheSelectionMicroprobeResult,
     run_stable_trajectory_cache_selection_microprobe,
 )
+from .d3c3_trajectory_evidence_repair import (
+    D3C3TrajectoryEvidenceRepairConfig,
+    D3C3TrajectoryEvidenceRepairResult,
+    run_d3c3_trajectory_evidence_repair,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -607,6 +612,8 @@ __all__ = [
     "CachedTrajectorySelectionRepairResult",
     "StableTrajectoryCacheSelectionMicroprobeConfig",
     "StableTrajectoryCacheSelectionMicroprobeResult",
+    "D3C3TrajectoryEvidenceRepairConfig",
+    "D3C3TrajectoryEvidenceRepairResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -624,6 +631,7 @@ __all__ = [
     "run_trajectory_positive_prefix_audit",
     "run_cached_trajectory_selection_repair",
     "run_stable_trajectory_cache_selection_microprobe",
+    "run_d3c3_trajectory_evidence_repair",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
