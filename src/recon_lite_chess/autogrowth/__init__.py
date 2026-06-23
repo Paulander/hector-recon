@@ -340,6 +340,11 @@ from .progress_candidate_selection_repair import (
     ProgressCandidateSelectionRepairResult,
     run_progress_candidate_selection_repair,
 )
+from .trajectory_positive_prefix_audit import (
+    TrajectoryPositivePrefixAuditConfig,
+    TrajectoryPositivePrefixAuditResult,
+    run_trajectory_positive_prefix_audit,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -586,6 +591,8 @@ __all__ = [
     "ReplyRobustProgressPoolResult",
     "ProgressCandidateSelectionRepairConfig",
     "ProgressCandidateSelectionRepairResult",
+    "TrajectoryPositivePrefixAuditConfig",
+    "TrajectoryPositivePrefixAuditResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -600,6 +607,7 @@ __all__ = [
     "run_online_low_progress_repair",
     "run_reply_robust_progress_pool",
     "run_progress_candidate_selection_repair",
+    "run_trajectory_positive_prefix_audit",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
