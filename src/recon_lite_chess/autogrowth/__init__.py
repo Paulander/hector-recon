@@ -360,6 +360,11 @@ from .d3c3_trajectory_evidence_repair import (
     D3C3TrajectoryEvidenceRepairResult,
     run_d3c3_trajectory_evidence_repair,
 )
+from .runtime_trajectory_repair_integration import (
+    RuntimeTrajectoryRepairIntegrationConfig,
+    RuntimeTrajectoryRepairIntegrationResult,
+    run_runtime_trajectory_repair_integration,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -614,6 +619,8 @@ __all__ = [
     "StableTrajectoryCacheSelectionMicroprobeResult",
     "D3C3TrajectoryEvidenceRepairConfig",
     "D3C3TrajectoryEvidenceRepairResult",
+    "RuntimeTrajectoryRepairIntegrationConfig",
+    "RuntimeTrajectoryRepairIntegrationResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -632,6 +639,7 @@ __all__ = [
     "run_cached_trajectory_selection_repair",
     "run_stable_trajectory_cache_selection_microprobe",
     "run_d3c3_trajectory_evidence_repair",
+    "run_runtime_trajectory_repair_integration",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
