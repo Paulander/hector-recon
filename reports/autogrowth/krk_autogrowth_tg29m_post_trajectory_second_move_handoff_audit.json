@@ -1,0 +1,2994 @@
+{
+  "ablation_results": {
+    "disable_reply_envelope_checks": {
+      "formal_recon_engine_confirmation_state": "FAILED_SECOND_MOVE_EVIDENCE_MASKED",
+      "selected_move": null,
+      "selection_collapsed": true
+    },
+    "mask_actuator_terminals": {
+      "formal_recon_engine_confirmation_state": "FAILED_ACTUATOR_MASKED",
+      "selected_move": null,
+      "selection_collapsed": true
+    },
+    "mask_bridge_pressure_terminals": {
+      "formal_recon_engine_confirmation_state": "FAILED_SECOND_MOVE_EVIDENCE_MASKED",
+      "selected_move": null,
+      "selection_collapsed": true
+    },
+    "mask_foundation_response_terminals": {
+      "formal_recon_engine_confirmation_state": "FAILED_SECOND_MOVE_EVIDENCE_MASKED",
+      "selected_move": null,
+      "selection_collapsed": true
+    },
+    "mask_frozen_mate2_foundation_quorum": {
+      "formal_recon_engine_confirmation_state": "FAILED_SECOND_MOVE_EVIDENCE_MASKED",
+      "selected_move": null,
+      "selection_collapsed": true
+    },
+    "mask_second_move_trajectory_evidence": {
+      "formal_recon_engine_confirmation_state": "FAILED_SECOND_MOVE_EVIDENCE_MASKED",
+      "selected_move": null,
+      "selection_collapsed": true
+    },
+    "mask_trajectory_positive_terminals": {
+      "formal_recon_engine_confirmation_state": "FAILED_SECOND_MOVE_EVIDENCE_MASKED",
+      "selected_move": null,
+      "selection_collapsed": true
+    }
+  },
+  "checkpoint": "TG29m_post_trajectory_second_move_handoff_audit",
+  "compact_regression": {
+    "foundation_sanity_pass": true,
+    "frontier_regression_pass": null,
+    "generic_edge_regression_pass": null,
+    "known_trajectory_microprobe_pass": true,
+    "near_miss_regression_pass": null,
+    "skipped_regression_reason": "frontier_staged_near_miss_generic_skipped_by_tg29m_minimal_s1_audit",
+    "staged_regression_pass": null,
+    "tg29i_cache_hit_rate": 1.0,
+    "tg29i_live_rollout_count": 0
+  },
+  "config": {
+    "base": {
+      "black_reply_policy": "deterministic_worst_foundation_reply",
+      "bridge_frontier_heldout_count": 0,
+      "bridge_frontier_train_count": 0,
+      "episode_count": 2,
+      "foundation_mate1_heldout_count": 4,
+      "foundation_mate1_train_count": 8,
+      "foundation_mate2_heldout_count": 2,
+      "foundation_mate2_train_count": 4,
+      "foundation_seed": 20260624,
+      "full_pool_path": "reports/autogrowth/pools/tg28f_full_foundation_backed_frontier_pool.jsonl",
+      "generic_edge_heldout_count": 0,
+      "generic_edge_train_count": 0,
+      "max_ablation_positions": 0,
+      "max_episode_ablation_count": 1,
+      "max_foundation_ablation_positions": 1,
+      "max_foundation_sanity_positions": 1,
+      "max_samples": 16,
+      "max_white_moves_per_episode": 2,
+      "near_miss_heldout_count": 0,
+      "progress_output": "reports/autogrowth/krk_autogrowth_tg29m_post_trajectory_second_move_handoff_audit_progress.json",
+      "repaired_high_recall_threshold": 0.018,
+      "schedule_names": [
+        "tg29l_minimal_real_context"
+      ],
+      "seed": 20260703,
+      "staged_heldout_count": 0,
+      "staged_near_miss_count": 0,
+      "staged_pool_path": "reports/autogrowth/pools/tg28l_staged_predecessor_pool.jsonl",
+      "staged_regression_count": 0,
+      "staged_train_count": 0
+    },
+    "run_max3_diagnostic": true,
+    "run_repair": true,
+    "selected_repair_arm": "second_move_full_reply_foundation_response_priority",
+    "tg29l_artifact_path": "reports/autogrowth/krk_autogrowth_tg29l_real_context_runtime_trajectory_validation.json"
+  },
+  "decision": {
+    "ablation_results": {
+      "disable_reply_envelope_checks": {
+        "formal_recon_engine_confirmation_state": "FAILED_SECOND_MOVE_EVIDENCE_MASKED",
+        "selected_move": null,
+        "selection_collapsed": true
+      },
+      "mask_actuator_terminals": {
+        "formal_recon_engine_confirmation_state": "FAILED_ACTUATOR_MASKED",
+        "selected_move": null,
+        "selection_collapsed": true
+      },
+      "mask_bridge_pressure_terminals": {
+        "formal_recon_engine_confirmation_state": "FAILED_SECOND_MOVE_EVIDENCE_MASKED",
+        "selected_move": null,
+        "selection_collapsed": true
+      },
+      "mask_foundation_response_terminals": {
+        "formal_recon_engine_confirmation_state": "FAILED_SECOND_MOVE_EVIDENCE_MASKED",
+        "selected_move": null,
+        "selection_collapsed": true
+      },
+      "mask_frozen_mate2_foundation_quorum": {
+        "formal_recon_engine_confirmation_state": "FAILED_SECOND_MOVE_EVIDENCE_MASKED",
+        "selected_move": null,
+        "selection_collapsed": true
+      },
+      "mask_second_move_trajectory_evidence": {
+        "formal_recon_engine_confirmation_state": "FAILED_SECOND_MOVE_EVIDENCE_MASKED",
+        "selected_move": null,
+        "selection_collapsed": true
+      },
+      "mask_trajectory_positive_terminals": {
+        "formal_recon_engine_confirmation_state": "FAILED_SECOND_MOVE_EVIDENCE_MASKED",
+        "selected_move": null,
+        "selection_collapsed": true
+      }
+    },
+    "action_ranker_used_for_runtime": false,
+    "bridge_labels_learner_visible": false,
+    "checkpoint_interpretation": "second_move_handoff_repair_pass",
+    "checkpoint_pass": true,
+    "direct_provider_override": false,
+    "edge_fence_labels_learner_visible": false,
+    "failing_episode_id": 0,
+    "failure_bucket_counts": {
+      "second_move_bridge_candidate_exists_but_lost_selection": 1
+    },
+    "first_black_reply": "b4a5",
+    "first_move_selected": "e2d3",
+    "foundation_cache_live_mismatch_count": 0,
+    "foundation_frozen": true,
+    "foundation_handoff_count": 2,
+    "foundation_m3_updates_during_eval": 0,
+    "foundation_m3_updates_during_training": 36513,
+    "foundation_m4_promotions_during_eval": 0,
+    "foundation_m4_promotions_during_training": 0,
+    "foundation_mate1_accuracy": 1.0,
+    "foundation_mate2_conversion_rate": 1.0,
+    "foundation_sanity_pass": true,
+    "frontier_regression_pass": null,
+    "generic_edge_regression_pass": null,
+    "guard_used_during_evaluation": false,
+    "guard_used_during_runtime_choice": false,
+    "illegal_move_count": 0,
+    "known_trajectory_microprobe_pass": true,
+    "live_rollout_count": 0,
+    "max2_episode_count": 2,
+    "max2_episode_success_count": 2,
+    "max3_episode_count": 2,
+    "max3_episode_success_count": 2,
+    "max_move_reached_count": 0,
+    "near_miss_regression_pass": null,
+    "phase_timings": {
+      "artifact_load_seconds": 0.006899,
+      "context_build_seconds": 15.043151,
+      "total_seconds": 195.807654
+    },
+    "purity_boundary": {
+      "action_ranker_used_for_runtime": false,
+      "black_replies_harness_simulated": true,
+      "cache_used_as_memoized_frozen_graph_response": true,
+      "cache_used_as_provider": false,
+      "checkpoint": "TG29m",
+      "direct_provider_override": false,
+      "foundation_frozen": true,
+      "learner_visible_stage_labels": false,
+      "runtime_move_selection": "local_second_move_graph_evidence_materialization",
+      "runtime_tablebase_or_dtm_move_source": false,
+      "trajectory_labels_learner_visible": false,
+      "trajectory_labels_trainer_side_only": true,
+      "white_moves_graph_mediated": true
+    },
+    "repair_applied": true,
+    "repair_type": "second_move_foundation_response_priority",
+    "rook_blunder_count": 0,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "s1_audited_candidate_count": 10,
+    "s1_bridge_to_foundation_candidate_count": 1,
+    "s1_candidate_cap_blocked_count": 10,
+    "s1_failure_bucket_after": "none",
+    "s1_failure_bucket_before": "second_move_bridge_candidate_exists_but_lost_selection",
+    "s1_fen": "8/8/5R2/k7/8/3K4/8/8 w - - 2 2",
+    "s1_good_candidate_exists": true,
+    "s1_good_candidate_lost_selection_count": 1,
+    "s1_immediate_foundation_candidate_count": 0,
+    "s1_legal_candidate_count": 22,
+    "s1_local_progress_only_candidate_count": 6,
+    "s1_retrieval_blocked_count": 0,
+    "s1_safe_candidate_count": 20,
+    "s1_safe_low_progress_candidate_count": 3,
+    "s1_trajectory_positive_candidate_count": 0,
+    "same_graph_foundation_continuation_count": 9,
+    "scheduler_equivalence_mismatch_count": 0,
+    "second_move_evidence_confirmed_count": 1,
+    "second_move_evidence_materialized_count": 1,
+    "second_move_repair_ablation_causal": true,
+    "second_move_selected_after": "d3c4",
+    "second_move_selected_before": "f6e6",
+    "selected_repair_arm": "second_move_full_reply_foundation_response_priority",
+    "stage_labels_learner_visible": false,
+    "staged_labels_learner_visible": false,
+    "staged_regression_pass": null,
+    "stalemate_count": 0,
+    "start_fen": "8/8/5R2/8/1k6/8/4K3/8 w - - 0 1",
+    "termination_reason_after": "foundation_handoff",
+    "termination_reason_before": "max_moves_reached",
+    "trajectory_cache_hit_rate": 1.0,
+    "trajectory_labels_learner_visible": false,
+    "unsafe_move_count": 0,
+    "validator_skip_used_during_internal_handoff_eval": false
+  },
+  "failing_episode_trace": {
+    "after_first_white_move_fen": "8/8/5R2/8/1k6/3K4/8/8 b - - 1 1",
+    "after_second_white_move_fen": "8/8/4R3/k7/8/3K4/8/8 b - - 3 2",
+    "black_reply_after_first": "b4a5",
+    "black_reply_after_second": "a5b4",
+    "episode_id": 0,
+    "final_fen": "8/8/4R3/8/1k6/3K4/8/8 w - - 4 3",
+    "foundation_handoff": false,
+    "foundation_reachable_after_first_reply": false,
+    "foundation_reachable_after_second_reply": false,
+    "max_white_moves": 2,
+    "s1_fen": "8/8/5R2/k7/8/3K4/8/8 w - - 2 2",
+    "same_graph_foundation_continuation_count": 3,
+    "selected_first_white_move": "e2d3",
+    "selected_second_white_move": "f6e6",
+    "start_fen": "8/8/5R2/8/1k6/8/4K3/8 w - - 0 1",
+    "termination_reason": "max_moves_reached"
+  },
+  "first_move_variant_audit": {
+    "skip_reason": "s1_good_candidate_exists",
+    "skipped": true
+  },
+  "max2_recheck": {
+    "episode_count": 2,
+    "episode_success_count": 2,
+    "foundation_handoff_count": 2,
+    "illegal_move_count": 0,
+    "max_move_reached_count": 0,
+    "rook_blunder_count": 0,
+    "same_graph_foundation_continuation_count": 9,
+    "stalemate_count": 0,
+    "traces": [
+      {
+        "episode_index": 0,
+        "start_fen": "8/8/5R2/8/1k6/8/4K3/8 w - - 0 1",
+        "steps": [
+          {
+            "after_black_reply_fen": "8/8/5R2/k7/8/3K4/8/8 w - - 2 2",
+            "after_white_move_fen": "8/8/5R2/8/1k6/3K4/8/8 b - - 1 1",
+            "black_reply": "b4a5",
+            "diagnostic_phase_classification": "trajectory_repair_graph_move",
+            "formal_recon_engine_confirmation_state": "CONFIRMED_BY_RUNTIME_TRAJECTORY_EVIDENCE",
+            "foundation_after_black_reply": {
+              "chain": false,
+              "confirmation_state": "CONFIRMED",
+              "mate1": false,
+              "mate2": false,
+              "recognized": false,
+              "same_graph_second_move_count": 0,
+              "selected_move": "f6f5"
+            },
+            "foundation_reachable_after_black_reply": false,
+            "graph_evidence_summary": {
+              "base_selection": null,
+              "selected_component": {
+                "bridge_feature_keys": [
+                  "reply_envelope_any_foundation=0",
+                  "reply_envelope_all_foundation=0",
+                  "reply_envelope_rate_bucket=0",
+                  "bounded_bridge_foundation=0",
+                  "bridge_delta_confinement_sign=0",
+                  "bridge_delta_confinement_gain_bucket=0",
+                  "bridge_delta_mobility_sign=-1",
+                  "bridge_delta_mobility_gain_bucket=1",
+                  "bridge_combined_progress_gain_bucket=2",
+                  "bridge_rook_safe=1",
+                  "trajectory_positive_candidate_confirmed=1",
+                  "next_state_foundation_progress=1",
+                  "trajectory_partial_positive_evidence=1"
+                ],
+                "candidate_indexed_by_current_retrieval": true,
+                "candidate_move": "e2d3",
+                "current_graph_evidence_score": 17.740000000000002,
+                "local_progress_score": 0.36,
+                "positive_feature_keys": [
+                  "move_piece=e",
+                  "delta_black_king_edge_distance_sign=0",
+                  "delta_black_king_mobility_sign=-1",
+                  "delta_black_king_mobility_gain_bucket=1",
+                  "delta_confinement_area_sign=0",
+                  "delta_confinement_area_gain_bucket=0",
+                  "combined_progress_gain_bucket=2",
+                  "rook_safe_after=1",
+                  "rook_attacked_after=0",
+                  "gives_check=0",
+                  "king_support_distance_bucket=3",
+                  "black_king_edge_distance_bucket=1",
+                  "trajectory_over_local_progress_dominance=1"
+                ],
+                "safety_metrics": {
+                  "rook_blunder": false,
+                  "rook_safe_after": true,
+                  "stalemate_after": false
+                },
+                "trajectory_classification": "trajectory_positive",
+                "trajectory_score": 11.4
+              },
+              "selected_score": 17.74,
+              "trajectory_runtime_candidates": [
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=4",
+                    "bridge_delta_mobility_sign=-1",
+                    "bridge_delta_mobility_gain_bucket=2",
+                    "bridge_combined_progress_gain_bucket=4",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "f6c6",
+                  "current_graph_evidence_score": 11.33872,
+                  "local_progress_score": 2.34,
+                  "positive_feature_keys": [
+                    "move_piece=f",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=2",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=4",
+                    "combined_progress_gain_bucket=4",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.7
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=3",
+                    "bridge_delta_mobility_sign=0",
+                    "bridge_delta_mobility_gain_bucket=0",
+                    "bridge_combined_progress_gain_bucket=3",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "f6d6",
+                  "current_graph_evidence_score": 12.19356,
+                  "local_progress_score": 1.2,
+                  "positive_feature_keys": [
+                    "move_piece=f",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=0",
+                    "delta_black_king_mobility_gain_bucket=0",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=3",
+                    "combined_progress_gain_bucket=3",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.8
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=2",
+                    "bridge_delta_mobility_sign=-1",
+                    "bridge_delta_mobility_gain_bucket=2",
+                    "bridge_combined_progress_gain_bucket=3",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "f6f5",
+                  "current_graph_evidence_score": 12.59484,
+                  "local_progress_score": 1.1400000000000001,
+                  "positive_feature_keys": [
+                    "move_piece=f",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=2",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=2",
+                    "combined_progress_gain_bucket=3",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=3",
+                    "black_king_edge_distance_bucket=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 7.3
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=2",
+                    "bridge_delta_mobility_sign=0",
+                    "bridge_delta_mobility_gain_bucket=0",
+                    "bridge_combined_progress_gain_bucket=2",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "f6e6",
+                  "current_graph_evidence_score": 11.81064,
+                  "local_progress_score": 0.6,
+                  "positive_feature_keys": [
+                    "move_piece=f",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=0",
+                    "delta_black_king_mobility_gain_bucket=0",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=2",
+                    "combined_progress_gain_bucket=2",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.8
+                },
+                {
+                  "bridge_feature_keys": [
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": false,
+                  "candidate_move": "f6f3",
+                  "current_graph_evidence_score": 0.0,
+                  "local_progress_score": 0.54,
+                  "positive_feature_keys": [
+                    "move_piece=f",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=2",
+                    "delta_confinement_area_sign=0",
+                    "delta_confinement_area_gain_bucket=0",
+                    "combined_progress_gain_bucket=3",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=1",
+                    "black_king_edge_distance_bucket=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.8
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=0",
+                    "bridge_delta_confinement_gain_bucket=0",
+                    "bridge_delta_mobility_sign=-1",
+                    "bridge_delta_mobility_gain_bucket=1",
+                    "bridge_combined_progress_gain_bucket=2",
+                    "bridge_rook_safe=1",
+                    "trajectory_positive_candidate_confirmed=1",
+                    "next_state_foundation_progress=1",
+                    "trajectory_partial_positive_evidence=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "e2d3",
+                  "current_graph_evidence_score": 17.740000000000002,
+                  "local_progress_score": 0.36,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=1",
+                    "delta_confinement_area_sign=0",
+                    "delta_confinement_area_gain_bucket=0",
+                    "combined_progress_gain_bucket=2",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=3",
+                    "black_king_edge_distance_bucket=1",
+                    "trajectory_over_local_progress_dominance=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_positive",
+                  "trajectory_score": 11.4
+                },
+                {
+                  "bridge_feature_keys": [
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": false,
+                  "candidate_move": "e2d2",
+                  "current_graph_evidence_score": 0.0,
+                  "local_progress_score": 0.18,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=1",
+                    "delta_confinement_area_sign=0",
+                    "delta_confinement_area_gain_bucket=0",
+                    "combined_progress_gain_bucket=1",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.75
+                },
+                {
+                  "bridge_feature_keys": [
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": false,
+                  "candidate_move": "e2f3",
+                  "current_graph_evidence_score": 0.0,
+                  "local_progress_score": 0.0,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=0",
+                    "delta_black_king_mobility_gain_bucket=0",
+                    "delta_confinement_area_sign=0",
+                    "delta_confinement_area_gain_bucket=0",
+                    "combined_progress_gain_bucket=0",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=3",
+                    "black_king_edge_distance_bucket=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 7.0
+                }
+              ]
+            },
+            "move_index": 0,
+            "safety_result": {
+              "rook_blunder": false,
+              "safe": true
+            },
+            "same_graph_foundation_continuation_count": 2,
+            "selected_white_move": "e2d3",
+            "termination_reason": null,
+            "white_to_move_fen": "8/8/5R2/8/1k6/8/4K3/8 w - - 0 1"
+          },
+          {
+            "after_black_reply_fen": "8/8/5R2/8/k1K5/8/8/8 w - - 4 3",
+            "after_white_move_fen": "8/8/5R2/k7/2K5/8/8/8 b - - 3 2",
+            "black_reply": "a5a4",
+            "diagnostic_phase_classification": "second_move_repair",
+            "formal_recon_engine_confirmation_state": "CONFIRMED_BY_SECOND_MOVE_FOUNDATION_RESPONSE_EVIDENCE",
+            "foundation_after_black_reply": {
+              "chain": false,
+              "confirmation_state": "CONFIRMED",
+              "mate1": true,
+              "mate2": false,
+              "recognized": true,
+              "same_graph_second_move_count": 0,
+              "selected_move": "f6a6"
+            },
+            "foundation_reachable_after_black_reply": true,
+            "graph_evidence_summary": {
+              "selected_component": {
+                "action_delta_evidence": "CONFIRMED",
+                "actuator_confirmation": true,
+                "after_candidate_fen": "8/8/5R2/k7/2K5/8/8/8 b - - 3 2",
+                "black_reply_envelope": {
+                  "all_reply_foundation": true,
+                  "any_reply_foundation": true,
+                  "replies_foundation_solved": 1,
+                  "reply_envelope_success_rate": 1.0,
+                  "reply_rows": [
+                    {
+                      "black_reply": "a5a4",
+                      "failure_reason": null,
+                      "foundation_selected_move": "f6a6",
+                      "foundation_solved": true,
+                      "reply_state": "8/8/5R2/8/k1K5/8/8/8 w - - 4 3"
+                    }
+                  ],
+                  "reply_total": 1,
+                  "same_graph_foundation_continuation_count": 1,
+                  "worst_reply": "a5a4",
+                  "worst_reply_foundation_success": true
+                },
+                "bridge_pressure_evidence": "CONFIRMED",
+                "classification": "bridge_to_foundation_progress",
+                "current_evidence_score": 1.53,
+                "edge_fence_evidence": "CONFIRMED",
+                "formal_recon_engine_confirmation_state": "TRUE",
+                "foundation_response_evidence": "CONFIRMED",
+                "legal": true,
+                "move": "d3c4",
+                "raw_candidate_row": {
+                  "action_delta_terminal_state": "CONFIRMED",
+                  "actuator_terminal_state": "CONFIRMED",
+                  "bridge_pressure_terminal_state": "CONFIRMED",
+                  "edge_terminal_state": "CONFIRMED",
+                  "evidence_score": 1.53,
+                  "formal_recon_engine_confirmed": true,
+                  "foundation_terminal_state": null,
+                  "move": "d3c4",
+                  "safety_terminal_state": "CONFIRMED"
+                },
+                "repair_score": 5.53,
+                "rook_blunder": false,
+                "safe": true,
+                "safety_veto_evidence": "CONFIRMED",
+                "same_graph_foundation_continuation_count": 1,
+                "stalemate_after": false,
+                "trajectory_positive_evidence": "FAILED",
+                "trajectory_vs_local_dominance_evidence": "FAILED"
+              },
+              "selected_score": 5.53
+            },
+            "move_index": 1,
+            "safety_result": {
+              "rook_blunder": false,
+              "safe": true
+            },
+            "same_graph_foundation_continuation_count": 1,
+            "selected_white_move": "d3c4",
+            "termination_reason": "foundation_handoff",
+            "white_to_move_fen": "8/8/5R2/k7/8/3K4/8/8 w - - 2 2"
+          }
+        ],
+        "termination_reason": "foundation_handoff"
+      },
+      {
+        "episode_index": 1,
+        "start_fen": "8/4R3/8/k7/8/3K4/8/8 w - - 0 1",
+        "steps": [
+          {
+            "after_black_reply_fen": "8/4R3/8/8/k7/2K5/8/8 w - - 2 2",
+            "after_white_move_fen": "8/4R3/8/k7/8/2K5/8/8 b - - 1 1",
+            "black_reply": "a5a4",
+            "diagnostic_phase_classification": "trajectory_repair_graph_move",
+            "formal_recon_engine_confirmation_state": "CONFIRMED_BY_RUNTIME_TRAJECTORY_EVIDENCE",
+            "foundation_after_black_reply": {
+              "chain": false,
+              "confirmation_state": "CONFIRMED",
+              "mate1": false,
+              "mate2": false,
+              "recognized": false,
+              "same_graph_second_move_count": 0,
+              "selected_move": "e7a7"
+            },
+            "foundation_reachable_after_black_reply": false,
+            "graph_evidence_summary": {
+              "base_selection": null,
+              "selected_component": {
+                "bridge_feature_keys": [
+                  "trajectory_positive_candidate_confirmed=1",
+                  "next_state_foundation_progress=1",
+                  "trajectory_partial_positive_evidence=1"
+                ],
+                "candidate_indexed_by_current_retrieval": true,
+                "candidate_move": "d3c3",
+                "current_graph_evidence_score": 17.8275,
+                "local_progress_score": 0.18,
+                "positive_feature_keys": [
+                  "move_piece=d",
+                  "delta_black_king_edge_distance_sign=0",
+                  "delta_black_king_mobility_sign=-1",
+                  "delta_black_king_mobility_gain_bucket=1",
+                  "delta_confinement_area_sign=0",
+                  "delta_confinement_area_gain_bucket=0",
+                  "combined_progress_gain_bucket=1",
+                  "rook_safe_after=1",
+                  "rook_attacked_after=0",
+                  "gives_check=0",
+                  "king_support_distance_bucket=4",
+                  "black_king_edge_distance_bucket=0",
+                  "trajectory_over_local_progress_dominance=1"
+                ],
+                "safety_metrics": {
+                  "rook_blunder": false,
+                  "rook_safe_after": true,
+                  "stalemate_after": false
+                },
+                "trajectory_classification": "trajectory_positive",
+                "trajectory_score": 11.65
+              },
+              "selected_score": 17.8275,
+              "trajectory_runtime_candidates": [
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=4",
+                    "bridge_delta_mobility_sign=-1",
+                    "bridge_delta_mobility_gain_bucket=2",
+                    "bridge_combined_progress_gain_bucket=4",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "e7b7",
+                  "current_graph_evidence_score": 11.72072,
+                  "local_progress_score": 2.7,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=2",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=4",
+                    "combined_progress_gain_bucket=4",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=0"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.4
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=3",
+                    "bridge_delta_mobility_sign=0",
+                    "bridge_delta_mobility_gain_bucket=0",
+                    "bridge_combined_progress_gain_bucket=3",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "e7c7",
+                  "current_graph_evidence_score": 12.57556,
+                  "local_progress_score": 1.44,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=0",
+                    "delta_black_king_mobility_gain_bucket=0",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=3",
+                    "combined_progress_gain_bucket=3",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=0"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.75
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=3",
+                    "bridge_delta_mobility_sign=-1",
+                    "bridge_delta_mobility_gain_bucket=1",
+                    "bridge_combined_progress_gain_bucket=3",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "e7e4",
+                  "current_graph_evidence_score": 13.12872,
+                  "local_progress_score": 1.3199999999999998,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=1",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=3",
+                    "combined_progress_gain_bucket=3",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=1",
+                    "black_king_edge_distance_bucket=0"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.8
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=2",
+                    "bridge_delta_mobility_sign=-1",
+                    "bridge_delta_mobility_gain_bucket=1",
+                    "bridge_combined_progress_gain_bucket=3",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "e7e6",
+                  "current_graph_evidence_score": 13.93884,
+                  "local_progress_score": 0.84,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=1",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=2",
+                    "combined_progress_gain_bucket=3",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=3",
+                    "black_king_edge_distance_bucket=0"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.5
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=3",
+                    "bridge_delta_mobility_sign=0",
+                    "bridge_delta_mobility_gain_bucket=0",
+                    "bridge_combined_progress_gain_bucket=3",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "e7d7",
+                  "current_graph_evidence_score": 12.57556,
+                  "local_progress_score": 0.72,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=0",
+                    "delta_black_king_mobility_gain_bucket=0",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=3",
+                    "combined_progress_gain_bucket=3",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=0"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.75
+                },
+                {
+                  "bridge_feature_keys": [
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": false,
+                  "candidate_move": "e7e3",
+                  "current_graph_evidence_score": 0.0,
+                  "local_progress_score": 0.48,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=0",
+                    "delta_black_king_mobility_gain_bucket=0",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=2",
+                    "combined_progress_gain_bucket=2",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=1",
+                    "black_king_edge_distance_bucket=0"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.8
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=1",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=2",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=0",
+                    "bridge_delta_confinement_gain_bucket=0",
+                    "bridge_delta_mobility_sign=-1",
+                    "bridge_delta_mobility_gain_bucket=1",
+                    "bridge_combined_progress_gain_bucket=2",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "d3c4",
+                  "current_graph_evidence_score": 16.06396,
+                  "local_progress_score": 0.36,
+                  "positive_feature_keys": [
+                    "move_piece=d",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=1",
+                    "delta_confinement_area_sign=0",
+                    "delta_confinement_area_gain_bucket=0",
+                    "combined_progress_gain_bucket=2",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=3",
+                    "black_king_edge_distance_bucket=0"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.4
+                },
+                {
+                  "bridge_feature_keys": [
+                    "trajectory_positive_candidate_confirmed=1",
+                    "next_state_foundation_progress=1",
+                    "trajectory_partial_positive_evidence=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "d3c3",
+                  "current_graph_evidence_score": 17.8275,
+                  "local_progress_score": 0.18,
+                  "positive_feature_keys": [
+                    "move_piece=d",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=1",
+                    "delta_confinement_area_sign=0",
+                    "delta_confinement_area_gain_bucket=0",
+                    "combined_progress_gain_bucket=1",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=0",
+                    "trajectory_over_local_progress_dominance=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_positive",
+                  "trajectory_score": 11.65
+                }
+              ]
+            },
+            "move_index": 0,
+            "safety_result": {
+              "rook_blunder": false,
+              "safe": true
+            },
+            "same_graph_foundation_continuation_count": 5,
+            "selected_white_move": "d3c3",
+            "termination_reason": null,
+            "white_to_move_fen": "8/4R3/8/k7/8/3K4/8/8 w - - 0 1"
+          },
+          {
+            "after_black_reply_fen": "8/8/8/4R3/8/k1K5/8/8 w - - 4 3",
+            "after_white_move_fen": "8/8/8/4R3/k7/2K5/8/8 b - - 3 2",
+            "black_reply": "a4a3",
+            "diagnostic_phase_classification": "bridge_move",
+            "formal_recon_engine_confirmation_state": "TRUE",
+            "foundation_after_black_reply": {
+              "chain": false,
+              "confirmation_state": "CONFIRMED",
+              "mate1": true,
+              "mate2": false,
+              "recognized": true,
+              "same_graph_second_move_count": 0,
+              "selected_move": "e5a5"
+            },
+            "foundation_reachable_after_black_reply": true,
+            "graph_evidence_summary": {
+              "bridge": {
+                "candidate_count": 10,
+                "failure_bucket": "none",
+                "selected": {
+                  "action_delta_terminal_state": "CONFIRMED",
+                  "actuator_terminal_state": "CONFIRMED",
+                  "all_replies_solved": true,
+                  "attention_terminal_state": "CONFIRMED",
+                  "bridge_confidence": 1.0,
+                  "bridge_pressure_terminal_state": "CONFIRMED",
+                  "delta_black_king_edge_distance": 0.0,
+                  "delta_black_king_legal_mobility": -2.0,
+                  "delta_confinement_area": -8.0,
+                  "delta_foundation_proximity": 1.0,
+                  "edge_terminal_state": "CONFIRMED",
+                  "evidence_score": 1.71,
+                  "formal_recon_engine_confirmed": true,
+                  "foundation_frontier_request_strength": 1.0,
+                  "foundation_handoff_conversion": true,
+                  "foundation_handoff_reachable": true,
+                  "foundation_terminal_state": null,
+                  "graph_confirmation_state": "TRUE",
+                  "move": "e7e5",
+                  "reply_envelope_foundation_coverage_rate": 1.0,
+                  "reply_solved": 1,
+                  "reply_total": 1,
+                  "safety_terminal_state": "CONFIRMED",
+                  "same_graph_foundation_continuation_count": 1,
+                  "worst_reply_failure_reason": null,
+                  "worst_reply_success": true
+                },
+                "selected_move": "e7e5",
+                "selected_move_count": 1
+              },
+              "edge_fence": {
+                "candidate_count": 8,
+                "failure_bucket": "none",
+                "selected": {
+                  "action_delta_terminal_state": "CONFIRMED",
+                  "actuator_terminal_state": "CONFIRMED",
+                  "all_replies_solved": true,
+                  "attention_terminal_state": "CONFIRMED",
+                  "bridge_confidence": null,
+                  "bridge_pressure_terminal_state": null,
+                  "delta_black_king_edge_distance": 0.0,
+                  "delta_black_king_legal_mobility": -2.0,
+                  "delta_confinement_area": -8.0,
+                  "delta_foundation_proximity": null,
+                  "edge_terminal_state": "CONFIRMED",
+                  "evidence_score": 1.31,
+                  "formal_recon_engine_confirmed": true,
+                  "foundation_frontier_request_strength": null,
+                  "foundation_handoff_conversion": true,
+                  "foundation_handoff_reachable": true,
+                  "foundation_terminal_state": "CONFIRMED",
+                  "graph_confirmation_state": "TRUE",
+                  "move": "e7e5",
+                  "reply_envelope_foundation_coverage_rate": null,
+                  "reply_solved": 1,
+                  "reply_total": 1,
+                  "safety_terminal_state": "CONFIRMED",
+                  "same_graph_foundation_continuation_count": 1,
+                  "worst_reply_failure_reason": null,
+                  "worst_reply_success": true
+                },
+                "selected_move": "e7e5",
+                "selected_move_count": 1
+              },
+              "foundation": {
+                "chain": false,
+                "confirmation_state": "CONFIRMED",
+                "mate1": false,
+                "mate2": false,
+                "recognized": false,
+                "same_graph_second_move_count": 0,
+                "selected_move": "e7a7"
+              },
+              "selected_component": {
+                "action_delta_terminal_state": "CONFIRMED",
+                "actuator_terminal_state": "CONFIRMED",
+                "all_replies_solved": true,
+                "attention_terminal_state": "CONFIRMED",
+                "bridge_confidence": 1.0,
+                "bridge_pressure_terminal_state": "CONFIRMED",
+                "delta_black_king_edge_distance": 0.0,
+                "delta_black_king_legal_mobility": -2.0,
+                "delta_confinement_area": -8.0,
+                "delta_foundation_proximity": 1.0,
+                "edge_terminal_state": "CONFIRMED",
+                "evidence_score": 1.71,
+                "formal_recon_engine_confirmed": true,
+                "foundation_frontier_request_strength": 1.0,
+                "foundation_handoff_conversion": true,
+                "foundation_handoff_reachable": true,
+                "foundation_terminal_state": null,
+                "graph_confirmation_state": "TRUE",
+                "move": "e7e5",
+                "reply_envelope_foundation_coverage_rate": 1.0,
+                "reply_solved": 1,
+                "reply_total": 1,
+                "safety_terminal_state": "CONFIRMED",
+                "same_graph_foundation_continuation_count": 1,
+                "worst_reply_failure_reason": null,
+                "worst_reply_success": true
+              },
+              "selected_score": 2.71
+            },
+            "move_index": 1,
+            "safety_result": {
+              "rook_blunder": false,
+              "safe": true
+            },
+            "same_graph_foundation_continuation_count": 1,
+            "selected_white_move": "e7e5",
+            "termination_reason": "foundation_handoff",
+            "white_to_move_fen": "8/4R3/8/8/k7/2K5/8/8 w - - 2 2"
+          }
+        ],
+        "termination_reason": "foundation_handoff"
+      }
+    ],
+    "unsafe_move_count": 0
+  },
+  "max3_diagnostic": {
+    "episode_count": 2,
+    "episode_success_count": 2,
+    "foundation_handoff_count": 2,
+    "illegal_move_count": 0,
+    "max_move_reached_count": 0,
+    "rook_blunder_count": 0,
+    "same_graph_foundation_continuation_count": 9,
+    "stalemate_count": 0,
+    "traces": [
+      {
+        "episode_index": 0,
+        "start_fen": "8/8/5R2/8/1k6/8/4K3/8 w - - 0 1",
+        "steps": [
+          {
+            "after_black_reply_fen": "8/8/5R2/k7/8/3K4/8/8 w - - 2 2",
+            "after_white_move_fen": "8/8/5R2/8/1k6/3K4/8/8 b - - 1 1",
+            "black_reply": "b4a5",
+            "diagnostic_phase_classification": "trajectory_repair_graph_move",
+            "formal_recon_engine_confirmation_state": "CONFIRMED_BY_RUNTIME_TRAJECTORY_EVIDENCE",
+            "foundation_after_black_reply": {
+              "chain": false,
+              "confirmation_state": "CONFIRMED",
+              "mate1": false,
+              "mate2": false,
+              "recognized": false,
+              "same_graph_second_move_count": 0,
+              "selected_move": "f6f5"
+            },
+            "foundation_reachable_after_black_reply": false,
+            "graph_evidence_summary": {
+              "base_selection": null,
+              "selected_component": {
+                "bridge_feature_keys": [
+                  "reply_envelope_any_foundation=0",
+                  "reply_envelope_all_foundation=0",
+                  "reply_envelope_rate_bucket=0",
+                  "bounded_bridge_foundation=0",
+                  "bridge_delta_confinement_sign=0",
+                  "bridge_delta_confinement_gain_bucket=0",
+                  "bridge_delta_mobility_sign=-1",
+                  "bridge_delta_mobility_gain_bucket=1",
+                  "bridge_combined_progress_gain_bucket=2",
+                  "bridge_rook_safe=1",
+                  "trajectory_positive_candidate_confirmed=1",
+                  "next_state_foundation_progress=1",
+                  "trajectory_partial_positive_evidence=1"
+                ],
+                "candidate_indexed_by_current_retrieval": true,
+                "candidate_move": "e2d3",
+                "current_graph_evidence_score": 17.740000000000002,
+                "local_progress_score": 0.36,
+                "positive_feature_keys": [
+                  "move_piece=e",
+                  "delta_black_king_edge_distance_sign=0",
+                  "delta_black_king_mobility_sign=-1",
+                  "delta_black_king_mobility_gain_bucket=1",
+                  "delta_confinement_area_sign=0",
+                  "delta_confinement_area_gain_bucket=0",
+                  "combined_progress_gain_bucket=2",
+                  "rook_safe_after=1",
+                  "rook_attacked_after=0",
+                  "gives_check=0",
+                  "king_support_distance_bucket=3",
+                  "black_king_edge_distance_bucket=1",
+                  "trajectory_over_local_progress_dominance=1"
+                ],
+                "safety_metrics": {
+                  "rook_blunder": false,
+                  "rook_safe_after": true,
+                  "stalemate_after": false
+                },
+                "trajectory_classification": "trajectory_positive",
+                "trajectory_score": 11.4
+              },
+              "selected_score": 17.74,
+              "trajectory_runtime_candidates": [
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=4",
+                    "bridge_delta_mobility_sign=-1",
+                    "bridge_delta_mobility_gain_bucket=2",
+                    "bridge_combined_progress_gain_bucket=4",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "f6c6",
+                  "current_graph_evidence_score": 11.33872,
+                  "local_progress_score": 2.34,
+                  "positive_feature_keys": [
+                    "move_piece=f",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=2",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=4",
+                    "combined_progress_gain_bucket=4",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.7
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=3",
+                    "bridge_delta_mobility_sign=0",
+                    "bridge_delta_mobility_gain_bucket=0",
+                    "bridge_combined_progress_gain_bucket=3",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "f6d6",
+                  "current_graph_evidence_score": 12.19356,
+                  "local_progress_score": 1.2,
+                  "positive_feature_keys": [
+                    "move_piece=f",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=0",
+                    "delta_black_king_mobility_gain_bucket=0",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=3",
+                    "combined_progress_gain_bucket=3",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.8
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=2",
+                    "bridge_delta_mobility_sign=-1",
+                    "bridge_delta_mobility_gain_bucket=2",
+                    "bridge_combined_progress_gain_bucket=3",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "f6f5",
+                  "current_graph_evidence_score": 12.59484,
+                  "local_progress_score": 1.1400000000000001,
+                  "positive_feature_keys": [
+                    "move_piece=f",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=2",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=2",
+                    "combined_progress_gain_bucket=3",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=3",
+                    "black_king_edge_distance_bucket=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 7.3
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=2",
+                    "bridge_delta_mobility_sign=0",
+                    "bridge_delta_mobility_gain_bucket=0",
+                    "bridge_combined_progress_gain_bucket=2",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "f6e6",
+                  "current_graph_evidence_score": 11.81064,
+                  "local_progress_score": 0.6,
+                  "positive_feature_keys": [
+                    "move_piece=f",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=0",
+                    "delta_black_king_mobility_gain_bucket=0",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=2",
+                    "combined_progress_gain_bucket=2",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.8
+                },
+                {
+                  "bridge_feature_keys": [
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": false,
+                  "candidate_move": "f6f3",
+                  "current_graph_evidence_score": 0.0,
+                  "local_progress_score": 0.54,
+                  "positive_feature_keys": [
+                    "move_piece=f",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=2",
+                    "delta_confinement_area_sign=0",
+                    "delta_confinement_area_gain_bucket=0",
+                    "combined_progress_gain_bucket=3",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=1",
+                    "black_king_edge_distance_bucket=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.8
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=0",
+                    "bridge_delta_confinement_gain_bucket=0",
+                    "bridge_delta_mobility_sign=-1",
+                    "bridge_delta_mobility_gain_bucket=1",
+                    "bridge_combined_progress_gain_bucket=2",
+                    "bridge_rook_safe=1",
+                    "trajectory_positive_candidate_confirmed=1",
+                    "next_state_foundation_progress=1",
+                    "trajectory_partial_positive_evidence=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "e2d3",
+                  "current_graph_evidence_score": 17.740000000000002,
+                  "local_progress_score": 0.36,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=1",
+                    "delta_confinement_area_sign=0",
+                    "delta_confinement_area_gain_bucket=0",
+                    "combined_progress_gain_bucket=2",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=3",
+                    "black_king_edge_distance_bucket=1",
+                    "trajectory_over_local_progress_dominance=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_positive",
+                  "trajectory_score": 11.4
+                },
+                {
+                  "bridge_feature_keys": [
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": false,
+                  "candidate_move": "e2d2",
+                  "current_graph_evidence_score": 0.0,
+                  "local_progress_score": 0.18,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=1",
+                    "delta_confinement_area_sign=0",
+                    "delta_confinement_area_gain_bucket=0",
+                    "combined_progress_gain_bucket=1",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.75
+                },
+                {
+                  "bridge_feature_keys": [
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": false,
+                  "candidate_move": "e2f3",
+                  "current_graph_evidence_score": 0.0,
+                  "local_progress_score": 0.0,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=0",
+                    "delta_black_king_mobility_gain_bucket=0",
+                    "delta_confinement_area_sign=0",
+                    "delta_confinement_area_gain_bucket=0",
+                    "combined_progress_gain_bucket=0",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=3",
+                    "black_king_edge_distance_bucket=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 7.0
+                }
+              ]
+            },
+            "move_index": 0,
+            "safety_result": {
+              "rook_blunder": false,
+              "safe": true
+            },
+            "same_graph_foundation_continuation_count": 2,
+            "selected_white_move": "e2d3",
+            "termination_reason": null,
+            "white_to_move_fen": "8/8/5R2/8/1k6/8/4K3/8 w - - 0 1"
+          },
+          {
+            "after_black_reply_fen": "8/8/5R2/8/k1K5/8/8/8 w - - 4 3",
+            "after_white_move_fen": "8/8/5R2/k7/2K5/8/8/8 b - - 3 2",
+            "black_reply": "a5a4",
+            "diagnostic_phase_classification": "second_move_repair",
+            "formal_recon_engine_confirmation_state": "CONFIRMED_BY_SECOND_MOVE_FOUNDATION_RESPONSE_EVIDENCE",
+            "foundation_after_black_reply": {
+              "chain": false,
+              "confirmation_state": "CONFIRMED",
+              "mate1": true,
+              "mate2": false,
+              "recognized": true,
+              "same_graph_second_move_count": 0,
+              "selected_move": "f6a6"
+            },
+            "foundation_reachable_after_black_reply": true,
+            "graph_evidence_summary": {
+              "selected_component": {
+                "action_delta_evidence": "CONFIRMED",
+                "actuator_confirmation": true,
+                "after_candidate_fen": "8/8/5R2/k7/2K5/8/8/8 b - - 3 2",
+                "black_reply_envelope": {
+                  "all_reply_foundation": true,
+                  "any_reply_foundation": true,
+                  "replies_foundation_solved": 1,
+                  "reply_envelope_success_rate": 1.0,
+                  "reply_rows": [
+                    {
+                      "black_reply": "a5a4",
+                      "failure_reason": null,
+                      "foundation_selected_move": "f6a6",
+                      "foundation_solved": true,
+                      "reply_state": "8/8/5R2/8/k1K5/8/8/8 w - - 4 3"
+                    }
+                  ],
+                  "reply_total": 1,
+                  "same_graph_foundation_continuation_count": 1,
+                  "worst_reply": "a5a4",
+                  "worst_reply_foundation_success": true
+                },
+                "bridge_pressure_evidence": "CONFIRMED",
+                "classification": "bridge_to_foundation_progress",
+                "current_evidence_score": 1.53,
+                "edge_fence_evidence": "CONFIRMED",
+                "formal_recon_engine_confirmation_state": "TRUE",
+                "foundation_response_evidence": "CONFIRMED",
+                "legal": true,
+                "move": "d3c4",
+                "raw_candidate_row": {
+                  "action_delta_terminal_state": "CONFIRMED",
+                  "actuator_terminal_state": "CONFIRMED",
+                  "bridge_pressure_terminal_state": "CONFIRMED",
+                  "edge_terminal_state": "CONFIRMED",
+                  "evidence_score": 1.53,
+                  "formal_recon_engine_confirmed": true,
+                  "foundation_terminal_state": null,
+                  "move": "d3c4",
+                  "safety_terminal_state": "CONFIRMED"
+                },
+                "repair_score": 5.53,
+                "rook_blunder": false,
+                "safe": true,
+                "safety_veto_evidence": "CONFIRMED",
+                "same_graph_foundation_continuation_count": 1,
+                "stalemate_after": false,
+                "trajectory_positive_evidence": "FAILED",
+                "trajectory_vs_local_dominance_evidence": "FAILED"
+              },
+              "selected_score": 5.53
+            },
+            "move_index": 1,
+            "safety_result": {
+              "rook_blunder": false,
+              "safe": true
+            },
+            "same_graph_foundation_continuation_count": 1,
+            "selected_white_move": "d3c4",
+            "termination_reason": "foundation_handoff",
+            "white_to_move_fen": "8/8/5R2/k7/8/3K4/8/8 w - - 2 2"
+          }
+        ],
+        "termination_reason": "foundation_handoff"
+      },
+      {
+        "episode_index": 1,
+        "start_fen": "8/4R3/8/k7/8/3K4/8/8 w - - 0 1",
+        "steps": [
+          {
+            "after_black_reply_fen": "8/4R3/8/8/k7/2K5/8/8 w - - 2 2",
+            "after_white_move_fen": "8/4R3/8/k7/8/2K5/8/8 b - - 1 1",
+            "black_reply": "a5a4",
+            "diagnostic_phase_classification": "trajectory_repair_graph_move",
+            "formal_recon_engine_confirmation_state": "CONFIRMED_BY_RUNTIME_TRAJECTORY_EVIDENCE",
+            "foundation_after_black_reply": {
+              "chain": false,
+              "confirmation_state": "CONFIRMED",
+              "mate1": false,
+              "mate2": false,
+              "recognized": false,
+              "same_graph_second_move_count": 0,
+              "selected_move": "e7a7"
+            },
+            "foundation_reachable_after_black_reply": false,
+            "graph_evidence_summary": {
+              "base_selection": null,
+              "selected_component": {
+                "bridge_feature_keys": [
+                  "trajectory_positive_candidate_confirmed=1",
+                  "next_state_foundation_progress=1",
+                  "trajectory_partial_positive_evidence=1"
+                ],
+                "candidate_indexed_by_current_retrieval": true,
+                "candidate_move": "d3c3",
+                "current_graph_evidence_score": 17.8275,
+                "local_progress_score": 0.18,
+                "positive_feature_keys": [
+                  "move_piece=d",
+                  "delta_black_king_edge_distance_sign=0",
+                  "delta_black_king_mobility_sign=-1",
+                  "delta_black_king_mobility_gain_bucket=1",
+                  "delta_confinement_area_sign=0",
+                  "delta_confinement_area_gain_bucket=0",
+                  "combined_progress_gain_bucket=1",
+                  "rook_safe_after=1",
+                  "rook_attacked_after=0",
+                  "gives_check=0",
+                  "king_support_distance_bucket=4",
+                  "black_king_edge_distance_bucket=0",
+                  "trajectory_over_local_progress_dominance=1"
+                ],
+                "safety_metrics": {
+                  "rook_blunder": false,
+                  "rook_safe_after": true,
+                  "stalemate_after": false
+                },
+                "trajectory_classification": "trajectory_positive",
+                "trajectory_score": 11.65
+              },
+              "selected_score": 17.8275,
+              "trajectory_runtime_candidates": [
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=4",
+                    "bridge_delta_mobility_sign=-1",
+                    "bridge_delta_mobility_gain_bucket=2",
+                    "bridge_combined_progress_gain_bucket=4",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "e7b7",
+                  "current_graph_evidence_score": 11.72072,
+                  "local_progress_score": 2.7,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=2",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=4",
+                    "combined_progress_gain_bucket=4",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=0"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.4
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=3",
+                    "bridge_delta_mobility_sign=0",
+                    "bridge_delta_mobility_gain_bucket=0",
+                    "bridge_combined_progress_gain_bucket=3",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "e7c7",
+                  "current_graph_evidence_score": 12.57556,
+                  "local_progress_score": 1.44,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=0",
+                    "delta_black_king_mobility_gain_bucket=0",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=3",
+                    "combined_progress_gain_bucket=3",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=0"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.75
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=3",
+                    "bridge_delta_mobility_sign=-1",
+                    "bridge_delta_mobility_gain_bucket=1",
+                    "bridge_combined_progress_gain_bucket=3",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "e7e4",
+                  "current_graph_evidence_score": 13.12872,
+                  "local_progress_score": 1.3199999999999998,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=1",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=3",
+                    "combined_progress_gain_bucket=3",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=1",
+                    "black_king_edge_distance_bucket=0"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.8
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=2",
+                    "bridge_delta_mobility_sign=-1",
+                    "bridge_delta_mobility_gain_bucket=1",
+                    "bridge_combined_progress_gain_bucket=3",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "e7e6",
+                  "current_graph_evidence_score": 13.93884,
+                  "local_progress_score": 0.84,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=1",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=2",
+                    "combined_progress_gain_bucket=3",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=3",
+                    "black_king_edge_distance_bucket=0"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.5
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=0",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=0",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=-1",
+                    "bridge_delta_confinement_gain_bucket=3",
+                    "bridge_delta_mobility_sign=0",
+                    "bridge_delta_mobility_gain_bucket=0",
+                    "bridge_combined_progress_gain_bucket=3",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "e7d7",
+                  "current_graph_evidence_score": 12.57556,
+                  "local_progress_score": 0.72,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=0",
+                    "delta_black_king_mobility_gain_bucket=0",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=3",
+                    "combined_progress_gain_bucket=3",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=0"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.75
+                },
+                {
+                  "bridge_feature_keys": [
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": false,
+                  "candidate_move": "e7e3",
+                  "current_graph_evidence_score": 0.0,
+                  "local_progress_score": 0.48,
+                  "positive_feature_keys": [
+                    "move_piece=e",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=0",
+                    "delta_black_king_mobility_gain_bucket=0",
+                    "delta_confinement_area_sign=-1",
+                    "delta_confinement_area_gain_bucket=2",
+                    "combined_progress_gain_bucket=2",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=1",
+                    "black_king_edge_distance_bucket=0"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.8
+                },
+                {
+                  "bridge_feature_keys": [
+                    "reply_envelope_any_foundation=1",
+                    "reply_envelope_all_foundation=0",
+                    "reply_envelope_rate_bucket=2",
+                    "bounded_bridge_foundation=0",
+                    "bridge_delta_confinement_sign=0",
+                    "bridge_delta_confinement_gain_bucket=0",
+                    "bridge_delta_mobility_sign=-1",
+                    "bridge_delta_mobility_gain_bucket=1",
+                    "bridge_combined_progress_gain_bucket=2",
+                    "bridge_rook_safe=1",
+                    "local_progress_only_veto=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "d3c4",
+                  "current_graph_evidence_score": 16.06396,
+                  "local_progress_score": 0.36,
+                  "positive_feature_keys": [
+                    "move_piece=d",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=1",
+                    "delta_confinement_area_sign=0",
+                    "delta_confinement_area_gain_bucket=0",
+                    "combined_progress_gain_bucket=2",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=3",
+                    "black_king_edge_distance_bucket=0"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_partial_positive",
+                  "trajectory_score": 6.4
+                },
+                {
+                  "bridge_feature_keys": [
+                    "trajectory_positive_candidate_confirmed=1",
+                    "next_state_foundation_progress=1",
+                    "trajectory_partial_positive_evidence=1"
+                  ],
+                  "candidate_indexed_by_current_retrieval": true,
+                  "candidate_move": "d3c3",
+                  "current_graph_evidence_score": 17.8275,
+                  "local_progress_score": 0.18,
+                  "positive_feature_keys": [
+                    "move_piece=d",
+                    "delta_black_king_edge_distance_sign=0",
+                    "delta_black_king_mobility_sign=-1",
+                    "delta_black_king_mobility_gain_bucket=1",
+                    "delta_confinement_area_sign=0",
+                    "delta_confinement_area_gain_bucket=0",
+                    "combined_progress_gain_bucket=1",
+                    "rook_safe_after=1",
+                    "rook_attacked_after=0",
+                    "gives_check=0",
+                    "king_support_distance_bucket=4",
+                    "black_king_edge_distance_bucket=0",
+                    "trajectory_over_local_progress_dominance=1"
+                  ],
+                  "safety_metrics": {
+                    "rook_blunder": false,
+                    "rook_safe_after": true,
+                    "stalemate_after": false
+                  },
+                  "trajectory_classification": "trajectory_positive",
+                  "trajectory_score": 11.65
+                }
+              ]
+            },
+            "move_index": 0,
+            "safety_result": {
+              "rook_blunder": false,
+              "safe": true
+            },
+            "same_graph_foundation_continuation_count": 5,
+            "selected_white_move": "d3c3",
+            "termination_reason": null,
+            "white_to_move_fen": "8/4R3/8/k7/8/3K4/8/8 w - - 0 1"
+          },
+          {
+            "after_black_reply_fen": "8/8/8/4R3/8/k1K5/8/8 w - - 4 3",
+            "after_white_move_fen": "8/8/8/4R3/k7/2K5/8/8 b - - 3 2",
+            "black_reply": "a4a3",
+            "diagnostic_phase_classification": "bridge_move",
+            "formal_recon_engine_confirmation_state": "TRUE",
+            "foundation_after_black_reply": {
+              "chain": false,
+              "confirmation_state": "CONFIRMED",
+              "mate1": true,
+              "mate2": false,
+              "recognized": true,
+              "same_graph_second_move_count": 0,
+              "selected_move": "e5a5"
+            },
+            "foundation_reachable_after_black_reply": true,
+            "graph_evidence_summary": {
+              "bridge": {
+                "candidate_count": 10,
+                "failure_bucket": "none",
+                "selected": {
+                  "action_delta_terminal_state": "CONFIRMED",
+                  "actuator_terminal_state": "CONFIRMED",
+                  "all_replies_solved": true,
+                  "attention_terminal_state": "CONFIRMED",
+                  "bridge_confidence": 1.0,
+                  "bridge_pressure_terminal_state": "CONFIRMED",
+                  "delta_black_king_edge_distance": 0.0,
+                  "delta_black_king_legal_mobility": -2.0,
+                  "delta_confinement_area": -8.0,
+                  "delta_foundation_proximity": 1.0,
+                  "edge_terminal_state": "CONFIRMED",
+                  "evidence_score": 1.71,
+                  "formal_recon_engine_confirmed": true,
+                  "foundation_frontier_request_strength": 1.0,
+                  "foundation_handoff_conversion": true,
+                  "foundation_handoff_reachable": true,
+                  "foundation_terminal_state": null,
+                  "graph_confirmation_state": "TRUE",
+                  "move": "e7e5",
+                  "reply_envelope_foundation_coverage_rate": 1.0,
+                  "reply_solved": 1,
+                  "reply_total": 1,
+                  "safety_terminal_state": "CONFIRMED",
+                  "same_graph_foundation_continuation_count": 1,
+                  "worst_reply_failure_reason": null,
+                  "worst_reply_success": true
+                },
+                "selected_move": "e7e5",
+                "selected_move_count": 1
+              },
+              "edge_fence": {
+                "candidate_count": 8,
+                "failure_bucket": "none",
+                "selected": {
+                  "action_delta_terminal_state": "CONFIRMED",
+                  "actuator_terminal_state": "CONFIRMED",
+                  "all_replies_solved": true,
+                  "attention_terminal_state": "CONFIRMED",
+                  "bridge_confidence": null,
+                  "bridge_pressure_terminal_state": null,
+                  "delta_black_king_edge_distance": 0.0,
+                  "delta_black_king_legal_mobility": -2.0,
+                  "delta_confinement_area": -8.0,
+                  "delta_foundation_proximity": null,
+                  "edge_terminal_state": "CONFIRMED",
+                  "evidence_score": 1.31,
+                  "formal_recon_engine_confirmed": true,
+                  "foundation_frontier_request_strength": null,
+                  "foundation_handoff_conversion": true,
+                  "foundation_handoff_reachable": true,
+                  "foundation_terminal_state": "CONFIRMED",
+                  "graph_confirmation_state": "TRUE",
+                  "move": "e7e5",
+                  "reply_envelope_foundation_coverage_rate": null,
+                  "reply_solved": 1,
+                  "reply_total": 1,
+                  "safety_terminal_state": "CONFIRMED",
+                  "same_graph_foundation_continuation_count": 1,
+                  "worst_reply_failure_reason": null,
+                  "worst_reply_success": true
+                },
+                "selected_move": "e7e5",
+                "selected_move_count": 1
+              },
+              "foundation": {
+                "chain": false,
+                "confirmation_state": "CONFIRMED",
+                "mate1": false,
+                "mate2": false,
+                "recognized": false,
+                "same_graph_second_move_count": 0,
+                "selected_move": "e7a7"
+              },
+              "selected_component": {
+                "action_delta_terminal_state": "CONFIRMED",
+                "actuator_terminal_state": "CONFIRMED",
+                "all_replies_solved": true,
+                "attention_terminal_state": "CONFIRMED",
+                "bridge_confidence": 1.0,
+                "bridge_pressure_terminal_state": "CONFIRMED",
+                "delta_black_king_edge_distance": 0.0,
+                "delta_black_king_legal_mobility": -2.0,
+                "delta_confinement_area": -8.0,
+                "delta_foundation_proximity": 1.0,
+                "edge_terminal_state": "CONFIRMED",
+                "evidence_score": 1.71,
+                "formal_recon_engine_confirmed": true,
+                "foundation_frontier_request_strength": 1.0,
+                "foundation_handoff_conversion": true,
+                "foundation_handoff_reachable": true,
+                "foundation_terminal_state": null,
+                "graph_confirmation_state": "TRUE",
+                "move": "e7e5",
+                "reply_envelope_foundation_coverage_rate": 1.0,
+                "reply_solved": 1,
+                "reply_total": 1,
+                "safety_terminal_state": "CONFIRMED",
+                "same_graph_foundation_continuation_count": 1,
+                "worst_reply_failure_reason": null,
+                "worst_reply_success": true
+              },
+              "selected_score": 2.71
+            },
+            "move_index": 1,
+            "safety_result": {
+              "rook_blunder": false,
+              "safe": true
+            },
+            "same_graph_foundation_continuation_count": 1,
+            "selected_white_move": "e7e5",
+            "termination_reason": "foundation_handoff",
+            "white_to_move_fen": "8/4R3/8/8/k7/2K5/8/8 w - - 2 2"
+          }
+        ],
+        "termination_reason": "foundation_handoff"
+      }
+    ],
+    "unsafe_move_count": 0
+  },
+  "purity_boundary": {
+    "action_ranker_used_for_runtime": false,
+    "black_replies_harness_simulated": true,
+    "cache_used_as_memoized_frozen_graph_response": true,
+    "cache_used_as_provider": false,
+    "checkpoint": "TG29m",
+    "direct_provider_override": false,
+    "foundation_frozen": true,
+    "learner_visible_stage_labels": false,
+    "runtime_move_selection": "local_second_move_graph_evidence_materialization",
+    "runtime_tablebase_or_dtm_move_source": false,
+    "trajectory_labels_learner_visible": false,
+    "trajectory_labels_trainer_side_only": true,
+    "white_moves_graph_mediated": true
+  },
+  "repair": {
+    "repair_applied": true,
+    "repair_s1_fen": "8/8/5R2/k7/8/3K4/8/8 w - - 2 2",
+    "repair_type": "second_move_foundation_response_priority",
+    "s1_failure_bucket_after": "none",
+    "s1_failure_bucket_before": "second_move_bridge_candidate_exists_but_lost_selection",
+    "second_move_evidence_confirmed_count": 1,
+    "second_move_evidence_materialized_count": 1,
+    "second_move_selected_after_repair": "d3c4",
+    "selected_repair_arm": "second_move_full_reply_foundation_response_priority",
+    "selected_second_candidate_after_repair": {
+      "action_delta_evidence": "CONFIRMED",
+      "actuator_confirmation": true,
+      "after_candidate_fen": "8/8/5R2/k7/2K5/8/8/8 b - - 3 2",
+      "black_reply_envelope": {
+        "all_reply_foundation": true,
+        "any_reply_foundation": true,
+        "replies_foundation_solved": 1,
+        "reply_envelope_success_rate": 1.0,
+        "reply_rows": [
+          {
+            "black_reply": "a5a4",
+            "failure_reason": null,
+            "foundation_selected_move": "f6a6",
+            "foundation_solved": true,
+            "reply_state": "8/8/5R2/8/k1K5/8/8/8 w - - 4 3"
+          }
+        ],
+        "reply_total": 1,
+        "same_graph_foundation_continuation_count": 1,
+        "worst_reply": "a5a4",
+        "worst_reply_foundation_success": true
+      },
+      "bridge_pressure_evidence": "CONFIRMED",
+      "classification": "bridge_to_foundation_progress",
+      "current_evidence_score": 1.53,
+      "edge_fence_evidence": "CONFIRMED",
+      "formal_recon_engine_confirmation_state": "TRUE",
+      "foundation_response_evidence": "CONFIRMED",
+      "legal": true,
+      "move": "d3c4",
+      "raw_candidate_row": {
+        "action_delta_terminal_state": "CONFIRMED",
+        "actuator_terminal_state": "CONFIRMED",
+        "bridge_pressure_terminal_state": "CONFIRMED",
+        "edge_terminal_state": "CONFIRMED",
+        "evidence_score": 1.53,
+        "formal_recon_engine_confirmed": true,
+        "foundation_terminal_state": null,
+        "move": "d3c4",
+        "safety_terminal_state": "CONFIRMED"
+      },
+      "repair_score": 5.53,
+      "rook_blunder": false,
+      "safe": true,
+      "safety_veto_evidence": "CONFIRMED",
+      "same_graph_foundation_continuation_count": 1,
+      "stalemate_after": false,
+      "trajectory_positive_evidence": "FAILED",
+      "trajectory_vs_local_dominance_evidence": "FAILED"
+    }
+  },
+  "s1_candidate_audit": {
+    "best_good_candidate": {
+      "action_delta_evidence": "CONFIRMED",
+      "actuator_confirmation": true,
+      "after_candidate_fen": "8/8/5R2/k7/2K5/8/8/8 b - - 3 2",
+      "black_reply_envelope": {
+        "all_reply_foundation": true,
+        "any_reply_foundation": true,
+        "replies_foundation_solved": 1,
+        "reply_envelope_success_rate": 1.0,
+        "reply_rows": [
+          {
+            "black_reply": "a5a4",
+            "failure_reason": null,
+            "foundation_selected_move": "f6a6",
+            "foundation_solved": true,
+            "reply_state": "8/8/5R2/8/k1K5/8/8/8 w - - 4 3"
+          }
+        ],
+        "reply_total": 1,
+        "same_graph_foundation_continuation_count": 1,
+        "worst_reply": "a5a4",
+        "worst_reply_foundation_success": true
+      },
+      "bridge_pressure_evidence": "CONFIRMED",
+      "classification": "bridge_to_foundation_progress",
+      "current_evidence_score": 1.53,
+      "edge_fence_evidence": "CONFIRMED",
+      "formal_recon_engine_confirmation_state": "TRUE",
+      "foundation_response_evidence": "CONFIRMED",
+      "legal": true,
+      "move": "d3c4",
+      "raw_candidate_row": {
+        "action_delta_terminal_state": "CONFIRMED",
+        "actuator_terminal_state": "CONFIRMED",
+        "bridge_pressure_terminal_state": "CONFIRMED",
+        "edge_terminal_state": "CONFIRMED",
+        "evidence_score": 1.53,
+        "formal_recon_engine_confirmed": true,
+        "foundation_terminal_state": null,
+        "move": "d3c4",
+        "safety_terminal_state": "CONFIRMED"
+      },
+      "repair_score": 5.53,
+      "rook_blunder": false,
+      "safe": true,
+      "safety_veto_evidence": "CONFIRMED",
+      "same_graph_foundation_continuation_count": 1,
+      "stalemate_after": false,
+      "trajectory_positive_evidence": "FAILED",
+      "trajectory_vs_local_dominance_evidence": "FAILED"
+    },
+    "candidate_rows": [
+      {
+        "action_delta_evidence": "CONFIRMED",
+        "actuator_confirmation": true,
+        "after_candidate_fen": "8/8/8/k7/5R2/3K4/8/8 b - - 3 2",
+        "black_reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": false,
+          "replies_foundation_solved": 0,
+          "reply_envelope_success_rate": 0.0,
+          "reply_rows": [
+            {
+              "black_reply": "a5a6",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "f4f6",
+              "foundation_solved": false,
+              "reply_state": "8/8/k7/8/5R2/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b5",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "f4f5",
+              "foundation_solved": false,
+              "reply_state": "8/8/8/1k6/5R2/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b6",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "f4f6",
+              "foundation_solved": false,
+              "reply_state": "8/8/1k6/8/5R2/3K4/8/8 w - - 4 3"
+            }
+          ],
+          "reply_total": 3,
+          "same_graph_foundation_continuation_count": 3,
+          "worst_reply": "a5a6",
+          "worst_reply_foundation_success": false
+        },
+        "bridge_pressure_evidence": "FAILED",
+        "classification": "safe_low_progress",
+        "current_evidence_score": 0.38,
+        "edge_fence_evidence": "CONFIRMED",
+        "formal_recon_engine_confirmation_state": "FAILED",
+        "foundation_response_evidence": "FAILED",
+        "legal": true,
+        "move": "f6f4",
+        "raw_candidate_row": {
+          "action_delta_terminal_state": "CONFIRMED",
+          "actuator_terminal_state": "CONFIRMED",
+          "bridge_pressure_terminal_state": "FAILED",
+          "edge_terminal_state": "CONFIRMED",
+          "evidence_score": 0.38,
+          "formal_recon_engine_confirmed": false,
+          "foundation_terminal_state": null,
+          "move": "f6f4",
+          "safety_terminal_state": "CONFIRMED"
+        },
+        "repair_score": 0.38,
+        "rook_blunder": false,
+        "safe": true,
+        "safety_veto_evidence": "CONFIRMED",
+        "same_graph_foundation_continuation_count": 3,
+        "stalemate_after": false,
+        "trajectory_positive_evidence": "FAILED",
+        "trajectory_vs_local_dominance_evidence": "FAILED"
+      },
+      {
+        "action_delta_evidence": "CONFIRMED",
+        "actuator_confirmation": true,
+        "after_candidate_fen": "8/8/4R3/k7/8/3K4/8/8 b - - 3 2",
+        "black_reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": true,
+          "replies_foundation_solved": 1,
+          "reply_envelope_success_rate": 0.3333333333333333,
+          "reply_rows": [
+            {
+              "black_reply": "a5a4",
+              "failure_reason": null,
+              "foundation_selected_move": "d3c3",
+              "foundation_solved": true,
+              "reply_state": "8/8/4R3/8/k7/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b4",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "e6e4",
+              "foundation_solved": false,
+              "reply_state": "8/8/4R3/8/1k6/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b5",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "e6e5",
+              "foundation_solved": false,
+              "reply_state": "8/8/4R3/1k6/8/3K4/8/8 w - - 4 3"
+            }
+          ],
+          "reply_total": 3,
+          "same_graph_foundation_continuation_count": 3,
+          "worst_reply": "a5b4",
+          "worst_reply_foundation_success": false
+        },
+        "bridge_pressure_evidence": "CONFIRMED",
+        "classification": "local_progress_only",
+        "current_evidence_score": 1.53,
+        "edge_fence_evidence": "CONFIRMED",
+        "formal_recon_engine_confirmation_state": "TRUE",
+        "foundation_response_evidence": "CONFIRMED",
+        "legal": true,
+        "move": "f6e6",
+        "raw_candidate_row": {
+          "action_delta_terminal_state": "CONFIRMED",
+          "actuator_terminal_state": "CONFIRMED",
+          "bridge_pressure_terminal_state": "CONFIRMED",
+          "edge_terminal_state": "CONFIRMED",
+          "evidence_score": 1.53,
+          "formal_recon_engine_confirmed": true,
+          "foundation_terminal_state": null,
+          "move": "f6e6",
+          "safety_terminal_state": "CONFIRMED"
+        },
+        "repair_score": 1.28,
+        "rook_blunder": false,
+        "safe": true,
+        "safety_veto_evidence": "CONFIRMED",
+        "same_graph_foundation_continuation_count": 3,
+        "stalemate_after": false,
+        "trajectory_positive_evidence": "FAILED",
+        "trajectory_vs_local_dominance_evidence": "FAILED"
+      },
+      {
+        "action_delta_evidence": "CONFIRMED",
+        "actuator_confirmation": true,
+        "after_candidate_fen": "8/8/3R4/k7/8/3K4/8/8 b - - 3 2",
+        "black_reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": true,
+          "replies_foundation_solved": 1,
+          "reply_envelope_success_rate": 0.3333333333333333,
+          "reply_rows": [
+            {
+              "black_reply": "a5a4",
+              "failure_reason": null,
+              "foundation_selected_move": "d3c3",
+              "foundation_solved": true,
+              "reply_state": "8/8/3R4/8/k7/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b4",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "d6d4",
+              "foundation_solved": false,
+              "reply_state": "8/8/3R4/8/1k6/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b5",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "d6d5",
+              "foundation_solved": false,
+              "reply_state": "8/8/3R4/1k6/8/3K4/8/8 w - - 4 3"
+            }
+          ],
+          "reply_total": 3,
+          "same_graph_foundation_continuation_count": 3,
+          "worst_reply": "a5b4",
+          "worst_reply_foundation_success": false
+        },
+        "bridge_pressure_evidence": "CONFIRMED",
+        "classification": "local_progress_only",
+        "current_evidence_score": 1.53,
+        "edge_fence_evidence": "CONFIRMED",
+        "formal_recon_engine_confirmation_state": "TRUE",
+        "foundation_response_evidence": "CONFIRMED",
+        "legal": true,
+        "move": "f6d6",
+        "raw_candidate_row": {
+          "action_delta_terminal_state": "CONFIRMED",
+          "actuator_terminal_state": "CONFIRMED",
+          "bridge_pressure_terminal_state": "CONFIRMED",
+          "edge_terminal_state": "CONFIRMED",
+          "evidence_score": 1.53,
+          "formal_recon_engine_confirmed": true,
+          "foundation_terminal_state": null,
+          "move": "f6d6",
+          "safety_terminal_state": "CONFIRMED"
+        },
+        "repair_score": 1.28,
+        "rook_blunder": false,
+        "safe": true,
+        "safety_veto_evidence": "CONFIRMED",
+        "same_graph_foundation_continuation_count": 3,
+        "stalemate_after": false,
+        "trajectory_positive_evidence": "FAILED",
+        "trajectory_vs_local_dominance_evidence": "FAILED"
+      },
+      {
+        "action_delta_evidence": "CONFIRMED",
+        "actuator_confirmation": true,
+        "after_candidate_fen": "8/8/2R5/k7/8/3K4/8/8 b - - 3 2",
+        "black_reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": false,
+          "replies_foundation_solved": 0,
+          "reply_envelope_success_rate": 0.0,
+          "reply_rows": [
+            {
+              "black_reply": "a5a4",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "c6c4",
+              "foundation_solved": false,
+              "reply_state": "8/8/2R5/8/k7/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b4",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "c6b6",
+              "foundation_solved": false,
+              "reply_state": "8/8/2R5/8/1k6/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b5",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "c6b6",
+              "foundation_solved": false,
+              "reply_state": "8/8/2R5/1k6/8/3K4/8/8 w - - 4 3"
+            }
+          ],
+          "reply_total": 3,
+          "same_graph_foundation_continuation_count": 3,
+          "worst_reply": "a5a4",
+          "worst_reply_foundation_success": false
+        },
+        "bridge_pressure_evidence": "FAILED",
+        "classification": "safe_low_progress",
+        "current_evidence_score": 0.38,
+        "edge_fence_evidence": "CONFIRMED",
+        "formal_recon_engine_confirmation_state": "FAILED",
+        "foundation_response_evidence": "FAILED",
+        "legal": true,
+        "move": "f6c6",
+        "raw_candidate_row": {
+          "action_delta_terminal_state": "CONFIRMED",
+          "actuator_terminal_state": "CONFIRMED",
+          "bridge_pressure_terminal_state": "FAILED",
+          "edge_terminal_state": "CONFIRMED",
+          "evidence_score": 0.38,
+          "formal_recon_engine_confirmed": false,
+          "foundation_terminal_state": null,
+          "move": "f6c6",
+          "safety_terminal_state": "CONFIRMED"
+        },
+        "repair_score": 0.38,
+        "rook_blunder": false,
+        "safe": true,
+        "safety_veto_evidence": "CONFIRMED",
+        "same_graph_foundation_continuation_count": 3,
+        "stalemate_after": false,
+        "trajectory_positive_evidence": "FAILED",
+        "trajectory_vs_local_dominance_evidence": "FAILED"
+      },
+      {
+        "action_delta_evidence": "CONFIRMED",
+        "actuator_confirmation": true,
+        "after_candidate_fen": "8/8/5R2/k7/2K5/8/8/8 b - - 3 2",
+        "black_reply_envelope": {
+          "all_reply_foundation": true,
+          "any_reply_foundation": true,
+          "replies_foundation_solved": 1,
+          "reply_envelope_success_rate": 1.0,
+          "reply_rows": [
+            {
+              "black_reply": "a5a4",
+              "failure_reason": null,
+              "foundation_selected_move": "f6a6",
+              "foundation_solved": true,
+              "reply_state": "8/8/5R2/8/k1K5/8/8/8 w - - 4 3"
+            }
+          ],
+          "reply_total": 1,
+          "same_graph_foundation_continuation_count": 1,
+          "worst_reply": "a5a4",
+          "worst_reply_foundation_success": true
+        },
+        "bridge_pressure_evidence": "CONFIRMED",
+        "classification": "bridge_to_foundation_progress",
+        "current_evidence_score": 1.53,
+        "edge_fence_evidence": "CONFIRMED",
+        "formal_recon_engine_confirmation_state": "TRUE",
+        "foundation_response_evidence": "CONFIRMED",
+        "legal": true,
+        "move": "d3c4",
+        "raw_candidate_row": {
+          "action_delta_terminal_state": "CONFIRMED",
+          "actuator_terminal_state": "CONFIRMED",
+          "bridge_pressure_terminal_state": "CONFIRMED",
+          "edge_terminal_state": "CONFIRMED",
+          "evidence_score": 1.53,
+          "formal_recon_engine_confirmed": true,
+          "foundation_terminal_state": null,
+          "move": "d3c4",
+          "safety_terminal_state": "CONFIRMED"
+        },
+        "repair_score": 5.53,
+        "rook_blunder": false,
+        "safe": true,
+        "safety_veto_evidence": "CONFIRMED",
+        "same_graph_foundation_continuation_count": 1,
+        "stalemate_after": false,
+        "trajectory_positive_evidence": "FAILED",
+        "trajectory_vs_local_dominance_evidence": "FAILED"
+      },
+      {
+        "action_delta_evidence": "CONFIRMED",
+        "actuator_confirmation": true,
+        "after_candidate_fen": "8/8/5R2/k7/8/2K5/8/8 b - - 3 2",
+        "black_reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": false,
+          "replies_foundation_solved": 0,
+          "reply_envelope_success_rate": 0.0,
+          "reply_rows": [
+            {
+              "black_reply": "a5a4",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "f6f4",
+              "foundation_solved": false,
+              "reply_state": "8/8/5R2/8/k7/2K5/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b5",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "f6f5",
+              "foundation_solved": false,
+              "reply_state": "8/8/5R2/1k6/8/2K5/8/8 w - - 4 3"
+            }
+          ],
+          "reply_total": 2,
+          "same_graph_foundation_continuation_count": 2,
+          "worst_reply": "a5a4",
+          "worst_reply_foundation_success": false
+        },
+        "bridge_pressure_evidence": "FAILED",
+        "classification": "safe_low_progress",
+        "current_evidence_score": 0.38,
+        "edge_fence_evidence": "CONFIRMED",
+        "formal_recon_engine_confirmation_state": "FAILED",
+        "foundation_response_evidence": "FAILED",
+        "legal": true,
+        "move": "d3c3",
+        "raw_candidate_row": {
+          "action_delta_terminal_state": "CONFIRMED",
+          "actuator_terminal_state": "CONFIRMED",
+          "bridge_pressure_terminal_state": "FAILED",
+          "edge_terminal_state": "CONFIRMED",
+          "evidence_score": 0.38,
+          "formal_recon_engine_confirmed": false,
+          "foundation_terminal_state": null,
+          "move": "d3c3",
+          "safety_terminal_state": "CONFIRMED"
+        },
+        "repair_score": 0.38,
+        "rook_blunder": false,
+        "safe": true,
+        "safety_veto_evidence": "CONFIRMED",
+        "same_graph_foundation_continuation_count": 2,
+        "stalemate_after": false,
+        "trajectory_positive_evidence": "FAILED",
+        "trajectory_vs_local_dominance_evidence": "FAILED"
+      },
+      {
+        "action_delta_evidence": "CONFIRMED",
+        "actuator_confirmation": true,
+        "after_candidate_fen": "8/8/8/k4R2/8/3K4/8/8 b - - 3 2",
+        "black_reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": true,
+          "replies_foundation_solved": 1,
+          "reply_envelope_success_rate": 0.25,
+          "reply_rows": [
+            {
+              "black_reply": "a5a4",
+              "failure_reason": null,
+              "foundation_selected_move": "d3c3",
+              "foundation_solved": true,
+              "reply_state": "8/8/8/5R2/k7/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5a6",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "f5f6",
+              "foundation_solved": false,
+              "reply_state": "8/8/k7/5R2/8/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b4",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "f5f4",
+              "foundation_solved": false,
+              "reply_state": "8/8/8/5R2/1k6/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b6",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "f5f6",
+              "foundation_solved": false,
+              "reply_state": "8/8/1k6/5R2/8/3K4/8/8 w - - 4 3"
+            }
+          ],
+          "reply_total": 4,
+          "same_graph_foundation_continuation_count": 4,
+          "worst_reply": "a5a6",
+          "worst_reply_foundation_success": false
+        },
+        "bridge_pressure_evidence": "CONFIRMED",
+        "classification": "local_progress_only",
+        "current_evidence_score": 1.47,
+        "edge_fence_evidence": "CONFIRMED",
+        "formal_recon_engine_confirmation_state": "TRUE",
+        "foundation_response_evidence": "CONFIRMED",
+        "legal": true,
+        "move": "f6f5",
+        "raw_candidate_row": {
+          "action_delta_terminal_state": "CONFIRMED",
+          "actuator_terminal_state": "CONFIRMED",
+          "bridge_pressure_terminal_state": "CONFIRMED",
+          "edge_terminal_state": "CONFIRMED",
+          "evidence_score": 1.47,
+          "formal_recon_engine_confirmed": true,
+          "foundation_terminal_state": null,
+          "move": "f6f5",
+          "safety_terminal_state": "CONFIRMED"
+        },
+        "repair_score": 1.22,
+        "rook_blunder": false,
+        "safe": true,
+        "safety_veto_evidence": "CONFIRMED",
+        "same_graph_foundation_continuation_count": 4,
+        "stalemate_after": false,
+        "trajectory_positive_evidence": "FAILED",
+        "trajectory_vs_local_dominance_evidence": "FAILED"
+      },
+      {
+        "action_delta_evidence": "CONFIRMED",
+        "actuator_confirmation": true,
+        "after_candidate_fen": "8/8/7R/k7/8/3K4/8/8 b - - 3 2",
+        "black_reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": true,
+          "replies_foundation_solved": 1,
+          "reply_envelope_success_rate": 0.3333333333333333,
+          "reply_rows": [
+            {
+              "black_reply": "a5a4",
+              "failure_reason": null,
+              "foundation_selected_move": "d3c3",
+              "foundation_solved": true,
+              "reply_state": "8/8/7R/8/k7/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b4",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "h6h4",
+              "foundation_solved": false,
+              "reply_state": "8/8/7R/8/1k6/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b5",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "h6h5",
+              "foundation_solved": false,
+              "reply_state": "8/8/7R/1k6/8/3K4/8/8 w - - 4 3"
+            }
+          ],
+          "reply_total": 3,
+          "same_graph_foundation_continuation_count": 3,
+          "worst_reply": "a5b4",
+          "worst_reply_foundation_success": false
+        },
+        "bridge_pressure_evidence": "CONFIRMED",
+        "classification": "local_progress_only",
+        "current_evidence_score": 1.35,
+        "edge_fence_evidence": "CONFIRMED",
+        "formal_recon_engine_confirmation_state": "TRUE",
+        "foundation_response_evidence": "CONFIRMED",
+        "legal": true,
+        "move": "f6h6",
+        "raw_candidate_row": {
+          "action_delta_terminal_state": "CONFIRMED",
+          "actuator_terminal_state": "CONFIRMED",
+          "bridge_pressure_terminal_state": "CONFIRMED",
+          "edge_terminal_state": "CONFIRMED",
+          "evidence_score": 1.35,
+          "formal_recon_engine_confirmed": true,
+          "foundation_terminal_state": null,
+          "move": "f6h6",
+          "safety_terminal_state": "CONFIRMED"
+        },
+        "repair_score": 1.1,
+        "rook_blunder": false,
+        "safe": true,
+        "safety_veto_evidence": "CONFIRMED",
+        "same_graph_foundation_continuation_count": 3,
+        "stalemate_after": false,
+        "trajectory_positive_evidence": "FAILED",
+        "trajectory_vs_local_dominance_evidence": "FAILED"
+      },
+      {
+        "action_delta_evidence": "CONFIRMED",
+        "actuator_confirmation": true,
+        "after_candidate_fen": "8/8/6R1/k7/8/3K4/8/8 b - - 3 2",
+        "black_reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": true,
+          "replies_foundation_solved": 1,
+          "reply_envelope_success_rate": 0.3333333333333333,
+          "reply_rows": [
+            {
+              "black_reply": "a5a4",
+              "failure_reason": null,
+              "foundation_selected_move": "d3c3",
+              "foundation_solved": true,
+              "reply_state": "8/8/6R1/8/k7/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b4",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "g6g4",
+              "foundation_solved": false,
+              "reply_state": "8/8/6R1/8/1k6/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b5",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "g6g5",
+              "foundation_solved": false,
+              "reply_state": "8/8/6R1/1k6/8/3K4/8/8 w - - 4 3"
+            }
+          ],
+          "reply_total": 3,
+          "same_graph_foundation_continuation_count": 3,
+          "worst_reply": "a5b4",
+          "worst_reply_foundation_success": false
+        },
+        "bridge_pressure_evidence": "CONFIRMED",
+        "classification": "local_progress_only",
+        "current_evidence_score": 1.35,
+        "edge_fence_evidence": "CONFIRMED",
+        "formal_recon_engine_confirmation_state": "TRUE",
+        "foundation_response_evidence": "CONFIRMED",
+        "legal": true,
+        "move": "f6g6",
+        "raw_candidate_row": {
+          "action_delta_terminal_state": "CONFIRMED",
+          "actuator_terminal_state": "CONFIRMED",
+          "bridge_pressure_terminal_state": "CONFIRMED",
+          "edge_terminal_state": "CONFIRMED",
+          "evidence_score": 1.35,
+          "formal_recon_engine_confirmed": true,
+          "foundation_terminal_state": null,
+          "move": "f6g6",
+          "safety_terminal_state": "CONFIRMED"
+        },
+        "repair_score": 1.1,
+        "rook_blunder": false,
+        "safe": true,
+        "safety_veto_evidence": "CONFIRMED",
+        "same_graph_foundation_continuation_count": 3,
+        "stalemate_after": false,
+        "trajectory_positive_evidence": "FAILED",
+        "trajectory_vs_local_dominance_evidence": "FAILED"
+      },
+      {
+        "action_delta_evidence": "CONFIRMED",
+        "actuator_confirmation": true,
+        "after_candidate_fen": "5R2/8/8/k7/8/3K4/8/8 b - - 3 2",
+        "black_reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": true,
+          "replies_foundation_solved": 1,
+          "reply_envelope_success_rate": 0.2,
+          "reply_rows": [
+            {
+              "black_reply": "a5a4",
+              "failure_reason": null,
+              "foundation_selected_move": "d3c3",
+              "foundation_solved": true,
+              "reply_state": "5R2/8/8/8/k7/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5a6",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "f8f6",
+              "foundation_solved": false,
+              "reply_state": "5R2/8/k7/8/8/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b4",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "f8f4",
+              "foundation_solved": false,
+              "reply_state": "5R2/8/8/8/1k6/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b5",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "f8f5",
+              "foundation_solved": false,
+              "reply_state": "5R2/8/8/1k6/8/3K4/8/8 w - - 4 3"
+            },
+            {
+              "black_reply": "a5b6",
+              "failure_reason": "no_foundation_response",
+              "foundation_selected_move": "f8f6",
+              "foundation_solved": false,
+              "reply_state": "5R2/8/1k6/8/8/3K4/8/8 w - - 4 3"
+            }
+          ],
+          "reply_total": 5,
+          "same_graph_foundation_continuation_count": 5,
+          "worst_reply": "a5a6",
+          "worst_reply_foundation_success": false
+        },
+        "bridge_pressure_evidence": "CONFIRMED",
+        "classification": "local_progress_only",
+        "current_evidence_score": 1.35,
+        "edge_fence_evidence": "CONFIRMED",
+        "formal_recon_engine_confirmation_state": "TRUE",
+        "foundation_response_evidence": "CONFIRMED",
+        "legal": true,
+        "move": "f6f8",
+        "raw_candidate_row": {
+          "action_delta_terminal_state": "CONFIRMED",
+          "actuator_terminal_state": "CONFIRMED",
+          "bridge_pressure_terminal_state": "CONFIRMED",
+          "edge_terminal_state": "CONFIRMED",
+          "evidence_score": 1.35,
+          "formal_recon_engine_confirmed": true,
+          "foundation_terminal_state": null,
+          "move": "f6f8",
+          "safety_terminal_state": "CONFIRMED"
+        },
+        "repair_score": 1.1,
+        "rook_blunder": false,
+        "safe": true,
+        "safety_veto_evidence": "CONFIRMED",
+        "same_graph_foundation_continuation_count": 5,
+        "stalemate_after": false,
+        "trajectory_positive_evidence": "FAILED",
+        "trajectory_vs_local_dominance_evidence": "FAILED"
+      }
+    ],
+    "s1_audited_candidate_count": 10,
+    "s1_bridge_to_foundation_candidate_count": 1,
+    "s1_candidate_cap_blocked_count": 10,
+    "s1_fen": "8/8/5R2/k7/8/3K4/8/8 w - - 2 2",
+    "s1_good_candidate_exists": true,
+    "s1_good_candidate_lost_selection_count": 1,
+    "s1_immediate_foundation_candidate_count": 0,
+    "s1_legal_candidate_count": 22,
+    "s1_local_progress_only_candidate_count": 6,
+    "s1_retrieval_blocked_count": 0,
+    "s1_safe_candidate_count": 20,
+    "s1_safe_low_progress_candidate_count": 3,
+    "s1_trajectory_positive_candidate_count": 0,
+    "selected_second_move_before": "f6e6"
+  },
+  "schema_version": "krk_autogrowth_tg29m_post_trajectory_second_move_handoff_audit.v0"
+}

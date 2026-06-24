@@ -370,6 +370,11 @@ from .real_context_runtime_trajectory_validation import (
     RealContextRuntimeTrajectoryValidationResult,
     run_real_context_runtime_trajectory_validation,
 )
+from .post_trajectory_second_move_handoff_audit import (
+    PostTrajectorySecondMoveHandoffAuditConfig,
+    PostTrajectorySecondMoveHandoffAuditResult,
+    run_post_trajectory_second_move_handoff_audit,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -628,6 +633,8 @@ __all__ = [
     "RuntimeTrajectoryRepairIntegrationResult",
     "RealContextRuntimeTrajectoryValidationConfig",
     "RealContextRuntimeTrajectoryValidationResult",
+    "PostTrajectorySecondMoveHandoffAuditConfig",
+    "PostTrajectorySecondMoveHandoffAuditResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -648,6 +655,7 @@ __all__ = [
     "run_d3c3_trajectory_evidence_repair",
     "run_runtime_trajectory_repair_integration",
     "run_real_context_runtime_trajectory_validation",
+    "run_post_trajectory_second_move_handoff_audit",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
