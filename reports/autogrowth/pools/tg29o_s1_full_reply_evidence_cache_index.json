@@ -1,0 +1,24 @@
+{
+  "audit_version": "tg29o_s1_full_reply_cache.v1",
+  "average_seconds_per_cached_candidate": 0.0,
+  "average_seconds_per_live_candidate": null,
+  "candidate_classification_counts": {
+    "bridge_to_foundation_progress": 103,
+    "one_reply_later_failed": 15,
+    "one_reply_narrow_foundation_positive": 2
+  },
+  "learner_visible_labels": false,
+  "pre_existing_cache": false,
+  "s1_cache_entry_count": 120,
+  "s1_cache_hit_rate_first_pass": 0.0,
+  "s1_cache_hit_rate_second_pass": 1.0,
+  "s1_cache_index_path": "reports/autogrowth/pools/tg29o_s1_full_reply_evidence_cache_index.json",
+  "s1_cache_live_mismatch_count": 0,
+  "s1_cache_path": "reports/autogrowth/pools/tg29o_s1_full_reply_evidence_cache.jsonl",
+  "s1_live_rollout_count_first_pass": 0,
+  "s1_live_rollout_count_second_pass": 0,
+  "schema_version": "tg29o_s1_full_reply_evidence_cache_index.v0",
+  "timeout_count": 0,
+  "unique_s1_fen_count": 12,
+  "validator_labels_used_for_generation_only": true
+}
