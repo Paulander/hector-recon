@@ -1,0 +1,1492 @@
+{
+  "ablation_results": {
+    "disable_reply_envelope_checks": {
+      "causal": true,
+      "credited_selected_count": 0
+    },
+    "mask_actuator_terminals": {
+      "causal": true,
+      "selected_count": 0
+    },
+    "mask_bridge_pressure_terminals": {
+      "causal": true,
+      "credited_selected_count": 1
+    },
+    "mask_candidate_cap_uncertainty_terminals": {
+      "causal": true,
+      "selected_count": 3
+    },
+    "mask_causal_failure_decay_terminals": {
+      "causal": true,
+      "low_progress_selected_count": 74
+    },
+    "mask_causal_success_terminals": {
+      "causal": true,
+      "credited_selected_count": 0
+    },
+    "mask_continuation_over_local_evidence": {
+      "causal": true,
+      "low_progress_selected_count": 3
+    },
+    "mask_foundation_response_terminals": {
+      "causal": true,
+      "credited_selected_count": 0
+    },
+    "mask_frozen_mate2_foundation_quorum": {
+      "causal": true,
+      "credited_selected_count": 0
+    },
+    "mask_s1_full_reply_evidence": {
+      "causal": false,
+      "selected_count": 4
+    },
+    "mask_spawned_continuation_candidate_terminals": {
+      "causal": true,
+      "selected_count": 0
+    },
+    "proxy_over_ecology_projection": true
+  },
+  "cache_index": {
+    "candidate_count": 81,
+    "candidate_credit_event_count": 75,
+    "candidate_debt_event_count": 1446,
+    "candidate_decay_event_count": 72,
+    "ecology_cache_index_path": "reports/autogrowth/pools/tg29t_continuation_candidate_ecology_cache_index.json",
+    "ecology_cache_path": "reports/autogrowth/pools/tg29t_continuation_candidate_ecology_cache.jsonl",
+    "schema_version": "tg29t_continuation_candidate_ecology_cache_index.v0",
+    "selectable_candidate_count": 75,
+    "selected_projection_count": 4,
+    "state_counts": {
+      "DECAYING": 72,
+      "MATURE": 3,
+      "PRUNED": 6
+    },
+    "tier_counts": {
+      "local_progress_only": 9,
+      "partial_continuation_positive": 3,
+      "safe_low_progress": 63,
+      "unsafe": 6
+    }
+  },
+  "candidate_population": {
+    "candidate_counts_by_turn": {
+      "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1|2": 15,
+      "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1|3": 22,
+      "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1|2": 22,
+      "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1|3": 22
+    },
+    "summary": {
+      "blocked_turn_count": 4,
+      "candidate_cap_blocked_count": 27,
+      "candidate_cap_noise_count": 72,
+      "continuation_label_too_broad": true,
+      "legal_candidate_count": 81,
+      "local_progress_only_count": 9,
+      "misleading_positive_count": 0,
+      "over_spawn_factor": 1.6875,
+      "partial_continuation_positive_count": 3,
+      "safe_candidate_count": 75,
+      "safe_low_progress_count": 63,
+      "spawned_candidate_count": 81,
+      "strong_continuation_positive_count": 0,
+      "unsafe_candidate_count": 6,
+      "unsafe_count": 6,
+      "widened_cap_used": 32
+    }
+  },
+  "checkpoint": "TG29t_continuation_candidate_ecology_materialization",
+  "compact_regression": {
+    "summary": {
+      "compact_regression_not_rerun_runtime_unchanged": true,
+      "compact_regression_reused_from_tg29q": true,
+      "decoy_rejection_pass": true,
+      "foundation_sanity_pass": true,
+      "frontier_regression_pass": true,
+      "generic_edge_regression_pass": true,
+      "known_trajectory_microprobe_pass": true,
+      "s1_full_reply_validation_pass": true,
+      "staged_near_miss_regression_pass": true,
+      "staged_regression_pass": true
+    }
+  },
+  "config": {
+    "base": {
+      "black_reply_policy": "deterministic_worst_foundation_reply",
+      "bridge_frontier_heldout_count": 1,
+      "bridge_frontier_train_count": 2,
+      "episode_count": 4,
+      "foundation_mate1_heldout_count": 16,
+      "foundation_mate1_train_count": 32,
+      "foundation_mate2_heldout_count": 8,
+      "foundation_mate2_train_count": 16,
+      "foundation_seed": 20260624,
+      "full_pool_path": "reports/autogrowth/pools/tg28f_full_foundation_backed_frontier_pool.jsonl",
+      "generic_edge_heldout_count": 2,
+      "generic_edge_train_count": 4,
+      "max_ablation_positions": 1,
+      "max_episode_ablation_count": 1,
+      "max_foundation_ablation_positions": 1,
+      "max_foundation_sanity_positions": 1,
+      "max_samples": 16,
+      "max_white_moves_per_episode": 4,
+      "near_miss_heldout_count": 8,
+      "progress_output": "reports/autogrowth/krk_autogrowth_tg29t_continuation_candidate_ecology_materialization_progress.json",
+      "repaired_high_recall_threshold": 0.018,
+      "schedule_names": [
+        "tg28h_mixed_balanced_baseline",
+        "mixed_balanced_plus_staged",
+        "staged_first_then_mixed_replay",
+        "mixed_first_then_staged",
+        "mixed_staged_near_miss_replay"
+      ],
+      "seed": 20260703,
+      "staged_heldout_count": 4,
+      "staged_near_miss_count": 8,
+      "staged_pool_path": "reports/autogrowth/pools/tg28l_staged_predecessor_pool.jsonl",
+      "staged_regression_count": 4,
+      "staged_train_count": 8
+    },
+    "ecology_cache_index_path": "reports/autogrowth/pools/tg29t_continuation_candidate_ecology_cache_index.json",
+    "ecology_cache_path": "reports/autogrowth/pools/tg29t_continuation_candidate_ecology_cache.jsonl",
+    "ecology_cycle_count": 25,
+    "include_all_safe_candidates": true,
+    "low_progress_decay_after": 6,
+    "maturity_credit_threshold": 20.0,
+    "prune_debt_threshold": 18.0,
+    "tg29p_artifact_path": "reports/autogrowth/krk_autogrowth_tg29p_cached_online_episode_scale_matrix.json",
+    "tg29q_artifact_path": "reports/autogrowth/krk_autogrowth_tg29q_horizon_limited_continuation_repair.json",
+    "tg29r_artifact_path": "reports/autogrowth/krk_autogrowth_tg29r_continuation_candidate_retrieval_repair.json",
+    "tg29s_artifact_path": "reports/autogrowth/krk_autogrowth_tg29s_continuation_evidence_materialization.json",
+    "widened_cap": 32
+  },
+  "decision": {
+    "ablation_results": {
+      "disable_reply_envelope_checks": {
+        "causal": true,
+        "credited_selected_count": 0
+      },
+      "mask_actuator_terminals": {
+        "causal": true,
+        "selected_count": 0
+      },
+      "mask_bridge_pressure_terminals": {
+        "causal": true,
+        "credited_selected_count": 1
+      },
+      "mask_candidate_cap_uncertainty_terminals": {
+        "causal": true,
+        "selected_count": 3
+      },
+      "mask_causal_failure_decay_terminals": {
+        "causal": true,
+        "low_progress_selected_count": 74
+      },
+      "mask_causal_success_terminals": {
+        "causal": true,
+        "credited_selected_count": 0
+      },
+      "mask_continuation_over_local_evidence": {
+        "causal": true,
+        "low_progress_selected_count": 3
+      },
+      "mask_foundation_response_terminals": {
+        "causal": true,
+        "credited_selected_count": 0
+      },
+      "mask_frozen_mate2_foundation_quorum": {
+        "causal": true,
+        "credited_selected_count": 0
+      },
+      "mask_s1_full_reply_evidence": {
+        "causal": false,
+        "selected_count": 4
+      },
+      "mask_spawned_continuation_candidate_terminals": {
+        "causal": true,
+        "selected_count": 0
+      },
+      "proxy_over_ecology_projection": true
+    },
+    "action_ranker_used_for_runtime": false,
+    "actuator_legal_available_terminal_count": 81,
+    "average_candidate_lifetime": 25.0,
+    "blocked_turn_count": 4,
+    "bridge_frontier_credit_count": 25,
+    "bridge_frontier_reached_terminal_count": 1,
+    "bridge_labels_learner_visible": false,
+    "bridge_pressure_present_terminal_count": 10,
+    "bridge_progress_loop_count": 0,
+    "cache_query_count": 81,
+    "candidate_active_count": 0,
+    "candidate_cap_blocked_count": 27,
+    "candidate_cap_noise_count": 72,
+    "candidate_cap_or_retrieval_blocked_count": 4,
+    "candidate_cap_uncertain_terminal_count": 81,
+    "candidate_credit_event_count": 75,
+    "candidate_credited_count": 0,
+    "candidate_debt_event_count": 1446,
+    "candidate_decay_event_count": 72,
+    "candidate_decay_terminal_count": 78,
+    "candidate_decaying_count": 72,
+    "candidate_ecology_ablation_causal": true,
+    "candidate_ecology_over_activation_count": 0,
+    "candidate_ecology_projection_only": true,
+    "candidate_ecology_selection_projection_only": true,
+    "candidate_mature_count": 3,
+    "candidate_pruned_count": 6,
+    "candidate_spawned_count": 0,
+    "candidate_trial_count": 0,
+    "candidate_unseen_count": 0,
+    "causal_failure_repeated_terminal_count": 72,
+    "causal_failure_terminal_count": 78,
+    "causal_success_repeated_terminal_count": 3,
+    "causal_success_terminal_count": 3,
+    "checkpoint_interpretation": "candidate_ecology_materialization_diagnostic_pass",
+    "checkpoint_pass": true,
+    "compact_regression_not_rerun_runtime_unchanged": true,
+    "compact_regression_reused_from_tg29q": true,
+    "continuation_cache_hit_rate": 1.0,
+    "continuation_cache_live_mismatch_count": 0,
+    "continuation_candidate_selected_count": 4,
+    "continuation_evidence_terminal_count": 435,
+    "continuation_label_too_broad": true,
+    "continuation_labels_learner_visible": false,
+    "continuation_over_local_terminal_count": 9,
+    "credited_candidate_selected_count": 2,
+    "decoy_correct_rejection_count": 9,
+    "decoy_episode_count": 9,
+    "decoy_false_handoff_count": 0,
+    "decoy_false_handoff_debt_count": 0,
+    "decoy_rejection_pass": true,
+    "decoy_unsafe_move_count": 0,
+    "direct_provider_override": false,
+    "ecology_cache_entry_count": 81,
+    "ecology_cache_index_path": "reports/autogrowth/pools/tg29t_continuation_candidate_ecology_cache_index.json",
+    "ecology_cache_path": "reports/autogrowth/pools/tg29t_continuation_candidate_ecology_cache.jsonl",
+    "ecology_training_seconds": 0.012206,
+    "edge_fence_labels_learner_visible": false,
+    "edge_fence_progress_present_terminal_count": 10,
+    "failure_bucket_counts": {
+      "candidate_ecology_too_noisy": 1,
+      "horizon_too_short_even_with_candidate_ecology": 1,
+      "materialized_evidence_no_effect": 1,
+      "no_candidate_reaches_foundation_basin": 1,
+      "partial_candidates_insufficient": 1
+    },
+    "final_runtime_selection_changed": false,
+    "foundation_cache_live_mismatch_count": 0,
+    "foundation_frozen": true,
+    "foundation_handoff_count": 0,
+    "foundation_handoff_credit_count": 75,
+    "foundation_m3_updates_during_eval": 0,
+    "foundation_m3_updates_during_training": 0,
+    "foundation_m4_promotions_during_eval": 0,
+    "foundation_m4_promotions_during_training": 0,
+    "foundation_mate1_accuracy": 1.0,
+    "foundation_mate2_conversion_rate": 1.0,
+    "foundation_reply_coverage_improved_terminal_count": 3,
+    "foundation_sanity_pass": true,
+    "frontier_regression_pass": true,
+    "generic_edge_regression_pass": true,
+    "good_candidate_exists_but_lost_selection_count": 2,
+    "guard_used_during_evaluation": false,
+    "guard_used_during_runtime_choice": false,
+    "horizon_too_short_and_stagnating_count": 0,
+    "horizon_too_short_but_progressing_count": 0,
+    "illegal_move_count": 0,
+    "known_trajectory_microprobe_pass": true,
+    "legal_candidate_count": 81,
+    "live_foundation_query_count": 0,
+    "live_rollout_count": 0,
+    "local_progress_loop_count": 2,
+    "local_progress_only_count": 9,
+    "local_progress_without_foundation_gain_terminal_count": 9,
+    "low_progress_candidate_selected_count": 2,
+    "m4_promotion_count": 3,
+    "m4_prune_count": 6,
+    "materialization_blocked_count": 0,
+    "materialized_continuation_candidate_count": 81,
+    "mature_candidate_selected_count": 2,
+    "max4_success_rate": 0.0,
+    "max5_success_rate": 0.0,
+    "max6_success_rate": 0.0,
+    "max_move_reached_count": 21,
+    "misleading_positive_count": 0,
+    "misleading_positive_debt_count": 0,
+    "near_miss_false_positive_count": 0,
+    "over_spawn_factor": 1.6875,
+    "partial_continuation_positive_count": 3,
+    "partial_reply_handoff_available_terminal_count": 3,
+    "phase_timings": {
+      "cache_write_seconds": 0.028867,
+      "context_build_seconds": 0.0,
+      "ecology_training_seconds": 0.012206,
+      "episode_eval_seconds": 0.0,
+      "total_seconds": 0.041078
+    },
+    "purity_boundary": {
+      "action_ranker_used_for_runtime": false,
+      "black_replies_harness_simulated": true,
+      "bridge_labels_learner_visible": false,
+      "broad_krk_expansion": false,
+      "candidate_ecology_graph_evidence_generic": true,
+      "checkpoint": "TG29t",
+      "direct_provider_override": false,
+      "edge_fence_labels_learner_visible": false,
+      "foundation_frozen": true,
+      "foundation_unfrozen": false,
+      "imagination_or_internal_rollout_added": false,
+      "over_spawn_allowed": true,
+      "python_final_selector_used": false,
+      "quality_tiers_trainer_side_only": true,
+      "repair_applied": false,
+      "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+      "runtime_tablebase_or_dtm_move_source": false,
+      "s1_cache_used_as_evidence": true,
+      "s1_cache_used_as_provider": false,
+      "s1_labels_learner_visible": false,
+      "stage_labels_learner_visible": false,
+      "staged_labels_learner_visible": false,
+      "trainer_side_exploration_used": true,
+      "trainer_side_exploration_used_in_final_eval": false,
+      "trajectory_cache_used_as_evidence": true,
+      "trajectory_cache_used_as_provider": false,
+      "trajectory_labels_learner_visible": false,
+      "validator_driven_runtime_selection": false
+    },
+    "python_final_selector_used": false,
+    "reduced_horizon_credit_count": 0,
+    "repair_applied": false,
+    "repeated_low_progress_debt_count": 180,
+    "repeated_low_progress_pattern_terminal_count": 9,
+    "reply_envelope_failed_terminal_count": 78,
+    "rook_blunder_count": 0,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "s1_all_reply_credit_count": 0,
+    "s1_cache_hit_rate": 1.0,
+    "s1_full_reply_validation_pass": true,
+    "s1_labels_learner_visible": false,
+    "safe_candidate_count": 75,
+    "safe_low_progress_count": 63,
+    "safety_debt_count": 6,
+    "safety_preserved_terminal_count": 75,
+    "same_graph_continuation_credit_count": 0,
+    "same_graph_foundation_continuation_count": 2,
+    "scheduler_equivalence_mismatch_count": 0,
+    "selected_repair_arm": "combined_candidate_ecology_diagnostic",
+    "spawned_candidate_count": 81,
+    "stage_labels_learner_visible": false,
+    "staged_labels_learner_visible": false,
+    "staged_near_miss_regression_pass": true,
+    "staged_regression_pass": true,
+    "stalemate_count": 0,
+    "strong_continuation_positive_count": 0,
+    "targeted_episode_count": 6,
+    "targeted_episode_success_count": 0,
+    "targeted_episode_success_rate": 0.0,
+    "targeted_eval_reused_from_tg29q": true,
+    "timeout_count": 0,
+    "trainer_quality_tiers_learner_visible": false,
+    "trainer_side_exploration_used": true,
+    "trainer_side_exploration_used_in_final_eval": false,
+    "trajectory_cache_hit_rate": 1.0,
+    "trajectory_labels_learner_visible": false,
+    "unsafe_candidate_count": 6,
+    "unsafe_count": 6,
+    "unsafe_move_count": 0,
+    "validator_skip_used_during_internal_handoff_eval": false,
+    "widened_cap_used": 32
+  },
+  "decoy_near_miss_regression": {
+    "summary": {
+      "candidate_ecology_over_activation_count": 0,
+      "decoy_correct_rejection_count": 9,
+      "decoy_episode_count": 9,
+      "decoy_false_handoff_count": 0,
+      "decoy_unsafe_move_count": 0,
+      "near_miss_false_positive_count": 0
+    }
+  },
+  "ecology_training": {
+    "cycle_progress": [
+      {
+        "cycle": 1,
+        "state_counts": {
+          "CREDITED": 3,
+          "PRUNED": 6,
+          "SPAWNED": 72
+        }
+      },
+      {
+        "cycle": 5,
+        "state_counts": {
+          "ACTIVE": 49,
+          "CREDITED": 3,
+          "PRUNED": 6,
+          "TRIAL": 23
+        }
+      },
+      {
+        "cycle": 10,
+        "state_counts": {
+          "CREDITED": 3,
+          "DECAYING": 72,
+          "PRUNED": 6
+        }
+      },
+      {
+        "cycle": 15,
+        "state_counts": {
+          "CREDITED": 3,
+          "DECAYING": 72,
+          "PRUNED": 6
+        }
+      },
+      {
+        "cycle": 20,
+        "state_counts": {
+          "CREDITED": 2,
+          "DECAYING": 72,
+          "MATURE": 1,
+          "PRUNED": 6
+        }
+      },
+      {
+        "cycle": 25,
+        "state_counts": {
+          "DECAYING": 72,
+          "MATURE": 3,
+          "PRUNED": 6
+        }
+      }
+    ],
+    "event_counts": {
+      "bridge_frontier_credit_count": 25,
+      "candidate_credit_event_count": 75,
+      "candidate_debt_event_count": 1446,
+      "candidate_decay_event_count": 72,
+      "foundation_handoff_credit_count": 75,
+      "m4_promotion_count": 3,
+      "m4_prune_count": 6,
+      "repeated_low_progress_debt_count": 180,
+      "safety_debt_count": 6
+    },
+    "state_history_sample": {
+      "0234d5c1e531e246": [
+        "SPAWNED",
+        "TRIAL",
+        "TRIAL",
+        "ACTIVE",
+        "ACTIVE",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "..."
+      ],
+      "4724c9bcde2ae7b2": [
+        "SPAWNED",
+        "TRIAL",
+        "TRIAL",
+        "TRIAL",
+        "ACTIVE",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "..."
+      ],
+      "6d18c7e65345a3f7": [
+        "SPAWNED",
+        "ACTIVE",
+        "ACTIVE",
+        "ACTIVE",
+        "ACTIVE",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "..."
+      ],
+      "87772477d058f148": [
+        "SPAWNED",
+        "TRIAL",
+        "TRIAL",
+        "TRIAL",
+        "ACTIVE",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "..."
+      ],
+      "b082a1039d41d282": [
+        "SPAWNED",
+        "TRIAL",
+        "TRIAL",
+        "TRIAL",
+        "ACTIVE",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "..."
+      ],
+      "ccca43fc57be40b6": [
+        "SPAWNED",
+        "ACTIVE",
+        "ACTIVE",
+        "ACTIVE",
+        "ACTIVE",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "..."
+      ],
+      "cd0fa03bc07de30a": [
+        "SPAWNED",
+        "TRIAL",
+        "TRIAL",
+        "TRIAL",
+        "ACTIVE",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "..."
+      ],
+      "e9bf7ba912be0522": [
+        "SPAWNED",
+        "ACTIVE",
+        "ACTIVE",
+        "ACTIVE",
+        "ACTIVE",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "DECAYING",
+        "..."
+      ]
+    },
+    "summary": {
+      "average_candidate_lifetime": 25.0,
+      "bridge_frontier_credit_count": 25,
+      "candidate_active_count": 0,
+      "candidate_credit_event_count": 75,
+      "candidate_credited_count": 0,
+      "candidate_debt_event_count": 1446,
+      "candidate_decay_event_count": 72,
+      "candidate_decaying_count": 72,
+      "candidate_mature_count": 3,
+      "candidate_pruned_count": 6,
+      "candidate_spawned_count": 0,
+      "candidate_trial_count": 0,
+      "candidate_unseen_count": 0,
+      "decoy_false_handoff_debt_count": 0,
+      "ecology_training_seconds": 0.012206,
+      "foundation_handoff_credit_count": 75,
+      "m4_promotion_count": 3,
+      "m4_prune_count": 6,
+      "misleading_positive_debt_count": 0,
+      "reduced_horizon_credit_count": 0,
+      "repeated_low_progress_debt_count": 180,
+      "s1_all_reply_credit_count": 0,
+      "safety_debt_count": 6,
+      "same_graph_continuation_credit_count": 0
+    }
+  },
+  "materialization_audit": {
+    "summary": {
+      "actuator_legal_available_terminal_count": 81,
+      "average_candidate_lifetime": 25.0,
+      "bridge_frontier_credit_count": 25,
+      "bridge_frontier_reached_terminal_count": 1,
+      "bridge_pressure_present_terminal_count": 10,
+      "candidate_active_count": 0,
+      "candidate_cap_uncertain_terminal_count": 81,
+      "candidate_credit_event_count": 75,
+      "candidate_credited_count": 0,
+      "candidate_debt_event_count": 1446,
+      "candidate_decay_event_count": 72,
+      "candidate_decay_terminal_count": 78,
+      "candidate_decaying_count": 72,
+      "candidate_mature_count": 3,
+      "candidate_pruned_count": 6,
+      "candidate_spawned_count": 0,
+      "candidate_trial_count": 0,
+      "candidate_unseen_count": 0,
+      "causal_failure_repeated_terminal_count": 72,
+      "causal_failure_terminal_count": 78,
+      "causal_success_repeated_terminal_count": 3,
+      "causal_success_terminal_count": 3,
+      "continuation_evidence_terminal_count": 435,
+      "continuation_over_local_terminal_count": 9,
+      "decoy_false_handoff_debt_count": 0,
+      "ecology_training_seconds": 0.012206,
+      "edge_fence_progress_present_terminal_count": 10,
+      "foundation_handoff_credit_count": 75,
+      "foundation_reply_coverage_improved_terminal_count": 3,
+      "local_progress_without_foundation_gain_terminal_count": 9,
+      "m4_promotion_count": 3,
+      "m4_prune_count": 6,
+      "materialization_blocked_count": 0,
+      "materialized_continuation_candidate_count": 81,
+      "misleading_positive_debt_count": 0,
+      "partial_reply_handoff_available_terminal_count": 3,
+      "reduced_horizon_credit_count": 0,
+      "repeated_low_progress_debt_count": 180,
+      "repeated_low_progress_pattern_terminal_count": 9,
+      "reply_envelope_failed_terminal_count": 78,
+      "s1_all_reply_credit_count": 0,
+      "safety_debt_count": 6,
+      "safety_preserved_terminal_count": 75,
+      "same_graph_continuation_credit_count": 0
+    }
+  },
+  "policy_comparison": {
+    "arms": {
+      "combined_candidate_ecology": {
+        "arm": "combined_candidate_ecology",
+        "credited_selected_count": 2,
+        "decaying_or_pruned_selected_count": 2,
+        "mature_selected_count": 2,
+        "runtime_repair_applied": false,
+        "selected_candidates": [
+          {
+            "arm": "combined_candidate_ecology",
+            "candidate_key": "88fdf8f42506d524",
+            "credit": 32.5,
+            "debt": 0.0,
+            "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "bridge_frontier_reached",
+              "bridge_pressure_present",
+              "candidate_cap_uncertain",
+              "causal_success_repeated",
+              "edge_fence_progress_present",
+              "foundation_reply_coverage_improved",
+              "partial_reply_handoff_available",
+              "safety_preserved"
+            ],
+            "move_index": 2,
+            "request_pressure": 60.0,
+            "state": "MATURE",
+            "trainer_diagnostic_quality_tier": "partial_continuation_positive"
+          },
+          {
+            "arm": "combined_candidate_ecology",
+            "candidate_key": "8794ed7c9e0d2280",
+            "credit": 20.0,
+            "debt": 0.0,
+            "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "candidate_cap_uncertain",
+              "causal_success_repeated",
+              "foundation_reply_coverage_improved",
+              "partial_reply_handoff_available",
+              "safety_preserved"
+            ],
+            "move_index": 3,
+            "request_pressure": 37.5,
+            "state": "MATURE",
+            "trainer_diagnostic_quality_tier": "partial_continuation_positive"
+          },
+          {
+            "arm": "combined_candidate_ecology",
+            "candidate_key": "b5a132b9ee86abad",
+            "credit": 0.0,
+            "debt": 8.0,
+            "episode_id": "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "candidate_cap_uncertain",
+              "causal_failure_repeated",
+              "reply_envelope_failed",
+              "safety_preserved"
+            ],
+            "move_index": 2,
+            "request_pressure": 13.5,
+            "state": "DECAYING",
+            "trainer_diagnostic_quality_tier": "safe_low_progress"
+          },
+          {
+            "arm": "combined_candidate_ecology",
+            "candidate_key": "727fb6388e4ea690",
+            "credit": 0.0,
+            "debt": 8.0,
+            "episode_id": "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "candidate_cap_uncertain",
+              "causal_failure_repeated",
+              "reply_envelope_failed",
+              "safety_preserved"
+            ],
+            "move_index": 3,
+            "request_pressure": 13.0,
+            "state": "DECAYING",
+            "trainer_diagnostic_quality_tier": "safe_low_progress"
+          }
+        ],
+        "selected_count": 4
+      },
+      "over_spawn_no_credit": {
+        "arm": "over_spawn_no_credit",
+        "credited_selected_count": 1,
+        "decaying_or_pruned_selected_count": 3,
+        "mature_selected_count": 1,
+        "runtime_repair_applied": false,
+        "selected_candidates": [
+          {
+            "arm": "over_spawn_no_credit",
+            "candidate_key": "88fdf8f42506d524",
+            "credit": 32.5,
+            "debt": 0.0,
+            "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "bridge_frontier_reached",
+              "bridge_pressure_present",
+              "candidate_cap_uncertain",
+              "causal_success_repeated",
+              "edge_fence_progress_present",
+              "foundation_reply_coverage_improved",
+              "partial_reply_handoff_available",
+              "safety_preserved"
+            ],
+            "move_index": 2,
+            "request_pressure": 60.0,
+            "state": "MATURE",
+            "trainer_diagnostic_quality_tier": "partial_continuation_positive"
+          },
+          {
+            "arm": "over_spawn_no_credit",
+            "candidate_key": "effc99155b1f6833",
+            "credit": 0.0,
+            "debt": 8.0,
+            "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "candidate_cap_uncertain",
+              "causal_failure_repeated",
+              "reply_envelope_failed",
+              "safety_preserved"
+            ],
+            "move_index": 3,
+            "request_pressure": 13.0,
+            "state": "DECAYING",
+            "trainer_diagnostic_quality_tier": "safe_low_progress"
+          },
+          {
+            "arm": "over_spawn_no_credit",
+            "candidate_key": "d28655027139ee7e",
+            "credit": 0.0,
+            "debt": 14.0,
+            "episode_id": "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "bridge_pressure_present",
+              "candidate_cap_uncertain",
+              "causal_failure_repeated",
+              "edge_fence_progress_present",
+              "local_progress_without_foundation_gain",
+              "repeated_low_progress_pattern",
+              "reply_envelope_failed",
+              "safety_preserved"
+            ],
+            "move_index": 2,
+            "request_pressure": 29.5,
+            "state": "DECAYING",
+            "trainer_diagnostic_quality_tier": "local_progress_only"
+          },
+          {
+            "arm": "over_spawn_no_credit",
+            "candidate_key": "727fb6388e4ea690",
+            "credit": 0.0,
+            "debt": 8.0,
+            "episode_id": "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "candidate_cap_uncertain",
+              "causal_failure_repeated",
+              "reply_envelope_failed",
+              "safety_preserved"
+            ],
+            "move_index": 3,
+            "request_pressure": 13.0,
+            "state": "DECAYING",
+            "trainer_diagnostic_quality_tier": "safe_low_progress"
+          }
+        ],
+        "selected_count": 4
+      },
+      "over_spawn_with_causal_credit": {
+        "arm": "over_spawn_with_causal_credit",
+        "credited_selected_count": 2,
+        "decaying_or_pruned_selected_count": 2,
+        "mature_selected_count": 2,
+        "runtime_repair_applied": false,
+        "selected_candidates": [
+          {
+            "arm": "over_spawn_with_causal_credit",
+            "candidate_key": "88fdf8f42506d524",
+            "credit": 32.5,
+            "debt": 0.0,
+            "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "bridge_frontier_reached",
+              "bridge_pressure_present",
+              "candidate_cap_uncertain",
+              "causal_success_repeated",
+              "edge_fence_progress_present",
+              "foundation_reply_coverage_improved",
+              "partial_reply_handoff_available",
+              "safety_preserved"
+            ],
+            "move_index": 2,
+            "request_pressure": 60.0,
+            "state": "MATURE",
+            "trainer_diagnostic_quality_tier": "partial_continuation_positive"
+          },
+          {
+            "arm": "over_spawn_with_causal_credit",
+            "candidate_key": "8794ed7c9e0d2280",
+            "credit": 20.0,
+            "debt": 0.0,
+            "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "candidate_cap_uncertain",
+              "causal_success_repeated",
+              "foundation_reply_coverage_improved",
+              "partial_reply_handoff_available",
+              "safety_preserved"
+            ],
+            "move_index": 3,
+            "request_pressure": 37.5,
+            "state": "MATURE",
+            "trainer_diagnostic_quality_tier": "partial_continuation_positive"
+          },
+          {
+            "arm": "over_spawn_with_causal_credit",
+            "candidate_key": "3067da603aa5b667",
+            "credit": 0.0,
+            "debt": 14.0,
+            "episode_id": "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "bridge_pressure_present",
+              "candidate_cap_uncertain",
+              "causal_failure_repeated",
+              "edge_fence_progress_present",
+              "local_progress_without_foundation_gain",
+              "repeated_low_progress_pattern",
+              "reply_envelope_failed",
+              "safety_preserved"
+            ],
+            "move_index": 2,
+            "request_pressure": 32.0,
+            "state": "DECAYING",
+            "trainer_diagnostic_quality_tier": "local_progress_only"
+          },
+          {
+            "arm": "over_spawn_with_causal_credit",
+            "candidate_key": "727fb6388e4ea690",
+            "credit": 0.0,
+            "debt": 8.0,
+            "episode_id": "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "candidate_cap_uncertain",
+              "causal_failure_repeated",
+              "reply_envelope_failed",
+              "safety_preserved"
+            ],
+            "move_index": 3,
+            "request_pressure": 13.0,
+            "state": "DECAYING",
+            "trainer_diagnostic_quality_tier": "safe_low_progress"
+          }
+        ],
+        "selected_count": 4
+      },
+      "over_spawn_with_causal_credit_and_decay": {
+        "arm": "over_spawn_with_causal_credit_and_decay",
+        "credited_selected_count": 2,
+        "decaying_or_pruned_selected_count": 2,
+        "mature_selected_count": 2,
+        "runtime_repair_applied": false,
+        "selected_candidates": [
+          {
+            "arm": "over_spawn_with_causal_credit_and_decay",
+            "candidate_key": "88fdf8f42506d524",
+            "credit": 32.5,
+            "debt": 0.0,
+            "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "bridge_frontier_reached",
+              "bridge_pressure_present",
+              "candidate_cap_uncertain",
+              "causal_success_repeated",
+              "edge_fence_progress_present",
+              "foundation_reply_coverage_improved",
+              "partial_reply_handoff_available",
+              "safety_preserved"
+            ],
+            "move_index": 2,
+            "request_pressure": 60.0,
+            "state": "MATURE",
+            "trainer_diagnostic_quality_tier": "partial_continuation_positive"
+          },
+          {
+            "arm": "over_spawn_with_causal_credit_and_decay",
+            "candidate_key": "8794ed7c9e0d2280",
+            "credit": 20.0,
+            "debt": 0.0,
+            "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "candidate_cap_uncertain",
+              "causal_success_repeated",
+              "foundation_reply_coverage_improved",
+              "partial_reply_handoff_available",
+              "safety_preserved"
+            ],
+            "move_index": 3,
+            "request_pressure": 37.5,
+            "state": "MATURE",
+            "trainer_diagnostic_quality_tier": "partial_continuation_positive"
+          },
+          {
+            "arm": "over_spawn_with_causal_credit_and_decay",
+            "candidate_key": "b5a132b9ee86abad",
+            "credit": 0.0,
+            "debt": 8.0,
+            "episode_id": "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "candidate_cap_uncertain",
+              "causal_failure_repeated",
+              "reply_envelope_failed",
+              "safety_preserved"
+            ],
+            "move_index": 2,
+            "request_pressure": 13.5,
+            "state": "DECAYING",
+            "trainer_diagnostic_quality_tier": "safe_low_progress"
+          },
+          {
+            "arm": "over_spawn_with_causal_credit_and_decay",
+            "candidate_key": "727fb6388e4ea690",
+            "credit": 0.0,
+            "debt": 8.0,
+            "episode_id": "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "candidate_cap_uncertain",
+              "causal_failure_repeated",
+              "reply_envelope_failed",
+              "safety_preserved"
+            ],
+            "move_index": 3,
+            "request_pressure": 13.0,
+            "state": "DECAYING",
+            "trainer_diagnostic_quality_tier": "safe_low_progress"
+          }
+        ],
+        "selected_count": 4
+      },
+      "over_spawn_with_continuation_aware_cap": {
+        "arm": "over_spawn_with_continuation_aware_cap",
+        "credited_selected_count": 2,
+        "decaying_or_pruned_selected_count": 2,
+        "mature_selected_count": 2,
+        "runtime_repair_applied": false,
+        "selected_candidates": [
+          {
+            "arm": "over_spawn_with_continuation_aware_cap",
+            "candidate_key": "88fdf8f42506d524",
+            "credit": 32.5,
+            "debt": 0.0,
+            "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "bridge_frontier_reached",
+              "bridge_pressure_present",
+              "candidate_cap_uncertain",
+              "causal_success_repeated",
+              "edge_fence_progress_present",
+              "foundation_reply_coverage_improved",
+              "partial_reply_handoff_available",
+              "safety_preserved"
+            ],
+            "move_index": 2,
+            "request_pressure": 60.0,
+            "state": "MATURE",
+            "trainer_diagnostic_quality_tier": "partial_continuation_positive"
+          },
+          {
+            "arm": "over_spawn_with_continuation_aware_cap",
+            "candidate_key": "8794ed7c9e0d2280",
+            "credit": 20.0,
+            "debt": 0.0,
+            "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "candidate_cap_uncertain",
+              "causal_success_repeated",
+              "foundation_reply_coverage_improved",
+              "partial_reply_handoff_available",
+              "safety_preserved"
+            ],
+            "move_index": 3,
+            "request_pressure": 37.5,
+            "state": "MATURE",
+            "trainer_diagnostic_quality_tier": "partial_continuation_positive"
+          },
+          {
+            "arm": "over_spawn_with_continuation_aware_cap",
+            "candidate_key": "3067da603aa5b667",
+            "credit": 0.0,
+            "debt": 14.0,
+            "episode_id": "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "bridge_pressure_present",
+              "candidate_cap_uncertain",
+              "causal_failure_repeated",
+              "edge_fence_progress_present",
+              "local_progress_without_foundation_gain",
+              "repeated_low_progress_pattern",
+              "reply_envelope_failed",
+              "safety_preserved"
+            ],
+            "move_index": 2,
+            "request_pressure": 32.0,
+            "state": "DECAYING",
+            "trainer_diagnostic_quality_tier": "local_progress_only"
+          },
+          {
+            "arm": "over_spawn_with_continuation_aware_cap",
+            "candidate_key": "727fb6388e4ea690",
+            "credit": 0.0,
+            "debt": 8.0,
+            "episode_id": "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "candidate_cap_uncertain",
+              "causal_failure_repeated",
+              "reply_envelope_failed",
+              "safety_preserved"
+            ],
+            "move_index": 3,
+            "request_pressure": 13.0,
+            "state": "DECAYING",
+            "trainer_diagnostic_quality_tier": "safe_low_progress"
+          }
+        ],
+        "selected_count": 4
+      },
+      "over_spawn_with_graded_request_pressure": {
+        "arm": "over_spawn_with_graded_request_pressure",
+        "credited_selected_count": 2,
+        "decaying_or_pruned_selected_count": 2,
+        "mature_selected_count": 2,
+        "runtime_repair_applied": false,
+        "selected_candidates": [
+          {
+            "arm": "over_spawn_with_graded_request_pressure",
+            "candidate_key": "88fdf8f42506d524",
+            "credit": 32.5,
+            "debt": 0.0,
+            "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "bridge_frontier_reached",
+              "bridge_pressure_present",
+              "candidate_cap_uncertain",
+              "causal_success_repeated",
+              "edge_fence_progress_present",
+              "foundation_reply_coverage_improved",
+              "partial_reply_handoff_available",
+              "safety_preserved"
+            ],
+            "move_index": 2,
+            "request_pressure": 60.0,
+            "state": "MATURE",
+            "trainer_diagnostic_quality_tier": "partial_continuation_positive"
+          },
+          {
+            "arm": "over_spawn_with_graded_request_pressure",
+            "candidate_key": "8794ed7c9e0d2280",
+            "credit": 20.0,
+            "debt": 0.0,
+            "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "candidate_cap_uncertain",
+              "causal_success_repeated",
+              "foundation_reply_coverage_improved",
+              "partial_reply_handoff_available",
+              "safety_preserved"
+            ],
+            "move_index": 3,
+            "request_pressure": 37.5,
+            "state": "MATURE",
+            "trainer_diagnostic_quality_tier": "partial_continuation_positive"
+          },
+          {
+            "arm": "over_spawn_with_graded_request_pressure",
+            "candidate_key": "3067da603aa5b667",
+            "credit": 0.0,
+            "debt": 14.0,
+            "episode_id": "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "bridge_pressure_present",
+              "candidate_cap_uncertain",
+              "causal_failure_repeated",
+              "edge_fence_progress_present",
+              "local_progress_without_foundation_gain",
+              "repeated_low_progress_pattern",
+              "reply_envelope_failed",
+              "safety_preserved"
+            ],
+            "move_index": 2,
+            "request_pressure": 32.0,
+            "state": "DECAYING",
+            "trainer_diagnostic_quality_tier": "local_progress_only"
+          },
+          {
+            "arm": "over_spawn_with_graded_request_pressure",
+            "candidate_key": "727fb6388e4ea690",
+            "credit": 0.0,
+            "debt": 8.0,
+            "episode_id": "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "candidate_cap_uncertain",
+              "causal_failure_repeated",
+              "reply_envelope_failed",
+              "safety_preserved"
+            ],
+            "move_index": 3,
+            "request_pressure": 13.0,
+            "state": "DECAYING",
+            "trainer_diagnostic_quality_tier": "safe_low_progress"
+          }
+        ],
+        "selected_count": 4
+      },
+      "tg29s_baseline": {
+        "arm": "tg29s_baseline",
+        "credited_selected_count": 2,
+        "decaying_or_pruned_selected_count": 0,
+        "mature_selected_count": 2,
+        "runtime_repair_applied": false,
+        "selected_candidates": [
+          {
+            "arm": "tg29s_baseline",
+            "candidate_key": "88fdf8f42506d524",
+            "credit": 32.5,
+            "debt": 0.0,
+            "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "bridge_frontier_reached",
+              "bridge_pressure_present",
+              "candidate_cap_uncertain",
+              "causal_success_repeated",
+              "edge_fence_progress_present",
+              "foundation_reply_coverage_improved",
+              "partial_reply_handoff_available",
+              "safety_preserved"
+            ],
+            "move_index": 2,
+            "request_pressure": 60.0,
+            "state": "MATURE",
+            "trainer_diagnostic_quality_tier": "partial_continuation_positive"
+          },
+          {
+            "arm": "tg29s_baseline",
+            "candidate_key": "8794ed7c9e0d2280",
+            "credit": 20.0,
+            "debt": 0.0,
+            "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+            "graph_visible_evidence_keys": [
+              "actuator_legal_available",
+              "candidate_cap_uncertain",
+              "causal_success_repeated",
+              "foundation_reply_coverage_improved",
+              "partial_reply_handoff_available",
+              "safety_preserved"
+            ],
+            "move_index": 3,
+            "request_pressure": 37.5,
+            "state": "MATURE",
+            "trainer_diagnostic_quality_tier": "partial_continuation_positive"
+          }
+        ],
+        "selected_count": 2
+      }
+    },
+    "repair_applied": false,
+    "selected_repair_arm": "combined_candidate_ecology_diagnostic",
+    "summary": {
+      "candidate_ecology_selection_projection_only": true,
+      "continuation_candidate_selected_count": 4,
+      "credited_candidate_selected_count": 2,
+      "final_runtime_selection_changed": false,
+      "low_progress_candidate_selected_count": 2,
+      "mature_candidate_selected_count": 2
+    }
+  },
+  "purity_boundary": {
+    "action_ranker_used_for_runtime": false,
+    "black_replies_harness_simulated": true,
+    "bridge_labels_learner_visible": false,
+    "broad_krk_expansion": false,
+    "candidate_ecology_graph_evidence_generic": true,
+    "checkpoint": "TG29t",
+    "direct_provider_override": false,
+    "edge_fence_labels_learner_visible": false,
+    "foundation_frozen": true,
+    "foundation_unfrozen": false,
+    "imagination_or_internal_rollout_added": false,
+    "over_spawn_allowed": true,
+    "python_final_selector_used": false,
+    "quality_tiers_trainer_side_only": true,
+    "repair_applied": false,
+    "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+    "runtime_tablebase_or_dtm_move_source": false,
+    "s1_cache_used_as_evidence": true,
+    "s1_cache_used_as_provider": false,
+    "s1_labels_learner_visible": false,
+    "stage_labels_learner_visible": false,
+    "staged_labels_learner_visible": false,
+    "trainer_side_exploration_used": true,
+    "trainer_side_exploration_used_in_final_eval": false,
+    "trajectory_cache_used_as_evidence": true,
+    "trajectory_cache_used_as_provider": false,
+    "trajectory_labels_learner_visible": false,
+    "validator_driven_runtime_selection": false
+  },
+  "schema_version": "krk_autogrowth_tg29t_continuation_candidate_ecology_materialization.v0",
+  "targeted_evaluation": {
+    "summary": {
+      "bridge_progress_loop_count": 0,
+      "candidate_cap_or_retrieval_blocked_count": 4,
+      "candidate_ecology_projection_only": true,
+      "foundation_handoff_count": 0,
+      "good_candidate_exists_but_lost_selection_count": 2,
+      "horizon_too_short_and_stagnating_count": 0,
+      "horizon_too_short_but_progressing_count": 0,
+      "illegal_move_count": 0,
+      "local_progress_loop_count": 2,
+      "materialization_blocked_count": 0,
+      "max4_success_rate": 0.0,
+      "max5_success_rate": 0.0,
+      "max6_success_rate": 0.0,
+      "max_move_reached_count": 21,
+      "rook_blunder_count": 0,
+      "same_graph_foundation_continuation_count": 2,
+      "stalemate_count": 0,
+      "targeted_episode_count": 6,
+      "targeted_episode_success_count": 0,
+      "targeted_episode_success_rate": 0.0,
+      "targeted_eval_reused_from_tg29q": true,
+      "unsafe_move_count": 0
+    }
+  },
+  "tg29s_baseline": {
+    "decision": {
+      "ablation_results": {},
+      "action_ranker_used_for_runtime": false,
+      "bridge_labels_learner_visible": false,
+      "candidate_cap_blocked_count": 33,
+      "candidate_cap_noise_count": 69,
+      "candidate_cap_or_retrieval_blocked_count": 4,
+      "candidate_cap_uncertainty_terminal_count": 33,
+      "checkpoint_interpretation": "continuation_evidence_materialization_diagnostic_pass",
+      "checkpoint_pass": true,
+      "continuation_aware_cap_success_rate": 0.5,
+      "continuation_cache_hit_rate": 1.0,
+      "continuation_cache_live_mismatch_count": 0,
+      "continuation_label_too_broad": true,
+      "continuation_labels_learner_visible": false,
+      "continuation_materialization_ablation_causal": false,
+      "continuation_over_local_terminal_count": 9,
+      "continuation_positive_candidate_count": 81,
+      "continuation_positive_dropped_count": 33,
+      "continuation_positive_in_runtime_count": 48,
+      "continuation_quality_margin_terminal_count": 3,
+      "decoy_rejection_pass": true,
+      "direct_provider_override": false,
+      "edge_fence_labels_learner_visible": false,
+      "failure_bucket_counts": {
+        "continuation_label_too_broad": 1,
+        "strong_continuation_candidate_absent": 1,
+        "widened_cap_too_noisy": 69
+      },
+      "foundation_cache_live_mismatch_count": 0,
+      "foundation_frozen": true,
+      "foundation_m3_updates_during_eval": 0,
+      "foundation_m3_updates_during_training": 0,
+      "foundation_m4_promotions_during_eval": 0,
+      "foundation_m4_promotions_during_training": 0,
+      "foundation_mate1_accuracy": 1.0,
+      "foundation_mate2_conversion_rate": 1.0,
+      "foundation_sanity_pass": true,
+      "frontier_regression_pass": null,
+      "generic_edge_regression_pass": null,
+      "good_continuation_candidate_exists_and_lost_count": 0,
+      "guard_used_during_evaluation": false,
+      "guard_used_during_runtime_choice": false,
+      "horizon_too_short_and_stagnating_count": 0,
+      "horizon_too_short_but_progressing_count": 0,
+      "illegal_move_count": 0,
+      "known_trajectory_microprobe_pass": true,
+      "legal_candidate_count": 81,
+      "local_progress_only_count": 9,
+      "local_progress_only_veto_count": 9,
+      "materialization_blocked_count": 78,
+      "materialized_continuation_candidate_count": 3,
+      "max4_success_rate": 0.0,
+      "max5_success_rate": 0.0,
+      "max6_success_rate": 0.0,
+      "max_move_reached_count": 21,
+      "misleading_continuation_veto_count": 0,
+      "misleading_positive_count": 0,
+      "near_miss_false_positive_count": 0,
+      "original_cap_success_rate": 0.25,
+      "partial_continuation_positive_count": 3,
+      "partial_continuation_terminal_count": 3,
+      "phase_timings": {
+        "tier_materialization_seconds": 0.02236
+      },
+      "purity_boundary": {
+        "action_ranker_used_for_runtime": false,
+        "black_replies_harness_simulated": true,
+        "bridge_labels_learner_visible": false,
+        "broad_krk_expansion": false,
+        "checkpoint": "TG29s",
+        "continuation_labels_learner_visible": false,
+        "direct_provider_override": false,
+        "edge_fence_labels_learner_visible": false,
+        "final_python_selector": false,
+        "foundation_frozen": true,
+        "foundation_unfrozen": false,
+        "imagination_or_internal_rollout_added": false,
+        "quality_tiers_trainer_side_only": true,
+        "repair_applied": false,
+        "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+        "runtime_tablebase_or_dtm_move_source": false,
+        "s1_cache_used_as_evidence": true,
+        "s1_cache_used_as_provider": false,
+        "s1_labels_learner_visible": false,
+        "stage_labels_learner_visible": false,
+        "staged_labels_learner_visible": false,
+        "trajectory_cache_used_as_evidence": true,
+        "trajectory_cache_used_as_provider": false,
+        "trajectory_labels_learner_visible": false,
+        "validator_driven_runtime_selection": false
+      },
+      "repair_applied": false,
+      "rook_blunder_count": 0,
+      "runtime_selectable_candidate_count": 48,
+      "runtime_tablebase_or_dtm_move_source": false,
+      "s1_cache_hit_rate": 1.0,
+      "s1_full_reply_validation_pass": true,
+      "s1_labels_learner_visible": false,
+      "safe_candidate_count": 75,
+      "safe_low_progress_count": 63,
+      "scheduler_equivalence_mismatch_count": 0,
+      "selected_repair_arm": "quality_tier_materialization_diagnostic",
+      "stage_labels_learner_visible": false,
+      "staged_labels_learner_visible": false,
+      "staged_near_miss_regression_pass": null,
+      "staged_regression_pass": null,
+      "stalemate_count": 0,
+      "strong_continuation_in_runtime_count": 0,
+      "strong_continuation_positive_count": 0,
+      "strong_continuation_selected_count": 0,
+      "strong_continuation_terminal_count": 0,
+      "targeted_episode_count": 6,
+      "targeted_episode_success_count": 0,
+      "targeted_episode_success_rate": 0.0,
+      "tier_counts_by_turn": {
+        "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1|2": {
+          "local_progress_only": 4,
+          "partial_continuation_positive": 1,
+          "safe_low_progress": 10
+        },
+        "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1|3": {
+          "partial_continuation_positive": 2,
+          "safe_low_progress": 17,
+          "unsafe": 3
+        },
+        "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1|2": {
+          "local_progress_only": 5,
+          "safe_low_progress": 17
+        },
+        "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1|3": {
+          "safe_low_progress": 19,
+          "unsafe": 3
+        }
+      },
+      "trajectory_cache_hit_rate": 1.0,
+      "trajectory_labels_learner_visible": false,
+      "unsafe_count": 6,
+      "unsafe_move_count": 0,
+      "validator_skip_used_during_internal_handoff_eval": false,
+      "widened_cap_success_rate": 0.5,
+      "widened_cap_used": 32
+    },
+    "tier_summary": {
+      "continuation_label_too_broad": true,
+      "continuation_positive_candidate_count": 81,
+      "legal_candidate_count": 81,
+      "local_progress_only_count": 9,
+      "misleading_positive_count": 0,
+      "partial_continuation_positive_count": 3,
+      "runtime_selectable_candidate_count": 48,
+      "safe_candidate_count": 75,
+      "safe_low_progress_count": 63,
+      "strong_continuation_positive_count": 0,
+      "tier_counts_by_turn": {
+        "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1|2": {
+          "local_progress_only": 4,
+          "partial_continuation_positive": 1,
+          "safe_low_progress": 10
+        },
+        "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1|3": {
+          "partial_continuation_positive": 2,
+          "safe_low_progress": 17,
+          "unsafe": 3
+        },
+        "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1|2": {
+          "local_progress_only": 5,
+          "safe_low_progress": 17
+        },
+        "generic_edge_starts|h4|mobility_maximizing|8/2R5/8/8/8/8/3K1k2/8 w - - 0 1|3": {
+          "safe_low_progress": 19,
+          "unsafe": 3
+        }
+      },
+      "unsafe_count": 6
+    }
+  }
+}

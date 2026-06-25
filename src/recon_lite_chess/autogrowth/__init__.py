@@ -405,6 +405,11 @@ from .continuation_evidence_materialization import (
     ContinuationEvidenceMaterializationResult,
     run_continuation_evidence_materialization,
 )
+from .continuation_candidate_ecology_materialization import (
+    ContinuationCandidateEcologyMaterializationConfig,
+    ContinuationCandidateEcologyMaterializationResult,
+    run_continuation_candidate_ecology_materialization,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -677,6 +682,8 @@ __all__ = [
     "ContinuationCandidateRetrievalRepairResult",
     "ContinuationEvidenceMaterializationConfig",
     "ContinuationEvidenceMaterializationResult",
+    "ContinuationCandidateEcologyMaterializationConfig",
+    "ContinuationCandidateEcologyMaterializationResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -704,6 +711,7 @@ __all__ = [
     "run_horizon_limited_continuation_repair",
     "run_continuation_candidate_retrieval_repair",
     "run_continuation_evidence_materialization",
+    "run_continuation_candidate_ecology_materialization",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",

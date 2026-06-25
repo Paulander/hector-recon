@@ -1,0 +1,22 @@
+{
+  "candidate_count": 81,
+  "candidate_credit_event_count": 75,
+  "candidate_debt_event_count": 1446,
+  "candidate_decay_event_count": 72,
+  "ecology_cache_index_path": "reports/autogrowth/pools/tg29t_continuation_candidate_ecology_cache_index.json",
+  "ecology_cache_path": "reports/autogrowth/pools/tg29t_continuation_candidate_ecology_cache.jsonl",
+  "schema_version": "tg29t_continuation_candidate_ecology_cache_index.v0",
+  "selectable_candidate_count": 75,
+  "selected_projection_count": 4,
+  "state_counts": {
+    "DECAYING": 72,
+    "MATURE": 3,
+    "PRUNED": 6
+  },
+  "tier_counts": {
+    "local_progress_only": 9,
+    "partial_continuation_positive": 3,
+    "safe_low_progress": 63,
+    "unsafe": 6
+  }
+}
