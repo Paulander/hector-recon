@@ -1,0 +1,18 @@
+{
+  "continuation_positive_candidate_count": 15,
+  "entry_count": 120,
+  "layer_counts": {
+    "bridge": 15,
+    "edge": 15,
+    "foundation_response": 15,
+    "legal": 15,
+    "runtime_selectable": 15,
+    "s1_full_reply": 15,
+    "safe": 15,
+    "trajectory": 15
+  },
+  "retrieval_cache_path": "reports/autogrowth/pools/tg29r_continuation_candidate_retrieval_cache.jsonl",
+  "schema_version": "tg29r_continuation_candidate_retrieval_cache_index.v0",
+  "unique_candidate_count": 15,
+  "unique_white_to_move_fen_count": 1
+}

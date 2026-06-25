@@ -395,6 +395,11 @@ from .horizon_limited_continuation_repair import (
     HorizonLimitedContinuationRepairResult,
     run_horizon_limited_continuation_repair,
 )
+from .continuation_candidate_retrieval_repair import (
+    ContinuationCandidateRetrievalRepairConfig,
+    ContinuationCandidateRetrievalRepairResult,
+    run_continuation_candidate_retrieval_repair,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -663,6 +668,8 @@ __all__ = [
     "CachedOnlineEpisodeScaleMatrixResult",
     "HorizonLimitedContinuationRepairConfig",
     "HorizonLimitedContinuationRepairResult",
+    "ContinuationCandidateRetrievalRepairConfig",
+    "ContinuationCandidateRetrievalRepairResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -688,6 +695,7 @@ __all__ = [
     "run_s1_full_reply_cache_online_recheck",
     "run_cached_online_episode_scale_matrix",
     "run_horizon_limited_continuation_repair",
+    "run_continuation_candidate_retrieval_repair",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
