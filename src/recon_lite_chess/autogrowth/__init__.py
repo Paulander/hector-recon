@@ -385,6 +385,11 @@ from .s1_full_reply_cache_online_recheck import (
     S1FullReplyCacheOnlineRecheckResult,
     run_s1_full_reply_cache_online_recheck,
 )
+from .cached_online_episode_scale_matrix import (
+    CachedOnlineEpisodeScaleMatrixConfig,
+    CachedOnlineEpisodeScaleMatrixResult,
+    run_cached_online_episode_scale_matrix,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -649,6 +654,8 @@ __all__ = [
     "S1FullReplyHandoffValidationResult",
     "S1FullReplyCacheOnlineRecheckConfig",
     "S1FullReplyCacheOnlineRecheckResult",
+    "CachedOnlineEpisodeScaleMatrixConfig",
+    "CachedOnlineEpisodeScaleMatrixResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -672,6 +679,7 @@ __all__ = [
     "run_post_trajectory_second_move_handoff_audit",
     "run_s1_full_reply_handoff_validation",
     "run_s1_full_reply_cache_online_recheck",
+    "run_cached_online_episode_scale_matrix",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
