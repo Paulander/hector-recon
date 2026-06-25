@@ -390,6 +390,11 @@ from .cached_online_episode_scale_matrix import (
     CachedOnlineEpisodeScaleMatrixResult,
     run_cached_online_episode_scale_matrix,
 )
+from .horizon_limited_continuation_repair import (
+    HorizonLimitedContinuationRepairConfig,
+    HorizonLimitedContinuationRepairResult,
+    run_horizon_limited_continuation_repair,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -656,6 +661,8 @@ __all__ = [
     "S1FullReplyCacheOnlineRecheckResult",
     "CachedOnlineEpisodeScaleMatrixConfig",
     "CachedOnlineEpisodeScaleMatrixResult",
+    "HorizonLimitedContinuationRepairConfig",
+    "HorizonLimitedContinuationRepairResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -680,6 +687,7 @@ __all__ = [
     "run_s1_full_reply_handoff_validation",
     "run_s1_full_reply_cache_online_recheck",
     "run_cached_online_episode_scale_matrix",
+    "run_horizon_limited_continuation_repair",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
