@@ -3139,7 +3139,7 @@
       }
     ],
     "summary": {
-      "average_seconds_per_candidate_audit": 7.684769735504862,
+      "average_seconds_per_candidate_audit": 7.930937115505429,
       "blocked_turn_count": 4,
       "bridge_candidate_count": 10,
       "candidate_cap_blocked_count": 33,
@@ -3279,24 +3279,24 @@
     "phase_timings": {
       "artifact_write_seconds": 0.0,
       "bridge_train_seconds": 0.0,
-      "candidate_index_build_seconds": 5e-06,
+      "candidate_index_build_seconds": 4e-06,
       "edge_fence_train_seconds": 0.0,
-      "foundation_build_seconds": 11.163888,
-      "foundation_cache_build_seconds": 4.35551,
+      "foundation_build_seconds": 11.126829,
+      "foundation_cache_build_seconds": 4.299475,
       "frontier_pool_load_seconds": 0.0,
-      "graph_materialization_seconds": 11.163888,
+      "graph_materialization_seconds": 11.126829,
       "near_miss_train_seconds": 0.0,
-      "regression_setup_seconds": 4.35551,
+      "regression_setup_seconds": 4.299475,
       "staged_pool_load_seconds": 0.0,
       "staged_train_seconds": 0.0,
       "trajectory_cache_load_seconds": 0.0
     },
-    "total_context_build_seconds": 15.519505
+    "total_context_build_seconds": 15.426379
   },
   "decision": {
     "ablation_results": {},
     "action_ranker_used_for_runtime": false,
-    "average_seconds_per_candidate_audit": 7.684769735504862,
+    "average_seconds_per_candidate_audit": 7.930937115505429,
     "blocked_turn_count": 4,
     "bridge_candidate_count": 10,
     "bridge_labels_learner_visible": false,
@@ -3355,10 +3355,10 @@
     "max_move_reached_count": 6,
     "only_low_progress_candidates_exist_count": 0,
     "phase_timings": {
-      "candidate_audit_seconds": 622.474849,
-      "context_build_seconds": 15.528203,
-      "regression_seconds": 5e-06,
-      "total_seconds": 638.028528
+      "candidate_audit_seconds": 642.407251,
+      "context_build_seconds": 15.434071,
+      "regression_seconds": 7e-06,
+      "total_seconds": 657.867512
     },
     "purity_boundary": {
       "action_ranker_used_for_runtime": false,
