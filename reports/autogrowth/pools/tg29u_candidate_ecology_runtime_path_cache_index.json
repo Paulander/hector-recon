@@ -1,0 +1,14 @@
+{
+  "cache_write_seconds": 0.001713,
+  "runtime_cache_index_path": "reports/autogrowth/pools/tg29u_candidate_ecology_runtime_path_cache_index.json",
+  "runtime_cache_path": "reports/autogrowth/pools/tg29u_candidate_ecology_runtime_path_cache.jsonl",
+  "runtime_row_count": 81,
+  "schema_version": "tg29u_candidate_ecology_runtime_path_cache_index.v0",
+  "selected_after_count": 2,
+  "selected_arm": "combined_ecology_runtime_path",
+  "state_counts": {
+    "DECAYING": 72,
+    "MATURE": 3,
+    "PRUNED": 6
+  }
+}

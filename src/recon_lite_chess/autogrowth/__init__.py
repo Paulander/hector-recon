@@ -410,6 +410,11 @@ from .continuation_candidate_ecology_materialization import (
     ContinuationCandidateEcologyMaterializationResult,
     run_continuation_candidate_ecology_materialization,
 )
+from .candidate_ecology_runtime_path_installation import (
+    CandidateEcologyRuntimePathInstallationConfig,
+    CandidateEcologyRuntimePathInstallationResult,
+    run_candidate_ecology_runtime_path_installation,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -684,6 +689,8 @@ __all__ = [
     "ContinuationEvidenceMaterializationResult",
     "ContinuationCandidateEcologyMaterializationConfig",
     "ContinuationCandidateEcologyMaterializationResult",
+    "CandidateEcologyRuntimePathInstallationConfig",
+    "CandidateEcologyRuntimePathInstallationResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -712,6 +719,7 @@ __all__ = [
     "run_continuation_candidate_retrieval_repair",
     "run_continuation_evidence_materialization",
     "run_continuation_candidate_ecology_materialization",
+    "run_candidate_ecology_runtime_path_installation",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
