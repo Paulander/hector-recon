@@ -435,6 +435,11 @@ from .tight_followup_success_basin_coverage import (
     TightFollowupSuccessBasinCoverageResult,
     run_tight_followup_success_basin_coverage,
 )
+from .child_foundation_basin_coverage import (
+    ChildFoundationBasinCoverageConfig,
+    ChildFoundationBasinCoverageResult,
+    run_child_foundation_basin_coverage_diagnostic,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -719,6 +724,8 @@ __all__ = [
     "LiveChainSufficiencyBasinBoundaryAuditResult",
     "TightFollowupSuccessBasinCoverageConfig",
     "TightFollowupSuccessBasinCoverageResult",
+    "ChildFoundationBasinCoverageConfig",
+    "ChildFoundationBasinCoverageResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -752,6 +759,7 @@ __all__ = [
     "run_reply_robust_mature_followup_repair",
     "run_live_chain_sufficiency_basin_boundary_audit",
     "run_tight_followup_success_basin_coverage",
+    "run_child_foundation_basin_coverage_diagnostic",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
