@@ -1,0 +1,624 @@
+{
+  "ablation_results": {
+    "disable_reply_envelope_checks": {
+      "causal": true,
+      "mature_plus_followup_chain_count": 0
+    },
+    "mask_actuator_terminals": {
+      "causal": true,
+      "selected_count": 0
+    },
+    "mask_bridge_pressure_terminals": {
+      "causal": false,
+      "followup_candidate_selected_count": 1
+    },
+    "mask_continuation_over_local_evidence": {
+      "causal": true,
+      "followup_candidate_selected_count": 0
+    },
+    "mask_credited_candidate_runtime_terminals": {
+      "causal": true,
+      "credited_candidate_selected_count": 0
+    },
+    "mask_followup_ecology_terminals": {
+      "causal": true,
+      "followup_candidate_selected_count": 0
+    },
+    "mask_followup_failure_debt_terminals": {
+      "basin_miss_selected_count": 1,
+      "causal": true
+    },
+    "mask_followup_success_credit": {
+      "causal": true,
+      "mature_plus_followup_chain_count": 0
+    },
+    "mask_foundation_basin_miss_debt": {
+      "causal": true,
+      "foundation_basin_miss_selected_count": 1
+    },
+    "mask_foundation_response_terminals": {
+      "causal": true,
+      "mature_plus_followup_chain_count": 0
+    },
+    "mask_frozen_mate2_foundation_quorum": {
+      "causal": true,
+      "mature_plus_followup_chain_count": 0
+    },
+    "mask_mature_candidate_runtime_terminals": {
+      "causal": true,
+      "mature_candidate_selected_count": 0
+    },
+    "mask_reply_fragility_debt_evidence": {
+      "causal": true,
+      "reply_fragile_candidate_count": 0
+    },
+    "mask_reply_robust_maturity_evidence": {
+      "causal": false,
+      "selected_chain_count": 0
+    },
+    "mask_s1_full_reply_evidence": {
+      "causal": false,
+      "mature_plus_followup_chain_count": 1
+    },
+    "proxy_over_followup_runtime_rows": true
+  },
+  "checkpoint": "TG29w_reply_robust_mature_followup_repair",
+  "compact_regression": {
+    "summary": {
+      "decoy_rejection_pass": true,
+      "foundation_sanity_pass": true,
+      "frontier_regression_pass": true,
+      "generic_edge_regression_pass": true,
+      "known_trajectory_microprobe_pass": true,
+      "s1_full_reply_validation_pass": true,
+      "staged_near_miss_regression_pass": true,
+      "staged_regression_pass": true
+    }
+  },
+  "config": {
+    "base": {
+      "black_reply_policy": "deterministic_worst_foundation_reply",
+      "bridge_frontier_heldout_count": 1,
+      "bridge_frontier_train_count": 2,
+      "episode_count": 4,
+      "foundation_mate1_heldout_count": 16,
+      "foundation_mate1_train_count": 32,
+      "foundation_mate2_heldout_count": 8,
+      "foundation_mate2_train_count": 16,
+      "foundation_seed": 20260624,
+      "full_pool_path": "reports/autogrowth/pools/tg28f_full_foundation_backed_frontier_pool.jsonl",
+      "generic_edge_heldout_count": 2,
+      "generic_edge_train_count": 4,
+      "max_ablation_positions": 1,
+      "max_episode_ablation_count": 1,
+      "max_foundation_ablation_positions": 1,
+      "max_foundation_sanity_positions": 1,
+      "max_samples": 16,
+      "max_white_moves_per_episode": 4,
+      "near_miss_heldout_count": 8,
+      "progress_output": "reports/autogrowth/krk_autogrowth_tg29w_reply_robust_mature_followup_repair_progress.json",
+      "repaired_high_recall_threshold": 0.018,
+      "schedule_names": [
+        "tg28h_mixed_balanced_baseline",
+        "mixed_balanced_plus_staged",
+        "staged_first_then_mixed_replay",
+        "mixed_first_then_staged",
+        "mixed_staged_near_miss_replay"
+      ],
+      "seed": 20260703,
+      "staged_heldout_count": 4,
+      "staged_near_miss_count": 8,
+      "staged_pool_path": "reports/autogrowth/pools/tg28l_staged_predecessor_pool.jsonl",
+      "staged_regression_count": 4,
+      "staged_train_count": 8
+    },
+    "runtime_cache_index_path": "reports/autogrowth/pools/tg29w_reply_robust_followup_runtime_cache_index.json",
+    "runtime_cache_path": "reports/autogrowth/pools/tg29w_reply_robust_followup_runtime_cache.jsonl",
+    "tg29p_artifact_path": "reports/autogrowth/krk_autogrowth_tg29p_cached_online_episode_scale_matrix.json",
+    "tg29q_artifact_path": "reports/autogrowth/krk_autogrowth_tg29q_horizon_limited_continuation_repair.json",
+    "tg29r_artifact_path": "reports/autogrowth/krk_autogrowth_tg29r_continuation_candidate_retrieval_repair.json",
+    "tg29u_artifact_path": "reports/autogrowth/krk_autogrowth_tg29u_candidate_ecology_runtime_path_installation.json",
+    "tg29v_artifact_path": "reports/autogrowth/krk_autogrowth_tg29v_mature_candidate_post_selection_sufficiency_audit.json",
+    "tg29v_followup_cache_index_path": "reports/autogrowth/pools/tg29v_mature_candidate_followup_cache_index.json",
+    "tg29v_followup_cache_path": "reports/autogrowth/pools/tg29v_mature_candidate_followup_cache.jsonl"
+  },
+  "decision": {
+    "ablation_results": {
+      "disable_reply_envelope_checks": {
+        "causal": true,
+        "mature_plus_followup_chain_count": 0
+      },
+      "mask_actuator_terminals": {
+        "causal": true,
+        "selected_count": 0
+      },
+      "mask_bridge_pressure_terminals": {
+        "causal": false,
+        "followup_candidate_selected_count": 1
+      },
+      "mask_continuation_over_local_evidence": {
+        "causal": true,
+        "followup_candidate_selected_count": 0
+      },
+      "mask_credited_candidate_runtime_terminals": {
+        "causal": true,
+        "credited_candidate_selected_count": 0
+      },
+      "mask_followup_ecology_terminals": {
+        "causal": true,
+        "followup_candidate_selected_count": 0
+      },
+      "mask_followup_failure_debt_terminals": {
+        "basin_miss_selected_count": 1,
+        "causal": true
+      },
+      "mask_followup_success_credit": {
+        "causal": true,
+        "mature_plus_followup_chain_count": 0
+      },
+      "mask_foundation_basin_miss_debt": {
+        "causal": true,
+        "foundation_basin_miss_selected_count": 1
+      },
+      "mask_foundation_response_terminals": {
+        "causal": true,
+        "mature_plus_followup_chain_count": 0
+      },
+      "mask_frozen_mate2_foundation_quorum": {
+        "causal": true,
+        "mature_plus_followup_chain_count": 0
+      },
+      "mask_mature_candidate_runtime_terminals": {
+        "causal": true,
+        "mature_candidate_selected_count": 0
+      },
+      "mask_reply_fragility_debt_evidence": {
+        "causal": true,
+        "reply_fragile_candidate_count": 0
+      },
+      "mask_reply_robust_maturity_evidence": {
+        "causal": false,
+        "selected_chain_count": 0
+      },
+      "mask_s1_full_reply_evidence": {
+        "causal": false,
+        "mature_plus_followup_chain_count": 1
+      },
+      "proxy_over_followup_runtime_rows": true
+    },
+    "action_ranker_used_for_runtime": false,
+    "bridge_labels_learner_visible": false,
+    "bridge_progress_loop_count": 0,
+    "cache_query_count": 2,
+    "checkpoint_interpretation": "reply_robust_followup_diagnostic_pass_no_targeted_repair",
+    "checkpoint_pass": true,
+    "continuation_cache_hit_rate": 1.0,
+    "continuation_labels_learner_visible": false,
+    "decoy_correct_rejection_count": 9,
+    "decoy_episode_count": 9,
+    "decoy_false_handoff_count": 0,
+    "decoy_rejection_pass": true,
+    "depth_labels_learner_visible": false,
+    "direct_provider_override": false,
+    "ecology_cache_hit_rate": 1.0,
+    "ecology_cache_live_mismatch_count": 0,
+    "ecology_overactivation_on_decoy_count": 0,
+    "edge_fence_labels_learner_visible": false,
+    "failure_bucket_counts": {
+      "followup_candidate_absent": 1,
+      "followup_candidate_selected_but_no_success": 1,
+      "foundation_basin_missed_after_followup": 1,
+      "mature_plus_followup_chain_horizon_limited": 1
+    },
+    "false_maturity_count": 0,
+    "followup_available_terminal_count": 1,
+    "followup_cache_entry_count": 2,
+    "followup_cache_hit_rate": 1.0,
+    "followup_cache_live_mismatch_count": 0,
+    "followup_cache_source_count": 2,
+    "followup_candidate_exists_count": 1,
+    "followup_candidate_lost_selection_count": 0,
+    "followup_candidate_missing_count": 1,
+    "followup_candidate_selected_count": 1,
+    "followup_candidate_success_count": 1,
+    "followup_ecology_materialized_count": 2,
+    "followup_ecology_spawn_count": 2,
+    "followup_failure_debt_count": 1,
+    "followup_failure_debt_terminal_count": 1,
+    "followup_overactivation_on_decoy_count": 0,
+    "followup_pruned_count": 0,
+    "followup_success_credit_count": 1,
+    "followup_success_credit_terminal_count": 1,
+    "foundation_basin_miss_debt_terminal_count": 1,
+    "foundation_basin_missed_count": 1,
+    "foundation_cache_live_mismatch_count": 0,
+    "foundation_frozen": true,
+    "foundation_handoff_count": 0,
+    "foundation_m3_updates_during_eval": 0,
+    "foundation_m3_updates_during_training": 0,
+    "foundation_m4_promotions_during_eval": 0,
+    "foundation_m4_promotions_during_training": 0,
+    "foundation_mate1_accuracy": 1.0,
+    "foundation_mate2_conversion_rate": 1.0,
+    "foundation_sanity_pass": true,
+    "frontier_regression_pass": true,
+    "generic_edge_regression_pass": true,
+    "guard_used_during_evaluation": false,
+    "guard_used_during_runtime_choice": false,
+    "horizon_insufficient_after_mature_move_count": 0,
+    "illegal_move_count": 0,
+    "known_trajectory_microprobe_pass": true,
+    "live_foundation_query_count": 0,
+    "live_rollout_count": 0,
+    "local_progress_loop_count": 0,
+    "mature_candidate_chain_credit_terminal_count": 1,
+    "mature_candidate_credit_debt_ratio": null,
+    "mature_candidate_credit_total": 52.5,
+    "mature_candidate_debt_total": 0.0,
+    "mature_candidate_selected_count": 2,
+    "mature_plus_followup_chain_count": 1,
+    "max4_success_rate": 0.0,
+    "max5_success_rate": 0.0,
+    "max6_success_rate": 0.0,
+    "max7_diagnostic_success_rate": 0.0,
+    "max8_diagnostic_success_rate": 0.0,
+    "max_move_reached_count": 21,
+    "near_miss_false_positive_count": 0,
+    "phase_timings": {
+      "cache_write_seconds": 0.000202,
+      "context_build_seconds": 0.0,
+      "episode_eval_seconds": 0.0,
+      "followup_runtime_install_seconds": 0.000339,
+      "horizon_diagnostic_seconds": 0.0,
+      "total_seconds": 0.013812
+    },
+    "purity_boundary": {
+      "action_ranker_used_for_runtime": false,
+      "black_replies_harness_simulated": true,
+      "bridge_labels_learner_visible": false,
+      "broad_krk_expansion": false,
+      "checkpoint": "TG29w",
+      "depth_labels_learner_visible": false,
+      "direct_provider_override": false,
+      "edge_fence_labels_learner_visible": false,
+      "foundation_frozen": true,
+      "foundation_unfrozen": false,
+      "imagination_or_internal_rollout_added": false,
+      "python_final_selector_used": false,
+      "quality_tier_labels_learner_visible": false,
+      "reply_policy_labels_learner_visible": false,
+      "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+      "runtime_tablebase_or_dtm_move_source": false,
+      "s1_cache_used_as_evidence": true,
+      "s1_cache_used_as_provider": false,
+      "s1_labels_learner_visible": false,
+      "stage_labels_learner_visible": false,
+      "staged_labels_learner_visible": false,
+      "trajectory_cache_used_as_evidence": true,
+      "trajectory_cache_used_as_provider": false,
+      "trajectory_labels_learner_visible": false,
+      "validator_driven_runtime_selection": false
+    },
+    "python_final_selector_used": false,
+    "quality_tier_labels_learner_visible": false,
+    "repair_applied": false,
+    "reply_followup_repair_ablation_causal": true,
+    "reply_fragile_mature_candidate_count": 1,
+    "reply_fragility_debt_terminal_count": 1,
+    "reply_policy_fragile_but_followup_exists_count": 1,
+    "reply_policy_labels_learner_visible": false,
+    "reply_robust_maturity_terminal_count": 0,
+    "rook_blunder_count": 0,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "s1_cache_hit_rate": 1.0,
+    "s1_full_reply_validation_pass": true,
+    "s1_handoff_count": 0,
+    "s1_labels_learner_visible": false,
+    "same_graph_foundation_continuation_count": 2,
+    "scheduler_equivalence_mismatch_count": 0,
+    "selected_mature_candidate_count": 2,
+    "selected_repair_arm": "reply_robust_plus_followup_diagnostic",
+    "stage_labels_learner_visible": false,
+    "staged_labels_learner_visible": false,
+    "staged_near_miss_regression_pass": true,
+    "staged_regression_pass": true,
+    "stalemate_count": 0,
+    "targeted_episode_count": 6,
+    "targeted_episode_success_count": 0,
+    "targeted_episode_success_rate": 0.0,
+    "targeted_success_delta_vs_tg29u": 0,
+    "targeted_success_delta_vs_tg29v": 0,
+    "timeout_count": 0,
+    "trainer_side_exploration_used": true,
+    "trainer_side_exploration_used_in_final_eval": false,
+    "trajectory_cache_hit_rate": 1.0,
+    "trajectory_labels_learner_visible": false,
+    "unsafe_move_count": 0,
+    "useful_with_followup_count": 1,
+    "validator_skip_used_during_internal_handoff_eval": false
+  },
+  "decoy_near_miss_regression": {
+    "summary": {
+      "decoy_correct_rejection_count": 9,
+      "decoy_episode_count": 9,
+      "decoy_false_handoff_count": 0,
+      "ecology_overactivation_on_decoy_count": 0,
+      "followup_overactivation_on_decoy_count": 0,
+      "near_miss_false_positive_count": 0
+    }
+  },
+  "followup_cache_audit": {
+    "summary": {
+      "cache_config_hash": null,
+      "cache_schema_valid": true,
+      "ecology_cache_compatible": true,
+      "followup_cache_entry_count": 2,
+      "followup_cache_hit_rate": 1.0,
+      "followup_cache_live_mismatch_count": 0,
+      "followup_cache_path": "reports/autogrowth/pools/tg29v_mature_candidate_followup_cache.jsonl",
+      "followup_cache_source_count": 2,
+      "foundation_config_hash": null,
+      "schema_version": "tg29v_mature_candidate_followup_cache_index.v0"
+    }
+  },
+  "followup_runtime_materialization": {
+    "runtime_rows": [
+      {
+        "after_black_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+        "candidate_move": "g4g2",
+        "followup_selected_move": "f4e3",
+        "post_selection_classification": "reply_fragile_useful_with_followup",
+        "runtime_evidence": {
+          "actuator_legality": true,
+          "followup_available_evidence": true,
+          "followup_candidate_credited": true,
+          "followup_candidate_debt": false,
+          "followup_candidate_pruned_veto": false,
+          "followup_candidate_spawned": true,
+          "followup_improves_same_graph_continuation": true,
+          "followup_local_progress_without_handoff": false,
+          "followup_missing_debt": false,
+          "followup_reaches_foundation_response": true,
+          "followup_reaches_s1_handoff": false,
+          "followup_reduces_horizon_failure": true,
+          "followup_reply_envelope_failed": false,
+          "followup_success_credit": true,
+          "foundation_basin_miss_debt": false,
+          "mature_candidate_chain_credit": true,
+          "reply_fragility_debt_evidence": true,
+          "reply_robust_maturity_evidence": false,
+          "safety_veto_clear": true
+        },
+        "selected_mature_candidate_cache_entry_id": "88fdf8f42506d524"
+      },
+      {
+        "after_black_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+        "candidate_move": "f4e3",
+        "followup_selected_move": null,
+        "post_selection_classification": "foundation_basin_missed",
+        "runtime_evidence": {
+          "actuator_legality": true,
+          "followup_available_evidence": false,
+          "followup_candidate_credited": false,
+          "followup_candidate_debt": true,
+          "followup_candidate_pruned_veto": false,
+          "followup_candidate_spawned": true,
+          "followup_improves_same_graph_continuation": false,
+          "followup_local_progress_without_handoff": false,
+          "followup_missing_debt": true,
+          "followup_reaches_foundation_response": false,
+          "followup_reaches_s1_handoff": false,
+          "followup_reduces_horizon_failure": false,
+          "followup_reply_envelope_failed": true,
+          "followup_success_credit": false,
+          "foundation_basin_miss_debt": true,
+          "mature_candidate_chain_credit": false,
+          "reply_fragility_debt_evidence": false,
+          "reply_robust_maturity_evidence": false,
+          "safety_veto_clear": true
+        },
+        "selected_mature_candidate_cache_entry_id": "8794ed7c9e0d2280"
+      }
+    ],
+    "summary": {
+      "followup_available_terminal_count": 1,
+      "followup_candidate_exists_count": 1,
+      "followup_candidate_lost_selection_count": 0,
+      "followup_candidate_missing_count": 1,
+      "followup_candidate_selected_count": 1,
+      "followup_candidate_success_count": 1,
+      "followup_ecology_materialized_count": 2,
+      "followup_ecology_spawn_count": 2,
+      "followup_failure_debt_count": 1,
+      "followup_failure_debt_terminal_count": 1,
+      "followup_pruned_count": 0,
+      "followup_success_credit_count": 1,
+      "followup_success_credit_terminal_count": 1,
+      "foundation_basin_miss_debt_terminal_count": 1,
+      "mature_candidate_chain_credit_terminal_count": 1,
+      "reply_fragility_debt_terminal_count": 1,
+      "reply_robust_maturity_terminal_count": 0
+    }
+  },
+  "horizon_diagnostic": {
+    "summary": {
+      "followup_chain_appears": true,
+      "foundation_basin_eventually_reached": false,
+      "max6_success": false,
+      "max7_diagnostic_success_rate": 0.0,
+      "max7_success": false,
+      "max8_diagnostic_success_rate": 0.0,
+      "max8_success": false,
+      "no_candidate_reaches_foundation_basin": true
+    }
+  },
+  "mature_candidate_diagnosis": {
+    "records": [
+      {
+        "after_black_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+        "after_candidate_fen": "8/8/8/8/5K2/8/6R1/4k3 b - - 5 3",
+        "black_reply": "e1d1",
+        "candidate_move": "g4g2",
+        "credit_debt_ratio": null,
+        "credit_total": 32.5,
+        "debt_total": 0.0,
+        "decay_count": 0,
+        "followup_candidates_available": 2,
+        "followup_outcome": {
+          "reaches_checkmate": false,
+          "reaches_foundation_response": true,
+          "reaches_s1_full_reply_handoff": false,
+          "reaches_same_graph_continuation": true,
+          "reaches_stable_bridge_frontier_state": false
+        },
+        "horizon": 4,
+        "maturity_state": "MATURE",
+        "post_selection_classification": "reply_fragile_useful_with_followup",
+        "reply_policy": "deterministic_worst_foundation_reply",
+        "selected_followup_candidate": "f4e3",
+        "trainer_diagnostic_classification": "reply_policy_fragile_maturity",
+        "white_to_move_fen": "8/8/8/8/5KR1/8/8/4k3 w - - 4 3"
+      },
+      {
+        "after_black_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+        "after_candidate_fen": "8/8/8/8/8/4K3/6R1/3k4 b - - 7 4",
+        "black_reply": "d1c1",
+        "candidate_move": "f4e3",
+        "credit_debt_ratio": null,
+        "credit_total": 20.0,
+        "debt_total": 0.0,
+        "decay_count": 0,
+        "followup_candidates_available": 0,
+        "followup_outcome": {
+          "reaches_checkmate": false,
+          "reaches_foundation_response": false,
+          "reaches_s1_full_reply_handoff": false,
+          "reaches_same_graph_continuation": false,
+          "reaches_stable_bridge_frontier_state": false
+        },
+        "horizon": 4,
+        "maturity_state": "MATURE",
+        "post_selection_classification": "foundation_basin_missed",
+        "reply_policy": "deterministic_worst_foundation_reply",
+        "selected_followup_candidate": null,
+        "trainer_diagnostic_classification": "horizon_insufficient_after_mature_move",
+        "white_to_move_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4"
+      }
+    ],
+    "summary": {
+      "false_maturity_count": 0,
+      "foundation_basin_missed_count": 1,
+      "horizon_insufficient_after_mature_move_count": 0,
+      "mature_candidate_credit_debt_ratio": null,
+      "mature_candidate_credit_total": 52.5,
+      "mature_candidate_debt_total": 0.0,
+      "reply_fragile_mature_candidate_count": 1,
+      "reply_policy_fragile_but_followup_exists_count": 1,
+      "selected_mature_candidate_count": 2,
+      "useful_with_followup_count": 1
+    }
+  },
+  "purity_boundary": {
+    "action_ranker_used_for_runtime": false,
+    "black_replies_harness_simulated": true,
+    "bridge_labels_learner_visible": false,
+    "broad_krk_expansion": false,
+    "checkpoint": "TG29w",
+    "depth_labels_learner_visible": false,
+    "direct_provider_override": false,
+    "edge_fence_labels_learner_visible": false,
+    "foundation_frozen": true,
+    "foundation_unfrozen": false,
+    "imagination_or_internal_rollout_added": false,
+    "python_final_selector_used": false,
+    "quality_tier_labels_learner_visible": false,
+    "reply_policy_labels_learner_visible": false,
+    "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+    "runtime_tablebase_or_dtm_move_source": false,
+    "s1_cache_used_as_evidence": true,
+    "s1_cache_used_as_provider": false,
+    "s1_labels_learner_visible": false,
+    "stage_labels_learner_visible": false,
+    "staged_labels_learner_visible": false,
+    "trajectory_cache_used_as_evidence": true,
+    "trajectory_cache_used_as_provider": false,
+    "trajectory_labels_learner_visible": false,
+    "validator_driven_runtime_selection": false
+  },
+  "repair_arm_comparison": {
+    "arms": {
+      "combined_minimal_reply_followup_repair": {
+        "repair_applied": false,
+        "supported": true
+      },
+      "followup_ecology_only": {
+        "repair_applied": false,
+        "supported": true
+      },
+      "foundation_basin_miss_debt": {
+        "repair_applied": false,
+        "supported": true
+      },
+      "reply_robust_maturity_only": {
+        "repair_applied": false,
+        "supported": false
+      },
+      "reply_robust_plus_followup": {
+        "repair_applied": false,
+        "supported": true
+      },
+      "tg29u_baseline": {
+        "expected_targeted_success_delta": 0,
+        "repair_applied": false
+      },
+      "tg29v_audit_baseline_no_repair": {
+        "expected_targeted_success_delta": 0,
+        "repair_applied": false
+      }
+    },
+    "repair_applied": false,
+    "selected_repair_arm": "reply_robust_plus_followup_diagnostic",
+    "summary": {
+      "mature_plus_followup_chain_count": 1,
+      "repair_applied": false,
+      "selected_repair_arm": "reply_robust_plus_followup_diagnostic"
+    }
+  },
+  "runtime_cache_index": {
+    "cache_write_seconds": 0.000202,
+    "followup_candidate_success_count": 1,
+    "runtime_cache_index_path": "reports/autogrowth/pools/tg29w_reply_robust_followup_runtime_cache_index.json",
+    "runtime_cache_path": "reports/autogrowth/pools/tg29w_reply_robust_followup_runtime_cache.jsonl",
+    "runtime_row_count": 2,
+    "schema_version": "tg29w_reply_robust_followup_runtime_cache_index.v0",
+    "selected_repair_arm": "reply_robust_plus_followup_diagnostic"
+  },
+  "schema_version": "krk_autogrowth_tg29w_reply_robust_mature_followup_repair.v0",
+  "targeted_evaluation": {
+    "summary": {
+      "bridge_progress_loop_count": 0,
+      "followup_candidate_selected_count": 1,
+      "foundation_handoff_count": 0,
+      "illegal_move_count": 0,
+      "local_progress_loop_count": 0,
+      "mature_candidate_selected_count": 2,
+      "mature_plus_followup_chain_count": 1,
+      "max4_success_rate": 0.0,
+      "max5_success_rate": 0.0,
+      "max6_success_rate": 0.0,
+      "max7_diagnostic_success_rate": 0.0,
+      "max8_diagnostic_success_rate": 0.0,
+      "max_move_reached_count": 21,
+      "rook_blunder_count": 0,
+      "s1_handoff_count": 0,
+      "same_graph_foundation_continuation_count": 2,
+      "stalemate_count": 0,
+      "targeted_episode_count": 6,
+      "targeted_episode_success_count": 0,
+      "targeted_episode_success_rate": 0.0,
+      "targeted_success_delta_vs_tg29u": 0,
+      "targeted_success_delta_vs_tg29v": 0,
+      "unsafe_move_count": 0
+    }
+  }
+}
