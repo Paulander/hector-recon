@@ -425,6 +425,11 @@ from .reply_robust_mature_followup_repair import (
     ReplyRobustMatureFollowupRepairResult,
     run_reply_robust_mature_followup_repair,
 )
+from .live_chain_sufficiency_basin_boundary_audit import (
+    LiveChainSufficiencyBasinBoundaryAuditConfig,
+    LiveChainSufficiencyBasinBoundaryAuditResult,
+    run_live_chain_sufficiency_basin_boundary_audit,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -705,6 +710,8 @@ __all__ = [
     "MatureCandidatePostSelectionSufficiencyAuditResult",
     "ReplyRobustMatureFollowupRepairConfig",
     "ReplyRobustMatureFollowupRepairResult",
+    "LiveChainSufficiencyBasinBoundaryAuditConfig",
+    "LiveChainSufficiencyBasinBoundaryAuditResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -736,6 +743,7 @@ __all__ = [
     "run_candidate_ecology_runtime_path_installation",
     "run_mature_candidate_post_selection_sufficiency_audit",
     "run_reply_robust_mature_followup_repair",
+    "run_live_chain_sufficiency_basin_boundary_audit",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",

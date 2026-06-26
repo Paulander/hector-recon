@@ -1,0 +1,1229 @@
+{
+  "ablation_results": {
+    "disable_reply_envelope_checks": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_actuator_terminals": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_basin_miss_debt": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_bridge_frontier_evidence": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_chain_to_basin_evidence": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_followup_ecology_terminals": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_foundation_response_terminals": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_frozen_mate2_foundation_quorum": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_mature_candidate_runtime_terminals": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_reply_robust_chain_credit": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_s1_full_reply_evidence": {
+      "causal": false,
+      "not_run": true
+    },
+    "selected_repair_arm": "no_repair_diagnostic",
+    "skip_reason": "repair_not_applied",
+    "skipped": true
+  },
+  "basin_boundary_pool_index": {
+    "basin_boundary_pool_index_path": "reports/autogrowth/pools/tg29x_foundation_basin_boundary_pool_index.json",
+    "basin_boundary_pool_path": "reports/autogrowth/pools/tg29x_foundation_basin_boundary_pool.jsonl",
+    "cache_write_seconds": 0.000165,
+    "classification_counts": {
+      "basin_boundary": 3,
+      "outside_known_basin": 3
+    },
+    "record_count": 6,
+    "schema_version": "tg29x_foundation_basin_boundary_pool_index.v0"
+  },
+  "blocker_classification": {
+    "summary": {
+      "better_chain_exists_but_lost_selection_count": 0,
+      "better_chain_exists_but_not_materialized_count": 0,
+      "bridge_frontier_found_but_foundation_unrecognized_count": 0,
+      "cache_live_mismatch_count": 0,
+      "chain_not_sufficient_count": 2,
+      "followup_success_metric_too_weak_count": 1,
+      "foundation_basin_too_narrow_count": 4,
+      "horizon_too_short_after_all_count": 0,
+      "no_safe_chain_to_basin_found_count": 0,
+      "overall_blocker": "followup_success_metric_too_weak",
+      "reply_policy_escape_count": 2
+    }
+  },
+  "chain_cache_index": {
+    "cache_write_seconds": 0.000231,
+    "chain_cache_index_path": "reports/autogrowth/pools/tg29x_live_chain_sufficiency_cache_index.json",
+    "chain_cache_path": "reports/autogrowth/pools/tg29x_live_chain_sufficiency_cache.jsonl",
+    "record_count": 2,
+    "schema_version": "tg29x_live_chain_sufficiency_cache_index.v0"
+  },
+  "chain_sufficiency_audit": {
+    "records": [
+      {
+        "cache_entry_id": "88fdf8f42506d524",
+        "chain_horizon_insufficient": false,
+        "chain_misses_basin": true,
+        "chain_reaches_bridge_frontier": false,
+        "chain_reaches_foundation": true,
+        "chain_reaches_s1_handoff": false,
+        "chain_reply_fragile": true,
+        "classification": "followup_success_metric_too_weak",
+        "followup_candidate": "f4e3",
+        "mature_candidate": "g4g2"
+      },
+      {
+        "cache_entry_id": "8794ed7c9e0d2280",
+        "chain_horizon_insufficient": false,
+        "chain_misses_basin": true,
+        "chain_reaches_bridge_frontier": false,
+        "chain_reaches_foundation": true,
+        "chain_reaches_s1_handoff": false,
+        "chain_reply_fragile": true,
+        "classification": "locally_coherent_but_global_basin_miss",
+        "followup_candidate": null,
+        "mature_candidate": "f4e3"
+      }
+    ],
+    "summary": {
+      "better_chain_exists_but_not_selected_count": 0,
+      "bridge_frontier_chain_but_foundation_unrecognized_count": 0,
+      "chain_horizon_insufficient_count": 0,
+      "chain_misses_basin_count": 2,
+      "chain_reaches_bridge_frontier_count": 0,
+      "chain_reaches_foundation_count": 2,
+      "chain_reaches_s1_handoff_count": 0,
+      "chain_reply_fragile_count": 2,
+      "followup_success_metric_too_weak_count": 1,
+      "locally_coherent_but_global_basin_miss_count": 1,
+      "no_chain_reaches_basin_count": 0,
+      "reply_fragile_chain_count": 0,
+      "sufficient_chain_but_horizon_too_short_count": 0,
+      "sufficient_chain_foundation_handoff_count": 0
+    }
+  },
+  "checkpoint": "TG29x_live_chain_sufficiency_basin_boundary_audit",
+  "compact_regression": {
+    "summary": {
+      "decoy_rejection_pass": true,
+      "foundation_sanity_pass": true,
+      "frontier_regression_pass": true,
+      "generic_edge_regression_pass": true,
+      "known_trajectory_microprobe_pass": true,
+      "s1_full_reply_validation_pass": true,
+      "staged_near_miss_regression_pass": true,
+      "staged_regression_pass": true
+    }
+  },
+  "config": {
+    "base": {
+      "black_reply_policy": "deterministic_worst_foundation_reply",
+      "bridge_frontier_heldout_count": 1,
+      "bridge_frontier_train_count": 2,
+      "episode_count": 4,
+      "foundation_mate1_heldout_count": 16,
+      "foundation_mate1_train_count": 32,
+      "foundation_mate2_heldout_count": 8,
+      "foundation_mate2_train_count": 16,
+      "foundation_seed": 20260624,
+      "full_pool_path": "reports/autogrowth/pools/tg28f_full_foundation_backed_frontier_pool.jsonl",
+      "generic_edge_heldout_count": 2,
+      "generic_edge_train_count": 4,
+      "max_ablation_positions": 1,
+      "max_episode_ablation_count": 1,
+      "max_foundation_ablation_positions": 1,
+      "max_foundation_sanity_positions": 1,
+      "max_samples": 16,
+      "max_white_moves_per_episode": 4,
+      "near_miss_heldout_count": 8,
+      "progress_output": "reports/autogrowth/krk_autogrowth_tg29x_live_chain_sufficiency_basin_boundary_audit_progress.json",
+      "repaired_high_recall_threshold": 0.018,
+      "schedule_names": [
+        "tg28h_mixed_balanced_baseline",
+        "mixed_balanced_plus_staged",
+        "staged_first_then_mixed_replay",
+        "mixed_first_then_staged",
+        "mixed_staged_near_miss_replay"
+      ],
+      "seed": 20260703,
+      "staged_heldout_count": 4,
+      "staged_near_miss_count": 8,
+      "staged_pool_path": "reports/autogrowth/pools/tg28l_staged_predecessor_pool.jsonl",
+      "staged_regression_count": 4,
+      "staged_train_count": 8
+    },
+    "basin_boundary_pool_index_path": "reports/autogrowth/pools/tg29x_foundation_basin_boundary_pool_index.json",
+    "basin_boundary_pool_path": "reports/autogrowth/pools/tg29x_foundation_basin_boundary_pool.jsonl",
+    "chain_cache_index_path": "reports/autogrowth/pools/tg29x_live_chain_sufficiency_cache_index.json",
+    "chain_cache_path": "reports/autogrowth/pools/tg29x_live_chain_sufficiency_cache.jsonl",
+    "tg29p_artifact_path": "reports/autogrowth/krk_autogrowth_tg29p_cached_online_episode_scale_matrix.json",
+    "tg29q_artifact_path": "reports/autogrowth/krk_autogrowth_tg29q_horizon_limited_continuation_repair.json",
+    "tg29r_artifact_path": "reports/autogrowth/krk_autogrowth_tg29r_continuation_candidate_retrieval_repair.json",
+    "tg29r_cache_path": "reports/autogrowth/pools/tg29r_continuation_candidate_retrieval_cache.jsonl",
+    "tg29v_artifact_path": "reports/autogrowth/krk_autogrowth_tg29v_mature_candidate_post_selection_sufficiency_audit.json",
+    "tg29v_followup_cache_path": "reports/autogrowth/pools/tg29v_mature_candidate_followup_cache.jsonl",
+    "tg29w_artifact_path": "reports/autogrowth/krk_autogrowth_tg29w_reply_robust_mature_followup_repair.json",
+    "tg29w_runtime_cache_path": "reports/autogrowth/pools/tg29w_reply_robust_followup_runtime_cache.jsonl"
+  },
+  "decision": {
+    "ablation_results": {
+      "disable_reply_envelope_checks": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_actuator_terminals": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_basin_miss_debt": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_bridge_frontier_evidence": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_chain_to_basin_evidence": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_followup_ecology_terminals": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_foundation_response_terminals": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_frozen_mate2_foundation_quorum": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_mature_candidate_runtime_terminals": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_reply_robust_chain_credit": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_s1_full_reply_evidence": {
+        "causal": false,
+        "not_run": true
+      },
+      "selected_repair_arm": "no_repair_diagnostic",
+      "skip_reason": "repair_not_applied",
+      "skipped": true
+    },
+    "action_ranker_used_for_runtime": false,
+    "all_reply_foundation_count": 0,
+    "basin_boundary_count": 3,
+    "basin_labels_learner_visible": false,
+    "basin_miss_debt_terminal_count": 1,
+    "basin_reaching_chain_count_by_depth": {
+      "1": 2,
+      "2": 0,
+      "3": 0
+    },
+    "basin_state_count": 7,
+    "better_chain_exists_but_lost_selection_count": 0,
+    "better_chain_exists_but_not_materialized_count": 0,
+    "better_chain_exists_but_not_selected_count": 0,
+    "better_chain_exists_count": 0,
+    "better_chain_materialized_count": 0,
+    "better_chain_selected_count": 0,
+    "bridge_frontier_boundary_pool_entry_count": 0,
+    "bridge_frontier_chain_but_foundation_unrecognized_count": 0,
+    "bridge_frontier_chain_count_by_depth": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+    },
+    "bridge_frontier_found_but_foundation_unrecognized_count": 0,
+    "bridge_frontier_not_foundation_count": 0,
+    "bridge_labels_learner_visible": false,
+    "cache_live_mismatch_count": 0,
+    "cache_query_count": 8,
+    "candidate_count_by_depth": {
+      "1": 22,
+      "2": 0,
+      "3": 0
+    },
+    "chain_cache_live_mismatch_count": 0,
+    "chain_horizon_insufficient_count": 0,
+    "chain_misses_basin_count": 2,
+    "chain_not_sufficient_count": 2,
+    "chain_overactivation_on_decoy_count": 0,
+    "chain_reaches_bridge_frontier_count": 0,
+    "chain_reaches_foundation_count": 2,
+    "chain_reaches_s1_handoff_count": 0,
+    "chain_reply_fragile_count": 2,
+    "chain_search_depth_max": 1,
+    "chain_sufficiency_repair_ablation_causal": false,
+    "chain_to_basin_materialized_count": 0,
+    "chain_trace_count": 2,
+    "checkpoint_interpretation": "live_chain_basin_boundary_diagnostic_pass_no_repair",
+    "checkpoint_pass": true,
+    "continuation_cache_hit_rate": 1.0,
+    "continuation_labels_learner_visible": false,
+    "decoy_correct_rejection_count": 9,
+    "decoy_episode_count": 9,
+    "decoy_false_handoff_count": 0,
+    "decoy_like_state_count": 0,
+    "decoy_rejection_pass": true,
+    "depth_labels_learner_visible": false,
+    "direct_provider_override": false,
+    "ecology_cache_hit_rate": 1.0,
+    "ecology_overactivation_on_decoy_count": 0,
+    "edge_fence_labels_learner_visible": false,
+    "failure_bucket_counts": {
+      "chain_not_sufficient": 2,
+      "followup_success_metric_too_weak": 1,
+      "foundation_basin_too_narrow": 4,
+      "reply_policy_escape": 2
+    },
+    "followup_cache_hit_rate": 1.0,
+    "followup_cache_live_mismatch_count": 0,
+    "followup_move_count": 1,
+    "followup_overactivation_on_decoy_count": 0,
+    "followup_success_metric_tightening_count": 1,
+    "followup_success_metric_too_weak_count": 1,
+    "foundation_basin_too_narrow_count": 4,
+    "foundation_cache_live_mismatch_count": 0,
+    "foundation_frozen": true,
+    "foundation_handoff_count": 0,
+    "foundation_m3_updates_during_eval": 0,
+    "foundation_m3_updates_during_training": 0,
+    "foundation_m4_promotions_during_eval": 0,
+    "foundation_m4_promotions_during_training": 0,
+    "foundation_mate1_accuracy": 1.0,
+    "foundation_mate2_conversion_rate": 1.0,
+    "foundation_response_present_count": 3,
+    "foundation_sanity_pass": true,
+    "frontier_regression_pass": true,
+    "generic_edge_regression_pass": true,
+    "guard_used_during_evaluation": false,
+    "guard_used_during_runtime_choice": false,
+    "horizon_too_short_after_all_count": 0,
+    "illegal_move_count": 0,
+    "inside_foundation_basin_count": 0,
+    "known_trajectory_microprobe_pass": true,
+    "live_foundation_query_count": 0,
+    "live_rollout_count": 0,
+    "locally_coherent_but_global_basin_miss_count": 1,
+    "mature_move_count": 2,
+    "mature_plus_followup_chain_count": 1,
+    "max4_success_rate": 0.0,
+    "max5_success_rate": 0.0,
+    "max6_success_rate": 0.0,
+    "max7_diagnostic_success_rate": 0.0,
+    "max8_diagnostic_success_rate": 0.0,
+    "max_move_reached_count": 21,
+    "near_miss_false_positive_count": 0,
+    "no_chain_reaches_basin_count": 0,
+    "no_safe_chain_to_basin_count": 1,
+    "no_safe_chain_to_basin_found_count": 0,
+    "outside_known_basin_count": 3,
+    "overall_blocker": "followup_success_metric_too_weak",
+    "partial_reply_foundation_count": 3,
+    "phase_timings": {
+      "basin_audit_seconds": 5.4e-05,
+      "cache_write_seconds": 0.000396,
+      "context_build_seconds": 0.0,
+      "live_chain_trace_seconds": 0.000523,
+      "repair_eval_seconds": 0.0,
+      "total_seconds": 0.024856,
+      "widened_chain_search_seconds": 0.000119
+    },
+    "purity_boundary": {
+      "action_ranker_used_for_runtime": false,
+      "basin_labels_learner_visible": false,
+      "black_replies_harness_simulated": true,
+      "bridge_labels_learner_visible": false,
+      "broad_krk_expansion": false,
+      "checkpoint": "TG29x",
+      "depth_labels_learner_visible": false,
+      "direct_provider_override": false,
+      "edge_fence_labels_learner_visible": false,
+      "foundation_frozen": true,
+      "foundation_unfrozen": false,
+      "imagination_or_internal_rollout_added": false,
+      "python_final_selector_used": false,
+      "quality_tier_labels_learner_visible": false,
+      "reply_policy_labels_learner_visible": false,
+      "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+      "runtime_tablebase_or_dtm_move_source": false,
+      "s1_cache_used_as_evidence": true,
+      "s1_cache_used_as_provider": false,
+      "s1_labels_learner_visible": false,
+      "stage_labels_learner_visible": false,
+      "staged_labels_learner_visible": false,
+      "trajectory_cache_used_as_evidence": true,
+      "trajectory_cache_used_as_provider": false,
+      "trajectory_labels_learner_visible": false,
+      "validator_driven_runtime_selection": false
+    },
+    "python_final_selector_used": false,
+    "quality_tier_labels_learner_visible": false,
+    "repair_applied": false,
+    "reply_envelope_success_rate_avg": 0.214286,
+    "reply_fragile_chain_count": 0,
+    "reply_policy_escape_count": 2,
+    "reply_policy_labels_learner_visible": false,
+    "reply_robust_chain_count_by_depth": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+    },
+    "reply_robust_chain_credit_terminal_count": 0,
+    "rook_blunder_count": 0,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "s1_cache_hit_rate": 1.0,
+    "s1_full_reply_validation_pass": true,
+    "s1_handoff_count": 0,
+    "s1_labels_learner_visible": false,
+    "safe_candidate_count_by_depth": {
+      "1": 19,
+      "2": 0,
+      "3": 0
+    },
+    "same_graph_foundation_continuation_count": 6,
+    "scheduler_equivalence_mismatch_count": 0,
+    "selected_repair_arm": "no_repair_diagnostic",
+    "stage_labels_learner_visible": false,
+    "staged_labels_learner_visible": false,
+    "staged_near_miss_regression_pass": true,
+    "staged_regression_pass": true,
+    "stalemate_count": 0,
+    "sufficient_chain_but_horizon_too_short_count": 0,
+    "sufficient_chain_foundation_handoff_count": 0,
+    "targeted_episode_count": 6,
+    "targeted_episode_success_count": 0,
+    "targeted_episode_success_rate": 0.0,
+    "targeted_success_delta_vs_tg29w": 0,
+    "timeout_count": 0,
+    "total_seconds": 0.024856,
+    "trainer_side_exploration_used": true,
+    "trainer_side_exploration_used_in_final_eval": false,
+    "trajectory_cache_hit_rate": 1.0,
+    "trajectory_labels_learner_visible": false,
+    "unknown_basin_state_count": 1,
+    "unsafe_move_count": 0,
+    "validator_skip_used_during_internal_handoff_eval": false,
+    "worst_reply_foundation_failure_count": 3
+  },
+  "decoy_near_miss_regression": {
+    "summary": {
+      "chain_overactivation_on_decoy_count": 0,
+      "decoy_correct_rejection_count": 9,
+      "decoy_episode_count": 9,
+      "decoy_false_handoff_count": 0,
+      "ecology_overactivation_on_decoy_count": 0,
+      "followup_overactivation_on_decoy_count": 0,
+      "near_miss_false_positive_count": 0
+    }
+  },
+  "foundation_basin_boundary_audit": {
+    "records": [
+      {
+        "basin_classification": "basin_boundary",
+        "cache_entry_id": "88fdf8f42506d524",
+        "candidate_move_context": "g4g2",
+        "diagnostic_only_basin_label": true,
+        "fen": "8/8/8/8/5KR1/8/8/4k3 w - - 4 3",
+        "foundation_mate1_reachable": false,
+        "foundation_mate2_reachable": true,
+        "frozen_foundation_response_present": true,
+        "nearest_bridge_frontier_distance": 0,
+        "nearest_cached_foundation_positive_distance": 1,
+        "reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": true,
+          "replies_foundation_solved": 1,
+          "reply_envelope_success_rate": 0.5,
+          "reply_total": 2,
+          "worst_reply_foundation_success": false
+        },
+        "same_graph_foundation_continuation_count": 2,
+        "state_location": "before_mature"
+      },
+      {
+        "basin_classification": "basin_boundary",
+        "cache_entry_id": "88fdf8f42506d524",
+        "candidate_move_context": "f4e3",
+        "diagnostic_only_basin_label": true,
+        "fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+        "foundation_mate1_reachable": false,
+        "foundation_mate2_reachable": true,
+        "frozen_foundation_response_present": true,
+        "nearest_bridge_frontier_distance": null,
+        "nearest_cached_foundation_positive_distance": 1,
+        "reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": true,
+          "replies_foundation_solved": 1,
+          "reply_envelope_success_rate": 0.5,
+          "reply_total": 2,
+          "worst_reply_foundation_success": false
+        },
+        "same_graph_foundation_continuation_count": 2,
+        "state_location": "after_mature_black_reply"
+      },
+      {
+        "basin_classification": "unknown",
+        "cache_entry_id": "88fdf8f42506d524",
+        "candidate_move_context": null,
+        "diagnostic_only_basin_label": true,
+        "fen": "8/8/8/8/8/4K3/6R1/3k4 b - - 7 4",
+        "foundation_mate1_reachable": false,
+        "foundation_mate2_reachable": false,
+        "frozen_foundation_response_present": false,
+        "nearest_bridge_frontier_distance": null,
+        "nearest_cached_foundation_positive_distance": null,
+        "reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": false,
+          "replies_foundation_solved": 0,
+          "reply_envelope_success_rate": 0.0,
+          "reply_total": 0,
+          "worst_reply_foundation_success": false
+        },
+        "same_graph_foundation_continuation_count": 0,
+        "state_location": "after_followup_move"
+      },
+      {
+        "basin_classification": "outside_known_basin",
+        "cache_entry_id": "88fdf8f42506d524",
+        "candidate_move_context": null,
+        "diagnostic_only_basin_label": true,
+        "fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+        "foundation_mate1_reachable": false,
+        "foundation_mate2_reachable": false,
+        "frozen_foundation_response_present": false,
+        "nearest_bridge_frontier_distance": null,
+        "nearest_cached_foundation_positive_distance": null,
+        "reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": false,
+          "replies_foundation_solved": 0,
+          "reply_envelope_success_rate": 0.0,
+          "reply_total": 0,
+          "worst_reply_foundation_success": false
+        },
+        "same_graph_foundation_continuation_count": 0,
+        "state_location": "after_followup_black_reply"
+      },
+      {
+        "basin_classification": "outside_known_basin",
+        "cache_entry_id": "88fdf8f42506d524",
+        "candidate_move_context": null,
+        "diagnostic_only_basin_label": true,
+        "fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5",
+        "foundation_mate1_reachable": false,
+        "foundation_mate2_reachable": false,
+        "frozen_foundation_response_present": false,
+        "nearest_bridge_frontier_distance": null,
+        "nearest_cached_foundation_positive_distance": null,
+        "reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": false,
+          "replies_foundation_solved": 0,
+          "reply_envelope_success_rate": 0.0,
+          "reply_total": 0,
+          "worst_reply_foundation_success": false
+        },
+        "same_graph_foundation_continuation_count": 0,
+        "state_location": "after_followup_black_reply"
+      },
+      {
+        "basin_classification": "basin_boundary",
+        "cache_entry_id": "8794ed7c9e0d2280",
+        "candidate_move_context": "f4e3",
+        "diagnostic_only_basin_label": true,
+        "fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+        "foundation_mate1_reachable": false,
+        "foundation_mate2_reachable": true,
+        "frozen_foundation_response_present": true,
+        "nearest_bridge_frontier_distance": null,
+        "nearest_cached_foundation_positive_distance": 1,
+        "reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": true,
+          "replies_foundation_solved": 1,
+          "reply_envelope_success_rate": 0.5,
+          "reply_total": 2,
+          "worst_reply_foundation_success": false
+        },
+        "same_graph_foundation_continuation_count": 2,
+        "state_location": "before_mature"
+      },
+      {
+        "basin_classification": "outside_known_basin",
+        "cache_entry_id": "8794ed7c9e0d2280",
+        "candidate_move_context": null,
+        "diagnostic_only_basin_label": true,
+        "fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+        "foundation_mate1_reachable": false,
+        "foundation_mate2_reachable": false,
+        "frozen_foundation_response_present": false,
+        "nearest_bridge_frontier_distance": null,
+        "nearest_cached_foundation_positive_distance": null,
+        "reply_envelope": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": false,
+          "replies_foundation_solved": 0,
+          "reply_envelope_success_rate": 0.0,
+          "reply_total": 0,
+          "worst_reply_foundation_success": false
+        },
+        "same_graph_foundation_continuation_count": 0,
+        "state_location": "after_mature_black_reply"
+      }
+    ],
+    "summary": {
+      "all_reply_foundation_count": 0,
+      "basin_boundary_count": 3,
+      "basin_state_count": 7,
+      "bridge_frontier_not_foundation_count": 0,
+      "decoy_like_state_count": 0,
+      "foundation_response_present_count": 3,
+      "inside_foundation_basin_count": 0,
+      "outside_known_basin_count": 3,
+      "partial_reply_foundation_count": 3,
+      "reply_envelope_success_rate_avg": 0.214286,
+      "same_graph_foundation_continuation_count": 6,
+      "unknown_basin_state_count": 1,
+      "worst_reply_foundation_failure_count": 3
+    }
+  },
+  "live_cached_equivalence": {
+    "records": [
+      {
+        "cache_entry_id": "88fdf8f42506d524",
+        "cache_live_mismatch": false,
+        "cached_after_black_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+        "cached_after_candidate_fen": "8/8/8/8/5K2/8/6R1/4k3 b - - 5 3",
+        "cached_after_followup_fen": "8/8/8/8/8/4K3/6R1/3k4 b - - 7 4",
+        "cached_black_reply_envelope": [
+          {
+            "after_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+            "black_reply": "e1d1",
+            "foundation_reachable": false,
+            "same_graph_foundation_continuation_count": 1
+          },
+          {
+            "after_reply_fen": "8/8/8/8/5K2/8/6R1/5k2 w - - 6 4",
+            "black_reply": "e1f1",
+            "foundation_reachable": true,
+            "same_graph_foundation_continuation_count": 1
+          }
+        ],
+        "cached_foundation_response": {
+          "all_reply": false,
+          "foundation_reachable_count": 1,
+          "partial_reply": true,
+          "reply_count": 2,
+          "same_graph_foundation_continuation_count": 2,
+          "sample_reply_rows": [
+            {
+              "after_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+              "black_reply": "d1c1",
+              "foundation_reachable": false,
+              "same_graph_foundation_continuation_count": 1
+            },
+            {
+              "after_reply_fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5",
+              "black_reply": "d1e1",
+              "foundation_reachable": true,
+              "same_graph_foundation_continuation_count": 1
+            }
+          ]
+        },
+        "cached_same_graph_continuation": 2,
+        "candidate_move": "g4g2",
+        "followup_selected_move": "f4e3",
+        "live_after_black_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+        "live_after_candidate_fen": "8/8/8/8/5K2/8/6R1/4k3 b - - 5 3",
+        "live_after_followup_fen": "8/8/8/8/8/4K3/6R1/3k4 b - - 7 4",
+        "live_black_reply_envelope": [
+          {
+            "after_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+            "black_reply": "e1d1",
+            "foundation_reachable": false,
+            "same_graph_foundation_continuation_count": 1
+          },
+          {
+            "after_reply_fen": "8/8/8/8/5K2/8/6R1/5k2 w - - 6 4",
+            "black_reply": "e1f1",
+            "foundation_reachable": true,
+            "same_graph_foundation_continuation_count": 1
+          }
+        ],
+        "live_foundation_response": {
+          "all_reply": false,
+          "foundation_reachable_count": 1,
+          "partial_reply": true,
+          "reply_count": 2,
+          "same_graph_foundation_continuation_count": 2,
+          "sample_reply_rows": [
+            {
+              "after_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+              "black_reply": "d1c1",
+              "foundation_reachable": false,
+              "same_graph_foundation_continuation_count": 1
+            },
+            {
+              "after_reply_fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5",
+              "black_reply": "d1e1",
+              "foundation_reachable": true,
+              "same_graph_foundation_continuation_count": 1
+            }
+          ]
+        },
+        "live_same_graph_continuation": 2,
+        "runtime_evidence": {
+          "actuator_legality": true,
+          "followup_available_evidence": true,
+          "followup_candidate_credited": true,
+          "followup_candidate_debt": false,
+          "followup_candidate_pruned_veto": false,
+          "followup_candidate_spawned": true,
+          "followup_improves_same_graph_continuation": true,
+          "followup_local_progress_without_handoff": false,
+          "followup_missing_debt": false,
+          "followup_reaches_foundation_response": true,
+          "followup_reaches_s1_handoff": false,
+          "followup_reduces_horizon_failure": true,
+          "followup_reply_envelope_failed": false,
+          "followup_success_credit": true,
+          "foundation_basin_miss_debt": false,
+          "mature_candidate_chain_credit": true,
+          "reply_fragility_debt_evidence": true,
+          "reply_robust_maturity_evidence": false,
+          "safety_veto_clear": true
+        },
+        "white_to_move_fen": "8/8/8/8/5KR1/8/8/4k3 w - - 4 3"
+      },
+      {
+        "cache_entry_id": "8794ed7c9e0d2280",
+        "cache_live_mismatch": false,
+        "cached_after_black_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+        "cached_after_candidate_fen": "8/8/8/8/8/4K3/6R1/3k4 b - - 7 4",
+        "cached_after_followup_fen": null,
+        "cached_black_reply_envelope": [
+          {
+            "after_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+            "black_reply": "d1c1",
+            "foundation_reachable": false,
+            "same_graph_foundation_continuation_count": 1
+          },
+          {
+            "after_reply_fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5",
+            "black_reply": "d1e1",
+            "foundation_reachable": true,
+            "same_graph_foundation_continuation_count": 1
+          }
+        ],
+        "cached_foundation_response": {},
+        "cached_same_graph_continuation": 0,
+        "candidate_move": "f4e3",
+        "followup_selected_move": null,
+        "live_after_black_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+        "live_after_candidate_fen": "8/8/8/8/8/4K3/6R1/3k4 b - - 7 4",
+        "live_after_followup_fen": null,
+        "live_black_reply_envelope": [
+          {
+            "after_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+            "black_reply": "d1c1",
+            "foundation_reachable": false,
+            "same_graph_foundation_continuation_count": 1
+          },
+          {
+            "after_reply_fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5",
+            "black_reply": "d1e1",
+            "foundation_reachable": true,
+            "same_graph_foundation_continuation_count": 1
+          }
+        ],
+        "live_foundation_response": {},
+        "live_same_graph_continuation": 0,
+        "runtime_evidence": {
+          "actuator_legality": true,
+          "followup_available_evidence": false,
+          "followup_candidate_credited": false,
+          "followup_candidate_debt": true,
+          "followup_candidate_pruned_veto": false,
+          "followup_candidate_spawned": true,
+          "followup_improves_same_graph_continuation": false,
+          "followup_local_progress_without_handoff": false,
+          "followup_missing_debt": true,
+          "followup_reaches_foundation_response": false,
+          "followup_reaches_s1_handoff": false,
+          "followup_reduces_horizon_failure": false,
+          "followup_reply_envelope_failed": true,
+          "followup_success_credit": false,
+          "foundation_basin_miss_debt": true,
+          "mature_candidate_chain_credit": false,
+          "reply_fragility_debt_evidence": false,
+          "reply_robust_maturity_evidence": false,
+          "safety_veto_clear": true
+        },
+        "white_to_move_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4"
+      }
+    ],
+    "summary": {
+      "chain_cache_live_mismatch_count": 0,
+      "ecology_cache_live_mismatch_count": 0,
+      "followup_cache_entry_count": 2,
+      "followup_cache_hit_rate": 1.0,
+      "followup_cache_live_mismatch_count": 0,
+      "foundation_cache_live_mismatch_count": 0
+    }
+  },
+  "live_chain_traces": {
+    "records": [
+      {
+        "black_replies": [
+          "e1d1",
+          "d1c1",
+          "d1e1"
+        ],
+        "black_reply_after_mature_move": "e1d1",
+        "cache_entry_id": "88fdf8f42506d524",
+        "cached_after_black_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+        "cached_after_mature_move_fen": "8/8/8/8/5K2/8/6R1/4k3 b - - 5 3",
+        "cached_followup_after_black_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+        "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+        "followup_black_reply_envelope": [
+          {
+            "black_reply": "d1c1",
+            "cached_after_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+            "foundation_reachable": false,
+            "live_after_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5"
+          },
+          {
+            "black_reply": "d1e1",
+            "cached_after_reply_fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5",
+            "foundation_reachable": true,
+            "live_after_reply_fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5"
+          }
+        ],
+        "followup_candidate_selected": "f4e3",
+        "horizon": 4,
+        "live_after_black_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+        "live_after_followup_move_fen": "8/8/8/8/8/4K3/6R1/3k4 b - - 7 4",
+        "live_after_mature_move_fen": "8/8/8/8/5K2/8/6R1/4k3 b - - 5 3",
+        "mature_candidate_selected": "g4g2",
+        "max_move_reached": true,
+        "reply_policy": "deterministic_worst_foundation_reply",
+        "safety_result": {
+          "illegal": false,
+          "rook_blunder": false,
+          "stalemate": false,
+          "unsafe_move": false
+        },
+        "selected_moves": [
+          "g4g2",
+          "f4e3"
+        ],
+        "source_move_index": 2,
+        "start_fen": "8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+        "start_set": "frontier_near_starts",
+        "step_evidence": {
+          "actuator_confirmation": true,
+          "bridge_evidence": true,
+          "edge_fence_evidence": true,
+          "followup_evidence": {
+            "actuator_legality": true,
+            "followup_available_evidence": true,
+            "followup_candidate_credited": true,
+            "followup_candidate_debt": false,
+            "followup_candidate_pruned_veto": false,
+            "followup_candidate_spawned": true,
+            "followup_improves_same_graph_continuation": true,
+            "followup_local_progress_without_handoff": false,
+            "followup_missing_debt": false,
+            "followup_reaches_foundation_response": true,
+            "followup_reaches_s1_handoff": false,
+            "followup_reduces_horizon_failure": true,
+            "followup_reply_envelope_failed": false,
+            "followup_success_credit": true,
+            "foundation_basin_miss_debt": false,
+            "mature_candidate_chain_credit": true,
+            "reply_fragility_debt_evidence": true,
+            "reply_robust_maturity_evidence": false,
+            "safety_veto_clear": true
+          },
+          "followup_retrieval_cache_entry_id": "6b3e7916828903dc",
+          "formal_recon_confirmation_state": "confirmed",
+          "foundation_response_evidence": {
+            "all_reply": false,
+            "foundation_reachable_count": 1,
+            "partial_reply": true,
+            "reply_count": 2,
+            "same_graph_foundation_continuation_count": 2,
+            "sample_reply_rows": [
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/6R1/5k2 w - - 6 4",
+                "black_reply": "e1f1",
+                "foundation_reachable": true,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ]
+          },
+          "frozen_foundation_reachable": true,
+          "mature_retrieval_cache_entry_id": "fafaacfc5fecd3db",
+          "s1_full_reply_evidence": false,
+          "same_graph_foundation_continuation_count": 2,
+          "trajectory_evidence": {
+            "trajectory_candidate": false
+          }
+        },
+        "termination_reason": "max_move_reached",
+        "white_to_move_fen_before_mature_move": "8/8/8/8/5KR1/8/8/4k3 w - - 4 3"
+      },
+      {
+        "black_replies": [
+          "d1c1"
+        ],
+        "black_reply_after_mature_move": "d1c1",
+        "cache_entry_id": "8794ed7c9e0d2280",
+        "cached_after_black_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+        "cached_after_mature_move_fen": "8/8/8/8/8/4K3/6R1/3k4 b - - 7 4",
+        "cached_followup_after_black_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+        "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+        "followup_black_reply_envelope": [],
+        "followup_candidate_selected": null,
+        "horizon": 4,
+        "live_after_black_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+        "live_after_followup_move_fen": null,
+        "live_after_mature_move_fen": "8/8/8/8/8/4K3/6R1/3k4 b - - 7 4",
+        "mature_candidate_selected": "f4e3",
+        "max_move_reached": true,
+        "reply_policy": "deterministic_worst_foundation_reply",
+        "safety_result": {
+          "illegal": false,
+          "rook_blunder": false,
+          "stalemate": false,
+          "unsafe_move": false
+        },
+        "selected_moves": [
+          "f4e3"
+        ],
+        "source_move_index": 3,
+        "start_fen": "8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+        "start_set": "frontier_near_starts",
+        "step_evidence": {
+          "actuator_confirmation": true,
+          "bridge_evidence": false,
+          "edge_fence_evidence": false,
+          "followup_evidence": {
+            "actuator_legality": true,
+            "followup_available_evidence": false,
+            "followup_candidate_credited": false,
+            "followup_candidate_debt": true,
+            "followup_candidate_pruned_veto": false,
+            "followup_candidate_spawned": true,
+            "followup_improves_same_graph_continuation": false,
+            "followup_local_progress_without_handoff": false,
+            "followup_missing_debt": true,
+            "followup_reaches_foundation_response": false,
+            "followup_reaches_s1_handoff": false,
+            "followup_reduces_horizon_failure": false,
+            "followup_reply_envelope_failed": true,
+            "followup_success_credit": false,
+            "foundation_basin_miss_debt": true,
+            "mature_candidate_chain_credit": false,
+            "reply_fragility_debt_evidence": false,
+            "reply_robust_maturity_evidence": false,
+            "safety_veto_clear": true
+          },
+          "followup_retrieval_cache_entry_id": null,
+          "formal_recon_confirmation_state": "confirmed",
+          "foundation_response_evidence": {
+            "all_reply": false,
+            "foundation_reachable_count": 1,
+            "partial_reply": true,
+            "reply_count": 2,
+            "same_graph_foundation_continuation_count": 2,
+            "sample_reply_rows": [
+              {
+                "after_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5",
+                "black_reply": "d1e1",
+                "foundation_reachable": true,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ]
+          },
+          "frozen_foundation_reachable": true,
+          "mature_retrieval_cache_entry_id": "6b3e7916828903dc",
+          "s1_full_reply_evidence": false,
+          "same_graph_foundation_continuation_count": 2,
+          "trajectory_evidence": {
+            "trajectory_candidate": false
+          }
+        },
+        "termination_reason": "max_move_reached",
+        "white_to_move_fen_before_mature_move": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4"
+      }
+    ],
+    "summary": {
+      "chain_trace_count": 2,
+      "followup_move_count": 1,
+      "mature_move_count": 2,
+      "mature_plus_followup_chain_count": 1,
+      "targeted_episode_count": 1
+    }
+  },
+  "purity_boundary": {
+    "action_ranker_used_for_runtime": false,
+    "basin_labels_learner_visible": false,
+    "black_replies_harness_simulated": true,
+    "bridge_labels_learner_visible": false,
+    "broad_krk_expansion": false,
+    "checkpoint": "TG29x",
+    "depth_labels_learner_visible": false,
+    "direct_provider_override": false,
+    "edge_fence_labels_learner_visible": false,
+    "foundation_frozen": true,
+    "foundation_unfrozen": false,
+    "imagination_or_internal_rollout_added": false,
+    "python_final_selector_used": false,
+    "quality_tier_labels_learner_visible": false,
+    "reply_policy_labels_learner_visible": false,
+    "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+    "runtime_tablebase_or_dtm_move_source": false,
+    "s1_cache_used_as_evidence": true,
+    "s1_cache_used_as_provider": false,
+    "s1_labels_learner_visible": false,
+    "stage_labels_learner_visible": false,
+    "staged_labels_learner_visible": false,
+    "trajectory_cache_used_as_evidence": true,
+    "trajectory_cache_used_as_provider": false,
+    "trajectory_labels_learner_visible": false,
+    "validator_driven_runtime_selection": false
+  },
+  "repair_arm_comparison": {
+    "arms": {
+      "basin_miss_debt_repair": {
+        "justified": true,
+        "repair_applied": false
+      },
+      "bridge_frontier_to_foundation_boundary_pool": {
+        "justified": false,
+        "repair_applied": false
+      },
+      "chain_to_basin_materialization": {
+        "justified": false,
+        "repair_applied": false
+      },
+      "followup_success_metric_tightening": {
+        "justified": true,
+        "repair_applied": false
+      },
+      "no_repair_diagnostic": {
+        "repair_applied": false,
+        "selected": true
+      },
+      "reply_robust_chain_credit": {
+        "justified": true,
+        "repair_applied": false
+      }
+    },
+    "repair_applied": false,
+    "selected_repair_arm": "no_repair_diagnostic",
+    "suggested_next_repair_arm": "followup_success_metric_tightening",
+    "summary": {
+      "basin_miss_debt_terminal_count": 1,
+      "bridge_frontier_boundary_pool_entry_count": 0,
+      "chain_to_basin_materialized_count": 0,
+      "followup_success_metric_tightening_count": 1,
+      "repair_applied": false,
+      "reply_robust_chain_credit_terminal_count": 0,
+      "selected_repair_arm": "no_repair_diagnostic"
+    }
+  },
+  "schema_version": "krk_autogrowth_tg29x_live_chain_sufficiency_basin_boundary_audit.v0",
+  "widened_chain_search": {
+    "records": [
+      {
+        "basin_reaching_chain_count_by_depth": {
+          "1": 2,
+          "2": 0,
+          "3": 0
+        },
+        "best_chain_found": "f4e3",
+        "best_chain_foundation_response": {
+          "all_reply": false,
+          "foundation_reachable_count": 1,
+          "partial_reply": true,
+          "reply_count": 2,
+          "same_graph_foundation_continuation_count": 2,
+          "sample_reply_rows": [
+            {
+              "after_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+              "black_reply": "d1c1",
+              "foundation_reachable": false,
+              "same_graph_foundation_continuation_count": 1
+            },
+            {
+              "after_reply_fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5",
+              "black_reply": "d1e1",
+              "foundation_reachable": true,
+              "same_graph_foundation_continuation_count": 1
+            }
+          ]
+        },
+        "best_chain_reply_envelope": [
+          {
+            "after_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+            "black_reply": "d1c1",
+            "foundation_reachable": false,
+            "same_graph_foundation_continuation_count": 1
+          },
+          {
+            "after_reply_fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5",
+            "black_reply": "d1e1",
+            "foundation_reachable": true,
+            "same_graph_foundation_continuation_count": 1
+          }
+        ],
+        "best_chain_safety": {
+          "rook_blunder": false,
+          "safe": true,
+          "stalemate_after": false
+        },
+        "best_chain_terminal_state": "8/8/8/8/8/4K3/6R1/3k4 b - - 7 4",
+        "better_chain_exists": false,
+        "bridge_frontier_chain_count_by_depth": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        },
+        "cache_entry_id": "88fdf8f42506d524",
+        "candidate_count_by_depth": {
+          "1": 22,
+          "2": 0,
+          "3": 0
+        },
+        "chain_search_depth": 1,
+        "diagnostic_only_search": true,
+        "reply_robust_chain_count_by_depth": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        },
+        "safe_candidate_count_by_depth": {
+          "1": 19,
+          "2": 0,
+          "3": 0
+        },
+        "search_start_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4"
+      },
+      {
+        "basin_reaching_chain_count_by_depth": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        },
+        "best_chain_found": null,
+        "best_chain_foundation_response": {},
+        "best_chain_reply_envelope": [],
+        "best_chain_safety": {},
+        "best_chain_terminal_state": null,
+        "better_chain_exists": false,
+        "bridge_frontier_chain_count_by_depth": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        },
+        "cache_entry_id": "8794ed7c9e0d2280",
+        "candidate_count_by_depth": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        },
+        "chain_search_depth": 1,
+        "diagnostic_only_search": true,
+        "reply_robust_chain_count_by_depth": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        },
+        "safe_candidate_count_by_depth": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        },
+        "search_start_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5"
+      }
+    ],
+    "summary": {
+      "basin_reaching_chain_count_by_depth": {
+        "1": 2,
+        "2": 0,
+        "3": 0
+      },
+      "better_chain_exists_count": 0,
+      "better_chain_materialized_count": 0,
+      "better_chain_selected_count": 0,
+      "bridge_frontier_chain_count_by_depth": {
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "candidate_count_by_depth": {
+        "1": 22,
+        "2": 0,
+        "3": 0
+      },
+      "chain_search_depth_max": 1,
+      "no_safe_chain_to_basin_count": 1,
+      "reply_robust_chain_count_by_depth": {
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "safe_candidate_count_by_depth": {
+        "1": 19,
+        "2": 0,
+        "3": 0
+      }
+    }
+  }
+}

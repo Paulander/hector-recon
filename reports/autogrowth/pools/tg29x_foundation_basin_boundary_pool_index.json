@@ -1,0 +1,11 @@
+{
+  "basin_boundary_pool_index_path": "reports/autogrowth/pools/tg29x_foundation_basin_boundary_pool_index.json",
+  "basin_boundary_pool_path": "reports/autogrowth/pools/tg29x_foundation_basin_boundary_pool.jsonl",
+  "cache_write_seconds": 0.000165,
+  "classification_counts": {
+    "basin_boundary": 3,
+    "outside_known_basin": 3
+  },
+  "record_count": 6,
+  "schema_version": "tg29x_foundation_basin_boundary_pool_index.v0"
+}
