@@ -415,6 +415,11 @@ from .candidate_ecology_runtime_path_installation import (
     CandidateEcologyRuntimePathInstallationResult,
     run_candidate_ecology_runtime_path_installation,
 )
+from .mature_candidate_post_selection_sufficiency_audit import (
+    MatureCandidatePostSelectionSufficiencyAuditConfig,
+    MatureCandidatePostSelectionSufficiencyAuditResult,
+    run_mature_candidate_post_selection_sufficiency_audit,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -691,6 +696,8 @@ __all__ = [
     "ContinuationCandidateEcologyMaterializationResult",
     "CandidateEcologyRuntimePathInstallationConfig",
     "CandidateEcologyRuntimePathInstallationResult",
+    "MatureCandidatePostSelectionSufficiencyAuditConfig",
+    "MatureCandidatePostSelectionSufficiencyAuditResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -720,6 +727,7 @@ __all__ = [
     "run_continuation_evidence_materialization",
     "run_continuation_candidate_ecology_materialization",
     "run_candidate_ecology_runtime_path_installation",
+    "run_mature_candidate_post_selection_sufficiency_audit",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",

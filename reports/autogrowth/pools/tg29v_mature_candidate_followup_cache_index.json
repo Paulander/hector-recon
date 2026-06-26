@@ -1,0 +1,13 @@
+{
+  "cache_write_seconds": 0.000181,
+  "classification_counts": {
+    "horizon_insufficient_after_mature_move": 1,
+    "reply_policy_fragile_maturity": 1
+  },
+  "followup_cache_index_path": "reports/autogrowth/pools/tg29v_mature_candidate_followup_cache_index.json",
+  "followup_cache_path": "reports/autogrowth/pools/tg29v_mature_candidate_followup_cache.jsonl",
+  "followup_candidate_exists_count": 1,
+  "followup_chain_success_count": 1,
+  "record_count": 2,
+  "schema_version": "tg29v_mature_candidate_followup_cache_index.v0"
+}

@@ -1,0 +1,1627 @@
+{
+  "ablation_results": {
+    "post_selection_repair_ablation_causal": false,
+    "selected_repair_arm": "audit_only_no_repair",
+    "skip_reason": "repair_not_applied",
+    "skipped": true
+  },
+  "alternative_comparison": {
+    "records": [
+      {
+        "alternatives": [
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/6R1/4K3/8/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/6R1/4K3/8/5k2 w - - 6 4",
+                "black_reply": "e1f1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "f4e3",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.64,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/4K1R1/8/8/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/4K1R1/8/3k4/8 w - - 6 4",
+                "black_reply": "e1d2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "f4e4",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.1,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/4K3/6R1/8/8/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/4K3/6R1/8/3k4/8 w - - 6 4",
+                "black_reply": "e1d2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "f4e5",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.1,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/6R1/5K2/8/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/6R1/5K2/3k4/8 w - - 6 4",
+                "black_reply": "e1d2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "f4f3",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.66,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/5K2/6R1/8/8/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/5K2/6R1/8/3k4/8 w - - 6 4",
+                "black_reply": "e1d2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "f4f5",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.1,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/6R1/6K1/8/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/6R1/6K1/3k4/8 w - - 6 4",
+                "black_reply": "e1d2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "f4g3",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.68,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/6K1/6R1/8/8/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/6K1/6R1/8/3k4/8 w - - 6 4",
+                "black_reply": "e1d2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "f4g5",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.1,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/3k4/6R1 w - - 6 4",
+                "black_reply": "e1d2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/4k3/6R1 w - - 6 4",
+                "black_reply": "e1e2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g4g1",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -5.26,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/6R1/5k2 w - - 6 4",
+                "black_reply": "e1f1",
+                "foundation_reachable": true,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": true,
+            "move": "g4g2",
+            "partial_reply_foundation_response": true,
+            "runtime_score": 10.775,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": true,
+            "selected_by_graph_before_tg29u": true,
+            "state": "MATURE"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/5K2/6R1/8/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5K2/6R1/3k4/8 w - - 6 4",
+                "black_reply": "e1d2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g4g3",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -3.98,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/6R1/5K2/8/8/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/6R1/5K2/8/3k4/8 w - - 6 4",
+                "black_reply": "e1d2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g4g5",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.22,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/6R1/8/5K2/8/8/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/6R1/8/5K2/8/3k4/8 w - - 6 4",
+                "black_reply": "e1d2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g4g6",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.34,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/6R1/8/8/5K2/8/8/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/6R1/8/8/5K2/8/3k4/8 w - - 6 4",
+                "black_reply": "e1d2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g4g7",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.46,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "6R1/8/8/8/5K2/8/8/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "6R1/8/8/8/5K2/8/3k4/8 w - - 6 4",
+                "black_reply": "e1d2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g4g8",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.58,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/5K1R/8/8/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5K1R/8/3k4/8 w - - 6 4",
+                "black_reply": "e1d2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g4h4",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.16,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          }
+        ],
+        "comparison_classification": "selected_mature_is_good_but_needs_followup",
+        "selected_mature_candidate": "g4g2"
+      },
+      {
+        "alternatives": [
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5",
+                "black_reply": "d1e1",
+                "foundation_reachable": true,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "f4e3",
+            "partial_reply_foundation_response": true,
+            "runtime_score": 7.5,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": true,
+            "selected_by_graph_before_tg29u": false,
+            "state": "MATURE"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/4K3/8/6R1/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/4K3/8/6R1/4k3 w - - 8 5",
+                "black_reply": "d1e1",
+                "foundation_reachable": true,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "f4e4",
+            "partial_reply_foundation_response": true,
+            "runtime_score": 7.5,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "MATURE"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/4K3/8/8/6R1/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/4K3/8/8/6R1/4k3 w - - 8 5",
+                "black_reply": "d1e1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "f4e5",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.1,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/8/5K2/6R1/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/8/5K2/6R1/4k3 w - - 8 5",
+                "black_reply": "d1e1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "f4f3",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.1,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/5K2/8/8/6R1/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/5K2/8/8/6R1/4k3 w - - 8 5",
+                "black_reply": "d1e1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "f4f5",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.1,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/8/6K1/6R1/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/8/6K1/6R1/4k3 w - - 8 5",
+                "black_reply": "d1e1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "f4g3",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.1,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/6K1/8/6R1/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/6K1/8/6R1/4k3 w - - 8 5",
+                "black_reply": "d1e1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "f4g4",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.1,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/6K1/8/8/6R1/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/6K1/8/8/6R1/4k3 w - - 8 5",
+                "black_reply": "d1e1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "f4g5",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.1,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/R7/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/R7/4k3 w - - 8 5",
+                "black_reply": "d1e1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g2a2",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.12,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/1R6/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/1R6/4k3 w - - 8 5",
+                "black_reply": "d1e1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g2b2",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.1,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/2k5/8 w - - 0 5",
+                "black_reply": "d1c2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 0
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/2R5/4k3 w - - 8 5",
+                "black_reply": "d1e1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g2c2",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -102.0,
+            "s1_full_reply_evidence": false,
+            "safety": false,
+            "same_graph_continuation": 1,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "PRUNED"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/3R4/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/3k4/8 w - - 0 5",
+                "black_reply": "d1d2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 0
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g2d2",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -102.0,
+            "s1_full_reply_evidence": false,
+            "safety": false,
+            "same_graph_continuation": 1,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "PRUNED"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/4R3/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/4k3/8 w - - 0 5",
+                "black_reply": "d1e2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 0
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g2e2",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -102.0,
+            "s1_full_reply_evidence": false,
+            "safety": false,
+            "same_graph_continuation": 1,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "PRUNED"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/5R2/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/5R2/4k3 w - - 8 5",
+                "black_reply": "d1e1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g2f2",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.08,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": true,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/2k5/6R1 w - - 8 5",
+                "black_reply": "d1c2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/3k4/6R1 w - - 8 5",
+                "black_reply": "d1d2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g2g1",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.96,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/5K2/6R1/8/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5K2/6R1/2k5/8 w - - 8 5",
+                "black_reply": "d1c2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g2g3",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.28,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/5KR1/8/8/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5KR1/8/2k5/8 w - - 8 5",
+                "black_reply": "d1c2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g2g4",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.4,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/6R1/5K2/8/8/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/6R1/5K2/8/2k5/8 w - - 8 5",
+                "black_reply": "d1c2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g2g5",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.52,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/6R1/8/5K2/8/8/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/6R1/8/5K2/8/2k5/8 w - - 8 5",
+                "black_reply": "d1c2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g2g6",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.64,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/6R1/8/8/5K2/8/8/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/6R1/8/8/5K2/8/2k5/8 w - - 8 5",
+                "black_reply": "d1c2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g2g7",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.76,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "6R1/8/8/8/5K2/8/8/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "6R1/8/8/8/5K2/8/2k5/8 w - - 8 5",
+                "black_reply": "d1c2",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g2g8",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.88,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          },
+          {
+            "after_move_reply_envelope": [
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/7R/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/7R/4k3 w - - 8 5",
+                "black_reply": "d1e1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ],
+            "all_reply_foundation_response": false,
+            "bridge_frontier_progress": false,
+            "move": "g2h2",
+            "partial_reply_foundation_response": false,
+            "runtime_score": -4.12,
+            "s1_full_reply_evidence": false,
+            "safety": true,
+            "same_graph_continuation": 2,
+            "selected_by_graph_after_tg29u": false,
+            "selected_by_graph_before_tg29u": false,
+            "state": "DECAYING"
+          }
+        ],
+        "comparison_classification": "selected_mature_is_good_but_needs_followup",
+        "selected_mature_candidate": "f4e3"
+      }
+    ],
+    "summary": {
+      "candidate_cap_hid_better_candidate_count": 0,
+      "non_mature_better_candidate_exists_count": 0,
+      "selected_mature_is_best_available_count": 0,
+      "selected_mature_is_false_positive_count": 0,
+      "selected_mature_is_good_but_needs_followup_count": 2
+    }
+  },
+  "checkpoint": "TG29v_mature_candidate_post_selection_sufficiency_audit",
+  "compact_regression": {
+    "summary": {
+      "compact_regression_reused_from_tg29q": true,
+      "decoy_rejection_pass": true,
+      "foundation_sanity_pass": true,
+      "frontier_regression_pass": true,
+      "generic_edge_regression_pass": true,
+      "known_trajectory_microprobe_pass": true,
+      "s1_full_reply_validation_pass": true,
+      "staged_near_miss_regression_pass": true,
+      "staged_regression_pass": true
+    }
+  },
+  "config": {
+    "base": {
+      "black_reply_policy": "deterministic_worst_foundation_reply",
+      "bridge_frontier_heldout_count": 1,
+      "bridge_frontier_train_count": 2,
+      "episode_count": 4,
+      "foundation_mate1_heldout_count": 16,
+      "foundation_mate1_train_count": 32,
+      "foundation_mate2_heldout_count": 8,
+      "foundation_mate2_train_count": 16,
+      "foundation_seed": 20260624,
+      "full_pool_path": "reports/autogrowth/pools/tg28f_full_foundation_backed_frontier_pool.jsonl",
+      "generic_edge_heldout_count": 2,
+      "generic_edge_train_count": 4,
+      "max_ablation_positions": 1,
+      "max_episode_ablation_count": 1,
+      "max_foundation_ablation_positions": 1,
+      "max_foundation_sanity_positions": 1,
+      "max_samples": 16,
+      "max_white_moves_per_episode": 4,
+      "near_miss_heldout_count": 8,
+      "progress_output": "reports/autogrowth/krk_autogrowth_tg29v_mature_candidate_post_selection_sufficiency_audit_progress.json",
+      "repaired_high_recall_threshold": 0.018,
+      "schedule_names": [
+        "tg28h_mixed_balanced_baseline",
+        "mixed_balanced_plus_staged",
+        "staged_first_then_mixed_replay",
+        "mixed_first_then_staged",
+        "mixed_staged_near_miss_replay"
+      ],
+      "seed": 20260703,
+      "staged_heldout_count": 4,
+      "staged_near_miss_count": 8,
+      "staged_pool_path": "reports/autogrowth/pools/tg28l_staged_predecessor_pool.jsonl",
+      "staged_regression_count": 4,
+      "staged_train_count": 8
+    },
+    "followup_cache_index_path": "reports/autogrowth/pools/tg29v_mature_candidate_followup_cache_index.json",
+    "followup_cache_path": "reports/autogrowth/pools/tg29v_mature_candidate_followup_cache.jsonl",
+    "tg29p_artifact_path": "reports/autogrowth/krk_autogrowth_tg29p_cached_online_episode_scale_matrix.json",
+    "tg29q_artifact_path": "reports/autogrowth/krk_autogrowth_tg29q_horizon_limited_continuation_repair.json",
+    "tg29r_artifact_path": "reports/autogrowth/krk_autogrowth_tg29r_continuation_candidate_retrieval_repair.json",
+    "tg29r_cache_path": "reports/autogrowth/pools/tg29r_continuation_candidate_retrieval_cache.jsonl",
+    "tg29u_artifact_path": "reports/autogrowth/krk_autogrowth_tg29u_candidate_ecology_runtime_path_installation.json",
+    "tg29u_cache_path": "reports/autogrowth/pools/tg29u_candidate_ecology_runtime_path_cache.jsonl"
+  },
+  "decision": {
+    "ablation_results": {
+      "post_selection_repair_ablation_causal": false,
+      "selected_repair_arm": "audit_only_no_repair",
+      "skip_reason": "repair_not_applied",
+      "skipped": true
+    },
+    "action_ranker_used_for_runtime": false,
+    "better_non_mature_candidate_exists_count": 0,
+    "black_reply_escape_state_count": 0,
+    "bridge_frontier_state_count": 0,
+    "bridge_labels_learner_visible": false,
+    "bridge_progress_loop_count": 0,
+    "cache_query_count": 2,
+    "checkpoint_interpretation": "mature_candidate_post_selection_sufficiency_diagnostic_pass",
+    "checkpoint_pass": true,
+    "compact_regression_reused_from_tg29q": true,
+    "continuation_cache_hit_rate": 1.0,
+    "continuation_chain_state_count": 1,
+    "continuation_labels_learner_visible": false,
+    "credited_candidate_selected_count": 2,
+    "decaying_candidate_selected_count": 0,
+    "decoy_correct_rejection_count": 9,
+    "decoy_episode_count": 9,
+    "decoy_false_handoff_count": 0,
+    "decoy_rejection_pass": true,
+    "depth_labels_learner_visible": false,
+    "direct_provider_override": false,
+    "ecology_cache_hit_rate": 1.0,
+    "ecology_cache_live_mismatch_count": 0,
+    "ecology_overactivation_on_decoy_count": 0,
+    "edge_fence_labels_learner_visible": false,
+    "failure_bucket_counts": {
+      "ecology_runtime_path_no_downstream_effect": 1,
+      "mature_candidate_horizon_insufficient": 1,
+      "mature_candidate_reply_fragile": 1,
+      "mature_candidate_selected_but_foundation_basin_not_reached": 1,
+      "mature_candidate_useful_but_followup_missing": 1
+    },
+    "false_maturity_count": 0,
+    "false_maturity_decay_event_count": 0,
+    "followup_candidate_exists_count": 1,
+    "followup_candidate_lost_selection_count": 0,
+    "followup_candidate_missing_count": 1,
+    "followup_candidate_selected_count": 1,
+    "followup_chain_failure_count": 1,
+    "followup_chain_success_count": 1,
+    "followup_depth_needed_avg": 1.5,
+    "followup_ecology_materialized_count": 1,
+    "followup_ecology_spawn_count": 0,
+    "followup_missing_candidate_count": 0,
+    "foundation_basin_missed_count": 1,
+    "foundation_cache_live_mismatch_count": 0,
+    "foundation_frozen": true,
+    "foundation_handoff_count": 0,
+    "foundation_m3_updates_during_eval": 0,
+    "foundation_m3_updates_during_training": 0,
+    "foundation_m4_promotions_during_eval": 0,
+    "foundation_m4_promotions_during_training": 0,
+    "foundation_mate1_accuracy": 1.0,
+    "foundation_mate2_conversion_rate": 1.0,
+    "foundation_sanity_pass": true,
+    "frontier_regression_pass": true,
+    "generic_edge_regression_pass": true,
+    "guard_used_during_evaluation": false,
+    "guard_used_during_runtime_choice": false,
+    "horizon_insufficient_after_mature_move_count": 1,
+    "horizon_too_short_and_stagnating_count": 0,
+    "horizon_too_short_but_progressing_count": 0,
+    "illegal_move_count": 0,
+    "immediate_foundation_handoff_count": 0,
+    "known_trajectory_microprobe_pass": true,
+    "live_foundation_query_count": 0,
+    "live_rollout_count": 0,
+    "local_progress_loop_count": 0,
+    "local_progress_only_state_count": 0,
+    "low_progress_state_count": 0,
+    "mature_candidate_count": 3,
+    "mature_candidate_credit_debt_ratio": null,
+    "mature_candidate_credit_total": 52.5,
+    "mature_candidate_debt_total": 0.0,
+    "mature_candidate_present_in_runtime_count": 3,
+    "mature_candidate_selected_count": 2,
+    "max4_success_rate": 0.0,
+    "max5_success_rate": 0.0,
+    "max6_success_rate": 0.0,
+    "max_move_reached_count": 21,
+    "near_miss_false_positive_count": 0,
+    "one_move_from_foundation_handoff_count": 0,
+    "phase_timings": {
+      "cache_write_seconds": 0.000181,
+      "context_build_seconds": 0.0,
+      "episode_eval_seconds": 0.0,
+      "followup_chain_audit_seconds": 0.000139,
+      "post_selection_audit_seconds": 0.000179,
+      "total_seconds": 0.024491
+    },
+    "post_selection_repair_ablation_causal": false,
+    "post_selection_state_count": 2,
+    "pruned_candidate_selected_count": 0,
+    "purity_boundary": {
+      "action_ranker_used_for_runtime": false,
+      "black_replies_harness_simulated": true,
+      "bridge_labels_learner_visible": false,
+      "broad_krk_expansion": false,
+      "checkpoint": "TG29v",
+      "depth_labels_learner_visible": false,
+      "direct_provider_override": false,
+      "edge_fence_labels_learner_visible": false,
+      "foundation_frozen": true,
+      "foundation_unfrozen": false,
+      "imagination_or_internal_rollout_added": false,
+      "post_selection_audit_only": true,
+      "python_final_selector_used": false,
+      "quality_tier_labels_learner_visible": false,
+      "repair_applied": false,
+      "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+      "runtime_tablebase_or_dtm_move_source": false,
+      "s1_cache_used_as_evidence": true,
+      "s1_cache_used_as_provider": false,
+      "s1_labels_learner_visible": false,
+      "stage_labels_learner_visible": false,
+      "staged_labels_learner_visible": false,
+      "trajectory_cache_used_as_evidence": true,
+      "trajectory_cache_used_as_provider": false,
+      "trajectory_labels_learner_visible": false,
+      "validator_driven_runtime_selection": false
+    },
+    "python_final_selector_used": false,
+    "quality_tier_labels_learner_visible": false,
+    "repair_applied": false,
+    "reply_policy_fragile_maturity_count": 1,
+    "rook_blunder_count": 0,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "s1_cache_hit_rate": 1.0,
+    "s1_full_reply_validation_pass": true,
+    "s1_handoff_count": 0,
+    "s1_labels_learner_visible": false,
+    "same_graph_foundation_continuation_count": 2,
+    "scheduler_equivalence_mismatch_count": 0,
+    "selected_mature_candidate_count": 2,
+    "selected_mature_candidate_episode_count": 1,
+    "selected_mature_false_positive_count": 0,
+    "selected_mature_is_best_available_count": 0,
+    "selected_repair_arm": "audit_only_no_repair",
+    "stage_labels_learner_visible": false,
+    "staged_labels_learner_visible": false,
+    "staged_near_miss_regression_pass": true,
+    "staged_regression_pass": true,
+    "stalemate_count": 0,
+    "targeted_episode_count": 6,
+    "targeted_episode_success_count": 0,
+    "targeted_episode_success_rate": 0.0,
+    "targeted_success_delta_vs_tg29u": 0,
+    "timeout_count": 0,
+    "trainer_side_exploration_used": true,
+    "trainer_side_exploration_used_in_final_eval": false,
+    "trajectory_cache_hit_rate": 1.0,
+    "trajectory_labels_learner_visible": false,
+    "true_mature_candidate_count": 0,
+    "unsafe_move_count": 0,
+    "validator_skip_used_during_internal_handoff_eval": false
+  },
+  "decoy_near_miss_regression": {
+    "summary": {
+      "decoy_correct_rejection_count": 9,
+      "decoy_episode_count": 9,
+      "decoy_false_handoff_count": 0,
+      "ecology_overactivation_on_decoy_count": 0,
+      "near_miss_false_positive_count": 0
+    }
+  },
+  "followup_cache_index": {
+    "cache_write_seconds": 0.000181,
+    "classification_counts": {
+      "horizon_insufficient_after_mature_move": 1,
+      "reply_policy_fragile_maturity": 1
+    },
+    "followup_cache_index_path": "reports/autogrowth/pools/tg29v_mature_candidate_followup_cache_index.json",
+    "followup_cache_path": "reports/autogrowth/pools/tg29v_mature_candidate_followup_cache.jsonl",
+    "followup_candidate_exists_count": 1,
+    "followup_chain_success_count": 1,
+    "record_count": 2,
+    "schema_version": "tg29v_mature_candidate_followup_cache_index.v0"
+  },
+  "followup_chain_audit": {
+    "records": [
+      {
+        "after_black_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+        "depth_1_followup_candidate_count": 2,
+        "depth_2_followup_candidate_count": 0,
+        "followup_chain_success": true,
+        "followup_depth_needed": 1,
+        "followup_selected_move": "f4e3",
+        "reaches_foundation_response": true,
+        "reaches_s1_full_reply_handoff": false,
+        "reaches_same_graph_continuation": true,
+        "reaches_stable_bridge_frontier_state": false,
+        "selected_mature_candidate_cache_entry_id": "88fdf8f42506d524"
+      },
+      {
+        "after_black_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+        "depth_1_followup_candidate_count": 0,
+        "depth_2_followup_candidate_count": 0,
+        "followup_chain_success": false,
+        "followup_depth_needed": 2,
+        "followup_selected_move": null,
+        "reaches_foundation_response": false,
+        "reaches_s1_full_reply_handoff": false,
+        "reaches_same_graph_continuation": false,
+        "reaches_stable_bridge_frontier_state": false,
+        "selected_mature_candidate_cache_entry_id": "8794ed7c9e0d2280"
+      }
+    ],
+    "summary": {
+      "followup_candidate_exists_count": 1,
+      "followup_candidate_lost_selection_count": 0,
+      "followup_candidate_missing_count": 1,
+      "followup_candidate_selected_count": 1,
+      "followup_chain_failure_count": 1,
+      "followup_chain_success_count": 1,
+      "followup_depth_needed_avg": 1.5
+    }
+  },
+  "post_selection_outcome_audit": {
+    "records": [
+      {
+        "after_black_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+        "all_reply_handoff_candidate_count": 0,
+        "continuation_positive_candidate_count": 22,
+        "foundation_response_candidate_count": 2,
+        "legal_candidate_count": 22,
+        "local_progress_only_candidate_count": 0,
+        "mature_credited_candidate_count": 2,
+        "partial_reply_candidate_count": 2,
+        "post_selection_state": "continuation_chain_state",
+        "runtime_selectable_candidate_count": 12,
+        "s1_full_reply_candidate_count": 0,
+        "safe_candidate_count": 19,
+        "safe_low_progress_candidate_count": 12,
+        "selected_mature_candidate_cache_entry_id": "88fdf8f42506d524"
+      },
+      {
+        "after_black_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+        "all_reply_handoff_candidate_count": 0,
+        "continuation_positive_candidate_count": 0,
+        "foundation_response_candidate_count": 0,
+        "legal_candidate_count": 0,
+        "local_progress_only_candidate_count": 0,
+        "mature_credited_candidate_count": 0,
+        "partial_reply_candidate_count": 0,
+        "post_selection_state": "foundation_basin_missed",
+        "runtime_selectable_candidate_count": 0,
+        "s1_full_reply_candidate_count": 0,
+        "safe_candidate_count": 0,
+        "safe_low_progress_candidate_count": 0,
+        "selected_mature_candidate_cache_entry_id": "8794ed7c9e0d2280"
+      }
+    ],
+    "summary": {
+      "black_reply_escape_state_count": 0,
+      "bridge_frontier_state_count": 0,
+      "continuation_chain_state_count": 1,
+      "foundation_basin_missed_count": 1,
+      "immediate_foundation_handoff_count": 0,
+      "local_progress_only_state_count": 0,
+      "low_progress_state_count": 0,
+      "one_move_from_foundation_handoff_count": 0,
+      "post_selection_state_count": 2
+    }
+  },
+  "purity_boundary": {
+    "action_ranker_used_for_runtime": false,
+    "black_replies_harness_simulated": true,
+    "bridge_labels_learner_visible": false,
+    "broad_krk_expansion": false,
+    "checkpoint": "TG29v",
+    "depth_labels_learner_visible": false,
+    "direct_provider_override": false,
+    "edge_fence_labels_learner_visible": false,
+    "foundation_frozen": true,
+    "foundation_unfrozen": false,
+    "imagination_or_internal_rollout_added": false,
+    "post_selection_audit_only": true,
+    "python_final_selector_used": false,
+    "quality_tier_labels_learner_visible": false,
+    "repair_applied": false,
+    "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+    "runtime_tablebase_or_dtm_move_source": false,
+    "s1_cache_used_as_evidence": true,
+    "s1_cache_used_as_provider": false,
+    "s1_labels_learner_visible": false,
+    "stage_labels_learner_visible": false,
+    "staged_labels_learner_visible": false,
+    "trajectory_cache_used_as_evidence": true,
+    "trajectory_cache_used_as_provider": false,
+    "trajectory_labels_learner_visible": false,
+    "validator_driven_runtime_selection": false
+  },
+  "repair_arm_comparison": {
+    "arms": {
+      "audit_only_no_repair": {
+        "repair_applied": false,
+        "selected": true
+      },
+      "credited_non_mature_competition_repair": {
+        "justified": false,
+        "repair_applied": false
+      },
+      "false_maturity_decay_repair": {
+        "justified": false,
+        "repair_applied": false
+      },
+      "followup_ecology_spawn_repair": {
+        "justified": true,
+        "repair_applied": false
+      },
+      "horizon_credit_repair": {
+        "justified": true,
+        "repair_applied": false
+      },
+      "reply_robust_maturity_repair": {
+        "justified": true,
+        "repair_applied": false
+      },
+      "tg29u_baseline": {
+        "repair_applied": false
+      }
+    },
+    "repair_applied": false,
+    "selected_repair_arm": "audit_only_no_repair",
+    "suggested_next_repair_arm": "reply_robust_maturity_repair_candidate"
+  },
+  "schema_version": "krk_autogrowth_tg29v_mature_candidate_post_selection_sufficiency_audit.v0",
+  "selected_mature_candidate_audit": {
+    "records": [
+      {
+        "after_black_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+        "after_mature_move_fen": "8/8/8/8/5K2/8/6R1/4k3 b - - 5 3",
+        "black_reply_after_mature_move": "e1d1",
+        "candidate_classification": "reply_policy_fragile_maturity",
+        "credit_debt_ratio": null,
+        "credit_total": 32.5,
+        "debt_total": 0.0,
+        "decay_count": 0,
+        "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+        "episode_termination_reason": "max_move_reached",
+        "evidence_summary": {
+          "actuator_confirmation": true,
+          "bridge_pressure": true,
+          "continuation_over_local": true,
+          "edge_fence": true,
+          "foundation_response": {
+            "all_reply": false,
+            "foundation_reachable_count": 1,
+            "partial_reply": true,
+            "reply_count": 2,
+            "same_graph_foundation_continuation_count": 2,
+            "sample_reply_rows": [
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+                "black_reply": "e1d1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/5K2/8/6R1/5k2 w - - 6 4",
+                "black_reply": "e1f1",
+                "foundation_reachable": true,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ]
+          },
+          "repeated_low_progress_debt": false,
+          "s1_full_reply": false,
+          "safety": true,
+          "trajectory_evidence": {
+            "trajectory_candidate": false
+          }
+        },
+        "foundation_handoff_occurs_later": true,
+        "horizon": 4,
+        "maturity_reason": [
+          "repeated causal credit memory",
+          "foundation reply coverage improved",
+          "bridge frontier credit",
+          "continuation over local evidence"
+        ],
+        "remaining_white_moves_after_mature_selection": 2,
+        "reply_policy": "deterministic_worst_foundation_reply",
+        "reply_rows": [
+          {
+            "after_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+            "black_reply": "e1d1",
+            "foundation_reachable": false,
+            "same_graph_foundation_continuation_count": 1
+          },
+          {
+            "after_reply_fen": "8/8/8/8/5K2/8/6R1/5k2 w - - 6 4",
+            "black_reply": "e1f1",
+            "foundation_reachable": true,
+            "same_graph_foundation_continuation_count": 1
+          }
+        ],
+        "s1_full_reply_handoff_occurs_later": false,
+        "same_graph_foundation_continuation_increases_later": false,
+        "selected_mature_candidate_cache_entry_id": "88fdf8f42506d524",
+        "selected_mature_move": "g4g2",
+        "source_blocked_turn": {
+          "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+          "move_index": 2,
+          "pre_tg29u_selected_move": "g4g2"
+        },
+        "start_fen": "8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+        "start_set": "frontier_near_starts",
+        "white_to_move_fen_before_mature_move": "8/8/8/8/5KR1/8/8/4k3 w - - 4 3"
+      },
+      {
+        "after_black_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+        "after_mature_move_fen": "8/8/8/8/8/4K3/6R1/3k4 b - - 7 4",
+        "black_reply_after_mature_move": "d1c1",
+        "candidate_classification": "horizon_insufficient_after_mature_move",
+        "credit_debt_ratio": null,
+        "credit_total": 20.0,
+        "debt_total": 0.0,
+        "decay_count": 0,
+        "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+        "episode_termination_reason": "max_move_reached",
+        "evidence_summary": {
+          "actuator_confirmation": true,
+          "bridge_pressure": false,
+          "continuation_over_local": true,
+          "edge_fence": false,
+          "foundation_response": {
+            "all_reply": false,
+            "foundation_reachable_count": 1,
+            "partial_reply": true,
+            "reply_count": 2,
+            "same_graph_foundation_continuation_count": 2,
+            "sample_reply_rows": [
+              {
+                "after_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+                "black_reply": "d1c1",
+                "foundation_reachable": false,
+                "same_graph_foundation_continuation_count": 1
+              },
+              {
+                "after_reply_fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5",
+                "black_reply": "d1e1",
+                "foundation_reachable": true,
+                "same_graph_foundation_continuation_count": 1
+              }
+            ]
+          },
+          "repeated_low_progress_debt": false,
+          "s1_full_reply": false,
+          "safety": true,
+          "trajectory_evidence": {
+            "trajectory_candidate": false
+          }
+        },
+        "foundation_handoff_occurs_later": true,
+        "horizon": 4,
+        "maturity_reason": [
+          "repeated causal credit memory",
+          "foundation reply coverage improved",
+          "continuation over local evidence"
+        ],
+        "remaining_white_moves_after_mature_selection": 1,
+        "reply_policy": "deterministic_worst_foundation_reply",
+        "reply_rows": [
+          {
+            "after_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+            "black_reply": "d1c1",
+            "foundation_reachable": false,
+            "same_graph_foundation_continuation_count": 1
+          },
+          {
+            "after_reply_fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5",
+            "black_reply": "d1e1",
+            "foundation_reachable": true,
+            "same_graph_foundation_continuation_count": 1
+          }
+        ],
+        "s1_full_reply_handoff_occurs_later": false,
+        "same_graph_foundation_continuation_increases_later": false,
+        "selected_mature_candidate_cache_entry_id": "8794ed7c9e0d2280",
+        "selected_mature_move": "f4e3",
+        "source_blocked_turn": {
+          "episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+          "move_index": 3,
+          "pre_tg29u_selected_move": "g2f2"
+        },
+        "start_fen": "8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+        "start_set": "frontier_near_starts",
+        "white_to_move_fen_before_mature_move": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4"
+      }
+    ],
+    "summary": {
+      "better_non_mature_candidate_exists_count": 0,
+      "false_maturity_count": 0,
+      "followup_missing_candidate_count": 0,
+      "horizon_insufficient_after_mature_move_count": 1,
+      "mature_candidate_credit_debt_ratio": null,
+      "mature_candidate_credit_total": 52.5,
+      "mature_candidate_debt_total": 0.0,
+      "reply_policy_fragile_maturity_count": 1,
+      "selected_mature_candidate_count": 2,
+      "selected_mature_candidate_episode_count": 1,
+      "selected_mature_false_positive_count": 0,
+      "selected_mature_is_best_available_count": 0,
+      "true_mature_candidate_count": 0
+    }
+  },
+  "targeted_evaluation": {
+    "summary": {
+      "bridge_progress_loop_count": 0,
+      "foundation_handoff_count": 0,
+      "horizon_too_short_and_stagnating_count": 0,
+      "horizon_too_short_but_progressing_count": 0,
+      "illegal_move_count": 0,
+      "local_progress_loop_count": 0,
+      "max4_success_rate": 0.0,
+      "max5_success_rate": 0.0,
+      "max6_success_rate": 0.0,
+      "max_move_reached_count": 21,
+      "rook_blunder_count": 0,
+      "s1_handoff_count": 0,
+      "same_graph_foundation_continuation_count": 2,
+      "stalemate_count": 0,
+      "targeted_episode_count": 6,
+      "targeted_episode_success_count": 0,
+      "targeted_episode_success_rate": 0.0,
+      "targeted_success_delta_vs_tg29u": 0,
+      "unsafe_move_count": 0
+    }
+  }
+}
