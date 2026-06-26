@@ -1,0 +1,960 @@
+{
+  "ablation_results": {
+    "disable_reply_envelope_checks": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_actuator_terminals": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_basin_miss_debt_terminals": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_bridge_frontier_evidence": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_followup_ecology_terminals": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_foundation_response_terminals": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_frozen_mate2_foundation_quorum": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_mature_candidate_runtime_terminals": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_robust_followup_credit_terminals": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_s1_full_reply_evidence": {
+      "causal": false,
+      "not_run": true
+    },
+    "mask_tightened_followup_success_terminals": {
+      "causal": false,
+      "not_run": true
+    },
+    "selected_repair_arm": "boundary_pool_only",
+    "skip_reason": "behavior_changing_repair_not_applied",
+    "skipped": true
+  },
+  "blocker_classification": {
+    "summary": {
+      "better_chain_exists_but_lost_selection_count": 0,
+      "better_chain_exists_but_not_materialized_count": 0,
+      "bridge_frontier_coverage_gap_count": 0,
+      "cache_live_mismatch_count": 0,
+      "followup_success_metric_too_weak_count": 1,
+      "foundation_basin_too_narrow_count": 1,
+      "no_safe_chain_to_basin_count": 1,
+      "overall_blocker": "followup_success_metric_too_weak"
+    }
+  },
+  "boundary_pool_index": {
+    "boundary_pool_index_path": "reports/autogrowth/pools/tg29y_frozen_foundation_basin_boundary_pool_index.json",
+    "boundary_pool_path": "reports/autogrowth/pools/tg29y_frozen_foundation_basin_boundary_pool.jsonl",
+    "cache_write_seconds": 0.000352,
+    "classification_counts": {
+      "basin_boundary_with_partial_support": 3,
+      "outside_frozen_foundation_basin": 3
+    },
+    "record_count": 6,
+    "schema_version": "tg29y_frozen_foundation_basin_boundary_pool_index.v0"
+  },
+  "checkpoint": "TG29y_tight_followup_success_basin_coverage",
+  "compact_regression": {
+    "summary": {
+      "decoy_rejection_pass": true,
+      "foundation_sanity_pass": true,
+      "frontier_regression_pass": true,
+      "generic_edge_regression_pass": true,
+      "known_trajectory_microprobe_pass": true,
+      "s1_full_reply_validation_pass": true,
+      "staged_near_miss_regression_pass": true,
+      "staged_regression_pass": true
+    }
+  },
+  "config": {
+    "base": {
+      "black_reply_policy": "deterministic_worst_foundation_reply",
+      "bridge_frontier_heldout_count": 1,
+      "bridge_frontier_train_count": 2,
+      "episode_count": 4,
+      "foundation_mate1_heldout_count": 16,
+      "foundation_mate1_train_count": 32,
+      "foundation_mate2_heldout_count": 8,
+      "foundation_mate2_train_count": 16,
+      "foundation_seed": 20260624,
+      "full_pool_path": "reports/autogrowth/pools/tg28f_full_foundation_backed_frontier_pool.jsonl",
+      "generic_edge_heldout_count": 2,
+      "generic_edge_train_count": 4,
+      "max_ablation_positions": 1,
+      "max_episode_ablation_count": 1,
+      "max_foundation_ablation_positions": 1,
+      "max_foundation_sanity_positions": 1,
+      "max_samples": 16,
+      "max_white_moves_per_episode": 4,
+      "near_miss_heldout_count": 8,
+      "progress_output": "reports/autogrowth/krk_autogrowth_tg29y_tight_followup_success_basin_coverage_progress.json",
+      "repaired_high_recall_threshold": 0.018,
+      "schedule_names": [
+        "tg28h_mixed_balanced_baseline",
+        "mixed_balanced_plus_staged",
+        "staged_first_then_mixed_replay",
+        "mixed_first_then_staged",
+        "mixed_staged_near_miss_replay"
+      ],
+      "seed": 20260703,
+      "staged_heldout_count": 4,
+      "staged_near_miss_count": 8,
+      "staged_pool_path": "reports/autogrowth/pools/tg28l_staged_predecessor_pool.jsonl",
+      "staged_regression_count": 4,
+      "staged_train_count": 8
+    },
+    "boundary_pool_index_path": "reports/autogrowth/pools/tg29y_frozen_foundation_basin_boundary_pool_index.json",
+    "boundary_pool_path": "reports/autogrowth/pools/tg29y_frozen_foundation_basin_boundary_pool.jsonl",
+    "tg29o_s1_cache_path": "reports/autogrowth/pools/tg29o_s1_full_reply_evidence_cache.jsonl",
+    "tg29p_artifact_path": "reports/autogrowth/krk_autogrowth_tg29p_cached_online_episode_scale_matrix.json",
+    "tg29q_artifact_path": "reports/autogrowth/krk_autogrowth_tg29q_horizon_limited_continuation_repair.json",
+    "tg29r_cache_path": "reports/autogrowth/pools/tg29r_continuation_candidate_retrieval_cache.jsonl",
+    "tg29t_cache_path": "reports/autogrowth/pools/tg29t_continuation_candidate_ecology_cache.jsonl",
+    "tg29u_cache_path": "reports/autogrowth/pools/tg29u_candidate_ecology_runtime_path_cache.jsonl",
+    "tg29w_artifact_path": "reports/autogrowth/krk_autogrowth_tg29w_reply_robust_mature_followup_repair.json",
+    "tg29w_runtime_cache_path": "reports/autogrowth/pools/tg29w_reply_robust_followup_runtime_cache.jsonl",
+    "tg29x_artifact_path": "reports/autogrowth/krk_autogrowth_tg29x_live_chain_sufficiency_basin_boundary_audit.json",
+    "tg29x_boundary_pool_path": "reports/autogrowth/pools/tg29x_foundation_basin_boundary_pool.jsonl",
+    "tg29x_chain_cache_path": "reports/autogrowth/pools/tg29x_live_chain_sufficiency_cache.jsonl"
+  },
+  "decision": {
+    "ablation_results": {
+      "disable_reply_envelope_checks": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_actuator_terminals": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_basin_miss_debt_terminals": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_bridge_frontier_evidence": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_followup_ecology_terminals": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_foundation_response_terminals": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_frozen_mate2_foundation_quorum": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_mature_candidate_runtime_terminals": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_robust_followup_credit_terminals": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_s1_full_reply_evidence": {
+        "causal": false,
+        "not_run": true
+      },
+      "mask_tightened_followup_success_terminals": {
+        "causal": false,
+        "not_run": true
+      },
+      "selected_repair_arm": "boundary_pool_only",
+      "skip_reason": "behavior_changing_repair_not_applied",
+      "skipped": true
+    },
+    "action_ranker_used_for_runtime": false,
+    "all_reply_foundation_count": 0,
+    "basin_boundary_cache_hit_rate": 1.0,
+    "basin_boundary_cache_live_mismatch_count": 0,
+    "basin_boundary_false_positive_on_decoy_count": 0,
+    "basin_boundary_hint_count": 2,
+    "basin_boundary_pool_entry_count": 6,
+    "basin_boundary_with_partial_support_count": 3,
+    "basin_labels_learner_visible": false,
+    "basin_miss_chain_count": 3,
+    "basin_miss_debt_terminal_count": 0,
+    "better_chain_exists_but_lost_selection_count": 0,
+    "better_chain_exists_but_not_materialized_count": 0,
+    "boundary_pool_only": true,
+    "bridge_frontier_coverage_gap_count": 0,
+    "bridge_frontier_not_foundation_count": 0,
+    "bridge_labels_learner_visible": false,
+    "cache_live_mismatch_count": 0,
+    "cache_query_count": 6,
+    "chain_overactivation_on_decoy_count": 0,
+    "checkpoint_interpretation": "tight_followup_success_basin_coverage_diagnostic_pass_no_runtime_repair",
+    "checkpoint_pass": true,
+    "continuation_cache_hit_rate": 1.0,
+    "continuation_labels_learner_visible": false,
+    "decoy_correct_rejection_count": 9,
+    "decoy_episode_count": 9,
+    "decoy_false_handoff_count": 0,
+    "decoy_like_boundary_count": 0,
+    "decoy_rejection_pass": true,
+    "depth_labels_learner_visible": false,
+    "direct_provider_override": false,
+    "ecology_cache_hit_rate": 1.0,
+    "edge_fence_labels_learner_visible": false,
+    "failure_bucket_counts": {
+      "false_followup_success_removed_but_no_repair": 1,
+      "followup_success_metric_too_weak": 1,
+      "foundation_basin_too_narrow": 1,
+      "no_safe_chain_to_basin": 1
+    },
+    "false_followup_success_count": 1,
+    "false_success_chain_count": 1,
+    "false_success_debt_event_count": 1,
+    "followup_cache_hit_rate": 1.0,
+    "followup_cache_live_mismatch_count": 0,
+    "followup_success_metric_too_weak_count": 1,
+    "foundation_basin_too_narrow_count": 1,
+    "foundation_cache_live_mismatch_count": 0,
+    "foundation_frozen": true,
+    "foundation_handoff_count": 0,
+    "foundation_m3_updates_during_eval": 0,
+    "foundation_m3_updates_during_training": 0,
+    "foundation_m4_promotions_during_eval": 0,
+    "foundation_m4_promotions_during_training": 0,
+    "foundation_mate1_accuracy": 1.0,
+    "foundation_mate2_conversion_rate": 1.0,
+    "foundation_response_present_count": 3,
+    "foundation_sanity_pass": true,
+    "foundation_unfrozen_in_main_arm": false,
+    "frontier_regression_pass": true,
+    "generic_edge_regression_pass": true,
+    "guard_used_during_evaluation": false,
+    "guard_used_during_runtime_choice": false,
+    "illegal_move_count": 0,
+    "inside_frozen_foundation_basin_count": 0,
+    "known_trajectory_microprobe_pass": true,
+    "live_foundation_query_count": 0,
+    "live_rollout_count": 0,
+    "max4_success_rate": 0.0,
+    "max5_success_rate": 0.0,
+    "max6_success_rate": 0.0,
+    "max_move_reached_count": 21,
+    "missing_evidence_family_counts": {
+      "S1_full_reply": 6,
+      "action/delta": 2,
+      "bridge_pressure": 5,
+      "foundation_response": 3,
+      "quorum": 6,
+      "shared_atoms": 6
+    },
+    "near_miss_false_positive_count": 0,
+    "no_safe_chain_to_basin_count": 1,
+    "old_followup_success_count": 1,
+    "old_success_reclassified_as_basin_miss_count": 1,
+    "old_success_reclassified_as_weak_count": 1,
+    "one_reply_foundation_hint_count": 2,
+    "outside_frozen_foundation_basin_count": 3,
+    "overall_blocker": "followup_success_metric_too_weak",
+    "partial_reply_foundation_count": 3,
+    "phase_timings": {
+      "basin_coverage_audit_seconds": 0.000255,
+      "cache_write_seconds": 0.000352,
+      "context_build_seconds": 0.0,
+      "followup_reclassification_seconds": 5.3e-05,
+      "repair_eval_seconds": 0.0,
+      "total_seconds": 0.061615
+    },
+    "purity_boundary": {
+      "action_ranker_used_for_runtime": false,
+      "basin_labels_learner_visible": false,
+      "black_replies_harness_simulated": true,
+      "bridge_labels_learner_visible": false,
+      "broad_krk_expansion": false,
+      "checkpoint": "TG29y",
+      "depth_labels_learner_visible": false,
+      "direct_provider_override": false,
+      "edge_fence_labels_learner_visible": false,
+      "foundation_frozen": true,
+      "foundation_unfrozen": false,
+      "foundation_unfrozen_in_main_arm": false,
+      "imagination_or_internal_rollout_added": false,
+      "python_final_selector_used": false,
+      "quality_tier_labels_learner_visible": false,
+      "reply_policy_labels_learner_visible": false,
+      "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+      "runtime_tablebase_or_dtm_move_source": false,
+      "s1_cache_used_as_evidence": true,
+      "s1_cache_used_as_provider": false,
+      "s1_labels_learner_visible": false,
+      "shadow_child_foundation_used_in_main_eval": false,
+      "stage_labels_learner_visible": false,
+      "staged_labels_learner_visible": false,
+      "trajectory_cache_used_as_evidence": true,
+      "trajectory_cache_used_as_provider": false,
+      "trajectory_labels_learner_visible": false,
+      "validator_driven_runtime_selection": false
+    },
+    "python_final_selector_used": false,
+    "quality_tier_labels_learner_visible": false,
+    "repair_applied": false,
+    "reply_fragile_support_count": 2,
+    "reply_policy_labels_learner_visible": false,
+    "robust_followup_credit_terminal_count": 0,
+    "rook_blunder_count": 0,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "s1_cache_hit_rate": 1.0,
+    "s1_full_reply_validation_pass": true,
+    "s1_handoff_count": 0,
+    "s1_labels_learner_visible": false,
+    "same_graph_foundation_continuation_count": 6,
+    "scheduler_equivalence_mismatch_count": 0,
+    "selected_followup_candidate_count": 1,
+    "selected_mature_candidate_count": 2,
+    "selected_repair_arm": "boundary_pool_only",
+    "shadow_child_foundation_used": false,
+    "shadow_child_foundation_used_in_main_eval": false,
+    "stage_labels_learner_visible": false,
+    "staged_labels_learner_visible": false,
+    "staged_near_miss_regression_pass": true,
+    "staged_regression_pass": true,
+    "stalemate_count": 0,
+    "targeted_episode_count": 6,
+    "targeted_episode_success_count": 0,
+    "targeted_episode_success_rate": 0.0,
+    "targeted_success_delta_vs_tg29x": 0,
+    "tight_followup_basin_repair_ablation_causal": false,
+    "tightened_followup_success_count": 0,
+    "tightened_followup_success_terminal_count": 0,
+    "timeout_count": 0,
+    "total_seconds": 0.061615,
+    "trainer_side_exploration_used": true,
+    "trainer_side_exploration_used_in_final_eval": false,
+    "trajectory_cache_hit_rate": 1.0,
+    "trajectory_labels_learner_visible": false,
+    "unknown_basin_state_count": 0,
+    "unsafe_move_count": 0,
+    "validator_skip_used_during_internal_handoff_eval": false,
+    "weak_followup_support_count": 2,
+    "worst_reply_foundation_failure_count": 6
+  },
+  "decoy_near_miss_regression": {
+    "summary": {
+      "basin_boundary_false_positive_on_decoy_count": 0,
+      "chain_overactivation_on_decoy_count": 0,
+      "decoy_correct_rejection_count": 9,
+      "decoy_episode_count": 9,
+      "decoy_false_handoff_count": 0,
+      "near_miss_false_positive_count": 0
+    }
+  },
+  "followup_success_reclassification": {
+    "records": [
+      {
+        "after_black_reply_fens": [
+          "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+          "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+          "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5"
+        ],
+        "after_followup_fen": "8/8/8/8/8/4K3/6R1/3k4 b - - 7 4",
+        "basin_statuses": [
+          "basin_boundary",
+          "basin_boundary",
+          "outside_known_basin",
+          "outside_known_basin"
+        ],
+        "bridge_frontier_status": true,
+        "cache_entry_id": "88fdf8f42506d524",
+        "followup_candidate": "f4e3",
+        "foundation_response": {
+          "all_reply": false,
+          "foundation_reachable_count": 1,
+          "partial_reply": true,
+          "reply_count": 2,
+          "same_graph_foundation_continuation_count": 2,
+          "sample_reply_rows": [
+            {
+              "after_reply_fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+              "black_reply": "e1d1",
+              "foundation_reachable": false,
+              "same_graph_foundation_continuation_count": 1
+            },
+            {
+              "after_reply_fen": "8/8/8/8/5K2/8/6R1/5k2 w - - 6 4",
+              "black_reply": "e1f1",
+              "foundation_reachable": true,
+              "same_graph_foundation_continuation_count": 1
+            }
+          ]
+        },
+        "mature_candidate": "g4g2",
+        "old_followup_success": true,
+        "old_success_misses_basin": true,
+        "old_success_was_one_reply_only": true,
+        "reply_envelope_coverage": [
+          {
+            "all_reply_foundation": false,
+            "any_reply_foundation": true,
+            "replies_foundation_solved": 1,
+            "reply_envelope_success_rate": 0.5,
+            "reply_total": 2,
+            "worst_reply_foundation_success": false
+          },
+          {
+            "all_reply_foundation": false,
+            "any_reply_foundation": true,
+            "replies_foundation_solved": 1,
+            "reply_envelope_success_rate": 0.5,
+            "reply_total": 2,
+            "worst_reply_foundation_success": false
+          },
+          {
+            "all_reply_foundation": false,
+            "any_reply_foundation": false,
+            "replies_foundation_solved": 0,
+            "reply_envelope_success_rate": 0.0,
+            "reply_total": 0,
+            "worst_reply_foundation_success": false
+          },
+          {
+            "all_reply_foundation": false,
+            "any_reply_foundation": false,
+            "replies_foundation_solved": 0,
+            "reply_envelope_success_rate": 0.0,
+            "reply_total": 0,
+            "worst_reply_foundation_success": false
+          }
+        ],
+        "s1_handoff_status": false,
+        "same_graph_continuation_count": 2,
+        "tightened_followup_success": false,
+        "tightened_followup_success_classification": "weak_followup_support"
+      },
+      {
+        "after_black_reply_fens": [
+          "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5"
+        ],
+        "after_followup_fen": null,
+        "basin_statuses": [
+          "basin_boundary",
+          "outside_known_basin"
+        ],
+        "bridge_frontier_status": false,
+        "cache_entry_id": "8794ed7c9e0d2280",
+        "followup_candidate": null,
+        "foundation_response": {
+          "all_reply": false,
+          "foundation_reachable_count": 1,
+          "partial_reply": true,
+          "reply_count": 2,
+          "same_graph_foundation_continuation_count": 2,
+          "sample_reply_rows": [
+            {
+              "after_reply_fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+              "black_reply": "d1c1",
+              "foundation_reachable": false,
+              "same_graph_foundation_continuation_count": 1
+            },
+            {
+              "after_reply_fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5",
+              "black_reply": "d1e1",
+              "foundation_reachable": true,
+              "same_graph_foundation_continuation_count": 1
+            }
+          ]
+        },
+        "mature_candidate": "f4e3",
+        "old_followup_success": false,
+        "old_success_misses_basin": false,
+        "old_success_was_one_reply_only": false,
+        "reply_envelope_coverage": [
+          {
+            "all_reply_foundation": false,
+            "any_reply_foundation": true,
+            "replies_foundation_solved": 1,
+            "reply_envelope_success_rate": 0.5,
+            "reply_total": 2,
+            "worst_reply_foundation_success": false
+          },
+          {
+            "all_reply_foundation": false,
+            "any_reply_foundation": false,
+            "replies_foundation_solved": 0,
+            "reply_envelope_success_rate": 0.0,
+            "reply_total": 0,
+            "worst_reply_foundation_success": false
+          }
+        ],
+        "s1_handoff_status": false,
+        "same_graph_continuation_count": 2,
+        "tightened_followup_success": false,
+        "tightened_followup_success_classification": "weak_followup_support"
+      }
+    ],
+    "summary": {
+      "basin_boundary_hint_count": 2,
+      "false_followup_success_count": 1,
+      "old_followup_success_count": 1,
+      "old_success_reclassified_as_basin_miss_count": 1,
+      "old_success_reclassified_as_weak_count": 1,
+      "one_reply_foundation_hint_count": 2,
+      "reply_fragile_support_count": 2,
+      "tightened_followup_success_count": 0,
+      "weak_followup_support_count": 2
+    }
+  },
+  "frozen_foundation_basin_coverage": {
+    "records": [
+      {
+        "basin_classification": "basin_boundary_with_partial_support",
+        "boundary_entry_id": "3cc3cf83909dc808",
+        "bridge_frontier_evidence": true,
+        "cache_config_hash": "1d226b8db3e15d55",
+        "fen": "8/8/8/8/5KR1/8/8/4k3 w - - 4 3",
+        "foundation_config_hash": "6840184287322f9a",
+        "foundation_quorum_activation": false,
+        "foundation_response_present": true,
+        "learner_visible_labels": false,
+        "mate1_reachable": false,
+        "mate2_reachable": true,
+        "missing_evidence_families": [
+          "S1_full_reply",
+          "quorum",
+          "shared_atoms"
+        ],
+        "nearest_bridge_frontier_summary": {
+          "available": true,
+          "distance": 0
+        },
+        "nearest_foundation_positive_summary": {
+          "available": true,
+          "distance": 1
+        },
+        "reply_envelope_summary": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": true,
+          "replies_foundation_solved": 1,
+          "reply_envelope_success_rate": 0.5,
+          "reply_total": 2,
+          "worst_reply_foundation_success": false
+        },
+        "s1_full_reply_evidence": false,
+        "same_graph_foundation_continuation_count": 2,
+        "schema_version": "tg29y_frozen_foundation_basin_boundary_pool_entry.v0",
+        "side_to_move": "white",
+        "source": "frozen_foundation_diagnostic",
+        "source_black_reply": "e1d1",
+        "source_candidate_move": "g4g2",
+        "source_chain_id": "88fdf8f42506d524",
+        "source_episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+        "source_move_index": 2
+      },
+      {
+        "basin_classification": "basin_boundary_with_partial_support",
+        "boundary_entry_id": "64371a615b545889",
+        "bridge_frontier_evidence": false,
+        "cache_config_hash": "1d226b8db3e15d55",
+        "fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+        "foundation_config_hash": "6840184287322f9a",
+        "foundation_quorum_activation": false,
+        "foundation_response_present": true,
+        "learner_visible_labels": false,
+        "mate1_reachable": false,
+        "mate2_reachable": true,
+        "missing_evidence_families": [
+          "S1_full_reply",
+          "bridge_pressure",
+          "quorum",
+          "shared_atoms"
+        ],
+        "nearest_bridge_frontier_summary": {
+          "available": false,
+          "distance": null
+        },
+        "nearest_foundation_positive_summary": {
+          "available": true,
+          "distance": 1
+        },
+        "reply_envelope_summary": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": true,
+          "replies_foundation_solved": 1,
+          "reply_envelope_success_rate": 0.5,
+          "reply_total": 2,
+          "worst_reply_foundation_success": false
+        },
+        "s1_full_reply_evidence": false,
+        "same_graph_foundation_continuation_count": 2,
+        "schema_version": "tg29y_frozen_foundation_basin_boundary_pool_entry.v0",
+        "side_to_move": "white",
+        "source": "frozen_foundation_diagnostic",
+        "source_black_reply": "e1d1",
+        "source_candidate_move": "f4e3",
+        "source_chain_id": "88fdf8f42506d524",
+        "source_episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+        "source_move_index": 2
+      },
+      {
+        "basin_classification": "outside_frozen_foundation_basin",
+        "boundary_entry_id": "d1cc3d06fcee4b0d",
+        "bridge_frontier_evidence": false,
+        "cache_config_hash": "1d226b8db3e15d55",
+        "fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+        "foundation_config_hash": "6840184287322f9a",
+        "foundation_quorum_activation": false,
+        "foundation_response_present": false,
+        "learner_visible_labels": false,
+        "mate1_reachable": false,
+        "mate2_reachable": false,
+        "missing_evidence_families": [
+          "S1_full_reply",
+          "bridge_pressure",
+          "foundation_response",
+          "quorum",
+          "shared_atoms"
+        ],
+        "nearest_bridge_frontier_summary": {
+          "available": false,
+          "distance": null
+        },
+        "nearest_foundation_positive_summary": {
+          "available": false,
+          "distance": null
+        },
+        "reply_envelope_summary": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": false,
+          "replies_foundation_solved": 0,
+          "reply_envelope_success_rate": 0.0,
+          "reply_total": 0,
+          "worst_reply_foundation_success": false
+        },
+        "s1_full_reply_evidence": false,
+        "same_graph_foundation_continuation_count": 0,
+        "schema_version": "tg29y_frozen_foundation_basin_boundary_pool_entry.v0",
+        "side_to_move": "white",
+        "source": "frozen_foundation_diagnostic",
+        "source_black_reply": "e1d1",
+        "source_candidate_move": "f4e3",
+        "source_chain_id": "88fdf8f42506d524",
+        "source_episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+        "source_move_index": 2
+      },
+      {
+        "basin_classification": "outside_frozen_foundation_basin",
+        "boundary_entry_id": "ff87c2251efe3b0e",
+        "bridge_frontier_evidence": false,
+        "cache_config_hash": "1d226b8db3e15d55",
+        "fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 8 5",
+        "foundation_config_hash": "6840184287322f9a",
+        "foundation_quorum_activation": false,
+        "foundation_response_present": false,
+        "learner_visible_labels": false,
+        "mate1_reachable": false,
+        "mate2_reachable": false,
+        "missing_evidence_families": [
+          "S1_full_reply",
+          "bridge_pressure",
+          "foundation_response",
+          "quorum",
+          "shared_atoms"
+        ],
+        "nearest_bridge_frontier_summary": {
+          "available": false,
+          "distance": null
+        },
+        "nearest_foundation_positive_summary": {
+          "available": false,
+          "distance": null
+        },
+        "reply_envelope_summary": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": false,
+          "replies_foundation_solved": 0,
+          "reply_envelope_success_rate": 0.0,
+          "reply_total": 0,
+          "worst_reply_foundation_success": false
+        },
+        "s1_full_reply_evidence": false,
+        "same_graph_foundation_continuation_count": 0,
+        "schema_version": "tg29y_frozen_foundation_basin_boundary_pool_entry.v0",
+        "side_to_move": "white",
+        "source": "frozen_foundation_diagnostic",
+        "source_black_reply": "e1d1",
+        "source_candidate_move": "f4e3",
+        "source_chain_id": "88fdf8f42506d524",
+        "source_episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+        "source_move_index": 2
+      },
+      {
+        "basin_classification": "basin_boundary_with_partial_support",
+        "boundary_entry_id": "7e1d98200e3477a4",
+        "bridge_frontier_evidence": false,
+        "cache_config_hash": "1d226b8db3e15d55",
+        "fen": "8/8/8/8/5K2/8/6R1/3k4 w - - 6 4",
+        "foundation_config_hash": "6840184287322f9a",
+        "foundation_quorum_activation": false,
+        "foundation_response_present": true,
+        "learner_visible_labels": false,
+        "mate1_reachable": false,
+        "mate2_reachable": true,
+        "missing_evidence_families": [
+          "S1_full_reply",
+          "action/delta",
+          "bridge_pressure",
+          "quorum",
+          "shared_atoms"
+        ],
+        "nearest_bridge_frontier_summary": {
+          "available": false,
+          "distance": null
+        },
+        "nearest_foundation_positive_summary": {
+          "available": true,
+          "distance": 1
+        },
+        "reply_envelope_summary": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": true,
+          "replies_foundation_solved": 1,
+          "reply_envelope_success_rate": 0.5,
+          "reply_total": 2,
+          "worst_reply_foundation_success": false
+        },
+        "s1_full_reply_evidence": false,
+        "same_graph_foundation_continuation_count": 2,
+        "schema_version": "tg29y_frozen_foundation_basin_boundary_pool_entry.v0",
+        "side_to_move": "white",
+        "source": "frozen_foundation_diagnostic",
+        "source_black_reply": "d1c1",
+        "source_candidate_move": "f4e3",
+        "source_chain_id": "8794ed7c9e0d2280",
+        "source_episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+        "source_move_index": 3
+      },
+      {
+        "basin_classification": "outside_frozen_foundation_basin",
+        "boundary_entry_id": "58a99200fc8b1ac0",
+        "bridge_frontier_evidence": false,
+        "cache_config_hash": "1d226b8db3e15d55",
+        "fen": "8/8/8/8/8/4K3/6R1/2k5 w - - 8 5",
+        "foundation_config_hash": "6840184287322f9a",
+        "foundation_quorum_activation": false,
+        "foundation_response_present": false,
+        "learner_visible_labels": false,
+        "mate1_reachable": false,
+        "mate2_reachable": false,
+        "missing_evidence_families": [
+          "S1_full_reply",
+          "action/delta",
+          "bridge_pressure",
+          "foundation_response",
+          "quorum",
+          "shared_atoms"
+        ],
+        "nearest_bridge_frontier_summary": {
+          "available": false,
+          "distance": null
+        },
+        "nearest_foundation_positive_summary": {
+          "available": false,
+          "distance": null
+        },
+        "reply_envelope_summary": {
+          "all_reply_foundation": false,
+          "any_reply_foundation": false,
+          "replies_foundation_solved": 0,
+          "reply_envelope_success_rate": 0.0,
+          "reply_total": 0,
+          "worst_reply_foundation_success": false
+        },
+        "s1_full_reply_evidence": false,
+        "same_graph_foundation_continuation_count": 0,
+        "schema_version": "tg29y_frozen_foundation_basin_boundary_pool_entry.v0",
+        "side_to_move": "white",
+        "source": "frozen_foundation_diagnostic",
+        "source_black_reply": "d1c1",
+        "source_candidate_move": "f4e3",
+        "source_chain_id": "8794ed7c9e0d2280",
+        "source_episode_id": "frontier_near_starts|h4|deterministic_worst_foundation_reply|8/8/8/4R3/5K2/8/8/6k1 w - - 0 1",
+        "source_move_index": 3
+      }
+    ],
+    "summary": {
+      "all_reply_foundation_count": 0,
+      "basin_boundary_pool_entry_count": 6,
+      "basin_boundary_with_partial_support_count": 3,
+      "bridge_frontier_not_foundation_count": 0,
+      "decoy_like_boundary_count": 0,
+      "foundation_response_present_count": 3,
+      "inside_frozen_foundation_basin_count": 0,
+      "missing_evidence_family_counts": {
+        "S1_full_reply": 6,
+        "action/delta": 2,
+        "bridge_pressure": 5,
+        "foundation_response": 3,
+        "quorum": 6,
+        "shared_atoms": 6
+      },
+      "outside_frozen_foundation_basin_count": 3,
+      "partial_reply_foundation_count": 3,
+      "same_graph_foundation_continuation_count": 6,
+      "unknown_basin_state_count": 0,
+      "worst_reply_foundation_failure_count": 6
+    }
+  },
+  "input_artifact_audit": {
+    "summary": {
+      "boundary_pool_entry_count": 6,
+      "cache_config_hash": "1d226b8db3e15d55",
+      "cache_config_hashes": [
+        "1d226b8db3e15d55",
+        "88e0522e9f2d6af9"
+      ],
+      "cache_live_mismatch_count": 0,
+      "cache_schema_versions_valid": true,
+      "chain_cache_entry_count": 2,
+      "followup_cache_live_mismatch_count": 0,
+      "foundation_cache_live_mismatch_count": 0,
+      "foundation_config_hash": "6840184287322f9a",
+      "foundation_config_hashes": [
+        "6840184287322f9a",
+        "c30e8a8ba2644c50"
+      ],
+      "foundation_remains_frozen": true,
+      "retrieval_cache_entry_count": 648,
+      "tg29o_s1_cache_entry_count": 120,
+      "tg29t_ecology_cache_entry_count": 81,
+      "tg29u_runtime_cache_entry_count": 81,
+      "tg29w_schema_version": "krk_autogrowth_tg29w_reply_robust_mature_followup_repair.v0",
+      "tg29x_artifact_path": "reports/autogrowth/krk_autogrowth_tg29x_live_chain_sufficiency_basin_boundary_audit.json",
+      "tg29x_boundary_pool_path": "reports/autogrowth/pools/tg29x_foundation_basin_boundary_pool.jsonl",
+      "tg29x_schema_version": "krk_autogrowth_tg29x_live_chain_sufficiency_basin_boundary_audit.v0",
+      "tiny_sample_cache_live_mismatch_count": 0
+    }
+  },
+  "purity_boundary": {
+    "action_ranker_used_for_runtime": false,
+    "basin_labels_learner_visible": false,
+    "black_replies_harness_simulated": true,
+    "bridge_labels_learner_visible": false,
+    "broad_krk_expansion": false,
+    "checkpoint": "TG29y",
+    "depth_labels_learner_visible": false,
+    "direct_provider_override": false,
+    "edge_fence_labels_learner_visible": false,
+    "foundation_frozen": true,
+    "foundation_unfrozen": false,
+    "foundation_unfrozen_in_main_arm": false,
+    "imagination_or_internal_rollout_added": false,
+    "python_final_selector_used": false,
+    "quality_tier_labels_learner_visible": false,
+    "reply_policy_labels_learner_visible": false,
+    "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+    "runtime_tablebase_or_dtm_move_source": false,
+    "s1_cache_used_as_evidence": true,
+    "s1_cache_used_as_provider": false,
+    "s1_labels_learner_visible": false,
+    "shadow_child_foundation_used_in_main_eval": false,
+    "stage_labels_learner_visible": false,
+    "staged_labels_learner_visible": false,
+    "trajectory_cache_used_as_evidence": true,
+    "trajectory_cache_used_as_provider": false,
+    "trajectory_labels_learner_visible": false,
+    "validator_driven_runtime_selection": false
+  },
+  "repair_arm_comparison": {
+    "arms": {
+      "basin_miss_debt": {
+        "justified": true,
+        "repair_applied": false
+      },
+      "boundary_pool_only": {
+        "justified": true,
+        "repair_applied": false,
+        "selected": true
+      },
+      "combined_metric_tightening": {
+        "justified": true,
+        "repair_applied": false
+      },
+      "no_repair_diagnostic": {
+        "justified": true,
+        "repair_applied": false
+      },
+      "robust_followup_credit_only": {
+        "justified": true,
+        "repair_applied": false
+      },
+      "tightened_followup_success_metric": {
+        "justified": true,
+        "repair_applied": false
+      }
+    },
+    "repair_applied": false,
+    "selected_repair_arm": "boundary_pool_only",
+    "summary": {
+      "basin_miss_debt_terminal_count": 0,
+      "boundary_pool_only": true,
+      "false_success_debt_event_count": 1,
+      "repair_applied": false,
+      "robust_followup_credit_terminal_count": 0,
+      "selected_repair_arm": "boundary_pool_only",
+      "tightened_followup_success_terminal_count": 0
+    }
+  },
+  "schema_version": "krk_autogrowth_tg29y_tight_followup_success_basin_coverage.v0",
+  "shadow_boundary_learnability": {
+    "boundary_state_count": 6,
+    "child_shadow_learnable_count": 0,
+    "child_shadow_unlearnable_count": 0,
+    "missing_evidence_family_counts": {
+      "S1_full_reply": 6,
+      "action/delta": 2,
+      "bridge_pressure": 5,
+      "foundation_response": 3,
+      "quorum": 6,
+      "shared_atoms": 6
+    },
+    "skip_reason": "TG29y kept shadow child foundation optional and disabled to preserve diagnostic scope.",
+    "skipped": true
+  },
+  "targeted_evaluation": {
+    "summary": {
+      "basin_miss_chain_count": 3,
+      "false_success_chain_count": 1,
+      "foundation_handoff_count": 0,
+      "illegal_move_count": 0,
+      "max4_success_rate": 0.0,
+      "max5_success_rate": 0.0,
+      "max6_success_rate": 0.0,
+      "max_move_reached_count": 21,
+      "rook_blunder_count": 0,
+      "s1_handoff_count": 0,
+      "selected_followup_candidate_count": 1,
+      "selected_mature_candidate_count": 2,
+      "stalemate_count": 0,
+      "targeted_episode_count": 6,
+      "targeted_episode_success_count": 0,
+      "targeted_episode_success_rate": 0.0,
+      "targeted_success_delta_vs_tg29x": 0,
+      "unsafe_move_count": 0
+    }
+  }
+}
