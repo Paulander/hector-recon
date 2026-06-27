@@ -450,6 +450,11 @@ from .child_boundary_coverage_scale_shadow_stability import (
     ChildBoundaryCoverageScaleShadowStabilityResult,
     run_child_boundary_coverage_scale_shadow_stability,
 )
+from .child_boundary_active_learning_shadow_stress import (
+    ChildBoundaryActiveLearningShadowStressConfig,
+    ChildBoundaryActiveLearningShadowStressResult,
+    run_child_boundary_active_learning_shadow_stress,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -740,6 +745,8 @@ __all__ = [
     "BoundaryDatasetExpansionChildCoverageResult",
     "ChildBoundaryCoverageScaleShadowStabilityConfig",
     "ChildBoundaryCoverageScaleShadowStabilityResult",
+    "ChildBoundaryActiveLearningShadowStressConfig",
+    "ChildBoundaryActiveLearningShadowStressResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -776,6 +783,7 @@ __all__ = [
     "run_child_foundation_basin_coverage_diagnostic",
     "run_boundary_dataset_expansion_child_coverage_ladder",
     "run_child_boundary_coverage_scale_shadow_stability",
+    "run_child_boundary_active_learning_shadow_stress",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
