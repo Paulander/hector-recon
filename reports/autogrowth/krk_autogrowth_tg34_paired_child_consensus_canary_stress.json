@@ -1,0 +1,1229 @@
+{
+  "ablation_results": {
+    "disable_child_cache_live_uncertainty_gate": {
+      "cache_mismatch_count": 0,
+      "causal": false
+    },
+    "disable_child_consensus_gate": {
+      "causal": true,
+      "paired_help_count": 0
+    },
+    "disable_child_fallback_gate": {
+      "causal": true,
+      "paired_help_count": 951
+    },
+    "disable_reply_envelope_checks": {
+      "causal": true,
+      "paired_help_count": 0
+    },
+    "mask_child_action_delta_terminals": {
+      "causal": true,
+      "paired_help_count": 475
+    },
+    "mask_child_actuator_terminals": {
+      "causal": true,
+      "paired_help_count": 0
+    },
+    "mask_child_boundary_quorums": {
+      "causal": true,
+      "paired_help_count": 0
+    },
+    "mask_child_decoy_veto": {
+      "canary_decoy_false_handoff_count": 466,
+      "causal": true
+    },
+    "mask_child_foundation_response_terminals": {
+      "causal": true,
+      "paired_help_count": 0
+    },
+    "mask_child_hard_decoy_veto": {
+      "canary_hard_decoy_false_handoff_count": 155,
+      "causal": true
+    },
+    "mask_child_same_graph_continuation_terminals": {
+      "causal": true,
+      "paired_help_count": 634
+    },
+    "mask_child_shared_atoms": {
+      "causal": true,
+      "paired_help_count": 951
+    },
+    "mask_parent_foundation_response": {
+      "causal": true,
+      "paired_help_count": 0
+    }
+  },
+  "artifacts": {
+    "branch_online_results": {
+      "cache_write_seconds": 0.900892,
+      "path": "reports/autogrowth/pools/tg34_branch_online_results.jsonl",
+      "record_count": 140000
+    },
+    "canary_gate_log": {
+      "cache_write_seconds": 0.485637,
+      "path": "reports/autogrowth/pools/tg34_canary_gate_log.jsonl",
+      "record_count": 80000
+    },
+    "child_intervention_log": {
+      "cache_write_seconds": 0.126628,
+      "path": "reports/autogrowth/pools/tg34_child_intervention_log.jsonl",
+      "record_count": 12473
+    },
+    "hard_decoy_stress": {
+      "cache_write_seconds": 0.2441,
+      "path": "reports/autogrowth/pools/tg34_hard_decoy_stress_results.jsonl",
+      "record_count": 46662
+    },
+    "live_cache_equivalence_samples": {
+      "cache_write_seconds": 0.003945,
+      "path": "reports/autogrowth/pools/tg34_live_cache_equivalence_samples.jsonl",
+      "record_count": 1000
+    },
+    "paired_ab_results": {
+      "cache_write_seconds": 0.124093,
+      "path": "reports/autogrowth/pools/tg34_paired_ab_results.jsonl",
+      "record_count": 20000
+    }
+  },
+  "checkpoint": "TG34_paired_child_consensus_canary_stress",
+  "config": {
+    "adaptive_stress": true,
+    "base": {
+      "black_reply_policy": "deterministic_worst_foundation_reply",
+      "bridge_frontier_heldout_count": 1,
+      "bridge_frontier_train_count": 2,
+      "episode_count": 4,
+      "foundation_mate1_heldout_count": 16,
+      "foundation_mate1_train_count": 32,
+      "foundation_mate2_heldout_count": 8,
+      "foundation_mate2_train_count": 16,
+      "foundation_seed": 20260624,
+      "full_pool_path": "reports/autogrowth/pools/tg28f_full_foundation_backed_frontier_pool.jsonl",
+      "generic_edge_heldout_count": 2,
+      "generic_edge_train_count": 4,
+      "max_ablation_positions": 1,
+      "max_episode_ablation_count": 1,
+      "max_foundation_ablation_positions": 1,
+      "max_foundation_sanity_positions": 1,
+      "max_samples": 16,
+      "max_white_moves_per_episode": 4,
+      "near_miss_heldout_count": 8,
+      "progress_output": "reports/autogrowth/krk_autogrowth_tg34_paired_child_consensus_canary_stress_progress.json",
+      "repaired_high_recall_threshold": 0.018,
+      "schedule_names": [
+        "tg28h_mixed_balanced_baseline",
+        "mixed_balanced_plus_staged",
+        "staged_first_then_mixed_replay",
+        "mixed_first_then_staged",
+        "mixed_staged_near_miss_replay"
+      ],
+      "seed": 20260703,
+      "staged_heldout_count": 4,
+      "staged_near_miss_count": 8,
+      "staged_pool_path": "reports/autogrowth/pools/tg28l_staged_predecessor_pool.jsonl",
+      "staged_regression_count": 4,
+      "staged_train_count": 8
+    },
+    "branch_online_results_path": "reports/autogrowth/pools/tg34_branch_online_results.jsonl",
+    "canary_gate_log_path": "reports/autogrowth/pools/tg34_canary_gate_log.jsonl",
+    "child_intervention_log_path": "reports/autogrowth/pools/tg34_child_intervention_log.jsonl",
+    "episode_tier_max": 250000,
+    "episode_tier_start": 20000,
+    "hard_decoy_stress": true,
+    "hard_decoy_stress_path": "reports/autogrowth/pools/tg34_hard_decoy_stress_results.jsonl",
+    "live_cache_sample_target": 1000,
+    "live_cache_samples_path": "reports/autogrowth/pools/tg34_live_cache_equivalence_samples.jsonl",
+    "long_mode": true,
+    "max_total_seconds": 21600,
+    "min_target_seconds": 14400,
+    "paired_ab": true,
+    "paired_ab_results_path": "reports/autogrowth/pools/tg34_paired_ab_results.jsonl",
+    "progress_interval_seconds": 300,
+    "seed_count": 50,
+    "target_tier": 1,
+    "tg32_boundary_pool_path": "reports/autogrowth/pools/tg32_active_foundation_basin_boundary_pool.jsonl",
+    "tg32_child_pool_path": "reports/autogrowth/pools/tg32_child_foundation_boundary_coverage_pool.jsonl",
+    "tg32_hard_decoy_pool_path": "reports/autogrowth/pools/tg32_hard_decoy_pool.jsonl",
+    "tg33_artifact_path": "reports/autogrowth/krk_autogrowth_tg33_experimental_child_runtime_ab.json"
+  },
+  "decision": {
+    "ablation_results": {
+      "disable_child_cache_live_uncertainty_gate": {
+        "cache_mismatch_count": 0,
+        "causal": false
+      },
+      "disable_child_consensus_gate": {
+        "causal": true,
+        "paired_help_count": 0
+      },
+      "disable_child_fallback_gate": {
+        "causal": true,
+        "paired_help_count": 951
+      },
+      "disable_reply_envelope_checks": {
+        "causal": true,
+        "paired_help_count": 0
+      },
+      "mask_child_action_delta_terminals": {
+        "causal": true,
+        "paired_help_count": 475
+      },
+      "mask_child_actuator_terminals": {
+        "causal": true,
+        "paired_help_count": 0
+      },
+      "mask_child_boundary_quorums": {
+        "causal": true,
+        "paired_help_count": 0
+      },
+      "mask_child_decoy_veto": {
+        "canary_decoy_false_handoff_count": 466,
+        "causal": true
+      },
+      "mask_child_foundation_response_terminals": {
+        "causal": true,
+        "paired_help_count": 0
+      },
+      "mask_child_hard_decoy_veto": {
+        "canary_hard_decoy_false_handoff_count": 155,
+        "causal": true
+      },
+      "mask_child_same_graph_continuation_terminals": {
+        "causal": true,
+        "paired_help_count": 634
+      },
+      "mask_child_shared_atoms": {
+        "causal": true,
+        "paired_help_count": 951
+      },
+      "mask_parent_foundation_response": {
+        "causal": true,
+        "paired_help_count": 0
+      }
+    },
+    "action_ranker_used_for_runtime": false,
+    "actuator_cache_live_mismatch_count": 0,
+    "adaptive_stress_tiers_completed": [
+      "tier_1"
+    ],
+    "adaptive_stress_tiers_skipped": [
+      "tier_2",
+      "tier_3",
+      "tier_4"
+    ],
+    "artifacts": {
+      "branch_online_results": {
+        "cache_write_seconds": 0.900892,
+        "path": "reports/autogrowth/pools/tg34_branch_online_results.jsonl",
+        "record_count": 140000
+      },
+      "canary_gate_log": {
+        "cache_write_seconds": 0.485637,
+        "path": "reports/autogrowth/pools/tg34_canary_gate_log.jsonl",
+        "record_count": 80000
+      },
+      "child_intervention_log": {
+        "cache_write_seconds": 0.126628,
+        "path": "reports/autogrowth/pools/tg34_child_intervention_log.jsonl",
+        "record_count": 12473
+      },
+      "hard_decoy_stress": {
+        "cache_write_seconds": 0.2441,
+        "path": "reports/autogrowth/pools/tg34_hard_decoy_stress_results.jsonl",
+        "record_count": 46662
+      },
+      "live_cache_equivalence_samples": {
+        "cache_write_seconds": 0.003945,
+        "path": "reports/autogrowth/pools/tg34_live_cache_equivalence_samples.jsonl",
+        "record_count": 1000
+      },
+      "paired_ab_results": {
+        "cache_write_seconds": 0.124093,
+        "path": "reports/autogrowth/pools/tg34_paired_ab_results.jsonl",
+        "record_count": 20000
+      }
+    },
+    "basin_labels_learner_visible": false,
+    "branch_count": 7,
+    "branch_names": [
+      "parent_main_baseline",
+      "child_shadow_only",
+      "experimental_child_consensus_tg33",
+      "experimental_child_consensus_canary_strict",
+      "experimental_child_consensus_canary_balanced",
+      "experimental_child_consensus_canary_failclosed",
+      "experimental_child_consensus_canary_no_child"
+    ],
+    "bridge_labels_learner_visible": false,
+    "cache_query_count": 161000,
+    "canary_decoy_false_handoff_count": 0,
+    "canary_hard_decoy_false_handoff_count": 0,
+    "canary_runtime_ablation_causal": true,
+    "canary_success_count": 7581,
+    "canary_success_delta_vs_parent": 0.09515,
+    "canary_success_delta_vs_tg33": 0.0,
+    "canary_success_rate": 0.37905,
+    "checkpoint_interpretation": "canary_adoption_ready_next",
+    "checkpoint_pass": true,
+    "child_actuator_ablation_causal": true,
+    "child_boundary_quorum_ablation_causal": true,
+    "child_boundary_recognized_and_helped_count": 7304,
+    "child_boundary_recognized_but_no_online_success_count": 15425,
+    "child_boundary_recognized_count": 22729,
+    "child_branch_artifact_path": "reports/autogrowth/krk_autogrowth_tg33_experimental_child_runtime_ab.json",
+    "child_cache_live_mismatch_count": 0,
+    "child_changed_outcome_count": 7304,
+    "child_changed_selected_move_count": 12473,
+    "child_confusable_decoy_episode_count": 15554,
+    "child_consensus_gate_ablation_causal": true,
+    "child_false_handoff_count": 0,
+    "child_foundation_response_ablation_causal": true,
+    "child_foundation_sanity_pass": true,
+    "child_hard_decoy_veto_ablation_causal": true,
+    "child_helped_success_count": 7304,
+    "child_hurt_success_count": 0,
+    "child_intervention_count": 12473,
+    "child_intervention_rate": 0.089093,
+    "child_no_effect_count": 5169,
+    "child_not_applicable_count": 94197,
+    "child_same_graph_continuation_ablation_causal": true,
+    "child_shadow_decoy_false_handoff_count": 0,
+    "child_shadow_hard_decoy_false_handoff_count": 0,
+    "child_shared_atom_ablation_causal": true,
+    "child_used_in_experimental_runtime": true,
+    "child_used_in_main_runtime": false,
+    "child_used_in_shadow_only": true,
+    "continuation_labels_learner_visible": false,
+    "decoy_episode_count": 46662,
+    "decoy_rejection_pass": true,
+    "depth_labels_learner_visible": false,
+    "direct_provider_override": false,
+    "edge_fence_labels_learner_visible": false,
+    "episode_count_by_branch": {
+      "child_shadow_only": 20000,
+      "experimental_child_consensus_canary_balanced": 20000,
+      "experimental_child_consensus_canary_failclosed": 20000,
+      "experimental_child_consensus_canary_no_child": 20000,
+      "experimental_child_consensus_canary_strict": 20000,
+      "experimental_child_consensus_tg33": 20000,
+      "parent_main_baseline": 20000
+    },
+    "episode_count_by_horizon": {
+      "max4": 28035,
+      "max5": 28035,
+      "max6": 27986,
+      "max7": 27972,
+      "max8": 27972
+    },
+    "episode_count_by_reply_policy": {
+      "bridge_avoidance": 28035,
+      "deterministic_worst_foundation": 28035,
+      "fixed_seed_random_legal": 28035,
+      "foundation_escape": 27860,
+      "mobility_maximizing": 28035
+    },
+    "episode_count_by_start_set": {
+      "boundary_derived_frontier_generic": 15554,
+      "child_confusable_decoy": 15554,
+      "frontier_near": 15554,
+      "generic_edge": 15554,
+      "hard_decoy": 15554,
+      "known_repaired": 15561,
+      "near_miss_decoy": 15554,
+      "newly_mined_child_intervention": 15554,
+      "staged_pool": 15561
+    },
+    "failure_bucket_counts": {
+      "canary_adoption_ready_next": 1
+    },
+    "foundation_unfrozen_in_main_arm": false,
+    "frontier_regression_pass": true,
+    "gate_closed_count": 70774,
+    "gate_closed_missed_help_count": 22049,
+    "gate_closed_reason_counts": {
+      "child_gate_closed_hard_decoy_veto": 26664,
+      "child_gate_closed_no_child_boundary": 40348,
+      "child_gate_closed_no_consensus": 3247,
+      "child_gate_closed_reply_not_robust": 515,
+      "child_gate_opened": 9226
+    },
+    "gate_false_close_count": 5512,
+    "gate_false_open_count": 0,
+    "gate_open_count": 9226,
+    "gate_open_help_count": 5401,
+    "gate_open_hurt_count": 0,
+    "gate_precision": 0.585411,
+    "gate_recall_against_helpful_interventions": 0.196758,
+    "generic_edge_regression_pass": true,
+    "guard_used_during_evaluation": false,
+    "guard_used_during_runtime_choice": false,
+    "hard_decoy_blocked_by_veto_count": 46662,
+    "hard_decoy_episode_count": 15554,
+    "hard_decoy_rejection_pass": true,
+    "hard_decoy_source_count": 768,
+    "illegal_move_count_by_branch": {
+      "child_shadow_only": 0,
+      "experimental_child_consensus_canary_balanced": 0,
+      "experimental_child_consensus_canary_failclosed": 0,
+      "experimental_child_consensus_canary_no_child": 0,
+      "experimental_child_consensus_canary_strict": 0,
+      "experimental_child_consensus_tg33": 0,
+      "parent_main_baseline": 0
+    },
+    "known_trajectory_microprobe_pass": true,
+    "live_cache_sample_count": 1000,
+    "live_foundation_query_count": 2000,
+    "live_rollout_count": 140000,
+    "long_run_short_finish_reason": "paired_canary_stress_completed_fast_below_long_wall_clock",
+    "mean_seed_canary_success_rate": 0.379848,
+    "mismatch_examples": [],
+    "near_miss_false_positive_count": 0,
+    "online_episode_count_completed": 140000,
+    "paired_confidence_interval": [
+      0.09215,
+      0.09815
+    ],
+    "paired_episode_count": 20000,
+    "paired_episode_count_completed": 20000,
+    "paired_help_count": 1903,
+    "paired_help_hurt_ratio": null,
+    "paired_hurt_count": 0,
+    "paired_mcnemar_p_value": null,
+    "paired_mcnemar_statistic": 1901.000525,
+    "paired_net_help": 1903,
+    "paired_parent_failure_child_failure_count": 12419,
+    "paired_parent_failure_child_success_count": 1903,
+    "paired_parent_success_child_failure_count": 0,
+    "paired_parent_success_child_success_count": 5678,
+    "paired_success_delta": 0.09515,
+    "parent_artifact_modified": false,
+    "parent_cache_live_mismatch_count": 0,
+    "parent_decoy_false_handoff_count": 0,
+    "parent_foundation_frozen": true,
+    "parent_foundation_m3_updates_during_eval": 0,
+    "parent_foundation_m3_updates_during_experiment": 0,
+    "parent_foundation_m4_promotions_during_eval": 0,
+    "parent_foundation_m4_promotions_during_experiment": 0,
+    "parent_foundation_sanity_pass": true,
+    "parent_hard_decoy_false_handoff_count": 0,
+    "parent_main_success_count": 5678,
+    "parent_main_success_rate": 0.2839,
+    "phase_timings": {
+      "ablation_seconds": 0.513272,
+      "hard_decoy_stress_seconds": 0.11136,
+      "live_cache_verification_seconds": 0.001359,
+      "online_eval_seconds": 1.518784,
+      "paired_ab_seconds": 1.518784,
+      "regression_seconds": 0.0,
+      "total_seconds": 4.155307
+    },
+    "purity_boundary": {
+      "action_ranker_used_for_runtime": false,
+      "basin_labels_learner_visible": false,
+      "black_replies_harness_simulated": true,
+      "bridge_labels_learner_visible": false,
+      "broad_krk_expansion": false,
+      "checkpoint": "TG34",
+      "child_consensus_canary_branch_only": true,
+      "child_used_in_experimental_runtime": true,
+      "child_used_in_main_runtime": false,
+      "depth_labels_learner_visible": false,
+      "direct_provider_override": false,
+      "edge_fence_labels_learner_visible": false,
+      "foundation_frozen": true,
+      "foundation_unfrozen": false,
+      "foundation_unfrozen_in_main_arm": false,
+      "imagination_or_internal_rollout_added": false,
+      "python_final_selector_used": false,
+      "quality_tier_labels_learner_visible": false,
+      "reply_policy_labels_learner_visible": false,
+      "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+      "runtime_tablebase_or_dtm_move_source": false,
+      "s1_cache_used_as_evidence": true,
+      "s1_cache_used_as_provider": false,
+      "s1_labels_learner_visible": false,
+      "stage_labels_learner_visible": false,
+      "staged_labels_learner_visible": false,
+      "trajectory_cache_used_as_evidence": true,
+      "trajectory_cache_used_as_provider": false,
+      "trajectory_labels_learner_visible": false,
+      "validator_driven_runtime_selection": false
+    },
+    "python_final_selector_used": false,
+    "quality_tier_labels_learner_visible": false,
+    "repair_applied": false,
+    "reply_envelope_cache_live_mismatch_count": 0,
+    "reply_policy_labels_learner_visible": false,
+    "requested_max_total_seconds": 21600,
+    "requested_min_target_seconds": 14400,
+    "rook_blunder_count_by_branch": {
+      "child_shadow_only": 0,
+      "experimental_child_consensus_canary_balanced": 0,
+      "experimental_child_consensus_canary_failclosed": 0,
+      "experimental_child_consensus_canary_no_child": 0,
+      "experimental_child_consensus_canary_strict": 0,
+      "experimental_child_consensus_tg33": 0,
+      "parent_main_baseline": 0
+    },
+    "runtime_tablebase_or_dtm_move_source": false,
+    "s1_full_reply_validation_pass": true,
+    "s1_labels_learner_visible": false,
+    "safety_failure_count_by_branch": {
+      "child_shadow_only": 0,
+      "experimental_child_consensus_canary_balanced": 0,
+      "experimental_child_consensus_canary_failclosed": 0,
+      "experimental_child_consensus_canary_no_child": 0,
+      "experimental_child_consensus_canary_strict": 0,
+      "experimental_child_consensus_tg33": 0,
+      "parent_main_baseline": 0
+    },
+    "scheduler_equivalence_mismatch_count": 0,
+    "selected_canary_branch": "experimental_child_consensus_canary_balanced",
+    "selected_canary_branch_reason": "best canary recall with hard-decoy and near-miss veto active and zero cache/live mismatches",
+    "selected_repair_arm": "paired_child_consensus_canary_stress_only",
+    "shadow_child_foundation_used": true,
+    "shadow_child_foundation_used_in_main_eval": false,
+    "stage_labels_learner_visible": false,
+    "staged_labels_learner_visible": false,
+    "staged_near_miss_regression_pass": true,
+    "staged_regression_pass": true,
+    "stalemate_count_by_branch": {
+      "child_shadow_only": 0,
+      "experimental_child_consensus_canary_balanced": 0,
+      "experimental_child_consensus_canary_failclosed": 0,
+      "experimental_child_consensus_canary_no_child": 0,
+      "experimental_child_consensus_canary_strict": 0,
+      "experimental_child_consensus_tg33": 0,
+      "parent_main_baseline": 0
+    },
+    "std_seed_canary_success_rate": 0.022661,
+    "success_by_branch_horizon": {
+      "child_shadow_only": {
+        "max4": 0.224969,
+        "max5": 0.250936,
+        "max6": 0.296648,
+        "max7": 0.314815,
+        "max8": 0.332332
+      },
+      "experimental_child_consensus_canary_balanced": {
+        "max4": 0.333833,
+        "max5": 0.359551,
+        "max6": 0.390195,
+        "max7": 0.397648,
+        "max8": 0.414164
+      },
+      "experimental_child_consensus_canary_failclosed": {
+        "max4": 0.333833,
+        "max5": 0.359551,
+        "max6": 0.390195,
+        "max7": 0.397648,
+        "max8": 0.414164
+      },
+      "experimental_child_consensus_canary_no_child": {
+        "max4": 0.224969,
+        "max5": 0.250936,
+        "max6": 0.296648,
+        "max7": 0.314815,
+        "max8": 0.332332
+      },
+      "experimental_child_consensus_canary_strict": {
+        "max4": 0.313858,
+        "max5": 0.340325,
+        "max6": 0.378439,
+        "max7": 0.383383,
+        "max8": 0.402402
+      },
+      "experimental_child_consensus_tg33": {
+        "max4": 0.333833,
+        "max5": 0.359551,
+        "max6": 0.390195,
+        "max7": 0.397648,
+        "max8": 0.414164
+      },
+      "parent_main_baseline": {
+        "max4": 0.224969,
+        "max5": 0.250936,
+        "max6": 0.296648,
+        "max7": 0.314815,
+        "max8": 0.332332
+      }
+    },
+    "success_by_branch_reply_policy": {
+      "child_shadow_only": {
+        "bridge_avoidance": 0.290637,
+        "deterministic_worst_foundation": 0.267915,
+        "fixed_seed_random_legal": 0.344819,
+        "foundation_escape": 0.247487,
+        "mobility_maximizing": 0.268414
+      },
+      "experimental_child_consensus_canary_balanced": {
+        "bridge_avoidance": 0.378527,
+        "deterministic_worst_foundation": 0.369288,
+        "fixed_seed_random_legal": 0.429463,
+        "foundation_escape": 0.354271,
+        "mobility_maximizing": 0.363546
+      },
+      "experimental_child_consensus_canary_failclosed": {
+        "bridge_avoidance": 0.378527,
+        "deterministic_worst_foundation": 0.369288,
+        "fixed_seed_random_legal": 0.429463,
+        "foundation_escape": 0.354271,
+        "mobility_maximizing": 0.363546
+      },
+      "experimental_child_consensus_canary_no_child": {
+        "bridge_avoidance": 0.290637,
+        "deterministic_worst_foundation": 0.267915,
+        "fixed_seed_random_legal": 0.344819,
+        "foundation_escape": 0.247487,
+        "mobility_maximizing": 0.268414
+      },
+      "experimental_child_consensus_canary_strict": {
+        "bridge_avoidance": 0.364544,
+        "deterministic_worst_foundation": 0.352809,
+        "fixed_seed_random_legal": 0.415481,
+        "foundation_escape": 0.339698,
+        "mobility_maximizing": 0.345568
+      },
+      "experimental_child_consensus_tg33": {
+        "bridge_avoidance": 0.378527,
+        "deterministic_worst_foundation": 0.369288,
+        "fixed_seed_random_legal": 0.429463,
+        "foundation_escape": 0.354271,
+        "mobility_maximizing": 0.363546
+      },
+      "parent_main_baseline": {
+        "bridge_avoidance": 0.290637,
+        "deterministic_worst_foundation": 0.267915,
+        "fixed_seed_random_legal": 0.344819,
+        "foundation_escape": 0.247487,
+        "mobility_maximizing": 0.268414
+      }
+    },
+    "success_by_branch_start_set": {
+      "child_shadow_only": {
+        "boundary_derived_frontier_generic": 0.227273,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.290729,
+        "generic_edge": 0.250675,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.860099,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.231773,
+        "staged_pool": 0.694107
+      },
+      "experimental_child_consensus_canary_balanced": {
+        "boundary_derived_frontier_generic": 0.412241,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.462646,
+        "generic_edge": 0.434743,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.903734,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.421242,
+        "staged_pool": 0.776428
+      },
+      "experimental_child_consensus_canary_failclosed": {
+        "boundary_derived_frontier_generic": 0.412241,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.462646,
+        "generic_edge": 0.434743,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.903734,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.421242,
+        "staged_pool": 0.776428
+      },
+      "experimental_child_consensus_canary_no_child": {
+        "boundary_derived_frontier_generic": 0.227273,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.290729,
+        "generic_edge": 0.250675,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.860099,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.231773,
+        "staged_pool": 0.694107
+      },
+      "experimental_child_consensus_canary_strict": {
+        "boundary_derived_frontier_generic": 0.379838,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.433843,
+        "generic_edge": 0.405491,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.894737,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.39559,
+        "staged_pool": 0.762933
+      },
+      "experimental_child_consensus_tg33": {
+        "boundary_derived_frontier_generic": 0.412241,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.462646,
+        "generic_edge": 0.434743,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.903734,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.421242,
+        "staged_pool": 0.776428
+      },
+      "parent_main_baseline": {
+        "boundary_derived_frontier_generic": 0.227273,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.290729,
+        "generic_edge": 0.250675,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.860099,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.231773,
+        "staged_pool": 0.694107
+      }
+    },
+    "success_by_seed": {
+      "0": 0.337778,
+      "1": 0.346667,
+      "10": 0.388889,
+      "11": 0.373333,
+      "12": 0.395556,
+      "13": 0.402222,
+      "14": 0.391111,
+      "15": 0.36,
+      "16": 0.328889,
+      "17": 0.368889,
+      "18": 0.382222,
+      "19": 0.371111,
+      "2": 0.38,
+      "20": 0.406667,
+      "21": 0.406667,
+      "22": 0.333333,
+      "23": 0.366667,
+      "24": 0.34,
+      "25": 0.395556,
+      "26": 0.364444,
+      "27": 0.384444,
+      "28": 0.386667,
+      "29": 0.391111,
+      "3": 0.395556,
+      "30": 0.384444,
+      "31": 0.34,
+      "32": 0.388889,
+      "33": 0.342222,
+      "34": 0.371111,
+      "35": 0.377778,
+      "36": 0.442222,
+      "37": 0.366667,
+      "38": 0.383529,
+      "39": 0.395556,
+      "4": 0.386667,
+      "40": 0.395556,
+      "41": 0.386667,
+      "42": 0.368889,
+      "43": 0.355556,
+      "44": 0.377778,
+      "45": 0.413333,
+      "46": 0.395556,
+      "47": 0.391111,
+      "48": 0.395556,
+      "49": 0.373333,
+      "5": 0.4,
+      "6": 0.388889,
+      "7": 0.4,
+      "8": 0.364444,
+      "9": 0.408889
+    },
+    "tg33_experimental_decoy_false_handoff_count": 0,
+    "tg33_experimental_hard_decoy_false_handoff_count": 0,
+    "tg33_experimental_success_count": 7581,
+    "tg33_experimental_success_rate": 0.37905,
+    "timeout_count": 0,
+    "total_episode_count": 140000,
+    "total_seconds": 4.155307,
+    "trainer_side_exploration_used": true,
+    "trainer_side_exploration_used_in_final_eval": false,
+    "trajectory_labels_learner_visible": false,
+    "unsafe_move_count_by_branch": {
+      "child_shadow_only": 0,
+      "experimental_child_consensus_canary_balanced": 0,
+      "experimental_child_consensus_canary_failclosed": 0,
+      "experimental_child_consensus_canary_no_child": 0,
+      "experimental_child_consensus_canary_strict": 0,
+      "experimental_child_consensus_tg33": 0,
+      "parent_main_baseline": 0
+    },
+    "validator_skip_used_during_internal_handoff_eval": false,
+    "worst_seed_canary_success_rate": 0.328889
+  },
+  "decoy_summary": {
+    "canary_decoy_false_handoff_count": 0,
+    "canary_hard_decoy_false_handoff_count": 0,
+    "child_confusable_decoy_episode_count": 15554,
+    "child_shadow_decoy_false_handoff_count": 0,
+    "child_shadow_hard_decoy_false_handoff_count": 0,
+    "decoy_episode_count": 46662,
+    "hard_decoy_blocked_by_veto_count": 46662,
+    "hard_decoy_episode_count": 15554,
+    "hard_decoy_source_count": 768,
+    "near_miss_false_positive_count": 0,
+    "parent_decoy_false_handoff_count": 0,
+    "parent_hard_decoy_false_handoff_count": 0,
+    "tg33_experimental_decoy_false_handoff_count": 0,
+    "tg33_experimental_hard_decoy_false_handoff_count": 0
+  },
+  "gate_summary": {
+    "gate_closed_count": 70774,
+    "gate_closed_missed_help_count": 22049,
+    "gate_closed_reason_counts": {
+      "child_gate_closed_hard_decoy_veto": 26664,
+      "child_gate_closed_no_child_boundary": 40348,
+      "child_gate_closed_no_consensus": 3247,
+      "child_gate_closed_reply_not_robust": 515,
+      "child_gate_opened": 9226
+    },
+    "gate_false_close_count": 5512,
+    "gate_false_open_count": 0,
+    "gate_open_count": 9226,
+    "gate_open_help_count": 5401,
+    "gate_open_hurt_count": 0,
+    "gate_precision": 0.585411,
+    "gate_recall_against_helpful_interventions": 0.196758
+  },
+  "input_audit": {
+    "summary": {
+      "cache_config_hash": "1d226b8db3e15d55",
+      "child_branch_artifact_path": "reports/autogrowth/krk_autogrowth_tg33_experimental_child_runtime_ab.json",
+      "foundation_unfrozen_in_main_arm": false,
+      "parent_foundation_frozen": true,
+      "parent_foundation_hash": "6840184287322f9a",
+      "parent_foundation_m3_updates_during_eval": 0,
+      "parent_foundation_m3_updates_during_experiment": 0,
+      "parent_foundation_m4_promotions_during_eval": 0,
+      "parent_foundation_m4_promotions_during_experiment": 0,
+      "tg32_boundary_rows": 4096,
+      "tg32_child_rows": 4096,
+      "tg32_hard_decoy_rows": 768,
+      "tg33_schema_version": "krk_autogrowth_tg33_experimental_child_runtime_ab.v0"
+    }
+  },
+  "intervention_summary": {
+    "child_boundary_recognized_and_helped_count": 7304,
+    "child_boundary_recognized_but_no_online_success_count": 15425,
+    "child_boundary_recognized_count": 22729,
+    "child_changed_outcome_count": 7304,
+    "child_changed_selected_move_count": 12473,
+    "child_false_handoff_count": 0,
+    "child_helped_success_count": 7304,
+    "child_hurt_success_count": 0,
+    "child_intervention_count": 12473,
+    "child_intervention_rate": 0.089093,
+    "child_no_effect_count": 5169,
+    "child_not_applicable_count": 94197
+  },
+  "live_cache_summary": {
+    "actuator_cache_live_mismatch_count": 0,
+    "child_cache_live_mismatch_count": 0,
+    "live_cache_sample_count": 1000,
+    "mismatch_examples": [],
+    "parent_cache_live_mismatch_count": 0,
+    "reply_envelope_cache_live_mismatch_count": 0
+  },
+  "online_summary": {
+    "branch_count": 7,
+    "branch_names": [
+      "parent_main_baseline",
+      "child_shadow_only",
+      "experimental_child_consensus_tg33",
+      "experimental_child_consensus_canary_strict",
+      "experimental_child_consensus_canary_balanced",
+      "experimental_child_consensus_canary_failclosed",
+      "experimental_child_consensus_canary_no_child"
+    ],
+    "canary_success_count": 7581,
+    "canary_success_delta_vs_parent": 0.09515,
+    "canary_success_delta_vs_tg33": 0.0,
+    "canary_success_rate": 0.37905,
+    "episode_count_by_branch": {
+      "child_shadow_only": 20000,
+      "experimental_child_consensus_canary_balanced": 20000,
+      "experimental_child_consensus_canary_failclosed": 20000,
+      "experimental_child_consensus_canary_no_child": 20000,
+      "experimental_child_consensus_canary_strict": 20000,
+      "experimental_child_consensus_tg33": 20000,
+      "parent_main_baseline": 20000
+    },
+    "episode_count_by_horizon": {
+      "max4": 28035,
+      "max5": 28035,
+      "max6": 27986,
+      "max7": 27972,
+      "max8": 27972
+    },
+    "episode_count_by_reply_policy": {
+      "bridge_avoidance": 28035,
+      "deterministic_worst_foundation": 28035,
+      "fixed_seed_random_legal": 28035,
+      "foundation_escape": 27860,
+      "mobility_maximizing": 28035
+    },
+    "episode_count_by_start_set": {
+      "boundary_derived_frontier_generic": 15554,
+      "child_confusable_decoy": 15554,
+      "frontier_near": 15554,
+      "generic_edge": 15554,
+      "hard_decoy": 15554,
+      "known_repaired": 15561,
+      "near_miss_decoy": 15554,
+      "newly_mined_child_intervention": 15554,
+      "staged_pool": 15561
+    },
+    "illegal_move_count_by_branch": {
+      "child_shadow_only": 0,
+      "experimental_child_consensus_canary_balanced": 0,
+      "experimental_child_consensus_canary_failclosed": 0,
+      "experimental_child_consensus_canary_no_child": 0,
+      "experimental_child_consensus_canary_strict": 0,
+      "experimental_child_consensus_tg33": 0,
+      "parent_main_baseline": 0
+    },
+    "mean_seed_canary_success_rate": 0.379848,
+    "parent_main_success_count": 5678,
+    "parent_main_success_rate": 0.2839,
+    "rook_blunder_count_by_branch": {
+      "child_shadow_only": 0,
+      "experimental_child_consensus_canary_balanced": 0,
+      "experimental_child_consensus_canary_failclosed": 0,
+      "experimental_child_consensus_canary_no_child": 0,
+      "experimental_child_consensus_canary_strict": 0,
+      "experimental_child_consensus_tg33": 0,
+      "parent_main_baseline": 0
+    },
+    "safety_failure_count_by_branch": {
+      "child_shadow_only": 0,
+      "experimental_child_consensus_canary_balanced": 0,
+      "experimental_child_consensus_canary_failclosed": 0,
+      "experimental_child_consensus_canary_no_child": 0,
+      "experimental_child_consensus_canary_strict": 0,
+      "experimental_child_consensus_tg33": 0,
+      "parent_main_baseline": 0
+    },
+    "selected_canary_branch": "experimental_child_consensus_canary_balanced",
+    "selected_canary_branch_reason": "best canary recall with hard-decoy and near-miss veto active and zero cache/live mismatches",
+    "stalemate_count_by_branch": {
+      "child_shadow_only": 0,
+      "experimental_child_consensus_canary_balanced": 0,
+      "experimental_child_consensus_canary_failclosed": 0,
+      "experimental_child_consensus_canary_no_child": 0,
+      "experimental_child_consensus_canary_strict": 0,
+      "experimental_child_consensus_tg33": 0,
+      "parent_main_baseline": 0
+    },
+    "std_seed_canary_success_rate": 0.022661,
+    "success_by_branch_horizon": {
+      "child_shadow_only": {
+        "max4": 0.224969,
+        "max5": 0.250936,
+        "max6": 0.296648,
+        "max7": 0.314815,
+        "max8": 0.332332
+      },
+      "experimental_child_consensus_canary_balanced": {
+        "max4": 0.333833,
+        "max5": 0.359551,
+        "max6": 0.390195,
+        "max7": 0.397648,
+        "max8": 0.414164
+      },
+      "experimental_child_consensus_canary_failclosed": {
+        "max4": 0.333833,
+        "max5": 0.359551,
+        "max6": 0.390195,
+        "max7": 0.397648,
+        "max8": 0.414164
+      },
+      "experimental_child_consensus_canary_no_child": {
+        "max4": 0.224969,
+        "max5": 0.250936,
+        "max6": 0.296648,
+        "max7": 0.314815,
+        "max8": 0.332332
+      },
+      "experimental_child_consensus_canary_strict": {
+        "max4": 0.313858,
+        "max5": 0.340325,
+        "max6": 0.378439,
+        "max7": 0.383383,
+        "max8": 0.402402
+      },
+      "experimental_child_consensus_tg33": {
+        "max4": 0.333833,
+        "max5": 0.359551,
+        "max6": 0.390195,
+        "max7": 0.397648,
+        "max8": 0.414164
+      },
+      "parent_main_baseline": {
+        "max4": 0.224969,
+        "max5": 0.250936,
+        "max6": 0.296648,
+        "max7": 0.314815,
+        "max8": 0.332332
+      }
+    },
+    "success_by_branch_reply_policy": {
+      "child_shadow_only": {
+        "bridge_avoidance": 0.290637,
+        "deterministic_worst_foundation": 0.267915,
+        "fixed_seed_random_legal": 0.344819,
+        "foundation_escape": 0.247487,
+        "mobility_maximizing": 0.268414
+      },
+      "experimental_child_consensus_canary_balanced": {
+        "bridge_avoidance": 0.378527,
+        "deterministic_worst_foundation": 0.369288,
+        "fixed_seed_random_legal": 0.429463,
+        "foundation_escape": 0.354271,
+        "mobility_maximizing": 0.363546
+      },
+      "experimental_child_consensus_canary_failclosed": {
+        "bridge_avoidance": 0.378527,
+        "deterministic_worst_foundation": 0.369288,
+        "fixed_seed_random_legal": 0.429463,
+        "foundation_escape": 0.354271,
+        "mobility_maximizing": 0.363546
+      },
+      "experimental_child_consensus_canary_no_child": {
+        "bridge_avoidance": 0.290637,
+        "deterministic_worst_foundation": 0.267915,
+        "fixed_seed_random_legal": 0.344819,
+        "foundation_escape": 0.247487,
+        "mobility_maximizing": 0.268414
+      },
+      "experimental_child_consensus_canary_strict": {
+        "bridge_avoidance": 0.364544,
+        "deterministic_worst_foundation": 0.352809,
+        "fixed_seed_random_legal": 0.415481,
+        "foundation_escape": 0.339698,
+        "mobility_maximizing": 0.345568
+      },
+      "experimental_child_consensus_tg33": {
+        "bridge_avoidance": 0.378527,
+        "deterministic_worst_foundation": 0.369288,
+        "fixed_seed_random_legal": 0.429463,
+        "foundation_escape": 0.354271,
+        "mobility_maximizing": 0.363546
+      },
+      "parent_main_baseline": {
+        "bridge_avoidance": 0.290637,
+        "deterministic_worst_foundation": 0.267915,
+        "fixed_seed_random_legal": 0.344819,
+        "foundation_escape": 0.247487,
+        "mobility_maximizing": 0.268414
+      }
+    },
+    "success_by_branch_start_set": {
+      "child_shadow_only": {
+        "boundary_derived_frontier_generic": 0.227273,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.290729,
+        "generic_edge": 0.250675,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.860099,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.231773,
+        "staged_pool": 0.694107
+      },
+      "experimental_child_consensus_canary_balanced": {
+        "boundary_derived_frontier_generic": 0.412241,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.462646,
+        "generic_edge": 0.434743,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.903734,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.421242,
+        "staged_pool": 0.776428
+      },
+      "experimental_child_consensus_canary_failclosed": {
+        "boundary_derived_frontier_generic": 0.412241,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.462646,
+        "generic_edge": 0.434743,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.903734,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.421242,
+        "staged_pool": 0.776428
+      },
+      "experimental_child_consensus_canary_no_child": {
+        "boundary_derived_frontier_generic": 0.227273,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.290729,
+        "generic_edge": 0.250675,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.860099,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.231773,
+        "staged_pool": 0.694107
+      },
+      "experimental_child_consensus_canary_strict": {
+        "boundary_derived_frontier_generic": 0.379838,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.433843,
+        "generic_edge": 0.405491,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.894737,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.39559,
+        "staged_pool": 0.762933
+      },
+      "experimental_child_consensus_tg33": {
+        "boundary_derived_frontier_generic": 0.412241,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.462646,
+        "generic_edge": 0.434743,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.903734,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.421242,
+        "staged_pool": 0.776428
+      },
+      "parent_main_baseline": {
+        "boundary_derived_frontier_generic": 0.227273,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.290729,
+        "generic_edge": 0.250675,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.860099,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.231773,
+        "staged_pool": 0.694107
+      }
+    },
+    "success_by_seed": {
+      "0": 0.337778,
+      "1": 0.346667,
+      "10": 0.388889,
+      "11": 0.373333,
+      "12": 0.395556,
+      "13": 0.402222,
+      "14": 0.391111,
+      "15": 0.36,
+      "16": 0.328889,
+      "17": 0.368889,
+      "18": 0.382222,
+      "19": 0.371111,
+      "2": 0.38,
+      "20": 0.406667,
+      "21": 0.406667,
+      "22": 0.333333,
+      "23": 0.366667,
+      "24": 0.34,
+      "25": 0.395556,
+      "26": 0.364444,
+      "27": 0.384444,
+      "28": 0.386667,
+      "29": 0.391111,
+      "3": 0.395556,
+      "30": 0.384444,
+      "31": 0.34,
+      "32": 0.388889,
+      "33": 0.342222,
+      "34": 0.371111,
+      "35": 0.377778,
+      "36": 0.442222,
+      "37": 0.366667,
+      "38": 0.383529,
+      "39": 0.395556,
+      "4": 0.386667,
+      "40": 0.395556,
+      "41": 0.386667,
+      "42": 0.368889,
+      "43": 0.355556,
+      "44": 0.377778,
+      "45": 0.413333,
+      "46": 0.395556,
+      "47": 0.391111,
+      "48": 0.395556,
+      "49": 0.373333,
+      "5": 0.4,
+      "6": 0.388889,
+      "7": 0.4,
+      "8": 0.364444,
+      "9": 0.408889
+    },
+    "tg33_experimental_success_count": 7581,
+    "tg33_experimental_success_rate": 0.37905,
+    "total_episode_count": 140000,
+    "unsafe_move_count_by_branch": {
+      "child_shadow_only": 0,
+      "experimental_child_consensus_canary_balanced": 0,
+      "experimental_child_consensus_canary_failclosed": 0,
+      "experimental_child_consensus_canary_no_child": 0,
+      "experimental_child_consensus_canary_strict": 0,
+      "experimental_child_consensus_tg33": 0,
+      "parent_main_baseline": 0
+    },
+    "worst_seed_canary_success_rate": 0.328889
+  },
+  "paired_summary": {
+    "paired_confidence_interval": [
+      0.09215,
+      0.09815
+    ],
+    "paired_episode_count": 20000,
+    "paired_help_count": 1903,
+    "paired_help_hurt_ratio": null,
+    "paired_hurt_count": 0,
+    "paired_mcnemar_p_value": null,
+    "paired_mcnemar_statistic": 1901.000525,
+    "paired_net_help": 1903,
+    "paired_parent_failure_child_failure_count": 12419,
+    "paired_parent_failure_child_success_count": 1903,
+    "paired_parent_success_child_failure_count": 0,
+    "paired_parent_success_child_success_count": 5678,
+    "paired_success_delta": 0.09515
+  },
+  "purity_boundary": {
+    "action_ranker_used_for_runtime": false,
+    "basin_labels_learner_visible": false,
+    "black_replies_harness_simulated": true,
+    "bridge_labels_learner_visible": false,
+    "broad_krk_expansion": false,
+    "checkpoint": "TG34",
+    "child_consensus_canary_branch_only": true,
+    "child_used_in_experimental_runtime": true,
+    "child_used_in_main_runtime": false,
+    "depth_labels_learner_visible": false,
+    "direct_provider_override": false,
+    "edge_fence_labels_learner_visible": false,
+    "foundation_frozen": true,
+    "foundation_unfrozen": false,
+    "foundation_unfrozen_in_main_arm": false,
+    "imagination_or_internal_rollout_added": false,
+    "python_final_selector_used": false,
+    "quality_tier_labels_learner_visible": false,
+    "reply_policy_labels_learner_visible": false,
+    "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+    "runtime_tablebase_or_dtm_move_source": false,
+    "s1_cache_used_as_evidence": true,
+    "s1_cache_used_as_provider": false,
+    "s1_labels_learner_visible": false,
+    "stage_labels_learner_visible": false,
+    "staged_labels_learner_visible": false,
+    "trajectory_cache_used_as_evidence": true,
+    "trajectory_cache_used_as_provider": false,
+    "trajectory_labels_learner_visible": false,
+    "validator_driven_runtime_selection": false
+  },
+  "regressions": {
+    "child_foundation_sanity_pass": true,
+    "decoy_rejection_pass": true,
+    "frontier_regression_pass": true,
+    "generic_edge_regression_pass": true,
+    "hard_decoy_rejection_pass": true,
+    "known_trajectory_microprobe_pass": true,
+    "parent_foundation_sanity_pass": true,
+    "s1_full_reply_validation_pass": true,
+    "staged_near_miss_regression_pass": true,
+    "staged_regression_pass": true
+  },
+  "schema_version": "krk_autogrowth_tg34_paired_child_consensus_canary_stress.v0"
+}

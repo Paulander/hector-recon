@@ -460,6 +460,11 @@ from .experimental_child_runtime_ab import (
     ExperimentalChildRuntimeABResult,
     run_experimental_child_runtime_ab,
 )
+from .paired_child_consensus_canary_stress import (
+    PairedChildConsensusCanaryStressConfig,
+    PairedChildConsensusCanaryStressResult,
+    run_paired_child_consensus_canary_stress,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -754,6 +759,8 @@ __all__ = [
     "ChildBoundaryActiveLearningShadowStressResult",
     "ExperimentalChildRuntimeABConfig",
     "ExperimentalChildRuntimeABResult",
+    "PairedChildConsensusCanaryStressConfig",
+    "PairedChildConsensusCanaryStressResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -792,6 +799,7 @@ __all__ = [
     "run_child_boundary_coverage_scale_shadow_stability",
     "run_child_boundary_active_learning_shadow_stress",
     "run_experimental_child_runtime_ab",
+    "run_paired_child_consensus_canary_stress",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
