@@ -1,0 +1,49 @@
+{
+  "artifacts": {
+    "branch_online_results": {
+      "bytes": 538884,
+      "cache_write_seconds": 1.072538,
+      "compressed": true,
+      "path": "reports/autogrowth/pools/tg35_branch_online_results.jsonl.gz",
+      "record_count": 100000
+    },
+    "canary_gate_log": {
+      "bytes": 231305,
+      "cache_write_seconds": 0.450927,
+      "compressed": true,
+      "path": "reports/autogrowth/pools/tg35_canary_gate_log.jsonl.gz",
+      "record_count": 40000
+    },
+    "child_intervention_log": {
+      "bytes": 98669,
+      "cache_write_seconds": 0.125882,
+      "compressed": true,
+      "path": "reports/autogrowth/pools/tg35_child_intervention_log.jsonl.gz",
+      "record_count": 6494
+    },
+    "hard_decoy_stress": {
+      "bytes": 248058,
+      "cache_write_seconds": 0.330161,
+      "compressed": true,
+      "path": "reports/autogrowth/pools/tg35_hard_decoy_stress_results.jsonl.gz",
+      "record_count": 33330
+    },
+    "live_cache_equivalence_samples": {
+      "bytes": 14231,
+      "cache_write_seconds": 0.027478,
+      "compressed": true,
+      "path": "reports/autogrowth/pools/tg35_live_cache_equivalence_samples.jsonl.gz",
+      "record_count": 5000
+    },
+    "paired_ab_results": {
+      "bytes": 172927,
+      "cache_write_seconds": 0.301225,
+      "compressed": true,
+      "path": "reports/autogrowth/pools/tg35_paired_ab_results.jsonl.gz",
+      "record_count": 20000
+    }
+  },
+  "full_log_opt_in_required": true,
+  "large_log_policy": "gzip_jsonl_by_default_full_logs_opt_in",
+  "schema_version": "tg35_artifact_index.v0"
+}

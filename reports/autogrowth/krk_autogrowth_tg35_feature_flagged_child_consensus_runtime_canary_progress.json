@@ -1,0 +1,8 @@
+{
+  "decision": {
+    "checkpoint_interpretation": "feature_flagged_canary_ready",
+    "checkpoint_pass": true,
+    "long_run_short_finish_reason": "feature_flagged_canary_completed_fast_below_long_wall_clock"
+  },
+  "phase": "complete"
+}

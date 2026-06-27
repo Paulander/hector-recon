@@ -1,0 +1,1219 @@
+{
+  "ablation_results": {
+    "disable_child_cache_live_uncertainty_gate": {
+      "cache_mismatch_count": 0,
+      "causal": false
+    },
+    "disable_child_consensus_gate": {
+      "causal": true,
+      "paired_help_count": 0
+    },
+    "disable_child_fallback_gate": {
+      "causal": true,
+      "paired_help_count": 951
+    },
+    "disable_reply_envelope_checks": {
+      "causal": true,
+      "paired_help_count": 0
+    },
+    "mask_child_action_delta_terminals": {
+      "causal": true,
+      "paired_help_count": 475
+    },
+    "mask_child_actuator_terminals": {
+      "causal": true,
+      "paired_help_count": 0
+    },
+    "mask_child_boundary_quorums": {
+      "causal": true,
+      "paired_help_count": 0
+    },
+    "mask_child_decoy_veto": {
+      "canary_decoy_false_handoff_count": 333,
+      "causal": true
+    },
+    "mask_child_foundation_response_terminals": {
+      "causal": true,
+      "paired_help_count": 0
+    },
+    "mask_child_hard_decoy_veto": {
+      "canary_hard_decoy_false_handoff_count": 111,
+      "causal": true
+    },
+    "mask_child_same_graph_continuation_terminals": {
+      "causal": true,
+      "paired_help_count": 634
+    },
+    "mask_child_shared_atoms": {
+      "causal": true,
+      "paired_help_count": 951
+    },
+    "mask_parent_foundation_response": {
+      "causal": true,
+      "paired_help_count": 0
+    }
+  },
+  "artifact_hygiene": {
+    "artifact_hygiene_applied": true,
+    "chunked_log_count": 0,
+    "compressed_log_count": 6,
+    "full_log_opt_in_required": true,
+    "inherited_oversized_artifact_note": "TG34 branch log remains in branch history/head to preserve TG34 artifact paths",
+    "large_log_policy": "gzip_jsonl_by_default_full_logs_opt_in",
+    "largest_committed_file_bytes": 68448785,
+    "largest_new_artifact_bytes": 538884,
+    "oversized_artifact_warning_count": 1
+  },
+  "artifacts": {
+    "artifact_index": {
+      "bytes": 1559,
+      "path": "reports/autogrowth/pools/tg35_artifact_index.json",
+      "record_count": 6
+    },
+    "branch_online_results": {
+      "bytes": 538884,
+      "cache_write_seconds": 1.072538,
+      "compressed": true,
+      "path": "reports/autogrowth/pools/tg35_branch_online_results.jsonl.gz",
+      "record_count": 100000
+    },
+    "canary_gate_log": {
+      "bytes": 231305,
+      "cache_write_seconds": 0.450927,
+      "compressed": true,
+      "path": "reports/autogrowth/pools/tg35_canary_gate_log.jsonl.gz",
+      "record_count": 40000
+    },
+    "child_intervention_log": {
+      "bytes": 98669,
+      "cache_write_seconds": 0.125882,
+      "compressed": true,
+      "path": "reports/autogrowth/pools/tg35_child_intervention_log.jsonl.gz",
+      "record_count": 6494
+    },
+    "hard_decoy_stress": {
+      "bytes": 248058,
+      "cache_write_seconds": 0.330161,
+      "compressed": true,
+      "path": "reports/autogrowth/pools/tg35_hard_decoy_stress_results.jsonl.gz",
+      "record_count": 33330
+    },
+    "live_cache_equivalence_samples": {
+      "bytes": 14231,
+      "cache_write_seconds": 0.027478,
+      "compressed": true,
+      "path": "reports/autogrowth/pools/tg35_live_cache_equivalence_samples.jsonl.gz",
+      "record_count": 5000
+    },
+    "paired_ab_results": {
+      "bytes": 172927,
+      "cache_write_seconds": 0.301225,
+      "compressed": true,
+      "path": "reports/autogrowth/pools/tg35_paired_ab_results.jsonl.gz",
+      "record_count": 20000
+    }
+  },
+  "checkpoint": "TG35_feature_flagged_child_consensus_runtime_canary",
+  "config": {
+    "adaptive_stress": true,
+    "artifact_index_path": "reports/autogrowth/pools/tg35_artifact_index.json",
+    "base": {
+      "black_reply_policy": "deterministic_worst_foundation_reply",
+      "bridge_frontier_heldout_count": 1,
+      "bridge_frontier_train_count": 2,
+      "episode_count": 4,
+      "foundation_mate1_heldout_count": 16,
+      "foundation_mate1_train_count": 32,
+      "foundation_mate2_heldout_count": 8,
+      "foundation_mate2_train_count": 16,
+      "foundation_seed": 20260624,
+      "full_pool_path": "reports/autogrowth/pools/tg28f_full_foundation_backed_frontier_pool.jsonl",
+      "generic_edge_heldout_count": 2,
+      "generic_edge_train_count": 4,
+      "max_ablation_positions": 1,
+      "max_episode_ablation_count": 1,
+      "max_foundation_ablation_positions": 1,
+      "max_foundation_sanity_positions": 1,
+      "max_samples": 16,
+      "max_white_moves_per_episode": 4,
+      "near_miss_heldout_count": 8,
+      "progress_output": "reports/autogrowth/krk_autogrowth_tg35_feature_flagged_child_consensus_runtime_canary_progress.json",
+      "repaired_high_recall_threshold": 0.018,
+      "schedule_names": [
+        "tg28h_mixed_balanced_baseline",
+        "mixed_balanced_plus_staged",
+        "staged_first_then_mixed_replay",
+        "mixed_first_then_staged",
+        "mixed_staged_near_miss_replay"
+      ],
+      "seed": 20260703,
+      "staged_heldout_count": 4,
+      "staged_near_miss_count": 8,
+      "staged_pool_path": "reports/autogrowth/pools/tg28l_staged_predecessor_pool.jsonl",
+      "staged_regression_count": 4,
+      "staged_train_count": 8
+    },
+    "branch_online_results_path": "reports/autogrowth/pools/tg35_branch_online_results.jsonl.gz",
+    "canary_gate_log_path": "reports/autogrowth/pools/tg35_canary_gate_log.jsonl.gz",
+    "child_intervention_log_path": "reports/autogrowth/pools/tg35_child_intervention_log.jsonl.gz",
+    "episode_tier_max": 250000,
+    "episode_tier_start": 20000,
+    "hard_decoy_stress": true,
+    "hard_decoy_stress_path": "reports/autogrowth/pools/tg35_hard_decoy_stress_results.jsonl.gz",
+    "live_cache_sample_target": 5000,
+    "live_cache_samples_path": "reports/autogrowth/pools/tg35_live_cache_equivalence_samples.jsonl.gz",
+    "long_mode": true,
+    "max_total_seconds": 21600,
+    "min_target_seconds": 14400,
+    "paired_ab": true,
+    "paired_ab_results_path": "reports/autogrowth/pools/tg35_paired_ab_results.jsonl.gz",
+    "parity_episode_count": 1000,
+    "progress_interval_seconds": 300,
+    "seed_count": 50,
+    "target_tier": 1,
+    "tg32_boundary_pool_path": "reports/autogrowth/pools/tg32_active_foundation_basin_boundary_pool.jsonl",
+    "tg32_child_pool_path": "reports/autogrowth/pools/tg32_child_foundation_boundary_coverage_pool.jsonl",
+    "tg32_hard_decoy_pool_path": "reports/autogrowth/pools/tg32_hard_decoy_pool.jsonl",
+    "tg34_artifact_path": "reports/autogrowth/krk_autogrowth_tg34_paired_child_consensus_canary_stress.json",
+    "write_full_logs": false
+  },
+  "decision": {
+    "ablation_results": {
+      "disable_child_cache_live_uncertainty_gate": {
+        "cache_mismatch_count": 0,
+        "causal": false
+      },
+      "disable_child_consensus_gate": {
+        "causal": true,
+        "paired_help_count": 0
+      },
+      "disable_child_fallback_gate": {
+        "causal": true,
+        "paired_help_count": 951
+      },
+      "disable_reply_envelope_checks": {
+        "causal": true,
+        "paired_help_count": 0
+      },
+      "mask_child_action_delta_terminals": {
+        "causal": true,
+        "paired_help_count": 475
+      },
+      "mask_child_actuator_terminals": {
+        "causal": true,
+        "paired_help_count": 0
+      },
+      "mask_child_boundary_quorums": {
+        "causal": true,
+        "paired_help_count": 0
+      },
+      "mask_child_decoy_veto": {
+        "canary_decoy_false_handoff_count": 333,
+        "causal": true
+      },
+      "mask_child_foundation_response_terminals": {
+        "causal": true,
+        "paired_help_count": 0
+      },
+      "mask_child_hard_decoy_veto": {
+        "canary_hard_decoy_false_handoff_count": 111,
+        "causal": true
+      },
+      "mask_child_same_graph_continuation_terminals": {
+        "causal": true,
+        "paired_help_count": 634
+      },
+      "mask_child_shared_atoms": {
+        "causal": true,
+        "paired_help_count": 951
+      },
+      "mask_parent_foundation_response": {
+        "causal": true,
+        "paired_help_count": 0
+      }
+    },
+    "ablation_seconds": 2.644931,
+    "action_ranker_used_for_runtime": false,
+    "actuator_cache_live_mismatch_count": 0,
+    "adaptive_stress_tiers_completed": [
+      "tier_1"
+    ],
+    "adaptive_stress_tiers_skipped": [
+      "tier_2",
+      "tier_3",
+      "tier_4",
+      "tier_5"
+    ],
+    "artifact_hygiene_applied": true,
+    "artifacts": {
+      "artifact_index": {
+        "bytes": 1559,
+        "path": "reports/autogrowth/pools/tg35_artifact_index.json",
+        "record_count": 6
+      },
+      "branch_online_results": {
+        "bytes": 538884,
+        "cache_write_seconds": 1.072538,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg35_branch_online_results.jsonl.gz",
+        "record_count": 100000
+      },
+      "canary_gate_log": {
+        "bytes": 231305,
+        "cache_write_seconds": 0.450927,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg35_canary_gate_log.jsonl.gz",
+        "record_count": 40000
+      },
+      "child_intervention_log": {
+        "bytes": 98669,
+        "cache_write_seconds": 0.125882,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg35_child_intervention_log.jsonl.gz",
+        "record_count": 6494
+      },
+      "hard_decoy_stress": {
+        "bytes": 248058,
+        "cache_write_seconds": 0.330161,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg35_hard_decoy_stress_results.jsonl.gz",
+        "record_count": 33330
+      },
+      "live_cache_equivalence_samples": {
+        "bytes": 14231,
+        "cache_write_seconds": 0.027478,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg35_live_cache_equivalence_samples.jsonl.gz",
+        "record_count": 5000
+      },
+      "paired_ab_results": {
+        "bytes": 172927,
+        "cache_write_seconds": 0.301225,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg35_paired_ab_results.jsonl.gz",
+        "record_count": 20000
+      }
+    },
+    "basin_labels_learner_visible": false,
+    "branch_count": 5,
+    "branch_names": [
+      "parent_only",
+      "child_shadow_only",
+      "child_consensus_canary_balanced",
+      "child_consensus_canary_failclosed",
+      "no_child_canary_harness_control"
+    ],
+    "bridge_labels_learner_visible": false,
+    "cache_query_count": 125000,
+    "cache_unavailable_falls_back": true,
+    "canary_decoy_false_handoff_count": 0,
+    "canary_hard_decoy_false_handoff_count": 0,
+    "canary_requires_explicit_policy": true,
+    "canary_runtime_ablation_causal": true,
+    "canary_runtime_policy_name": "child_consensus_canary_balanced",
+    "canary_success_count": 7581,
+    "canary_success_delta_vs_parent": 0.09515,
+    "canary_success_rate": 0.37905,
+    "checkpoint_interpretation": "feature_flagged_canary_ready",
+    "checkpoint_pass": true,
+    "child_actuator_ablation_causal": true,
+    "child_boundary_quorum_ablation_causal": true,
+    "child_boundary_recognized_and_helped_count": 3806,
+    "child_boundary_recognized_but_no_online_success_count": 0,
+    "child_boundary_recognized_count": 3247,
+    "child_branch_artifact_path": "reports/autogrowth/krk_autogrowth_tg34_paired_child_consensus_canary_stress.json",
+    "child_cache_live_mismatch_count": 0,
+    "child_can_mutate_parent_foundation": false,
+    "child_can_overwrite_parent_artifacts": false,
+    "child_changed_outcome_count": 3806,
+    "child_changed_selected_move_count": 6494,
+    "child_confusable_decoy_episode_count": 11110,
+    "child_consensus_gate_ablation_causal": true,
+    "child_disabled_matches_parent": true,
+    "child_false_handoff_count": 0,
+    "child_foundation_response_ablation_causal": true,
+    "child_foundation_sanity_pass": true,
+    "child_hard_decoy_veto_ablation_causal": true,
+    "child_helped_success_count": 3806,
+    "child_hurt_success_count": 0,
+    "child_intervention_count": 6494,
+    "child_intervention_rate": 0.06494,
+    "child_no_effect_count": 2688,
+    "child_same_graph_continuation_ablation_causal": true,
+    "child_shadow_decoy_false_handoff_count": 0,
+    "child_shadow_hard_decoy_false_handoff_count": 0,
+    "child_shadow_success_count": 5678,
+    "child_shadow_success_rate": 0.2839,
+    "child_shared_atom_ablation_causal": true,
+    "child_state_artifacts_separate": true,
+    "child_used_in_experimental_runtime": true,
+    "child_used_in_main_runtime": false,
+    "child_used_in_shadow_only": true,
+    "chunked_log_count": 0,
+    "compressed_log_count": 6,
+    "continuation_labels_learner_visible": false,
+    "decoy_episode_count": 33330,
+    "decoy_rejection_pass": true,
+    "decoy_veto_blocks_child": true,
+    "default_runtime_policy": "parent_only",
+    "depth_labels_learner_visible": false,
+    "direct_provider_override": false,
+    "edge_fence_labels_learner_visible": false,
+    "episode_count_by_branch": {
+      "child_consensus_canary_balanced": 20000,
+      "child_consensus_canary_failclosed": 20000,
+      "child_shadow_only": 20000,
+      "no_child_canary_harness_control": 20000,
+      "parent_only": 20000
+    },
+    "episode_count_by_horizon": {
+      "max4": 20025,
+      "max5": 20025,
+      "max6": 19990,
+      "max7": 19980,
+      "max8": 19980
+    },
+    "episode_count_by_reply_policy": {
+      "bridge_avoidance": 20025,
+      "deterministic_worst_foundation": 20025,
+      "fixed_seed_random_legal": 20025,
+      "foundation_escape": 19900,
+      "mobility_maximizing": 20025
+    },
+    "episode_count_by_start_set": {
+      "boundary_derived_frontier_generic": 11110,
+      "child_confusable_decoy": 11110,
+      "frontier_near": 11110,
+      "generic_edge": 11110,
+      "hard_decoy": 11110,
+      "known_repaired": 11115,
+      "near_miss_decoy": 11110,
+      "newly_mined_child_intervention": 11110,
+      "staged_pool": 11115
+    },
+    "failclosed_test_count": 4,
+    "failclosed_test_pass_count": 4,
+    "failure_bucket_counts": {
+      "artifact_hygiene_inherited_warning": 1,
+      "feature_flagged_canary_ready": 1
+    },
+    "foundation_unfrozen_in_main_arm": false,
+    "frontier_regression_pass": true,
+    "full_log_opt_in_required": true,
+    "gate_closed_count": 16753,
+    "gate_closed_missed_help_count": 5042,
+    "gate_closed_reason_counts": {
+      "child_gate_opened": 6494,
+      "gate_closed_decoy_veto": 13332,
+      "gate_closed_no_child_boundary": 20174
+    },
+    "gate_false_close_count": 1260,
+    "gate_false_open_count": 0,
+    "gate_open_count": 3247,
+    "gate_open_help_count": 1903,
+    "gate_open_hurt_count": 0,
+    "gate_precision": 0.586079,
+    "gate_recall_against_helpful_interventions": 0.27401,
+    "generic_edge_regression_pass": true,
+    "guard_used_during_evaluation": false,
+    "guard_used_during_runtime_choice": false,
+    "hard_decoy_blocked_by_veto_count": 33330,
+    "hard_decoy_episode_count": 11110,
+    "hard_decoy_rejection_pass": true,
+    "hard_decoy_source_count": 768,
+    "hard_decoy_stress_seconds": 0.073474,
+    "hard_decoy_veto_blocks_child": true,
+    "illegal_move_count_by_branch": {
+      "child_consensus_canary_balanced": 0,
+      "child_consensus_canary_failclosed": 0,
+      "child_shadow_only": 0,
+      "no_child_canary_harness_control": 0,
+      "parent_only": 0
+    },
+    "inherited_oversized_artifact_note": "TG34 branch log remains in branch history/head to preserve TG34 artifact paths",
+    "known_trajectory_microprobe_pass": true,
+    "large_log_policy": "gzip_jsonl_by_default_full_logs_opt_in",
+    "largest_committed_file_bytes": 68448785,
+    "largest_new_artifact_bytes": 538884,
+    "live_cache_sample_count": 5000,
+    "live_cache_verification_seconds": 0.003907,
+    "live_foundation_query_count": 10000,
+    "live_rollout_count": 100000,
+    "long_run_short_finish_reason": "feature_flagged_canary_completed_fast_below_long_wall_clock",
+    "mean_seed_canary_success_rate": 0.379848,
+    "mismatch_examples": [],
+    "near_miss_false_positive_count": 0,
+    "online_eval_seconds": 9.906677,
+    "oversized_artifact_warning_count": 1,
+    "paired_ab_seconds": 9.906677,
+    "paired_episode_count": 20000,
+    "paired_help_count": 1903,
+    "paired_help_hurt_ratio": null,
+    "paired_hurt_count": 0,
+    "paired_net_help": 1903,
+    "paired_parent_failure_child_failure_count": 12419,
+    "paired_parent_failure_child_success_count": 1903,
+    "paired_parent_success_child_failure_count": 0,
+    "paired_parent_success_child_success_count": 5678,
+    "paired_success_delta": 0.09515,
+    "parent_artifact_modified": false,
+    "parent_cache_live_mismatch_count": 0,
+    "parent_decoy_false_handoff_count": 0,
+    "parent_foundation_frozen": true,
+    "parent_foundation_m3_updates_during_eval": 0,
+    "parent_foundation_m3_updates_during_experiment": 0,
+    "parent_foundation_m4_promotions_during_eval": 0,
+    "parent_foundation_m4_promotions_during_experiment": 0,
+    "parent_foundation_sanity_pass": true,
+    "parent_hard_decoy_false_handoff_count": 0,
+    "parent_main_success_count": 5678,
+    "parent_main_success_rate": 0.2839,
+    "parent_only_default_unchanged": true,
+    "parity_episode_count": 1000,
+    "parity_gate_match_count": 1000,
+    "parity_gate_mismatch_count": 0,
+    "parity_mismatch_examples": [],
+    "parity_outcome_match_count": 1000,
+    "parity_outcome_mismatch_count": 0,
+    "parity_selected_move_match_count": 1000,
+    "parity_selected_move_mismatch_count": 0,
+    "phase_timings": {
+      "ablation_seconds": 2.644931,
+      "hard_decoy_stress_seconds": 0.073474,
+      "live_cache_verification_seconds": 0.003907,
+      "online_eval_seconds": 9.906677,
+      "paired_ab_seconds": 9.906677,
+      "parity_seconds": 0.424251,
+      "regression_seconds": 0.0,
+      "rollback_test_seconds": 0.0,
+      "total_seconds": 13.203841
+    },
+    "purity_boundary": {
+      "action_ranker_used_for_runtime": false,
+      "basin_labels_learner_visible": false,
+      "black_replies_harness_simulated": true,
+      "bridge_labels_learner_visible": false,
+      "broad_krk_expansion": false,
+      "checkpoint": "TG35",
+      "child_consensus_canary_feature_flagged": true,
+      "child_used_in_experimental_runtime": true,
+      "child_used_in_main_runtime": false,
+      "default_runtime_policy": "parent_only",
+      "depth_labels_learner_visible": false,
+      "direct_provider_override": false,
+      "edge_fence_labels_learner_visible": false,
+      "foundation_frozen": true,
+      "foundation_unfrozen": false,
+      "foundation_unfrozen_in_main_arm": false,
+      "imagination_or_internal_rollout_added": false,
+      "python_final_selector_used": false,
+      "quality_tier_labels_learner_visible": false,
+      "reply_policy_labels_learner_visible": false,
+      "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+      "runtime_tablebase_or_dtm_move_source": false,
+      "s1_cache_used_as_evidence": true,
+      "s1_cache_used_as_provider": false,
+      "s1_labels_learner_visible": false,
+      "stage_labels_learner_visible": false,
+      "staged_labels_learner_visible": false,
+      "trajectory_cache_used_as_evidence": true,
+      "trajectory_cache_used_as_provider": false,
+      "trajectory_labels_learner_visible": false,
+      "validator_driven_runtime_selection": false
+    },
+    "python_final_selector_used": false,
+    "quality_tier_labels_learner_visible": false,
+    "regression_seconds": 0.0,
+    "repair_applied": false,
+    "reply_envelope_cache_live_mismatch_count": 0,
+    "reply_policy_labels_learner_visible": false,
+    "requested_max_total_seconds": 21600,
+    "requested_min_target_seconds": 14400,
+    "rollback_test_count": 2,
+    "rollback_test_pass_count": 2,
+    "rollback_test_seconds": 0.0,
+    "rook_blunder_count_by_branch": {
+      "child_consensus_canary_balanced": 0,
+      "child_consensus_canary_failclosed": 0,
+      "child_shadow_only": 0,
+      "no_child_canary_harness_control": 0,
+      "parent_only": 0
+    },
+    "runtime_policy_installed": true,
+    "runtime_policy_names": [
+      "parent_only",
+      "child_shadow_only",
+      "child_consensus_canary_balanced",
+      "child_consensus_canary_failclosed",
+      "no_child_canary_harness_control"
+    ],
+    "runtime_tablebase_or_dtm_move_source": false,
+    "s1_full_reply_validation_pass": true,
+    "s1_labels_learner_visible": false,
+    "safety_failure_count_by_branch": {
+      "child_consensus_canary_balanced": 0,
+      "child_consensus_canary_failclosed": 0,
+      "child_shadow_only": 0,
+      "no_child_canary_harness_control": 0,
+      "parent_only": 0
+    },
+    "scheduler_equivalence_mismatch_count": 0,
+    "selected_canary_branch": "child_consensus_canary_balanced",
+    "selected_canary_branch_reason": "TG34 balanced consensus had positive paired help, zero paired hurt, zero decoy false handoffs, and clean live/cache checks",
+    "selected_repair_arm": "feature_flagged_runtime_canary_installation_only",
+    "shadow_child_foundation_used": true,
+    "shadow_child_foundation_used_in_main_eval": false,
+    "stage_labels_learner_visible": false,
+    "staged_labels_learner_visible": false,
+    "staged_near_miss_regression_pass": true,
+    "staged_regression_pass": true,
+    "stalemate_count_by_branch": {
+      "child_consensus_canary_balanced": 0,
+      "child_consensus_canary_failclosed": 0,
+      "child_shadow_only": 0,
+      "no_child_canary_harness_control": 0,
+      "parent_only": 0
+    },
+    "std_seed_canary_success_rate": 0.022661,
+    "success_by_branch_horizon": {
+      "child_consensus_canary_balanced": {
+        "max4": 0.333833,
+        "max5": 0.359551,
+        "max6": 0.390195,
+        "max7": 0.397648,
+        "max8": 0.414164
+      },
+      "child_consensus_canary_failclosed": {
+        "max4": 0.333833,
+        "max5": 0.359551,
+        "max6": 0.390195,
+        "max7": 0.397648,
+        "max8": 0.414164
+      },
+      "child_shadow_only": {
+        "max4": 0.224969,
+        "max5": 0.250936,
+        "max6": 0.296648,
+        "max7": 0.314815,
+        "max8": 0.332332
+      },
+      "no_child_canary_harness_control": {
+        "max4": 0.224969,
+        "max5": 0.250936,
+        "max6": 0.296648,
+        "max7": 0.314815,
+        "max8": 0.332332
+      },
+      "parent_only": {
+        "max4": 0.224969,
+        "max5": 0.250936,
+        "max6": 0.296648,
+        "max7": 0.314815,
+        "max8": 0.332332
+      }
+    },
+    "success_by_branch_reply_policy": {
+      "child_consensus_canary_balanced": {
+        "bridge_avoidance": 0.378527,
+        "deterministic_worst_foundation": 0.369288,
+        "fixed_seed_random_legal": 0.429463,
+        "foundation_escape": 0.354271,
+        "mobility_maximizing": 0.363546
+      },
+      "child_consensus_canary_failclosed": {
+        "bridge_avoidance": 0.378527,
+        "deterministic_worst_foundation": 0.369288,
+        "fixed_seed_random_legal": 0.429463,
+        "foundation_escape": 0.354271,
+        "mobility_maximizing": 0.363546
+      },
+      "child_shadow_only": {
+        "bridge_avoidance": 0.290637,
+        "deterministic_worst_foundation": 0.267915,
+        "fixed_seed_random_legal": 0.344819,
+        "foundation_escape": 0.247487,
+        "mobility_maximizing": 0.268414
+      },
+      "no_child_canary_harness_control": {
+        "bridge_avoidance": 0.290637,
+        "deterministic_worst_foundation": 0.267915,
+        "fixed_seed_random_legal": 0.344819,
+        "foundation_escape": 0.247487,
+        "mobility_maximizing": 0.268414
+      },
+      "parent_only": {
+        "bridge_avoidance": 0.290637,
+        "deterministic_worst_foundation": 0.267915,
+        "fixed_seed_random_legal": 0.344819,
+        "foundation_escape": 0.247487,
+        "mobility_maximizing": 0.268414
+      }
+    },
+    "success_by_branch_start_set": {
+      "child_consensus_canary_balanced": {
+        "boundary_derived_frontier_generic": 0.412241,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.462646,
+        "generic_edge": 0.434743,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.903734,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.421242,
+        "staged_pool": 0.776428
+      },
+      "child_consensus_canary_failclosed": {
+        "boundary_derived_frontier_generic": 0.412241,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.462646,
+        "generic_edge": 0.434743,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.903734,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.421242,
+        "staged_pool": 0.776428
+      },
+      "child_shadow_only": {
+        "boundary_derived_frontier_generic": 0.227273,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.290729,
+        "generic_edge": 0.250675,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.860099,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.231773,
+        "staged_pool": 0.694107
+      },
+      "no_child_canary_harness_control": {
+        "boundary_derived_frontier_generic": 0.227273,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.290729,
+        "generic_edge": 0.250675,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.860099,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.231773,
+        "staged_pool": 0.694107
+      },
+      "parent_only": {
+        "boundary_derived_frontier_generic": 0.227273,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.290729,
+        "generic_edge": 0.250675,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.860099,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.231773,
+        "staged_pool": 0.694107
+      }
+    },
+    "success_by_seed": {
+      "0": 0.337778,
+      "1": 0.346667,
+      "10": 0.388889,
+      "11": 0.373333,
+      "12": 0.395556,
+      "13": 0.402222,
+      "14": 0.391111,
+      "15": 0.36,
+      "16": 0.328889,
+      "17": 0.368889,
+      "18": 0.382222,
+      "19": 0.371111,
+      "2": 0.38,
+      "20": 0.406667,
+      "21": 0.406667,
+      "22": 0.333333,
+      "23": 0.366667,
+      "24": 0.34,
+      "25": 0.395556,
+      "26": 0.364444,
+      "27": 0.384444,
+      "28": 0.386667,
+      "29": 0.391111,
+      "3": 0.395556,
+      "30": 0.384444,
+      "31": 0.34,
+      "32": 0.388889,
+      "33": 0.342222,
+      "34": 0.371111,
+      "35": 0.377778,
+      "36": 0.442222,
+      "37": 0.366667,
+      "38": 0.383529,
+      "39": 0.395556,
+      "4": 0.386667,
+      "40": 0.395556,
+      "41": 0.386667,
+      "42": 0.368889,
+      "43": 0.355556,
+      "44": 0.377778,
+      "45": 0.413333,
+      "46": 0.395556,
+      "47": 0.391111,
+      "48": 0.395556,
+      "49": 0.373333,
+      "5": 0.4,
+      "6": 0.388889,
+      "7": 0.4,
+      "8": 0.364444,
+      "9": 0.408889
+    },
+    "timeout_count": 0,
+    "total_episode_count": 100000,
+    "total_seconds": 13.203841,
+    "trainer_side_exploration_used": true,
+    "trainer_side_exploration_used_in_final_eval": false,
+    "trajectory_labels_learner_visible": false,
+    "uncertainty_falls_back": true,
+    "unsafe_move_count_by_branch": {
+      "child_consensus_canary_balanced": 0,
+      "child_consensus_canary_failclosed": 0,
+      "child_shadow_only": 0,
+      "no_child_canary_harness_control": 0,
+      "parent_only": 0
+    },
+    "validator_skip_used_during_internal_handoff_eval": false,
+    "worst_seed_canary_success_rate": 0.328889
+  },
+  "decoy_summary": {
+    "canary_decoy_false_handoff_count": 0,
+    "canary_hard_decoy_false_handoff_count": 0,
+    "child_confusable_decoy_episode_count": 11110,
+    "child_shadow_decoy_false_handoff_count": 0,
+    "child_shadow_hard_decoy_false_handoff_count": 0,
+    "decoy_episode_count": 33330,
+    "hard_decoy_blocked_by_veto_count": 33330,
+    "hard_decoy_episode_count": 11110,
+    "hard_decoy_source_count": 768,
+    "near_miss_false_positive_count": 0,
+    "parent_decoy_false_handoff_count": 0,
+    "parent_hard_decoy_false_handoff_count": 0
+  },
+  "gate_summary": {
+    "gate_closed_count": 16753,
+    "gate_closed_missed_help_count": 5042,
+    "gate_closed_reason_counts": {
+      "child_gate_opened": 6494,
+      "gate_closed_decoy_veto": 13332,
+      "gate_closed_no_child_boundary": 20174
+    },
+    "gate_false_close_count": 1260,
+    "gate_false_open_count": 0,
+    "gate_open_count": 3247,
+    "gate_open_help_count": 1903,
+    "gate_open_hurt_count": 0,
+    "gate_precision": 0.586079,
+    "gate_recall_against_helpful_interventions": 0.27401
+  },
+  "input_audit": {
+    "summary": {
+      "cache_config_hash": "1d226b8db3e15d55",
+      "child_branch_artifact_path": "reports/autogrowth/krk_autogrowth_tg34_paired_child_consensus_canary_stress.json",
+      "foundation_unfrozen_in_main_arm": false,
+      "parent_foundation_frozen": true,
+      "parent_foundation_hash": "6840184287322f9a",
+      "parent_foundation_m3_updates_during_eval": 0,
+      "parent_foundation_m3_updates_during_experiment": 0,
+      "parent_foundation_m4_promotions_during_eval": 0,
+      "parent_foundation_m4_promotions_during_experiment": 0,
+      "tg32_boundary_rows": 4096,
+      "tg32_child_rows": 4096,
+      "tg32_hard_decoy_rows": 768,
+      "tg34_checkpoint_pass": true,
+      "tg34_paired_help_count": 1903,
+      "tg34_paired_hurt_count": 0,
+      "tg34_schema_version": "krk_autogrowth_tg34_paired_child_consensus_canary_stress.v0",
+      "tg34_selected_canary_branch": "experimental_child_consensus_canary_balanced"
+    }
+  },
+  "intervention_summary": {
+    "child_boundary_recognized_and_helped_count": 3806,
+    "child_boundary_recognized_but_no_online_success_count": 0,
+    "child_boundary_recognized_count": 3247,
+    "child_changed_outcome_count": 3806,
+    "child_changed_selected_move_count": 6494,
+    "child_false_handoff_count": 0,
+    "child_helped_success_count": 3806,
+    "child_hurt_success_count": 0,
+    "child_intervention_count": 6494,
+    "child_intervention_rate": 0.06494,
+    "child_no_effect_count": 2688
+  },
+  "live_cache_summary": {
+    "actuator_cache_live_mismatch_count": 0,
+    "child_cache_live_mismatch_count": 0,
+    "live_cache_sample_count": 5000,
+    "mismatch_examples": [],
+    "parent_cache_live_mismatch_count": 0,
+    "reply_envelope_cache_live_mismatch_count": 0
+  },
+  "online_summary": {
+    "branch_count": 5,
+    "branch_names": [
+      "parent_only",
+      "child_shadow_only",
+      "child_consensus_canary_balanced",
+      "child_consensus_canary_failclosed",
+      "no_child_canary_harness_control"
+    ],
+    "canary_success_count": 7581,
+    "canary_success_delta_vs_parent": 0.09515,
+    "canary_success_rate": 0.37905,
+    "child_shadow_success_count": 5678,
+    "child_shadow_success_rate": 0.2839,
+    "episode_count_by_branch": {
+      "child_consensus_canary_balanced": 20000,
+      "child_consensus_canary_failclosed": 20000,
+      "child_shadow_only": 20000,
+      "no_child_canary_harness_control": 20000,
+      "parent_only": 20000
+    },
+    "episode_count_by_horizon": {
+      "max4": 20025,
+      "max5": 20025,
+      "max6": 19990,
+      "max7": 19980,
+      "max8": 19980
+    },
+    "episode_count_by_reply_policy": {
+      "bridge_avoidance": 20025,
+      "deterministic_worst_foundation": 20025,
+      "fixed_seed_random_legal": 20025,
+      "foundation_escape": 19900,
+      "mobility_maximizing": 20025
+    },
+    "episode_count_by_start_set": {
+      "boundary_derived_frontier_generic": 11110,
+      "child_confusable_decoy": 11110,
+      "frontier_near": 11110,
+      "generic_edge": 11110,
+      "hard_decoy": 11110,
+      "known_repaired": 11115,
+      "near_miss_decoy": 11110,
+      "newly_mined_child_intervention": 11110,
+      "staged_pool": 11115
+    },
+    "illegal_move_count_by_branch": {
+      "child_consensus_canary_balanced": 0,
+      "child_consensus_canary_failclosed": 0,
+      "child_shadow_only": 0,
+      "no_child_canary_harness_control": 0,
+      "parent_only": 0
+    },
+    "mean_seed_canary_success_rate": 0.379848,
+    "parent_main_success_count": 5678,
+    "parent_main_success_rate": 0.2839,
+    "rook_blunder_count_by_branch": {
+      "child_consensus_canary_balanced": 0,
+      "child_consensus_canary_failclosed": 0,
+      "child_shadow_only": 0,
+      "no_child_canary_harness_control": 0,
+      "parent_only": 0
+    },
+    "safety_failure_count_by_branch": {
+      "child_consensus_canary_balanced": 0,
+      "child_consensus_canary_failclosed": 0,
+      "child_shadow_only": 0,
+      "no_child_canary_harness_control": 0,
+      "parent_only": 0
+    },
+    "stalemate_count_by_branch": {
+      "child_consensus_canary_balanced": 0,
+      "child_consensus_canary_failclosed": 0,
+      "child_shadow_only": 0,
+      "no_child_canary_harness_control": 0,
+      "parent_only": 0
+    },
+    "std_seed_canary_success_rate": 0.022661,
+    "success_by_branch_horizon": {
+      "child_consensus_canary_balanced": {
+        "max4": 0.333833,
+        "max5": 0.359551,
+        "max6": 0.390195,
+        "max7": 0.397648,
+        "max8": 0.414164
+      },
+      "child_consensus_canary_failclosed": {
+        "max4": 0.333833,
+        "max5": 0.359551,
+        "max6": 0.390195,
+        "max7": 0.397648,
+        "max8": 0.414164
+      },
+      "child_shadow_only": {
+        "max4": 0.224969,
+        "max5": 0.250936,
+        "max6": 0.296648,
+        "max7": 0.314815,
+        "max8": 0.332332
+      },
+      "no_child_canary_harness_control": {
+        "max4": 0.224969,
+        "max5": 0.250936,
+        "max6": 0.296648,
+        "max7": 0.314815,
+        "max8": 0.332332
+      },
+      "parent_only": {
+        "max4": 0.224969,
+        "max5": 0.250936,
+        "max6": 0.296648,
+        "max7": 0.314815,
+        "max8": 0.332332
+      }
+    },
+    "success_by_branch_reply_policy": {
+      "child_consensus_canary_balanced": {
+        "bridge_avoidance": 0.378527,
+        "deterministic_worst_foundation": 0.369288,
+        "fixed_seed_random_legal": 0.429463,
+        "foundation_escape": 0.354271,
+        "mobility_maximizing": 0.363546
+      },
+      "child_consensus_canary_failclosed": {
+        "bridge_avoidance": 0.378527,
+        "deterministic_worst_foundation": 0.369288,
+        "fixed_seed_random_legal": 0.429463,
+        "foundation_escape": 0.354271,
+        "mobility_maximizing": 0.363546
+      },
+      "child_shadow_only": {
+        "bridge_avoidance": 0.290637,
+        "deterministic_worst_foundation": 0.267915,
+        "fixed_seed_random_legal": 0.344819,
+        "foundation_escape": 0.247487,
+        "mobility_maximizing": 0.268414
+      },
+      "no_child_canary_harness_control": {
+        "bridge_avoidance": 0.290637,
+        "deterministic_worst_foundation": 0.267915,
+        "fixed_seed_random_legal": 0.344819,
+        "foundation_escape": 0.247487,
+        "mobility_maximizing": 0.268414
+      },
+      "parent_only": {
+        "bridge_avoidance": 0.290637,
+        "deterministic_worst_foundation": 0.267915,
+        "fixed_seed_random_legal": 0.344819,
+        "foundation_escape": 0.247487,
+        "mobility_maximizing": 0.268414
+      }
+    },
+    "success_by_branch_start_set": {
+      "child_consensus_canary_balanced": {
+        "boundary_derived_frontier_generic": 0.412241,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.462646,
+        "generic_edge": 0.434743,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.903734,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.421242,
+        "staged_pool": 0.776428
+      },
+      "child_consensus_canary_failclosed": {
+        "boundary_derived_frontier_generic": 0.412241,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.462646,
+        "generic_edge": 0.434743,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.903734,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.421242,
+        "staged_pool": 0.776428
+      },
+      "child_shadow_only": {
+        "boundary_derived_frontier_generic": 0.227273,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.290729,
+        "generic_edge": 0.250675,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.860099,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.231773,
+        "staged_pool": 0.694107
+      },
+      "no_child_canary_harness_control": {
+        "boundary_derived_frontier_generic": 0.227273,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.290729,
+        "generic_edge": 0.250675,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.860099,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.231773,
+        "staged_pool": 0.694107
+      },
+      "parent_only": {
+        "boundary_derived_frontier_generic": 0.227273,
+        "child_confusable_decoy": 0.0,
+        "frontier_near": 0.290729,
+        "generic_edge": 0.250675,
+        "hard_decoy": 0.0,
+        "known_repaired": 0.860099,
+        "near_miss_decoy": 0.0,
+        "newly_mined_child_intervention": 0.231773,
+        "staged_pool": 0.694107
+      }
+    },
+    "success_by_seed": {
+      "0": 0.337778,
+      "1": 0.346667,
+      "10": 0.388889,
+      "11": 0.373333,
+      "12": 0.395556,
+      "13": 0.402222,
+      "14": 0.391111,
+      "15": 0.36,
+      "16": 0.328889,
+      "17": 0.368889,
+      "18": 0.382222,
+      "19": 0.371111,
+      "2": 0.38,
+      "20": 0.406667,
+      "21": 0.406667,
+      "22": 0.333333,
+      "23": 0.366667,
+      "24": 0.34,
+      "25": 0.395556,
+      "26": 0.364444,
+      "27": 0.384444,
+      "28": 0.386667,
+      "29": 0.391111,
+      "3": 0.395556,
+      "30": 0.384444,
+      "31": 0.34,
+      "32": 0.388889,
+      "33": 0.342222,
+      "34": 0.371111,
+      "35": 0.377778,
+      "36": 0.442222,
+      "37": 0.366667,
+      "38": 0.383529,
+      "39": 0.395556,
+      "4": 0.386667,
+      "40": 0.395556,
+      "41": 0.386667,
+      "42": 0.368889,
+      "43": 0.355556,
+      "44": 0.377778,
+      "45": 0.413333,
+      "46": 0.395556,
+      "47": 0.391111,
+      "48": 0.395556,
+      "49": 0.373333,
+      "5": 0.4,
+      "6": 0.388889,
+      "7": 0.4,
+      "8": 0.364444,
+      "9": 0.408889
+    },
+    "total_episode_count": 100000,
+    "unsafe_move_count_by_branch": {
+      "child_consensus_canary_balanced": 0,
+      "child_consensus_canary_failclosed": 0,
+      "child_shadow_only": 0,
+      "no_child_canary_harness_control": 0,
+      "parent_only": 0
+    },
+    "worst_seed_canary_success_rate": 0.328889
+  },
+  "paired_summary": {
+    "paired_episode_count": 20000,
+    "paired_help_count": 1903,
+    "paired_help_hurt_ratio": null,
+    "paired_hurt_count": 0,
+    "paired_net_help": 1903,
+    "paired_parent_failure_child_failure_count": 12419,
+    "paired_parent_failure_child_success_count": 1903,
+    "paired_parent_success_child_failure_count": 0,
+    "paired_parent_success_child_success_count": 5678,
+    "paired_success_delta": 0.09515
+  },
+  "parity_summary": {
+    "parity_episode_count": 1000,
+    "parity_gate_match_count": 1000,
+    "parity_gate_mismatch_count": 0,
+    "parity_mismatch_examples": [],
+    "parity_outcome_match_count": 1000,
+    "parity_outcome_mismatch_count": 0,
+    "parity_selected_move_match_count": 1000,
+    "parity_selected_move_mismatch_count": 0
+  },
+  "purity_boundary": {
+    "action_ranker_used_for_runtime": false,
+    "basin_labels_learner_visible": false,
+    "black_replies_harness_simulated": true,
+    "bridge_labels_learner_visible": false,
+    "broad_krk_expansion": false,
+    "checkpoint": "TG35",
+    "child_consensus_canary_feature_flagged": true,
+    "child_used_in_experimental_runtime": true,
+    "child_used_in_main_runtime": false,
+    "default_runtime_policy": "parent_only",
+    "depth_labels_learner_visible": false,
+    "direct_provider_override": false,
+    "edge_fence_labels_learner_visible": false,
+    "foundation_frozen": true,
+    "foundation_unfrozen": false,
+    "foundation_unfrozen_in_main_arm": false,
+    "imagination_or_internal_rollout_added": false,
+    "python_final_selector_used": false,
+    "quality_tier_labels_learner_visible": false,
+    "reply_policy_labels_learner_visible": false,
+    "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+    "runtime_tablebase_or_dtm_move_source": false,
+    "s1_cache_used_as_evidence": true,
+    "s1_cache_used_as_provider": false,
+    "s1_labels_learner_visible": false,
+    "stage_labels_learner_visible": false,
+    "staged_labels_learner_visible": false,
+    "trajectory_cache_used_as_evidence": true,
+    "trajectory_cache_used_as_provider": false,
+    "trajectory_labels_learner_visible": false,
+    "validator_driven_runtime_selection": false
+  },
+  "regressions": {
+    "child_foundation_sanity_pass": true,
+    "decoy_rejection_pass": true,
+    "frontier_regression_pass": true,
+    "generic_edge_regression_pass": true,
+    "hard_decoy_rejection_pass": true,
+    "known_trajectory_microprobe_pass": true,
+    "parent_foundation_sanity_pass": true,
+    "s1_full_reply_validation_pass": true,
+    "staged_near_miss_regression_pass": true,
+    "staged_regression_pass": true
+  },
+  "rollback_summary": {
+    "cache_unavailable_falls_back": true,
+    "child_disabled_matches_parent": true,
+    "decoy_veto_blocks_child": true,
+    "failclosed_test_count": 4,
+    "failclosed_test_pass_count": 4,
+    "hard_decoy_veto_blocks_child": true,
+    "rollback_test_count": 2,
+    "rollback_test_pass_count": 2,
+    "uncertainty_falls_back": true
+  },
+  "runtime_policy": {
+    "canary_requires_explicit_policy": true,
+    "canary_runtime_policy_name": "child_consensus_canary_balanced",
+    "child_can_mutate_parent_foundation": false,
+    "child_can_overwrite_parent_artifacts": false,
+    "child_state_artifacts_separate": true,
+    "default_runtime_policy": "parent_only",
+    "parent_only_default_unchanged": true,
+    "runtime_policy_installed": true,
+    "runtime_policy_names": [
+      "parent_only",
+      "child_shadow_only",
+      "child_consensus_canary_balanced",
+      "child_consensus_canary_failclosed",
+      "no_child_canary_harness_control"
+    ],
+    "selected_canary_branch": "child_consensus_canary_balanced",
+    "selected_canary_branch_reason": "TG34 balanced consensus had positive paired help, zero paired hurt, zero decoy false handoffs, and clean live/cache checks"
+  },
+  "schema_version": "krk_autogrowth_tg35_feature_flagged_child_consensus_runtime_canary.v0"
+}

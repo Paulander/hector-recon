@@ -465,6 +465,16 @@ from .paired_child_consensus_canary_stress import (
     PairedChildConsensusCanaryStressResult,
     run_paired_child_consensus_canary_stress,
 )
+from .child_consensus_runtime_policy import (
+    DEFAULT_CHILD_CONSENSUS_RUNTIME_POLICY,
+    ChildConsensusRuntimeDecision,
+    decide_child_consensus_runtime,
+)
+from .feature_flagged_child_consensus_runtime_canary import (
+    FeatureFlaggedChildConsensusRuntimeCanaryConfig,
+    FeatureFlaggedChildConsensusRuntimeCanaryResult,
+    run_feature_flagged_child_consensus_runtime_canary,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -761,6 +771,9 @@ __all__ = [
     "ExperimentalChildRuntimeABResult",
     "PairedChildConsensusCanaryStressConfig",
     "PairedChildConsensusCanaryStressResult",
+    "FeatureFlaggedChildConsensusRuntimeCanaryConfig",
+    "FeatureFlaggedChildConsensusRuntimeCanaryResult",
+    "ChildConsensusRuntimeDecision",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -800,6 +813,9 @@ __all__ = [
     "run_child_boundary_active_learning_shadow_stress",
     "run_experimental_child_runtime_ab",
     "run_paired_child_consensus_canary_stress",
+    "run_feature_flagged_child_consensus_runtime_canary",
+    "DEFAULT_CHILD_CONSENSUS_RUNTIME_POLICY",
+    "decide_child_consensus_runtime",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
