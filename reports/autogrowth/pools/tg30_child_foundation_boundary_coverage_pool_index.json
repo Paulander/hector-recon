@@ -1,0 +1,21 @@
+{
+  "cache_write_seconds": 0.000618,
+  "child_all_reply_foundation_count": 0,
+  "child_boundary_coverage_rate": 0.3875,
+  "child_coverage_pool_index_path": "reports/autogrowth/pools/tg30_child_foundation_boundary_coverage_pool_index.json",
+  "child_coverage_pool_path": "reports/autogrowth/pools/tg30_child_foundation_boundary_coverage_pool.jsonl",
+  "child_decoy_false_handoff_count": 0,
+  "child_decoy_recognized_count": 0,
+  "child_false_positive_count": 0,
+  "child_heldout_boundary_coverage_rate": 0.5,
+  "child_heldout_recognized_count": 8,
+  "child_near_miss_false_positive_count": 0,
+  "child_partial_reply_foundation_count": 31,
+  "child_regression_boundary_coverage_rate": 0.5,
+  "child_regression_recognized_count": 8,
+  "child_same_graph_continuation_count": 62,
+  "child_train_recognized_count": 15,
+  "child_worst_reply_success_count": 0,
+  "record_count": 80,
+  "schema_version": "tg30_child_foundation_boundary_coverage_pool_index.v0"
+}

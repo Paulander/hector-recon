@@ -440,6 +440,11 @@ from .child_foundation_basin_coverage import (
     ChildFoundationBasinCoverageResult,
     run_child_foundation_basin_coverage_diagnostic,
 )
+from .boundary_dataset_expansion_child_coverage_ladder import (
+    BoundaryDatasetExpansionChildCoverageConfig,
+    BoundaryDatasetExpansionChildCoverageResult,
+    run_boundary_dataset_expansion_child_coverage_ladder,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -726,6 +731,8 @@ __all__ = [
     "TightFollowupSuccessBasinCoverageResult",
     "ChildFoundationBasinCoverageConfig",
     "ChildFoundationBasinCoverageResult",
+    "BoundaryDatasetExpansionChildCoverageConfig",
+    "BoundaryDatasetExpansionChildCoverageResult",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
     "run_full_frontier_validation_near_miss",
@@ -760,6 +767,7 @@ __all__ = [
     "run_live_chain_sufficiency_basin_boundary_audit",
     "run_tight_followup_success_basin_coverage",
     "run_child_foundation_basin_coverage_diagnostic",
+    "run_boundary_dataset_expansion_child_coverage_ladder",
     "TERMINAL_LIFECYCLE_POLICY",
     "apply_terminal_lifecycle",
     "classify_terminal_kind",
