@@ -1,0 +1,27 @@
+{
+  "boundary_decoy_count": 96,
+  "boundary_generation_accept_count": 512,
+  "boundary_generation_attempt_count": 13398,
+  "boundary_generation_reject_count": 12880,
+  "boundary_generation_rejection_counts": {
+    "duplicate": 12880
+  },
+  "boundary_generation_timeout_count": 0,
+  "boundary_heldout_count": 128,
+  "boundary_regression_count": 96,
+  "boundary_train_count": 192,
+  "bridge_frontier_not_foundation_count": 0,
+  "cache_write_seconds": 0.010208,
+  "clean_decoy_count": 96,
+  "duplicate_boundary_count": 12880,
+  "expanded_boundary_pool_entry_count": 512,
+  "lineage_group_count": 512,
+  "near_miss_decoy_count": 0,
+  "outside_frozen_basin_count": 208,
+  "parent_recognized_boundary_count": 0,
+  "partial_support_boundary_count": 208,
+  "path": "reports/autogrowth/pools/tg31_scaled_foundation_basin_boundary_pool.jsonl",
+  "schema_version": "tg31_scaled_foundation_basin_boundary_pool_index.v0",
+  "split_group_leak_count": 0,
+  "unique_boundary_fen_count": 512
+}

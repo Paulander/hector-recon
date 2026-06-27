@@ -1,0 +1,24 @@
+{
+  "child_used_in_main_runtime": false,
+  "horizons": [
+    "max4",
+    "max5",
+    "max6",
+    "max7"
+  ],
+  "reply_policies": [
+    "deterministic_worst_foundation",
+    "mobility_maximizing",
+    "fixed_seed_random_legal"
+  ],
+  "schema_version": "krk_autogrowth_tg31_shadow_child_online_stability_matrix.v0",
+  "selected_child_arm": "child_boundary_plus_foundation_response",
+  "shadow_child_used": true,
+  "start_sets": [
+    "known_repaired",
+    "staged_pool",
+    "frontier_near",
+    "generic_edge",
+    "near_miss_decoy"
+  ]
+}
