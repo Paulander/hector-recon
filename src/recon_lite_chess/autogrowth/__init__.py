@@ -475,6 +475,11 @@ from .feature_flagged_child_consensus_runtime_canary import (
     FeatureFlaggedChildConsensusRuntimeCanaryResult,
     run_feature_flagged_child_consensus_runtime_canary,
 )
+from .runtime_stage_gate_campaign import (
+    RuntimeStageGateCampaignConfig,
+    RuntimeStageGateCampaignResult,
+    run_runtime_stage_gate_campaign,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -773,6 +778,8 @@ __all__ = [
     "PairedChildConsensusCanaryStressResult",
     "FeatureFlaggedChildConsensusRuntimeCanaryConfig",
     "FeatureFlaggedChildConsensusRuntimeCanaryResult",
+    "RuntimeStageGateCampaignConfig",
+    "RuntimeStageGateCampaignResult",
     "ChildConsensusRuntimeDecision",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
@@ -814,6 +821,7 @@ __all__ = [
     "run_experimental_child_runtime_ab",
     "run_paired_child_consensus_canary_stress",
     "run_feature_flagged_child_consensus_runtime_canary",
+    "run_runtime_stage_gate_campaign",
     "DEFAULT_CHILD_CONSENSUS_RUNTIME_POLICY",
     "decide_child_consensus_runtime",
     "TERMINAL_LIFECYCLE_POLICY",

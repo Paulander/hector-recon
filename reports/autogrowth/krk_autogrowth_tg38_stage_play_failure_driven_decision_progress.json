@@ -1,0 +1,63 @@
+{
+  "decision": {
+    "adoption_readiness_classification": "controlled_experimental_canary_runtime_ready_for_default_off_stage_play",
+    "artifacts": {
+      "failure_traces": {
+        "bytes": 51,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg38_failure_traces.jsonl.gz",
+        "record_count": 0
+      },
+      "gate_diagnostics": {
+        "bytes": 219,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg38_gate_diagnostics.jsonl.gz",
+        "record_count": 1
+      },
+      "hurt_case_audit": {
+        "bytes": 52,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg38_hurt_case_audit.jsonl.gz",
+        "record_count": 0
+      }
+    },
+    "case_classification": "case_1_canary_improves_stage_play_clean",
+    "checkpoint_interpretation": "controlled_experimental_canary_runtime_ready_for_default_off_stage_play",
+    "compressed_log_count": 3,
+    "purity_boundary": {
+      "action_ranker_used_for_runtime": false,
+      "basin_labels_learner_visible": false,
+      "black_replies_harness_simulated": true,
+      "bridge_labels_learner_visible": false,
+      "broad_krk_expansion": false,
+      "checkpoint": "TG36_TG38",
+      "child_consensus_canary_feature_flagged": true,
+      "child_used_in_experimental_runtime": true,
+      "child_used_in_main_runtime": false,
+      "default_runtime_policy": "parent_only",
+      "direct_provider_override": false,
+      "edge_fence_labels_learner_visible": false,
+      "foundation_frozen": true,
+      "foundation_unfrozen": false,
+      "foundation_unfrozen_in_main_arm": false,
+      "imagination_or_internal_rollout_added": false,
+      "python_final_selector_used": false,
+      "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+      "runtime_tablebase_or_dtm_move_source": false,
+      "s1_cache_used_as_evidence": true,
+      "s1_cache_used_as_provider": false,
+      "s1_labels_learner_visible": false,
+      "stage_labels_learner_visible": false,
+      "staged_labels_learner_visible": false,
+      "trajectory_cache_used_as_evidence": true,
+      "trajectory_cache_used_as_provider": false,
+      "trajectory_labels_learner_visible": false,
+      "validator_driven_runtime_selection": false
+    },
+    "selected_next_action": "default_off_canary_stage_play_package",
+    "selected_next_action_reason": "canary improved controlled stage-play with zero paired hurt, clean decoys, clean safety, and clean live/cache",
+    "tg38_pass": true,
+    "total_seconds": 0.000349
+  },
+  "phase": "complete"
+}

@@ -1,0 +1,12 @@
+{
+  "decision": {
+    "checkpoint_interpretation": "stage_play_canary_ladder_pass",
+    "decoy_false_handoff_count": 0,
+    "hard_decoy_false_handoff_count": 0,
+    "paired_episode_count": 50000,
+    "paired_help_count": 3695,
+    "paired_hurt_count": 0,
+    "tg37_pass": true
+  },
+  "phase": "complete"
+}
