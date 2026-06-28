@@ -1,0 +1,53 @@
+{
+  "decision": {
+    "actuator_cache_live_mismatch_count": 0,
+    "artifacts": {
+      "live_recompute_samples": {
+        "bytes": 189506,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg43_live_recompute_samples.jsonl.gz",
+        "record_count": 50000
+      }
+    },
+    "checkpoint_interpretation": "live_no_cache_equivalence_clean",
+    "child_cache_live_mismatch_count": 0,
+    "decoy_veto_cache_live_mismatch_count": 0,
+    "gate_decision_cache_live_mismatch_count": 0,
+    "live_recompute_sample_count": 50000,
+    "mismatch_examples": [],
+    "parent_cache_live_mismatch_count": 0,
+    "purity_boundary": {
+      "action_ranker_used_for_runtime": false,
+      "basin_labels_learner_visible": false,
+      "black_replies_harness_simulated": true,
+      "bridge_labels_learner_visible": false,
+      "broad_krk_expansion": false,
+      "checkpoint": "TG36_TG38",
+      "child_consensus_canary_feature_flagged": true,
+      "child_used_in_experimental_runtime": true,
+      "child_used_in_main_runtime": false,
+      "default_runtime_policy": "parent_only",
+      "direct_provider_override": false,
+      "edge_fence_labels_learner_visible": false,
+      "foundation_frozen": true,
+      "foundation_unfrozen": false,
+      "foundation_unfrozen_in_main_arm": false,
+      "imagination_or_internal_rollout_added": false,
+      "python_final_selector_used": false,
+      "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+      "runtime_tablebase_or_dtm_move_source": false,
+      "s1_cache_used_as_evidence": true,
+      "s1_cache_used_as_provider": false,
+      "s1_labels_learner_visible": false,
+      "stage_labels_learner_visible": false,
+      "staged_labels_learner_visible": false,
+      "trajectory_cache_used_as_evidence": true,
+      "trajectory_cache_used_as_provider": false,
+      "trajectory_labels_learner_visible": false,
+      "validator_driven_runtime_selection": false
+    },
+    "reply_envelope_cache_live_mismatch_count": 0,
+    "tg43_pass": true
+  },
+  "phase": "complete"
+}

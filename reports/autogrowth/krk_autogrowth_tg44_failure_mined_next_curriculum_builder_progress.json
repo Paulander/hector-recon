@@ -1,0 +1,95 @@
+{
+  "decision": {
+    "artifacts": {
+      "both_fail": {
+        "bytes": 360780,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg44_both_fail_pool.jsonl.gz",
+        "record_count": 61450
+      },
+      "broad_probe_failure": {
+        "bytes": 57958,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg44_broad_probe_failure_pool.jsonl.gz",
+        "record_count": 10000
+      },
+      "gate_closed_missed_help": {
+        "bytes": 115421,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg44_gate_closed_missed_help_pool.jsonl.gz",
+        "record_count": 20112
+      },
+      "hard_decoy_near_false_positive": {
+        "bytes": 72,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg44_hard_decoy_near_false_positive_pool.jsonl.gz",
+        "record_count": 0
+      },
+      "parent_fail_canary_success": {
+        "bytes": 42488,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg44_parent_fail_canary_success_pool.jsonl.gz",
+        "record_count": 7402
+      },
+      "parent_success_canary_fail": {
+        "bytes": 68,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg44_parent_success_canary_fail_pool.jsonl.gz",
+        "record_count": 0
+      }
+    },
+    "checkpoint_interpretation": "failure_mined_curriculum_pools_written",
+    "mined_curriculum_pool_counts": {
+      "both_fail": 61450,
+      "broad_probe_failure": 10000,
+      "gate_closed_missed_help": 20112,
+      "hard_decoy_near_false_positive": 0,
+      "parent_fail_canary_success": 7402,
+      "parent_success_canary_fail": 0
+    },
+    "needs": {
+      "broad_krk_curriculum": true,
+      "cache_validity": false,
+      "foundation_basin_expansion": true,
+      "gate_precision": false,
+      "gate_recall": false,
+      "more_boundary_coverage": true,
+      "more_hard_decoys": false,
+      "post_handoff_continuation": false,
+      "runtime_path_integration": false
+    },
+    "next_curriculum_need": "broad_krk_curriculum",
+    "purity_boundary": {
+      "action_ranker_used_for_runtime": false,
+      "basin_labels_learner_visible": false,
+      "black_replies_harness_simulated": true,
+      "bridge_labels_learner_visible": false,
+      "broad_krk_expansion": false,
+      "checkpoint": "TG36_TG38",
+      "child_consensus_canary_feature_flagged": true,
+      "child_used_in_experimental_runtime": true,
+      "child_used_in_main_runtime": false,
+      "default_runtime_policy": "parent_only",
+      "direct_provider_override": false,
+      "edge_fence_labels_learner_visible": false,
+      "foundation_frozen": true,
+      "foundation_unfrozen": false,
+      "foundation_unfrozen_in_main_arm": false,
+      "imagination_or_internal_rollout_added": false,
+      "python_final_selector_used": false,
+      "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+      "runtime_tablebase_or_dtm_move_source": false,
+      "s1_cache_used_as_evidence": true,
+      "s1_cache_used_as_provider": false,
+      "s1_labels_learner_visible": false,
+      "stage_labels_learner_visible": false,
+      "staged_labels_learner_visible": false,
+      "trajectory_cache_used_as_evidence": true,
+      "trajectory_cache_used_as_provider": false,
+      "trajectory_labels_learner_visible": false,
+      "validator_driven_runtime_selection": false
+    },
+    "tg44_pass": true
+  },
+  "phase": "complete"
+}

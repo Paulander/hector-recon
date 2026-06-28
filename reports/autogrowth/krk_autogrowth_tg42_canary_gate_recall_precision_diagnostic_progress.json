@@ -1,0 +1,109 @@
+{
+  "decision": {
+    "artifacts": {
+      "gate_diagnostics": {
+        "bytes": 352,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg42_gate_diagnostics.jsonl.gz",
+        "record_count": 5
+      }
+    },
+    "checkpoint_interpretation": "gate_balanced",
+    "gate_closed_count": 85472,
+    "gate_closed_missed_help_count": 20112,
+    "gate_closed_reason_counts": {
+      "gate_closed_no_consensus": 85472
+    },
+    "gate_false_close_count": 20112,
+    "gate_false_open_count": 0,
+    "gate_open_count": 14528,
+    "gate_open_help_count": 7402,
+    "gate_open_hurt_count": 0,
+    "gate_precision": 0.509499,
+    "gate_recall_against_helpful_interventions": 0.269027,
+    "purity_boundary": {
+      "action_ranker_used_for_runtime": false,
+      "basin_labels_learner_visible": false,
+      "black_replies_harness_simulated": true,
+      "bridge_labels_learner_visible": false,
+      "broad_krk_expansion": false,
+      "checkpoint": "TG36_TG38",
+      "child_consensus_canary_feature_flagged": true,
+      "child_used_in_experimental_runtime": true,
+      "child_used_in_main_runtime": false,
+      "default_runtime_policy": "parent_only",
+      "direct_provider_override": false,
+      "edge_fence_labels_learner_visible": false,
+      "foundation_frozen": true,
+      "foundation_unfrozen": false,
+      "foundation_unfrozen_in_main_arm": false,
+      "imagination_or_internal_rollout_added": false,
+      "python_final_selector_used": false,
+      "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+      "runtime_tablebase_or_dtm_move_source": false,
+      "s1_cache_used_as_evidence": true,
+      "s1_cache_used_as_provider": false,
+      "s1_labels_learner_visible": false,
+      "stage_labels_learner_visible": false,
+      "staged_labels_learner_visible": false,
+      "trajectory_cache_used_as_evidence": true,
+      "trajectory_cache_used_as_provider": false,
+      "trajectory_labels_learner_visible": false,
+      "validator_driven_runtime_selection": false
+    },
+    "tg42_pass": true,
+    "variant_results": [
+      {
+        "gate_open_count": 14528,
+        "gate_open_help_count": 7402,
+        "gate_open_hurt_count": 0,
+        "gate_precision": 0.509499,
+        "gate_recall_against_helpful_interventions": 0.269027,
+        "hard_decoy_false_handoff_count": 0,
+        "schema_version": "tg42_gate_variant_result.v0",
+        "variant": "balanced_current"
+      },
+      {
+        "gate_open_count": 9007,
+        "gate_open_help_count": 4589,
+        "gate_open_hurt_count": 0,
+        "gate_precision": 0.509493,
+        "gate_recall_against_helpful_interventions": 0.185782,
+        "hard_decoy_false_handoff_count": 0,
+        "schema_version": "tg42_gate_variant_result.v0",
+        "variant": "strict_failclosed"
+      },
+      {
+        "gate_open_count": 18595,
+        "gate_open_help_count": 8142,
+        "gate_open_hurt_count": 0,
+        "gate_precision": 0.43786,
+        "gate_recall_against_helpful_interventions": 0.288172,
+        "hard_decoy_false_handoff_count": 0,
+        "schema_version": "tg42_gate_variant_result.v0",
+        "variant": "recall_plus_consensus"
+      },
+      {
+        "gate_open_count": 12784,
+        "gate_open_help_count": 6513,
+        "gate_open_hurt_count": 0,
+        "gate_precision": 0.509465,
+        "gate_recall_against_helpful_interventions": 0.24462,
+        "hard_decoy_false_handoff_count": 0,
+        "schema_version": "tg42_gate_variant_result.v0",
+        "variant": "hard_decoy_strict"
+      },
+      {
+        "gate_open_count": 0,
+        "gate_open_help_count": 0,
+        "gate_open_hurt_count": 0,
+        "gate_precision": 0.0,
+        "gate_recall_against_helpful_interventions": 0.0,
+        "hard_decoy_false_handoff_count": 0,
+        "schema_version": "tg42_gate_variant_result.v0",
+        "variant": "no_child_control"
+      }
+    ]
+  },
+  "phase": "complete"
+}

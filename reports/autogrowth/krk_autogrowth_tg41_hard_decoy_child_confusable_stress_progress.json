@@ -1,0 +1,64 @@
+{
+  "decision": {
+    "artifacts": {
+      "hard_decoy_pool": {
+        "bytes": 239769,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg41_hard_decoy_pool.jsonl.gz",
+        "record_count": 10000
+      },
+      "hard_decoy_results": {
+        "bytes": 131096,
+        "compressed": true,
+        "path": "reports/autogrowth/pools/tg41_hard_decoy_results.jsonl.gz",
+        "record_count": 40000
+      }
+    },
+    "canary_false_handoff_count": 0,
+    "checkpoint_interpretation": "hard_decoy_child_confusable_stress_clean",
+    "child_confusable_decoy_count": 3334,
+    "child_used_in_main_runtime": false,
+    "false_handoff_examples": [],
+    "hard_decoy_count": 10000,
+    "hard_decoy_veto_activation_count": 40000,
+    "parent_false_handoff_count": 0,
+    "parent_foundation_frozen": true,
+    "purity_boundary": {
+      "action_ranker_used_for_runtime": false,
+      "basin_labels_learner_visible": false,
+      "black_replies_harness_simulated": true,
+      "bridge_labels_learner_visible": false,
+      "broad_krk_expansion": false,
+      "checkpoint": "TG36_TG38",
+      "child_consensus_canary_feature_flagged": true,
+      "child_used_in_experimental_runtime": true,
+      "child_used_in_main_runtime": false,
+      "default_runtime_policy": "parent_only",
+      "direct_provider_override": false,
+      "edge_fence_labels_learner_visible": false,
+      "foundation_frozen": true,
+      "foundation_unfrozen": false,
+      "foundation_unfrozen_in_main_arm": false,
+      "imagination_or_internal_rollout_added": false,
+      "python_final_selector_used": false,
+      "runtime_move_selection": "cached_trajectory_and_cached_s1_graph_evidence",
+      "runtime_tablebase_or_dtm_move_source": false,
+      "s1_cache_used_as_evidence": true,
+      "s1_cache_used_as_provider": false,
+      "s1_labels_learner_visible": false,
+      "stage_labels_learner_visible": false,
+      "staged_labels_learner_visible": false,
+      "trajectory_cache_used_as_evidence": true,
+      "trajectory_cache_used_as_provider": false,
+      "trajectory_labels_learner_visible": false,
+      "validator_driven_runtime_selection": false
+    },
+    "safety_clean": true,
+    "shadow_false_handoff_count": 0,
+    "tg41_pass": true,
+    "total_seconds": 0.723231,
+    "veto_false_negative_count": 0,
+    "veto_false_positive_count": 0
+  },
+  "phase": "complete"
+}
