@@ -1,0 +1,5714 @@
+{
+  "artifact_hashes": {
+    "failure_pool_hash": "34079682bd0e47ceffbb13124752059a13c0080619c08b120215d33f0fc7559f",
+    "graph_summary_hash": "d5cc13f26bfb0b73974c7acd3b621b4b87197f40aea616c6a8a5661e7274e4a9",
+    "mate1_eval_trace_hash": "f0cc1b0e429e9d29911bb2e951be4c605128e2c31703d9feccf84dbeb30013fe",
+    "mate1_train_trace_hash": "7068c527a83aeb35515f676156aae69996958e0820dbc28c10c2655ff0f17b9f",
+    "mate2_eval_trace_hash": "50698a64f38c542de8e9f85b2d3f81e5e2d1fbf1a5a2434ef31dec5a86fa3e6a",
+    "mate2_train_trace_hash": "6bd8bbee014385a0dd9b968e70e3d1bf73b5ad25b3c8f9126e1bf8d273aad396"
+  },
+  "artifact_paths": {
+    "failure_pool": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/pools/tg46b_failure_pool.jsonl.gz",
+    "graph_summary": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/pools/tg46b_graph_summary.json",
+    "main": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/krk_tg46b_real_clean_slate_foundation.json",
+    "markdown": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/krk_tg46b_real_clean_slate_foundation.md",
+    "mate1_eval_trace": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/pools/tg46b_mate1_eval_traces.jsonl.gz",
+    "mate1_train_trace": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/pools/tg46b_mate1_train_traces.jsonl.gz",
+    "mate2_eval_trace": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/pools/tg46b_mate2_eval_traces.jsonl.gz",
+    "mate2_train_trace": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/pools/tg46b_mate2_train_traces.jsonl.gz",
+    "progress": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/krk_tg46b_real_clean_slate_foundation_progress.json"
+  },
+  "checkpoint": "TG46b_real_clean_slate_krk_foundation",
+  "config": {
+    "eta_m3": 0.1,
+    "failure_pool_path": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/pools/tg46b_failure_pool.jsonl.gz",
+    "fresh_graph": true,
+    "graph_summary_path": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/pools/tg46b_graph_summary.json",
+    "markdown_path": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/krk_tg46b_real_clean_slate_foundation.md",
+    "mate1_eval_trace_path": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/pools/tg46b_mate1_eval_traces.jsonl.gz",
+    "mate1_heldout_count": 100,
+    "mate1_pass_threshold": 0.99,
+    "mate1_train_count": 300,
+    "mate1_train_trace_path": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/pools/tg46b_mate1_train_traces.jsonl.gz",
+    "mate2_eval_trace_path": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/pools/tg46b_mate2_eval_traces.jsonl.gz",
+    "mate2_heldout_count": 100,
+    "mate2_pass_threshold": 0.9,
+    "mate2_train_count": 600,
+    "mate2_train_trace_path": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/pools/tg46b_mate2_train_traces.jsonl.gz",
+    "max_generation_attempts": 500000,
+    "max_trace_samples": 16,
+    "output_dir": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation",
+    "output_path": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/krk_tg46b_real_clean_slate_foundation.json",
+    "progress_path": "reports/autogrowth/clean_slate_krk/tg46b_real_foundation/krk_tg46b_real_clean_slate_foundation_progress.json",
+    "rich_feature_credit_scale": 0.25,
+    "seed": 20260628
+  },
+  "dataset": {
+    "mate1_heldout_count": 100,
+    "mate1_heldout_hash": "9c680d84b6c4ed5d73ff36e81b7ce4f02518717dc4c300b14e25e477abf32d41",
+    "mate1_train_count": 300,
+    "mate1_train_hash": "8072c7a3003e431dd76ba42fcc65dc421b8fe35ff21e2b4814fdd4665bedc1a6",
+    "mate2_heldout_count": 100,
+    "mate2_heldout_hash": "acfd3b5c1da13a93f8ccbc31491c67b7b54826b58322f14108b1883896e7188a",
+    "mate2_train_count": 600,
+    "mate2_train_hash": "655501337a1d25e91906c63c28cbe4027b76825c37fb88878b033ce56dccd2e6"
+  },
+  "decision": {
+    "action_ranker_used_for_runtime": false,
+    "checkpoint_interpretation": "real_clean_slate_foundation_failed_at_mate2",
+    "checkpoint_pass": false,
+    "curriculum_labels_trainer_side_only": true,
+    "direct_provider_override": false,
+    "failure_pool_entry_count": 22,
+    "fresh_graph": true,
+    "generated_krk_fens_used": true,
+    "illegal_move_count": 0,
+    "learner_visible_basin_labels": false,
+    "learner_visible_continuation_labels": false,
+    "learner_visible_stage_labels": false,
+    "loaded_prior_learned_node_count": 0,
+    "loaded_prior_m3_weight_count": 0,
+    "loaded_prior_m4_promotion_count": 0,
+    "loaded_prior_tg_artifact_count": 0,
+    "m3_update_count": 5555792,
+    "m4_true_promotion_count": 0,
+    "mate1_correct_count": 100,
+    "mate1_heldout_accuracy": 1.0,
+    "mate1_heldout_count": 100,
+    "mate1_null_selection_count": 0,
+    "mate1_train_count": 300,
+    "mate2_conversion_count": 78,
+    "mate2_first_move_success_rate": 0.78,
+    "mate2_forced_reply_coverage": 0.78,
+    "mate2_heldout_conversion_rate": 0.78,
+    "mate2_heldout_count": 100,
+    "mate2_train_count": 600,
+    "mature_materialized_count": 0,
+    "one_reply_false_positive_selected_count": 0,
+    "placeholder_fens_used": false,
+    "purity_boundary": {
+      "action_ranker_used_for_runtime": false,
+      "basin_labels_learner_visible": false,
+      "depth_labels_learner_visible": false,
+      "direct_provider_override": false,
+      "python_final_selector_used": false,
+      "quality_tier_labels_learner_visible": false,
+      "reply_policy_labels_learner_visible": false,
+      "runtime_tablebase_or_dtm_move_source": false,
+      "stage_labels_learner_visible": false,
+      "trainer_side_curriculum_distribution_used": true,
+      "trainer_side_legal_move_labels_used": true,
+      "trajectory_labels_learner_visible": false
+    },
+    "python_final_selector_used": false,
+    "real_failure_pool_used": true,
+    "real_graph_artifact_written": true,
+    "real_graph_evaluation_used": true,
+    "real_graph_training_used": true,
+    "real_legal_move_evaluation_used": true,
+    "rook_blunder_count": 1,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "same_graph_continuation_count": 78,
+    "selected_next_action": "repair_real_mate2_foundation",
+    "selected_next_action_reason": "real_clean_slate_foundation_failed_at_mate2",
+    "stalemate_count": 0,
+    "synthetic_stage_runner_used_in_result": false,
+    "synthetic_tg46_ablations_detected": true,
+    "synthetic_tg46_graph_growth_detected": true,
+    "synthetic_tg46_placeholder_fens_detected": true,
+    "synthetic_tg46_success_counts_detected": true,
+    "synthetic_tg46_target_rate_paths_detected": true,
+    "terminal_node_count": 1334,
+    "total_seconds": 243.575577,
+    "trial_node_count": 1334
+  },
+  "graph_summary": {
+    "dead_or_pruned_node_count": 0,
+    "edge_count_estimate": 4002,
+    "m3_update_count": 5555792,
+    "m3_update_count_by_subgraph": {
+      "mate1_and_continuation": 3490432,
+      "mate2_first_move": 2065360
+    },
+    "m4_note": "TG46b proves fresh foundation training/evaluation; M4 promotion remains conservative.",
+    "m4_true_promotion_count": 0,
+    "mate1_terminal_count": 630,
+    "mate2_first_terminal_count": 704,
+    "mature_materialized_count": 0,
+    "node_model": "fresh_terminal_stem_cell_graph",
+    "root_node_count": 1,
+    "schema_version": "krk_tg46b_graph_summary.v0",
+    "script_node_count": 2,
+    "terminal_node_count": 1334,
+    "terminal_state_counts": {
+      "TRIAL": 1334
+    },
+    "top_mate1_terminals": {
+      "m3_update_count": 3490432,
+      "terminal_count": 630,
+      "top_negative_terminals": [
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -1.0,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 18599,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 0,
+                "total_correlations": 0,
+                "total_interventions": 18599
+              },
+              "relevance_stats": {
+                "activation_count": 18599,
+                "confirm_count": 0,
+                "context_coverage": 1.0,
+                "context_precision": 0.0,
+                "parent_locality": 1.0,
+                "request_exposures": 18599,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": null,
+                "maturity": 0.8999999999999999,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00006",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:gives_check=0",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 18599,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00006",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 18599,
+            "xp_failures": 18599,
+            "xp_successes": 0
+          },
+          "diagnostics": {
+            "m3_local_weight": -110.1,
+            "negative_credit": 18599,
+            "neutral_credit": 0,
+            "positive_credit": 0
+          },
+          "learner_visible": {
+            "activation_count": 18599,
+            "chooses_move_directly": false,
+            "confirm_count": 0,
+            "local_weight": -110.1,
+            "negative_credit": 18599,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 0,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 18599,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:gives_check=0"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -1.0,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 18599,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 0,
+                "total_correlations": 0,
+                "total_interventions": 18599
+              },
+              "relevance_stats": {
+                "activation_count": 18599,
+                "confirm_count": 0,
+                "context_coverage": 1.0,
+                "context_precision": 0.0,
+                "parent_locality": 1.0,
+                "request_exposures": 18599,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": null,
+                "maturity": 0.8999999999999999,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00019",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 18599,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00019",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 18599,
+            "xp_failures": 18599,
+            "xp_successes": 0
+          },
+          "diagnostics": {
+            "m3_local_weight": -110.1,
+            "negative_credit": 18599,
+            "neutral_credit": 0,
+            "positive_credit": 0
+          },
+          "learner_visible": {
+            "activation_count": 18599,
+            "chooses_move_directly": false,
+            "confirm_count": 0,
+            "local_weight": -110.1,
+            "negative_credit": 18599,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 0,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 18599,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:pair:gives_check:black_king_edge_after=0:0"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -1.0,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 18459,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 0,
+                "total_correlations": 0,
+                "total_interventions": 18459
+              },
+              "relevance_stats": {
+                "activation_count": 18459,
+                "confirm_count": 0,
+                "context_coverage": 1.0,
+                "context_precision": 0.0,
+                "parent_locality": 1.0,
+                "request_exposures": 18459,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": null,
+                "maturity": 0.8999999999999999,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00022",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:pair:rook_safety:gives_check=0:0",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 18459,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00022",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 18459,
+            "xp_failures": 18459,
+            "xp_successes": 0
+          },
+          "diagnostics": {
+            "m3_local_weight": -101.7,
+            "negative_credit": 18459,
+            "neutral_credit": 0,
+            "positive_credit": 0
+          },
+          "learner_visible": {
+            "activation_count": 18459,
+            "chooses_move_directly": false,
+            "confirm_count": 0,
+            "local_weight": -101.7,
+            "negative_credit": 18459,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 0,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 18459,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:pair:rook_safety:gives_check=0:0"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -1.0,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 13376,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 0,
+                "total_correlations": 0,
+                "total_interventions": 13376
+              },
+              "relevance_stats": {
+                "activation_count": 13376,
+                "confirm_count": 0,
+                "context_coverage": 1.0,
+                "context_precision": 0.0,
+                "parent_locality": 1.0,
+                "request_exposures": 13376,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": null,
+                "maturity": 0.8999999999999999,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00020",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:pair:piece:gives_check=4:0",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 13376,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00020",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 13376,
+            "xp_failures": 13376,
+            "xp_successes": 0
+          },
+          "diagnostics": {
+            "m3_local_weight": -83.985,
+            "negative_credit": 13376,
+            "neutral_credit": 0,
+            "positive_credit": 0
+          },
+          "learner_visible": {
+            "activation_count": 13376,
+            "chooses_move_directly": false,
+            "confirm_count": 0,
+            "local_weight": -83.985,
+            "negative_credit": 13376,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 0,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 13376,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:pair:piece:gives_check=4:0"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -1.0,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 9484,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 0,
+                "total_correlations": 0,
+                "total_interventions": 9484
+              },
+              "relevance_stats": {
+                "activation_count": 9484,
+                "confirm_count": 0,
+                "context_coverage": 1.0,
+                "context_precision": 0.0,
+                "parent_locality": 1.0,
+                "request_exposures": 9484,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": null,
+                "maturity": 0.8999999999999999,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00341",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:black_reply_mobility_after=2",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 9484,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00341",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 9484,
+            "xp_failures": 9484,
+            "xp_successes": 0
+          },
+          "diagnostics": {
+            "m3_local_weight": -49.94,
+            "negative_credit": 9484,
+            "neutral_credit": 0,
+            "positive_credit": 0
+          },
+          "learner_visible": {
+            "activation_count": 9484,
+            "chooses_move_directly": false,
+            "confirm_count": 0,
+            "local_weight": -49.94,
+            "negative_credit": 9484,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 0,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 9484,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:black_reply_mobility_after=2"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -1.0,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 9428,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 0,
+                "total_correlations": 0,
+                "total_interventions": 9428
+              },
+              "relevance_stats": {
+                "activation_count": 9428,
+                "confirm_count": 0,
+                "context_coverage": 1.0,
+                "context_precision": 0.0,
+                "parent_locality": 1.0,
+                "request_exposures": 9428,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": null,
+                "maturity": 0.8999999999999999,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00342",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=0:2",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 9428,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00342",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 9428,
+            "xp_failures": 9428,
+            "xp_successes": 0
+          },
+          "diagnostics": {
+            "m3_local_weight": -47.14,
+            "negative_credit": 9428,
+            "neutral_credit": 0,
+            "positive_credit": 0
+          },
+          "learner_visible": {
+            "activation_count": 9428,
+            "chooses_move_directly": false,
+            "confirm_count": 0,
+            "local_weight": -47.14,
+            "negative_credit": 9428,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 0,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 9428,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=0:2"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -1.0,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 4701,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 0,
+                "total_correlations": 0,
+                "total_interventions": 4701
+              },
+              "relevance_stats": {
+                "activation_count": 4701,
+                "confirm_count": 0,
+                "context_coverage": 1.0,
+                "context_precision": 0.0,
+                "parent_locality": 1.0,
+                "request_exposures": 4701,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": null,
+                "maturity": 0.8999999999999999,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00001",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:black_reply_mobility_after=1",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 4701,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00001",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 4701,
+            "xp_failures": 4701,
+            "xp_successes": 0
+          },
+          "diagnostics": {
+            "m3_local_weight": -29.805,
+            "negative_credit": 4701,
+            "neutral_credit": 0,
+            "positive_credit": 0
+          },
+          "learner_visible": {
+            "activation_count": 4701,
+            "chooses_move_directly": false,
+            "confirm_count": 0,
+            "local_weight": -29.805,
+            "negative_credit": 4701,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 0,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 4701,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:black_reply_mobility_after=1"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -0.9872159090909091,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 5596,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 36,
+                "total_correlations": 0,
+                "total_interventions": 5632
+              },
+              "relevance_stats": {
+                "activation_count": 5632,
+                "confirm_count": 36,
+                "context_coverage": 1.0,
+                "context_precision": 0.006392045454545455,
+                "parent_locality": 1.0,
+                "request_exposures": 5632,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 19512,
+                "maturity": 0.902237215909091,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00192",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:file_delta_magnitude=1",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 5632,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00192",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 5632,
+            "xp_failures": 5596,
+            "xp_successes": 36
+          },
+          "diagnostics": {
+            "m3_local_weight": -28.35,
+            "negative_credit": 5596,
+            "neutral_credit": 0,
+            "positive_credit": 36
+          },
+          "learner_visible": {
+            "activation_count": 5632,
+            "chooses_move_directly": false,
+            "confirm_count": 36,
+            "local_weight": -28.35,
+            "negative_credit": 5596,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 36,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 5632,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:file_delta_magnitude=1"
+          }
+        }
+      ],
+      "top_positive_terminals": [
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": 1.0,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 0,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 1072,
+                "total_correlations": 0,
+                "total_interventions": 1072
+              },
+              "relevance_stats": {
+                "activation_count": 1072,
+                "confirm_count": 1072,
+                "context_coverage": 1.0,
+                "context_precision": 1.0,
+                "parent_locality": 1.0,
+                "request_exposures": 1072,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 19822,
+                "maturity": 1.0,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.0,
+                "quarantine_reason": null,
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00272",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=1:0",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 1072,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00272",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 1072,
+            "xp_failures": 0,
+            "xp_successes": 1072
+          },
+          "diagnostics": {
+            "m3_local_weight": 107.2,
+            "negative_credit": 0,
+            "neutral_credit": 0,
+            "positive_credit": 1072
+          },
+          "learner_visible": {
+            "activation_count": 1072,
+            "chooses_move_directly": false,
+            "confirm_count": 1072,
+            "local_weight": 107.2,
+            "negative_credit": 0,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 1072,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 1072,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=1:0"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": 0.865970409051349,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 77,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 1072,
+                "total_correlations": 0,
+                "total_interventions": 1149
+              },
+              "relevance_stats": {
+                "activation_count": 1149,
+                "confirm_count": 1072,
+                "context_coverage": 1.0,
+                "context_precision": 0.9329852045256745,
+                "parent_locality": 1.0,
+                "request_exposures": 1149,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 19822,
+                "maturity": 1.0,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.0,
+                "quarantine_reason": null,
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00275",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:pair:rook_safety:gives_check=0:1",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 1149,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00275",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 1149,
+            "xp_failures": 77,
+            "xp_successes": 1072
+          },
+          "diagnostics": {
+            "m3_local_weight": 106.815,
+            "negative_credit": 77,
+            "neutral_credit": 0,
+            "positive_credit": 1072
+          },
+          "learner_visible": {
+            "activation_count": 1149,
+            "chooses_move_directly": false,
+            "confirm_count": 1072,
+            "local_weight": 106.815,
+            "negative_credit": 77,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 1072,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 1149,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:pair:rook_safety:gives_check=0:1"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": 0.7388483373884833,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 161,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 1072,
+                "total_correlations": 0,
+                "total_interventions": 1233
+              },
+              "relevance_stats": {
+                "activation_count": 1233,
+                "confirm_count": 1072,
+                "context_coverage": 1.0,
+                "context_precision": 0.8694241686942417,
+                "parent_locality": 1.0,
+                "request_exposures": 1233,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 19822,
+                "maturity": 1.0,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.0,
+                "quarantine_reason": null,
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00271",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:gives_check=1",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 1233,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00271",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 1233,
+            "xp_failures": 161,
+            "xp_successes": 1072
+          },
+          "diagnostics": {
+            "m3_local_weight": 102.615,
+            "negative_credit": 161,
+            "neutral_credit": 0,
+            "positive_credit": 1072
+          },
+          "learner_visible": {
+            "activation_count": 1233,
+            "chooses_move_directly": false,
+            "confirm_count": 1072,
+            "local_weight": 102.615,
+            "negative_credit": 161,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 1072,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 1233,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:gives_check=1"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": 0.7388483373884833,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 161,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 1072,
+                "total_correlations": 0,
+                "total_interventions": 1233
+              },
+              "relevance_stats": {
+                "activation_count": 1233,
+                "confirm_count": 1072,
+                "context_coverage": 1.0,
+                "context_precision": 0.8694241686942417,
+                "parent_locality": 1.0,
+                "request_exposures": 1233,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 19822,
+                "maturity": 1.0,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.0,
+                "quarantine_reason": null,
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00273",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:pair:gives_check:black_king_edge_after=1:0",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 1233,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00273",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 1233,
+            "xp_failures": 161,
+            "xp_successes": 1072
+          },
+          "diagnostics": {
+            "m3_local_weight": 102.615,
+            "negative_credit": 161,
+            "neutral_credit": 0,
+            "positive_credit": 1072
+          },
+          "learner_visible": {
+            "activation_count": 1233,
+            "chooses_move_directly": false,
+            "confirm_count": 1072,
+            "local_weight": 102.615,
+            "negative_credit": 161,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 1072,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 1233,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:pair:gives_check:black_king_edge_after=1:0"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": 0.7388483373884833,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 161,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 1072,
+                "total_correlations": 0,
+                "total_interventions": 1233
+              },
+              "relevance_stats": {
+                "activation_count": 1233,
+                "confirm_count": 1072,
+                "context_coverage": 1.0,
+                "context_precision": 0.8694241686942417,
+                "parent_locality": 1.0,
+                "request_exposures": 1233,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 19822,
+                "maturity": 1.0,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.0,
+                "quarantine_reason": null,
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00274",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:pair:piece:gives_check=4:1",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 1233,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00274",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 1233,
+            "xp_failures": 161,
+            "xp_successes": 1072
+          },
+          "diagnostics": {
+            "m3_local_weight": 102.615,
+            "negative_credit": 161,
+            "neutral_credit": 0,
+            "positive_credit": 1072
+          },
+          "learner_visible": {
+            "activation_count": 1233,
+            "chooses_move_directly": false,
+            "confirm_count": 1072,
+            "local_weight": 102.615,
+            "negative_credit": 161,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 1072,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 1233,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:pair:piece:gives_check=4:1"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": 0.7881567973311092,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 127,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 1072,
+                "total_correlations": 0,
+                "total_interventions": 1199
+              },
+              "relevance_stats": {
+                "activation_count": 1199,
+                "confirm_count": 1072,
+                "context_coverage": 1.0,
+                "context_precision": 0.8940783986655546,
+                "parent_locality": 1.0,
+                "request_exposures": 1199,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 19822,
+                "maturity": 1.0,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.0,
+                "quarantine_reason": null,
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00270",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:black_reply_mobility_after=0",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 1199,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00270",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 1199,
+            "xp_failures": 127,
+            "xp_successes": 1072
+          },
+          "diagnostics": {
+            "m3_local_weight": 94.5,
+            "negative_credit": 127,
+            "neutral_credit": 0,
+            "positive_credit": 1072
+          },
+          "learner_visible": {
+            "activation_count": 1199,
+            "chooses_move_directly": false,
+            "confirm_count": 1072,
+            "local_weight": 94.5,
+            "negative_credit": 127,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 1072,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 1199,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:black_reply_mobility_after=0"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -0.4920527561717957,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 2206,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 751,
+                "total_correlations": 0,
+                "total_interventions": 2957
+              },
+              "relevance_stats": {
+                "activation_count": 2957,
+                "confirm_count": 751,
+                "context_coverage": 1.0,
+                "context_precision": 0.2539736219141021,
+                "parent_locality": 1.0,
+                "request_exposures": 2957,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 19822,
+                "maturity": 0.9888907676699357,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00252",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:white_rook_to_black_king_after=2",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 2957,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00252",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 2957,
+            "xp_failures": 2206,
+            "xp_successes": 751
+          },
+          "diagnostics": {
+            "m3_local_weight": 62.455,
+            "negative_credit": 2206,
+            "neutral_credit": 0,
+            "positive_credit": 751
+          },
+          "learner_visible": {
+            "activation_count": 2957,
+            "chooses_move_directly": false,
+            "confirm_count": 751,
+            "local_weight": 62.455,
+            "negative_credit": 2206,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 751,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 2957,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:white_rook_to_black_king_after=2"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -0.7138009049773756,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 4545,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 759,
+                "total_correlations": 0,
+                "total_interventions": 5304
+              },
+              "relevance_stats": {
+                "activation_count": 5304,
+                "confirm_count": 759,
+                "context_coverage": 1.0,
+                "context_precision": 0.1430995475113122,
+                "parent_locality": 1.0,
+                "request_exposures": 5304,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 19822,
+                "maturity": 0.9500848416289593,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00243",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:white_king_to_rook_after=2",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 5304,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00243",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 5304,
+            "xp_failures": 4545,
+            "xp_successes": 759
+          },
+          "diagnostics": {
+            "m3_local_weight": 50.8,
+            "negative_credit": 4545,
+            "neutral_credit": 0,
+            "positive_credit": 759
+          },
+          "learner_visible": {
+            "activation_count": 5304,
+            "chooses_move_directly": false,
+            "confirm_count": 759,
+            "local_weight": 50.8,
+            "negative_credit": 4545,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 759,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 5304,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:white_king_to_rook_after=2"
+          }
+        }
+      ]
+    },
+    "top_mate2_first_terminals": {
+      "m3_update_count": 2065360,
+      "terminal_count": 704,
+      "top_negative_terminals": [
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -1.0,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 4592,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 0,
+                "total_correlations": 0,
+                "total_interventions": 4592
+              },
+              "relevance_stats": {
+                "activation_count": 4592,
+                "confirm_count": 0,
+                "context_coverage": 1.0,
+                "context_precision": 0.0,
+                "parent_locality": 1.0,
+                "request_exposures": 4592,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": null,
+                "maturity": 0.8999999999999999,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00180",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:white_king_to_black_king_after=3",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 4592,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00180",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 4592,
+            "xp_failures": 4592,
+            "xp_successes": 0
+          },
+          "diagnostics": {
+            "m3_local_weight": -36.91,
+            "negative_credit": 4592,
+            "neutral_credit": 0,
+            "positive_credit": 0
+          },
+          "learner_visible": {
+            "activation_count": 4592,
+            "chooses_move_directly": false,
+            "confirm_count": 0,
+            "local_weight": -36.91,
+            "negative_credit": 4592,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 0,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 4592,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:white_king_to_black_king_after=3"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -1.0,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 6198,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 0,
+                "total_correlations": 0,
+                "total_interventions": 6198
+              },
+              "relevance_stats": {
+                "activation_count": 6198,
+                "confirm_count": 0,
+                "context_coverage": 1.0,
+                "context_precision": 0.0,
+                "parent_locality": 1.0,
+                "request_exposures": 6198,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": null,
+                "maturity": 0.8999999999999999,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00176",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:black_reply_mobility_after=3",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 6198,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00176",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 6198,
+            "xp_failures": 6198,
+            "xp_successes": 0
+          },
+          "diagnostics": {
+            "m3_local_weight": -36.885,
+            "negative_credit": 6198,
+            "neutral_credit": 0,
+            "positive_credit": 0
+          },
+          "learner_visible": {
+            "activation_count": 6198,
+            "chooses_move_directly": false,
+            "confirm_count": 0,
+            "local_weight": -36.885,
+            "negative_credit": 6198,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 0,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 6198,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:black_reply_mobility_after=3"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -0.9688473520249221,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 632,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 10,
+                "total_correlations": 0,
+                "total_interventions": 642
+              },
+              "relevance_stats": {
+                "activation_count": 642,
+                "confirm_count": 10,
+                "context_coverage": 1.0,
+                "context_precision": 0.01557632398753894,
+                "parent_locality": 1.0,
+                "request_exposures": 642,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 11648,
+                "maturity": 0.9054517133956386,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00255",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:rook_attacked_after=1",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 642,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00255",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 642,
+            "xp_failures": 632,
+            "xp_successes": 10
+          },
+          "diagnostics": {
+            "m3_local_weight": -31.05,
+            "negative_credit": 632,
+            "neutral_credit": 0,
+            "positive_credit": 10
+          },
+          "learner_visible": {
+            "activation_count": 642,
+            "chooses_move_directly": false,
+            "confirm_count": 10,
+            "local_weight": -31.05,
+            "negative_credit": 632,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 10,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 642,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:rook_attacked_after=1"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -0.9688473520249221,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 632,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 10,
+                "total_correlations": 0,
+                "total_interventions": 642
+              },
+              "relevance_stats": {
+                "activation_count": 642,
+                "confirm_count": 10,
+                "context_coverage": 1.0,
+                "context_precision": 0.01557632398753894,
+                "parent_locality": 1.0,
+                "request_exposures": 642,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 11648,
+                "maturity": 0.9054517133956386,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00258",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:white_rook_to_black_king_after=1",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 642,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00258",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 642,
+            "xp_failures": 632,
+            "xp_successes": 10
+          },
+          "diagnostics": {
+            "m3_local_weight": -31.05,
+            "negative_credit": 632,
+            "neutral_credit": 0,
+            "positive_credit": 10
+          },
+          "learner_visible": {
+            "activation_count": 642,
+            "chooses_move_directly": false,
+            "confirm_count": 10,
+            "local_weight": -31.05,
+            "negative_credit": 632,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 10,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 642,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:white_rook_to_black_king_after=1"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -1.0,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 5768,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 0,
+                "total_correlations": 0,
+                "total_interventions": 5768
+              },
+              "relevance_stats": {
+                "activation_count": 5768,
+                "confirm_count": 0,
+                "context_coverage": 1.0,
+                "context_precision": 0.0,
+                "parent_locality": 1.0,
+                "request_exposures": 5768,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": null,
+                "maturity": 0.8999999999999999,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00181",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=0:3",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 5768,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00181",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 5768,
+            "xp_failures": 5768,
+            "xp_successes": 0
+          },
+          "diagnostics": {
+            "m3_local_weight": -28.84,
+            "negative_credit": 5768,
+            "neutral_credit": 0,
+            "positive_credit": 0
+          },
+          "learner_visible": {
+            "activation_count": 5768,
+            "chooses_move_directly": false,
+            "confirm_count": 0,
+            "local_weight": -28.84,
+            "negative_credit": 5768,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 0,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 5768,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=0:3"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -0.9016966067864272,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 7622,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 394,
+                "total_correlations": 0,
+                "total_interventions": 8016
+              },
+              "relevance_stats": {
+                "activation_count": 8016,
+                "confirm_count": 394,
+                "context_coverage": 1.0,
+                "context_precision": 0.04915169660678643,
+                "parent_locality": 1.0,
+                "request_exposures": 8016,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 11708,
+                "maturity": 0.9172030938123752,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00253",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:piece_type=4",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 8016,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00253",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 8016,
+            "xp_failures": 7622,
+            "xp_successes": 394
+          },
+          "diagnostics": {
+            "m3_local_weight": -24.525,
+            "negative_credit": 7622,
+            "neutral_credit": 0,
+            "positive_credit": 394
+          },
+          "learner_visible": {
+            "activation_count": 8016,
+            "chooses_move_directly": false,
+            "confirm_count": 394,
+            "local_weight": -24.525,
+            "negative_credit": 7622,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 394,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 8016,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:piece_type=4"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -1.0,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 1732,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 0,
+                "total_correlations": 0,
+                "total_interventions": 1732
+              },
+              "relevance_stats": {
+                "activation_count": 1732,
+                "confirm_count": 0,
+                "context_coverage": 1.0,
+                "context_precision": 0.0,
+                "parent_locality": 1.0,
+                "request_exposures": 1732,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": null,
+                "maturity": 0.8999999999999999,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00285",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:black_reply_mobility_after=2",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 1732,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00285",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 1732,
+            "xp_failures": 1732,
+            "xp_successes": 0
+          },
+          "diagnostics": {
+            "m3_local_weight": -23.555,
+            "negative_credit": 1732,
+            "neutral_credit": 0,
+            "positive_credit": 0
+          },
+          "learner_visible": {
+            "activation_count": 1732,
+            "chooses_move_directly": false,
+            "confirm_count": 0,
+            "local_weight": -23.555,
+            "negative_credit": 1732,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 0,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 1732,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:black_reply_mobility_after=2"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -1.0,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 1484,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 0,
+                "total_correlations": 0,
+                "total_interventions": 1484
+              },
+              "relevance_stats": {
+                "activation_count": 1484,
+                "confirm_count": 0,
+                "context_coverage": 1.0,
+                "context_precision": 0.0,
+                "parent_locality": 1.0,
+                "request_exposures": 1484,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": null,
+                "maturity": 0.8999999999999999,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00288",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=0:2",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 1484,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00288",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 1484,
+            "xp_failures": 1484,
+            "xp_successes": 0
+          },
+          "diagnostics": {
+            "m3_local_weight": -18.4,
+            "negative_credit": 1484,
+            "neutral_credit": 0,
+            "positive_credit": 0
+          },
+          "learner_visible": {
+            "activation_count": 1484,
+            "chooses_move_directly": false,
+            "confirm_count": 0,
+            "local_weight": -18.4,
+            "negative_credit": 1484,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 0,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 1484,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=0:2"
+          }
+        }
+      ],
+      "top_positive_terminals": [
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -0.17477284874398719,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 1099,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 772,
+                "total_correlations": 0,
+                "total_interventions": 1871
+              },
+              "relevance_stats": {
+                "activation_count": 1871,
+                "confirm_count": 772,
+                "context_coverage": 1.0,
+                "context_precision": 0.41261357562800643,
+                "parent_locality": 1.0,
+                "request_exposures": 1871,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 11735,
+                "maturity": 1.0,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": null,
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00018",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=0:1",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 1871,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00018",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 1871,
+            "xp_failures": 1099,
+            "xp_successes": 772
+          },
+          "diagnostics": {
+            "m3_local_weight": 67.7,
+            "negative_credit": 1099,
+            "neutral_credit": 0,
+            "positive_credit": 772
+          },
+          "learner_visible": {
+            "activation_count": 1871,
+            "chooses_move_directly": false,
+            "confirm_count": 772,
+            "local_weight": 67.7,
+            "negative_credit": 1099,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 772,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 1871,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=0:1"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -0.2825278810408922,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 1380,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 772,
+                "total_correlations": 0,
+                "total_interventions": 2152
+              },
+              "relevance_stats": {
+                "activation_count": 2152,
+                "confirm_count": 772,
+                "context_coverage": 1.0,
+                "context_precision": 0.3587360594795539,
+                "parent_locality": 1.0,
+                "request_exposures": 2152,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 11735,
+                "maturity": 1.0,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": null,
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00001",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:black_reply_mobility_after=1",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 2152,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00001",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 2152,
+            "xp_failures": 1380,
+            "xp_successes": 772
+          },
+          "diagnostics": {
+            "m3_local_weight": 63.055,
+            "negative_credit": 1380,
+            "neutral_credit": 0,
+            "positive_credit": 772
+          },
+          "learner_visible": {
+            "activation_count": 2152,
+            "chooses_move_directly": false,
+            "confirm_count": 772,
+            "local_weight": 63.055,
+            "negative_credit": 1380,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 772,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 2152,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:black_reply_mobility_after=1"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -0.7642748091603053,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 5778,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 772,
+                "total_correlations": 0,
+                "total_interventions": 6550
+              },
+              "relevance_stats": {
+                "activation_count": 6550,
+                "confirm_count": 772,
+                "context_coverage": 1.0,
+                "context_precision": 0.11786259541984732,
+                "parent_locality": 1.0,
+                "request_exposures": 6550,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 11735,
+                "maturity": 0.9412519083969466,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": null,
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00015",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:white_king_to_black_king_after=2",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 6550,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00015",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 6550,
+            "xp_failures": 5778,
+            "xp_successes": 772
+          },
+          "diagnostics": {
+            "m3_local_weight": 34.135,
+            "negative_credit": 5778,
+            "neutral_credit": 0,
+            "positive_credit": 772
+          },
+          "learner_visible": {
+            "activation_count": 6550,
+            "chooses_move_directly": false,
+            "confirm_count": 772,
+            "local_weight": 34.135,
+            "negative_credit": 5778,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 772,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 6550,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:white_king_to_black_king_after=2"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -0.8523255813953489,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 9558,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 762,
+                "total_correlations": 0,
+                "total_interventions": 10320
+              },
+              "relevance_stats": {
+                "activation_count": 10320,
+                "confirm_count": 762,
+                "context_coverage": 1.0,
+                "context_precision": 0.07383720930232558,
+                "parent_locality": 1.0,
+                "request_exposures": 10320,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 11735,
+                "maturity": 0.9258430232558139,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": null,
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00022",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:pair:rook_safety:gives_check=0:0",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 10320,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00022",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 10320,
+            "xp_failures": 9558,
+            "xp_successes": 762
+          },
+          "diagnostics": {
+            "m3_local_weight": 28.41,
+            "negative_credit": 9558,
+            "neutral_credit": 0,
+            "positive_credit": 762
+          },
+          "learner_visible": {
+            "activation_count": 10320,
+            "chooses_move_directly": false,
+            "confirm_count": 762,
+            "local_weight": 28.41,
+            "negative_credit": 9558,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 762,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 10320,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:pair:rook_safety:gives_check=0:0"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -0.8626160641846209,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 10331,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 762,
+                "total_correlations": 0,
+                "total_interventions": 11093
+              },
+              "relevance_stats": {
+                "activation_count": 11093,
+                "confirm_count": 762,
+                "context_coverage": 1.0,
+                "context_precision": 0.06869196790768953,
+                "parent_locality": 1.0,
+                "request_exposures": 11093,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 11735,
+                "maturity": 0.9240421887676913,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": null,
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00012",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:rook_attacked_after=0",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 11093,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00012",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 11093,
+            "xp_failures": 10331,
+            "xp_successes": 762
+          },
+          "diagnostics": {
+            "m3_local_weight": 24.545,
+            "negative_credit": 10331,
+            "neutral_credit": 0,
+            "positive_credit": 762
+          },
+          "learner_visible": {
+            "activation_count": 11093,
+            "chooses_move_directly": false,
+            "confirm_count": 762,
+            "local_weight": 24.545,
+            "negative_credit": 10331,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 762,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 11093,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:rook_attacked_after=0"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -0.7949552481692432,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 3309,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 378,
+                "total_correlations": 0,
+                "total_interventions": 3687
+              },
+              "relevance_stats": {
+                "activation_count": 3687,
+                "confirm_count": 378,
+                "context_coverage": 1.0,
+                "context_precision": 0.10252237591537836,
+                "parent_locality": 1.0,
+                "request_exposures": 3687,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 11735,
+                "maturity": 0.9358828315703824,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": null,
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00020",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:pair:piece:gives_check=6:0",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 3687,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00020",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 3687,
+            "xp_failures": 3309,
+            "xp_successes": 378
+          },
+          "diagnostics": {
+            "m3_local_weight": 18.18,
+            "negative_credit": 3309,
+            "neutral_credit": 0,
+            "positive_credit": 378
+          },
+          "learner_visible": {
+            "activation_count": 3687,
+            "chooses_move_directly": false,
+            "confirm_count": 378,
+            "local_weight": 18.18,
+            "negative_credit": 3309,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 378,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 3687,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:pair:piece:gives_check=6:0"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -0.7967195482656628,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 3341,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 378,
+                "total_correlations": 0,
+                "total_interventions": 3719
+              },
+              "relevance_stats": {
+                "activation_count": 3719,
+                "confirm_count": 378,
+                "context_coverage": 1.0,
+                "context_precision": 0.10164022586716859,
+                "parent_locality": 1.0,
+                "request_exposures": 3719,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 11735,
+                "maturity": 0.935574079053509,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": null,
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00009",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:piece_type=6",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 3719,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00009",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 3719,
+            "xp_failures": 3341,
+            "xp_successes": 378
+          },
+          "diagnostics": {
+            "m3_local_weight": 18.02,
+            "negative_credit": 3341,
+            "neutral_credit": 0,
+            "positive_credit": 378
+          },
+          "learner_visible": {
+            "activation_count": 3719,
+            "chooses_move_directly": false,
+            "confirm_count": 378,
+            "local_weight": 18.02,
+            "negative_credit": 3341,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 378,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 3719,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:piece_type=6"
+          }
+        },
+        {
+          "cell": {
+            "candidate_stats": {
+              "credit_stats": {
+                "causal_balance": -0.7784037558685446,
+                "has_causal_intervention": true,
+                "negative_correlation": 0,
+                "negative_intervention": 2841,
+                "neutral_correlation": 0,
+                "neutral_intervention": 0,
+                "positive_correlation": 0,
+                "positive_intervention": 354,
+                "total_correlations": 0,
+                "total_interventions": 3195
+              },
+              "relevance_stats": {
+                "activation_count": 3195,
+                "confirm_count": 354,
+                "context_coverage": 1.0,
+                "context_precision": 0.1107981220657277,
+                "parent_locality": 1.0,
+                "request_exposures": 3195,
+                "sibling_contrast": 0.0
+              },
+              "survival_stats": {
+                "last_confirm_cycle": 11708,
+                "maturity": 0.9387793427230047,
+                "parent_locality": "terminal_feature_parent",
+                "prune_pressure": 0.35,
+                "quarantine_reason": "local_suppressor_candidate",
+                "suppressed_sibling": null
+              }
+            },
+            "cell_id": "tg26h_terminal_00242",
+            "children": [],
+            "config": {
+              "exploration_budget": 100,
+              "max_samples": 500,
+              "min_samples": 50,
+              "reward_threshold": 0.3,
+              "specialization_threshold": 0.5
+            },
+            "depth": 0,
+            "exploration_ticks": 0,
+            "grace_games": 20,
+            "is_composition": false,
+            "last_confirm_cycle": null,
+            "metadata": {
+              "fan_in_allowed": true,
+              "node_type": "TERMINAL",
+              "relation_types": [
+                "SUB",
+                "SUR",
+                "POR"
+              ],
+              "terminal_key": "action_pattern:to_file_edge_distance=2",
+              "terminal_kind": "feature_vector_pattern"
+            },
+            "min_exposure_threshold": 50,
+            "parent_xp_owner": null,
+            "pattern_centroid": null,
+            "pattern_signature": null,
+            "samples": [],
+            "state": "TRIAL",
+            "total_exposures": 3195,
+            "trial_consistency": 0.0,
+            "trial_edge_key": null,
+            "trial_node_id": "TRIAL_tg26h_terminal_00242",
+            "trial_parent_id": "terminal_feature_parent",
+            "trial_signature": null,
+            "trial_tick": 0,
+            "trust_score": 0.0,
+            "xp": 3195,
+            "xp_failures": 2841,
+            "xp_successes": 354
+          },
+          "diagnostics": {
+            "m3_local_weight": 17.72,
+            "negative_credit": 2841,
+            "neutral_credit": 0,
+            "positive_credit": 354
+          },
+          "learner_visible": {
+            "activation_count": 3195,
+            "chooses_move_directly": false,
+            "confirm_count": 354,
+            "local_weight": 17.72,
+            "negative_credit": 2841,
+            "neutral_credit": 0,
+            "node_type": "TERMINAL",
+            "positive_credit": 354,
+            "relation_to_output": "local_terminal_affordance_weight",
+            "request_exposures": 3195,
+            "stem_cell_state": "TRIAL",
+            "terminal_key": "action_pattern:to_file_edge_distance=2"
+          }
+        }
+      ]
+    },
+    "training_update_summary": {
+      "mate1": {
+        "m3_update_count_delta": 971344,
+        "m3_update_count_total": 971344,
+        "negative_updates": 5219,
+        "neutral_updates": 0,
+        "position_count": 300,
+        "positive_updates": 300,
+        "samples": [
+          {
+            "fen": "7k/5K2/8/8/8/8/8/5R2 w - - 0 1",
+            "index": 0,
+            "legal_move_count": 18,
+            "positive_mating_moves": [
+              "f1h1"
+            ],
+            "selected_after": "f1h1",
+            "selected_before": "f7g6",
+            "terminal_count_after": 371,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 17,
+              "neutral": 0,
+              "positive": 1
+            }
+          },
+          {
+            "fen": "k7/2K5/8/8/8/8/6R1/8 w - - 0 1",
+            "index": 1,
+            "legal_move_count": 20,
+            "positive_mating_moves": [
+              "g2a2"
+            ],
+            "selected_after": "g2a2",
+            "selected_before": "g2a2",
+            "terminal_count_after": 416,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 19,
+              "neutral": 0,
+              "positive": 1
+            }
+          },
+          {
+            "fen": "8/8/3R4/8/8/8/5K1k/8 w - - 0 1",
+            "index": 2,
+            "legal_move_count": 19,
+            "positive_mating_moves": [
+              "d6h6"
+            ],
+            "selected_after": "d6h6",
+            "selected_before": "d6h6",
+            "terminal_count_after": 466,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 18,
+              "neutral": 0,
+              "positive": 1
+            }
+          },
+          {
+            "fen": "8/8/2R5/8/8/7K/8/7k w - - 0 1",
+            "index": 3,
+            "legal_move_count": 17,
+            "positive_mating_moves": [
+              "c6c1"
+            ],
+            "selected_after": "c6c1",
+            "selected_before": "c6c1",
+            "terminal_count_after": 503,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 16,
+              "neutral": 0,
+              "positive": 1
+            }
+          },
+          {
+            "fen": "8/8/8/8/8/1K4R1/8/k7 w - - 0 1",
+            "index": 4,
+            "legal_move_count": 18,
+            "positive_mating_moves": [
+              "g3g1"
+            ],
+            "selected_after": "g3g1",
+            "selected_before": "g3g1",
+            "terminal_count_after": 514,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 17,
+              "neutral": 0,
+              "positive": 1
+            }
+          },
+          {
+            "fen": "5K1k/8/8/8/8/8/8/6R1 w - - 0 1",
+            "index": 5,
+            "legal_move_count": 17,
+            "positive_mating_moves": [
+              "g1h1"
+            ],
+            "selected_after": "g1h1",
+            "selected_before": "g1h1",
+            "terminal_count_after": 532,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 16,
+              "neutral": 0,
+              "positive": 1
+            }
+          },
+          {
+            "fen": "2R5/8/8/8/8/5K1k/8/8 w - - 0 1",
+            "index": 6,
+            "legal_move_count": 19,
+            "positive_mating_moves": [
+              "c8h8"
+            ],
+            "selected_after": "c8h8",
+            "selected_before": "c8h8",
+            "terminal_count_after": 538,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 18,
+              "neutral": 0,
+              "positive": 1
+            }
+          },
+          {
+            "fen": "8/k1K5/8/8/8/8/5R2/8 w - - 0 1",
+            "index": 7,
+            "legal_move_count": 19,
+            "positive_mating_moves": [
+              "f2a2"
+            ],
+            "selected_after": "f2a2",
+            "selected_before": "f2a2",
+            "terminal_count_after": 542,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 18,
+              "neutral": 0,
+              "positive": 1
+            }
+          },
+          {
+            "fen": "8/7R/8/8/8/k1K5/8/8 w - - 0 1",
+            "index": 8,
+            "legal_move_count": 19,
+            "positive_mating_moves": [
+              "h7a7"
+            ],
+            "selected_after": "h7a7",
+            "selected_before": "h7a7",
+            "terminal_count_after": 547,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 18,
+              "neutral": 0,
+              "positive": 1
+            }
+          },
+          {
+            "fen": "8/8/8/2R5/8/8/5K1k/8 w - - 0 1",
+            "index": 9,
+            "legal_move_count": 19,
+            "positive_mating_moves": [
+              "c5h5"
+            ],
+            "selected_after": "c5h5",
+            "selected_before": "c5h5",
+            "terminal_count_after": 552,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 18,
+              "neutral": 0,
+              "positive": 1
+            }
+          },
+          {
+            "fen": "1R6/8/8/8/8/8/k1K5/8 w - - 0 1",
+            "index": 10,
+            "legal_move_count": 19,
+            "positive_mating_moves": [
+              "b8a8"
+            ],
+            "selected_after": "b8a8",
+            "selected_before": "b8a8",
+            "terminal_count_after": 554,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 18,
+              "neutral": 0,
+              "positive": 1
+            }
+          },
+          {
+            "fen": "8/8/8/8/8/4K3/1R6/4k3 w - - 0 1",
+            "index": 11,
+            "legal_move_count": 19,
+            "positive_mating_moves": [
+              "b2b1"
+            ],
+            "selected_after": "b2b1",
+            "selected_before": "b2b1",
+            "terminal_count_after": 563,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 18,
+              "neutral": 0,
+              "positive": 1
+            }
+          },
+          {
+            "fen": "8/8/8/8/5R2/1K6/8/1k6 w - - 0 1",
+            "index": 12,
+            "legal_move_count": 19,
+            "positive_mating_moves": [
+              "f4f1"
+            ],
+            "selected_after": "f4f1",
+            "selected_before": "f4f1",
+            "terminal_count_after": 571,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 18,
+              "neutral": 0,
+              "positive": 1
+            }
+          },
+          {
+            "fen": "8/8/8/8/k1K5/8/2R5/8 w - - 0 1",
+            "index": 13,
+            "legal_move_count": 14,
+            "positive_mating_moves": [
+              "c2a2"
+            ],
+            "selected_after": "c2a2",
+            "selected_before": "c2a2",
+            "terminal_count_after": 581,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 13,
+              "neutral": 0,
+              "positive": 1
+            }
+          },
+          {
+            "fen": "8/8/8/8/8/5K1k/8/1R6 w - - 0 1",
+            "index": 14,
+            "legal_move_count": 19,
+            "positive_mating_moves": [
+              "b1h1"
+            ],
+            "selected_after": "b1h1",
+            "selected_before": "b1h1",
+            "terminal_count_after": 581,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 18,
+              "neutral": 0,
+              "positive": 1
+            }
+          },
+          {
+            "fen": "4R3/8/8/8/8/2K5/8/2k5 w - - 0 1",
+            "index": 15,
+            "legal_move_count": 19,
+            "positive_mating_moves": [
+              "e8e1"
+            ],
+            "selected_after": "e8e1",
+            "selected_before": "e8e1",
+            "terminal_count_after": 585,
+            "trace_type": "mate1_train",
+            "updates": {
+              "negative": 18,
+              "neutral": 0,
+              "positive": 1
+            }
+          }
+        ],
+        "terminal_count": 628
+      },
+      "mate2": {
+        "first_learner_m3_update_count_delta": 2065360,
+        "first_move_negative_updates": 10963,
+        "first_move_neutral_updates": 0,
+        "first_move_positive_updates": 772,
+        "first_terminal_count": 704,
+        "mate_learner_extra_m3_update_count_delta": 2519088,
+        "mate_terminal_count": 630,
+        "position_count": 600,
+        "reply_training_position_count": 772,
+        "samples": [
+          {
+            "fen": "8/8/8/8/4KR2/8/8/4k3 w - - 0 1",
+            "first_terminal_count_after": 357,
+            "first_updates": {
+              "negative": 15,
+              "neutral": 0,
+              "positive": 1
+            },
+            "forced_first_moves": [
+              "e4d3"
+            ],
+            "index": 0,
+            "legal_move_count": 16,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "e1d1",
+                "forced_first": "e4d3",
+                "mate_moves": [
+                  "f4f1"
+                ]
+              }
+            ],
+            "selected_after": "e4d3",
+            "selected_before": "f4h4",
+            "trace_type": "mate2_train"
+          },
+          {
+            "fen": "7k/8/8/5K2/8/8/1R6/8 w - - 0 1",
+            "first_terminal_count_after": 437,
+            "first_updates": {
+              "negative": 21,
+              "neutral": 0,
+              "positive": 1
+            },
+            "forced_first_moves": [
+              "f5g6"
+            ],
+            "index": 1,
+            "legal_move_count": 22,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "h8g8",
+                "forced_first": "f5g6",
+                "mate_moves": [
+                  "b2b8"
+                ]
+              }
+            ],
+            "selected_after": "f5g6",
+            "selected_before": "f5g6",
+            "trace_type": "mate2_train"
+          },
+          {
+            "fen": "5k2/8/6K1/8/8/8/8/R7 w - - 0 1",
+            "first_terminal_count_after": 495,
+            "first_updates": {
+              "negative": 19,
+              "neutral": 0,
+              "positive": 1
+            },
+            "forced_first_moves": [
+              "a1e1"
+            ],
+            "index": 2,
+            "legal_move_count": 20,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "f8g8",
+                "forced_first": "a1e1",
+                "mate_moves": [
+                  "e1e8"
+                ]
+              }
+            ],
+            "selected_after": "a1e1",
+            "selected_before": "g6h6",
+            "trace_type": "mate2_train"
+          },
+          {
+            "fen": "2k5/8/2K5/8/3R4/8/8/8 w - - 0 1",
+            "first_terminal_count_after": 523,
+            "first_updates": {
+              "negative": 18,
+              "neutral": 0,
+              "positive": 1
+            },
+            "forced_first_moves": [
+              "c6b6"
+            ],
+            "index": 3,
+            "legal_move_count": 19,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "c8b8",
+                "forced_first": "c6b6",
+                "mate_moves": [
+                  "d4d8"
+                ]
+              }
+            ],
+            "selected_after": "c6b6",
+            "selected_before": "c6b6",
+            "trace_type": "mate2_train"
+          },
+          {
+            "fen": "7k/4K3/8/8/3R4/8/8/8 w - - 0 1",
+            "first_terminal_count_after": 544,
+            "first_updates": {
+              "negative": 21,
+              "neutral": 0,
+              "positive": 1
+            },
+            "forced_first_moves": [
+              "e7f7"
+            ],
+            "index": 4,
+            "legal_move_count": 22,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "h8h7",
+                "forced_first": "e7f7",
+                "mate_moves": [
+                  "d4h4"
+                ]
+              }
+            ],
+            "selected_after": "e7f7",
+            "selected_before": "e7f8",
+            "trace_type": "mate2_train"
+          },
+          {
+            "fen": "8/8/8/8/2K5/k7/5R2/8 w - - 0 1",
+            "first_terminal_count_after": 557,
+            "first_updates": {
+              "negative": 15,
+              "neutral": 0,
+              "positive": 5
+            },
+            "forced_first_moves": [
+              "f2c2",
+              "f2d2",
+              "f2e2",
+              "f2g2",
+              "f2h2"
+            ],
+            "index": 5,
+            "legal_move_count": 20,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "a3a4",
+                "forced_first": "f2c2",
+                "mate_moves": [
+                  "c2a2"
+                ]
+              },
+              {
+                "black_reply": "a3a4",
+                "forced_first": "f2d2",
+                "mate_moves": [
+                  "d2a2"
+                ]
+              },
+              {
+                "black_reply": "a3a4",
+                "forced_first": "f2e2",
+                "mate_moves": [
+                  "e2a2"
+                ]
+              },
+              {
+                "black_reply": "a3a4",
+                "forced_first": "f2g2",
+                "mate_moves": [
+                  "g2a2"
+                ]
+              },
+              {
+                "black_reply": "a3a4",
+                "forced_first": "f2h2",
+                "mate_moves": [
+                  "h2a2"
+                ]
+              }
+            ],
+            "selected_after": "f2e2",
+            "selected_before": "c4b5",
+            "trace_type": "mate2_train"
+          },
+          {
+            "fen": "6R1/8/8/8/2K5/k7/8/8 w - - 0 1",
+            "first_terminal_count_after": 561,
+            "first_updates": {
+              "negative": 19,
+              "neutral": 0,
+              "positive": 1
+            },
+            "forced_first_moves": [
+              "g8g2"
+            ],
+            "index": 6,
+            "legal_move_count": 20,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "a3a4",
+                "forced_first": "g8g2",
+                "mate_moves": [
+                  "g2a2"
+                ]
+              }
+            ],
+            "selected_after": "g8g2",
+            "selected_before": "g8h8",
+            "trace_type": "mate2_train"
+          },
+          {
+            "fen": "4K2k/8/8/8/8/8/8/R7 w - - 0 1",
+            "first_terminal_count_after": 568,
+            "first_updates": {
+              "negative": 18,
+              "neutral": 0,
+              "positive": 1
+            },
+            "forced_first_moves": [
+              "e8f7"
+            ],
+            "index": 7,
+            "legal_move_count": 19,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "h8h7",
+                "forced_first": "e8f7",
+                "mate_moves": [
+                  "a1h1"
+                ]
+              }
+            ],
+            "selected_after": "e8f7",
+            "selected_before": "e8f7",
+            "trace_type": "mate2_train"
+          },
+          {
+            "fen": "8/8/4R3/8/2K5/8/8/k7 w - - 0 1",
+            "first_terminal_count_after": 572,
+            "first_updates": {
+              "negative": 21,
+              "neutral": 0,
+              "positive": 1
+            },
+            "forced_first_moves": [
+              "c4b3"
+            ],
+            "index": 8,
+            "legal_move_count": 22,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "a1b1",
+                "forced_first": "c4b3",
+                "mate_moves": [
+                  "e6e1"
+                ]
+              }
+            ],
+            "selected_after": "c4b3",
+            "selected_before": "c4b3",
+            "trace_type": "mate2_train"
+          },
+          {
+            "fen": "8/8/8/8/8/2K5/6R1/k7 w - - 0 1",
+            "first_terminal_count_after": 593,
+            "first_updates": {
+              "negative": 20,
+              "neutral": 0,
+              "positive": 1
+            },
+            "forced_first_moves": [
+              "c3b3"
+            ],
+            "index": 9,
+            "legal_move_count": 21,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "a1b1",
+                "forced_first": "c3b3",
+                "mate_moves": [
+                  "g2g1"
+                ]
+              }
+            ],
+            "selected_after": "c3b3",
+            "selected_before": "c3b3",
+            "trace_type": "mate2_train"
+          },
+          {
+            "fen": "6R1/8/8/8/8/3K4/8/k7 w - - 0 1",
+            "first_terminal_count_after": 597,
+            "first_updates": {
+              "negative": 21,
+              "neutral": 0,
+              "positive": 1
+            },
+            "forced_first_moves": [
+              "d3c2"
+            ],
+            "index": 10,
+            "legal_move_count": 22,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "a1a2",
+                "forced_first": "d3c2",
+                "mate_moves": [
+                  "g8a8"
+                ]
+              }
+            ],
+            "selected_after": "d3c2",
+            "selected_before": "d3c2",
+            "trace_type": "mate2_train"
+          },
+          {
+            "fen": "3K4/k7/4R3/8/8/8/8/8 w - - 0 1",
+            "first_terminal_count_after": 604,
+            "first_updates": {
+              "negative": 17,
+              "neutral": 0,
+              "positive": 2
+            },
+            "forced_first_moves": [
+              "d8c7",
+              "d8c8"
+            ],
+            "index": 11,
+            "legal_move_count": 19,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "a7a8",
+                "forced_first": "d8c7",
+                "mate_moves": [
+                  "e6a6"
+                ]
+              },
+              {
+                "black_reply": "a7a8",
+                "forced_first": "d8c8",
+                "mate_moves": [
+                  "e6a6"
+                ]
+              }
+            ],
+            "selected_after": "d8c7",
+            "selected_before": "d8c8",
+            "trace_type": "mate2_train"
+          },
+          {
+            "fen": "6k1/8/4K3/8/8/8/7R/8 w - - 0 1",
+            "first_terminal_count_after": 610,
+            "first_updates": {
+              "negative": 20,
+              "neutral": 0,
+              "positive": 1
+            },
+            "forced_first_moves": [
+              "e6f6"
+            ],
+            "index": 12,
+            "legal_move_count": 21,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "g8f8",
+                "forced_first": "e6f6",
+                "mate_moves": [
+                  "h2h8"
+                ]
+              }
+            ],
+            "selected_after": "e6f6",
+            "selected_before": "e6f6",
+            "trace_type": "mate2_train"
+          },
+          {
+            "fen": "k7/8/2K5/8/4R3/8/8/8 w - - 0 1",
+            "first_terminal_count_after": 610,
+            "first_updates": {
+              "negative": 19,
+              "neutral": 0,
+              "positive": 2
+            },
+            "forced_first_moves": [
+              "c6b6",
+              "c6c7"
+            ],
+            "index": 13,
+            "legal_move_count": 21,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "a8b8",
+                "forced_first": "c6b6",
+                "mate_moves": [
+                  "e4e8"
+                ]
+              },
+              {
+                "black_reply": "a8a7",
+                "forced_first": "c6c7",
+                "mate_moves": [
+                  "e4a4"
+                ]
+              }
+            ],
+            "selected_after": "c6b6",
+            "selected_before": "c6b6",
+            "trace_type": "mate2_train"
+          },
+          {
+            "fen": "8/8/2R5/8/8/5K2/8/3k4 w - - 0 1",
+            "first_terminal_count_after": 615,
+            "first_updates": {
+              "negative": 20,
+              "neutral": 0,
+              "positive": 1
+            },
+            "forced_first_moves": [
+              "f3e3"
+            ],
+            "index": 14,
+            "legal_move_count": 21,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "d1e1",
+                "forced_first": "f3e3",
+                "mate_moves": [
+                  "c6c1"
+                ]
+              }
+            ],
+            "selected_after": "f3e3",
+            "selected_before": "f3e3",
+            "trace_type": "mate2_train"
+          },
+          {
+            "fen": "2k5/8/4K3/8/1R6/8/8/8 w - - 0 1",
+            "first_terminal_count_after": 616,
+            "first_updates": {
+              "negative": 20,
+              "neutral": 0,
+              "positive": 1
+            },
+            "forced_first_moves": [
+              "e6d6"
+            ],
+            "index": 15,
+            "legal_move_count": 21,
+            "mate_terminal_count_after": 630,
+            "reply_training_sample": [
+              {
+                "black_reply": "c8d8",
+                "forced_first": "e6d6",
+                "mate_moves": [
+                  "b4b8"
+                ]
+              }
+            ],
+            "selected_after": "e6d6",
+            "selected_before": "e6d6",
+            "trace_type": "mate2_train"
+          }
+        ]
+      }
+    },
+    "trial_node_count": 1334
+  },
+  "mate1": {
+    "heldout": {
+      "accuracy": 1.0,
+      "correct_count": 100,
+      "illegal_move_count": 0,
+      "null_selection_count": 0,
+      "position_count": 100,
+      "rook_blunder_count": 0,
+      "samples": [
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "8/8/8/5K1k/8/4R3/8/8 w - - 0 1",
+          "index": 0,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "e3h3"
+          ],
+          "selected": "e3h3",
+          "selected_weight": 65.7,
+          "trace_type": "mate1_eval"
+        },
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "8/8/8/8/8/6K1/3R4/6k1 w - - 0 1",
+          "index": 1,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "d2d1"
+          ],
+          "selected": "d2d1",
+          "selected_weight": 52.1125,
+          "trace_type": "mate1_eval"
+        },
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "3k4/8/3K4/8/8/8/8/R7 w - - 0 1",
+          "index": 2,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "a1a8"
+          ],
+          "selected": "a1a8",
+          "selected_weight": 81.20375,
+          "trace_type": "mate1_eval"
+        },
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "8/8/8/8/4R3/6K1/8/6k1 w - - 0 1",
+          "index": 3,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "e4e1"
+          ],
+          "selected": "e4e1",
+          "selected_weight": 71.1475,
+          "trace_type": "mate1_eval"
+        },
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "8/8/8/8/2R5/K7/8/k7 w - - 0 1",
+          "index": 4,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "c4c1"
+          ],
+          "selected": "c4c1",
+          "selected_weight": 54.14875,
+          "trace_type": "mate1_eval"
+        },
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "2k5/8/R1K5/8/8/8/8/8 w - - 0 1",
+          "index": 5,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "a6a8"
+          ],
+          "selected": "a6a8",
+          "selected_weight": 93.96375,
+          "trace_type": "mate1_eval"
+        },
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "8/8/8/8/k1K5/8/1R6/8 w - - 0 1",
+          "index": 6,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "b2a2"
+          ],
+          "selected": "b2a2",
+          "selected_weight": 60.405,
+          "trace_type": "mate1_eval"
+        },
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "1k6/8/1K2R3/8/8/8/8/8 w - - 0 1",
+          "index": 7,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "e6e8"
+          ],
+          "selected": "e6e8",
+          "selected_weight": 57.1175,
+          "trace_type": "mate1_eval"
+        },
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "3R4/8/8/8/5K1k/8/8/8 w - - 0 1",
+          "index": 8,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "d8h8"
+          ],
+          "selected": "d8h8",
+          "selected_weight": 77.80375,
+          "trace_type": "mate1_eval"
+        },
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "R7/8/8/8/8/8/8/5K1k w - - 0 1",
+          "index": 9,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "a8h8"
+          ],
+          "selected": "a8h8",
+          "selected_weight": 60.67125,
+          "trace_type": "mate1_eval"
+        },
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "8/8/8/8/4R3/8/8/5K1k w - - 0 1",
+          "index": 10,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "e4h4"
+          ],
+          "selected": "e4h4",
+          "selected_weight": 43.86625,
+          "trace_type": "mate1_eval"
+        },
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "8/8/5K1k/8/8/8/8/3R4 w - - 0 1",
+          "index": 11,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "d1h1"
+          ],
+          "selected": "d1h1",
+          "selected_weight": 75.71875,
+          "trace_type": "mate1_eval"
+        },
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "3k4/8/3K3R/8/8/8/8/8 w - - 0 1",
+          "index": 12,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "h6h8"
+          ],
+          "selected": "h6h8",
+          "selected_weight": 76.67,
+          "trace_type": "mate1_eval"
+        },
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "8/2R5/8/8/8/8/2K5/k7 w - - 0 1",
+          "index": 13,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "c7a7"
+          ],
+          "selected": "c7a7",
+          "selected_weight": 44.9475,
+          "trace_type": "mate1_eval"
+        },
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "k7/8/K2R4/8/8/8/8/8 w - - 0 1",
+          "index": 14,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "d6d8"
+          ],
+          "selected": "d6d8",
+          "selected_weight": 44.38625,
+          "trace_type": "mate1_eval"
+        },
+        {
+          "active_terminal_count": 176,
+          "correct": true,
+          "fen": "7k/5K2/8/1R6/8/8/8/8 w - - 0 1",
+          "index": 15,
+          "legal": true,
+          "outcome_flags": {
+            "checkmate": true,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "positive_mating_moves": [
+            "b5h5"
+          ],
+          "selected": "b5h5",
+          "selected_weight": 47.19375,
+          "trace_type": "mate1_eval"
+        }
+      ],
+      "stalemate_count": 0,
+      "wrong_action_count": 0
+    },
+    "training": {
+      "m3_update_count_delta": 971344,
+      "m3_update_count_total": 971344,
+      "negative_updates": 5219,
+      "neutral_updates": 0,
+      "position_count": 300,
+      "positive_updates": 300,
+      "samples": [
+        {
+          "fen": "7k/5K2/8/8/8/8/8/5R2 w - - 0 1",
+          "index": 0,
+          "legal_move_count": 18,
+          "positive_mating_moves": [
+            "f1h1"
+          ],
+          "selected_after": "f1h1",
+          "selected_before": "f7g6",
+          "terminal_count_after": 371,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 17,
+            "neutral": 0,
+            "positive": 1
+          }
+        },
+        {
+          "fen": "k7/2K5/8/8/8/8/6R1/8 w - - 0 1",
+          "index": 1,
+          "legal_move_count": 20,
+          "positive_mating_moves": [
+            "g2a2"
+          ],
+          "selected_after": "g2a2",
+          "selected_before": "g2a2",
+          "terminal_count_after": 416,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 19,
+            "neutral": 0,
+            "positive": 1
+          }
+        },
+        {
+          "fen": "8/8/3R4/8/8/8/5K1k/8 w - - 0 1",
+          "index": 2,
+          "legal_move_count": 19,
+          "positive_mating_moves": [
+            "d6h6"
+          ],
+          "selected_after": "d6h6",
+          "selected_before": "d6h6",
+          "terminal_count_after": 466,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 18,
+            "neutral": 0,
+            "positive": 1
+          }
+        },
+        {
+          "fen": "8/8/2R5/8/8/7K/8/7k w - - 0 1",
+          "index": 3,
+          "legal_move_count": 17,
+          "positive_mating_moves": [
+            "c6c1"
+          ],
+          "selected_after": "c6c1",
+          "selected_before": "c6c1",
+          "terminal_count_after": 503,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 16,
+            "neutral": 0,
+            "positive": 1
+          }
+        },
+        {
+          "fen": "8/8/8/8/8/1K4R1/8/k7 w - - 0 1",
+          "index": 4,
+          "legal_move_count": 18,
+          "positive_mating_moves": [
+            "g3g1"
+          ],
+          "selected_after": "g3g1",
+          "selected_before": "g3g1",
+          "terminal_count_after": 514,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 17,
+            "neutral": 0,
+            "positive": 1
+          }
+        },
+        {
+          "fen": "5K1k/8/8/8/8/8/8/6R1 w - - 0 1",
+          "index": 5,
+          "legal_move_count": 17,
+          "positive_mating_moves": [
+            "g1h1"
+          ],
+          "selected_after": "g1h1",
+          "selected_before": "g1h1",
+          "terminal_count_after": 532,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 16,
+            "neutral": 0,
+            "positive": 1
+          }
+        },
+        {
+          "fen": "2R5/8/8/8/8/5K1k/8/8 w - - 0 1",
+          "index": 6,
+          "legal_move_count": 19,
+          "positive_mating_moves": [
+            "c8h8"
+          ],
+          "selected_after": "c8h8",
+          "selected_before": "c8h8",
+          "terminal_count_after": 538,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 18,
+            "neutral": 0,
+            "positive": 1
+          }
+        },
+        {
+          "fen": "8/k1K5/8/8/8/8/5R2/8 w - - 0 1",
+          "index": 7,
+          "legal_move_count": 19,
+          "positive_mating_moves": [
+            "f2a2"
+          ],
+          "selected_after": "f2a2",
+          "selected_before": "f2a2",
+          "terminal_count_after": 542,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 18,
+            "neutral": 0,
+            "positive": 1
+          }
+        },
+        {
+          "fen": "8/7R/8/8/8/k1K5/8/8 w - - 0 1",
+          "index": 8,
+          "legal_move_count": 19,
+          "positive_mating_moves": [
+            "h7a7"
+          ],
+          "selected_after": "h7a7",
+          "selected_before": "h7a7",
+          "terminal_count_after": 547,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 18,
+            "neutral": 0,
+            "positive": 1
+          }
+        },
+        {
+          "fen": "8/8/8/2R5/8/8/5K1k/8 w - - 0 1",
+          "index": 9,
+          "legal_move_count": 19,
+          "positive_mating_moves": [
+            "c5h5"
+          ],
+          "selected_after": "c5h5",
+          "selected_before": "c5h5",
+          "terminal_count_after": 552,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 18,
+            "neutral": 0,
+            "positive": 1
+          }
+        },
+        {
+          "fen": "1R6/8/8/8/8/8/k1K5/8 w - - 0 1",
+          "index": 10,
+          "legal_move_count": 19,
+          "positive_mating_moves": [
+            "b8a8"
+          ],
+          "selected_after": "b8a8",
+          "selected_before": "b8a8",
+          "terminal_count_after": 554,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 18,
+            "neutral": 0,
+            "positive": 1
+          }
+        },
+        {
+          "fen": "8/8/8/8/8/4K3/1R6/4k3 w - - 0 1",
+          "index": 11,
+          "legal_move_count": 19,
+          "positive_mating_moves": [
+            "b2b1"
+          ],
+          "selected_after": "b2b1",
+          "selected_before": "b2b1",
+          "terminal_count_after": 563,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 18,
+            "neutral": 0,
+            "positive": 1
+          }
+        },
+        {
+          "fen": "8/8/8/8/5R2/1K6/8/1k6 w - - 0 1",
+          "index": 12,
+          "legal_move_count": 19,
+          "positive_mating_moves": [
+            "f4f1"
+          ],
+          "selected_after": "f4f1",
+          "selected_before": "f4f1",
+          "terminal_count_after": 571,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 18,
+            "neutral": 0,
+            "positive": 1
+          }
+        },
+        {
+          "fen": "8/8/8/8/k1K5/8/2R5/8 w - - 0 1",
+          "index": 13,
+          "legal_move_count": 14,
+          "positive_mating_moves": [
+            "c2a2"
+          ],
+          "selected_after": "c2a2",
+          "selected_before": "c2a2",
+          "terminal_count_after": 581,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 13,
+            "neutral": 0,
+            "positive": 1
+          }
+        },
+        {
+          "fen": "8/8/8/8/8/5K1k/8/1R6 w - - 0 1",
+          "index": 14,
+          "legal_move_count": 19,
+          "positive_mating_moves": [
+            "b1h1"
+          ],
+          "selected_after": "b1h1",
+          "selected_before": "b1h1",
+          "terminal_count_after": 581,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 18,
+            "neutral": 0,
+            "positive": 1
+          }
+        },
+        {
+          "fen": "4R3/8/8/8/8/2K5/8/2k5 w - - 0 1",
+          "index": 15,
+          "legal_move_count": 19,
+          "positive_mating_moves": [
+            "e8e1"
+          ],
+          "selected_after": "e8e1",
+          "selected_before": "e8e1",
+          "terminal_count_after": 585,
+          "trace_type": "mate1_train",
+          "updates": {
+            "negative": 18,
+            "neutral": 0,
+            "positive": 1
+          }
+        }
+      ],
+      "terminal_count": 628
+    }
+  },
+  "mate2": {
+    "heldout": {
+      "conversion_count": 78,
+      "conversion_rate": 0.78,
+      "first_move_success_count": 78,
+      "first_move_success_rate": 0.78,
+      "forced_mate_reply_coverage": 0.78,
+      "illegal_move_count": 0,
+      "null_selection_count": 0,
+      "one_reply_false_positive_selected_count": 0,
+      "position_count": 100,
+      "reply_evaluation_count": 100,
+      "rook_blunder_count": 1,
+      "same_graph_continuation_count": 78,
+      "samples": [
+        {
+          "all_replies_mated": false,
+          "any_reply_mated": false,
+          "conversion": false,
+          "fen": "6k1/8/5K2/8/7R/8/8/8 w - - 0 1",
+          "first_move_success": false,
+          "forced_first_moves": [
+            "h4h1",
+            "h4h2",
+            "h4h3",
+            "h4h5",
+            "h4h6"
+          ],
+          "index": 0,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "g8g7",
+              "correct_mates": [],
+              "mated": false,
+              "selected_mate": "h4g4"
+            }
+          ],
+          "selected_first": "f6e7",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 322.06,
+          "trace_type": "mate2_eval"
+        },
+        {
+          "all_replies_mated": true,
+          "any_reply_mated": true,
+          "conversion": true,
+          "fen": "3R4/8/8/8/1K6/8/8/k7 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "b4b3"
+          ],
+          "index": 1,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "a1b1",
+              "correct_mates": [
+                "d8d1"
+              ],
+              "mated": true,
+              "selected_mate": "d8d1"
+            }
+          ],
+          "selected_first": "b4b3",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 344.1125,
+          "trace_type": "mate2_eval"
+        },
+        {
+          "all_replies_mated": true,
+          "any_reply_mated": true,
+          "conversion": true,
+          "fen": "3k4/8/2K5/7R/8/8/8/8 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "h5e5"
+          ],
+          "index": 2,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "d8c8",
+              "correct_mates": [
+                "e5e8"
+              ],
+              "mated": true,
+              "selected_mate": "e5e8"
+            }
+          ],
+          "selected_first": "h5e5",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 216.6625,
+          "trace_type": "mate2_eval"
+        },
+        {
+          "all_replies_mated": true,
+          "any_reply_mated": true,
+          "conversion": true,
+          "fen": "8/2R5/8/8/8/8/k7/2K5 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "c7c3"
+          ],
+          "index": 3,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "a2a1",
+              "correct_mates": [
+                "c3a3"
+              ],
+              "mated": true,
+              "selected_mate": "c3a3"
+            }
+          ],
+          "selected_first": "c7c3",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 156.09625,
+          "trace_type": "mate2_eval"
+        },
+        {
+          "all_replies_mated": false,
+          "any_reply_mated": false,
+          "conversion": false,
+          "fen": "8/8/8/1R3K2/7k/8/8/8 w - - 0 1",
+          "first_move_success": false,
+          "forced_first_moves": [
+            "b5b3"
+          ],
+          "index": 4,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "h4h3",
+              "correct_mates": [],
+              "mated": false,
+              "selected_mate": "b5h5"
+            }
+          ],
+          "selected_first": "f5f4",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 258.5575,
+          "trace_type": "mate2_eval"
+        },
+        {
+          "all_replies_mated": true,
+          "any_reply_mated": true,
+          "conversion": true,
+          "fen": "2R5/8/8/8/8/8/7k/5K2 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "c8c3"
+          ],
+          "index": 5,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "h2h1",
+              "correct_mates": [
+                "c3h3"
+              ],
+              "mated": true,
+              "selected_mate": "c3h3"
+            }
+          ],
+          "selected_first": "c8c3",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 138.2875,
+          "trace_type": "mate2_eval"
+        },
+        {
+          "all_replies_mated": true,
+          "any_reply_mated": true,
+          "conversion": true,
+          "fen": "8/8/8/2K5/8/k7/4R3/8 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "c5c4"
+          ],
+          "index": 6,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "a3a4",
+              "correct_mates": [
+                "e2a2"
+              ],
+              "mated": true,
+              "selected_mate": "e2a2"
+            }
+          ],
+          "selected_first": "c5c4",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 349.00625,
+          "trace_type": "mate2_eval"
+        },
+        {
+          "all_replies_mated": true,
+          "any_reply_mated": true,
+          "conversion": true,
+          "fen": "4R3/8/8/8/7k/5K2/8/8 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "e8e5"
+          ],
+          "index": 7,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "h4h3",
+              "correct_mates": [
+                "e5h5"
+              ],
+              "mated": true,
+              "selected_mate": "e5h5"
+            }
+          ],
+          "selected_first": "e8e5",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 177.72625,
+          "trace_type": "mate2_eval"
+        },
+        {
+          "all_replies_mated": true,
+          "any_reply_mated": true,
+          "conversion": true,
+          "fen": "3k4/8/2R5/4K3/8/8/8/8 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "e5e6"
+          ],
+          "index": 8,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "d8e8",
+              "correct_mates": [
+                "c6c8"
+              ],
+              "mated": true,
+              "selected_mate": "c6c8"
+            }
+          ],
+          "selected_first": "e5e6",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 324.2125,
+          "trace_type": "mate2_eval"
+        },
+        {
+          "all_replies_mated": true,
+          "any_reply_mated": true,
+          "conversion": true,
+          "fen": "6R1/8/8/8/8/4K3/8/7k w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "e3f2"
+          ],
+          "index": 9,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "h1h2",
+              "correct_mates": [
+                "g8h8"
+              ],
+              "mated": true,
+              "selected_mate": "g8h8"
+            }
+          ],
+          "selected_first": "e3f2",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 375.7325,
+          "trace_type": "mate2_eval"
+        },
+        {
+          "all_replies_mated": false,
+          "any_reply_mated": false,
+          "conversion": false,
+          "fen": "3k4/8/2K5/8/8/8/4R3/8 w - - 0 1",
+          "first_move_success": false,
+          "forced_first_moves": [
+            "e2e1",
+            "e2e3",
+            "e2e4",
+            "e2e5",
+            "e2e6"
+          ],
+          "index": 10,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "d8d7",
+              "correct_mates": [],
+              "mated": false,
+              "selected_mate": "e2d2"
+            }
+          ],
+          "selected_first": "c6b7",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 351.05125,
+          "trace_type": "mate2_eval"
+        },
+        {
+          "all_replies_mated": true,
+          "any_reply_mated": true,
+          "conversion": true,
+          "fen": "7k/4K3/8/8/8/3R4/8/8 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "e7f7"
+          ],
+          "index": 11,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "h8h7",
+              "correct_mates": [
+                "d3h3"
+              ],
+              "mated": true,
+              "selected_mate": "d3h3"
+            }
+          ],
+          "selected_first": "e7f7",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 361.16375,
+          "trace_type": "mate2_eval"
+        },
+        {
+          "all_replies_mated": true,
+          "any_reply_mated": true,
+          "conversion": true,
+          "fen": "8/8/8/8/1R6/7k/8/5K2 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "f1f2"
+          ],
+          "index": 12,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "h3h2",
+              "correct_mates": [
+                "b4h4"
+              ],
+              "mated": true,
+              "selected_mate": "b4h4"
+            }
+          ],
+          "selected_first": "f1f2",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 354.34125,
+          "trace_type": "mate2_eval"
+        },
+        {
+          "all_replies_mated": true,
+          "any_reply_mated": true,
+          "conversion": true,
+          "fen": "5k2/8/4K3/8/7R/8/8/8 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "h4g4"
+          ],
+          "index": 13,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "f8e8",
+              "correct_mates": [
+                "g4g8"
+              ],
+              "mated": true,
+              "selected_mate": "g4g8"
+            }
+          ],
+          "selected_first": "h4g4",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 232.51875,
+          "trace_type": "mate2_eval"
+        },
+        {
+          "all_replies_mated": true,
+          "any_reply_mated": true,
+          "conversion": true,
+          "fen": "8/k2K4/6R1/8/8/8/8/8 w - - 0 1",
+          "first_move_success": true,
+          "forced_first_moves": [
+            "d7c7",
+            "d7c8"
+          ],
+          "index": 14,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "a7a8",
+              "correct_mates": [
+                "g6a6"
+              ],
+              "mated": true,
+              "selected_mate": "g6a6"
+            }
+          ],
+          "selected_first": "d7c8",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 338.87625,
+          "trace_type": "mate2_eval"
+        },
+        {
+          "all_replies_mated": false,
+          "any_reply_mated": false,
+          "conversion": false,
+          "fen": "6k1/8/5K2/8/8/8/7R/8 w - - 0 1",
+          "first_move_success": false,
+          "forced_first_moves": [
+            "h2h1",
+            "h2h3",
+            "h2h4",
+            "h2h5",
+            "h2h6"
+          ],
+          "index": 15,
+          "outcome_flags": {
+            "checkmate": false,
+            "rook_missing_or_capturable": false,
+            "stalemate": false
+          },
+          "reply_checks": [
+            {
+              "black_reply": "g8g7",
+              "correct_mates": [],
+              "mated": false,
+              "selected_mate": "h2h7"
+            }
+          ],
+          "selected_first": "f6e7",
+          "selected_first_active_terminal_count": 176,
+          "selected_first_weight": 335.235,
+          "trace_type": "mate2_eval"
+        }
+      ],
+      "stalemate_count": 0,
+      "wrong_first_move_count": 22
+    },
+    "training": {
+      "first_learner_m3_update_count_delta": 2065360,
+      "first_move_negative_updates": 10963,
+      "first_move_neutral_updates": 0,
+      "first_move_positive_updates": 772,
+      "first_terminal_count": 704,
+      "mate_learner_extra_m3_update_count_delta": 2519088,
+      "mate_terminal_count": 630,
+      "position_count": 600,
+      "reply_training_position_count": 772,
+      "samples": [
+        {
+          "fen": "8/8/8/8/4KR2/8/8/4k3 w - - 0 1",
+          "first_terminal_count_after": 357,
+          "first_updates": {
+            "negative": 15,
+            "neutral": 0,
+            "positive": 1
+          },
+          "forced_first_moves": [
+            "e4d3"
+          ],
+          "index": 0,
+          "legal_move_count": 16,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "e1d1",
+              "forced_first": "e4d3",
+              "mate_moves": [
+                "f4f1"
+              ]
+            }
+          ],
+          "selected_after": "e4d3",
+          "selected_before": "f4h4",
+          "trace_type": "mate2_train"
+        },
+        {
+          "fen": "7k/8/8/5K2/8/8/1R6/8 w - - 0 1",
+          "first_terminal_count_after": 437,
+          "first_updates": {
+            "negative": 21,
+            "neutral": 0,
+            "positive": 1
+          },
+          "forced_first_moves": [
+            "f5g6"
+          ],
+          "index": 1,
+          "legal_move_count": 22,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "h8g8",
+              "forced_first": "f5g6",
+              "mate_moves": [
+                "b2b8"
+              ]
+            }
+          ],
+          "selected_after": "f5g6",
+          "selected_before": "f5g6",
+          "trace_type": "mate2_train"
+        },
+        {
+          "fen": "5k2/8/6K1/8/8/8/8/R7 w - - 0 1",
+          "first_terminal_count_after": 495,
+          "first_updates": {
+            "negative": 19,
+            "neutral": 0,
+            "positive": 1
+          },
+          "forced_first_moves": [
+            "a1e1"
+          ],
+          "index": 2,
+          "legal_move_count": 20,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "f8g8",
+              "forced_first": "a1e1",
+              "mate_moves": [
+                "e1e8"
+              ]
+            }
+          ],
+          "selected_after": "a1e1",
+          "selected_before": "g6h6",
+          "trace_type": "mate2_train"
+        },
+        {
+          "fen": "2k5/8/2K5/8/3R4/8/8/8 w - - 0 1",
+          "first_terminal_count_after": 523,
+          "first_updates": {
+            "negative": 18,
+            "neutral": 0,
+            "positive": 1
+          },
+          "forced_first_moves": [
+            "c6b6"
+          ],
+          "index": 3,
+          "legal_move_count": 19,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "c8b8",
+              "forced_first": "c6b6",
+              "mate_moves": [
+                "d4d8"
+              ]
+            }
+          ],
+          "selected_after": "c6b6",
+          "selected_before": "c6b6",
+          "trace_type": "mate2_train"
+        },
+        {
+          "fen": "7k/4K3/8/8/3R4/8/8/8 w - - 0 1",
+          "first_terminal_count_after": 544,
+          "first_updates": {
+            "negative": 21,
+            "neutral": 0,
+            "positive": 1
+          },
+          "forced_first_moves": [
+            "e7f7"
+          ],
+          "index": 4,
+          "legal_move_count": 22,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "h8h7",
+              "forced_first": "e7f7",
+              "mate_moves": [
+                "d4h4"
+              ]
+            }
+          ],
+          "selected_after": "e7f7",
+          "selected_before": "e7f8",
+          "trace_type": "mate2_train"
+        },
+        {
+          "fen": "8/8/8/8/2K5/k7/5R2/8 w - - 0 1",
+          "first_terminal_count_after": 557,
+          "first_updates": {
+            "negative": 15,
+            "neutral": 0,
+            "positive": 5
+          },
+          "forced_first_moves": [
+            "f2c2",
+            "f2d2",
+            "f2e2",
+            "f2g2",
+            "f2h2"
+          ],
+          "index": 5,
+          "legal_move_count": 20,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "a3a4",
+              "forced_first": "f2c2",
+              "mate_moves": [
+                "c2a2"
+              ]
+            },
+            {
+              "black_reply": "a3a4",
+              "forced_first": "f2d2",
+              "mate_moves": [
+                "d2a2"
+              ]
+            },
+            {
+              "black_reply": "a3a4",
+              "forced_first": "f2e2",
+              "mate_moves": [
+                "e2a2"
+              ]
+            },
+            {
+              "black_reply": "a3a4",
+              "forced_first": "f2g2",
+              "mate_moves": [
+                "g2a2"
+              ]
+            },
+            {
+              "black_reply": "a3a4",
+              "forced_first": "f2h2",
+              "mate_moves": [
+                "h2a2"
+              ]
+            }
+          ],
+          "selected_after": "f2e2",
+          "selected_before": "c4b5",
+          "trace_type": "mate2_train"
+        },
+        {
+          "fen": "6R1/8/8/8/2K5/k7/8/8 w - - 0 1",
+          "first_terminal_count_after": 561,
+          "first_updates": {
+            "negative": 19,
+            "neutral": 0,
+            "positive": 1
+          },
+          "forced_first_moves": [
+            "g8g2"
+          ],
+          "index": 6,
+          "legal_move_count": 20,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "a3a4",
+              "forced_first": "g8g2",
+              "mate_moves": [
+                "g2a2"
+              ]
+            }
+          ],
+          "selected_after": "g8g2",
+          "selected_before": "g8h8",
+          "trace_type": "mate2_train"
+        },
+        {
+          "fen": "4K2k/8/8/8/8/8/8/R7 w - - 0 1",
+          "first_terminal_count_after": 568,
+          "first_updates": {
+            "negative": 18,
+            "neutral": 0,
+            "positive": 1
+          },
+          "forced_first_moves": [
+            "e8f7"
+          ],
+          "index": 7,
+          "legal_move_count": 19,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "h8h7",
+              "forced_first": "e8f7",
+              "mate_moves": [
+                "a1h1"
+              ]
+            }
+          ],
+          "selected_after": "e8f7",
+          "selected_before": "e8f7",
+          "trace_type": "mate2_train"
+        },
+        {
+          "fen": "8/8/4R3/8/2K5/8/8/k7 w - - 0 1",
+          "first_terminal_count_after": 572,
+          "first_updates": {
+            "negative": 21,
+            "neutral": 0,
+            "positive": 1
+          },
+          "forced_first_moves": [
+            "c4b3"
+          ],
+          "index": 8,
+          "legal_move_count": 22,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "a1b1",
+              "forced_first": "c4b3",
+              "mate_moves": [
+                "e6e1"
+              ]
+            }
+          ],
+          "selected_after": "c4b3",
+          "selected_before": "c4b3",
+          "trace_type": "mate2_train"
+        },
+        {
+          "fen": "8/8/8/8/8/2K5/6R1/k7 w - - 0 1",
+          "first_terminal_count_after": 593,
+          "first_updates": {
+            "negative": 20,
+            "neutral": 0,
+            "positive": 1
+          },
+          "forced_first_moves": [
+            "c3b3"
+          ],
+          "index": 9,
+          "legal_move_count": 21,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "a1b1",
+              "forced_first": "c3b3",
+              "mate_moves": [
+                "g2g1"
+              ]
+            }
+          ],
+          "selected_after": "c3b3",
+          "selected_before": "c3b3",
+          "trace_type": "mate2_train"
+        },
+        {
+          "fen": "6R1/8/8/8/8/3K4/8/k7 w - - 0 1",
+          "first_terminal_count_after": 597,
+          "first_updates": {
+            "negative": 21,
+            "neutral": 0,
+            "positive": 1
+          },
+          "forced_first_moves": [
+            "d3c2"
+          ],
+          "index": 10,
+          "legal_move_count": 22,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "a1a2",
+              "forced_first": "d3c2",
+              "mate_moves": [
+                "g8a8"
+              ]
+            }
+          ],
+          "selected_after": "d3c2",
+          "selected_before": "d3c2",
+          "trace_type": "mate2_train"
+        },
+        {
+          "fen": "3K4/k7/4R3/8/8/8/8/8 w - - 0 1",
+          "first_terminal_count_after": 604,
+          "first_updates": {
+            "negative": 17,
+            "neutral": 0,
+            "positive": 2
+          },
+          "forced_first_moves": [
+            "d8c7",
+            "d8c8"
+          ],
+          "index": 11,
+          "legal_move_count": 19,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "a7a8",
+              "forced_first": "d8c7",
+              "mate_moves": [
+                "e6a6"
+              ]
+            },
+            {
+              "black_reply": "a7a8",
+              "forced_first": "d8c8",
+              "mate_moves": [
+                "e6a6"
+              ]
+            }
+          ],
+          "selected_after": "d8c7",
+          "selected_before": "d8c8",
+          "trace_type": "mate2_train"
+        },
+        {
+          "fen": "6k1/8/4K3/8/8/8/7R/8 w - - 0 1",
+          "first_terminal_count_after": 610,
+          "first_updates": {
+            "negative": 20,
+            "neutral": 0,
+            "positive": 1
+          },
+          "forced_first_moves": [
+            "e6f6"
+          ],
+          "index": 12,
+          "legal_move_count": 21,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "g8f8",
+              "forced_first": "e6f6",
+              "mate_moves": [
+                "h2h8"
+              ]
+            }
+          ],
+          "selected_after": "e6f6",
+          "selected_before": "e6f6",
+          "trace_type": "mate2_train"
+        },
+        {
+          "fen": "k7/8/2K5/8/4R3/8/8/8 w - - 0 1",
+          "first_terminal_count_after": 610,
+          "first_updates": {
+            "negative": 19,
+            "neutral": 0,
+            "positive": 2
+          },
+          "forced_first_moves": [
+            "c6b6",
+            "c6c7"
+          ],
+          "index": 13,
+          "legal_move_count": 21,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "a8b8",
+              "forced_first": "c6b6",
+              "mate_moves": [
+                "e4e8"
+              ]
+            },
+            {
+              "black_reply": "a8a7",
+              "forced_first": "c6c7",
+              "mate_moves": [
+                "e4a4"
+              ]
+            }
+          ],
+          "selected_after": "c6b6",
+          "selected_before": "c6b6",
+          "trace_type": "mate2_train"
+        },
+        {
+          "fen": "8/8/2R5/8/8/5K2/8/3k4 w - - 0 1",
+          "first_terminal_count_after": 615,
+          "first_updates": {
+            "negative": 20,
+            "neutral": 0,
+            "positive": 1
+          },
+          "forced_first_moves": [
+            "f3e3"
+          ],
+          "index": 14,
+          "legal_move_count": 21,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "d1e1",
+              "forced_first": "f3e3",
+              "mate_moves": [
+                "c6c1"
+              ]
+            }
+          ],
+          "selected_after": "f3e3",
+          "selected_before": "f3e3",
+          "trace_type": "mate2_train"
+        },
+        {
+          "fen": "2k5/8/4K3/8/1R6/8/8/8 w - - 0 1",
+          "first_terminal_count_after": 616,
+          "first_updates": {
+            "negative": 20,
+            "neutral": 0,
+            "positive": 1
+          },
+          "forced_first_moves": [
+            "e6d6"
+          ],
+          "index": 15,
+          "legal_move_count": 21,
+          "mate_terminal_count_after": 630,
+          "reply_training_sample": [
+            {
+              "black_reply": "c8d8",
+              "forced_first": "e6d6",
+              "mate_moves": [
+                "b4b8"
+              ]
+            }
+          ],
+          "selected_after": "e6d6",
+          "selected_before": "e6d6",
+          "trace_type": "mate2_train"
+        }
+      ]
+    }
+  },
+  "provenance": {
+    "config_hash": "a099d82dcee6da2f33995f8c70be3fa59505e6270b13ee9fc079724d519d8900",
+    "evaluator_version_hash": "a4683db757297c07b7f7c8bca6e94f597495976b12e763225d613bf981100ce1",
+    "feature_schema_hash": "99fb60107df5dfdc812b7742ce53ebd8f864ee8ddeec20a4876e4c9cd35f9f9b",
+    "fresh_graph": true,
+    "git_head": "c1c1e3fe1bc7ac83bac9a57cb7d58dc21e14e6f5",
+    "loaded_prior_learned_node_count": 0,
+    "loaded_prior_m3_weight_count": 0,
+    "loaded_prior_m4_promotion_count": 0,
+    "loaded_prior_tg_artifact_count": 0,
+    "parent_graph_hash": null,
+    "train_manifest_hash": "255863e822efeefb22d1670afe4649dbcce33311e578b75b6304a1367b3224f9"
+  },
+  "purity_boundary": {
+    "action_ranker_used_for_runtime": false,
+    "basin_labels_learner_visible": false,
+    "depth_labels_learner_visible": false,
+    "direct_provider_override": false,
+    "python_final_selector_used": false,
+    "quality_tier_labels_learner_visible": false,
+    "reply_policy_labels_learner_visible": false,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "stage_labels_learner_visible": false,
+    "trainer_side_curriculum_distribution_used": true,
+    "trainer_side_legal_move_labels_used": true,
+    "trajectory_labels_learner_visible": false
+  },
+  "runtime_structure": {
+    "m3_updates_modify_terminal_weights": true,
+    "real_graph_evaluation_used": true,
+    "real_graph_training_used": true,
+    "remaining_caveat": "legal move affordances are enumerated by the environment and scored by terminal activation weights; this is not the synthetic TG46 target-rate scaffold",
+    "runtime_choice": "terminal_weighted_legal_affordance_selection",
+    "same_fresh_graph_used_for_mate1_then_mate2": true,
+    "same_graph_continuation_used_for_mate2_second_moves": true,
+    "terminal_stem_cell_nodes_used": true
+  },
+  "schema_version": "krk_tg46b_real_clean_slate_foundation.v0",
+  "synthetic_tg46_audit": {
+    "audited_path": "src/recon_lite_chess/autogrowth/clean_slate_full_curriculum.py",
+    "placeholder_fen_detected": true,
+    "synthetic_ablation_detected": true,
+    "synthetic_graph_growth_detected": true,
+    "synthetic_success_count_detected": true,
+    "target_rate_path_detected": true,
+    "used_in_tg46b_result": false
+  },
+  "timing": {
+    "phases": [
+      {
+        "phase": "generate_mate1",
+        "seconds": 12.089466
+      },
+      {
+        "phase": "train_mate1",
+        "seconds": 19.286723
+      },
+      {
+        "phase": "evaluate_mate1",
+        "seconds": 1.722325
+      },
+      {
+        "phase": "generate_mate2",
+        "seconds": 125.335793
+      },
+      {
+        "phase": "train_mate2",
+        "seconds": 81.819023
+      },
+      {
+        "phase": "evaluate_mate2",
+        "seconds": 3.311806
+      }
+    ],
+    "total_seconds": 243.575577
+  },
+  "training_runway": {
+    "curriculum_labels_trainer_side_only": true,
+    "generated_krk_fens_used": true,
+    "learner_visible_basin_labels": false,
+    "learner_visible_stage_labels": false,
+    "real_legal_move_evaluation_used": true,
+    "real_mate1_positions_used": true,
+    "real_mate2_positions_used": true
+  }
+}
