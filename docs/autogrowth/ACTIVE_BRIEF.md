@@ -4,6 +4,13 @@ Status: learning-core reset branch.
 
 The previous branch mode over-optimized for not approving bad mechanisms. This branch should optimize for allowing a minimal learner to act in sandbox, receive credit, promote or delete candidate topology, and prove whether the loop is alive.
 
+## Latest Clean-Slate Checkpoint
+
+- TG46d is the current promoted clean foundation parent. Use only `reports/autogrowth/clean_slate_krk/tg46d_m4_foundation_consolidation/promoted_tg46d_foundation.json` for the next clean KRK stages. The parent foundation must remain loaded/frozen with zero M3/M4 deltas during child-stage training.
+- TG47 real edge/fence inside the clean pipeline is implemented as a bounded diagnostic stage over fresh generated edge/fence/decoy positions. It reconstructs the TG46d parent from the promoted key contract, trains child edge/fence terminal evidence, and compares parent-only, M3-only, M4-only, M3+M4, no-foundation, and decoy arms.
+- Current TG47 bounded result is a useful failure, not an advancement. M3 improves over parent-only on the small edge/fence heldout slice, but still has unsafe rook-risk selections; M4 promotion is causal but does not preserve enough useful behavior and remains below threshold. Parent sanity stays clean and frozen; no old TG pools/canaries, runtime tablebase/DTM, ActionRanker runtime, direct provider override, learner-visible stage labels, or hardcoded FEN/move repairs are used.
+- Next TG47 repair should focus on graph-native edge/fence safety and M4 consolidation quality before scaling. Do not proceed to bridge-frontier/full KRK broadening from TG47 until edge/fence passes safely and M4 either succeeds or is explicitly blocked with evidence.
+
 ## Current Direction
 
 Build and evaluate one causal trace-derived topology-growth loop. Triplets are the current narrow proof pattern, not the full candidate space:

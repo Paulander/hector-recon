@@ -505,6 +505,11 @@ from .m4_foundation_consolidation import (
     M4FoundationConsolidationResult,
     run_m4_foundation_consolidation,
 )
+from .clean_edge_fence_stage import (
+    CleanEdgeFenceStageConfig,
+    CleanEdgeFenceStageResult,
+    run_clean_edge_fence_stage,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -815,6 +820,8 @@ __all__ = [
     "Mate2FoundationRepairResult",
     "M4FoundationConsolidationConfig",
     "M4FoundationConsolidationResult",
+    "CleanEdgeFenceStageConfig",
+    "CleanEdgeFenceStageResult",
     "ChildConsensusRuntimeDecision",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
@@ -862,6 +869,7 @@ __all__ = [
     "run_real_clean_slate_krk_foundation",
     "run_mate2_foundation_repair",
     "run_m4_foundation_consolidation",
+    "run_clean_edge_fence_stage",
     "DEFAULT_CHILD_CONSENSUS_RUNTIME_POLICY",
     "decide_child_consensus_runtime",
     "TERMINAL_LIFECYCLE_POLICY",
