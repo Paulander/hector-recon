@@ -485,6 +485,11 @@ from .default_off_canary_runtime_campaign import (
     DefaultOffCanaryRuntimeCampaignResult,
     run_default_off_canary_runtime_campaign,
 )
+from .clean_slate_full_curriculum import (
+    CleanSlateKRKFullCurriculumConfig,
+    CleanSlateKRKFullCurriculumResult,
+    run_clean_slate_krk_full_curriculum,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -787,6 +792,8 @@ __all__ = [
     "RuntimeStageGateCampaignResult",
     "DefaultOffCanaryRuntimeCampaignConfig",
     "DefaultOffCanaryRuntimeCampaignResult",
+    "CleanSlateKRKFullCurriculumConfig",
+    "CleanSlateKRKFullCurriculumResult",
     "ChildConsensusRuntimeDecision",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
@@ -830,6 +837,7 @@ __all__ = [
     "run_feature_flagged_child_consensus_runtime_canary",
     "run_runtime_stage_gate_campaign",
     "run_default_off_canary_runtime_campaign",
+    "run_clean_slate_krk_full_curriculum",
     "DEFAULT_CHILD_CONSENSUS_RUNTIME_POLICY",
     "decide_child_consensus_runtime",
     "TERMINAL_LIFECYCLE_POLICY",
