@@ -1,0 +1,1963 @@
+{
+  "graph_edge_count": 3786,
+  "graph_node_count": 1265,
+  "m3_update_count": 2300672,
+  "m4_true_promotion_count": 0,
+  "mate1_terminal_count": 630,
+  "mate2_first_terminal_count": 632,
+  "mature_materialized_count": 0,
+  "node_model": "fresh_terminal_stem_cell_graph_with_pairwise_mate2_credit",
+  "root_node_count": 1,
+  "schema_version": "krk_tg46c_graph_summary.v0",
+  "script_node_count": 2,
+  "terminal_node_count": 1262,
+  "top_mate2_first_terminals": {
+    "m3_update_count": 118096,
+    "terminal_count": 632,
+    "top_negative_terminals": [
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": -1.0,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 107,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 107
+            },
+            "relevance_stats": {
+              "activation_count": 107,
+              "confirm_count": 0,
+              "context_coverage": 1.0,
+              "context_precision": 0.0,
+              "parent_locality": 1.0,
+              "request_exposures": 107,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.8999999999999999,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.35,
+              "quarantine_reason": "local_suppressor_candidate",
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00254",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "action_pattern:black_reply_mobility_after=3",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 107,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00254",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 107,
+          "xp_failures": 107,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": -2.14,
+          "negative_credit": 107,
+          "neutral_credit": 0,
+          "positive_credit": 0
+        },
+        "learner_visible": {
+          "activation_count": 107,
+          "chooses_move_directly": false,
+          "confirm_count": 0,
+          "local_weight": -2.14,
+          "negative_credit": 107,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 0,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 107,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "action_pattern:black_reply_mobility_after=3"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": -1.0,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 107,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 107
+            },
+            "relevance_stats": {
+              "activation_count": 107,
+              "confirm_count": 0,
+              "context_coverage": 1.0,
+              "context_precision": 0.0,
+              "parent_locality": 1.0,
+              "request_exposures": 107,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.8999999999999999,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.35,
+              "quarantine_reason": "local_suppressor_candidate",
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00257",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=0:3",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 107,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00257",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 107,
+          "xp_failures": 107,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": -2.14,
+          "negative_credit": 107,
+          "neutral_credit": 0,
+          "positive_credit": 0
+        },
+        "learner_visible": {
+          "activation_count": 107,
+          "chooses_move_directly": false,
+          "confirm_count": 0,
+          "local_weight": -2.14,
+          "negative_credit": 107,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 0,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 107,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=0:3"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": -1.0,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 36,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 36
+            },
+            "relevance_stats": {
+              "activation_count": 36,
+              "confirm_count": 0,
+              "context_coverage": 1.0,
+              "context_precision": 0.0,
+              "parent_locality": 1.0,
+              "request_exposures": 36,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.7719999999999999,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.35,
+              "quarantine_reason": "local_suppressor_candidate",
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00460",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "action_pattern:white_king_to_black_king_after=3",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 36,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00460",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 36,
+          "xp_failures": 36,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": -0.72,
+          "negative_credit": 36,
+          "neutral_credit": 0,
+          "positive_credit": 0
+        },
+        "learner_visible": {
+          "activation_count": 36,
+          "chooses_move_directly": false,
+          "confirm_count": 0,
+          "local_weight": -0.72,
+          "negative_credit": 36,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 0,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 36,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "action_pattern:white_king_to_black_king_after=3"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": -1.0,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 107,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 107
+            },
+            "relevance_stats": {
+              "activation_count": 107,
+              "confirm_count": 0,
+              "context_coverage": 1.0,
+              "context_precision": 0.0,
+              "parent_locality": 1.0,
+              "request_exposures": 107,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.8999999999999999,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.35,
+              "quarantine_reason": "local_suppressor_candidate",
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00259",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "after_terminal:black_reply_mobility=3",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 107,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00259",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 107,
+          "xp_failures": 107,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": -0.535,
+          "negative_credit": 107,
+          "neutral_credit": 0,
+          "positive_credit": 0
+        },
+        "learner_visible": {
+          "activation_count": 107,
+          "chooses_move_directly": false,
+          "confirm_count": 0,
+          "local_weight": -0.535,
+          "negative_credit": 107,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 0,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 107,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "after_terminal:black_reply_mobility=3"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": -1.0,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 107,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 107
+            },
+            "relevance_stats": {
+              "activation_count": 107,
+              "confirm_count": 0,
+              "context_coverage": 1.0,
+              "context_precision": 0.0,
+              "parent_locality": 1.0,
+              "request_exposures": 107,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.8999999999999999,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.35,
+              "quarantine_reason": "local_suppressor_candidate",
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00266",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "after_terminal:legal_move_count=3",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 107,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00266",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 107,
+          "xp_failures": 107,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": -0.535,
+          "negative_credit": 107,
+          "neutral_credit": 0,
+          "positive_credit": 0
+        },
+        "learner_visible": {
+          "activation_count": 107,
+          "chooses_move_directly": false,
+          "confirm_count": 0,
+          "local_weight": -0.535,
+          "negative_credit": 107,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 0,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 107,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "after_terminal:legal_move_count=3"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": -1.0,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 18,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 18
+            },
+            "relevance_stats": {
+              "activation_count": 18,
+              "confirm_count": 0,
+              "context_coverage": 1.0,
+              "context_precision": 0.0,
+              "parent_locality": 1.0,
+              "request_exposures": 18,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.736,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.35,
+              "quarantine_reason": "local_suppressor_candidate",
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00554",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "action_pattern:black_reply_mobility_after=2",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 18,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00554",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 18,
+          "xp_failures": 18,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": -0.36,
+          "negative_credit": 18,
+          "neutral_credit": 0,
+          "positive_credit": 0
+        },
+        "learner_visible": {
+          "activation_count": 18,
+          "chooses_move_directly": false,
+          "confirm_count": 0,
+          "local_weight": -0.36,
+          "negative_credit": 18,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 0,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 18,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "action_pattern:black_reply_mobility_after=2"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": -1.0,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 18,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 18
+            },
+            "relevance_stats": {
+              "activation_count": 18,
+              "confirm_count": 0,
+              "context_coverage": 1.0,
+              "context_precision": 0.0,
+              "parent_locality": 1.0,
+              "request_exposures": 18,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.736,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.35,
+              "quarantine_reason": "local_suppressor_candidate",
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00555",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=0:2",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 18,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00555",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 18,
+          "xp_failures": 18,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": -0.36,
+          "negative_credit": 18,
+          "neutral_credit": 0,
+          "positive_credit": 0
+        },
+        "learner_visible": {
+          "activation_count": 18,
+          "chooses_move_directly": false,
+          "confirm_count": 0,
+          "local_weight": -0.36,
+          "negative_credit": 18,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 0,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 18,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=0:2"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": -1.0,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 36,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 36
+            },
+            "relevance_stats": {
+              "activation_count": 36,
+              "confirm_count": 0,
+              "context_coverage": 1.0,
+              "context_precision": 0.0,
+              "parent_locality": 1.0,
+              "request_exposures": 36,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.7719999999999999,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.35,
+              "quarantine_reason": "local_suppressor_candidate",
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00467",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "after_terminal:white_king_to_black_king_distance=3",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 36,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00467",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 36,
+          "xp_failures": 36,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": -0.18,
+          "negative_credit": 36,
+          "neutral_credit": 0,
+          "positive_credit": 0
+        },
+        "learner_visible": {
+          "activation_count": 36,
+          "chooses_move_directly": false,
+          "confirm_count": 0,
+          "local_weight": -0.18,
+          "negative_credit": 36,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 0,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 36,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "after_terminal:white_king_to_black_king_distance=3"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": -1.0,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 31,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 31
+            },
+            "relevance_stats": {
+              "activation_count": 31,
+              "confirm_count": 0,
+              "context_coverage": 1.0,
+              "context_precision": 0.0,
+              "parent_locality": 1.0,
+              "request_exposures": 31,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.762,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.35,
+              "quarantine_reason": "local_suppressor_candidate",
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00260",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "after_terminal:feature_hub_enemy_king_mobility=1",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 31,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00260",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 31,
+          "xp_failures": 31,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": -0.155,
+          "negative_credit": 31,
+          "neutral_credit": 0,
+          "positive_credit": 0
+        },
+        "learner_visible": {
+          "activation_count": 31,
+          "chooses_move_directly": false,
+          "confirm_count": 0,
+          "local_weight": -0.155,
+          "negative_credit": 31,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 0,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 31,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "after_terminal:feature_hub_enemy_king_mobility=1"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": -1.0,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 31,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 0,
+              "total_correlations": 0,
+              "total_interventions": 31
+            },
+            "relevance_stats": {
+              "activation_count": 31,
+              "confirm_count": 0,
+              "context_coverage": 1.0,
+              "context_precision": 0.0,
+              "parent_locality": 1.0,
+              "request_exposures": 31,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": null,
+              "maturity": 0.762,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.35,
+              "quarantine_reason": "local_suppressor_candidate",
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00261",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "after_terminal:feature_hub_enemy_king_mobility_raw=8",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 31,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00261",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 31,
+          "xp_failures": 31,
+          "xp_successes": 0
+        },
+        "diagnostics": {
+          "m3_local_weight": -0.155,
+          "negative_credit": 31,
+          "neutral_credit": 0,
+          "positive_credit": 0
+        },
+        "learner_visible": {
+          "activation_count": 31,
+          "chooses_move_directly": false,
+          "confirm_count": 0,
+          "local_weight": -0.155,
+          "negative_credit": 31,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 0,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 31,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "after_terminal:feature_hub_enemy_king_mobility_raw=8"
+        }
+      }
+    ],
+    "top_positive_terminals": [
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.358974358974359,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 175,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 371,
+              "total_correlations": 0,
+              "total_interventions": 546
+            },
+            "relevance_stats": {
+              "activation_count": 546,
+              "confirm_count": 371,
+              "context_coverage": 1.0,
+              "context_precision": 0.6794871794871795,
+              "parent_locality": 1.0,
+              "request_exposures": 546,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": 670,
+              "maturity": 1.0,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00001",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "action_pattern:black_reply_mobility_after=1",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 546,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00001",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 546,
+          "xp_failures": 175,
+          "xp_successes": 371
+        },
+        "diagnostics": {
+          "m3_local_weight": 33.6,
+          "negative_credit": 175,
+          "neutral_credit": 0,
+          "positive_credit": 371
+        },
+        "learner_visible": {
+          "activation_count": 546,
+          "chooses_move_directly": false,
+          "confirm_count": 371,
+          "local_weight": 33.6,
+          "negative_credit": 175,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 371,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 546,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "action_pattern:black_reply_mobility_after=1"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.358974358974359,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 175,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 371,
+              "total_correlations": 0,
+              "total_interventions": 546
+            },
+            "relevance_stats": {
+              "activation_count": 546,
+              "confirm_count": 371,
+              "context_coverage": 1.0,
+              "context_precision": 0.6794871794871795,
+              "parent_locality": 1.0,
+              "request_exposures": 546,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": 670,
+              "maturity": 1.0,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00018",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=0:1",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 546,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00018",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 546,
+          "xp_failures": 175,
+          "xp_successes": 371
+        },
+        "diagnostics": {
+          "m3_local_weight": 33.6,
+          "negative_credit": 175,
+          "neutral_credit": 0,
+          "positive_credit": 371
+        },
+        "learner_visible": {
+          "activation_count": 546,
+          "chooses_move_directly": false,
+          "confirm_count": 371,
+          "local_weight": 33.6,
+          "negative_credit": 175,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 371,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 546,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "action_pattern:pair:gives_check:black_reply_mobility_after=0:1"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.17777777777777778,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 259,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 371,
+              "total_correlations": 0,
+              "total_interventions": 630
+            },
+            "relevance_stats": {
+              "activation_count": 630,
+              "confirm_count": 371,
+              "context_coverage": 1.0,
+              "context_precision": 0.5888888888888889,
+              "parent_locality": 1.0,
+              "request_exposures": 630,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": 670,
+              "maturity": 1.0,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00015",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "action_pattern:white_king_to_black_king_after=2",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 630,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00015",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 630,
+          "xp_failures": 259,
+          "xp_successes": 371
+        },
+        "diagnostics": {
+          "m3_local_weight": 31.92,
+          "negative_credit": 259,
+          "neutral_credit": 0,
+          "positive_credit": 371
+        },
+        "learner_visible": {
+          "activation_count": 630,
+          "chooses_move_directly": false,
+          "confirm_count": 371,
+          "local_weight": 31.92,
+          "negative_credit": 259,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 371,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 630,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "action_pattern:white_king_to_black_king_after=2"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.10581222056631892,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 300,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 371,
+              "total_correlations": 0,
+              "total_interventions": 671
+            },
+            "relevance_stats": {
+              "activation_count": 671,
+              "confirm_count": 371,
+              "context_coverage": 1.0,
+              "context_precision": 0.5529061102831595,
+              "parent_locality": 1.0,
+              "request_exposures": 671,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": 670,
+              "maturity": 1.0,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00000",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "action_pattern:black_king_edge_after=0",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 671,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00000",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 671,
+          "xp_failures": 300,
+          "xp_successes": 371
+        },
+        "diagnostics": {
+          "m3_local_weight": 31.1,
+          "negative_credit": 300,
+          "neutral_credit": 0,
+          "positive_credit": 371
+        },
+        "learner_visible": {
+          "activation_count": 671,
+          "chooses_move_directly": false,
+          "confirm_count": 371,
+          "local_weight": 31.1,
+          "negative_credit": 300,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 371,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 671,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "action_pattern:black_king_edge_after=0"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.10581222056631892,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 300,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 371,
+              "total_correlations": 0,
+              "total_interventions": 671
+            },
+            "relevance_stats": {
+              "activation_count": 671,
+              "confirm_count": 371,
+              "context_coverage": 1.0,
+              "context_precision": 0.5529061102831595,
+              "parent_locality": 1.0,
+              "request_exposures": 671,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": 670,
+              "maturity": 1.0,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00006",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "action_pattern:gives_check=0",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 671,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00006",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 671,
+          "xp_failures": 300,
+          "xp_successes": 371
+        },
+        "diagnostics": {
+          "m3_local_weight": 31.1,
+          "negative_credit": 300,
+          "neutral_credit": 0,
+          "positive_credit": 371
+        },
+        "learner_visible": {
+          "activation_count": 671,
+          "chooses_move_directly": false,
+          "confirm_count": 371,
+          "local_weight": 31.1,
+          "negative_credit": 300,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 371,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 671,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "action_pattern:gives_check=0"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.10581222056631892,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 300,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 371,
+              "total_correlations": 0,
+              "total_interventions": 671
+            },
+            "relevance_stats": {
+              "activation_count": 671,
+              "confirm_count": 371,
+              "context_coverage": 1.0,
+              "context_precision": 0.5529061102831595,
+              "parent_locality": 1.0,
+              "request_exposures": 671,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": 670,
+              "maturity": 1.0,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00007",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "action_pattern:is_capture=0",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 671,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00007",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 671,
+          "xp_failures": 300,
+          "xp_successes": 371
+        },
+        "diagnostics": {
+          "m3_local_weight": 31.1,
+          "negative_credit": 300,
+          "neutral_credit": 0,
+          "positive_credit": 371
+        },
+        "learner_visible": {
+          "activation_count": 671,
+          "chooses_move_directly": false,
+          "confirm_count": 371,
+          "local_weight": 31.1,
+          "negative_credit": 300,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 371,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 671,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "action_pattern:is_capture=0"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.10581222056631892,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 300,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 371,
+              "total_correlations": 0,
+              "total_interventions": 671
+            },
+            "relevance_stats": {
+              "activation_count": 671,
+              "confirm_count": 371,
+              "context_coverage": 1.0,
+              "context_precision": 0.5529061102831595,
+              "parent_locality": 1.0,
+              "request_exposures": 671,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": 670,
+              "maturity": 1.0,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00008",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "action_pattern:is_stalemate_after=0",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 671,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00008",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 671,
+          "xp_failures": 300,
+          "xp_successes": 371
+        },
+        "diagnostics": {
+          "m3_local_weight": 31.1,
+          "negative_credit": 300,
+          "neutral_credit": 0,
+          "positive_credit": 371
+        },
+        "learner_visible": {
+          "activation_count": 671,
+          "chooses_move_directly": false,
+          "confirm_count": 371,
+          "local_weight": 31.1,
+          "negative_credit": 300,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 371,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 671,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "action_pattern:is_stalemate_after=0"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.10581222056631892,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 300,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 371,
+              "total_correlations": 0,
+              "total_interventions": 671
+            },
+            "relevance_stats": {
+              "activation_count": 671,
+              "confirm_count": 371,
+              "context_coverage": 1.0,
+              "context_precision": 0.5529061102831595,
+              "parent_locality": 1.0,
+              "request_exposures": 671,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": 670,
+              "maturity": 1.0,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00019",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 671,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00019",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 671,
+          "xp_failures": 300,
+          "xp_successes": 371
+        },
+        "diagnostics": {
+          "m3_local_weight": 31.1,
+          "negative_credit": 300,
+          "neutral_credit": 0,
+          "positive_credit": 371
+        },
+        "learner_visible": {
+          "activation_count": 671,
+          "chooses_move_directly": false,
+          "confirm_count": 371,
+          "local_weight": 31.1,
+          "negative_credit": 300,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 371,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 671,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "action_pattern:pair:gives_check:black_king_edge_after=0:0"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.10510510510510511,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 298,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 368,
+              "total_correlations": 0,
+              "total_interventions": 666
+            },
+            "relevance_stats": {
+              "activation_count": 666,
+              "confirm_count": 368,
+              "context_coverage": 1.0,
+              "context_precision": 0.5525525525525525,
+              "parent_locality": 1.0,
+              "request_exposures": 666,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": 670,
+              "maturity": 1.0,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00012",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "action_pattern:rook_attacked_after=0",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 666,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00012",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 666,
+          "xp_failures": 298,
+          "xp_successes": 368
+        },
+        "diagnostics": {
+          "m3_local_weight": 30.84,
+          "negative_credit": 298,
+          "neutral_credit": 0,
+          "positive_credit": 368
+        },
+        "learner_visible": {
+          "activation_count": 666,
+          "chooses_move_directly": false,
+          "confirm_count": 368,
+          "local_weight": 30.84,
+          "negative_credit": 298,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 368,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 666,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "action_pattern:rook_attacked_after=0"
+        }
+      },
+      {
+        "cell": {
+          "candidate_stats": {
+            "credit_stats": {
+              "causal_balance": 0.10510510510510511,
+              "has_causal_intervention": true,
+              "negative_correlation": 0,
+              "negative_intervention": 298,
+              "neutral_correlation": 0,
+              "neutral_intervention": 0,
+              "positive_correlation": 0,
+              "positive_intervention": 368,
+              "total_correlations": 0,
+              "total_interventions": 666
+            },
+            "relevance_stats": {
+              "activation_count": 666,
+              "confirm_count": 368,
+              "context_coverage": 1.0,
+              "context_precision": 0.5525525525525525,
+              "parent_locality": 1.0,
+              "request_exposures": 666,
+              "sibling_contrast": 0.0
+            },
+            "survival_stats": {
+              "last_confirm_cycle": 670,
+              "maturity": 1.0,
+              "parent_locality": "terminal_feature_parent",
+              "prune_pressure": 0.0,
+              "quarantine_reason": null,
+              "suppressed_sibling": null
+            }
+          },
+          "cell_id": "tg26h_terminal_00022",
+          "children": [],
+          "config": {
+            "exploration_budget": 100,
+            "max_samples": 500,
+            "min_samples": 50,
+            "reward_threshold": 0.3,
+            "specialization_threshold": 0.5
+          },
+          "depth": 0,
+          "exploration_ticks": 0,
+          "grace_games": 20,
+          "is_composition": false,
+          "last_confirm_cycle": null,
+          "metadata": {
+            "fan_in_allowed": true,
+            "node_type": "TERMINAL",
+            "relation_types": [
+              "SUB",
+              "SUR",
+              "POR"
+            ],
+            "terminal_key": "action_pattern:pair:rook_safety:gives_check=0:0",
+            "terminal_kind": "feature_vector_pattern"
+          },
+          "min_exposure_threshold": 50,
+          "parent_xp_owner": null,
+          "pattern_centroid": null,
+          "pattern_signature": null,
+          "samples": [],
+          "state": "TRIAL",
+          "total_exposures": 666,
+          "trial_consistency": 0.0,
+          "trial_edge_key": null,
+          "trial_node_id": "TRIAL_tg26h_terminal_00022",
+          "trial_parent_id": "terminal_feature_parent",
+          "trial_signature": null,
+          "trial_tick": 0,
+          "trust_score": 0.0,
+          "xp": 666,
+          "xp_failures": 298,
+          "xp_successes": 368
+        },
+        "diagnostics": {
+          "m3_local_weight": 30.84,
+          "negative_credit": 298,
+          "neutral_credit": 0,
+          "positive_credit": 368
+        },
+        "learner_visible": {
+          "activation_count": 666,
+          "chooses_move_directly": false,
+          "confirm_count": 368,
+          "local_weight": 30.84,
+          "negative_credit": 298,
+          "neutral_credit": 0,
+          "node_type": "TERMINAL",
+          "positive_credit": 368,
+          "relation_to_output": "local_terminal_affordance_weight",
+          "request_exposures": 666,
+          "stem_cell_state": "TRIAL",
+          "terminal_key": "action_pattern:pair:rook_safety:gives_check=0:0"
+        }
+      }
+    ]
+  },
+  "trial_node_count": 1262
+}

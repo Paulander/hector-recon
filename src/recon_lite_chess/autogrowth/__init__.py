@@ -495,6 +495,11 @@ from .real_clean_slate_foundation import (
     RealCleanSlateFoundationResult,
     run_real_clean_slate_krk_foundation,
 )
+from .mate2_foundation_repair import (
+    Mate2FoundationRepairConfig,
+    Mate2FoundationRepairResult,
+    run_mate2_foundation_repair,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -801,6 +806,8 @@ __all__ = [
     "CleanSlateKRKFullCurriculumResult",
     "RealCleanSlateFoundationConfig",
     "RealCleanSlateFoundationResult",
+    "Mate2FoundationRepairConfig",
+    "Mate2FoundationRepairResult",
     "ChildConsensusRuntimeDecision",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
@@ -846,6 +853,7 @@ __all__ = [
     "run_default_off_canary_runtime_campaign",
     "run_clean_slate_krk_full_curriculum",
     "run_real_clean_slate_krk_foundation",
+    "run_mate2_foundation_repair",
     "DEFAULT_CHILD_CONSENSUS_RUNTIME_POLICY",
     "decide_child_consensus_runtime",
     "TERMINAL_LIFECYCLE_POLICY",

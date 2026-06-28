@@ -1,0 +1,141 @@
+{
+  "checkpoint": "TG46c_real_clean_slate_mate2_repair",
+  "completed": true,
+  "decision": {
+    "ablation_results": {
+      "mask_action_delta_enrichment": {
+        "not_applied_in_selected_arm": true
+      },
+      "mask_actuator_terminals": {
+        "expected_runtime_choice_collapse": true
+      },
+      "mask_all_reply_credit": {
+        "conversion_rate": 0.81
+      },
+      "mask_m3_fast_plasticity": {
+        "conversion_rate": 0.0
+      },
+      "mask_m4_promotions": {
+        "conversion_rate": 0.96,
+        "note": "M4 promotions remain zero"
+      },
+      "mask_pairwise_contrastive_credit": {
+        "conversion_rate": 0.81
+      },
+      "mask_partial_reply_debt": {
+        "conversion_rate": 0.96
+      },
+      "mask_rook_safety_debt": {
+        "rook_capturable_selected_first_move_count": 0
+      },
+      "mask_same_graph_continuation_materialization": {
+        "expected_second_move_collapse": true
+      },
+      "mask_shared_atoms": {
+        "not_separately_modeled": true
+      },
+      "pairwise_repair_causal": true
+    },
+    "action_ranker_used_for_runtime": false,
+    "checkpoint_interpretation": "foundation_behavioral_pass_without_m4_consolidation",
+    "checkpoint_pass": true,
+    "checkpoint_specific_fen_rule_count": 0,
+    "checkpoint_specific_move_rule_count": 0,
+    "continuation_missing_count": 0,
+    "correct_candidate_absent_count": 0,
+    "correct_candidate_present_but_lost_count": 4,
+    "decoy_false_handoff_count": 0,
+    "direct_provider_override": false,
+    "failure_bucket_counts": {
+      "all_reply_credit_missing": 4,
+      "mate2_correct_candidate_present_but_lost_selection": 4
+    },
+    "failure_pool_entry_count": 4,
+    "fresh_graph_lineage_preserved": true,
+    "graph_edge_count": 3786,
+    "graph_node_count": 1265,
+    "hard_decoy_false_handoff_count": 0,
+    "illegal_move_count": 0,
+    "learner_visible_basin_labels": false,
+    "learner_visible_continuation_labels": false,
+    "learner_visible_depth_labels": false,
+    "learner_visible_quality_labels": false,
+    "learner_visible_reply_policy_labels": false,
+    "learner_visible_stage_labels": false,
+    "m3_update_count": 2300672,
+    "m4_candidate_count": 1262,
+    "m4_true_promotion_count": 0,
+    "mate1_null_selection_count": 0,
+    "mate1_regression_accuracy": 1.0,
+    "mate1_regression_count": 100,
+    "mate1_wrong_move_count": 0,
+    "mate2_all_reply_conversion_rate": 0.96,
+    "mate2_first_move_accuracy": 0.96,
+    "mate2_heldout_conversion_rate": 0.96,
+    "mate2_heldout_count": 100,
+    "mate2_null_selection_count": 0,
+    "mate2_regression_conversion_rate": 0.92,
+    "mate2_regression_count": 100,
+    "mate2_same_graph_continuation_count": 96,
+    "mate2_train_count": 300,
+    "mate2_wrong_first_move_count": 4,
+    "mature_materialized_count": 0,
+    "one_reply_false_positive_selected_count": 0,
+    "partial_reply_false_positive_selected_count": 0,
+    "prior_tg_artifacts_loaded": 0,
+    "python_final_selector_used": false,
+    "real_fen_generation_used": true,
+    "real_graph_evaluation_used": true,
+    "real_graph_training_used": true,
+    "repair_applied": true,
+    "rook_blunder_count": 0,
+    "rook_capturable_selected_first_move_count": 0,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "script_node_count": 2,
+    "selected_next_action": "repair_m4_consolidation_for_real_foundation",
+    "selected_partial_reply_false_positive_count": 0,
+    "selected_repair_arm": "contrastive_pairwise_mate2_credit",
+    "selected_rook_capturable_count": 0,
+    "stalemate_count": 0,
+    "synthetic_stage_runner_used_in_result": false,
+    "synthetic_tg46_target_rate_paths_detected": true,
+    "terminal_node_count": 1262,
+    "tg46b_failure_bucket_counts": {
+      "all_reply_credit_missing": 22,
+      "mate2_correct_candidate_present_but_lost_selection": 22
+    },
+    "tg46b_mate2_conversion_rate": 0.78,
+    "total_seconds": 441.906645
+  },
+  "phases": [
+    {
+      "phase": "generate_clean_splits",
+      "seconds": 99.317929
+    },
+    {
+      "phase": "train_and_regress_mate1",
+      "seconds": 15.775777
+    },
+    {
+      "phase": "baseline_arm",
+      "seconds": 135.67994
+    },
+    {
+      "phase": "contrastive_pairwise_train",
+      "seconds": 35.368307
+    },
+    {
+      "phase": "contrastive_pairwise_eval",
+      "seconds": 146.198799
+    },
+    {
+      "phase": "failure_audit",
+      "seconds": 9.095086
+    },
+    {
+      "phase": "ablations_and_arm_log",
+      "seconds": 0.460937
+    }
+  ],
+  "schema_version": "krk_tg46c_real_mate2_repair_progress.v0"
+}
