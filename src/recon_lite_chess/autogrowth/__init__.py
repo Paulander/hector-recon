@@ -500,6 +500,11 @@ from .mate2_foundation_repair import (
     Mate2FoundationRepairResult,
     run_mate2_foundation_repair,
 )
+from .m4_foundation_consolidation import (
+    M4FoundationConsolidationConfig,
+    M4FoundationConsolidationResult,
+    run_m4_foundation_consolidation,
+)
 from .sandbox import (
     SandboxConfig,
     SandboxMetrics,
@@ -808,6 +813,8 @@ __all__ = [
     "RealCleanSlateFoundationResult",
     "Mate2FoundationRepairConfig",
     "Mate2FoundationRepairResult",
+    "M4FoundationConsolidationConfig",
+    "M4FoundationConsolidationResult",
     "ChildConsensusRuntimeDecision",
     "run_persisted_foundation_backed_frontier_pool",
     "run_full_foundation_frontier_pool_resume",
@@ -854,6 +861,7 @@ __all__ = [
     "run_clean_slate_krk_full_curriculum",
     "run_real_clean_slate_krk_foundation",
     "run_mate2_foundation_repair",
+    "run_m4_foundation_consolidation",
     "DEFAULT_CHILD_CONSENSUS_RUNTIME_POLICY",
     "decide_child_consensus_runtime",
     "TERMINAL_LIFECYCLE_POLICY",
