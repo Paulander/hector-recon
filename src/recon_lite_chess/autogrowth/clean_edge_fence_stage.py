@@ -566,17 +566,23 @@ def _evaluate_stage(
 ) -> dict[str, Any]:
     out = []
     successes = 0
+    graded_successes = 0
     counts = {"edge_trap_progress": [0, 0], "fence_hold_progress": [0, 0], "bridge_frontier_near": [0, 0]}
+    graded_counts = {"edge_trap_progress": [0, 0], "fence_hold_progress": [0, 0], "bridge_frontier_near": [0, 0]}
     for index, row in enumerate(rows):
         board = chess.Board(row["fen"])
         selected = _choose_stage_move(board, parent=parent, edge_learner=edge_learner)
         metrics = _move_metrics(board, selected, parent=parent)
         success = _stage_success(metrics, row["family"])
+        graded_success = _stage_graded_success(metrics, row["family"])
         score_components = _score_components(board, selected, parent=parent, edge_learner=edge_learner)
         successes += int(success)
+        graded_successes += int(graded_success)
         if row["family"] in counts:
             counts[row["family"]][0] += int(success)
             counts[row["family"]][1] += 1
+            graded_counts[row["family"]][0] += int(graded_success)
+            graded_counts[row["family"]][1] += 1
         out.append({
             "trace_type": trace_type,
             "index": index,
@@ -586,6 +592,7 @@ def _evaluate_stage(
             "lineage_key": row.get("lineage_key"),
             "selected": None if selected is None else selected.uci(),
             "success": success,
+            "graded_success": graded_success,
             "metrics": metrics,
             "score_components": score_components,
             "failure_buckets": [] if success else _failure_buckets(metrics),
@@ -595,9 +602,27 @@ def _evaluate_stage(
         "position_count": total,
         "success_count": successes,
         "success_rate": 0.0 if total == 0 else successes / total,
+        "graded_success_count": graded_successes,
+        "graded_success_rate": 0.0 if total == 0 else graded_successes / total,
         "edge_trap_success_rate": _rate(counts["edge_trap_progress"]),
         "fence_hold_success_rate": _rate(counts["fence_hold_progress"]),
         "bridge_frontier_near_success_rate": _rate(counts["bridge_frontier_near"]),
+        "edge_trap_graded_success_rate": _rate(graded_counts["edge_trap_progress"]),
+        "fence_hold_graded_success_rate": _rate(graded_counts["fence_hold_progress"]),
+        "bridge_frontier_near_graded_success_rate": _rate(graded_counts["bridge_frontier_near"]),
+        "binary_to_graded_gap_count": sum(int(row["graded_success"] and not row["success"]) for row in out),
+        "fence_hold_binary_to_graded_gap_count": sum(
+            int(row["family"] == "fence_hold_progress" and row["graded_success"] and not row["success"])
+            for row in out
+        ),
+        "safe_confinement_only_progress_count": sum(
+            int(row["metrics"]["safe_confinement_progress"] and not row["metrics"]["black_mobility_reduced"])
+            for row in out
+        ),
+        "graded_progress_without_handoff_count": sum(
+            int(row["graded_success"] and not row["metrics"]["all_reply_handoff"])
+            for row in out
+        ),
         "confinement_improvement_count": sum(int(row["metrics"]["confinement_improved"]) for row in out),
         "confinement_regression_count": sum(int(row["metrics"]["confinement_regressed"]) for row in out),
         "black_mobility_reduction_count": sum(int(row["metrics"]["black_mobility_reduced"]) for row in out),
@@ -1058,7 +1083,25 @@ def _move_metrics(
     parent: dict[str, TerminalAffordanceLearner] | None,
 ) -> dict[str, Any]:
     if move is None or move not in board.legal_moves:
-        return {"illegal": True, "rook_risk": False, "rook_missing": False, "stalemate": False, "success_signal": 0.0, "low_progress": True, "all_reply_handoff": False, "partial_reply_handoff": False, "confinement_improved": False, "confinement_regressed": False, "black_mobility_reduced": False, "rook_safe": False}
+        return {
+            "illegal": True,
+            "rook_risk": False,
+            "rook_missing": False,
+            "stalemate": False,
+            "success_signal": 0.0,
+            "graded_progress_score": -1.0,
+            "graded_progress_class": "illegal_or_missing_move",
+            "low_progress": True,
+            "all_reply_handoff": False,
+            "partial_reply_handoff": False,
+            "confinement_improved": False,
+            "confinement_regressed": False,
+            "black_mobility_reduced": False,
+            "rook_safe": False,
+            "safe_confinement_progress": False,
+            "safe_mobility_progress": False,
+            "safe_edge_progress": False,
+        }
     after = board.copy(stack=False)
     after.push(move)
     before_f = extract_learner_features(board)
@@ -1073,21 +1116,41 @@ def _move_metrics(
     confinement_regressed = after_area > before_area
     mobility_reduced = after_f["black_reply_mobility"] < before_f["black_reply_mobility"]
     edge_progress = after_f["black_king_nearest_edge_distance"] < before_f["black_king_nearest_edge_distance"]
+    king_approach = after_f["white_king_to_black_king_distance"] < before_f["white_king_to_black_king_distance"]
+    rook_safe = not rook_risk and not rook_missing
     success_signal = sum([confinement_improved, mobility_reduced, edge_progress, all_handoff]) - sum([rook_risk, stalemate, confinement_regressed])
+    graded_progress_score = _graded_progress_score(
+        rook_safe=rook_safe,
+        stalemate=stalemate,
+        illegal=False,
+        confinement_improved=confinement_improved,
+        confinement_regressed=confinement_regressed,
+        mobility_reduced=mobility_reduced,
+        edge_progress=edge_progress,
+        king_approach=king_approach,
+        partial_reply_handoff=any_handoff and not all_handoff,
+        all_reply_handoff=all_handoff,
+    )
     return {
         "illegal": False,
         "rook_risk": rook_risk,
         "rook_missing": rook_missing,
         "stalemate": stalemate,
-        "rook_safe": not rook_risk and not rook_missing,
+        "rook_safe": rook_safe,
         "confinement_improved": confinement_improved,
         "confinement_regressed": confinement_regressed,
         "black_mobility_reduced": mobility_reduced,
         "edge_progress": edge_progress,
+        "king_approach": king_approach,
         "partial_reply_handoff": any_handoff and not all_handoff,
         "all_reply_handoff": all_handoff,
         "low_progress": success_signal <= 0,
         "success_signal": float(success_signal),
+        "graded_progress_score": graded_progress_score,
+        "graded_progress_class": _graded_progress_class(graded_progress_score),
+        "safe_confinement_progress": bool(rook_safe and confinement_improved and not confinement_regressed),
+        "safe_mobility_progress": bool(rook_safe and mobility_reduced and not confinement_regressed),
+        "safe_edge_progress": bool(rook_safe and edge_progress and not confinement_regressed),
         "after_fen": after.fen(),
     }
 
@@ -1098,6 +1161,60 @@ def _stage_success(metrics: dict[str, Any], family: str) -> bool:
     if family in ("decoy_edge", "hard_decoy_edge"):
         return not metrics["all_reply_handoff"] and not metrics["partial_reply_handoff"] and metrics["rook_safe"]
     return bool(metrics["all_reply_handoff"] or (metrics["confinement_improved"] and metrics["black_mobility_reduced"]) or (metrics["edge_progress"] and metrics["rook_safe"] and not metrics["low_progress"]))
+
+
+def _stage_graded_success(metrics: dict[str, Any], family: str) -> bool:
+    if metrics["illegal"] or metrics["rook_risk"] or metrics.get("rook_missing", False) or metrics["stalemate"] or metrics["confinement_regressed"]:
+        return False
+    if family in ("decoy_edge", "hard_decoy_edge"):
+        return not metrics["all_reply_handoff"] and not metrics["partial_reply_handoff"] and metrics["rook_safe"]
+    if metrics["all_reply_handoff"]:
+        return True
+    if family == "fence_hold_progress":
+        return bool(metrics["safe_confinement_progress"] or metrics["safe_mobility_progress"])
+    return bool(
+        metrics["safe_confinement_progress"] and metrics["safe_mobility_progress"]
+        or metrics["safe_edge_progress"] and not metrics["low_progress"]
+    )
+
+
+def _graded_progress_score(
+    *,
+    rook_safe: bool,
+    stalemate: bool,
+    illegal: bool,
+    confinement_improved: bool,
+    confinement_regressed: bool,
+    mobility_reduced: bool,
+    edge_progress: bool,
+    king_approach: bool,
+    partial_reply_handoff: bool,
+    all_reply_handoff: bool,
+) -> float:
+    if illegal or not rook_safe or stalemate:
+        return -1.0
+    if confinement_regressed:
+        return -0.8
+    score = 0.0
+    score += 1.0 if all_reply_handoff else 0.0
+    score += 0.35 if confinement_improved else 0.0
+    score += 0.20 if mobility_reduced else 0.0
+    score += 0.15 if edge_progress else 0.0
+    score += 0.05 if king_approach and confinement_improved else 0.0
+    score -= 0.20 if partial_reply_handoff else 0.0
+    return round(score, 6)
+
+
+def _graded_progress_class(score: float) -> str:
+    if score >= 1.0:
+        return "all_reply_handoff"
+    if score >= 0.50:
+        return "strong_safe_progress"
+    if score > 0.0:
+        return "weak_safe_progress"
+    if score == 0.0:
+        return "no_progress"
+    return "unsafe_or_regressed"
 
 
 def _run_online_episodes(
@@ -1309,6 +1426,8 @@ def _failure_rows(rows: list[dict[str, Any]], parent, edge_learner) -> list[dict
             "regression_type": row.get("regression_type"),
             "selected_move": row.get("selected"),
             "after_selected_fen": after,
+            "binary_success": row.get("success"),
+            "graded_success": row.get("graded_success"),
             "failure_bucket": row["failure_buckets"],
             "active_positive_terminal_keys": row.get("score_components", {}).get("active_positive_terminal_keys", []),
             "active_veto_terminal_keys": row.get("score_components", {}).get("active_veto_terminal_keys", []),
@@ -1316,6 +1435,11 @@ def _failure_rows(rows: list[dict[str, Any]], parent, edge_learner) -> list[dict
             "evidence_activations": 0 if selected is None else edge_learner.active_terminal_count(board, selected),
             "foundation_handoff_present": row["metrics"]["all_reply_handoff"],
             "partial_foundation_handoff_present": row["metrics"]["partial_reply_handoff"],
+            "graded_progress_score": row["metrics"].get("graded_progress_score"),
+            "graded_progress_class": row["metrics"].get("graded_progress_class"),
+            "safe_confinement_progress": row["metrics"].get("safe_confinement_progress"),
+            "safe_mobility_progress": row["metrics"].get("safe_mobility_progress"),
+            "safe_edge_progress": row["metrics"].get("safe_edge_progress"),
             "rook_risk_present": row["metrics"]["rook_risk"],
             "rook_missing_present": row["metrics"].get("rook_missing", False),
             "stalemate_risk_present": row["metrics"]["stalemate"],
@@ -1386,6 +1510,20 @@ def _decision(
         and decoy_false_count == 0
         and hard_decoy_false_count == 0
     )
+    graded_behavior_pass = (
+        foundation_before["pass"]
+        and foundation_after["pass"]
+        and candidate_behavior["graded_success_rate"] >= 0.75
+        and candidate_behavior["fence_hold_graded_success_rate"] >= 0.60
+        and candidate_behavior["rook_blunder_count"] == 0
+        and candidate_behavior["rook_missing_count"] == 0
+        and candidate_behavior["unsafe_move_count"] == 0
+        and candidate_behavior["illegal_move_count"] == 0
+        and candidate_behavior["stalemate_count"] == 0
+        and candidate_behavior["confinement_regression_count"] == 0
+        and decoy_false_count == 0
+        and hard_decoy_false_count == 0
+    )
     m4_pass = behavior_pass and edge_m4["edge_fence_m4_true_promotion_count"] > 0 and m4_only["success_rate"] >= 0.75 and ablations["edge_fence_M4_ablation_causal"]
     if m4_pass:
         interpretation = "edge_fence_M4_consolidation_pass"
@@ -1393,6 +1531,9 @@ def _decision(
     elif behavior_pass:
         interpretation = "edge_fence_behavioral_pass_without_M4_consolidation"
         next_action = "repair_edge_fence_M4_consolidation"
+    elif graded_behavior_pass:
+        interpretation = "edge_fence_graded_progress_pass_without_binary_handoff"
+        next_action = "repair_fence_hold_handoff_after_graded_progress"
     else:
         interpretation = "edge_fence_stage_failed_below_threshold"
         next_action = "repair_real_edge_fence_stage"
@@ -1446,9 +1587,19 @@ def _decision(
         "true_M3_plus_M4_success_rate": m3_plus_m4["success_rate"],
         "true_M3_plus_M4_alias_of_M3_only": False,
         "edge_fence_success_rate": candidate_behavior["success_rate"],
+        "edge_fence_graded_success_rate": candidate_behavior["graded_success_rate"],
+        "edge_fence_graded_success_count": candidate_behavior["graded_success_count"],
+        "edge_fence_binary_to_graded_gap_count": candidate_behavior["binary_to_graded_gap_count"],
         "edge_trap_success_rate": candidate_behavior["edge_trap_success_rate"],
         "fence_hold_success_rate": candidate_behavior["fence_hold_success_rate"],
         "bridge_frontier_near_success_rate": candidate_behavior["bridge_frontier_near_success_rate"],
+        "edge_trap_graded_success_rate": candidate_behavior["edge_trap_graded_success_rate"],
+        "fence_hold_graded_success_rate": candidate_behavior["fence_hold_graded_success_rate"],
+        "bridge_frontier_near_graded_success_rate": candidate_behavior["bridge_frontier_near_graded_success_rate"],
+        "fence_hold_binary_to_graded_gap_count": candidate_behavior["fence_hold_binary_to_graded_gap_count"],
+        "safe_confinement_only_progress_count": candidate_behavior["safe_confinement_only_progress_count"],
+        "graded_progress_without_handoff_count": candidate_behavior["graded_progress_without_handoff_count"],
+        "graded_behavior_pass_without_binary_handoff": graded_behavior_pass,
         "confinement_improvement_count": candidate_behavior["confinement_improvement_count"],
         "confinement_regression_count": candidate_behavior["confinement_regression_count"],
         "black_mobility_reduction_count": candidate_behavior["black_mobility_reduction_count"],

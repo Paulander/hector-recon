@@ -4,9 +4,11 @@ from recon_lite_chess.autogrowth.clean_edge_fence_stage import (
     _combine_m3_plus_m4,
     _is_veto_terminal_key,
     _local_progress_terminal_keys,
+    _move_metrics,
     _promote_edge_fence,
     _purity_boundary,
     _score_components,
+    _stage_graded_success,
     _stage_success,
     _update_edge_move,
 )
@@ -275,3 +277,36 @@ def test_tg47d_context_protected_local_progress_affordance_can_mature() -> None:
     promoted_as = {row["terminal_key"]: row["promoted_as"] for row in result["candidate_rows"] if row["promoted"]}
     assert promoted_as[positive_key] == "affordance"
     assert promoted_as[veto_key] == "veto"
+
+
+def test_tg47e_fence_hold_safe_confinement_progress_is_graded_not_binary() -> None:
+    metrics = {
+        "illegal": False,
+        "rook_risk": False,
+        "rook_missing": False,
+        "stalemate": False,
+        "confinement_regressed": False,
+        "all_reply_handoff": False,
+        "partial_reply_handoff": False,
+        "rook_safe": True,
+        "confinement_improved": True,
+        "black_mobility_reduced": False,
+        "edge_progress": False,
+        "low_progress": False,
+        "safe_confinement_progress": True,
+        "safe_mobility_progress": False,
+        "safe_edge_progress": False,
+    }
+
+    assert _stage_success(metrics, "fence_hold_progress") is False
+    assert _stage_graded_success(metrics, "fence_hold_progress") is True
+
+
+def test_tg47e_unsafe_move_fails_binary_and_graded_progress() -> None:
+    board = chess.Board("8/7K/8/8/6k1/8/5R2/8 w - - 0 1")
+    metrics = _move_metrics(board, chess.Move.from_uci("f2f4"), parent=None)
+
+    assert metrics["rook_risk"] is True
+    assert _stage_success(metrics, "fence_hold_progress") is False
+    assert _stage_graded_success(metrics, "fence_hold_progress") is False
+    assert metrics["graded_progress_class"] == "unsafe_or_regressed"
