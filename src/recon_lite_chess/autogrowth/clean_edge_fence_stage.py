@@ -62,6 +62,7 @@ class CleanEdgeFenceStageConfig:
     eval_trace_path: str = str(DEFAULT_OUTPUT_DIR / "pools" / "tg47_eval_traces.jsonl.gz")
     failure_pool_path: str = str(DEFAULT_OUTPUT_DIR / "pools" / "tg47_failure_pool.jsonl.gz")
     online_trace_path: str = str(DEFAULT_OUTPUT_DIR / "pools" / "tg47_online_episodes.jsonl.gz")
+    continuation_trace_path: str = str(DEFAULT_OUTPUT_DIR / "pools" / "tg47_continuation_traces.jsonl.gz")
     m4_audit_log_path: str = str(DEFAULT_OUTPUT_DIR / "pools" / "tg47_m4_audit.jsonl.gz")
     graph_summary_path: str = str(DEFAULT_OUTPUT_DIR / "pools" / "tg47_graph_summary.json")
     promoted_edge_fence_artifact_path: str = str(DEFAULT_OUTPUT_DIR / "promoted_tg47_edge_fence.json")
@@ -83,6 +84,7 @@ class CleanEdgeFenceStageConfig:
     m4_max_unsafe_activation: int = 0
     m4_max_decoy_false_handoff_activation: int = 0
     stage_play_episode_count: int = 120
+    continuation_training_enabled: bool = False
     fresh_extension: bool = True
 
 
@@ -146,6 +148,14 @@ def run_clean_edge_fence_stage(*, config: CleanEdgeFenceStageConfig) -> CleanEdg
         edge_learner=edge_learner,
         parent=parent,
     )
+    continuation_train_rows = []
+    if config.continuation_training_enabled:
+        continuation_train_rows = _train_edge_fence_continuations(
+            datasets["train"],
+            edge_learner=edge_learner,
+            parent=parent,
+        )
+    train_rows.extend(continuation_train_rows)
     _write_jsonl_gzip(config.train_trace_path, train_rows)
     progress["phases"].append(_phase("train_edge_fence_M3", phase_start))
     _write_json(config.progress_path, progress)
@@ -204,6 +214,13 @@ def run_clean_edge_fence_stage(*, config: CleanEdgeFenceStageConfig) -> CleanEdg
         edge_learner=m4_learner,
         trace_type="decoy_eval",
     )
+    continuation_m4 = _evaluate_stage_continuations(
+        datasets["heldout"],
+        parent=parent,
+        edge_learner=m4_learner,
+        trace_type="edge_fence_M4_continuation",
+    )
+    _write_jsonl_gzip(config.continuation_trace_path, continuation_m4["rows"])
     progress["phases"].append(_phase("promote_and_evaluate_M4", phase_start))
     _write_json(config.progress_path, progress)
 
@@ -218,7 +235,15 @@ def run_clean_edge_fence_stage(*, config: CleanEdgeFenceStageConfig) -> CleanEdg
     _write_json(config.progress_path, progress)
 
     foundation_after = _foundation_sanity(parent)
-    eval_rows = parent_only["rows"] + m3_only["rows"] + m4_only["rows"] + m3_plus_m4["rows"] + regression_m4["rows"] + decoy_eval["rows"]
+    eval_rows = (
+        parent_only["rows"]
+        + m3_only["rows"]
+        + m4_only["rows"]
+        + m3_plus_m4["rows"]
+        + regression_m4["rows"]
+        + decoy_eval["rows"]
+        + continuation_m4["rows"]
+    )
     failures = _collect_failure_pool_rows(
         parent_only=parent_only,
         m3_only=m3_only,
@@ -252,6 +277,7 @@ def run_clean_edge_fence_stage(*, config: CleanEdgeFenceStageConfig) -> CleanEdg
         regression_m4=regression_m4,
         decoy_eval=decoy_eval,
         online=online,
+        continuation_m4=continuation_m4,
         edge_m4=edge_m4,
         graph_summary=graph_summary,
         ablations=ablations,
@@ -286,6 +312,7 @@ def run_clean_edge_fence_stage(*, config: CleanEdgeFenceStageConfig) -> CleanEdg
             "edge_fence_M4_only": _strip_rows(m4_only),
             "no_foundation_response": _strip_rows(no_foundation),
             "decoy": _strip_rows(decoy_eval),
+            "edge_fence_M4_continuation": _strip_rows(continuation_m4),
         },
         "online": _strip_rows(online),
         "m4_audit": {k: v for k, v in edge_m4.items() if k != "candidate_rows"},
@@ -299,6 +326,7 @@ def run_clean_edge_fence_stage(*, config: CleanEdgeFenceStageConfig) -> CleanEdg
             "eval_traces": config.eval_trace_path,
             "failure_pool": config.failure_pool_path,
             "online_episode_trace": config.online_trace_path,
+            "continuation_traces": config.continuation_trace_path,
             "m4_audit_log": config.m4_audit_log_path,
             "graph_summary": config.graph_summary_path,
             "promoted_edge_fence_artifact": config.promoted_edge_fence_artifact_path,
@@ -491,6 +519,92 @@ def _train_edge_fence(
     return trace
 
 
+def _train_edge_fence_continuations(
+    rows: list[dict[str, Any]],
+    *,
+    edge_learner: TerminalAffordanceLearner,
+    parent: dict[str, TerminalAffordanceLearner],
+) -> list[dict[str, Any]]:
+    trace = []
+    for index, row in enumerate(rows):
+        board = chess.Board(row["fen"])
+        first = _choose_stage_move(board, parent=parent, edge_learner=edge_learner)
+        first_metrics = _move_metrics(board, first, parent=parent)
+        if first is None or not _stage_graded_success(first_metrics, row["family"]) or first_metrics["all_reply_handoff"]:
+            continue
+        after_first = board.copy(stack=False)
+        after_first.push(first)
+        for reply_index, reply in enumerate(sorted(after_first.legal_moves, key=lambda item: item.uci())):
+            state = after_first.copy(stack=False)
+            state.push(reply)
+            if state.turn != chess.WHITE:
+                continue
+            rewards = {move.uci(): _edge_reward(state, move, parent=parent) for move in state.legal_moves}
+            credited = _train_edge_rewards_on_board(edge_learner, state, rewards)
+            second = _choose_stage_move(state, parent=parent, edge_learner=edge_learner)
+            second_metrics = _move_metrics(state, second, parent=parent)
+            trace.append({
+                "trace_type": "tg47_continuation_train",
+                "index": index,
+                "reply_index": reply_index,
+                "fen": row["fen"],
+                "family": row["family"],
+                "first_move": first.uci(),
+                "black_reply": reply.uci(),
+                "successor_fen": state.fen(),
+                "second_selected": None if second is None else second.uci(),
+                "second_all_reply_handoff": second_metrics["all_reply_handoff"],
+                "second_graded_success": _stage_graded_success(second_metrics, row["family"]),
+                "max_reward": max(rewards.values()) if rewards else 0.0,
+                "credited": credited,
+                "terminal_count_after": len(edge_learner.terminals),
+            })
+    return trace
+
+
+def _train_edge_rewards_on_board(
+    edge_learner: TerminalAffordanceLearner,
+    board: chess.Board,
+    rewards: dict[str, float],
+) -> dict[str, int]:
+    positive_moves = [
+        move for move in sorted(board.legal_moves, key=lambda item: item.uci())
+        if rewards[move.uci()] >= 0.35
+    ]
+    if not positive_moves and rewards:
+        best_reward = max(rewards.values())
+        positive_moves = [
+            move for move in sorted(board.legal_moves, key=lambda item: item.uci())
+            if rewards[move.uci()] == best_reward and best_reward > 0.0
+        ]
+    catastrophic_moves = [
+        move for move in sorted(board.legal_moves, key=lambda item: item.uci())
+        if rewards[move.uci()] <= -0.50
+    ]
+    weak_moves = [
+        move for move in sorted(board.legal_moves, key=lambda item: item.uci())
+        if rewards[move.uci()] < 0.0 and move not in catastrophic_moves
+    ][:4]
+    wrong_moves = [
+        move for move in sorted(board.legal_moves, key=lambda item: edge_learner.weight_for_move(board, item), reverse=True)
+        if move not in positive_moves and move not in catastrophic_moves and move not in weak_moves
+    ][:5]
+    updates = {"positive": 0, "negative": 0, "neutral": 0}
+    for move in positive_moves:
+        _update_edge_move(edge_learner, board, move, reward=max(0.20, rewards[move.uci()]))
+        updates["positive"] += 1
+    for move in catastrophic_moves:
+        _update_edge_move(edge_learner, board, move, reward=-1.0)
+        updates["negative"] += 1
+    for move in weak_moves:
+        _update_edge_move(edge_learner, board, move, reward=min(-0.25, rewards[move.uci()]))
+        updates["negative"] += 1
+    for move in wrong_moves:
+        _update_edge_move(edge_learner, board, move, reward=min(-0.15, rewards[move.uci()]))
+        updates["negative"] += 1
+    return updates
+
+
 def _update_edge_move(
     learner: TerminalAffordanceLearner,
     board: chess.Board,
@@ -642,6 +756,99 @@ def _evaluate_stage(
         "hard_decoy_partial_reply_false_handoff_count": sum(int(row["family"] == "hard_decoy_edge" and row["metrics"]["partial_reply_handoff"]) for row in out),
         "decoy_false_handoff_count": sum(int(row["family"] == "decoy_edge" and (row["metrics"]["all_reply_handoff"] or row["metrics"]["partial_reply_handoff"])) for row in out),
         "hard_decoy_false_handoff_count": sum(int(row["family"] == "hard_decoy_edge" and (row["metrics"]["all_reply_handoff"] or row["metrics"]["partial_reply_handoff"])) for row in out),
+        "rows": out,
+    }
+
+
+def _evaluate_stage_continuations(
+    rows: list[dict[str, Any]],
+    *,
+    parent: dict[str, TerminalAffordanceLearner],
+    edge_learner: TerminalAffordanceLearner,
+    trace_type: str,
+) -> dict[str, Any]:
+    out = []
+    attempted = 0
+    robust_success = 0
+    any_success = 0
+    second_unsafe = 0
+    for index, row in enumerate(rows):
+        board = chess.Board(row["fen"])
+        first = _choose_stage_move(board, parent=parent, edge_learner=edge_learner)
+        first_metrics = _move_metrics(board, first, parent=parent)
+        first_graded = _stage_graded_success(first_metrics, row["family"])
+        reply_rows = []
+        if first is not None and first_graded and not first_metrics["all_reply_handoff"]:
+            attempted += 1
+            after_first = board.copy(stack=False)
+            after_first.push(first)
+            for reply_index, reply in enumerate(sorted(after_first.legal_moves, key=lambda item: item.uci())):
+                state = after_first.copy(stack=False)
+                state.push(reply)
+                second = _choose_stage_move(state, parent=parent, edge_learner=edge_learner)
+                second_metrics = _move_metrics(state, second, parent=parent)
+                second_ok = bool(second_metrics["all_reply_handoff"])
+                second_bad = bool(
+                    second_metrics["rook_risk"]
+                    or second_metrics.get("rook_missing", False)
+                    or second_metrics["stalemate"]
+                    or second_metrics["illegal"]
+                    or second_metrics["confinement_regressed"]
+                )
+                second_unsafe += int(second_bad)
+                reply_rows.append({
+                    "reply_index": reply_index,
+                    "black_reply": reply.uci(),
+                    "successor_fen": state.fen(),
+                    "second_selected": None if second is None else second.uci(),
+                    "second_all_reply_handoff": second_ok,
+                    "second_graded_success": _stage_graded_success(second_metrics, row["family"]),
+                    "second_unsafe": second_bad,
+                    "second_metrics": second_metrics,
+                })
+        reply_total = len(reply_rows)
+        solved = sum(int(item["second_all_reply_handoff"]) for item in reply_rows)
+        robust = bool(reply_total > 0 and solved == reply_total)
+        any_reply = bool(solved > 0)
+        robust_success += int(robust)
+        any_success += int(any_reply)
+        out.append({
+            "trace_type": trace_type,
+            "index": index,
+            "fen": row["fen"],
+            "family": row["family"],
+            "split": row.get("split"),
+            "lineage_key": row.get("lineage_key"),
+            "first_selected": None if first is None else first.uci(),
+            "first_graded_success": first_graded,
+            "first_binary_success": _stage_success(first_metrics, row["family"]),
+            "first_all_reply_handoff": first_metrics["all_reply_handoff"],
+            "attempted_continuation": bool(reply_rows),
+            "reply_total": reply_total,
+            "reply_second_handoff_count": solved,
+            "continuation_any_reply_handoff": any_reply,
+            "continuation_all_reply_handoff": robust,
+            "reply_envelope_success_rate": 0.0 if reply_total == 0 else solved / reply_total,
+            "reply_rows": reply_rows,
+        })
+    total = len(out)
+    return {
+        "position_count": total,
+        "attempted_continuation_count": attempted,
+        "continuation_any_reply_handoff_count": any_success,
+        "continuation_all_reply_handoff_count": robust_success,
+        "continuation_any_reply_handoff_rate": 0.0 if attempted == 0 else any_success / attempted,
+        "continuation_all_reply_handoff_rate": 0.0 if attempted == 0 else robust_success / attempted,
+        "continuation_second_unsafe_count": second_unsafe,
+        "continuation_fence_hold_attempt_count": sum(
+            int(row["family"] == "fence_hold_progress" and row["attempted_continuation"]) for row in out
+        ),
+        "continuation_fence_hold_all_reply_handoff_count": sum(
+            int(row["family"] == "fence_hold_progress" and row["continuation_all_reply_handoff"]) for row in out
+        ),
+        "continuation_fence_hold_any_reply_handoff_count": sum(
+            int(row["family"] == "fence_hold_progress" and row["continuation_any_reply_handoff"]) for row in out
+        ),
         "rows": out,
     }
 
@@ -1486,6 +1693,7 @@ def _decision(
     regression_m4: dict[str, Any],
     decoy_eval: dict[str, Any],
     online: dict[str, Any],
+    continuation_m4: dict[str, Any],
     edge_m4: dict[str, Any],
     graph_summary: dict[str, Any],
     ablations: dict[str, Any],
@@ -1524,6 +1732,12 @@ def _decision(
         and decoy_false_count == 0
         and hard_decoy_false_count == 0
     )
+    continuation_handoff_pass = (
+        graded_behavior_pass
+        and continuation_m4["attempted_continuation_count"] > 0
+        and continuation_m4["continuation_all_reply_handoff_rate"] >= 0.60
+        and continuation_m4["continuation_second_unsafe_count"] == 0
+    )
     m4_pass = behavior_pass and edge_m4["edge_fence_m4_true_promotion_count"] > 0 and m4_only["success_rate"] >= 0.75 and ablations["edge_fence_M4_ablation_causal"]
     if m4_pass:
         interpretation = "edge_fence_M4_consolidation_pass"
@@ -1531,6 +1745,9 @@ def _decision(
     elif behavior_pass:
         interpretation = "edge_fence_behavioral_pass_without_M4_consolidation"
         next_action = "repair_edge_fence_M4_consolidation"
+    elif continuation_handoff_pass:
+        interpretation = "edge_fence_continuation_handoff_pass_without_binary_gate"
+        next_action = "scale_tg47_continuation_handoff_before_tg48"
     elif graded_behavior_pass:
         interpretation = "edge_fence_graded_progress_pass_without_binary_handoff"
         next_action = "repair_fence_hold_handoff_after_graded_progress"
@@ -1542,6 +1759,7 @@ def _decision(
         "checkpoint_interpretation": interpretation,
         "selected_repair_arm": "clean_edge_fence_generic_terminal_growth",
         "repair_applied": True,
+        "continuation_training_enabled": config.continuation_training_enabled,
         "run_scale_label": config.run_scale_label,
         "selected_next_action": next_action,
         "selected_next_action_reason": interpretation,
@@ -1600,6 +1818,16 @@ def _decision(
         "safe_confinement_only_progress_count": candidate_behavior["safe_confinement_only_progress_count"],
         "graded_progress_without_handoff_count": candidate_behavior["graded_progress_without_handoff_count"],
         "graded_behavior_pass_without_binary_handoff": graded_behavior_pass,
+        "continuation_handoff_pass_without_binary_gate": continuation_handoff_pass,
+        "continuation_attempted_count": continuation_m4["attempted_continuation_count"],
+        "continuation_any_reply_handoff_count": continuation_m4["continuation_any_reply_handoff_count"],
+        "continuation_all_reply_handoff_count": continuation_m4["continuation_all_reply_handoff_count"],
+        "continuation_any_reply_handoff_rate": continuation_m4["continuation_any_reply_handoff_rate"],
+        "continuation_all_reply_handoff_rate": continuation_m4["continuation_all_reply_handoff_rate"],
+        "continuation_second_unsafe_count": continuation_m4["continuation_second_unsafe_count"],
+        "continuation_fence_hold_attempt_count": continuation_m4["continuation_fence_hold_attempt_count"],
+        "continuation_fence_hold_any_reply_handoff_count": continuation_m4["continuation_fence_hold_any_reply_handoff_count"],
+        "continuation_fence_hold_all_reply_handoff_count": continuation_m4["continuation_fence_hold_all_reply_handoff_count"],
         "confinement_improvement_count": candidate_behavior["confinement_improvement_count"],
         "confinement_regression_count": candidate_behavior["confinement_regression_count"],
         "black_mobility_reduction_count": candidate_behavior["black_mobility_reduction_count"],

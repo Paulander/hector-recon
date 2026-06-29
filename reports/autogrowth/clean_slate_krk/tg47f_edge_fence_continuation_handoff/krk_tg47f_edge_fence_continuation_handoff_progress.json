@@ -1,0 +1,197 @@
+{
+  "checkpoint": "TG47f_edge_fence_continuation_handoff",
+  "completed": true,
+  "decision": {
+    "M3_trial_only_success_rate": 0.4166666666666667,
+    "M4_consolidated_only_success_rate": 0.5,
+    "ablation_results": {
+      "edge_fence_M4_ablation_causal": true,
+      "edge_fence_ablation_causal": true,
+      "foundation_dependency_ablation_causal": true,
+      "mask_M3_trial_weights": {
+        "success_rate": 0.5
+      },
+      "mask_M4_promotions": {
+        "success_rate": 0.16666666666666666
+      },
+      "mask_action_delta_evidence": {
+        "not_separately_materialized": true
+      },
+      "mask_actuator_terminals": {
+        "expected_runtime_choice_collapse": true
+      },
+      "mask_black_mobility_terminals": {
+        "not_separately_materialized": true
+      },
+      "mask_confinement_terminals": {
+        "not_separately_materialized": true
+      },
+      "mask_edge_distance_terminals": {
+        "not_separately_materialized": true
+      },
+      "mask_edge_fence_promoted_structures": {
+        "success_rate": 0.16666666666666666
+      },
+      "mask_foundation_response_evidence": {
+        "success_rate": 0.3333333333333333
+      },
+      "mask_repeated_low_progress_debt": {
+        "repeated_low_progress_count": 1
+      },
+      "mask_rook_safety_debt": {
+        "rook_blunder_count": 0
+      },
+      "mask_same_graph_foundation_continuation_evidence": {
+        "success_rate": 0.3333333333333333
+      },
+      "mask_shared_atoms": {
+        "not_separately_materialized": true
+      },
+      "mask_stalemate_risk_debt": {
+        "stalemate_count": 0
+      }
+    },
+    "action_ranker_used_for_runtime": false,
+    "all_reply_foundation_handoff_count": 0,
+    "black_mobility_reduction_count": 7,
+    "bridge_frontier_near_graded_success_rate": 1.0,
+    "bridge_frontier_near_success_rate": 1.0,
+    "checkpoint_interpretation": "edge_fence_stage_failed_below_threshold",
+    "checkpoint_pass": false,
+    "checkpoint_specific_fen_rule_count": 0,
+    "checkpoint_specific_move_rule_count": 0,
+    "confinement_improvement_count": 10,
+    "confinement_regression_count": 0,
+    "continuation_all_reply_handoff_count": 0,
+    "continuation_all_reply_handoff_rate": 0.0,
+    "continuation_any_reply_handoff_count": 0,
+    "continuation_any_reply_handoff_rate": 0.0,
+    "continuation_attempted_count": 10,
+    "continuation_fence_hold_all_reply_handoff_count": 0,
+    "continuation_fence_hold_any_reply_handoff_count": 0,
+    "continuation_fence_hold_attempt_count": 5,
+    "continuation_handoff_pass_without_binary_gate": false,
+    "continuation_second_unsafe_count": 2,
+    "continuation_training_enabled": true,
+    "decoy_all_reply_false_handoff_count": 0,
+    "decoy_count": 12,
+    "decoy_false_handoff_count": 1,
+    "decoy_partial_reply_false_handoff_count": 1,
+    "direct_provider_override": false,
+    "edge_fence_M4_ablation_causal": true,
+    "edge_fence_ablation_causal": true,
+    "edge_fence_binary_to_graded_gap_count": 4,
+    "edge_fence_graded_success_count": 10,
+    "edge_fence_graded_success_rate": 0.8333333333333334,
+    "edge_fence_heldout_count": 12,
+    "edge_fence_m4_candidate_count": 829,
+    "edge_fence_m4_only_success_rate": 0.5,
+    "edge_fence_m4_promoted_affordance_terminal_count": 3,
+    "edge_fence_m4_promoted_bundle_count": 1,
+    "edge_fence_m4_promoted_quorum_count": 1,
+    "edge_fence_m4_promoted_terminal_count": 20,
+    "edge_fence_m4_promoted_veto_terminal_count": 17,
+    "edge_fence_m4_true_promotion_count": 20,
+    "edge_fence_regression_count": 12,
+    "edge_fence_runtime_success_rate": 0.75,
+    "edge_fence_success_rate": 0.5,
+    "edge_fence_train_count": 24,
+    "edge_trap_graded_success_rate": 0.6666666666666666,
+    "edge_trap_success_rate": 0.6666666666666666,
+    "fence_hold_binary_to_graded_gap_count": 4,
+    "fence_hold_graded_success_rate": 0.8333333333333334,
+    "fence_hold_success_rate": 0.16666666666666666,
+    "foundation_dependency_ablation_causal": true,
+    "foundation_handoff_count": 6,
+    "foundation_sanity_after_pass": true,
+    "foundation_sanity_before_pass": true,
+    "generated_real_fens_used": true,
+    "graded_behavior_pass_without_binary_handoff": false,
+    "graded_progress_without_handoff_count": 10,
+    "graph_edge_count": 2841,
+    "graph_node_count": 951,
+    "group_lineage_disjoint": true,
+    "hard_decoy_all_reply_false_handoff_count": 0,
+    "hard_decoy_count": 12,
+    "hard_decoy_false_handoff_count": 0,
+    "hard_decoy_partial_reply_false_handoff_count": 0,
+    "illegal_move_count": 0,
+    "learner_visible_basin_labels": false,
+    "learner_visible_continuation_labels": false,
+    "learner_visible_depth_labels": false,
+    "learner_visible_edge_fence_labels": false,
+    "learner_visible_quality_labels": false,
+    "learner_visible_reply_policy_labels": false,
+    "learner_visible_stage_labels": false,
+    "m3_update_count": 286700,
+    "mate1_regression_accuracy": 1.0,
+    "mate2_all_reply_conversion_rate": 0.975,
+    "mate2_one_reply_false_positive_count": 0,
+    "mate2_regression_conversion_rate": 0.9,
+    "max_move_reached_count": 0,
+    "old_canary_loaded": false,
+    "old_tg_pools_loaded": 0,
+    "one_reply_false_positive_count": 0,
+    "paired_help_count": 5,
+    "paired_hurt_count": 0,
+    "parent_foundation_frozen": true,
+    "parent_foundation_hash": "84aee84704c2a7b84534509eaf7b8c257fdc846bef2531a595f5dbb775d513a6",
+    "parent_foundation_loaded": true,
+    "parent_foundation_m3_delta_during_edge_fence": 0,
+    "parent_foundation_m4_delta_during_edge_fence": 0,
+    "parent_foundation_only_success_rate": 0.125,
+    "partial_reply_foundation_support_count": 0,
+    "placeholder_fens_used": false,
+    "python_final_selector_used": false,
+    "repair_applied": true,
+    "repeated_low_progress_count": 1,
+    "rook_blunder_count": 0,
+    "rook_missing_count": 0,
+    "rook_safety_preserved_count": 12,
+    "run_scale_label": "smoke",
+    "runtime_tablebase_or_dtm_move_source": false,
+    "safe_confinement_only_progress_count": 4,
+    "script_node_count": 3,
+    "selected_behavior_arm": "M4_consolidated_only",
+    "selected_next_action": "repair_real_edge_fence_stage",
+    "selected_next_action_reason": "edge_fence_stage_failed_below_threshold",
+    "selected_repair_arm": "clean_edge_fence_generic_terminal_growth",
+    "stage_play_episode_count": 8,
+    "stalemate_count": 0,
+    "success_delta_vs_foundation_only": 0.625,
+    "synthetic_stage_runner_used": false,
+    "synthetic_tg46_target_rate_paths_detected": true,
+    "terminal_node_count": 947,
+    "total_seconds": 742.822657,
+    "true_M3_plus_M4_alias_of_M3_only": false,
+    "true_M3_plus_M4_success_rate": 0.4166666666666667,
+    "unsafe_move_count": 0
+  },
+  "phases": [
+    {
+      "phase": "load_and_verify_parent_foundation",
+      "seconds": 241.262684
+    },
+    {
+      "phase": "generate_edge_fence_datasets",
+      "seconds": 0.020755
+    },
+    {
+      "phase": "train_edge_fence_M3",
+      "seconds": 216.029061
+    },
+    {
+      "phase": "evaluate_parent_and_M3",
+      "seconds": 36.502337
+    },
+    {
+      "phase": "promote_and_evaluate_M4",
+      "seconds": 186.367803
+    },
+    {
+      "phase": "stage_play_online",
+      "seconds": 0.250729
+    }
+  ],
+  "schema_version": "krk_tg47f_edge_fence_continuation_handoff_progress.v0"
+}

@@ -2,6 +2,7 @@ from recon_lite_chess.autogrowth.clean_edge_fence_stage import (
     CleanEdgeFenceStageConfig,
     _collect_failure_pool_rows,
     _combine_m3_plus_m4,
+    _graded_progress_score,
     _is_veto_terminal_key,
     _local_progress_terminal_keys,
     _move_metrics,
@@ -211,6 +212,7 @@ def test_tg47b_parent_and_purity_invariants_point_to_clean_tg46d() -> None:
     purity = _purity_boundary()
 
     assert cfg.parent_foundation_artifact_path.endswith("tg46d_m4_foundation_consolidation/promoted_tg46d_foundation.json")
+    assert cfg.continuation_training_enabled is False
     assert purity["runtime_tablebase_or_dtm_move_source"] is False
     assert purity["action_ranker_used_for_runtime"] is False
     assert purity["python_final_selector_used"] is False
@@ -310,3 +312,46 @@ def test_tg47e_unsafe_move_fails_binary_and_graded_progress() -> None:
     assert _stage_success(metrics, "fence_hold_progress") is False
     assert _stage_graded_success(metrics, "fence_hold_progress") is False
     assert metrics["graded_progress_class"] == "unsafe_or_regressed"
+
+
+def test_tg47f_graded_score_prioritizes_handoff_over_weak_progress() -> None:
+    weak = _graded_progress_score(
+        rook_safe=True,
+        stalemate=False,
+        illegal=False,
+        confinement_improved=True,
+        confinement_regressed=False,
+        mobility_reduced=False,
+        edge_progress=False,
+        king_approach=False,
+        partial_reply_handoff=False,
+        all_reply_handoff=False,
+    )
+    handoff = _graded_progress_score(
+        rook_safe=True,
+        stalemate=False,
+        illegal=False,
+        confinement_improved=False,
+        confinement_regressed=False,
+        mobility_reduced=False,
+        edge_progress=False,
+        king_approach=False,
+        partial_reply_handoff=False,
+        all_reply_handoff=True,
+    )
+    unsafe = _graded_progress_score(
+        rook_safe=False,
+        stalemate=False,
+        illegal=False,
+        confinement_improved=True,
+        confinement_regressed=False,
+        mobility_reduced=True,
+        edge_progress=True,
+        king_approach=True,
+        partial_reply_handoff=False,
+        all_reply_handoff=True,
+    )
+
+    assert 0.0 < weak < handoff
+    assert handoff >= 1.0
+    assert unsafe < 0.0
