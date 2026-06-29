@@ -40,6 +40,12 @@ from .terminal_substrate import TerminalAffordanceLearner, _train_terminal_mate_
 
 DEFAULT_TG46D_DIR = Path("reports/autogrowth/clean_slate_krk/tg46d_m4_foundation_consolidation")
 DEFAULT_OUTPUT_DIR = Path("reports/autogrowth/clean_slate_krk/tg47_edge_fence")
+PARENT_FOUNDATION_SCORE_SCALE = 0.20
+NON_VETO_NEGATIVE_SCORE_SCALE = 0.25
+VETO_DOMINANCE_SCORE_SCALE = 8.0
+DERIVED_VETO_WEIGHT = -18.0
+_FOUNDATION_REPLY_HANDOFF_CACHE: dict[str, tuple[bool, bool]] = {}
+_FOUNDATION_SOLVES_WHITE_TO_MOVE_CACHE: dict[str, bool] = {}
 
 
 @dataclass(frozen=True)
@@ -72,6 +78,8 @@ class CleanEdgeFenceStageConfig:
     m4_precision_threshold: float = 0.58
     m4_min_positive_support: int = 12
     m4_min_negative_support: int = 12
+    m4_min_family_support: int = 4
+    m4_min_family_precision: float = 0.70
     m4_max_unsafe_activation: int = 0
     m4_max_decoy_false_handoff_activation: int = 0
     stage_play_episode_count: int = 120
@@ -104,6 +112,7 @@ def run_clean_edge_fence_stage(*, config: CleanEdgeFenceStageConfig) -> CleanEdg
     if not config.fresh_extension:
         raise ValueError("TG47 requires fresh_extension=True")
     start = time.perf_counter()
+    _clear_foundation_diagnostic_caches()
     _ensure_parents(config)
     progress = {
         "schema_version": config.progress_schema_version,
@@ -117,6 +126,7 @@ def run_clean_edge_fence_stage(*, config: CleanEdgeFenceStageConfig) -> CleanEdg
     parent_artifact = _load_json(config.parent_foundation_artifact_path)
     parent_hash = _file_sha256(config.parent_foundation_artifact_path)
     parent = _reconstruct_parent_foundation(parent_artifact)
+    _clear_foundation_diagnostic_caches()
     foundation_before = _foundation_sanity(parent)
     progress["phases"].append(_phase("load_and_verify_parent_foundation", phase_start))
     _write_json(config.progress_path, progress)
@@ -610,9 +620,8 @@ def _choose_stage_move(
 ) -> chess.Move | None:
     options = []
     for move in sorted(board.legal_moves, key=lambda item: item.uci()):
-        edge_weight = 0.0 if edge_learner is None else edge_learner.weight_for_move(board, move)
-        parent_weight = 0.0 if parent is None else parent["mate2_first"].weight_for_move(board, move)
-        options.append((edge_weight + 0.20 * parent_weight, move.uci(), move))
+        score = _score_components(board, move, parent=parent, edge_learner=edge_learner)["final_score"]
+        options.append((score, move.uci(), move))
     options.sort(reverse=True)
     return options[0][-1] if options else None
 
@@ -637,8 +646,10 @@ def _score_components(
     parent_weight = 0.0 if parent is None else parent["mate2_first"].weight_for_move(board, move)
     active_positive: list[str] = []
     active_veto: list[str] = []
+    active_other_negative: list[str] = []
     positive_weight = 0.0
     veto_weight = 0.0
+    other_negative_weight = 0.0
     edge_weight = 0.0
     if edge_learner is not None:
         for key, _scale in terminal_action_feature_keys(
@@ -657,16 +668,54 @@ def _score_components(
             elif terminal.local_weight > 0.0:
                 active_positive.append(key)
                 positive_weight += terminal.local_weight
-    final_score = edge_weight + 0.20 * parent_weight
+            elif terminal.local_weight < 0.0:
+                active_other_negative.append(key)
+                other_negative_weight += terminal.local_weight
+    if edge_learner is not None:
+        for key, weight in _derived_veto_terminal_weights(board, move, parent=parent):
+            active_veto.append(key)
+            veto_weight += weight
+            edge_weight += weight
+    final_score = (
+        PARENT_FOUNDATION_SCORE_SCALE * parent_weight
+        + positive_weight
+        + NON_VETO_NEGATIVE_SCORE_SCALE * other_negative_weight
+        + VETO_DOMINANCE_SCORE_SCALE * veto_weight
+    )
     return {
         "parent_weight": round(parent_weight, 6),
         "edge_weight": round(edge_weight, 6),
         "positive_terminal_weight": round(positive_weight, 6),
         "veto_terminal_weight": round(veto_weight, 6),
+        "other_negative_terminal_weight": round(other_negative_weight, 6),
         "final_score": round(final_score, 6),
         "active_positive_terminal_keys": active_positive[:64],
         "active_veto_terminal_keys": active_veto[:64],
+        "active_other_negative_terminal_keys": active_other_negative[:64],
     }
+
+
+def _derived_veto_terminal_weights(
+    board: chess.Board,
+    move: chess.Move,
+    *,
+    parent: dict[str, TerminalAffordanceLearner] | None,
+) -> list[tuple[str, float]]:
+    metrics = _move_metrics(board, move, parent=parent)
+    out: list[tuple[str, float]] = []
+    if metrics["rook_risk"]:
+        out.append(("derived_veto_terminal:rook_capturable_by_reply=1", DERIVED_VETO_WEIGHT))
+    if metrics.get("rook_missing", False):
+        out.append(("derived_veto_terminal:rook_missing_after=1", DERIVED_VETO_WEIGHT))
+    if metrics["stalemate"]:
+        out.append(("derived_veto_terminal:stalemate_after=1", DERIVED_VETO_WEIGHT))
+    if metrics["confinement_regressed"]:
+        out.append(("derived_veto_terminal:confinement_regression=1", DERIVED_VETO_WEIGHT))
+    if metrics["low_progress"]:
+        out.append(("derived_veto_terminal:low_progress=1", DERIVED_VETO_WEIGHT * 0.25))
+    if metrics["partial_reply_handoff"] and not metrics["all_reply_handoff"]:
+        out.append(("derived_veto_terminal:nonrobust_successor_support=1", DERIVED_VETO_WEIGHT * 0.5))
+    return out
 
 
 def _promote_edge_fence(
@@ -689,6 +738,7 @@ def _promote_edge_fence(
         decoy_false_handoff_activation = int(audit["decoy_false_handoff_activation_count"])
         hard_decoy_false_handoff_activation = int(audit["hard_decoy_false_handoff_activation_count"])
         broad_standalone = _is_broad_standalone_affordance_key(key)
+        context_protected = _context_protected_affordance_pass(audit, config)
         promote_positive = (
             terminal.local_weight > 0.0
             and precision >= config.m4_precision_threshold
@@ -698,6 +748,7 @@ def _promote_edge_fence(
             and decoy_false_handoff_activation <= config.m4_max_decoy_false_handoff_activation
             and hard_decoy_false_handoff_activation <= config.m4_max_decoy_false_handoff_activation
             and not broad_standalone
+            and context_protected
         )
         promote_veto = (
             terminal.local_weight < 0.0
@@ -728,6 +779,7 @@ def _promote_edge_fence(
             "decoy_false_handoff_activation_count": decoy_false_handoff_activation,
             "hard_decoy_false_handoff_activation_count": hard_decoy_false_handoff_activation,
             "broad_standalone_affordance": broad_standalone,
+            "context_protected_affordance": context_protected,
             "promoted_as": "veto" if promote_veto else "affordance" if promote_positive else None,
             "promoted": promote,
         })
@@ -782,6 +834,17 @@ def _is_broad_standalone_affordance_key(key: str) -> bool:
     return key in broad_keys
 
 
+def _context_protected_affordance_pass(audit: dict[str, Any], config: CleanEdgeFenceStageConfig) -> bool:
+    for family in ("edge_trap_progress", "fence_hold_progress", "bridge_frontier_near"):
+        family_audit = audit.get("family_audit", {}).get(family, {})
+        if (
+            int(family_audit.get("support", 0)) >= config.m4_min_family_support
+            and float(family_audit.get("precision", 0.0)) >= config.m4_min_family_precision
+        ):
+            return True
+    return False
+
+
 def _empty_terminal_audit() -> dict[str, Any]:
     return {
         "family_audit": {},
@@ -797,6 +860,7 @@ def _is_veto_terminal_key(key: str) -> bool:
     """Terminal-local negative structures that may survive as suppressors."""
 
     veto_fragments = (
+        "derived_veto_terminal:",
         "rook_attacked_after=1",
         "rook_attacked_by_black=1",
         "rook_safe=0",
@@ -958,25 +1022,45 @@ def _foundation_reply_handoff(
 ) -> tuple[bool, bool]:
     if parent is None:
         return False, False
+    cache_key = after_white_move.fen()
+    cached = _FOUNDATION_REPLY_HANDOFF_CACHE.get(cache_key)
+    if cached is not None:
+        return cached
     replies = list(after_white_move.legal_moves)
     if not replies:
-        return False, False
+        result = (False, False)
+        _FOUNDATION_REPLY_HANDOFF_CACHE[cache_key] = result
+        return result
     solved = 0
     for reply in replies:
         state = after_white_move.copy(stack=False)
         state.push(reply)
         if _foundation_solves_white_to_move(state, parent):
             solved += 1
-    return solved > 0, solved == len(replies)
+    result = (solved > 0, solved == len(replies))
+    _FOUNDATION_REPLY_HANDOFF_CACHE[cache_key] = result
+    return result
 
 
 def _foundation_solves_white_to_move(board: chess.Board, parent: dict[str, TerminalAffordanceLearner]) -> bool:
+    cache_key = board.fen()
+    cached = _FOUNDATION_SOLVES_WHITE_TO_MOVE_CACHE.get(cache_key)
+    if cached is not None:
+        return cached
     mate = parent["mate1"].choose(board)
     if mate is not None and mate.uci() in {move.uci() for move in _mate_moves(board)}:
+        _FOUNDATION_SOLVES_WHITE_TO_MOVE_CACHE[cache_key] = True
         return True
     first = parent["mate2_first"].choose(board)
     forced = {move.uci() for move in _forced_mate_in_two_first_moves(board)}
-    return bool(first is not None and first.uci() in forced)
+    result = bool(first is not None and first.uci() in forced)
+    _FOUNDATION_SOLVES_WHITE_TO_MOVE_CACHE[cache_key] = result
+    return result
+
+
+def _clear_foundation_diagnostic_caches() -> None:
+    _FOUNDATION_REPLY_HANDOFF_CACHE.clear()
+    _FOUNDATION_SOLVES_WHITE_TO_MOVE_CACHE.clear()
 
 
 def _confinement_area(board: chess.Board) -> int:

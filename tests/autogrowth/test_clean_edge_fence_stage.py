@@ -5,8 +5,10 @@ from recon_lite_chess.autogrowth.clean_edge_fence_stage import (
     _is_veto_terminal_key,
     _promote_edge_fence,
     _purity_boundary,
+    _score_components,
     _stage_success,
 )
+import chess
 from recon_lite_chess.autogrowth.terminal_substrate import TerminalAffordanceLearner
 
 
@@ -48,9 +50,20 @@ def test_tg47_m4_promotes_repeated_affordance_and_explicit_veto_only() -> None:
         negative=20,
     )
 
+    terminal_audit = {
+        "action_pattern:pair:gives_check:black_reply_mobility_after=1:3": {
+            "family_audit": {"edge_trap_progress": {"support": 8, "success": 7, "failure": 1, "precision": 0.875}},
+            "decoy_activation_count": 0,
+            "hard_decoy_activation_count": 0,
+            "unsafe_activation_count": 0,
+            "decoy_false_handoff_activation_count": 0,
+            "hard_decoy_false_handoff_activation_count": 0,
+        }
+    }
     promoted, audit = _promote_edge_fence(
         learner,
         CleanEdgeFenceStageConfig(m4_precision_threshold=0.58, m4_min_positive_support=12, m4_min_negative_support=12),
+        terminal_audit=terminal_audit,
     )
 
     promoted_keys = set(promoted.terminals)
@@ -198,3 +211,16 @@ def test_tg47b_parent_and_purity_invariants_point_to_clean_tg46d() -> None:
     assert purity["action_ranker_used_for_runtime"] is False
     assert purity["python_final_selector_used"] is False
     assert purity["direct_provider_override"] is False
+
+
+def test_tg47c_derived_veto_dominates_unsafe_successor_score() -> None:
+    board = chess.Board("8/7K/8/8/6k1/8/5R2/8 w - - 0 1")
+    learner = TerminalAffordanceLearner.create(eta_m3=0.08)
+    unsafe = chess.Move.from_uci("f2f4")
+    safe = chess.Move.from_uci("f2f6")
+
+    unsafe_score = _score_components(board, unsafe, parent=None, edge_learner=learner)
+    safe_score = _score_components(board, safe, parent=None, edge_learner=learner)
+
+    assert "derived_veto_terminal:rook_capturable_by_reply=1" in unsafe_score["active_veto_terminal_keys"]
+    assert unsafe_score["final_score"] < safe_score["final_score"]
