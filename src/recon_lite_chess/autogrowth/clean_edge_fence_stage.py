@@ -44,6 +44,10 @@ DEFAULT_OUTPUT_DIR = Path("reports/autogrowth/clean_slate_krk/tg47_edge_fence")
 
 @dataclass(frozen=True)
 class CleanEdgeFenceStageConfig:
+    checkpoint_name: str = "TG47_real_edge_fence_inside_clean_pipeline"
+    schema_version: str = "krk_tg47_real_edge_fence.v0"
+    progress_schema_version: str = "krk_tg47_real_edge_fence_progress.v0"
+    run_scale_label: str = "configured"
     output_dir: str = str(DEFAULT_OUTPUT_DIR)
     output_path: str = str(DEFAULT_OUTPUT_DIR / "krk_tg47_real_edge_fence.json")
     progress_path: str = str(DEFAULT_OUTPUT_DIR / "krk_tg47_real_edge_fence_progress.json")
@@ -68,6 +72,8 @@ class CleanEdgeFenceStageConfig:
     m4_precision_threshold: float = 0.58
     m4_min_positive_support: int = 12
     m4_min_negative_support: int = 12
+    m4_max_unsafe_activation: int = 0
+    m4_max_decoy_false_handoff_activation: int = 0
     stage_play_episode_count: int = 120
     fresh_extension: bool = True
 
@@ -80,8 +86,8 @@ class CleanEdgeFenceStageResult:
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "schema_version": "krk_tg47_real_edge_fence.v0",
-            "checkpoint": "TG47_real_edge_fence_inside_clean_pipeline",
+            "schema_version": self.config.schema_version,
+            "checkpoint": self.config.checkpoint_name,
             "config": asdict(self.config),
             **self.payload,
             "decision": self.decision,
@@ -100,8 +106,8 @@ def run_clean_edge_fence_stage(*, config: CleanEdgeFenceStageConfig) -> CleanEdg
     start = time.perf_counter()
     _ensure_parents(config)
     progress = {
-        "schema_version": "krk_tg47_real_edge_fence_progress.v0",
-        "checkpoint": "TG47_real_edge_fence_inside_clean_pipeline",
+        "schema_version": config.progress_schema_version,
+        "checkpoint": config.checkpoint_name,
         "phases": [],
     }
     _write_json(config.progress_path, progress)
@@ -157,14 +163,25 @@ def run_clean_edge_fence_stage(*, config: CleanEdgeFenceStageConfig) -> CleanEdg
     _write_json(config.progress_path, progress)
 
     phase_start = time.perf_counter()
-    m4_learner, edge_m4 = _promote_edge_fence(edge_learner, config)
+    terminal_audit = _terminal_activation_audit(
+        edge_learner,
+        datasets["train"] + datasets["heldout"] + datasets["decoy"] + datasets["hard_decoy"],
+        parent=parent,
+    )
+    m4_learner, edge_m4 = _promote_edge_fence(edge_learner, config, terminal_audit=terminal_audit)
     m4_only = _evaluate_stage(
         datasets["heldout"],
         parent=parent,
         edge_learner=m4_learner,
         trace_type="edge_fence_M4_only",
     )
-    m3_plus_m4 = m3_only
+    combined_learner = _combine_m3_plus_m4(edge_learner=edge_learner, m4_learner=m4_learner)
+    m3_plus_m4 = _evaluate_stage(
+        datasets["heldout"],
+        parent=parent,
+        edge_learner=combined_learner,
+        trace_type="true_edge_fence_M3_plus_M4",
+    )
     regression_m4 = _evaluate_stage(
         datasets["regression"],
         parent=parent,
@@ -191,8 +208,15 @@ def run_clean_edge_fence_stage(*, config: CleanEdgeFenceStageConfig) -> CleanEdg
     _write_json(config.progress_path, progress)
 
     foundation_after = _foundation_sanity(parent)
-    eval_rows = parent_only["rows"] + m3_only["rows"] + m4_only["rows"] + regression_m4["rows"] + decoy_eval["rows"]
-    failures = [row for row in m4_only["rows"] if not row["success"]]
+    eval_rows = parent_only["rows"] + m3_only["rows"] + m4_only["rows"] + m3_plus_m4["rows"] + regression_m4["rows"] + decoy_eval["rows"]
+    failures = _collect_failure_pool_rows(
+        parent_only=parent_only,
+        m3_only=m3_only,
+        m4_only=m4_only,
+        m3_plus_m4=m3_plus_m4,
+        regression_m4=regression_m4,
+        decoy_eval=decoy_eval,
+    )
     _write_jsonl_gzip(config.eval_trace_path, eval_rows)
     _write_jsonl_gzip(config.failure_pool_path, _failure_rows(failures, parent, m4_learner))
     _write_jsonl_gzip(config.m4_audit_log_path, edge_m4["candidate_rows"])
@@ -245,9 +269,11 @@ def run_clean_edge_fence_stage(*, config: CleanEdgeFenceStageConfig) -> CleanEdg
         "datasets": _dataset_summary(datasets),
         "evaluation": {
             "foundation_only_parent": _strip_rows(parent_only),
+            "M3_trial_only": _strip_rows(m3_only),
+            "M4_consolidated_only": _strip_rows(m4_only),
+            "true_M3_plus_M4": _strip_rows(m3_plus_m4),
             "edge_fence_M3_only": _strip_rows(m3_only),
             "edge_fence_M4_only": _strip_rows(m4_only),
-            "edge_fence_M3_plus_M4": _strip_rows(m3_plus_m4),
             "no_foundation_response": _strip_rows(no_foundation),
             "decoy": _strip_rows(decoy_eval),
         },
@@ -325,6 +351,7 @@ def _foundation_sanity(parent: dict[str, TerminalAffordanceLearner]) -> dict[str
 def _generate_datasets(config: CleanEdgeFenceStageConfig) -> dict[str, list[dict[str, Any]]]:
     rng = random.Random(config.seed)
     used: set[str] = set()
+    used_lineage: dict[str, str] = {}
     counts = {
         "train": config.edge_fence_train_count,
         "heldout": config.edge_fence_heldout_count,
@@ -346,11 +373,28 @@ def _generate_datasets(config: CleanEdgeFenceStageConfig) -> dict[str, list[dict
                 continue
             if split not in ("decoy", "hard_decoy") and family not in families:
                 continue
+            lineage_key = _lineage_key(board, family)
+            if lineage_key in used_lineage and used_lineage[lineage_key] != split:
+                continue
             used.add(board.fen())
-            datasets[split].append({"fen": board.fen(), "family": family, "split": split})
+            used_lineage[lineage_key] = split
+            datasets[split].append({"fen": board.fen(), "family": family, "split": split, "lineage_key": lineage_key})
         if len(datasets[split]) < count:
             raise RuntimeError(f"generated {len(datasets[split])}/{count} TG47 {split} positions")
     return datasets
+
+
+def _lineage_key(board: chess.Board, family: str) -> str:
+    features = extract_learner_features(board)
+    buckets = {
+        "family": family,
+        "bk_edge": int(features["black_king_nearest_edge_distance"]),
+        "mobility": int(features["black_reply_mobility"]),
+        "wk_bk": int(features["white_king_to_black_king_distance"]),
+        "wr_bk": int(features["white_rook_to_black_king_distance"]),
+        "area_bucket": _confinement_area(board) // 4,
+    }
+    return "|".join(f"{key}={value}" for key, value in sorted(buckets.items()))
 
 
 def _classify_generated_family(board: chess.Board, *, hard_decoy: bool, decoy: bool) -> str | None:
@@ -481,6 +525,8 @@ def _edge_reward(
     any_handoff, all_handoff = _foundation_reply_handoff(after, parent)
     if confinement_delta < 0:
         return -0.80
+    if any_handoff and not all_handoff:
+        return -0.35
     reward = 0.0
     reward += 0.30 if confinement_delta > 0 else 0.0
     reward += 0.16 if edge_delta > 0 else 0.0
@@ -507,6 +553,7 @@ def _evaluate_stage(
         selected = _choose_stage_move(board, parent=parent, edge_learner=edge_learner)
         metrics = _move_metrics(board, selected, parent=parent)
         success = _stage_success(metrics, row["family"])
+        score_components = _score_components(board, selected, parent=parent, edge_learner=edge_learner)
         successes += int(success)
         if row["family"] in counts:
             counts[row["family"]][0] += int(success)
@@ -516,9 +563,12 @@ def _evaluate_stage(
             "index": index,
             "fen": row["fen"],
             "family": row["family"],
+            "split": row.get("split"),
+            "lineage_key": row.get("lineage_key"),
             "selected": None if selected is None else selected.uci(),
             "success": success,
             "metrics": metrics,
+            "score_components": score_components,
             "failure_buckets": [] if success else _failure_buckets(metrics),
         })
     total = len(out)
@@ -538,11 +588,16 @@ def _evaluate_stage(
         "partial_reply_foundation_support_count": sum(int(row["metrics"]["partial_reply_handoff"]) for row in out),
         "one_reply_false_positive_count": sum(int(row["metrics"]["partial_reply_handoff"] and not row["metrics"]["all_reply_handoff"]) for row in out),
         "rook_blunder_count": sum(int(row["metrics"]["rook_risk"]) for row in out),
+        "rook_missing_count": sum(int(row["metrics"].get("rook_missing", False)) for row in out),
         "illegal_move_count": sum(int(row["metrics"]["illegal"]) for row in out),
         "stalemate_count": sum(int(row["metrics"]["stalemate"]) for row in out),
-        "unsafe_move_count": sum(int(row["metrics"]["rook_risk"] or row["metrics"]["stalemate"] or row["metrics"]["illegal"]) for row in out),
-        "decoy_false_handoff_count": sum(int(row["family"] == "decoy_edge" and row["metrics"]["all_reply_handoff"]) for row in out),
-        "hard_decoy_false_handoff_count": sum(int(row["family"] == "hard_decoy_edge" and row["metrics"]["all_reply_handoff"]) for row in out),
+        "unsafe_move_count": sum(int(row["metrics"]["rook_risk"] or row["metrics"].get("rook_missing", False) or row["metrics"]["stalemate"] or row["metrics"]["illegal"] or row["metrics"]["confinement_regressed"]) for row in out),
+        "decoy_all_reply_false_handoff_count": sum(int(row["family"] == "decoy_edge" and row["metrics"]["all_reply_handoff"]) for row in out),
+        "decoy_partial_reply_false_handoff_count": sum(int(row["family"] == "decoy_edge" and row["metrics"]["partial_reply_handoff"]) for row in out),
+        "hard_decoy_all_reply_false_handoff_count": sum(int(row["family"] == "hard_decoy_edge" and row["metrics"]["all_reply_handoff"]) for row in out),
+        "hard_decoy_partial_reply_false_handoff_count": sum(int(row["family"] == "hard_decoy_edge" and row["metrics"]["partial_reply_handoff"]) for row in out),
+        "decoy_false_handoff_count": sum(int(row["family"] == "decoy_edge" and (row["metrics"]["all_reply_handoff"] or row["metrics"]["partial_reply_handoff"])) for row in out),
+        "hard_decoy_false_handoff_count": sum(int(row["family"] == "hard_decoy_edge" and (row["metrics"]["all_reply_handoff"] or row["metrics"]["partial_reply_handoff"])) for row in out),
         "rows": out,
     }
 
@@ -562,21 +617,87 @@ def _choose_stage_move(
     return options[0][-1] if options else None
 
 
+def _score_components(
+    board: chess.Board,
+    move: chess.Move | None,
+    *,
+    parent: dict[str, TerminalAffordanceLearner] | None,
+    edge_learner: TerminalAffordanceLearner | None,
+) -> dict[str, Any]:
+    if move is None or move not in board.legal_moves:
+        return {
+            "parent_weight": 0.0,
+            "edge_weight": 0.0,
+            "positive_terminal_weight": 0.0,
+            "veto_terminal_weight": 0.0,
+            "final_score": 0.0,
+            "active_positive_terminal_keys": [],
+            "active_veto_terminal_keys": [],
+        }
+    parent_weight = 0.0 if parent is None else parent["mate2_first"].weight_for_move(board, move)
+    active_positive: list[str] = []
+    active_veto: list[str] = []
+    positive_weight = 0.0
+    veto_weight = 0.0
+    edge_weight = 0.0
+    if edge_learner is not None:
+        for key, _scale in terminal_action_feature_keys(
+            board,
+            move,
+            hub=edge_learner.hub,
+            feature_cache=edge_learner.feature_cache,
+        ):
+            terminal = edge_learner.terminals.get(key)
+            if terminal is None:
+                continue
+            edge_weight += terminal.local_weight
+            if terminal.local_weight < 0.0 and _is_veto_terminal_key(key):
+                active_veto.append(key)
+                veto_weight += terminal.local_weight
+            elif terminal.local_weight > 0.0:
+                active_positive.append(key)
+                positive_weight += terminal.local_weight
+    final_score = edge_weight + 0.20 * parent_weight
+    return {
+        "parent_weight": round(parent_weight, 6),
+        "edge_weight": round(edge_weight, 6),
+        "positive_terminal_weight": round(positive_weight, 6),
+        "veto_terminal_weight": round(veto_weight, 6),
+        "final_score": round(final_score, 6),
+        "active_positive_terminal_keys": active_positive[:64],
+        "active_veto_terminal_keys": active_veto[:64],
+    }
+
+
 def _promote_edge_fence(
     edge_learner: TerminalAffordanceLearner,
     config: CleanEdgeFenceStageConfig,
+    *,
+    terminal_audit: dict[str, dict[str, Any]] | None = None,
 ) -> tuple[TerminalAffordanceLearner, dict[str, Any]]:
     promoted = set()
     rows = []
+    terminal_audit = terminal_audit or {}
+    promoted_veto_count = 0
+    promoted_affordance_count = 0
     for key, terminal in edge_learner.terminals.items():
         total = terminal.positive_credit + terminal.negative_credit
         precision = 0.0 if total == 0 else terminal.positive_credit / total
         negative_precision = 0.0 if total == 0 else terminal.negative_credit / total
+        audit = terminal_audit.get(key, _empty_terminal_audit())
+        unsafe_activation = int(audit["unsafe_activation_count"])
+        decoy_false_handoff_activation = int(audit["decoy_false_handoff_activation_count"])
+        hard_decoy_false_handoff_activation = int(audit["hard_decoy_false_handoff_activation_count"])
+        broad_standalone = _is_broad_standalone_affordance_key(key)
         promote_positive = (
             terminal.local_weight > 0.0
             and precision >= config.m4_precision_threshold
             and terminal.positive_credit >= config.m4_min_positive_support
             and terminal.positive_credit > terminal.negative_credit
+            and unsafe_activation <= config.m4_max_unsafe_activation
+            and decoy_false_handoff_activation <= config.m4_max_decoy_false_handoff_activation
+            and hard_decoy_false_handoff_activation <= config.m4_max_decoy_false_handoff_activation
+            and not broad_standalone
         )
         promote_veto = (
             terminal.local_weight < 0.0
@@ -589,6 +710,8 @@ def _promote_edge_fence(
         if promote:
             promoted.add(key)
             terminal.cell.state = StemCellState.MATURE
+            promoted_veto_count += int(promote_veto)
+            promoted_affordance_count += int(promote_positive)
         rows.append({
             "terminal_key": key,
             "candidate_type": _edge_candidate_type(key),
@@ -598,6 +721,13 @@ def _promote_edge_fence(
             "precision": round(precision, 6),
             "negative_precision": round(negative_precision, 6),
             "local_weight": round(terminal.local_weight, 6),
+            "family_audit": audit["family_audit"],
+            "decoy_activation_count": audit["decoy_activation_count"],
+            "hard_decoy_activation_count": audit["hard_decoy_activation_count"],
+            "unsafe_activation_count": unsafe_activation,
+            "decoy_false_handoff_activation_count": decoy_false_handoff_activation,
+            "hard_decoy_false_handoff_activation_count": hard_decoy_false_handoff_activation,
+            "broad_standalone_affordance": broad_standalone,
             "promoted_as": "veto" if promote_veto else "affordance" if promote_positive else None,
             "promoted": promote,
         })
@@ -608,13 +738,59 @@ def _promote_edge_fence(
         clone.terminals[key] = edge_learner.terminals[key]
     audit = {
         "edge_fence_m4_candidate_count": len(rows),
-        "edge_fence_m4_true_promotion_count": len(promoted) + (2 if promoted else 0),
+        "edge_fence_m4_true_promotion_count": len(promoted),
         "edge_fence_m4_promoted_terminal_count": len(promoted),
+        "edge_fence_m4_promoted_veto_terminal_count": promoted_veto_count,
+        "edge_fence_m4_promoted_affordance_terminal_count": promoted_affordance_count,
         "edge_fence_m4_promoted_bundle_count": int(bool(promoted)),
         "edge_fence_m4_promoted_quorum_count": int(bool(promoted)),
         "candidate_rows": rows,
     }
     return clone, audit
+
+
+def _combine_m3_plus_m4(
+    *,
+    edge_learner: TerminalAffordanceLearner,
+    m4_learner: TerminalAffordanceLearner,
+) -> TerminalAffordanceLearner:
+    combined = TerminalAffordanceLearner.create(
+        eta_m3=edge_learner.eta_m3,
+        rich_feature_credit_scale=edge_learner.rich_feature_credit_scale,
+    )
+    combined.hub = edge_learner.hub
+    combined.feature_cache = edge_learner.feature_cache
+    combined.m3_update_count = edge_learner.m3_update_count
+    for key, terminal in edge_learner.terminals.items():
+        combined.terminals[key] = terminal
+    for key, terminal in m4_learner.terminals.items():
+        combined.terminals[key] = terminal
+    return combined
+
+
+def _is_broad_standalone_affordance_key(key: str) -> bool:
+    broad_keys = {
+        "action_pattern:gives_check=1",
+        "action_pattern:gives_check=0",
+        "action_pattern:is_capture=0",
+        "action_pattern:is_capture=1",
+        "action_pattern:is_stalemate_after=0",
+        "action_pattern:piece_type=4",
+        "action_pattern:file_delta_magnitude=0",
+        "action_pattern:rank_delta_magnitude=0",
+    }
+    return key in broad_keys
+
+
+def _empty_terminal_audit() -> dict[str, Any]:
+    return {
+        "family_audit": {},
+        "decoy_activation_count": 0,
+        "hard_decoy_activation_count": 0,
+        "unsafe_activation_count": 0,
+        "decoy_false_handoff_activation_count": 0,
+        "hard_decoy_false_handoff_activation_count": 0,
+    }
 
 
 def _is_veto_terminal_key(key: str) -> bool:
@@ -633,6 +809,55 @@ def _is_veto_terminal_key(key: str) -> bool:
     return any(fragment in key for fragment in veto_fragments)
 
 
+def _terminal_activation_audit(
+    edge_learner: TerminalAffordanceLearner,
+    rows: list[dict[str, Any]],
+    *,
+    parent: dict[str, TerminalAffordanceLearner],
+) -> dict[str, dict[str, Any]]:
+    audit: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        board = chess.Board(row["fen"])
+        selected = _choose_stage_move(board, parent=parent, edge_learner=edge_learner)
+        if selected is None:
+            continue
+        metrics = _move_metrics(board, selected, parent=parent)
+        success = _stage_success(metrics, row["family"])
+        unsafe = bool(
+            metrics["rook_risk"]
+            or metrics.get("rook_missing", False)
+            or metrics["stalemate"]
+            or metrics["illegal"]
+            or metrics["confinement_regressed"]
+        )
+        decoy_false = row["family"] == "decoy_edge" and (metrics["all_reply_handoff"] or metrics["partial_reply_handoff"])
+        hard_decoy_false = row["family"] == "hard_decoy_edge" and (metrics["all_reply_handoff"] or metrics["partial_reply_handoff"])
+        for key, _scale in terminal_action_feature_keys(
+            board,
+            selected,
+            hub=edge_learner.hub,
+            feature_cache=edge_learner.feature_cache,
+        ):
+            if key not in edge_learner.terminals:
+                continue
+            item = audit.setdefault(key, _empty_terminal_audit())
+            family = row["family"]
+            family_item = item["family_audit"].setdefault(
+                family,
+                {"support": 0, "success": 0, "failure": 0, "precision": 0.0},
+            )
+            family_item["support"] += 1
+            family_item["success"] += int(success)
+            family_item["failure"] += int(not success)
+            family_item["precision"] = round(family_item["success"] / family_item["support"], 6)
+            item["decoy_activation_count"] += int(row["family"] == "decoy_edge")
+            item["hard_decoy_activation_count"] += int(row["family"] == "hard_decoy_edge")
+            item["unsafe_activation_count"] += int(unsafe)
+            item["decoy_false_handoff_activation_count"] += int(decoy_false)
+            item["hard_decoy_false_handoff_activation_count"] += int(hard_decoy_false)
+    return audit
+
+
 def _move_metrics(
     board: chess.Board,
     move: chess.Move | None,
@@ -640,7 +865,7 @@ def _move_metrics(
     parent: dict[str, TerminalAffordanceLearner] | None,
 ) -> dict[str, Any]:
     if move is None or move not in board.legal_moves:
-        return {"illegal": True, "rook_risk": False, "stalemate": False, "success_signal": 0.0, "low_progress": True, "all_reply_handoff": False, "partial_reply_handoff": False, "confinement_improved": False, "confinement_regressed": False, "black_mobility_reduced": False, "rook_safe": False}
+        return {"illegal": True, "rook_risk": False, "rook_missing": False, "stalemate": False, "success_signal": 0.0, "low_progress": True, "all_reply_handoff": False, "partial_reply_handoff": False, "confinement_improved": False, "confinement_regressed": False, "black_mobility_reduced": False, "rook_safe": False}
     after = board.copy(stack=False)
     after.push(move)
     before_f = extract_learner_features(board)
@@ -649,6 +874,7 @@ def _move_metrics(
     after_area = _confinement_area(after)
     any_handoff, all_handoff = _foundation_reply_handoff(after, parent)
     rook_risk = _rook_capturable_by_reply(after)
+    rook_missing = not bool(after.pieces(chess.ROOK, chess.WHITE))
     stalemate = after.is_stalemate()
     confinement_improved = after_area < before_area
     confinement_regressed = after_area > before_area
@@ -658,8 +884,9 @@ def _move_metrics(
     return {
         "illegal": False,
         "rook_risk": rook_risk,
+        "rook_missing": rook_missing,
         "stalemate": stalemate,
-        "rook_safe": not rook_risk,
+        "rook_safe": not rook_risk and not rook_missing,
         "confinement_improved": confinement_improved,
         "confinement_regressed": confinement_regressed,
         "black_mobility_reduced": mobility_reduced,
@@ -673,10 +900,10 @@ def _move_metrics(
 
 
 def _stage_success(metrics: dict[str, Any], family: str) -> bool:
-    if metrics["illegal"] or metrics["rook_risk"] or metrics["stalemate"] or metrics["confinement_regressed"]:
+    if metrics["illegal"] or metrics["rook_risk"] or metrics.get("rook_missing", False) or metrics["stalemate"] or metrics["confinement_regressed"]:
         return False
     if family in ("decoy_edge", "hard_decoy_edge"):
-        return not metrics["all_reply_handoff"] and metrics["rook_safe"]
+        return not metrics["all_reply_handoff"] and not metrics["partial_reply_handoff"] and metrics["rook_safe"]
     return bool(metrics["all_reply_handoff"] or (metrics["confinement_improved"] and metrics["black_mobility_reduced"]) or (metrics["edge_progress"] and metrics["rook_safe"] and not metrics["low_progress"]))
 
 
@@ -785,6 +1012,8 @@ def _failure_buckets(metrics: dict[str, Any]) -> list[str]:
         buckets.append("edge_fence_candidate_not_materialized")
     if metrics["rook_risk"]:
         buckets.append("rook_risk_selected")
+    if metrics.get("rook_missing", False):
+        buckets.append("rook_missing_selected")
     if metrics["stalemate"]:
         buckets.append("stalemate_risk_selected")
     if metrics["confinement_regressed"]:
@@ -796,6 +1025,55 @@ def _failure_buckets(metrics: dict[str, Any]) -> list[str]:
     if metrics["low_progress"]:
         buckets.append("repeated_low_progress_loop")
     return buckets or ["unknown"]
+
+
+def _collect_failure_pool_rows(
+    *,
+    parent_only: dict[str, Any],
+    m3_only: dict[str, Any],
+    m4_only: dict[str, Any],
+    m3_plus_m4: dict[str, Any],
+    regression_m4: dict[str, Any],
+    decoy_eval: dict[str, Any],
+) -> list[dict[str, Any]]:
+    rows = []
+    by_key: dict[tuple[str, int], dict[str, Any]] = {}
+    for payload in (parent_only, m3_only, m4_only, m3_plus_m4, regression_m4, decoy_eval):
+        for row in payload["rows"]:
+            if _is_failure_pool_worthy(row):
+                rows.append(row)
+            key = (row["trace_type"], row["index"])
+            by_key[key] = row
+    m3_by_index = {row["index"]: row for row in m3_only["rows"]}
+    parent_by_index = {row["index"]: row for row in parent_only["rows"]}
+    for row in m4_only["rows"]:
+        m3_row = m3_by_index.get(row["index"])
+        parent_row = parent_by_index.get(row["index"])
+        if m3_row is not None and m3_row["success"] and not row["success"]:
+            rows.append({**row, "regression_type": "m4_regression_vs_m3"})
+        if parent_row is not None and parent_row["success"] and not row["success"]:
+            rows.append({**row, "regression_type": "m4_regression_vs_parent"})
+    deduped: dict[tuple[str, int, str | None, str], dict[str, Any]] = {}
+    for row in rows:
+        key = (row["trace_type"], row["index"], row.get("selected"), row.get("regression_type", ""))
+        deduped[key] = row
+    return list(deduped.values())
+
+
+def _is_failure_pool_worthy(row: dict[str, Any]) -> bool:
+    metrics = row["metrics"]
+    decoy_handoff = row["family"] in ("decoy_edge", "hard_decoy_edge") and (
+        metrics["all_reply_handoff"] or metrics["partial_reply_handoff"]
+    )
+    unsafe = (
+        metrics["rook_risk"]
+        or metrics.get("rook_missing", False)
+        or metrics["stalemate"]
+        or metrics["illegal"]
+        or metrics["confinement_regressed"]
+    )
+    family_failure = row["family"] == "fence_hold_progress" and not row["success"]
+    return bool(not row["success"] or unsafe or decoy_handoff or family_failure)
 
 
 def _failure_rows(rows: list[dict[str, Any]], parent, edge_learner) -> list[dict[str, Any]]:
@@ -811,12 +1089,22 @@ def _failure_rows(rows: list[dict[str, Any]], parent, edge_learner) -> list[dict
         out.append({
             "failure_id": f"tg47_failure_{index:04d}",
             "fen": row["fen"],
+            "family": row["family"],
+            "split": row.get("split"),
+            "lineage_key": row.get("lineage_key"),
+            "trace_type": row["trace_type"],
+            "regression_type": row.get("regression_type"),
             "selected_move": row.get("selected"),
             "after_selected_fen": after,
             "failure_bucket": row["failure_buckets"],
+            "active_positive_terminal_keys": row.get("score_components", {}).get("active_positive_terminal_keys", []),
+            "active_veto_terminal_keys": row.get("score_components", {}).get("active_veto_terminal_keys", []),
+            "score_components": row.get("score_components", {}),
             "evidence_activations": 0 if selected is None else edge_learner.active_terminal_count(board, selected),
             "foundation_handoff_present": row["metrics"]["all_reply_handoff"],
+            "partial_foundation_handoff_present": row["metrics"]["partial_reply_handoff"],
             "rook_risk_present": row["metrics"]["rook_risk"],
+            "rook_missing_present": row["metrics"].get("rook_missing", False),
             "stalemate_risk_present": row["metrics"]["stalemate"],
             "confinement_regressed": row["metrics"]["confinement_regressed"],
             "low_progress_repeated": row["metrics"]["low_progress"],
@@ -866,14 +1154,24 @@ def _decision(
     ablations: dict[str, Any],
     total_seconds: float,
 ) -> dict[str, Any]:
+    candidate_behavior = m4_only if m4_only["success_rate"] >= m3_plus_m4["success_rate"] else m3_plus_m4
+    candidate_arm = "M4_consolidated_only" if candidate_behavior is m4_only else "true_M3_plus_M4"
+    decoy_false_count = decoy_eval["decoy_all_reply_false_handoff_count"] + decoy_eval["decoy_partial_reply_false_handoff_count"]
+    hard_decoy_false_count = decoy_eval["hard_decoy_all_reply_false_handoff_count"] + decoy_eval["hard_decoy_partial_reply_false_handoff_count"]
     behavior_pass = (
         foundation_before["pass"]
         and foundation_after["pass"]
-        and m3_plus_m4["success_rate"] >= 0.75
-        and m3_plus_m4["success_rate"] > parent_only["success_rate"]
-        and m3_plus_m4["rook_blunder_count"] == 0
-        and m3_plus_m4["illegal_move_count"] == 0
-        and decoy_eval["decoy_false_handoff_count"] == 0
+        and candidate_behavior["success_rate"] >= 0.75
+        and candidate_behavior["success_rate"] > parent_only["success_rate"]
+        and candidate_behavior["fence_hold_success_rate"] >= 0.60
+        and candidate_behavior["rook_blunder_count"] == 0
+        and candidate_behavior["rook_missing_count"] == 0
+        and candidate_behavior["unsafe_move_count"] == 0
+        and candidate_behavior["illegal_move_count"] == 0
+        and candidate_behavior["stalemate_count"] == 0
+        and candidate_behavior["confinement_regression_count"] == 0
+        and decoy_false_count == 0
+        and hard_decoy_false_count == 0
     )
     m4_pass = behavior_pass and edge_m4["edge_fence_m4_true_promotion_count"] > 0 and m4_only["success_rate"] >= 0.75 and ablations["edge_fence_M4_ablation_causal"]
     if m4_pass:
@@ -890,6 +1188,7 @@ def _decision(
         "checkpoint_interpretation": interpretation,
         "selected_repair_arm": "clean_edge_fence_generic_terminal_growth",
         "repair_applied": True,
+        "run_scale_label": config.run_scale_label,
         "selected_next_action": next_action,
         "selected_next_action_reason": interpretation,
         "parent_foundation_loaded": True,
@@ -921,25 +1220,30 @@ def _decision(
         "edge_fence_regression_count": len(datasets["regression"]),
         "decoy_count": len(datasets["decoy"]),
         "hard_decoy_count": len(datasets["hard_decoy"]),
-        "group_lineage_disjoint": True,
+        "group_lineage_disjoint": _group_lineage_disjoint(datasets),
         "generated_real_fens_used": True,
         "placeholder_fens_used": False,
         "mate1_regression_accuracy": foundation_after["mate1_regression_accuracy"],
         "mate2_regression_conversion_rate": foundation_after["mate2_regression_conversion_rate"],
         "mate2_all_reply_conversion_rate": foundation_after["mate2_all_reply_conversion_rate"],
         "mate2_one_reply_false_positive_count": foundation_after["mate2_one_reply_false_positive_count"],
-        "edge_fence_success_rate": m3_plus_m4["success_rate"],
-        "edge_trap_success_rate": m3_plus_m4["edge_trap_success_rate"],
-        "fence_hold_success_rate": m3_plus_m4["fence_hold_success_rate"],
-        "bridge_frontier_near_success_rate": m3_plus_m4["bridge_frontier_near_success_rate"],
-        "confinement_improvement_count": m3_plus_m4["confinement_improvement_count"],
-        "confinement_regression_count": m3_plus_m4["confinement_regression_count"],
-        "black_mobility_reduction_count": m3_plus_m4["black_mobility_reduction_count"],
-        "rook_safety_preserved_count": m3_plus_m4["rook_safety_preserved_count"],
-        "repeated_low_progress_count": m3_plus_m4["repeated_low_progress_count"],
-        "all_reply_foundation_handoff_count": m3_plus_m4["all_reply_foundation_handoff_count"],
-        "partial_reply_foundation_support_count": m3_plus_m4["partial_reply_foundation_support_count"],
-        "one_reply_false_positive_count": m3_plus_m4["one_reply_false_positive_count"],
+        "selected_behavior_arm": candidate_arm,
+        "M3_trial_only_success_rate": m3_only["success_rate"],
+        "M4_consolidated_only_success_rate": m4_only["success_rate"],
+        "true_M3_plus_M4_success_rate": m3_plus_m4["success_rate"],
+        "true_M3_plus_M4_alias_of_M3_only": False,
+        "edge_fence_success_rate": candidate_behavior["success_rate"],
+        "edge_trap_success_rate": candidate_behavior["edge_trap_success_rate"],
+        "fence_hold_success_rate": candidate_behavior["fence_hold_success_rate"],
+        "bridge_frontier_near_success_rate": candidate_behavior["bridge_frontier_near_success_rate"],
+        "confinement_improvement_count": candidate_behavior["confinement_improvement_count"],
+        "confinement_regression_count": candidate_behavior["confinement_regression_count"],
+        "black_mobility_reduction_count": candidate_behavior["black_mobility_reduction_count"],
+        "rook_safety_preserved_count": candidate_behavior["rook_safety_preserved_count"],
+        "repeated_low_progress_count": candidate_behavior["repeated_low_progress_count"],
+        "all_reply_foundation_handoff_count": candidate_behavior["all_reply_foundation_handoff_count"],
+        "partial_reply_foundation_support_count": candidate_behavior["partial_reply_foundation_support_count"],
+        "one_reply_false_positive_count": candidate_behavior["one_reply_false_positive_count"],
         "stage_play_episode_count": online["stage_play_episode_count"],
         "parent_foundation_only_success_rate": online["parent_foundation_only_success_rate"],
         "edge_fence_runtime_success_rate": online["edge_fence_runtime_success_rate"],
@@ -948,10 +1252,15 @@ def _decision(
         "paired_hurt_count": online["paired_hurt_count"],
         "foundation_handoff_count": online["foundation_handoff_count"],
         "max_move_reached_count": online["max_move_reached_count"],
-        "rook_blunder_count": m3_plus_m4["rook_blunder_count"],
-        "illegal_move_count": m3_plus_m4["illegal_move_count"],
-        "stalemate_count": m3_plus_m4["stalemate_count"],
-        "unsafe_move_count": m3_plus_m4["unsafe_move_count"],
+        "rook_blunder_count": candidate_behavior["rook_blunder_count"],
+        "rook_missing_count": candidate_behavior["rook_missing_count"],
+        "illegal_move_count": candidate_behavior["illegal_move_count"],
+        "stalemate_count": candidate_behavior["stalemate_count"],
+        "unsafe_move_count": candidate_behavior["unsafe_move_count"],
+        "decoy_all_reply_false_handoff_count": decoy_eval["decoy_all_reply_false_handoff_count"],
+        "decoy_partial_reply_false_handoff_count": decoy_eval["decoy_partial_reply_false_handoff_count"],
+        "hard_decoy_all_reply_false_handoff_count": decoy_eval["hard_decoy_all_reply_false_handoff_count"],
+        "hard_decoy_partial_reply_false_handoff_count": decoy_eval["hard_decoy_partial_reply_false_handoff_count"],
         "decoy_false_handoff_count": decoy_eval["decoy_false_handoff_count"],
         "hard_decoy_false_handoff_count": decoy_eval["hard_decoy_false_handoff_count"],
         "terminal_node_count": graph_summary["terminal_node_count"],
@@ -962,6 +1271,8 @@ def _decision(
         "edge_fence_m4_candidate_count": edge_m4["edge_fence_m4_candidate_count"],
         "edge_fence_m4_true_promotion_count": edge_m4["edge_fence_m4_true_promotion_count"],
         "edge_fence_m4_promoted_terminal_count": edge_m4["edge_fence_m4_promoted_terminal_count"],
+        "edge_fence_m4_promoted_veto_terminal_count": edge_m4["edge_fence_m4_promoted_veto_terminal_count"],
+        "edge_fence_m4_promoted_affordance_terminal_count": edge_m4["edge_fence_m4_promoted_affordance_terminal_count"],
         "edge_fence_m4_promoted_bundle_count": edge_m4["edge_fence_m4_promoted_bundle_count"],
         "edge_fence_m4_promoted_quorum_count": edge_m4["edge_fence_m4_promoted_quorum_count"],
         "edge_fence_m4_only_success_rate": m4_only["success_rate"],
@@ -1005,10 +1316,12 @@ def _graph_summary(parent, edge_learner, m4_learner, edge_m4) -> dict[str, Any]:
 
 def _promoted_artifact(config, parent_hash, edge_m4, graph_summary, m4_only, regression_m4) -> dict[str, Any]:
     return {
-        "schema_version": "krk_tg47_promoted_edge_fence.v0",
+        "schema_version": f"{config.schema_version}.promoted",
         "parent_foundation_hash": parent_hash,
         "promotion_unit_type": "edge_fence_evidence_bundle_quorum",
         "promoted_terminal_count": edge_m4["edge_fence_m4_promoted_terminal_count"],
+        "promoted_veto_terminal_count": edge_m4["edge_fence_m4_promoted_veto_terminal_count"],
+        "promoted_affordance_terminal_count": edge_m4["edge_fence_m4_promoted_affordance_terminal_count"],
         "promoted_bundle_count": edge_m4["edge_fence_m4_promoted_bundle_count"],
         "promoted_quorum_count": edge_m4["edge_fence_m4_promoted_quorum_count"],
         "m4_only_success_rate": m4_only["success_rate"],
@@ -1025,8 +1338,25 @@ def _dataset_summary(datasets: dict[str, list[dict[str, Any]]]) -> dict[str, Any
         counts: dict[str, int] = {}
         for row in rows:
             counts[row["family"]] = counts.get(row["family"], 0) + 1
-        out[split] = {"count": len(rows), "family_counts": counts}
+        out[split] = {
+            "count": len(rows),
+            "family_counts": counts,
+            "lineage_group_count": len({row.get("lineage_key") for row in rows}),
+        }
     return out
+
+
+def _group_lineage_disjoint(datasets: dict[str, list[dict[str, Any]]]) -> bool:
+    seen: dict[str, str] = {}
+    for split, rows in datasets.items():
+        for row in rows:
+            key = row.get("lineage_key")
+            if key is None:
+                return False
+            if key in seen and seen[key] != split:
+                return False
+            seen[key] = split
+    return True
 
 
 def _strip_rows(payload: dict[str, Any]) -> dict[str, Any]:
@@ -1106,7 +1436,7 @@ def _hash_json(payload: Any) -> str:
 
 def _write_markdown(config: CleanEdgeFenceStageConfig, decision: dict[str, Any], payload: dict[str, Any]) -> None:
     lines = [
-        "# TG47 Real Edge/Fence",
+        f"# {config.checkpoint_name}",
         "",
         f"Checkpoint pass: `{decision['checkpoint_pass']}`",
         f"Interpretation: `{decision['checkpoint_interpretation']}`",

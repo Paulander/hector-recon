@@ -1,0 +1,176 @@
+{
+  "checkpoint": "TG47b_edge_fence_repair",
+  "completed": true,
+  "decision": {
+    "M3_trial_only_success_rate": 0.5,
+    "M4_consolidated_only_success_rate": 0.25,
+    "ablation_results": {
+      "edge_fence_M4_ablation_causal": false,
+      "edge_fence_ablation_causal": false,
+      "foundation_dependency_ablation_causal": false,
+      "mask_M3_trial_weights": {
+        "success_rate": 0.25
+      },
+      "mask_M4_promotions": {
+        "success_rate": 0.25
+      },
+      "mask_action_delta_evidence": {
+        "not_separately_materialized": true
+      },
+      "mask_actuator_terminals": {
+        "expected_runtime_choice_collapse": true
+      },
+      "mask_black_mobility_terminals": {
+        "not_separately_materialized": true
+      },
+      "mask_confinement_terminals": {
+        "not_separately_materialized": true
+      },
+      "mask_edge_distance_terminals": {
+        "not_separately_materialized": true
+      },
+      "mask_edge_fence_promoted_structures": {
+        "success_rate": 0.25
+      },
+      "mask_foundation_response_evidence": {
+        "success_rate": 0.5
+      },
+      "mask_repeated_low_progress_debt": {
+        "repeated_low_progress_count": 11
+      },
+      "mask_rook_safety_debt": {
+        "rook_blunder_count": 0
+      },
+      "mask_same_graph_foundation_continuation_evidence": {
+        "success_rate": 0.5
+      },
+      "mask_shared_atoms": {
+        "not_separately_materialized": true
+      },
+      "mask_stalemate_risk_debt": {
+        "stalemate_count": 0
+      }
+    },
+    "action_ranker_used_for_runtime": false,
+    "all_reply_foundation_handoff_count": 0,
+    "black_mobility_reduction_count": 12,
+    "bridge_frontier_near_success_rate": 0.6666666666666666,
+    "checkpoint_interpretation": "edge_fence_stage_failed_below_threshold",
+    "checkpoint_pass": false,
+    "checkpoint_specific_fen_rule_count": 0,
+    "checkpoint_specific_move_rule_count": 0,
+    "confinement_improvement_count": 23,
+    "confinement_regression_count": 0,
+    "decoy_all_reply_false_handoff_count": 3,
+    "decoy_count": 24,
+    "decoy_false_handoff_count": 4,
+    "decoy_partial_reply_false_handoff_count": 1,
+    "direct_provider_override": false,
+    "edge_fence_M4_ablation_causal": false,
+    "edge_fence_ablation_causal": false,
+    "edge_fence_heldout_count": 24,
+    "edge_fence_m4_candidate_count": 775,
+    "edge_fence_m4_only_success_rate": 0.25,
+    "edge_fence_m4_promoted_affordance_terminal_count": 0,
+    "edge_fence_m4_promoted_bundle_count": 1,
+    "edge_fence_m4_promoted_quorum_count": 1,
+    "edge_fence_m4_promoted_terminal_count": 8,
+    "edge_fence_m4_promoted_veto_terminal_count": 8,
+    "edge_fence_m4_true_promotion_count": 8,
+    "edge_fence_regression_count": 24,
+    "edge_fence_runtime_success_rate": 0.3125,
+    "edge_fence_success_rate": 0.5,
+    "edge_fence_train_count": 60,
+    "edge_trap_success_rate": 0.6,
+    "fence_hold_success_rate": 0.38461538461538464,
+    "foundation_dependency_ablation_causal": false,
+    "foundation_handoff_count": 5,
+    "foundation_sanity_after_pass": true,
+    "foundation_sanity_before_pass": true,
+    "generated_real_fens_used": true,
+    "graph_edge_count": 2679,
+    "graph_node_count": 897,
+    "group_lineage_disjoint": true,
+    "hard_decoy_all_reply_false_handoff_count": 2,
+    "hard_decoy_count": 24,
+    "hard_decoy_false_handoff_count": 2,
+    "hard_decoy_partial_reply_false_handoff_count": 0,
+    "illegal_move_count": 0,
+    "learner_visible_basin_labels": false,
+    "learner_visible_continuation_labels": false,
+    "learner_visible_depth_labels": false,
+    "learner_visible_edge_fence_labels": false,
+    "learner_visible_quality_labels": false,
+    "learner_visible_reply_policy_labels": false,
+    "learner_visible_stage_labels": false,
+    "m3_update_count": 182864,
+    "mate1_regression_accuracy": 1.0,
+    "mate2_all_reply_conversion_rate": 0.975,
+    "mate2_one_reply_false_positive_count": 0,
+    "mate2_regression_conversion_rate": 0.9,
+    "max_move_reached_count": 0,
+    "old_canary_loaded": false,
+    "old_tg_pools_loaded": 0,
+    "one_reply_false_positive_count": 0,
+    "paired_help_count": 1,
+    "paired_hurt_count": 0,
+    "parent_foundation_frozen": true,
+    "parent_foundation_hash": "84aee84704c2a7b84534509eaf7b8c257fdc846bef2531a595f5dbb775d513a6",
+    "parent_foundation_loaded": true,
+    "parent_foundation_m3_delta_during_edge_fence": 0,
+    "parent_foundation_m4_delta_during_edge_fence": 0,
+    "parent_foundation_only_success_rate": 0.25,
+    "partial_reply_foundation_support_count": 0,
+    "placeholder_fens_used": false,
+    "python_final_selector_used": false,
+    "repair_applied": true,
+    "repeated_low_progress_count": 10,
+    "rook_blunder_count": 10,
+    "rook_missing_count": 0,
+    "rook_safety_preserved_count": 14,
+    "run_scale_label": "smoke",
+    "runtime_tablebase_or_dtm_move_source": false,
+    "script_node_count": 3,
+    "selected_behavior_arm": "true_M3_plus_M4",
+    "selected_next_action": "repair_real_edge_fence_stage",
+    "selected_next_action_reason": "edge_fence_stage_failed_below_threshold",
+    "selected_repair_arm": "clean_edge_fence_generic_terminal_growth",
+    "stage_play_episode_count": 16,
+    "stalemate_count": 0,
+    "success_delta_vs_foundation_only": 0.0625,
+    "synthetic_stage_runner_used": false,
+    "synthetic_tg46_target_rate_paths_detected": true,
+    "terminal_node_count": 893,
+    "total_seconds": 551.851437,
+    "true_M3_plus_M4_alias_of_M3_only": false,
+    "true_M3_plus_M4_success_rate": 0.5,
+    "unsafe_move_count": 10
+  },
+  "phases": [
+    {
+      "phase": "load_and_verify_parent_foundation",
+      "seconds": 235.305381
+    },
+    {
+      "phase": "generate_edge_fence_datasets",
+      "seconds": 0.045433
+    },
+    {
+      "phase": "train_edge_fence_M3",
+      "seconds": 199.289082
+    },
+    {
+      "phase": "evaluate_parent_and_M3",
+      "seconds": 12.872461
+    },
+    {
+      "phase": "promote_and_evaluate_M4",
+      "seconds": 40.943572
+    },
+    {
+      "phase": "stage_play_online",
+      "seconds": 2.986663
+    }
+  ],
+  "schema_version": "krk_tg47b_edge_fence_repair_progress.v0"
+}
