@@ -3,10 +3,12 @@ from recon_lite_chess.autogrowth.clean_edge_fence_stage import (
     _collect_failure_pool_rows,
     _combine_m3_plus_m4,
     _is_veto_terminal_key,
+    _local_progress_terminal_keys,
     _promote_edge_fence,
     _purity_boundary,
     _score_components,
     _stage_success,
+    _update_edge_move,
 )
 import chess
 from recon_lite_chess.autogrowth.terminal_substrate import TerminalAffordanceLearner
@@ -224,3 +226,52 @@ def test_tg47c_derived_veto_dominates_unsafe_successor_score() -> None:
 
     assert "derived_veto_terminal:rook_capturable_by_reply=1" in unsafe_score["active_veto_terminal_keys"]
     assert unsafe_score["final_score"] < safe_score["final_score"]
+
+
+def test_tg47d_local_progress_terminals_materialize_through_m3() -> None:
+    board = chess.Board("8/7K/8/8/6k1/8/5R2/8 w - - 0 1")
+    learner = TerminalAffordanceLearner.create(eta_m3=0.08)
+    move = chess.Move.from_uci("f2f6")
+
+    keys = {key for key, _scale in _local_progress_terminal_keys(board, move)}
+    _update_edge_move(learner, board, move, reward=0.8)
+
+    assert "local_progress:rook_safe=1" in keys
+    assert any(key.startswith("local_progress_pair:rook_safe:confinement_delta=") for key in keys)
+    assert "local_progress:rook_safe=1" in learner.terminals
+    assert learner.terminals["local_progress:rook_safe=1"].positive_credit == 1
+
+
+def test_tg47d_context_protected_local_progress_affordance_can_mature() -> None:
+    learner = TerminalAffordanceLearner.create(eta_m3=0.08)
+    positive_key = "local_progress_pair:rook_safe:black_mobility_delta=1:improved"
+    veto_key = "local_progress:rook_safe=0"
+    _terminal(learner, positive_key, weight=0.9, positive=20, negative=4)
+    _terminal(learner, veto_key, weight=-1.2, positive=1, negative=20)
+    audit = {
+        positive_key: {
+            "family_audit": {"fence_hold_progress": {"support": 8, "success": 7, "failure": 1, "precision": 0.875}},
+            "decoy_activation_count": 0,
+            "hard_decoy_activation_count": 0,
+            "unsafe_activation_count": 0,
+            "decoy_false_handoff_activation_count": 0,
+            "hard_decoy_false_handoff_activation_count": 0,
+        },
+        veto_key: {
+            "family_audit": {"fence_hold_progress": {"support": 8, "success": 0, "failure": 8, "precision": 0.0}},
+            "decoy_activation_count": 0,
+            "hard_decoy_activation_count": 0,
+            "unsafe_activation_count": 8,
+            "decoy_false_handoff_activation_count": 0,
+            "hard_decoy_false_handoff_activation_count": 0,
+        },
+    }
+
+    promoted, result = _promote_edge_fence(learner, CleanEdgeFenceStageConfig(), terminal_audit=audit)
+
+    assert positive_key in promoted.terminals
+    assert veto_key in promoted.terminals
+    assert _is_veto_terminal_key(veto_key)
+    promoted_as = {row["terminal_key"]: row["promoted_as"] for row in result["candidate_rows"] if row["promoted"]}
+    assert promoted_as[positive_key] == "affordance"
+    assert promoted_as[veto_key] == "veto"

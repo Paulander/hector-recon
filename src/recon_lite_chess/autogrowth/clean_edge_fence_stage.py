@@ -15,7 +15,7 @@ import chess
 
 from recon_lite_hector.nodes.stem_cell import StemCellState
 
-from .features import extract_learner_features
+from .features import extract_learner_features, validate_learner_record
 from .foundation_curriculum import (
     _forced_mate_in_two_first_moves,
     _mate_moves,
@@ -514,6 +514,15 @@ def _update_edge_move(
             cycle=learner.cycle,
         )
         learner.m3_update_count += 1
+    for terminal_key, scale in _local_progress_terminal_keys(board, move):
+        terminal = learner.get_terminal(terminal_key)
+        terminal.update(
+            reward=reward,
+            eta=learner.eta_m3,
+            scale=scale,
+            cycle=learner.cycle,
+        )
+        learner.m3_update_count += 1
 
 
 def _edge_reward(
@@ -671,6 +680,20 @@ def _score_components(
             elif terminal.local_weight < 0.0:
                 active_other_negative.append(key)
                 other_negative_weight += terminal.local_weight
+        for key, _scale in _local_progress_terminal_keys(board, move):
+            terminal = edge_learner.terminals.get(key)
+            if terminal is None:
+                continue
+            edge_weight += terminal.local_weight
+            if terminal.local_weight < 0.0 and _is_veto_terminal_key(key):
+                active_veto.append(key)
+                veto_weight += terminal.local_weight
+            elif terminal.local_weight > 0.0:
+                active_positive.append(key)
+                positive_weight += terminal.local_weight
+            elif terminal.local_weight < 0.0:
+                active_other_negative.append(key)
+                other_negative_weight += terminal.local_weight
     if edge_learner is not None:
         for key, weight in _derived_veto_terminal_weights(board, move, parent=parent):
             active_veto.append(key)
@@ -716,6 +739,73 @@ def _derived_veto_terminal_weights(
     if metrics["partial_reply_handoff"] and not metrics["all_reply_handoff"]:
         out.append(("derived_veto_terminal:nonrobust_successor_support=1", DERIVED_VETO_WEIGHT * 0.5))
     return out
+
+
+def _local_progress_terminal_keys(board: chess.Board, move: chess.Move) -> tuple[tuple[str, float], ...]:
+    """Generic edge/fence progress compositions represented as local TERMINALs."""
+
+    after = board.copy(stack=False)
+    after.push(move)
+    before_f = extract_learner_features(board)
+    after_f = extract_learner_features(after)
+    before_area = _confinement_area(board)
+    after_area = _confinement_area(after)
+    confinement_delta = _delta_direction(before_area - after_area)
+    black_mobility_delta = _delta_direction(before_f["black_reply_mobility"] - after_f["black_reply_mobility"])
+    black_edge_delta = _delta_direction(
+        before_f["black_king_nearest_edge_distance"] - after_f["black_king_nearest_edge_distance"]
+    )
+    king_approach_delta = _delta_direction(
+        before_f["white_king_to_black_king_distance"] - after_f["white_king_to_black_king_distance"]
+    )
+    rook_safe = int(not _rook_capturable_by_reply(after) and bool(after.pieces(chess.ROOK, chess.WHITE)))
+    gives_check = int(board.gives_check(move))
+    piece = board.piece_at(move.from_square)
+    piece_type = 0 if piece is None else int(piece.piece_type)
+    keys = [
+        (f"local_progress:rook_safe={rook_safe}", 1.0),
+        (f"local_progress:confinement_delta={confinement_delta}", 1.0),
+        (f"local_progress:black_mobility_delta={black_mobility_delta}", 1.0),
+        (f"local_progress:black_edge_delta={black_edge_delta}", 1.0),
+        (f"local_progress:king_approach_delta={king_approach_delta}", 0.5),
+        (f"local_progress:gives_check={gives_check}", 0.5),
+        (
+            f"local_progress_pair:rook_safe:confinement_delta={rook_safe}:{confinement_delta}",
+            1.0,
+        ),
+        (
+            f"local_progress_pair:rook_safe:black_mobility_delta={rook_safe}:{black_mobility_delta}",
+            1.0,
+        ),
+        (
+            f"local_progress_pair:rook_safe:black_edge_delta={rook_safe}:{black_edge_delta}",
+            1.0,
+        ),
+        (
+            f"local_progress_pair:piece:confinement_delta={piece_type}:{confinement_delta}",
+            0.5,
+        ),
+        (
+            "local_progress_triplet:rook_safe:confinement:black_mobility="
+            f"{rook_safe}:{confinement_delta}:{black_mobility_delta}",
+            1.0,
+        ),
+        (
+            "local_progress_triplet:rook_safe:edge:black_mobility="
+            f"{rook_safe}:{black_edge_delta}:{black_mobility_delta}",
+            1.0,
+        ),
+    ]
+    validate_learner_record([key for key, _scale in keys])
+    return tuple(keys)
+
+
+def _delta_direction(value: float | int) -> str:
+    if value > 0:
+        return "improved"
+    if value < 0:
+        return "regressed"
+    return "same"
 
 
 def _promote_edge_fence(
@@ -869,6 +959,11 @@ def _is_veto_terminal_key(key: str) -> bool:
         "delta_terminal:confinement_area=positive",
         "delta_terminal:confinement_file_span=positive",
         "delta_terminal:confinement_rank_span=positive",
+        "local_progress:rook_safe=0",
+        "local_progress:confinement_delta=regressed",
+        "local_progress:black_mobility_delta=regressed",
+        "local_progress_pair:rook_safe:confinement_delta=0:",
+        "local_progress_pair:rook_safe:black_mobility_delta=0:",
     )
     return any(fragment in key for fragment in veto_fragments)
 
@@ -902,24 +997,58 @@ def _terminal_activation_audit(
             hub=edge_learner.hub,
             feature_cache=edge_learner.feature_cache,
         ):
-            if key not in edge_learner.terminals:
-                continue
-            item = audit.setdefault(key, _empty_terminal_audit())
-            family = row["family"]
-            family_item = item["family_audit"].setdefault(
-                family,
-                {"support": 0, "success": 0, "failure": 0, "precision": 0.0},
+            _record_terminal_activation_audit(
+                audit,
+                key=key,
+                row=row,
+                success=success,
+                unsafe=unsafe,
+                decoy_false=decoy_false,
+                hard_decoy_false=hard_decoy_false,
+                edge_learner=edge_learner,
             )
-            family_item["support"] += 1
-            family_item["success"] += int(success)
-            family_item["failure"] += int(not success)
-            family_item["precision"] = round(family_item["success"] / family_item["support"], 6)
-            item["decoy_activation_count"] += int(row["family"] == "decoy_edge")
-            item["hard_decoy_activation_count"] += int(row["family"] == "hard_decoy_edge")
-            item["unsafe_activation_count"] += int(unsafe)
-            item["decoy_false_handoff_activation_count"] += int(decoy_false)
-            item["hard_decoy_false_handoff_activation_count"] += int(hard_decoy_false)
+        for key, _scale in _local_progress_terminal_keys(board, selected):
+            _record_terminal_activation_audit(
+                audit,
+                key=key,
+                row=row,
+                success=success,
+                unsafe=unsafe,
+                decoy_false=decoy_false,
+                hard_decoy_false=hard_decoy_false,
+                edge_learner=edge_learner,
+            )
     return audit
+
+
+def _record_terminal_activation_audit(
+    audit: dict[str, dict[str, Any]],
+    *,
+    key: str,
+    row: dict[str, Any],
+    success: bool,
+    unsafe: bool,
+    decoy_false: bool,
+    hard_decoy_false: bool,
+    edge_learner: TerminalAffordanceLearner,
+) -> None:
+    if key not in edge_learner.terminals:
+        return
+    item = audit.setdefault(key, _empty_terminal_audit())
+    family = row["family"]
+    family_item = item["family_audit"].setdefault(
+        family,
+        {"support": 0, "success": 0, "failure": 0, "precision": 0.0},
+    )
+    family_item["support"] += 1
+    family_item["success"] += int(success)
+    family_item["failure"] += int(not success)
+    family_item["precision"] = round(family_item["success"] / family_item["support"], 6)
+    item["decoy_activation_count"] += int(row["family"] == "decoy_edge")
+    item["hard_decoy_activation_count"] += int(row["family"] == "hard_decoy_edge")
+    item["unsafe_activation_count"] += int(unsafe)
+    item["decoy_false_handoff_activation_count"] += int(decoy_false)
+    item["hard_decoy_false_handoff_activation_count"] += int(hard_decoy_false)
 
 
 def _move_metrics(
