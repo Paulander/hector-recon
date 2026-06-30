@@ -53,6 +53,19 @@ def _edge_distance(square: int | None) -> int:
     return min(file_idx, 7 - file_idx, rank_idx, 7 - rank_idx)
 
 
+def _corner_distance(square: int | None) -> int:
+    if square is None:
+        return 8
+    file_idx = chess.square_file(square)
+    rank_idx = chess.square_rank(square)
+    return min(
+        file_idx + rank_idx,
+        file_idx + (7 - rank_idx),
+        (7 - file_idx) + rank_idx,
+        (7 - file_idx) + (7 - rank_idx),
+    )
+
+
 def _white_rook_square(board: chess.Board) -> int | None:
     rooks = sorted(board.pieces(chess.ROOK, chess.WHITE))
     return rooks[0] if rooks else None
@@ -69,6 +82,142 @@ def _black_mobility(board: chess.Board) -> int:
 def _rook_attacked_by_black(board: chess.Board) -> bool:
     rook = _white_rook_square(board)
     return bool(rook is not None and board.is_attacked_by(chess.BLACK, rook))
+
+
+def _edge_axis(square: int | None) -> str:
+    if square is None:
+        return "none"
+    file_idx = chess.square_file(square)
+    rank_idx = chess.square_rank(square)
+    if rank_idx in (0, 7):
+        return "rank"
+    if file_idx in (0, 7):
+        return "file"
+    return "none"
+
+
+def _axis_coord(square: int | None, axis: str) -> int:
+    if square is None:
+        return -1
+    if axis == "rank":
+        return chess.square_file(square)
+    if axis == "file":
+        return chess.square_rank(square)
+    return -1
+
+
+def _sign(value: int) -> int:
+    if value > 0:
+        return 1
+    if value < 0:
+        return -1
+    return 0
+
+
+def _rook_lateral_escape_available(board: chess.Board) -> bool:
+    rook = _white_rook_square(board)
+    if rook is None:
+        return False
+    for move in board.legal_moves:
+        if move.from_square != rook:
+            continue
+        if chess.square_file(move.from_square) == chess.square_file(move.to_square):
+            continue
+        after = board.copy(stack=False)
+        after.push(move)
+        if not _rook_attacked_by_black(after) and bool(after.pieces(chess.ROOK, chess.WHITE)):
+            return True
+    return False
+
+
+def _white_king_controls_escape_band(board: chess.Board) -> bool:
+    wk = board.king(chess.WHITE)
+    bk = board.king(chess.BLACK)
+    if wk is None or bk is None:
+        return False
+    bk_file = chess.square_file(bk)
+    bk_rank = chess.square_rank(bk)
+    escape_squares: list[int] = []
+    if bk_file == 0:
+        escape_squares.extend(chess.square(1, rank) for rank in range(max(0, bk_rank - 1), min(7, bk_rank + 1) + 1))
+    elif bk_file == 7:
+        escape_squares.extend(chess.square(6, rank) for rank in range(max(0, bk_rank - 1), min(7, bk_rank + 1) + 1))
+    if bk_rank == 0:
+        escape_squares.extend(chess.square(file_idx, 1) for file_idx in range(max(0, bk_file - 1), min(7, bk_file + 1) + 1))
+    elif bk_rank == 7:
+        escape_squares.extend(chess.square(file_idx, 6) for file_idx in range(max(0, bk_file - 1), min(7, bk_file + 1) + 1))
+    return any(chess.square_distance(wk, square) <= 1 for square in set(escape_squares))
+
+
+def _edge_geometry_features(
+    *,
+    white_king: int | None,
+    black_king: int | None,
+    rook: int | None,
+    board: chess.Board,
+) -> dict[str, float]:
+    if white_king is None or black_king is None:
+        return {
+            "king_delta_file_abs": 8.0,
+            "king_delta_rank_abs": 8.0,
+            "king_support_l_shape": 0.0,
+            "king_pair_knight_distance_like": 0.0,
+            "king_support_chebyshev_distance": 8.0,
+            "king_support_manhattan_distance": 16.0,
+            "rook_black_king_same_side_of_white_king_on_primary_axis": 0.0,
+            "rook_black_king_opposite_sides_of_white_king_on_primary_axis": 0.0,
+            "rook_distance_to_black_king_edge_line": 8.0,
+            "rook_fence_depth_relative_to_black_king_edge": 8.0,
+            "rook_lateral_escape_available": 0.0,
+            "black_king_on_edge": 0.0,
+            "black_king_corner_distance": 8.0,
+            "white_king_controls_escape_band": 0.0,
+        }
+    wk_file, wk_rank = chess.square_file(white_king), chess.square_rank(white_king)
+    bk_file, bk_rank = chess.square_file(black_king), chess.square_rank(black_king)
+    file_abs = abs(wk_file - bk_file)
+    rank_abs = abs(wk_rank - bk_rank)
+    axis = _edge_axis(black_king)
+    rook_coord = _axis_coord(rook, axis)
+    wk_coord = _axis_coord(white_king, axis)
+    bk_coord = _axis_coord(black_king, axis)
+    rook_side = 0 if rook_coord < 0 or wk_coord < 0 else _sign(rook_coord - wk_coord)
+    bk_side = 0 if bk_coord < 0 or wk_coord < 0 else _sign(bk_coord - wk_coord)
+    rook_file = -1 if rook is None else chess.square_file(rook)
+    rook_rank = -1 if rook is None else chess.square_rank(rook)
+    if black_king is None or rook is None:
+        edge_line_distance = 8
+        fence_depth = 8
+    elif bk_file in (0, 7):
+        edge_line_distance = abs(rook_file - bk_file)
+        fence_depth = abs(rook_file - bk_file)
+    elif bk_rank in (0, 7):
+        edge_line_distance = abs(rook_rank - bk_rank)
+        fence_depth = abs(rook_rank - bk_rank)
+    else:
+        edge_line_distance = _edge_distance(rook)
+        fence_depth = _edge_distance(rook)
+    l_shape = sorted((file_abs, rank_abs)) == [1, 2]
+    return {
+        "king_delta_file_abs": float(file_abs),
+        "king_delta_rank_abs": float(rank_abs),
+        "king_support_l_shape": 1.0 if l_shape else 0.0,
+        "king_pair_knight_distance_like": 1.0 if l_shape else 0.0,
+        "king_support_chebyshev_distance": float(max(file_abs, rank_abs)),
+        "king_support_manhattan_distance": float(file_abs + rank_abs),
+        "rook_black_king_same_side_of_white_king_on_primary_axis": 1.0
+        if rook_side != 0 and rook_side == bk_side
+        else 0.0,
+        "rook_black_king_opposite_sides_of_white_king_on_primary_axis": 1.0
+        if rook_side != 0 and bk_side != 0 and rook_side != bk_side
+        else 0.0,
+        "rook_distance_to_black_king_edge_line": float(edge_line_distance),
+        "rook_fence_depth_relative_to_black_king_edge": float(fence_depth),
+        "rook_lateral_escape_available": 1.0 if _rook_lateral_escape_available(board) else 0.0,
+        "black_king_on_edge": 1.0 if _edge_distance(black_king) == 0 else 0.0,
+        "black_king_corner_distance": float(_corner_distance(black_king)),
+        "white_king_controls_escape_band": 1.0 if _white_king_controls_escape_band(board) else 0.0,
+    }
 
 
 def extract_learner_features(board: chess.Board) -> dict[str, float]:
@@ -102,6 +251,12 @@ def extract_learner_features(board: chess.Board) -> dict[str, float]:
         "is_checkmate": 1.0 if board.is_checkmate() else 0.0,
         "is_stalemate": 1.0 if board.is_stalemate() else 0.0,
     }
+    features.update(_edge_geometry_features(
+        white_king=white_king,
+        black_king=black_king,
+        rook=rook,
+        board=board,
+    ))
     validate_learner_record(features)
     return features
 

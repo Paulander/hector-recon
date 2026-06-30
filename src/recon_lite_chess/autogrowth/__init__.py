@@ -81,6 +81,15 @@ from .edge_fence_curriculum import (
     EdgeFenceCurriculumResult,
     run_edge_fence_curriculum,
 )
+from .edge_killbox_curriculum import (
+    EdgeKillboxCurriculumConfig,
+    EdgeKillboxCurriculumResult,
+    classify_edge_killbox_family,
+    edge_killbox_invariants,
+    generate_edge_killbox_datasets,
+    geometry_summary,
+    run_edge_killbox_curriculum,
+)
 from .foundation_curriculum import (
     ActionRanker,
     FoundationCurriculumConfig,
