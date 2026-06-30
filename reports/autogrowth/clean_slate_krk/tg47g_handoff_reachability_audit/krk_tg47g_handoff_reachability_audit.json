@@ -1,0 +1,167 @@
+{
+  "artifact_paths": {
+    "audit_traces": "reports/autogrowth/clean_slate_krk/tg47g_handoff_reachability_audit/pools/tg47g_handoff_audit.jsonl.gz",
+    "boundary_failures": "reports/autogrowth/clean_slate_krk/tg47g_handoff_reachability_audit/pools/tg47g_boundary_failures.jsonl.gz",
+    "main": "reports/autogrowth/clean_slate_krk/tg47g_handoff_reachability_audit/krk_tg47g_handoff_reachability_audit.json",
+    "markdown": "reports/autogrowth/clean_slate_krk/tg47g_handoff_reachability_audit/krk_tg47g_handoff_reachability_audit.md"
+  },
+  "audit_summary": {
+    "blocker_classification_counts": {
+      "decoy_all_reply_handoff_leak": 24,
+      "reachable_with_selected_first": 19,
+      "selected_first_move_bad": 5
+    },
+    "family_counts": {
+      "bridge_frontier_near": 4,
+      "decoy_edge": 12,
+      "edge_trap_progress": 5,
+      "fence_hold_progress": 15,
+      "hard_decoy_edge": 12
+    },
+    "position_count": 48
+  },
+  "cache_summary": {
+    "foundation_response_cache_entries": 1781,
+    "move_metric_cache_entries": 1991
+  },
+  "checkpoint": "TG47g_handoff_reachability_audit",
+  "config": {
+    "audit_trace_path": "reports/autogrowth/clean_slate_krk/tg47g_handoff_reachability_audit/pools/tg47g_handoff_audit.jsonl.gz",
+    "boundary_failure_path": "reports/autogrowth/clean_slate_krk/tg47g_handoff_reachability_audit/pools/tg47g_boundary_failures.jsonl.gz",
+    "checkpoint_name": "TG47g_handoff_reachability_audit",
+    "markdown_path": "reports/autogrowth/clean_slate_krk/tg47g_handoff_reachability_audit/krk_tg47g_handoff_reachability_audit.md",
+    "max_positions": null,
+    "oracle_first_move_cap": 3,
+    "oracle_second_move_cap": 3,
+    "output_dir": "reports/autogrowth/clean_slate_krk/tg47g_handoff_reachability_audit",
+    "output_path": "reports/autogrowth/clean_slate_krk/tg47g_handoff_reachability_audit/krk_tg47g_handoff_reachability_audit.json",
+    "parent_foundation_artifact_path": "reports/autogrowth/clean_slate_krk/tg46d_m4_foundation_consolidation/promoted_tg46d_foundation.json",
+    "parent_foundation_m4_audit_path": "reports/autogrowth/clean_slate_krk/tg46d_m4_foundation_consolidation/pools/tg46d_m4_audit.jsonl.gz",
+    "schema_version": "krk_tg47g_handoff_reachability_audit.v0",
+    "selected_second_move_cap": 3,
+    "source_tg47f_artifact_path": "reports/autogrowth/clean_slate_krk/tg47f_edge_fence_continuation_handoff/krk_tg47f_edge_fence_continuation_handoff.json",
+    "source_tg47f_eval_trace_path": "reports/autogrowth/clean_slate_krk/tg47f_edge_fence_continuation_handoff/pools/tg47f_eval_traces.jsonl.gz",
+    "source_tg47f_m4_audit_path": "reports/autogrowth/clean_slate_krk/tg47f_edge_fence_continuation_handoff/pools/tg47f_m4_audit.jsonl.gz"
+  },
+  "decision": {
+    "action_ranker_used_for_runtime": false,
+    "blocker_classification_counts": {
+      "decoy_all_reply_handoff_leak": 24,
+      "reachable_with_selected_first": 19,
+      "selected_first_move_bad": 5
+    },
+    "boundary_pool_loaded": false,
+    "checkpoint_interpretation": "decoy_handoff_leak",
+    "checkpoint_pass": true,
+    "child_branch_loaded": false,
+    "decoy_all_reply_false_handoff_count": 24,
+    "decoy_partial_false_handoff_count": 0,
+    "diagnostic_only": true,
+    "direct_provider_override": false,
+    "edge_learner_terminal_count": 20,
+    "edge_learner_weight_delta_during_audit": 0,
+    "fence_hold_oracle_first_all_reply_second_handoff_rate": 1.0,
+    "fence_hold_position_count": 15,
+    "fence_hold_selected_first_all_reply_second_handoff_rate": 0.6666666666666666,
+    "foundation_response_validation_mode": "positive_tg46d_graph_weight_not_forced_mate_or_tablebase",
+    "input_position_count": 48,
+    "learner_visible_basin_labels": false,
+    "learner_visible_continuation_labels": false,
+    "learner_visible_depth_labels": false,
+    "learner_visible_edge_fence_labels": false,
+    "learner_visible_quality_labels": false,
+    "learner_visible_reply_policy_labels": false,
+    "learner_visible_stage_labels": false,
+    "non_decoy_position_count": 24,
+    "old_canary_loaded": false,
+    "old_tg_pools_loaded": 0,
+    "oracle_audit_capped_count": 48,
+    "oracle_first_all_reply_second_handoff_rate": 1.0,
+    "oracle_first_any_reply_second_handoff_rate": 1.0,
+    "oracle_first_move_cap": 3,
+    "oracle_second_move_cap": 3,
+    "outside_foundation_basin_count": 0,
+    "parent_foundation_frozen": true,
+    "parent_foundation_hash": "84aee84704c2a7b84534509eaf7b8c257fdc846bef2531a595f5dbb775d513a6",
+    "parent_foundation_m3_delta_during_audit": 0,
+    "parent_foundation_m4_delta_during_audit": 0,
+    "parent_foundation_sanity_after_pass": true,
+    "parent_foundation_sanity_before_pass": true,
+    "partial_only_count": 0,
+    "python_final_selector_used": false,
+    "repair_applied": false,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "selected_first_all_reply_second_handoff_rate": 0.7916666666666666,
+    "selected_first_any_reply_second_handoff_rate": 0.9166666666666666,
+    "selected_next_action": "quarantine_continuation_decoy_leak_before_training",
+    "selected_second_move_cap": 3,
+    "total_seconds": 414.172842,
+    "unsafe_second_required_count": 5
+  },
+  "edge_fence_m4": {
+    "m3_update_delta_during_audit": 0,
+    "m4_promotion_delta_during_audit": 0,
+    "terminal_count": 20
+  },
+  "parent_foundation": {
+    "frozen": true,
+    "m3_delta_during_audit": 0,
+    "m4_delta_during_audit": 0,
+    "sanity_after": {
+      "mate1_regression_accuracy": 1.0,
+      "mate1_terminal_count": 14,
+      "mate2_all_reply_conversion_rate": 0.97,
+      "mate2_first_terminal_count": 104,
+      "mate2_heldout_conversion_rate": 0.97,
+      "mate2_one_reply_false_positive_count": 0,
+      "mate2_regression_conversion_rate": 0.94,
+      "pass": true,
+      "sanity_source": "tg46d_promoted_artifact_and_m4_audit_contract"
+    },
+    "sanity_before": {
+      "mate1_regression_accuracy": 1.0,
+      "mate1_terminal_count": 14,
+      "mate2_all_reply_conversion_rate": 0.97,
+      "mate2_first_terminal_count": 104,
+      "mate2_heldout_conversion_rate": 0.97,
+      "mate2_one_reply_false_positive_count": 0,
+      "mate2_regression_conversion_rate": 0.94,
+      "pass": true,
+      "sanity_source": "tg46d_promoted_artifact_and_m4_audit_contract"
+    }
+  },
+  "provenance": {
+    "boundary_pool_loaded": false,
+    "child_branch_loaded": false,
+    "git_head": "84ec13408d4dbe771c9fd1f809b8e3ae65a5ae28",
+    "input_source": "tg47f_generated_fens_audit_only",
+    "old_canary_loaded": false,
+    "old_tg_pools_loaded": 0,
+    "parent_foundation_artifact": "reports/autogrowth/clean_slate_krk/tg46d_m4_foundation_consolidation/promoted_tg46d_foundation.json",
+    "parent_foundation_hash": "84aee84704c2a7b84534509eaf7b8c257fdc846bef2531a595f5dbb775d513a6",
+    "parent_foundation_m4_audit": "reports/autogrowth/clean_slate_krk/tg46d_m4_foundation_consolidation/pools/tg46d_m4_audit.jsonl.gz",
+    "source_tg47f_artifact": "reports/autogrowth/clean_slate_krk/tg47f_edge_fence_continuation_handoff/krk_tg47f_edge_fence_continuation_handoff.json",
+    "source_tg47f_eval_trace": "reports/autogrowth/clean_slate_krk/tg47f_edge_fence_continuation_handoff/pools/tg47f_eval_traces.jsonl.gz",
+    "source_tg47f_m4_audit": "reports/autogrowth/clean_slate_krk/tg47f_edge_fence_continuation_handoff/pools/tg47f_m4_audit.jsonl.gz"
+  },
+  "purity_boundary": {
+    "action_ranker_used_for_runtime": false,
+    "basin_labels_learner_visible": false,
+    "continuation_labels_learner_visible": false,
+    "depth_labels_learner_visible": false,
+    "diagnostic_only": true,
+    "direct_provider_override": false,
+    "edge_fence_labels_learner_visible": false,
+    "python_final_selector_used": false,
+    "quality_tier_labels_learner_visible": false,
+    "reply_policy_labels_learner_visible": false,
+    "runtime_tablebase_or_dtm_move_source": false,
+    "stage_labels_learner_visible": false,
+    "trainer_side_exploration_used": true,
+    "trainer_side_exploration_used_in_final_eval": true
+  },
+  "schema_version": "krk_tg47g_handoff_reachability_audit.v0",
+  "timing": {
+    "total_seconds": 414.172842
+  }
+}

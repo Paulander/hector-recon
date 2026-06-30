@@ -92,6 +92,12 @@ from .handoff_filter_validation import (
     HandoffFilterValidationResult,
     run_handoff_filter_validation,
 )
+from .handoff_reachability_audit import (
+    HandoffReachabilityAuditConfig,
+    HandoffReachabilityAuditResult,
+    classify_blocker,
+    run_handoff_reachability_audit,
+)
 from .experiment import (
     AutogrowthExperimentConfig,
     AutogrowthExperimentResult,
