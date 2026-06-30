@@ -98,6 +98,11 @@ from .handoff_reachability_audit import (
     classify_blocker,
     run_handoff_reachability_audit,
 )
+from .validated_basin_acceptance import (
+    ValidatedBasinAcceptanceConfig,
+    ValidatedBasinAcceptanceResult,
+    run_validated_basin_acceptance,
+)
 from .experiment import (
     AutogrowthExperimentConfig,
     AutogrowthExperimentResult,
