@@ -103,6 +103,11 @@ from .validated_basin_acceptance import (
     ValidatedBasinAcceptanceResult,
     run_validated_basin_acceptance,
 )
+from .validated_reachability_expansion import (
+    ValidatedReachabilityExpansionConfig,
+    ValidatedReachabilityExpansionResult,
+    run_validated_reachability_expansion,
+)
 from .experiment import (
     AutogrowthExperimentConfig,
     AutogrowthExperimentResult,
