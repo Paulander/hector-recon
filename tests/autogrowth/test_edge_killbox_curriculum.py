@@ -84,6 +84,8 @@ def test_tg48_tiny_run_writes_artifact_and_preserves_purity(tmp_path: Path) -> N
         failure_pool_path=str(output_dir / "pools" / "tg48a_failure_pool.jsonl.gz"),
         generator_samples_path=str(output_dir / "pools" / "tg48a_generator_samples.jsonl.gz"),
         graph_summary_path=str(output_dir / "pools" / "tg48a_graph_summary.json"),
+        board_sample_path=str(output_dir / "pools" / "tg48a_repair_board_samples.md"),
+        boundary_positive_path=str(output_dir / "pools" / "tg48a_boundary_positive_routed.jsonl.gz"),
         run_scale_label="test",
         train_count=3,
         heldout_count=3,
@@ -117,7 +119,21 @@ def test_tg48_tiny_run_writes_artifact_and_preserves_purity(tmp_path: Path) -> N
     assert Path(cfg.generator_samples_path).exists()
     assert Path(cfg.graph_summary_path).exists()
     assert Path(cfg.board_sample_path).exists()
+    assert Path(cfg.boundary_positive_path).exists()
     assert "TG48a Repair Board Samples" in Path(cfg.board_sample_path).read_text(encoding="utf-8")
+    assert "hard_decoy_generator_mislabel_count" in payload["decision"]
+    assert "true_hard_decoy_leak_count" in payload["decision"]
+    assert "boundary_positive_routed_count" in payload["decision"]
+    assert (
+        payload["decision"]["hard_decoy_false_handoff_count_after_excluding_generator_mislabels"]
+        == payload["decision"]["true_hard_decoy_leak_count"]
+    )
+    assert payload["decision"]["hard_decoy_generator_mislabel_count"] == 0
+    assert payload["decision"]["true_hard_decoy_leak_count"] == 0
+    assert (
+        payload["decision"]["boundary_positive_routed_count"]
+        == payload["hard_decoy_gate"]["boundary_positive_routed_count"]
+    )
 
     with gzip.open(cfg.eval_trace_path, "rt", encoding="utf-8") as handle:
         eval_rows = [json.loads(line) for line in handle]
@@ -126,6 +142,23 @@ def test_tg48_tiny_run_writes_artifact_and_preserves_purity(tmp_path: Path) -> N
         for row in eval_rows
         if row["metrics"].get("graph_positive_false_basin")
     )
+    assert all(
+        not row["metrics"]["validated_entry"]
+        for row in eval_rows
+        if row["trace_type"] == "TG48a_decoy_M4" and row["family"] == "hard_decoy_edge_killbox"
+    )
+    assert all(not row["success"] for row in eval_rows if row["metrics"].get("partial_only_near_basin"))
+
+    with gzip.open(cfg.train_trace_path, "rt", encoding="utf-8") as handle:
+        train_rows = [json.loads(line) for line in handle]
+    assert all(row["split"] != "boundary_positive" for row in train_rows)
+    assert all(row["family"] != "boundary_positive_edge_killbox" for row in train_rows)
+
+    with gzip.open(cfg.boundary_positive_path, "rt", encoding="utf-8") as handle:
+        boundary_rows = [json.loads(line) for line in handle]
+    assert len(boundary_rows) == payload["decision"]["boundary_positive_routed_count"]
+    assert all(row["split"] == "boundary_positive" for row in boundary_rows)
+    assert all(row["validator_metadata"]["learner_visible_labels"] is False for row in boundary_rows)
 
     for row in payload["m4_audit"]["candidate_rows"]:
         key = row["terminal_key"]

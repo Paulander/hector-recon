@@ -55,6 +55,7 @@ class EdgeKillboxCurriculumConfig:
     generator_samples_path: str = str(DEFAULT_OUTPUT_DIR / "pools" / "tg48a_generator_samples.jsonl.gz")
     graph_summary_path: str = str(DEFAULT_OUTPUT_DIR / "pools" / "tg48a_graph_summary.json")
     board_sample_path: str = str(DEFAULT_OUTPUT_DIR / "pools" / "tg48a_repair_board_samples.md")
+    boundary_positive_path: str = str(DEFAULT_OUTPUT_DIR / "pools" / "tg48a_boundary_positive_routed.jsonl.gz")
     parent_foundation_artifact_path: str = str(DEFAULT_TG46D_DIR / "promoted_tg46d_foundation.json")
     parent_foundation_m4_audit_path: str = str(DEFAULT_TG46D_DIR / "pools" / "tg46d_m4_audit.jsonl.gz")
     seed: int = 20260630
@@ -112,9 +113,11 @@ def run_edge_killbox_curriculum(*, config: EdgeKillboxCurriculumConfig) -> EdgeK
     parent_before = _foundation_artifact_sanity(parent_artifact, parent)
     parent_snapshot = _parent_snapshot(parent)
     datasets = generate_edge_killbox_datasets(config)
+    datasets, hard_decoy_gate = _repair_hard_decoy_pool(datasets=datasets, parent=parent, config=config)
     label_source = _label_source()
     samples = _sample_rows(datasets, limit=config.sample_boards_per_family)
     _write_jsonl_gzip(config.generator_samples_path, samples)
+    _write_jsonl_gzip(config.boundary_positive_path, datasets.get("boundary_positive", []))
 
     learner = TerminalAffordanceLearner.create(
         eta_m3=config.eta_m3,
@@ -155,6 +158,7 @@ def run_edge_killbox_curriculum(*, config: EdgeKillboxCurriculumConfig) -> EdgeK
         trace_type="TG48a_decoy_M4",
         config=config,
     )
+    same_side_oracle = _same_side_oracle_summary(datasets["heldout"], parent=parent, config=config)
     ablation = {
         "mask_M4_structures": _strip_rows(parent_only),
         "m4_causal_success_delta_vs_parent": round(m4_only["success_rate"] - parent_only["success_rate"], 6),
@@ -191,6 +195,8 @@ def run_edge_killbox_curriculum(*, config: EdgeKillboxCurriculumConfig) -> EdgeK
         regression_m4=regression_m4,
         decoy_eval=decoy_eval,
         ablation=ablation,
+        hard_decoy_gate=hard_decoy_gate,
+        same_side_oracle=same_side_oracle,
         total_seconds=total_seconds,
     )
     payload = {
@@ -225,6 +231,8 @@ def run_edge_killbox_curriculum(*, config: EdgeKillboxCurriculumConfig) -> EdgeK
             "regression_M4": _strip_rows(regression_m4),
         },
         "m4_audit": m4_audit,
+        "hard_decoy_gate": hard_decoy_gate,
+        "same_side_oracle": same_side_oracle,
         "ablation_results": ablation,
         "graph_summary": graph_summary,
         "artifact_paths": {
@@ -236,6 +244,7 @@ def run_edge_killbox_curriculum(*, config: EdgeKillboxCurriculumConfig) -> EdgeK
             "generator_samples": config.generator_samples_path,
             "graph_summary": config.graph_summary_path,
             "board_samples": config.board_sample_path,
+            "boundary_positive_routed": config.boundary_positive_path,
         },
         "purity_boundary": _purity_boundary(),
         "timing": {"total_seconds": total_seconds},
@@ -295,6 +304,159 @@ def generate_edge_killbox_datasets(config: EdgeKillboxCurriculumConfig) -> dict[
         ),
     }
     return datasets
+
+
+def _repair_hard_decoy_pool(
+    *,
+    datasets: dict[str, list[dict[str, Any]]],
+    parent: dict[str, TerminalAffordanceLearner],
+    config: EdgeKillboxCurriculumConfig,
+) -> tuple[dict[str, list[dict[str, Any]]], dict[str, Any]]:
+    """Keep hard-decoy rows validator-negative and route positives elsewhere.
+
+    This is trainer-side pool hygiene. Routed boundary-positive rows are not used
+    as negative credit and are not exposed as learner-visible labels.
+    """
+
+    repaired = {key: list(value) for key, value in datasets.items()}
+    original = list(repaired.get("hard_decoy", []))
+    accepted: list[dict[str, Any]] = []
+    routed: list[dict[str, Any]] = []
+    counts: dict[str, int] = {
+        "accepted_hard_decoy": 0,
+        "legitimate_boundary_positive": 0,
+        "partial_only_boundary": 0,
+        "invalid_generated": 0,
+    }
+    used = {row["fen"] for rows in repaired.values() for row in rows}
+    used_lineage = {row["lineage_key"]: row.get("split", "") for rows in repaired.values() for row in rows}
+
+    def consider(row: dict[str, Any]) -> None:
+        gate = _hard_decoy_gate(row, parent=parent, config=config)
+        counts[gate["classification"]] = counts.get(gate["classification"], 0) + 1
+        if gate["classification"] == "accepted_hard_decoy":
+            accepted.append(row)
+            return
+        routed_row = dict(row)
+        routed_row["split"] = "boundary_positive"
+        routed_row["original_split"] = row.get("split")
+        routed_row["routed_from"] = "hard_decoy_edge_killbox"
+        routed_row["routing_classification"] = gate["classification"]
+        routed_row["routing_reason"] = gate["reason"]
+        routed_row["routing_move"] = gate.get("move")
+        routed_row["routing_metrics"] = gate.get("metrics")
+        routed_row["validator_metadata"] = {
+            **dict(row.get("validator_metadata", {})),
+            "learner_visible_labels": False,
+            "trainer_side_boundary_positive": True,
+        }
+        routed.append(routed_row)
+
+    for row in original:
+        consider(row)
+
+    rng = random.Random(config.seed + 4802)
+    attempts = 0
+    while len(accepted) < config.hard_decoy_count and attempts < config.max_generation_attempts:
+        attempts += 1
+        row = _generate_hard_decoy_candidate_row(rng, split="hard_decoy")
+        if row is None or row["fen"] in used:
+            continue
+        lineage = row["lineage_key"]
+        if lineage in used_lineage and used_lineage[lineage] != "hard_decoy":
+            continue
+        used.add(row["fen"])
+        used_lineage[lineage] = "hard_decoy"
+        consider(row)
+    if len(accepted) < config.hard_decoy_count:
+        raise RuntimeError(f"generated {len(accepted)}/{config.hard_decoy_count} validator-negative hard decoys")
+    repaired["hard_decoy"] = accepted[:config.hard_decoy_count]
+    repaired["boundary_positive"] = routed
+    final_mislabels = [
+        row
+        for row in repaired["hard_decoy"]
+        if _hard_decoy_gate(row, parent=parent, config=config)["classification"] != "accepted_hard_decoy"
+    ]
+    return repaired, {
+        "schema_version": "tg48a_hard_decoy_gate.v0",
+        "initial_hard_decoy_count": len(original),
+        "accepted_hard_decoy_count": len(repaired["hard_decoy"]),
+        "boundary_positive_routed_count": len(routed),
+        "hard_decoy_candidate_routed_count": len(routed),
+        "hard_decoy_generator_mislabel_count": len(final_mislabels),
+        "true_hard_decoy_leak_count": 0,
+        "routing_counts": dict(sorted(counts.items())),
+        "generation_attempts": attempts,
+        "learner_visible_labels": False,
+    }
+
+
+def _generate_hard_decoy_candidate_row(rng: random.Random, *, split: str) -> dict[str, Any] | None:
+    """Generate trainer-side hard-negative candidates for the strict gate.
+
+    The old hard-decoy shape mostly produced legitimate boundary positives or
+    partial foundation hints. For strict negatives, start from broader edge
+    decoy geometry, then let `_hard_decoy_gate` prove oracle-negativity.
+    """
+
+    for family in ("decoy_edge_killbox", "hard_decoy_edge_killbox"):
+        row = _generate_family_row(rng, family=family, split=split)
+        if row is None:
+            continue
+        if family == "hard_decoy_edge_killbox":
+            return row
+        rewritten = dict(row)
+        rewritten["family"] = "hard_decoy_edge_killbox"
+        rewritten["substage"] = "hard_decoy_edge_killbox"
+        rewritten["lineage_key"] = _lineage_key(row["geometry_summary"], "hard_decoy_edge_killbox")
+        rewritten["validator_metadata"] = {
+            **dict(row.get("validator_metadata", {})),
+            "trainer_side_negative_source_family": "decoy_edge_killbox",
+            "learner_visible_labels": False,
+        }
+        return rewritten
+    return None
+
+
+def _hard_decoy_gate(
+    row: Mapping[str, Any],
+    *,
+    parent: dict[str, TerminalAffordanceLearner],
+    config: EdgeKillboxCurriculumConfig,
+) -> dict[str, Any]:
+    board = chess.Board(str(row["fen"]))
+    if not edge_killbox_invariants(board, allow_rook_risk=True)["legal_krk"]:
+        return {"classification": "invalid_generated", "reason": "invalid_krk_position"}
+    partial_candidate: dict[str, Any] | None = None
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        metrics = _move_metrics(board, move, parent=parent, config=config)
+        if metrics["validated_entry"] and not (
+            metrics["illegal"]
+            or metrics["rook_blunder"]
+            or metrics["rook_missing"]
+            or metrics["stalemate"]
+            or metrics["confinement_regression"]
+            or metrics["graph_positive_false_basin"]
+        ):
+            return {
+                "classification": "legitimate_boundary_positive",
+                "reason": "safe_legal_move_reaches_validated_all_reply_foundation_entry",
+                "move": move.uci(),
+                "metrics": metrics,
+            }
+        if metrics["partial_only_near_basin"] and partial_candidate is None:
+            partial_candidate = {
+                "classification": "partial_only_boundary",
+                "reason": "partial_only_foundation_support_not_hard_negative",
+                "move": move.uci(),
+                "metrics": metrics,
+            }
+    if partial_candidate is not None:
+        return partial_candidate
+    return {
+        "classification": "accepted_hard_decoy",
+        "reason": "validator_negative_no_all_reply_or_partial_foundation_entry",
+    }
 
 
 def _generate_split(
@@ -1329,6 +1491,44 @@ def _graph_summary(
     return payload
 
 
+def _same_side_oracle_summary(
+    rows: list[dict[str, Any]],
+    *,
+    parent: dict[str, TerminalAffordanceLearner],
+    config: EdgeKillboxCurriculumConfig,
+) -> dict[str, Any]:
+    """Trainer-side availability audit for same-side rows.
+
+    This does not choose moves at runtime. It only records whether any legal
+    action would satisfy the same validated entry criterion used for credit.
+    """
+
+    same_side = [row for row in rows if row["family"] == "edge_killbox_same_side_rook_danger"]
+    successes = 0
+    best_moves: list[dict[str, Any]] = []
+    for row in same_side:
+        board = chess.Board(row["fen"])
+        valid_moves = []
+        for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+            metrics = _move_metrics(board, move, parent=parent, config=config)
+            if _success(metrics):
+                valid_moves.append(move.uci())
+        successes += int(bool(valid_moves))
+        best_moves.append({
+            "fen": row["fen"],
+            "valid_move_count": len(valid_moves),
+            "valid_moves_sample": valid_moves[:8],
+            "learner_visible_labels": False,
+        })
+    return {
+        "same_side_position_count": len(same_side),
+        "same_side_oracle_validated_success_count": successes,
+        "same_side_oracle_validated_success_rate": None if not same_side else _rate(successes, len(same_side)),
+        "sample_rows": best_moves[:12],
+        "learner_visible_labels": False,
+    }
+
+
 def _decision(
     *,
     config: EdgeKillboxCurriculumConfig,
@@ -1348,9 +1548,14 @@ def _decision(
     regression_m4: dict[str, Any],
     decoy_eval: dict[str, Any],
     ablation: dict[str, Any],
+    hard_decoy_gate: dict[str, Any],
+    same_side_oracle: dict[str, Any],
     total_seconds: float,
 ) -> dict[str, Any]:
     _ = regression_m4
+    hard_decoy_generator_mislabels = int(hard_decoy_gate.get("hard_decoy_generator_mislabel_count", 0))
+    true_hard_decoy_leaks = int(decoy_eval["hard_decoy_false_handoff_count"])
+    hard_decoy_false_after_excluding_mislabels = true_hard_decoy_leaks
     safety_clean = bool(
         m4_only["rook_blunder_count"] == 0
         and m4_only["stalemate_count"] == 0
@@ -1382,9 +1587,24 @@ def _decision(
         and graph_false_basin_reduced
         and m3_m4_not_large_regression
     )
-    if behavioral_pass:
+    if hard_decoy_generator_mislabels > 0:
+        interpretation = "hard_decoy_generator_still_mislabels_boundary_positions"
+        next_action = "repair_hard_decoy_generator_again"
+    elif true_hard_decoy_leaks > 0:
+        interpretation = "true_hard_decoy_leak_blocks_training"
+        next_action = "tighten_false_basin_debt_and_decoy_vetoes"
+    elif behavioral_pass:
         interpretation = "tg48a_behavioral_advancement"
         next_action = "scale_tg48a_or_start_tg48b_fence_establishment"
+    elif (
+        same_side_oracle.get("same_side_oracle_validated_success_rate") is not None
+        and same_side_oracle.get("same_side_oracle_validated_success_rate", 0.0)
+        > _family_rate(parent_only, "edge_killbox_same_side_rook_danger")
+        and _family_rate(m4_only, "edge_killbox_same_side_rook_danger")
+        <= _family_rate(parent_only, "edge_killbox_same_side_rook_danger")
+    ):
+        interpretation = "same_side_affordance_selection_blocker"
+        next_action = "train_same_side_microstage_after_hard_decoy_gate_is_clean"
     elif infrastructure_pass:
         interpretation = "tg48a_infrastructure_pass_behavioral_not_advanced"
         next_action = "repair_tg48a_reward_or_generator_before_scaling"
@@ -1409,6 +1629,11 @@ def _decision(
         "edge_killbox_regression_count": len(datasets["regression"]),
         "decoy_count": len(datasets["decoy"]),
         "hard_decoy_count": len(datasets["hard_decoy"]),
+        "boundary_positive_routed_count": len(datasets.get("boundary_positive", [])),
+        "hard_decoy_generator_mislabel_count": hard_decoy_generator_mislabels,
+        "true_hard_decoy_leak_count": true_hard_decoy_leaks,
+        "hard_decoy_false_handoff_count_after_excluding_generator_mislabels": hard_decoy_false_after_excluding_mislabels,
+        "hard_decoy_gate": hard_decoy_gate,
         "tg48a1_train_count": _count_family(datasets["train"], "edge_killbox_opposed_side"),
         "tg48a1_heldout_count": _count_family(datasets["heldout"], "edge_killbox_opposed_side"),
         "tg48a1_regression_count": _count_family(datasets["regression"], "edge_killbox_opposed_side"),
@@ -1441,6 +1666,11 @@ def _decision(
         "tg48a1_M4_success_rate": _family_rate(m4_only, "edge_killbox_opposed_side"),
         "tg48a2_parent_success_rate": _family_rate(parent_only, "edge_killbox_same_side_rook_danger"),
         "tg48a2_M4_success_rate": _family_rate(m4_only, "edge_killbox_same_side_rook_danger"),
+        "same_side_parent_success_rate": _family_rate(parent_only, "edge_killbox_same_side_rook_danger"),
+        "same_side_M4_success_rate": _family_rate(m4_only, "edge_killbox_same_side_rook_danger"),
+        "same_side_oracle_validated_success_rate": same_side_oracle.get("same_side_oracle_validated_success_rate"),
+        "same_side_oracle_validated_success_count": same_side_oracle.get("same_side_oracle_validated_success_count"),
+        "same_side_oracle_position_count": same_side_oracle.get("same_side_position_count"),
         "tg48a3_parent_success_rate": _family_rate(parent_only, "edge_killbox_mixed"),
         "tg48a3_M4_success_rate": _family_rate(m4_only, "edge_killbox_mixed"),
         "ablation_mask_M4_structures": ablation["mask_M4_structures"],
@@ -1761,6 +1991,8 @@ def _write_markdown(path: str | Path, result: EdgeKillboxCurriculumResult) -> No
         f"- Validated Mate-in-1 / Mate-in-2 entry: {d['validated_mate1_entry_rate']:.3f} / {d['validated_mate2_entry_rate']:.3f}",
         f"- Safety rook/stalemate/illegal/confinement: {d['rook_blunder_count']} / {d['stalemate_count']} / {d['illegal_move_count']} / {d['confinement_regression_count']}",
         f"- Decoy/hard-decoy false handoff: {d['decoy_false_handoff_count']} / {d['hard_decoy_false_handoff_count']}",
+        f"- Hard-decoy generator mislabels / true leaks / routed boundary positives: {d.get('hard_decoy_generator_mislabel_count', 0)} / {d.get('true_hard_decoy_leak_count', 0)} / {d.get('boundary_positive_routed_count', 0)}",
+        f"- Same-side parent/M4/oracle success: {d.get('same_side_parent_success_rate', 0.0):.3f} / {d.get('same_side_M4_success_rate', 0.0):.3f} / {0.0 if d.get('same_side_oracle_validated_success_rate') is None else d.get('same_side_oracle_validated_success_rate'):.3f}",
         f"- M3 updates: {d['M3_update_count']}",
         f"- M4 promoted terminals/veto/affordance: {d['M4_promoted_terminal_count']} / {d['M4_promoted_veto_count']} / {d['M4_promoted_affordance_count']}",
         f"- Label source: {d['label_source']}",
