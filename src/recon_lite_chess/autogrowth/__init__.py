@@ -101,6 +101,11 @@ from .tg48a2_same_side_microstage import (
     generate_same_side_microstage_datasets,
     run_tg48a2_same_side_microstage,
 )
+from .tg48a2_same_side_episode_training import (
+    TG48a2SameSideEpisodeTrainingConfig,
+    TG48a2SameSideEpisodeTrainingResult,
+    run_tg48a2_same_side_episode_training,
+)
 from .foundation_curriculum import (
     ActionRanker,
     FoundationCurriculumConfig,
