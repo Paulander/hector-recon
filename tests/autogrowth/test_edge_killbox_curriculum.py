@@ -1,3 +1,4 @@
+import gzip
 import json
 from pathlib import Path
 
@@ -94,6 +95,10 @@ def test_tg48_tiny_run_writes_artifact_and_preserves_purity(tmp_path: Path) -> N
     payload = json.loads(Path(cfg.output_path).read_text(encoding="utf-8"))
 
     assert result.decision["checkpoint_pass"] is True
+    if payload["decision"]["behavioral_advancement"]:
+        assert payload["decision"]["M4_promoted_affordance_count"] > 0
+        assert payload["decision"]["hard_decoy_false_handoff_count"] == 0
+        assert payload["decision"]["graph_positive_false_basin_reduced_vs_parent"]
     assert payload["decision"]["parent_foundation_weight_delta_during_stage"] == 0
     assert payload["decision"]["runtime_tablebase_or_dtm_move_source"] is False
     assert payload["decision"]["action_ranker_used_for_runtime"] is False
@@ -101,7 +106,27 @@ def test_tg48_tiny_run_writes_artifact_and_preserves_purity(tmp_path: Path) -> N
     assert payload["decision"]["direct_provider_override"] is False
     assert payload["decision"]["stage_labels_learner_visible"] is False
     assert payload["decision"]["tempo_opposition_labels_learner_visible"] is False
+    assert "positive_affordance_candidate_count" in payload["decision"]
+    assert "positive_affordance_rejection_reason_counts" in payload["decision"]
     assert Path(cfg.train_trace_path).exists()
     assert Path(cfg.eval_trace_path).exists()
     assert Path(cfg.generator_samples_path).exists()
     assert Path(cfg.graph_summary_path).exists()
+    assert Path(cfg.board_sample_path).exists()
+    assert "TG48a Repair Board Samples" in Path(cfg.board_sample_path).read_text(encoding="utf-8")
+
+    with gzip.open(cfg.eval_trace_path, "rt", encoding="utf-8") as handle:
+        eval_rows = [json.loads(line) for line in handle]
+    assert all(
+        not row["success"]
+        for row in eval_rows
+        if row["metrics"].get("graph_positive_false_basin")
+    )
+
+    for row in payload["m4_audit"]["candidate_rows"]:
+        key = row["terminal_key"]
+        forbidden = ("stage", "basin", "curriculum", "tempo", "opposition", "quality", "reply_policy")
+        assert not any(term in key.lower() for term in forbidden)
+
+    assert payload["decision"]["parent_foundation_m3_delta_during_stage"] == 0
+    assert payload["decision"]["parent_foundation_m4_delta_during_stage"] == 0

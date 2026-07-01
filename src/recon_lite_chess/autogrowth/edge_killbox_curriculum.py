@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 from dataclasses import asdict, dataclass
 import gzip
 import json
@@ -36,6 +37,8 @@ from .validated_reachability_expansion import _validated_foundation_response_det
 
 
 DEFAULT_OUTPUT_DIR = Path("reports/autogrowth/clean_slate_krk/tg48a_edge_killbox_curriculum")
+DEFAULT_REPAIR_OUTPUT_DIR = Path("reports/autogrowth/clean_slate_krk/tg48a_edge_killbox_repair")
+_FOUNDATION_RESPONSE_CACHE: dict[str, dict[str, Any]] = {}
 
 
 @dataclass(frozen=True)
@@ -51,6 +54,7 @@ class EdgeKillboxCurriculumConfig:
     failure_pool_path: str = str(DEFAULT_OUTPUT_DIR / "pools" / "tg48a_failure_pool.jsonl.gz")
     generator_samples_path: str = str(DEFAULT_OUTPUT_DIR / "pools" / "tg48a_generator_samples.jsonl.gz")
     graph_summary_path: str = str(DEFAULT_OUTPUT_DIR / "pools" / "tg48a_graph_summary.json")
+    board_sample_path: str = str(DEFAULT_OUTPUT_DIR / "pools" / "tg48a_repair_board_samples.md")
     parent_foundation_artifact_path: str = str(DEFAULT_TG46D_DIR / "promoted_tg46d_foundation.json")
     parent_foundation_m4_audit_path: str = str(DEFAULT_TG46D_DIR / "pools" / "tg46d_m4_audit.jsonl.gz")
     seed: int = 20260630
@@ -64,10 +68,13 @@ class EdgeKillboxCurriculumConfig:
     eta_m3: float = 0.08
     rich_feature_credit_scale: float = 0.25
     m4_precision_threshold: float = 0.62
+    m4_affordance_precision_threshold: float = 0.70
+    m4_veto_precision_threshold: float = 0.62
     m4_min_positive_support: int = 4
     m4_min_negative_support: int = 4
     m4_max_decoy_false_handoff_activation: int = 0
     m4_max_unsafe_activation: int = 0
+    m3_plus_m4_trial_scale: float = 0.25
     sample_boards_per_family: int = 20
 
 
@@ -95,6 +102,7 @@ class EdgeKillboxCurriculumResult:
 
 def run_edge_killbox_curriculum(*, config: EdgeKillboxCurriculumConfig) -> EdgeKillboxCurriculumResult:
     start = time.perf_counter()
+    _FOUNDATION_RESPONSE_CACHE.clear()
     parent_artifact = _load_json(config.parent_foundation_artifact_path)
     parent_hash = _file_sha256(config.parent_foundation_artifact_path)
     parent = _reconstruct_parent_foundation_from_m4_audit(
@@ -112,7 +120,13 @@ def run_edge_killbox_curriculum(*, config: EdgeKillboxCurriculumConfig) -> EdgeK
         eta_m3=config.eta_m3,
         rich_feature_credit_scale=config.rich_feature_credit_scale,
     )
-    train_rows = _train_child(datasets["train"], learner=learner, parent=parent, label_source=label_source, config=config)
+    train_rows = _train_child(
+        datasets["train"] + datasets["decoy"] + datasets["hard_decoy"],
+        learner=learner,
+        parent=parent,
+        label_source=label_source,
+        config=config,
+    )
     _write_jsonl_gzip(config.train_trace_path, train_rows)
 
     parent_only = _evaluate_rows(datasets["heldout"], parent=parent, learner=None, trace_type="parent_TG46d_only", config=config)
@@ -129,7 +143,7 @@ def run_edge_killbox_curriculum(*, config: EdgeKillboxCurriculumConfig) -> EdgeK
     m3_plus_m4 = _evaluate_rows(
         datasets["heldout"],
         parent=parent,
-        learner=_combine_learners(m3=learner, m4=m4_learner),
+        learner=_combine_learners(m3=learner, m4=m4_learner, trial_scale=config.m3_plus_m4_trial_scale),
         trace_type="TG48a_true_M3_plus_M4",
         config=config,
     )
@@ -153,6 +167,7 @@ def run_edge_killbox_curriculum(*, config: EdgeKillboxCurriculumConfig) -> EdgeK
     failure_rows = [row for row in eval_rows if row.get("failure_buckets")]
     _write_jsonl_gzip(config.eval_trace_path, eval_rows)
     _write_jsonl_gzip(config.failure_pool_path, failure_rows)
+    _write_board_samples(config.board_sample_path, eval_rows, m4_audit=m4_audit)
     graph_summary = _graph_summary(learner=learner, m4_learner=m4_learner, m4_audit=m4_audit)
     _write_json(config.graph_summary_path, graph_summary)
     parent_after = _foundation_artifact_sanity(parent_artifact, parent)
@@ -209,7 +224,7 @@ def run_edge_killbox_curriculum(*, config: EdgeKillboxCurriculumConfig) -> EdgeK
             "decoy_hard_decoy": _strip_rows(decoy_eval),
             "regression_M4": _strip_rows(regression_m4),
         },
-        "m4_audit": {key: value for key, value in m4_audit.items() if key != "candidate_rows"},
+        "m4_audit": m4_audit,
         "ablation_results": ablation,
         "graph_summary": graph_summary,
         "artifact_paths": {
@@ -220,6 +235,7 @@ def run_edge_killbox_curriculum(*, config: EdgeKillboxCurriculumConfig) -> EdgeK
             "failure_pool": config.failure_pool_path,
             "generator_samples": config.generator_samples_path,
             "graph_summary": config.graph_summary_path,
+            "board_samples": config.board_sample_path,
         },
         "purity_boundary": _purity_boundary(),
         "timing": {"total_seconds": total_seconds},
@@ -667,9 +683,14 @@ def _train_child(
     for index, row in enumerate(rows):
         board = chess.Board(row["fen"])
         rewards = {move.uci(): _reward(board, move, parent=parent, config=config) for move in board.legal_moves}
-        positive = [move for move in sorted(board.legal_moves, key=lambda item: item.uci()) if rewards[move.uci()] >= 2.0]
+        is_decoy_training = row["family"] in {"decoy_edge_killbox", "hard_decoy_edge_killbox"}
+        positive = [] if is_decoy_training else [
+            move for move in sorted(board.legal_moves, key=lambda item: item.uci()) if rewards[move.uci()] >= 2.0
+        ]
         catastrophic = [move for move in sorted(board.legal_moves, key=lambda item: item.uci()) if rewards[move.uci()] <= -5.0]
-        if not positive and rewards:
+        if is_decoy_training:
+            catastrophic = _decoy_debt_moves(board, parent=parent, config=config)
+        if not positive and rewards and not is_decoy_training:
             best = max(rewards.values())
             positive = [move for move in sorted(board.legal_moves, key=lambda item: item.uci()) if rewards[move.uci()] == best and best > 0.0]
         weak = [
@@ -703,11 +724,35 @@ def _train_child(
             "credited_move_count": len(positive),
             "catastrophic_debt_move_count": len(catastrophic),
             "weak_debt_move_count": len(weak),
+            "decoy_debt_training": is_decoy_training,
             "updates": updates,
             "terminal_count_after": len(learner.terminals),
             "learner_visible_labels": False,
         })
     return trace
+
+
+def _decoy_debt_moves(
+    board: chess.Board,
+    *,
+    parent: dict[str, TerminalAffordanceLearner] | None,
+    config: EdgeKillboxCurriculumConfig,
+) -> list[chess.Move]:
+    out = []
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        metrics = _move_metrics(board, move, parent=parent, config=config)
+        if (
+            metrics["rook_blunder"]
+            or metrics["rook_missing"]
+            or metrics["stalemate"]
+            or metrics["illegal"]
+            or metrics["confinement_regression"]
+            or metrics["graph_positive_false_basin"]
+            or metrics["partial_only_near_basin"]
+            or metrics["validated_entry"]
+        ):
+            out.append(move)
+    return out
 
 
 def _reward(
@@ -728,15 +773,15 @@ def _reward(
     after_f = extract_learner_features(after)
     response = _foundation_response(after, parent)
     if response["graph_positive_false_basin"]:
-        return -3.0
+        return -4.0
     confinement_delta = _confinement_area(board) - _confinement_area(after)
     if confinement_delta < 0:
         return -3.0
     reward = -0.05
     reward += 10.0 if after.is_checkmate() else 0.0
-    reward += 8.0 if response["validated_mate1_entry"] else 0.0
-    reward += 6.0 if response["validated_mate2_entry"] else 0.0
-    reward += 3.0 if _preserves_or_establishes_killbox(after_f) else 0.0
+    reward += 10.0 if response["validated_mate1_entry"] else 0.0
+    reward += 8.0 if response["validated_mate2_entry"] else 0.0
+    reward += 3.0 if _graded_positive_progress(board, after) else 0.0
     reward += 2.0 if after_f["rook_fence_depth_relative_to_black_king_edge"] <= before_f["rook_fence_depth_relative_to_black_king_edge"] else 0.0
     reward += 1.0 if confinement_delta > 0 else 0.0
     reward += 1.0 if after_f["black_reply_mobility"] < before_f["black_reply_mobility"] else 0.0
@@ -748,6 +793,23 @@ def _reward(
     if response["validated_partial_only"]:
         reward -= 1.5
     return max(-8.0, min(10.0, reward))
+
+
+def _graded_positive_progress(before_board: chess.Board, after_board: chess.Board) -> bool:
+    before_f = extract_learner_features(before_board)
+    after_f = extract_learner_features(after_board)
+    confinement_delta = _confinement_area(before_board) - _confinement_area(after_board)
+    return bool(
+        _preserves_or_establishes_killbox(after_f)
+        and not _rook_capturable_by_reply(after_board)
+        and not after_board.is_stalemate()
+        and confinement_delta >= 0
+        and (
+            confinement_delta > 0
+            or after_f["black_reply_mobility"] < before_f["black_reply_mobility"]
+            or after_f["king_support_manhattan_distance"] < before_f["king_support_manhattan_distance"]
+        )
+    )
 
 
 def _preserves_or_establishes_killbox(features: Mapping[str, float]) -> bool:
@@ -869,6 +931,44 @@ def _terminal_keys(board: chess.Board, move: chess.Move) -> tuple[tuple[str, flo
         (f"safety_geometry:rook_capturable_after={int(_rook_capturable_by_reply(after))}", 1.0),
         (f"safety_geometry:stalemate_after={int(after.is_stalemate())}", 1.0),
     ]
+    action_piece = 0 if piece is None else int(piece.piece_type)
+    file_sign = _sign(file_delta)
+    rank_sign = _sign(rank_delta)
+    confinement_bucket = _delta_bucket(_confinement_area(board) - _confinement_area(after))
+    mobility_bucket = _delta_bucket(before["black_reply_mobility"] - after_f["black_reply_mobility"])
+    support_bucket = _delta_bucket(before["king_support_manhattan_distance"] - after_f["king_support_manhattan_distance"])
+    keys.extend(
+        [
+            (
+                "compound_geometry:"
+                f"piece={action_piece}|fd={file_sign}|rd={rank_sign}|"
+                f"b_same={int(before['rook_black_king_same_side_of_white_king_on_primary_axis'])}|"
+                f"b_opp={int(before['rook_black_king_opposite_sides_of_white_king_on_primary_axis'])}|"
+                f"a_same={int(after_f['rook_black_king_same_side_of_white_king_on_primary_axis'])}|"
+                f"a_opp={int(after_f['rook_black_king_opposite_sides_of_white_king_on_primary_axis'])}|"
+                f"conf={confinement_bucket}|mob={mobility_bucket}|support={support_bucket}",
+                1.0,
+            ),
+            (
+                "compound_support_action:"
+                f"piece={action_piece}|fd_mag={min(3, abs(file_delta))}|rd_mag={min(3, abs(rank_delta))}|"
+                f"b_support={int(_support_band(before))}|a_support={int(_support_band(after_f))}|"
+                f"a_rook_safe={int(not _rook_capturable_by_reply(after))}|"
+                f"conf={confinement_bucket}|mob={mobility_bucket}",
+                1.0,
+            ),
+            (
+                "compound_rook_edge_geometry:"
+                f"piece={action_piece}|fd={file_sign}|rd={rank_sign}|"
+                f"b_rook_line={min(4, int(before['rook_distance_to_black_king_edge_line']))}|"
+                f"a_rook_line={min(4, int(after_f['rook_distance_to_black_king_edge_line']))}|"
+                f"b_depth={min(4, int(before['rook_fence_depth_relative_to_black_king_edge']))}|"
+                f"a_depth={min(4, int(after_f['rook_fence_depth_relative_to_black_king_edge']))}|"
+                f"safe={int(not _rook_capturable_by_reply(after))}",
+                1.0,
+            ),
+        ]
+    )
     validate_learner_record([key for key, _scale in keys])
     return tuple(keys)
 
@@ -912,6 +1012,7 @@ def _move_metrics(
         "fence_preserved": after_f["rook_fence_depth_relative_to_black_king_edge"] <= before_f["rook_fence_depth_relative_to_black_king_edge"],
         "black_mobility_reduced": after_f["black_reply_mobility"] < before_f["black_reply_mobility"],
         "support_geometry_improved": after_f["king_support_manhattan_distance"] < before_f["king_support_manhattan_distance"],
+        "graded_positive_progress": _graded_positive_progress(board, after),
         "validated_mate1_entry": response["validated_mate1_entry"],
         "validated_mate2_entry": response["validated_mate2_entry"],
         "validated_entry": response["validated_all_reply_handoff"],
@@ -932,7 +1033,11 @@ def _foundation_response(after_white_move: chess.Board, parent: dict[str, Termin
             "graph_positive_false_basin": False,
             "validated_partial_only": False,
         }
-    response = _validated_foundation_response_details_fast(after_white_move, parent, response_cache={})
+    response = _validated_foundation_response_details_fast(
+        after_white_move,
+        parent,
+        response_cache=_FOUNDATION_RESPONSE_CACHE,
+    )
     graph_type = response["graph_response_type"]
     return {
         "validated_all_reply_handoff": bool(response["validator_all_reply_foundation_response"]),
@@ -967,11 +1072,12 @@ def _success(metrics: Mapping[str, Any]) -> bool:
         and not metrics["rook_missing"]
         and not metrics["stalemate"]
         and not metrics["confinement_regression"]
+        and not metrics["graph_positive_false_basin"]
+        and not metrics["partial_only_near_basin"]
         and (
             metrics["immediate_checkmate"]
             or metrics["validated_entry"]
             or metrics["mate_conversion_within_horizon"]
-            or (metrics["fence_preserved"] and metrics["black_mobility_reduced"])
         )
     )
 
@@ -1039,10 +1145,31 @@ def _terminal_activation_audit(
             for key, _scale in _terminal_keys(board, move):
                 if key not in learner.terminals:
                     continue
-                item = audit.setdefault(key, {"activation_count": 0, "unsafe_activation_count": 0, "decoy_false_handoff_activation_count": 0})
+                item = audit.setdefault(
+                    key,
+                    {
+                        "activation_count": 0,
+                        "unsafe_activation_count": 0,
+                        "decoy_false_handoff_activation_count": 0,
+                        "positive_progress_activation_count": 0,
+                        "validated_entry_activation_count": 0,
+                        "positive_family_counts": {},
+                    },
+                )
                 item["activation_count"] += 1
                 item["unsafe_activation_count"] += int(unsafe)
                 item["decoy_false_handoff_activation_count"] += int(decoy_false)
+                positive_progress = bool(
+                    not unsafe
+                    and not metrics["graph_positive_false_basin"]
+                    and not metrics["partial_only_near_basin"]
+                    and (metrics["validated_entry"] or metrics["graded_positive_progress"])
+                )
+                item["positive_progress_activation_count"] += int(positive_progress)
+                item["validated_entry_activation_count"] += int(metrics["validated_entry"])
+                if positive_progress and row["family"] not in {"decoy_edge_killbox", "hard_decoy_edge_killbox"}:
+                    family_counts = item["positive_family_counts"]
+                    family_counts[row["family"]] = int(family_counts.get(row["family"], 0)) + 1
     return audit
 
 
@@ -1057,32 +1184,55 @@ def _promote_m4(
     promoted = []
     veto_count = 0
     affordance_count = 0
+    positive_affordance_candidate_count = 0
+    positive_affordance_rejected_count = 0
+    rejection_reason_counts: dict[str, int] = {}
     for key, terminal in learner.terminals.items():
         total = terminal.positive_credit + terminal.negative_credit
         precision = 0.0 if total == 0 else terminal.positive_credit / total
         negative_precision = 0.0 if total == 0 else terminal.negative_credit / total
-        audit = terminal_audit.get(key, {"unsafe_activation_count": 0, "decoy_false_handoff_activation_count": 0})
+        audit = terminal_audit.get(
+            key,
+            {
+                "activation_count": 0,
+                "unsafe_activation_count": 0,
+                "decoy_false_handoff_activation_count": 0,
+                "positive_progress_activation_count": 0,
+                "validated_entry_activation_count": 0,
+                "positive_family_counts": {},
+            },
+        )
+        is_positive_candidate = terminal.local_weight > 0 and not _is_broad_key(key)
+        positive_rejection_reasons = _positive_rejection_reasons(
+            key=key,
+            terminal=terminal,
+            precision=precision,
+            audit=audit,
+            config=config,
+        )
+        positive_affordance_candidate_count += int(is_positive_candidate)
         promote_affordance = bool(
-            terminal.local_weight > 0
-            and terminal.positive_credit >= config.m4_min_positive_support
-            and precision >= config.m4_precision_threshold
-            and audit["unsafe_activation_count"] <= config.m4_max_unsafe_activation
-            and audit["decoy_false_handoff_activation_count"] <= config.m4_max_decoy_false_handoff_activation
-            and not _is_broad_key(key)
+            is_positive_candidate
+            and not positive_rejection_reasons
         )
         promote_veto = bool(
             terminal.local_weight < 0
             and terminal.negative_credit >= config.m4_min_negative_support
-            and negative_precision >= config.m4_precision_threshold
+            and negative_precision >= config.m4_veto_precision_threshold
             and _is_veto_key(key)
         )
         promote = promote_affordance or promote_veto
         if promote:
-            terminal.cell.state = StemCellState.MATURE
-            clone.terminals[key] = terminal
+            cloned_terminal = copy.deepcopy(terminal)
+            cloned_terminal.cell.state = StemCellState.MATURE
+            clone.terminals[key] = cloned_terminal
             promoted.append(key)
             affordance_count += int(promote_affordance)
             veto_count += int(promote_veto)
+        elif is_positive_candidate:
+            positive_affordance_rejected_count += 1
+            for reason in positive_rejection_reasons:
+                rejection_reason_counts[reason] = rejection_reason_counts.get(reason, 0) + 1
         rows.append({
             "terminal_key": key,
             "positive_intervention_count": terminal.positive_credit,
@@ -1093,6 +1243,10 @@ def _promote_m4(
             "local_weight": round(terminal.local_weight, 6),
             "unsafe_activation_count": audit.get("unsafe_activation_count", 0),
             "decoy_false_handoff_activation_count": audit.get("decoy_false_handoff_activation_count", 0),
+            "positive_progress_activation_count": audit.get("positive_progress_activation_count", 0),
+            "validated_entry_activation_count": audit.get("validated_entry_activation_count", 0),
+            "positive_family_counts": dict(sorted(audit.get("positive_family_counts", {}).items())),
+            "positive_affordance_rejection_reasons": positive_rejection_reasons,
             "promoted_as": "affordance" if promote_affordance else "veto" if promote_veto else None,
             "promoted": promote,
         })
@@ -1101,14 +1255,52 @@ def _promote_m4(
         "M4_promoted_terminal_count": len(promoted),
         "M4_promoted_veto_count": veto_count,
         "M4_promoted_affordance_count": affordance_count,
+        "positive_affordance_candidate_count": positive_affordance_candidate_count,
+        "positive_affordance_rejected_count": positive_affordance_rejected_count,
+        "positive_affordance_rejection_reason_counts": dict(sorted(rejection_reason_counts.items())),
         "candidate_rows": rows,
     }
 
 
-def _combine_learners(*, m3: TerminalAffordanceLearner, m4: TerminalAffordanceLearner) -> TerminalAffordanceLearner:
+def _positive_rejection_reasons(
+    *,
+    key: str,
+    terminal: Any,
+    precision: float,
+    audit: Mapping[str, Any],
+    config: EdgeKillboxCurriculumConfig,
+) -> list[str]:
+    reasons = []
+    if terminal.local_weight <= 0:
+        reasons.append("non_positive_weight")
+    if terminal.positive_credit < config.m4_min_positive_support:
+        reasons.append("insufficient_positive_support")
+    if precision < config.m4_affordance_precision_threshold:
+        reasons.append("precision_below_affordance_threshold")
+    if audit.get("unsafe_activation_count", 0) > config.m4_max_unsafe_activation:
+        reasons.append("unsafe_activation")
+    if audit.get("decoy_false_handoff_activation_count", 0) > config.m4_max_decoy_false_handoff_activation:
+        reasons.append("decoy_false_handoff_activation")
+    if audit.get("positive_progress_activation_count", 0) < config.m4_min_positive_support:
+        reasons.append("insufficient_validated_or_graded_progress_activation")
+    if _is_broad_key(key):
+        reasons.append("broad_key")
+    return reasons
+
+
+def _combine_learners(
+    *,
+    m3: TerminalAffordanceLearner,
+    m4: TerminalAffordanceLearner,
+    trial_scale: float,
+) -> TerminalAffordanceLearner:
     clone = TerminalAffordanceLearner.create(eta_m3=m3.eta_m3, rich_feature_credit_scale=m3.rich_feature_credit_scale)
-    clone.terminals.update(m3.terminals)
-    clone.terminals.update(m4.terminals)
+    for key, value in m3.terminals.items():
+        copied = copy.deepcopy(value)
+        if key not in m4.terminals:
+            copied.local_weight *= trial_scale
+        clone.terminals[key] = copied
+    clone.terminals.update({key: copy.deepcopy(value) for key, value in m4.terminals.items()})
     clone.m3_update_count = m3.m3_update_count
     return clone
 
@@ -1168,7 +1360,16 @@ def _decision(
     decoy_clean = bool(decoy_eval["decoy_false_handoff_count"] == 0 and decoy_eval["hard_decoy_false_handoff_count"] == 0)
     a1_improved = _family_rate(m4_only, "edge_killbox_opposed_side") > _family_rate(parent_only, "edge_killbox_opposed_side")
     a2_improved = _family_rate(m4_only, "edge_killbox_same_side_rook_danger") > _family_rate(parent_only, "edge_killbox_same_side_rook_danger")
-    m4_causal = bool(m4_audit["M4_promoted_terminal_count"] > 0 and ablation["m4_causal_success_delta_vs_parent"] > 0)
+    m4_causal = bool(
+        m4_audit["M4_promoted_affordance_count"] > 0
+        and ablation["m4_causal_success_delta_vs_parent"] > 0
+    )
+    graph_false_basin_reduced = bool(
+        m4_only["graph_positive_false_basin_count"] < parent_only["graph_positive_false_basin_count"]
+    )
+    m3_m4_not_large_regression = bool(
+        m3_plus_m4["success_rate"] >= max(0.0, m4_only["success_rate"] - 0.15)
+    )
     infrastructure_pass = bool(parent_delta == 0 and parent_before["pass"] and parent_after["pass"])
     behavioral_pass = bool(
         infrastructure_pass
@@ -1178,7 +1379,8 @@ def _decision(
         and a2_improved
         and m4_causal
         and m4_only["validated_entry_rate"] > parent_only["validated_entry_rate"]
-        and m4_only["graph_positive_false_basin_count"] == 0
+        and graph_false_basin_reduced
+        and m3_m4_not_large_regression
     )
     if behavioral_pass:
         interpretation = "tg48a_behavioral_advancement"
@@ -1229,6 +1431,18 @@ def _decision(
         "M4_promoted_terminal_count": m4_audit["M4_promoted_terminal_count"],
         "M4_promoted_veto_count": m4_audit["M4_promoted_veto_count"],
         "M4_promoted_affordance_count": m4_audit["M4_promoted_affordance_count"],
+        "positive_affordance_candidate_count": m4_audit["positive_affordance_candidate_count"],
+        "positive_affordance_rejected_count": m4_audit["positive_affordance_rejected_count"],
+        "positive_affordance_rejection_reason_counts": m4_audit["positive_affordance_rejection_reason_counts"],
+        "M4_positive_affordance_required_for_behavioral_advancement": True,
+        "M3_plus_M4_not_large_regression": m3_m4_not_large_regression,
+        "graph_positive_false_basin_reduced_vs_parent": graph_false_basin_reduced,
+        "tg48a1_parent_success_rate": _family_rate(parent_only, "edge_killbox_opposed_side"),
+        "tg48a1_M4_success_rate": _family_rate(m4_only, "edge_killbox_opposed_side"),
+        "tg48a2_parent_success_rate": _family_rate(parent_only, "edge_killbox_same_side_rook_danger"),
+        "tg48a2_M4_success_rate": _family_rate(m4_only, "edge_killbox_same_side_rook_danger"),
+        "tg48a3_parent_success_rate": _family_rate(parent_only, "edge_killbox_mixed"),
+        "tg48a3_M4_success_rate": _family_rate(m4_only, "edge_killbox_mixed"),
         "ablation_mask_M4_structures": ablation["mask_M4_structures"],
         "decoy_false_handoff_count": decoy_eval["decoy_false_handoff_count"],
         "hard_decoy_false_handoff_count": decoy_eval["hard_decoy_false_handoff_count"],
@@ -1325,6 +1539,9 @@ def _is_veto_key(key: str) -> bool:
         or "stalemate_after=1" in key
         or "confinement_area=regressed" in key
         or "black_mobility=regressed" in key
+        or key.startswith("compound_geometry:")
+        or key.startswith("compound_support_action:")
+        or key.startswith("compound_rook_edge_geometry:")
     )
 
 
@@ -1411,10 +1628,130 @@ def _purity_boundary() -> dict[str, bool]:
     }
 
 
+def _write_board_samples(path: str | Path, eval_rows: list[dict[str, Any]], *, m4_audit: Mapping[str, Any]) -> None:
+    categories = {
+        "M3 failures": [
+            row for row in eval_rows
+            if row["trace_type"] == "TG48a_M3_trial_only" and not row["success"]
+        ],
+        "M4 failures": [
+            row for row in eval_rows
+            if row["trace_type"] == "TG48a_M4_consolidated_only" and not row["success"]
+        ],
+        "Hard-decoy false handoffs": [
+            row for row in eval_rows
+            if row["family"] == "hard_decoy_edge_killbox" and row["metrics"].get("validated_entry")
+        ],
+        "Graph-positive false basins": [
+            row for row in eval_rows
+            if row["metrics"].get("graph_positive_false_basin")
+        ],
+        "Parent succeeds but M3 worsens": _paired_regressions(
+            eval_rows,
+            better_trace="parent_TG46d_only",
+            worse_trace="TG48a_M3_trial_only",
+        ),
+        "M4 succeeds with active veto terminal": _m4_veto_success_rows(eval_rows, m4_audit=m4_audit),
+    }
+    lines = [
+        "# TG48a Repair Board Samples",
+        "",
+        "Human-readable samples from TG48a repair evaluation traces. Family/substage fields are trainer-side diagnostics only.",
+        "",
+    ]
+    for title, rows in categories.items():
+        lines.extend([f"## {title}", ""])
+        if not rows:
+            lines.extend(["No rows in this category.", ""])
+            continue
+        for row in rows[:20]:
+            board = chess.Board(row["fen"])
+            lines.extend(
+                [
+                    f"### {row['trace_type']} index {row['index']}",
+                    "",
+                    f"- FEN: `{row['fen']}`",
+                    f"- Pieces: `{_piece_coordinates(board)}`",
+                    f"- Family: `{row['family']}`",
+                    f"- Selected move: `{row.get('selected')}`",
+                    f"- Success: `{row['success']}`",
+                    f"- Failure buckets: `{', '.join(row.get('failure_buckets') or []) or 'none'}`",
+                    f"- Metrics: `{_compact_metrics(row['metrics'])}`",
+                    "",
+                    "```text",
+                    str(board),
+                    "```",
+                    "",
+                ]
+            )
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    Path(path).write_text("\n".join(lines), encoding="utf-8")
+
+
+def _paired_regressions(
+    eval_rows: list[dict[str, Any]],
+    *,
+    better_trace: str,
+    worse_trace: str,
+) -> list[dict[str, Any]]:
+    by_key: dict[tuple[str, int], dict[str, dict[str, Any]]] = {}
+    for row in eval_rows:
+        by_key.setdefault((row["fen"], int(row["index"])), {})[row["trace_type"]] = row
+    out = []
+    for rows in by_key.values():
+        better = rows.get(better_trace)
+        worse = rows.get(worse_trace)
+        if better and worse and better["success"] and not worse["success"]:
+            out.append(worse)
+    return out
+
+
+def _m4_veto_success_rows(eval_rows: list[dict[str, Any]], *, m4_audit: Mapping[str, Any]) -> list[dict[str, Any]]:
+    promoted_veto_keys = {
+        row["terminal_key"]
+        for row in m4_audit.get("candidate_rows", [])
+        if row.get("promoted_as") == "veto"
+    }
+    out = []
+    for row in eval_rows:
+        if row["trace_type"] != "TG48a_M4_consolidated_only" or not row["success"] or not row.get("selected"):
+            continue
+        board = chess.Board(row["fen"])
+        move = chess.Move.from_uci(row["selected"])
+        active_keys = {key for key, _scale in _terminal_keys(board, move)}
+        if active_keys & promoted_veto_keys:
+            out.append(row)
+    return out
+
+
+def _piece_coordinates(board: chess.Board) -> str:
+    pieces = []
+    for square, piece in sorted(board.piece_map().items(), key=lambda item: item[0]):
+        symbol = piece.symbol().upper() if piece.color == chess.WHITE else piece.symbol().lower()
+        pieces.append(f"{symbol}{chess.square_name(square)}")
+    return ", ".join(pieces)
+
+
+def _compact_metrics(metrics: Mapping[str, Any]) -> str:
+    keys = (
+        "validated_entry",
+        "validated_mate1_entry",
+        "validated_mate2_entry",
+        "mate_conversion_within_horizon",
+        "graded_positive_progress",
+        "graph_positive_false_basin",
+        "partial_only_near_basin",
+        "rook_blunder",
+        "stalemate",
+        "confinement_regression",
+    )
+    return ", ".join(f"{key}={metrics.get(key)}" for key in keys)
+
+
 def _write_markdown(path: str | Path, result: EdgeKillboxCurriculumResult) -> None:
     d = result.decision
     lines = [
-        "# TG48a Edge-Killbox Curriculum",
+        f"# {result.config.checkpoint_name}",
         "",
         f"- Checkpoint pass: {d['checkpoint_pass']}",
         f"- Interpretation: {d['checkpoint_interpretation']}",
