@@ -12,6 +12,10 @@ from recon_lite_chess.autogrowth.edge_killbox_curriculum import (
     geometry_summary,
     run_edge_killbox_curriculum,
 )
+from recon_lite_chess.autogrowth.tg48a2_same_side_diagnostic import (
+    TG48a2SameSideDiagnosticConfig,
+    run_tg48a2_same_side_diagnostic,
+)
 from recon_lite_chess.autogrowth.features import extract_learner_features, validate_learner_record
 
 
@@ -130,3 +134,78 @@ def test_tg48_tiny_run_writes_artifact_and_preserves_purity(tmp_path: Path) -> N
 
     assert payload["decision"]["parent_foundation_m3_delta_during_stage"] == 0
     assert payload["decision"]["parent_foundation_m4_delta_during_stage"] == 0
+
+
+def test_tg48a2_diagnostic_classifies_hard_decoy_and_keeps_slices_separate(tmp_path: Path) -> None:
+    output_dir = tmp_path / "tg48a2"
+    cfg = TG48a2SameSideDiagnosticConfig(
+        output_dir=str(output_dir),
+        output_path=str(output_dir / "krk_tg48a2_same_side_diagnostic.json"),
+        markdown_path=str(output_dir / "krk_tg48a2_same_side_diagnostic.md"),
+        hard_decoy_relabel_path=str(output_dir / "pools" / "tg48a2_hard_decoy_relabel_audit.jsonl.gz"),
+        hard_decoy_markdown_path=str(output_dir / "tg48a2_hard_decoy_relabel_audit.md"),
+        same_side_slice_path=str(output_dir / "pools" / "tg48a2_same_side_slice.jsonl.gz"),
+        same_side_markdown_path=str(output_dir / "tg48a2_same_side_slice.md"),
+        terminal_precision_path=str(output_dir / "pools" / "tg48a2_terminal_precision_audit.jsonl.gz"),
+        same_side_count=3,
+        max_generation_attempts=80_000,
+        top_rejected_affordance_count=3,
+    )
+
+    result = run_tg48a2_same_side_diagnostic(config=cfg)
+    payload = json.loads(Path(cfg.output_path).read_text(encoding="utf-8"))
+
+    assert result.decision["checkpoint_pass"] is True
+    assert payload["decision"]["hard_decoy_false_handoff_count"] > 0
+    assert (
+        payload["decision"]["hard_decoy_generator_strict_mislabel_count"]
+        + payload["decision"]["legitimate_boundary_positive_count"]
+        + payload["decision"]["true_hard_decoy_leak_count"]
+        + payload["decision"]["partial_only_boundary_count"]
+        + payload["decision"]["validator_bug_count"]
+        + payload["decision"]["ambiguous_hard_decoy_count"]
+        == payload["decision"]["hard_decoy_false_handoff_count"]
+    )
+    assert payload["decision"]["parent_frozen_deltas"] == {"m3": 0, "m4": 0, "weight": 0}
+    assert payload["decision"]["runtime_tablebase_or_dtm_move_source"] is False
+    assert payload["decision"]["action_ranker_used_for_runtime"] is False
+    assert payload["decision"]["python_final_selector_used"] is False
+    assert payload["decision"]["direct_provider_override"] is False
+    assert payload["decision"]["stage_labels_learner_visible"] is False
+    assert payload["decision"]["basin_labels_learner_visible"] is False
+    assert payload["decision"]["curriculum_labels_learner_visible"] is False
+    assert payload["decision"]["tempo_opposition_labels_learner_visible"] is False
+
+    with gzip.open(cfg.hard_decoy_relabel_path, "rt", encoding="utf-8") as handle:
+        hard_rows = [json.loads(line) for line in handle]
+    assert hard_rows
+    assert all(row["classification"] for row in hard_rows)
+    assert all(
+        not row["partial_only"] or row["classification"] == "partial_only_boundary"
+        for row in hard_rows
+    )
+
+    with gzip.open(cfg.same_side_slice_path, "rt", encoding="utf-8") as handle:
+        same_rows = [json.loads(line) for line in handle]
+    assert len(same_rows) == 3
+    assert {row["family"] for row in same_rows} == {"edge_killbox_same_side_rook_danger"}
+    assert all("edge_killbox_opposed_side" not in row["family"] for row in same_rows)
+
+    with gzip.open(cfg.terminal_precision_path, "rt", encoding="utf-8") as handle:
+        terminal_rows = [json.loads(line) for line in handle]
+    assert terminal_rows
+    for row in terminal_rows:
+        for key in (
+            "decoy_activation_count",
+            "hard_decoy_activation_count",
+            "unsafe_activation_count",
+            "same_side_activation_count",
+            "opposed_side_activation_count",
+            "validated_success_activation_count",
+            "false_basin_activation_count",
+        ):
+            assert key in row
+        assert not any(
+            term in row["terminal_key"].lower()
+            for term in ("stage", "basin", "curriculum", "tempo", "opposition", "quality", "reply_policy")
+        )

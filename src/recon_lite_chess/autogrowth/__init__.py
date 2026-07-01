@@ -90,6 +90,11 @@ from .edge_killbox_curriculum import (
     geometry_summary,
     run_edge_killbox_curriculum,
 )
+from .tg48a2_same_side_diagnostic import (
+    TG48a2SameSideDiagnosticConfig,
+    TG48a2SameSideDiagnosticResult,
+    run_tg48a2_same_side_diagnostic,
+)
 from .foundation_curriculum import (
     ActionRanker,
     FoundationCurriculumConfig,
@@ -614,6 +619,10 @@ __all__ = [
     "EvaluationResult",
     "EdgeFenceCurriculumConfig",
     "EdgeFenceCurriculumResult",
+    "EdgeKillboxCurriculumConfig",
+    "EdgeKillboxCurriculumResult",
+    "TG48a2SameSideDiagnosticConfig",
+    "TG48a2SameSideDiagnosticResult",
     "FenceBoundaryRehearsalConfig",
     "FenceBoundaryRehearsalResult",
     "FenceBoundarySignalConfig",
@@ -910,6 +919,7 @@ __all__ = [
     "run_curated_terminal_curriculum",
     "run_curated_replay_curriculum",
     "run_edge_fence_curriculum",
+    "run_tg48a2_same_side_diagnostic",
     "run_fence_boundary_rehearsal",
     "run_fence_boundary_signal",
     "run_fragment_chain_curriculum",
