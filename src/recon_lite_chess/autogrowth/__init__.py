@@ -95,6 +95,12 @@ from .tg48a2_same_side_diagnostic import (
     TG48a2SameSideDiagnosticResult,
     run_tg48a2_same_side_diagnostic,
 )
+from .tg48a2_same_side_microstage import (
+    TG48a2SameSideMicrostageConfig,
+    TG48a2SameSideMicrostageResult,
+    generate_same_side_microstage_datasets,
+    run_tg48a2_same_side_microstage,
+)
 from .foundation_curriculum import (
     ActionRanker,
     FoundationCurriculumConfig,
