@@ -14,7 +14,7 @@ by the child-zeroed arm.
 Known limitation: positive affordances promote and activate but are behaviorally neutral. This is
 deferred to Phase 2 representations.
 
-Next task: Phase 1.1 feature audit.
+Current task: Phase 1.1 audit complete; next: 1.2 dieted retrain (feature removal + foundation retrain, atomic).
 
 No-go until Phase 1 starts: new TG names, new report documents, new pool/cache formats, training
 logic changes, `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.
