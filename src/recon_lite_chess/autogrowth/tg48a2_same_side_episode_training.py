@@ -28,6 +28,7 @@ from .edge_killbox_curriculum import (
     _combine_learners,
     _confinement_area,
     _failure_buckets,
+    _foundation_response as _edge_foundation_response,
     _label_source,
     _move_metrics,
     _parent_snapshot,
@@ -156,7 +157,21 @@ def run_tg48a2_same_side_episode_training(
 
     terminal_audit = _terminal_episode_audit(learner, train_traces)
     m4_learner, m4_audit = _promote_m4(learner, terminal_audit=terminal_audit, config=config)
-    parent_eval = _evaluate_episode_rows(datasets["heldout"], parent=parent, learner=None, trace_type="parent_TG46d_episode", config=config)
+    parent_legacy_eval = _evaluate_episode_rows(
+        datasets["heldout"],
+        parent=parent,
+        learner=None,
+        trace_type="parent_TG46d_episode_legacy_availability_classifier",
+        config=config,
+        classifier_mode="legacy_availability_diagnostic",
+    )
+    parent_eval = _evaluate_episode_rows(
+        datasets["heldout"],
+        parent=parent,
+        learner=None,
+        trace_type="parent_TG46d_episode",
+        config=config,
+    )
     m3_eval = _evaluate_episode_rows(datasets["heldout"], parent=parent, learner=learner, trace_type="TG48a2_episode_M3", config=config)
     m4_eval = _evaluate_episode_rows(datasets["heldout"], parent=parent, learner=m4_learner, trace_type="TG48a2_episode_M4", config=config)
     m3_plus_m4_eval = _evaluate_episode_rows(
@@ -176,7 +191,8 @@ def run_tg48a2_same_side_episode_training(
         config=config,
     )
     eval_traces = (
-        parent_eval["traces"]
+        parent_legacy_eval["traces"]
+        + parent_eval["traces"]
         + m3_eval["traces"]
         + m4_eval["traces"]
         + m3_plus_m4_eval["traces"]
@@ -203,6 +219,7 @@ def run_tg48a2_same_side_episode_training(
         hard_decoy_gate=hard_decoy_gate,
         learner=learner,
         m4_audit=m4_audit,
+        parent_legacy_eval=parent_legacy_eval,
         parent_eval=parent_eval,
         m3_eval=m3_eval,
         m4_eval=m4_eval,
@@ -243,6 +260,7 @@ def run_tg48a2_same_side_episode_training(
         "datasets": _dataset_summary(datasets),
         "hard_decoy_gate": hard_decoy_gate,
         "evaluation": {
+            "parent_legacy_availability_classifier": _strip_traces(parent_legacy_eval),
             "parent": _strip_traces(parent_eval),
             "M3": _strip_traces(m3_eval),
             "M4": _strip_traces(m4_eval),
@@ -251,6 +269,7 @@ def run_tg48a2_same_side_episode_training(
             "regression_M4": _strip_traces(regression_eval),
             "decoy_M4": _strip_traces(decoy_eval),
         },
+        "reward_channel_audit": _reward_channel_summary(train_traces),
         "m4_audit": m4_audit,
         "artifact_paths": {
             "main": config.output_path,
@@ -279,9 +298,9 @@ def _train_episode_rows(
     config: TG48a2SameSideEpisodeTrainingConfig,
     label_source: str,
 ) -> list[dict[str, Any]]:
-    rng = random.Random(config.seed + 4821)
     traces = []
     for index, row in enumerate(rows):
+        rng = random.Random(config.seed + 4821 + index)
         trace = _play_episode(
             row=row,
             episode_id=f"train_{index:05d}",
@@ -292,6 +311,16 @@ def _train_episode_rows(
             rng=rng,
             training=True,
         )
+        contrastive_trace = _contrastive_episode_trace(
+            row=row,
+            selected_trace=trace,
+            episode_id=f"train_{index:05d}_contrastive",
+            parent=parent,
+            learner=learner,
+            config=config,
+            rng=random.Random(config.seed + 94821 + index),
+        )
+        _attach_contrastive_credit(trace, contrastive_trace=contrastive_trace, config=config)
         trace["label_source"] = label_source
         _apply_episode_credit(learner, trace=trace, config=config)
         traces.append(trace)
@@ -305,6 +334,7 @@ def _evaluate_episode_rows(
     learner: TerminalAffordanceLearner | None,
     trace_type: str,
     config: TG48a2SameSideEpisodeTrainingConfig,
+    classifier_mode: str = "repaired",
 ) -> dict[str, Any]:
     traces = [
         _play_episode(
@@ -316,6 +346,7 @@ def _evaluate_episode_rows(
             behavior_policy="graph_runtime_no_exploration",
             rng=random.Random(config.seed + index),
             training=False,
+            classifier_mode=classifier_mode,
         )
         for index, row in enumerate(rows)
     ]
@@ -332,6 +363,8 @@ def _play_episode(
     behavior_policy: str,
     rng: random.Random,
     training: bool,
+    classifier_mode: str = "repaired",
+    forced_first_move_uci: str | None = None,
 ) -> dict[str, Any]:
     board = chess.Board(str(row["fen"]))
     positions = [board.fen()]
@@ -342,24 +375,36 @@ def _play_episode(
     legal_reply_coverage: list[dict[str, Any]] = []
     endpoint_type = "no_progress"
     endpoint_diagnostics: dict[str, Any] = {}
+    episode_diagnostics: dict[str, bool] = {
+        "partial_only_near_basin_seen": False,
+        "handoff_available_seen": False,
+        "legacy_availability_partial_only_near_basin_seen": False,
+        "legacy_availability_graph_positive_false_basin_seen": False,
+    }
     max_white = config.max_white_moves
     max_plies = config.max_total_plies
     total_plies = 0
     for white_ply in range(max_white):
         if board.turn != chess.WHITE or total_plies >= max_plies:
             break
-        move = _select_white_move(
-            board,
-            parent=parent,
-            learner=learner,
-            config=config,
-            rng=rng,
-            training=training,
-        )
+        if white_ply == 0 and forced_first_move_uci is not None:
+            move = chess.Move.from_uci(forced_first_move_uci)
+            if move not in board.legal_moves:
+                move = None
+        else:
+            move = _select_white_move(
+                board,
+                parent=parent,
+                learner=learner,
+                config=config,
+                rng=rng,
+                training=training,
+            )
         selected_moves_by_white_ply.append(None if move is None else move.uci())
         if move is None or move not in board.legal_moves:
             endpoint_type = "illegal"
             endpoint_diagnostics = _endpoint_diagnostics(board, None, parent=parent, config=config)
+            _accumulate_episode_diagnostics(episode_diagnostics, endpoint_diagnostics)
             break
         terminal_keys = [key for key, _scale in _micro_terminal_keys(board, move)]
         terminal_activations_by_white_ply.append(terminal_keys)
@@ -367,7 +412,13 @@ def _play_episode(
         board.push(move)
         total_plies += 1
         positions.append(board.fen())
-        endpoint_type, endpoint_diagnostics = _classify_endpoint(board, parent=parent, config=config)
+        endpoint_type, endpoint_diagnostics = _classify_endpoint(
+            board,
+            parent=parent,
+            config=config,
+            classifier_mode=classifier_mode,
+        )
+        _accumulate_episode_diagnostics(episode_diagnostics, endpoint_diagnostics)
         if endpoint_type in _STOP_ENDPOINTS:
             break
         if board.turn != chess.BLACK or total_plies >= max_plies:
@@ -388,14 +439,23 @@ def _play_episode(
         board.push(reply)
         total_plies += 1
         positions.append(board.fen())
-        endpoint_type, endpoint_diagnostics = _classify_endpoint(board, parent=parent, config=config)
+        endpoint_type, endpoint_diagnostics = _classify_endpoint(
+            board,
+            parent=parent,
+            config=config,
+            classifier_mode=classifier_mode,
+        )
+        _accumulate_episode_diagnostics(episode_diagnostics, endpoint_diagnostics)
         if endpoint_type in _STOP_ENDPOINTS:
             break
     else:
         endpoint_type = "horizon_reached_safe" if _safe_board(board) else "no_progress"
         endpoint_diagnostics = _endpoint_board_diagnostics(board, parent=parent, config=config)
+        _accumulate_episode_diagnostics(episode_diagnostics, endpoint_diagnostics)
     if not endpoint_diagnostics:
         endpoint_diagnostics = _endpoint_board_diagnostics(board, parent=parent, config=config)
+        _accumulate_episode_diagnostics(episode_diagnostics, endpoint_diagnostics)
+    endpoint_diagnostics = {**endpoint_diagnostics, **episode_diagnostics}
     reward_channels, trajectory_reward = _trajectory_reward(endpoint_type, endpoint_diagnostics)
     credit_assignments = _credit_assignments(
         terminal_activations_by_white_ply=terminal_activations_by_white_ply,
@@ -410,6 +470,7 @@ def _play_episode(
         "family": row.get("family"),
         "episode_id": episode_id,
         "behavior_policy": behavior_policy,
+        "classifier_mode": classifier_mode,
         "max_white_moves": config.max_white_moves,
         "max_total_plies": config.max_total_plies,
         "white_moves": white_moves,
@@ -431,6 +492,10 @@ def _play_episode(
         "confinement_regression": bool(endpoint_diagnostics.get("confinement_regression", False)),
         "graph_positive_false_basin": bool(endpoint_diagnostics.get("graph_positive_false_basin", False)),
         "partial_only_near_basin": bool(endpoint_diagnostics.get("partial_only_near_basin", False)),
+        "partial_only_near_basin_seen": bool(endpoint_diagnostics.get("partial_only_near_basin_seen", False)),
+        "handoff_available": bool(endpoint_diagnostics.get("handoff_available", False)),
+        "handoff_available_seen": bool(endpoint_diagnostics.get("handoff_available_seen", False)),
+        "legacy_availability_endpoint_type": _classify_legacy_availability_endpoint(endpoint_diagnostics),
         "trajectory_reward": trajectory_reward,
         "reward_channels": reward_channels,
         "credit_assignments": credit_assignments,
@@ -448,6 +513,127 @@ def _play_episode(
     return trace
 
 
+def _contrastive_episode_trace(
+    *,
+    row: Mapping[str, Any],
+    selected_trace: Mapping[str, Any],
+    episode_id: str,
+    parent: dict[str, TerminalAffordanceLearner],
+    learner: TerminalAffordanceLearner,
+    config: TG48a2SameSideEpisodeTrainingConfig,
+    rng: random.Random,
+) -> dict[str, Any] | None:
+    board = chess.Board(str(row["fen"]))
+    selected_uci = selected_trace["selected_moves_by_white_ply"][0] if selected_trace["selected_moves_by_white_ply"] else None
+    move = _select_contrastive_first_move(
+        board,
+        selected_uci=selected_uci,
+        parent=parent,
+        learner=learner,
+        config=config,
+    )
+    if move is None:
+        return None
+    return _play_episode(
+        row=row,
+        episode_id=episode_id,
+        parent=parent,
+        learner=learner,
+        config=config,
+        behavior_policy="trainer_side_contrastive_alternative",
+        rng=rng,
+        training=False,
+        forced_first_move_uci=move.uci(),
+    )
+
+
+def _select_contrastive_first_move(
+    board: chess.Board,
+    *,
+    selected_uci: str | None,
+    parent: dict[str, TerminalAffordanceLearner],
+    learner: TerminalAffordanceLearner,
+    config: TG48a2SameSideEpisodeTrainingConfig,
+) -> chess.Move | None:
+    candidates = [move for move in sorted(board.legal_moves, key=lambda item: item.uci()) if move.uci() != selected_uci]
+    if not candidates:
+        return None
+    ranked = sorted(
+        (
+            (
+                _trainer_exploration_score(board, move, parent=parent, config=config),
+                _score_micro_move(board, move, parent=parent, learner=learner),
+                move.uci(),
+                move,
+            )
+            for move in candidates
+        ),
+        reverse=True,
+    )
+    return ranked[0][-1]
+
+
+def _attach_contrastive_credit(
+    trace: dict[str, Any],
+    *,
+    contrastive_trace: Mapping[str, Any] | None,
+    config: TG48a2SameSideEpisodeTrainingConfig,
+) -> None:
+    if contrastive_trace is None:
+        trace["credit_assignment_mode"] = "selected_trajectory_no_available_pair"
+        trace["contrastive_episode"] = {"available": False, "learner_visible_labels": False}
+        return
+    trace["credit_assignment_mode"] = "contrastive_terminal_activation_difference"
+    trace["contrastive_episode"] = _contrastive_summary(contrastive_trace)
+    trace["credit_assignments"] = _credit_assignments(
+        terminal_activations_by_white_ply=trace["terminal_activations_by_white_ply"],
+        reward_channels=trace["reward_channels"],
+        trajectory_reward=float(trace["trajectory_reward"]),
+        gamma=config.gamma,
+        contrastive_terminal_activations_by_white_ply=contrastive_trace["terminal_activations_by_white_ply"],
+        contrastive_reward_channels=contrastive_trace["reward_channels"],
+        contrastive_trajectory_reward=float(contrastive_trace["trajectory_reward"]),
+    )
+
+
+def _contrastive_summary(trace: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "available": True,
+        "episode_id": trace["episode_id"],
+        "behavior_policy": trace["behavior_policy"],
+        "endpoint_type": trace["endpoint_type"],
+        "episode_success": trace["episode_success"],
+        "same_side_subskill_success": trace["same_side_subskill_success"],
+        "lateral_escape_success": trace["lateral_escape_success"],
+        "endpoint_validated_entry": trace["endpoint_validated_entry"],
+        "endpoint_opposed_side_or_safer_geometry": trace["endpoint_opposed_side_or_safer_geometry"],
+        "rook_blunder": trace["rook_blunder"],
+        "stalemate": trace["stalemate"],
+        "illegal": trace["illegal"],
+        "confinement_regression": trace["confinement_regression"],
+        "graph_positive_false_basin": trace["graph_positive_false_basin"],
+        "partial_only_near_basin": trace["partial_only_near_basin"],
+        "partial_only_near_basin_seen": trace["partial_only_near_basin_seen"],
+        "handoff_available_seen": trace["handoff_available_seen"],
+        "trajectory_reward": trace["trajectory_reward"],
+        "reward_channels": trace["reward_channels"],
+        "terminal_activations_by_white_ply": trace["terminal_activations_by_white_ply"],
+        "selected_moves_by_white_ply": trace["selected_moves_by_white_ply"],
+        "learner_visible_labels": False,
+    }
+
+
+def _accumulate_episode_diagnostics(flags: dict[str, bool], diag: Mapping[str, Any]) -> None:
+    flags["partial_only_near_basin_seen"] = flags["partial_only_near_basin_seen"] or bool(diag.get("partial_only_near_basin"))
+    flags["handoff_available_seen"] = flags["handoff_available_seen"] or bool(diag.get("handoff_available"))
+    flags["legacy_availability_partial_only_near_basin_seen"] = flags[
+        "legacy_availability_partial_only_near_basin_seen"
+    ] or bool(diag.get("legacy_availability_partial_only_near_basin"))
+    flags["legacy_availability_graph_positive_false_basin_seen"] = flags[
+        "legacy_availability_graph_positive_false_basin_seen"
+    ] or bool(diag.get("legacy_availability_graph_positive_false_basin"))
+
+
 _STOP_ENDPOINTS = {
     "validated_mate1_entry",
     "validated_mate2_entry",
@@ -458,7 +644,6 @@ _STOP_ENDPOINTS = {
     "illegal",
     "confinement_regression",
     "graph_positive_false_basin",
-    "partial_only_near_basin",
 }
 
 
@@ -502,9 +687,9 @@ def _trainer_exploration_score(
     score += 5.0 if endpoint == "safer_opposed_or_killbox_geometry" else 0.0
     score += 3.0 if _is_lateral_rook_move(board, move) and _safe_board(after) else 0.0
     score += 1.0 if diag.get("geometry_transition") else 0.0
+    score += 0.5 if diag.get("partial_only_near_basin") else 0.0
     score -= 8.0 if diag.get("rook_blunder") or diag.get("stalemate") else 0.0
     score -= 5.0 if diag.get("graph_positive_false_basin") else 0.0
-    score -= 3.0 if diag.get("partial_only_near_basin") else 0.0
     return score
 
 
@@ -531,27 +716,50 @@ def _classify_endpoint(
     *,
     parent: dict[str, TerminalAffordanceLearner] | None,
     config: TG48a2SameSideEpisodeTrainingConfig,
+    classifier_mode: str = "repaired",
 ) -> tuple[str, dict[str, Any]]:
     diag = _endpoint_board_diagnostics(board, parent=parent, config=config)
+    if classifier_mode == "legacy_availability_diagnostic":
+        return _classify_legacy_availability_endpoint(diag), diag
     if diag["rook_blunder"] or diag["rook_missing"]:
         return "rook_blunder", diag
     if diag["stalemate"]:
         return "stalemate", diag
     if diag["confinement_regression"]:
         return "confinement_regression", diag
-    if diag["graph_positive_false_basin"]:
-        return "graph_positive_false_basin", diag
-    if diag["partial_only_near_basin"]:
-        return "partial_only_near_basin", diag
     if diag["validated_mate1_entry"]:
         return "validated_mate1_entry", diag
     if diag["validated_mate2_entry"]:
         return "validated_mate2_entry", diag
     if diag["validated_entry"]:
         return "validated_foundation_entry", diag
+    if diag["graph_positive_false_basin"]:
+        return "graph_positive_false_basin", diag
     if diag["geometry_transition"] and diag["killbox_friendly"] and not diag["rook_blunder"]:
         return "safer_opposed_or_killbox_geometry", diag
     return "no_progress", diag
+
+
+def _classify_legacy_availability_endpoint(diag: Mapping[str, Any]) -> str:
+    if diag["rook_blunder"] or diag["rook_missing"]:
+        return "rook_blunder"
+    if diag["stalemate"]:
+        return "stalemate"
+    if diag["confinement_regression"]:
+        return "confinement_regression"
+    if diag["legacy_availability_graph_positive_false_basin"]:
+        return "graph_positive_false_basin"
+    if diag["legacy_availability_partial_only_near_basin"]:
+        return "partial_only_near_basin"
+    if diag["legacy_availability_validated_mate1_entry"]:
+        return "validated_mate1_entry"
+    if diag["legacy_availability_validated_mate2_entry"]:
+        return "validated_mate2_entry"
+    if diag["legacy_availability_validated_entry"]:
+        return "validated_foundation_entry"
+    if diag["geometry_transition"] and diag["killbox_friendly"] and not diag["rook_blunder"]:
+        return "safer_opposed_or_killbox_geometry"
+    return "no_progress"
 
 
 def _endpoint_diagnostics(
@@ -588,6 +796,16 @@ def _endpoint_board_diagnostics(
         "validated_mate2_entry": response["validated_mate2_entry"],
         "graph_positive_false_basin": response["graph_positive_false_basin"],
         "partial_only_near_basin": response["partial_only_near_basin"],
+        "handoff_available": response["handoff_available"],
+        "handoff_available_mate1_entry": response["handoff_available_mate1_entry"],
+        "handoff_available_mate2_entry": response["handoff_available_mate2_entry"],
+        "handoff_available_partial_only_near_basin": response["handoff_available_partial_only_near_basin"],
+        "handoff_available_graph_positive_false_basin": response["handoff_available_graph_positive_false_basin"],
+        "legacy_availability_validated_entry": response["legacy_availability_validated_entry"],
+        "legacy_availability_validated_mate1_entry": response["legacy_availability_validated_mate1_entry"],
+        "legacy_availability_validated_mate2_entry": response["legacy_availability_validated_mate2_entry"],
+        "legacy_availability_graph_positive_false_basin": response["legacy_availability_graph_positive_false_basin"],
+        "legacy_availability_partial_only_near_basin": response["legacy_availability_partial_only_near_basin"],
         "rook_blunder": _rook_capturable_by_reply(_white_turn_copy(board)),
         "rook_missing": not bool(board.pieces(chess.ROOK, chess.WHITE)),
         "stalemate": board.is_stalemate(),
@@ -608,6 +826,51 @@ def _foundation_response_for_board(
     config: TG48a2SameSideEpisodeTrainingConfig,
 ) -> dict[str, bool]:
     if parent is None:
+        return _empty_foundation_response_flags()
+    direct = _direct_foundation_response_for_board(board, parent=parent)
+    availability = _foundation_availability_for_board(board, parent=parent, config=config, force_white_turn=False)
+    legacy = _foundation_availability_for_board(board, parent=parent, config=config, force_white_turn=True)
+    return {
+        **direct,
+        "handoff_available": availability["validated_entry"],
+        "handoff_available_mate1_entry": availability["validated_mate1_entry"],
+        "handoff_available_mate2_entry": availability["validated_mate2_entry"],
+        "handoff_available_graph_positive_false_basin": availability["graph_positive_false_basin"],
+        "handoff_available_partial_only_near_basin": availability["partial_only_near_basin"],
+        "legacy_availability_validated_entry": legacy["validated_entry"],
+        "legacy_availability_validated_mate1_entry": legacy["validated_mate1_entry"],
+        "legacy_availability_validated_mate2_entry": legacy["validated_mate2_entry"],
+        "legacy_availability_graph_positive_false_basin": legacy["graph_positive_false_basin"],
+        "legacy_availability_partial_only_near_basin": legacy["partial_only_near_basin"],
+    }
+
+
+def _empty_foundation_response_flags() -> dict[str, bool]:
+    return {
+        "validated_entry": False,
+        "validated_mate1_entry": False,
+        "validated_mate2_entry": False,
+        "graph_positive_false_basin": False,
+        "partial_only_near_basin": False,
+        "handoff_available": False,
+        "handoff_available_mate1_entry": False,
+        "handoff_available_mate2_entry": False,
+        "handoff_available_graph_positive_false_basin": False,
+        "handoff_available_partial_only_near_basin": False,
+        "legacy_availability_validated_entry": False,
+        "legacy_availability_validated_mate1_entry": False,
+        "legacy_availability_validated_mate2_entry": False,
+        "legacy_availability_graph_positive_false_basin": False,
+        "legacy_availability_partial_only_near_basin": False,
+    }
+
+
+def _direct_foundation_response_for_board(
+    board: chess.Board,
+    *,
+    parent: dict[str, TerminalAffordanceLearner],
+) -> dict[str, bool]:
+    if board.turn != chess.BLACK:
         return {
             "validated_entry": False,
             "validated_mate1_entry": False,
@@ -615,7 +878,34 @@ def _foundation_response_for_board(
             "graph_positive_false_basin": False,
             "partial_only_near_basin": False,
         }
-    white_board = _white_turn_copy(board)
+    response = _edge_foundation_response(board, parent)
+    validated_entry = bool(response["validated_all_reply_handoff"])
+    partial_only = bool(response["validated_partial_only"] and not validated_entry)
+    return {
+        "validated_entry": validated_entry,
+        "validated_mate1_entry": bool(response["validated_mate1_entry"]),
+        "validated_mate2_entry": bool(response["validated_mate2_entry"]),
+        "graph_positive_false_basin": bool(response["graph_positive_false_basin"] and not partial_only),
+        "partial_only_near_basin": partial_only,
+    }
+
+
+def _foundation_availability_for_board(
+    board: chess.Board,
+    *,
+    parent: dict[str, TerminalAffordanceLearner],
+    config: TG48a2SameSideEpisodeTrainingConfig,
+    force_white_turn: bool,
+) -> dict[str, bool]:
+    if not force_white_turn and board.turn != chess.WHITE:
+        return {
+            "validated_entry": False,
+            "validated_mate1_entry": False,
+            "validated_mate2_entry": False,
+            "graph_positive_false_basin": False,
+            "partial_only_near_basin": False,
+        }
+    white_board = _white_turn_copy(board) if force_white_turn else board.copy(stack=False)
     legal = list(white_board.legal_moves)
     best = {
         "validated_entry": False,
@@ -630,7 +920,9 @@ def _foundation_response_for_board(
         best["validated_entry"] = best["validated_entry"] or bool(metrics["validated_entry"])
         best["validated_mate1_entry"] = best["validated_mate1_entry"] or bool(metrics["validated_mate1_entry"])
         best["validated_mate2_entry"] = best["validated_mate2_entry"] or bool(metrics["validated_mate2_entry"])
-        best["graph_positive_false_basin"] = best["graph_positive_false_basin"] or bool(metrics["graph_positive_false_basin"])
+        best["graph_positive_false_basin"] = best["graph_positive_false_basin"] or bool(
+            metrics["graph_positive_false_basin"] and not metrics["partial_only_near_basin"]
+        )
         best["partial_only_near_basin"] = best["partial_only_near_basin"] or bool(metrics["partial_only_near_basin"])
     return best
 
@@ -659,7 +951,9 @@ def _black_mobility(board: chess.Board) -> int:
 
 def _trajectory_reward(endpoint_type: str, diag: Mapping[str, Any]) -> tuple[dict[str, float], float]:
     channels = {
-        "foundation_handoff": 0.0,
+        "foundation_entry_achieved": 0.0,
+        "foundation_handoff_available": 0.0,
+        "near_basin_shaping": 0.0,
         "lateral_escape": 0.0,
         "geometry_transition": 0.0,
         "safety": 0.0,
@@ -667,17 +961,26 @@ def _trajectory_reward(endpoint_type: str, diag: Mapping[str, Any]) -> tuple[dic
         "terminal_failure": 0.0,
     }
     if endpoint_type == "validated_mate1_entry":
-        channels["foundation_handoff"] = 10.0
+        channels["foundation_entry_achieved"] = 10.0
     elif endpoint_type in {"validated_mate2_entry", "validated_foundation_entry"}:
-        channels["foundation_handoff"] = 8.0
+        channels["foundation_entry_achieved"] = 8.0
+    if (
+        channels["foundation_entry_achieved"] == 0.0
+        and (diag.get("handoff_available") or diag.get("handoff_available_seen"))
+    ):
+        channels["foundation_handoff_available"] = 1.0
+    if (
+        endpoint_type == "partial_only_near_basin"
+        or diag.get("partial_only_near_basin")
+        or diag.get("partial_only_near_basin_seen")
+    ) and not diag.get("graph_positive_false_basin"):
+        channels["near_basin_shaping"] = 0.5
     if endpoint_type == "safer_opposed_or_killbox_geometry":
         channels["geometry_transition"] = 5.0
     if diag.get("lateral_escape_survived_reply"):
         channels["lateral_escape"] = 3.0
     if diag.get("killbox_friendly") and not diag.get("rook_blunder"):
         channels["safety"] += 1.0
-    if endpoint_type == "partial_only_near_basin":
-        channels["false_basin"] = -3.0
     if endpoint_type == "graph_positive_false_basin":
         channels["false_basin"] = -5.0
     if endpoint_type == "confinement_regression":
@@ -694,19 +997,47 @@ def _credit_assignments(
     reward_channels: Mapping[str, float],
     trajectory_reward: float,
     gamma: float,
+    contrastive_terminal_activations_by_white_ply: list[list[str]] | None = None,
+    contrastive_reward_channels: Mapping[str, float] | None = None,
+    contrastive_trajectory_reward: float = 0.0,
 ) -> list[dict[str, Any]]:
     assignments = []
-    total = len(terminal_activations_by_white_ply)
-    for index, keys in enumerate(terminal_activations_by_white_ply):
+    contrastive_activations = contrastive_terminal_activations_by_white_ply or []
+    total = max(len(terminal_activations_by_white_ply), len(contrastive_activations))
+    channel_keys = set(reward_channels)
+    if contrastive_reward_channels is not None:
+        channel_keys.update(contrastive_reward_channels)
+    reward_delta = round(trajectory_reward - contrastive_trajectory_reward, 6)
+    for index in range(total):
+        keys = terminal_activations_by_white_ply[index] if index < len(terminal_activations_by_white_ply) else []
+        contrastive_keys = contrastive_activations[index] if index < len(contrastive_activations) else []
+        selected_set = set(keys)
+        contrastive_set = set(contrastive_keys)
+        selected_only = sorted(selected_set - contrastive_set)
+        contrastive_only = sorted(contrastive_set - selected_set)
+        shared = selected_set & contrastive_set
         discount = gamma ** max(0, total - index - 1)
-        discounted_reward = round(trajectory_reward * discount, 6)
-        channel_credit = {key: round(value * discount, 6) for key, value in reward_channels.items()}
+        discounted_reward = round(reward_delta * discount, 6)
+        channel_credit = {
+            key: round((float(reward_channels.get(key, 0.0)) - float((contrastive_reward_channels or {}).get(key, 0.0))) * discount, 6)
+            for key in sorted(channel_keys)
+        }
+        terminal_credit = {key: discounted_reward for key in selected_only}
+        terminal_credit.update({key: round(-discounted_reward, 6) for key in contrastive_only})
+        terminal_sources = {key: "selected_only" for key in selected_only}
+        terminal_sources.update({key: "alternative_only" for key in contrastive_only})
         assignments.append({
             "white_ply": index,
-            "terminal_count": len(keys),
+            "terminal_count": len(terminal_credit),
+            "selected_terminal_count": len(keys),
+            "contrastive_terminal_count": len(contrastive_keys),
+            "shared_terminal_count": len(shared),
             "discount": round(discount, 6),
             "discounted_reward": discounted_reward,
+            "reward_delta": reward_delta,
             "reward_channels": channel_credit,
+            "terminal_credit": terminal_credit,
+            "terminal_sources": terminal_sources,
             "learner_visible_labels": False,
         })
     return assignments
@@ -720,9 +1051,13 @@ def _apply_episode_credit(
 ) -> None:
     activations = trace["terminal_activations_by_white_ply"]
     assignments = trace["credit_assignments"]
-    for assignment, keys in zip(assignments, activations, strict=True):
-        reward = float(assignment["discounted_reward"])
-        for key in keys:
+    for index, assignment in enumerate(assignments):
+        terminal_credit = assignment.get("terminal_credit")
+        if terminal_credit is None:
+            keys = activations[index] if index < len(activations) else []
+            terminal_credit = {key: float(assignment["discounted_reward"]) for key in keys}
+        for key, reward_value in terminal_credit.items():
+            reward = float(reward_value)
             terminal = learner.get_terminal(key)
             terminal.update(
                 reward=reward,
@@ -740,10 +1075,23 @@ def _terminal_episode_audit(
 ) -> dict[str, dict[str, Any]]:
     audit: dict[str, dict[str, Any]] = {}
     for trace in traces:
-        positive = trace["trajectory_reward"] > 0.0
-        negative = trace["trajectory_reward"] < 0.0
-        keys = {key for ply_keys in trace["terminal_activations_by_white_ply"] for key in ply_keys}
-        for key in keys:
+        episode_credit: dict[tuple[str, str], float] = {}
+        for assignment in trace["credit_assignments"]:
+            terminal_credit = assignment.get("terminal_credit")
+            terminal_sources = assignment.get("terminal_sources", {})
+            if terminal_credit is None:
+                terminal_credit = {
+                    key: float(assignment["discounted_reward"])
+                    for key in trace["terminal_activations_by_white_ply"][assignment["white_ply"]]
+                }
+                terminal_sources = {key: "selected_only" for key in terminal_credit}
+            for key, value in terminal_credit.items():
+                source = str(terminal_sources.get(key, "selected_only"))
+                episode_credit[(key, source)] = episode_credit.get((key, source), 0.0) + float(value)
+        for (key, source), signed_credit in episode_credit.items():
+            outcome = _audit_outcome_for_source(trace, source)
+            positive = signed_credit > 0.0
+            negative = signed_credit < 0.0
             item = audit.setdefault(
                 key,
                 {
@@ -763,21 +1111,31 @@ def _terminal_episode_audit(
             item["activation_count"] += 1
             item["positive_episode_activation_count"] += int(positive)
             item["negative_episode_activation_count"] += int(negative)
-            item["lateral_escape_episode_activation_count"] += int(trace["lateral_escape_success"])
-            item["geometry_transition_episode_activation_count"] += int(trace["endpoint_opposed_side_or_safer_geometry"])
-            item["validated_entry_episode_activation_count"] += int(trace["endpoint_validated_entry"])
-            item["false_basin_episode_activation_count"] += int(trace["graph_positive_false_basin"] or trace["partial_only_near_basin"])
-            item["unsafe_episode_activation_count"] += int(trace["rook_blunder"] or trace["stalemate"] or trace["illegal"] or trace["confinement_regression"])
-            item["decoy_false_handoff_activation_count"] += int(
-                trace["family"] in {"decoy_edge_killbox", "hard_decoy_edge_killbox"} and trace["endpoint_validated_entry"]
+            item["lateral_escape_episode_activation_count"] += int(outcome["lateral_escape_success"])
+            item["geometry_transition_episode_activation_count"] += int(outcome["endpoint_opposed_side_or_safer_geometry"])
+            item["validated_entry_episode_activation_count"] += int(outcome["endpoint_validated_entry"])
+            item["false_basin_episode_activation_count"] += int(
+                outcome["graph_positive_false_basin"] or outcome["partial_only_near_basin"]
             )
-            for assignment in trace["credit_assignments"]:
-                value = float(assignment["discounted_reward"])
-                if value > 0:
-                    item["discounted_credit_sum"] += value
-                elif value < 0:
-                    item["discounted_debt_sum"] += abs(value)
+            item["unsafe_episode_activation_count"] += int(
+                outcome["rook_blunder"] or outcome["stalemate"] or outcome["illegal"] or outcome["confinement_regression"]
+            )
+            item["decoy_false_handoff_activation_count"] += int(
+                trace["family"] in {"decoy_edge_killbox", "hard_decoy_edge_killbox"} and outcome["endpoint_validated_entry"]
+            )
+            if signed_credit > 0:
+                item["discounted_credit_sum"] += signed_credit
+            elif signed_credit < 0:
+                item["discounted_debt_sum"] += abs(signed_credit)
     return audit
+
+
+def _audit_outcome_for_source(trace: Mapping[str, Any], source: str) -> Mapping[str, Any]:
+    if source == "alternative_only":
+        contrastive = trace.get("contrastive_episode", {})
+        if contrastive.get("available"):
+            return contrastive
+    return trace
 
 
 def _promote_m4(
@@ -877,6 +1235,8 @@ def _summarize_episodes(traces: list[dict[str, Any]]) -> dict[str, Any]:
         "validated_mate2_entry_rate": _rate(sum(int(trace["endpoint_validated_mate2"]) for trace in traces), total),
         "graph_positive_false_basin_count": sum(int(trace["graph_positive_false_basin"]) for trace in traces),
         "partial_only_near_basin_count": sum(int(trace["partial_only_near_basin"]) for trace in traces),
+        "partial_only_near_basin_seen_count": sum(int(trace.get("partial_only_near_basin_seen", False)) for trace in traces),
+        "handoff_available_seen_count": sum(int(trace.get("handoff_available_seen", False)) for trace in traces),
         "rook_blunder_count": sum(int(trace["rook_blunder"]) for trace in traces),
         "stalemate_count": sum(int(trace["stalemate"]) for trace in traces),
         "illegal_move_count": sum(int(trace["illegal"]) for trace in traces),
@@ -934,15 +1294,59 @@ def _dataset_summary(datasets: Mapping[str, list[dict[str, Any]]]) -> dict[str, 
 def _reward_channel_rows(traces: list[dict[str, Any]]) -> list[dict[str, Any]]:
     rows = []
     for trace in traces:
+        contrastive = trace.get("contrastive_episode", {})
+        contrastive_reward = contrastive.get("trajectory_reward")
         rows.append({
             "episode_id": trace["episode_id"],
             "endpoint_type": trace["endpoint_type"],
             "trajectory_reward": trace["trajectory_reward"],
+            "contrastive_endpoint_type": contrastive.get("endpoint_type"),
+            "contrastive_trajectory_reward": contrastive_reward,
+            "contrastive_reward_delta": (
+                None
+                if contrastive_reward is None
+                else round(float(trace["trajectory_reward"]) - float(contrastive_reward), 6)
+            ),
             "reward_channels": trace["reward_channels"],
+            "credit_assignment_mode": trace.get("credit_assignment_mode", "selected_trajectory"),
             "credit_assignment_count": len(trace["credit_assignments"]),
             "learner_visible_labels": False,
         })
     return rows
+
+
+def _reward_channel_summary(traces: list[dict[str, Any]]) -> dict[str, Any]:
+    channel_sums: dict[str, float] = {}
+    channel_nonzero_counts: dict[str, int] = {}
+    endpoint_counts: dict[str, int] = {}
+    delta_rewards = []
+    for trace in traces:
+        endpoint = str(trace["endpoint_type"])
+        endpoint_counts[endpoint] = endpoint_counts.get(endpoint, 0) + 1
+        for key, value in trace["reward_channels"].items():
+            channel_sums[key] = channel_sums.get(key, 0.0) + float(value)
+            channel_nonzero_counts[key] = channel_nonzero_counts.get(key, 0) + int(abs(float(value)) > 1e-12)
+        contrastive = trace.get("contrastive_episode", {})
+        if contrastive.get("available"):
+            delta_rewards.append(round(float(trace["trajectory_reward"]) - float(contrastive["trajectory_reward"]), 6))
+    rewards = [float(trace["trajectory_reward"]) for trace in traces]
+    return {
+        "episode_count": len(traces),
+        "positive_reward_count": sum(int(value > 0.0) for value in rewards),
+        "negative_reward_count": sum(int(value < 0.0) for value in rewards),
+        "zero_reward_count": sum(int(value == 0.0) for value in rewards),
+        "positive_contrastive_delta_count": sum(int(value > 0.0) for value in delta_rewards),
+        "negative_contrastive_delta_count": sum(int(value < 0.0) for value in delta_rewards),
+        "zero_contrastive_delta_count": sum(int(value == 0.0) for value in delta_rewards),
+        "contrastive_pair_count": len(delta_rewards),
+        "endpoint_counts": endpoint_counts,
+        "channel_sums": {key: round(value, 6) for key, value in sorted(channel_sums.items())},
+        "channel_nonzero_counts": dict(sorted(channel_nonzero_counts.items())),
+        "nondegenerate_reward_distribution": bool(
+            len({round(value, 6) for value in rewards}) > 1
+            or (any(value > 0.0 for value in delta_rewards) and any(value < 0.0 for value in delta_rewards))
+        ),
+    }
 
 
 def _decision(
@@ -955,6 +1359,7 @@ def _decision(
     hard_decoy_gate: Mapping[str, Any],
     learner: TerminalAffordanceLearner,
     m4_audit: Mapping[str, Any],
+    parent_legacy_eval: Mapping[str, Any],
     parent_eval: Mapping[str, Any],
     m3_eval: Mapping[str, Any],
     m4_eval: Mapping[str, Any],
@@ -977,6 +1382,14 @@ def _decision(
         or m4_audit["promoted_geometry_transition_affordance_count"]
         or m4_audit["promoted_foundation_handoff_affordance_count"]
     )
+    m3_delta_vs_parent = m3_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
+    m4_delta_vs_parent = m4_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
+    m3_plus_m4_delta_vs_parent = m3_plus_m4_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
+    trained_arm_beats_parent = bool(
+        m3_delta_vs_parent > 0.0
+        or m4_delta_vs_parent > 0.0
+        or m3_plus_m4_delta_vs_parent > 0.0
+    )
     m4_subskill_improves = m4_eval["same_side_subskill_success_rate"] > parent_eval["same_side_subskill_success_rate"]
     false_basin_decreases = m4_eval["graph_positive_false_basin_count"] < parent_eval["graph_positive_false_basin_count"]
     if not infrastructure_pass:
@@ -987,13 +1400,13 @@ def _decision(
         next_action = "inspect_episode_reward_channels_and_terminal_keys"
     elif m4_subskill_improves and m4_eval["validated_entry_rate"] <= parent_eval["validated_entry_rate"]:
         interpretation = "same_side_subskill_learned_foundation_handoff_still_sparse"
-        next_action = "add_followup_opposed_side_or_diagnostic_imagination"
+        next_action = "inspect_repaired_parent_vs_trained_arm_main_json_metrics"
     elif m4_subskill_improves and safety_clean and false_basin_decreases:
         interpretation = "same_side_episode_behavioral_candidate"
-        next_action = "integrate_same_side_episode_stage_into_tg48a"
+        next_action = "record_phase0_metric_result_before_any_next_phase"
     else:
         interpretation = "same_side_episode_reward_or_generator_blocker"
-        next_action = "inspect_episode_failure_pool"
+        next_action = "inspect_main_json_reward_channel_audit_and_terminal_credit"
     return {
         "checkpoint_pass": infrastructure_pass,
         "checkpoint_interpretation": interpretation,
@@ -1002,10 +1415,21 @@ def _decision(
         "parent_foundation_hash": parent_hash,
         "episode_train_count": config.train_count,
         "episode_heldout_count": parent_eval["episode_count"],
+        "primary_metric": "heldout_episode_success_rate_vs_repaired_parent",
+        "parent_legacy_availability_classifier_episode_success_rate": parent_legacy_eval["episode_success_rate"],
         "parent_episode_success_rate": parent_eval["episode_success_rate"],
+        "parent_reclassification_episode_success_delta": round(
+            parent_eval["episode_success_rate"] - parent_legacy_eval["episode_success_rate"],
+            6,
+        ),
         "M3_episode_success_rate": m3_eval["episode_success_rate"],
         "M4_episode_success_rate": m4_eval["episode_success_rate"],
         "true_M3_plus_M4_episode_success_rate": m3_plus_m4_eval["episode_success_rate"],
+        "M3_delta_vs_repaired_parent_episode_success_rate": round(m3_delta_vs_parent, 6),
+        "M4_delta_vs_repaired_parent_episode_success_rate": round(m4_delta_vs_parent, 6),
+        "M3_plus_M4_delta_vs_repaired_parent_episode_success_rate": round(m3_plus_m4_delta_vs_parent, 6),
+        "trained_arm_beats_repaired_parent": trained_arm_beats_parent,
+        "primary_metric_acceptance_pass": trained_arm_beats_parent,
         "same_side_subskill_success_rate": m4_eval["same_side_subskill_success_rate"],
         "lateral_escape_success_rate": m4_eval["lateral_escape_success_rate"],
         "selected_lateral_rook_rate": m4_eval["selected_lateral_rook_rate"],
@@ -1104,7 +1528,10 @@ def _write_markdown(path: str | Path, result: TG48a2SameSideEpisodeTrainingResul
         f"- Checkpoint pass: {d['checkpoint_pass']}",
         f"- Interpretation: {d['checkpoint_interpretation']}",
         f"- Selected next action: {d['selected_next_action']}",
+        f"- Primary metric: {d['primary_metric']}",
+        f"- Parent legacy/repaired/reclassification delta: {d['parent_legacy_availability_classifier_episode_success_rate']:.3f} / {d['parent_episode_success_rate']:.3f} / {d['parent_reclassification_episode_success_delta']:.3f}",
         f"- Episode success parent/M3/M4/M3+M4: {d['parent_episode_success_rate']:.3f} / {d['M3_episode_success_rate']:.3f} / {d['M4_episode_success_rate']:.3f} / {d['true_M3_plus_M4_episode_success_rate']:.3f}",
+        f"- Episode success deltas vs repaired parent M3/M4/M3+M4: {d['M3_delta_vs_repaired_parent_episode_success_rate']:.3f} / {d['M4_delta_vs_repaired_parent_episode_success_rate']:.3f} / {d['M3_plus_M4_delta_vs_repaired_parent_episode_success_rate']:.3f}",
         f"- Same-side subskill success: {d['same_side_subskill_success_rate']:.3f}",
         f"- Lateral escape success: {d['lateral_escape_success_rate']:.3f}",
         f"- Validated entry rate: {d['validated_entry_rate']:.3f}",
