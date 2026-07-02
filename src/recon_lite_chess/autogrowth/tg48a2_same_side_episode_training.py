@@ -188,6 +188,16 @@ def run_tg48a2_same_side_episode_training(
         trace_type="TG48a2_episode_M3_plus_M4",
         config=config,
     )
+    ablated_affordances_eval = _evaluate_episode_rows(
+        datasets["heldout"],
+        parent=parent,
+        learner=_ablate_promoted_positive_affordances(
+            _combine_learners(m3=learner, m4=m4_learner, trial_scale=config.m3_plus_m4_trial_scale),
+            m4_audit=m4_audit,
+        ),
+        trace_type="TG48a2_episode_M3_plus_M4_ablated_affordances",
+        config=config,
+    )
     no_foundation_eval = _evaluate_episode_rows(datasets["heldout"], parent=None, learner=learner, trace_type="TG48a2_episode_no_foundation", config=config)
     regression_eval = _evaluate_episode_rows(datasets["regression"], parent=parent, learner=m4_learner, trace_type="TG48a2_episode_regression_M4", config=config)
     decoy_eval = _evaluate_episode_rows(
@@ -204,6 +214,7 @@ def run_tg48a2_same_side_episode_training(
         + m3_eval["traces"]
         + m4_eval["traces"]
         + m3_plus_m4_eval["traces"]
+        + ablated_affordances_eval["traces"]
         + no_foundation_eval["traces"]
         + regression_eval["traces"]
         + decoy_eval["traces"]
@@ -233,6 +244,7 @@ def run_tg48a2_same_side_episode_training(
         m3_eval=m3_eval,
         m4_eval=m4_eval,
         m3_plus_m4_eval=m3_plus_m4_eval,
+        ablated_affordances_eval=ablated_affordances_eval,
         no_foundation_eval=no_foundation_eval,
         regression_eval=regression_eval,
         decoy_eval=decoy_eval,
@@ -275,6 +287,7 @@ def run_tg48a2_same_side_episode_training(
             "M3": _strip_traces(m3_eval),
             "M4": _strip_traces(m4_eval),
             "M3_plus_M4": _strip_traces(m3_plus_m4_eval),
+            "M3_plus_M4_ablated_affordances": _strip_traces(ablated_affordances_eval),
             "no_foundation": _strip_traces(no_foundation_eval),
             "regression_M4": _strip_traces(regression_eval),
             "decoy_M4": _strip_traces(decoy_eval),
@@ -367,6 +380,28 @@ def _zero_child_weights(learner: TerminalAffordanceLearner) -> TerminalAffordanc
     clone = copy.deepcopy(learner)
     for terminal in clone.terminals.values():
         terminal.local_weight = 0.0
+    return clone
+
+
+_POSITIVE_AFFORDANCE_PROMOTIONS = {
+    "lateral_escape_affordance",
+    "geometry_transition_affordance",
+    "foundation_handoff_affordance",
+}
+
+
+def _ablate_promoted_positive_affordances(
+    learner: TerminalAffordanceLearner,
+    *,
+    m4_audit: Mapping[str, Any],
+) -> TerminalAffordanceLearner:
+    clone = copy.deepcopy(learner)
+    for row in m4_audit["candidate_rows"]:
+        if row.get("promoted_as") not in _POSITIVE_AFFORDANCE_PROMOTIONS:
+            continue
+        terminal = clone.terminals.get(row["terminal_key"])
+        if terminal is not None:
+            terminal.local_weight = 0.0
     return clone
 
 
@@ -1386,6 +1421,7 @@ def _decision(
     m3_eval: Mapping[str, Any],
     m4_eval: Mapping[str, Any],
     m3_plus_m4_eval: Mapping[str, Any],
+    ablated_affordances_eval: Mapping[str, Any],
     no_foundation_eval: Mapping[str, Any],
     regression_eval: Mapping[str, Any],
     decoy_eval: Mapping[str, Any],
@@ -1407,6 +1443,7 @@ def _decision(
     m3_delta_vs_parent = m3_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
     m4_delta_vs_parent = m4_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
     m3_plus_m4_delta_vs_parent = m3_plus_m4_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
+    ablated_affordances_delta_vs_parent = ablated_affordances_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
     zeroed_child_delta_vs_parent = child_weights_zeroed_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
     zeroed_child_matches_parent = _episode_summary_matches(parent_eval, child_weights_zeroed_eval)
     trained_arm_beats_parent = bool(
@@ -1452,9 +1489,14 @@ def _decision(
         "M3_episode_success_rate": m3_eval["episode_success_rate"],
         "M4_episode_success_rate": m4_eval["episode_success_rate"],
         "true_M3_plus_M4_episode_success_rate": m3_plus_m4_eval["episode_success_rate"],
+        "M3_plus_M4_ablated_affordances_episode_success_rate": ablated_affordances_eval["episode_success_rate"],
         "M3_delta_vs_repaired_parent_episode_success_rate": round(m3_delta_vs_parent, 6),
         "M4_delta_vs_repaired_parent_episode_success_rate": round(m4_delta_vs_parent, 6),
         "M3_plus_M4_delta_vs_repaired_parent_episode_success_rate": round(m3_plus_m4_delta_vs_parent, 6),
+        "M3_plus_M4_ablated_affordances_delta_vs_repaired_parent_episode_success_rate": round(
+            ablated_affordances_delta_vs_parent,
+            6,
+        ),
         "trained_arm_beats_repaired_parent": trained_arm_beats_parent,
         "primary_metric_acceptance_pass": trained_arm_beats_parent,
         "same_side_subskill_success_rate": m4_eval["same_side_subskill_success_rate"],
@@ -1559,6 +1601,7 @@ def _write_markdown(path: str | Path, result: TG48a2SameSideEpisodeTrainingResul
         f"- Parent legacy/repaired/reclassification delta: {d['parent_legacy_availability_classifier_episode_success_rate']:.3f} / {d['parent_episode_success_rate']:.3f} / {d['parent_reclassification_episode_success_delta']:.3f}",
         f"- Child weights zeroed rate/delta/matches parent: {d['child_weights_zeroed_episode_success_rate']:.3f} / {d['child_weights_zeroed_delta_vs_repaired_parent_episode_success_rate']:.3f} / {d['child_weights_zeroed_matches_repaired_parent']}",
         f"- Episode success parent/M3/M4/M3+M4: {d['parent_episode_success_rate']:.3f} / {d['M3_episode_success_rate']:.3f} / {d['M4_episode_success_rate']:.3f} / {d['true_M3_plus_M4_episode_success_rate']:.3f}",
+        f"- Ablated affordances rate/delta vs repaired parent: {d['M3_plus_M4_ablated_affordances_episode_success_rate']:.3f} / {d['M3_plus_M4_ablated_affordances_delta_vs_repaired_parent_episode_success_rate']:.3f}",
         f"- Episode success deltas vs repaired parent M3/M4/M3+M4: {d['M3_delta_vs_repaired_parent_episode_success_rate']:.3f} / {d['M4_delta_vs_repaired_parent_episode_success_rate']:.3f} / {d['M3_plus_M4_delta_vs_repaired_parent_episode_success_rate']:.3f}",
         f"- Same-side subskill success: {d['same_side_subskill_success_rate']:.3f}",
         f"- Lateral escape success: {d['lateral_escape_success_rate']:.3f}",
