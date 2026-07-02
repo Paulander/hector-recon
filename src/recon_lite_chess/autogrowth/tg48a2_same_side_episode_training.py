@@ -172,6 +172,13 @@ def run_tg48a2_same_side_episode_training(
         trace_type="parent_TG46d_episode",
         config=config,
     )
+    child_weights_zeroed_eval = _evaluate_episode_rows(
+        datasets["heldout"],
+        parent=parent,
+        learner=_zero_child_weights(learner),
+        trace_type="TG48a2_episode_child_weights_zeroed",
+        config=config,
+    )
     m3_eval = _evaluate_episode_rows(datasets["heldout"], parent=parent, learner=learner, trace_type="TG48a2_episode_M3", config=config)
     m4_eval = _evaluate_episode_rows(datasets["heldout"], parent=parent, learner=m4_learner, trace_type="TG48a2_episode_M4", config=config)
     m3_plus_m4_eval = _evaluate_episode_rows(
@@ -193,6 +200,7 @@ def run_tg48a2_same_side_episode_training(
     eval_traces = (
         parent_legacy_eval["traces"]
         + parent_eval["traces"]
+        + child_weights_zeroed_eval["traces"]
         + m3_eval["traces"]
         + m4_eval["traces"]
         + m3_plus_m4_eval["traces"]
@@ -221,6 +229,7 @@ def run_tg48a2_same_side_episode_training(
         m4_audit=m4_audit,
         parent_legacy_eval=parent_legacy_eval,
         parent_eval=parent_eval,
+        child_weights_zeroed_eval=child_weights_zeroed_eval,
         m3_eval=m3_eval,
         m4_eval=m4_eval,
         m3_plus_m4_eval=m3_plus_m4_eval,
@@ -262,6 +271,7 @@ def run_tg48a2_same_side_episode_training(
         "evaluation": {
             "parent_legacy_availability_classifier": _strip_traces(parent_legacy_eval),
             "parent": _strip_traces(parent_eval),
+            "child_weights_zeroed": _strip_traces(child_weights_zeroed_eval),
             "M3": _strip_traces(m3_eval),
             "M4": _strip_traces(m4_eval),
             "M3_plus_M4": _strip_traces(m3_plus_m4_eval),
@@ -351,6 +361,13 @@ def _evaluate_episode_rows(
         for index, row in enumerate(rows)
     ]
     return _summarize_episodes(traces)
+
+
+def _zero_child_weights(learner: TerminalAffordanceLearner) -> TerminalAffordanceLearner:
+    clone = copy.deepcopy(learner)
+    for terminal in clone.terminals.values():
+        terminal.local_weight = 0.0
+    return clone
 
 
 def _play_episode(
@@ -1281,6 +1298,10 @@ def _strip_traces(metrics: Mapping[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in metrics.items() if key != "traces"}
 
 
+def _episode_summary_matches(left: Mapping[str, Any], right: Mapping[str, Any]) -> bool:
+    return _strip_traces(left) == _strip_traces(right)
+
+
 def _dataset_summary(datasets: Mapping[str, list[dict[str, Any]]]) -> dict[str, Any]:
     return {
         split: {
@@ -1361,6 +1382,7 @@ def _decision(
     m4_audit: Mapping[str, Any],
     parent_legacy_eval: Mapping[str, Any],
     parent_eval: Mapping[str, Any],
+    child_weights_zeroed_eval: Mapping[str, Any],
     m3_eval: Mapping[str, Any],
     m4_eval: Mapping[str, Any],
     m3_plus_m4_eval: Mapping[str, Any],
@@ -1385,6 +1407,8 @@ def _decision(
     m3_delta_vs_parent = m3_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
     m4_delta_vs_parent = m4_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
     m3_plus_m4_delta_vs_parent = m3_plus_m4_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
+    zeroed_child_delta_vs_parent = child_weights_zeroed_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
+    zeroed_child_matches_parent = _episode_summary_matches(parent_eval, child_weights_zeroed_eval)
     trained_arm_beats_parent = bool(
         m3_delta_vs_parent > 0.0
         or m4_delta_vs_parent > 0.0
@@ -1422,6 +1446,9 @@ def _decision(
             parent_eval["episode_success_rate"] - parent_legacy_eval["episode_success_rate"],
             6,
         ),
+        "child_weights_zeroed_episode_success_rate": child_weights_zeroed_eval["episode_success_rate"],
+        "child_weights_zeroed_delta_vs_repaired_parent_episode_success_rate": round(zeroed_child_delta_vs_parent, 6),
+        "child_weights_zeroed_matches_repaired_parent": zeroed_child_matches_parent,
         "M3_episode_success_rate": m3_eval["episode_success_rate"],
         "M4_episode_success_rate": m4_eval["episode_success_rate"],
         "true_M3_plus_M4_episode_success_rate": m3_plus_m4_eval["episode_success_rate"],
@@ -1530,6 +1557,7 @@ def _write_markdown(path: str | Path, result: TG48a2SameSideEpisodeTrainingResul
         f"- Selected next action: {d['selected_next_action']}",
         f"- Primary metric: {d['primary_metric']}",
         f"- Parent legacy/repaired/reclassification delta: {d['parent_legacy_availability_classifier_episode_success_rate']:.3f} / {d['parent_episode_success_rate']:.3f} / {d['parent_reclassification_episode_success_delta']:.3f}",
+        f"- Child weights zeroed rate/delta/matches parent: {d['child_weights_zeroed_episode_success_rate']:.3f} / {d['child_weights_zeroed_delta_vs_repaired_parent_episode_success_rate']:.3f} / {d['child_weights_zeroed_matches_repaired_parent']}",
         f"- Episode success parent/M3/M4/M3+M4: {d['parent_episode_success_rate']:.3f} / {d['M3_episode_success_rate']:.3f} / {d['M4_episode_success_rate']:.3f} / {d['true_M3_plus_M4_episode_success_rate']:.3f}",
         f"- Episode success deltas vs repaired parent M3/M4/M3+M4: {d['M3_delta_vs_repaired_parent_episode_success_rate']:.3f} / {d['M4_delta_vs_repaired_parent_episode_success_rate']:.3f} / {d['M3_plus_M4_delta_vs_repaired_parent_episode_success_rate']:.3f}",
         f"- Same-side subskill success: {d['same_side_subskill_success_rate']:.3f}",

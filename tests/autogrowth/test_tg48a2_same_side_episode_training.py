@@ -32,15 +32,16 @@ def test_training_strategy_note_records_episode_first_policy() -> None:
         assert phrase in text
 
 
-def test_episode_reward_keeps_partial_and_false_basin_out_of_success() -> None:
+def test_episode_reward_keeps_partial_shaping_and_false_basin_out_of_success() -> None:
     partial_channels, partial_reward = _trajectory_reward("partial_only_near_basin", {})
     false_channels, false_reward = _trajectory_reward("graph_positive_false_basin", {})
     unsafe_channels, unsafe_reward = _trajectory_reward("rook_blunder", {})
 
-    assert partial_reward < 0
+    assert partial_reward >= 0
     assert false_reward < 0
     assert unsafe_reward < 0
-    assert partial_channels["false_basin"] < 0
+    assert partial_channels["near_basin_shaping"] > 0
+    assert partial_channels["false_basin"] == 0
     assert false_channels["false_basin"] < 0
     assert unsafe_channels["terminal_failure"] < 0
     assert _episode_success("partial_only_near_basin") is False
