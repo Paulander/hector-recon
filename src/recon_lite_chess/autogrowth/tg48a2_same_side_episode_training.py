@@ -198,6 +198,26 @@ def run_tg48a2_same_side_episode_training(
         trace_type="TG48a2_episode_M3_plus_M4_ablated_affordances",
         config=config,
     )
+    ablated_vetoes_eval = _evaluate_episode_rows(
+        datasets["heldout"],
+        parent=parent,
+        learner=_ablate_promoted_vetoes(
+            _combine_learners(m3=learner, m4=m4_learner, trial_scale=config.m3_plus_m4_trial_scale),
+            m4_audit=m4_audit,
+        ),
+        trace_type="TG48a2_episode_M3_plus_M4_ablated_vetoes",
+        config=config,
+    )
+    ablated_both_eval = _evaluate_episode_rows(
+        datasets["heldout"],
+        parent=parent,
+        learner=_ablate_all_promoted_structure(
+            _combine_learners(m3=learner, m4=m4_learner, trial_scale=config.m3_plus_m4_trial_scale),
+            m4_audit=m4_audit,
+        ),
+        trace_type="TG48a2_episode_M3_plus_M4_ablated_both",
+        config=config,
+    )
     no_foundation_eval = _evaluate_episode_rows(datasets["heldout"], parent=None, learner=learner, trace_type="TG48a2_episode_no_foundation", config=config)
     regression_eval = _evaluate_episode_rows(datasets["regression"], parent=parent, learner=m4_learner, trace_type="TG48a2_episode_regression_M4", config=config)
     decoy_eval = _evaluate_episode_rows(
@@ -215,6 +235,8 @@ def run_tg48a2_same_side_episode_training(
         + m4_eval["traces"]
         + m3_plus_m4_eval["traces"]
         + ablated_affordances_eval["traces"]
+        + ablated_vetoes_eval["traces"]
+        + ablated_both_eval["traces"]
         + no_foundation_eval["traces"]
         + regression_eval["traces"]
         + decoy_eval["traces"]
@@ -245,6 +267,8 @@ def run_tg48a2_same_side_episode_training(
         m4_eval=m4_eval,
         m3_plus_m4_eval=m3_plus_m4_eval,
         ablated_affordances_eval=ablated_affordances_eval,
+        ablated_vetoes_eval=ablated_vetoes_eval,
+        ablated_both_eval=ablated_both_eval,
         no_foundation_eval=no_foundation_eval,
         regression_eval=regression_eval,
         decoy_eval=decoy_eval,
@@ -282,12 +306,26 @@ def run_tg48a2_same_side_episode_training(
         "hard_decoy_gate": hard_decoy_gate,
         "evaluation": {
             "parent_legacy_availability_classifier": _strip_traces(parent_legacy_eval),
-            "parent": _strip_traces(parent_eval),
-            "child_weights_zeroed": _strip_traces(child_weights_zeroed_eval),
+            "parent": _heldout_eval_summary(parent_eval, parent_eval=parent_eval, m4_audit=m4_audit),
+            "child_weights_zeroed": _heldout_eval_summary(child_weights_zeroed_eval, parent_eval=parent_eval, m4_audit=m4_audit),
             "M3": _strip_traces(m3_eval),
             "M4": _strip_traces(m4_eval),
-            "M3_plus_M4": _strip_traces(m3_plus_m4_eval),
-            "M3_plus_M4_ablated_affordances": _strip_traces(ablated_affordances_eval),
+            "M3_plus_M4": _heldout_eval_summary(m3_plus_m4_eval, parent_eval=parent_eval, m4_audit=m4_audit),
+            "M3_plus_M4_ablated_affordances": _heldout_eval_summary(
+                ablated_affordances_eval,
+                parent_eval=parent_eval,
+                m4_audit=m4_audit,
+            ),
+            "M3_plus_M4_ablated_vetoes": _heldout_eval_summary(
+                ablated_vetoes_eval,
+                parent_eval=parent_eval,
+                m4_audit=m4_audit,
+            ),
+            "M3_plus_M4_ablated_both": _heldout_eval_summary(
+                ablated_both_eval,
+                parent_eval=parent_eval,
+                m4_audit=m4_audit,
+            ),
             "no_foundation": _strip_traces(no_foundation_eval),
             "regression_M4": _strip_traces(regression_eval),
             "decoy_M4": _strip_traces(decoy_eval),
@@ -388,6 +426,8 @@ _POSITIVE_AFFORDANCE_PROMOTIONS = {
     "geometry_transition_affordance",
     "foundation_handoff_affordance",
 }
+_VETO_PROMOTIONS = {"safety_veto"}
+_ALL_PROMOTIONS = _POSITIVE_AFFORDANCE_PROMOTIONS | _VETO_PROMOTIONS
 
 
 def _ablate_promoted_positive_affordances(
@@ -395,9 +435,34 @@ def _ablate_promoted_positive_affordances(
     *,
     m4_audit: Mapping[str, Any],
 ) -> TerminalAffordanceLearner:
+    return _ablate_promoted_keys(learner, m4_audit=m4_audit, promoted_as=_POSITIVE_AFFORDANCE_PROMOTIONS)
+
+
+def _ablate_promoted_vetoes(
+    learner: TerminalAffordanceLearner,
+    *,
+    m4_audit: Mapping[str, Any],
+) -> TerminalAffordanceLearner:
+    return _ablate_promoted_keys(learner, m4_audit=m4_audit, promoted_as=_VETO_PROMOTIONS)
+
+
+def _ablate_all_promoted_structure(
+    learner: TerminalAffordanceLearner,
+    *,
+    m4_audit: Mapping[str, Any],
+) -> TerminalAffordanceLearner:
+    return _ablate_promoted_keys(learner, m4_audit=m4_audit, promoted_as=_ALL_PROMOTIONS)
+
+
+def _ablate_promoted_keys(
+    learner: TerminalAffordanceLearner,
+    *,
+    m4_audit: Mapping[str, Any],
+    promoted_as: set[str],
+) -> TerminalAffordanceLearner:
     clone = copy.deepcopy(learner)
     for row in m4_audit["candidate_rows"]:
-        if row.get("promoted_as") not in _POSITIVE_AFFORDANCE_PROMOTIONS:
+        if row.get("promoted_as") not in promoted_as:
             continue
         terminal = clone.terminals.get(row["terminal_key"])
         if terminal is not None:
@@ -1333,6 +1398,99 @@ def _strip_traces(metrics: Mapping[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in metrics.items() if key != "traces"}
 
 
+def _heldout_eval_summary(
+    metrics: Mapping[str, Any],
+    *,
+    parent_eval: Mapping[str, Any],
+    m4_audit: Mapping[str, Any],
+) -> dict[str, Any]:
+    summary = _strip_traces(metrics)
+    summary["promoted_activation_accounting"] = _promoted_activation_accounting(
+        metrics["traces"],
+        parent_traces=parent_eval["traces"],
+        m4_audit=m4_audit,
+    )
+    return summary
+
+
+def _promoted_activation_accounting(
+    traces: list[dict[str, Any]],
+    *,
+    parent_traces: list[dict[str, Any]],
+    m4_audit: Mapping[str, Any],
+) -> dict[str, Any]:
+    promoted_rows = [
+        row
+        for row in m4_audit["candidate_rows"]
+        if row.get("promoted_as") in _ALL_PROMOTIONS
+    ]
+    rows_by_key = {row["terminal_key"]: row for row in promoted_rows}
+    by_terminal = {
+        key: {
+            "terminal_key": key,
+            "promoted_as": row["promoted_as"],
+            "activation_count": 0,
+            "episode_activation_count": 0,
+        }
+        for key, row in rows_by_key.items()
+    }
+    selected_first_move_differs = 0
+    selected_sequence_differs = 0
+    affordance_active_episodes = 0
+    veto_active_episodes = 0
+    for trace, parent_trace in zip(traces, parent_traces, strict=True):
+        selected_first_move_differs += int(_first_selected_move(trace) != _first_selected_move(parent_trace))
+        selected_sequence_differs += int(trace["selected_moves_by_white_ply"] != parent_trace["selected_moves_by_white_ply"])
+        episode_keys = [key for ply_keys in trace["terminal_activations_by_white_ply"] for key in ply_keys]
+        active_once = set(episode_keys)
+        affordance_active_episodes += int(any(rows_by_key[key]["promoted_as"] in _POSITIVE_AFFORDANCE_PROMOTIONS for key in active_once if key in rows_by_key))
+        veto_active_episodes += int(any(rows_by_key[key]["promoted_as"] in _VETO_PROMOTIONS for key in active_once if key in rows_by_key))
+        for key in episode_keys:
+            if key in by_terminal:
+                by_terminal[key]["activation_count"] += 1
+        for key in active_once:
+            if key in by_terminal:
+                by_terminal[key]["episode_activation_count"] += 1
+    affordance_activation_count = sum(
+        item["activation_count"]
+        for item in by_terminal.values()
+        if item["promoted_as"] in _POSITIVE_AFFORDANCE_PROMOTIONS
+    )
+    veto_activation_count = sum(
+        item["activation_count"]
+        for item in by_terminal.values()
+        if item["promoted_as"] in _VETO_PROMOTIONS
+    )
+    return {
+        "promoted_terminal_count": len(by_terminal),
+        "promoted_affordance_terminal_count": sum(
+            int(row["promoted_as"] in _POSITIVE_AFFORDANCE_PROMOTIONS)
+            for row in promoted_rows
+        ),
+        "promoted_veto_terminal_count": sum(
+            int(row["promoted_as"] in _VETO_PROMOTIONS)
+            for row in promoted_rows
+        ),
+        "promoted_affordance_activation_count": affordance_activation_count,
+        "promoted_veto_activation_count": veto_activation_count,
+        "promoted_affordance_active_episode_count": affordance_active_episodes,
+        "promoted_veto_active_episode_count": veto_active_episodes,
+        "promoted_affordance_zero_heldout_activations": affordance_activation_count == 0,
+        "selected_first_move_differs_from_parent_episode_count": selected_first_move_differs,
+        "selected_sequence_differs_from_parent_episode_count": selected_sequence_differs,
+        "by_terminal": [
+            by_terminal[key]
+            for key in sorted(by_terminal)
+        ],
+        "learner_visible_labels": False,
+    }
+
+
+def _first_selected_move(trace: Mapping[str, Any]) -> str | None:
+    moves = trace.get("selected_moves_by_white_ply", [])
+    return None if not moves else moves[0]
+
+
 def _episode_summary_matches(left: Mapping[str, Any], right: Mapping[str, Any]) -> bool:
     return _strip_traces(left) == _strip_traces(right)
 
@@ -1422,6 +1580,8 @@ def _decision(
     m4_eval: Mapping[str, Any],
     m3_plus_m4_eval: Mapping[str, Any],
     ablated_affordances_eval: Mapping[str, Any],
+    ablated_vetoes_eval: Mapping[str, Any],
+    ablated_both_eval: Mapping[str, Any],
     no_foundation_eval: Mapping[str, Any],
     regression_eval: Mapping[str, Any],
     decoy_eval: Mapping[str, Any],
@@ -1444,6 +1604,8 @@ def _decision(
     m4_delta_vs_parent = m4_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
     m3_plus_m4_delta_vs_parent = m3_plus_m4_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
     ablated_affordances_delta_vs_parent = ablated_affordances_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
+    ablated_vetoes_delta_vs_parent = ablated_vetoes_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
+    ablated_both_delta_vs_parent = ablated_both_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
     zeroed_child_delta_vs_parent = child_weights_zeroed_eval["episode_success_rate"] - parent_eval["episode_success_rate"]
     zeroed_child_matches_parent = _episode_summary_matches(parent_eval, child_weights_zeroed_eval)
     trained_arm_beats_parent = bool(
@@ -1490,11 +1652,21 @@ def _decision(
         "M4_episode_success_rate": m4_eval["episode_success_rate"],
         "true_M3_plus_M4_episode_success_rate": m3_plus_m4_eval["episode_success_rate"],
         "M3_plus_M4_ablated_affordances_episode_success_rate": ablated_affordances_eval["episode_success_rate"],
+        "M3_plus_M4_ablated_vetoes_episode_success_rate": ablated_vetoes_eval["episode_success_rate"],
+        "M3_plus_M4_ablated_both_episode_success_rate": ablated_both_eval["episode_success_rate"],
         "M3_delta_vs_repaired_parent_episode_success_rate": round(m3_delta_vs_parent, 6),
         "M4_delta_vs_repaired_parent_episode_success_rate": round(m4_delta_vs_parent, 6),
         "M3_plus_M4_delta_vs_repaired_parent_episode_success_rate": round(m3_plus_m4_delta_vs_parent, 6),
         "M3_plus_M4_ablated_affordances_delta_vs_repaired_parent_episode_success_rate": round(
             ablated_affordances_delta_vs_parent,
+            6,
+        ),
+        "M3_plus_M4_ablated_vetoes_delta_vs_repaired_parent_episode_success_rate": round(
+            ablated_vetoes_delta_vs_parent,
+            6,
+        ),
+        "M3_plus_M4_ablated_both_delta_vs_repaired_parent_episode_success_rate": round(
+            ablated_both_delta_vs_parent,
             6,
         ),
         "trained_arm_beats_repaired_parent": trained_arm_beats_parent,
