@@ -78,6 +78,31 @@ def _safe_move_id(move: chess.Move) -> str:
     return move.uci().replace("-", "_")
 
 
+def _position_repetition_key(board: chess.Board) -> str:
+    return " ".join(
+        [
+            board.board_fen(),
+            "w" if board.turn == chess.WHITE else "b",
+            board.castling_xfen(),
+            chess.square_name(board.ep_square) if board.ep_square is not None else "-",
+        ]
+    )
+
+
+def _after_move_repetition_key(board: chess.Board, move: chess.Move) -> str:
+    after = board.copy(stack=False)
+    after.push(move)
+    return _position_repetition_key(after)
+
+
+def _move_confirms_zero_reply_mate(board: chess.Board, move: chess.Move) -> bool:
+    if move not in board.legal_moves:
+        return False
+    after = board.copy(stack=False)
+    after.push(move)
+    return after.legal_moves.count() == 0 and after.is_check()
+
+
 @dataclass
 class FrozenMate2FirstScorer:
     """Frozen exported mate2-first terminal scorer used only for request ordering."""
@@ -1170,6 +1195,14 @@ def build_mate_in_two_skill_graph(
         ordered_uci = [move.uci() for move in ordered_moves]
         if len(ordered_uci) != len(legal_uci) or set(ordered_uci) != set(legal_uci):
             raise ValueError("move_orderer must return each legal move exactly once")
+    immediate_mates = tuple(
+        move for move in ordered_moves if _move_confirms_zero_reply_mate(board, move)
+    )
+    if immediate_mates:
+        immediate_uci = {move.uci() for move in immediate_mates}
+        ordered_moves = immediate_mates + tuple(
+            move for move in ordered_moves if move.uci() not in immediate_uci
+        )
 
     candidate_count = 0
     frame_count = 0
@@ -2006,6 +2039,7 @@ def _policy_result(
     invocations: Mapping[str, Any],
     scorer: FrozenMate2FirstScorer,
 ) -> dict[str, Any]:
+    fallback = invocations.get("fallback", {})
     return {
         "confirmed": bound_move is not None,
         "branch": branch,
@@ -2014,6 +2048,15 @@ def _policy_result(
         "mate2_gate_fired": bool(gate_audit["fired"]),
         "mate2_gate_score": float(gate_audit["score"]),
         "mate2_gate_threshold": float(gate_audit["threshold"]),
+        "fallback_repetition_guard_activated": bool(
+            fallback.get("repetition_guard_activated", False)
+        ),
+        "fallback_repetition_guard_masked_count": int(
+            fallback.get("repetition_guard_masked_count", 0)
+        ),
+        "fallback_repetition_guard_lifted": bool(
+            fallback.get("repetition_guard_lifted", False)
+        ),
         "invocations": dict(invocations),
         "scorer_source_path": str(scorer.source_path),
         "scorer_source_sha256": scorer.source_sha256,
@@ -2027,6 +2070,7 @@ def run_krk_policy(
     gate: Mapping[str, Any] | None = None,
     scorer: FrozenMate2FirstScorer | None = None,
     record_trace: bool = False,
+    repetition_counts: Mapping[str, int] | None = None,
 ) -> dict[str, Any]:
     """Run the Phase 2.7 priority dispatcher over existing graph-native skills."""
 
@@ -2039,6 +2083,9 @@ def run_krk_policy(
             "mate2_gate_fired": False,
             "mate2_gate_score": 0.0,
             "mate2_gate_threshold": 0.0,
+            "fallback_repetition_guard_activated": False,
+            "fallback_repetition_guard_masked_count": 0,
+            "fallback_repetition_guard_lifted": False,
             "invocations": {},
             "scorer_source_path": None,
             "scorer_source_sha256": None,
@@ -2050,6 +2097,58 @@ def run_krk_policy(
     trace_messages: list[dict[str, Any]] = []
     invocations: dict[str, Any] = {}
     frames = 0
+    gate_audit: dict[str, Any] = {
+        "fired": False,
+        "score": 0.0,
+        "threshold": float(active_gate["threshold"]),
+    }
+
+    _policy_trace_message(
+        trace_messages,
+        KRK_POLICY_ROOT_ID,
+        MATE_IN_ONE_BASIN_ID,
+        "SUB",
+        "request",
+    )
+    basin = run_mate_in_one_basin_recognizer(board, record_trace=record_trace)
+    invocations["mate_in_1_basin"] = {"confirmed": bool(basin["confirmed"])}
+    _policy_trace_message(
+        trace_messages,
+        MATE_IN_ONE_BASIN_ID,
+        KRK_POLICY_ROOT_ID,
+        "SUR",
+        "confirm" if basin["confirmed"] else "fail",
+    )
+    if basin["confirmed"]:
+        _policy_trace_message(
+            trace_messages,
+            KRK_POLICY_ROOT_ID,
+            MATE_IN_ONE_SKILL_ID,
+            "SUB",
+            "request",
+        )
+        mate1 = run_mate_in_one_skill(board, record_trace=record_trace)
+        invocations["mate_in_1_skill"] = {
+            "confirmed": bool(mate1["confirmed"]),
+            "bound_move": mate1["bound_move"],
+        }
+        _policy_trace_message(
+            trace_messages,
+            MATE_IN_ONE_SKILL_ID,
+            KRK_POLICY_ROOT_ID,
+            "SUR",
+            "confirm" if mate1["confirmed"] else "fail",
+        )
+        if mate1["confirmed"] and mate1["bound_move"] is not None:
+            return _policy_result(
+                branch="mate_in_1",
+                bound_move=chess.Move.from_uci(mate1["bound_move"]),
+                frames=frames,
+                gate_audit=gate_audit,
+                trace_messages=trace_messages,
+                invocations=invocations,
+                scorer=active_scorer,
+            )
 
     _policy_trace_message(
         trace_messages,
@@ -2115,53 +2214,6 @@ def run_krk_policy(
     _policy_trace_message(
         trace_messages,
         KRK_POLICY_ROOT_ID,
-        MATE_IN_ONE_BASIN_ID,
-        "SUB",
-        "request",
-    )
-    basin = run_mate_in_one_basin_recognizer(board, record_trace=record_trace)
-    invocations["mate_in_1_basin"] = {"confirmed": bool(basin["confirmed"])}
-    _policy_trace_message(
-        trace_messages,
-        MATE_IN_ONE_BASIN_ID,
-        KRK_POLICY_ROOT_ID,
-        "SUR",
-        "confirm" if basin["confirmed"] else "fail",
-    )
-    if basin["confirmed"]:
-        _policy_trace_message(
-            trace_messages,
-            KRK_POLICY_ROOT_ID,
-            MATE_IN_ONE_SKILL_ID,
-            "SUB",
-            "request",
-        )
-        mate1 = run_mate_in_one_skill(board, record_trace=record_trace)
-        invocations["mate_in_1_skill"] = {
-            "confirmed": bool(mate1["confirmed"]),
-            "bound_move": mate1["bound_move"],
-        }
-        _policy_trace_message(
-            trace_messages,
-            MATE_IN_ONE_SKILL_ID,
-            KRK_POLICY_ROOT_ID,
-            "SUR",
-            "confirm" if mate1["confirmed"] else "fail",
-        )
-        if mate1["confirmed"] and mate1["bound_move"] is not None:
-            return _policy_result(
-                branch="mate_in_1",
-                bound_move=chess.Move.from_uci(mate1["bound_move"]),
-                frames=frames,
-                gate_audit=gate_audit,
-                trace_messages=trace_messages,
-                invocations=invocations,
-                scorer=active_scorer,
-            )
-
-    _policy_trace_message(
-        trace_messages,
-        KRK_POLICY_ROOT_ID,
         FENCE_ESTABLISHED_ID,
         "SUB",
         "request",
@@ -2211,11 +2263,23 @@ def run_krk_policy(
 
     legal_moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
     ordered = active_scorer.order_moves(board, legal_moves)
+    active_counts = repetition_counts or {}
+    allowed = tuple(
+        move for move in ordered
+        if int(active_counts.get(_after_move_repetition_key(board, move), 0)) < 2
+    )
+    guard_activated = len(allowed) < len(ordered)
+    guard_lifted = guard_activated and not allowed
+    if allowed:
+        ordered = allowed
     fallback = ordered[0] if ordered else None
     invocations["fallback"] = {
         "confirmed": fallback is not None,
         "bound_move": None if fallback is None else fallback.uci(),
         "score": 0.0 if fallback is None else active_scorer.score_move(board, fallback),
+        "repetition_guard_activated": guard_activated,
+        "repetition_guard_masked_count": len(legal_moves) - len(allowed),
+        "repetition_guard_lifted": guard_lifted,
     }
     _policy_trace_message(
         trace_messages,

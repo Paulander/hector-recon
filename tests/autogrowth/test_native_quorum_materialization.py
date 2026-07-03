@@ -641,20 +641,72 @@ def test_phase2_chain_confidence_gate_trains_weighted_threshold() -> None:
 
 def test_phase27_krk_policy_dispatches_through_existing_skills() -> None:
     board = chess.Board("7R/8/8/8/8/1K6/8/k7 w - - 0 1")
-    gate = dict(load_chain_confidence_gate())
-    gate["threshold"] = 2.0
     scorer = load_canonical_mate2_first_scorer()
 
-    audit = run_krk_policy(board, gate=gate, scorer=scorer, record_trace=True)
+    audit = run_krk_policy(board, scorer=scorer, record_trace=True)
     messages = _trace_messages(audit["trace"])
 
     assert audit["branch"] == "mate_in_1"
+    assert not audit["mate2_gate_fired"]
     assert chess.Move.from_uci(audit["bound_move"]) in _mate_moves(board)
-    assert (KRK_POLICY_ROOT_ID, MATE_IN_TWO_GATE_ID, "SUB", "request") in messages
-    assert (MATE_IN_TWO_GATE_ID, KRK_POLICY_ROOT_ID, "SUR", "fail") in messages
     assert (KRK_POLICY_ROOT_ID, "mate_in_1_basin", "SUB", "request") in messages
     assert (KRK_POLICY_ROOT_ID, "mate_in_1_skill", "SUB", "request") in messages
     assert ("mate_in_1_skill", KRK_POLICY_ROOT_ID, "SUR", "confirm") in messages
+    assert (KRK_POLICY_ROOT_ID, MATE_IN_TWO_GATE_ID, "SUB", "request") not in messages
+
+
+def test_phase27b_mate_in_two_cash_in_orders_immediate_mates_first() -> None:
+    board = chess.Board("7R/8/8/8/8/1K6/8/k7 w - - 0 1")
+    scorer = load_canonical_mate2_first_scorer()
+
+    audit = run_mate_in_two_skill(
+        board,
+        record_trace=False,
+        move_orderer=scorer.order_moves,
+    )
+    mate_moves = {move.uci() for move in _mate_moves(board)}
+
+    assert audit["confirmed"]
+    assert audit["bound_move"] in mate_moves
+    assert audit["candidate_order"][0] in mate_moves
+    assert audit["bound_move_rank"] == 1
+
+
+def _repetition_key(board: chess.Board) -> str:
+    return " ".join(
+        [
+            board.board_fen(),
+            "w" if board.turn == chess.WHITE else "b",
+            board.castling_xfen(),
+            chess.square_name(board.ep_square) if board.ep_square is not None else "-",
+        ]
+    )
+
+
+def test_phase27b_fallback_repetition_guard_masks_third_occurrence() -> None:
+    board = chess.Board("8/8/8/k7/3K4/8/8/1R6 w - - 0 1")
+    gate = dict(load_chain_confidence_gate())
+    gate["threshold"] = 2.0
+    scorer = load_canonical_mate2_first_scorer()
+    ordered = scorer.order_moves(
+        board,
+        tuple(sorted(board.legal_moves, key=lambda item: item.uci())),
+    )
+    after_top = board.copy(stack=False)
+    after_top.push(ordered[0])
+
+    audit = run_krk_policy(
+        board,
+        gate=gate,
+        scorer=scorer,
+        record_trace=False,
+        repetition_counts={_repetition_key(after_top): 2},
+    )
+
+    assert audit["branch"] == "fallback"
+    assert audit["fallback_repetition_guard_activated"]
+    assert audit["fallback_repetition_guard_masked_count"] >= 1
+    assert audit["bound_move"] != ordered[0].uci()
 
 
 def test_tg26u_smoke_materializes_native_quorum_and_reports_ablations() -> None:
