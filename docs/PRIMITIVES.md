@@ -54,7 +54,12 @@ Status: expressible because neighbor availability atoms are retained; otherwise 
 discovery target rather than a learner-visible legal-move-count feature.
 
 ## Confirmation Semantics
-The one genuine formalism extension is mate-in-N confirmation: runtime must generate the opponent
-reply set, spawn one subgraph instance per legal reply, and confirm only via an AND/quorum over all
-reply-instance confirmations. This universal quantification over a runtime-generated set is distinct
-from static boolean composition, which ReCoN already supports through thresholded terminals.
+Implemented in Phase 2.3: mate-in-N confirmation generates the opponent reply set, spawns one
+subgraph instance per legal reply, binds each child to its hypothetical board through a virtual
+frame, and confirms via k=n quorum over reply-instance confirmations.
+For mate-in-2, each candidate first move POR-gates a reply quantifier; each reply child requests the
+existing `mate_in_1_skill` on the post-reply board.
+Emptiness convention: n=0 replies with the defender in check confirms trivially as already mate;
+n=0 replies without check hard-fails as stalemate.
+This universal quantification over runtime-generated replies is distinct from static boolean
+composition, which ReCoN already supports through thresholded terminals.

@@ -297,12 +297,37 @@ class FormalReConEngine:
             return NodeState.TRUE
         try:
             env["__graph__"] = self.g
-            done, success = node.predicate(node, env)
+            done, success = node.predicate(node, self._env_for_node(node.nid, env))
         except Exception:
             return NodeState.FAILED
         if not done:
             return NodeState.WAITING
         return NodeState.TRUE if success else NodeState.FAILED
+
+    def _env_for_node(self, nid: str, env: Dict[str, Any]) -> Dict[str, Any]:
+        virtual_frames = env.get("virtual_frames")
+        if not isinstance(virtual_frames, dict):
+            return env
+
+        lineage: list[str] = []
+        cur: Optional[str] = nid
+        while cur is not None:
+            lineage.append(cur)
+            cur = self.g.parent_of(cur)
+
+        overlay: Dict[str, Any] = {}
+        for node_id in reversed(lineage):
+            frame = virtual_frames.get(node_id)
+            if isinstance(frame, dict):
+                overlay.update(frame)
+
+        if not overlay:
+            return env
+        scoped_env = dict(env)
+        scoped_env.update(overlay)
+        scoped_env["__graph__"] = self.g
+        scoped_env["__root_env__"] = env
+        return scoped_env
 
     def _next_quorum_script_state(self, node: Node) -> Optional[NodeState]:
         policy = str(node.meta.get("confirm_policy", "or")).lower()

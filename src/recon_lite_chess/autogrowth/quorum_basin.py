@@ -16,6 +16,10 @@ ROOT_ID = "phase2_basin_root"
 MATE_IN_ONE_SKILL_ROOT_ID = "phase2_mate_in_1_skill_root"
 MATE_IN_ONE_SKILL_ID = "mate_in_1_skill"
 MATE_IN_ONE_RECOGNIZER_STEP_ID = "mate_in_1_basin_recognizer_step"
+MATE_IN_TWO_SKILL_ROOT_ID = "phase2_mate_in_2_skill_root"
+MATE_IN_TWO_SKILL_ID = "mate_in_2_skill"
+REPLY_QUANTIFIER_ROOT_ID = "phase2_reply_quantifier_root"
+REPLY_QUANTIFIER_ID = "mate_in_2_reply_quantifier"
 MATE_IN_ONE_BASIN_ID = "mate_in_1_basin"
 ESCAPE_RESTRICTED_ID = "mate_in_1_escape_restricted"
 KING_SUPPORT_GEOMETRY_ID = "mate_in_1_king_support_geometry"
@@ -40,6 +44,18 @@ class PerceptAtom:
     reason: str
 
 
+def _prefixed(prefix: str, node_id: str) -> str:
+    return f"{prefix}{node_id}" if prefix else node_id
+
+
+def _base_id(prefix: str, node_id: str) -> str:
+    return node_id.removeprefix(prefix) if prefix and node_id.startswith(prefix) else node_id
+
+
+def _safe_move_id(move: chess.Move) -> str:
+    return move.uci().replace("-", "_")
+
+
 def _compare(value: float, op: str, expected: float) -> bool:
     if op == "eq":
         return value == expected
@@ -61,12 +77,12 @@ def _percept_predicate(atom: PerceptAtom) -> Callable[[Node, dict[str, Any]], tu
     return predicate
 
 
-def mate_in_one_basin_atoms() -> tuple[PerceptAtom, ...]:
+def mate_in_one_basin_atoms(*, prefix: str = "") -> tuple[PerceptAtom, ...]:
     """Return the hand-derived atoms for the initial Mate-in-1 basin."""
 
     unavailable = tuple(
         PerceptAtom(
-            node_id=f"atom_bk_neighbor_{direction}_blocked",
+            node_id=_prefixed(prefix, f"atom_bk_neighbor_{direction}_blocked"),
             feature_name=f"bk_neighbor_{direction}_available",
             op="eq",
             expected=0.0,
@@ -75,82 +91,106 @@ def mate_in_one_basin_atoms() -> tuple[PerceptAtom, ...]:
         for direction in _BK_NEIGHBOR_DIRECTIONS
     )
     return (
-        PerceptAtom("atom_white_to_move", "side_white_to_move", "eq", 1.0, "white has the mating turn"),
-        PerceptAtom("atom_rook_present", "rook_present", "eq", 1.0, "rook material exists"),
-        PerceptAtom("atom_rook_safe", "rook_attacked_by_black", "eq", 0.0, "rook is not immediately loose"),
-        PerceptAtom("atom_black_king_edge", "black_king_on_edge", "eq", 1.0, "rook mate needs the defender on an edge"),
         PerceptAtom(
-            "atom_black_king_corner",
+            _prefixed(prefix, "atom_white_to_move"),
+            "side_white_to_move",
+            "eq",
+            1.0,
+            "white has the mating turn",
+        ),
+        PerceptAtom(
+            _prefixed(prefix, "atom_rook_present"),
+            "rook_present",
+            "eq",
+            1.0,
+            "rook material exists",
+        ),
+        PerceptAtom(
+            _prefixed(prefix, "atom_rook_safe"),
+            "rook_attacked_by_black",
+            "eq",
+            0.0,
+            "rook is not immediately loose",
+        ),
+        PerceptAtom(
+            _prefixed(prefix, "atom_black_king_edge"),
+            "black_king_on_edge",
+            "eq",
+            1.0,
+            "rook mate needs the defender on an edge",
+        ),
+        PerceptAtom(
+            _prefixed(prefix, "atom_black_king_corner"),
             "black_king_corner_distance",
             "eq",
             0.0,
             "corner wall supplies two escape constraints",
         ),
         PerceptAtom(
-            "atom_corner_king_knight_support",
+            _prefixed(prefix, "atom_corner_king_knight_support"),
             "king_pair_knight_distance_like",
             "eq",
             1.0,
             "white king has board-interior knight-distance corner support",
         ),
         PerceptAtom(
-            "atom_black_king_rank_zero",
+            _prefixed(prefix, "atom_black_king_rank_zero"),
             "black_king_rank",
             "eq",
             0.0,
             "black king is on the south rank edge",
         ),
         PerceptAtom(
-            "atom_black_king_rank_seven",
+            _prefixed(prefix, "atom_black_king_rank_seven"),
             "black_king_rank",
             "eq",
             7.0,
             "black king is on the north rank edge",
         ),
         PerceptAtom(
-            "atom_black_king_file_zero",
+            _prefixed(prefix, "atom_black_king_file_zero"),
             "black_king_file",
             "eq",
             0.0,
             "black king is on the west file edge",
         ),
         PerceptAtom(
-            "atom_black_king_file_seven",
+            _prefixed(prefix, "atom_black_king_file_seven"),
             "black_king_file",
             "eq",
             7.0,
             "black king is on the east file edge",
         ),
         PerceptAtom(
-            "atom_rank_edge_along_delta_zero",
+            _prefixed(prefix, "atom_rank_edge_along_delta_zero"),
             "king_delta_file_abs",
             "eq",
             0.0,
             "on a rank edge, the kings align along the edge axis",
         ),
         PerceptAtom(
-            "atom_rank_edge_perpendicular_delta_two",
+            _prefixed(prefix, "atom_rank_edge_perpendicular_delta_two"),
             "king_delta_rank_abs",
             "eq",
             2.0,
             "on a rank edge, the white king is two ranks inward",
         ),
         PerceptAtom(
-            "atom_file_edge_along_delta_zero",
+            _prefixed(prefix, "atom_file_edge_along_delta_zero"),
             "king_delta_rank_abs",
             "eq",
             0.0,
             "on a file edge, the kings align along the edge axis",
         ),
         PerceptAtom(
-            "atom_file_edge_perpendicular_delta_two",
+            _prefixed(prefix, "atom_file_edge_perpendicular_delta_two"),
             "king_delta_file_abs",
             "eq",
             2.0,
             "on a file edge, the white king is two files inward",
         ),
         PerceptAtom(
-            "atom_rook_not_adjacent_to_black_king",
+            _prefixed(prefix, "atom_rook_not_adjacent_to_black_king"),
             "white_rook_to_black_king_distance",
             "ge",
             2.0,
@@ -185,78 +225,89 @@ def _add_percept_atom(graph: Graph, atom: PerceptAtom, parent: str) -> None:
     graph.add_hierarchy_pair(parent, atom.node_id)
 
 
-def _add_mate_in_one_basin_subgraph(graph: Graph, parent_id: str) -> None:
+def _add_mate_in_one_basin_subgraph(graph: Graph, parent_id: str, *, prefix: str = "") -> None:
     """Attach the fixed basin recognizer under an existing script parent."""
 
-    _add_quorum_script(graph, MATE_IN_ONE_BASIN_ID, role="mate_in_1_basin", policy="and")
+    basin_id = _prefixed(prefix, MATE_IN_ONE_BASIN_ID)
+    escape_id = _prefixed(prefix, ESCAPE_RESTRICTED_ID)
+    king_support_id = _prefixed(prefix, KING_SUPPORT_GEOMETRY_ID)
+    edge_opposition_id = _prefixed(prefix, EDGE_RELATIVE_OPPOSITION_ID)
+    rank_edge_opposition_id = _prefixed(prefix, RANK_EDGE_OPPOSITION_ID)
+    file_edge_opposition_id = _prefixed(prefix, FILE_EDGE_OPPOSITION_ID)
+    rank_edge_id = _prefixed(prefix, BLACK_KING_ON_RANK_EDGE_ID)
+    file_edge_id = _prefixed(prefix, BLACK_KING_ON_FILE_EDGE_ID)
+    corner_support_id = _prefixed(prefix, CORNER_KNIGHT_SUPPORT_ID)
+
+    _add_quorum_script(graph, basin_id, role="mate_in_1_basin", policy="and")
     _add_quorum_script(
         graph,
-        ESCAPE_RESTRICTED_ID,
+        escape_id,
         role="mobility_restriction_quorum",
         policy="k_of_n",
         k=4,
     )
     _add_quorum_script(
         graph,
-        KING_SUPPORT_GEOMETRY_ID,
+        king_support_id,
         role="king_support_geometry_quorum",
         policy="k_of_n",
         k=1,
     )
     _add_quorum_script(
         graph,
-        EDGE_RELATIVE_OPPOSITION_ID,
+        edge_opposition_id,
         role="edge_relative_opposition_quorum",
         policy="k_of_n",
         k=1,
     )
-    _add_quorum_script(graph, RANK_EDGE_OPPOSITION_ID, role="rank_edge_opposition_quorum", policy="and")
-    _add_quorum_script(graph, FILE_EDGE_OPPOSITION_ID, role="file_edge_opposition_quorum", policy="and")
+    _add_quorum_script(graph, rank_edge_opposition_id, role="rank_edge_opposition_quorum", policy="and")
+    _add_quorum_script(graph, file_edge_opposition_id, role="file_edge_opposition_quorum", policy="and")
     _add_quorum_script(
         graph,
-        BLACK_KING_ON_RANK_EDGE_ID,
+        rank_edge_id,
         role="black_king_rank_edge_selector",
         policy="k_of_n",
         k=1,
     )
     _add_quorum_script(
         graph,
-        BLACK_KING_ON_FILE_EDGE_ID,
+        file_edge_id,
         role="black_king_file_edge_selector",
         policy="k_of_n",
         k=1,
     )
     _add_quorum_script(
         graph,
-        CORNER_KNIGHT_SUPPORT_ID,
+        corner_support_id,
         role="corner_knight_support_quorum",
         policy="and",
     )
-    graph.add_hierarchy_pair(parent_id, MATE_IN_ONE_BASIN_ID)
-    graph.add_hierarchy_pair(MATE_IN_ONE_BASIN_ID, ESCAPE_RESTRICTED_ID)
-    graph.add_hierarchy_pair(MATE_IN_ONE_BASIN_ID, KING_SUPPORT_GEOMETRY_ID)
-    graph.add_hierarchy_pair(KING_SUPPORT_GEOMETRY_ID, EDGE_RELATIVE_OPPOSITION_ID)
-    graph.add_hierarchy_pair(KING_SUPPORT_GEOMETRY_ID, CORNER_KNIGHT_SUPPORT_ID)
-    graph.add_hierarchy_pair(EDGE_RELATIVE_OPPOSITION_ID, RANK_EDGE_OPPOSITION_ID)
-    graph.add_hierarchy_pair(EDGE_RELATIVE_OPPOSITION_ID, FILE_EDGE_OPPOSITION_ID)
-    graph.add_hierarchy_pair(RANK_EDGE_OPPOSITION_ID, BLACK_KING_ON_RANK_EDGE_ID)
-    graph.add_hierarchy_pair(FILE_EDGE_OPPOSITION_ID, BLACK_KING_ON_FILE_EDGE_ID)
+    graph.add_hierarchy_pair(parent_id, basin_id)
+    graph.add_hierarchy_pair(basin_id, escape_id)
+    graph.add_hierarchy_pair(basin_id, king_support_id)
+    graph.add_hierarchy_pair(king_support_id, edge_opposition_id)
+    graph.add_hierarchy_pair(king_support_id, corner_support_id)
+    graph.add_hierarchy_pair(edge_opposition_id, rank_edge_opposition_id)
+    graph.add_hierarchy_pair(edge_opposition_id, file_edge_opposition_id)
+    graph.add_hierarchy_pair(rank_edge_opposition_id, rank_edge_id)
+    graph.add_hierarchy_pair(file_edge_opposition_id, file_edge_id)
 
-    for atom in mate_in_one_basin_atoms():
-        if atom.node_id.startswith("atom_bk_neighbor_"):
-            parent = ESCAPE_RESTRICTED_ID
-        elif atom.node_id in {"atom_black_king_corner", "atom_corner_king_knight_support"}:
-            parent = CORNER_KNIGHT_SUPPORT_ID
-        elif atom.node_id in {"atom_black_king_rank_zero", "atom_black_king_rank_seven"}:
-            parent = BLACK_KING_ON_RANK_EDGE_ID
-        elif atom.node_id in {"atom_black_king_file_zero", "atom_black_king_file_seven"}:
-            parent = BLACK_KING_ON_FILE_EDGE_ID
-        elif atom.node_id.startswith("atom_rank_edge_"):
-            parent = RANK_EDGE_OPPOSITION_ID
-        elif atom.node_id.startswith("atom_file_edge_"):
-            parent = FILE_EDGE_OPPOSITION_ID
+    for atom in mate_in_one_basin_atoms(prefix=prefix):
+        base_node_id = _base_id(prefix, atom.node_id)
+        if base_node_id.startswith("atom_bk_neighbor_"):
+            parent = escape_id
+        elif base_node_id in {"atom_black_king_corner", "atom_corner_king_knight_support"}:
+            parent = corner_support_id
+        elif base_node_id in {"atom_black_king_rank_zero", "atom_black_king_rank_seven"}:
+            parent = rank_edge_id
+        elif base_node_id in {"atom_black_king_file_zero", "atom_black_king_file_seven"}:
+            parent = file_edge_id
+        elif base_node_id.startswith("atom_rank_edge_"):
+            parent = rank_edge_opposition_id
+        elif base_node_id.startswith("atom_file_edge_"):
+            parent = file_edge_opposition_id
         else:
-            parent = MATE_IN_ONE_BASIN_ID
+            parent = basin_id
         _add_percept_atom(graph, atom, parent)
 
 
@@ -379,35 +430,36 @@ def _deliver_edge_mate_predicate(node: Node, env: dict[str, Any]) -> tuple[bool,
     return True, True
 
 
-def build_mate_in_one_skill_graph() -> Graph:
-    """Build recognizer POR actuator skill graph; no learned weights are used."""
+def _add_mate_in_one_skill_subgraph(graph: Graph, parent_id: str, *, prefix: str = "") -> None:
+    skill_id = _prefixed(prefix, MATE_IN_ONE_SKILL_ID)
+    recognizer_step_id = _prefixed(prefix, MATE_IN_ONE_RECOGNIZER_STEP_ID)
+    deliver_step_id = _prefixed(prefix, DELIVER_EDGE_MATE_SCRIPT_ID)
+    deliver_actuator_id = _prefixed(prefix, DELIVER_EDGE_MATE_ACTUATOR_ID)
 
-    graph = Graph()
-    graph.add_node(Node(MATE_IN_ONE_SKILL_ROOT_ID, NodeType.SCRIPT))
     graph.add_node(
         Node(
-            MATE_IN_ONE_SKILL_ID,
+            skill_id,
             NodeType.SCRIPT,
             meta={"role": "mate_in_1_skill"},
         )
     )
     graph.add_node(
         Node(
-            MATE_IN_ONE_RECOGNIZER_STEP_ID,
+            recognizer_step_id,
             NodeType.SCRIPT,
             meta={"role": "mate_in_1_basin_recognizer_step"},
         )
     )
-    _add_mate_in_one_basin_subgraph(graph, MATE_IN_ONE_RECOGNIZER_STEP_ID)
+    _add_mate_in_one_basin_subgraph(graph, recognizer_step_id, prefix=prefix)
     _add_quorum_script(
         graph,
-        DELIVER_EDGE_MATE_SCRIPT_ID,
+        deliver_step_id,
         role="deliver_edge_mate_step",
         policy="and",
     )
     graph.add_node(
         Node(
-            DELIVER_EDGE_MATE_ACTUATOR_ID,
+            deliver_actuator_id,
             NodeType.TERMINAL,
             predicate=_deliver_edge_mate_predicate,
             meta={
@@ -417,13 +469,231 @@ def build_mate_in_one_skill_graph() -> Graph:
             },
         )
     )
-    graph.add_hierarchy_pair(MATE_IN_ONE_SKILL_ROOT_ID, MATE_IN_ONE_SKILL_ID)
-    graph.add_hierarchy_pair(MATE_IN_ONE_SKILL_ID, MATE_IN_ONE_RECOGNIZER_STEP_ID)
-    graph.add_hierarchy_pair(MATE_IN_ONE_SKILL_ID, DELIVER_EDGE_MATE_SCRIPT_ID)
-    graph.add_hierarchy_pair(DELIVER_EDGE_MATE_SCRIPT_ID, DELIVER_EDGE_MATE_ACTUATOR_ID)
-    graph.add_sequence_pair(MATE_IN_ONE_RECOGNIZER_STEP_ID, DELIVER_EDGE_MATE_SCRIPT_ID)
+    graph.add_hierarchy_pair(parent_id, skill_id)
+    graph.add_hierarchy_pair(skill_id, recognizer_step_id)
+    graph.add_hierarchy_pair(skill_id, deliver_step_id)
+    graph.add_hierarchy_pair(deliver_step_id, deliver_actuator_id)
+    graph.add_sequence_pair(recognizer_step_id, deliver_step_id)
+
+
+def build_mate_in_one_skill_graph() -> Graph:
+    """Build recognizer POR actuator skill graph; no learned weights are used."""
+
+    graph = Graph()
+    graph.add_node(Node(MATE_IN_ONE_SKILL_ROOT_ID, NodeType.SCRIPT))
+    _add_mate_in_one_skill_subgraph(graph, MATE_IN_ONE_SKILL_ROOT_ID)
     graph.validate_formal_pairs()
     return graph
+
+
+def _virtual_frame(board: chess.Board) -> dict[str, Any]:
+    framed = board.copy(stack=False)
+    return {"board": framed, "features": extract_learner_features(framed)}
+
+
+def _after_move(board: chess.Board, move: chess.Move) -> chess.Board:
+    after = board.copy(stack=False)
+    after.push(move)
+    return after
+
+
+def _bind_first_move_predicate(move_uci: str) -> Callable[[Node, dict[str, Any]], tuple[bool, bool]]:
+    move = chess.Move.from_uci(move_uci)
+
+    def predicate(node: Node, env: dict[str, Any]) -> tuple[bool, bool]:
+        board = env["board"]
+        if move not in board.legal_moves:
+            node.meta["last_failure"] = "candidate_first_move_not_legal"
+            node.activation.value = 0.0
+            return True, False
+        node.meta["bound_move"] = move_uci
+        node.activation.value = 1.0
+        env.setdefault("mate_in_2_skill", {})["candidate_move"] = move_uci
+        return True, True
+
+    return predicate
+
+
+def _zero_reply_predicate(node: Node, env: dict[str, Any]) -> tuple[bool, bool]:
+    board = env["board"]
+    no_replies = board.legal_moves.count() == 0
+    in_check = board.is_check()
+    success = bool(no_replies and in_check)
+    node.meta["zero_reply_in_check"] = bool(in_check)
+    node.activation.value = 1.0 if success else 0.0
+    return True, success
+
+
+def _add_first_move_bind_subgraph(
+    graph: Graph,
+    parent_id: str,
+    *,
+    move: chess.Move,
+    prefix: str,
+) -> str:
+    bind_step_id = _prefixed(prefix, "bind_first_move_step")
+    bind_terminal_id = _prefixed(prefix, "bind_first_move")
+    graph.add_node(
+        Node(
+            bind_step_id,
+            NodeType.SCRIPT,
+            meta={"role": "mate_in_2_bind_first_move_step", "move": move.uci()},
+        )
+    )
+    graph.add_node(
+        Node(
+            bind_terminal_id,
+            NodeType.TERMINAL,
+            predicate=_bind_first_move_predicate(move.uci()),
+            meta={
+                "role": "actuator_terminal",
+                "actuator": "bind_candidate_first_move",
+                "move": move.uci(),
+            },
+        )
+    )
+    graph.add_hierarchy_pair(parent_id, bind_step_id)
+    graph.add_hierarchy_pair(bind_step_id, bind_terminal_id)
+    return bind_step_id
+
+
+def _add_reply_quantifier_subgraph(
+    graph: Graph,
+    parent_id: str,
+    *,
+    board: chess.Board,
+    prefix: str,
+    virtual_frames: dict[str, dict[str, Any]],
+) -> tuple[str, int]:
+    quantifier_id = _prefixed(prefix, REPLY_QUANTIFIER_ID)
+    replies = sorted(board.legal_moves, key=lambda item: item.uci())
+    _add_quorum_script(
+        graph,
+        quantifier_id,
+        role="mate_in_2_reply_quantifier",
+        policy="k_of_n",
+        k=max(1, len(replies)),
+    )
+    graph.nodes[quantifier_id].meta["reply_count"] = len(replies)
+    graph.add_hierarchy_pair(parent_id, quantifier_id)
+    virtual_frames[quantifier_id] = _virtual_frame(board)
+
+    if not replies:
+        terminal_id = _prefixed(prefix, "zero_reply_semantics")
+        graph.add_node(
+            Node(
+                terminal_id,
+                NodeType.TERMINAL,
+                predicate=_zero_reply_predicate,
+                meta={"role": "reply_quantifier_zero_reply_semantics"},
+            )
+        )
+        graph.add_hierarchy_pair(quantifier_id, terminal_id)
+        return quantifier_id, 1
+
+    frame_count = 1
+    for reply in replies:
+        reply_prefix = f"{prefix}reply_{_safe_move_id(reply)}__"
+        reply_child_id = _prefixed(reply_prefix, "reply_child")
+        reply_board = _after_move(board, reply)
+        graph.add_node(
+            Node(
+                reply_child_id,
+                NodeType.SCRIPT,
+                meta={"role": "mate_in_2_reply_child", "reply_move": reply.uci()},
+            )
+        )
+        graph.add_hierarchy_pair(quantifier_id, reply_child_id)
+        virtual_frames[reply_child_id] = _virtual_frame(reply_board)
+        frame_count += 1
+        _add_mate_in_one_skill_subgraph(graph, reply_child_id, prefix=reply_prefix)
+    return quantifier_id, frame_count
+
+
+def build_reply_quantifier_graph(board: chess.Board) -> tuple[Graph, dict[str, dict[str, Any]]]:
+    """Build a standalone reply quantifier for a black-to-move virtual board."""
+
+    graph = Graph()
+    virtual_frames: dict[str, dict[str, Any]] = {}
+    graph.add_node(Node(REPLY_QUANTIFIER_ROOT_ID, NodeType.SCRIPT))
+    _add_reply_quantifier_subgraph(
+        graph,
+        REPLY_QUANTIFIER_ROOT_ID,
+        board=board,
+        prefix="",
+        virtual_frames=virtual_frames,
+    )
+    graph.validate_formal_pairs()
+    return graph, virtual_frames
+
+
+def _add_mate_in_two_candidate_subgraph(
+    graph: Graph,
+    parent_id: str,
+    *,
+    board: chess.Board,
+    move: chess.Move,
+    virtual_frames: dict[str, dict[str, Any]],
+) -> int:
+    candidate_prefix = f"candidate_{_safe_move_id(move)}__"
+    candidate_id = _prefixed(candidate_prefix, "mate_in_2_candidate")
+    after_first = _after_move(board, move)
+    graph.add_node(
+        Node(
+            candidate_id,
+            NodeType.SCRIPT,
+            meta={"role": "mate_in_2_candidate", "first_move": move.uci()},
+        )
+    )
+    graph.add_hierarchy_pair(parent_id, candidate_id)
+    bind_step_id = _add_first_move_bind_subgraph(
+        graph,
+        candidate_id,
+        move=move,
+        prefix=candidate_prefix,
+    )
+    quantifier_id, frame_count = _add_reply_quantifier_subgraph(
+        graph,
+        candidate_id,
+        board=after_first,
+        prefix=candidate_prefix,
+        virtual_frames=virtual_frames,
+    )
+    graph.add_sequence_pair(bind_step_id, quantifier_id)
+    return frame_count
+
+
+def build_mate_in_two_skill_graph(
+    board: chess.Board,
+) -> tuple[Graph, dict[str, dict[str, Any]], dict[str, int]]:
+    """Build exact mate-in-2 skill graph over all legal first moves."""
+
+    graph = Graph()
+    virtual_frames: dict[str, dict[str, Any]] = {}
+    graph.add_node(Node(MATE_IN_TWO_SKILL_ROOT_ID, NodeType.SCRIPT))
+    _add_quorum_script(
+        graph,
+        MATE_IN_TWO_SKILL_ID,
+        role="mate_in_2_skill",
+        policy="k_of_n",
+        k=1,
+    )
+    graph.add_hierarchy_pair(MATE_IN_TWO_SKILL_ROOT_ID, MATE_IN_TWO_SKILL_ID)
+
+    candidate_count = 0
+    frame_count = 0
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        candidate_count += 1
+        frame_count += _add_mate_in_two_candidate_subgraph(
+            graph,
+            MATE_IN_TWO_SKILL_ID,
+            board=board,
+            move=move,
+            virtual_frames=virtual_frames,
+        )
+
+    graph.validate_formal_pairs()
+    return graph, virtual_frames, {"candidate_count": candidate_count, "virtual_frame_count": frame_count}
 
 
 def run_mate_in_one_basin_recognizer(
@@ -510,6 +780,94 @@ def run_mate_in_one_skill(
         "bound_move": actuator_node.meta.get("bound_move"),
         "ticks": engine.tick,
         "features": features,
+        "script_states": script_states,
+        "trace": trace,
+    }
+
+
+def run_reply_quantifier(
+    board: chess.Board,
+    *,
+    max_ticks: int = 96,
+    record_trace: bool = True,
+) -> dict[str, Any]:
+    """Execute the reply quantifier on a black-to-move virtual board."""
+
+    graph, virtual_frames = build_reply_quantifier_graph(board)
+    env = {
+        "board": board,
+        "features": extract_learner_features(board),
+        "virtual_frames": virtual_frames,
+    }
+    engine = FormalReConEngine(graph, record_trace=record_trace)
+    engine.request(REPLY_QUANTIFIER_ROOT_ID)
+    trace = engine.run(
+        max_ticks=max_ticks,
+        env=env,
+        until=lambda _engine: graph.nodes[REPLY_QUANTIFIER_ROOT_ID].state
+        in (NodeState.CONFIRMED, NodeState.FAILED),
+    )
+    return {
+        "confirmed": graph.nodes[REPLY_QUANTIFIER_ID].state == NodeState.CONFIRMED,
+        "root_state": graph.nodes[REPLY_QUANTIFIER_ROOT_ID].state.name,
+        "quantifier_state": graph.nodes[REPLY_QUANTIFIER_ID].state.name,
+        "reply_count": graph.nodes[REPLY_QUANTIFIER_ID].meta.get("reply_count"),
+        "virtual_frame_count": len(virtual_frames),
+        "trace": trace,
+    }
+
+
+def run_mate_in_two_skill(
+    board: chess.Board,
+    *,
+    max_ticks: int = 192,
+    record_trace: bool = True,
+) -> dict[str, Any]:
+    """Execute the exact mate-in-2 skill with universal reply confirmation."""
+
+    graph, virtual_frames, counts = build_mate_in_two_skill_graph(board)
+    env = {
+        "board": board,
+        "features": extract_learner_features(board),
+        "virtual_frames": virtual_frames,
+    }
+    engine = FormalReConEngine(graph, record_trace=record_trace)
+    engine.request(MATE_IN_TWO_SKILL_ROOT_ID)
+    trace = engine.run(
+        max_ticks=max_ticks,
+        env=env,
+        until=lambda _engine: graph.nodes[MATE_IN_TWO_SKILL_ROOT_ID].state
+        in (NodeState.CONFIRMED, NodeState.FAILED),
+    )
+
+    confirmed_candidates = sorted(
+        (
+            node.meta["first_move"],
+            node_id,
+        )
+        for node_id, node in graph.nodes.items()
+        if node.meta.get("role") == "mate_in_2_candidate"
+        and node.state == NodeState.CONFIRMED
+    )
+    bound_move = confirmed_candidates[0][0] if confirmed_candidates else None
+    if bound_move is not None:
+        graph.nodes[MATE_IN_TWO_SKILL_ID].meta["bound_move"] = bound_move
+
+    script_states = {
+        node_id: node.state.name
+        for node_id, node in sorted(graph.nodes.items())
+        if node.ntype == NodeType.SCRIPT
+    }
+    return {
+        "confirmed": graph.nodes[MATE_IN_TWO_SKILL_ID].state == NodeState.CONFIRMED,
+        "root_state": graph.nodes[MATE_IN_TWO_SKILL_ROOT_ID].state.name,
+        "skill_state": graph.nodes[MATE_IN_TWO_SKILL_ID].state.name,
+        "bound_move": bound_move,
+        "confirmed_candidate_count": len(confirmed_candidates),
+        "candidate_count": counts["candidate_count"],
+        "virtual_frame_count": len(virtual_frames),
+        "expanded_virtual_frame_count": counts["virtual_frame_count"],
+        "ticks": engine.tick,
         "script_states": script_states,
         "trace": trace,
     }

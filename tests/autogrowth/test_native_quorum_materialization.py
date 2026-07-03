@@ -1,3 +1,5 @@
+import random
+
 import chess
 
 from recon_lite import FormalReConEngine, Graph, Node, NodeState, NodeType
@@ -7,11 +9,17 @@ from recon_lite_chess.autogrowth import (
     generate_position_sets,
     run_mate_in_one_basin_recognizer,
     run_mate_in_one_skill,
+    run_mate_in_two_skill,
     run_native_quorum_materialization,
+    run_reply_quantifier,
 )
 from recon_lite_chess.autogrowth.foundation_curriculum import (
+    _forced_mate_in_two_first_moves,
     _generate_mate_in_one_positions,
+    _generate_forced_mate_in_two_positions,
     _mate_moves,
+    _random_krk_board,
+    _valid_foundation_board,
 )
 
 
@@ -174,6 +182,68 @@ def _skill_eval_rows(positive_fens: list[str], negative_fens: list[str]) -> list
     return rows
 
 
+def _has_stalemate_trap(board: chess.Board) -> list[str]:
+    traps = []
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        after = board.copy(stack=False)
+        after.push(move)
+        if after.legal_moves.count() == 0 and not after.is_check():
+            traps.append(move.uci())
+    return traps
+
+
+def _generate_non_mate_in_two_positions(*, count: int, seed: int) -> tuple[list[str], list[dict]]:
+    rng = random.Random(seed)
+    positions: list[str] = []
+    used: set[str] = set()
+    trap_rows: list[dict] = []
+    for _ in range(800_000):
+        if len(positions) >= count and trap_rows:
+            break
+        board = _random_krk_board(rng)
+        if not _valid_foundation_board(board):
+            continue
+        fen = board.fen()
+        if fen in used:
+            continue
+        if _mate_moves(board) or _forced_mate_in_two_first_moves(board):
+            continue
+        traps = _has_stalemate_trap(board)
+        if traps:
+            trap_rows.append({"fen": fen, "trap_moves": traps})
+            if len(positions) < count:
+                positions.insert(0, fen)
+                used.add(fen)
+        elif len(positions) < count:
+            positions.append(fen)
+            used.add(fen)
+    if len(positions) < count:
+        raise RuntimeError(f"generated {len(positions)} non-mate-in-2 positions, needed {count}")
+    return positions[:count], trap_rows
+
+
+def _validates_mate_in_two_delivery(board: chess.Board, move_uci: str | None) -> bool:
+    if move_uci is None:
+        return False
+    move = chess.Move.from_uci(move_uci)
+    if move not in board.legal_moves:
+        return False
+    after_first = board.copy(stack=False)
+    after_first.push(move)
+    replies = list(after_first.legal_moves)
+    if not replies:
+        return after_first.is_check()
+    for reply in replies:
+        post_reply = after_first.copy(stack=False)
+        post_reply.push(reply)
+        audit = run_mate_in_one_skill(post_reply, record_trace=False)
+        if not audit["confirmed"] or audit["bound_move"] is None:
+            return False
+        if chess.Move.from_uci(audit["bound_move"]) not in _mate_moves(post_reply):
+            return False
+    return True
+
+
 def test_phase2_mate_in_one_basin_quorum_generalizes_on_generated_heldout() -> None:
     known_false_positive_fens = {
         "2K5/8/k7/8/8/8/8/4R3 w - - 0 1",
@@ -327,6 +397,115 @@ def test_phase2_mate_in_one_skill_binds_basin_to_edge_mate_actuator() -> None:
     assert ("deliver_edge_mate_step", "deliver_edge_mate", "SUB", "request") in traced
     assert ("deliver_edge_mate", "deliver_edge_mate_step", "SUR", "confirm") in traced
     assert ("deliver_edge_mate_step", "mate_in_1_skill", "SUR", "confirm") in traced
+
+
+def test_phase2_reply_quantifier_zero_reply_semantics() -> None:
+    mate_board = chess.Board("7k/5K2/7R/8/8/8/8/8 b - - 1 1")
+    stalemate_board = chess.Board("k7/1R6/2K5/8/8/8/8/8 b - - 0 1")
+
+    assert mate_board.legal_moves.count() == 0
+    assert mate_board.is_check()
+    mate_audit = run_reply_quantifier(mate_board, record_trace=True)
+    assert mate_audit["confirmed"]
+    assert mate_audit["reply_count"] == 0
+
+    assert stalemate_board.legal_moves.count() == 0
+    assert not stalemate_board.is_check()
+    stalemate_audit = run_reply_quantifier(stalemate_board, record_trace=True)
+    assert not stalemate_audit["confirmed"]
+    assert stalemate_audit["root_state"] == "FAILED"
+    assert (
+        "zero_reply_semantics",
+        "mate_in_2_reply_quantifier",
+        "SUR",
+        "fail",
+    ) in _trace_messages(stalemate_audit["trace"])
+
+
+def test_phase2_mate_in_two_skill_trace_reaches_reply_mate_in_one() -> None:
+    fen = "5k2/7K/8/8/4R3/8/8/8 w - - 0 1"
+    board = chess.Board(fen)
+    forced_moves = _forced_mate_in_two_first_moves(board)
+    assert [move.uci() for move in forced_moves] == ["h7g6"]
+
+    audit = run_mate_in_two_skill(board, record_trace=True)
+    traced = _trace_messages(audit["trace"])
+    after_first = board.copy(stack=False)
+    after_first.push(forced_moves[0])
+    reply = sorted(after_first.legal_moves, key=lambda item: item.uci())[0]
+    reply_child = f"candidate_h7g6__reply_{reply.uci()}__reply_child"
+    reply_skill = f"candidate_h7g6__reply_{reply.uci()}__mate_in_1_skill"
+
+    assert audit["confirmed"]
+    assert audit["bound_move"] == "h7g6"
+    assert ("phase2_mate_in_2_skill_root", "mate_in_2_skill", "SUB", "request") in traced
+    assert ("mate_in_2_skill", "candidate_h7g6__mate_in_2_candidate", "SUB", "request") in traced
+    assert (
+        "candidate_h7g6__mate_in_2_candidate",
+        "candidate_h7g6__mate_in_2_reply_quantifier",
+        "SUB",
+        "request",
+    ) in traced
+    assert (
+        "candidate_h7g6__mate_in_2_reply_quantifier",
+        reply_child,
+        "SUB",
+        "request",
+    ) in traced
+    assert (reply_child, reply_skill, "SUB", "request") in traced
+    assert (reply_skill, reply_child, "SUR", "confirm") in traced
+
+
+def test_phase2_mate_in_two_skill_exact_quantifier_generalizes_on_generated_heldout() -> None:
+    positive_fens = _generate_forced_mate_in_two_positions(
+        count=64,
+        seed=20261021,
+        max_attempts=400_000,
+    )
+    negative_fens, trap_rows = _generate_non_mate_in_two_positions(
+        count=64,
+        seed=20261022,
+    )
+
+    failures = []
+    false_emissions = []
+    frame_counts = []
+    for fen in positive_fens:
+        board = chess.Board(fen)
+        audit = run_mate_in_two_skill(board, record_trace=False)
+        if not audit["confirmed"] or not _validates_mate_in_two_delivery(
+            board,
+            audit["bound_move"],
+        ):
+            failures.append(
+                {
+                    "fen": fen,
+                    "bound_move": audit["bound_move"],
+                    "forced_moves": [
+                        move.uci() for move in _forced_mate_in_two_first_moves(board)
+                    ],
+                }
+            )
+        frame_counts.append(audit["virtual_frame_count"])
+
+    for fen in negative_fens:
+        board = chess.Board(fen)
+        audit = run_mate_in_two_skill(board, record_trace=False)
+        if audit["confirmed"] or audit["bound_move"] is not None:
+            false_emissions.append(
+                {
+                    "fen": fen,
+                    "bound_move": audit["bound_move"],
+                    "stalemate_traps": _has_stalemate_trap(board),
+                }
+            )
+        frame_counts.append(audit["virtual_frame_count"])
+
+    assert failures == []
+    assert false_emissions == []
+    assert trap_rows
+    assert round(sum(frame_counts) / len(frame_counts), 6) == 96.804688
+    assert max(frame_counts) == 182
 
 
 def test_tg26u_smoke_materializes_native_quorum_and_reports_ablations() -> None:
