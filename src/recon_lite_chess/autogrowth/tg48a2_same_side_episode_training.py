@@ -35,7 +35,7 @@ from .edge_killbox_curriculum import (
     _rate,
     _rook_capturable_by_reply,
 )
-from .features import extract_learner_features, validate_learner_record
+from .features import extract_diagnostic_features, validate_learner_record
 from .handoff_reachability_audit import (
     _foundation_artifact_sanity,
     _reconstruct_parent_foundation_from_m4_audit,
@@ -904,7 +904,7 @@ def _endpoint_board_diagnostics(
     eval_config = EdgeKillboxCurriculumConfig(max_horizon_plies=config.max_total_plies)
     metrics = _move_metrics(_null_white_board(board), None, parent=parent, config=eval_config)
     # `_move_metrics` is move-based; direct endpoint fields below are authoritative.
-    f = extract_learner_features(_white_turn_copy(board))
+    f = extract_diagnostic_features(_white_turn_copy(board))
     axis = _axis_pattern(f)
     response = _foundation_response_for_board(board, parent=parent, config=config)
     diag = {

@@ -16,19 +16,19 @@ from recon_lite_chess.autogrowth.foundation_curriculum import (
 )
 
 
-def test_tg26h_terminal_feature_vector_bridges_feature_hub_and_firewall() -> None:
+def test_tg26h_terminal_feature_vector_uses_dieted_firewall() -> None:
     fen = _generate_mate_in_one_positions(count=1, seed=2601, max_attempts=30_000)[0]
     board = chess.Board(fen)
     features = extract_terminal_feature_vector(board)
     move = _mate_moves(board)[0]
     action_keys = [key for key, _scale in terminal_action_feature_keys(board, move)]
 
-    assert "feature_hub_opposition_status" in features
+    assert not any(key.startswith("feature_hub_") for key in features)
     assert "king_file_delta" in features
     assert "direct_file_opposition" in features
     assert "confinement_area" in features
     assert any(key.startswith("action_pattern:") for key in action_keys)
-    assert any(key.startswith("before_terminal:feature_hub_opposition_status") for key in action_keys)
+    assert not any(key.startswith("before_terminal:feature_hub_") for key in action_keys)
     assert any(key.startswith("delta_terminal:black_king_nearest_edge_distance") for key in action_keys)
     assert not any("is_checkmate_after" in key for key in action_keys)
     validate_learner_record(features)

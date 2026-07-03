@@ -41,7 +41,7 @@ from .edge_killbox_curriculum import (
     _sign,
     classify_edge_killbox_family,
 )
-from .features import extract_learner_features, validate_learner_record
+from .features import extract_diagnostic_features, validate_learner_record
 from .handoff_reachability_audit import (
     _foundation_artifact_sanity,
     _reconstruct_parent_foundation_from_m4_audit,
@@ -599,8 +599,8 @@ def _weight_for_move(learner: TerminalAffordanceLearner, board: chess.Board, mov
 def _micro_terminal_keys(board: chess.Board, move: chess.Move) -> tuple[tuple[str, float], ...]:
     after = board.copy(stack=False)
     after.push(move)
-    before = extract_learner_features(board)
-    after_f = extract_learner_features(after)
+    before = extract_diagnostic_features(board)
+    after_f = extract_diagnostic_features(after)
     piece = board.piece_at(move.from_square)
     file_delta = chess.square_file(move.to_square) - chess.square_file(move.from_square)
     rank_delta = chess.square_rank(move.to_square) - chess.square_rank(move.from_square)
@@ -662,8 +662,8 @@ def _move_diagnostics(
         return _diagnostics_for_invalid(metrics)
     after = board.copy(stack=False)
     after.push(move)
-    before_f = extract_learner_features(board)
-    after_f = extract_learner_features(after)
+    before_f = extract_diagnostic_features(board)
+    after_f = extract_diagnostic_features(after)
     before_axis = _axis_pattern(before_f)
     after_axis = _axis_pattern(after_f)
     is_lateral = _is_lateral_rook_move(board, move)

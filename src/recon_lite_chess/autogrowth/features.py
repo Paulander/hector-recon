@@ -168,10 +168,8 @@ def _edge_geometry_features(
             "rook_black_king_opposite_sides_of_white_king_on_primary_axis": 0.0,
             "rook_distance_to_black_king_edge_line": 8.0,
             "rook_fence_depth_relative_to_black_king_edge": 8.0,
-            "rook_lateral_escape_available": 0.0,
             "black_king_on_edge": 0.0,
             "black_king_corner_distance": 8.0,
-            "white_king_controls_escape_band": 0.0,
         }
     wk_file, wk_rank = chess.square_file(white_king), chess.square_rank(white_king)
     bk_file, bk_rank = chess.square_file(black_king), chess.square_rank(black_king)
@@ -213,10 +211,8 @@ def _edge_geometry_features(
         else 0.0,
         "rook_distance_to_black_king_edge_line": float(edge_line_distance),
         "rook_fence_depth_relative_to_black_king_edge": float(fence_depth),
-        "rook_lateral_escape_available": 1.0 if _rook_lateral_escape_available(board) else 0.0,
         "black_king_on_edge": 1.0 if _edge_distance(black_king) == 0 else 0.0,
         "black_king_corner_distance": float(_corner_distance(black_king)),
-        "white_king_controls_escape_band": 1.0 if _white_king_controls_escape_band(board) else 0.0,
     }
 
 
@@ -243,13 +239,9 @@ def extract_learner_features(board: chess.Board) -> dict[str, float]:
         "white_rook_to_black_king_distance": float(_chebyshev(rook, black_king)),
         "white_king_to_rook_distance": float(_chebyshev(white_king, rook)),
         "black_king_nearest_edge_distance": float(_edge_distance(black_king)),
-        "legal_move_count": float(board.legal_moves.count()),
-        "black_reply_mobility": float(_black_mobility(board)),
         "rook_present": 1.0 if rook is not None else 0.0,
         "rook_attacked_by_black": 1.0 if _rook_attacked_by_black(board) else 0.0,
         "is_check": 1.0 if board.is_check() else 0.0,
-        "is_checkmate": 1.0 if board.is_checkmate() else 0.0,
-        "is_stalemate": 1.0 if board.is_stalemate() else 0.0,
     }
     features.update(_edge_geometry_features(
         white_king=white_king,
@@ -257,6 +249,22 @@ def extract_learner_features(board: chess.Board) -> dict[str, float]:
         rook=rook,
         board=board,
     ))
+    validate_learner_record(features)
+    return features
+
+
+def extract_diagnostic_features(board: chess.Board) -> dict[str, float]:
+    """Return the full trainer-side feature record, including diagnostics."""
+
+    features = extract_learner_features(board)
+    features.update({
+        "legal_move_count": float(board.legal_moves.count()),
+        "black_reply_mobility": float(_black_mobility(board)),
+        "is_checkmate": 1.0 if board.is_checkmate() else 0.0,
+        "is_stalemate": 1.0 if board.is_stalemate() else 0.0,
+        "rook_lateral_escape_available": 1.0 if _rook_lateral_escape_available(board) else 0.0,
+        "white_king_controls_escape_band": 1.0 if _white_king_controls_escape_band(board) else 0.0,
+    })
     validate_learner_record(features)
     return features
 

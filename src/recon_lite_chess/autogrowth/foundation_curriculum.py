@@ -12,7 +12,7 @@ import chess
 
 from recon_lite_hector.nodes.stem_cell import StemCellState, StemCellTerminal
 
-from .features import extract_learner_features, validate_learner_record
+from .features import extract_diagnostic_features, extract_learner_features, validate_learner_record
 
 
 @dataclass(frozen=True)
@@ -503,6 +503,7 @@ def _action_features(board: chess.Board, move: chess.Move) -> dict[str, int]:
     after = board.copy(stack=False)
     after.push(move)
     features = extract_learner_features(after)
+    features.update(extract_diagnostic_features(after))
     file_delta = chess.square_file(move.to_square) - chess.square_file(move.from_square)
     rank_delta = chess.square_rank(move.to_square) - chess.square_rank(move.from_square)
     payload = {

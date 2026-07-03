@@ -25,7 +25,7 @@ from .clean_edge_fence_stage import (
     _write_json,
     _write_jsonl_gzip,
 )
-from .features import extract_learner_features, validate_learner_record
+from .features import extract_diagnostic_features, validate_learner_record
 from .foundation_curriculum import _mate_moves, _random_krk_board, _valid_foundation_board
 from .handoff_reachability_audit import (
     _foundation_artifact_sanity,
@@ -730,7 +730,7 @@ def _inside(file_idx: int, rank_idx: int) -> bool:
 def classify_edge_killbox_family(board: chess.Board) -> str | None:
     if not edge_killbox_invariants(board, allow_rook_risk=True)["legal_krk"]:
         return None
-    f = extract_learner_features(board)
+    f = extract_diagnostic_features(board)
     if int(f["black_king_on_edge"]) != 1:
         return None
     support = _support_band(f)
@@ -762,7 +762,7 @@ def edge_killbox_invariants(board: chess.Board, *, allow_rook_risk: bool = False
         and not board.is_checkmate()
         and not board.is_stalemate()
     )
-    f = extract_learner_features(board) if legal_krk else {}
+    f = extract_diagnostic_features(board) if legal_krk else {}
     return {
         "legal_krk": legal_krk,
         "white_to_move": board.turn == chess.WHITE,
@@ -777,7 +777,7 @@ def edge_killbox_invariants(board: chess.Board, *, allow_rook_risk: bool = False
 
 
 def geometry_summary(board: chess.Board) -> dict[str, Any]:
-    f = extract_learner_features(board)
+    f = extract_diagnostic_features(board)
     summary = {
         "black_king_on_edge": int(f["black_king_on_edge"]),
         "black_king_corner_distance": int(f["black_king_corner_distance"]),
@@ -931,8 +931,8 @@ def _reward(
         return -8.0
     if after.is_stalemate() or not bool(after.pieces(chess.ROOK, chess.WHITE)) or _rook_capturable_by_reply(after):
         return -8.0
-    before_f = extract_learner_features(board)
-    after_f = extract_learner_features(after)
+    before_f = extract_diagnostic_features(board)
+    after_f = extract_diagnostic_features(after)
     response = _foundation_response(after, parent)
     if response["graph_positive_false_basin"]:
         return -4.0
@@ -958,8 +958,8 @@ def _reward(
 
 
 def _graded_positive_progress(before_board: chess.Board, after_board: chess.Board) -> bool:
-    before_f = extract_learner_features(before_board)
-    after_f = extract_learner_features(after_board)
+    before_f = extract_diagnostic_features(before_board)
+    after_f = extract_diagnostic_features(after_board)
     confinement_delta = _confinement_area(before_board) - _confinement_area(after_board)
     return bool(
         _preserves_or_establishes_killbox(after_f)
@@ -1066,8 +1066,8 @@ def _weight_for_move(learner: TerminalAffordanceLearner, board: chess.Board, mov
 def _terminal_keys(board: chess.Board, move: chess.Move) -> tuple[tuple[str, float], ...]:
     after = board.copy(stack=False)
     after.push(move)
-    before = extract_learner_features(board)
-    after_f = extract_learner_features(after)
+    before = extract_diagnostic_features(board)
+    after_f = extract_diagnostic_features(after)
     piece = board.piece_at(move.from_square)
     file_delta = chess.square_file(move.to_square) - chess.square_file(move.from_square)
     rank_delta = chess.square_rank(move.to_square) - chess.square_rank(move.from_square)
@@ -1160,8 +1160,8 @@ def _move_metrics(
         }
     after = board.copy(stack=False)
     after.push(move)
-    before_f = extract_learner_features(board)
-    after_f = extract_learner_features(after)
+    before_f = extract_diagnostic_features(board)
+    after_f = extract_diagnostic_features(after)
     response = _foundation_response(after, parent)
     confinement_delta = _confinement_area(board) - _confinement_area(after)
     return {

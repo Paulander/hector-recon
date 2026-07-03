@@ -27,7 +27,7 @@ from .curriculum_reward_recovery import (
     _summarize_rollouts,
     score_non_terminal_progress,
 )
-from .features import extract_learner_features, validate_learner_record
+from .features import extract_diagnostic_features, validate_learner_record
 from .positions import KRKPositionSet, generate_position_sets
 
 
@@ -64,11 +64,11 @@ class LocalPrecisionGate:
     def evaluate(self, board: chess.Board, move: chess.Move | None, node: dict[str, Any] | None) -> dict[str, Any]:
         if move is None or move not in board.legal_moves:
             return {"suppress": False, "reason": "no_candidate_move"}
-        before_features = extract_learner_features(board)
+        before_features = extract_diagnostic_features(board)
         before_box = box_min_side(board)
         after = board.copy(stack=False)
         after.push(move)
-        after_features = extract_learner_features(after)
+        after_features = extract_diagnostic_features(after)
         after_box = box_min_side(after)
         confinement_would_worsen = did_box_grow(board, after)
         rook_safety_regression = (

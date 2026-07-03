@@ -12,7 +12,7 @@ from typing import Any, Iterable
 import chess
 
 from .arbitration import LocalArbitrationConfig, LocalArbitrationResult, run_local_arbitration_experiment
-from .features import extract_learner_features, validate_learner_record
+from .features import extract_diagnostic_features, extract_learner_features, validate_learner_record
 from .mining import _magnitude_bucket, _signed_bucket
 from .positions import KRKPositionSet, generate_position_sets
 from .suppressor import _projected_negative_reason
@@ -29,13 +29,11 @@ RISK_BEFORE_FEATURES = (
 
 RISK_DELTA_FEATURES = (
     "black_king_nearest_edge_distance",
-    "black_reply_mobility",
     "white_king_to_black_king_distance",
     "white_rook_to_black_king_distance",
     "white_king_to_rook_distance",
     "rook_attacked_by_black",
     "is_check",
-    "is_stalemate",
 )
 
 CONTEXT_SPECIALIZED_FEATURES = (
@@ -50,13 +48,9 @@ CONTEXT_SPECIALIZED_FEATURES = (
     "white_rook_to_black_king_distance",
     "white_king_to_rook_distance",
     "black_king_nearest_edge_distance",
-    "legal_move_count",
-    "black_reply_mobility",
     "rook_present",
     "rook_attacked_by_black",
     "is_check",
-    "is_checkmate",
-    "is_stalemate",
 )
 
 
@@ -528,8 +522,8 @@ def _candidate_from_context_bucket(*, bucket_key: str, rows: list[dict[str, Any]
 
 
 def _risk_aware_credit(before: chess.Board, after: chess.Board) -> float:
-    before_features = extract_learner_features(before)
-    after_features = extract_learner_features(after)
+    before_features = extract_diagnostic_features(before)
+    after_features = extract_diagnostic_features(after)
     if after.is_checkmate():
         return 2.0
     score = 0.0

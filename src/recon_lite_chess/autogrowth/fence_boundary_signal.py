@@ -17,7 +17,7 @@ from .edge_fence_curriculum import (
     _evaluate_foundation_regression,
     _train_chunk,
 )
-from .features import extract_learner_features, validate_learner_record
+from .features import extract_diagnostic_features, validate_learner_record
 from .foundation_curriculum import (
     ActionRanker,
     FoundationCurriculumConfig,
@@ -396,11 +396,11 @@ def _delta_action_feature_keys(board: chess.Board, move: chess.Move) -> tuple[st
     if move not in board.legal_moves:
         validate_learner_record(keys)
         return tuple(keys)
-    before = extract_learner_features(board)
+    before = extract_diagnostic_features(board)
     before_confinement = box_min_side(board)
     after = board.copy(stack=False)
     after.push(move)
-    after_features = extract_learner_features(after)
+    after_features = extract_diagnostic_features(after)
     confinement_delta = _sign(box_min_side(after) - before_confinement)
     edge_delta = _sign(
         after_features["black_king_nearest_edge_distance"]

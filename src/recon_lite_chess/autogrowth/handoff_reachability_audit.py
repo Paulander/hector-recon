@@ -28,7 +28,7 @@ from .clean_edge_fence_stage import (
     _write_json,
     _write_jsonl_gzip,
 )
-from .features import extract_learner_features
+from .features import extract_diagnostic_features
 from .real_clean_slate_foundation import _git_head
 from .terminal_substrate import TerminalAffordanceLearner
 
@@ -572,8 +572,8 @@ def _ranked_legal_moves(board: chess.Board, *, cap: int) -> list[chess.Move]:
 def _cheap_progress_tuple(board: chess.Board, move: chess.Move) -> tuple[int, float, int, int, int]:
     after = board.copy(stack=False)
     after.push(move)
-    before_f = extract_learner_features(board)
-    after_f = extract_learner_features(after)
+    before_f = extract_diagnostic_features(board)
+    after_f = extract_diagnostic_features(after)
     before_area = _confinement_area(board)
     after_area = _confinement_area(after)
     rook_risk = _rook_capturable_by_reply(after)
@@ -642,8 +642,8 @@ def _graph_basin_move_metrics(
         }
     after = board.copy(stack=False)
     after.push(move)
-    before_f = extract_learner_features(board)
-    after_f = extract_learner_features(after)
+    before_f = extract_diagnostic_features(board)
+    after_f = extract_diagnostic_features(after)
     before_area = _confinement_area(board)
     after_area = _confinement_area(after)
     responses = _cached_foundation_response_details(after, parent, response_cache=response_cache)

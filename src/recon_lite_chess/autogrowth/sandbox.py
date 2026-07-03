@@ -18,7 +18,7 @@ from .evaluate import (
     evaluate_arm,
     _position_repetition_key,
 )
-from .features import extract_learner_features, validate_learner_record
+from .features import extract_diagnostic_features, validate_learner_record
 from .positions import KRKPositionSet, generate_position_sets
 
 
@@ -472,7 +472,7 @@ def _before_condition_matches(
     candidate: dict[str, Any],
     activation_max_distance: float,
 ) -> bool:
-    features = extract_learner_features(board)
+    features = extract_diagnostic_features(board)
     prototype = candidate["before_cluster"]["prototype"]
     names = candidate["before_cluster"]["feature_names"]
     distance = _normalized_distance(features, prototype, names)
@@ -500,8 +500,8 @@ def _after_condition_matches(
     after_board: chess.Board,
     candidate: dict[str, Any],
 ) -> bool:
-    before = extract_learner_features(before_board)
-    after = extract_learner_features(after_board)
+    before = extract_diagnostic_features(before_board)
+    after = extract_diagnostic_features(after_board)
     deltas = {key: after[key] - before[key] for key in after.keys()}
     prototype = candidate["after_delta_cluster"]["prototype"]
     names = candidate["after_delta_cluster"]["feature_names"]

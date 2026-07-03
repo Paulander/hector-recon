@@ -34,7 +34,7 @@ from .evaluate import (
     classify_terminal_outcome,
     _position_repetition_key,
 )
-from .features import extract_learner_features, validate_learner_record
+from .features import extract_diagnostic_features, validate_learner_record
 from .fragment_chain_curriculum import (
     FragmentChainCurriculumConfig,
     _chain_adjacency,
@@ -337,7 +337,7 @@ def _generate_yoked_random_candidates(
         first_moves = [move for move in first_moves if board.piece_at(move.from_square).color == chess.WHITE]
         if not first_moves:
             continue
-        before_features = extract_learner_features(board)
+        before_features = extract_diagnostic_features(board)
         first_move = rng.choice(first_moves)
         after_first = board.copy(stack=False)
         after_first.push(first_move)
@@ -359,7 +359,7 @@ def _generate_yoked_random_candidates(
         second_move = rng.choice(second_moves)
         after_second = before_second.copy(stack=False)
         after_second.push(second_move)
-        after_features = extract_learner_features(after_second)
+        after_features = extract_diagnostic_features(after_second)
         deltas = {key: after_features[key] - before_features[key] for key in before_features}
         first_schema = _action_schema(board, first_move)
         second_schema = _action_schema(before_second, second_move)
@@ -475,7 +475,7 @@ def _graded_playout(
 ) -> dict[str, Any]:
     board = chess.Board(fen)
     initial_board = board.copy(stack=False)
-    initial_features = extract_learner_features(initial_board)
+    initial_features = extract_diagnostic_features(initial_board)
     initial_box = box_min_side(initial_board)
     stage_info = _match_curriculum_stage(initial_board)
     active_script: dict[str, Any] | None = None
@@ -606,7 +606,7 @@ def _graded_playout(
             white_action_counts[action_key] = white_action_counts.get(action_key, 0) + 1
 
         board.push(move)
-        after_features = extract_learner_features(board)
+        after_features = extract_diagnostic_features(board)
         if after_features["rook_attacked_by_black"] > 0.0:
             rook_attacked_count += 1
         if after_features["rook_present"] <= 0.0:
@@ -654,7 +654,7 @@ def _graded_playout(
     else:
         final_outcome = "mate" if board.is_checkmate() else "horizon_no_mate"
 
-    final_features = extract_learner_features(board)
+    final_features = extract_diagnostic_features(board)
     non_terminal_progress = score_non_terminal_progress(
         initial_features=initial_features,
         final_features=final_features,
@@ -746,7 +746,10 @@ def score_non_terminal_progress(
     """Generic non-terminal progress score for diagnostics/credit instrumentation."""
 
     edge_progress = initial_features["black_king_nearest_edge_distance"] - final_features["black_king_nearest_edge_distance"]
-    mobility_progress = initial_features["black_reply_mobility"] - final_features["black_reply_mobility"]
+    mobility_progress = (
+        initial_features.get("black_reply_mobility", 0.0)
+        - final_features.get("black_reply_mobility", 0.0)
+    )
     king_coordination = initial_features["white_king_to_black_king_distance"] - final_features["white_king_to_black_king_distance"]
     rook_coordination = initial_features["white_rook_to_black_king_distance"] - final_features["white_rook_to_black_king_distance"]
     confinement_progress = float(initial_box - final_box)

@@ -11,6 +11,16 @@ from recon_lite_chess.autogrowth import (
 )
 
 
+REMOVE_MARKED_FEATURES = {
+    "legal_move_count",
+    "black_reply_mobility",
+    "is_checkmate",
+    "is_stalemate",
+    "rook_lateral_escape_available",
+    "white_king_controls_escape_band",
+}
+
+
 def test_learner_features_exclude_forbidden_terms() -> None:
     board = chess.Board("8/8/8/4k3/8/8/8/R3K3 w - - 0 1")
 
@@ -21,6 +31,12 @@ def test_learner_features_exclude_forbidden_terms() -> None:
     assert features["rook_present"] == 1.0
     for term in FORBIDDEN_LEARNER_TERMS:
         assert term not in serialized
+
+
+def test_learner_features_are_dieted_to_percepts() -> None:
+    features = extract_learner_features(chess.Board("8/8/8/4k3/8/8/8/R3K3 w - - 0 1"))
+
+    assert not (REMOVE_MARKED_FEATURES & features.keys()) and not any(key.startswith("feature_hub_") for key in features)
 
 
 def test_trace_record_excludes_forbidden_terms() -> None:

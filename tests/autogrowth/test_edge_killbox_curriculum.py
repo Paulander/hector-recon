@@ -16,12 +16,17 @@ from recon_lite_chess.autogrowth.tg48a2_same_side_diagnostic import (
     TG48a2SameSideDiagnosticConfig,
     run_tg48a2_same_side_diagnostic,
 )
-from recon_lite_chess.autogrowth.features import extract_learner_features, validate_learner_record
+from recon_lite_chess.autogrowth.features import (
+    extract_diagnostic_features,
+    extract_learner_features,
+    validate_learner_record,
+)
 
 
 def test_tg48_geometry_features_are_generic_and_firewall_safe() -> None:
     board = chess.Board("8/8/8/8/8/8/4R3/4K1k1 w - - 0 1")
     features = extract_learner_features(board)
+    diagnostics = extract_diagnostic_features(board)
 
     for key in (
         "king_delta_file_abs",
@@ -34,12 +39,14 @@ def test_tg48_geometry_features_are_generic_and_firewall_safe() -> None:
         "rook_black_king_opposite_sides_of_white_king_on_primary_axis",
         "rook_distance_to_black_king_edge_line",
         "rook_fence_depth_relative_to_black_king_edge",
-        "rook_lateral_escape_available",
         "black_king_on_edge",
         "black_king_corner_distance",
-        "white_king_controls_escape_band",
     ):
         assert key in features
+    assert "rook_lateral_escape_available" not in features
+    assert "white_king_controls_escape_band" not in features
+    assert "rook_lateral_escape_available" in diagnostics
+    assert "white_king_controls_escape_band" in diagnostics
     validate_learner_record(features)
 
 

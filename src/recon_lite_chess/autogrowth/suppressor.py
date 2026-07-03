@@ -19,7 +19,7 @@ from .evaluate import (
     evaluate_arm,
     _position_repetition_key,
 )
-from .features import extract_learner_features, validate_learner_record
+from .features import extract_diagnostic_features, extract_learner_features, validate_learner_record
 from .positions import KRKPositionSet, generate_position_sets
 from .sandbox import (
     SandboxMetrics,
@@ -633,7 +633,7 @@ def suppressor_confirms(
         return False
     after = board.copy(stack=False)
     after.push(candidate_move)
-    after_features = extract_learner_features(after)
+    after_features = extract_diagnostic_features(after)
     distance = _normalized_distance(
         after_features,
         learner_visible["projected_after_prototype"],
@@ -652,11 +652,11 @@ def _failure_record(
     learner_visible = {
         "ply": int(ply),
         "before_features": {
-            name: extract_learner_features(before)[name]
+            name: extract_diagnostic_features(before)[name]
             for name in SUPPRESSOR_FEATURE_NAMES
         },
         "projected_after_features": {
-            name: extract_learner_features(after)[name]
+            name: extract_diagnostic_features(after)[name]
             for name in SUPPRESSOR_FEATURE_NAMES
         },
         "action": {
@@ -720,8 +720,8 @@ def _projected_negative_reason(before: chess.Board, after: chess.Board) -> str |
     terminal = classify_terminal_outcome(after)
     if terminal in {"rook_loss", "stalemate", "illegal_move"}:
         return terminal
-    before_features = extract_learner_features(before)
-    after_features = extract_learner_features(after)
+    before_features = extract_diagnostic_features(before)
+    after_features = extract_diagnostic_features(after)
     if after_features["rook_attacked_by_black"] > before_features["rook_attacked_by_black"]:
         return "rook_attacked_after_action"
     if after_features["is_stalemate"] > 0.0:

@@ -15,7 +15,7 @@ from .continuation_retry import (
     evaluate_continuation_retry_arm,
 )
 from .evaluate import choose_black_reply, choose_white_baseline_move, classify_terminal_outcome, _position_repetition_key
-from .features import extract_learner_features
+from .features import extract_diagnostic_features
 from .fragment_chain_curriculum import _chain_adjacency, _generate_fragment_candidates, _local_script_config
 from .lag_terminals import LAG_FEATURES, evaluate_lag_terminal, _after_terminal_matches, _apply_lag_quarantine, _lag_node_selectable
 from .positions import KRKPositionSet, generate_position_sets
@@ -444,7 +444,7 @@ def _finalize_events(events: list[dict[str, Any]], indexes: list[int], *, outcom
 
 
 def _compact_features(board: chess.Board) -> dict[str, float]:
-    features = extract_learner_features(board)
+    features = extract_diagnostic_features(board)
     return {
         "black_king_nearest_edge_distance": features["black_king_nearest_edge_distance"],
         "black_reply_mobility": features["black_reply_mobility"],

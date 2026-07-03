@@ -15,7 +15,7 @@ import chess
 
 from recon_lite_hector.nodes.stem_cell import StemCellState
 
-from .features import extract_learner_features, validate_learner_record
+from .features import extract_diagnostic_features, validate_learner_record
 from .foundation_curriculum import (
     _forced_mate_in_two_first_moves,
     _mate_moves,
@@ -423,7 +423,7 @@ def _generate_datasets(config: CleanEdgeFenceStageConfig) -> dict[str, list[dict
 
 
 def _lineage_key(board: chess.Board, family: str) -> str:
-    features = extract_learner_features(board)
+    features = extract_diagnostic_features(board)
     buckets = {
         "family": family,
         "bk_edge": int(features["black_king_nearest_edge_distance"]),
@@ -436,7 +436,7 @@ def _lineage_key(board: chess.Board, family: str) -> str:
 
 
 def _classify_generated_family(board: chess.Board, *, hard_decoy: bool, decoy: bool) -> str | None:
-    features = extract_learner_features(board)
+    features = extract_diagnostic_features(board)
     edge = int(features["black_king_nearest_edge_distance"])
     mobility = int(features["black_reply_mobility"])
     wk_dist = int(features["white_king_to_black_king_distance"])
@@ -649,8 +649,8 @@ def _edge_reward(
     after.push(move)
     if after.is_stalemate() or _rook_capturable_by_reply(after):
         return -1.0
-    before_f = extract_learner_features(board)
-    after_f = extract_learner_features(after)
+    before_f = extract_diagnostic_features(board)
+    after_f = extract_diagnostic_features(after)
     confinement_delta = _confinement_area(board) - _confinement_area(after)
     edge_delta = before_f["black_king_nearest_edge_distance"] - after_f["black_king_nearest_edge_distance"]
     mobility_delta = before_f["black_reply_mobility"] - after_f["black_reply_mobility"]
@@ -978,8 +978,8 @@ def _local_progress_terminal_keys(board: chess.Board, move: chess.Move) -> tuple
 
     after = board.copy(stack=False)
     after.push(move)
-    before_f = extract_learner_features(board)
-    after_f = extract_learner_features(after)
+    before_f = extract_diagnostic_features(board)
+    after_f = extract_diagnostic_features(after)
     before_area = _confinement_area(board)
     after_area = _confinement_area(after)
     confinement_delta = _delta_direction(before_area - after_area)
@@ -1311,8 +1311,8 @@ def _move_metrics(
         }
     after = board.copy(stack=False)
     after.push(move)
-    before_f = extract_learner_features(board)
-    after_f = extract_learner_features(after)
+    before_f = extract_diagnostic_features(board)
+    after_f = extract_diagnostic_features(after)
     before_area = _confinement_area(board)
     after_area = _confinement_area(after)
     any_handoff, all_handoff = _foundation_reply_handoff(after, parent)

@@ -140,6 +140,7 @@ from .experiment import (
 )
 from .features import (
     FORBIDDEN_LEARNER_TERMS,
+    extract_diagnostic_features,
     extract_learner_features,
     make_trace_record,
     validate_learner_record,
@@ -728,6 +729,7 @@ __all__ = [
     "evaluate_local_arbitration_arm",
     "evaluate_local_suppressor_arm",
     "evaluate_sandbox_arm",
+    "extract_diagnostic_features",
     "extract_learner_features",
     "generate_context_specialized_candidates",
     "generate_local_script_candidates",

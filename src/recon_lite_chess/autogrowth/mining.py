@@ -23,13 +23,11 @@ _BEFORE_CLUSTER_FEATURES = (
 
 _DELTA_CLUSTER_FEATURES = (
     "black_king_nearest_edge_distance",
-    "black_reply_mobility",
     "white_king_to_black_king_distance",
     "white_rook_to_black_king_distance",
     "white_king_to_rook_distance",
     "rook_attacked_by_black",
     "is_check",
-    "is_stalemate",
 )
 
 
@@ -254,12 +252,12 @@ def _generic_local_score(record: dict[str, Any]) -> float:
     repetition = record.get("repetition_context", {})
     score = 0.0
     score += -0.30 * float(delta["black_king_nearest_edge_distance"])
-    score += -0.05 * float(delta["black_reply_mobility"])
+    score += -0.05 * float(delta.get("black_reply_mobility", 0.0))
     score += -0.04 * float(delta["white_king_to_black_king_distance"])
     score += -0.02 * float(delta["white_rook_to_black_king_distance"])
     score += -0.08 * float(delta["rook_attacked_by_black"])
     score += 0.10 * float(delta["is_check"])
-    score += -1.00 * float(delta["is_stalemate"])
+    score += -1.00 * float(delta.get("is_stalemate", 0.0))
     score += -0.05 * float(repetition.get("position_seen_before", 0))
     score += -0.03 * float(repetition.get("white_action_seen_before", 0))
     return score

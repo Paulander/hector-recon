@@ -37,21 +37,7 @@ from .foundation_curriculum import (
 )
 
 
-SAFE_FEATURE_HUB_NAMES = (
-    "opposition_status",
-    "mobility",
-    "king_tropism",
-    "mobility_restriction",
-    "tempo_advantage",
-    "mating_net_present",
-    "enemy_king_rank",
-    "enemy_king_file",
-    "enemy_king_at_edge",
-    "enemy_king_in_corner",
-    "enemy_king_mobility",
-    "enemy_king_mobility_raw",
-    "stalemate_danger",
-)
+SAFE_FEATURE_HUB_NAMES: tuple[str, ...] = ()
 
 ACTION_AFTER_EXCLUDED_TERMINAL_FLAGS = frozenset({"is_checkmate"})
 
@@ -423,11 +409,6 @@ def extract_terminal_feature_vector(
         if key not in ACTION_AFTER_EXCLUDED_TERMINAL_FLAGS
     }
     features.update(_king_geometry_features(board))
-    feature_hub = hub or create_default_hub()
-    hub_values = feature_hub.compute_all(board, force=True)
-    for name in SAFE_FEATURE_HUB_NAMES:
-        if name in hub_values:
-            features[f"feature_hub_{name}"] = float(hub_values[name])
     validate_learner_record(features)
     return features
 
@@ -570,7 +551,6 @@ def feature_substrate_coverage_sample(sample_fen: str) -> dict[str, Any]:
                 "direct_rank_opposition",
                 "diagonal_opposition",
                 "distant_opposition_parity",
-                "feature_hub_opposition_status",
             }.issubset(terminal_features),
         },
         "knight_distance": {

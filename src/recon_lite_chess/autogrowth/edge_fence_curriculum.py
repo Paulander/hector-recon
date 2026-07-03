@@ -12,7 +12,7 @@ import chess
 
 from recon_lite_chess.training.krk_curriculum import box_min_side, did_box_grow
 
-from .features import extract_learner_features, validate_learner_record
+from .features import extract_diagnostic_features, extract_learner_features, validate_learner_record
 from .foundation_curriculum import (
     ActionRanker,
     FoundationCurriculumConfig,
@@ -773,7 +773,7 @@ def _cheap_action_assessment(
             safety_filter_rejected=True,
             reward_components={"illegal": -1.0},
         )
-    before_features = extract_learner_features(board)
+    before_features = extract_diagnostic_features(board)
     before_box = box_min_side(board)
     after = board.copy(stack=False)
     after.push(move)
@@ -822,7 +822,7 @@ def _cheap_action_assessment(
             safety_filter_rejected=True,
             reward_components={"rook_loss_reply_risk": -0.90},
         )
-    after_features = extract_learner_features(after)
+    after_features = extract_diagnostic_features(after)
     reward = 0.0
     if confinement_regressed:
         components["confinement_regression"] = -0.45
@@ -1031,8 +1031,8 @@ def _non_mate_shaping_components(
     *,
     confinement_regressed: bool,
 ) -> tuple[float, dict[str, float]]:
-    before_features = extract_learner_features(before)
-    after_features = extract_learner_features(after_reply)
+    before_features = extract_diagnostic_features(before)
+    after_features = extract_diagnostic_features(after_reply)
     reward = 0.0
     components: dict[str, float] = {}
     if box_min_side(after_reply) < box_min_side(before):
