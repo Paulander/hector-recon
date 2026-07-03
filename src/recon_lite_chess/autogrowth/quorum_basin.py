@@ -50,6 +50,9 @@ FENCE_WEST_EDGE_ID = "fence_west_edge_branch"
 FENCE_EAST_EDGE_ID = "fence_east_edge_branch"
 FENCE_SOUTH_EDGE_ID = "fence_south_edge_branch"
 FENCE_NORTH_EDGE_ID = "fence_north_edge_branch"
+KRK_POLICY_ROOT_ID = "krk_policy"
+MATE_IN_TWO_GATE_ID = "mate_in_2_chain_confidence_gate"
+CANONICAL_DIETED_FALLBACK_ID = "canonical_dieted_scorer_fallback"
 
 _BK_NEIGHBOR_DIRECTIONS = ("n", "ne", "e", "se", "s", "sw", "w", "nw")
 
@@ -1703,6 +1706,28 @@ CHAIN_CONFIDENCE_POOL_SCHEMA = "phase2_chain_confidence_pool_row.v0"
 CHAIN_CONFIDENCE_MODEL_SCHEMA = "phase2_chain_confidence_weighted_threshold.v0"
 
 
+def load_chain_confidence_gate(
+    *,
+    seed: int = 20261211,
+    threshold_name: str = "balanced",
+    output_dir: str | Path = CHAIN_CONFIDENCE_OUTPUT_DIR,
+) -> dict[str, Any]:
+    """Load a trained dispatcher gate without changing exact confirmation semantics."""
+
+    path = Path(output_dir) / f"chain_confidence_gate_seed_{int(seed)}.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    model = payload["model"]
+    if threshold_name not in model["thresholds"]:
+        raise ValueError(f"threshold {threshold_name!r} not found in {path}")
+    return {
+        "artifact_path": str(path),
+        "seed": int(seed),
+        "threshold_name": threshold_name,
+        "threshold": float(model["thresholds"][threshold_name]),
+        "model": model,
+    }
+
+
 def fence_or_opposition_recognizer_confirms(board: chess.Board) -> bool:
     """Internal geometry recognizer bit over dieted percepts."""
 
@@ -1938,6 +1963,283 @@ def _score_gate_model(model: Mapping[str, Any], features: Mapping[str, float]) -
     for key, value in values.items():
         score += float(weights.get(key, 0.0)) * value
     return _sigmoid(score)
+
+
+def score_chain_confidence_gate(
+    board: chess.Board,
+    gate: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Score the dispatcher gate on the current board."""
+
+    features = chain_confidence_feature_record(board)
+    score = _score_gate_model(gate["model"], features)
+    threshold = float(gate["threshold"])
+    return {
+        "score": score,
+        "threshold": threshold,
+        "fired": score >= threshold,
+        "features": features,
+    }
+
+
+def _policy_trace_message(
+    messages: list[dict[str, Any]],
+    src: str,
+    dst: str,
+    link_type: str,
+    message: str,
+    **meta: Any,
+) -> None:
+    row = {"src": src, "dst": dst, "link_type": link_type, "message": message}
+    if meta:
+        row["meta"] = meta
+    messages.append(row)
+
+
+def _policy_result(
+    *,
+    branch: str,
+    bound_move: chess.Move | None,
+    frames: int,
+    gate_audit: Mapping[str, Any],
+    trace_messages: list[dict[str, Any]],
+    invocations: Mapping[str, Any],
+    scorer: FrozenMate2FirstScorer,
+) -> dict[str, Any]:
+    return {
+        "confirmed": bound_move is not None,
+        "branch": branch,
+        "bound_move": None if bound_move is None else bound_move.uci(),
+        "virtual_frame_count": int(frames),
+        "mate2_gate_fired": bool(gate_audit["fired"]),
+        "mate2_gate_score": float(gate_audit["score"]),
+        "mate2_gate_threshold": float(gate_audit["threshold"]),
+        "invocations": dict(invocations),
+        "scorer_source_path": str(scorer.source_path),
+        "scorer_source_sha256": scorer.source_sha256,
+        "trace": [{"tick": 0, "messages": trace_messages}],
+    }
+
+
+def run_krk_policy(
+    board: chess.Board,
+    *,
+    gate: Mapping[str, Any] | None = None,
+    scorer: FrozenMate2FirstScorer | None = None,
+    record_trace: bool = False,
+) -> dict[str, Any]:
+    """Run the Phase 2.7 priority dispatcher over existing graph-native skills."""
+
+    if board.turn != chess.WHITE or board.is_game_over(claim_draw=False):
+        return {
+            "confirmed": False,
+            "branch": "not_applicable",
+            "bound_move": None,
+            "virtual_frame_count": 0,
+            "mate2_gate_fired": False,
+            "mate2_gate_score": 0.0,
+            "mate2_gate_threshold": 0.0,
+            "invocations": {},
+            "scorer_source_path": None,
+            "scorer_source_sha256": None,
+            "trace": [{"tick": 0, "messages": []}],
+        }
+
+    active_gate = load_chain_confidence_gate() if gate is None else gate
+    active_scorer = load_canonical_mate2_first_scorer() if scorer is None else scorer
+    trace_messages: list[dict[str, Any]] = []
+    invocations: dict[str, Any] = {}
+    frames = 0
+
+    _policy_trace_message(
+        trace_messages,
+        KRK_POLICY_ROOT_ID,
+        MATE_IN_TWO_GATE_ID,
+        "SUB",
+        "request",
+    )
+    gate_audit = score_chain_confidence_gate(board, active_gate)
+    _policy_trace_message(
+        trace_messages,
+        MATE_IN_TWO_GATE_ID,
+        KRK_POLICY_ROOT_ID,
+        "SUR",
+        "confirm" if gate_audit["fired"] else "fail",
+        score=round(float(gate_audit["score"]), 6),
+        threshold=round(float(gate_audit["threshold"]), 6),
+    )
+    invocations["mate2_gate"] = {
+        "fired": bool(gate_audit["fired"]),
+        "score": float(gate_audit["score"]),
+        "threshold": float(gate_audit["threshold"]),
+    }
+
+    if gate_audit["fired"]:
+        _policy_trace_message(
+            trace_messages,
+            KRK_POLICY_ROOT_ID,
+            MATE_IN_TWO_SKILL_ID,
+            "SUB",
+            "request",
+        )
+        mate2 = run_mate_in_two_skill(
+            board,
+            record_trace=record_trace,
+            move_orderer=active_scorer.order_moves,
+        )
+        frames += int(mate2["virtual_frame_count"])
+        invocations["mate_in_2_skill"] = {
+            "confirmed": bool(mate2["confirmed"]),
+            "bound_move": mate2["bound_move"],
+            "virtual_frame_count": int(mate2["virtual_frame_count"]),
+            "bound_move_rank": mate2["bound_move_rank"],
+        }
+        _policy_trace_message(
+            trace_messages,
+            MATE_IN_TWO_SKILL_ID,
+            KRK_POLICY_ROOT_ID,
+            "SUR",
+            "confirm" if mate2["confirmed"] else "fail",
+        )
+        if mate2["confirmed"] and mate2["bound_move"] is not None:
+            return _policy_result(
+                branch="mate_in_2",
+                bound_move=chess.Move.from_uci(mate2["bound_move"]),
+                frames=frames,
+                gate_audit=gate_audit,
+                trace_messages=trace_messages,
+                invocations=invocations,
+                scorer=active_scorer,
+            )
+
+    _policy_trace_message(
+        trace_messages,
+        KRK_POLICY_ROOT_ID,
+        MATE_IN_ONE_BASIN_ID,
+        "SUB",
+        "request",
+    )
+    basin = run_mate_in_one_basin_recognizer(board, record_trace=record_trace)
+    invocations["mate_in_1_basin"] = {"confirmed": bool(basin["confirmed"])}
+    _policy_trace_message(
+        trace_messages,
+        MATE_IN_ONE_BASIN_ID,
+        KRK_POLICY_ROOT_ID,
+        "SUR",
+        "confirm" if basin["confirmed"] else "fail",
+    )
+    if basin["confirmed"]:
+        _policy_trace_message(
+            trace_messages,
+            KRK_POLICY_ROOT_ID,
+            MATE_IN_ONE_SKILL_ID,
+            "SUB",
+            "request",
+        )
+        mate1 = run_mate_in_one_skill(board, record_trace=record_trace)
+        invocations["mate_in_1_skill"] = {
+            "confirmed": bool(mate1["confirmed"]),
+            "bound_move": mate1["bound_move"],
+        }
+        _policy_trace_message(
+            trace_messages,
+            MATE_IN_ONE_SKILL_ID,
+            KRK_POLICY_ROOT_ID,
+            "SUR",
+            "confirm" if mate1["confirmed"] else "fail",
+        )
+        if mate1["confirmed"] and mate1["bound_move"] is not None:
+            return _policy_result(
+                branch="mate_in_1",
+                bound_move=chess.Move.from_uci(mate1["bound_move"]),
+                frames=frames,
+                gate_audit=gate_audit,
+                trace_messages=trace_messages,
+                invocations=invocations,
+                scorer=active_scorer,
+            )
+
+    _policy_trace_message(
+        trace_messages,
+        KRK_POLICY_ROOT_ID,
+        FENCE_ESTABLISHED_ID,
+        "SUB",
+        "request",
+    )
+    fence = run_fence_established_recognizer(board, record_trace=record_trace)
+    invocations["fence_established"] = {"confirmed": bool(fence["confirmed"])}
+    _policy_trace_message(
+        trace_messages,
+        FENCE_ESTABLISHED_ID,
+        KRK_POLICY_ROOT_ID,
+        "SUR",
+        "confirm" if fence["confirmed"] else "fail",
+    )
+    if not fence["confirmed"]:
+        _policy_trace_message(
+            trace_messages,
+            KRK_POLICY_ROOT_ID,
+            ESTABLISH_FENCE_SKILL_ID,
+            "SUB",
+            "request",
+        )
+        establish = run_establish_fence_skill(board, record_trace=record_trace)
+        frames += int(establish["virtual_frame_count"])
+        invocations["establish_fence_skill"] = {
+            "confirmed": bool(establish["confirmed"]),
+            "bound_move": establish["bound_move"],
+            "virtual_frame_count": int(establish["virtual_frame_count"]),
+            "bound_move_rank": establish["bound_move_rank"],
+        }
+        _policy_trace_message(
+            trace_messages,
+            ESTABLISH_FENCE_SKILL_ID,
+            KRK_POLICY_ROOT_ID,
+            "SUR",
+            "confirm" if establish["confirmed"] else "fail",
+        )
+        if establish["confirmed"] and establish["bound_move"] is not None:
+            return _policy_result(
+                branch="establish_fence",
+                bound_move=chess.Move.from_uci(establish["bound_move"]),
+                frames=frames,
+                gate_audit=gate_audit,
+                trace_messages=trace_messages,
+                invocations=invocations,
+                scorer=active_scorer,
+            )
+
+    legal_moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+    ordered = active_scorer.order_moves(board, legal_moves)
+    fallback = ordered[0] if ordered else None
+    invocations["fallback"] = {
+        "confirmed": fallback is not None,
+        "bound_move": None if fallback is None else fallback.uci(),
+        "score": 0.0 if fallback is None else active_scorer.score_move(board, fallback),
+    }
+    _policy_trace_message(
+        trace_messages,
+        KRK_POLICY_ROOT_ID,
+        CANONICAL_DIETED_FALLBACK_ID,
+        "SUB",
+        "request",
+    )
+    _policy_trace_message(
+        trace_messages,
+        CANONICAL_DIETED_FALLBACK_ID,
+        KRK_POLICY_ROOT_ID,
+        "SUR",
+        "confirm" if fallback is not None else "fail",
+    )
+    return _policy_result(
+        branch="fallback",
+        bound_move=fallback,
+        frames=frames,
+        gate_audit=gate_audit,
+        trace_messages=trace_messages,
+        invocations=invocations,
+        scorer=active_scorer,
+    )
 
 
 def _threshold_metrics(scores: Sequence[float], labels: Sequence[bool], threshold: float) -> dict[str, float | int]:

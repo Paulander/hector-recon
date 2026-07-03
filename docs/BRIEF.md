@@ -2,42 +2,30 @@
 
 Mission: merge the Feb baseline learner, native ReCoN runtime, and TG46+ evaluation rigor into one
 learner whose frozen graph beats its baseline on heldout KRK behavior with causal ablation evidence.
-
-Current state: Phase 2.6 exact fence-establishment skill executes graph-native.
-
-Dieted foundation result: TG46c full-M3 Mate-in-2 heldout all-reply passed 3/3 seeds after the
-black-king-neighbor percept revision: 20260701=0.94, 20260702=0.95, 20260703=0.96.
-
+Current state: Phase 2.7 priority dispatcher composes the learned mate-in-2 gate, exact mate-in-2
+skill, mate-in-1 basin/skill, exact fence-establishment skill, and canonical dieted fallback scorer.
 Canonical dieted parent: reports/autogrowth/clean_slate_krk/dieted_foundation_v1/krk_tg46c_real_mate2_repair_seed_20260702_rev1.json
-
 Canonical sha256: ae382d0463e35eff09e9515a715648b5d49b1e0891d127a660e036e378452eb6
-
-Recorded finding: M4 per-key precision promotion loses distributed percept signal (0.94 -> 0.86 on
-seed 20260701); promotion redesign deferred to Phase 2 (quorum composition re-compresses
-distributed atoms into promotable units).
-
-Current task: 2.5 learned gate is dispatcher-only; exact mate-in-2 remains sole verifier/binder.
-Pool: 2000 self-distilled rows (300 exact positives / 1700 negatives), canonical orderer loaded
-TG46c full-M3 mate2_first from the dieted parent; 20/657 keys matched because the artifact exports
-top 10 positive + top 10 negative terminal rows.
-
-Decision table over heldout, 3 train seeds, vs 2.4 ordered frame reference about 60 mean / 182 max:
-threshold | recall | precision | conversion | pos frames mean/max | neg frames mean/max
-recall-favor | 1.00/1.00/1.00 | 0.15/0.15/0.15 | 1.00/1.00/1.00 | 2.32/12,2.27/12,2.27/4 | 125.76/185,124.94/182,124.53/185
-balanced | 0.96/0.96/0.97 | 1.00/0.95/0.91 | 0.96/0.96/0.97 | 2.21/12,2.19/12,2.21/4 | 0.00/0,0.79/110,1.25/93
-precision-favor | 0.87/0.89/0.80 | 1.00/0.99/0.94 | 0.87/0.89/0.80 | 2.00/12,2.03/12,1.79/4 | 0.00/0,0.16/66,0.66/93
-
-Adopted 2.5 operating point: balanced. Verification: seed 20261211's 425 heldout negatives were
-genuinely gate-scored; threshold=0.854756, max negative score=0.714112, so 0-frame negatives were
-gate declines rather than skipped evaluation.
-
-Current task: 2.6 exact fence-establishment skill, fit-free. `fence_established` is a composed
-quorum over nearest-edge branches plus rook safety; `establish_fence_skill` binds legal rook moves
-and confirms only if a k=n black-reply quantifier leaves the fence established after every reply.
-Fresh seed 20261231: 64/64 trainer-positive edge-rung positions established; 0/64 exact negatives
-emitted a move. Frames mean/max overall=46.44/76; positives=28.75/70; negatives=64.12/76.
-
-Next: 2.7 skill chaining: fence -> mate ladder composition.
-
+Adopted 2.5 operating point: balanced gate, seed 20261211, threshold=0.854756; exact mate-in-2
+skill remains the sole verifier/binder when the gate fires.
+Phase 2.6 fence-establishment ceiling: seed 20261231, 64/64 positives established, 0/64 negatives
+emitted, frames mean/max=46.44/76.
+Phase 2.7 full-game eval: 50 games per pool, fresh seeds 20270101-20270104, black=fixed-seed
+uniform legal because the old deterministic-worst-foundation reply path depends on historical cache
+construction. Stop-rule violations: 0 skill illegal moves, 0 skill rook losses, 0 skill stalemates.
+pool | win rate | draws | mean mate plies | frames mean/max | fallback share | branch counts
+mate-in-<=2 | 36/50=0.72 | repetition 14 | 2.78 | 13.23/64 | 0.00 | mate2 145, mate1 8
+fence-rung | 22/50=0.44 | repetition 27, fifty 1 | 24.45 | 41.48/161 | 0.65 | fallback 456, fence 126, mate2 100, mate1 17
+general KRK | 27/50=0.54 | repetition 22, fifty 1 | 26.33 | 57.11/152 | 0.75 | fallback 592, fence 108, mate2 66, mate1 20
+Deferral recovery: gate-declined trainer-verified mate-in-2 positions=5 across fence/general games;
+3/5 such games still won, mean extra plies among recovered wins=1.33.
+Fence-to-mate gap: fence pool observed 25 gaps, mean/median/max=18.56/14/50 plies, unresolved=19,
+fallback share inside gap=0.85; general observed 19 gaps, mean/median/max=22.11/16/58, unresolved=22,
+fallback share inside gap=0.81.
+Fence durability finding: fallback broke established fences 32 times in fence games and 25 times in
+general games; establish_fence fired more than once in 32 fence games and 22 general games.
+Recorded finding: mate2-first dispatch can preempt immediate mate, causing 14 repetitions even in
+mate-in-<=2 starts with fallback share 0.00.
+Next: 2.8 — fence-to-mate bridge closes fallback wandering in the established-fence to mate-2 gap.
 No-go: new TG names, new report documents, new pool/cache formats, training logic changes,
 `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.

@@ -5,12 +5,16 @@ import chess
 from recon_lite import FormalReConEngine, Graph, Node, NodeState, NodeType
 from recon_lite_chess.autogrowth import (
     NativeQuorumMaterializationConfig,
+    KRK_POLICY_ROOT_ID,
+    MATE_IN_TWO_GATE_ID,
     extract_learner_features,
     generate_position_sets,
     load_canonical_mate2_first_scorer,
+    load_chain_confidence_gate,
     evaluate_chain_confidence_gate,
     fence_established_geometry,
     run_mate_in_one_basin_recognizer,
+    run_krk_policy,
     resolve_establish_fence_move,
     run_establish_fence_skill,
     run_fence_established_recognizer,
@@ -633,6 +637,24 @@ def test_phase2_chain_confidence_gate_trains_weighted_threshold() -> None:
     assert recall_row["end_to_end_conversion"] == 1.0
     assert balanced_row["precision"] == 1.0
     assert balanced_row["end_to_end_conversion"] == 1.0
+
+
+def test_phase27_krk_policy_dispatches_through_existing_skills() -> None:
+    board = chess.Board("7R/8/8/8/8/1K6/8/k7 w - - 0 1")
+    gate = dict(load_chain_confidence_gate())
+    gate["threshold"] = 2.0
+    scorer = load_canonical_mate2_first_scorer()
+
+    audit = run_krk_policy(board, gate=gate, scorer=scorer, record_trace=True)
+    messages = _trace_messages(audit["trace"])
+
+    assert audit["branch"] == "mate_in_1"
+    assert chess.Move.from_uci(audit["bound_move"]) in _mate_moves(board)
+    assert (KRK_POLICY_ROOT_ID, MATE_IN_TWO_GATE_ID, "SUB", "request") in messages
+    assert (MATE_IN_TWO_GATE_ID, KRK_POLICY_ROOT_ID, "SUR", "fail") in messages
+    assert (KRK_POLICY_ROOT_ID, "mate_in_1_basin", "SUB", "request") in messages
+    assert (KRK_POLICY_ROOT_ID, "mate_in_1_skill", "SUB", "request") in messages
+    assert ("mate_in_1_skill", KRK_POLICY_ROOT_ID, "SUR", "confirm") in messages
 
 
 def test_tg26u_smoke_materializes_native_quorum_and_reports_ablations() -> None:
