@@ -111,6 +111,7 @@ def _basin_eval_rows(positive_fens: list[str], negative_fens: list[str]) -> list
                 "confirmed": audit["confirmed"],
                 "basin_state": audit["basin_state"],
                 "escape_restricted_state": audit["escape_restricted_state"],
+                "edge_relative_opposition_state": audit["edge_relative_opposition_state"],
                 "ticks": audit["ticks"],
                 "mate_moves": [move.uci() for move in _mate_moves(board)],
                 "trace_messages": {
@@ -121,6 +122,21 @@ def _basin_eval_rows(positive_fens: list[str], negative_fens: list[str]) -> list
             }
         )
     return rows
+
+
+def _basin_confusion(rows: list[dict]) -> dict[str, float | int]:
+    true_positive = sum(row["expected"] and row["confirmed"] for row in rows)
+    false_negative = sum(row["expected"] and not row["confirmed"] for row in rows)
+    false_positive = sum((not row["expected"]) and row["confirmed"] for row in rows)
+    true_negative = sum((not row["expected"]) and not row["confirmed"] for row in rows)
+    return {
+        "true_positive": true_positive,
+        "false_negative": false_negative,
+        "false_positive": false_positive,
+        "true_negative": true_negative,
+        "precision": true_positive / max(1, true_positive + false_positive),
+        "recall": true_positive / max(1, true_positive + false_negative),
+    }
 
 
 def test_phase2_mate_in_one_basin_quorum_generalizes_on_generated_heldout() -> None:
@@ -137,20 +153,44 @@ def test_phase2_mate_in_one_basin_quorum_generalizes_on_generated_heldout() -> N
     )
     negative_fens = list(negative_set.heldout)
 
-    rows = _basin_eval_rows(positive_fens, negative_fens)
-    true_positive = sum(row["expected"] and row["confirmed"] for row in rows)
-    false_negative = sum(row["expected"] and not row["confirmed"] for row in rows)
-    false_positive = sum((not row["expected"]) and row["confirmed"] for row in rows)
-    true_negative = sum((not row["expected"]) and not row["confirmed"] for row in rows)
-    precision = true_positive / max(1, true_positive + false_positive)
-    recall = true_positive / max(1, true_positive + false_negative)
+    original_rows = _basin_eval_rows(positive_fens, negative_fens)
+    original_confusion = _basin_confusion(original_rows)
+    known_false_positive_fens = {
+        "2K5/8/k7/8/8/8/8/4R3 w - - 0 1",
+        "8/8/8/7R/8/8/K7/2k5 w - - 0 1",
+    }
 
-    assert true_positive >= 12
-    assert true_negative > 0
-    assert precision > 0.0
-    assert recall > 0.0
-    confirmed_row = next(row for row in rows if row["confirmed"])
+    assert original_confusion["true_positive"] >= 12
+    assert original_confusion["false_positive"] == 0
+    assert not any(
+        row["fen"] in known_false_positive_fens and row["confirmed"]
+        for row in original_rows
+    )
+    confirmed_row = next(row for row in original_rows if row["confirmed"])
     assert ("mate_in_1_basin", "phase2_basin_root", "SUR", "confirm") in confirmed_row["trace_messages"]
+
+    fresh_positive_fens = _generate_mate_in_one_positions(
+        count=64,
+        seed=20260817,
+        max_attempts=320_000,
+    )
+    fresh_negative_set = generate_position_sets(
+        seed=20260817,
+        train_count=0,
+        heldout_weakness_count=32,
+        heldout_broader_count=32,
+    )
+    fresh_rows = _basin_eval_rows(fresh_positive_fens, list(fresh_negative_set.heldout))
+    fresh_confusion = _basin_confusion(fresh_rows)
+
+    assert fresh_confusion == {
+        "true_positive": 49,
+        "false_negative": 15,
+        "false_positive": 0,
+        "true_negative": 64,
+        "precision": 1.0,
+        "recall": 49 / 64,
+    }
 
 
 def test_tg26u_smoke_materializes_native_quorum_and_reports_ablations() -> None:

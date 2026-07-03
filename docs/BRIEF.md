@@ -3,7 +3,7 @@
 Mission: merge the Feb baseline learner, native ReCoN runtime, and TG46+ evaluation rigor into one
 learner whose frozen graph beats its baseline on heldout KRK behavior with causal ablation evidence.
 
-Current state: Phase 2.1 basin recognizer measured.
+Current state: Phase 2.1b basin recognizer refined and measured.
 
 Dieted foundation result: TG46c full-M3 Mate-in-2 heldout all-reply passed 3/3 seeds after the
 black-king-neighbor percept revision: 20260701=0.94, 20260702=0.95, 20260703=0.96.
@@ -16,8 +16,8 @@ Recorded finding: M4 per-key precision promotion loses distributed percept signa
 seed 20260701); promotion redesign deferred to Phase 2 (quorum composition re-compresses
 distributed atoms into promotable units).
 
-Current task: Phase 2.1 basin recognizer measured at P=0.96/R=1.00 on generated heldout; next:
-2.2 bind the basin recognizer to mate-in-1 action/actuator candidates.
+Current task: 2.1b basin recognizer at P=1.00/R=0.766 on fresh heldout via composed
+edge-relative opposition; next: 2.2 bind recognizer to mate-in-1 actuator candidates.
 
 No-go: new TG names, new report documents, new pool/cache formats, training logic changes,
 `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.

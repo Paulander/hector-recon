@@ -15,6 +15,11 @@ from .features import extract_learner_features
 ROOT_ID = "phase2_basin_root"
 MATE_IN_ONE_BASIN_ID = "mate_in_1_basin"
 ESCAPE_RESTRICTED_ID = "mate_in_1_escape_restricted"
+EDGE_RELATIVE_OPPOSITION_ID = "mate_in_1_edge_relative_opposition"
+RANK_EDGE_OPPOSITION_ID = "mate_in_1_rank_edge_opposition"
+FILE_EDGE_OPPOSITION_ID = "mate_in_1_file_edge_opposition"
+BLACK_KING_ON_RANK_EDGE_ID = "mate_in_1_black_king_on_rank_edge"
+BLACK_KING_ON_FILE_EDGE_ID = "mate_in_1_black_king_on_file_edge"
 
 
 @dataclass(frozen=True)
@@ -66,11 +71,60 @@ def mate_in_one_basin_atoms() -> tuple[PerceptAtom, ...]:
         PerceptAtom("atom_rook_safe", "rook_attacked_by_black", "eq", 0.0, "rook is not immediately loose"),
         PerceptAtom("atom_black_king_edge", "black_king_on_edge", "eq", 1.0, "rook mate needs the defender on an edge"),
         PerceptAtom(
-            "atom_king_support_distance_two",
-            "king_support_chebyshev_distance",
+            "atom_black_king_rank_zero",
+            "black_king_rank",
+            "eq",
+            0.0,
+            "black king is on the south rank edge",
+        ),
+        PerceptAtom(
+            "atom_black_king_rank_seven",
+            "black_king_rank",
+            "eq",
+            7.0,
+            "black king is on the north rank edge",
+        ),
+        PerceptAtom(
+            "atom_black_king_file_zero",
+            "black_king_file",
+            "eq",
+            0.0,
+            "black king is on the west file edge",
+        ),
+        PerceptAtom(
+            "atom_black_king_file_seven",
+            "black_king_file",
+            "eq",
+            7.0,
+            "black king is on the east file edge",
+        ),
+        PerceptAtom(
+            "atom_rank_edge_along_delta_zero",
+            "king_delta_file_abs",
+            "eq",
+            0.0,
+            "on a rank edge, the kings align along the edge axis",
+        ),
+        PerceptAtom(
+            "atom_rank_edge_perpendicular_delta_two",
+            "king_delta_rank_abs",
             "eq",
             2.0,
-            "white king is close enough to cover edge escapes",
+            "on a rank edge, the white king is two ranks inward",
+        ),
+        PerceptAtom(
+            "atom_file_edge_along_delta_zero",
+            "king_delta_rank_abs",
+            "eq",
+            0.0,
+            "on a file edge, the kings align along the edge axis",
+        ),
+        PerceptAtom(
+            "atom_file_edge_perpendicular_delta_two",
+            "king_delta_file_abs",
+            "eq",
+            2.0,
+            "on a file edge, the white king is two files inward",
         ),
         PerceptAtom(
             "atom_rook_not_adjacent_to_black_king",
@@ -83,34 +137,16 @@ def mate_in_one_basin_atoms() -> tuple[PerceptAtom, ...]:
     )
 
 
-def build_mate_in_one_basin_graph() -> Graph:
-    """Build the fixed recognizer graph; no positions or labels are stored."""
+def _add_quorum_script(graph: Graph, node_id: str, *, role: str, policy: str, k: int | None = None) -> None:
+    meta: dict[str, Any] = {"role": role, "confirm_policy": policy}
+    if k is not None:
+        meta["confirm_k"] = int(k)
+    graph.add_node(Node(node_id, NodeType.SCRIPT, meta=meta))
 
-    graph = Graph()
-    graph.add_node(Node(ROOT_ID, NodeType.SCRIPT))
+
+def _add_percept_atom(graph: Graph, atom: PerceptAtom, parent: str) -> None:
     graph.add_node(
         Node(
-            MATE_IN_ONE_BASIN_ID,
-            NodeType.SCRIPT,
-            meta={"role": "mate_in_1_basin", "confirm_policy": "and"},
-        )
-    )
-    graph.add_node(
-        Node(
-            ESCAPE_RESTRICTED_ID,
-            NodeType.SCRIPT,
-            meta={
-                "role": "mobility_restriction_quorum",
-                "confirm_policy": "k_of_n",
-                "confirm_k": 4,
-            },
-        )
-    )
-    graph.add_hierarchy_pair(ROOT_ID, MATE_IN_ONE_BASIN_ID)
-    graph.add_hierarchy_pair(MATE_IN_ONE_BASIN_ID, ESCAPE_RESTRICTED_ID)
-
-    for atom in mate_in_one_basin_atoms():
-        node = Node(
             atom.node_id,
             NodeType.TERMINAL,
             predicate=_percept_predicate(atom),
@@ -122,9 +158,68 @@ def build_mate_in_one_basin_graph() -> Graph:
                 "reason": atom.reason,
             },
         )
-        graph.add_node(node)
-        parent = ESCAPE_RESTRICTED_ID if atom.node_id.startswith("atom_bk_neighbor_") else MATE_IN_ONE_BASIN_ID
-        graph.add_hierarchy_pair(parent, atom.node_id)
+    )
+    graph.add_hierarchy_pair(parent, atom.node_id)
+
+
+def build_mate_in_one_basin_graph() -> Graph:
+    """Build the fixed recognizer graph; no positions or labels are stored."""
+
+    graph = Graph()
+    graph.add_node(Node(ROOT_ID, NodeType.SCRIPT))
+    _add_quorum_script(graph, MATE_IN_ONE_BASIN_ID, role="mate_in_1_basin", policy="and")
+    _add_quorum_script(
+        graph,
+        ESCAPE_RESTRICTED_ID,
+        role="mobility_restriction_quorum",
+        policy="k_of_n",
+        k=4,
+    )
+    _add_quorum_script(
+        graph,
+        EDGE_RELATIVE_OPPOSITION_ID,
+        role="edge_relative_opposition_quorum",
+        policy="k_of_n",
+        k=1,
+    )
+    _add_quorum_script(graph, RANK_EDGE_OPPOSITION_ID, role="rank_edge_opposition_quorum", policy="and")
+    _add_quorum_script(graph, FILE_EDGE_OPPOSITION_ID, role="file_edge_opposition_quorum", policy="and")
+    _add_quorum_script(
+        graph,
+        BLACK_KING_ON_RANK_EDGE_ID,
+        role="black_king_rank_edge_selector",
+        policy="k_of_n",
+        k=1,
+    )
+    _add_quorum_script(
+        graph,
+        BLACK_KING_ON_FILE_EDGE_ID,
+        role="black_king_file_edge_selector",
+        policy="k_of_n",
+        k=1,
+    )
+    graph.add_hierarchy_pair(ROOT_ID, MATE_IN_ONE_BASIN_ID)
+    graph.add_hierarchy_pair(MATE_IN_ONE_BASIN_ID, ESCAPE_RESTRICTED_ID)
+    graph.add_hierarchy_pair(MATE_IN_ONE_BASIN_ID, EDGE_RELATIVE_OPPOSITION_ID)
+    graph.add_hierarchy_pair(EDGE_RELATIVE_OPPOSITION_ID, RANK_EDGE_OPPOSITION_ID)
+    graph.add_hierarchy_pair(EDGE_RELATIVE_OPPOSITION_ID, FILE_EDGE_OPPOSITION_ID)
+    graph.add_hierarchy_pair(RANK_EDGE_OPPOSITION_ID, BLACK_KING_ON_RANK_EDGE_ID)
+    graph.add_hierarchy_pair(FILE_EDGE_OPPOSITION_ID, BLACK_KING_ON_FILE_EDGE_ID)
+
+    for atom in mate_in_one_basin_atoms():
+        if atom.node_id.startswith("atom_bk_neighbor_"):
+            parent = ESCAPE_RESTRICTED_ID
+        elif atom.node_id in {"atom_black_king_rank_zero", "atom_black_king_rank_seven"}:
+            parent = BLACK_KING_ON_RANK_EDGE_ID
+        elif atom.node_id in {"atom_black_king_file_zero", "atom_black_king_file_seven"}:
+            parent = BLACK_KING_ON_FILE_EDGE_ID
+        elif atom.node_id.startswith("atom_rank_edge_"):
+            parent = RANK_EDGE_OPPOSITION_ID
+        elif atom.node_id.startswith("atom_file_edge_"):
+            parent = FILE_EDGE_OPPOSITION_ID
+        else:
+            parent = MATE_IN_ONE_BASIN_ID
+        _add_percept_atom(graph, atom, parent)
 
     graph.validate_formal_pairs()
     return graph
@@ -156,14 +251,21 @@ def run_mate_in_one_basin_recognizer(
         for node_id, node in sorted(graph.nodes.items())
         if node.meta.get("role") == "atomic_percept_terminal"
     }
+    script_states = {
+        node_id: node.state.name
+        for node_id, node in sorted(graph.nodes.items())
+        if node.ntype == NodeType.SCRIPT
+    }
     confirmed = graph.nodes[MATE_IN_ONE_BASIN_ID].state == NodeState.CONFIRMED
     return {
         "confirmed": confirmed,
         "root_state": graph.nodes[ROOT_ID].state.name,
         "basin_state": graph.nodes[MATE_IN_ONE_BASIN_ID].state.name,
         "escape_restricted_state": graph.nodes[ESCAPE_RESTRICTED_ID].state.name,
+        "edge_relative_opposition_state": graph.nodes[EDGE_RELATIVE_OPPOSITION_ID].state.name,
         "ticks": engine.tick,
         "features": features,
         "atom_states": atom_states,
+        "script_states": script_states,
         "trace": trace,
     }
