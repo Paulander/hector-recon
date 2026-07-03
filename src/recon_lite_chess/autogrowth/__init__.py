@@ -172,6 +172,15 @@ from .positions import (
     generate_position_sets,
     is_valid_krk_seed,
 )
+from .quorum_basin import (
+    ESCAPE_RESTRICTED_ID,
+    MATE_IN_ONE_BASIN_ID,
+    ROOT_ID as BASIN_ROOT_ID,
+    PerceptAtom,
+    build_mate_in_one_basin_graph,
+    mate_in_one_basin_atoms,
+    run_mate_in_one_basin_recognizer,
+)
 from .precision_gate import (
     LocalPrecisionGate,
     PrecisionGateConfig,

@@ -4,7 +4,13 @@ from recon_lite import FormalReConEngine, Graph, Node, NodeState, NodeType
 from recon_lite_chess.autogrowth import (
     NativeQuorumMaterializationConfig,
     extract_learner_features,
+    generate_position_sets,
+    run_mate_in_one_basin_recognizer,
     run_native_quorum_materialization,
+)
+from recon_lite_chess.autogrowth.foundation_curriculum import (
+    _generate_mate_in_one_positions,
+    _mate_moves,
 )
 
 
@@ -88,6 +94,63 @@ def test_phase2_quorum_direct_opposition_executes_with_formal_trace() -> None:
     assert graph.nodes["root"].state == NodeState.FAILED
     assert ("same_file", "direct_opposition", "SUR", "fail") in messages
     assert ("distance_two", "direct_opposition", "SUR", "confirm") in messages
+
+
+def _basin_eval_rows(positive_fens: list[str], negative_fens: list[str]) -> list[dict]:
+    rows = []
+    for expected, fen in [(True, fen) for fen in positive_fens] + [
+        (False, fen) for fen in negative_fens
+    ]:
+        board = chess.Board(fen)
+        assert bool(_mate_moves(board)) is expected
+        audit = run_mate_in_one_basin_recognizer(board, record_trace=True)
+        rows.append(
+            {
+                "fen": fen,
+                "expected": expected,
+                "confirmed": audit["confirmed"],
+                "basin_state": audit["basin_state"],
+                "escape_restricted_state": audit["escape_restricted_state"],
+                "ticks": audit["ticks"],
+                "mate_moves": [move.uci() for move in _mate_moves(board)],
+                "trace_messages": {
+                    (message["src"], message["dst"], message["link_type"], message["message"])
+                    for frame in audit["trace"]
+                    for message in frame["messages"]
+                },
+            }
+        )
+    return rows
+
+
+def test_phase2_mate_in_one_basin_quorum_generalizes_on_generated_heldout() -> None:
+    positive_fens = _generate_mate_in_one_positions(
+        count=48,
+        seed=20260731,
+        max_attempts=240_000,
+    )
+    negative_set = generate_position_sets(
+        seed=20260731,
+        train_count=0,
+        heldout_weakness_count=24,
+        heldout_broader_count=24,
+    )
+    negative_fens = list(negative_set.heldout)
+
+    rows = _basin_eval_rows(positive_fens, negative_fens)
+    true_positive = sum(row["expected"] and row["confirmed"] for row in rows)
+    false_negative = sum(row["expected"] and not row["confirmed"] for row in rows)
+    false_positive = sum((not row["expected"]) and row["confirmed"] for row in rows)
+    true_negative = sum((not row["expected"]) and not row["confirmed"] for row in rows)
+    precision = true_positive / max(1, true_positive + false_positive)
+    recall = true_positive / max(1, true_positive + false_negative)
+
+    assert true_positive >= 12
+    assert true_negative > 0
+    assert precision > 0.0
+    assert recall > 0.0
+    confirmed_row = next(row for row in rows if row["confirmed"])
+    assert ("mate_in_1_basin", "phase2_basin_root", "SUR", "confirm") in confirmed_row["trace_messages"]
 
 
 def test_tg26u_smoke_materializes_native_quorum_and_reports_ablations() -> None:
