@@ -6,6 +6,7 @@ from recon_lite_chess.autogrowth import (
     extract_learner_features,
     generate_position_sets,
     run_mate_in_one_basin_recognizer,
+    run_mate_in_one_skill,
     run_native_quorum_materialization,
 )
 from recon_lite_chess.autogrowth.foundation_curriculum import (
@@ -141,6 +142,38 @@ def _basin_confusion(rows: list[dict]) -> dict[str, float | int]:
     }
 
 
+def _skill_eval_rows(positive_fens: list[str], negative_fens: list[str]) -> list[dict]:
+    rows = []
+    for expected, fen in [(True, fen) for fen in positive_fens] + [
+        (False, fen) for fen in negative_fens
+    ]:
+        board = chess.Board(fen)
+        assert bool(_mate_moves(board)) is expected
+        audit = run_mate_in_one_skill(board, record_trace=True)
+        bound_move = (
+            None if audit["bound_move"] is None else chess.Move.from_uci(audit["bound_move"])
+        )
+        mate_moves = _mate_moves(board)
+        rows.append(
+            {
+                "fen": fen,
+                "expected": expected,
+                "confirmed": audit["confirmed"],
+                "bound_move": None if bound_move is None else bound_move.uci(),
+                "delivered_mate": bound_move in mate_moves if bound_move is not None else False,
+                "root_state": audit["root_state"],
+                "skill_state": audit["skill_state"],
+                "recognizer_step_state": audit["recognizer_step_state"],
+                "basin_state": audit["basin_state"],
+                "actuator_script_state": audit["actuator_script_state"],
+                "actuator_state": audit["actuator_state"],
+                "mate_moves": [move.uci() for move in mate_moves],
+                "trace_messages": _trace_messages(audit["trace"]),
+            }
+        )
+    return rows
+
+
 def test_phase2_mate_in_one_basin_quorum_generalizes_on_generated_heldout() -> None:
     known_false_positive_fens = {
         "2K5/8/k7/8/8/8/8/4R3 w - - 0 1",
@@ -242,6 +275,58 @@ def test_phase2_mate_in_one_basin_quorum_generalizes_on_generated_heldout() -> N
         "precision": 1.0,
         "recall": 1.0,
     }
+
+
+def test_phase2_mate_in_one_skill_binds_basin_to_edge_mate_actuator() -> None:
+    positive_fens = _generate_mate_in_one_positions(
+        count=64,
+        seed=20261001,
+        max_attempts=320_000,
+    )
+    negative_set = generate_position_sets(
+        seed=20261001,
+        train_count=0,
+        heldout_weakness_count=32,
+        heldout_broader_count=32,
+    )
+    rows = _skill_eval_rows(positive_fens, list(negative_set.heldout))
+    positive_rows = [row for row in rows if row["expected"]]
+    negative_rows = [row for row in rows if not row["expected"]]
+    misses = [
+        row for row in positive_rows if not row["confirmed"] or not row["delivered_mate"]
+    ]
+    false_emissions = [
+        row for row in negative_rows if row["confirmed"] or row["bound_move"] is not None
+    ]
+
+    assert len(positive_rows) == 64
+    assert len(negative_rows) == 64
+    assert misses == []
+    assert false_emissions == []
+
+    traced = positive_rows[0]["trace_messages"]
+    assert ("phase2_mate_in_1_skill_root", "mate_in_1_skill", "SUB", "request") in traced
+    assert (
+        "mate_in_1_skill",
+        "mate_in_1_basin_recognizer_step",
+        "SUB",
+        "request",
+    ) in traced
+    assert (
+        "mate_in_1_basin",
+        "mate_in_1_basin_recognizer_step",
+        "SUR",
+        "confirm",
+    ) in traced
+    assert (
+        "mate_in_1_basin_recognizer_step",
+        "deliver_edge_mate_step",
+        "POR",
+        "inhibit_request",
+    ) in traced
+    assert ("deliver_edge_mate_step", "deliver_edge_mate", "SUB", "request") in traced
+    assert ("deliver_edge_mate", "deliver_edge_mate_step", "SUR", "confirm") in traced
+    assert ("deliver_edge_mate_step", "mate_in_1_skill", "SUR", "confirm") in traced
 
 
 def test_tg26u_smoke_materializes_native_quorum_and_reports_ablations() -> None:

@@ -7,12 +7,15 @@ from typing import Any, Callable
 
 import chess
 
-from recon_lite import FormalReConEngine, Graph, Node, NodeState, NodeType
+from recon_lite import FormalReConEngine, Graph, LinkType, Node, NodeState, NodeType
 
 from .features import extract_learner_features
 
 
 ROOT_ID = "phase2_basin_root"
+MATE_IN_ONE_SKILL_ROOT_ID = "phase2_mate_in_1_skill_root"
+MATE_IN_ONE_SKILL_ID = "mate_in_1_skill"
+MATE_IN_ONE_RECOGNIZER_STEP_ID = "mate_in_1_basin_recognizer_step"
 MATE_IN_ONE_BASIN_ID = "mate_in_1_basin"
 ESCAPE_RESTRICTED_ID = "mate_in_1_escape_restricted"
 KING_SUPPORT_GEOMETRY_ID = "mate_in_1_king_support_geometry"
@@ -22,6 +25,10 @@ FILE_EDGE_OPPOSITION_ID = "mate_in_1_file_edge_opposition"
 BLACK_KING_ON_RANK_EDGE_ID = "mate_in_1_black_king_on_rank_edge"
 BLACK_KING_ON_FILE_EDGE_ID = "mate_in_1_black_king_on_file_edge"
 CORNER_KNIGHT_SUPPORT_ID = "mate_in_1_corner_knight_support"
+DELIVER_EDGE_MATE_SCRIPT_ID = "deliver_edge_mate_step"
+DELIVER_EDGE_MATE_ACTUATOR_ID = "deliver_edge_mate"
+
+_BK_NEIGHBOR_DIRECTIONS = ("n", "ne", "e", "se", "s", "sw", "w", "nw")
 
 
 @dataclass(frozen=True)
@@ -65,7 +72,7 @@ def mate_in_one_basin_atoms() -> tuple[PerceptAtom, ...]:
             expected=0.0,
             reason="black king neighbor is statically unavailable",
         )
-        for direction in ("n", "ne", "e", "se", "s", "sw", "w", "nw")
+        for direction in _BK_NEIGHBOR_DIRECTIONS
     )
     return (
         PerceptAtom("atom_white_to_move", "side_white_to_move", "eq", 1.0, "white has the mating turn"),
@@ -178,11 +185,9 @@ def _add_percept_atom(graph: Graph, atom: PerceptAtom, parent: str) -> None:
     graph.add_hierarchy_pair(parent, atom.node_id)
 
 
-def build_mate_in_one_basin_graph() -> Graph:
-    """Build the fixed recognizer graph; no positions or labels are stored."""
+def _add_mate_in_one_basin_subgraph(graph: Graph, parent_id: str) -> None:
+    """Attach the fixed basin recognizer under an existing script parent."""
 
-    graph = Graph()
-    graph.add_node(Node(ROOT_ID, NodeType.SCRIPT))
     _add_quorum_script(graph, MATE_IN_ONE_BASIN_ID, role="mate_in_1_basin", policy="and")
     _add_quorum_script(
         graph,
@@ -227,7 +232,7 @@ def build_mate_in_one_basin_graph() -> Graph:
         role="corner_knight_support_quorum",
         policy="and",
     )
-    graph.add_hierarchy_pair(ROOT_ID, MATE_IN_ONE_BASIN_ID)
+    graph.add_hierarchy_pair(parent_id, MATE_IN_ONE_BASIN_ID)
     graph.add_hierarchy_pair(MATE_IN_ONE_BASIN_ID, ESCAPE_RESTRICTED_ID)
     graph.add_hierarchy_pair(MATE_IN_ONE_BASIN_ID, KING_SUPPORT_GEOMETRY_ID)
     graph.add_hierarchy_pair(KING_SUPPORT_GEOMETRY_ID, EDGE_RELATIVE_OPPOSITION_ID)
@@ -254,6 +259,169 @@ def build_mate_in_one_basin_graph() -> Graph:
             parent = MATE_IN_ONE_BASIN_ID
         _add_percept_atom(graph, atom, parent)
 
+
+def build_mate_in_one_basin_graph() -> Graph:
+    """Build the fixed recognizer graph; no positions or labels are stored."""
+
+    graph = Graph()
+    graph.add_node(Node(ROOT_ID, NodeType.SCRIPT))
+    _add_mate_in_one_basin_subgraph(graph, ROOT_ID)
+    graph.validate_formal_pairs()
+    return graph
+
+
+def _white_rook_square(board: chess.Board) -> int | None:
+    rooks = sorted(board.pieces(chess.ROOK, chess.WHITE))
+    return rooks[0] if rooks else None
+
+
+def _white_king_defends_square(board: chess.Board, square: int) -> bool:
+    white_king = board.king(chess.WHITE)
+    return white_king is not None and chess.square_distance(white_king, square) <= 1
+
+
+def _rook_on_black_king_edge_line(
+    board: chess.Board,
+    *,
+    features: dict[str, float],
+) -> bool:
+    if features["rook_distance_to_black_king_edge_line"] == 0.0:
+        return True
+
+    black_king = board.king(chess.BLACK)
+    rook = _white_rook_square(board)
+    if black_king is None or rook is None:
+        return False
+    if features["black_king_corner_distance"] != 0.0:
+        return False
+
+    return (
+        chess.square_file(rook) == chess.square_file(black_king)
+        or chess.square_rank(rook) == chess.square_rank(black_king)
+    )
+
+
+def _black_king_along_edge_squares(black_king: int) -> tuple[int, ...]:
+    file_idx = chess.square_file(black_king)
+    rank_idx = chess.square_rank(black_king)
+    squares: set[int] = set()
+    if file_idx in (0, 7):
+        for rank_delta in (-1, 1):
+            rank = rank_idx + rank_delta
+            if 0 <= rank <= 7:
+                squares.add(chess.square(file_idx, rank))
+    if rank_idx in (0, 7):
+        for file_delta in (-1, 1):
+            file_ = file_idx + file_delta
+            if 0 <= file_ <= 7:
+                squares.add(chess.square(file_, rank_idx))
+    return tuple(sorted(squares))
+
+
+def _white_covers_with_black_king_vacated(board: chess.Board, square: int) -> bool:
+    black_king = board.king(chess.BLACK)
+    if black_king is None:
+        return False
+    vacated = board.copy(stack=False)
+    vacated.remove_piece_at(black_king)
+    return vacated.is_attacked_by(chess.WHITE, square)
+
+
+def _has_deliver_edge_mate_geometry(after_board: chess.Board) -> bool:
+    rook = _white_rook_square(after_board)
+    black_king = after_board.king(chess.BLACK)
+    if rook is None or black_king is None:
+        return False
+
+    features = extract_learner_features(after_board)
+    if not _rook_on_black_king_edge_line(after_board, features=features):
+        return False
+    if features["rook_attacked_by_black"] > 0.0 and not _white_king_defends_square(
+        after_board,
+        rook,
+    ):
+        return False
+
+    return all(
+        _white_covers_with_black_king_vacated(after_board, square)
+        for square in _black_king_along_edge_squares(black_king)
+    )
+
+
+def resolve_deliver_edge_mate_move(board: chess.Board) -> chess.Move | None:
+    """Resolve the requested edge-mate actuator by one-ply rook-move geometry."""
+
+    rook = _white_rook_square(board)
+    if rook is None or board.turn != chess.WHITE:
+        return None
+
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        if move.from_square != rook:
+            continue
+        after = board.copy(stack=False)
+        after.push(move)
+        if _has_deliver_edge_mate_geometry(after):
+            return move
+    return None
+
+
+def _deliver_edge_mate_predicate(node: Node, env: dict[str, Any]) -> tuple[bool, bool]:
+    board = env["board"]
+    move = resolve_deliver_edge_mate_move(board)
+    if move is None:
+        node.meta["last_failure"] = "no_legal_rook_move_realized_edge_mate_delta"
+        node.activation.value = 0.0
+        return True, False
+
+    node.meta["bound_move"] = move.uci()
+    node.activation.value = 1.0
+    env.setdefault("mate_in_1_skill", {})["bound_move"] = move.uci()
+    return True, True
+
+
+def build_mate_in_one_skill_graph() -> Graph:
+    """Build recognizer POR actuator skill graph; no learned weights are used."""
+
+    graph = Graph()
+    graph.add_node(Node(MATE_IN_ONE_SKILL_ROOT_ID, NodeType.SCRIPT))
+    graph.add_node(
+        Node(
+            MATE_IN_ONE_SKILL_ID,
+            NodeType.SCRIPT,
+            meta={"role": "mate_in_1_skill"},
+        )
+    )
+    graph.add_node(
+        Node(
+            MATE_IN_ONE_RECOGNIZER_STEP_ID,
+            NodeType.SCRIPT,
+            meta={"role": "mate_in_1_basin_recognizer_step"},
+        )
+    )
+    _add_mate_in_one_basin_subgraph(graph, MATE_IN_ONE_RECOGNIZER_STEP_ID)
+    _add_quorum_script(
+        graph,
+        DELIVER_EDGE_MATE_SCRIPT_ID,
+        role="deliver_edge_mate_step",
+        policy="and",
+    )
+    graph.add_node(
+        Node(
+            DELIVER_EDGE_MATE_ACTUATOR_ID,
+            NodeType.TERMINAL,
+            predicate=_deliver_edge_mate_predicate,
+            meta={
+                "role": "actuator_terminal",
+                "actuator": "deliver_edge_mate",
+                "delta": "rook_distance_to_black_king_edge_line_to_zero",
+            },
+        )
+    )
+    graph.add_hierarchy_pair(MATE_IN_ONE_SKILL_ROOT_ID, MATE_IN_ONE_SKILL_ID)
+    graph.add_hierarchy_pair(MATE_IN_ONE_SKILL_ID, MATE_IN_ONE_RECOGNIZER_STEP_ID)
+    graph.add_hierarchy_pair(MATE_IN_ONE_SKILL_ID, DELIVER_EDGE_MATE_SCRIPT_ID)
+    graph.add_hierarchy_pair(DELIVER_EDGE_MATE_SCRIPT_ID, DELIVER_EDGE_MATE_ACTUATOR_ID)
+    graph.add_sequence_pair(MATE_IN_ONE_RECOGNIZER_STEP_ID, DELIVER_EDGE_MATE_SCRIPT_ID)
     graph.validate_formal_pairs()
     return graph
 
@@ -301,6 +469,47 @@ def run_mate_in_one_basin_recognizer(
         "ticks": engine.tick,
         "features": features,
         "atom_states": atom_states,
+        "script_states": script_states,
+        "trace": trace,
+    }
+
+
+def run_mate_in_one_skill(
+    board: chess.Board,
+    *,
+    max_ticks: int = 48,
+    record_trace: bool = True,
+) -> dict[str, Any]:
+    """Execute the Mate-in-1 recognizer-to-actuator skill on one board."""
+
+    graph = build_mate_in_one_skill_graph()
+    features = extract_learner_features(board)
+    env: dict[str, Any] = {"board": board, "features": features}
+    engine = FormalReConEngine(graph, record_trace=record_trace)
+    engine.request(MATE_IN_ONE_SKILL_ROOT_ID)
+    trace = engine.run(
+        max_ticks=max_ticks,
+        env=env,
+        until=lambda _engine: graph.nodes[MATE_IN_ONE_SKILL_ROOT_ID].state
+        in (NodeState.CONFIRMED, NodeState.FAILED),
+    )
+    actuator_node = graph.nodes[DELIVER_EDGE_MATE_ACTUATOR_ID]
+    script_states = {
+        node_id: node.state.name
+        for node_id, node in sorted(graph.nodes.items())
+        if node.ntype == NodeType.SCRIPT
+    }
+    return {
+        "confirmed": graph.nodes[MATE_IN_ONE_SKILL_ID].state == NodeState.CONFIRMED,
+        "root_state": graph.nodes[MATE_IN_ONE_SKILL_ROOT_ID].state.name,
+        "skill_state": graph.nodes[MATE_IN_ONE_SKILL_ID].state.name,
+        "recognizer_step_state": graph.nodes[MATE_IN_ONE_RECOGNIZER_STEP_ID].state.name,
+        "basin_state": graph.nodes[MATE_IN_ONE_BASIN_ID].state.name,
+        "actuator_script_state": graph.nodes[DELIVER_EDGE_MATE_SCRIPT_ID].state.name,
+        "actuator_state": actuator_node.state.name,
+        "bound_move": actuator_node.meta.get("bound_move"),
+        "ticks": engine.tick,
+        "features": features,
         "script_states": script_states,
         "trace": trace,
     }
