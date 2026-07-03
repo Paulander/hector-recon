@@ -3,18 +3,20 @@
 Mission: merge the Feb baseline learner, native ReCoN runtime, and TG46+ evaluation rigor into one
 learner whose frozen graph beats its baseline on heldout KRK behavior with causal ablation evidence.
 
-Current state: Phase 0 is closed.
+Current state: Phase 1.3 complete.
 
-Headline result: parent baseline 0.156 mean heldout episode success -> M3+M4 0.240 mean across
-3/3 seeds.
+Dieted foundation result: TG46c full-M3 Mate-in-2 heldout all-reply passed 3/3 seeds after the
+black-king-neighbor percept revision: 20260701=0.94, 20260702=0.95, 20260703=0.96.
 
-Ablation result: the trained gain is causal and veto-driven per decomposition; plumbing is verified
-by the child-zeroed arm.
+Canonical dieted parent: reports/autogrowth/clean_slate_krk/dieted_foundation_v1/krk_tg46c_real_mate2_repair_seed_20260702_rev1.json
 
-Known limitation: positive affordances promote and activate but are behaviorally neutral. This is
-deferred to Phase 2 representations.
+Canonical sha256: ae382d0463e35eff09e9515a715648b5d49b1e0891d127a660e036e378452eb6
 
-Current task: 1.2a diet refactor done; next: 1.2b dieted foundation retrain, 3 seeds, acceptance >=0.90 Mate-in-2 heldout all-reply.
+Recorded finding: M4 per-key precision promotion loses distributed percept signal (0.94 -> 0.86 on
+seed 20260701); promotion redesign deferred to Phase 2 (quorum composition re-compresses
+distributed atoms into promotable units).
 
-No-go until Phase 1 starts: new TG names, new report documents, new pool/cache formats, training
-logic changes, `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.
+Current task: Phase 1.3 complete; next: Phase 2 kickoff (composition primitives + quorum basin terminals).
+
+No-go: new TG names, new report documents, new pool/cache formats, training logic changes,
+`docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.
