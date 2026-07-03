@@ -259,6 +259,9 @@ class FormalReConEngine:
         if node.state == NodeState.ACTIVE:
             return NodeState.WAITING
         if node.state == NodeState.WAITING:
+            quorum_state = self._next_quorum_script_state(node)
+            if quorum_state is not None:
+                return quorum_state
             if confirm:
                 return NodeState.TRUE
             if fail and not wait:
@@ -300,6 +303,29 @@ class FormalReConEngine:
         if not done:
             return NodeState.WAITING
         return NodeState.TRUE if success else NodeState.FAILED
+
+    def _next_quorum_script_state(self, node: Node) -> Optional[NodeState]:
+        policy = str(node.meta.get("confirm_policy", "or")).lower()
+        if policy not in {"and", "k_of_n", "quorum"}:
+            return None
+
+        children = self.g.children(node.nid)
+        if not children:
+            return None
+        if policy == "and":
+            threshold = len(children)
+        else:
+            threshold = int(node.meta.get("confirm_k", node.meta.get("quorum_k", 1)))
+        threshold = max(1, min(threshold, len(children)))
+
+        confirmed = sum(1 for child in children if self.g.nodes[child].state == NodeState.CONFIRMED)
+        failed = sum(1 for child in children if self.g.nodes[child].state == NodeState.FAILED)
+        pending = len(children) - confirmed - failed
+        if confirmed >= threshold:
+            return NodeState.TRUE
+        if confirmed + pending < threshold:
+            return NodeState.FAILED
+        return NodeState.WAITING
 
     def _node_states(self, active_nodes: Optional[set[str]] = None) -> Dict[str, str]:
         return {nid: node.state.name for nid, node in self._iter_nodes(active_nodes)}
