@@ -20,6 +20,17 @@ REMOVE_MARKED_FEATURES = {
     "white_king_controls_escape_band",
 }
 
+BK_NEIGHBOR_FEATURES = {
+    "bk_neighbor_n_available",
+    "bk_neighbor_ne_available",
+    "bk_neighbor_e_available",
+    "bk_neighbor_se_available",
+    "bk_neighbor_s_available",
+    "bk_neighbor_sw_available",
+    "bk_neighbor_w_available",
+    "bk_neighbor_nw_available",
+}
+
 
 def test_learner_features_exclude_forbidden_terms() -> None:
     board = chess.Board("8/8/8/4k3/8/8/8/R3K3 w - - 0 1")
@@ -34,9 +45,14 @@ def test_learner_features_exclude_forbidden_terms() -> None:
 
 
 def test_learner_features_are_dieted_to_percepts() -> None:
-    features = extract_learner_features(chess.Board("8/8/8/4k3/8/8/8/R3K3 w - - 0 1"))
+    features = extract_learner_features(
+        chess.Board("8/8/8/4k3/8/8/8/R3K3 w - - 0 1")
+    )
 
-    assert not (REMOVE_MARKED_FEATURES & features.keys()) and not any(key.startswith("feature_hub_") for key in features)
+    assert BK_NEIGHBOR_FEATURES <= features.keys()
+    assert not (REMOVE_MARKED_FEATURES & features.keys()) and not any(
+        key.startswith("feature_hub_") for key in features
+    )
 
 
 def test_trace_record_excludes_forbidden_terms() -> None:

@@ -44,6 +44,14 @@
 `feature_hub_enemy_king_mobility` | COMPUTED-LOOKAHEAD REMOVE | counts enemy king escape squares.
 `feature_hub_enemy_king_mobility_raw` | COMPUTED-LOOKAHEAD REMOVE | raw enemy king escape-square count.
 `feature_hub_stalemate_danger` | CONCEPT REMOVE | composite stalemate-risk heuristic.
+`bk_neighbor_n_available` | PERCEPT | static attack geometry, same class as is_check.
+`bk_neighbor_ne_available` | PERCEPT | static attack geometry, same class as is_check.
+`bk_neighbor_e_available` | PERCEPT | static attack geometry, same class as is_check.
+`bk_neighbor_se_available` | PERCEPT | static attack geometry, same class as is_check.
+`bk_neighbor_s_available` | PERCEPT | static attack geometry, same class as is_check.
+`bk_neighbor_sw_available` | PERCEPT | static attack geometry, same class as is_check.
+`bk_neighbor_w_available` | PERCEPT | static attack geometry, same class as is_check.
+`bk_neighbor_nw_available` | PERCEPT | static attack geometry, same class as is_check.
 
 ## Impact Inventory
 Promoted refs mate1/mate2_first: `legal_move_count` 1/1; `black_reply_mobility` 3/5; `is_checkmate` 0/0; `is_stalemate` 0/0.

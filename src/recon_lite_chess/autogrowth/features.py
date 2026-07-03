@@ -27,6 +27,17 @@ FORBIDDEN_LEARNER_TERMS = (
     "landmark",
 )
 
+_BK_NEIGHBOR_DIRECTIONS = (
+    ("n", 0, 1),
+    ("ne", 1, 1),
+    ("e", 1, 0),
+    ("se", 1, -1),
+    ("s", 0, -1),
+    ("sw", -1, -1),
+    ("w", -1, 0),
+    ("nw", -1, 1),
+)
+
 
 def _square_file(square: int | None) -> int:
     return -1 if square is None else chess.square_file(square)
@@ -216,6 +227,30 @@ def _edge_geometry_features(
     }
 
 
+def _black_king_neighbor_features(board: chess.Board, black_king: int | None) -> dict[str, float]:
+    features = {
+        f"bk_neighbor_{name}_available": 0.0
+        for name, _, _ in _BK_NEIGHBOR_DIRECTIONS
+    }
+    if black_king is None:
+        return features
+
+    bk_file = chess.square_file(black_king)
+    bk_rank = chess.square_rank(black_king)
+    for name, file_delta, rank_delta in _BK_NEIGHBOR_DIRECTIONS:
+        file_idx = bk_file + file_delta
+        rank_idx = bk_rank + rank_delta
+        if not (0 <= file_idx <= 7 and 0 <= rank_idx <= 7):
+            continue
+        square = chess.square(file_idx, rank_idx)
+        if board.piece_at(square) is None and not board.is_attacked_by(
+            chess.WHITE,
+            square,
+        ):
+            features[f"bk_neighbor_{name}_available"] = 1.0
+    return features
+
+
 def extract_learner_features(board: chess.Board) -> dict[str, float]:
     """Return generic learner-visible features for a KRK board.
 
@@ -243,12 +278,15 @@ def extract_learner_features(board: chess.Board) -> dict[str, float]:
         "rook_attacked_by_black": 1.0 if _rook_attacked_by_black(board) else 0.0,
         "is_check": 1.0 if board.is_check() else 0.0,
     }
-    features.update(_edge_geometry_features(
-        white_king=white_king,
-        black_king=black_king,
-        rook=rook,
-        board=board,
-    ))
+    features.update(
+        _edge_geometry_features(
+            white_king=white_king,
+            black_king=black_king,
+            rook=rook,
+            board=board,
+        )
+    )
+    features.update(_black_king_neighbor_features(board, black_king))
     validate_learner_record(features)
     return features
 
@@ -257,14 +295,20 @@ def extract_diagnostic_features(board: chess.Board) -> dict[str, float]:
     """Return the full trainer-side feature record, including diagnostics."""
 
     features = extract_learner_features(board)
-    features.update({
-        "legal_move_count": float(board.legal_moves.count()),
-        "black_reply_mobility": float(_black_mobility(board)),
-        "is_checkmate": 1.0 if board.is_checkmate() else 0.0,
-        "is_stalemate": 1.0 if board.is_stalemate() else 0.0,
-        "rook_lateral_escape_available": 1.0 if _rook_lateral_escape_available(board) else 0.0,
-        "white_king_controls_escape_band": 1.0 if _white_king_controls_escape_band(board) else 0.0,
-    })
+    features.update(
+        {
+            "legal_move_count": float(board.legal_moves.count()),
+            "black_reply_mobility": float(_black_mobility(board)),
+            "is_checkmate": 1.0 if board.is_checkmate() else 0.0,
+            "is_stalemate": 1.0 if board.is_stalemate() else 0.0,
+            "rook_lateral_escape_available": 1.0
+            if _rook_lateral_escape_available(board)
+            else 0.0,
+            "white_king_controls_escape_band": 1.0
+            if _white_king_controls_escape_band(board)
+            else 0.0,
+        }
+    )
     validate_learner_record(features)
     return features
 
