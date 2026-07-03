@@ -1,0 +1,219 @@
+{
+  "pool": {
+    "negative_label_count": 1700,
+    "orderer_line": "loaded canonical TG46c full-M3 mate2_first artifact reports/autogrowth/clean_slate_krk/dieted_foundation_v1/krk_tg46c_real_mate2_repair_seed_20260702_rev1.json; used graph_summary.top_mate2_first_terminals exported rows, so 20/657 keys matched because the artifact stores top 10 positive and top 10 negative terminals",
+    "pool_path": "reports/autogrowth/clean_slate_krk/phase2_chain_confidence_v1/pools/chain_confidence_pool_seed_20261201.jsonl.gz",
+    "positive_label_count": 300,
+    "row_count": 2000,
+    "schema_version": "phase2_chain_confidence_pool_summary.v0",
+    "seed": 20261201,
+    "source_counts": {
+      "mate2_positive_generator": 300,
+      "random_non_mate2_generator": 850,
+      "weakness_near_miss_generator": 850
+    }
+  },
+  "schema_version": "phase2_chain_confidence_summary.v0",
+  "seed_results": {
+    "20261211": {
+      "artifact_path": "reports/autogrowth/clean_slate_krk/phase2_chain_confidence_v1/chain_confidence_gate_seed_20261211.json",
+      "heldout_eval": {
+        "baseline_ordered_negative_frames_max": 185,
+        "baseline_ordered_negative_frames_mean": 125.75764705882352,
+        "baseline_ordered_positive_frames_max": 12,
+        "baseline_ordered_positive_frames_mean": 2.32,
+        "negative_count": 425,
+        "positive_count": 75,
+        "row_count": 500,
+        "thresholds": {
+          "balanced": {
+            "end_to_end_conversion": 0.96,
+            "f1": 0.9795918367346939,
+            "false_negative": 3,
+            "false_positive": 0,
+            "negative_frames_max": 0,
+            "negative_frames_mean": 0.0,
+            "positive_frames_max": 12,
+            "positive_frames_mean": 2.2133333333333334,
+            "precision": 1.0,
+            "recall": 0.96,
+            "threshold": 0.8547562995859772,
+            "true_negative": 425,
+            "true_positive": 72
+          },
+          "precision_favoring": {
+            "end_to_end_conversion": 0.8666666666666667,
+            "f1": 0.9285714285714286,
+            "false_negative": 10,
+            "false_positive": 0,
+            "negative_frames_max": 0,
+            "negative_frames_mean": 0.0,
+            "positive_frames_max": 12,
+            "positive_frames_mean": 2.0,
+            "precision": 1.0,
+            "recall": 0.8666666666666667,
+            "threshold": 0.9380628979994549,
+            "true_negative": 425,
+            "true_positive": 65
+          },
+          "recall_favoring": {
+            "end_to_end_conversion": 1.0,
+            "f1": 0.2608695652173913,
+            "false_negative": 0,
+            "false_positive": 425,
+            "negative_frames_max": 185,
+            "negative_frames_mean": 125.75764705882352,
+            "positive_frames_max": 12,
+            "positive_frames_mean": 2.32,
+            "precision": 0.15,
+            "recall": 1.0,
+            "threshold": 0.0,
+            "true_negative": 0,
+            "true_positive": 75
+          }
+        }
+      },
+      "heldout_row_count": 500,
+      "thresholds": {
+        "balanced": 0.8547562995859772,
+        "precision_favoring": 0.9380628979994549,
+        "recall_favoring": 0.0
+      }
+    },
+    "20261212": {
+      "artifact_path": "reports/autogrowth/clean_slate_krk/phase2_chain_confidence_v1/chain_confidence_gate_seed_20261212.json",
+      "heldout_eval": {
+        "baseline_ordered_negative_frames_max": 182,
+        "baseline_ordered_negative_frames_mean": 124.9435294117647,
+        "baseline_ordered_positive_frames_max": 12,
+        "baseline_ordered_positive_frames_mean": 2.2666666666666666,
+        "negative_count": 425,
+        "positive_count": 75,
+        "row_count": 500,
+        "thresholds": {
+          "balanced": {
+            "end_to_end_conversion": 0.96,
+            "f1": 0.9536423841059603,
+            "false_negative": 3,
+            "false_positive": 4,
+            "negative_frames_max": 110,
+            "negative_frames_mean": 0.7858823529411765,
+            "positive_frames_max": 12,
+            "positive_frames_mean": 2.1866666666666665,
+            "precision": 0.9473684210526315,
+            "recall": 0.96,
+            "threshold": 0.83262735384083,
+            "true_negative": 421,
+            "true_positive": 72
+          },
+          "precision_favoring": {
+            "end_to_end_conversion": 0.8933333333333333,
+            "f1": 0.9370629370629371,
+            "false_negative": 8,
+            "false_positive": 1,
+            "negative_frames_max": 66,
+            "negative_frames_mean": 0.15529411764705883,
+            "positive_frames_max": 12,
+            "positive_frames_mean": 2.026666666666667,
+            "precision": 0.9852941176470589,
+            "recall": 0.8933333333333333,
+            "threshold": 0.932811877311236,
+            "true_negative": 424,
+            "true_positive": 67
+          },
+          "recall_favoring": {
+            "end_to_end_conversion": 1.0,
+            "f1": 0.2608695652173913,
+            "false_negative": 0,
+            "false_positive": 425,
+            "negative_frames_max": 182,
+            "negative_frames_mean": 124.9435294117647,
+            "positive_frames_max": 12,
+            "positive_frames_mean": 2.2666666666666666,
+            "precision": 0.15,
+            "recall": 1.0,
+            "threshold": 0.0,
+            "true_negative": 0,
+            "true_positive": 75
+          }
+        }
+      },
+      "heldout_row_count": 500,
+      "thresholds": {
+        "balanced": 0.83262735384083,
+        "precision_favoring": 0.932811877311236,
+        "recall_favoring": 0.0
+      }
+    },
+    "20261213": {
+      "artifact_path": "reports/autogrowth/clean_slate_krk/phase2_chain_confidence_v1/chain_confidence_gate_seed_20261213.json",
+      "heldout_eval": {
+        "baseline_ordered_negative_frames_max": 185,
+        "baseline_ordered_negative_frames_mean": 124.53411764705882,
+        "baseline_ordered_positive_frames_max": 4,
+        "baseline_ordered_positive_frames_mean": 2.2666666666666666,
+        "negative_count": 425,
+        "positive_count": 75,
+        "row_count": 500,
+        "thresholds": {
+          "balanced": {
+            "end_to_end_conversion": 0.9733333333333334,
+            "f1": 0.9419354838709678,
+            "false_negative": 2,
+            "false_positive": 7,
+            "negative_frames_max": 93,
+            "negative_frames_mean": 1.2541176470588236,
+            "positive_frames_max": 4,
+            "positive_frames_mean": 2.2133333333333334,
+            "precision": 0.9125,
+            "recall": 0.9733333333333334,
+            "threshold": 0.8259946817052094,
+            "true_negative": 418,
+            "true_positive": 73
+          },
+          "precision_favoring": {
+            "end_to_end_conversion": 0.8,
+            "f1": 0.8633093525179856,
+            "false_negative": 15,
+            "false_positive": 4,
+            "negative_frames_max": 93,
+            "negative_frames_mean": 0.6635294117647059,
+            "positive_frames_max": 4,
+            "positive_frames_mean": 1.7866666666666666,
+            "precision": 0.9375,
+            "recall": 0.8,
+            "threshold": 0.9591837270173621,
+            "true_negative": 421,
+            "true_positive": 60
+          },
+          "recall_favoring": {
+            "end_to_end_conversion": 1.0,
+            "f1": 0.2608695652173913,
+            "false_negative": 0,
+            "false_positive": 425,
+            "negative_frames_max": 185,
+            "negative_frames_mean": 124.53411764705882,
+            "positive_frames_max": 4,
+            "positive_frames_mean": 2.2666666666666666,
+            "precision": 0.15,
+            "recall": 1.0,
+            "threshold": 0.0,
+            "true_negative": 0,
+            "true_positive": 75
+          }
+        }
+      },
+      "heldout_row_count": 500,
+      "thresholds": {
+        "balanced": 0.8259946817052094,
+        "precision_favoring": 0.9591837270173621,
+        "recall_favoring": 0.0
+      }
+    }
+  },
+  "train_seeds": [
+    20261211,
+    20261212,
+    20261213
+  ]
+}

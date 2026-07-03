@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import gzip
 import hashlib
 import json
+import math
 from pathlib import Path
-from typing import Any, Callable, Sequence
+import random
+from typing import Any, Callable, Iterable, Mapping, Sequence
 
 import chess
 
@@ -1056,3 +1059,482 @@ def run_mate_in_two_skill(
         "script_states": script_states,
         "trace": trace,
     }
+
+
+CHAIN_CONFIDENCE_OUTPUT_DIR = Path(
+    "reports/autogrowth/clean_slate_krk/phase2_chain_confidence_v1"
+)
+CHAIN_CONFIDENCE_POOL_SCHEMA = "phase2_chain_confidence_pool_row.v0"
+CHAIN_CONFIDENCE_MODEL_SCHEMA = "phase2_chain_confidence_weighted_threshold.v0"
+
+
+def fence_or_opposition_recognizer_confirms(board: chess.Board) -> bool:
+    """Internal geometry recognizer bit over dieted percepts."""
+
+    features = extract_learner_features(board)
+    direct_opposition = (
+        features["king_support_chebyshev_distance"] == 2.0
+        and (
+            features["king_delta_file_abs"] == 0.0
+            or features["king_delta_rank_abs"] == 0.0
+        )
+    )
+    rook_fence = (
+        features["rook_present"] == 1.0
+        and features["rook_attacked_by_black"] == 0.0
+        and features["black_king_nearest_edge_distance"] >= 1.0
+        and features["rook_black_king_opposite_sides_of_white_king_on_primary_axis"] == 1.0
+    )
+    return bool(direct_opposition or rook_fence)
+
+
+def chain_confidence_feature_record(board: chess.Board) -> dict[str, float]:
+    """Dieted percepts plus internal recognizer confirmation bits for the gate."""
+
+    features = dict(extract_learner_features(board))
+    basin = run_mate_in_one_basin_recognizer(
+        board,
+        record_trace=False,
+    )["confirmed"]
+    features["internal_mate_in_1_basin_confirms"] = 1.0 if basin else 0.0
+    features["internal_fence_or_opposition_confirms"] = (
+        1.0 if fence_or_opposition_recognizer_confirms(board) else 0.0
+    )
+    return features
+
+
+def _run_ordered_exact_mate_in_two(
+    board: chess.Board,
+    *,
+    move_orderer: Callable[[chess.Board, Sequence[chess.Move]], Sequence[chess.Move]] | None,
+) -> dict[str, Any]:
+    legal_moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+    moves = legal_moves if move_orderer is None else tuple(move_orderer(board, legal_moves))
+    legal_uci = {move.uci() for move in legal_moves}
+    if len(moves) != len(legal_moves) or {move.uci() for move in moves} != legal_uci:
+        raise ValueError("move_orderer must return each legal move exactly once")
+
+    frames = 0
+    requested = 0
+    for rank, move in enumerate(moves, start=1):
+        after = _after_move(board, move)
+        audit = run_reply_quantifier(after, record_trace=False)
+        requested += 1
+        frames += int(audit["virtual_frame_count"])
+        if audit["confirmed"]:
+            return {
+                "confirmed": True,
+                "bound_move": move.uci(),
+                "bound_move_rank": rank,
+                "frames": frames,
+                "requested_candidates": requested,
+            }
+    return {
+        "confirmed": False,
+        "bound_move": None,
+        "bound_move_rank": None,
+        "frames": frames,
+        "requested_candidates": requested,
+    }
+
+
+def _write_json(path: str | Path, payload: Mapping[str, Any]) -> None:
+    output = Path(path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _write_jsonl_gzip(path: str | Path, rows: Iterable[Mapping[str, Any]]) -> None:
+    output = Path(path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with gzip.open(output, "wt", encoding="utf-8") as handle:
+        for row in rows:
+            handle.write(json.dumps(dict(row), sort_keys=True) + "\n")
+
+
+def _read_jsonl_gzip(path: str | Path) -> list[dict[str, Any]]:
+    with gzip.open(path, "rt", encoding="utf-8") as handle:
+        return [json.loads(line) for line in handle]
+
+
+def generate_chain_confidence_pool(
+    *,
+    seed: int,
+    positive_count: int = 800,
+    random_negative_count: int = 800,
+    near_miss_count: int = 800,
+    output_path: str | Path | None = None,
+) -> dict[str, Any]:
+    """Generate a self-distilled mate-in-2 gate pool in JSONL gzip format."""
+
+    from .foundation_curriculum import (
+        _forced_mate_in_two_first_moves,
+        _generate_forced_mate_in_two_positions,
+    )
+    from .positions import generate_krk_board
+
+    scorer = load_canonical_mate2_first_scorer()
+    orderer_line = (
+        "loaded canonical TG46c full-M3 mate2_first artifact "
+        f"{scorer.source_path}; used graph_summary.top_mate2_first_terminals "
+        f"exported rows, so {len(scorer.terminal_weights)}/{scorer.source_terminal_count} "
+        "keys matched because the artifact stores top 10 positive and top 10 negative terminals"
+    )
+
+    rng = random.Random(seed)
+    used: set[str] = set()
+    source_fens: list[tuple[str, str]] = []
+
+    positive_fens = _generate_forced_mate_in_two_positions(
+        count=positive_count,
+        seed=seed,
+        excluded=used,
+        max_attempts=max(1_000_000, positive_count * 20_000),
+    )
+    for fen in positive_fens:
+        used.add(fen)
+        source_fens.append(("mate2_positive_generator", fen))
+
+    while sum(1 for source, _fen in source_fens if source == "random_non_mate2_generator") < random_negative_count:
+        board = generate_krk_board(rng, weakness_zone=False, excluded_fens=used)
+        if _forced_mate_in_two_first_moves(board):
+            used.add(board.fen())
+            continue
+        fen = board.fen()
+        used.add(fen)
+        source_fens.append(("random_non_mate2_generator", fen))
+
+    while sum(1 for source, _fen in source_fens if source == "weakness_near_miss_generator") < near_miss_count:
+        board = generate_krk_board(rng, weakness_zone=True, excluded_fens=used)
+        fen = board.fen()
+        used.add(fen)
+        source_fens.append(("weakness_near_miss_generator", fen))
+
+    rows: list[dict[str, Any]] = []
+    for index, (source, fen) in enumerate(source_fens):
+        board = chess.Board(fen)
+        features = chain_confidence_feature_record(board)
+        internal = {
+            "internal_mate_in_1_basin_confirms": features["internal_mate_in_1_basin_confirms"],
+            "internal_fence_or_opposition_confirms": features["internal_fence_or_opposition_confirms"],
+        }
+        exact = _run_ordered_exact_mate_in_two(
+            board,
+            move_orderer=scorer.order_moves,
+        )
+        rows.append({
+            "schema_version": CHAIN_CONFIDENCE_POOL_SCHEMA,
+            "row_id": index,
+            "seed": int(seed),
+            "source": source,
+            "fen": fen,
+            "dieted_percepts": {
+                key: value
+                for key, value in sorted(features.items())
+                if not key.startswith("internal_")
+            },
+            "internal_terminal_features": internal,
+            "gate_features": features,
+            "exact_mate_in_2_label": bool(exact["confirmed"]),
+            "exact_bound_move": exact["bound_move"],
+            "exact_bound_move_order_rank": exact["bound_move_rank"],
+            "exact_ordered_frames": exact["frames"],
+            "exact_ordered_requested_candidates": exact["requested_candidates"],
+            "label_source": "ordered_exact_mate_in_2_skill_reply_quantifier",
+        })
+
+    path = Path(output_path) if output_path is not None else (
+        CHAIN_CONFIDENCE_OUTPUT_DIR / "pools" / f"chain_confidence_pool_seed_{seed}.jsonl.gz"
+    )
+    _write_jsonl_gzip(path, rows)
+    positives = sum(1 for row in rows if row["exact_mate_in_2_label"])
+    summary = {
+        "schema_version": "phase2_chain_confidence_pool_summary.v0",
+        "seed": int(seed),
+        "pool_path": str(path),
+        "row_count": len(rows),
+        "positive_label_count": positives,
+        "negative_label_count": len(rows) - positives,
+        "source_counts": {
+            source: sum(1 for row in rows if row["source"] == source)
+            for source in sorted({row["source"] for row in rows})
+        },
+        "orderer_line": orderer_line,
+    }
+    _write_json(path.with_suffix("").with_suffix(".summary.json"), summary)
+    return summary
+
+
+def _gate_base_features(raw: Mapping[str, float], stats: Mapping[str, Mapping[str, float]] | None) -> dict[str, float]:
+    values: dict[str, float] = {}
+    for key, value in sorted(raw.items()):
+        numeric = float(value)
+        if stats is not None:
+            item = stats[key]
+            numeric = (numeric - float(item["mean"])) / max(1e-9, float(item["std"]))
+        values[f"raw:{key}"] = numeric
+        values[f"bucket:{key}={int(round(float(value)))}"] = 1.0
+    return values
+
+
+def _feature_stats(rows: Sequence[Mapping[str, Any]]) -> dict[str, dict[str, float]]:
+    keys = sorted(rows[0]["gate_features"])
+    stats: dict[str, dict[str, float]] = {}
+    for key in keys:
+        values = [float(row["gate_features"][key]) for row in rows]
+        avg = sum(values) / len(values)
+        var = sum((value - avg) ** 2 for value in values) / len(values)
+        stats[key] = {"mean": avg, "std": math.sqrt(var) if var > 1e-12 else 1.0}
+    return stats
+
+
+def _sigmoid(value: float) -> float:
+    if value >= 0:
+        z = math.exp(-value)
+        return 1.0 / (1.0 + z)
+    z = math.exp(value)
+    return z / (1.0 + z)
+
+
+def _score_gate_model(model: Mapping[str, Any], features: Mapping[str, float]) -> float:
+    weights = model["weights"]
+    values = _gate_base_features(features, model["feature_stats"])
+    score = float(model["bias"])
+    for key, value in values.items():
+        score += float(weights.get(key, 0.0)) * value
+    return _sigmoid(score)
+
+
+def _threshold_metrics(scores: Sequence[float], labels: Sequence[bool], threshold: float) -> dict[str, float | int]:
+    tp = sum(score >= threshold and label for score, label in zip(scores, labels))
+    fp = sum(score >= threshold and not label for score, label in zip(scores, labels))
+    fn = sum(score < threshold and label for score, label in zip(scores, labels))
+    tn = sum(score < threshold and not label for score, label in zip(scores, labels))
+    precision = 0.0 if tp + fp == 0 else tp / (tp + fp)
+    recall = 0.0 if tp + fn == 0 else tp / (tp + fn)
+    f1 = 0.0 if precision + recall == 0.0 else 2.0 * precision * recall / (precision + recall)
+    return {
+        "threshold": float(threshold),
+        "true_positive": int(tp),
+        "false_positive": int(fp),
+        "false_negative": int(fn),
+        "true_negative": int(tn),
+        "precision": precision,
+        "recall": recall,
+        "f1": f1,
+    }
+
+
+def _choose_gate_thresholds(scores: Sequence[float], labels: Sequence[bool]) -> dict[str, float]:
+    score_tuple = tuple(scores)
+    positive_scores = [score for score, label in zip(scores, labels) if label]
+    if not positive_scores:
+        raise ValueError("chain-confidence training requires positive examples")
+    candidates = sorted(set(score_tuple + tuple(score - 1e-12 for score in score_tuple)))
+    recall_favoring = 0.0
+    metrics = [_threshold_metrics(scores, labels, threshold) for threshold in candidates]
+    balanced = max(metrics, key=lambda item: (item["f1"], item["recall"], item["precision"]))["threshold"]
+    recall_safe = [item for item in metrics if item["recall"] >= 0.90]
+    precision_favoring = max(
+        recall_safe or metrics,
+        key=lambda item: (item["precision"], item["recall"], item["threshold"]),
+    )["threshold"]
+    return {
+        "recall_favoring": float(recall_favoring),
+        "balanced": float(balanced),
+        "precision_favoring": float(precision_favoring),
+    }
+
+
+def _stratified_split(
+    rows: Sequence[dict[str, Any]],
+    *,
+    seed: int,
+    heldout_fraction: float,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    rng = random.Random(seed)
+    positives = [row for row in rows if row["exact_mate_in_2_label"]]
+    negatives = [row for row in rows if not row["exact_mate_in_2_label"]]
+    rng.shuffle(positives)
+    rng.shuffle(negatives)
+    pos_heldout = max(1, int(round(len(positives) * heldout_fraction)))
+    neg_heldout = max(1, int(round(len(negatives) * heldout_fraction)))
+    heldout = positives[:pos_heldout] + negatives[:neg_heldout]
+    train = positives[pos_heldout:] + negatives[neg_heldout:]
+    rng.shuffle(train)
+    rng.shuffle(heldout)
+    return train, heldout
+
+
+def train_chain_confidence_gate(
+    rows: Sequence[dict[str, Any]],
+    *,
+    seed: int,
+    heldout_fraction: float = 0.25,
+    epochs: int = 80,
+    learning_rate: float = 0.04,
+    l2: float = 0.0005,
+) -> dict[str, Any]:
+    """Train a weighted-threshold gate over percept/internal features."""
+
+    train_rows, heldout_rows = _stratified_split(
+        list(rows),
+        seed=seed,
+        heldout_fraction=heldout_fraction,
+    )
+    stats = _feature_stats(train_rows)
+    weights: dict[str, float] = {}
+    bias = 0.0
+    rng = random.Random(seed)
+    pos_count = sum(1 for row in train_rows if row["exact_mate_in_2_label"])
+    neg_count = len(train_rows) - pos_count
+    pos_weight = len(train_rows) / max(1.0, 2.0 * pos_count)
+    neg_weight = len(train_rows) / max(1.0, 2.0 * neg_count)
+
+    for epoch in range(epochs):
+        rng.shuffle(train_rows)
+        lr = learning_rate / math.sqrt(epoch + 1.0)
+        for row in train_rows:
+            label = 1.0 if row["exact_mate_in_2_label"] else 0.0
+            values = _gate_base_features(row["gate_features"], stats)
+            linear = bias + sum(weights.get(key, 0.0) * value for key, value in values.items())
+            pred = _sigmoid(linear)
+            class_weight = pos_weight if label > 0.5 else neg_weight
+            err = (pred - label) * class_weight
+            bias -= lr * err
+            for key, value in values.items():
+                current = weights.get(key, 0.0)
+                weights[key] = current - lr * (err * value + l2 * current)
+        if not math.isfinite(bias) or any(not math.isfinite(value) for value in weights.values()):
+            raise ValueError("chain-confidence training diverged")
+
+    model: dict[str, Any] = {
+        "schema_version": CHAIN_CONFIDENCE_MODEL_SCHEMA,
+        "seed": int(seed),
+        "model_type": "weighted_threshold_logistic",
+        "bias": bias,
+        "weights": dict(sorted(weights.items())),
+        "feature_stats": stats,
+        "train_count": len(train_rows),
+        "heldout_count": len(heldout_rows),
+        "train_positive_count": pos_count,
+        "train_negative_count": neg_count,
+        "heldout_positive_count": sum(1 for row in heldout_rows if row["exact_mate_in_2_label"]),
+        "heldout_negative_count": sum(1 for row in heldout_rows if not row["exact_mate_in_2_label"]),
+    }
+    train_scores = [_score_gate_model(model, row["gate_features"]) for row in train_rows]
+    train_labels = [bool(row["exact_mate_in_2_label"]) for row in train_rows]
+    model["thresholds"] = _choose_gate_thresholds(tuple(train_scores), tuple(train_labels))
+    model["train_threshold_metrics"] = {
+        name: _threshold_metrics(tuple(train_scores), tuple(train_labels), threshold)
+        for name, threshold in model["thresholds"].items()
+    }
+    model["heldout_row_ids"] = [int(row["row_id"]) for row in heldout_rows]
+    model["train_row_ids"] = [int(row["row_id"]) for row in train_rows]
+    return model
+
+
+def evaluate_chain_confidence_gate(
+    rows: Sequence[dict[str, Any]],
+    *,
+    model: Mapping[str, Any],
+) -> dict[str, Any]:
+    labels = [bool(row["exact_mate_in_2_label"]) for row in rows]
+    scores = [_score_gate_model(model, row["gate_features"]) for row in rows]
+    positives = [row for row in rows if row["exact_mate_in_2_label"]]
+    negatives = [row for row in rows if not row["exact_mate_in_2_label"]]
+    baseline_positive_frames = [int(row["exact_ordered_frames"]) for row in positives]
+    baseline_negative_frames = [int(row["exact_ordered_frames"]) for row in negatives]
+
+    threshold_rows: dict[str, Any] = {}
+    for name, threshold in model["thresholds"].items():
+        metrics = _threshold_metrics(tuple(scores), tuple(labels), float(threshold))
+        positive_frames: list[int] = []
+        negative_frames: list[int] = []
+        for row, score in zip(rows, scores):
+            frames = int(row["exact_ordered_frames"]) if score >= float(threshold) else 0
+            if row["exact_mate_in_2_label"]:
+                positive_frames.append(frames)
+            else:
+                negative_frames.append(frames)
+        threshold_rows[name] = {
+            **metrics,
+            "end_to_end_conversion": metrics["recall"],
+            "positive_frames_mean": 0.0 if not positive_frames else sum(positive_frames) / len(positive_frames),
+            "positive_frames_max": max(positive_frames) if positive_frames else 0,
+            "negative_frames_mean": 0.0 if not negative_frames else sum(negative_frames) / len(negative_frames),
+            "negative_frames_max": max(negative_frames) if negative_frames else 0,
+        }
+
+    return {
+        "row_count": len(rows),
+        "positive_count": len(positives),
+        "negative_count": len(negatives),
+        "baseline_ordered_positive_frames_mean": (
+            0.0 if not baseline_positive_frames else sum(baseline_positive_frames) / len(baseline_positive_frames)
+        ),
+        "baseline_ordered_positive_frames_max": max(baseline_positive_frames) if baseline_positive_frames else 0,
+        "baseline_ordered_negative_frames_mean": (
+            0.0 if not baseline_negative_frames else sum(baseline_negative_frames) / len(baseline_negative_frames)
+        ),
+        "baseline_ordered_negative_frames_max": max(baseline_negative_frames) if baseline_negative_frames else 0,
+        "thresholds": threshold_rows,
+    }
+
+
+def run_chain_confidence_training(
+    *,
+    pool_seed: int = 20261201,
+    train_seeds: Sequence[int] = (20261211, 20261212, 20261213),
+    output_dir: str | Path = CHAIN_CONFIDENCE_OUTPUT_DIR,
+    regenerate_pool: bool = False,
+    positive_count: int = 800,
+    random_negative_count: int = 800,
+    near_miss_count: int = 800,
+) -> dict[str, Any]:
+    """Generate/load the Phase 2.5 pool, train 3 gate seeds, and write artifacts."""
+
+    base = Path(output_dir)
+    pool_path = base / "pools" / f"chain_confidence_pool_seed_{pool_seed}.jsonl.gz"
+    if regenerate_pool or not pool_path.exists():
+        pool_summary = generate_chain_confidence_pool(
+            seed=pool_seed,
+            positive_count=positive_count,
+            random_negative_count=random_negative_count,
+            near_miss_count=near_miss_count,
+            output_path=pool_path,
+        )
+    else:
+        pool_summary = json.loads(pool_path.with_suffix("").with_suffix(".summary.json").read_text(encoding="utf-8"))
+    rows = _read_jsonl_gzip(pool_path)
+
+    seed_results: dict[str, Any] = {}
+    for seed in train_seeds:
+        model = train_chain_confidence_gate(rows, seed=int(seed))
+        heldout = [row for row in rows if int(row["row_id"]) in set(model["heldout_row_ids"])]
+        eval_result = evaluate_chain_confidence_gate(heldout, model=model)
+        payload = {
+            "schema_version": "phase2_chain_confidence_gate_result.v0",
+            "seed": int(seed),
+            "pool_path": str(pool_path),
+            "model": model,
+            "heldout_eval": eval_result,
+        }
+        model_path = base / f"chain_confidence_gate_seed_{seed}.json"
+        _write_json(model_path, payload)
+        heldout_ids = set(model["heldout_row_ids"])
+        seed_results[str(seed)] = {
+            "artifact_path": str(model_path),
+            "heldout_eval": eval_result,
+            "thresholds": model["thresholds"],
+            "heldout_row_count": len(heldout_ids),
+        }
+
+    summary = {
+        "schema_version": "phase2_chain_confidence_summary.v0",
+        "pool": pool_summary,
+        "train_seeds": [int(seed) for seed in train_seeds],
+        "seed_results": seed_results,
+    }
+    _write_json(base / "chain_confidence_summary.json", summary)
+    return summary

@@ -8,11 +8,13 @@ from recon_lite_chess.autogrowth import (
     extract_learner_features,
     generate_position_sets,
     load_canonical_mate2_first_scorer,
+    evaluate_chain_confidence_gate,
     run_mate_in_one_basin_recognizer,
     run_mate_in_one_skill,
     run_mate_in_two_skill,
     run_native_quorum_materialization,
     run_reply_quantifier,
+    train_chain_confidence_gate,
 )
 from recon_lite_chess.autogrowth.foundation_curriculum import (
     _forced_mate_in_two_first_moves,
@@ -530,6 +532,44 @@ def test_phase2_mate_in_two_skill_exact_quantifier_generalizes_on_generated_held
     assert trap_rows
     assert round(sum(frame_counts) / len(frame_counts), 6) == 96.804688
     assert max(frame_counts) == 182
+
+
+def test_phase2_chain_confidence_gate_trains_weighted_threshold() -> None:
+    rows = []
+    for index in range(40):
+        label = index < 20
+        signal = 1.0 if label else 0.0
+        rows.append(
+            {
+                "row_id": index,
+                "exact_mate_in_2_label": label,
+                "exact_ordered_frames": 11 if label else 17,
+                "gate_features": {
+                    "white_king_file": float(index % 8),
+                    "black_king_nearest_edge_distance": 0.0 if label else 3.0,
+                    "internal_mate_in_1_basin_confirms": 0.0,
+                    "internal_fence_or_opposition_confirms": signal,
+                },
+            }
+        )
+
+    model = train_chain_confidence_gate(
+        rows,
+        seed=20261211,
+        heldout_fraction=0.25,
+        epochs=20,
+    )
+    heldout_ids = set(model["heldout_row_ids"])
+    heldout = [row for row in rows if row["row_id"] in heldout_ids]
+    evaluation = evaluate_chain_confidence_gate(heldout, model=model)
+    recall_row = evaluation["thresholds"]["recall_favoring"]
+    balanced_row = evaluation["thresholds"]["balanced"]
+
+    assert model["schema_version"] == "phase2_chain_confidence_weighted_threshold.v0"
+    assert recall_row["recall"] == 1.0
+    assert recall_row["end_to_end_conversion"] == 1.0
+    assert balanced_row["precision"] == 1.0
+    assert balanced_row["end_to_end_conversion"] == 1.0
 
 
 def test_tg26u_smoke_materializes_native_quorum_and_reports_ablations() -> None:
