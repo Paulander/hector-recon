@@ -9,7 +9,12 @@ from recon_lite_chess.autogrowth import (
     generate_position_sets,
     load_canonical_mate2_first_scorer,
     evaluate_chain_confidence_gate,
+    fence_established_geometry,
     run_mate_in_one_basin_recognizer,
+    resolve_establish_fence_move,
+    run_establish_fence_skill,
+    run_fence_established_recognizer,
+    run_fence_reply_quantifier,
     run_mate_in_one_skill,
     run_mate_in_two_skill,
     run_native_quorum_materialization,
@@ -532,6 +537,64 @@ def test_phase2_mate_in_two_skill_exact_quantifier_generalizes_on_generated_held
     assert trap_rows
     assert round(sum(frame_counts) / len(frame_counts), 6) == 96.804688
     assert max(frame_counts) == 182
+
+
+def test_phase2_fence_established_recognizer_uses_edge_branches() -> None:
+    fenced = chess.Board("8/8/8/k7/3K4/8/8/1R6 w - - 0 1")
+    not_fenced = chess.Board("8/8/8/k7/3K4/8/8/2R5 w - - 0 1")
+
+    assert fence_established_geometry(fenced)
+    audit = run_fence_established_recognizer(fenced, record_trace=True)
+    traced = _trace_messages(audit["trace"])
+
+    assert audit["confirmed"]
+    assert audit["edge_selector_state"] == "CONFIRMED"
+    assert audit["rook_safety_state"] == "CONFIRMED"
+    assert (
+        "fence_west_edge_branch",
+        "fence_nearest_edge_selector",
+        "SUR",
+        "confirm",
+    ) in traced
+
+    assert not fence_established_geometry(not_fenced)
+    assert not run_fence_established_recognizer(not_fenced, record_trace=False)["confirmed"]
+
+
+def test_phase2_fence_reply_quantifier_zero_reply_stalemate_fails() -> None:
+    stalemate_board = chess.Board("k7/1R6/2K5/8/8/8/8/8 b - - 0 1")
+
+    assert stalemate_board.legal_moves.count() == 0
+    assert not stalemate_board.is_check()
+    audit = run_fence_reply_quantifier(stalemate_board, record_trace=True)
+
+    assert not audit["confirmed"]
+    assert audit["root_state"] == "FAILED"
+    assert (
+        "zero_reply_semantics",
+        "establish_fence_reply_quantifier",
+        "SUR",
+        "fail",
+    ) in _trace_messages(audit["trace"])
+
+
+def test_phase2_establish_fence_skill_binds_stable_rook_fence() -> None:
+    board = chess.Board("8/8/8/k1K5/8/8/8/7R w - - 0 1")
+    trainer_move = resolve_establish_fence_move(board)
+
+    assert trainer_move is not None
+    audit = run_establish_fence_skill(board, record_trace=True)
+    traced = _trace_messages(audit["trace"])
+
+    assert audit["confirmed"]
+    assert audit["bound_move"] == trainer_move.uci()
+    assert ("phase2_establish_fence_skill_root", "establish_fence_skill", "SUB", "request") in traced
+    assert (
+        "establish_fence_skill",
+        f"fence_candidate_{trainer_move.uci()}__establish_fence_candidate",
+        "SUB",
+        "request",
+    ) in traced
 
 
 def test_phase2_chain_confidence_gate_trains_weighted_threshold() -> None:

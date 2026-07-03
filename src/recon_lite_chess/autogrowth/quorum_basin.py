@@ -25,6 +25,14 @@ MATE_IN_ONE_SKILL_ID = "mate_in_1_skill"
 MATE_IN_ONE_RECOGNIZER_STEP_ID = "mate_in_1_basin_recognizer_step"
 MATE_IN_TWO_SKILL_ROOT_ID = "phase2_mate_in_2_skill_root"
 MATE_IN_TWO_SKILL_ID = "mate_in_2_skill"
+FENCE_ESTABLISHED_ROOT_ID = "phase2_fence_established_root"
+FENCE_ESTABLISHED_ID = "fence_established"
+FENCE_EDGE_SELECTOR_ID = "fence_nearest_edge_selector"
+FENCE_ROOK_SAFETY_ID = "fence_rook_safety"
+ESTABLISH_FENCE_SKILL_ROOT_ID = "phase2_establish_fence_skill_root"
+ESTABLISH_FENCE_SKILL_ID = "establish_fence_skill"
+FENCE_REPLY_QUANTIFIER_ROOT_ID = "phase2_fence_reply_quantifier_root"
+FENCE_REPLY_QUANTIFIER_ID = "establish_fence_reply_quantifier"
 REPLY_QUANTIFIER_ROOT_ID = "phase2_reply_quantifier_root"
 REPLY_QUANTIFIER_ID = "mate_in_2_reply_quantifier"
 MATE_IN_ONE_BASIN_ID = "mate_in_1_basin"
@@ -38,6 +46,10 @@ BLACK_KING_ON_FILE_EDGE_ID = "mate_in_1_black_king_on_file_edge"
 CORNER_KNIGHT_SUPPORT_ID = "mate_in_1_corner_knight_support"
 DELIVER_EDGE_MATE_SCRIPT_ID = "deliver_edge_mate_step"
 DELIVER_EDGE_MATE_ACTUATOR_ID = "deliver_edge_mate"
+FENCE_WEST_EDGE_ID = "fence_west_edge_branch"
+FENCE_EAST_EDGE_ID = "fence_east_edge_branch"
+FENCE_SOUTH_EDGE_ID = "fence_south_edge_branch"
+FENCE_NORTH_EDGE_ID = "fence_north_edge_branch"
 
 _BK_NEIGHBOR_DIRECTIONS = ("n", "ne", "e", "se", "s", "sw", "w", "nw")
 
@@ -287,6 +299,97 @@ def mate_in_one_basin_atoms(*, prefix: str = "") -> tuple[PerceptAtom, ...]:
     )
 
 
+def fence_established_atoms(*, prefix: str = "") -> tuple[PerceptAtom, ...]:
+    """Return the static atoms for the rook-fence recognizer."""
+
+    return (
+        PerceptAtom(
+            _prefixed(prefix, "atom_fence_rook_present"),
+            "rook_present",
+            "eq",
+            1.0,
+            "rook material exists for the fence",
+        ),
+        PerceptAtom(
+            _prefixed(prefix, "atom_fence_black_king_on_edge"),
+            "black_king_on_edge",
+            "eq",
+            1.0,
+            "black king is still edge-side of the fence line",
+        ),
+        PerceptAtom(
+            _prefixed(prefix, "atom_fence_rook_not_attacked"),
+            "rook_attacked_by_black",
+            "eq",
+            0.0,
+            "rook is not attacked by the black king",
+        ),
+        PerceptAtom(
+            _prefixed(prefix, "atom_fence_rook_defended_by_king"),
+            "white_king_to_rook_distance",
+            "le",
+            1.0,
+            "white king defends the fenced rook",
+        ),
+        PerceptAtom(
+            _prefixed(prefix, "atom_fence_bk_file_west"),
+            "black_king_file",
+            "eq",
+            0.0,
+            "nearest edge is the west file",
+        ),
+        PerceptAtom(
+            _prefixed(prefix, "atom_fence_wr_file_west_line"),
+            "white_rook_file",
+            "eq",
+            1.0,
+            "rook sits one file interior to the west edge",
+        ),
+        PerceptAtom(
+            _prefixed(prefix, "atom_fence_bk_file_east"),
+            "black_king_file",
+            "eq",
+            7.0,
+            "nearest edge is the east file",
+        ),
+        PerceptAtom(
+            _prefixed(prefix, "atom_fence_wr_file_east_line"),
+            "white_rook_file",
+            "eq",
+            6.0,
+            "rook sits one file interior to the east edge",
+        ),
+        PerceptAtom(
+            _prefixed(prefix, "atom_fence_bk_rank_south"),
+            "black_king_rank",
+            "eq",
+            0.0,
+            "nearest edge is the south rank",
+        ),
+        PerceptAtom(
+            _prefixed(prefix, "atom_fence_wr_rank_south_line"),
+            "white_rook_rank",
+            "eq",
+            1.0,
+            "rook sits one rank interior to the south edge",
+        ),
+        PerceptAtom(
+            _prefixed(prefix, "atom_fence_bk_rank_north"),
+            "black_king_rank",
+            "eq",
+            7.0,
+            "nearest edge is the north rank",
+        ),
+        PerceptAtom(
+            _prefixed(prefix, "atom_fence_wr_rank_north_line"),
+            "white_rook_rank",
+            "eq",
+            6.0,
+            "rook sits one rank interior to the north edge",
+        ),
+    )
+
+
 def _add_quorum_script(graph: Graph, node_id: str, *, role: str, policy: str, k: int | None = None) -> None:
     meta: dict[str, Any] = {"role": role, "confirm_policy": policy}
     if k is not None:
@@ -398,6 +501,62 @@ def _add_mate_in_one_basin_subgraph(graph: Graph, parent_id: str, *, prefix: str
         _add_percept_atom(graph, atom, parent)
 
 
+def _add_fence_established_subgraph(graph: Graph, parent_id: str, *, prefix: str = "") -> None:
+    """Attach the fixed rook-fence recognizer under an existing script parent."""
+
+    fence_id = _prefixed(prefix, FENCE_ESTABLISHED_ID)
+    edge_selector_id = _prefixed(prefix, FENCE_EDGE_SELECTOR_ID)
+    safety_id = _prefixed(prefix, FENCE_ROOK_SAFETY_ID)
+    west_id = _prefixed(prefix, FENCE_WEST_EDGE_ID)
+    east_id = _prefixed(prefix, FENCE_EAST_EDGE_ID)
+    south_id = _prefixed(prefix, FENCE_SOUTH_EDGE_ID)
+    north_id = _prefixed(prefix, FENCE_NORTH_EDGE_ID)
+
+    _add_quorum_script(graph, fence_id, role="fence_established", policy="and")
+    _add_quorum_script(
+        graph,
+        edge_selector_id,
+        role="fence_nearest_edge_selector",
+        policy="k_of_n",
+        k=1,
+    )
+    _add_quorum_script(
+        graph,
+        safety_id,
+        role="fence_rook_safety",
+        policy="k_of_n",
+        k=1,
+    )
+    _add_quorum_script(graph, west_id, role="fence_west_edge_branch", policy="and")
+    _add_quorum_script(graph, east_id, role="fence_east_edge_branch", policy="and")
+    _add_quorum_script(graph, south_id, role="fence_south_edge_branch", policy="and")
+    _add_quorum_script(graph, north_id, role="fence_north_edge_branch", policy="and")
+
+    graph.add_hierarchy_pair(parent_id, fence_id)
+    graph.add_hierarchy_pair(fence_id, edge_selector_id)
+    graph.add_hierarchy_pair(fence_id, safety_id)
+    graph.add_hierarchy_pair(edge_selector_id, west_id)
+    graph.add_hierarchy_pair(edge_selector_id, east_id)
+    graph.add_hierarchy_pair(edge_selector_id, south_id)
+    graph.add_hierarchy_pair(edge_selector_id, north_id)
+
+    for atom in fence_established_atoms(prefix=prefix):
+        base_node_id = _base_id(prefix, atom.node_id)
+        if base_node_id in {"atom_fence_rook_not_attacked", "atom_fence_rook_defended_by_king"}:
+            parent = safety_id
+        elif base_node_id in {"atom_fence_bk_file_west", "atom_fence_wr_file_west_line"}:
+            parent = west_id
+        elif base_node_id in {"atom_fence_bk_file_east", "atom_fence_wr_file_east_line"}:
+            parent = east_id
+        elif base_node_id in {"atom_fence_bk_rank_south", "atom_fence_wr_rank_south_line"}:
+            parent = south_id
+        elif base_node_id in {"atom_fence_bk_rank_north", "atom_fence_wr_rank_north_line"}:
+            parent = north_id
+        else:
+            parent = fence_id
+        _add_percept_atom(graph, atom, parent)
+
+
 def build_mate_in_one_basin_graph() -> Graph:
     """Build the fixed recognizer graph; no positions or labels are stored."""
 
@@ -406,6 +565,64 @@ def build_mate_in_one_basin_graph() -> Graph:
     _add_mate_in_one_basin_subgraph(graph, ROOT_ID)
     graph.validate_formal_pairs()
     return graph
+
+
+def build_fence_established_graph() -> Graph:
+    """Build the fixed rook-fence recognizer graph."""
+
+    graph = Graph()
+    graph.add_node(Node(FENCE_ESTABLISHED_ROOT_ID, NodeType.SCRIPT))
+    _add_fence_established_subgraph(graph, FENCE_ESTABLISHED_ROOT_ID)
+    graph.validate_formal_pairs()
+    return graph
+
+
+def fence_established_geometry(board: chess.Board) -> bool:
+    """Trainer-side exact geometry for validating the static fence recognizer."""
+
+    features = extract_learner_features(board)
+    if features["rook_present"] != 1.0 or features["black_king_on_edge"] != 1.0:
+        return False
+    rook_safe = (
+        features["rook_attacked_by_black"] == 0.0
+        or features["white_king_to_rook_distance"] <= 1.0
+    )
+    if not rook_safe:
+        return False
+
+    west = features["black_king_file"] == 0.0 and features["white_rook_file"] == 1.0
+    east = features["black_king_file"] == 7.0 and features["white_rook_file"] == 6.0
+    south = features["black_king_rank"] == 0.0 and features["white_rook_rank"] == 1.0
+    north = features["black_king_rank"] == 7.0 and features["white_rook_rank"] == 6.0
+    return bool(west or east or south or north)
+
+
+def _stable_fence_after_all_replies(board: chess.Board) -> bool:
+    replies = list(board.legal_moves)
+    if not replies:
+        return board.is_check()
+    for reply in replies:
+        after_reply = board.copy(stack=False)
+        after_reply.push(reply)
+        if not fence_established_geometry(after_reply):
+            return False
+    return True
+
+
+def resolve_establish_fence_move(board: chess.Board) -> chess.Move | None:
+    """Resolve a legal rook move whose fence survives all black replies."""
+
+    rook = _white_rook_square(board)
+    if rook is None or board.turn != chess.WHITE:
+        return None
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        if move.from_square != rook:
+            continue
+        after = board.copy(stack=False)
+        after.push(move)
+        if _stable_fence_after_all_replies(after):
+            return move
+    return None
 
 
 def _white_rook_square(board: chess.Board) -> int | None:
@@ -601,6 +818,24 @@ def _bind_first_move_predicate(move_uci: str) -> Callable[[Node, dict[str, Any]]
     return predicate
 
 
+def _bind_rook_move_predicate(move_uci: str) -> Callable[[Node, dict[str, Any]], tuple[bool, bool]]:
+    move = chess.Move.from_uci(move_uci)
+
+    def predicate(node: Node, env: dict[str, Any]) -> tuple[bool, bool]:
+        board = env["board"]
+        rook = _white_rook_square(board)
+        if rook is None or move.from_square != rook or move not in board.legal_moves:
+            node.meta["last_failure"] = "candidate_rook_move_not_legal"
+            node.activation.value = 0.0
+            return True, False
+        node.meta["bound_move"] = move_uci
+        node.activation.value = 1.0
+        env.setdefault("establish_fence_skill", {})["candidate_move"] = move_uci
+        return True, True
+
+    return predicate
+
+
 def _zero_reply_predicate(node: Node, env: dict[str, Any]) -> tuple[bool, bool]:
     board = env["board"]
     no_replies = board.legal_moves.count() == 0
@@ -609,6 +844,39 @@ def _zero_reply_predicate(node: Node, env: dict[str, Any]) -> tuple[bool, bool]:
     node.meta["zero_reply_in_check"] = bool(in_check)
     node.activation.value = 1.0 if success else 0.0
     return True, success
+
+
+def _add_rook_move_bind_subgraph(
+    graph: Graph,
+    parent_id: str,
+    *,
+    move: chess.Move,
+    prefix: str,
+) -> str:
+    bind_step_id = _prefixed(prefix, "bind_rook_move_step")
+    bind_terminal_id = _prefixed(prefix, "bind_rook_move")
+    graph.add_node(
+        Node(
+            bind_step_id,
+            NodeType.SCRIPT,
+            meta={"role": "establish_fence_bind_rook_move_step", "move": move.uci()},
+        )
+    )
+    graph.add_node(
+        Node(
+            bind_terminal_id,
+            NodeType.TERMINAL,
+            predicate=_bind_rook_move_predicate(move.uci()),
+            meta={
+                "role": "actuator_terminal",
+                "actuator": "bind_candidate_rook_fence_move",
+                "move": move.uci(),
+            },
+        )
+    )
+    graph.add_hierarchy_pair(parent_id, bind_step_id)
+    graph.add_hierarchy_pair(bind_step_id, bind_terminal_id)
+    return bind_step_id
 
 
 def _add_first_move_bind_subgraph(
@@ -697,6 +965,59 @@ def _add_reply_quantifier_subgraph(
     return quantifier_id, frame_count
 
 
+def _add_fence_reply_quantifier_subgraph(
+    graph: Graph,
+    parent_id: str,
+    *,
+    board: chess.Board,
+    prefix: str,
+    virtual_frames: dict[str, dict[str, Any]],
+) -> tuple[str, int]:
+    quantifier_id = _prefixed(prefix, FENCE_REPLY_QUANTIFIER_ID)
+    replies = sorted(board.legal_moves, key=lambda item: item.uci())
+    _add_quorum_script(
+        graph,
+        quantifier_id,
+        role="establish_fence_reply_quantifier",
+        policy="k_of_n",
+        k=max(1, len(replies)),
+    )
+    graph.nodes[quantifier_id].meta["reply_count"] = len(replies)
+    graph.add_hierarchy_pair(parent_id, quantifier_id)
+    virtual_frames[quantifier_id] = _virtual_frame(board)
+
+    if not replies:
+        terminal_id = _prefixed(prefix, "zero_reply_semantics")
+        graph.add_node(
+            Node(
+                terminal_id,
+                NodeType.TERMINAL,
+                predicate=_zero_reply_predicate,
+                meta={"role": "reply_quantifier_zero_reply_semantics"},
+            )
+        )
+        graph.add_hierarchy_pair(quantifier_id, terminal_id)
+        return quantifier_id, 1
+
+    frame_count = 1
+    for reply in replies:
+        reply_prefix = f"{prefix}reply_{_safe_move_id(reply)}__"
+        reply_child_id = _prefixed(reply_prefix, "fence_reply_child")
+        reply_board = _after_move(board, reply)
+        graph.add_node(
+            Node(
+                reply_child_id,
+                NodeType.SCRIPT,
+                meta={"role": "establish_fence_reply_child", "reply_move": reply.uci()},
+            )
+        )
+        graph.add_hierarchy_pair(quantifier_id, reply_child_id)
+        virtual_frames[reply_child_id] = _virtual_frame(reply_board)
+        frame_count += 1
+        _add_fence_established_subgraph(graph, reply_child_id, prefix=reply_prefix)
+    return quantifier_id, frame_count
+
+
 def build_reply_quantifier_graph(board: chess.Board) -> tuple[Graph, dict[str, dict[str, Any]]]:
     """Build a standalone reply quantifier for a black-to-move virtual board."""
 
@@ -706,6 +1027,23 @@ def build_reply_quantifier_graph(board: chess.Board) -> tuple[Graph, dict[str, d
     _add_reply_quantifier_subgraph(
         graph,
         REPLY_QUANTIFIER_ROOT_ID,
+        board=board,
+        prefix="",
+        virtual_frames=virtual_frames,
+    )
+    graph.validate_formal_pairs()
+    return graph, virtual_frames
+
+
+def build_fence_reply_quantifier_graph(board: chess.Board) -> tuple[Graph, dict[str, dict[str, Any]]]:
+    """Build a standalone fence reply quantifier for a black-to-move virtual board."""
+
+    graph = Graph()
+    virtual_frames: dict[str, dict[str, Any]] = {}
+    graph.add_node(Node(FENCE_REPLY_QUANTIFIER_ROOT_ID, NodeType.SCRIPT))
+    _add_fence_reply_quantifier_subgraph(
+        graph,
+        FENCE_REPLY_QUANTIFIER_ROOT_ID,
         board=board,
         prefix="",
         virtual_frames=virtual_frames,
@@ -745,6 +1083,48 @@ def _add_mate_in_two_candidate_subgraph(
         prefix=candidate_prefix,
     )
     quantifier_id, frame_count = _add_reply_quantifier_subgraph(
+        graph,
+        candidate_id,
+        board=after_first,
+        prefix=candidate_prefix,
+        virtual_frames=virtual_frames,
+    )
+    graph.add_sequence_pair(bind_step_id, quantifier_id)
+    graph.nodes[candidate_id].meta["virtual_frame_count"] = int(frame_count)
+    return frame_count
+
+
+def _add_establish_fence_candidate_subgraph(
+    graph: Graph,
+    parent_id: str,
+    *,
+    board: chess.Board,
+    move: chess.Move,
+    virtual_frames: dict[str, dict[str, Any]],
+    order_rank: int,
+) -> int:
+    candidate_prefix = f"fence_candidate_{_safe_move_id(move)}__"
+    candidate_id = _prefixed(candidate_prefix, "establish_fence_candidate")
+    after_first = _after_move(board, move)
+    graph.add_node(
+        Node(
+            candidate_id,
+            NodeType.SCRIPT,
+            meta={
+                "role": "establish_fence_candidate",
+                "first_move": move.uci(),
+                "candidate_order_rank": int(order_rank),
+            },
+        )
+    )
+    graph.add_hierarchy_pair(parent_id, candidate_id)
+    bind_step_id = _add_rook_move_bind_subgraph(
+        graph,
+        candidate_id,
+        move=move,
+        prefix=candidate_prefix,
+    )
+    quantifier_id, frame_count = _add_fence_reply_quantifier_subgraph(
         graph,
         candidate_id,
         board=after_first,
@@ -811,6 +1191,70 @@ def build_mate_in_two_skill_graph(
     }
 
 
+def _always_fail_predicate(node: Node, _env: dict[str, Any]) -> tuple[bool, bool]:
+    node.activation.value = 0.0
+    return True, False
+
+
+def build_establish_fence_skill_graph(
+    board: chess.Board,
+    *,
+    lazy_candidates: bool = True,
+) -> tuple[Graph, dict[str, dict[str, Any]], dict[str, Any]]:
+    """Build exact fence-establishment graph over all legal rook moves."""
+
+    graph = Graph()
+    virtual_frames: dict[str, dict[str, Any]] = {}
+    graph.add_node(Node(ESTABLISH_FENCE_SKILL_ROOT_ID, NodeType.SCRIPT))
+    _add_quorum_script(
+        graph,
+        ESTABLISH_FENCE_SKILL_ID,
+        role="establish_fence_skill",
+        policy="k_of_n",
+        k=1,
+    )
+    if lazy_candidates:
+        graph.nodes[ESTABLISH_FENCE_SKILL_ID].meta["request_policy"] = "lazy_k_of_n"
+    graph.add_hierarchy_pair(ESTABLISH_FENCE_SKILL_ROOT_ID, ESTABLISH_FENCE_SKILL_ID)
+
+    rook = _white_rook_square(board)
+    legal_rook_moves = tuple(
+        move
+        for move in sorted(board.legal_moves, key=lambda item: item.uci())
+        if rook is not None and move.from_square == rook
+    )
+    candidate_order: list[str] = []
+    frame_count = 0
+    if not legal_rook_moves:
+        terminal_id = "establish_fence_no_legal_rook_move"
+        graph.add_node(
+            Node(
+                terminal_id,
+                NodeType.TERMINAL,
+                predicate=_always_fail_predicate,
+                meta={"role": "establish_fence_no_legal_rook_move"},
+            )
+        )
+        graph.add_hierarchy_pair(ESTABLISH_FENCE_SKILL_ID, terminal_id)
+    for order_rank, move in enumerate(legal_rook_moves, start=1):
+        candidate_order.append(move.uci())
+        frame_count += _add_establish_fence_candidate_subgraph(
+            graph,
+            ESTABLISH_FENCE_SKILL_ID,
+            board=board,
+            move=move,
+            virtual_frames=virtual_frames,
+            order_rank=order_rank,
+        )
+
+    graph.validate_formal_pairs()
+    return graph, virtual_frames, {
+        "candidate_count": len(legal_rook_moves),
+        "virtual_frame_count": frame_count,
+        "candidate_order": candidate_order,
+    }
+
+
 def _descendant_nodes(graph: Graph, node_id: str) -> set[str]:
     descendants: set[str] = set()
     stack = list(graph.children(node_id))
@@ -832,6 +1276,21 @@ def _mate_in_two_lazy_active_nodes(
         active.add(candidate_id)
         if graph.nodes[candidate_id].state != NodeState.INACTIVE:
             active.update(candidate_descendants[candidate_id])
+    return active
+
+
+def _lazy_skill_active_nodes(
+    graph: Graph,
+    *,
+    root_id: str,
+    skill_id: str,
+    candidate_descendants: dict[str, set[str]],
+) -> set[str]:
+    active = {root_id, skill_id}
+    for candidate_id in graph.children(skill_id):
+        active.add(candidate_id)
+        if graph.nodes[candidate_id].state != NodeState.INACTIVE:
+            active.update(candidate_descendants.get(candidate_id, set()))
     return active
 
 
@@ -878,6 +1337,42 @@ def run_mate_in_one_basin_recognizer(
         "ticks": engine.tick,
         "features": features,
         "atom_states": atom_states,
+        "script_states": script_states,
+        "trace": trace,
+    }
+
+
+def run_fence_established_recognizer(
+    board: chess.Board,
+    *,
+    max_ticks: int = 32,
+    record_trace: bool = True,
+) -> dict[str, Any]:
+    """Execute the fixed fence recognizer on one board."""
+
+    graph = build_fence_established_graph()
+    features = extract_learner_features(board)
+    engine = FormalReConEngine(graph, record_trace=record_trace)
+    engine.request(FENCE_ESTABLISHED_ROOT_ID)
+    trace = engine.run(
+        max_ticks=max_ticks,
+        env={"board": board, "features": features},
+        until=lambda _engine: graph.nodes[FENCE_ESTABLISHED_ROOT_ID].state
+        in (NodeState.CONFIRMED, NodeState.FAILED),
+    )
+    script_states = {
+        node_id: node.state.name
+        for node_id, node in sorted(graph.nodes.items())
+        if node.ntype == NodeType.SCRIPT
+    }
+    return {
+        "confirmed": graph.nodes[FENCE_ESTABLISHED_ID].state == NodeState.CONFIRMED,
+        "root_state": graph.nodes[FENCE_ESTABLISHED_ROOT_ID].state.name,
+        "fence_state": graph.nodes[FENCE_ESTABLISHED_ID].state.name,
+        "edge_selector_state": graph.nodes[FENCE_EDGE_SELECTOR_ID].state.name,
+        "rook_safety_state": graph.nodes[FENCE_ROOK_SAFETY_ID].state.name,
+        "ticks": engine.tick,
+        "features": features,
         "script_states": script_states,
         "trace": trace,
     }
@@ -951,6 +1446,38 @@ def run_reply_quantifier(
         "root_state": graph.nodes[REPLY_QUANTIFIER_ROOT_ID].state.name,
         "quantifier_state": graph.nodes[REPLY_QUANTIFIER_ID].state.name,
         "reply_count": graph.nodes[REPLY_QUANTIFIER_ID].meta.get("reply_count"),
+        "virtual_frame_count": len(virtual_frames),
+        "trace": trace,
+    }
+
+
+def run_fence_reply_quantifier(
+    board: chess.Board,
+    *,
+    max_ticks: int = 96,
+    record_trace: bool = True,
+) -> dict[str, Any]:
+    """Execute the fence reply quantifier on a black-to-move virtual board."""
+
+    graph, virtual_frames = build_fence_reply_quantifier_graph(board)
+    env = {
+        "board": board,
+        "features": extract_learner_features(board),
+        "virtual_frames": virtual_frames,
+    }
+    engine = FormalReConEngine(graph, record_trace=record_trace)
+    engine.request(FENCE_REPLY_QUANTIFIER_ROOT_ID)
+    trace = engine.run(
+        max_ticks=max_ticks,
+        env=env,
+        until=lambda _engine: graph.nodes[FENCE_REPLY_QUANTIFIER_ROOT_ID].state
+        in (NodeState.CONFIRMED, NodeState.FAILED),
+    )
+    return {
+        "confirmed": graph.nodes[FENCE_REPLY_QUANTIFIER_ID].state == NodeState.CONFIRMED,
+        "root_state": graph.nodes[FENCE_REPLY_QUANTIFIER_ROOT_ID].state.name,
+        "quantifier_state": graph.nodes[FENCE_REPLY_QUANTIFIER_ID].state.name,
+        "reply_count": graph.nodes[FENCE_REPLY_QUANTIFIER_ID].meta.get("reply_count"),
         "virtual_frame_count": len(virtual_frames),
         "trace": trace,
     }
@@ -1045,6 +1572,114 @@ def run_mate_in_two_skill(
         "confirmed": graph.nodes[MATE_IN_TWO_SKILL_ID].state == NodeState.CONFIRMED,
         "root_state": graph.nodes[MATE_IN_TWO_SKILL_ROOT_ID].state.name,
         "skill_state": graph.nodes[MATE_IN_TWO_SKILL_ID].state.name,
+        "bound_move": bound_move,
+        "confirmed_candidate_count": len(confirmed_candidates),
+        "candidate_count": counts["candidate_count"],
+        "candidate_order": candidate_order,
+        "bound_move_rank": bound_move_rank,
+        "requested_candidate_count": len(requested_candidates),
+        "built_virtual_frame_count": len(virtual_frames),
+        "all_candidate_virtual_frame_count": counts["virtual_frame_count"],
+        "virtual_frame_count": expanded_virtual_frame_count,
+        "expanded_virtual_frame_count": expanded_virtual_frame_count,
+        "ticks": engine.tick,
+        "script_states": script_states,
+        "trace": trace,
+    }
+
+
+def run_establish_fence_skill(
+    board: chess.Board,
+    *,
+    max_ticks: int = 2048,
+    record_trace: bool = True,
+    lazy_candidates: bool = True,
+) -> dict[str, Any]:
+    """Execute the exact fence-establishment skill with universal reply confirmation."""
+
+    graph, virtual_frames, counts = build_establish_fence_skill_graph(
+        board,
+        lazy_candidates=lazy_candidates,
+    )
+    env = {
+        "board": board,
+        "features": extract_learner_features(board),
+        "virtual_frames": virtual_frames,
+    }
+    engine = FormalReConEngine(graph, record_trace=record_trace)
+    engine.request(ESTABLISH_FENCE_SKILL_ROOT_ID)
+    if lazy_candidates:
+        candidate_descendants = {
+            candidate_id: _descendant_nodes(graph, candidate_id)
+            for candidate_id in graph.children(ESTABLISH_FENCE_SKILL_ID)
+        }
+        for _ in range(max(0, max_ticks)):
+            engine.step_subset(
+                env,
+                active_nodes=_lazy_skill_active_nodes(
+                    graph,
+                    root_id=ESTABLISH_FENCE_SKILL_ROOT_ID,
+                    skill_id=ESTABLISH_FENCE_SKILL_ID,
+                    candidate_descendants=candidate_descendants,
+                ),
+            )
+            if graph.nodes[ESTABLISH_FENCE_SKILL_ROOT_ID].state in (
+                NodeState.CONFIRMED,
+                NodeState.FAILED,
+            ):
+                break
+        trace = engine.trace
+    else:
+        trace = engine.run(
+            max_ticks=max_ticks,
+            env=env,
+            until=lambda _engine: graph.nodes[ESTABLISH_FENCE_SKILL_ROOT_ID].state
+            in (NodeState.CONFIRMED, NodeState.FAILED),
+        )
+
+    confirmed_candidates = sorted(
+        (
+            node.meta["first_move"],
+            node_id,
+        )
+        for node_id, node in graph.nodes.items()
+        if node.meta.get("role") == "establish_fence_candidate"
+        and node.state == NodeState.CONFIRMED
+    )
+    bound_move = confirmed_candidates[0][0] if confirmed_candidates else None
+    if bound_move is not None:
+        graph.nodes[ESTABLISH_FENCE_SKILL_ID].meta["bound_move"] = bound_move
+
+    candidate_nodes = [
+        (node_id, node)
+        for node_id, node in graph.nodes.items()
+        if node.meta.get("role") == "establish_fence_candidate"
+    ]
+    requested_candidates = [
+        (node_id, node)
+        for node_id, node in candidate_nodes
+        if node.state != NodeState.INACTIVE
+    ]
+    expanded_virtual_frame_count = sum(
+        int(node.meta.get("virtual_frame_count", 0))
+        for _node_id, node in requested_candidates
+    )
+    candidate_order = list(counts["candidate_order"])
+    bound_move_rank = (
+        candidate_order.index(bound_move) + 1
+        if bound_move in candidate_order
+        else None
+    )
+
+    script_states = {
+        node_id: node.state.name
+        for node_id, node in sorted(graph.nodes.items())
+        if node.ntype == NodeType.SCRIPT
+    }
+    return {
+        "confirmed": graph.nodes[ESTABLISH_FENCE_SKILL_ID].state == NodeState.CONFIRMED,
+        "root_state": graph.nodes[ESTABLISH_FENCE_SKILL_ROOT_ID].state.name,
+        "skill_state": graph.nodes[ESTABLISH_FENCE_SKILL_ID].state.name,
         "bound_move": bound_move,
         "confirmed_candidate_count": len(confirmed_candidates),
         "candidate_count": counts["candidate_count"],

@@ -3,7 +3,7 @@
 Mission: merge the Feb baseline learner, native ReCoN runtime, and TG46+ evaluation rigor into one
 learner whose frozen graph beats its baseline on heldout KRK behavior with causal ablation evidence.
 
-Current state: Phase 2.5 chain-confidence dispatcher trained and measured.
+Current state: Phase 2.6 exact fence-establishment skill executes graph-native.
 
 Dieted foundation result: TG46c full-M3 Mate-in-2 heldout all-reply passed 3/3 seeds after the
 black-king-neighbor percept revision: 20260701=0.94, 20260702=0.95, 20260703=0.96.
@@ -27,7 +27,17 @@ recall-favor | 1.00/1.00/1.00 | 0.15/0.15/0.15 | 1.00/1.00/1.00 | 2.32/12,2.27/1
 balanced | 0.96/0.96/0.97 | 1.00/0.95/0.91 | 0.96/0.96/0.97 | 2.21/12,2.19/12,2.21/4 | 0.00/0,0.79/110,1.25/93
 precision-favor | 0.87/0.89/0.80 | 1.00/0.99/0.94 | 0.87/0.89/0.80 | 2.00/12,2.03/12,1.79/4 | 0.00/0,0.16/66,0.66/93
 
-Next: 2.6 skill-chaining rung (fence establishment) — pending operating-point decision.
+Adopted 2.5 operating point: balanced. Verification: seed 20261211's 425 heldout negatives were
+genuinely gate-scored; threshold=0.854756, max negative score=0.714112, so 0-frame negatives were
+gate declines rather than skipped evaluation.
+
+Current task: 2.6 exact fence-establishment skill, fit-free. `fence_established` is a composed
+quorum over nearest-edge branches plus rook safety; `establish_fence_skill` binds legal rook moves
+and confirms only if a k=n black-reply quantifier leaves the fence established after every reply.
+Fresh seed 20261231: 64/64 trainer-positive edge-rung positions established; 0/64 exact negatives
+emitted a move. Frames mean/max overall=46.44/76; positives=28.75/70; negatives=64.12/76.
+
+Next: 2.7 skill chaining: fence -> mate ladder composition.
 
 No-go: new TG names, new report documents, new pool/cache formats, training logic changes,
 `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.
