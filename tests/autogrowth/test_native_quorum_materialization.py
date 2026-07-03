@@ -111,7 +111,9 @@ def _basin_eval_rows(positive_fens: list[str], negative_fens: list[str]) -> list
                 "confirmed": audit["confirmed"],
                 "basin_state": audit["basin_state"],
                 "escape_restricted_state": audit["escape_restricted_state"],
+                "king_support_geometry_state": audit["king_support_geometry_state"],
                 "edge_relative_opposition_state": audit["edge_relative_opposition_state"],
+                "corner_knight_support_state": audit["corner_knight_support_state"],
                 "ticks": audit["ticks"],
                 "mate_moves": [move.uci() for move in _mate_moves(board)],
                 "trace_messages": {
@@ -140,6 +142,24 @@ def _basin_confusion(rows: list[dict]) -> dict[str, float | int]:
 
 
 def test_phase2_mate_in_one_basin_quorum_generalizes_on_generated_heldout() -> None:
+    known_false_positive_fens = {
+        "2K5/8/k7/8/8/8/8/4R3 w - - 0 1",
+        "8/8/8/7R/8/8/K7/2k5 w - - 0 1",
+    }
+    known_false_positive_rows = _basin_eval_rows([], list(known_false_positive_fens))
+    corner_regression_rows = _basin_eval_rows(["7R/8/8/8/8/1K6/8/k7 w - - 0 1"], [])
+
+    assert not any(row["confirmed"] for row in known_false_positive_rows)
+    corner_row = corner_regression_rows[0]
+    assert corner_row["confirmed"]
+    assert corner_row["corner_knight_support_state"] == "CONFIRMED"
+    assert (
+        "mate_in_1_corner_knight_support",
+        "mate_in_1_king_support_geometry",
+        "SUR",
+        "confirm",
+    ) in corner_row["trace_messages"]
+
     positive_fens = _generate_mate_in_one_positions(
         count=48,
         seed=20260731,
@@ -155,13 +175,15 @@ def test_phase2_mate_in_one_basin_quorum_generalizes_on_generated_heldout() -> N
 
     original_rows = _basin_eval_rows(positive_fens, negative_fens)
     original_confusion = _basin_confusion(original_rows)
-    known_false_positive_fens = {
-        "2K5/8/k7/8/8/8/8/4R3 w - - 0 1",
-        "8/8/8/7R/8/8/K7/2k5 w - - 0 1",
-    }
 
-    assert original_confusion["true_positive"] >= 12
-    assert original_confusion["false_positive"] == 0
+    assert original_confusion == {
+        "true_positive": 48,
+        "false_negative": 0,
+        "false_positive": 0,
+        "true_negative": 48,
+        "precision": 1.0,
+        "recall": 1.0,
+    }
     assert not any(
         row["fen"] in known_false_positive_fens and row["confirmed"]
         for row in original_rows
@@ -169,27 +191,56 @@ def test_phase2_mate_in_one_basin_quorum_generalizes_on_generated_heldout() -> N
     confirmed_row = next(row for row in original_rows if row["confirmed"])
     assert ("mate_in_1_basin", "phase2_basin_root", "SUR", "confirm") in confirmed_row["trace_messages"]
 
-    fresh_positive_fens = _generate_mate_in_one_positions(
+    prior_fresh_positive_fens = _generate_mate_in_one_positions(
         count=64,
         seed=20260817,
         max_attempts=320_000,
     )
-    fresh_negative_set = generate_position_sets(
+    prior_fresh_negative_set = generate_position_sets(
         seed=20260817,
         train_count=0,
         heldout_weakness_count=32,
         heldout_broader_count=32,
     )
-    fresh_rows = _basin_eval_rows(fresh_positive_fens, list(fresh_negative_set.heldout))
+    fresh_rows = _basin_eval_rows(
+        prior_fresh_positive_fens,
+        list(prior_fresh_negative_set.heldout),
+    )
     fresh_confusion = _basin_confusion(fresh_rows)
 
     assert fresh_confusion == {
-        "true_positive": 49,
-        "false_negative": 15,
+        "true_positive": 64,
+        "false_negative": 0,
         "false_positive": 0,
         "true_negative": 64,
         "precision": 1.0,
-        "recall": 49 / 64,
+        "recall": 1.0,
+    }
+
+    new_fresh_positive_fens = _generate_mate_in_one_positions(
+        count=64,
+        seed=20260901,
+        max_attempts=320_000,
+    )
+    new_fresh_negative_set = generate_position_sets(
+        seed=20260901,
+        train_count=0,
+        heldout_weakness_count=32,
+        heldout_broader_count=32,
+    )
+    new_fresh_rows = _basin_eval_rows(
+        new_fresh_positive_fens,
+        list(new_fresh_negative_set.heldout),
+    )
+    new_fresh_confusion = _basin_confusion(new_fresh_rows)
+
+    assert new_fresh_confusion == {
+        "true_positive": 64,
+        "false_negative": 0,
+        "false_positive": 0,
+        "true_negative": 64,
+        "precision": 1.0,
+        "recall": 1.0,
     }
 
 

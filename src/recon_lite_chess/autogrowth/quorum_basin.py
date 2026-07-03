@@ -15,11 +15,13 @@ from .features import extract_learner_features
 ROOT_ID = "phase2_basin_root"
 MATE_IN_ONE_BASIN_ID = "mate_in_1_basin"
 ESCAPE_RESTRICTED_ID = "mate_in_1_escape_restricted"
+KING_SUPPORT_GEOMETRY_ID = "mate_in_1_king_support_geometry"
 EDGE_RELATIVE_OPPOSITION_ID = "mate_in_1_edge_relative_opposition"
 RANK_EDGE_OPPOSITION_ID = "mate_in_1_rank_edge_opposition"
 FILE_EDGE_OPPOSITION_ID = "mate_in_1_file_edge_opposition"
 BLACK_KING_ON_RANK_EDGE_ID = "mate_in_1_black_king_on_rank_edge"
 BLACK_KING_ON_FILE_EDGE_ID = "mate_in_1_black_king_on_file_edge"
+CORNER_KNIGHT_SUPPORT_ID = "mate_in_1_corner_knight_support"
 
 
 @dataclass(frozen=True)
@@ -70,6 +72,20 @@ def mate_in_one_basin_atoms() -> tuple[PerceptAtom, ...]:
         PerceptAtom("atom_rook_present", "rook_present", "eq", 1.0, "rook material exists"),
         PerceptAtom("atom_rook_safe", "rook_attacked_by_black", "eq", 0.0, "rook is not immediately loose"),
         PerceptAtom("atom_black_king_edge", "black_king_on_edge", "eq", 1.0, "rook mate needs the defender on an edge"),
+        PerceptAtom(
+            "atom_black_king_corner",
+            "black_king_corner_distance",
+            "eq",
+            0.0,
+            "corner wall supplies two escape constraints",
+        ),
+        PerceptAtom(
+            "atom_corner_king_knight_support",
+            "king_pair_knight_distance_like",
+            "eq",
+            1.0,
+            "white king has board-interior knight-distance corner support",
+        ),
         PerceptAtom(
             "atom_black_king_rank_zero",
             "black_king_rank",
@@ -177,6 +193,13 @@ def build_mate_in_one_basin_graph() -> Graph:
     )
     _add_quorum_script(
         graph,
+        KING_SUPPORT_GEOMETRY_ID,
+        role="king_support_geometry_quorum",
+        policy="k_of_n",
+        k=1,
+    )
+    _add_quorum_script(
+        graph,
         EDGE_RELATIVE_OPPOSITION_ID,
         role="edge_relative_opposition_quorum",
         policy="k_of_n",
@@ -198,9 +221,17 @@ def build_mate_in_one_basin_graph() -> Graph:
         policy="k_of_n",
         k=1,
     )
+    _add_quorum_script(
+        graph,
+        CORNER_KNIGHT_SUPPORT_ID,
+        role="corner_knight_support_quorum",
+        policy="and",
+    )
     graph.add_hierarchy_pair(ROOT_ID, MATE_IN_ONE_BASIN_ID)
     graph.add_hierarchy_pair(MATE_IN_ONE_BASIN_ID, ESCAPE_RESTRICTED_ID)
-    graph.add_hierarchy_pair(MATE_IN_ONE_BASIN_ID, EDGE_RELATIVE_OPPOSITION_ID)
+    graph.add_hierarchy_pair(MATE_IN_ONE_BASIN_ID, KING_SUPPORT_GEOMETRY_ID)
+    graph.add_hierarchy_pair(KING_SUPPORT_GEOMETRY_ID, EDGE_RELATIVE_OPPOSITION_ID)
+    graph.add_hierarchy_pair(KING_SUPPORT_GEOMETRY_ID, CORNER_KNIGHT_SUPPORT_ID)
     graph.add_hierarchy_pair(EDGE_RELATIVE_OPPOSITION_ID, RANK_EDGE_OPPOSITION_ID)
     graph.add_hierarchy_pair(EDGE_RELATIVE_OPPOSITION_ID, FILE_EDGE_OPPOSITION_ID)
     graph.add_hierarchy_pair(RANK_EDGE_OPPOSITION_ID, BLACK_KING_ON_RANK_EDGE_ID)
@@ -209,6 +240,8 @@ def build_mate_in_one_basin_graph() -> Graph:
     for atom in mate_in_one_basin_atoms():
         if atom.node_id.startswith("atom_bk_neighbor_"):
             parent = ESCAPE_RESTRICTED_ID
+        elif atom.node_id in {"atom_black_king_corner", "atom_corner_king_knight_support"}:
+            parent = CORNER_KNIGHT_SUPPORT_ID
         elif atom.node_id in {"atom_black_king_rank_zero", "atom_black_king_rank_seven"}:
             parent = BLACK_KING_ON_RANK_EDGE_ID
         elif atom.node_id in {"atom_black_king_file_zero", "atom_black_king_file_seven"}:
@@ -262,7 +295,9 @@ def run_mate_in_one_basin_recognizer(
         "root_state": graph.nodes[ROOT_ID].state.name,
         "basin_state": graph.nodes[MATE_IN_ONE_BASIN_ID].state.name,
         "escape_restricted_state": graph.nodes[ESCAPE_RESTRICTED_ID].state.name,
+        "king_support_geometry_state": graph.nodes[KING_SUPPORT_GEOMETRY_ID].state.name,
         "edge_relative_opposition_state": graph.nodes[EDGE_RELATIVE_OPPOSITION_ID].state.name,
+        "corner_knight_support_state": graph.nodes[CORNER_KNIGHT_SUPPORT_ID].state.name,
         "ticks": engine.tick,
         "features": features,
         "atom_states": atom_states,
