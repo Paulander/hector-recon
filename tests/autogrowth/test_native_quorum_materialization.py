@@ -7,6 +7,7 @@ from recon_lite_chess.autogrowth import (
     NativeQuorumMaterializationConfig,
     extract_learner_features,
     generate_position_sets,
+    load_canonical_mate2_first_scorer,
     run_mate_in_one_basin_recognizer,
     run_mate_in_one_skill,
     run_mate_in_two_skill,
@@ -455,6 +456,19 @@ def test_phase2_mate_in_two_skill_trace_reaches_reply_mate_in_one() -> None:
     assert (reply_child, reply_skill, "SUB", "request") in traced
     assert (reply_skill, reply_child, "SUR", "confirm") in traced
 
+    scorer = load_canonical_mate2_first_scorer()
+    ordered_audit = run_mate_in_two_skill(
+        board,
+        record_trace=False,
+        move_orderer=scorer.order_moves,
+    )
+
+    assert ordered_audit["confirmed"]
+    assert ordered_audit["bound_move"] == "h7g6"
+    assert ordered_audit["bound_move_rank"] == 1
+    assert ordered_audit["requested_candidate_count"] == 1
+    assert ordered_audit["virtual_frame_count"] < ordered_audit["built_virtual_frame_count"]
+
 
 def test_phase2_mate_in_two_skill_exact_quantifier_generalizes_on_generated_heldout() -> None:
     positive_fens = _generate_forced_mate_in_two_positions(
@@ -472,7 +486,12 @@ def test_phase2_mate_in_two_skill_exact_quantifier_generalizes_on_generated_held
     frame_counts = []
     for fen in positive_fens:
         board = chess.Board(fen)
-        audit = run_mate_in_two_skill(board, record_trace=False)
+        audit = run_mate_in_two_skill(
+            board,
+            record_trace=False,
+            lazy_candidates=False,
+            max_ticks=192,
+        )
         if not audit["confirmed"] or not _validates_mate_in_two_delivery(
             board,
             audit["bound_move"],
@@ -490,7 +509,12 @@ def test_phase2_mate_in_two_skill_exact_quantifier_generalizes_on_generated_held
 
     for fen in negative_fens:
         board = chess.Board(fen)
-        audit = run_mate_in_two_skill(board, record_trace=False)
+        audit = run_mate_in_two_skill(
+            board,
+            record_trace=False,
+            lazy_candidates=False,
+            max_ticks=192,
+        )
         if audit["confirmed"] or audit["bound_move"] is not None:
             false_emissions.append(
                 {

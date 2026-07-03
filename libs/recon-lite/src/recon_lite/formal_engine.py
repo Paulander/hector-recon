@@ -108,9 +108,25 @@ class FormalReConEngine:
         states_before = self._node_states(active_set) if self.record_trace else {}
         messages = self._emit_messages(active_set)
         incoming = self._group_by_target(messages)
-        node_items = self.g.nodes.items() if active_set is None else (
-            (nid, self.g.nodes[nid]) for nid in active_set if nid in self.g.nodes
-        )
+        if active_set is None:
+            node_items = (
+                (nid, node)
+                for nid, node in self.g.nodes.items()
+                if node.state != NodeState.INACTIVE
+                or incoming.get(nid)
+                or nid in self._external_requests
+            )
+        else:
+            node_items = (
+                (nid, self.g.nodes[nid])
+                for nid in active_set
+                if nid in self.g.nodes
+                and (
+                    self.g.nodes[nid].state != NodeState.INACTIVE
+                    or incoming.get(nid)
+                    or nid in self._external_requests
+                )
+            )
         next_states = {
             nid: self._next_state(node, incoming.get(nid, []), env)
             for nid, node in node_items
@@ -169,11 +185,20 @@ class FormalReConEngine:
             for src in active_nodes:
                 if src not in self.g.nodes:
                     continue
+                state = self.g.nodes[src].state
+                if state == NodeState.INACTIVE:
+                    continue
                 for link_type in LinkType:
                     for dst in self.g.out.get((src, link_type), []):
                         if dst not in active_nodes:
                             continue
-                        message = self._message_for(link_type, self.g.nodes[src].state)
+                        message = self._message_for(link_type, state)
+                        if (
+                            message == FormalMessage.REQUEST
+                            and link_type == LinkType.SUB
+                            and not self._lazy_sub_target_selected(src, dst)
+                        ):
+                            continue
                         if message is not None:
                             messages.append(
                                 EdgeMessage(
@@ -186,7 +211,16 @@ class FormalReConEngine:
                             )
             return messages
         for edge in self.g.edges:
-            message = self._message_for(edge.ltype, self.g.nodes[edge.src].state)
+            state = self.g.nodes[edge.src].state
+            if state == NodeState.INACTIVE:
+                continue
+            message = self._message_for(edge.ltype, state)
+            if (
+                message == FormalMessage.REQUEST
+                and edge.ltype == LinkType.SUB
+                and not self._lazy_sub_target_selected(edge.src, edge.dst)
+            ):
+                continue
             if message is not None:
                 messages.append(
                     EdgeMessage(
@@ -198,6 +232,29 @@ class FormalReConEngine:
                     )
                 )
         return messages
+
+    def _lazy_sub_target_selected(self, src: str, dst: str) -> bool:
+        node = self.g.nodes[src]
+        if str(node.meta.get("request_policy", "")).lower() != "lazy_k_of_n":
+            return True
+        if str(node.meta.get("confirm_policy", "")).lower() not in {"k_of_n", "quorum"}:
+            return True
+        threshold = int(node.meta.get("confirm_k", node.meta.get("quorum_k", 1)))
+        if threshold != 1:
+            return True
+
+        children = self.g.children(src)
+        if any(self.g.nodes[child].state in (NodeState.TRUE, NodeState.CONFIRMED) for child in children):
+            return False
+
+        active_states = {NodeState.REQUESTED, NodeState.ACTIVE, NodeState.SUPPRESSED, NodeState.WAITING}
+        for child in children:
+            if self.g.nodes[child].state in active_states:
+                return dst == child
+        for child in children:
+            if self.g.nodes[child].state == NodeState.INACTIVE:
+                return dst == child
+        return False
 
     def _message_for(self, link_type: LinkType, state: NodeState) -> Optional[FormalMessage]:
         if state in (NodeState.REQUESTED, NodeState.ACTIVE, NodeState.SUPPRESSED, NodeState.WAITING, NodeState.FAILED):

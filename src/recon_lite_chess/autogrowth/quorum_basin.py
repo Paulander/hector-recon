@@ -2,14 +2,18 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, Callable
+from dataclasses import dataclass, field
+import hashlib
+import json
+from pathlib import Path
+from typing import Any, Callable, Sequence
 
 import chess
 
 from recon_lite import FormalReConEngine, Graph, LinkType, Node, NodeState, NodeType
 
 from .features import extract_learner_features
+from .terminal_substrate import terminal_action_feature_keys
 
 
 ROOT_ID = "phase2_basin_root"
@@ -54,6 +58,86 @@ def _base_id(prefix: str, node_id: str) -> str:
 
 def _safe_move_id(move: chess.Move) -> str:
     return move.uci().replace("-", "_")
+
+
+@dataclass
+class FrozenMate2FirstScorer:
+    """Frozen exported mate2-first terminal scorer used only for request ordering."""
+
+    terminal_weights: dict[str, float]
+    source_path: Path
+    source_sha256: str
+    source_terminal_count: int
+    feature_cache: dict[str, dict[str, float]] = field(default_factory=dict)
+
+    def score_move(self, board: chess.Board, move: chess.Move) -> float:
+        return sum(
+            self.terminal_weights.get(terminal_key, 0.0)
+            for terminal_key, _scale in terminal_action_feature_keys(
+                board,
+                move,
+                feature_cache=self.feature_cache,
+            )
+        )
+
+    def order_moves(self, board: chess.Board, moves: Sequence[chess.Move]) -> tuple[chess.Move, ...]:
+        rows = [
+            (self.score_move(board, move), move.uci(), move)
+            for move in moves
+        ]
+        rows.sort(key=lambda row: (row[0], row[1]), reverse=True)
+        return tuple(row[-1] for row in rows)
+
+    def rank_move(self, board: chess.Board, move: chess.Move) -> int | None:
+        ordered = self.order_moves(
+            board,
+            tuple(sorted(board.legal_moves, key=lambda item: item.uci())),
+        )
+        for index, candidate in enumerate(ordered, start=1):
+            if candidate == move:
+                return index
+        return None
+
+
+def load_canonical_mate2_first_scorer(
+    *,
+    brief_path: str | Path = "docs/BRIEF.md",
+) -> FrozenMate2FirstScorer:
+    """Load the canonical dieted parent scorer named and hashed in ``docs/BRIEF.md``."""
+
+    brief = Path(brief_path).read_text(encoding="utf-8").splitlines()
+    source_path: Path | None = None
+    expected_hash: str | None = None
+    for line in brief:
+        if line.startswith("Canonical dieted parent:"):
+            source_path = Path(line.split(":", 1)[1].strip())
+        elif line.startswith("Canonical sha256:"):
+            expected_hash = line.split(":", 1)[1].strip()
+    if source_path is None or expected_hash is None:
+        raise ValueError(f"canonical dieted parent and hash not found in {brief_path}")
+    actual_hash = hashlib.sha256(source_path.read_bytes()).hexdigest()
+    if actual_hash != expected_hash:
+        raise ValueError(
+            f"canonical dieted parent hash mismatch: expected {expected_hash}, got {actual_hash}"
+        )
+
+    payload = json.loads(source_path.read_text(encoding="utf-8"))
+    summary = payload["graph_summary"]["top_mate2_first_terminals"]
+    weights: dict[str, float] = {}
+    for bucket in ("top_positive_terminals", "top_negative_terminals"):
+        for row in summary.get(bucket, []):
+            learner_visible = row.get("learner_visible", {})
+            terminal_key = learner_visible.get("terminal_key")
+            if terminal_key:
+                weights[str(terminal_key)] = float(learner_visible["local_weight"])
+    if not weights:
+        raise ValueError(f"no exported mate2_first terminal weights found in {source_path}")
+    return FrozenMate2FirstScorer(
+        terminal_weights=weights,
+        source_path=source_path,
+        source_sha256=actual_hash,
+        source_terminal_count=int(summary.get("terminal_count", len(weights))),
+    )
 
 
 def _compare(value: float, op: str, expected: float) -> bool:
@@ -634,6 +718,7 @@ def _add_mate_in_two_candidate_subgraph(
     board: chess.Board,
     move: chess.Move,
     virtual_frames: dict[str, dict[str, Any]],
+    order_rank: int,
 ) -> int:
     candidate_prefix = f"candidate_{_safe_move_id(move)}__"
     candidate_id = _prefixed(candidate_prefix, "mate_in_2_candidate")
@@ -642,7 +727,11 @@ def _add_mate_in_two_candidate_subgraph(
         Node(
             candidate_id,
             NodeType.SCRIPT,
-            meta={"role": "mate_in_2_candidate", "first_move": move.uci()},
+            meta={
+                "role": "mate_in_2_candidate",
+                "first_move": move.uci(),
+                "candidate_order_rank": int(order_rank),
+            },
         )
     )
     graph.add_hierarchy_pair(parent_id, candidate_id)
@@ -660,12 +749,16 @@ def _add_mate_in_two_candidate_subgraph(
         virtual_frames=virtual_frames,
     )
     graph.add_sequence_pair(bind_step_id, quantifier_id)
+    graph.nodes[candidate_id].meta["virtual_frame_count"] = int(frame_count)
     return frame_count
 
 
 def build_mate_in_two_skill_graph(
     board: chess.Board,
-) -> tuple[Graph, dict[str, dict[str, Any]], dict[str, int]]:
+    *,
+    lazy_candidates: bool = True,
+    move_orderer: Callable[[chess.Board, Sequence[chess.Move]], Sequence[chess.Move]] | None = None,
+) -> tuple[Graph, dict[str, dict[str, Any]], dict[str, Any]]:
     """Build exact mate-in-2 skill graph over all legal first moves."""
 
     graph = Graph()
@@ -678,22 +771,65 @@ def build_mate_in_two_skill_graph(
         policy="k_of_n",
         k=1,
     )
+    if lazy_candidates:
+        graph.nodes[MATE_IN_TWO_SKILL_ID].meta["request_policy"] = "lazy_k_of_n"
     graph.add_hierarchy_pair(MATE_IN_TWO_SKILL_ROOT_ID, MATE_IN_TWO_SKILL_ID)
+
+    legal_moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+    if move_orderer is None:
+        ordered_moves = legal_moves
+    else:
+        ordered_moves = tuple(move_orderer(board, legal_moves))
+        legal_uci = [move.uci() for move in legal_moves]
+        ordered_uci = [move.uci() for move in ordered_moves]
+        if len(ordered_uci) != len(legal_uci) or set(ordered_uci) != set(legal_uci):
+            raise ValueError("move_orderer must return each legal move exactly once")
 
     candidate_count = 0
     frame_count = 0
-    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+    candidate_order: list[str] = []
+    for order_rank, move in enumerate(ordered_moves, start=1):
         candidate_count += 1
+        candidate_order.append(move.uci())
         frame_count += _add_mate_in_two_candidate_subgraph(
             graph,
             MATE_IN_TWO_SKILL_ID,
             board=board,
             move=move,
             virtual_frames=virtual_frames,
+            order_rank=order_rank,
         )
 
     graph.validate_formal_pairs()
-    return graph, virtual_frames, {"candidate_count": candidate_count, "virtual_frame_count": frame_count}
+    return graph, virtual_frames, {
+        "candidate_count": candidate_count,
+        "virtual_frame_count": frame_count,
+        "candidate_order": candidate_order,
+    }
+
+
+def _descendant_nodes(graph: Graph, node_id: str) -> set[str]:
+    descendants: set[str] = set()
+    stack = list(graph.children(node_id))
+    while stack:
+        child = stack.pop()
+        if child in descendants:
+            continue
+        descendants.add(child)
+        stack.extend(graph.children(child))
+    return descendants
+
+
+def _mate_in_two_lazy_active_nodes(
+    graph: Graph,
+    candidate_descendants: dict[str, set[str]],
+) -> set[str]:
+    active = {MATE_IN_TWO_SKILL_ROOT_ID, MATE_IN_TWO_SKILL_ID}
+    for candidate_id in graph.children(MATE_IN_TWO_SKILL_ID):
+        active.add(candidate_id)
+        if graph.nodes[candidate_id].state != NodeState.INACTIVE:
+            active.update(candidate_descendants[candidate_id])
+    return active
 
 
 def run_mate_in_one_basin_recognizer(
@@ -820,12 +956,18 @@ def run_reply_quantifier(
 def run_mate_in_two_skill(
     board: chess.Board,
     *,
-    max_ticks: int = 192,
+    max_ticks: int = 2048,
     record_trace: bool = True,
+    lazy_candidates: bool = True,
+    move_orderer: Callable[[chess.Board, Sequence[chess.Move]], Sequence[chess.Move]] | None = None,
 ) -> dict[str, Any]:
     """Execute the exact mate-in-2 skill with universal reply confirmation."""
 
-    graph, virtual_frames, counts = build_mate_in_two_skill_graph(board)
+    graph, virtual_frames, counts = build_mate_in_two_skill_graph(
+        board,
+        lazy_candidates=lazy_candidates,
+        move_orderer=move_orderer,
+    )
     env = {
         "board": board,
         "features": extract_learner_features(board),
@@ -833,12 +975,29 @@ def run_mate_in_two_skill(
     }
     engine = FormalReConEngine(graph, record_trace=record_trace)
     engine.request(MATE_IN_TWO_SKILL_ROOT_ID)
-    trace = engine.run(
-        max_ticks=max_ticks,
-        env=env,
-        until=lambda _engine: graph.nodes[MATE_IN_TWO_SKILL_ROOT_ID].state
-        in (NodeState.CONFIRMED, NodeState.FAILED),
-    )
+    if lazy_candidates:
+        candidate_descendants = {
+            candidate_id: _descendant_nodes(graph, candidate_id)
+            for candidate_id in graph.children(MATE_IN_TWO_SKILL_ID)
+        }
+        for _ in range(max(0, max_ticks)):
+            engine.step_subset(
+                env,
+                active_nodes=_mate_in_two_lazy_active_nodes(graph, candidate_descendants),
+            )
+            if graph.nodes[MATE_IN_TWO_SKILL_ROOT_ID].state in (
+                NodeState.CONFIRMED,
+                NodeState.FAILED,
+            ):
+                break
+        trace = engine.trace
+    else:
+        trace = engine.run(
+            max_ticks=max_ticks,
+            env=env,
+            until=lambda _engine: graph.nodes[MATE_IN_TWO_SKILL_ROOT_ID].state
+            in (NodeState.CONFIRMED, NodeState.FAILED),
+        )
 
     confirmed_candidates = sorted(
         (
@@ -853,6 +1012,27 @@ def run_mate_in_two_skill(
     if bound_move is not None:
         graph.nodes[MATE_IN_TWO_SKILL_ID].meta["bound_move"] = bound_move
 
+    candidate_nodes = [
+        (node_id, node)
+        for node_id, node in graph.nodes.items()
+        if node.meta.get("role") == "mate_in_2_candidate"
+    ]
+    requested_candidates = [
+        (node_id, node)
+        for node_id, node in candidate_nodes
+        if node.state != NodeState.INACTIVE
+    ]
+    expanded_virtual_frame_count = sum(
+        int(node.meta.get("virtual_frame_count", 0))
+        for _node_id, node in requested_candidates
+    )
+    candidate_order = list(counts["candidate_order"])
+    bound_move_rank = (
+        candidate_order.index(bound_move) + 1
+        if bound_move in candidate_order
+        else None
+    )
+
     script_states = {
         node_id: node.state.name
         for node_id, node in sorted(graph.nodes.items())
@@ -865,8 +1045,13 @@ def run_mate_in_two_skill(
         "bound_move": bound_move,
         "confirmed_candidate_count": len(confirmed_candidates),
         "candidate_count": counts["candidate_count"],
-        "virtual_frame_count": len(virtual_frames),
-        "expanded_virtual_frame_count": counts["virtual_frame_count"],
+        "candidate_order": candidate_order,
+        "bound_move_rank": bound_move_rank,
+        "requested_candidate_count": len(requested_candidates),
+        "built_virtual_frame_count": len(virtual_frames),
+        "all_candidate_virtual_frame_count": counts["virtual_frame_count"],
+        "virtual_frame_count": expanded_virtual_frame_count,
+        "expanded_virtual_frame_count": expanded_virtual_frame_count,
         "ticks": engine.tick,
         "script_states": script_states,
         "trace": trace,
