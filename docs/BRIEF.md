@@ -6,35 +6,34 @@ Canonical dieted parent: reports/autogrowth/clean_slate_krk/dieted_foundation_v1
 Canonical sha256: ae382d0463e35eff09e9515a715648b5d49b1e0891d127a660e036e378452eb6
 Adopted 2.5 gate: balanced seed 20261211 threshold=0.854756; exact mate-in-2 remains verifier.
 
-Standing spec checklist: every loop over moves in any skill must state quantifier polarity
-explicitly: existential over our candidate moves, universal over opponent replies.
+Standing spec: move loops state polarity explicitly. Learned gates/priors are dispatch-layer only;
+labels, strata, success judgments, and reported ground truth use exact ungated audits.
+Reclassified call sites: phase2_edge_mate_v1 pool labels, 2.8e true-middle heldout construction, 2.8e policy success judge, and 2.8d-fix chase rung judge.
 
 Phase 2.8b-fix: `enter_mate2_skill` repaired from helpful-opponent existential reply semantics to
 universal all-reply semantics. It is exact mate-in-3 restricted to edge/fence distance-1 closure;
 the bright line is fixed here: no mate-4 exactification.
 
-Phase 2.8c: waypoint validation (`fence_established AND WK Chebyshev<=2 on nearest-edge interior
-side`) converted 162/200=0.810 in full games, but horizon-6 learning on 300/100 starts did not beat
-dispatcher. Baselines: dispatcher 44/100=0.440, fallback 28/100=0.280, random 17/100=0.170.
-Learned seeds: 35/100, 36/100, 36/100; stable but 0/3 beat dispatcher.
+Phase 2.8c/2.8d were confounded by mixed strata. Re-stratification found the old waypoint heldout
+was 26 mate1-now / 8 mate2-now / 2 distance-1 / 64 true-middle; universal-d1 heldout was
+16 mate1-now / 24 distance-1 / 0 true-middle. Full table: reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1/phase2_8e_pool_strata_summary.json.
 
-Phase 2.8d: added `chase_to_mate_skill`, a fit-free hand-authored ceiling gated on the waypoint
-manifold. Branch order: gated mate-2 defer, rook escape slide, king approach, rook waiting tempo.
-It is not learned and is not evidence for autogrowth.
-Initial 2.8d rung eval on the same 100 heldout starts, horizon 6, fixed-seed uniform black: chase
-20/100=0.200, no own-move skill violations. It was below the 0.60 integration threshold, so
-`krk_policy` was not changed and no 200-game integration eval was run.
+Phase 2.8e clean true-middle heldout: 100 starts, all from existing true-middle heldout rows; no
+fresh rows needed. Evaluation horizon 10, black fixed-seed uniform legal, success = ungated exact
+mate2 OR actual mate, hard failures = confinement crossed / rook lost / stalemate / repetition.
 
-Phase 2.8d-fix: judge repaired to trainer-side ungated exact mate-2 audit OR actual mate; learned
-gate is not ground-truth. Hard failures are confinement crossed, rook lost, stalemate, or third
-occurrence; attacked rook is recoverable. Gate audit found no current positive-label judge leak.
+True-middle conversion: dispatcher 30/100=0.300 Wilson [0.219, 0.396]; fallback 30/100=0.300
+[0.219, 0.396]; best 2.8c learned seed 20270212 25/100=0.250 [0.175, 0.343]; fixed chase
+31/100=0.310 [0.228, 0.406]. Chase is not interval-separated from dispatcher.
 
-Fixed standalone rung eval, same 100 starts, horizon 10: chase 33/100=0.330, Wilson [0.246, 0.427].
-Branch counts: king approach 74, rook escape 32, tempo 228, not-applicable 29; tempo moved from old
-h6 186 fires/start=1.86 to fixed h10 228 fires/start=2.28.
+Paired on true-middle: chase vs dispatcher = 17 win/win, 14 win/loss, 13 loss/win, 56 loss/loss.
+Learned vs dispatcher = 23 win/win, 2 win/loss, 7 loss/win, 68 loss/loss. Fallback matched
+dispatcher outcomes on this heldout: 30 win/win, 70 loss/loss.
 
-Stop condition: 4 skill-branch rook-loss hard failures occurred after black replies, so paired
-200-game integration was not run. Rook-loss FENs include `6k1/4KR2/8/8/8/8/8/8 w - - 0 1` and
-`8/8/8/8/8/8/1K3R2/3k4 w - - 0 1`. `krk_policy` has an opt-in chase flag only; default unchanged.
-Decision: Phase 2.8d-fix stops before integration; repair chase rook-safety/tempo before closure.
-No-go: new TG names, new report documents, new pool/cache formats, training logic changes, `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.
+Chase rook-loss audit: all four known losses were black replies capturing the rook after a
+chase-bound move, so they are skill bugs, not follow-on fallback behavior. Strata: three
+true-middle, one mate1-now. Example FENs: `6k1/4KR2/8/8/8/8/8/8 w - - 0 1` and
+`8/8/8/8/8/8/1K3R2/3k4 w - - 0 1`.
+
+Decision: Phase 2.8e stops before integration; repair chase reply-safety/tempo, then rerun true-middle eval before any 200-game integration or Phase 2 closure claim.
+No-go: new TG names, new report documents, training logic changes, `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.

@@ -1,0 +1,102 @@
+{
+  "audit_rule": "all labels use exact mate1, ungated exact mate2, and ungated enter_mate2; learned gates are dispatch-layer only",
+  "call_sites_reclassified": [
+    "phase2_edge_mate_v1/pools/*.jsonl.gz pool row labels",
+    "phase2_8e_true_middle_heldout.jsonl.gz construction filter",
+    "phase2_8e_true_middle_eval policy success judge",
+    "phase2_8d_fix_chase_rung_eval judge supersedes earlier gated/contaminated reading"
+  ],
+  "exclusive_order": [
+    "mate1-now",
+    "mate2-now",
+    "distance-1",
+    "true-middle"
+  ],
+  "gate_non_label_uses_observed": [
+    "_edge_mate_internal_terminal_keys internal feature only",
+    "run_krk_policy dispatch only",
+    "_edge_mate_fast_dispatch self-play harvest heuristic only"
+  ],
+  "pool_dir": "reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1/pools",
+  "row_labels_path": "reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1/phase2_8e_pool_strata_rows.jsonl.gz",
+  "schema_version": "phase2_8e_pool_strata_summary.v0",
+  "table": {
+    "edge_mate_distance1_heldout.jsonl.gz": {
+      "distance-1": 24,
+      "mate1-now": 16,
+      "mate2-now": 0,
+      "row_count": 96,
+      "true-middle": 56
+    },
+    "edge_mate_distance1_train.jsonl.gz": {
+      "distance-1": 79,
+      "mate1-now": 55,
+      "mate2-now": 0,
+      "row_count": 300,
+      "true-middle": 166
+    },
+    "edge_mate_distance1_universal_heldout.jsonl.gz": {
+      "distance-1": 24,
+      "mate1-now": 16,
+      "mate2-now": 0,
+      "row_count": 40,
+      "true-middle": 0
+    },
+    "edge_mate_distance1_universal_train.jsonl.gz": {
+      "distance-1": 79,
+      "mate1-now": 55,
+      "mate2-now": 0,
+      "row_count": 134,
+      "true-middle": 0
+    },
+    "edge_mate_distance2_certified_heldout.jsonl.gz": {
+      "distance-1": 0,
+      "mate1-now": 0,
+      "mate2-now": 0,
+      "row_count": 64,
+      "true-middle": 64
+    },
+    "edge_mate_distance2_certified_train.jsonl.gz": {
+      "distance-1": 0,
+      "mate1-now": 0,
+      "mate2-now": 0,
+      "row_count": 9,
+      "true-middle": 9
+    },
+    "edge_mate_distance2_to5_selfplay.jsonl.gz": {
+      "distance-1": 0,
+      "mate1-now": 0,
+      "mate2-now": 0,
+      "row_count": 300,
+      "true-middle": 300
+    },
+    "edge_mate_distance2_universal_heldout.jsonl.gz": {
+      "distance-1": 0,
+      "mate1-now": 0,
+      "mate2-now": 0,
+      "row_count": 64,
+      "true-middle": 64
+    },
+    "edge_mate_distance2_universal_train.jsonl.gz": {
+      "distance-1": 0,
+      "mate1-now": 0,
+      "mate2-now": 0,
+      "row_count": 41,
+      "true-middle": 41
+    },
+    "waypoint_middle_rung_heldout.jsonl.gz": {
+      "distance-1": 2,
+      "mate1-now": 26,
+      "mate2-now": 8,
+      "row_count": 100,
+      "true-middle": 64
+    },
+    "waypoint_middle_rung_train.jsonl.gz": {
+      "distance-1": 20,
+      "mate1-now": 65,
+      "mate2-now": 40,
+      "row_count": 300,
+      "true-middle": 175
+    }
+  }
+}

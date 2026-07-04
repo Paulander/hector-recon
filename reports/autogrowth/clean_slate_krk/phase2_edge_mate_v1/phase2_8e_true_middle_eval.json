@@ -1,0 +1,1671 @@
+{
+  "best_learned_reproduction": {
+    "alternative_arm_counts": {
+      "dispatcher": 263,
+      "fallback": 47,
+      "learned": 84,
+      "random": 206
+    },
+    "m3_update_count": 1543456,
+    "nonzero_reward_delta_count": 392,
+    "seed": 20270212,
+    "selected_arm_counts": {
+      "dispatcher": 31,
+      "fallback": 79,
+      "learned": 290,
+      "random": 200
+    },
+    "terminal_count": 10623
+  },
+  "clean_heldout": {
+    "fresh_attempts": 0,
+    "row_count": 100,
+    "source_counts": {
+      "existing_true_middle_heldout": 100
+    }
+  },
+  "decision": {
+    "chase_ge_dispatcher": true,
+    "chase_rate": 0.31,
+    "chase_wilson_95": [
+      0.22779697212376038,
+      0.40626055719489407
+    ],
+    "dispatcher_rate": 0.3,
+    "dispatcher_wilson_95": [
+      0.2189488529493276,
+      0.3958485463334666
+    ],
+    "intervals_separated_in_chase_favor": false,
+    "skill_bug_detected": true,
+    "status": "stop_skill_bug"
+  },
+  "elapsed_seconds": 513.659,
+  "paired_tables": {
+    "chase_vs_dispatcher": {
+      "loss/loss": 56,
+      "loss/win": 13,
+      "win/loss": 14,
+      "win/win": 17
+    },
+    "fallback_vs_dispatcher": {
+      "loss/loss": 70,
+      "win/win": 30
+    },
+    "learned_vs_dispatcher": {
+      "loss/loss": 68,
+      "loss/win": 7,
+      "win/loss": 2,
+      "win/win": 23
+    }
+  },
+  "policy_results": {
+    "chase": {
+      "branch_counts": {
+        "king_approach": 96,
+        "not_applicable": 34,
+        "rook_escape_slide": 33,
+        "rook_waiting_tempo": 170
+      },
+      "endpoint_counts": {
+        "confinement_crossed": 22,
+        "exact_mate2_or_mate_entered": 31,
+        "horizon": 3,
+        "repetition": 8,
+        "rook_lost": 2,
+        "skill_fail_not_applicable": 34
+      },
+      "failure_fens": [
+        {
+          "branches": [
+            "rook_waiting_tempo"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/k7/8/1K6/8/8/1R6/8 w - - 0 1",
+          "white_moves": [
+            "b2b1"
+          ]
+        },
+        {
+          "branches": [
+            "rook_waiting_tempo",
+            "king_approach",
+            "king_approach",
+            "not_applicable"
+          ],
+          "endpoint": "skill_fail_not_applicable",
+          "fen": "2k5/R7/1K6/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "a7b7",
+            "b6c6",
+            "c6c7"
+          ]
+        },
+        {
+          "branches": [
+            "king_approach",
+            "not_applicable"
+          ],
+          "endpoint": "skill_fail_not_applicable",
+          "fen": "8/8/1R6/8/2K5/8/k7/8 w - - 0 1",
+          "white_moves": [
+            "c4b4"
+          ]
+        },
+        {
+          "branches": [
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo"
+          ],
+          "endpoint": "repetition",
+          "fen": "8/8/8/7k/5K2/6R1/8/8 w - - 0 1",
+          "white_moves": [
+            "g3g2",
+            "g2g1",
+            "g1g2",
+            "g2g1",
+            "g1g2"
+          ]
+        },
+        {
+          "branches": [
+            "king_approach",
+            "not_applicable"
+          ],
+          "endpoint": "skill_fail_not_applicable",
+          "fen": "1R6/8/8/2K5/8/k7/8/8 w - - 0 1",
+          "white_moves": [
+            "c5b5"
+          ]
+        },
+        {
+          "branches": [
+            "rook_waiting_tempo",
+            "king_approach",
+            "not_applicable"
+          ],
+          "endpoint": "skill_fail_not_applicable",
+          "fen": "8/8/8/8/k7/2K5/1R6/8 w - - 0 1",
+          "white_moves": [
+            "b2b1",
+            "c3b3"
+          ]
+        },
+        {
+          "branches": [
+            "rook_escape_slide",
+            "king_approach",
+            "not_applicable"
+          ],
+          "endpoint": "skill_fail_not_applicable",
+          "fen": "2k5/1R6/1K6/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "b7h7",
+            "b6b7"
+          ]
+        },
+        {
+          "branches": [
+            "rook_waiting_tempo"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/k7/8/1K6/1R6/8/8/8 w - - 0 1",
+          "white_moves": [
+            "b4b3"
+          ]
+        },
+        {
+          "branches": [
+            "rook_waiting_tempo"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/7k/8/6K1/8/8/6R1/8 w - - 0 1",
+          "white_moves": [
+            "g2g1"
+          ]
+        },
+        {
+          "branches": [
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo"
+          ],
+          "endpoint": "repetition",
+          "fen": "8/8/2K5/k7/8/1R6/8/8 w - - 0 1",
+          "white_moves": [
+            "b3b2",
+            "b2b1",
+            "b1b2",
+            "b2b1",
+            "b1b2"
+          ]
+        },
+        {
+          "branches": [
+            "rook_waiting_tempo"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "6k1/R3K3/8/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "a7b7"
+          ]
+        },
+        {
+          "branches": [
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "king_approach",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo"
+          ],
+          "endpoint": "repetition",
+          "fen": "6k1/4R3/7K/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "e7d7",
+            "d7c7",
+            "c7b7",
+            "h6g6",
+            "b7a7",
+            "a7b7",
+            "b7a7",
+            "a7b7"
+          ]
+        },
+        {
+          "branches": [
+            "rook_waiting_tempo"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/8/1R6/8/1K6/8/k7/8 w - - 0 1",
+          "white_moves": [
+            "b6b5"
+          ]
+        },
+        {
+          "branches": [
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo"
+          ],
+          "endpoint": "repetition",
+          "fen": "2k5/4R3/1K6/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "e7d7",
+            "d7c7",
+            "c7d7",
+            "d7c7",
+            "c7d7"
+          ]
+        },
+        {
+          "branches": [
+            "rook_escape_slide",
+            "not_applicable"
+          ],
+          "endpoint": "skill_fail_not_applicable",
+          "fen": "8/8/8/8/2K5/1R6/k7/8 w - - 0 1",
+          "white_moves": [
+            "b3b8"
+          ]
+        },
+        {
+          "branches": [
+            "rook_waiting_tempo",
+            "not_applicable"
+          ],
+          "endpoint": "skill_fail_not_applicable",
+          "fen": "8/k7/8/1K6/8/8/8/1R6 w - - 0 1",
+          "white_moves": [
+            "b1b2"
+          ]
+        },
+        {
+          "branches": [
+            "king_approach",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo"
+          ],
+          "endpoint": "repetition",
+          "fen": "8/8/8/8/8/7K/1R6/5k2 w - - 0 1",
+          "white_moves": [
+            "h3g3",
+            "b2a2",
+            "a2b2",
+            "b2a2",
+            "a2b2"
+          ]
+        },
+        {
+          "branches": [
+            "king_approach",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "king_approach",
+            "rook_escape_slide",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "king_approach"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/8/8/8/8/6K1/7R/4k3 w - - 0 1",
+          "white_moves": [
+            "g3f3",
+            "h2g2",
+            "g2f2",
+            "f3e3",
+            "f2a2",
+            "a2b2",
+            "b2a2",
+            "a2b2",
+            "e3e2"
+          ]
+        },
+        {
+          "branches": [
+            "rook_waiting_tempo",
+            "king_approach",
+            "not_applicable"
+          ],
+          "endpoint": "skill_fail_not_applicable",
+          "fen": "8/8/8/8/8/1K6/6R1/2k5 w - - 0 1",
+          "white_moves": [
+            "g2f2",
+            "b3b2"
+          ]
+        },
+        {
+          "branches": [
+            "rook_waiting_tempo",
+            "king_approach",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo",
+            "rook_waiting_tempo"
+          ],
+          "endpoint": "repetition",
+          "fen": "8/8/8/8/8/6K1/R7/5k2 w - - 0 1",
+          "white_moves": [
+            "a2b2",
+            "g3f3",
+            "b2a2",
+            "a2b2",
+            "b2a2",
+            "a2b2"
+          ]
+        }
+      ],
+      "row_count": 100,
+      "skill_violation_count": 0,
+      "skill_violations": [],
+      "success_count": 31,
+      "success_rate": 0.31,
+      "wilson_95": [
+        0.22779697212376038,
+        0.40626055719489407
+      ]
+    },
+    "dispatcher": {
+      "branch_counts": {
+        "enter_mate2": 73,
+        "establish_fence": 47,
+        "fallback": 323
+      },
+      "endpoint_counts": {
+        "confinement_crossed": 57,
+        "exact_mate2_or_mate_entered": 30,
+        "horizon": 3,
+        "repetition": 3,
+        "rook_lost": 7
+      },
+      "failure_fens": [
+        {
+          "branches": [
+            "fallback",
+            "enter_mate2"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/k7/8/1K6/8/8/1R6/8 w - - 0 1",
+          "white_moves": [
+            "b5a5",
+            "a5b6"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "enter_mate2"
+          ],
+          "endpoint": "horizon",
+          "fen": "5k2/7R/7K/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "h7g7",
+            "h6g6",
+            "g6f6",
+            "g7f7",
+            "f7e7",
+            "f6e6",
+            "e6d6",
+            "e7d7",
+            "d7c7",
+            "d6c6"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "enter_mate2"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "2k5/R7/1K6/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "a7b7",
+            "b7c7",
+            "b6c6",
+            "c6b7",
+            "b7c8",
+            "c8d8",
+            "d8e8",
+            "e8f7"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "enter_mate2"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/8/8/7k/5K2/6R1/8/8 w - - 0 1",
+          "white_moves": [
+            "g3g4",
+            "g4g5",
+            "f4f5",
+            "f5g4",
+            "g4h5",
+            "h5g6"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "enter_mate2"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "1R6/8/8/2K5/8/k7/8/8 w - - 0 1",
+          "white_moves": [
+            "b8b4",
+            "c5c4",
+            "c4b3"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "enter_mate2"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/8/8/8/k7/2K5/1R6/8 w - - 0 1",
+          "white_moves": [
+            "b2b3",
+            "b3b4",
+            "c3c4",
+            "c4c5",
+            "c5b6"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "enter_mate2"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "2k5/1R6/1K6/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "b6a7",
+            "a7b8",
+            "b8c8",
+            "c8d8",
+            "d8e8",
+            "e8f7"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "enter_mate2"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/k7/8/1K6/1R6/8/8/8 w - - 0 1",
+          "white_moves": [
+            "b5a5",
+            "a5b6"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "enter_mate2"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/7k/8/6K1/8/8/6R1/8 w - - 0 1",
+          "white_moves": [
+            "g5h5",
+            "h5g6"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "establish_fence",
+            "fallback",
+            "establish_fence",
+            "fallback",
+            "fallback",
+            "establish_fence",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/8/2K5/k7/8/1R6/8/8 w - - 0 1",
+          "white_moves": [
+            "c6b7",
+            "b3b1",
+            "b1b3",
+            "b3b1",
+            "b1b2",
+            "b7b6",
+            "b2b5",
+            "b5h5"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "enter_mate2"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "6k1/R3K3/8/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "e7e8",
+            "e8f7"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "horizon",
+          "fen": "6k1/4R3/7K/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "e7h7",
+            "h7g7",
+            "h6g6",
+            "g6f6",
+            "g7f7",
+            "f7e7",
+            "f6e6",
+            "e6f7",
+            "f7e8",
+            "e8d8"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "enter_mate2"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "6R1/8/5K2/8/7k/8/8/8 w - - 0 1",
+          "white_moves": [
+            "g8g5",
+            "f6f5",
+            "f5g6",
+            "g6h5",
+            "h5h4",
+            "h4g3"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "enter_mate2"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/8/1R6/8/1K6/8/k7/8 w - - 0 1",
+          "white_moves": [
+            "b4a4",
+            "a4b3"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "establish_fence",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "2k5/4R3/1K6/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "b6a7",
+            "e7b7",
+            "b7b5"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "establish_fence",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "4k3/6R1/3K4/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "d6c7",
+            "g7d7",
+            "d7d5"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "enter_mate2"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/k7/8/1K6/8/8/8/1R6 w - - 0 1",
+          "white_moves": [
+            "b5a5",
+            "a5b6"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "establish_fence",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/8/8/8/8/7K/1R6/5k2 w - - 0 1",
+          "white_moves": [
+            "h3h2",
+            "h2g2",
+            "g2f2",
+            "b2e2",
+            "e2e8"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "enter_mate2"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/8/8/8/8/6K1/7R/4k3 w - - 0 1",
+          "white_moves": [
+            "h2f2",
+            "g3f3",
+            "f3g2",
+            "g2f1",
+            "f1e1",
+            "e1d1",
+            "d1c2"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "establish_fence",
+            "fallback",
+            "fallback",
+            "establish_fence",
+            "fallback",
+            "establish_fence",
+            "fallback"
+          ],
+          "endpoint": "rook_lost",
+          "fen": "8/8/8/8/8/1K6/6R1/2k5 w - - 0 1",
+          "white_moves": [
+            "b3a2",
+            "a2b2",
+            "b2c2",
+            "g2d2",
+            "d2h2",
+            "c2d2",
+            "h2e2",
+            "e2h2",
+            "h2e2",
+            "e2g2"
+          ]
+        }
+      ],
+      "row_count": 100,
+      "skill_violation_count": 0,
+      "skill_violations": [],
+      "success_count": 30,
+      "success_rate": 0.3,
+      "wilson_95": [
+        0.2189488529493276,
+        0.3958485463334666
+      ]
+    },
+    "fallback": {
+      "branch_counts": {
+        "fallback": 366
+      },
+      "endpoint_counts": {
+        "confinement_crossed": 42,
+        "exact_mate2_or_mate_entered": 30,
+        "horizon": 2,
+        "rook_lost": 26
+      },
+      "failure_fens": [
+        {
+          "branches": [
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/k7/8/1K6/8/8/1R6/8 w - - 0 1",
+          "white_moves": [
+            "b5a5",
+            "a5b6"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "horizon",
+          "fen": "5k2/7R/7K/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "h7g7",
+            "h6g6",
+            "g6f6",
+            "g7f7",
+            "f7e7",
+            "f6e6",
+            "e6d6",
+            "e7d7",
+            "d7c7",
+            "d6c6"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "2k5/R7/1K6/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "a7b7",
+            "b7c7",
+            "b6c6",
+            "c6b7",
+            "b7c8",
+            "c8d8",
+            "d8e8",
+            "e8f7"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/8/8/7k/5K2/6R1/8/8 w - - 0 1",
+          "white_moves": [
+            "g3g4",
+            "g4g5",
+            "f4f5",
+            "f5g4",
+            "g4h5",
+            "h5g6"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "1R6/8/8/2K5/8/k7/8/8 w - - 0 1",
+          "white_moves": [
+            "b8b4",
+            "c5c4",
+            "c4b3"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/8/8/8/k7/2K5/1R6/8 w - - 0 1",
+          "white_moves": [
+            "b2b3",
+            "b3b4",
+            "c3c4",
+            "c4c5",
+            "c5b6"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "2k5/1R6/1K6/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "b6a7",
+            "a7b8",
+            "b8c8",
+            "c8d8",
+            "d8e8",
+            "e8f7"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/k7/8/1K6/1R6/8/8/8 w - - 0 1",
+          "white_moves": [
+            "b5a5",
+            "a5b6"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/7k/8/6K1/8/8/6R1/8 w - - 0 1",
+          "white_moves": [
+            "g5h5",
+            "h5g6"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "rook_lost",
+          "fen": "8/8/2K5/k7/8/1R6/8/8 w - - 0 1",
+          "white_moves": [
+            "c6b7",
+            "b7b6"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "6k1/R3K3/8/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "e7e8",
+            "e8f7"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "horizon",
+          "fen": "6k1/4R3/7K/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "e7h7",
+            "h7g7",
+            "h6g6",
+            "g6f6",
+            "g7f7",
+            "f7e7",
+            "f6e6",
+            "e6f7",
+            "f7e8",
+            "e8d8"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "6R1/8/5K2/8/7k/8/8/8 w - - 0 1",
+          "white_moves": [
+            "g8g5",
+            "f6f5",
+            "f5g6",
+            "g6h5",
+            "h5h4",
+            "h4g3"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/8/1R6/8/1K6/8/k7/8 w - - 0 1",
+          "white_moves": [
+            "b4a4",
+            "a4b3"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "rook_lost",
+          "fen": "2k5/4R3/1K6/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "b6a7",
+            "a7b7"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "rook_lost",
+          "fen": "4k3/6R1/3K4/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "d6c7",
+            "c7d7"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/k7/8/1K6/8/8/8/1R6 w - - 0 1",
+          "white_moves": [
+            "b5a5",
+            "a5b6"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "rook_lost",
+          "fen": "8/8/8/8/8/7K/1R6/5k2 w - - 0 1",
+          "white_moves": [
+            "h3h2",
+            "h2g2",
+            "g2f2",
+            "f2e2"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "confinement_crossed",
+          "fen": "8/8/8/8/8/6K1/7R/4k3 w - - 0 1",
+          "white_moves": [
+            "h2f2",
+            "g3f3",
+            "f3g2",
+            "g2f1",
+            "f1e1",
+            "e1d1",
+            "d1c2"
+          ]
+        },
+        {
+          "branches": [
+            "fallback",
+            "fallback",
+            "fallback",
+            "fallback"
+          ],
+          "endpoint": "rook_lost",
+          "fen": "8/8/8/8/8/1K6/6R1/2k5 w - - 0 1",
+          "white_moves": [
+            "b3a2",
+            "a2b2",
+            "b2c2",
+            "c2d2"
+          ]
+        }
+      ],
+      "row_count": 100,
+      "skill_violation_count": 0,
+      "skill_violations": [],
+      "success_count": 30,
+      "success_rate": 0.3,
+      "wilson_95": [
+        0.2189488529493276,
+        0.3958485463334666
+      ]
+    },
+    "learned": {
+      "branch_counts": {
+        "learned": 517
+      },
+      "endpoint_counts": {
+        "exact_mate2_or_mate_entered": 25,
+        "horizon": 3,
+        "repetition": 67,
+        "rook_lost": 4,
+        "stalemate": 1
+      },
+      "failure_fens": [
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "8/k7/8/1K6/8/8/1R6/8 w - - 0 1",
+          "white_moves": [
+            "b5c5",
+            "c5c4",
+            "c4c3",
+            "c3c4",
+            "c4c3",
+            "c3c4"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "6R1/5K2/8/7k/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "g8g6",
+            "f7f6",
+            "f6f5",
+            "f5f6",
+            "f6f5",
+            "f5f4",
+            "f4f3",
+            "f3f4",
+            "f4f5"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "5k2/7R/7K/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "h7g7",
+            "h6g6",
+            "g6f6",
+            "f6g6",
+            "g6h6",
+            "h6g6"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "2k5/R7/1K6/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "b6a6",
+            "a6b6",
+            "b6a6",
+            "a6b6"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "8/8/8/7k/5K2/6R1/8/8 w - - 0 1",
+          "white_moves": [
+            "f4f3",
+            "f3f2",
+            "f2f3",
+            "f3f2",
+            "f2f3"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "1R6/8/8/2K5/8/k7/8/8 w - - 0 1",
+          "white_moves": [
+            "b8b4",
+            "c5c4",
+            "c4c5",
+            "c5c4",
+            "c4c3",
+            "c3c4"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "8/8/8/8/k7/2K5/1R6/8 w - - 0 1",
+          "white_moves": [
+            "c3c2",
+            "c2c3",
+            "c3c4",
+            "c4c3",
+            "c3c2",
+            "c2c1",
+            "c1c2"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "horizon",
+          "fen": "2k5/1R6/1K6/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "b6a6",
+            "a6b6",
+            "b6c6",
+            "c6d6",
+            "d6c6",
+            "c6d6",
+            "d6e6",
+            "e6f6",
+            "f6e6",
+            "e6f6"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "8/k7/8/1K6/1R6/8/8/8 w - - 0 1",
+          "white_moves": [
+            "b5c5",
+            "c5c4",
+            "c4c3",
+            "c3c4",
+            "c4c3",
+            "c3c4"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "8/7k/8/6K1/8/8/6R1/8 w - - 0 1",
+          "white_moves": [
+            "g5f5",
+            "f5f4",
+            "f4f5",
+            "f5f6",
+            "f6f5"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "8/8/2K5/k7/8/1R6/8/8 w - - 0 1",
+          "white_moves": [
+            "c6c7",
+            "c7c8",
+            "c8c7",
+            "c7c8",
+            "c8c7"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "6k1/R3K3/8/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "e7e6",
+            "e6f6",
+            "f6e6",
+            "e6f6",
+            "f6e6"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "6R1/8/5K2/8/7k/8/8/8 w - - 0 1",
+          "white_moves": [
+            "g8g5",
+            "f6f5",
+            "f5f6",
+            "f6f5",
+            "f5f6"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "8/8/1R6/8/1K6/8/k7/8 w - - 0 1",
+          "white_moves": [
+            "b4c4",
+            "c4c3",
+            "c3c4",
+            "c4c3",
+            "c3c4"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "2k5/4R3/1K6/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "b6a6",
+            "a6b6",
+            "b6a6",
+            "a6b6",
+            "b6c6",
+            "c6d6",
+            "d6e6",
+            "e6d6",
+            "d6c6",
+            "c6d6"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned"
+          ],
+          "endpoint": "stalemate",
+          "fen": "8/8/8/8/2K5/1R6/k7/8 w - - 0 1",
+          "white_moves": [
+            "c4c3",
+            "b3b2"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "horizon",
+          "fen": "4k3/6R1/3K4/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "d6c6",
+            "c6d6",
+            "d6c6",
+            "c6b6",
+            "b6a6",
+            "a6b6",
+            "b6c6",
+            "c6d6",
+            "d6e6",
+            "e6f6"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "8/k7/8/1K6/8/8/8/1R6 w - - 0 1",
+          "white_moves": [
+            "b5c5",
+            "c5c4",
+            "c4c3",
+            "c3c4",
+            "c4c3",
+            "c3c4"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "8/8/8/8/8/7K/1R6/5k2 w - - 0 1",
+          "white_moves": [
+            "b2g2",
+            "h3g3",
+            "g3h3",
+            "h3g3",
+            "g3h3"
+          ]
+        },
+        {
+          "branches": [
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned",
+            "learned"
+          ],
+          "endpoint": "repetition",
+          "fen": "8/8/8/8/8/6K1/7R/4k3 w - - 0 1",
+          "white_moves": [
+            "h2f2",
+            "g3f3",
+            "f3e3",
+            "e3d3",
+            "d3e3",
+            "e3f3",
+            "f3g3",
+            "g3f3"
+          ]
+        }
+      ],
+      "row_count": 100,
+      "skill_violation_count": 1,
+      "skill_violations": [
+        {
+          "branch": "learned",
+          "fen": "8/8/8/8/2K5/1R6/k7/8 w - - 0 1",
+          "move": "b3b2",
+          "reason": "stalemate_after_own_move"
+        }
+      ],
+      "success_count": 25,
+      "success_rate": 0.25,
+      "wilson_95": [
+        0.17545211362287672,
+        0.34304463548061603
+      ]
+    }
+  },
+  "rook_loss_investigation": [
+    {
+      "black_replies": [
+        "g8h7"
+      ],
+      "branches": [
+        "rook_escape_slide"
+      ],
+      "exact_stratum": "true-middle",
+      "fen": "6k1/4KR2/8/8/8/8/8/8 w - - 0 1",
+      "last_transition": {
+        "before_fen": "6k1/4KR2/8/8/8/8/8/8 w - - 0 1",
+        "black_reply": "g8h7",
+        "branch": "rook_escape_slide",
+        "white_move": "f7h7"
+      },
+      "mechanism": "black_reply_captured_rook_after_chase_bound_move",
+      "skill_bug": true,
+      "white_moves": [
+        "f7h7"
+      ]
+    },
+    {
+      "black_replies": [
+        "b8a8",
+        "a8b8",
+        "b8c8",
+        "c8d7"
+      ],
+      "branches": [
+        "rook_waiting_tempo",
+        "rook_waiting_tempo",
+        "rook_waiting_tempo",
+        "rook_waiting_tempo"
+      ],
+      "exact_stratum": "mate1-now",
+      "fen": "1k6/7R/1K6/8/8/8/8/8 w - - 14 8",
+      "last_transition": {
+        "before_fen": "2k5/4R3/1K6/8/8/8/8/8 w - - 20 11",
+        "black_reply": "c8d7",
+        "branch": "rook_waiting_tempo",
+        "white_move": "e7d7"
+      },
+      "mechanism": "black_reply_captured_rook_after_chase_bound_move",
+      "skill_bug": true,
+      "white_moves": [
+        "h7g7",
+        "g7f7",
+        "f7e7",
+        "e7d7"
+      ]
+    },
+    {
+      "black_replies": [
+        "e8d8",
+        "d8c8",
+        "c8b7"
+      ],
+      "branches": [
+        "rook_waiting_tempo",
+        "rook_waiting_tempo",
+        "rook_waiting_tempo"
+      ],
+      "exact_stratum": "true-middle",
+      "fen": "4k3/R7/3K4/8/8/8/8/8 w - - 0 1",
+      "last_transition": {
+        "before_fen": "2k5/R7/3K4/8/8/8/8/8 w - - 4 3",
+        "black_reply": "c8b7",
+        "branch": "rook_waiting_tempo",
+        "white_move": "a7b7"
+      },
+      "mechanism": "black_reply_captured_rook_after_chase_bound_move",
+      "skill_bug": true,
+      "white_moves": [
+        "a7b7",
+        "b7a7",
+        "a7b7"
+      ]
+    },
+    {
+      "black_replies": [
+        "d1e2"
+      ],
+      "branches": [
+        "rook_waiting_tempo"
+      ],
+      "exact_stratum": "true-middle",
+      "fen": "8/8/8/8/8/8/1K3R2/3k4 w - - 0 1",
+      "last_transition": {
+        "before_fen": "8/8/8/8/8/8/1K3R2/3k4 w - - 0 1",
+        "black_reply": "d1e2",
+        "branch": "rook_waiting_tempo",
+        "white_move": "f2e2"
+      },
+      "mechanism": "black_reply_captured_rook_after_chase_bound_move",
+      "skill_bug": true,
+      "white_moves": [
+        "f2e2"
+      ]
+    }
+  ],
+  "schema_version": "phase2_8e_true_middle_eval.v0",
+  "strata_rows_path": "reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1/phase2_8e_pool_strata_rows.jsonl.gz",
+  "strata_summary_path": "reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1/phase2_8e_pool_strata_summary.json",
+  "true_middle_heldout_path": "reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1/pools/phase2_8e_true_middle_heldout.jsonl.gz"
+}
