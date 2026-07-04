@@ -1,0 +1,599 @@
+{
+  "branch_counts": {
+    "enter_mate2": 79,
+    "establish_fence": 123,
+    "fallback": 558,
+    "mate_in_1": 162,
+    "mate_in_2": 101
+  },
+  "conversion_rate": 0.81,
+  "count": 200,
+  "definition": "fence_established AND white king Chebyshev<=2 from black king on nearest-edge interior side",
+  "draw_breakdown": {
+    "fifty_move": 5,
+    "horizon": 0,
+    "illegal": 0,
+    "repetition": 27,
+    "rook_loss": 6,
+    "skill_violation": 0,
+    "stalemate": 0
+  },
+  "failures": [
+    {
+      "branch_counts": {
+        "establish_fence": 2,
+        "fallback": 2
+      },
+      "frames_max": 37,
+      "frames_mean": 18.5,
+      "guard_activations": 0,
+      "index": 7,
+      "outcome": "repetition",
+      "plies": 8,
+      "skill_violations": [],
+      "start_fen": "8/8/6K1/6R1/7k/8/8/8 w - - 4 3",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 5
+      },
+      "frames_max": 3,
+      "frames_mean": 1.125,
+      "guard_activations": 0,
+      "index": 24,
+      "outcome": "repetition",
+      "plies": 15,
+      "skill_violations": [],
+      "start_fen": "3k4/7R/2K5/8/8/8/8/8 w - - 0 1",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 2,
+        "fallback": 4
+      },
+      "frames_max": 34,
+      "frames_mean": 11.333333333333334,
+      "guard_activations": 1,
+      "index": 26,
+      "outcome": "rook_loss",
+      "plies": 12,
+      "skill_violations": [],
+      "start_fen": "8/8/5K2/8/7k/8/8/6R1 w - - 0 1",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 3
+      },
+      "frames_max": 27,
+      "frames_mean": 13.5,
+      "guard_activations": 0,
+      "index": 36,
+      "outcome": "repetition",
+      "plies": 11,
+      "skill_violations": [],
+      "start_fen": "8/8/7k/6R1/6K1/8/8/8 w - - 6 4",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 2,
+        "fallback": 2
+      },
+      "frames_max": 27,
+      "frames_mean": 13.5,
+      "guard_activations": 0,
+      "index": 37,
+      "outcome": "repetition",
+      "plies": 8,
+      "skill_violations": [],
+      "start_fen": "8/8/7k/6R1/6K1/8/8/8 w - - 10 6",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 2,
+        "fallback": 2
+      },
+      "frames_max": 27,
+      "frames_mean": 13.5,
+      "guard_activations": 0,
+      "index": 60,
+      "outcome": "repetition",
+      "plies": 8,
+      "skill_violations": [],
+      "start_fen": "8/6K1/8/7k/8/8/8/6R1 w - - 8 5",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 4
+      },
+      "frames_max": 14,
+      "frames_mean": 5.0,
+      "guard_activations": 0,
+      "index": 64,
+      "outcome": "repetition",
+      "plies": 13,
+      "skill_violations": [],
+      "start_fen": "1R6/8/8/k7/8/2K5/8/8 w - - 38 20",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 3
+      },
+      "frames_max": 7,
+      "frames_mean": 3.5,
+      "guard_activations": 0,
+      "index": 65,
+      "outcome": "repetition",
+      "plies": 11,
+      "skill_violations": [],
+      "start_fen": "8/8/k7/1R6/1K6/8/8/8 w - - 44 23",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 3
+      },
+      "frames_max": 7,
+      "frames_mean": 3.5,
+      "guard_activations": 0,
+      "index": 66,
+      "outcome": "repetition",
+      "plies": 11,
+      "skill_violations": [],
+      "start_fen": "8/8/k7/1R6/1K6/8/8/8 w - - 48 25",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 6,
+        "fallback": 31
+      },
+      "frames_max": 110,
+      "frames_mean": 66.83783783783784,
+      "guard_activations": 0,
+      "index": 75,
+      "outcome": "repetition",
+      "plies": 74,
+      "skill_violations": [],
+      "start_fen": "8/8/8/8/8/5K2/1R6/3k4 w - - 0 1",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 2,
+        "fallback": 4
+      },
+      "frames_max": 14,
+      "frames_mean": 4.666666666666667,
+      "guard_activations": 1,
+      "index": 85,
+      "outcome": "rook_loss",
+      "plies": 12,
+      "skill_violations": [],
+      "start_fen": "8/8/8/2K5/k7/8/8/1R6 w - - 0 1",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 3
+      },
+      "frames_max": 3,
+      "frames_mean": 1.5,
+      "guard_activations": 0,
+      "index": 93,
+      "outcome": "repetition",
+      "plies": 11,
+      "skill_violations": [],
+      "start_fen": "5k2/3KR3/8/8/8/8/8/8 w - - 24 13",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 3
+      },
+      "frames_max": 27,
+      "frames_mean": 13.5,
+      "guard_activations": 0,
+      "index": 105,
+      "outcome": "repetition",
+      "plies": 11,
+      "skill_violations": [],
+      "start_fen": "8/8/7k/6R1/6K1/8/8/8 w - - 18 10",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 29
+      },
+      "frames_max": 110,
+      "frames_mean": 75.6875,
+      "guard_activations": 0,
+      "index": 120,
+      "outcome": "repetition",
+      "plies": 64,
+      "skill_violations": [],
+      "start_fen": "4k3/5RK1/8/8/8/8/8/8 w - - 24 13",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 2,
+        "fallback": 2
+      },
+      "frames_max": 3,
+      "frames_mean": 1.5,
+      "guard_activations": 0,
+      "index": 121,
+      "outcome": "repetition",
+      "plies": 8,
+      "skill_violations": [],
+      "start_fen": "4k3/R5K1/8/8/8/8/8/8 w - - 28 15",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 3
+      },
+      "frames_max": 33,
+      "frames_mean": 6.5,
+      "guard_activations": 0,
+      "index": 122,
+      "outcome": "repetition",
+      "plies": 11,
+      "skill_violations": [],
+      "start_fen": "4k3/R5K1/8/8/8/8/8/8 w - - 32 17",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 2,
+        "fallback": 2
+      },
+      "frames_max": 7,
+      "frames_mean": 3.5,
+      "guard_activations": 0,
+      "index": 124,
+      "outcome": "repetition",
+      "plies": 8,
+      "skill_violations": [],
+      "start_fen": "8/8/k7/1R6/1K6/8/8/8 w - - 8 5",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 3
+      },
+      "frames_max": 7,
+      "frames_mean": 3.5,
+      "guard_activations": 0,
+      "index": 125,
+      "outcome": "repetition",
+      "plies": 11,
+      "skill_violations": [],
+      "start_fen": "8/8/k7/1R6/1K6/8/8/8 w - - 12 7",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 5
+      },
+      "frames_max": 7,
+      "frames_mean": 2.625,
+      "guard_activations": 0,
+      "index": 129,
+      "outcome": "repetition",
+      "plies": 15,
+      "skill_violations": [],
+      "start_fen": "8/8/8/8/k7/1R6/1K6/8 w - - 4 3",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 3
+      },
+      "frames_max": 7,
+      "frames_mean": 3.5,
+      "guard_activations": 0,
+      "index": 130,
+      "outcome": "repetition",
+      "plies": 11,
+      "skill_violations": [],
+      "start_fen": "8/8/k7/1R6/1K6/8/8/8 w - - 16 9",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 2,
+        "fallback": 5
+      },
+      "frames_max": 7,
+      "frames_mean": 2.0,
+      "guard_activations": 1,
+      "index": 135,
+      "outcome": "rook_loss",
+      "plies": 14,
+      "skill_violations": [],
+      "start_fen": "1R6/8/8/8/k7/2K5/8/8 w - - 28 15",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 4
+      },
+      "frames_max": 14,
+      "frames_mean": 3.2857142857142856,
+      "guard_activations": 0,
+      "index": 136,
+      "outcome": "repetition",
+      "plies": 13,
+      "skill_violations": [],
+      "start_fen": "8/8/8/8/8/2K5/7R/4k3 w - - 38 20",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 2,
+        "fallback": 2
+      },
+      "frames_max": 3,
+      "frames_mean": 1.5,
+      "guard_activations": 0,
+      "index": 137,
+      "outcome": "repetition",
+      "plies": 8,
+      "skill_violations": [],
+      "start_fen": "8/8/8/8/8/8/3KR3/5k2 w - - 44 23",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 5
+      },
+      "frames_max": 14,
+      "frames_mean": 2.875,
+      "guard_activations": 0,
+      "index": 145,
+      "outcome": "repetition",
+      "plies": 15,
+      "skill_violations": [],
+      "start_fen": "8/8/8/8/8/1K6/7R/3k4 w - - 2 2",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 3
+      },
+      "frames_max": 3,
+      "frames_mean": 1.5,
+      "guard_activations": 0,
+      "index": 146,
+      "outcome": "repetition",
+      "plies": 11,
+      "skill_violations": [],
+      "start_fen": "8/8/8/8/8/8/3KR3/5k2 w - - 10 6",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "enter_mate2": 1,
+        "fallback": 4,
+        "mate_in_2": 1
+      },
+      "frames_max": 2,
+      "frames_mean": 0.6666666666666666,
+      "guard_activations": 0,
+      "index": 155,
+      "outcome": "fifty_move",
+      "plies": 12,
+      "skill_violations": [],
+      "start_fen": "1R6/2K5/8/k7/8/8/8/8 w - - 88 45",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "fallback": 4
+      },
+      "frames_max": 0,
+      "frames_mean": 0.0,
+      "guard_activations": 0,
+      "index": 156,
+      "outcome": "fifty_move",
+      "plies": 8,
+      "skill_violations": [],
+      "start_fen": "8/8/1RK5/k7/8/8/8/8 w - - 92 47",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 4,
+        "fallback": 31
+      },
+      "frames_max": 110,
+      "frames_mean": 50.65714285714286,
+      "guard_activations": 0,
+      "index": 164,
+      "outcome": "repetition",
+      "plies": 70,
+      "skill_violations": [],
+      "start_fen": "5k2/R7/7K/8/8/8/8/8 w - - 2 2",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 2,
+        "fallback": 2
+      },
+      "frames_max": 7,
+      "frames_mean": 3.5,
+      "guard_activations": 0,
+      "index": 174,
+      "outcome": "repetition",
+      "plies": 8,
+      "skill_violations": [],
+      "start_fen": "8/8/k7/1R6/1K6/8/8/8 w - - 6 4",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 3
+      },
+      "frames_max": 7,
+      "frames_mean": 3.5,
+      "guard_activations": 0,
+      "index": 175,
+      "outcome": "repetition",
+      "plies": 11,
+      "skill_violations": [],
+      "start_fen": "8/8/k7/1R6/1K6/8/8/8 w - - 10 6",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "fallback": 4
+      },
+      "frames_max": 0,
+      "frames_mean": 0.0,
+      "guard_activations": 0,
+      "index": 178,
+      "outcome": "fifty_move",
+      "plies": 8,
+      "skill_violations": [],
+      "start_fen": "2K5/1R6/k7/8/8/8/8/8 w - - 92 47",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "fallback": 3
+      },
+      "frames_max": 0,
+      "frames_mean": 0.0,
+      "guard_activations": 0,
+      "index": 179,
+      "outcome": "fifty_move",
+      "plies": 6,
+      "skill_violations": [],
+      "start_fen": "8/1RK5/8/k7/8/8/8/8 w - - 94 48",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "fallback": 1
+      },
+      "frames_max": 0,
+      "frames_mean": 0.0,
+      "guard_activations": 0,
+      "index": 180,
+      "outcome": "fifty_move",
+      "plies": 2,
+      "skill_violations": [],
+      "start_fen": "8/8/1RK5/k7/8/8/8/8 w - - 98 50",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 5
+      },
+      "frames_max": 27,
+      "frames_mean": 10.125,
+      "guard_activations": 1,
+      "index": 184,
+      "outcome": "rook_loss",
+      "plies": 16,
+      "skill_violations": [],
+      "start_fen": "8/6R1/8/7k/8/5K2/8/8 w - - 60 31",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 2,
+        "fallback": 4
+      },
+      "frames_max": 27,
+      "frames_mean": 9.0,
+      "guard_activations": 1,
+      "index": 185,
+      "outcome": "rook_loss",
+      "plies": 12,
+      "skill_violations": [],
+      "start_fen": "8/8/8/7k/6R1/6K1/8/8 w - - 64 33",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 3
+      },
+      "frames_max": 27,
+      "frames_mean": 13.5,
+      "guard_activations": 0,
+      "index": 186,
+      "outcome": "repetition",
+      "plies": 11,
+      "skill_violations": [],
+      "start_fen": "8/8/7k/6R1/6K1/8/8/8 w - - 70 36",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 2,
+        "fallback": 6
+      },
+      "frames_max": 38,
+      "frames_mean": 9.5,
+      "guard_activations": 1,
+      "index": 194,
+      "outcome": "rook_loss",
+      "plies": 16,
+      "skill_violations": [],
+      "start_fen": "5k2/R7/6K1/8/8/8/8/8 w - - 8 5",
+      "win": false
+    },
+    {
+      "branch_counts": {
+        "establish_fence": 3,
+        "fallback": 4
+      },
+      "frames_max": 27,
+      "frames_mean": 11.571428571428571,
+      "guard_activations": 0,
+      "index": 199,
+      "outcome": "repetition",
+      "plies": 13,
+      "skill_violations": [],
+      "start_fen": "6R1/8/8/7k/8/5K2/8/8 w - - 0 1",
+      "win": false
+    }
+  ],
+  "from_game_logs": 200,
+  "from_generator": 0,
+  "guard_activations": 9,
+  "schema_version": "phase2_8c_waypoint_eval.v0",
+  "wilson_95": [
+    0.7499876129240015,
+    0.8583282847220932
+  ],
+  "win_count": 162
+}

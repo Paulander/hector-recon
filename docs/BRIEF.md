@@ -10,30 +10,28 @@ Standing spec checklist: every loop over moves in any skill must state quantifie
 explicitly: existential over our candidate moves, universal over opponent replies.
 
 Phase 2.8b-fix: `enter_mate2_skill` repaired from helpful-opponent existential reply semantics to
-universal all-reply semantics. It is now exact mate-in-3 restricted to edge/fence distance-1
-closure; the bright line is fixed here: no mate-4 exactification.
+universal all-reply semantics. It is exact mate-in-3 restricted to edge/fence distance-1 closure;
+the bright line is fixed here: no mate-4 exactification.
 
-Relabel result: old 2.8a distance-1 train survived 134/300=0.447 and heldout survived
-40/96=0.417, so the omitted reply quantifier inflated the heldout pool by 56/96 positions.
-Corrected distance-1 closure on relabeled heldout is 40/40=1.000; frames mean/max 6.35/46.
+Phase 2.8c diagnostics: fresh 200-game fence/general pools, black=fixed-seed uniform legal, paired
+fixed dispatcher vs identical dispatcher with `enter_mate2` disabled. Fence fixed and disabled both
+won 133/200=0.665, Wilson 95% [0.597, 0.727], paired table 133 win/win and 67 loss/loss. General
+fixed and disabled both won 144/200=0.720, Wilson [0.654, 0.778], paired table 144 win/win and
+56 loss/loss. Therefore `enter_mate2` has no measured system-level effect on these pools.
 
-Full-game eval, same 50-game pools/seeds, black=fixed-seed uniform legal:
-pool | 2.7b | broken 2.8b | fixed 2.8b
-mate-in-<=2 | 50/50 | 50/50 | 50/50
-fence | 35/50 | 31/50 | 30/50
-general | 36/50 | 28/50 | 29/50
-Fixed run had zero skill-branch illegal moves, rook losses, or stalemates.
+Draw/loss structure: fence fixed nonwins 67; only 1 had `enter_mate2` fire, once; shuffle declines
+0. General fixed nonwins 56; `enter_mate2` fired in 0; shuffle declines 0. Draws were repetition
+dominant: fence 54 repetitions, 7 fifty-move, 6 rook-loss; general 50 repetitions, 6 fifty-move.
+Repetition-guard activations: fence 48, general 68. Only multi-enter game: general index 10
+(`8/8/2K5/6k1/8/R7/8/8 w - - 0 1`) with two firings.
 
-Fixed gap/fallback: fence fallback share 0.748, gap mean/median/max 15.72/8/56 with 21 unresolved;
-general fallback share 0.763, gap 14.47/6/48 with 21 unresolved. Fence breaks under fallback
-remain dominant: 111 in fence/general combined during fixed eval.
+Waypoint validation: `king_support_waypoint = fence_established AND white king Chebyshev<=2 from
+black king on nearest-edge interior side`. Harvested 200/200 from game logs. Current dispatcher
+converted 162/200=0.810, Wilson [0.750, 0.858]; failures 38 = 27 repetition, 6 rook-loss, 5
+fifty-move. This waypoint is not a solved middle manifold.
 
-Corrected distance-2 stratum, baselines only: source d2 107 -> certified 105; split 41 train /
-64 heldout. Heldout entry rates: fallback 56/64=0.875, random 10/64=0.156, dispatcher
-56/64=0.875. Because fallback remains >=0.85, the stratum needs redefinition before training.
-
-Decision: no training this session and no Phase 2.8c advance. Next: 2.8b review of stratum
-definition and fence-maintenance gap under explicit quantifier polarity.
+Decision: no code fix, no training, no threshold move. Next: 2.8c middle-rung design
+(fence-maintenance + king-approach) against waypoint data.
 
 No-go: new TG names, new report documents, new pool/cache formats, training logic changes,
 `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.

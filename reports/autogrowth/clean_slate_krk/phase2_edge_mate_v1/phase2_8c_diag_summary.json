@@ -1,0 +1,1523 @@
+{
+  "black_base_seed": 20270440,
+  "black_policy": "fixed_seed_uniform_legal",
+  "by_pool": {
+    "fence": {
+      "enter_disabled": {
+        "branch_counts": {
+          "establish_fence": 439,
+          "fallback": 2222,
+          "mate_in_1": 133,
+          "mate_in_2": 95
+        },
+        "draw_breakdown": {
+          "fifty_move": 7,
+          "horizon": 0,
+          "illegal": 0,
+          "repetition": 54,
+          "rook_loss": 6,
+          "skill_violation": 0,
+          "stalemate": 0
+        },
+        "enter_mate2_games": 0,
+        "enter_mate2_total": 0,
+        "game_count": 200,
+        "guard_activations": 48,
+        "multi_enter_games": [],
+        "shuffle_decline_games": 0,
+        "shuffle_decline_total": 0,
+        "wilson_95": [
+          0.5970219120796653,
+          0.7267591302158368
+        ],
+        "win_count": 133,
+        "win_rate": 0.665
+      },
+      "fixed": {
+        "branch_counts": {
+          "enter_mate2": 76,
+          "establish_fence": 439,
+          "fallback": 2140,
+          "mate_in_1": 133,
+          "mate_in_2": 101
+        },
+        "draw_breakdown": {
+          "fifty_move": 7,
+          "horizon": 0,
+          "illegal": 0,
+          "repetition": 54,
+          "rook_loss": 6,
+          "skill_violation": 0,
+          "stalemate": 0
+        },
+        "enter_mate2_games": 76,
+        "enter_mate2_total": 76,
+        "game_count": 200,
+        "guard_activations": 48,
+        "multi_enter_games": [],
+        "shuffle_decline_games": 0,
+        "shuffle_decline_total": 0,
+        "wilson_95": [
+          0.5970219120796653,
+          0.7267591302158368
+        ],
+        "win_count": 133,
+        "win_rate": 0.665
+      },
+      "fixed_nonwin_count": 67,
+      "fixed_nonwin_enter_mate2_games": 1,
+      "fixed_nonwin_enter_mate2_total": 1,
+      "fixed_nonwin_shuffle_decline_games": 0,
+      "fixed_nonwin_shuffle_decline_total": 0,
+      "fixed_nonwins": [
+        {
+          "branch_counts": {
+            "fallback": 5
+          },
+          "enter_mate2_count": 0,
+          "index": 11,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/6K1/8/1R6/8/k7/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 5,
+            "fallback": 19
+          },
+          "enter_mate2_count": 0,
+          "index": 6,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/1R6/8/6K1/8/k7/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 3
+          },
+          "enter_mate2_count": 0,
+          "index": 20,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "7k/8/2K5/8/6R1/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 15
+          },
+          "enter_mate2_count": 0,
+          "index": 5,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/5K2/8/8/8/R7/6k1 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 5
+          },
+          "enter_mate2_count": 0,
+          "index": 27,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "3k4/7R/2K5/8/8/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 8,
+            "fallback": 12
+          },
+          "enter_mate2_count": 0,
+          "index": 23,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/k6K/8/8/8/8/1R6 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 5
+          },
+          "enter_mate2_count": 0,
+          "index": 29,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/5K2/8/7k/8/8/6R1 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 12
+          },
+          "enter_mate2_count": 0,
+          "index": 21,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "2K5/6R1/8/7k/8/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 4
+          },
+          "enter_mate2_count": 0,
+          "index": 37,
+          "outcome": "rook_loss",
+          "shuffle_declines": [],
+          "start_fen": "6R1/8/8/7k/8/8/5K2/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 5,
+            "fallback": 29
+          },
+          "enter_mate2_count": 0,
+          "index": 7,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/8/1R6/4K3/8/k7 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 5
+          },
+          "enter_mate2_count": 0,
+          "index": 42,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/8/8/3K4/R7/2k5 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "fallback": 18
+          },
+          "enter_mate2_count": 0,
+          "index": 24,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/K7/8/7k/8/6R1/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 2
+          },
+          "enter_mate2_count": 0,
+          "index": 49,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/K7/8/8/8/5R2/2k5 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 5,
+            "fallback": 8
+          },
+          "enter_mate2_count": 0,
+          "index": 61,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/1R6/3K4/8/8/8/k7/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 3
+          },
+          "enter_mate2_count": 0,
+          "index": 64,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/8/8/5K2/1R6/3k4 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 5,
+            "fallback": 8
+          },
+          "enter_mate2_count": 0,
+          "index": 62,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "6K1/6R1/8/8/8/7k/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 22
+          },
+          "enter_mate2_count": 0,
+          "index": 55,
+          "outcome": "rook_loss",
+          "shuffle_declines": [],
+          "start_fen": "7k/8/6R1/8/8/8/8/6K1 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 6,
+            "fallback": 8
+          },
+          "enter_mate2_count": 0,
+          "index": 77,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/2K5/7k/8/8/8/6R1 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 8,
+            "fallback": 42
+          },
+          "enter_mate2_count": 0,
+          "index": 63,
+          "outcome": "fifty_move",
+          "shuffle_declines": [],
+          "start_fen": "6k1/2R5/8/8/8/8/7K/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 3
+          },
+          "enter_mate2_count": 0,
+          "index": 90,
+          "outcome": "rook_loss",
+          "shuffle_declines": [],
+          "start_fen": "2k5/R4K2/8/8/8/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 7
+          },
+          "enter_mate2_count": 0,
+          "index": 88,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/6R1/8/7k/8/8/3K4 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 3
+          },
+          "enter_mate2_count": 0,
+          "index": 100,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "4k3/R7/8/8/3K4/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "fallback": 23
+          },
+          "enter_mate2_count": 0,
+          "index": 79,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/7K/8/8/k7/8/1R6/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 20
+          },
+          "enter_mate2_count": 0,
+          "index": 89,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/1R6/8/8/8/8/8/k5K1 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 3
+          },
+          "enter_mate2_count": 0,
+          "index": 102,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "6k1/4R3/8/8/3K4/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 3
+          },
+          "enter_mate2_count": 0,
+          "index": 107,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/1R6/8/k7/8/8/2K5/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 5,
+            "fallback": 15
+          },
+          "enter_mate2_count": 0,
+          "index": 97,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/6K1/8/8/8/8/6R1/1k6 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 5
+          },
+          "enter_mate2_count": 0,
+          "index": 112,
+          "outcome": "rook_loss",
+          "shuffle_declines": [],
+          "start_fen": "1R6/8/8/8/k7/8/K7/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 1,
+            "fallback": 11
+          },
+          "enter_mate2_count": 0,
+          "index": 98,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "1K4R1/8/8/8/8/7k/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "fallback": 13
+          },
+          "enter_mate2_count": 0,
+          "index": 95,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/7k/8/8/6R1/8/8/5K2 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "fallback": 8
+          },
+          "enter_mate2_count": 0,
+          "index": 109,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/8/8/8/4R3/K5k1 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 6
+          },
+          "enter_mate2_count": 0,
+          "index": 119,
+          "outcome": "rook_loss",
+          "shuffle_declines": [],
+          "start_fen": "8/8/1R6/8/k7/8/8/1K6 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 5,
+            "fallback": 10
+          },
+          "enter_mate2_count": 0,
+          "index": 115,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/1K6/8/8/8/8/2R5/4k3 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 9
+          },
+          "enter_mate2_count": 0,
+          "index": 116,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "7K/8/8/8/8/8/7R/5k2 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 13,
+            "fallback": 37
+          },
+          "enter_mate2_count": 0,
+          "index": 105,
+          "outcome": "fifty_move",
+          "shuffle_declines": [],
+          "start_fen": "k7/4R3/8/8/8/5K2/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 3
+          },
+          "enter_mate2_count": 0,
+          "index": 128,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "7k/8/8/8/6R1/8/8/2K5 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 9,
+            "fallback": 17
+          },
+          "enter_mate2_count": 0,
+          "index": 125,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/K7/8/8/k7/8/1R6/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 15
+          },
+          "enter_mate2_count": 0,
+          "index": 124,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "7k/5R2/1K6/8/8/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 18
+          },
+          "enter_mate2_count": 0,
+          "index": 123,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/7k/8/8/K7/6R1 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 5,
+            "fallback": 31
+          },
+          "enter_mate2_count": 0,
+          "index": 110,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/5K2/8/8/8/R7/2k5 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 6
+          },
+          "enter_mate2_count": 0,
+          "index": 137,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/8/1K6/8/7R/2k5 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 5,
+            "fallback": 8
+          },
+          "enter_mate2_count": 0,
+          "index": 134,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "5k2/R7/8/8/8/8/8/6K1 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 2
+          },
+          "enter_mate2_count": 0,
+          "index": 143,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/7K/8/8/R7/6k1 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 2
+          },
+          "enter_mate2_count": 0,
+          "index": 147,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "6k1/R7/8/8/8/8/6K1/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 15
+          },
+          "enter_mate2_count": 0,
+          "index": 150,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/k7/8/1R6/8/6K1/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 5,
+            "fallback": 41
+          },
+          "enter_mate2_count": 0,
+          "index": 120,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/7k/K7/8/8/6R1/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 3
+          },
+          "enter_mate2_count": 0,
+          "index": 158,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/8/1R3K2/8/8/k7 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 3
+          },
+          "enter_mate2_count": 0,
+          "index": 165,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "k7/8/8/8/1R6/8/8/K7 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 10,
+            "fallback": 40
+          },
+          "enter_mate2_count": 0,
+          "index": 145,
+          "outcome": "fifty_move",
+          "shuffle_declines": [],
+          "start_fen": "5K2/8/8/8/8/8/6R1/k7 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "enter_mate2": 1,
+            "establish_fence": 10,
+            "fallback": 39
+          },
+          "enter_mate2_count": 1,
+          "index": 146,
+          "outcome": "fifty_move",
+          "shuffle_declines": [],
+          "start_fen": "8/8/1R6/8/4K3/8/8/k7 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 7
+          },
+          "enter_mate2_count": 0,
+          "index": 167,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/1K6/8/8/8/5R2/k7 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 4
+          },
+          "enter_mate2_count": 0,
+          "index": 170,
+          "outcome": "rook_loss",
+          "shuffle_declines": [],
+          "start_fen": "1R6/8/8/k7/8/K7/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 8,
+            "fallback": 42
+          },
+          "enter_mate2_count": 0,
+          "index": 142,
+          "outcome": "fifty_move",
+          "shuffle_declines": [],
+          "start_fen": "8/8/k7/8/8/1R3K2/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 28
+          },
+          "enter_mate2_count": 0,
+          "index": 156,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/7K/1R6/8/8/k7 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 21
+          },
+          "enter_mate2_count": 0,
+          "index": 169,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/4K3/8/8/k7/8/8/1R6 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 10,
+            "fallback": 40
+          },
+          "enter_mate2_count": 0,
+          "index": 157,
+          "outcome": "fifty_move",
+          "shuffle_declines": [],
+          "start_fen": "6k1/R7/8/7K/8/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "fallback": 19
+          },
+          "enter_mate2_count": 0,
+          "index": 172,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/6R1/8/7k/8/8/1K6 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 14
+          },
+          "enter_mate2_count": 0,
+          "index": 182,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/1R5K/8/k7/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "fallback": 17
+          },
+          "enter_mate2_count": 0,
+          "index": 180,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/2K5/8/8/8/8/R7/2k5 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "fallback": 9
+          },
+          "enter_mate2_count": 0,
+          "index": 183,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "2k5/5R2/8/8/8/8/8/2K5 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 6
+          },
+          "enter_mate2_count": 0,
+          "index": 192,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/8/K7/1R6/8/k7 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 4
+          },
+          "enter_mate2_count": 0,
+          "index": 194,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "6R1/8/8/7k/8/5K2/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 10,
+            "fallback": 40
+          },
+          "enter_mate2_count": 0,
+          "index": 174,
+          "outcome": "fifty_move",
+          "shuffle_declines": [],
+          "start_fen": "1K6/8/8/7k/8/8/6R1/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 9,
+            "fallback": 30
+          },
+          "enter_mate2_count": 0,
+          "index": 179,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "k7/6R1/8/8/8/8/8/4K3 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 9,
+            "fallback": 27
+          },
+          "enter_mate2_count": 0,
+          "index": 191,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "3k4/1R6/8/8/8/2K5/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 6,
+            "fallback": 31
+          },
+          "enter_mate2_count": 0,
+          "index": 188,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/7K/8/8/8/8/1R6/7k w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 8,
+            "fallback": 29
+          },
+          "enter_mate2_count": 0,
+          "index": 190,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "6k1/R7/8/8/7K/8/8/8 w - - 0 1"
+        }
+      ],
+      "paired_flips": [],
+      "paired_outcome_table": {
+        "loss_loss": 67,
+        "loss_win": 0,
+        "win_loss": 0,
+        "win_win": 133
+      }
+    },
+    "general": {
+      "enter_disabled": {
+        "branch_counts": {
+          "establish_fence": 530,
+          "fallback": 2628,
+          "mate_in_1": 144,
+          "mate_in_2": 99
+        },
+        "draw_breakdown": {
+          "fifty_move": 6,
+          "horizon": 0,
+          "illegal": 0,
+          "repetition": 50,
+          "rook_loss": 0,
+          "skill_violation": 0,
+          "stalemate": 0
+        },
+        "enter_mate2_games": 0,
+        "enter_mate2_total": 0,
+        "game_count": 200,
+        "guard_activations": 68,
+        "multi_enter_games": [],
+        "shuffle_decline_games": 0,
+        "shuffle_decline_total": 0,
+        "wilson_95": [
+          0.6540769541334929,
+          0.7776311022605097
+        ],
+        "win_count": 144,
+        "win_rate": 0.72
+      },
+      "fixed": {
+        "branch_counts": {
+          "enter_mate2": 59,
+          "establish_fence": 530,
+          "fallback": 2567,
+          "mate_in_1": 144,
+          "mate_in_2": 102
+        },
+        "draw_breakdown": {
+          "fifty_move": 6,
+          "horizon": 0,
+          "illegal": 0,
+          "repetition": 50,
+          "rook_loss": 0,
+          "skill_violation": 0,
+          "stalemate": 0
+        },
+        "enter_mate2_games": 58,
+        "enter_mate2_total": 59,
+        "game_count": 200,
+        "guard_activations": 68,
+        "multi_enter_games": [
+          {
+            "count": 2,
+            "index": 10,
+            "pool": "general",
+            "start_fen": "8/8/2K5/6k1/8/R7/8/8 w - - 0 1"
+          }
+        ],
+        "shuffle_decline_games": 3,
+        "shuffle_decline_total": 3,
+        "wilson_95": [
+          0.6540769541334929,
+          0.7776311022605097
+        ],
+        "win_count": 144,
+        "win_rate": 0.72
+      },
+      "fixed_nonwin_count": 56,
+      "fixed_nonwin_enter_mate2_games": 0,
+      "fixed_nonwin_enter_mate2_total": 0,
+      "fixed_nonwin_shuffle_decline_games": 0,
+      "fixed_nonwin_shuffle_decline_total": 0,
+      "fixed_nonwins": [
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 3
+          },
+          "enter_mate2_count": 0,
+          "index": 6,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/8/8/8/2K4k/5R2 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 6,
+            "fallback": 15
+          },
+          "enter_mate2_count": 0,
+          "index": 3,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/8/k7/3R3K/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 10
+          },
+          "enter_mate2_count": 0,
+          "index": 5,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "5K2/8/8/8/8/5R2/2k5/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 6,
+            "fallback": 12
+          },
+          "enter_mate2_count": 0,
+          "index": 16,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/4R3/7K/8/8/8/5k2/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 8,
+            "fallback": 37
+          },
+          "enter_mate2_count": 0,
+          "index": 1,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "2R5/8/4k3/8/1K6/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 4
+          },
+          "enter_mate2_count": 0,
+          "index": 25,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "7R/4k3/8/8/8/3K4/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 13
+          },
+          "enter_mate2_count": 0,
+          "index": 24,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "3R4/8/8/8/8/k5K1/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 6,
+            "fallback": 12
+          },
+          "enter_mate2_count": 0,
+          "index": 35,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/R1K5/8/8/8/8/8/5k2 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 7
+          },
+          "enter_mate2_count": 0,
+          "index": 39,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "1R6/8/8/8/8/6k1/3K4/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 12,
+            "fallback": 33
+          },
+          "enter_mate2_count": 0,
+          "index": 22,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "6k1/8/8/8/8/8/8/R1K5 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 7
+          },
+          "enter_mate2_count": 0,
+          "index": 40,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/4k3/8/8/8/3K2R1/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "fallback": 20
+          },
+          "enter_mate2_count": 0,
+          "index": 34,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "1K6/8/8/8/8/1k6/8/R7 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 7,
+            "fallback": 43
+          },
+          "enter_mate2_count": 0,
+          "index": 42,
+          "outcome": "fifty_move",
+          "shuffle_declines": [],
+          "start_fen": "4R3/8/8/8/7K/8/8/k7 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 5,
+            "fallback": 10
+          },
+          "enter_mate2_count": 0,
+          "index": 58,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "R7/8/7k/8/K7/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 12
+          },
+          "enter_mate2_count": 0,
+          "index": 64,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "5K2/8/3R4/8/k7/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 3
+          },
+          "enter_mate2_count": 0,
+          "index": 69,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/6K1/8/8/8/3R4/8/2k5 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 11,
+            "fallback": 38
+          },
+          "enter_mate2_count": 0,
+          "index": 54,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "4R2K/8/8/7k/8/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 6
+          },
+          "enter_mate2_count": 0,
+          "index": 73,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/1K6/7R/8/8/8/4k3/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 5,
+            "fallback": 17
+          },
+          "enter_mate2_count": 0,
+          "index": 71,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/2k5/8/1R6/8/6K1/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 8
+          },
+          "enter_mate2_count": 0,
+          "index": 78,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/1k6/2R5/8/3K4/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 6
+          },
+          "enter_mate2_count": 0,
+          "index": 80,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "1R6/4k3/6K1/8/8/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 6
+          },
+          "enter_mate2_count": 0,
+          "index": 83,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "1R6/8/8/8/8/k7/8/2K5 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 7,
+            "fallback": 15
+          },
+          "enter_mate2_count": 0,
+          "index": 79,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "2R5/8/1K6/8/8/8/8/1k6 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 6,
+            "fallback": 31
+          },
+          "enter_mate2_count": 0,
+          "index": 74,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/7R/7K/8/k7/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 6,
+            "fallback": 24
+          },
+          "enter_mate2_count": 0,
+          "index": 96,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/1k6/8/6R1/8/5K2/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 7,
+            "fallback": 24
+          },
+          "enter_mate2_count": 0,
+          "index": 97,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "5R2/8/8/6K1/1k6/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 11,
+            "fallback": 39
+          },
+          "enter_mate2_count": 0,
+          "index": 93,
+          "outcome": "fifty_move",
+          "shuffle_declines": [],
+          "start_fen": "8/8/R7/8/8/6K1/2k5/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "fallback": 13
+          },
+          "enter_mate2_count": 0,
+          "index": 102,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "5K2/8/k7/4R3/8/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 13
+          },
+          "enter_mate2_count": 0,
+          "index": 105,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/R7/5K2/8/8/8/8/6k1 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 5,
+            "fallback": 12
+          },
+          "enter_mate2_count": 0,
+          "index": 107,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "1K6/8/8/8/8/7k/8/2R5 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 11,
+            "fallback": 39
+          },
+          "enter_mate2_count": 0,
+          "index": 98,
+          "outcome": "fifty_move",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/3K3k/8/8/5R2/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 6,
+            "fallback": 18
+          },
+          "enter_mate2_count": 0,
+          "index": 110,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/6R1/8/8/8/8/K2k4 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 1,
+            "fallback": 16
+          },
+          "enter_mate2_count": 0,
+          "index": 119,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/6k1/1R6/1K6/8/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 7
+          },
+          "enter_mate2_count": 0,
+          "index": 135,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/2k5/K7/8/8/8/1R6 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 8,
+            "fallback": 16
+          },
+          "enter_mate2_count": 0,
+          "index": 132,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "3k4/6K1/8/8/R7/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 6
+          },
+          "enter_mate2_count": 0,
+          "index": 141,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/8/4R3/1k6/8/K7 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 3,
+            "fallback": 10
+          },
+          "enter_mate2_count": 0,
+          "index": 144,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/2K4k/8/8/3R4/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 5,
+            "fallback": 22
+          },
+          "enter_mate2_count": 0,
+          "index": 134,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "K7/8/8/8/8/5k2/2R5/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 6,
+            "fallback": 15
+          },
+          "enter_mate2_count": 0,
+          "index": 143,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/7k/K7/8/3R4/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 15
+          },
+          "enter_mate2_count": 0,
+          "index": 147,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/k7/8/8/4R1K1/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 15
+          },
+          "enter_mate2_count": 0,
+          "index": 150,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/7K/8/6R1/5k2/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 8
+          },
+          "enter_mate2_count": 0,
+          "index": 156,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "k7/8/8/1R6/8/8/7K/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 25
+          },
+          "enter_mate2_count": 0,
+          "index": 148,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/K7/8/8/3R4/8/7k/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "fallback": 6
+          },
+          "enter_mate2_count": 0,
+          "index": 167,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/3R4/K7/8/6k1/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 6,
+            "fallback": 44
+          },
+          "enter_mate2_count": 0,
+          "index": 146,
+          "outcome": "fifty_move",
+          "shuffle_declines": [],
+          "start_fen": "8/R5K1/8/8/8/8/8/5k2 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 11,
+            "fallback": 24
+          },
+          "enter_mate2_count": 0,
+          "index": 161,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "k7/8/8/8/8/8/1R6/K7 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 7,
+            "fallback": 43
+          },
+          "enter_mate2_count": 0,
+          "index": 152,
+          "outcome": "fifty_move",
+          "shuffle_declines": [],
+          "start_fen": "R7/8/8/8/2k5/7K/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 5,
+            "fallback": 12
+          },
+          "enter_mate2_count": 0,
+          "index": 172,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "k7/8/8/8/8/4R3/8/4K3 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 13
+          },
+          "enter_mate2_count": 0,
+          "index": 176,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/8/8/7k/6R1/3K4 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 6,
+            "fallback": 13
+          },
+          "enter_mate2_count": 0,
+          "index": 184,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "1R6/2k5/8/8/8/6K1/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 4,
+            "fallback": 5
+          },
+          "enter_mate2_count": 0,
+          "index": 187,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/6k1/1R6/6K1/8/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 7,
+            "fallback": 17
+          },
+          "enter_mate2_count": 0,
+          "index": 181,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "5R2/8/8/8/8/8/1K5k/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 7,
+            "fallback": 13
+          },
+          "enter_mate2_count": 0,
+          "index": 185,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "6K1/8/1k6/3R4/8/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 17
+          },
+          "enter_mate2_count": 0,
+          "index": 186,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/2R5/3k4/K7/8/8/8/8 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 5,
+            "fallback": 45
+          },
+          "enter_mate2_count": 0,
+          "index": 164,
+          "outcome": "fifty_move",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/6K1/8/8/2k5/5R2 w - - 0 1"
+        },
+        {
+          "branch_counts": {
+            "establish_fence": 2,
+            "fallback": 20
+          },
+          "enter_mate2_count": 0,
+          "index": 195,
+          "outcome": "repetition",
+          "shuffle_declines": [],
+          "start_fen": "8/8/8/8/8/R7/2k5/7K w - - 0 1"
+        }
+      ],
+      "paired_flips": [],
+      "paired_outcome_table": {
+        "loss_loss": 56,
+        "loss_win": 0,
+        "win_loss": 0,
+        "win_win": 144
+      }
+    }
+  },
+  "log_path": "reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1/phase2_8c_paired_game_logs.jsonl.gz",
+  "pools": {
+    "fence": {
+      "count": 200,
+      "seed": 20270403
+    },
+    "general": {
+      "count": 200,
+      "seed": 20270404
+    }
+  },
+  "schema_version": "phase2_8c_diag.v0",
+  "workers": 16
+}
