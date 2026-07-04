@@ -32,6 +32,7 @@ CHASE_TO_MATE_SKILL_ID = "chase_to_mate_skill"
 CHASE_DEFER_MATE2_STEP_ID = "chase_defer_mate2_step"
 CHASE_ROOK_ESCAPE_STEP_ID = "chase_rook_escape_slide_step"
 CHASE_KING_APPROACH_STEP_ID = "chase_king_approach_step"
+CHASE_KING_PURSUIT_STEP_ID = "chase_king_lateral_pursuit_step"
 CHASE_ROOK_TEMPO_STEP_ID = "chase_rook_tempo_step"
 FENCE_ESTABLISHED_ROOT_ID = "phase2_fence_established_root"
 FENCE_ESTABLISHED_ID = "fence_established"
@@ -783,6 +784,50 @@ def _edge_relative_opposition_contact(board: chess.Board) -> bool:
     return False
 
 
+def _edge_relative_support_offsets(board: chess.Board) -> tuple[tuple[str, int], ...]:
+    white_king = board.king(chess.WHITE)
+    black_king = board.king(chess.BLACK)
+    if white_king is None or black_king is None:
+        return ()
+    offsets: list[tuple[str, int]] = []
+    for edge in _fence_edges_for_board(board):
+        if edge == "west":
+            perpendicular_held = (
+                chess.square_file(white_king) - chess.square_file(black_king) == 2
+            )
+        elif edge == "east":
+            perpendicular_held = (
+                chess.square_file(black_king) - chess.square_file(white_king) == 2
+            )
+        elif edge == "south":
+            perpendicular_held = (
+                chess.square_rank(white_king) - chess.square_rank(black_king) == 2
+            )
+        elif edge == "north":
+            perpendicular_held = (
+                chess.square_rank(black_king) - chess.square_rank(white_king) == 2
+            )
+        else:
+            perpendicular_held = False
+        if not perpendicular_held:
+            continue
+        offset = _edge_along_coord(white_king, edge) - _edge_along_coord(black_king, edge)
+        offsets.append((edge, offset))
+    return tuple(offsets)
+
+
+def _edge_relative_alignment_offset(board: chess.Board) -> int | None:
+    offsets = _edge_relative_support_offsets(board)
+    if not offsets:
+        return None
+    return min(abs(offset) for _edge, offset in offsets)
+
+
+def _edge_relative_pursuit_needed(board: chess.Board) -> bool:
+    offset = _edge_relative_alignment_offset(board)
+    return offset is not None and offset >= 1
+
+
 def _king_support_contact_geometry(board: chess.Board) -> bool:
     features = extract_learner_features(board)
     return bool(
@@ -1004,6 +1049,52 @@ def _resolve_chase_king_approach(
             continue
         ranked.append((score, move.uci(), move))
     ranked.sort(key=lambda item: (item[0], item[1]))
+    return ranked[0][-1] if ranked else None
+
+
+def _resolve_chase_king_lateral_pursuit(
+    board: chess.Board,
+    *,
+    repetition_counts: Mapping[str, int],
+    rejected_moves: list[dict[str, str]] | None = None,
+) -> chess.Move | None:
+    white_king = board.king(chess.WHITE)
+    if white_king is None:
+        return None
+    before_offsets = [
+        (edge, offset)
+        for edge, offset in _edge_relative_support_offsets(board)
+        if abs(offset) >= 1
+    ]
+    if not before_offsets:
+        return None
+    ranked: list[tuple[int, int, str, chess.Move]] = []
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        if move.from_square != white_king:
+            continue
+        valid, _reason, after = _chase_after_move_valid(
+            board,
+            move,
+            repetition_counts=repetition_counts,
+        )
+        if not valid or after is None:
+            _record_chase_rejected_move(
+                rejected_moves,
+                branch="king_lateral_pursuit",
+                move=move,
+                reason=_reason,
+            )
+            continue
+        after_offsets = dict(_edge_relative_support_offsets(after))
+        for edge, offset in before_offsets:
+            after_offset = after_offsets.get(edge)
+            if after_offset is None or abs(after_offset) >= abs(offset):
+                continue
+            flight_direction = -1 if offset > 0 else 1
+            ahead_corner = 0 if flight_direction < 0 else 7
+            corner_distance = abs(_edge_along_coord(move.to_square, edge) - ahead_corner)
+            ranked.append((abs(after_offset), corner_distance, move.uci(), move))
+    ranked.sort(key=lambda item: (item[0], item[1], item[2]))
     return ranked[0][-1] if ranked else None
 
 
@@ -2717,7 +2808,48 @@ def run_chase_to_mate_skill(
             confirmed=False,
             reason="support_contact_already_achieved",
         )
-    _chase_continue(messages, CHASE_KING_APPROACH_STEP_ID, CHASE_ROOK_TEMPO_STEP_ID)
+    _chase_continue(messages, CHASE_KING_APPROACH_STEP_ID, CHASE_KING_PURSUIT_STEP_ID)
+
+    _chase_request_step(messages, CHASE_KING_PURSUIT_STEP_ID)
+    if _edge_relative_pursuit_needed(board):
+        move = _resolve_chase_king_lateral_pursuit(
+            board,
+            repetition_counts=active_counts,
+            rejected_moves=rejected_moves,
+        )
+        if move is None:
+            _chase_step_result(
+                messages,
+                CHASE_KING_PURSUIT_STEP_ID,
+                confirmed=False,
+                reason="no_safe_lateral_pursuit_progress",
+            )
+        else:
+            _chase_step_result(
+                messages,
+                CHASE_KING_PURSUIT_STEP_ID,
+                confirmed=True,
+                reason="king_lateral_alignment_progress",
+                bound_move=move,
+            )
+            return _chase_result(
+                confirmed=True,
+                branch="king_lateral_pursuit",
+                bound_move=move,
+                reason="king_lateral_alignment_progress",
+                frames=frames,
+                messages=messages,
+                gate_audit=gate_audit,
+                rejected_moves=rejected_moves,
+            )
+    else:
+        _chase_step_result(
+            messages,
+            CHASE_KING_PURSUIT_STEP_ID,
+            confirmed=False,
+            reason="king_already_aligned_or_no_perpendicular_contact",
+        )
+    _chase_continue(messages, CHASE_KING_PURSUIT_STEP_ID, CHASE_ROOK_TEMPO_STEP_ID)
 
     _chase_request_step(messages, CHASE_ROOK_TEMPO_STEP_ID)
     if not _king_support_contact_geometry(board):
@@ -2732,6 +2864,24 @@ def run_chase_to_mate_skill(
             branch="rook_waiting_tempo",
             bound_move=None,
             reason="support_contact_not_achieved",
+            frames=frames,
+            messages=messages,
+            gate_audit=gate_audit,
+            rejected_moves=rejected_moves,
+        )
+    alignment_offset = _edge_relative_alignment_offset(board)
+    if alignment_offset != 0:
+        _chase_step_result(
+            messages,
+            CHASE_ROOK_TEMPO_STEP_ID,
+            confirmed=False,
+            reason="king_alignment_not_achieved",
+        )
+        return _chase_result(
+            confirmed=False,
+            branch="rook_waiting_tempo",
+            bound_move=None,
+            reason="king_alignment_not_achieved",
             frames=frames,
             messages=messages,
             gate_audit=gate_audit,
