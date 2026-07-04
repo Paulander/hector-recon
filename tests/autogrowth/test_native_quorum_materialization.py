@@ -8,6 +8,7 @@ from recon_lite_chess.autogrowth import (
     NativeQuorumMaterializationConfig,
     KRK_POLICY_ROOT_ID,
     MATE_IN_TWO_GATE_ID,
+    ENTER_MATE_TWO_SKILL_ID,
     extract_learner_features,
     generate_position_sets,
     load_canonical_mate2_first_scorer,
@@ -21,6 +22,7 @@ from recon_lite_chess.autogrowth import (
     run_fence_established_recognizer,
     run_fence_reply_quantifier,
     run_edge_mate_distance1_training,
+    run_enter_mate2_skill,
     run_mate_in_one_skill,
     run_mate_in_two_skill,
     run_native_quorum_materialization,
@@ -672,6 +674,37 @@ def test_phase27b_mate_in_two_cash_in_orders_immediate_mates_first() -> None:
     assert audit["bound_move"] in mate_moves
     assert audit["candidate_order"][0] in mate_moves
     assert audit["bound_move_rank"] == 1
+
+
+def test_phase28b_enter_mate2_dispatcher_branch_executes_distance1_closure() -> None:
+    board = chess.Board("8/k7/8/1K6/8/8/1R6/8 w - - 0 1")
+    scorer = load_canonical_mate2_first_scorer()
+
+    enter = run_enter_mate2_skill(board, scorer=scorer, record_trace=True)
+    enter_messages = _trace_messages(enter["trace"])
+
+    assert not _mate_moves(board)
+    assert not _forced_mate_in_two_first_moves(board)
+    assert enter["confirmed"]
+    assert enter["bound_move"] == "b5c6"
+    assert (ENTER_MATE_TWO_SKILL_ID, "enter_mate_in_2_skill:b5c6", "SUB", "request") in enter_messages
+    assert ("enter_mate_in_2_skill:b5c6", ENTER_MATE_TWO_SKILL_ID, "SUR", "confirm") in enter_messages
+
+    gate = dict(load_chain_confidence_gate())
+    gate["threshold"] = 2.0
+    policy = run_krk_policy(
+        board,
+        gate=gate,
+        scorer=scorer,
+        record_trace=True,
+    )
+    policy_messages = _trace_messages(policy["trace"])
+
+    assert policy["branch"] == "enter_mate2"
+    assert policy["bound_move"] == "b5c6"
+    assert not policy["mate2_gate_fired"]
+    assert (KRK_POLICY_ROOT_ID, ENTER_MATE_TWO_SKILL_ID, "SUB", "request") in policy_messages
+    assert (ENTER_MATE_TWO_SKILL_ID, KRK_POLICY_ROOT_ID, "SUR", "confirm") in policy_messages
 
 
 def _repetition_key(board: chess.Board) -> str:

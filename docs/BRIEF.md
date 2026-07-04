@@ -2,39 +2,36 @@
 
 Mission: merge the Feb baseline learner, native ReCoN runtime, and TG46+ evaluation rigor into one
 learner whose frozen graph beats its baseline on heldout KRK behavior with causal ablation evidence.
-Current state: Phase 2.8a edge-mate rung v1 trained in the flat episode substrate; graph-native
-learned dispatch migration is explicitly deferred.
 Canonical dieted parent: reports/autogrowth/clean_slate_krk/dieted_foundation_v1/krk_tg46c_real_mate2_repair_seed_20260702_rev1.json
 Canonical sha256: ae382d0463e35eff09e9515a715648b5d49b1e0891d127a660e036e378452eb6
 Adopted 2.5 gate: balanced seed 20261211 threshold=0.854756; exact mate-in-2 remains verifier.
 
-Phase 2.7b dispatcher baseline: mate-in-1 first, mate-in-2 cash-in, fallback-only threefold guard.
-Full-game win rates: mate-in-<=2 50/50, fence-rung 35/50, general KRK 36/50; gap remains dominated
-by fallback between established fence and mate-2 gate.
+Phase 2.8a finding: distance-1 learning was unstable and roughly fallback-level (best seed
+50/96=0.521 vs fallback 47/96=0.490), so distance-1 is now treated as exact-reachable and the
+learning frontier moved to distance-2.
 
-Phase 2.8a pools: reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1/pools/. Banked 300
-distance-1 train, 96 fresh distance-1 heldout, 300 distance-2-to-5 selfplay starts. Deeper
-distribution: d2=107, d3=80, d4=63, d5=50. Distance labels used exact mate-2 confirmation after a
-fast KRK validator prefilter; graph/quantifier label frames total/mean/max=5150/13.01/48.
+Phase 2.8b exact closure: `enter_mate2_skill` enters the certified mate-in-2 manifold on the
+2.8a distance-1 heldout at 96/96=1.000; frames mean/max 3.54/16. The lower-than-expected frame
+mean versus the old 13.01 label audit is from lazy k=1 OR exit on first confirming candidate.
 
-Training: distance-1 only, contrastive terminal episode credit, black=fixed-seed uniform legal
-(v1 limitation), success=exact mate-2 manifold entered within 2 white moves; failure=fence break,
-rook loss, stalemate, illegal, or horizon.
+Phase 2.8b dispatcher eval, same 50-game pools/seeds as 2.7b, black=fixed-seed uniform legal:
+mate-in-<=2 stayed 50/50 with fallback share 0.000; fence fell 35/50 -> 31/50; general fell
+36/50 -> 28/50. No skill-branch illegal moves, rook losses, or stalemates after fixing an eval
+SquareSet/a1 false-positive. Fallback share stayed high: fence 0.719, general 0.727.
 
-Heldout manifold-entry rate:
-arm | rate | endpoints
-fallback scorer | 47/96=0.490 | mate2 47, horizon 39, fence-broken 10
-random legal | 18/96=0.188 | mate2/mate 18, horizon 32, fence-broken 42, rook 3, stalemate 1
-learned seed 20270211 | 43/96=0.448 | mate2 43, horizon 34, fence-broken 10, rook 2, stalemate 7
-learned seed 20270212 | 50/96=0.521 | mate2/mate 50, horizon 24, fence-broken 15, stalemate 7
-learned seed 20270213 | 42/96=0.438 | mate2/mate 42, horizon 35, fence-broken 13, rook 1, stalemate 5
+Gap measurement after `enter_mate2`: fence gap mean/median/max 18.83/8/68 with 21 unresolved and
+0.787 fallback share inside; general gap 15.00/6/48 with 22 unresolved and 0.711 fallback share.
+Fence durability remains the hole: fence broken while fallback played 110 times in fence pool and
+85 times in general.
 
-Learned structure summary (affordance/veto promoted counts): 20270211=92/580, 20270212=119/552,
-20270213=84/587. Finding: dense near-goal training adds more positive affordances than Phase 0, but
-the substrate still learns vetoes more readily.
+Phase 2.8b distance-2 training: source d2 rows 107 -> 73 certified; split 9 train / 64 heldout.
+Baselines on heldout: fallback 58/64=0.906, random 7/64=0.109, integrated dispatcher 59/64=0.922.
+Learned entry rates by seed: 20270211 44/64=0.688, 20270212 60/64=0.938, 20270213 58/64=0.906.
+Promoted affordance/veto counts: 134/1127, 122/147, 212/330.
 
-Decision: stop rule did not fire because one seed beat fallback, but the effect is unstable
-(1/3 seeds above fallback). Next: 2.8b distance expansion + dispatcher integration, with seed
-stability as the first acceptance check.
+Decision: stop condition is seed instability (spread 0.25) and only 1/3 seeds beat dispatcher.
+No tuning, no Phase 2.8c advance. Next: 2.8b review of distance-2 data volume/credit and the
+fence-maintenance gap before any distance-3+ expansion.
+
 No-go: new TG names, new report documents, new pool/cache formats, training logic changes,
 `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.
