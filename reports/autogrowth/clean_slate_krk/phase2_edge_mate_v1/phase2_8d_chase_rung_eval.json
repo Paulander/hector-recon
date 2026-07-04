@@ -1,0 +1,945 @@
+{
+  "best_learned_seed_eval": {
+    "branch_counts": {
+      "learned": 182
+    },
+    "endpoint_counts": {
+      "fence_broken": 46,
+      "horizon": 3,
+      "mate2_manifold_entered": 16,
+      "mate_delivered": 20,
+      "repetition": 8,
+      "rook_lost": 4,
+      "stalemate": 3
+    },
+    "failure_fens": [
+      {
+        "branches": [
+          "learned",
+          "learned",
+          "learned",
+          "learned",
+          "learned",
+          "learned"
+        ],
+        "endpoint": "repetition",
+        "fen": "8/8/1RK5/k7/8/8/8/8 w - - 52 27",
+        "white_moves": [
+          "c6c7",
+          "c7c6",
+          "c6c7",
+          "c7c6",
+          "c6c5",
+          "c5c6"
+        ]
+      },
+      {
+        "branches": [
+          "learned"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/1K6/8/k7/8/1R6/8 w - - 0 1",
+        "white_moves": [
+          "b6c6"
+        ]
+      },
+      {
+        "branches": [
+          "learned"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/5K2/6R1/3k4 w - - 0 1",
+        "white_moves": [
+          "g2g1"
+        ]
+      },
+      {
+        "branches": [
+          "learned",
+          "learned",
+          "learned",
+          "learned",
+          "learned",
+          "learned"
+        ],
+        "endpoint": "repetition",
+        "fen": "8/8/k7/1R6/1K6/8/8/8 w - - 10 6",
+        "white_moves": [
+          "b4c4",
+          "c4c5",
+          "c5c6",
+          "c6c5",
+          "c5c4",
+          "c4c5"
+        ]
+      },
+      {
+        "branches": [
+          "learned",
+          "learned"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "5k2/R2K4/8/8/8/8/8/8 w - - 14 8",
+        "white_moves": [
+          "d7d6",
+          "a7a8"
+        ]
+      },
+      {
+        "branches": [
+          "learned"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "1R6/2K5/8/k7/8/8/8/8 w - - 46 24",
+        "white_moves": [
+          "b8b5"
+        ]
+      },
+      {
+        "branches": [
+          "learned"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/3K4/7R/2k5 w - - 0 1",
+        "white_moves": [
+          "h2h1"
+        ]
+      },
+      {
+        "branches": [
+          "learned",
+          "learned",
+          "learned",
+          "learned",
+          "learned",
+          "learned"
+        ],
+        "endpoint": "repetition",
+        "fen": "8/8/8/1K6/1R6/k7/8/8 w - - 58 30",
+        "white_moves": [
+          "b5c5",
+          "c5c4",
+          "c4c3",
+          "c3c4",
+          "c4c3",
+          "c3c4"
+        ]
+      },
+      {
+        "branches": [
+          "learned",
+          "learned"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/k7/8/1K6/8/1R6 w - - 0 1",
+        "white_moves": [
+          "b3c3",
+          "b1b6"
+        ]
+      },
+      {
+        "branches": [
+          "learned"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "1R6/2K5/8/k7/8/8/8/8 w - - 48 25",
+        "white_moves": [
+          "b8b5"
+        ]
+      },
+      {
+        "branches": [
+          "learned",
+          "learned"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/8/R2K4/5k2 w - - 0 1",
+        "white_moves": [
+          "d2d3",
+          "a2a1"
+        ]
+      },
+      {
+        "branches": [
+          "learned"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "5k2/2R4K/8/8/8/8/8/8 w - - 0 1",
+        "white_moves": [
+          "c7c8"
+        ]
+      },
+      {
+        "branches": [
+          "learned"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/2K5/4R3/1k6 w - - 0 1",
+        "white_moves": [
+          "e2e1"
+        ]
+      },
+      {
+        "branches": [
+          "learned",
+          "learned",
+          "learned",
+          "learned",
+          "learned",
+          "learned"
+        ],
+        "endpoint": "horizon",
+        "fen": "8/8/6K1/6R1/7k/8/8/8 w - - 18 10",
+        "white_moves": [
+          "g6f6",
+          "f6f5",
+          "f5f6",
+          "f6f5",
+          "f5f4",
+          "f4f3"
+        ]
+      },
+      {
+        "branches": [
+          "learned"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/5K2/R7/4k3 w - - 0 1",
+        "white_moves": [
+          "a2a1"
+        ]
+      },
+      {
+        "branches": [
+          "learned"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/5K2/5R2/3k4 w - - 44 23",
+        "white_moves": [
+          "f2f1"
+        ]
+      },
+      {
+        "branches": [
+          "learned"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/k7/8/1RK5 w - - 2 2",
+        "white_moves": [
+          "b1b3"
+        ]
+      },
+      {
+        "branches": [
+          "learned",
+          "learned",
+          "learned",
+          "learned"
+        ],
+        "endpoint": "stalemate",
+        "fen": "8/8/8/6R1/6K1/8/7k/8 w - - 0 1",
+        "white_moves": [
+          "g4f4",
+          "f4f3",
+          "g5g2",
+          "f3f2"
+        ]
+      },
+      {
+        "branches": [
+          "learned",
+          "learned"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/5K2/5R2/4k3 w - - 0 1",
+        "white_moves": [
+          "f3g3",
+          "f2f1"
+        ]
+      },
+      {
+        "branches": [
+          "learned",
+          "learned",
+          "learned",
+          "learned",
+          "learned",
+          "learned"
+        ],
+        "endpoint": "repetition",
+        "fen": "8/8/k7/2K5/8/1R6/8/8 w - - 0 1",
+        "white_moves": [
+          "b3b6",
+          "b6b5",
+          "c5c4",
+          "c4c5",
+          "c5c4",
+          "c4c5"
+        ]
+      }
+    ],
+    "frames_max": 6,
+    "frames_mean": 0.6,
+    "row_count": 100,
+    "skill_violations": [
+      {
+        "branch": "learned",
+        "fen": "8/8/8/6R1/6K1/8/7k/8 w - - 0 1",
+        "move": "f3f2",
+        "reason": "stalemate_after_own_move"
+      },
+      {
+        "branch": "learned",
+        "fen": "k7/2K5/8/8/1R6/8/8/8 w - - 0 1",
+        "move": "c6c7",
+        "reason": "stalemate_after_own_move"
+      },
+      {
+        "branch": "learned",
+        "fen": "6R1/8/8/8/6K1/8/7k/8 w - - 0 1",
+        "move": "f3f2",
+        "reason": "stalemate_after_own_move"
+      }
+    ],
+    "success_count": 36,
+    "success_rate": 0.36,
+    "wilson_95": [
+      0.2727122040140433,
+      0.4576459754839126
+    ]
+  },
+  "best_learned_train_reproduction": {
+    "alternative_arm_counts": {
+      "dispatcher": 243,
+      "fallback": 66,
+      "learned": 137,
+      "random": 154
+    },
+    "m3_update_count": 1435910,
+    "nonzero_reward_delta_count": 290,
+    "selected_arm_counts": {
+      "dispatcher": 26,
+      "fallback": 120,
+      "learned": 194,
+      "random": 260
+    },
+    "terminal_count": 10623
+  },
+  "chase_eval": {
+    "branch_counts": {
+      "king_approach": 65,
+      "not_applicable": 20,
+      "rook_escape_slide": 26,
+      "rook_waiting_tempo": 186
+    },
+    "endpoint_counts": {
+      "fence_broken": 37,
+      "horizon": 16,
+      "mate2_manifold_entered": 20,
+      "repetition": 6,
+      "skill_fail_not_applicable": 20,
+      "skill_fail_rook_escape_slide": 1
+    },
+    "failure_fens": [
+      {
+        "branches": [
+          "rook_waiting_tempo",
+          "not_applicable"
+        ],
+        "endpoint": "skill_fail_not_applicable",
+        "fen": "8/8/1K6/8/k7/8/1R6/8 w - - 0 1",
+        "white_moves": [
+          "b2b1"
+        ]
+      },
+      {
+        "branches": [
+          "rook_escape_slide"
+        ],
+        "endpoint": "skill_fail_rook_escape_slide",
+        "fen": "6k1/4KR2/8/8/8/8/8/8 w - - 0 1",
+        "white_moves": []
+      },
+      {
+        "branches": [
+          "rook_waiting_tempo"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/4K3/7R/4k3 w - - 20 11",
+        "white_moves": [
+          "h2g2"
+        ]
+      },
+      {
+        "branches": [
+          "king_approach",
+          "king_approach",
+          "king_approach",
+          "rook_waiting_tempo",
+          "rook_waiting_tempo",
+          "rook_waiting_tempo"
+        ],
+        "endpoint": "horizon",
+        "fen": "8/8/8/8/8/5K2/6R1/3k4 w - - 0 1",
+        "white_moves": [
+          "f3e3",
+          "e3d3",
+          "d3c3",
+          "g2f2",
+          "f2g2",
+          "g2f2"
+        ]
+      },
+      {
+        "branches": [
+          "rook_escape_slide"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/k7/1R6/1K6/8/8/8 w - - 10 6",
+        "white_moves": [
+          "b5b8"
+        ]
+      },
+      {
+        "branches": [
+          "rook_waiting_tempo"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "5k2/R2K4/8/8/8/8/8/8 w - - 14 8",
+        "white_moves": [
+          "a7b7"
+        ]
+      },
+      {
+        "branches": [
+          "king_approach"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "1R6/2K5/8/k7/8/8/8/8 w - - 46 24",
+        "white_moves": [
+          "c7b7"
+        ]
+      },
+      {
+        "branches": [
+          "rook_escape_slide"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/1K6/1R6/k7/8/8 w - - 58 30",
+        "white_moves": [
+          "b4b1"
+        ]
+      },
+      {
+        "branches": [
+          "rook_waiting_tempo",
+          "not_applicable"
+        ],
+        "endpoint": "skill_fail_not_applicable",
+        "fen": "8/8/8/k7/8/1K6/8/1R6 w - - 0 1",
+        "white_moves": [
+          "b1b2"
+        ]
+      },
+      {
+        "branches": [
+          "king_approach"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "1R6/2K5/8/k7/8/8/8/8 w - - 48 25",
+        "white_moves": [
+          "c7b7"
+        ]
+      },
+      {
+        "branches": [
+          "rook_waiting_tempo",
+          "rook_waiting_tempo"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "4k3/1R6/4K3/8/8/8/8/8 w - - 0 1",
+        "white_moves": [
+          "b7a7",
+          "a7b7"
+        ]
+      },
+      {
+        "branches": [
+          "rook_waiting_tempo",
+          "rook_waiting_tempo",
+          "king_approach",
+          "not_applicable"
+        ],
+        "endpoint": "skill_fail_not_applicable",
+        "fen": "8/k1K5/8/8/1R6/8/8/8 w - - 2 2",
+        "white_moves": [
+          "b4b3",
+          "b3b2",
+          "c7b7"
+        ]
+      },
+      {
+        "branches": [
+          "rook_waiting_tempo",
+          "not_applicable"
+        ],
+        "endpoint": "skill_fail_not_applicable",
+        "fen": "8/8/8/8/8/8/R2K4/5k2 w - - 0 1",
+        "white_moves": [
+          "a2b2"
+        ]
+      },
+      {
+        "branches": [
+          "rook_waiting_tempo",
+          "not_applicable"
+        ],
+        "endpoint": "skill_fail_not_applicable",
+        "fen": "5k2/2R4K/8/8/8/8/8/8 w - - 0 1",
+        "white_moves": [
+          "c7b7"
+        ]
+      },
+      {
+        "branches": [
+          "rook_waiting_tempo"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "1R6/8/8/k1K5/8/8/8/8 w - - 34 18",
+        "white_moves": [
+          "b8b7"
+        ]
+      },
+      {
+        "branches": [
+          "rook_waiting_tempo",
+          "rook_waiting_tempo",
+          "rook_waiting_tempo",
+          "rook_waiting_tempo"
+        ],
+        "endpoint": "repetition",
+        "fen": "8/8/8/8/8/6R1/5K2/7k w - - 8 5",
+        "white_moves": [
+          "g3g4",
+          "g4g3",
+          "g3g4",
+          "g4g3"
+        ]
+      },
+      {
+        "branches": [
+          "rook_waiting_tempo",
+          "rook_waiting_tempo",
+          "rook_waiting_tempo",
+          "rook_waiting_tempo",
+          "rook_waiting_tempo",
+          "rook_waiting_tempo"
+        ],
+        "endpoint": "horizon",
+        "fen": "8/k1K5/8/8/1R6/8/8/8 w - - 0 1",
+        "white_moves": [
+          "b4b3",
+          "b3b2",
+          "b2b1",
+          "b1b2",
+          "b2b1",
+          "b1b2"
+        ]
+      },
+      {
+        "branches": [
+          "rook_escape_slide",
+          "not_applicable"
+        ],
+        "endpoint": "skill_fail_not_applicable",
+        "fen": "8/8/6K1/6R1/7k/8/8/8 w - - 18 10",
+        "white_moves": [
+          "g5g1"
+        ]
+      },
+      {
+        "branches": [
+          "king_approach",
+          "king_approach",
+          "king_approach",
+          "rook_waiting_tempo"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/5K2/5R2/3k4 w - - 44 23",
+        "white_moves": [
+          "f3e3",
+          "e3d3",
+          "d3c3",
+          "f2e2"
+        ]
+      },
+      {
+        "branches": [
+          "king_approach",
+          "king_approach",
+          "not_applicable"
+        ],
+        "endpoint": "skill_fail_not_applicable",
+        "fen": "8/8/8/8/8/k7/8/1RK5 w - - 2 2",
+        "white_moves": [
+          "c1c2",
+          "c2b2"
+        ]
+      }
+    ],
+    "frames_max": 6,
+    "frames_mean": 0.66,
+    "row_count": 100,
+    "skill_violations": [],
+    "success_count": 20,
+    "success_rate": 0.2,
+    "wilson_95": [
+      0.1333669333310325,
+      0.2888291655931589
+    ]
+  },
+  "config": {
+    "best_learned_seed_reproduced": 20270212,
+    "black_policy": "fixed_seed_uniform_legal",
+    "heldout_count": 100,
+    "heldout_path": "reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1/pools/waypoint_middle_rung_heldout.jsonl.gz",
+    "horizon_white_moves": 6,
+    "purity_class": "hand_authored_procedural_ceiling_fit_free",
+    "verification": "one_ply_own_move_only_no_reply_quantification_no_mate4"
+  },
+  "decision": {
+    "clears_integration_threshold": false,
+    "rung_success_rate": 0.2,
+    "rung_success_threshold": 0.6,
+    "skill_violation_count": 0,
+    "status": "stop_before_integration"
+  },
+  "dispatcher_eval": {
+    "branch_counts": {
+      "enter_mate2": 37,
+      "fallback": 178,
+      "mate_in_1": 26
+    },
+    "endpoint_counts": {
+      "fence_broken": 45,
+      "horizon": 10,
+      "mate2_manifold_entered": 18,
+      "mate_delivered": 26,
+      "rook_lost": 1
+    },
+    "failure_fens": [
+      {
+        "branches": [
+          "fallback",
+          "fallback",
+          "fallback",
+          "fallback",
+          "enter_mate2"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/1RK5/k7/8/8/8/8 w - - 52 27",
+        "white_moves": [
+          "c6b7",
+          "b7a6",
+          "a6a5",
+          "a5a4",
+          "a4b3"
+        ]
+      },
+      {
+        "branches": [
+          "fallback",
+          "fallback"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/1K6/8/k7/8/1R6/8 w - - 0 1",
+        "white_moves": [
+          "b2b1",
+          "b6b5"
+        ]
+      },
+      {
+        "branches": [
+          "fallback"
+        ],
+        "endpoint": "rook_lost",
+        "fen": "6k1/4KR2/8/8/8/8/8/8 w - - 0 1",
+        "white_moves": [
+          "f7h7"
+        ]
+      },
+      {
+        "branches": [
+          "fallback",
+          "fallback",
+          "fallback",
+          "fallback",
+          "fallback",
+          "enter_mate2"
+        ],
+        "endpoint": "horizon",
+        "fen": "8/8/8/8/8/5K2/6R1/3k4 w - - 0 1",
+        "white_moves": [
+          "g2e2",
+          "f3e3",
+          "e3d3",
+          "e2d2",
+          "d2c2",
+          "d3c3"
+        ]
+      },
+      {
+        "branches": [
+          "fallback"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/k7/1R6/1K6/8/8/8 w - - 10 6",
+        "white_moves": [
+          "b5b8"
+        ]
+      },
+      {
+        "branches": [
+          "fallback",
+          "fallback",
+          "enter_mate2"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "5k2/R2K4/8/8/8/8/8/8 w - - 14 8",
+        "white_moves": [
+          "d7d8",
+          "d8e8",
+          "e8f7"
+        ]
+      },
+      {
+        "branches": [
+          "fallback",
+          "fallback",
+          "fallback",
+          "fallback",
+          "enter_mate2"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "1R6/2K5/8/k7/8/8/8/8 w - - 46 24",
+        "white_moves": [
+          "b8b6",
+          "c7c6",
+          "c6c5",
+          "c5c4",
+          "c4b3"
+        ]
+      },
+      {
+        "branches": [
+          "fallback"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/1K6/1R6/k7/8/8 w - - 58 30",
+        "white_moves": [
+          "b4b1"
+        ]
+      },
+      {
+        "branches": [
+          "fallback",
+          "fallback",
+          "fallback",
+          "enter_mate2"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/k7/8/1K6/8/1R6 w - - 0 1",
+        "white_moves": [
+          "b3a3",
+          "a3a4",
+          "a4a5",
+          "a5b6"
+        ]
+      },
+      {
+        "branches": [
+          "fallback",
+          "fallback",
+          "fallback",
+          "fallback",
+          "fallback",
+          "fallback"
+        ],
+        "endpoint": "horizon",
+        "fen": "1R6/2K5/8/k7/8/8/8/8 w - - 48 25",
+        "white_moves": [
+          "b8b6",
+          "c7c6",
+          "c6b7",
+          "b7a6",
+          "a6a5",
+          "a5a4"
+        ]
+      },
+      {
+        "branches": [
+          "fallback",
+          "fallback",
+          "enter_mate2"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/8/R2K4/5k2 w - - 0 1",
+        "white_moves": [
+          "d2d1",
+          "d1e1",
+          "e1f2"
+        ]
+      },
+      {
+        "branches": [
+          "fallback"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "5k2/2R4K/8/8/8/8/8/8 w - - 0 1",
+        "white_moves": [
+          "c7d7"
+        ]
+      },
+      {
+        "branches": [
+          "enter_mate2"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/2K5/4R3/1k6 w - - 0 1",
+        "white_moves": [
+          "e2e1"
+        ]
+      },
+      {
+        "branches": [
+          "fallback"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/6K1/6R1/7k/8/8/8 w - - 18 10",
+        "white_moves": [
+          "g5g2"
+        ]
+      },
+      {
+        "branches": [
+          "fallback",
+          "fallback",
+          "fallback"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/5K2/R7/4k3 w - - 0 1",
+        "white_moves": [
+          "f3g2",
+          "g2f2",
+          "f2e2"
+        ]
+      },
+      {
+        "branches": [
+          "fallback",
+          "fallback",
+          "fallback",
+          "fallback",
+          "fallback",
+          "enter_mate2"
+        ],
+        "endpoint": "horizon",
+        "fen": "8/8/8/8/8/5K2/5R2/3k4 w - - 44 23",
+        "white_moves": [
+          "f2e2",
+          "f3e3",
+          "e3d3",
+          "e2d2",
+          "d2c2",
+          "d3c3"
+        ]
+      },
+      {
+        "branches": [
+          "fallback",
+          "fallback",
+          "fallback",
+          "fallback",
+          "fallback",
+          "fallback"
+        ],
+        "endpoint": "horizon",
+        "fen": "8/8/8/8/8/k7/8/1RK5 w - - 2 2",
+        "white_moves": [
+          "b1b2",
+          "c1c2",
+          "c2b1",
+          "b1a2",
+          "a2a3",
+          "a3a4"
+        ]
+      },
+      {
+        "branches": [
+          "fallback",
+          "enter_mate2"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/6R1/6K1/8/7k/8 w - - 0 1",
+        "white_moves": [
+          "g4h4",
+          "h4g3"
+        ]
+      },
+      {
+        "branches": [
+          "fallback",
+          "fallback",
+          "fallback",
+          "fallback",
+          "enter_mate2"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/5K2/5R2/4k3 w - - 0 1",
+        "white_moves": [
+          "f3g2",
+          "g2f1",
+          "f1e1",
+          "e1d1",
+          "d1c2"
+        ]
+      },
+      {
+        "branches": [
+          "fallback"
+        ],
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/5K2/2R5/4k3 w - - 0 1",
+        "white_moves": [
+          "f3g2"
+        ]
+      }
+    ],
+    "frames_max": 46,
+    "frames_mean": 5.22,
+    "row_count": 100,
+    "skill_violations": [],
+    "success_count": 44,
+    "success_rate": 0.44,
+    "wilson_95": [
+      0.34672026630160796,
+      0.5377189534832302
+    ]
+  },
+  "elapsed_seconds": 297.756,
+  "paired_tables": {
+    "chase_vs_best_learned_seed": {
+      "loss/loss": 55,
+      "loss/win": 25,
+      "win/loss": 9,
+      "win/win": 11
+    },
+    "chase_vs_dispatcher": {
+      "loss/loss": 51,
+      "loss/win": 29,
+      "win/loss": 5,
+      "win/win": 15
+    }
+  },
+  "schema_version": "phase2_8d_chase_rung_eval.v0"
+}

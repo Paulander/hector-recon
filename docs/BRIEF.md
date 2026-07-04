@@ -13,28 +13,28 @@ Phase 2.8b-fix: `enter_mate2_skill` repaired from helpful-opponent existential r
 universal all-reply semantics. It is exact mate-in-3 restricted to edge/fence distance-1 closure;
 the bright line is fixed here: no mate-4 exactification.
 
-Phase 2.8c diagnostics: paired 200-game fixed-vs-enter-disabled eval found no system effect from
-`enter_mate2` on fence/general pools. Fence both 133/200=0.665; general both 144/200=0.720.
-Waypoint validation harvested 200 game-log states satisfying `fence_established AND WK Chebyshev<=2
-on nearest-edge interior side`; current dispatcher converted 162/200=0.810 in full games, with 38
-failures: 27 repetition, 6 rook-loss, 5 fifty-move.
+Phase 2.8c: waypoint validation (`fence_established AND WK Chebyshev<=2 on nearest-edge interior
+side`) converted 162/200=0.810 in full games, but horizon-6 middle-rung learning on 300/100
+waypoint starts did not beat dispatcher. Heldout baselines: dispatcher 44/100=0.440, fallback
+28/100=0.280, random 17/100=0.170. Learned seeds: 35/100, 36/100, 36/100; stable but 0/3 beat
+dispatcher. Discovery: `king_support_l_shape` and `king_pair_knight_distance_like` carried ~1.5%
+abs weight mass and activated more in failures than successes.
 
-Phase 2.8c middle-rung training: waypoint-to-mate learned policy, no dispatcher integration.
-Pool: 400 starts = 200 harvested waypoints + 200 generator-fresh waypoints; split 300 train / 100
-heldout. Episode success = exact mate-2 audit confirms within 6 white moves, with direct mate as
-terminal success; hard fail on fence break, rook loss, stalemate, or third occurrence. Black is
-fixed-seed uniform legal; holding the fence has no reward.
+Phase 2.8d: added `chase_to_mate_skill`, a fit-free hand-authored ceiling gated on the waypoint
+manifold. Branch order: gated mate-2 defer, rook escape slide, king approach, rook waiting tempo.
+Per-move verification is one-ply own-move only: legal, fence intact, rook safe, no stalemate, no
+third occurrence. It is not learned and is not evidence for autogrowth.
 
-Heldout baselines on identical starts/horizon: current dispatcher 44/100=0.440 Wilson [0.347,
-0.538], fallback scorer 28/100=0.280 [0.201, 0.375], random legal 17/100=0.170 [0.109, 0.255].
-Learned seeds: 20270211 35/100=0.350, 20270212 36/100=0.360, 20270213 36/100=0.360; spread 0.01.
-Paired vs dispatcher: seed 20270211 win/loss 2 and loss/win 11; seeds 20270212/20270213 win/loss
-2 and loss/win 10 each. Stable but 0/3 seeds beat dispatcher, so no 2.8d integration.
+2.8d rung eval on the same 100 heldout starts, horizon 6, fixed-seed uniform black: chase
+20/100=0.200, Wilson [0.133, 0.289], no own-move skill violations. Dispatcher remained
+44/100=0.440; reproduced best learned seed 20270212 at 36/100=0.360. Paired chase vs dispatcher:
+15 win/win, 5 win/loss, 29 loss/win, 51 loss/loss. Chase vs best learned: 11 win/win, 9 win/loss,
+25 loss/win, 55 loss/loss.
 
-Discovery instrument: promoted affordance/veto counts were 1560/6973, 1413/7101, 1331/7213.
-`king_support_l_shape` and `king_pair_knight_distance_like` each carried about 1.5% of total abs
-weight mass; activation was higher in failures (~0.48-0.54) than successes (~0.24-0.28).
+Failure structure: 37 fence breaks, 16 horizons, 20 outside-domain skill fails, 6 repetitions, 1
+rook-escape fail. Locally safe but not reply-robust: below the 0.60 integration threshold, so
+`krk_policy` was not changed and no 200-game integration eval was run.
 
-Decision: middle-rung learned waypoint policy beats fallback/random but not current dispatcher.
-Next: 2.8c middle-rung review; do not integrate.
+Decision: Phase 2.8d stops before integration. Next: 2.8d/Phase 2 review of reply-robust middle
+rung design; do not claim learned discovery for this ceiling.
 No-go: new TG names, new report documents, new pool/cache formats, training logic changes, `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.

@@ -27,6 +27,12 @@ MATE_IN_TWO_SKILL_ROOT_ID = "phase2_mate_in_2_skill_root"
 MATE_IN_TWO_SKILL_ID = "mate_in_2_skill"
 ENTER_MATE_TWO_SKILL_ROOT_ID = "phase2_enter_mate_in_2_skill_root"
 ENTER_MATE_TWO_SKILL_ID = "enter_mate_in_2_skill"
+CHASE_TO_MATE_SKILL_ROOT_ID = "phase2_chase_to_mate_skill_root"
+CHASE_TO_MATE_SKILL_ID = "chase_to_mate_skill"
+CHASE_DEFER_MATE2_STEP_ID = "chase_defer_mate2_step"
+CHASE_ROOK_ESCAPE_STEP_ID = "chase_rook_escape_slide_step"
+CHASE_KING_APPROACH_STEP_ID = "chase_king_approach_step"
+CHASE_ROOK_TEMPO_STEP_ID = "chase_rook_tempo_step"
 FENCE_ESTABLISHED_ROOT_ID = "phase2_fence_established_root"
 FENCE_ESTABLISHED_ID = "fence_established"
 FENCE_EDGE_SELECTOR_ID = "fence_nearest_edge_selector"
@@ -637,6 +643,312 @@ def _stable_fence_after_all_replies(board: chess.Board) -> bool:
         if not fence_established_geometry(after_reply):
             return False
     return True
+
+
+def _fence_edges_for_board(board: chess.Board) -> tuple[str, ...]:
+    black_king = board.king(chess.BLACK)
+    rook = _white_rook_square(board)
+    if black_king is None or rook is None:
+        return ()
+    bk_file = chess.square_file(black_king)
+    bk_rank = chess.square_rank(black_king)
+    rook_file = chess.square_file(rook)
+    rook_rank = chess.square_rank(rook)
+    edges: list[str] = []
+    if bk_file == 0 and rook_file == 1:
+        edges.append("west")
+    if bk_file == 7 and rook_file == 6:
+        edges.append("east")
+    if bk_rank == 0 and rook_rank == 1:
+        edges.append("south")
+    if bk_rank == 7 and rook_rank == 6:
+        edges.append("north")
+    return tuple(edges)
+
+
+def _edge_along_coord(square: int, edge: str) -> int:
+    if edge in {"west", "east"}:
+        return chess.square_rank(square)
+    return chess.square_file(square)
+
+
+def _edge_line_coord(square: int, edge: str) -> int:
+    if edge in {"west", "east"}:
+        return chess.square_file(square)
+    return chess.square_rank(square)
+
+
+def _edge_fence_line(edge: str) -> int:
+    if edge == "west":
+        return 1
+    if edge == "east":
+        return 6
+    if edge == "south":
+        return 1
+    if edge == "north":
+        return 6
+    raise ValueError(f"unknown edge: {edge}")
+
+
+def _king_interior_to_edge(white_king: int, black_king: int, edge: str) -> bool:
+    wk_file = chess.square_file(white_king)
+    wk_rank = chess.square_rank(white_king)
+    bk_file = chess.square_file(black_king)
+    bk_rank = chess.square_rank(black_king)
+    if edge == "west":
+        return wk_file > bk_file
+    if edge == "east":
+        return wk_file < bk_file
+    if edge == "south":
+        return wk_rank > bk_rank
+    if edge == "north":
+        return wk_rank < bk_rank
+    return False
+
+
+def _king_support_waypoint_geometry(board: chess.Board) -> bool:
+    if not fence_established_geometry(board):
+        return False
+    white_king = board.king(chess.WHITE)
+    black_king = board.king(chess.BLACK)
+    if white_king is None or black_king is None:
+        return False
+    if chess.square_distance(white_king, black_king) > 2:
+        return False
+    return any(
+        _king_interior_to_edge(white_king, black_king, edge)
+        for edge in _fence_edges_for_board(board)
+    )
+
+
+def _edge_relative_opposition_contact(board: chess.Board) -> bool:
+    white_king = board.king(chess.WHITE)
+    black_king = board.king(chess.BLACK)
+    if white_king is None or black_king is None:
+        return False
+    wk_file = chess.square_file(white_king)
+    wk_rank = chess.square_rank(white_king)
+    bk_file = chess.square_file(black_king)
+    bk_rank = chess.square_rank(black_king)
+    for edge in _fence_edges_for_board(board):
+        if edge == "west" and wk_file - bk_file == 2 and wk_rank == bk_rank:
+            return True
+        if edge == "east" and bk_file - wk_file == 2 and wk_rank == bk_rank:
+            return True
+        if edge == "south" and wk_rank - bk_rank == 2 and wk_file == bk_file:
+            return True
+        if edge == "north" and bk_rank - wk_rank == 2 and wk_file == bk_file:
+            return True
+    return False
+
+
+def _king_support_contact_geometry(board: chess.Board) -> bool:
+    features = extract_learner_features(board)
+    return bool(
+        features["king_pair_knight_distance_like"] == 1.0
+        or _edge_relative_opposition_contact(board)
+    )
+
+
+def _support_target_squares(board: chess.Board) -> tuple[int, ...]:
+    black_king = board.king(chess.BLACK)
+    if black_king is None:
+        return ()
+    bk_file = chess.square_file(black_king)
+    bk_rank = chess.square_rank(black_king)
+    targets: set[int] = set()
+    for edge in _fence_edges_for_board(board):
+        if edge == "west" and bk_file + 2 <= 7:
+            targets.add(chess.square(bk_file + 2, bk_rank))
+        elif edge == "east" and bk_file - 2 >= 0:
+            targets.add(chess.square(bk_file - 2, bk_rank))
+        elif edge == "south" and bk_rank + 2 <= 7:
+            targets.add(chess.square(bk_file, bk_rank + 2))
+        elif edge == "north" and bk_rank - 2 >= 0:
+            targets.add(chess.square(bk_file, bk_rank - 2))
+        for file_delta, rank_delta in (
+            (-2, -1),
+            (-2, 1),
+            (-1, -2),
+            (-1, 2),
+            (1, -2),
+            (1, 2),
+            (2, -1),
+            (2, 1),
+        ):
+            file_idx = bk_file + file_delta
+            rank_idx = bk_rank + rank_delta
+            if not (0 <= file_idx <= 7 and 0 <= rank_idx <= 7):
+                continue
+            square = chess.square(file_idx, rank_idx)
+            if _king_interior_to_edge(square, black_king, edge):
+                targets.add(square)
+    return tuple(sorted(targets))
+
+
+def _king_contact_score(board: chess.Board) -> tuple[int, int, int]:
+    if _king_support_contact_geometry(board):
+        return (0, 0, 0)
+    white_king = board.king(chess.WHITE)
+    targets = _support_target_squares(board)
+    if white_king is None or not targets:
+        return (1, 8, 16)
+    wk_file = chess.square_file(white_king)
+    wk_rank = chess.square_rank(white_king)
+    distances = [
+        (
+            chess.square_distance(white_king, target),
+            abs(wk_file - chess.square_file(target))
+            + abs(wk_rank - chess.square_rank(target)),
+        )
+        for target in targets
+    ]
+    chebyshev, manhattan = min(distances)
+    return (1, chebyshev, manhattan)
+
+
+def _chase_rook_safe(board: chess.Board) -> bool:
+    rook = _white_rook_square(board)
+    if rook is None:
+        return False
+    features = extract_learner_features(board)
+    return bool(
+        features["rook_attacked_by_black"] == 0.0
+        or _white_king_defends_square(board, rook)
+    )
+
+
+def _chase_after_move_valid(
+    board: chess.Board,
+    move: chess.Move,
+    *,
+    repetition_counts: Mapping[str, int],
+) -> tuple[bool, str, chess.Board | None]:
+    if move not in board.legal_moves:
+        return False, "illegal", None
+    if int(repetition_counts.get(_after_move_repetition_key(board, move), 0)) >= 2:
+        return False, "third_occurrence_repetition", None
+    after = _after_move(board, move)
+    if _white_rook_square(after) is None:
+        return False, "rook_lost", after
+    if after.is_stalemate():
+        return False, "stalemate_delivered", after
+    if not fence_established_geometry(after):
+        return False, "fence_broken", after
+    if not _chase_rook_safe(after):
+        return False, "rook_unsafe", after
+    if not _king_support_waypoint_geometry(after):
+        return False, "left_waypoint_domain", after
+    return True, "ok", after
+
+
+def _rook_fence_slide_candidates(
+    board: chess.Board,
+    *,
+    repetition_counts: Mapping[str, int],
+) -> list[tuple[chess.Move, chess.Board, str]]:
+    rook = _white_rook_square(board)
+    black_king = board.king(chess.BLACK)
+    if rook is None or black_king is None:
+        return []
+    candidates: list[tuple[chess.Move, chess.Board, str]] = []
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        if move.from_square != rook:
+            continue
+        for edge in _fence_edges_for_board(board):
+            if _edge_line_coord(move.to_square, edge) != _edge_fence_line(edge):
+                continue
+            if _edge_along_coord(move.to_square, edge) == _edge_along_coord(rook, edge):
+                continue
+            valid, _reason, after = _chase_after_move_valid(
+                board,
+                move,
+                repetition_counts=repetition_counts,
+            )
+            if valid and after is not None:
+                candidates.append((move, after, edge))
+                break
+    return candidates
+
+
+def _resolve_chase_rook_escape(
+    board: chess.Board,
+    *,
+    repetition_counts: Mapping[str, int],
+) -> chess.Move | None:
+    rook = _white_rook_square(board)
+    black_king = board.king(chess.BLACK)
+    if rook is None or black_king is None:
+        return None
+    candidates = _rook_fence_slide_candidates(
+        board,
+        repetition_counts=repetition_counts,
+    )
+    if not candidates:
+        return None
+    ranked = []
+    for move, _after, edge in candidates:
+        distance = abs(
+            _edge_along_coord(move.to_square, edge)
+            - _edge_along_coord(black_king, edge)
+        )
+        slide = abs(
+            _edge_along_coord(move.to_square, edge)
+            - _edge_along_coord(rook, edge)
+        )
+        ranked.append((distance, slide, move.uci(), move))
+    ranked.sort(reverse=True)
+    return ranked[0][-1]
+
+
+def _resolve_chase_king_approach(
+    board: chess.Board,
+    *,
+    repetition_counts: Mapping[str, int],
+) -> chess.Move | None:
+    white_king = board.king(chess.WHITE)
+    if white_king is None:
+        return None
+    before_score = _king_contact_score(board)
+    ranked: list[tuple[tuple[int, int, int], str, chess.Move]] = []
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        if move.from_square != white_king:
+            continue
+        valid, _reason, after = _chase_after_move_valid(
+            board,
+            move,
+            repetition_counts=repetition_counts,
+        )
+        if not valid or after is None:
+            continue
+        score = _king_contact_score(after)
+        if score >= before_score:
+            continue
+        ranked.append((score, move.uci(), move))
+    ranked.sort(key=lambda item: (item[0], item[1]))
+    return ranked[0][-1] if ranked else None
+
+
+def _resolve_chase_rook_tempo(
+    board: chess.Board,
+    *,
+    repetition_counts: Mapping[str, int],
+) -> chess.Move | None:
+    rook = _white_rook_square(board)
+    if rook is None:
+        return None
+    ranked: list[tuple[int, str, chess.Move]] = []
+    for move, _after, edge in _rook_fence_slide_candidates(
+        board,
+        repetition_counts=repetition_counts,
+    ):
+        slide = abs(
+            _edge_along_coord(move.to_square, edge)
+            - _edge_along_coord(rook, edge)
+        )
+        ranked.append((slide, move.uci(), move))
+    ranked.sort(key=lambda item: (item[0], item[1]))
+    return ranked[0][-1] if ranked else None
 
 
 def resolve_establish_fence_move(board: chess.Board) -> chess.Move | None:
@@ -2064,6 +2376,304 @@ def _policy_result(
         "scorer_source_sha256": scorer.source_sha256,
         "trace": [{"tick": 0, "messages": trace_messages}],
     }
+
+
+def _chase_result(
+    *,
+    confirmed: bool,
+    branch: str,
+    bound_move: chess.Move | None,
+    reason: str,
+    frames: int,
+    messages: list[dict[str, Any]],
+    gate_audit: Mapping[str, Any],
+) -> dict[str, Any]:
+    _policy_trace_message(
+        messages,
+        CHASE_TO_MATE_SKILL_ID,
+        CHASE_TO_MATE_SKILL_ROOT_ID,
+        "SUR",
+        "confirm" if confirmed else "fail",
+        branch=branch,
+        reason=reason,
+    )
+    return {
+        "confirmed": bool(confirmed),
+        "root_state": "CONFIRMED" if confirmed else "FAILED",
+        "skill_state": "CONFIRMED" if confirmed else "FAILED",
+        "branch": branch,
+        "branch_fired": branch if confirmed else None,
+        "bound_move": None if bound_move is None else bound_move.uci(),
+        "failure_reason": None if confirmed else reason,
+        "deferred_to_mate2": branch == "defer_mate2",
+        "virtual_frame_count": int(frames),
+        "mate2_gate_fired": bool(gate_audit["fired"]),
+        "mate2_gate_score": float(gate_audit["score"]),
+        "mate2_gate_threshold": float(gate_audit["threshold"]),
+        "trace": [{"tick": 0, "messages": messages}],
+    }
+
+
+def _chase_request_step(
+    messages: list[dict[str, Any]],
+    step_id: str,
+) -> None:
+    _policy_trace_message(
+        messages,
+        CHASE_TO_MATE_SKILL_ID,
+        step_id,
+        "SUB",
+        "request",
+    )
+
+
+def _chase_step_result(
+    messages: list[dict[str, Any]],
+    step_id: str,
+    *,
+    confirmed: bool,
+    reason: str,
+    bound_move: chess.Move | None = None,
+) -> None:
+    meta: dict[str, Any] = {"reason": reason}
+    if bound_move is not None:
+        meta["bound_move"] = bound_move.uci()
+    _policy_trace_message(
+        messages,
+        step_id,
+        CHASE_TO_MATE_SKILL_ID,
+        "SUR",
+        "confirm" if confirmed else "fail",
+        **meta,
+    )
+
+
+def _chase_continue(
+    messages: list[dict[str, Any]],
+    step_id: str,
+    next_step_id: str,
+) -> None:
+    _policy_trace_message(
+        messages,
+        step_id,
+        next_step_id,
+        "POR",
+        "inhibit_request",
+    )
+
+
+def run_chase_to_mate_skill(
+    board: chess.Board,
+    *,
+    gate: Mapping[str, Any] | None = None,
+    scorer: FrozenMate2FirstScorer | None = None,
+    record_trace: bool = True,
+    repetition_counts: Mapping[str, int] | None = None,
+    mate2_cache: dict[str, dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Run the hand-authored waypoint chase ceiling with one-ply verification only."""
+
+    active_gate = load_chain_confidence_gate() if gate is None else gate
+    active_scorer = load_canonical_mate2_first_scorer() if scorer is None else scorer
+    active_counts = repetition_counts or {}
+    active_cache = {} if mate2_cache is None else mate2_cache
+    messages: list[dict[str, Any]] = []
+    if record_trace:
+        _policy_trace_message(
+            messages,
+            CHASE_TO_MATE_SKILL_ROOT_ID,
+            CHASE_TO_MATE_SKILL_ID,
+            "SUB",
+            "request",
+        )
+    gate_audit = score_chain_confidence_gate(board, active_gate)
+    frames = 0
+    if board.turn != chess.WHITE or board.is_game_over(claim_draw=False):
+        return _chase_result(
+            confirmed=False,
+            branch="not_applicable",
+            bound_move=None,
+            reason="not_white_to_move_or_game_over",
+            frames=frames,
+            messages=messages,
+            gate_audit=gate_audit,
+        )
+    if not _king_support_waypoint_geometry(board):
+        return _chase_result(
+            confirmed=False,
+            branch="not_applicable",
+            bound_move=None,
+            reason="outside_waypoint_domain",
+            frames=frames,
+            messages=messages,
+            gate_audit=gate_audit,
+        )
+
+    _chase_request_step(messages, CHASE_DEFER_MATE2_STEP_ID)
+    if gate_audit["fired"]:
+        mate2 = _edge_mate_exact_mate2_audit(
+            board,
+            scorer=active_scorer,
+            cache=active_cache,
+        )
+        frames += int(mate2["frames"])
+        if mate2["confirmed"]:
+            _chase_step_result(
+                messages,
+                CHASE_DEFER_MATE2_STEP_ID,
+                confirmed=True,
+                reason="gated_mate2_confirmed_dispatcher_owns_move",
+            )
+            return _chase_result(
+                confirmed=False,
+                branch="defer_mate2",
+                bound_move=None,
+                reason="gated_mate2_confirmed_dispatcher_owns_move",
+                frames=frames,
+                messages=messages,
+                gate_audit=gate_audit,
+            )
+        defer_reason = "mate2_gate_fired_but_exact_audit_failed"
+    else:
+        defer_reason = "mate2_gate_not_fired"
+    _chase_step_result(
+        messages,
+        CHASE_DEFER_MATE2_STEP_ID,
+        confirmed=False,
+        reason=defer_reason,
+    )
+    _chase_continue(messages, CHASE_DEFER_MATE2_STEP_ID, CHASE_ROOK_ESCAPE_STEP_ID)
+
+    _chase_request_step(messages, CHASE_ROOK_ESCAPE_STEP_ID)
+    features = extract_learner_features(board)
+    if features["rook_attacked_by_black"] == 1.0:
+        move = _resolve_chase_rook_escape(
+            board,
+            repetition_counts=active_counts,
+        )
+        if move is None:
+            _chase_step_result(
+                messages,
+                CHASE_ROOK_ESCAPE_STEP_ID,
+                confirmed=False,
+                reason="black_attacks_rook_no_safe_far_slide",
+            )
+            return _chase_result(
+                confirmed=False,
+                branch="rook_escape_slide",
+                bound_move=None,
+                reason="black_attacks_rook_no_safe_far_slide",
+                frames=frames,
+                messages=messages,
+                gate_audit=gate_audit,
+            )
+        _chase_step_result(
+            messages,
+            CHASE_ROOK_ESCAPE_STEP_ID,
+            confirmed=True,
+            reason="black_attacks_rook_far_slide_found",
+            bound_move=move,
+        )
+        return _chase_result(
+            confirmed=True,
+            branch="rook_escape_slide",
+            bound_move=move,
+            reason="black_attacks_rook_far_slide_found",
+            frames=frames,
+            messages=messages,
+            gate_audit=gate_audit,
+        )
+    _chase_step_result(
+        messages,
+        CHASE_ROOK_ESCAPE_STEP_ID,
+        confirmed=False,
+        reason="rook_not_attacked_by_black",
+    )
+    _chase_continue(messages, CHASE_ROOK_ESCAPE_STEP_ID, CHASE_KING_APPROACH_STEP_ID)
+
+    _chase_request_step(messages, CHASE_KING_APPROACH_STEP_ID)
+    if not _king_support_contact_geometry(board):
+        move = _resolve_chase_king_approach(
+            board,
+            repetition_counts=active_counts,
+        )
+        if move is None:
+            _chase_step_result(
+                messages,
+                CHASE_KING_APPROACH_STEP_ID,
+                confirmed=False,
+                reason="no_safe_king_approach_progress",
+            )
+            return _chase_result(
+                confirmed=False,
+                branch="king_approach",
+                bound_move=None,
+                reason="no_safe_king_approach_progress",
+                frames=frames,
+                messages=messages,
+                gate_audit=gate_audit,
+            )
+        _chase_step_result(
+            messages,
+            CHASE_KING_APPROACH_STEP_ID,
+            confirmed=True,
+            reason="king_support_contact_progress",
+            bound_move=move,
+        )
+        return _chase_result(
+            confirmed=True,
+            branch="king_approach",
+            bound_move=move,
+            reason="king_support_contact_progress",
+            frames=frames,
+            messages=messages,
+            gate_audit=gate_audit,
+        )
+    _chase_step_result(
+        messages,
+        CHASE_KING_APPROACH_STEP_ID,
+        confirmed=False,
+        reason="support_contact_already_achieved",
+    )
+    _chase_continue(messages, CHASE_KING_APPROACH_STEP_ID, CHASE_ROOK_TEMPO_STEP_ID)
+
+    _chase_request_step(messages, CHASE_ROOK_TEMPO_STEP_ID)
+    move = _resolve_chase_rook_tempo(
+        board,
+        repetition_counts=active_counts,
+    )
+    if move is None:
+        _chase_step_result(
+            messages,
+            CHASE_ROOK_TEMPO_STEP_ID,
+            confirmed=False,
+            reason="no_safe_rook_waiting_slide",
+        )
+        return _chase_result(
+            confirmed=False,
+            branch="rook_waiting_tempo",
+            bound_move=None,
+            reason="no_safe_rook_waiting_slide",
+            frames=frames,
+            messages=messages,
+            gate_audit=gate_audit,
+        )
+    _chase_step_result(
+        messages,
+        CHASE_ROOK_TEMPO_STEP_ID,
+        confirmed=True,
+        reason="support_contact_rook_waiting_slide",
+        bound_move=move,
+    )
+    return _chase_result(
+        confirmed=True,
+        branch="rook_waiting_tempo",
+        bound_move=move,
+        reason="support_contact_rook_waiting_slide",
+        frames=frames,
+        messages=messages,
+        gate_audit=gate_audit,
+    )
 
 
 def run_krk_policy(

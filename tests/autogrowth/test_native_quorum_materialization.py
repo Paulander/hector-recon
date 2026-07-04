@@ -6,6 +6,11 @@ from recon_lite import FormalReConEngine, Graph, Node, NodeState, NodeType
 from recon_lite_chess.autogrowth import (
     EdgeMateDistanceTrainingConfig,
     NativeQuorumMaterializationConfig,
+    CHASE_KING_APPROACH_STEP_ID,
+    CHASE_ROOK_ESCAPE_STEP_ID,
+    CHASE_ROOK_TEMPO_STEP_ID,
+    CHASE_TO_MATE_SKILL_ID,
+    CHASE_TO_MATE_SKILL_ROOT_ID,
     KRK_POLICY_ROOT_ID,
     MATE_IN_TWO_GATE_ID,
     ENTER_MATE_TWO_SKILL_ID,
@@ -21,6 +26,7 @@ from recon_lite_chess.autogrowth import (
     run_establish_fence_skill,
     run_fence_established_recognizer,
     run_fence_reply_quantifier,
+    run_chase_to_mate_skill,
     run_edge_mate_distance1_training,
     run_enter_mate2_skill,
     run_mate_in_one_skill,
@@ -723,6 +729,51 @@ def test_phase28b_enter_mate2_uses_universal_reply_polarity() -> None:
     assert not policy["mate2_gate_fired"]
     assert (KRK_POLICY_ROOT_ID, ENTER_MATE_TWO_SKILL_ID, "SUB", "request") in policy_messages
     assert (ENTER_MATE_TWO_SKILL_ID, KRK_POLICY_ROOT_ID, "SUR", "confirm") in policy_messages
+
+
+def test_phase28d_chase_to_mate_skill_branches_with_trace() -> None:
+    gate = dict(load_chain_confidence_gate())
+    gate["threshold"] = 2.0
+    scorer = load_canonical_mate2_first_scorer()
+    cases = [
+        (
+            chess.Board("8/8/8/8/8/1K6/1R6/k7 w - - 0 1"),
+            "rook_escape_slide",
+            CHASE_ROOK_ESCAPE_STEP_ID,
+        ),
+        (
+            chess.Board("8/8/8/8/8/1RK5/8/k7 w - - 0 1"),
+            "king_approach",
+            CHASE_KING_APPROACH_STEP_ID,
+        ),
+        (
+            chess.Board("8/8/8/8/1R6/1K6/8/k7 w - - 0 1"),
+            "rook_waiting_tempo",
+            CHASE_ROOK_TEMPO_STEP_ID,
+        ),
+    ]
+
+    for board, branch, step_id in cases:
+        audit = run_chase_to_mate_skill(
+            board,
+            gate=gate,
+            scorer=scorer,
+            record_trace=True,
+        )
+        traced = _trace_messages(audit["trace"])
+        move = chess.Move.from_uci(audit["bound_move"])
+        after = board.copy(stack=False)
+        after.push(move)
+
+        assert audit["confirmed"]
+        assert audit["branch"] == branch
+        assert fence_established_geometry(after)
+        assert bool(after.pieces(chess.ROOK, chess.WHITE))
+        assert not after.is_stalemate()
+        assert (CHASE_TO_MATE_SKILL_ROOT_ID, CHASE_TO_MATE_SKILL_ID, "SUB", "request") in traced
+        assert (CHASE_TO_MATE_SKILL_ID, step_id, "SUB", "request") in traced
+        assert (step_id, CHASE_TO_MATE_SKILL_ID, "SUR", "confirm") in traced
+        assert (CHASE_TO_MATE_SKILL_ID, CHASE_TO_MATE_SKILL_ROOT_ID, "SUR", "confirm") in traced
 
 
 def _repetition_key(board: chess.Board) -> str:
