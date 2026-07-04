@@ -707,7 +707,7 @@ def _king_interior_to_edge(white_king: int, black_king: int, edge: str) -> bool:
 
 
 def _king_support_waypoint_geometry(board: chess.Board) -> bool:
-    if not fence_established_geometry(board):
+    if not _chase_confinement_intact_geometry(board):
         return False
     white_king = board.king(chess.WHITE)
     black_king = board.king(chess.BLACK)
@@ -719,6 +719,10 @@ def _king_support_waypoint_geometry(board: chess.Board) -> bool:
         _king_interior_to_edge(white_king, black_king, edge)
         for edge in _fence_edges_for_board(board)
     )
+
+
+def _chase_confinement_intact_geometry(board: chess.Board) -> bool:
+    return bool(_fence_edges_for_board(board))
 
 
 def _edge_relative_opposition_contact(board: chess.Board) -> bool:
@@ -833,10 +837,8 @@ def _chase_after_move_valid(
         return False, "rook_lost", after
     if after.is_stalemate():
         return False, "stalemate_delivered", after
-    if not fence_established_geometry(after):
-        return False, "fence_broken", after
-    if not _chase_rook_safe(after):
-        return False, "rook_unsafe", after
+    if not _chase_confinement_intact_geometry(after):
+        return False, "confinement_crossed", after
     if not _king_support_waypoint_geometry(after):
         return False, "left_waypoint_domain", after
     return True, "ok", after
@@ -2685,6 +2687,7 @@ def run_krk_policy(
     repetition_counts: Mapping[str, int] | None = None,
     mate2_cache: dict[str, dict[str, Any]] | None = None,
     enter_cache: dict[str, dict[str, Any]] | None = None,
+    enable_chase: bool = False,
 ) -> dict[str, Any]:
     """Run the Phase 2.7 priority dispatcher over existing graph-native skills."""
 
@@ -2891,6 +2894,51 @@ def run_krk_policy(
             invocations=invocations,
             scorer=active_scorer,
         )
+
+    if enable_chase:
+        _policy_trace_message(
+            trace_messages,
+            KRK_POLICY_ROOT_ID,
+            CHASE_TO_MATE_SKILL_ID,
+            "SUB",
+            "request",
+        )
+        chase = run_chase_to_mate_skill(
+            board,
+            gate=active_gate,
+            scorer=active_scorer,
+            record_trace=record_trace,
+            repetition_counts=repetition_counts,
+            mate2_cache=mate2_cache,
+        )
+        frames += int(chase["virtual_frame_count"])
+        invocations["chase_to_mate_skill"] = {
+            "confirmed": bool(chase["confirmed"]),
+            "bound_move": chase["bound_move"],
+            "branch": chase["branch"],
+            "branch_fired": chase["branch_fired"],
+            "failure_reason": chase["failure_reason"],
+            "virtual_frame_count": int(chase["virtual_frame_count"]),
+        }
+        _policy_trace_message(
+            trace_messages,
+            CHASE_TO_MATE_SKILL_ID,
+            KRK_POLICY_ROOT_ID,
+            "SUR",
+            "confirm" if chase["confirmed"] else "fail",
+            branch=chase["branch"],
+            reason=chase["failure_reason"] or "confirmed",
+        )
+        if chase["confirmed"] and chase["bound_move"] is not None:
+            return _policy_result(
+                branch="chase_to_mate",
+                bound_move=chess.Move.from_uci(chase["bound_move"]),
+                frames=frames,
+                gate_audit=gate_audit,
+                trace_messages=trace_messages,
+                invocations=invocations,
+                scorer=active_scorer,
+            )
 
     _policy_trace_message(
         trace_messages,
