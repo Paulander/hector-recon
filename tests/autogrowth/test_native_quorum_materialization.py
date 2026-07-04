@@ -6,8 +6,10 @@ from recon_lite import FormalReConEngine, Graph, Node, NodeState, NodeType
 from recon_lite_chess.autogrowth import (
     EdgeMateDistanceTrainingConfig,
     NativeQuorumMaterializationConfig,
+    CHASE_DEFER_MATE2_STEP_ID,
     CHASE_KING_APPROACH_STEP_ID,
     CHASE_KING_PURSUIT_STEP_ID,
+    CHASE_KING_UNBLOCK_STEP_ID,
     CHASE_ROOK_ESCAPE_STEP_ID,
     CHASE_ROOK_TEMPO_STEP_ID,
     CHASE_TO_MATE_SKILL_ID,
@@ -858,6 +860,84 @@ def test_phase28g_chase_lateral_pursuit_preempts_tempo_with_trace() -> None:
             "SUB",
             "request",
         ) not in traced
+
+
+def test_phase28h_chase_unblocks_fence_ray_with_trace() -> None:
+    gate = dict(load_chain_confidence_gate())
+    gate["threshold"] = 2.0
+    scorer = load_canonical_mate2_first_scorer()
+    board = chess.Board("8/k7/8/1K6/8/8/1R6/8 w - - 0 1")
+
+    audit = run_chase_to_mate_skill(
+        board,
+        gate=gate,
+        scorer=scorer,
+        record_trace=True,
+    )
+    traced = _trace_messages(audit["trace"])
+
+    assert audit["confirmed"]
+    assert audit["branch"] == "king_unblock"
+    assert audit["bound_move"] == "b5c6"
+    assert (
+        CHASE_DEFER_MATE2_STEP_ID,
+        CHASE_KING_UNBLOCK_STEP_ID,
+        "POR",
+        "inhibit_request",
+    ) in traced
+    assert (
+        CHASE_TO_MATE_SKILL_ID,
+        CHASE_KING_UNBLOCK_STEP_ID,
+        "SUB",
+        "request",
+    ) in traced
+    assert (
+        CHASE_KING_UNBLOCK_STEP_ID,
+        CHASE_TO_MATE_SKILL_ID,
+        "SUR",
+        "confirm",
+    ) in traced
+
+
+def test_phase28h_chase_long_side_tempo_on_aligned_bk_c8_with_trace() -> None:
+    gate = dict(load_chain_confidence_gate())
+    gate["threshold"] = 2.0
+    scorer = load_canonical_mate2_first_scorer()
+    original_bk_c8 = chess.Board("2k5/R7/1K6/8/8/8/8/8 w - - 0 1")
+    aligned_bk_c8 = chess.Board("2k5/R7/2K5/8/8/8/8/8 w - - 0 1")
+
+    pursuit = run_chase_to_mate_skill(
+        original_bk_c8,
+        gate=gate,
+        scorer=scorer,
+        record_trace=True,
+    )
+    tempo = run_chase_to_mate_skill(
+        aligned_bk_c8,
+        gate=gate,
+        scorer=scorer,
+        record_trace=True,
+    )
+    traced = _trace_messages(tempo["trace"])
+
+    assert pursuit["branch"] == "king_lateral_pursuit"
+    assert pursuit["bound_move"] == "b6c6"
+    assert tempo["confirmed"]
+    assert tempo["branch"] == "rook_waiting_tempo"
+    assert tempo["bound_move"] == "a7h7"
+    assert tempo["bound_move"] != "a7b7"
+    assert (
+        CHASE_TO_MATE_SKILL_ID,
+        CHASE_ROOK_TEMPO_STEP_ID,
+        "SUB",
+        "request",
+    ) in traced
+    assert (
+        CHASE_ROOK_TEMPO_STEP_ID,
+        CHASE_TO_MATE_SKILL_ID,
+        "SUR",
+        "confirm",
+    ) in traced
 
 
 def _repetition_key(board: chess.Board) -> str:
