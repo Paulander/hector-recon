@@ -6,32 +6,34 @@ Canonical dieted parent: reports/autogrowth/clean_slate_krk/dieted_foundation_v1
 Canonical sha256: ae382d0463e35eff09e9515a715648b5d49b1e0891d127a660e036e378452eb6
 Adopted 2.5 gate: balanced seed 20261211 threshold=0.854756; exact mate-in-2 remains verifier.
 
-Phase 2.8a finding: distance-1 learning was unstable and roughly fallback-level (best seed
-50/96=0.521 vs fallback 47/96=0.490), so distance-1 is now treated as exact-reachable and the
-learning frontier moved to distance-2.
+Standing spec checklist: every loop over moves in any skill must state quantifier polarity
+explicitly: existential over our candidate moves, universal over opponent replies.
 
-Phase 2.8b exact closure: `enter_mate2_skill` enters the certified mate-in-2 manifold on the
-2.8a distance-1 heldout at 96/96=1.000; frames mean/max 3.54/16. The lower-than-expected frame
-mean versus the old 13.01 label audit is from lazy k=1 OR exit on first confirming candidate.
+Phase 2.8b-fix: `enter_mate2_skill` repaired from helpful-opponent existential reply semantics to
+universal all-reply semantics. It is now exact mate-in-3 restricted to edge/fence distance-1
+closure; the bright line is fixed here: no mate-4 exactification.
 
-Phase 2.8b dispatcher eval, same 50-game pools/seeds as 2.7b, black=fixed-seed uniform legal:
-mate-in-<=2 stayed 50/50 with fallback share 0.000; fence fell 35/50 -> 31/50; general fell
-36/50 -> 28/50. No skill-branch illegal moves, rook losses, or stalemates after fixing an eval
-SquareSet/a1 false-positive. Fallback share stayed high: fence 0.719, general 0.727.
+Relabel result: old 2.8a distance-1 train survived 134/300=0.447 and heldout survived
+40/96=0.417, so the omitted reply quantifier inflated the heldout pool by 56/96 positions.
+Corrected distance-1 closure on relabeled heldout is 40/40=1.000; frames mean/max 6.35/46.
 
-Gap measurement after `enter_mate2`: fence gap mean/median/max 18.83/8/68 with 21 unresolved and
-0.787 fallback share inside; general gap 15.00/6/48 with 22 unresolved and 0.711 fallback share.
-Fence durability remains the hole: fence broken while fallback played 110 times in fence pool and
-85 times in general.
+Full-game eval, same 50-game pools/seeds, black=fixed-seed uniform legal:
+pool | 2.7b | broken 2.8b | fixed 2.8b
+mate-in-<=2 | 50/50 | 50/50 | 50/50
+fence | 35/50 | 31/50 | 30/50
+general | 36/50 | 28/50 | 29/50
+Fixed run had zero skill-branch illegal moves, rook losses, or stalemates.
 
-Phase 2.8b distance-2 training: source d2 rows 107 -> 73 certified; split 9 train / 64 heldout.
-Baselines on heldout: fallback 58/64=0.906, random 7/64=0.109, integrated dispatcher 59/64=0.922.
-Learned entry rates by seed: 20270211 44/64=0.688, 20270212 60/64=0.938, 20270213 58/64=0.906.
-Promoted affordance/veto counts: 134/1127, 122/147, 212/330.
+Fixed gap/fallback: fence fallback share 0.748, gap mean/median/max 15.72/8/56 with 21 unresolved;
+general fallback share 0.763, gap 14.47/6/48 with 21 unresolved. Fence breaks under fallback
+remain dominant: 111 in fence/general combined during fixed eval.
 
-Decision: stop condition is seed instability (spread 0.25) and only 1/3 seeds beat dispatcher.
-No tuning, no Phase 2.8c advance. Next: 2.8b review of distance-2 data volume/credit and the
-fence-maintenance gap before any distance-3+ expansion.
+Corrected distance-2 stratum, baselines only: source d2 107 -> certified 105; split 41 train /
+64 heldout. Heldout entry rates: fallback 56/64=0.875, random 10/64=0.156, dispatcher
+56/64=0.875. Because fallback remains >=0.85, the stratum needs redefinition before training.
+
+Decision: no training this session and no Phase 2.8c advance. Next: 2.8b review of stratum
+definition and fence-maintenance gap under explicit quantifier polarity.
 
 No-go: new TG names, new report documents, new pool/cache formats, training logic changes,
 `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.

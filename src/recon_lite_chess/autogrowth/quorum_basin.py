@@ -2257,7 +2257,9 @@ def run_krk_policy(
     invocations["enter_mate2_skill"] = {
         "confirmed": bool(enter_mate2["confirmed"]),
         "bound_move": enter_mate2["bound_move"],
-        "winning_reply": enter_mate2["winning_reply"],
+        "failed_reply": enter_mate2["failed_reply"],
+        "all_reply_count": int(enter_mate2["all_reply_count"]),
+        "confirmed_reply_count": int(enter_mate2["confirmed_reply_count"]),
         "virtual_frame_count": enter_frames,
         "bound_move_rank": enter_rank,
         "successor_check_count": int(enter_mate2["successor_check_count"]),
@@ -2788,7 +2790,9 @@ def run_enter_mate2_skill(
             "root_state": "FAILED",
             "skill_state": "FAILED",
             "bound_move": None,
-            "winning_reply": None,
+            "failed_reply": None,
+            "all_reply_count": 0,
+            "confirmed_reply_count": 0,
             "candidate_count": 0,
             "requested_candidate_count": 0,
             "successor_check_count": 0,
@@ -2817,7 +2821,9 @@ def run_enter_mate2_skill(
             "root_state": "FAILED",
             "skill_state": "FAILED",
             "bound_move": None,
-            "winning_reply": None,
+            "failed_reply": None,
+            "all_reply_count": 0,
+            "confirmed_reply_count": 0,
             "candidate_count": 0,
             "requested_candidate_count": 0,
             "successor_check_count": 0,
@@ -2879,7 +2885,9 @@ def run_enter_mate2_skill(
                     "root_state": "CONFIRMED",
                     "skill_state": "CONFIRMED",
                     "bound_move": move.uci(),
-                    "winning_reply": None,
+                    "failed_reply": None,
+                    "all_reply_count": 0,
+                    "confirmed_reply_count": 0,
                     "candidate_count": len(legal_moves),
                     "requested_candidate_count": rank,
                     "successor_check_count": successor_checks,
@@ -2888,60 +2896,111 @@ def run_enter_mate2_skill(
                     "bound_move_rank": rank,
                     "trace": [{"tick": 0, "messages": messages}],
                 }
+            if record_trace:
+                _policy_trace_message(
+                    messages,
+                    f"{ENTER_MATE_TWO_SKILL_ID}:{move.uci()}",
+                    ENTER_MATE_TWO_SKILL_ID,
+                    "SUR",
+                    "fail",
+                    reason="zero_reply_stalemate",
+                )
             continue
 
-        candidate_confirmed = False
+        candidate_failed_reply: str | None = None
+        confirmed_replies = 0
+        replies = tuple(sorted(after_white.legal_moves, key=lambda item: item.uci()))
         for reply in sorted(after_white.legal_moves, key=lambda item: item.uci()):
             successor = _after_move(after_white, reply)
-            if _white_rook_square(successor) is None or successor.is_stalemate():
-                continue
-            audit = _edge_mate_exact_mate2_audit(
-                successor,
-                scorer=active_scorer,
-                cache=active_cache,
-            )
             successor_checks += 1
-            frames += int(audit["frames"])
-            if audit["confirmed"]:
-                candidate_confirmed = True
+            if _white_rook_square(successor) is None:
+                candidate_failed_reply = reply.uci()
                 if record_trace:
                     _policy_trace_message(
                         messages,
                         f"{ENTER_MATE_TWO_SKILL_ID}:{move.uci()}",
                         ENTER_MATE_TWO_SKILL_ID,
                         "SUR",
-                        "confirm",
+                        "fail",
                         reply=reply.uci(),
-                        successor_bound_move=audit["bound_move"],
+                        reason="reply_captures_rook",
                     )
+                break
+            if successor.is_stalemate():
+                candidate_failed_reply = reply.uci()
+                if record_trace:
                     _policy_trace_message(
                         messages,
+                        f"{ENTER_MATE_TWO_SKILL_ID}:{move.uci()}",
                         ENTER_MATE_TWO_SKILL_ID,
-                        ENTER_MATE_TWO_SKILL_ROOT_ID,
                         "SUR",
-                        "confirm",
+                        "fail",
+                        reply=reply.uci(),
+                        reason="reply_forces_stalemate",
                     )
-                return {
-                    "confirmed": True,
-                    "root_state": "CONFIRMED",
-                    "skill_state": "CONFIRMED",
-                    "bound_move": move.uci(),
-                    "winning_reply": reply.uci(),
-                    "candidate_count": len(legal_moves),
-                    "requested_candidate_count": rank,
-                    "successor_check_count": successor_checks,
-                    "virtual_frame_count": frames,
-                    "expanded_virtual_frame_count": frames,
-                    "bound_move_rank": rank,
-                    "trace": [{"tick": 0, "messages": messages}],
-                }
-        if record_trace and not candidate_confirmed:
+                break
+            audit = _edge_mate_exact_mate2_audit(
+                successor,
+                scorer=active_scorer,
+                cache=active_cache,
+            )
+            frames += int(audit["frames"])
+            if not audit["confirmed"]:
+                candidate_failed_reply = reply.uci()
+                if record_trace:
+                    _policy_trace_message(
+                        messages,
+                        f"{ENTER_MATE_TWO_SKILL_ID}:{move.uci()}",
+                        ENTER_MATE_TWO_SKILL_ID,
+                        "SUR",
+                        "fail",
+                        reply=reply.uci(),
+                        reason="successor_not_exact_mate2",
+                    )
+                break
+            confirmed_replies += 1
+        if candidate_failed_reply is None:
+            if record_trace:
+                _policy_trace_message(
+                    messages,
+                    f"{ENTER_MATE_TWO_SKILL_ID}:{move.uci()}",
+                    ENTER_MATE_TWO_SKILL_ID,
+                    "SUR",
+                    "confirm",
+                    all_reply_count=len(replies),
+                )
+                _policy_trace_message(
+                    messages,
+                    ENTER_MATE_TWO_SKILL_ID,
+                    ENTER_MATE_TWO_SKILL_ROOT_ID,
+                    "SUR",
+                    "confirm",
+                )
+            return {
+                "confirmed": True,
+                "root_state": "CONFIRMED",
+                "skill_state": "CONFIRMED",
+                "bound_move": move.uci(),
+                "failed_reply": None,
+                "all_reply_count": len(replies),
+                "confirmed_reply_count": confirmed_replies,
+                "candidate_count": len(legal_moves),
+                "requested_candidate_count": rank,
+                "successor_check_count": successor_checks,
+                "virtual_frame_count": frames,
+                "expanded_virtual_frame_count": frames,
+                "bound_move_rank": rank,
+                "trace": [{"tick": 0, "messages": messages}],
+            }
+        if record_trace:
             _policy_trace_message(
                 messages,
                 f"{ENTER_MATE_TWO_SKILL_ID}:{move.uci()}",
                 ENTER_MATE_TWO_SKILL_ID,
                 "SUR",
                 "fail",
+                failed_reply=candidate_failed_reply,
+                confirmed_reply_count=confirmed_replies,
             )
 
     if record_trace:
@@ -2957,7 +3016,9 @@ def run_enter_mate2_skill(
         "root_state": "FAILED",
         "skill_state": "FAILED",
         "bound_move": None,
-        "winning_reply": None,
+        "failed_reply": None,
+        "all_reply_count": 0,
+        "confirmed_reply_count": 0,
         "candidate_count": len(legal_moves),
         "requested_candidate_count": len(legal_moves),
         "successor_check_count": successor_checks,
@@ -2988,7 +3049,9 @@ def _edge_mate_enter_mate2_audit(
     compact = {
         "confirmed": bool(audit["confirmed"]),
         "bound_move": audit["bound_move"],
-        "winning_reply": audit["winning_reply"],
+        "failed_reply": audit["failed_reply"],
+        "all_reply_count": int(audit["all_reply_count"]),
+        "confirmed_reply_count": int(audit["confirmed_reply_count"]),
         "frames": int(audit["virtual_frame_count"]),
         "requested_candidate_count": int(audit["requested_candidate_count"]),
         "successor_check_count": int(audit["successor_check_count"]),

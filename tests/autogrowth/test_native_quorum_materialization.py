@@ -676,19 +676,37 @@ def test_phase27b_mate_in_two_cash_in_orders_immediate_mates_first() -> None:
     assert audit["bound_move_rank"] == 1
 
 
-def test_phase28b_enter_mate2_dispatcher_branch_executes_distance1_closure() -> None:
-    board = chess.Board("8/k7/8/1K6/8/8/1R6/8 w - - 0 1")
+def test_phase28b_enter_mate2_uses_universal_reply_polarity() -> None:
+    helpful_only = chess.Board("8/k7/8/1K6/8/8/1R6/8 w - - 0 1")
     scorer = load_canonical_mate2_first_scorer()
 
+    after_candidate = helpful_only.copy(stack=False)
+    after_candidate.push(chess.Move.from_uci("b5c6"))
+    reply_labels = {}
+    for reply in sorted(after_candidate.legal_moves, key=lambda item: item.uci()):
+        successor = after_candidate.copy(stack=False)
+        successor.push(reply)
+        reply_labels[reply.uci()] = bool(_forced_mate_in_two_first_moves(successor))
+
+    assert reply_labels == {"a7a6": False, "a7a8": True}
+    assert not run_enter_mate2_skill(
+        helpful_only,
+        scorer=scorer,
+        record_trace=False,
+    )["confirmed"]
+
+    board = chess.Board("8/8/8/8/8/1R2K3/8/k7 w - - 0 1")
     enter = run_enter_mate2_skill(board, scorer=scorer, record_trace=True)
     enter_messages = _trace_messages(enter["trace"])
 
     assert not _mate_moves(board)
     assert not _forced_mate_in_two_first_moves(board)
     assert enter["confirmed"]
-    assert enter["bound_move"] == "b5c6"
-    assert (ENTER_MATE_TWO_SKILL_ID, "enter_mate_in_2_skill:b5c6", "SUB", "request") in enter_messages
-    assert ("enter_mate_in_2_skill:b5c6", ENTER_MATE_TWO_SKILL_ID, "SUR", "confirm") in enter_messages
+    assert enter["bound_move"] == "e3d3"
+    assert enter["all_reply_count"] == 1
+    assert enter["confirmed_reply_count"] == 1
+    assert (ENTER_MATE_TWO_SKILL_ID, "enter_mate_in_2_skill:e3d3", "SUB", "request") in enter_messages
+    assert ("enter_mate_in_2_skill:e3d3", ENTER_MATE_TWO_SKILL_ID, "SUR", "confirm") in enter_messages
 
     gate = dict(load_chain_confidence_gate())
     gate["threshold"] = 2.0
@@ -701,7 +719,7 @@ def test_phase28b_enter_mate2_dispatcher_branch_executes_distance1_closure() -> 
     policy_messages = _trace_messages(policy["trace"])
 
     assert policy["branch"] == "enter_mate2"
-    assert policy["bound_move"] == "b5c6"
+    assert policy["bound_move"] == "e3d3"
     assert not policy["mate2_gate_fired"]
     assert (KRK_POLICY_ROOT_ID, ENTER_MATE_TWO_SKILL_ID, "SUB", "request") in policy_messages
     assert (ENTER_MATE_TWO_SKILL_ID, KRK_POLICY_ROOT_ID, "SUR", "confirm") in policy_messages

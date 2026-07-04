@@ -1,0 +1,249 @@
+{
+  "baseline_eval": {
+    "fallback_scorer_alone": {
+      "distance1_entry_count": 56,
+      "distance1_entry_rate": 0.875,
+      "endpoint_counts": {
+        "distance1_manifold_entered": 56,
+        "horizon": 8
+      },
+      "enter_mate2_frames_max": 30,
+      "enter_mate2_frames_mean": 5.28125,
+      "row_count": 64,
+      "sample_failures": [
+        {
+          "endpoint": "horizon",
+          "fen": "8/8/8/2K5/1R6/8/k7/8 w - - 36 19",
+          "white_moves": [
+            "c5c4",
+            "c4b5"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "8/8/8/2K5/1R6/8/k7/8 w - - 64 33",
+          "white_moves": [
+            "c5c4",
+            "c4b5"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "8/8/8/8/8/4K3/7R/1k6 w - - 6 4",
+          "white_moves": [
+            "e3d3",
+            "h2d2"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "8/8/8/8/8/3K4/4R3/6k1 w - - 10 6",
+          "white_moves": [
+            "d3e3",
+            "e3d2"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "8/8/8/8/8/4K3/3R4/1k6 w - - 4 3",
+          "white_moves": [
+            "e3d3",
+            "d3e2"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "8/8/8/8/8/3K4/2R5/6k1 w - - 2 2",
+          "white_moves": [
+            "d3e3",
+            "c2e2"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "8/k7/8/1R6/2K5/8/8/8 w - - 24 13",
+          "white_moves": [
+            "c4c5",
+            "c5b4"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "8/8/8/8/8/3K4/4R3/6k1 w - - 4 3",
+          "white_moves": [
+            "d3e3",
+            "e3d2"
+          ]
+        }
+      ]
+    },
+    "integrated_dispatcher": {
+      "distance1_entry_count": 56,
+      "distance1_entry_rate": 0.875,
+      "endpoint_counts": {
+        "distance1_manifold_entered": 56,
+        "horizon": 8
+      },
+      "enter_mate2_frames_max": 30,
+      "enter_mate2_frames_mean": 5.34375,
+      "row_count": 64,
+      "sample_failures": [
+        {
+          "endpoint": "horizon",
+          "fen": "8/8/8/2K5/1R6/8/k7/8 w - - 64 33",
+          "white_moves": [
+            "c5c4",
+            "c4b5"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "8/8/8/8/8/4K3/7R/1k6 w - - 6 4",
+          "white_moves": [
+            "e3d3",
+            "h2d2"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "8/8/8/8/8/3K4/4R3/6k1 w - - 10 6",
+          "white_moves": [
+            "d3e3",
+            "e3d2"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "8/8/8/8/8/3K4/2R5/6k1 w - - 2 2",
+          "white_moves": [
+            "d3e3",
+            "c2e2"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "1k6/7R/8/4K3/8/8/8/8 w - - 2 2",
+          "white_moves": [
+            "e5d6",
+            "h7d7"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "1k6/7R/4K3/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "e6d6",
+            "h7d7"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "6k1/4R3/3K4/8/8/8/8/8 w - - 0 1",
+          "white_moves": [
+            "d6e6",
+            "e6d7"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "8/8/8/8/8/3K4/4R3/6k1 w - - 4 3",
+          "white_moves": [
+            "d3e3",
+            "e3d2"
+          ]
+        }
+      ]
+    },
+    "random_legal": {
+      "distance1_entry_count": 10,
+      "distance1_entry_rate": 0.15625,
+      "endpoint_counts": {
+        "distance1_manifold_entered": 10,
+        "fence_broken": 39,
+        "horizon": 11,
+        "rook_lost": 4
+      },
+      "enter_mate2_frames_max": 28,
+      "enter_mate2_frames_mean": 2.875,
+      "row_count": 64,
+      "sample_failures": [
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/8/8/3K4/3R4/1k6 w - - 2 2",
+          "white_moves": [
+            "d3c4"
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/5K2/6R1/8/7k/8 w - - 4 3",
+          "white_moves": [
+            "f5f6",
+            "g4a4"
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "1k1K4/7R/8/8/8/8/8/8 w - - 20 11",
+          "white_moves": [
+            "h7h8"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "8/8/8/6RK/8/8/7k/8 w - - 22 12",
+          "white_moves": [
+            "g5g3",
+            "g3g6"
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/2K5/1R6/8/k7/8 w - - 36 19",
+          "white_moves": [
+            "c5d6"
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "8/k7/8/1RK5/8/8/8/8 w - - 4 3",
+          "white_moves": [
+            "b5b8",
+            "c5d6"
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/8/8/8/R7/3K2k1 w - - 6 4",
+          "white_moves": [
+            "a2e2",
+            "e2e4"
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "1k2K3/7R/8/8/8/8/8/8 w - - 56 29",
+          "white_moves": [
+            "h7h1"
+          ]
+        }
+      ]
+    }
+  },
+  "certified_count": 105,
+  "enter_mate2_cache_state_count": 3117,
+  "exact_label_frames_max": 94,
+  "exact_label_frames_mean": 22.19047619047619,
+  "exact_label_frames_total": 2330,
+  "heldout_count": 64,
+  "label_source": "corrected_enter_mate2_universal_manifold",
+  "mate2_cache_state_count": 6515,
+  "pool_paths": {
+    "distance2_heldout": "reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1/pools/edge_mate_distance2_universal_heldout.jsonl.gz",
+    "distance2_train": "reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1/pools/edge_mate_distance2_universal_train.jsonl.gz"
+  },
+  "schema_version": "phase2_edge_mate_distance2_universal_baselines.v0",
+  "source_distance2_count": 107,
+  "source_path": "reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1/pools/edge_mate_distance2_to5_selfplay.jsonl.gz",
+  "train_count": 41
+}
