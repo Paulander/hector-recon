@@ -747,7 +747,7 @@ def test_phase28d_chase_to_mate_skill_branches_with_trace() -> None:
             CHASE_KING_APPROACH_STEP_ID,
         ),
         (
-            chess.Board("8/8/8/8/1R6/1K6/8/k7 w - - 0 1"),
+            chess.Board("8/8/8/8/1R6/8/2K5/k7 w - - 0 1"),
             "rook_waiting_tempo",
             CHASE_ROOK_TEMPO_STEP_ID,
         ),
@@ -774,6 +774,41 @@ def test_phase28d_chase_to_mate_skill_branches_with_trace() -> None:
         assert (CHASE_TO_MATE_SKILL_ID, step_id, "SUB", "request") in traced
         assert (step_id, CHASE_TO_MATE_SKILL_ID, "SUR", "confirm") in traced
         assert (CHASE_TO_MATE_SKILL_ID, CHASE_TO_MATE_SKILL_ROOT_ID, "SUR", "confirm") in traced
+
+
+def test_phase28f_chase_rejects_rook_loss_moves_and_binds_safe_alternatives() -> None:
+    gate = dict(load_chain_confidence_gate())
+    gate["threshold"] = 2.0
+    scorer = load_canonical_mate2_first_scorer()
+    cases = [
+        ("6k1/4KR2/8/8/8/8/8/8 w - - 0 1", "f7h7", "e7f6"),
+        ("2k5/4R3/1K6/8/8/8/8/8 w - - 20 11", "e7d7", "e7f7"),
+        ("2k5/R7/3K4/8/8/8/8/8 w - - 4 3", "a7b7", "a7c7"),
+        ("8/8/8/8/8/8/1K3R2/3k4 w - - 0 1", "f2e2", "f2g2"),
+    ]
+
+    for fen, rejected_move, bound_alternative in cases:
+        board = chess.Board(fen)
+        audit = run_chase_to_mate_skill(
+            board,
+            gate=gate,
+            scorer=scorer,
+            record_trace=True,
+        )
+        rejected = {row["move"] for row in audit["rejected_moves"]}
+        move = chess.Move.from_uci(audit["bound_move"])
+        after = board.copy(stack=False)
+        after.push(move)
+        features = extract_learner_features(after)
+
+        assert rejected_move in rejected
+        assert audit["confirmed"]
+        assert audit["bound_move"] == bound_alternative
+        assert (
+            features["rook_attacked_by_black"] == 0.0
+            or features["white_king_to_rook_distance"] <= 1.0
+        )
+        assert fence_established_geometry(after)
 
 
 def _repetition_key(board: chess.Board) -> str:

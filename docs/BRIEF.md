@@ -35,5 +35,6 @@ chase-bound move, so they are skill bugs, not follow-on fallback behavior. Strat
 true-middle, one mate1-now. Example FENs: `6k1/4KR2/8/8/8/8/8/8 w - - 0 1` and
 `8/8/8/8/8/8/1K3R2/3k4 w - - 0 1`.
 
-Decision: Phase 2.8e stops before integration; repair chase reply-safety/tempo, then rerun true-middle eval before any 200-game integration or Phase 2 closure claim.
+Decision: Phase 2.8f repaired chase post-bind safety/fence-line verification; clean true-middle
+horizon 6/10/16 = 30/36/38, rook/confinement residuals 0, but 0.38 < 0.60 so no integration; next: chase failure review.
 No-go: new TG names, new report documents, training logic changes, `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.
