@@ -16,7 +16,7 @@ import chess
 from recon_lite import FormalReConEngine, Graph, LinkType, Node, NodeState, NodeType
 
 from .features import extract_learner_features
-from .terminal_substrate import terminal_action_feature_keys
+from .terminal_substrate import TerminalAffordanceLearner, terminal_action_feature_keys
 
 
 ROOT_ID = "phase2_basin_root"
@@ -2539,3 +2539,843 @@ def run_chain_confidence_training(
     }
     _write_json(base / "chain_confidence_summary.json", summary)
     return summary
+
+
+PHASE28_EDGE_MATE_OUTPUT_DIR = Path(
+    "reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1"
+)
+EDGE_MATE_POOL_SCHEMA = "phase2_edge_mate_pool_row.v0"
+EDGE_MATE_RESULT_SCHEMA = "phase2_edge_mate_distance1_training.v0"
+
+
+@dataclass(frozen=True)
+class EdgeMateDistanceTrainingConfig:
+    seed: int = 20270201
+    output_dir: str = str(PHASE28_EDGE_MATE_OUTPUT_DIR)
+    distance1_train_count: int = 300
+    distance1_heldout_count: int = 96
+    distance2_to5_count: int = 300
+    train_seeds: tuple[int, ...] = (20270211, 20270212, 20270213)
+    max_generation_attempts: int = 1_500_000
+    max_selfplay_games: int = 800
+    max_game_plies: int = 110
+    max_white_moves_per_episode: int = 2
+    eta_m3: float = 0.10
+    rich_feature_credit_scale: float = 0.25
+    gamma: float = 0.90
+    epsilon: float = 0.15
+    promotion_abs_weight_threshold: float = 0.05
+    promotion_min_credit_events: int = 3
+
+
+def _edge_mate_edge_distance(square: int | None) -> int:
+    if square is None:
+        return 8
+    return min(
+        chess.square_file(square),
+        7 - chess.square_file(square),
+        chess.square_rank(square),
+        7 - chess.square_rank(square),
+    )
+
+
+def _edge_mate_board_from_random_fence_start(rng: random.Random) -> chess.Board | None:
+    from .foundation_curriculum import _random_krk_board, _valid_foundation_board
+
+    board = _random_krk_board(rng)
+    if not _valid_foundation_board(board):
+        return None
+    if _edge_mate_edge_distance(board.king(chess.BLACK)) != 0:
+        return None
+    if not fence_established_geometry(board):
+        return None
+    return board
+
+
+def _edge_mate_fixed_seed_black_reply(board: chess.Board, rng: random.Random) -> chess.Move | None:
+    if board.turn != chess.BLACK or board.is_game_over(claim_draw=False):
+        return None
+    replies = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+    if not replies:
+        return None
+    return replies[rng.randrange(len(replies))]
+
+
+def _edge_mate_terminal_keys(board: chess.Board, move: chess.Move) -> list[str]:
+    return [key for key, _scale in terminal_action_feature_keys(board, move)]
+
+
+def _edge_mate_exact_mate2_audit(
+    board: chess.Board,
+    *,
+    scorer: FrozenMate2FirstScorer,
+    cache: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    fen = board.fen()
+    cached = cache.get(fen)
+    if cached is not None:
+        return cached
+    if board.turn != chess.WHITE or board.is_game_over(claim_draw=False):
+        audit = {
+            "confirmed": False,
+            "bound_move": None,
+            "frames": 0,
+            "requested_candidate_count": 0,
+        }
+    else:
+        from .foundation_curriculum import _forced_mate_in_two_first_moves
+
+        forced = _forced_mate_in_two_first_moves(board)
+        if not forced:
+            audit = {
+                "confirmed": False,
+                "bound_move": None,
+                "frames": 0,
+                "requested_candidate_count": 0,
+            }
+        else:
+            exact = _run_ordered_exact_mate_in_two(
+                board,
+                move_orderer=scorer.order_moves,
+            )
+            audit = {
+                "confirmed": bool(exact["confirmed"]),
+                "bound_move": exact["bound_move"],
+                "frames": int(exact["frames"]),
+                "requested_candidate_count": int(exact["requested_candidates"]),
+            }
+    cache[fen] = audit
+    return audit
+
+
+def _edge_mate_distance1_row(
+    board: chess.Board,
+    *,
+    row_id: int,
+    split: str,
+    seed: int,
+    scorer: FrozenMate2FirstScorer,
+    mate2_cache: dict[str, dict[str, Any]],
+    candidate_moves: Sequence[chess.Move] | None = None,
+) -> dict[str, Any] | None:
+    current = _edge_mate_exact_mate2_audit(board, scorer=scorer, cache=mate2_cache)
+    if current["confirmed"]:
+        return None
+
+    move_rows: list[dict[str, Any]] = []
+    total_frames = int(current["frames"])
+    legal_moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+    moves = tuple(candidate_moves) if candidate_moves is not None else scorer.order_moves(board, legal_moves)[:12]
+    legal_uci = {move.uci() for move in legal_moves}
+    for move in moves:
+        if move.uci() not in legal_uci:
+            continue
+        after_white = board.copy(stack=False)
+        after_white.push(move)
+        if _white_rook_square(after_white) is None or after_white.is_stalemate():
+            continue
+        replies = tuple(sorted(after_white.legal_moves, key=lambda item: item.uci()))
+        if not replies:
+            continue
+        success_replies: list[str] = []
+        reply_frames = 0
+        for reply in replies:
+            successor = after_white.copy(stack=False)
+            successor.push(reply)
+            if _white_rook_square(successor) is None or successor.is_stalemate():
+                continue
+            audit = _edge_mate_exact_mate2_audit(
+                successor,
+                scorer=scorer,
+                cache=mate2_cache,
+            )
+            reply_frames += int(audit["frames"])
+            if audit["confirmed"]:
+                success_replies.append(reply.uci())
+        total_frames += reply_frames
+        if success_replies:
+            move_rows.append({
+                "move": move.uci(),
+                "success_reply_count": len(success_replies),
+                "reply_count": len(replies),
+                "success_replies": success_replies,
+                "label_frames": reply_frames,
+            })
+
+    if not move_rows:
+        return None
+    move_rows.sort(
+        key=lambda row: (
+            row["success_reply_count"] / max(1, row["reply_count"]),
+            row["success_reply_count"],
+            row["move"],
+        ),
+        reverse=True,
+    )
+    return {
+        "schema_version": EDGE_MATE_POOL_SCHEMA,
+        "row_id": int(row_id),
+        "split": split,
+        "seed": int(seed),
+        "family": "edge_mate_distance_1",
+        "fen": board.fen(),
+        "distance_to_exact_mate2_manifold": 1,
+        "fence_established": True,
+        "black_king_edge_confined": True,
+        "positive_moves": [row["move"] for row in move_rows],
+        "best_positive_move": move_rows[0]["move"],
+        "positive_move_rows": move_rows,
+        "exact_label_frames": total_frames,
+        "label_source": "one_white_move_then_legal_black_reply_successor_exact_mate_in_2_skill",
+        "learner_visible_labels": False,
+    }
+
+
+def _edge_mate_generate_distance1_rows(
+    *,
+    count: int,
+    split: str,
+    seed: int,
+    scorer: FrozenMate2FirstScorer,
+    mate2_cache: dict[str, dict[str, Any]],
+    excluded: set[str],
+    max_attempts: int,
+) -> list[dict[str, Any]]:
+    rng = random.Random(seed)
+    rows: list[dict[str, Any]] = []
+    attempts = 0
+    while len(rows) < count and attempts < max_attempts:
+        attempts += 1
+        board = _edge_mate_board_from_random_fence_start(rng)
+        if board is None:
+            continue
+        fen = board.fen()
+        if fen in excluded:
+            continue
+        row = _edge_mate_distance1_row(
+            board,
+            row_id=len(rows),
+            split=split,
+            seed=seed,
+            scorer=scorer,
+            mate2_cache=mate2_cache,
+        )
+        if row is None:
+            continue
+        excluded.add(fen)
+        rows.append(row)
+    if len(rows) < count:
+        raise RuntimeError(f"generated {len(rows)} {split} distance-1 rows, needed {count}")
+    return rows
+
+
+def _edge_mate_generate_distance2_to5_rows(
+    *,
+    count: int,
+    seed: int,
+    scorer: FrozenMate2FirstScorer,
+    gate: Mapping[str, Any],
+    config: EdgeMateDistanceTrainingConfig,
+    excluded: set[str],
+) -> list[dict[str, Any]]:
+    rng = random.Random(seed)
+    rows: list[dict[str, Any]] = []
+    game_index = 0
+    mate2_cache: dict[str, dict[str, Any]] = {}
+    while len(rows) < count and game_index < config.max_selfplay_games:
+        start = None
+        while start is None:
+            start = _edge_mate_board_from_random_fence_start(rng)
+        board = start
+        repetitions = {_position_repetition_key(board): 1}
+        pending: list[dict[str, Any]] = []
+        white_index = 0
+        plies = 0
+        while plies < config.max_game_plies and not board.is_game_over(claim_draw=False):
+            if board.turn != chess.WHITE:
+                break
+            fence_now = fence_established_geometry(board)
+            policy = _edge_mate_fast_dispatch(
+                board,
+                scorer=scorer,
+                gate=gate,
+                mate2_cache=mate2_cache,
+                repetitions=repetitions,
+            )
+            if fence_now and not policy["mate2_gate_fired"]:
+                pending.append({
+                    "fen": board.fen(),
+                    "white_index": white_index,
+                    "branch": policy["branch"],
+                })
+            if policy["branch"] == "mate_in_2":
+                for item in pending:
+                    distance = white_index - int(item["white_index"])
+                    if 2 <= distance <= 5 and item["fen"] not in excluded:
+                        excluded.add(item["fen"])
+                        rows.append({
+                            "schema_version": EDGE_MATE_POOL_SCHEMA,
+                            "row_id": len(rows),
+                            "split": "distance_2_to_5",
+                            "seed": int(seed),
+                            "family": "edge_mate_distance_2_to_5_selfplay",
+                            "fen": item["fen"],
+                            "distance_to_exact_mate2_manifold": distance,
+                            "plies_until_gate_fire": distance * 2,
+                            "source_game_index": game_index,
+                            "source_branch_at_state": item["branch"],
+                            "fence_established": True,
+                            "black_king_edge_confined": True,
+                            "label_source": "phase2_7b_selfplay_first_mate2_gate_fire",
+                            "learner_visible_labels": False,
+                        })
+                        if len(rows) >= count:
+                            break
+                break
+            move = chess.Move.from_uci(policy["bound_move"]) if policy["bound_move"] else None
+            if move is None or move not in board.legal_moves:
+                break
+            board.push(move)
+            plies += 1
+            key = _position_repetition_key(board)
+            repetitions[key] = repetitions.get(key, 0) + 1
+            if board.is_game_over(claim_draw=False) or repetitions[key] >= 3:
+                break
+            reply = _edge_mate_fixed_seed_black_reply(board, rng)
+            if reply is None:
+                break
+            board.push(reply)
+            plies += 1
+            key = _position_repetition_key(board)
+            repetitions[key] = repetitions.get(key, 0) + 1
+            if _white_rook_square(board) is None or repetitions[key] >= 3:
+                break
+            white_index += 1
+        game_index += 1
+    if len(rows) < count:
+        raise RuntimeError(f"generated {len(rows)} distance-2-to-5 rows, needed {count}")
+    return rows
+
+
+def _edge_mate_fast_dispatch(
+    board: chess.Board,
+    *,
+    scorer: FrozenMate2FirstScorer,
+    gate: Mapping[str, Any],
+    mate2_cache: dict[str, dict[str, Any]],
+    repetitions: Mapping[str, int],
+) -> dict[str, Any]:
+    from .foundation_curriculum import _mate_moves
+
+    mates = _mate_moves(board)
+    if mates:
+        return {
+            "branch": "mate_in_1",
+            "bound_move": mates[0].uci(),
+            "mate2_gate_fired": False,
+        }
+    gate_audit = score_chain_confidence_gate(board, gate)
+    if gate_audit["fired"]:
+        exact = _edge_mate_exact_mate2_audit(board, scorer=scorer, cache=mate2_cache)
+        if exact["confirmed"] and exact["bound_move"] is not None:
+            return {
+                "branch": "mate_in_2",
+                "bound_move": exact["bound_move"],
+                "mate2_gate_fired": True,
+            }
+    if not fence_established_geometry(board):
+        fence_move = resolve_establish_fence_move(board)
+        if fence_move is not None:
+            return {
+                "branch": "establish_fence",
+                "bound_move": fence_move.uci(),
+                "mate2_gate_fired": bool(gate_audit["fired"]),
+            }
+    legal_moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+    ordered = scorer.order_moves(board, legal_moves)
+    allowed = tuple(
+        move for move in ordered
+        if int(repetitions.get(_after_move_repetition_key(board, move), 0)) < 2
+    )
+    if allowed:
+        ordered = allowed
+    return {
+        "branch": "fallback",
+        "bound_move": None if not ordered else ordered[0].uci(),
+        "mate2_gate_fired": bool(gate_audit["fired"]),
+    }
+
+
+def generate_edge_mate_curriculum_pools(
+    *,
+    config: EdgeMateDistanceTrainingConfig = EdgeMateDistanceTrainingConfig(),
+) -> dict[str, Any]:
+    scorer = load_canonical_mate2_first_scorer()
+    gate = load_chain_confidence_gate()
+    mate2_cache: dict[str, dict[str, Any]] = {}
+    excluded: set[str] = set()
+    train = _edge_mate_generate_distance1_rows(
+        count=config.distance1_train_count,
+        split="train",
+        seed=config.seed,
+        scorer=scorer,
+        mate2_cache=mate2_cache,
+        excluded=excluded,
+        max_attempts=config.max_generation_attempts,
+    )
+    heldout = _edge_mate_generate_distance1_rows(
+        count=config.distance1_heldout_count,
+        split="heldout",
+        seed=config.seed + 1,
+        scorer=scorer,
+        mate2_cache=mate2_cache,
+        excluded=excluded,
+        max_attempts=config.max_generation_attempts,
+    )
+    deeper = _edge_mate_generate_distance2_to5_rows(
+        count=config.distance2_to5_count,
+        seed=config.seed + 2,
+        scorer=scorer,
+        gate=gate,
+        config=config,
+        excluded=excluded,
+    )
+    base = Path(config.output_dir)
+    paths = {
+        "distance1_train": base / "pools" / "edge_mate_distance1_train.jsonl.gz",
+        "distance1_heldout": base / "pools" / "edge_mate_distance1_heldout.jsonl.gz",
+        "distance2_to5": base / "pools" / "edge_mate_distance2_to5_selfplay.jsonl.gz",
+    }
+    _write_jsonl_gzip(paths["distance1_train"], train)
+    _write_jsonl_gzip(paths["distance1_heldout"], heldout)
+    _write_jsonl_gzip(paths["distance2_to5"], deeper)
+    label_frames = [int(row["exact_label_frames"]) for row in train + heldout]
+    summary = {
+        "schema_version": "phase2_edge_mate_curriculum_summary.v0",
+        "seed": int(config.seed),
+        "distance1_train_count": len(train),
+        "distance1_heldout_count": len(heldout),
+        "distance2_to5_count": len(deeper),
+        "pool_paths": {key: str(path) for key, path in paths.items()},
+        "exact_label_frames_total": sum(label_frames),
+        "exact_label_frames_mean": 0.0 if not label_frames else sum(label_frames) / len(label_frames),
+        "exact_label_frames_max": max(label_frames) if label_frames else 0,
+        "mate2_cache_state_count": len(mate2_cache),
+        "distance2_to5_distribution": {
+            str(distance): sum(
+                int(row["distance_to_exact_mate2_manifold"]) == distance
+                for row in deeper
+            )
+            for distance in range(2, 6)
+        },
+        "black_policy": "fixed_seed_uniform_legal",
+        "graph_native_learned_dispatch_migration": "deferred_after_flat_episode_v1",
+    }
+    _write_json(base / "edge_mate_curriculum_summary.json", summary)
+    return {"summary": summary, "train": train, "heldout": heldout, "deeper": deeper}
+
+
+def _edge_mate_episode_rollout(
+    row: Mapping[str, Any],
+    *,
+    chooser: Callable[[chess.Board, int, random.Random], chess.Move | None],
+    scorer: FrozenMate2FirstScorer,
+    rng: random.Random,
+    max_white_moves: int,
+    mate2_cache: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    board = chess.Board(str(row["fen"]))
+    terminal_activations: list[list[str]] = []
+    white_moves: list[str] = []
+    black_replies: list[str] = []
+    frames = 0
+    endpoint = "horizon"
+    for white_ply in range(max_white_moves):
+        audit = _edge_mate_exact_mate2_audit(board, scorer=scorer, cache=mate2_cache)
+        frames += int(audit["frames"])
+        if audit["confirmed"]:
+            endpoint = "mate2_manifold_entered"
+            break
+        if board.turn != chess.WHITE or board.is_game_over(claim_draw=False):
+            endpoint = "terminal"
+            break
+        move = chooser(board, white_ply, rng)
+        if move is None or move not in board.legal_moves:
+            endpoint = "illegal"
+            break
+        terminal_activations.append(_edge_mate_terminal_keys(board, move))
+        white_moves.append(move.uci())
+        board.push(move)
+        if _white_rook_square(board) is None:
+            endpoint = "rook_lost"
+            break
+        if board.is_stalemate():
+            endpoint = "stalemate"
+            break
+        if board.is_checkmate():
+            endpoint = "mate_delivered"
+            break
+        if board.turn != chess.BLACK:
+            endpoint = "terminal"
+            break
+        reply = _edge_mate_fixed_seed_black_reply(board, rng)
+        if reply is None:
+            endpoint = "mate_delivered" if board.is_check() else "stalemate"
+            break
+        board.push(reply)
+        black_replies.append(reply.uci())
+        if _white_rook_square(board) is None:
+            endpoint = "rook_lost"
+            break
+        if board.is_stalemate():
+            endpoint = "stalemate"
+            break
+        audit = _edge_mate_exact_mate2_audit(board, scorer=scorer, cache=mate2_cache)
+        frames += int(audit["frames"])
+        if audit["confirmed"]:
+            endpoint = "mate2_manifold_entered"
+            break
+        if not fence_established_geometry(board):
+            endpoint = "fence_broken"
+            break
+    success = endpoint in {"mate2_manifold_entered", "mate_delivered"}
+    reward_channels = {
+        "mate2_manifold_entry": 6.0 if endpoint == "mate2_manifold_entered" else 0.0,
+        "mate_delivery": 6.0 if endpoint == "mate_delivered" else 0.0,
+        "terminal_failure": -6.0 if endpoint in {"fence_broken", "rook_lost", "stalemate", "illegal"} else 0.0,
+        "horizon": -1.0 if endpoint == "horizon" else 0.0,
+    }
+    trajectory_reward = round(sum(reward_channels.values()), 6)
+    return {
+        "start_fen": row["fen"],
+        "endpoint_type": endpoint,
+        "episode_success": success,
+        "white_moves": white_moves,
+        "black_replies": black_replies,
+        "terminal_activations_by_white_ply": terminal_activations,
+        "reward_channels": reward_channels,
+        "trajectory_reward": trajectory_reward,
+        "exact_mate2_frames": frames,
+        "learner_visible_labels": False,
+    }
+
+
+def _edge_mate_apply_contrastive_credit(
+    learner: TerminalAffordanceLearner,
+    *,
+    selected: Mapping[str, Any],
+    alternative: Mapping[str, Any],
+    config: EdgeMateDistanceTrainingConfig,
+) -> None:
+    selected_activations = selected["terminal_activations_by_white_ply"]
+    alternative_activations = alternative["terminal_activations_by_white_ply"]
+    total = max(len(selected_activations), len(alternative_activations))
+    reward_delta = float(selected["trajectory_reward"]) - float(alternative["trajectory_reward"])
+    for index in range(total):
+        selected_keys = set(selected_activations[index]) if index < len(selected_activations) else set()
+        alternative_keys = set(alternative_activations[index]) if index < len(alternative_activations) else set()
+        discount = config.gamma ** max(0, total - index - 1)
+        discounted = reward_delta * discount
+        terminal_credit = {
+            key: discounted for key in sorted(selected_keys - alternative_keys)
+        }
+        terminal_credit.update({
+            key: -discounted for key in sorted(alternative_keys - selected_keys)
+        })
+        for key, reward in terminal_credit.items():
+            terminal = learner.get_terminal(key)
+            terminal.update(
+                reward=reward,
+                eta=config.eta_m3,
+                scale=1.0,
+                cycle=learner.cycle,
+            )
+            learner.m3_update_count += 1
+        learner.cycle += 1
+
+
+def _edge_mate_learned_chooser(
+    learner: TerminalAffordanceLearner,
+    *,
+    epsilon: float,
+) -> Callable[[chess.Board, int, random.Random], chess.Move | None]:
+    def choose(board: chess.Board, _white_ply: int, rng: random.Random) -> chess.Move | None:
+        moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+        if not moves:
+            return None
+        if rng.random() < epsilon:
+            return moves[rng.randrange(len(moves))]
+        return learner.choose(board)
+
+    return choose
+
+
+def _edge_mate_best_positive_chooser(
+    row: Mapping[str, Any],
+) -> Callable[[chess.Board, int, random.Random], chess.Move | None]:
+    positive = str(row["best_positive_move"])
+
+    def choose(board: chess.Board, white_ply: int, _rng: random.Random) -> chess.Move | None:
+        if white_ply == 0:
+            move = chess.Move.from_uci(positive)
+            if move in board.legal_moves:
+                return move
+        moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+        return moves[0] if moves else None
+
+    return choose
+
+
+def _edge_mate_bad_or_random_chooser(
+    row: Mapping[str, Any],
+) -> Callable[[chess.Board, int, random.Random], chess.Move | None]:
+    positives = set(row.get("positive_moves", []))
+
+    def choose(board: chess.Board, _white_ply: int, rng: random.Random) -> chess.Move | None:
+        moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+        if not moves:
+            return None
+        negatives = [move for move in moves if move.uci() not in positives]
+        choices = tuple(negatives or moves)
+        return choices[rng.randrange(len(choices))]
+
+    return choose
+
+
+def _edge_mate_fallback_chooser(
+    scorer: FrozenMate2FirstScorer,
+) -> Callable[[chess.Board, int, random.Random], chess.Move | None]:
+    def choose(board: chess.Board, _white_ply: int, _rng: random.Random) -> chess.Move | None:
+        moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+        ordered = scorer.order_moves(board, moves)
+        return ordered[0] if ordered else None
+
+    return choose
+
+
+def _edge_mate_random_chooser(
+    board: chess.Board,
+    _white_ply: int,
+    rng: random.Random,
+) -> chess.Move | None:
+    moves = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+    return None if not moves else moves[rng.randrange(len(moves))]
+
+
+def _edge_mate_train_one_seed(
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    seed: int,
+    scorer: FrozenMate2FirstScorer,
+    config: EdgeMateDistanceTrainingConfig,
+) -> tuple[TerminalAffordanceLearner, dict[str, Any]]:
+    learner = TerminalAffordanceLearner.create(
+        eta_m3=config.eta_m3,
+        rich_feature_credit_scale=config.rich_feature_credit_scale,
+    )
+    mate2_cache: dict[str, dict[str, Any]] = {}
+    traces: list[dict[str, Any]] = []
+    for index, row in enumerate(rows):
+        if index % 2 == 0:
+            selected_chooser = _edge_mate_best_positive_chooser(row)
+            alternative_chooser = _edge_mate_bad_or_random_chooser(row)
+        else:
+            selected_chooser = _edge_mate_learned_chooser(learner, epsilon=config.epsilon)
+            alternative_chooser = _edge_mate_best_positive_chooser(row)
+        selected = _edge_mate_episode_rollout(
+            row,
+            chooser=selected_chooser,
+            scorer=scorer,
+            rng=random.Random(seed + index * 17),
+            max_white_moves=config.max_white_moves_per_episode,
+            mate2_cache=mate2_cache,
+        )
+        alternative = _edge_mate_episode_rollout(
+            row,
+            chooser=alternative_chooser,
+            scorer=scorer,
+            rng=random.Random(seed + 100_000 + index * 17),
+            max_white_moves=config.max_white_moves_per_episode,
+            mate2_cache=mate2_cache,
+        )
+        _edge_mate_apply_contrastive_credit(
+            learner,
+            selected=selected,
+            alternative=alternative,
+            config=config,
+        )
+        traces.append({
+            "row_id": row["row_id"],
+            "selected_endpoint": selected["endpoint_type"],
+            "selected_success": selected["episode_success"],
+            "alternative_endpoint": alternative["endpoint_type"],
+            "alternative_success": alternative["episode_success"],
+            "reward_delta": round(float(selected["trajectory_reward"]) - float(alternative["trajectory_reward"]), 6),
+        })
+    return learner, {
+        "train_trace_count": len(traces),
+        "selected_success_count": sum(int(trace["selected_success"]) for trace in traces),
+        "alternative_success_count": sum(int(trace["alternative_success"]) for trace in traces),
+        "terminal_count": len(learner.terminals),
+        "m3_update_count": learner.m3_update_count,
+        "mate2_cache_state_count": len(mate2_cache),
+    }
+
+
+def _edge_mate_evaluate_rows(
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    chooser: Callable[[chess.Board, int, random.Random], chess.Move | None],
+    scorer: FrozenMate2FirstScorer,
+    seed: int,
+    config: EdgeMateDistanceTrainingConfig,
+) -> dict[str, Any]:
+    mate2_cache: dict[str, dict[str, Any]] = {}
+    traces = [
+        _edge_mate_episode_rollout(
+            row,
+            chooser=chooser,
+            scorer=scorer,
+            rng=random.Random(seed + index * 31),
+            max_white_moves=config.max_white_moves_per_episode,
+            mate2_cache=mate2_cache,
+        )
+        for index, row in enumerate(rows)
+    ]
+    successes = [trace for trace in traces if trace["episode_success"]]
+    endpoint_counts = {
+        endpoint: sum(trace["endpoint_type"] == endpoint for trace in traces)
+        for endpoint in sorted({trace["endpoint_type"] for trace in traces})
+    }
+    frames = [int(trace["exact_mate2_frames"]) for trace in traces]
+    return {
+        "row_count": len(rows),
+        "manifold_entry_count": len(successes),
+        "manifold_entry_rate": 0.0 if not rows else len(successes) / len(rows),
+        "endpoint_counts": endpoint_counts,
+        "exact_frames_mean": 0.0 if not frames else sum(frames) / len(frames),
+        "exact_frames_max": max(frames) if frames else 0,
+        "sample_failures": [
+            {
+                "fen": rows[index]["fen"],
+                "endpoint": trace["endpoint_type"],
+                "white_moves": trace["white_moves"],
+            }
+            for index, trace in enumerate(traces)
+            if not trace["episode_success"]
+        ][:8],
+    }
+
+
+def _edge_mate_structure_summary(
+    learner: TerminalAffordanceLearner,
+    *,
+    config: EdgeMateDistanceTrainingConfig,
+) -> dict[str, Any]:
+    promoted_affordances = []
+    promoted_vetoes = []
+    for key, terminal in sorted(learner.terminals.items()):
+        events = terminal.positive_credit + terminal.negative_credit
+        if events < config.promotion_min_credit_events:
+            continue
+        if terminal.local_weight >= config.promotion_abs_weight_threshold:
+            promoted_affordances.append(key)
+        elif terminal.local_weight <= -config.promotion_abs_weight_threshold:
+            promoted_vetoes.append(key)
+    return {
+        "terminal_count": len(learner.terminals),
+        "promoted_affordance_count": len(promoted_affordances),
+        "promoted_veto_count": len(promoted_vetoes),
+        "top_affordances": promoted_affordances[:12],
+        "top_vetoes": promoted_vetoes[:12],
+        "promotion_rule": {
+            "abs_weight_threshold": config.promotion_abs_weight_threshold,
+            "min_credit_events": config.promotion_min_credit_events,
+        },
+    }
+
+
+def run_edge_mate_distance1_training(
+    *,
+    config: EdgeMateDistanceTrainingConfig = EdgeMateDistanceTrainingConfig(),
+    regenerate_pools: bool = False,
+) -> dict[str, Any]:
+    base = Path(config.output_dir)
+    summary_path = base / "edge_mate_curriculum_summary.json"
+    if regenerate_pools or not summary_path.exists():
+        pool_payload = generate_edge_mate_curriculum_pools(config=config)
+        pool_summary = pool_payload["summary"]
+        train_rows = pool_payload["train"]
+        heldout_rows = pool_payload["heldout"]
+    else:
+        pool_summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        train_rows = _read_jsonl_gzip(pool_summary["pool_paths"]["distance1_train"])
+        heldout_rows = _read_jsonl_gzip(pool_summary["pool_paths"]["distance1_heldout"])
+
+    scorer = load_canonical_mate2_first_scorer()
+    fallback_eval = _edge_mate_evaluate_rows(
+        heldout_rows,
+        chooser=_edge_mate_fallback_chooser(scorer),
+        scorer=scorer,
+        seed=config.seed + 50,
+        config=config,
+    )
+    random_eval = _edge_mate_evaluate_rows(
+        heldout_rows,
+        chooser=_edge_mate_random_chooser,
+        scorer=scorer,
+        seed=config.seed + 60,
+        config=config,
+    )
+
+    seed_results: dict[str, Any] = {}
+    for seed in config.train_seeds:
+        learner, train_summary = _edge_mate_train_one_seed(
+            train_rows,
+            seed=int(seed),
+            scorer=scorer,
+            config=config,
+        )
+        learned_eval = _edge_mate_evaluate_rows(
+            heldout_rows,
+            chooser=lambda board, white_ply, rng, learner=learner: learner.choose(board),
+            scorer=scorer,
+            seed=int(seed) + 500,
+            config=config,
+        )
+        seed_results[str(seed)] = {
+            "train": train_summary,
+            "heldout_eval": learned_eval,
+            "structure": _edge_mate_structure_summary(learner, config=config),
+            "learner": learner.to_dict(max_terminals=16),
+        }
+
+    learned_rates = [
+        result["heldout_eval"]["manifold_entry_rate"]
+        for result in seed_results.values()
+    ]
+    fallback_rate = fallback_eval["manifold_entry_rate"]
+    stop = all(rate <= fallback_rate for rate in learned_rates)
+    result = {
+        "schema_version": EDGE_MATE_RESULT_SCHEMA,
+        "config": {
+            **config.__dict__,
+            "train_seeds": list(config.train_seeds),
+        },
+        "pool_summary": pool_summary,
+        "baseline_eval": {
+            "fallback_scorer_alone": fallback_eval,
+            "random_legal": random_eval,
+        },
+        "seed_results": seed_results,
+        "decision": {
+            "status": "stop_learned_not_above_fallback_all_seeds" if stop else "distance1_clears_fallback_baseline",
+            "learned_rates": learned_rates,
+            "fallback_rate": fallback_rate,
+            "random_rate": random_eval["manifold_entry_rate"],
+            "black_policy": "fixed_seed_uniform_legal",
+            "graph_native_learned_dispatch_migration": "deferred_to_later_phase2_session",
+        },
+    }
+    _write_json(base / "edge_mate_distance1_training_summary.json", result)
+    return result

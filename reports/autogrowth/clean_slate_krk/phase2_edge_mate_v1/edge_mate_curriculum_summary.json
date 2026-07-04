@@ -1,0 +1,24 @@
+{
+  "black_policy": "fixed_seed_uniform_legal",
+  "distance1_heldout_count": 96,
+  "distance1_train_count": 300,
+  "distance2_to5_count": 300,
+  "distance2_to5_distribution": {
+    "2": 107,
+    "3": 80,
+    "4": 63,
+    "5": 50
+  },
+  "exact_label_frames_max": 48,
+  "exact_label_frames_mean": 13.005050505050505,
+  "exact_label_frames_total": 5150,
+  "graph_native_learned_dispatch_migration": "deferred_after_flat_episode_v1",
+  "mate2_cache_state_count": 63929,
+  "pool_paths": {
+    "distance1_heldout": "reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1/pools/edge_mate_distance1_heldout.jsonl.gz",
+    "distance1_train": "reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1/pools/edge_mate_distance1_train.jsonl.gz",
+    "distance2_to5": "reports/autogrowth/clean_slate_krk/phase2_edge_mate_v1/pools/edge_mate_distance2_to5_selfplay.jsonl.gz"
+  },
+  "schema_version": "phase2_edge_mate_curriculum_summary.v0",
+  "seed": 20270201
+}

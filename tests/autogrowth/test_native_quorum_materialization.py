@@ -4,6 +4,7 @@ import chess
 
 from recon_lite import FormalReConEngine, Graph, Node, NodeState, NodeType
 from recon_lite_chess.autogrowth import (
+    EdgeMateDistanceTrainingConfig,
     NativeQuorumMaterializationConfig,
     KRK_POLICY_ROOT_ID,
     MATE_IN_TWO_GATE_ID,
@@ -19,6 +20,7 @@ from recon_lite_chess.autogrowth import (
     run_establish_fence_skill,
     run_fence_established_recognizer,
     run_fence_reply_quantifier,
+    run_edge_mate_distance1_training,
     run_mate_in_one_skill,
     run_mate_in_two_skill,
     run_native_quorum_materialization,
@@ -707,6 +709,27 @@ def test_phase27b_fallback_repetition_guard_masks_third_occurrence() -> None:
     assert audit["fallback_repetition_guard_activated"]
     assert audit["fallback_repetition_guard_masked_count"] >= 1
     assert audit["bound_move"] != ordered[0].uci()
+
+
+def test_phase28a_edge_mate_distance1_training_smoke(tmp_path) -> None:
+    cfg = EdgeMateDistanceTrainingConfig(
+        output_dir=str(tmp_path / "edge_mate"),
+        distance1_train_count=1,
+        distance1_heldout_count=1,
+        distance2_to5_count=0,
+        train_seeds=(20270211,),
+        max_generation_attempts=50_000,
+        max_selfplay_games=1,
+    )
+
+    result = run_edge_mate_distance1_training(config=cfg, regenerate_pools=True)
+
+    assert result["schema_version"] == "phase2_edge_mate_distance1_training.v0"
+    assert result["pool_summary"]["distance1_train_count"] == 1
+    assert result["pool_summary"]["distance1_heldout_count"] == 1
+    assert result["seed_results"]["20270211"]["train"]["train_trace_count"] == 1
+    assert "fallback_scorer_alone" in result["baseline_eval"]
+    assert result["decision"]["black_policy"] == "fixed_seed_uniform_legal"
 
 
 def test_tg26u_smoke_materializes_native_quorum_and_reports_ablations() -> None:
