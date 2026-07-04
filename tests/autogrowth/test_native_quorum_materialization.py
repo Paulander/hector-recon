@@ -110,6 +110,46 @@ def _trace_messages(trace: list[dict]) -> set[tuple[str, str, str, str]]:
     }
 
 
+def _orient_square(square: int, orientation: str) -> int:
+    file_idx = chess.square_file(square)
+    rank_idx = chess.square_rank(square)
+    if orientation == "a":
+        return chess.square(file_idx, rank_idx)
+    if orientation == "h":
+        return chess.square(7 - file_idx, rank_idx)
+    if orientation == "1":
+        return chess.square(rank_idx, file_idx)
+    if orientation == "8":
+        return chess.square(rank_idx, 7 - file_idx)
+    raise ValueError(f"unknown orientation: {orientation}")
+
+
+def _orient_board(board: chess.Board, orientation: str) -> chess.Board:
+    transformed = chess.Board(None)
+    for square, piece in board.piece_map().items():
+        transformed.set_piece_at(_orient_square(square, orientation), piece)
+    transformed.turn = board.turn
+    transformed.castling_rights = 0
+    transformed.ep_square = (
+        None if board.ep_square is None else _orient_square(board.ep_square, orientation)
+    )
+    transformed.halfmove_clock = board.halfmove_clock
+    transformed.fullmove_number = board.fullmove_number
+    return transformed
+
+
+def _orient_move(move_uci: str | None, orientation: str) -> str | None:
+    if move_uci is None:
+        return None
+    move = chess.Move.from_uci(move_uci)
+    return chess.Move(
+        _orient_square(move.from_square, orientation),
+        _orient_square(move.to_square, orientation),
+        promotion=move.promotion,
+        drop=move.drop,
+    ).uci()
+
+
 def test_phase2_quorum_direct_opposition_executes_with_formal_trace() -> None:
     graph, trace = _run_direct_opposition(OPPOSITION_FEN)
     messages = _trace_messages(trace)
@@ -938,6 +978,47 @@ def test_phase28h_chase_long_side_tempo_on_aligned_bk_c8_with_trace() -> None:
         "SUR",
         "confirm",
     ) in traced
+
+
+def test_phase28i_chase_regressions_are_symmetric_across_edges() -> None:
+    gate = dict(load_chain_confidence_gate())
+    gate["threshold"] = 2.0
+    scorer = load_canonical_mate2_first_scorer()
+    base_fens = [
+        "8/8/8/8/8/1K6/1R6/k7 w - - 0 1",
+        "8/8/8/8/8/1RK5/8/k7 w - - 0 1",
+        "8/8/8/8/1R6/8/8/k1K5 w - - 0 1",
+        "6k1/4KR2/8/8/8/8/8/8 w - - 0 1",
+        "2k5/4R3/1K6/8/8/8/8/8 w - - 20 11",
+        "2k5/R7/3K4/8/8/8/8/8 w - - 4 3",
+        "8/8/8/8/8/8/1K3R2/3k4 w - - 0 1",
+        "8/8/8/8/k7/2K5/8/1R6 w - - 0 1",
+        "8/8/8/2K5/k7/8/8/1R6 w - - 0 1",
+        "8/k7/8/1K6/8/8/1R6/8 w - - 0 1",
+        "2k5/R7/1K6/8/8/8/8/8 w - - 0 1",
+        "2k5/R7/2K5/8/8/8/8/8 w - - 0 1",
+    ]
+
+    for fen in base_fens:
+        base_board = chess.Board(fen)
+        base = run_chase_to_mate_skill(
+            base_board,
+            gate=gate,
+            scorer=scorer,
+            record_trace=False,
+        )
+        for orientation in ("a", "h", "1", "8"):
+            board = _orient_board(base_board, orientation)
+            audit = run_chase_to_mate_skill(
+                board,
+                gate=gate,
+                scorer=scorer,
+                record_trace=False,
+            )
+
+            assert audit["confirmed"] == base["confirmed"]
+            assert audit["branch"] == base["branch"]
+            assert audit["bound_move"] == _orient_move(base["bound_move"], orientation)
 
 
 def _repetition_key(board: chess.Board) -> str:

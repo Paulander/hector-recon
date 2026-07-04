@@ -34,7 +34,7 @@ Chase rook-loss audit: all four known losses were black replies capturing the ro
 chase-bound move, so they are skill bugs, not follow-on fallback behavior. Strata: three
 true-middle, one mate1-now. Example FENs: `6k1/4KR2/8/8/8/8/8/8 w - - 0 1` and
 `8/8/8/8/8/8/1K3R2/3k4 w - - 0 1`.
-
-Decision: Phase 2.8h unblock + long-side tempo stayed safe but did not clear integration:
-horizon 6/10/16 = 32/35/35, rook/confinement residuals 0, 8/27 former not-applicables converted; next: chase failure review.
+Integration no-adopt: Phase 2.8i paired 200 games with-chase 137/200 vs without 134/200 (+0.015), paired 128 win/win, 9 loss/win, 6 win/loss, 57 loss/loss; repetitions 61 vs 56; skill violations 0.
+Decision: chase ceiling final at 80/100 corrected standalone (horizons 6/10/16 all 80), rook/confinement residuals 0.
+Residual gap repetition/not_applicable/tempo, example FENs `8/8/8/8/2K5/1R6/k7/8 w - - 0 1`, `2k5/1R6/1K6/8/8/8/8/8 w - - 0 1`, `8/8/8/7k/5K2/6R1/8/8 w - - 0 1`, is DECLARED the first autonomous-discovery target (2.9); no further hand branches.
 No-go: new TG names, new report documents, training logic changes, `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.
