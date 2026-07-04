@@ -13,25 +13,28 @@ Phase 2.8b-fix: `enter_mate2_skill` repaired from helpful-opponent existential r
 universal all-reply semantics. It is exact mate-in-3 restricted to edge/fence distance-1 closure;
 the bright line is fixed here: no mate-4 exactification.
 
-Phase 2.8c diagnostics: fresh 200-game fence/general pools, black=fixed-seed uniform legal, paired
-fixed dispatcher vs identical dispatcher with `enter_mate2` disabled. Fence fixed and disabled both
-won 133/200=0.665, Wilson 95% [0.597, 0.727], paired table 133 win/win and 67 loss/loss. General
-fixed and disabled both won 144/200=0.720, Wilson [0.654, 0.778], paired table 144 win/win and
-56 loss/loss. Therefore `enter_mate2` has no measured system-level effect on these pools.
+Phase 2.8c diagnostics: paired 200-game fixed-vs-enter-disabled eval found no system effect from
+`enter_mate2` on fence/general pools. Fence both 133/200=0.665; general both 144/200=0.720.
+Waypoint validation harvested 200 game-log states satisfying `fence_established AND WK Chebyshev<=2
+on nearest-edge interior side`; current dispatcher converted 162/200=0.810 in full games, with 38
+failures: 27 repetition, 6 rook-loss, 5 fifty-move.
 
-Draw/loss structure: fence fixed nonwins 67; only 1 had `enter_mate2` fire, once; shuffle declines
-0. General fixed nonwins 56; `enter_mate2` fired in 0; shuffle declines 0. Draws were repetition
-dominant: fence 54 repetitions, 7 fifty-move, 6 rook-loss; general 50 repetitions, 6 fifty-move.
-Repetition-guard activations: fence 48, general 68. Only multi-enter game: general index 10
-(`8/8/2K5/6k1/8/R7/8/8 w - - 0 1`) with two firings.
+Phase 2.8c middle-rung training: waypoint-to-mate learned policy, no dispatcher integration.
+Pool: 400 starts = 200 harvested waypoints + 200 generator-fresh waypoints; split 300 train / 100
+heldout. Episode success = exact mate-2 audit confirms within 6 white moves, with direct mate as
+terminal success; hard fail on fence break, rook loss, stalemate, or third occurrence. Black is
+fixed-seed uniform legal; holding the fence has no reward.
 
-Waypoint validation: `king_support_waypoint = fence_established AND white king Chebyshev<=2 from
-black king on nearest-edge interior side`. Harvested 200/200 from game logs. Current dispatcher
-converted 162/200=0.810, Wilson [0.750, 0.858]; failures 38 = 27 repetition, 6 rook-loss, 5
-fifty-move. This waypoint is not a solved middle manifold.
+Heldout baselines on identical starts/horizon: current dispatcher 44/100=0.440 Wilson [0.347,
+0.538], fallback scorer 28/100=0.280 [0.201, 0.375], random legal 17/100=0.170 [0.109, 0.255].
+Learned seeds: 20270211 35/100=0.350, 20270212 36/100=0.360, 20270213 36/100=0.360; spread 0.01.
+Paired vs dispatcher: seed 20270211 win/loss 2 and loss/win 11; seeds 20270212/20270213 win/loss
+2 and loss/win 10 each. Stable but 0/3 seeds beat dispatcher, so no 2.8d integration.
 
-Decision: no code fix, no training, no threshold move. Next: 2.8c middle-rung design
-(fence-maintenance + king-approach) against waypoint data.
+Discovery instrument: promoted affordance/veto counts were 1560/6973, 1413/7101, 1331/7213.
+`king_support_l_shape` and `king_pair_knight_distance_like` each carried about 1.5% of total abs
+weight mass; activation was higher in failures (~0.48-0.54) than successes (~0.24-0.28).
 
-No-go: new TG names, new report documents, new pool/cache formats, training logic changes,
-`docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.
+Decision: middle-rung learned waypoint policy beats fallback/random but not current dispatcher.
+Next: 2.8c middle-rung review; do not integrate.
+No-go: new TG names, new report documents, new pool/cache formats, training logic changes, `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.
