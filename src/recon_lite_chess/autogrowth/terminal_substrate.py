@@ -19,7 +19,7 @@ from recon_lite_hector.nodes.stem_cell import StemCellState, StemCellTerminal
 from recon_lite_chess.features.hub import FeatureHub, create_default_hub
 from recon_lite_chess.features.krk_features import KRKFeatures
 
-from .features import extract_learner_features, validate_learner_record
+from .features import extract_learner_features, validate_learner_record, validate_learner_visible_keys
 from .foundation_curriculum import (
     ActionRanker,
     _action_feature_keys,
@@ -403,12 +403,12 @@ def extract_terminal_feature_vector(
 ) -> dict[str, float]:
     """Return generic-safe feature coordinates for terminal spawning."""
 
+    _ = hub
     features: dict[str, float] = {
         key: value
         for key, value in extract_learner_features(board).items()
         if key not in ACTION_AFTER_EXCLUDED_TERMINAL_FLAGS
     }
-    features.update(_king_geometry_features(board))
     validate_learner_record(features)
     return features
 
@@ -442,7 +442,10 @@ def terminal_action_feature_keys(
             f"delta_terminal:{key}={_delta_bucket(after_features[key] - before_features[key])}",
             0.25,
         ))
-    validate_learner_record([key for key, _scale in keys])
+    validate_learner_visible_keys(
+        (key for key, _scale in keys),
+        builder="terminal_substrate.terminal_action_feature_keys",
+    )
     return tuple(keys)
 
 
@@ -530,49 +533,40 @@ def feature_substrate_coverage_sample(sample_fen: str) -> dict[str, Any]:
             "tg26h_terminal": "white_king_to_black_king_distance" in terminal_features,
         },
         "king_file_rank_deltas": {
-            "current_autogrowth": False,
+            "current_autogrowth": {"king_delta_file_abs", "king_delta_rank_abs"}.issubset(current_features),
             "feature_hub": "enemy_king_file" in hub_features and "enemy_king_rank" in hub_features,
             "older_krk_features": False,
-            "tg26h_terminal": {
-                "king_file_delta",
-                "king_rank_delta",
-                "king_file_delta_abs",
-                "king_rank_delta_abs",
-            }.issubset(terminal_features),
+            "tg26h_terminal": {"king_delta_file_abs", "king_delta_rank_abs"}.issubset(terminal_features),
         },
         "same_file_rank_and_opposition": {
-            "current_autogrowth": False,
+            "current_autogrowth": "expressible by bucketed king deltas, not a learner-visible concept atom",
             "feature_hub": "opposition_status" in hub_features,
             "older_krk_features": "opposition_status" in krk_features,
-            "tg26h_terminal": {
-                "king_same_file",
-                "king_same_rank",
-                "direct_file_opposition",
-                "direct_rank_opposition",
-                "diagonal_opposition",
-                "distant_opposition_parity",
-            }.issubset(terminal_features),
+            "tg26h_terminal": False,
         },
         "knight_distance": {
-            "current_autogrowth": False,
+            "current_autogrowth": {"king_support_l_shape", "king_pair_knight_distance_like"}.issubset(current_features),
             "feature_hub": False,
             "older_krk_features": False,
-            "tg26h_terminal": "king_knight_distance_like" in terminal_features,
+            "tg26h_terminal": {"king_support_l_shape", "king_pair_knight_distance_like"}.issubset(terminal_features),
         },
         "side_to_move_tempo": {
             "current_autogrowth": "side_white_to_move" in current_features,
             "feature_hub": "tempo_advantage" in hub_features,
             "older_krk_features": "side_to_move" in krk_features,
-            "tg26h_terminal": {"side_white_to_move", "halfmove_clock_bucket"}.issubset(terminal_features),
+            "tg26h_terminal": "side_white_to_move" in terminal_features,
         },
         "rook_safety": {
             "current_autogrowth": "rook_attacked_by_black" in current_features,
             "feature_hub": False,
             "older_krk_features": "rook_safe" in krk_features,
-            "tg26h_terminal": {"rook_safe", "rook_attacked_by_black"}.issubset(terminal_features),
+            "tg26h_terminal": "rook_attacked_by_black" in terminal_features,
         },
         "confinement_preservation": {
-            "current_autogrowth": "present in TG26/TG26g stage scoring, not core learner feature vector",
+            "current_autogrowth": {
+                "rook_distance_to_black_king_edge_line",
+                "rook_fence_depth_relative_to_black_king_edge",
+            }.issubset(current_features),
             "feature_hub": "enemy_king_mobility" in hub_features,
             "older_krk_features": {
                 "box_area",
@@ -580,9 +574,8 @@ def feature_substrate_coverage_sample(sample_fen: str) -> dict[str, Any]:
                 "rook_fence_distance",
             }.issubset(set(krk_features)),
             "tg26h_terminal": {
-                "confinement_file_span",
-                "confinement_rank_span",
-                "confinement_area",
+                "rook_distance_to_black_king_edge_line",
+                "rook_fence_depth_relative_to_black_king_edge",
             }.issubset(terminal_features),
         },
         "black_reply_mobility": {

@@ -19,7 +19,7 @@ from recon_lite_hector.nodes.stem_cell import StemCellState, StemCellTerminal
 
 from .curated_replay_curriculum import _mate2_buckets
 from .curated_terminal_curriculum import curated_stage_entries
-from .features import validate_learner_record
+from .features import validate_learner_record, validate_learner_visible_keys
 from .foundation_curriculum import (
     _forced_mate_in_two_first_moves,
     _mate_moves,
@@ -626,7 +626,10 @@ def _triplet_keys(board: chess.Board, move: chess.Move) -> tuple[tuple[str, ...]
         action_delta_keys.append(
             f"delta_terminal:{key}={_delta_bucket(after_features[key] - before_features[key])}"
         )
-    validate_learner_record([*before_keys, *action_delta_keys, *after_keys])
+    validate_learner_visible_keys(
+        [*before_keys, *action_delta_keys, *after_keys],
+        builder="single_graph_curriculum._triplet_keys",
+    )
     return before_keys, tuple(action_delta_keys), after_keys
 
 

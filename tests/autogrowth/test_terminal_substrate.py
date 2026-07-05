@@ -24,13 +24,17 @@ def test_tg26h_terminal_feature_vector_uses_dieted_firewall() -> None:
     action_keys = [key for key, _scale in terminal_action_feature_keys(board, move)]
 
     assert not any(key.startswith("feature_hub_") for key in features)
-    assert "king_file_delta" in features
-    assert "direct_file_opposition" in features
-    assert "confinement_area" in features
+    assert "king_delta_file_abs" in features
+    assert "king_support_l_shape" in features
+    assert "rook_distance_to_black_king_edge_line" in features
+    assert "direct_file_opposition" not in features
+    assert "confinement_area" not in features
     assert any(key.startswith("action_pattern:") for key in action_keys)
     assert not any(key.startswith("before_terminal:feature_hub_") for key in action_keys)
     assert any(key.startswith("delta_terminal:black_king_nearest_edge_distance") for key in action_keys)
     assert not any("is_checkmate_after" in key for key in action_keys)
+    assert not any("black_reply_mobility" in key for key in action_keys)
+    assert not any("is_stalemate_after" in key for key in action_keys)
     validate_learner_record(features)
     validate_learner_record(action_keys)
 

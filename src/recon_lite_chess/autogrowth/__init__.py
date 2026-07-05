@@ -140,10 +140,14 @@ from .experiment import (
 )
 from .features import (
     FORBIDDEN_LEARNER_TERMS,
+    LEARNER_VISIBLE_FEATURE_NAMES,
+    REMOVE_MARKED_LEARNER_FEATURES,
     extract_diagnostic_features,
     extract_learner_features,
+    learner_visible_key_firewall_leaks,
     make_trace_record,
     validate_learner_record,
+    validate_learner_visible_keys,
 )
 from .fragment_chain_curriculum import (
     FragmentChainCurriculumConfig,
@@ -709,6 +713,8 @@ __all__ = [
     "FenceBoundarySignalConfig",
     "FenceBoundarySignalResult",
     "FORBIDDEN_LEARNER_TERMS",
+    "LEARNER_VISIBLE_FEATURE_NAMES",
+    "REMOVE_MARKED_LEARNER_FEATURES",
     "ActionRanker",
     "FoundationCurriculumConfig",
     "FoundationCurriculumResult",
@@ -800,6 +806,7 @@ __all__ = [
     "evaluate_sandbox_arm",
     "extract_diagnostic_features",
     "extract_learner_features",
+    "learner_visible_key_firewall_leaks",
     "generate_context_specialized_candidates",
     "generate_local_script_candidates",
     "generalize_script_candidates_to_fragments",
@@ -1033,4 +1040,5 @@ __all__ = [
     "train_growth_candidates",
     "train_terminal_foundation_bundle",
     "validate_learner_record",
+    "validate_learner_visible_keys",
 ]

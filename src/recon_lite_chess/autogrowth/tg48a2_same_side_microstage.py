@@ -41,7 +41,7 @@ from .edge_killbox_curriculum import (
     _sign,
     classify_edge_killbox_family,
 )
-from .features import extract_diagnostic_features, validate_learner_record
+from .features import extract_diagnostic_features, validate_learner_record, validate_learner_visible_keys
 from .handoff_reachability_audit import (
     _foundation_artifact_sanity,
     _reconstruct_parent_foundation_from_m4_audit,
@@ -607,7 +607,6 @@ def _micro_terminal_keys(board: chess.Board, move: chess.Move) -> tuple[tuple[st
     before_axis = _axis_pattern(before)
     after_axis = _axis_pattern(after_f)
     confinement_bucket = _delta_bucket(_confinement_area(board) - _confinement_area(after))
-    mobility_bucket = _delta_bucket(before["black_reply_mobility"] - after_f["black_reply_mobility"])
     support_bucket = _delta_bucket(before["king_support_manhattan_distance"] - after_f["king_support_manhattan_distance"])
     action_piece = 0 if piece is None else int(piece.piece_type)
     keys = [
@@ -626,25 +625,25 @@ def _micro_terminal_keys(board: chess.Board, move: chess.Move) -> tuple[tuple[st
         (f"micro_after:line_distance={min(4, int(after_f['rook_distance_to_black_king_edge_line']))}", 0.5),
         (f"micro_delta:axis_pattern={_axis_delta_bucket(before_axis, after_axis)}", 1.0),
         (f"micro_delta:confinement_area={confinement_bucket}", 1.0),
-        (f"micro_delta:black_mobility={mobility_bucket}", 1.0),
         (f"micro_delta:support_distance={support_bucket}", 0.5),
-        (f"micro_guard:rook_risk_after={int(_rook_capturable_by_reply(after))}", 1.0),
-        (f"micro_guard:stalemate_after={int(after.is_stalemate())}", 1.0),
         (
             "micro_compound:"
             f"piece={action_piece}|fd={_sign(file_delta)}|rd={_sign(rank_delta)}|"
-            f"b_axis={before_axis}|a_axis={after_axis}|conf={confinement_bucket}|"
-            f"mob={mobility_bucket}|risk={int(_rook_capturable_by_reply(after))}",
+            f"b_axis={before_axis}|a_axis={after_axis}|conf={confinement_bucket}",
             1.0,
         ),
         (
             "micro_rook_path:"
             f"piece={action_piece}|fd_mag={min(3, abs(file_delta))}|rd_mag={min(3, abs(rank_delta))}|"
             f"axis_delta={_axis_delta_bucket(before_axis, after_axis)}|conf={confinement_bucket}|"
-            f"support={support_bucket}|risk={int(_rook_capturable_by_reply(after))}",
+            f"support={support_bucket}",
             1.0,
         ),
     ]
+    validate_learner_visible_keys(
+        (key for key, _scale in keys),
+        builder="tg48a2_same_side_microstage._micro_terminal_keys",
+    )
     _validate_micro_learner_record([key for key, _scale in keys])
     return tuple(keys)
 

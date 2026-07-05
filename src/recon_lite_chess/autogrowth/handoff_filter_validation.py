@@ -110,6 +110,8 @@ def run_handoff_filter_validation(*, config: HandoffFilterValidationConfig) -> H
             mate2_heldout_count=config.foundation_mate2_heldout_count,
             max_generation_attempts=max(500_000, config.max_generation_attempts),
             eta_m3=0.10,
+            mate1_pass_threshold=config.mate1_regression_threshold,
+            mate2_pass_threshold=config.mate2_regression_threshold,
             max_samples=config.max_samples,
         )
     )

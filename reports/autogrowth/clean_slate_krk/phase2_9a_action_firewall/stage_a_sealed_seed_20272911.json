@@ -1,0 +1,2749 @@
+{
+  "baseline_eval": {
+    "approach_ceiling": {
+      "endpoint_counts": {
+        "fence_broken": 24,
+        "illegal": 21,
+        "waypoint_reached": 83
+      },
+      "name": "approach_ceiling",
+      "row_count": 128,
+      "sample_failures": [
+        {
+          "endpoint": "illegal",
+          "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+              "move": "h8g8"
+            },
+            {
+              "fen": "1k4K1/6R1/8/8/8/8/8/8 w - - 2 2",
+              "move": "g8f8"
+            },
+            {
+              "fen": "k4K2/6R1/8/8/8/8/8/8 w - - 4 3",
+              "move": "f8e8"
+            },
+            {
+              "fen": "1k2K3/6R1/8/8/8/8/8/8 w - - 6 4",
+              "move": "e8d8"
+            }
+          ]
+        },
+        {
+          "endpoint": "illegal",
+          "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+              "move": "b8a7"
+            },
+            {
+              "fen": "8/K7/8/8/1R6/8/8/k7 w - - 2 2",
+              "move": "a7a6"
+            },
+            {
+              "fen": "8/8/K7/8/1R6/8/k7/8 w - - 4 3",
+              "move": "a6a5"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+              "move": "g1f2"
+            },
+            {
+              "fen": "8/8/8/1R6/8/k7/5K2/8 w - - 2 2",
+              "move": "f2e3"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+              "move": "e1d2"
+            }
+          ]
+        },
+        {
+          "endpoint": "illegal",
+          "fen": "8/8/8/8/8/8/K1R5/7k w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/8/8/8/K1R5/7k w - - 0 1",
+              "move": "a2b1"
+            },
+            {
+              "fen": "8/8/8/8/8/8/2R5/1K4k1 w - - 2 2",
+              "move": "b1c1"
+            },
+            {
+              "fen": "8/8/8/8/8/8/2R5/2K4k w - - 4 3",
+              "move": "c1d1"
+            },
+            {
+              "fen": "8/8/8/8/8/8/2R5/3K2k1 w - - 6 4",
+              "move": "d1e1"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+              "move": "f2e3"
+            }
+          ]
+        },
+        {
+          "endpoint": "illegal",
+          "fen": "1K5k/4R3/8/8/8/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "1K5k/4R3/8/8/8/8/8/8 w - - 0 1",
+              "move": "b8c8"
+            },
+            {
+              "fen": "2K3k1/4R3/8/8/8/8/8/8 w - - 2 2",
+              "move": "c8d8"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+              "move": "b6a5"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "k7/8/1R6/8/8/8/8/7K w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "k7/8/1R6/8/8/8/8/7K w - - 0 1",
+              "move": "h1g2"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/3K4/8/8/8/6R1/4k3 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/3K4/8/8/8/6R1/4k3 w - - 0 1",
+              "move": "d6e5"
+            }
+          ]
+        },
+        {
+          "endpoint": "illegal",
+          "fen": "8/2K5/8/1R6/8/k7/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/2K5/8/1R6/8/k7/8/8 w - - 0 1",
+              "move": "c7b6"
+            },
+            {
+              "fen": "8/8/1K6/1R6/8/8/k7/8 w - - 2 2",
+              "move": "b6a5"
+            },
+            {
+              "fen": "8/8/8/KR6/8/8/8/k7 w - - 4 3",
+              "move": "a5a4"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/4K3/8/8/8/8/2R5/k7 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/4K3/8/8/8/8/2R5/k7 w - - 0 1",
+              "move": "e7d6"
+            }
+          ]
+        },
+        {
+          "endpoint": "illegal",
+          "fen": "4k3/KR6/8/8/8/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "4k3/KR6/8/8/8/8/8/8 w - - 0 1",
+              "move": "a7b8"
+            },
+            {
+              "fen": "1K3k2/1R6/8/8/8/8/8/8 w - - 2 2",
+              "move": "b8c8"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/8/7k/8/K5R1/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/8/7k/8/K5R1/8 w - - 0 1",
+              "move": "a2b3"
+            }
+          ]
+        },
+        {
+          "endpoint": "illegal",
+          "fen": "8/8/7k/8/8/8/6R1/7K w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/7k/8/8/8/6R1/7K w - - 0 1",
+              "move": "h1h2"
+            },
+            {
+              "fen": "8/7k/8/8/8/8/6RK/8 w - - 2 2",
+              "move": "h2h3"
+            },
+            {
+              "fen": "8/8/7k/8/8/7K/6R1/8 w - - 4 3",
+              "move": "h3h4"
+            },
+            {
+              "fen": "8/7k/8/8/7K/8/6R1/8 w - - 6 4",
+              "move": "h4h5"
+            }
+          ]
+        },
+        {
+          "endpoint": "illegal",
+          "fen": "8/8/8/8/8/8/5K1R/2k5 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/8/8/8/5K1R/2k5 w - - 0 1",
+              "move": "f2e1"
+            },
+            {
+              "fen": "8/8/8/8/8/8/7R/1k2K3 w - - 2 2",
+              "move": "e1d1"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/8/7k/8/3K2R1/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/8/7k/8/3K2R1/8 w - - 0 1",
+              "move": "d2e3"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/7K/8/1R6/8/8/k7 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/7K/8/1R6/8/8/k7 w - - 0 1",
+              "move": "h6g5"
+            },
+            {
+              "fen": "8/8/8/6K1/1R6/8/k7/8 w - - 2 2",
+              "move": "g5f4"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/7K/8/8/4R3/2k5 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/7K/8/8/4R3/2k5 w - - 0 1",
+              "move": "h5g4"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/1K6/8/6R1/8/7k w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/1K6/8/6R1/8/7k w - - 0 1",
+              "move": "b5c4"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/7K/8/8/6R1/8/7k w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/7K/8/8/6R1/8/7k w - - 0 1",
+              "move": "h6h5"
+            }
+          ]
+        },
+        {
+          "endpoint": "illegal",
+          "fen": "8/8/8/6RK/8/8/8/7k w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/6RK/8/8/8/7k w - - 0 1",
+              "move": "h5h4"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/6K1/k7/8/8/1R6/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/6K1/k7/8/8/1R6/8 w - - 0 1",
+              "move": "g6f5"
+            },
+            {
+              "fen": "8/8/8/5K2/k7/8/1R6/8 w - - 2 2",
+              "move": "f5e4"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/7K/8/k7/8/8/1R6 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/7K/8/k7/8/8/1R6 w - - 0 1",
+              "move": "h6g5"
+            },
+            {
+              "fen": "8/8/8/6K1/8/k7/8/1R6 w - - 2 2",
+              "move": "g5f4"
+            }
+          ]
+        }
+      ],
+      "success_count": 83,
+      "success_rate": 0.6484375,
+      "wilson_95": [
+        0.5624978389203745,
+        0.7257271271859276
+      ]
+    },
+    "fallback": {
+      "endpoint_counts": {
+        "fence_broken": 78,
+        "horizon": 33,
+        "waypoint_reached": 17
+      },
+      "name": "fallback",
+      "row_count": 128,
+      "sample_failures": [
+        {
+          "endpoint": "horizon",
+          "fen": "8/k4K2/8/8/8/8/1R6/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/k4K2/8/8/8/8/1R6/8 w - - 0 1",
+              "move": "f7g8"
+            },
+            {
+              "fen": "k5K1/8/8/8/8/8/1R6/8 w - - 2 2",
+              "move": "g8h8"
+            },
+            {
+              "fen": "7K/k7/8/8/8/8/1R6/8 w - - 4 3",
+              "move": "h8h7"
+            },
+            {
+              "fen": "k7/7K/8/8/8/8/1R6/8 w - - 6 4",
+              "move": "h7h8"
+            },
+            {
+              "fen": "7K/k7/8/8/8/8/1R6/8 w - - 8 5",
+              "move": "h8h7"
+            },
+            {
+              "fen": "k7/7K/8/8/8/8/1R6/8 w - - 10 6",
+              "move": "h7h8"
+            },
+            {
+              "fen": "7K/k7/8/8/8/8/1R6/8 w - - 12 7",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/7K/k7/8/8/8/1R6/8 w - - 14 8",
+              "move": "h7h8"
+            },
+            {
+              "fen": "7K/k7/8/8/8/8/1R6/8 w - - 16 9",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/7K/k7/8/8/8/1R6/8 w - - 18 10",
+              "move": "h7h8"
+            },
+            {
+              "fen": "7K/8/8/k7/8/8/1R6/8 w - - 20 11",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/7K/k7/8/8/8/1R6/8 w - - 22 12",
+              "move": "h7h8"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+              "move": "g7g6"
+            }
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "k6K/8/8/8/8/1R6/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "k6K/8/8/8/8/1R6/8/8 w - - 0 1",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/k6K/8/8/8/1R6/8/8 w - - 2 2",
+              "move": "h7h8"
+            },
+            {
+              "fen": "k6K/8/8/8/8/1R6/8/8 w - - 4 3",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/k6K/8/8/8/1R6/8/8 w - - 6 4",
+              "move": "h7h8"
+            },
+            {
+              "fen": "7K/8/k7/8/8/1R6/8/8 w - - 8 5",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/k6K/8/8/8/1R6/8/8 w - - 10 6",
+              "move": "h7h8"
+            },
+            {
+              "fen": "7K/8/k7/8/8/1R6/8/8 w - - 12 7",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/7K/8/k7/8/1R6/8/8 w - - 14 8",
+              "move": "h7h8"
+            },
+            {
+              "fen": "7K/8/k7/8/8/1R6/8/8 w - - 16 9",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/k6K/8/8/8/1R6/8/8 w - - 18 10",
+              "move": "h7h8"
+            },
+            {
+              "fen": "k6K/8/8/8/8/1R6/8/8 w - - 20 11",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/k6K/8/8/8/1R6/8/8 w - - 22 12",
+              "move": "h7h8"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+              "move": "g4h5"
+            },
+            {
+              "fen": "8/8/8/7K/8/8/4R3/2k5 w - - 2 2",
+              "move": "h5h6"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/1R6/8/8/6K1/8/8/k7 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/1R6/8/8/6K1/8/8/k7 w - - 0 1",
+              "move": "g4h5"
+            },
+            {
+              "fen": "8/1R6/8/7K/8/8/k7/8 w - - 2 2",
+              "move": "h5h6"
+            },
+            {
+              "fen": "8/1R6/7K/8/8/k7/8/8 w - - 4 3",
+              "move": "h6h7"
+            },
+            {
+              "fen": "8/1R5K/8/8/k7/8/8/8 w - - 6 4",
+              "move": "h7h8"
+            },
+            {
+              "fen": "7K/1R6/8/k7/8/8/8/8 w - - 8 5",
+              "move": "h8h7"
+            }
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "8/k7/8/8/5K2/8/8/1R6 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/k7/8/8/5K2/8/8/1R6 w - - 0 1",
+              "move": "f4g5"
+            },
+            {
+              "fen": "k7/8/8/6K1/8/8/8/1R6 w - - 2 2",
+              "move": "g5h6"
+            },
+            {
+              "fen": "8/k7/7K/8/8/8/8/1R6 w - - 4 3",
+              "move": "h6h7"
+            },
+            {
+              "fen": "k7/7K/8/8/8/8/8/1R6 w - - 6 4",
+              "move": "h7h8"
+            },
+            {
+              "fen": "7K/k7/8/8/8/8/8/1R6 w - - 8 5",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/7K/k7/8/8/8/8/1R6 w - - 10 6",
+              "move": "h7h8"
+            },
+            {
+              "fen": "7K/8/8/k7/8/8/8/1R6 w - - 12 7",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/7K/8/8/k7/8/8/1R6 w - - 14 8",
+              "move": "h7h8"
+            },
+            {
+              "fen": "7K/8/8/k7/8/8/8/1R6 w - - 16 9",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/7K/k7/8/8/8/8/1R6 w - - 18 10",
+              "move": "h7h8"
+            },
+            {
+              "fen": "7K/k7/8/8/8/8/8/1R6 w - - 20 11",
+              "move": "h8h7"
+            },
+            {
+              "fen": "k7/7K/8/8/8/8/8/1R6 w - - 22 12",
+              "move": "h7h8"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "4k3/1R6/8/K7/8/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "4k3/1R6/8/K7/8/8/8/8 w - - 0 1",
+              "move": "b7h7"
+            },
+            {
+              "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+              "move": "h7h6"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+              "move": "b8c8"
+            },
+            {
+              "fen": "2K5/8/8/8/1R6/8/8/k7 w - - 2 2",
+              "move": "c8d8"
+            },
+            {
+              "fen": "3K4/8/8/8/1R6/8/k7/8 w - - 4 3",
+              "move": "d8e8"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+              "move": "g1h2"
+            },
+            {
+              "fen": "8/8/8/1R6/8/k7/7K/8 w - - 2 2",
+              "move": "h2h3"
+            }
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "5k2/R7/8/8/8/8/2K5/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "5k2/R7/8/8/8/8/2K5/8 w - - 0 1",
+              "move": "c2d3"
+            },
+            {
+              "fen": "6k1/R7/8/8/8/3K4/8/8 w - - 2 2",
+              "move": "d3e4"
+            },
+            {
+              "fen": "7k/R7/8/8/4K3/8/8/8 w - - 4 3",
+              "move": "e4f4"
+            },
+            {
+              "fen": "6k1/R7/8/8/5K2/8/8/8 w - - 6 4",
+              "move": "f4g3"
+            },
+            {
+              "fen": "5k2/R7/8/8/8/6K1/8/8 w - - 8 5",
+              "move": "g3h4"
+            },
+            {
+              "fen": "4k3/R7/8/8/7K/8/8/8 w - - 10 6",
+              "move": "h4h3"
+            },
+            {
+              "fen": "5k2/R7/8/8/8/7K/8/8 w - - 12 7",
+              "move": "h3h4"
+            },
+            {
+              "fen": "6k1/R7/8/8/7K/8/8/8 w - - 14 8",
+              "move": "h4h3"
+            },
+            {
+              "fen": "7k/R7/8/8/8/7K/8/8 w - - 16 9",
+              "move": "h3h2"
+            },
+            {
+              "fen": "6k1/R7/8/8/8/8/7K/8 w - - 18 10",
+              "move": "h2h3"
+            },
+            {
+              "fen": "5k2/R7/8/8/8/7K/8/8 w - - 20 11",
+              "move": "h3h4"
+            },
+            {
+              "fen": "4k3/R7/8/8/7K/8/8/8 w - - 22 12",
+              "move": "h4h3"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+              "move": "e1f2"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/8/8/8/K1R5/7k w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/8/8/8/K1R5/7k w - - 0 1",
+              "move": "c2f2"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "k7/6R1/8/8/4K3/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "k7/6R1/8/8/4K3/8/8/8 w - - 0 1",
+              "move": "g7h7"
+            },
+            {
+              "fen": "1k6/7R/8/8/4K3/8/8/8 w - - 2 2",
+              "move": "h7h6"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/3K3k/8/8/8/8/8/6R1 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/3K3k/8/8/8/8/8/6R1 w - - 0 1",
+              "move": "d7d8"
+            },
+            {
+              "fen": "3K4/8/7k/8/8/8/8/6R1 w - - 2 2",
+              "move": "g1g8"
+            }
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "1R6/8/8/8/k5K1/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "1R6/8/8/8/k5K1/8/8/8 w - - 0 1",
+              "move": "g4h5"
+            },
+            {
+              "fen": "1R6/8/8/k6K/8/8/8/8 w - - 2 2",
+              "move": "h5h6"
+            },
+            {
+              "fen": "1R6/8/7K/8/k7/8/8/8 w - - 4 3",
+              "move": "h6h7"
+            },
+            {
+              "fen": "1R6/7K/8/8/8/k7/8/8 w - - 6 4",
+              "move": "h7h8"
+            },
+            {
+              "fen": "1R5K/8/8/8/8/8/k7/8 w - - 8 5",
+              "move": "h8h7"
+            },
+            {
+              "fen": "1R6/7K/8/8/8/8/8/k7 w - - 10 6",
+              "move": "h7h8"
+            },
+            {
+              "fen": "1R5K/8/8/8/8/8/k7/8 w - - 12 7",
+              "move": "h8h7"
+            },
+            {
+              "fen": "1R6/7K/8/8/8/k7/8/8 w - - 14 8",
+              "move": "h7h8"
+            },
+            {
+              "fen": "1R5K/8/8/8/k7/8/8/8 w - - 16 9",
+              "move": "h8h7"
+            },
+            {
+              "fen": "1R6/7K/8/8/8/k7/8/8 w - - 18 10",
+              "move": "h7h8"
+            },
+            {
+              "fen": "1R5K/8/8/8/8/8/k7/8 w - - 20 11",
+              "move": "h8h7"
+            },
+            {
+              "fen": "1R6/7K/8/8/8/k7/8/8 w - - 22 12",
+              "move": "h7h8"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "k7/5R2/8/8/8/2K5/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "k7/5R2/8/8/8/2K5/8/8 w - - 0 1",
+              "move": "f7h7"
+            },
+            {
+              "fen": "1k6/7R/8/8/8/2K5/8/8 w - - 2 2",
+              "move": "h7h6"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+              "move": "f2g3"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/7k/8/8/8/K5R1/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/7k/8/8/8/K5R1/8 w - - 0 1",
+              "move": "g2g8"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "k7/7R/8/6K1/8/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "k7/7R/8/6K1/8/8/8/8 w - - 0 1",
+              "move": "h7h3"
+            }
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "1R6/8/8/k7/8/8/8/6K1 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "1R6/8/8/k7/8/8/8/6K1 w - - 0 1",
+              "move": "g1h2"
+            },
+            {
+              "fen": "1R6/8/k7/8/8/8/7K/8 w - - 2 2",
+              "move": "h2h3"
+            },
+            {
+              "fen": "1R6/8/8/k7/8/7K/8/8 w - - 4 3",
+              "move": "h3h4"
+            },
+            {
+              "fen": "1R6/8/8/8/k6K/8/8/8 w - - 6 4",
+              "move": "h4h5"
+            },
+            {
+              "fen": "1R6/8/8/7K/8/k7/8/8 w - - 8 5",
+              "move": "h5h6"
+            },
+            {
+              "fen": "1R6/8/7K/8/8/8/k7/8 w - - 10 6",
+              "move": "h6h7"
+            },
+            {
+              "fen": "1R6/7K/8/8/8/k7/8/8 w - - 12 7",
+              "move": "h7h8"
+            },
+            {
+              "fen": "1R5K/8/8/8/k7/8/8/8 w - - 14 8",
+              "move": "h8h7"
+            },
+            {
+              "fen": "1R6/7K/8/8/8/k7/8/8 w - - 16 9",
+              "move": "h7h8"
+            },
+            {
+              "fen": "1R5K/8/8/8/k7/8/8/8 w - - 18 10",
+              "move": "h8h7"
+            },
+            {
+              "fen": "1R6/7K/8/8/8/k7/8/8 w - - 20 11",
+              "move": "h7h8"
+            },
+            {
+              "fen": "1R5K/8/8/8/8/8/k7/8 w - - 22 12",
+              "move": "h8h7"
+            }
+          ]
+        },
+        {
+          "endpoint": "horizon",
+          "fen": "k6K/8/8/8/8/8/1R6/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "k6K/8/8/8/8/8/1R6/8 w - - 0 1",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/k6K/8/8/8/8/1R6/8 w - - 2 2",
+              "move": "h7h8"
+            },
+            {
+              "fen": "k6K/8/8/8/8/8/1R6/8 w - - 4 3",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/k6K/8/8/8/8/1R6/8 w - - 6 4",
+              "move": "h7h8"
+            },
+            {
+              "fen": "k6K/8/8/8/8/8/1R6/8 w - - 8 5",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/k6K/8/8/8/8/1R6/8 w - - 10 6",
+              "move": "h7h8"
+            },
+            {
+              "fen": "7K/8/k7/8/8/8/1R6/8 w - - 12 7",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/k6K/8/8/8/8/1R6/8 w - - 14 8",
+              "move": "h7h8"
+            },
+            {
+              "fen": "k6K/8/8/8/8/8/1R6/8 w - - 16 9",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/k6K/8/8/8/8/1R6/8 w - - 18 10",
+              "move": "h7h8"
+            },
+            {
+              "fen": "k6K/8/8/8/8/8/1R6/8 w - - 20 11",
+              "move": "h8h7"
+            },
+            {
+              "fen": "8/k6K/8/8/8/8/1R6/8 w - - 22 12",
+              "move": "h7h8"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "1K5k/4R3/8/8/8/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "1K5k/4R3/8/8/8/8/8/8 w - - 0 1",
+              "move": "e7f7"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "k7/3R4/8/8/8/3K4/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "k7/3R4/8/8/8/3K4/8/8 w - - 0 1",
+              "move": "d7h7"
+            },
+            {
+              "fen": "1k6/7R/8/8/8/3K4/8/8 w - - 2 2",
+              "move": "h7h6"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+              "move": "b6c7"
+            }
+          ]
+        }
+      ],
+      "success_count": 17,
+      "success_rate": 0.1328125,
+      "wilson_95": [
+        0.08460228531840389,
+        0.20242016694495388
+      ]
+    },
+    "random": {
+      "endpoint_counts": {
+        "fence_broken": 123,
+        "waypoint_reached": 5
+      },
+      "name": "random",
+      "row_count": 128,
+      "sample_failures": [
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/k4K2/8/8/8/8/1R6/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/k4K2/8/8/8/8/1R6/8 w - - 0 1",
+              "move": "f7f8"
+            },
+            {
+              "fen": "k4K2/8/8/8/8/8/1R6/8 w - - 2 2",
+              "move": "b2b1"
+            },
+            {
+              "fen": "5K2/k7/8/8/8/8/8/1R6 w - - 4 3",
+              "move": "f8g7"
+            },
+            {
+              "fen": "k7/6K1/8/8/8/8/8/1R6 w - - 6 4",
+              "move": "b1b7"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+              "move": "g7g3"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "k6K/8/8/8/8/1R6/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "k6K/8/8/8/8/1R6/8/8 w - - 0 1",
+              "move": "b3b5"
+            },
+            {
+              "fen": "7K/k7/8/1R6/8/8/8/8 w - - 2 2",
+              "move": "b5a5"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+              "move": "e2d2"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/1R6/8/8/6K1/8/8/k7 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/1R6/8/8/6K1/8/8/k7 w - - 0 1",
+              "move": "b7h7"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/k7/8/8/5K2/8/8/1R6 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/k7/8/8/5K2/8/8/1R6 w - - 0 1",
+              "move": "b1b2"
+            },
+            {
+              "fen": "k7/8/8/8/5K2/8/1R6/8 w - - 2 2",
+              "move": "b2c2"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "4k3/1R6/8/K7/8/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "4k3/1R6/8/K7/8/8/8/8 w - - 0 1",
+              "move": "b7h7"
+            },
+            {
+              "fen": "5k2/7R/8/K7/8/8/8/8 w - - 2 2",
+              "move": "a5b5"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+              "move": "b4b7"
+            },
+            {
+              "fen": "1K6/1R6/8/8/8/8/8/k7 w - - 2 2",
+              "move": "b7c7"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/k7/8/8/3K4/8/1R6/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/k7/8/8/3K4/8/1R6/8 w - - 0 1",
+              "move": "b2b1"
+            },
+            {
+              "fen": "8/8/k7/8/3K4/8/8/1R6 w - - 2 2",
+              "move": "b1b8"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+              "move": "b5e5"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "5k2/R7/8/8/8/8/2K5/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "5k2/R7/8/8/8/8/2K5/8 w - - 0 1",
+              "move": "c2d2"
+            },
+            {
+              "fen": "6k1/R7/8/8/8/8/3K4/8 w - - 2 2",
+              "move": "d2e3"
+            },
+            {
+              "fen": "7k/R7/8/8/8/4K3/8/8 w - - 4 3",
+              "move": "e3d4"
+            },
+            {
+              "fen": "6k1/R7/8/8/3K4/8/8/8 w - - 6 4",
+              "move": "a7b7"
+            },
+            {
+              "fen": "5k2/1R6/8/8/3K4/8/8/8 w - - 8 5",
+              "move": "b7b8"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+              "move": "e1f1"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/8/8/8/8/K1R5/7k w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/8/8/8/8/K1R5/7k w - - 0 1",
+              "move": "a2a1"
+            },
+            {
+              "fen": "8/8/8/8/8/8/2R5/K5k1 w - - 2 2",
+              "move": "c2c7"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "k7/6R1/8/8/4K3/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "k7/6R1/8/8/4K3/8/8/8 w - - 0 1",
+              "move": "g7h7"
+            },
+            {
+              "fen": "1k6/7R/8/8/4K3/8/8/8 w - - 2 2",
+              "move": "e4f3"
+            },
+            {
+              "fen": "2k5/7R/8/8/8/5K2/8/8 w - - 4 3",
+              "move": "h7e7"
+            },
+            {
+              "fen": "1k6/4R3/8/8/8/5K2/8/8 w - - 6 4",
+              "move": "e7g7"
+            },
+            {
+              "fen": "2k5/6R1/8/8/8/5K2/8/8 w - - 8 5",
+              "move": "g7d7"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/3K3k/8/8/8/8/8/6R1 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/3K3k/8/8/8/8/8/6R1 w - - 0 1",
+              "move": "g1h1"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "1R6/8/8/8/k5K1/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "1R6/8/8/8/k5K1/8/8/8 w - - 0 1",
+              "move": "g4g3"
+            },
+            {
+              "fen": "1R6/8/8/k7/8/6K1/8/8 w - - 2 2",
+              "move": "b8b2"
+            },
+            {
+              "fen": "8/8/8/8/k7/6K1/1R6/8 w - - 4 3",
+              "move": "g3h3"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "k7/5R2/8/8/8/2K5/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "k7/5R2/8/8/8/2K5/8/8 w - - 0 1",
+              "move": "f7f8"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "5k2/7R/8/6K1/8/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "5k2/7R/8/6K1/8/8/8/8 w - - 0 1",
+              "move": "h7d7"
+            },
+            {
+              "fen": "6k1/3R4/8/6K1/8/8/8/8 w - - 2 2",
+              "move": "g5g4"
+            },
+            {
+              "fen": "7k/3R4/8/8/6K1/8/8/8 w - - 4 3",
+              "move": "d7d3"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+              "move": "e7e4"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "8/8/7k/8/8/8/K5R1/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "8/8/7k/8/8/8/K5R1/8 w - - 0 1",
+              "move": "a2a3"
+            },
+            {
+              "fen": "8/7k/8/8/8/K7/6R1/8 w - - 2 2",
+              "move": "g2g6"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "k7/7R/8/6K1/8/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "k7/7R/8/6K1/8/8/8/8 w - - 0 1",
+              "move": "h7f7"
+            },
+            {
+              "fen": "1k6/5R2/8/6K1/8/8/8/8 w - - 2 2",
+              "move": "f7a7"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "1R6/8/8/k7/8/8/8/6K1 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "1R6/8/8/k7/8/8/8/6K1 w - - 0 1",
+              "move": "b8b3"
+            },
+            {
+              "fen": "8/8/k7/8/8/1R6/8/6K1 w - - 2 2",
+              "move": "b3b7"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "k6K/8/8/8/8/8/1R6/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "k6K/8/8/8/8/8/1R6/8 w - - 0 1",
+              "move": "b2f2"
+            }
+          ]
+        },
+        {
+          "endpoint": "fence_broken",
+          "fen": "1K5k/4R3/8/8/8/8/8/8 w - - 0 1",
+          "success": false,
+          "white_steps": [
+            {
+              "fen": "1K5k/4R3/8/8/8/8/8/8 w - - 0 1",
+              "move": "e7e2"
+            }
+          ]
+        }
+      ],
+      "success_count": 5,
+      "success_rate": 0.0390625,
+      "wilson_95": [
+        0.016798610797803704,
+        0.08818702076683686
+      ]
+    }
+  },
+  "decision": {
+    "ceiling_rate": 0.6484375,
+    "exceeds_dumb_ceiling": true
+  },
+  "dump": {
+    "leaked_terminal_count": 0,
+    "path": "reports/autogrowth/clean_slate_krk/phase2_9a_action_firewall/stage_d_A_sealed_seed_20272911_weights.json",
+    "terminal_count": 473
+  },
+  "heldout_count": 128,
+  "heldout_eval": {
+    "activation_counts": {
+      "failure": {
+        "action_pattern:black_king_edge_after=0": 52,
+        "action_pattern:file_delta_magnitude=0": 1,
+        "action_pattern:file_delta_magnitude=1": 51,
+        "action_pattern:file_delta_sign=-1": 34,
+        "action_pattern:file_delta_sign=0": 1,
+        "action_pattern:file_delta_sign=1": 17,
+        "action_pattern:from_file_edge_distance=0": 18,
+        "action_pattern:from_file_edge_distance=1": 14,
+        "action_pattern:from_file_edge_distance=2": 11,
+        "action_pattern:from_file_edge_distance=3": 9,
+        "action_pattern:from_rank_edge_distance=0": 12,
+        "action_pattern:from_rank_edge_distance=1": 14,
+        "action_pattern:from_rank_edge_distance=2": 15,
+        "action_pattern:from_rank_edge_distance=3": 11,
+        "action_pattern:gives_check=0": 52,
+        "action_pattern:is_capture=0": 52,
+        "action_pattern:pair:gives_check:black_king_edge_after=0:0": 52,
+        "action_pattern:pair:piece:file_rank_delta=6:-1:-1": 21,
+        "action_pattern:pair:piece:file_rank_delta=6:-1:0": 1,
+        "action_pattern:pair:piece:file_rank_delta=6:-1:1": 12,
+        "action_pattern:pair:piece:file_rank_delta=6:0:1": 1,
+        "action_pattern:pair:piece:file_rank_delta=6:1:-1": 9,
+        "action_pattern:pair:piece:file_rank_delta=6:1:0": 1,
+        "action_pattern:pair:piece:file_rank_delta=6:1:1": 7,
+        "action_pattern:pair:piece:gives_check=6:0": 52,
+        "action_pattern:pair:rook_safety:gives_check=0:0": 51,
+        "action_pattern:pair:rook_safety:gives_check=1:0": 1,
+        "action_pattern:piece_type=6": 52,
+        "action_pattern:rank_delta_magnitude=0": 2,
+        "action_pattern:rank_delta_magnitude=1": 50,
+        "action_pattern:rank_delta_sign=-1": 30,
+        "action_pattern:rank_delta_sign=0": 2,
+        "action_pattern:rank_delta_sign=1": 20,
+        "action_pattern:rook_attacked_after=0": 51,
+        "action_pattern:rook_attacked_after=1": 1,
+        "action_pattern:to_file_edge_distance=0": 6,
+        "action_pattern:to_file_edge_distance=1": 18,
+        "action_pattern:to_file_edge_distance=2": 10,
+        "action_pattern:to_file_edge_distance=3": 18,
+        "action_pattern:to_rank_edge_distance=0": 2,
+        "action_pattern:to_rank_edge_distance=1": 10,
+        "action_pattern:to_rank_edge_distance=2": 17,
+        "action_pattern:to_rank_edge_distance=3": 23,
+        "action_pattern:white_king_to_black_king_after=2": 5,
+        "action_pattern:white_king_to_black_king_after=3": 9,
+        "action_pattern:white_king_to_black_king_after=4": 18,
+        "action_pattern:white_king_to_black_king_after=5": 15,
+        "action_pattern:white_king_to_black_king_after=6": 5,
+        "action_pattern:white_king_to_rook_after=1": 12,
+        "action_pattern:white_king_to_rook_after=2": 13,
+        "action_pattern:white_king_to_rook_after=3": 12,
+        "action_pattern:white_king_to_rook_after=4": 10,
+        "action_pattern:white_king_to_rook_after=5": 5,
+        "action_pattern:white_rook_to_black_king_after=1": 1,
+        "action_pattern:white_rook_to_black_king_after=2": 27,
+        "action_pattern:white_rook_to_black_king_after=3": 8,
+        "action_pattern:white_rook_to_black_king_after=4": 2,
+        "action_pattern:white_rook_to_black_king_after=5": 5,
+        "action_pattern:white_rook_to_black_king_after=6": 6,
+        "action_pattern:white_rook_to_black_king_after=7": 3,
+        "after_terminal:bk_neighbor_e_available=0": 36,
+        "after_terminal:bk_neighbor_e_available=1": 16,
+        "after_terminal:bk_neighbor_n_available=0": 20,
+        "after_terminal:bk_neighbor_n_available=1": 32,
+        "after_terminal:bk_neighbor_ne_available=0": 51,
+        "after_terminal:bk_neighbor_ne_available=1": 1,
+        "after_terminal:bk_neighbor_nw_available=0": 47,
+        "after_terminal:bk_neighbor_nw_available=1": 5,
+        "after_terminal:bk_neighbor_s_available=0": 25,
+        "after_terminal:bk_neighbor_s_available=1": 27,
+        "after_terminal:bk_neighbor_se_available=0": 47,
+        "after_terminal:bk_neighbor_se_available=1": 5,
+        "after_terminal:bk_neighbor_sw_available=0": 48,
+        "after_terminal:bk_neighbor_sw_available=1": 4,
+        "after_terminal:bk_neighbor_w_available=0": 38,
+        "after_terminal:bk_neighbor_w_available=1": 14,
+        "after_terminal:black_king_corner_distance=0": 20,
+        "after_terminal:black_king_corner_distance=1": 15,
+        "after_terminal:black_king_corner_distance=2": 10,
+        "after_terminal:black_king_corner_distance=3": 7,
+        "after_terminal:black_king_file=0": 29,
+        "after_terminal:black_king_file=1": 2,
+        "after_terminal:black_king_file=2": 2,
+        "after_terminal:black_king_file=4": 2,
+        "after_terminal:black_king_file=5": 2,
+        "after_terminal:black_king_file=6": 1,
+        "after_terminal:black_king_file=7": 14,
+        "after_terminal:black_king_nearest_edge_distance=0": 52,
+        "after_terminal:black_king_on_edge=1": 52,
+        "after_terminal:black_king_rank=0": 17,
+        "after_terminal:black_king_rank=1": 10,
+        "after_terminal:black_king_rank=2": 5,
+        "after_terminal:black_king_rank=3": 4,
+        "after_terminal:black_king_rank=4": 1,
+        "after_terminal:black_king_rank=5": 1,
+        "after_terminal:black_king_rank=6": 2,
+        "after_terminal:black_king_rank=7": 12,
+        "after_terminal:is_check=0": 52,
+        "after_terminal:king_delta_file_abs=0": 7,
+        "after_terminal:king_delta_file_abs=1": 12,
+        "after_terminal:king_delta_file_abs=2": 6,
+        "after_terminal:king_delta_file_abs=3": 8,
+        "after_terminal:king_delta_file_abs=4": 8,
+        "after_terminal:king_delta_file_abs=5": 6,
+        "after_terminal:king_delta_file_abs=6": 5,
+        "after_terminal:king_delta_rank_abs=0": 6,
+        "after_terminal:king_delta_rank_abs=1": 10,
+        "after_terminal:king_delta_rank_abs=2": 7,
+        "after_terminal:king_delta_rank_abs=3": 8,
+        "after_terminal:king_delta_rank_abs=4": 11,
+        "after_terminal:king_delta_rank_abs=5": 9,
+        "after_terminal:king_delta_rank_abs=6": 1,
+        "after_terminal:king_pair_knight_distance_like=0": 49,
+        "after_terminal:king_pair_knight_distance_like=1": 3,
+        "after_terminal:king_support_chebyshev_distance=2": 5,
+        "after_terminal:king_support_chebyshev_distance=3": 9,
+        "after_terminal:king_support_chebyshev_distance=4": 18,
+        "after_terminal:king_support_chebyshev_distance=5": 15,
+        "after_terminal:king_support_chebyshev_distance=6": 5,
+        "after_terminal:king_support_l_shape=0": 49,
+        "after_terminal:king_support_l_shape=1": 3,
+        "after_terminal:king_support_manhattan_distance=10": 1,
+        "after_terminal:king_support_manhattan_distance=12": 1,
+        "after_terminal:king_support_manhattan_distance=2": 2,
+        "after_terminal:king_support_manhattan_distance=3": 4,
+        "after_terminal:king_support_manhattan_distance=4": 11,
+        "after_terminal:king_support_manhattan_distance=5": 12,
+        "after_terminal:king_support_manhattan_distance=6": 10,
+        "after_terminal:king_support_manhattan_distance=7": 7,
+        "after_terminal:king_support_manhattan_distance=8": 4,
+        "after_terminal:rook_attacked_by_black=0": 51,
+        "after_terminal:rook_attacked_by_black=1": 1,
+        "after_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=0": 40,
+        "after_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=1": 12,
+        "after_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=0": 32,
+        "after_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=1": 20,
+        "after_terminal:rook_distance_to_black_king_edge_line=1": 47,
+        "after_terminal:rook_distance_to_black_king_edge_line=2": 4,
+        "after_terminal:rook_distance_to_black_king_edge_line=6": 1,
+        "after_terminal:rook_fence_depth_relative_to_black_king_edge=1": 47,
+        "after_terminal:rook_fence_depth_relative_to_black_king_edge=2": 4,
+        "after_terminal:rook_fence_depth_relative_to_black_king_edge=6": 1,
+        "after_terminal:rook_present=1": 52,
+        "after_terminal:side_white_to_move=0": 52,
+        "after_terminal:white_king_file=0": 4,
+        "after_terminal:white_king_file=1": 7,
+        "after_terminal:white_king_file=2": 3,
+        "after_terminal:white_king_file=3": 10,
+        "after_terminal:white_king_file=4": 8,
+        "after_terminal:white_king_file=5": 7,
+        "after_terminal:white_king_file=6": 11,
+        "after_terminal:white_king_file=7": 2,
+        "after_terminal:white_king_rank=1": 4,
+        "after_terminal:white_king_rank=2": 8,
+        "after_terminal:white_king_rank=3": 13,
+        "after_terminal:white_king_rank=4": 10,
+        "after_terminal:white_king_rank=5": 9,
+        "after_terminal:white_king_rank=6": 6,
+        "after_terminal:white_king_rank=7": 2,
+        "after_terminal:white_king_to_black_king_distance=2": 5,
+        "after_terminal:white_king_to_black_king_distance=3": 9,
+        "after_terminal:white_king_to_black_king_distance=4": 18,
+        "after_terminal:white_king_to_black_king_distance=5": 15,
+        "after_terminal:white_king_to_black_king_distance=6": 5,
+        "after_terminal:white_king_to_rook_distance=1": 12,
+        "after_terminal:white_king_to_rook_distance=2": 13,
+        "after_terminal:white_king_to_rook_distance=3": 12,
+        "after_terminal:white_king_to_rook_distance=4": 10,
+        "after_terminal:white_king_to_rook_distance=5": 5,
+        "after_terminal:white_rook_file=1": 26,
+        "after_terminal:white_rook_file=2": 4,
+        "after_terminal:white_rook_file=4": 4,
+        "after_terminal:white_rook_file=5": 2,
+        "after_terminal:white_rook_file=6": 15,
+        "after_terminal:white_rook_file=7": 1,
+        "after_terminal:white_rook_rank=0": 7,
+        "after_terminal:white_rook_rank=1": 12,
+        "after_terminal:white_rook_rank=2": 4,
+        "after_terminal:white_rook_rank=3": 8,
+        "after_terminal:white_rook_rank=4": 3,
+        "after_terminal:white_rook_rank=5": 2,
+        "after_terminal:white_rook_rank=6": 13,
+        "after_terminal:white_rook_rank=7": 3,
+        "after_terminal:white_rook_to_black_king_distance=1": 1,
+        "after_terminal:white_rook_to_black_king_distance=2": 27,
+        "after_terminal:white_rook_to_black_king_distance=3": 8,
+        "after_terminal:white_rook_to_black_king_distance=4": 2,
+        "after_terminal:white_rook_to_black_king_distance=5": 5,
+        "after_terminal:white_rook_to_black_king_distance=6": 6,
+        "after_terminal:white_rook_to_black_king_distance=7": 3,
+        "before_terminal:bk_neighbor_e_available=0": 39,
+        "before_terminal:bk_neighbor_e_available=1": 13,
+        "before_terminal:bk_neighbor_n_available=0": 19,
+        "before_terminal:bk_neighbor_n_available=1": 33,
+        "before_terminal:bk_neighbor_ne_available=0": 51,
+        "before_terminal:bk_neighbor_ne_available=1": 1,
+        "before_terminal:bk_neighbor_nw_available=0": 51,
+        "before_terminal:bk_neighbor_nw_available=1": 1,
+        "before_terminal:bk_neighbor_s_available=0": 25,
+        "before_terminal:bk_neighbor_s_available=1": 27,
+        "before_terminal:bk_neighbor_se_available=0": 51,
+        "before_terminal:bk_neighbor_se_available=1": 1,
+        "before_terminal:bk_neighbor_sw_available=0": 52,
+        "before_terminal:bk_neighbor_w_available=0": 40,
+        "before_terminal:bk_neighbor_w_available=1": 12,
+        "before_terminal:black_king_corner_distance=0": 20,
+        "before_terminal:black_king_corner_distance=1": 15,
+        "before_terminal:black_king_corner_distance=2": 10,
+        "before_terminal:black_king_corner_distance=3": 7,
+        "before_terminal:black_king_file=0": 29,
+        "before_terminal:black_king_file=1": 2,
+        "before_terminal:black_king_file=2": 2,
+        "before_terminal:black_king_file=4": 2,
+        "before_terminal:black_king_file=5": 2,
+        "before_terminal:black_king_file=6": 1,
+        "before_terminal:black_king_file=7": 14,
+        "before_terminal:black_king_nearest_edge_distance=0": 52,
+        "before_terminal:black_king_on_edge=1": 52,
+        "before_terminal:black_king_rank=0": 17,
+        "before_terminal:black_king_rank=1": 10,
+        "before_terminal:black_king_rank=2": 5,
+        "before_terminal:black_king_rank=3": 4,
+        "before_terminal:black_king_rank=4": 1,
+        "before_terminal:black_king_rank=5": 1,
+        "before_terminal:black_king_rank=6": 2,
+        "before_terminal:black_king_rank=7": 12,
+        "before_terminal:is_check=0": 52,
+        "before_terminal:king_delta_file_abs=0": 12,
+        "before_terminal:king_delta_file_abs=1": 7,
+        "before_terminal:king_delta_file_abs=2": 2,
+        "before_terminal:king_delta_file_abs=3": 5,
+        "before_terminal:king_delta_file_abs=4": 7,
+        "before_terminal:king_delta_file_abs=5": 8,
+        "before_terminal:king_delta_file_abs=6": 6,
+        "before_terminal:king_delta_file_abs=7": 5,
+        "before_terminal:king_delta_rank_abs=0": 7,
+        "before_terminal:king_delta_rank_abs=1": 6,
+        "before_terminal:king_delta_rank_abs=2": 8,
+        "before_terminal:king_delta_rank_abs=3": 5,
+        "before_terminal:king_delta_rank_abs=4": 5,
+        "before_terminal:king_delta_rank_abs=5": 11,
+        "before_terminal:king_delta_rank_abs=6": 9,
+        "before_terminal:king_delta_rank_abs=7": 1,
+        "before_terminal:king_pair_knight_distance_like=0": 52,
+        "before_terminal:king_support_chebyshev_distance=2": 1,
+        "before_terminal:king_support_chebyshev_distance=3": 6,
+        "before_terminal:king_support_chebyshev_distance=4": 7,
+        "before_terminal:king_support_chebyshev_distance=5": 18,
+        "before_terminal:king_support_chebyshev_distance=6": 15,
+        "before_terminal:king_support_chebyshev_distance=7": 5,
+        "before_terminal:king_support_l_shape=0": 52,
+        "before_terminal:king_support_manhattan_distance=10": 4,
+        "before_terminal:king_support_manhattan_distance=12": 1,
+        "before_terminal:king_support_manhattan_distance=14": 1,
+        "before_terminal:king_support_manhattan_distance=2": 1,
+        "before_terminal:king_support_manhattan_distance=3": 3,
+        "before_terminal:king_support_manhattan_distance=4": 4,
+        "before_terminal:king_support_manhattan_distance=5": 11,
+        "before_terminal:king_support_manhattan_distance=6": 11,
+        "before_terminal:king_support_manhattan_distance=7": 8,
+        "before_terminal:king_support_manhattan_distance=8": 4,
+        "before_terminal:king_support_manhattan_distance=9": 4,
+        "before_terminal:rook_attacked_by_black=0": 51,
+        "before_terminal:rook_attacked_by_black=1": 1,
+        "before_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=0": 47,
+        "before_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=1": 5,
+        "before_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=0": 23,
+        "before_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=1": 29,
+        "before_terminal:rook_distance_to_black_king_edge_line=1": 47,
+        "before_terminal:rook_distance_to_black_king_edge_line=2": 4,
+        "before_terminal:rook_distance_to_black_king_edge_line=6": 1,
+        "before_terminal:rook_fence_depth_relative_to_black_king_edge=1": 47,
+        "before_terminal:rook_fence_depth_relative_to_black_king_edge=2": 4,
+        "before_terminal:rook_fence_depth_relative_to_black_king_edge=6": 1,
+        "before_terminal:rook_present=1": 52,
+        "before_terminal:side_white_to_move=1": 52,
+        "before_terminal:white_king_file=0": 6,
+        "before_terminal:white_king_file=1": 6,
+        "before_terminal:white_king_file=2": 6,
+        "before_terminal:white_king_file=3": 4,
+        "before_terminal:white_king_file=4": 5,
+        "before_terminal:white_king_file=5": 5,
+        "before_terminal:white_king_file=6": 8,
+        "before_terminal:white_king_file=7": 12,
+        "before_terminal:white_king_rank=0": 4,
+        "before_terminal:white_king_rank=1": 7,
+        "before_terminal:white_king_rank=2": 6,
+        "before_terminal:white_king_rank=3": 2,
+        "before_terminal:white_king_rank=4": 9,
+        "before_terminal:white_king_rank=5": 9,
+        "before_terminal:white_king_rank=6": 7,
+        "before_terminal:white_king_rank=7": 8,
+        "before_terminal:white_king_to_black_king_distance=2": 1,
+        "before_terminal:white_king_to_black_king_distance=3": 6,
+        "before_terminal:white_king_to_black_king_distance=4": 7,
+        "before_terminal:white_king_to_black_king_distance=5": 18,
+        "before_terminal:white_king_to_black_king_distance=6": 15,
+        "before_terminal:white_king_to_black_king_distance=7": 5,
+        "before_terminal:white_king_to_rook_distance=1": 14,
+        "before_terminal:white_king_to_rook_distance=2": 6,
+        "before_terminal:white_king_to_rook_distance=3": 10,
+        "before_terminal:white_king_to_rook_distance=4": 9,
+        "before_terminal:white_king_to_rook_distance=5": 9,
+        "before_terminal:white_king_to_rook_distance=6": 4,
+        "before_terminal:white_rook_file=1": 26,
+        "before_terminal:white_rook_file=2": 4,
+        "before_terminal:white_rook_file=4": 4,
+        "before_terminal:white_rook_file=5": 2,
+        "before_terminal:white_rook_file=6": 15,
+        "before_terminal:white_rook_file=7": 1,
+        "before_terminal:white_rook_rank=0": 7,
+        "before_terminal:white_rook_rank=1": 12,
+        "before_terminal:white_rook_rank=2": 4,
+        "before_terminal:white_rook_rank=3": 8,
+        "before_terminal:white_rook_rank=4": 3,
+        "before_terminal:white_rook_rank=5": 2,
+        "before_terminal:white_rook_rank=6": 13,
+        "before_terminal:white_rook_rank=7": 3,
+        "before_terminal:white_rook_to_black_king_distance=1": 1,
+        "before_terminal:white_rook_to_black_king_distance=2": 27,
+        "before_terminal:white_rook_to_black_king_distance=3": 8,
+        "before_terminal:white_rook_to_black_king_distance=4": 2,
+        "before_terminal:white_rook_to_black_king_distance=5": 5,
+        "before_terminal:white_rook_to_black_king_distance=6": 6,
+        "before_terminal:white_rook_to_black_king_distance=7": 3,
+        "delta_terminal:bk_neighbor_e_available=negative": 1,
+        "delta_terminal:bk_neighbor_e_available=positive": 4,
+        "delta_terminal:bk_neighbor_e_available=zero": 47,
+        "delta_terminal:bk_neighbor_n_available=negative": 1,
+        "delta_terminal:bk_neighbor_n_available=zero": 51,
+        "delta_terminal:bk_neighbor_ne_available=negative": 1,
+        "delta_terminal:bk_neighbor_ne_available=positive": 1,
+        "delta_terminal:bk_neighbor_ne_available=zero": 50,
+        "delta_terminal:bk_neighbor_nw_available=negative": 1,
+        "delta_terminal:bk_neighbor_nw_available=positive": 5,
+        "delta_terminal:bk_neighbor_nw_available=zero": 46,
+        "delta_terminal:bk_neighbor_s_available=negative": 2,
+        "delta_terminal:bk_neighbor_s_available=positive": 2,
+        "delta_terminal:bk_neighbor_s_available=zero": 48,
+        "delta_terminal:bk_neighbor_se_available=negative": 1,
+        "delta_terminal:bk_neighbor_se_available=positive": 5,
+        "delta_terminal:bk_neighbor_se_available=zero": 46,
+        "delta_terminal:bk_neighbor_sw_available=positive": 4,
+        "delta_terminal:bk_neighbor_sw_available=zero": 48,
+        "delta_terminal:bk_neighbor_w_available=negative": 3,
+        "delta_terminal:bk_neighbor_w_available=positive": 5,
+        "delta_terminal:bk_neighbor_w_available=zero": 44,
+        "delta_terminal:black_king_corner_distance=zero": 52,
+        "delta_terminal:black_king_file=zero": 52,
+        "delta_terminal:black_king_nearest_edge_distance=zero": 52,
+        "delta_terminal:black_king_on_edge=zero": 52,
+        "delta_terminal:black_king_rank=zero": 52,
+        "delta_terminal:is_check=zero": 52,
+        "delta_terminal:king_delta_file_abs=negative": 38,
+        "delta_terminal:king_delta_file_abs=positive": 13,
+        "delta_terminal:king_delta_file_abs=zero": 1,
+        "delta_terminal:king_delta_rank_abs=negative": 40,
+        "delta_terminal:king_delta_rank_abs=positive": 10,
+        "delta_terminal:king_delta_rank_abs=zero": 2,
+        "delta_terminal:king_pair_knight_distance_like=positive": 3,
+        "delta_terminal:king_pair_knight_distance_like=zero": 49,
+        "delta_terminal:king_support_chebyshev_distance=negative": 50,
+        "delta_terminal:king_support_chebyshev_distance=positive": 1,
+        "delta_terminal:king_support_chebyshev_distance=zero": 1,
+        "delta_terminal:king_support_l_shape=positive": 3,
+        "delta_terminal:king_support_l_shape=zero": 49,
+        "delta_terminal:king_support_manhattan_distance=negative": 30,
+        "delta_terminal:king_support_manhattan_distance=positive": 1,
+        "delta_terminal:king_support_manhattan_distance=zero": 21,
+        "delta_terminal:rook_attacked_by_black=zero": 52,
+        "delta_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=negative": 2,
+        "delta_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=positive": 9,
+        "delta_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=zero": 41,
+        "delta_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=negative": 10,
+        "delta_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=positive": 1,
+        "delta_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=zero": 41,
+        "delta_terminal:rook_distance_to_black_king_edge_line=zero": 52,
+        "delta_terminal:rook_fence_depth_relative_to_black_king_edge=zero": 52,
+        "delta_terminal:rook_present=zero": 52,
+        "delta_terminal:side_white_to_move=negative": 52,
+        "delta_terminal:white_king_file=negative": 34,
+        "delta_terminal:white_king_file=positive": 17,
+        "delta_terminal:white_king_file=zero": 1,
+        "delta_terminal:white_king_rank=negative": 30,
+        "delta_terminal:white_king_rank=positive": 20,
+        "delta_terminal:white_king_rank=zero": 2,
+        "delta_terminal:white_king_to_black_king_distance=negative": 50,
+        "delta_terminal:white_king_to_black_king_distance=positive": 1,
+        "delta_terminal:white_king_to_black_king_distance=zero": 1,
+        "delta_terminal:white_king_to_rook_distance=negative": 31,
+        "delta_terminal:white_king_to_rook_distance=positive": 9,
+        "delta_terminal:white_king_to_rook_distance=zero": 12,
+        "delta_terminal:white_rook_file=zero": 52,
+        "delta_terminal:white_rook_rank=zero": 52,
+        "delta_terminal:white_rook_to_black_king_distance=zero": 52
+      },
+      "success": {
+        "action_pattern:black_king_edge_after=0": 267,
+        "action_pattern:file_delta_magnitude=1": 267,
+        "action_pattern:file_delta_sign=-1": 134,
+        "action_pattern:file_delta_sign=1": 133,
+        "action_pattern:from_file_edge_distance=0": 21,
+        "action_pattern:from_file_edge_distance=1": 40,
+        "action_pattern:from_file_edge_distance=2": 65,
+        "action_pattern:from_file_edge_distance=3": 141,
+        "action_pattern:from_rank_edge_distance=0": 19,
+        "action_pattern:from_rank_edge_distance=1": 36,
+        "action_pattern:from_rank_edge_distance=2": 74,
+        "action_pattern:from_rank_edge_distance=3": 138,
+        "action_pattern:gives_check=0": 267,
+        "action_pattern:is_capture=0": 267,
+        "action_pattern:pair:gives_check:black_king_edge_after=0:0": 267,
+        "action_pattern:pair:piece:file_rank_delta=6:-1:-1": 68,
+        "action_pattern:pair:piece:file_rank_delta=6:-1:1": 66,
+        "action_pattern:pair:piece:file_rank_delta=6:1:-1": 71,
+        "action_pattern:pair:piece:file_rank_delta=6:1:1": 62,
+        "action_pattern:pair:piece:gives_check=6:0": 267,
+        "action_pattern:pair:rook_safety:gives_check=0:0": 267,
+        "action_pattern:piece_type=6": 267,
+        "action_pattern:rank_delta_magnitude=1": 267,
+        "action_pattern:rank_delta_sign=-1": 139,
+        "action_pattern:rank_delta_sign=1": 128,
+        "action_pattern:rook_attacked_after=0": 267,
+        "action_pattern:to_file_edge_distance=1": 23,
+        "action_pattern:to_file_edge_distance=2": 104,
+        "action_pattern:to_file_edge_distance=3": 140,
+        "action_pattern:to_rank_edge_distance=1": 21,
+        "action_pattern:to_rank_edge_distance=2": 111,
+        "action_pattern:to_rank_edge_distance=3": 135,
+        "action_pattern:white_king_to_black_king_after=2": 76,
+        "action_pattern:white_king_to_black_king_after=3": 92,
+        "action_pattern:white_king_to_black_king_after=4": 52,
+        "action_pattern:white_king_to_black_king_after=5": 34,
+        "action_pattern:white_king_to_black_king_after=6": 13,
+        "action_pattern:white_king_to_rook_after=1": 26,
+        "action_pattern:white_king_to_rook_after=2": 70,
+        "action_pattern:white_king_to_rook_after=3": 86,
+        "action_pattern:white_king_to_rook_after=4": 62,
+        "action_pattern:white_king_to_rook_after=5": 20,
+        "action_pattern:white_king_to_rook_after=6": 3,
+        "action_pattern:white_rook_to_black_king_after=2": 34,
+        "action_pattern:white_rook_to_black_king_after=3": 67,
+        "action_pattern:white_rook_to_black_king_after=4": 68,
+        "action_pattern:white_rook_to_black_king_after=5": 50,
+        "action_pattern:white_rook_to_black_king_after=6": 36,
+        "action_pattern:white_rook_to_black_king_after=7": 12,
+        "after_terminal:bk_neighbor_e_available=0": 146,
+        "after_terminal:bk_neighbor_e_available=1": 121,
+        "after_terminal:bk_neighbor_n_available=0": 159,
+        "after_terminal:bk_neighbor_n_available=1": 108,
+        "after_terminal:bk_neighbor_ne_available=0": 267,
+        "after_terminal:bk_neighbor_nw_available=0": 267,
+        "after_terminal:bk_neighbor_s_available=0": 151,
+        "after_terminal:bk_neighbor_s_available=1": 116,
+        "after_terminal:bk_neighbor_se_available=0": 266,
+        "after_terminal:bk_neighbor_se_available=1": 1,
+        "after_terminal:bk_neighbor_sw_available=0": 267,
+        "after_terminal:bk_neighbor_w_available=0": 139,
+        "after_terminal:bk_neighbor_w_available=1": 128,
+        "after_terminal:black_king_corner_distance=0": 60,
+        "after_terminal:black_king_corner_distance=1": 94,
+        "after_terminal:black_king_corner_distance=2": 67,
+        "after_terminal:black_king_corner_distance=3": 46,
+        "after_terminal:black_king_file=0": 79,
+        "after_terminal:black_king_file=1": 20,
+        "after_terminal:black_king_file=2": 16,
+        "after_terminal:black_king_file=3": 10,
+        "after_terminal:black_king_file=4": 13,
+        "after_terminal:black_king_file=5": 18,
+        "after_terminal:black_king_file=6": 31,
+        "after_terminal:black_king_file=7": 80,
+        "after_terminal:black_king_nearest_edge_distance=0": 267,
+        "after_terminal:black_king_on_edge=1": 267,
+        "after_terminal:black_king_rank=0": 82,
+        "after_terminal:black_king_rank=1": 18,
+        "after_terminal:black_king_rank=2": 18,
+        "after_terminal:black_king_rank=3": 13,
+        "after_terminal:black_king_rank=4": 10,
+        "after_terminal:black_king_rank=5": 15,
+        "after_terminal:black_king_rank=6": 25,
+        "after_terminal:black_king_rank=7": 86,
+        "after_terminal:is_check=0": 267,
+        "after_terminal:king_delta_file_abs=0": 10,
+        "after_terminal:king_delta_file_abs=1": 42,
+        "after_terminal:king_delta_file_abs=2": 81,
+        "after_terminal:king_delta_file_abs=3": 74,
+        "after_terminal:king_delta_file_abs=4": 32,
+        "after_terminal:king_delta_file_abs=5": 20,
+        "after_terminal:king_delta_file_abs=6": 8,
+        "after_terminal:king_delta_rank_abs=0": 9,
+        "after_terminal:king_delta_rank_abs=1": 57,
+        "after_terminal:king_delta_rank_abs=2": 88,
+        "after_terminal:king_delta_rank_abs=3": 68,
+        "after_terminal:king_delta_rank_abs=4": 24,
+        "after_terminal:king_delta_rank_abs=5": 16,
+        "after_terminal:king_delta_rank_abs=6": 5,
+        "after_terminal:king_pair_knight_distance_like=0": 227,
+        "after_terminal:king_pair_knight_distance_like=1": 40,
+        "after_terminal:king_support_chebyshev_distance=2": 76,
+        "after_terminal:king_support_chebyshev_distance=3": 92,
+        "after_terminal:king_support_chebyshev_distance=4": 52,
+        "after_terminal:king_support_chebyshev_distance=5": 34,
+        "after_terminal:king_support_chebyshev_distance=6": 13,
+        "after_terminal:king_support_l_shape=0": 227,
+        "after_terminal:king_support_l_shape=1": 40,
+        "after_terminal:king_support_manhattan_distance=10": 2,
+        "after_terminal:king_support_manhattan_distance=2": 12,
+        "after_terminal:king_support_manhattan_distance=3": 44,
+        "after_terminal:king_support_manhattan_distance=4": 54,
+        "after_terminal:king_support_manhattan_distance=5": 57,
+        "after_terminal:king_support_manhattan_distance=6": 45,
+        "after_terminal:king_support_manhattan_distance=7": 33,
+        "after_terminal:king_support_manhattan_distance=8": 13,
+        "after_terminal:king_support_manhattan_distance=9": 7,
+        "after_terminal:rook_attacked_by_black=0": 267,
+        "after_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=0": 95,
+        "after_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=1": 172,
+        "after_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=0": 211,
+        "after_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=1": 56,
+        "after_terminal:rook_distance_to_black_king_edge_line=1": 234,
+        "after_terminal:rook_distance_to_black_king_edge_line=3": 3,
+        "after_terminal:rook_distance_to_black_king_edge_line=4": 12,
+        "after_terminal:rook_distance_to_black_king_edge_line=5": 4,
+        "after_terminal:rook_distance_to_black_king_edge_line=6": 7,
+        "after_terminal:rook_distance_to_black_king_edge_line=7": 7,
+        "after_terminal:rook_fence_depth_relative_to_black_king_edge=1": 234,
+        "after_terminal:rook_fence_depth_relative_to_black_king_edge=3": 3,
+        "after_terminal:rook_fence_depth_relative_to_black_king_edge=4": 12,
+        "after_terminal:rook_fence_depth_relative_to_black_king_edge=5": 4,
+        "after_terminal:rook_fence_depth_relative_to_black_king_edge=6": 7,
+        "after_terminal:rook_fence_depth_relative_to_black_king_edge=7": 7,
+        "after_terminal:rook_present=1": 267,
+        "after_terminal:side_white_to_move=0": 267,
+        "after_terminal:white_king_file=1": 10,
+        "after_terminal:white_king_file=2": 52,
+        "after_terminal:white_king_file=3": 70,
+        "after_terminal:white_king_file=4": 70,
+        "after_terminal:white_king_file=5": 52,
+        "after_terminal:white_king_file=6": 13,
+        "after_terminal:white_king_rank=1": 12,
+        "after_terminal:white_king_rank=2": 51,
+        "after_terminal:white_king_rank=3": 63,
+        "after_terminal:white_king_rank=4": 72,
+        "after_terminal:white_king_rank=5": 60,
+        "after_terminal:white_king_rank=6": 9,
+        "after_terminal:white_king_to_black_king_distance=2": 76,
+        "after_terminal:white_king_to_black_king_distance=3": 92,
+        "after_terminal:white_king_to_black_king_distance=4": 52,
+        "after_terminal:white_king_to_black_king_distance=5": 34,
+        "after_terminal:white_king_to_black_king_distance=6": 13,
+        "after_terminal:white_king_to_rook_distance=1": 26,
+        "after_terminal:white_king_to_rook_distance=2": 70,
+        "after_terminal:white_king_to_rook_distance=3": 86,
+        "after_terminal:white_king_to_rook_distance=4": 62,
+        "after_terminal:white_king_to_rook_distance=5": 20,
+        "after_terminal:white_king_to_rook_distance=6": 3,
+        "after_terminal:white_rook_file=0": 17,
+        "after_terminal:white_rook_file=1": 82,
+        "after_terminal:white_rook_file=2": 15,
+        "after_terminal:white_rook_file=3": 39,
+        "after_terminal:white_rook_file=4": 7,
+        "after_terminal:white_rook_file=5": 3,
+        "after_terminal:white_rook_file=6": 91,
+        "after_terminal:white_rook_file=7": 13,
+        "after_terminal:white_rook_rank=0": 19,
+        "after_terminal:white_rook_rank=1": 97,
+        "after_terminal:white_rook_rank=2": 12,
+        "after_terminal:white_rook_rank=3": 12,
+        "after_terminal:white_rook_rank=4": 11,
+        "after_terminal:white_rook_rank=5": 6,
+        "after_terminal:white_rook_rank=6": 90,
+        "after_terminal:white_rook_rank=7": 20,
+        "after_terminal:white_rook_to_black_king_distance=2": 34,
+        "after_terminal:white_rook_to_black_king_distance=3": 67,
+        "after_terminal:white_rook_to_black_king_distance=4": 68,
+        "after_terminal:white_rook_to_black_king_distance=5": 50,
+        "after_terminal:white_rook_to_black_king_distance=6": 36,
+        "after_terminal:white_rook_to_black_king_distance=7": 12,
+        "before_terminal:bk_neighbor_e_available=0": 145,
+        "before_terminal:bk_neighbor_e_available=1": 122,
+        "before_terminal:bk_neighbor_n_available=0": 157,
+        "before_terminal:bk_neighbor_n_available=1": 110,
+        "before_terminal:bk_neighbor_ne_available=0": 265,
+        "before_terminal:bk_neighbor_ne_available=1": 2,
+        "before_terminal:bk_neighbor_nw_available=0": 266,
+        "before_terminal:bk_neighbor_nw_available=1": 1,
+        "before_terminal:bk_neighbor_s_available=0": 150,
+        "before_terminal:bk_neighbor_s_available=1": 117,
+        "before_terminal:bk_neighbor_se_available=0": 265,
+        "before_terminal:bk_neighbor_se_available=1": 2,
+        "before_terminal:bk_neighbor_sw_available=0": 267,
+        "before_terminal:bk_neighbor_w_available=0": 139,
+        "before_terminal:bk_neighbor_w_available=1": 128,
+        "before_terminal:black_king_corner_distance=0": 60,
+        "before_terminal:black_king_corner_distance=1": 94,
+        "before_terminal:black_king_corner_distance=2": 67,
+        "before_terminal:black_king_corner_distance=3": 46,
+        "before_terminal:black_king_file=0": 79,
+        "before_terminal:black_king_file=1": 20,
+        "before_terminal:black_king_file=2": 16,
+        "before_terminal:black_king_file=3": 10,
+        "before_terminal:black_king_file=4": 13,
+        "before_terminal:black_king_file=5": 18,
+        "before_terminal:black_king_file=6": 31,
+        "before_terminal:black_king_file=7": 80,
+        "before_terminal:black_king_nearest_edge_distance=0": 267,
+        "before_terminal:black_king_on_edge=1": 267,
+        "before_terminal:black_king_rank=0": 82,
+        "before_terminal:black_king_rank=1": 18,
+        "before_terminal:black_king_rank=2": 18,
+        "before_terminal:black_king_rank=3": 13,
+        "before_terminal:black_king_rank=4": 10,
+        "before_terminal:black_king_rank=5": 15,
+        "before_terminal:black_king_rank=6": 25,
+        "before_terminal:black_king_rank=7": 86,
+        "before_terminal:is_check=0": 267,
+        "before_terminal:king_delta_file_abs=0": 18,
+        "before_terminal:king_delta_file_abs=1": 26,
+        "before_terminal:king_delta_file_abs=2": 32,
+        "before_terminal:king_delta_file_abs=3": 68,
+        "before_terminal:king_delta_file_abs=4": 66,
+        "before_terminal:king_delta_file_abs=5": 29,
+        "before_terminal:king_delta_file_abs=6": 20,
+        "before_terminal:king_delta_file_abs=7": 8,
+        "before_terminal:king_delta_rank_abs=0": 32,
+        "before_terminal:king_delta_rank_abs=1": 25,
+        "before_terminal:king_delta_rank_abs=2": 47,
+        "before_terminal:king_delta_rank_abs=3": 72,
+        "before_terminal:king_delta_rank_abs=4": 46,
+        "before_terminal:king_delta_rank_abs=5": 24,
+        "before_terminal:king_delta_rank_abs=6": 16,
+        "before_terminal:king_delta_rank_abs=7": 5,
+        "before_terminal:king_pair_knight_distance_like=0": 267,
+        "before_terminal:king_support_chebyshev_distance=3": 84,
+        "before_terminal:king_support_chebyshev_distance=4": 87,
+        "before_terminal:king_support_chebyshev_distance=5": 49,
+        "before_terminal:king_support_chebyshev_distance=6": 34,
+        "before_terminal:king_support_chebyshev_distance=7": 13,
+        "before_terminal:king_support_l_shape=0": 267,
+        "before_terminal:king_support_manhattan_distance=10": 9,
+        "before_terminal:king_support_manhattan_distance=11": 7,
+        "before_terminal:king_support_manhattan_distance=12": 2,
+        "before_terminal:king_support_manhattan_distance=3": 19,
+        "before_terminal:king_support_manhattan_distance=4": 31,
+        "before_terminal:king_support_manhattan_distance=5": 58,
+        "before_terminal:king_support_manhattan_distance=6": 60,
+        "before_terminal:king_support_manhattan_distance=7": 39,
+        "before_terminal:king_support_manhattan_distance=8": 24,
+        "before_terminal:king_support_manhattan_distance=9": 18,
+        "before_terminal:rook_attacked_by_black=0": 267,
+        "before_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=0": 145,
+        "before_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=1": 122,
+        "before_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=0": 186,
+        "before_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=1": 81,
+        "before_terminal:rook_distance_to_black_king_edge_line=1": 234,
+        "before_terminal:rook_distance_to_black_king_edge_line=3": 3,
+        "before_terminal:rook_distance_to_black_king_edge_line=4": 12,
+        "before_terminal:rook_distance_to_black_king_edge_line=5": 4,
+        "before_terminal:rook_distance_to_black_king_edge_line=6": 7,
+        "before_terminal:rook_distance_to_black_king_edge_line=7": 7,
+        "before_terminal:rook_fence_depth_relative_to_black_king_edge=1": 234,
+        "before_terminal:rook_fence_depth_relative_to_black_king_edge=3": 3,
+        "before_terminal:rook_fence_depth_relative_to_black_king_edge=4": 12,
+        "before_terminal:rook_fence_depth_relative_to_black_king_edge=5": 4,
+        "before_terminal:rook_fence_depth_relative_to_black_king_edge=6": 7,
+        "before_terminal:rook_fence_depth_relative_to_black_king_edge=7": 7,
+        "before_terminal:rook_present=1": 267,
+        "before_terminal:side_white_to_move=1": 267,
+        "before_terminal:white_king_file=0": 9,
+        "before_terminal:white_king_file=1": 19,
+        "before_terminal:white_king_file=2": 34,
+        "before_terminal:white_king_file=3": 73,
+        "before_terminal:white_king_file=4": 68,
+        "before_terminal:white_king_file=5": 31,
+        "before_terminal:white_king_file=6": 21,
+        "before_terminal:white_king_file=7": 12,
+        "before_terminal:white_king_rank=0": 10,
+        "before_terminal:white_king_rank=1": 16,
+        "before_terminal:white_king_rank=2": 33,
+        "before_terminal:white_king_rank=3": 66,
+        "before_terminal:white_king_rank=4": 72,
+        "before_terminal:white_king_rank=5": 41,
+        "before_terminal:white_king_rank=6": 20,
+        "before_terminal:white_king_rank=7": 9,
+        "before_terminal:white_king_to_black_king_distance=3": 84,
+        "before_terminal:white_king_to_black_king_distance=4": 87,
+        "before_terminal:white_king_to_black_king_distance=5": 49,
+        "before_terminal:white_king_to_black_king_distance=6": 34,
+        "before_terminal:white_king_to_black_king_distance=7": 13,
+        "before_terminal:white_king_to_rook_distance=1": 16,
+        "before_terminal:white_king_to_rook_distance=2": 60,
+        "before_terminal:white_king_to_rook_distance=3": 74,
+        "before_terminal:white_king_to_rook_distance=4": 65,
+        "before_terminal:white_king_to_rook_distance=5": 34,
+        "before_terminal:white_king_to_rook_distance=6": 15,
+        "before_terminal:white_king_to_rook_distance=7": 3,
+        "before_terminal:white_rook_file=0": 17,
+        "before_terminal:white_rook_file=1": 82,
+        "before_terminal:white_rook_file=2": 15,
+        "before_terminal:white_rook_file=3": 39,
+        "before_terminal:white_rook_file=4": 7,
+        "before_terminal:white_rook_file=5": 3,
+        "before_terminal:white_rook_file=6": 91,
+        "before_terminal:white_rook_file=7": 13,
+        "before_terminal:white_rook_rank=0": 19,
+        "before_terminal:white_rook_rank=1": 97,
+        "before_terminal:white_rook_rank=2": 12,
+        "before_terminal:white_rook_rank=3": 12,
+        "before_terminal:white_rook_rank=4": 11,
+        "before_terminal:white_rook_rank=5": 6,
+        "before_terminal:white_rook_rank=6": 90,
+        "before_terminal:white_rook_rank=7": 20,
+        "before_terminal:white_rook_to_black_king_distance=2": 34,
+        "before_terminal:white_rook_to_black_king_distance=3": 67,
+        "before_terminal:white_rook_to_black_king_distance=4": 68,
+        "before_terminal:white_rook_to_black_king_distance=5": 50,
+        "before_terminal:white_rook_to_black_king_distance=6": 36,
+        "before_terminal:white_rook_to_black_king_distance=7": 12,
+        "delta_terminal:bk_neighbor_e_available=negative": 2,
+        "delta_terminal:bk_neighbor_e_available=positive": 1,
+        "delta_terminal:bk_neighbor_e_available=zero": 264,
+        "delta_terminal:bk_neighbor_n_available=negative": 2,
+        "delta_terminal:bk_neighbor_n_available=zero": 265,
+        "delta_terminal:bk_neighbor_ne_available=negative": 2,
+        "delta_terminal:bk_neighbor_ne_available=zero": 265,
+        "delta_terminal:bk_neighbor_nw_available=negative": 1,
+        "delta_terminal:bk_neighbor_nw_available=zero": 266,
+        "delta_terminal:bk_neighbor_s_available=negative": 1,
+        "delta_terminal:bk_neighbor_s_available=zero": 266,
+        "delta_terminal:bk_neighbor_se_available=negative": 2,
+        "delta_terminal:bk_neighbor_se_available=positive": 1,
+        "delta_terminal:bk_neighbor_se_available=zero": 264,
+        "delta_terminal:bk_neighbor_sw_available=zero": 267,
+        "delta_terminal:bk_neighbor_w_available=zero": 267,
+        "delta_terminal:black_king_corner_distance=zero": 267,
+        "delta_terminal:black_king_file=zero": 267,
+        "delta_terminal:black_king_nearest_edge_distance=zero": 267,
+        "delta_terminal:black_king_on_edge=zero": 267,
+        "delta_terminal:black_king_rank=zero": 267,
+        "delta_terminal:is_check=zero": 267,
+        "delta_terminal:king_delta_file_abs=negative": 222,
+        "delta_terminal:king_delta_file_abs=positive": 45,
+        "delta_terminal:king_delta_rank_abs=negative": 197,
+        "delta_terminal:king_delta_rank_abs=positive": 70,
+        "delta_terminal:king_pair_knight_distance_like=positive": 40,
+        "delta_terminal:king_pair_knight_distance_like=zero": 227,
+        "delta_terminal:king_support_chebyshev_distance=negative": 259,
+        "delta_terminal:king_support_chebyshev_distance=positive": 3,
+        "delta_terminal:king_support_chebyshev_distance=zero": 5,
+        "delta_terminal:king_support_l_shape=positive": 40,
+        "delta_terminal:king_support_l_shape=zero": 227,
+        "delta_terminal:king_support_manhattan_distance=negative": 155,
+        "delta_terminal:king_support_manhattan_distance=positive": 3,
+        "delta_terminal:king_support_manhattan_distance=zero": 109,
+        "delta_terminal:rook_attacked_by_black=zero": 267,
+        "delta_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=negative": 13,
+        "delta_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=positive": 63,
+        "delta_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=zero": 191,
+        "delta_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=negative": 26,
+        "delta_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=positive": 1,
+        "delta_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=zero": 240,
+        "delta_terminal:rook_distance_to_black_king_edge_line=zero": 267,
+        "delta_terminal:rook_fence_depth_relative_to_black_king_edge=zero": 267,
+        "delta_terminal:rook_present=zero": 267,
+        "delta_terminal:side_white_to_move=negative": 267,
+        "delta_terminal:white_king_file=negative": 134,
+        "delta_terminal:white_king_file=positive": 133,
+        "delta_terminal:white_king_rank=negative": 139,
+        "delta_terminal:white_king_rank=positive": 128,
+        "delta_terminal:white_king_to_black_king_distance=negative": 259,
+        "delta_terminal:white_king_to_black_king_distance=positive": 3,
+        "delta_terminal:white_king_to_black_king_distance=zero": 5,
+        "delta_terminal:white_king_to_rook_distance=negative": 170,
+        "delta_terminal:white_king_to_rook_distance=positive": 61,
+        "delta_terminal:white_king_to_rook_distance=zero": 36,
+        "delta_terminal:white_rook_file=zero": 267,
+        "delta_terminal:white_rook_rank=zero": 267,
+        "delta_terminal:white_rook_to_black_king_distance=zero": 267
+      }
+    },
+    "endpoint_counts": {
+      "fence_broken": 34,
+      "waypoint_reached": 94
+    },
+    "name": "learned",
+    "row_count": 128,
+    "sample_failures": [
+      {
+        "endpoint": "fence_broken",
+        "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+            "move": "h8g8"
+          },
+          {
+            "fen": "1k4K1/6R1/8/8/8/8/8/8 w - - 2 2",
+            "move": "g8f7"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+            "move": "g4f3"
+          },
+          {
+            "fen": "8/8/8/8/8/5K2/4R3/2k5 w - - 2 2",
+            "move": "f3e4"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+            "move": "b8a7"
+          },
+          {
+            "fen": "8/K7/8/8/1R6/8/8/k7 w - - 2 2",
+            "move": "a7b6"
+          },
+          {
+            "fen": "8/8/1K6/8/1R6/8/k7/8 w - - 4 3",
+            "move": "b6a5"
+          },
+          {
+            "fen": "8/8/8/K7/1R6/k7/8/8 w - - 6 4",
+            "move": "a5b6"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+            "move": "g1f2"
+          },
+          {
+            "fen": "8/8/8/1R6/8/k7/5K2/8 w - - 2 2",
+            "move": "f2e3"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+            "move": "e1d2"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+            "move": "f2e3"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+            "move": "b6a5"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "k7/8/1R6/8/8/8/8/7K w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "k7/8/1R6/8/8/8/8/7K w - - 0 1",
+            "move": "h1g2"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/3K4/8/8/8/6R1/4k3 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/3K4/8/8/8/6R1/4k3 w - - 0 1",
+            "move": "d6e5"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/4K3/8/8/8/8/2R5/k7 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/4K3/8/8/8/8/2R5/k7 w - - 0 1",
+            "move": "e7d6"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/7k/8/K5R1/8 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/8/8/7k/8/K5R1/8 w - - 0 1",
+            "move": "a2b3"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/7k/8/8/8/6R1/7K w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/7k/8/8/8/6R1/7K w - - 0 1",
+            "move": "h1h2"
+          },
+          {
+            "fen": "8/7k/8/8/8/8/6RK/8 w - - 2 2",
+            "move": "h2g3"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/7k/8/3K2R1/8 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/8/8/7k/8/3K2R1/8 w - - 0 1",
+            "move": "d2e3"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/7K/8/1R6/8/8/k7 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/7K/8/1R6/8/8/k7 w - - 0 1",
+            "move": "h6g5"
+          },
+          {
+            "fen": "8/8/8/6K1/1R6/8/k7/8 w - - 2 2",
+            "move": "g5f4"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/7K/8/8/4R3/2k5 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/8/7K/8/8/4R3/2k5 w - - 0 1",
+            "move": "h5g4"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/1K6/8/6R1/8/7k w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/8/1K6/8/6R1/8/7k w - - 0 1",
+            "move": "b5c4"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/7K/8/8/6R1/8/7k w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/7K/8/8/6R1/8/7k w - - 0 1",
+            "move": "h6g5"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/6RK/8/8/8/7k w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/8/6RK/8/8/8/7k w - - 0 1",
+            "move": "h5g4"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/6K1/k7/8/8/1R6/8 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/6K1/k7/8/8/1R6/8 w - - 0 1",
+            "move": "g6f5"
+          },
+          {
+            "fen": "8/8/8/5K2/k7/8/1R6/8 w - - 2 2",
+            "move": "f5e4"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/7K/8/k7/8/8/1R6 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/7K/8/k7/8/8/1R6 w - - 0 1",
+            "move": "h6g5"
+          },
+          {
+            "fen": "8/8/8/6K1/8/k7/8/1R6 w - - 2 2",
+            "move": "g5f4"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/3K4/8/8/8/8/5R2/7k w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/3K4/8/8/8/8/5R2/7k w - - 0 1",
+            "move": "d7e6"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "8/8/8/8/8/k3K3/8/1R6 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "8/8/8/8/8/k3K3/8/1R6 w - - 0 1",
+            "move": "e3d4"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "5k2/7R/8/8/8/2K5/8/8 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "5k2/7R/8/8/8/2K5/8/8 w - - 0 1",
+            "move": "c3d4"
+          }
+        ]
+      },
+      {
+        "endpoint": "fence_broken",
+        "fen": "2K4k/5R2/8/8/8/8/8/8 w - - 0 1",
+        "success": false,
+        "white_steps": [
+          {
+            "fen": "2K4k/5R2/8/8/8/8/8/8 w - - 0 1",
+            "move": "c8d7"
+          }
+        ]
+      }
+    ],
+    "success_count": 94,
+    "success_rate": 0.734375,
+    "wilson_95": [
+      0.6518470619103658,
+      0.8032449898364271
+    ]
+  },
+  "horizon": 12,
+  "schema_version": "phase2_9a_stage_a_sealed_seed.v0",
+  "seed": 20272911,
+  "structure": {
+    "leaked_terminal_count": 0,
+    "min_events": 3,
+    "promoted_affordance_count": 298,
+    "promoted_veto_count": 158,
+    "terminal_count": 473,
+    "threshold": 0.05,
+    "top_affordances": [
+      "action_pattern:black_king_edge_after=0",
+      "action_pattern:file_delta_magnitude=1",
+      "action_pattern:file_delta_sign=-1",
+      "action_pattern:file_delta_sign=1",
+      "action_pattern:from_file_edge_distance=2",
+      "action_pattern:from_file_edge_distance=3",
+      "action_pattern:from_rank_edge_distance=2",
+      "action_pattern:from_rank_edge_distance=3",
+      "action_pattern:gives_check=0",
+      "action_pattern:is_capture=0",
+      "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+      "action_pattern:pair:piece:file_rank_delta=6:-1:-1",
+      "action_pattern:pair:piece:file_rank_delta=6:-1:0",
+      "action_pattern:pair:piece:file_rank_delta=6:-1:1",
+      "action_pattern:pair:piece:file_rank_delta=6:0:-1",
+      "action_pattern:pair:piece:file_rank_delta=6:0:1",
+      "action_pattern:pair:piece:file_rank_delta=6:1:-1",
+      "action_pattern:pair:piece:file_rank_delta=6:1:0",
+      "action_pattern:pair:piece:file_rank_delta=6:1:1",
+      "action_pattern:pair:piece:gives_check=6:0"
+    ],
+    "top_vetoes": [
+      "action_pattern:file_delta_magnitude=0",
+      "action_pattern:file_delta_magnitude=2",
+      "action_pattern:file_delta_magnitude=3",
+      "action_pattern:file_delta_sign=0",
+      "action_pattern:from_file_edge_distance=0",
+      "action_pattern:from_file_edge_distance=1",
+      "action_pattern:from_rank_edge_distance=0",
+      "action_pattern:from_rank_edge_distance=1",
+      "action_pattern:gives_check=1",
+      "action_pattern:pair:gives_check:black_king_edge_after=1:0",
+      "action_pattern:pair:piece:file_rank_delta=4:-1:0",
+      "action_pattern:pair:piece:file_rank_delta=4:0:-1",
+      "action_pattern:pair:piece:file_rank_delta=4:0:1",
+      "action_pattern:pair:piece:file_rank_delta=4:1:0",
+      "action_pattern:pair:piece:gives_check=4:0",
+      "action_pattern:pair:piece:gives_check=4:1",
+      "action_pattern:pair:rook_safety:gives_check=0:1",
+      "action_pattern:pair:rook_safety:gives_check=1:0",
+      "action_pattern:pair:rook_safety:gives_check=1:1",
+      "action_pattern:piece_type=4"
+    ]
+  },
+  "task": "A",
+  "train_count": 600,
+  "train_summary": {
+    "m3_update_count": 343796,
+    "terminal_count": 473,
+    "train_trace_sample": [
+      {
+        "alternative_endpoint": "fence_broken",
+        "alternative_success": false,
+        "reward_delta": 0.0,
+        "row_id": 0,
+        "selected_endpoint": "fence_broken",
+        "selected_success": false
+      },
+      {
+        "alternative_endpoint": "waypoint_reached",
+        "alternative_success": true,
+        "reward_delta": -12.0,
+        "row_id": 1,
+        "selected_endpoint": "fence_broken",
+        "selected_success": false
+      },
+      {
+        "alternative_endpoint": "fence_broken",
+        "alternative_success": false,
+        "reward_delta": 12.0,
+        "row_id": 2,
+        "selected_endpoint": "waypoint_reached",
+        "selected_success": true
+      },
+      {
+        "alternative_endpoint": "waypoint_reached",
+        "alternative_success": true,
+        "reward_delta": -12.0,
+        "row_id": 3,
+        "selected_endpoint": "fence_broken",
+        "selected_success": false
+      },
+      {
+        "alternative_endpoint": "fence_broken",
+        "alternative_success": false,
+        "reward_delta": 12.0,
+        "row_id": 4,
+        "selected_endpoint": "waypoint_reached",
+        "selected_success": true
+      },
+      {
+        "alternative_endpoint": "waypoint_reached",
+        "alternative_success": true,
+        "reward_delta": -12.0,
+        "row_id": 5,
+        "selected_endpoint": "fence_broken",
+        "selected_success": false
+      },
+      {
+        "alternative_endpoint": "fence_broken",
+        "alternative_success": false,
+        "reward_delta": 12.0,
+        "row_id": 6,
+        "selected_endpoint": "waypoint_reached",
+        "selected_success": true
+      },
+      {
+        "alternative_endpoint": "illegal",
+        "alternative_success": false,
+        "reward_delta": 12.0,
+        "row_id": 7,
+        "selected_endpoint": "waypoint_reached",
+        "selected_success": true
+      },
+      {
+        "alternative_endpoint": "fence_broken",
+        "alternative_success": false,
+        "reward_delta": 12.0,
+        "row_id": 8,
+        "selected_endpoint": "waypoint_reached",
+        "selected_success": true
+      },
+      {
+        "alternative_endpoint": "waypoint_reached",
+        "alternative_success": true,
+        "reward_delta": 0.0,
+        "row_id": 9,
+        "selected_endpoint": "waypoint_reached",
+        "selected_success": true
+      },
+      {
+        "alternative_endpoint": "fence_broken",
+        "alternative_success": false,
+        "reward_delta": 12.0,
+        "row_id": 10,
+        "selected_endpoint": "waypoint_reached",
+        "selected_success": true
+      },
+      {
+        "alternative_endpoint": "waypoint_reached",
+        "alternative_success": true,
+        "reward_delta": -12.0,
+        "row_id": 11,
+        "selected_endpoint": "fence_broken",
+        "selected_success": false
+      },
+      {
+        "alternative_endpoint": "fence_broken",
+        "alternative_success": false,
+        "reward_delta": 12.0,
+        "row_id": 12,
+        "selected_endpoint": "waypoint_reached",
+        "selected_success": true
+      },
+      {
+        "alternative_endpoint": "fence_broken",
+        "alternative_success": false,
+        "reward_delta": 12.0,
+        "row_id": 13,
+        "selected_endpoint": "waypoint_reached",
+        "selected_success": true
+      },
+      {
+        "alternative_endpoint": "fence_broken",
+        "alternative_success": false,
+        "reward_delta": 12.0,
+        "row_id": 14,
+        "selected_endpoint": "waypoint_reached",
+        "selected_success": true
+      },
+      {
+        "alternative_endpoint": "fence_broken",
+        "alternative_success": false,
+        "reward_delta": 0.0,
+        "row_id": 15,
+        "selected_endpoint": "fence_broken",
+        "selected_success": false
+      },
+      {
+        "alternative_endpoint": "fence_broken",
+        "alternative_success": false,
+        "reward_delta": 12.0,
+        "row_id": 16,
+        "selected_endpoint": "waypoint_reached",
+        "selected_success": true
+      },
+      {
+        "alternative_endpoint": "illegal",
+        "alternative_success": false,
+        "reward_delta": 0.0,
+        "row_id": 17,
+        "selected_endpoint": "fence_broken",
+        "selected_success": false
+      },
+      {
+        "alternative_endpoint": "fence_broken",
+        "alternative_success": false,
+        "reward_delta": 12.0,
+        "row_id": 18,
+        "selected_endpoint": "waypoint_reached",
+        "selected_success": true
+      },
+      {
+        "alternative_endpoint": "waypoint_reached",
+        "alternative_success": true,
+        "reward_delta": 0.0,
+        "row_id": 19,
+        "selected_endpoint": "waypoint_reached",
+        "selected_success": true
+      },
+      {
+        "alternative_endpoint": "fence_broken",
+        "alternative_success": false,
+        "reward_delta": 0.0,
+        "row_id": 20,
+        "selected_endpoint": "illegal",
+        "selected_success": false
+      },
+      {
+        "alternative_endpoint": "waypoint_reached",
+        "alternative_success": true,
+        "reward_delta": -12.0,
+        "row_id": 21,
+        "selected_endpoint": "fence_broken",
+        "selected_success": false
+      },
+      {
+        "alternative_endpoint": "fence_broken",
+        "alternative_success": false,
+        "reward_delta": 0.0,
+        "row_id": 22,
+        "selected_endpoint": "fence_broken",
+        "selected_success": false
+      },
+      {
+        "alternative_endpoint": "illegal",
+        "alternative_success": false,
+        "reward_delta": 0.0,
+        "row_id": 23,
+        "selected_endpoint": "fence_broken",
+        "selected_success": false
+      }
+    ]
+  }
+}

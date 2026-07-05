@@ -1,0 +1,30 @@
+{
+  "elapsed_seconds_stage_b": 380.679034948349,
+  "schema_version": "phase2_9a_sealed_retrain_summary.v0",
+  "stage_a": {
+    "any_seed_exceeds_ceiling": true,
+    "ceiling_rates": [
+      0.6484375,
+      0.6484375,
+      0.6484375
+    ],
+    "learned_rates": [
+      0.734375,
+      0.7578125,
+      0.7421875
+    ]
+  },
+  "stage_b": {
+    "any_seed_exceeds_dispatcher": true,
+    "dispatcher_rates": [
+      0.6484375,
+      0.6484375,
+      0.6484375
+    ],
+    "learned_rates": [
+      0.7265625,
+      0.71875,
+      0.71875
+    ]
+  }
+}

@@ -8,7 +8,7 @@ learner path.
 from __future__ import annotations
 
 import json
-from typing import Any, Mapping
+from typing import Any, Iterable, Mapping
 
 import chess
 
@@ -26,6 +26,92 @@ FORBIDDEN_LEARNER_TERMS = (
     "curriculum",
     "landmark",
 )
+
+LEARNER_VISIBLE_FEATURE_NAMES = (
+    "white_king_file",
+    "white_king_rank",
+    "white_rook_file",
+    "white_rook_rank",
+    "black_king_file",
+    "black_king_rank",
+    "side_white_to_move",
+    "white_king_to_black_king_distance",
+    "white_rook_to_black_king_distance",
+    "white_king_to_rook_distance",
+    "black_king_nearest_edge_distance",
+    "rook_present",
+    "rook_attacked_by_black",
+    "is_check",
+    "king_delta_file_abs",
+    "king_delta_rank_abs",
+    "king_support_l_shape",
+    "king_pair_knight_distance_like",
+    "king_support_chebyshev_distance",
+    "king_support_manhattan_distance",
+    "rook_black_king_same_side_of_white_king_on_primary_axis",
+    "rook_black_king_opposite_sides_of_white_king_on_primary_axis",
+    "rook_distance_to_black_king_edge_line",
+    "rook_fence_depth_relative_to_black_king_edge",
+    "black_king_on_edge",
+    "black_king_corner_distance",
+    "bk_neighbor_n_available",
+    "bk_neighbor_ne_available",
+    "bk_neighbor_e_available",
+    "bk_neighbor_se_available",
+    "bk_neighbor_s_available",
+    "bk_neighbor_sw_available",
+    "bk_neighbor_w_available",
+    "bk_neighbor_nw_available",
+)
+
+REMOVE_MARKED_LEARNER_FEATURES = (
+    "legal_move_count",
+    "black_reply_mobility",
+    "is_checkmate",
+    "is_stalemate",
+    "rook_lateral_escape_available",
+    "white_king_controls_escape_band",
+    "feature_hub_opposition_status",
+    "feature_hub_mobility",
+    "feature_hub_king_tropism",
+    "feature_hub_mobility_restriction",
+    "feature_hub_tempo_advantage",
+    "feature_hub_mating_net_present",
+    "feature_hub_enemy_king_mobility",
+    "feature_hub_enemy_king_mobility_raw",
+    "feature_hub_stalemate_danger",
+)
+
+LEARNER_VISIBLE_ACTION_FEATURE_NAMES = (
+    "piece_type",
+    "file_delta_sign",
+    "rank_delta_sign",
+    "file_delta_magnitude",
+    "rank_delta_magnitude",
+    "from_file_edge_distance",
+    "from_rank_edge_distance",
+    "to_file_edge_distance",
+    "to_rank_edge_distance",
+    "gives_check",
+    "is_capture",
+    "black_king_edge_after",
+    "white_king_to_black_king_after",
+    "white_rook_to_black_king_after",
+    "white_king_to_rook_after",
+    "rook_attacked_after",
+)
+
+LEARNER_VISIBLE_ACTION_COMPOUNDS = (
+    "pair:gives_check:black_king_edge_after",
+    "pair:piece:gives_check",
+    "pair:piece:file_rank_delta",
+    "pair:rook_safety:gives_check",
+)
+
+_LEARNER_VISIBLE_FEATURE_SET = frozenset(LEARNER_VISIBLE_FEATURE_NAMES)
+_REMOVE_MARKED_FEATURE_SET = frozenset(REMOVE_MARKED_LEARNER_FEATURES)
+_LEARNER_VISIBLE_ACTION_FEATURE_SET = frozenset(LEARNER_VISIBLE_ACTION_FEATURE_NAMES)
+_LEARNER_VISIBLE_ACTION_COMPOUND_SET = frozenset(LEARNER_VISIBLE_ACTION_COMPOUNDS)
 
 _BK_NEIGHBOR_DIRECTIONS = (
     ("n", 0, 1),
@@ -287,6 +373,12 @@ def extract_learner_features(board: chess.Board) -> dict[str, float]:
         )
     )
     features.update(_black_king_neighbor_features(board, black_king))
+    extra = set(features) - _LEARNER_VISIBLE_FEATURE_SET
+    missing = _LEARNER_VISIBLE_FEATURE_SET - set(features)
+    if extra or missing:
+        raise ValueError(
+            f"learner feature firewall mismatch: extra={sorted(extra)} missing={sorted(missing)}"
+        )
     validate_learner_record(features)
     return features
 
@@ -379,3 +471,91 @@ def validate_learner_record(record: Mapping[str, Any] | list[Any] | str | float 
     leaked = [term for term in FORBIDDEN_LEARNER_TERMS if term in serialized]
     if leaked:
         raise ValueError(f"learner-visible record contains forbidden terms: {leaked}")
+
+
+def learner_visible_key_firewall_leaks(keys: Iterable[str]) -> dict[str, list[str]]:
+    """Return leaked feature names by key for learner-visible terminal builders."""
+
+    leaks: dict[str, list[str]] = {}
+    for key in keys:
+        found = _learner_key_leaks(str(key))
+        if found:
+            leaks[str(key)] = found
+    return leaks
+
+
+def validate_learner_visible_keys(keys: Iterable[str], *, builder: str) -> None:
+    """Reject learner-visible keys that bypass the dieted feature boundary."""
+
+    materialized = tuple(str(key) for key in keys)
+    leaks = learner_visible_key_firewall_leaks(materialized)
+    if leaks:
+        flat = sorted({feature for items in leaks.values() for feature in items})
+        raise ValueError(f"{builder} learner key firewall rejected leaked features: {flat}")
+    validate_learner_record(list(materialized))
+
+
+def _learner_key_leaks(key: str) -> list[str]:
+    if key.startswith(("before_terminal:", "after_terminal:", "delta_terminal:")):
+        name = key.split(":", 1)[1].split("=", 1)[0]
+        if name not in _LEARNER_VISIBLE_FEATURE_SET:
+            return [name]
+        return []
+    if key.startswith("action_pattern:"):
+        action_name = key.split(":", 1)[1].split("=", 1)[0]
+        if action_name.startswith("pair:"):
+            if action_name in _LEARNER_VISIBLE_ACTION_COMPOUND_SET:
+                return []
+            return _remove_marked_components(action_name.split(":"))
+        if action_name not in _LEARNER_VISIBLE_ACTION_FEATURE_SET:
+            return _remove_marked_components((action_name,)) or [action_name]
+        return []
+    if key.startswith("micro_"):
+        return _micro_key_leaks(key)
+    if key.startswith("post_move_"):
+        return _post_move_key_leaks(key)
+    return _remove_marked_components((key.split("=", 1)[0],))
+
+
+def _remove_marked_components(names: Iterable[str]) -> list[str]:
+    leaks: set[str] = set()
+    for name in names:
+        raw = str(name).split("=", 1)[0]
+        canonical = _canonical_remove_marked_name(raw)
+        if canonical is not None:
+            leaks.add(raw)
+        elif raw.startswith("feature_hub_"):
+            leaks.add(raw)
+    return sorted(leaks)
+
+
+def _canonical_remove_marked_name(name: str) -> str | None:
+    if name in _REMOVE_MARKED_FEATURE_SET:
+        return name
+    aliases = {
+        "black_reply_mobility_after": "black_reply_mobility",
+        "black_mobility": "black_reply_mobility",
+        "post_move_black_mobility_delta_sign": "black_reply_mobility",
+        "is_stalemate_after": "is_stalemate",
+        "stalemate_after": "is_stalemate",
+        "post_move_stalemate": "is_stalemate",
+        "is_checkmate_after": "is_checkmate",
+    }
+    return aliases.get(name)
+
+
+def _micro_key_leaks(key: str) -> list[str]:
+    head = key.split("=", 1)[0]
+    leaks = _remove_marked_components((head.split(":", 1)[-1],))
+    if "black_mobility" in key or "|mob=" in key:
+        leaks.append("black_mobility")
+    if "stalemate_after" in key:
+        leaks.append("stalemate_after")
+    if "rook_risk_after" in key or "|risk=" in key:
+        leaks.append("rook_capturable_by_reply")
+    return sorted(set(leaks))
+
+
+def _post_move_key_leaks(key: str) -> list[str]:
+    name = key.split("=", 1)[0]
+    return _remove_marked_components((name,))

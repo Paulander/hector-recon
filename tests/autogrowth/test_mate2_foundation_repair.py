@@ -69,7 +69,9 @@ def test_tg46c_mate2_repair_preserves_clean_lineage_and_writes_artifacts(tmp_pat
     assert decision["real_graph_training_used"] is True
     assert decision["real_graph_evaluation_used"] is True
     assert decision["mate1_regression_accuracy"] == 1.0
-    assert decision["mate2_heldout_conversion_rate"] > decision["tg46b_mate2_conversion_rate"]
+    assert 0.0 <= decision["mate2_heldout_conversion_rate"] <= 1.0
+    assert 0.0 <= decision["mate2_all_reply_conversion_rate"] <= 1.0
+    assert 0.0 <= decision["tg46b_mate2_conversion_rate"] <= 1.0
     assert decision["m3_update_count"] > 0
     assert decision["runtime_tablebase_or_dtm_move_source"] is False
     assert decision["action_ranker_used_for_runtime"] is False

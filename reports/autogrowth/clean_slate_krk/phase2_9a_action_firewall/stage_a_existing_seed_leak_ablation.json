@@ -1,0 +1,1030 @@
+{
+  "schema_version": "phase2_9a_stage_a_existing_seed_leak_ablation.v0",
+  "seeds": {
+    "20272911": {
+      "leaked_weight_count": 308,
+      "leaked_weights_zeroed": {
+        "endpoint_counts": {
+          "fence_broken": 27,
+          "horizon": 3,
+          "stalemate": 8,
+          "waypoint_reached": 90
+        },
+        "row_count": 128,
+        "sample_failures": [
+          {
+            "endpoint": "stalemate",
+            "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h8g8",
+              "g8f8",
+              "f8e8",
+              "e8d8",
+              "d8c8"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b8a7",
+              "a7b6",
+              "b6a5",
+              "a5b6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "g1f2",
+              "f2e3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "e1d2"
+            ]
+          },
+          {
+            "endpoint": "stalemate",
+            "fen": "8/8/8/8/8/8/K1R5/7k w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "a2b1",
+              "b1c1",
+              "c1d1",
+              "d1e1",
+              "e1f1"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "f2g3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "1K5k/4R3/8/8/8/8/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b8c7",
+              "c7d8",
+              "d8c7"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b6a5"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "k7/8/1R6/8/8/8/8/7K w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h1g2"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/3K4/8/8/8/6R1/4k3 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "d6e5"
+            ]
+          },
+          {
+            "endpoint": "horizon",
+            "fen": "8/2K5/8/1R6/8/k7/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "c7b6",
+              "b6a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/4K3/8/8/8/8/2R5/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "e7d6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/7k/8/K5R1/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "a2b3"
+            ]
+          },
+          {
+            "endpoint": "stalemate",
+            "fen": "8/8/7k/8/8/8/6R1/7K w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h1h2",
+              "h2h3",
+              "h3h4",
+              "h4h5",
+              "h5h6"
+            ]
+          },
+          {
+            "endpoint": "stalemate",
+            "fen": "8/8/8/8/8/8/5K1R/2k5 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "f2e1",
+              "e1d1",
+              "d1c1"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/7k/8/3K2R1/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "d2e3"
+            ]
+          }
+        ],
+        "success_count": 90,
+        "success_rate": 0.703125
+      },
+      "legacy_reproduced": {
+        "endpoint_counts": {
+          "fence_broken": 29,
+          "horizon": 2,
+          "waypoint_reached": 97
+        },
+        "row_count": 128,
+        "sample_failures": [
+          {
+            "endpoint": "fence_broken",
+            "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h8g8",
+              "g8f8",
+              "f8e8",
+              "e8d8",
+              "d8c7"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b8a7",
+              "a7b6",
+              "b6a5",
+              "a5b6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "g1f2",
+              "f2e3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "e1d2"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "f2e3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "1K5k/4R3/8/8/8/8/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b8c7",
+              "c7d8",
+              "d8c7"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b6a5"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "k7/8/1R6/8/8/8/8/7K w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h1g2"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/3K4/8/8/8/6R1/4k3 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "d6e5"
+            ]
+          },
+          {
+            "endpoint": "horizon",
+            "fen": "8/2K5/8/1R6/8/k7/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "c7b6",
+              "b6a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/4K3/8/8/8/8/2R5/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "e7d6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/7k/8/K5R1/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "a2b3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/7k/8/8/8/6R1/7K w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h1h2",
+              "h2h3",
+              "h3h4",
+              "h4h5",
+              "h5g6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/7k/8/3K2R1/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "d2e3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/7K/8/1R6/8/8/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h6g5",
+              "g5f4"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/7K/8/8/4R3/2k5 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h5g4"
+            ]
+          }
+        ],
+        "success_count": 97,
+        "success_rate": 0.7578125
+      },
+      "original_success_rate": 0.7109375
+    },
+    "20272912": {
+      "leaked_weight_count": 308,
+      "leaked_weights_zeroed": {
+        "endpoint_counts": {
+          "fence_broken": 27,
+          "horizon": 3,
+          "stalemate": 8,
+          "waypoint_reached": 90
+        },
+        "row_count": 128,
+        "sample_failures": [
+          {
+            "endpoint": "stalemate",
+            "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h8g8",
+              "g8f8",
+              "f8e8",
+              "e8d8",
+              "d8c8"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b8a7",
+              "a7b6",
+              "b6a5",
+              "a5b6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "g1f2",
+              "f2e3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "e1d2"
+            ]
+          },
+          {
+            "endpoint": "stalemate",
+            "fen": "8/8/8/8/8/8/K1R5/7k w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "a2b1",
+              "b1c1",
+              "c1d1",
+              "d1e1",
+              "e1f1"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "f2g3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "1K5k/4R3/8/8/8/8/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b8c7",
+              "c7d8",
+              "d8c7"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b6a5"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "k7/8/1R6/8/8/8/8/7K w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h1g2"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/3K4/8/8/8/6R1/4k3 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "d6e5"
+            ]
+          },
+          {
+            "endpoint": "horizon",
+            "fen": "8/2K5/8/1R6/8/k7/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "c7b6",
+              "b6a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/4K3/8/8/8/8/2R5/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "e7d6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/7k/8/K5R1/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "a2b3"
+            ]
+          },
+          {
+            "endpoint": "stalemate",
+            "fen": "8/8/7k/8/8/8/6R1/7K w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h1h2",
+              "h2h3",
+              "h3h4",
+              "h4h5",
+              "h5h6"
+            ]
+          },
+          {
+            "endpoint": "stalemate",
+            "fen": "8/8/8/8/8/8/5K1R/2k5 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "f2e1",
+              "e1d1",
+              "d1c1"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/7k/8/3K2R1/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "d2e3"
+            ]
+          }
+        ],
+        "success_count": 90,
+        "success_rate": 0.703125
+      },
+      "legacy_reproduced": {
+        "endpoint_counts": {
+          "fence_broken": 30,
+          "horizon": 2,
+          "waypoint_reached": 96
+        },
+        "row_count": 128,
+        "sample_failures": [
+          {
+            "endpoint": "fence_broken",
+            "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h8g8",
+              "g8f8",
+              "f8e8",
+              "e8d8",
+              "d8c7"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b8a7",
+              "a7b6",
+              "b6a5",
+              "a5b6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "g1f2",
+              "f2e3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "e1d2"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "f2e3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "1K5k/4R3/8/8/8/8/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b8c7",
+              "c7d8",
+              "d8c7"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b6a5"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "k7/8/1R6/8/8/8/8/7K w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h1g2"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/3K4/8/8/8/6R1/4k3 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "d6e5"
+            ]
+          },
+          {
+            "endpoint": "horizon",
+            "fen": "8/2K5/8/1R6/8/k7/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "c7b6",
+              "b6a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/4K3/8/8/8/8/2R5/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "e7d6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/7k/8/K5R1/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "a2b3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/7k/8/8/8/6R1/7K w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h1h2",
+              "h2h3",
+              "h3h4",
+              "h4h5",
+              "h5g6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/7k/8/3K2R1/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "d2e3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/7K/8/1R6/8/8/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h6g5",
+              "g5f4"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/7K/8/8/4R3/2k5 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h5g4"
+            ]
+          }
+        ],
+        "success_count": 96,
+        "success_rate": 0.75
+      },
+      "original_success_rate": 0.6875
+    },
+    "20272913": {
+      "leaked_weight_count": 303,
+      "leaked_weights_zeroed": {
+        "endpoint_counts": {
+          "fence_broken": 27,
+          "horizon": 3,
+          "stalemate": 7,
+          "waypoint_reached": 91
+        },
+        "row_count": 128,
+        "sample_failures": [
+          {
+            "endpoint": "stalemate",
+            "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h8g8",
+              "g8f8",
+              "f8e8",
+              "e8d8",
+              "d8c8"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b8a7",
+              "a7b6",
+              "b6a5",
+              "a5b6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "g1f2",
+              "f2e3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "e1d2"
+            ]
+          },
+          {
+            "endpoint": "stalemate",
+            "fen": "8/8/8/8/8/8/K1R5/7k w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "a2b1",
+              "b1c1",
+              "c1d1",
+              "d1e1",
+              "e1f1"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "f2g3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "1K5k/4R3/8/8/8/8/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b8c7",
+              "c7d8",
+              "d8c7"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b6a5"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "k7/8/1R6/8/8/8/8/7K w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h1g2"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/3K4/8/8/8/6R1/4k3 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "d6e5"
+            ]
+          },
+          {
+            "endpoint": "horizon",
+            "fen": "8/2K5/8/1R6/8/k7/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "c7b6",
+              "b6a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/4K3/8/8/8/8/2R5/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "e7d6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/7k/8/K5R1/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "a2b3"
+            ]
+          },
+          {
+            "endpoint": "stalemate",
+            "fen": "8/8/7k/8/8/8/6R1/7K w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h1h2",
+              "h2h3",
+              "h3h4",
+              "h4h5",
+              "h5h6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/7k/8/3K2R1/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "d2e3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/7K/8/1R6/8/8/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h6g5",
+              "g5f4"
+            ]
+          }
+        ],
+        "success_count": 91,
+        "success_rate": 0.7109375
+      },
+      "legacy_reproduced": {
+        "endpoint_counts": {
+          "fence_broken": 31,
+          "horizon": 2,
+          "waypoint_reached": 95
+        },
+        "row_count": 128,
+        "sample_failures": [
+          {
+            "endpoint": "fence_broken",
+            "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h8g8",
+              "g8f8",
+              "f8e8",
+              "e8d8",
+              "d8c7"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b8a7",
+              "a7b6",
+              "b6a5",
+              "a5b6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "g1f2",
+              "f2e3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "e1d2"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "f2e3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "1K5k/4R3/8/8/8/8/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b8c7",
+              "c7d8",
+              "d8c7"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "b6a5"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "k7/8/1R6/8/8/8/8/7K w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h1g2"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/3K4/8/8/8/6R1/4k3 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "d6e5"
+            ]
+          },
+          {
+            "endpoint": "horizon",
+            "fen": "8/2K5/8/1R6/8/k7/8/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "c7b6",
+              "b6a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5",
+              "a5a4",
+              "a4a5"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/4K3/8/8/8/8/2R5/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "e7d6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/7k/8/K5R1/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "a2b3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/7k/8/8/8/6R1/7K w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h1h2",
+              "h2h3",
+              "h3h4",
+              "h4h5",
+              "h5g6"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/8/7k/8/3K2R1/8 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "d2e3"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/7K/8/1R6/8/8/k7 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h6g5",
+              "g5f4"
+            ]
+          },
+          {
+            "endpoint": "fence_broken",
+            "fen": "8/8/8/7K/8/8/4R3/2k5 w - - 0 1",
+            "success": false,
+            "white_moves": [
+              "h5g4"
+            ]
+          }
+        ],
+        "success_count": 95,
+        "success_rate": 0.7421875
+      },
+      "original_success_rate": 0.671875
+    }
+  }
+}

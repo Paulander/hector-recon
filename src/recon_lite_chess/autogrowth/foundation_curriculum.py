@@ -12,7 +12,13 @@ import chess
 
 from recon_lite_hector.nodes.stem_cell import StemCellState, StemCellTerminal
 
-from .features import extract_diagnostic_features, extract_learner_features, validate_learner_record
+from .features import (
+    LEARNER_VISIBLE_ACTION_FEATURE_NAMES,
+    extract_diagnostic_features,
+    extract_learner_features,
+    validate_learner_record,
+    validate_learner_visible_keys,
+)
 
 
 @dataclass(frozen=True)
@@ -481,10 +487,13 @@ def _move_reward(board: chess.Board, move: chess.Move, *, positive_moves: set[st
 
 def _action_feature_keys(board: chess.Board, move: chess.Move) -> tuple[str, ...]:
     features = _action_features(board, move)
-    keys = [f"{name}={value}" for name, value in sorted(features.items())]
+    learner_features = {
+        name: features[name]
+        for name in LEARNER_VISIBLE_ACTION_FEATURE_NAMES
+        if name in features
+    }
+    keys = [f"{name}={value}" for name, value in sorted(learner_features.items())]
     keys.extend((
-        "pair:gives_check:black_reply_mobility_after="
-        f"{features['gives_check']}:{features['black_reply_mobility_after']}",
         "pair:gives_check:black_king_edge_after="
         f"{features['gives_check']}:{features['black_king_edge_after']}",
         "pair:piece:gives_check="
@@ -494,7 +503,7 @@ def _action_feature_keys(board: chess.Board, move: chess.Move) -> tuple[str, ...
         "pair:rook_safety:gives_check="
         f"{features['rook_attacked_after']}:{features['gives_check']}",
     ))
-    validate_learner_record(keys)
+    validate_learner_visible_keys((f"action_pattern:{key}" for key in keys), builder="foundation_curriculum._action_feature_keys")
     return tuple(keys)
 
 

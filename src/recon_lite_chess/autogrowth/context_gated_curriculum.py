@@ -11,7 +11,7 @@ import chess
 
 from .curated_replay_curriculum import _mate2_buckets
 from .curated_terminal_curriculum import curated_stage_entries
-from .features import validate_learner_record
+from .features import validate_learner_record, validate_learner_visible_keys
 from .foundation_curriculum import _mate_moves
 from .terminal_substrate import (
     TerminalAffordanceLearner,
@@ -308,7 +308,7 @@ def context_terminal_keys(board: chess.Board) -> tuple[str, ...]:
         f"before_terminal:{key}={_bucket(value)}"
         for key, value in sorted(features.items())
     )
-    validate_learner_record(keys)
+    validate_learner_visible_keys(keys, builder="context_gated_curriculum.context_terminal_keys")
     return keys
 
 

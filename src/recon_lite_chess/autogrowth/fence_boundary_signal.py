@@ -17,7 +17,7 @@ from .edge_fence_curriculum import (
     _evaluate_foundation_regression,
     _train_chunk,
 )
-from .features import extract_diagnostic_features, validate_learner_record
+from .features import extract_diagnostic_features, validate_learner_record, validate_learner_visible_keys
 from .foundation_curriculum import (
     ActionRanker,
     FoundationCurriculumConfig,
@@ -157,6 +157,8 @@ def run_fence_boundary_signal(*, config: FenceBoundarySignalConfig) -> FenceBoun
             mate2_heldout_count=config.foundation_mate2_heldout_count,
             max_generation_attempts=max(500_000, config.max_generation_attempts),
             eta_m3=0.10,
+            mate1_pass_threshold=config.mate1_regression_threshold,
+            mate2_pass_threshold=config.mate2_regression_threshold,
             max_samples=config.max_samples,
         )
     )
@@ -406,7 +408,6 @@ def _delta_action_feature_keys(board: chess.Board, move: chess.Move) -> tuple[st
         after_features["black_king_nearest_edge_distance"]
         - before["black_king_nearest_edge_distance"]
     )
-    mobility_delta = _sign(after_features["black_reply_mobility"] - before["black_reply_mobility"])
     king_distance_delta = _sign(
         after_features["white_king_to_black_king_distance"]
         - before["white_king_to_black_king_distance"]
@@ -414,14 +415,12 @@ def _delta_action_feature_keys(board: chess.Board, move: chess.Move) -> tuple[st
     extras = [
         f"post_move_confinement_delta_sign={confinement_delta}",
         f"post_move_black_edge_distance_delta_sign={edge_delta}",
-        f"post_move_black_mobility_delta_sign={mobility_delta}",
         f"post_move_white_king_distance_delta_sign={king_distance_delta}",
         f"post_move_rook_safe={int(after_features['rook_present'] > 0.0 and after_features['rook_attacked_by_black'] <= 0.0)}",
-        f"post_move_stalemate={int(after.is_stalemate())}",
         f"post_move_confinement_regressed={int(did_box_grow(board, after))}",
     ]
     keys.extend(extras)
-    validate_learner_record(keys)
+    validate_learner_visible_keys(keys, builder="fence_boundary_signal._delta_action_feature_keys")
     return tuple(keys)
 
 

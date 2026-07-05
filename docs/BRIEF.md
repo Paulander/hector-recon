@@ -7,7 +7,7 @@ Canonical sha256: ae382d0463e35eff09e9515a715648b5d49b1e0891d127a660e036e378452e
 Adopted 2.5 gate: balanced seed 20261211 threshold=0.854756; exact mate-in-2 remains verifier.
 
 Standing spec: move loops state polarity explicitly. Learned gates/priors are dispatch-layer only;
-labels, strata, success judgments, and reported ground truth use exact ungated audits.
+labels, strata, success judgments, reported ground truth use exact ungated audits; all learner-visible key builders pass the firewall at construction.
 Reclassified call sites: phase2_edge_mate_v1 pool labels, 2.8e true-middle heldout construction, 2.8e policy success judge, and 2.8d-fix chase rung judge.
 
 Phase 2.8b-fix: `enter_mate2_skill` repaired from helpful-opponent existential reply semantics to
@@ -35,6 +35,6 @@ chase-bound move, so they are skill bugs, not follow-on fallback behavior. Strat
 true-middle, one mate1-now. Example FENs: `6k1/4KR2/8/8/8/8/8/8 w - - 0 1` and
 `8/8/8/8/8/8/1K3R2/3k4 w - - 0 1`.
 Integration no-adopt: Phase 2.8i paired 200 games with-chase 137/200 vs without 134/200 (+0.015), paired 128 win/win, 9 loss/win, 6 win/loss, 57 loss/loss; repetitions 61 vs 56; skill violations 0.
-Phase 2.9 overnight artifacts: reports/autogrowth/clean_slate_krk/phase2_9_overnight/. Stage C scaled 500 paired/pool with-approach wins fence/general/mate<=2 = 496/489/499 vs 348/379/497; all residual nonwins were repetitions, skill violations 0.
-Stage A approach substrate: learned 91/88/86 of 128 beats exact approach ceilings 82/78/76, first learned-beats-hand result. Stage B true-middle: learned 90/87/89 misses dispatcher 102/94/97. Stage D weight dumps written. Next: 2.9 analysis + autonomous-discovery probe design.
+Phase 2.9a sealed action-key leak: old builders exposed `black_reply_mobility_after`, `is_stalemate_after`, terminal-substrate-only opposition/confinement aliases, and TG48a2 micro mobility/risk keys. Existing Stage A survives leak-zero ablation: 90/90/91 of 128 vs originals 91/88/86.
+Sealed retrain: Stage A learned 94/97/95 beats approach ceiling 83/83/83; Stage B learned 93/92/92 beats dispatcher 83/83/83; leaked terminal count 0 in all six seeds. Next: 2.9b -- autonomous discovery probe design (approach rung, graded against ceiling + clean learned baseline).
 No-go: new TG names, new report documents, training logic changes, `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.
