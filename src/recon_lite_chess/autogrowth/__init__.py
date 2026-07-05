@@ -9,6 +9,10 @@ from .arbitration import (
     evaluate_local_arbitration_arm,
     run_local_arbitration_experiment,
 )
+from .approach_discovery_probe import (
+    ApproachDiscoveryProbeConfig,
+    run_approach_discovery_probe,
+)
 from .candidate_generation import (
     CONTEXT_SPECIALIZED_FEATURES,
     ContextSpecializedCandidateConfig,

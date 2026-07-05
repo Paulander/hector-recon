@@ -1,0 +1,62 @@
+{
+  "allowed_inputs": [
+    "board state and legal moves",
+    "terminal_action_feature_keys outputs that pass the central firewall",
+    "exact waypoint/fence success labels for training and grading",
+    "fixed-seed black uniform legal replies for rollout evaluation"
+  ],
+  "baselines": [
+    "hand-derived approach ceiling",
+    "sealed flat learned Stage A baseline from Phase 2.9a",
+    "canonical fallback scorer",
+    "fixed-seed random legal",
+    "causal ablation with discovered structure removed"
+  ],
+  "config": {
+    "atom_weight_scale": 0.5,
+    "flat_baseline_seeds": [
+      20272911,
+      20272912,
+      20272913
+    ],
+    "heldout_row_limit": null,
+    "horizon_white_moves": 12,
+    "max_atoms": 64,
+    "max_quorum_width": 3,
+    "max_quorums": 48,
+    "max_samples": 24,
+    "min_atom_support": 10,
+    "min_quorum_precision": 0.55,
+    "min_quorum_support": 8,
+    "output_dir": "reports/autogrowth/clean_slate_krk/phase2_9b_autonomous_discovery",
+    "quorum_bonus": 1.25,
+    "seeds": [
+      20272921,
+      20272922,
+      20272923
+    ],
+    "stage_a_baseline_dir": "reports/autogrowth/clean_slate_krk/phase2_9a_action_firewall",
+    "stage_a_rows_path": "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_a_rows.json",
+    "top_atom_pool": 72,
+    "train_row_limit": null
+  },
+  "forbidden": [
+    "hand-derived approach/chase/fence/opposition/confinement concepts as learner-visible features",
+    "hidden terminal aliases and old terminal-only aliases",
+    "mobility lookahead",
+    "stalemate-after",
+    "black-reply-mobility-after",
+    "rook-capturable-by-reply",
+    "any key rejected by features.validate_learner_visible_keys",
+    "hand-authored approach resolver as candidate generator",
+    "silent retries or cherry-picked seeds"
+  ],
+  "grown_structures": [
+    "primitive atom TERMINALs keyed by sealed terminal/action atoms",
+    "finite quorum SCRIPTs over those atoms with k=n confirmation",
+    "a root dispatcher that scores moves by confirmed learned atoms/quorums"
+  ],
+  "meaning_of_autonomous_discovery": "The probe enumerates legal actions from frozen approach-rung starts, observes only sealed terminal/action keys, mines atomic terminals and finite k-of-n quorum SCRIPTs from outcome-labeled action evidence, and uses those grown structures for move selection. The hand approach skill is used only as an outcome labeler/ceiling, never as a candidate generator or learner-visible feature source.",
+  "schema_version": "phase2_9b_design_spec.v0",
+  "success_definition": "Useful if discovered topology beats fallback/random, leaks zero keys, and ablation reduces heldout conversion. Competitive if it reaches the sealed flat learned baseline band."
+}
