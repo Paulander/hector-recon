@@ -29,6 +29,9 @@ ENTER_MATE_TWO_SKILL_ROOT_ID = "phase2_enter_mate_in_2_skill_root"
 ENTER_MATE_TWO_SKILL_ID = "enter_mate_in_2_skill"
 CHASE_TO_MATE_SKILL_ROOT_ID = "phase2_chase_to_mate_skill_root"
 CHASE_TO_MATE_SKILL_ID = "chase_to_mate_skill"
+APPROACH_TO_WAYPOINT_SKILL_ROOT_ID = "phase2_approach_to_waypoint_skill_root"
+APPROACH_TO_WAYPOINT_SKILL_ID = "approach_to_waypoint_skill"
+APPROACH_KING_STEP_ID = "approach_king_step"
 CHASE_DEFER_MATE2_STEP_ID = "chase_defer_mate2_step"
 CHASE_KING_UNBLOCK_STEP_ID = "chase_king_unblock_step"
 CHASE_ROOK_ESCAPE_STEP_ID = "chase_rook_escape_slide_step"
@@ -939,6 +942,7 @@ def _chase_after_move_valid(
     move: chess.Move,
     *,
     repetition_counts: Mapping[str, int],
+    require_waypoint: bool = True,
 ) -> tuple[bool, str, chess.Board | None]:
     if move not in board.legal_moves:
         return False, "illegal", None
@@ -951,7 +955,7 @@ def _chase_after_move_valid(
         return False, "stalemate_delivered", after
     if not _chase_confinement_intact_geometry(after):
         return False, "confinement_crossed", after
-    if not _king_support_waypoint_geometry(after):
+    if require_waypoint and not _king_support_waypoint_geometry(after):
         return False, "left_waypoint_domain", after
     if not _chase_rook_safe(after):
         return False, "rook_attacked_or_undefended", after
@@ -1155,7 +1159,7 @@ def _resolve_chase_king_lateral_pursuit(
     ]
     if not before_offsets:
         return None
-    ranked: list[tuple[int, int, str, chess.Move]] = []
+    ranked: list[tuple[int, int, int, str, chess.Move]] = []
     for move in sorted(board.legal_moves, key=lambda item: item.uci()):
         if move.from_square != white_king:
             continue
@@ -1208,6 +1212,71 @@ def _resolve_chase_rook_tempo(
         )
         ranked.append((-distance, move.uci(), move))
     ranked.sort(key=lambda item: (item[0], item[1]))
+    return ranked[0][-1] if ranked else None
+
+
+def _approach_midpoint_distance(board: chess.Board, square: int) -> int:
+    distances = [
+        abs(2 * _edge_along_coord(square, edge) - 7)
+        for edge in _fence_edges_for_board(board)
+    ]
+    return min(distances) if distances else 99
+
+
+def _resolve_approach_king_step(
+    board: chess.Board,
+    *,
+    repetition_counts: Mapping[str, int],
+    rejected_moves: list[dict[str, str]] | None = None,
+) -> chess.Move | None:
+    white_king = board.king(chess.WHITE)
+    black_king = board.king(chess.BLACK)
+    if white_king is None or black_king is None:
+        return None
+    before_distance = chess.square_distance(white_king, black_king)
+    ranked: list[tuple[int, int, str, chess.Move]] = []
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        if move.from_square != white_king:
+            continue
+        valid, _reason, after = _chase_after_move_valid(
+            board,
+            move,
+            repetition_counts=repetition_counts,
+            require_waypoint=False,
+        )
+        if not valid or after is None:
+            _record_chase_rejected_move(
+                rejected_moves,
+                branch="approach_king_step",
+                move=move,
+                reason=_reason,
+            )
+            continue
+        after_king = after.king(chess.WHITE)
+        after_black = after.king(chess.BLACK)
+        if after_king is None or after_black is None:
+            continue
+        after_distance = chess.square_distance(after_king, after_black)
+        if after_distance >= before_distance:
+            _record_chase_rejected_move(
+                rejected_moves,
+                branch="approach_king_step",
+                move=move,
+                reason="king_distance_not_reduced",
+            )
+            continue
+        manhattan = (
+            abs(chess.square_file(after_king) - chess.square_file(after_black))
+            + abs(chess.square_rank(after_king) - chess.square_rank(after_black))
+        )
+        ranked.append((
+            after_distance,
+            _approach_midpoint_distance(after, after_king),
+            manhattan,
+            move.uci(),
+            move,
+        ))
+    ranked.sort(key=lambda item: (item[0], item[1], item[2], item[3]))
     return ranked[0][-1] if ranked else None
 
 
@@ -2724,6 +2793,145 @@ def _chase_continue(
     )
 
 
+def _approach_result(
+    *,
+    confirmed: bool,
+    branch: str,
+    bound_move: chess.Move | None,
+    reason: str,
+    messages: list[dict[str, Any]],
+    rejected_moves: Sequence[Mapping[str, str]] | None = None,
+) -> dict[str, Any]:
+    _policy_trace_message(
+        messages,
+        APPROACH_TO_WAYPOINT_SKILL_ID,
+        APPROACH_TO_WAYPOINT_SKILL_ROOT_ID,
+        "SUR",
+        "confirm" if confirmed else "fail",
+        branch=branch,
+        reason=reason,
+    )
+    return {
+        "confirmed": bool(confirmed),
+        "root_state": "CONFIRMED" if confirmed else "FAILED",
+        "skill_state": "CONFIRMED" if confirmed else "FAILED",
+        "branch": branch,
+        "branch_fired": branch if confirmed else None,
+        "bound_move": None if bound_move is None else bound_move.uci(),
+        "failure_reason": None if confirmed else reason,
+        "virtual_frame_count": 0,
+        "rejected_moves": [dict(item) for item in rejected_moves or ()],
+        "trace": [{"tick": 0, "messages": messages}],
+    }
+
+
+def _approach_step_result(
+    messages: list[dict[str, Any]],
+    *,
+    confirmed: bool,
+    reason: str,
+    bound_move: chess.Move | None = None,
+) -> None:
+    meta: dict[str, Any] = {"reason": reason}
+    if bound_move is not None:
+        meta["bound_move"] = bound_move.uci()
+    _policy_trace_message(
+        messages,
+        APPROACH_KING_STEP_ID,
+        APPROACH_TO_WAYPOINT_SKILL_ID,
+        "SUR",
+        "confirm" if confirmed else "fail",
+        **meta,
+    )
+
+
+def run_approach_to_waypoint_skill(
+    board: chess.Board,
+    *,
+    record_trace: bool = True,
+    repetition_counts: Mapping[str, int] | None = None,
+) -> dict[str, Any]:
+    """Run the minimal fence-preserving king approach ceiling."""
+
+    active_counts = repetition_counts or {}
+    messages: list[dict[str, Any]] = []
+    rejected_moves: list[dict[str, str]] = []
+    if record_trace:
+        _policy_trace_message(
+            messages,
+            APPROACH_TO_WAYPOINT_SKILL_ROOT_ID,
+            APPROACH_TO_WAYPOINT_SKILL_ID,
+            "SUB",
+            "request",
+        )
+
+    if board.turn != chess.WHITE or board.is_game_over(claim_draw=False):
+        return _approach_result(
+            confirmed=False,
+            branch="not_applicable",
+            bound_move=None,
+            reason="not_white_to_move_or_game_over",
+            messages=messages,
+        )
+    if not fence_established_geometry(board):
+        return _approach_result(
+            confirmed=False,
+            branch="not_applicable",
+            bound_move=None,
+            reason="fence_not_established",
+            messages=messages,
+        )
+    if _king_support_waypoint_geometry(board):
+        return _approach_result(
+            confirmed=False,
+            branch="not_applicable",
+            bound_move=None,
+            reason="waypoint_already_reached",
+            messages=messages,
+        )
+
+    _policy_trace_message(
+        messages,
+        APPROACH_TO_WAYPOINT_SKILL_ID,
+        APPROACH_KING_STEP_ID,
+        "SUB",
+        "request",
+    )
+    move = _resolve_approach_king_step(
+        board,
+        repetition_counts=active_counts,
+        rejected_moves=rejected_moves,
+    )
+    if move is None:
+        _approach_step_result(
+            messages,
+            confirmed=False,
+            reason="no_safe_distance_reducing_king_step",
+        )
+        return _approach_result(
+            confirmed=False,
+            branch="king_approach",
+            bound_move=None,
+            reason="no_safe_distance_reducing_king_step",
+            messages=messages,
+            rejected_moves=rejected_moves,
+        )
+    _approach_step_result(
+        messages,
+        confirmed=True,
+        reason="king_distance_reduced_with_fence_intact",
+        bound_move=move,
+    )
+    return _approach_result(
+        confirmed=True,
+        branch="king_approach",
+        bound_move=move,
+        reason="king_distance_reduced_with_fence_intact",
+        messages=messages,
+        rejected_moves=rejected_moves,
+    )
+
+
 def run_chase_to_mate_skill(
     board: chess.Board,
     *,
@@ -3068,6 +3276,7 @@ def run_krk_policy(
     mate2_cache: dict[str, dict[str, Any]] | None = None,
     enter_cache: dict[str, dict[str, Any]] | None = None,
     enable_chase: bool = False,
+    enable_approach: bool | None = None,
 ) -> dict[str, Any]:
     """Run the Phase 2.7 priority dispatcher over existing graph-native skills."""
 
@@ -3091,6 +3300,7 @@ def run_krk_policy(
 
     active_gate = load_chain_confidence_gate() if gate is None else gate
     active_scorer = load_canonical_mate2_first_scorer() if scorer is None else scorer
+    active_approach = enable_chase if enable_approach is None else enable_approach
     trace_messages: list[dict[str, Any]] = []
     invocations: dict[str, Any] = {}
     frames = 0
@@ -3313,6 +3523,48 @@ def run_krk_policy(
             return _policy_result(
                 branch="chase_to_mate",
                 bound_move=chess.Move.from_uci(chase["bound_move"]),
+                frames=frames,
+                gate_audit=gate_audit,
+                trace_messages=trace_messages,
+                invocations=invocations,
+                scorer=active_scorer,
+            )
+
+    if active_approach:
+        _policy_trace_message(
+            trace_messages,
+            KRK_POLICY_ROOT_ID,
+            APPROACH_TO_WAYPOINT_SKILL_ID,
+            "SUB",
+            "request",
+        )
+        approach = run_approach_to_waypoint_skill(
+            board,
+            record_trace=record_trace,
+            repetition_counts=repetition_counts,
+        )
+        frames += int(approach["virtual_frame_count"])
+        invocations["approach_to_waypoint_skill"] = {
+            "confirmed": bool(approach["confirmed"]),
+            "bound_move": approach["bound_move"],
+            "branch": approach["branch"],
+            "branch_fired": approach["branch_fired"],
+            "failure_reason": approach["failure_reason"],
+            "virtual_frame_count": int(approach["virtual_frame_count"]),
+        }
+        _policy_trace_message(
+            trace_messages,
+            APPROACH_TO_WAYPOINT_SKILL_ID,
+            KRK_POLICY_ROOT_ID,
+            "SUR",
+            "confirm" if approach["confirmed"] else "fail",
+            branch=approach["branch"],
+            reason=approach["failure_reason"] or "confirmed",
+        )
+        if approach["confirmed"] and approach["bound_move"] is not None:
+            return _policy_result(
+                branch="approach_to_waypoint",
+                bound_move=chess.Move.from_uci(approach["bound_move"]),
                 frames=frames,
                 gate_audit=gate_audit,
                 trace_messages=trace_messages,

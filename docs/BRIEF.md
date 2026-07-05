@@ -35,6 +35,6 @@ chase-bound move, so they are skill bugs, not follow-on fallback behavior. Strat
 true-middle, one mate1-now. Example FENs: `6k1/4KR2/8/8/8/8/8/8 w - - 0 1` and
 `8/8/8/8/8/8/1K3R2/3k4 w - - 0 1`.
 Integration no-adopt: Phase 2.8i paired 200 games with-chase 137/200 vs without 134/200 (+0.015), paired 128 win/win, 9 loss/win, 6 win/loss, 57 loss/loss; repetitions 61 vs 56; skill violations 0.
-Phase 2.8j forensics replay of 2.8i seeds found no handoff hole: with-chase nonwins 63, ungated exact mate2/mate3 confirmations skipped by dispatcher 0, chase third-occurrence binds 0.
-Decision: chase ceiling final at 80/100 corrected standalone; residual gap repetition/not_applicable/tempo is DECLARED the first autonomous-discovery target (2.9); no further hand branches.
+Phase 2.8k pre-waypoint forensics: nonwins mostly died before waypoint/chase-bound progress; fallback broke the fence 202 times. Approach standalone reached waypoint 70/100.
+Accepted: middle rung closed end-to-end by hand ceilings; paired 200 games with approach 197/200 vs 137/200, repetitions 3 vs 61, skill violations 0. Next: 2.9 autonomous-discovery probe, target = approach rung (primary, easiest) + near-corner residual (stretch), graded against the 2.8k and 2.8i ceilings.
 No-go: new TG names, new report documents, training logic changes, `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.

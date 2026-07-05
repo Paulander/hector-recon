@@ -1,0 +1,1157 @@
+{
+  "accepted_for_adoption": true,
+  "black_base_seed": 20270851,
+  "black_policy": "fixed-seed uniform legal",
+  "elapsed_seconds": 503.858717918396,
+  "max_plies": 220,
+  "paired_disagreements": [
+    {
+      "fen": "1R6/4K3/8/8/8/8/8/k7 w - - 0 1",
+      "row_id": 0,
+      "with": {
+        "approach_branches": {
+          "king_approach": 3
+        },
+        "branches": {
+          "approach_to_waypoint": 3,
+          "chase_to_mate": 1,
+          "enter_mate2": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 7,
+          "fallback": 21
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "7k/R7/8/8/8/8/4K3/8 w - - 0 1",
+      "row_id": 5,
+      "with": {
+        "approach_branches": {
+          "king_approach": 4
+        },
+        "branches": {
+          "approach_to_waypoint": 4,
+          "enter_mate2": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 2,
+          "fallback": 3
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "8/8/6R1/8/4K2k/8/8/8 w - - 0 1",
+      "row_id": 6,
+      "with": {
+        "approach_branches": {
+          "king_approach": 1
+        },
+        "branches": {
+          "approach_to_waypoint": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "chase_to_mate": 5,
+          "fallback": 1
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "3K4/6R1/8/8/8/8/8/7k w - - 0 1",
+      "row_id": 8,
+      "with": {
+        "approach_branches": {
+          "king_approach": 4
+        },
+        "branches": {
+          "approach_to_waypoint": 4,
+          "enter_mate2": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 3,
+          "fallback": 10
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "6K1/8/8/8/8/8/5R2/7k w - - 0 1",
+      "row_id": 16,
+      "with": {
+        "approach_branches": {
+          "king_approach": 5,
+          "not_applicable": 1
+        },
+        "branches": {
+          "approach_to_waypoint": 5,
+          "chase_to_mate": 4,
+          "establish_fence": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 3,
+          "fallback": 26
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "8/1K6/8/k7/8/1R6/8/8 w - - 0 1",
+      "row_id": 17,
+      "with": {
+        "approach_branches": {
+          "king_approach": 4,
+          "not_applicable": 2
+        },
+        "branches": {
+          "approach_to_waypoint": 3,
+          "enter_mate2": 1,
+          "establish_fence": 1,
+          "fallback": 2,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 5,
+          "fallback": 7
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "8/8/8/8/8/8/2K4R/5k2 w - - 0 1",
+      "row_id": 20,
+      "with": {
+        "approach_branches": {
+          "king_approach": 3,
+          "not_applicable": 1
+        },
+        "branches": {
+          "approach_to_waypoint": 2,
+          "enter_mate2": 1,
+          "establish_fence": 1,
+          "fallback": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 3,
+          "fallback": 3
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "k7/4R3/8/5K2/8/8/8/8 w - - 0 1",
+      "row_id": 23,
+      "with": {
+        "approach_branches": {
+          "king_approach": 2
+        },
+        "branches": {
+          "approach_to_waypoint": 2,
+          "enter_mate2": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 1,
+          "fallback": 12
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "8/1K6/8/8/8/8/2R5/7k w - - 0 1",
+      "row_id": 24,
+      "with": {
+        "approach_branches": {
+          "king_approach": 4
+        },
+        "branches": {
+          "approach_to_waypoint": 4,
+          "chase_to_mate": 1,
+          "enter_mate2": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 3,
+          "fallback": 4
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "7k/3R4/8/8/8/8/3K4/8 w - - 0 1",
+      "row_id": 31,
+      "with": {
+        "approach_branches": {
+          "king_approach": 4
+        },
+        "branches": {
+          "approach_to_waypoint": 4,
+          "chase_to_mate": 2,
+          "mate_in_1": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 5,
+          "fallback": 7
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "3k4/1R6/8/8/8/6K1/8/8 w - - 0 1",
+      "row_id": 36,
+      "with": {
+        "approach_branches": {
+          "king_approach": 6,
+          "not_applicable": 2
+        },
+        "branches": {
+          "approach_to_waypoint": 5,
+          "chase_to_mate": 3,
+          "enter_mate2": 1,
+          "establish_fence": 1,
+          "fallback": 2,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 5,
+          "fallback": 10
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "4k3/R7/8/8/7K/8/8/8 w - - 0 1",
+      "row_id": 37,
+      "with": {
+        "approach_branches": {
+          "king_approach": 2
+        },
+        "branches": {
+          "approach_to_waypoint": 2,
+          "chase_to_mate": 3,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 2,
+          "fallback": 2
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "7k/8/8/8/8/3K2R1/8/8 w - - 0 1",
+      "row_id": 38,
+      "with": {
+        "approach_branches": {
+          "king_approach": 2
+        },
+        "branches": {
+          "approach_to_waypoint": 2,
+          "enter_mate2": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 3,
+          "fallback": 3
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "1R6/8/8/8/5K2/k7/8/8 w - - 0 1",
+      "row_id": 39,
+      "with": {
+        "approach_branches": {
+          "king_approach": 3
+        },
+        "branches": {
+          "approach_to_waypoint": 3,
+          "enter_mate2": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 10,
+          "fallback": 28
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "8/8/8/8/8/8/7R/K1k5 w - - 0 1",
+      "row_id": 40,
+      "with": {
+        "approach_branches": {
+          "king_approach": 6,
+          "not_applicable": 1
+        },
+        "branches": {
+          "approach_to_waypoint": 4,
+          "enter_mate2": 1,
+          "establish_fence": 1,
+          "fallback": 2,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 3,
+          "fallback": 6
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "6k1/1R6/8/8/8/8/8/7K w - - 0 1",
+      "row_id": 43,
+      "with": {
+        "approach_branches": {
+          "king_approach": 5
+        },
+        "branches": {
+          "approach_to_waypoint": 5,
+          "chase_to_mate": 3,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 3,
+          "fallback": 5
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "8/1R6/8/k7/8/8/8/K7 w - - 0 1",
+      "row_id": 45,
+      "with": {
+        "approach_branches": {
+          "king_approach": 8,
+          "not_applicable": 3
+        },
+        "branches": {
+          "approach_to_waypoint": 4,
+          "enter_mate2": 1,
+          "establish_fence": 3,
+          "fallback": 4,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 4,
+          "fallback": 33
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "8/8/7K/8/8/8/3R4/6k1 w - - 0 1",
+      "row_id": 47,
+      "with": {
+        "approach_branches": {
+          "king_approach": 3
+        },
+        "branches": {
+          "approach_to_waypoint": 3,
+          "chase_to_mate": 2,
+          "mate_in_1": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 2,
+          "fallback": 8
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "8/8/7k/8/8/8/3K2R1/8 w - - 0 1",
+      "row_id": 54,
+      "with": {
+        "approach_branches": {
+          "king_approach": 2
+        },
+        "branches": {
+          "approach_to_waypoint": 2,
+          "chase_to_mate": 2,
+          "mate_in_1": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "chase_to_mate": 1,
+          "establish_fence": 4,
+          "fallback": 12
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "8/8/8/1R6/8/7K/8/k7 w - - 0 1",
+      "row_id": 61,
+      "with": {
+        "approach_branches": {
+          "king_approach": 5
+        },
+        "branches": {
+          "approach_to_waypoint": 5,
+          "enter_mate2": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 2,
+          "fallback": 12
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "2K5/7k/8/8/8/8/6R1/8 w - - 0 1",
+      "row_id": 72,
+      "with": {
+        "approach_branches": {
+          "king_approach": 3
+        },
+        "branches": {
+          "approach_to_waypoint": 3,
+          "enter_mate2": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 2,
+          "fallback": 17
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "8/8/8/1R6/6K1/8/8/k7 w - - 0 1",
+      "row_id": 73,
+      "with": {
+        "approach_branches": {
+          "king_approach": 7,
+          "not_applicable": 3
+        },
+        "branches": {
+          "approach_to_waypoint": 6,
+          "chase_to_mate": 4,
+          "enter_mate2": 1,
+          "establish_fence": 2,
+          "fallback": 2,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 1,
+          "fallback": 15
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "2k5/5R2/8/8/8/8/8/4K3 w - - 0 1",
+      "row_id": 74,
+      "with": {
+        "approach_branches": {
+          "king_approach": 5
+        },
+        "branches": {
+          "approach_to_waypoint": 5,
+          "chase_to_mate": 1,
+          "mate_in_1": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 3,
+          "fallback": 4
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "8/4K3/8/8/6R1/8/8/7k w - - 0 1",
+      "row_id": 80,
+      "with": {
+        "approach_branches": {
+          "king_approach": 2,
+          "not_applicable": 2
+        },
+        "branches": {
+          "approach_to_waypoint": 2,
+          "chase_to_mate": 2,
+          "establish_fence": 2
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      },
+      "without": {
+        "branches": {
+          "chase_to_mate": 2,
+          "enter_mate2": 1,
+          "establish_fence": 1,
+          "fallback": 4,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      }
+    },
+    {
+      "fen": "8/8/8/7K/8/8/2R5/6k1 w - - 0 1",
+      "row_id": 81,
+      "with": {
+        "approach_branches": {
+          "king_approach": 2
+        },
+        "branches": {
+          "approach_to_waypoint": 2,
+          "enter_mate2": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "chase_to_mate": 5,
+          "establish_fence": 1,
+          "fallback": 3
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "8/7k/8/8/8/8/3K4/6R1 w - - 0 1",
+      "row_id": 83,
+      "with": {
+        "approach_branches": {
+          "king_approach": 2
+        },
+        "branches": {
+          "approach_to_waypoint": 2,
+          "chase_to_mate": 3,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 2,
+          "fallback": 2
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "6K1/8/8/8/8/8/5R2/2k5 w - - 0 1",
+      "row_id": 84,
+      "with": {
+        "approach_branches": {
+          "king_approach": 8,
+          "not_applicable": 3
+        },
+        "branches": {
+          "approach_to_waypoint": 7,
+          "chase_to_mate": 3,
+          "enter_mate2": 1,
+          "establish_fence": 2,
+          "fallback": 2,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 8,
+          "fallback": 38
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "6k1/1R6/8/8/8/8/8/6K1 w - - 0 1",
+      "row_id": 87,
+      "with": {
+        "approach_branches": {
+          "king_approach": 5
+        },
+        "branches": {
+          "approach_to_waypoint": 5,
+          "enter_mate2": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 4,
+          "fallback": 9
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "8/8/8/8/8/8/3R3K/1k6 w - - 0 1",
+      "row_id": 90,
+      "with": {
+        "approach_branches": {
+          "king_approach": 4,
+          "not_applicable": 1
+        },
+        "branches": {
+          "approach_to_waypoint": 4,
+          "enter_mate2": 1,
+          "establish_fence": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 8,
+          "fallback": 24
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "2k5/4R3/8/K7/8/8/8/8 w - - 0 1",
+      "row_id": 92,
+      "with": {
+        "approach_branches": {
+          "king_approach": 5,
+          "not_applicable": 1
+        },
+        "branches": {
+          "approach_to_waypoint": 4,
+          "chase_to_mate": 1,
+          "enter_mate2": 1,
+          "establish_fence": 1,
+          "fallback": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "chase_to_mate": 2,
+          "establish_fence": 3,
+          "fallback": 4
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "8/k7/8/8/5K2/1R6/8/8 w - - 0 1",
+      "row_id": 93,
+      "with": {
+        "approach_branches": {
+          "king_approach": 3
+        },
+        "branches": {
+          "approach_to_waypoint": 3,
+          "chase_to_mate": 3,
+          "mate_in_1": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "chase_to_mate": 4,
+          "establish_fence": 6,
+          "fallback": 21
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "8/8/8/7K/8/1R6/8/k7 w - - 0 1",
+      "row_id": 96,
+      "with": {
+        "approach_branches": {
+          "king_approach": 5,
+          "not_applicable": 1
+        },
+        "branches": {
+          "approach_to_waypoint": 5,
+          "chase_to_mate": 1,
+          "enter_mate2": 1,
+          "establish_fence": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 11,
+          "fallback": 39
+        },
+        "outcome": "draw",
+        "reason": "fifty_move"
+      }
+    },
+    {
+      "fen": "8/8/8/8/8/8/K3R3/6k1 w - - 0 1",
+      "row_id": 98,
+      "with": {
+        "approach_branches": {
+          "king_approach": 4,
+          "not_applicable": 1
+        },
+        "branches": {
+          "approach_to_waypoint": 4,
+          "enter_mate2": 1,
+          "establish_fence": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "chase_to_mate": 2,
+          "establish_fence": 4,
+          "fallback": 11
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "7k/8/8/8/8/6R1/8/1K6 w - - 0 1",
+      "row_id": 102,
+      "with": {
+        "approach_branches": {
+          "king_approach": 4
+        },
+        "branches": {
+          "approach_to_waypoint": 4,
+          "chase_to_mate": 1,
+          "enter_mate2": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 3,
+          "fallback": 3
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "5k2/R7/8/8/8/8/8/5K2 w - - 0 1",
+      "row_id": 106,
+      "with": {
+        "approach_branches": {
+          "king_approach": 5
+        },
+        "branches": {
+          "approach_to_waypoint": 5,
+          "enter_mate2": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 6,
+          "fallback": 10
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "3k4/R7/8/8/8/8/2K5/8 w - - 0 1",
+      "row_id": 109,
+      "with": {
+        "approach_branches": {
+          "king_approach": 8,
+          "not_applicable": 2
+        },
+        "branches": {
+          "approach_to_waypoint": 7,
+          "chase_to_mate": 3,
+          "enter_mate2": 1,
+          "establish_fence": 1,
+          "fallback": 2,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 2,
+          "fallback": 3
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "K7/8/8/8/8/8/R7/6k1 w - - 0 1",
+      "row_id": 110,
+      "with": {
+        "approach_branches": {
+          "king_approach": 5
+        },
+        "branches": {
+          "approach_to_waypoint": 5,
+          "chase_to_mate": 3,
+          "enter_mate2": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 10,
+          "fallback": 35
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "1k6/5R2/8/8/8/8/3K4/8 w - - 0 1",
+      "row_id": 111,
+      "with": {
+        "approach_branches": {
+          "king_approach": 4
+        },
+        "branches": {
+          "approach_to_waypoint": 4,
+          "enter_mate2": 1,
+          "mate_in_1": 1,
+          "mate_in_2": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 6,
+          "fallback": 8
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "3k4/7R/8/8/2K5/8/8/8 w - - 0 1",
+      "row_id": 115,
+      "with": {
+        "approach_branches": {
+          "king_approach": 2
+        },
+        "branches": {
+          "approach_to_waypoint": 2,
+          "mate_in_1": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "chase_to_mate": 2,
+          "establish_fence": 5,
+          "fallback": 6
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    },
+    {
+      "fen": "6R1/3K4/8/7k/8/8/8/8 w - - 0 1",
+      "row_id": 117,
+      "with": {
+        "approach_branches": {
+          "king_approach": 2
+        },
+        "branches": {
+          "approach_to_waypoint": 2,
+          "mate_in_1": 1
+        },
+        "outcome": "win",
+        "reason": "checkmate"
+      },
+      "without": {
+        "branches": {
+          "establish_fence": 3,
+          "fallback": 3
+        },
+        "outcome": "draw",
+        "reason": "repetition"
+      }
+    }
+  ],
+  "paired_table": {
+    "without_loss__with_loss": 1,
+    "without_loss__with_win": 62,
+    "without_win__with_loss": 2,
+    "without_win__with_win": 135
+  },
+  "repetition_draw_delta": -58,
+  "sample_starts": [
+    "1R6/4K3/8/8/8/8/8/k7 w - - 0 1",
+    "K3k3/6R1/8/8/8/8/8/8 w - - 0 1",
+    "5k2/2R5/8/8/5K2/8/8/8 w - - 0 1",
+    "8/8/8/4K3/8/8/6R1/1k6 w - - 0 1",
+    "8/7k/8/8/8/8/6R1/5K2 w - - 0 1",
+    "7k/R7/8/8/8/8/4K3/8 w - - 0 1",
+    "8/8/6R1/8/4K2k/8/8/8 w - - 0 1",
+    "8/k7/8/8/4K3/8/1R6/8 w - - 0 1",
+    "3K4/6R1/8/8/8/8/8/7k w - - 0 1",
+    "3K3k/3R4/8/8/8/8/8/8 w - - 0 1"
+  ],
+  "schema_version": "phase2_8k_approach_integration_eval.v0",
+  "start_count": 200,
+  "start_filter": "fence_established true-middle excluding mate1, ungated exact mate2, and ungated enter_mate2/mate3",
+  "start_generation_attempts": 5267,
+  "start_seed": 20270801,
+  "win_delta": 0.29999999999999993,
+  "with_approach": {
+    "approach_branch_counts": {
+      "king_approach": 658,
+      "not_applicable": 103
+    },
+    "branch_counts": {
+      "approach_to_waypoint": 589,
+      "chase_to_mate": 223,
+      "enter_mate2": 119,
+      "establish_fence": 80,
+      "fallback": 92,
+      "mate_in_1": 197,
+      "mate_in_2": 146
+    },
+    "chase_branch_counts": {
+      "king_approach": 54,
+      "king_lateral_pursuit": 144,
+      "king_unblock": 2,
+      "not_applicable": 739,
+      "rook_escape_slide": 23,
+      "rook_waiting_tempo": 22
+    },
+    "draw_breakdown": {
+      "repetition": 3
+    },
+    "frames_max_per_white_move": 46,
+    "frames_mean_per_white_move": 2.5,
+    "games": 200,
+    "loss_breakdown": {},
+    "mean_white_moves_to_mate": 7.258883248730965,
+    "repetition_guard_activations": 25,
+    "skill_violation_count": 0,
+    "skill_violations": [],
+    "wilson_95": [
+      0.9568342712073097,
+      0.9948857622067417
+    ],
+    "win_rate": 0.985,
+    "wins": 197
+  },
+  "without_approach": {
+    "approach_branch_counts": {},
+    "branch_counts": {
+      "chase_to_mate": 175,
+      "enter_mate2": 45,
+      "establish_fence": 484,
+      "fallback": 2048,
+      "mate_in_1": 137,
+      "mate_in_2": 88
+    },
+    "chase_branch_counts": {
+      "king_approach": 68,
+      "king_lateral_pursuit": 70,
+      "king_unblock": 4,
+      "not_applicable": 2517,
+      "rook_escape_slide": 33,
+      "rook_waiting_tempo": 15
+    },
+    "draw_breakdown": {
+      "fifty_move": 2,
+      "repetition": 61
+    },
+    "frames_max_per_white_move": 113,
+    "frames_mean_per_white_move": 45.67819952972791,
+    "games": 200,
+    "loss_breakdown": {},
+    "mean_white_moves_to_mate": 14.379562043795621,
+    "repetition_guard_activations": 60,
+    "skill_violation_count": 0,
+    "skill_violations": [],
+    "wilson_95": [
+      0.6176504391426966,
+      0.745376790097715
+    ],
+    "win_rate": 0.685,
+    "wins": 137
+  },
+  "worker_count": 8
+}

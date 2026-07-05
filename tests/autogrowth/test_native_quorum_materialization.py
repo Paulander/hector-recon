@@ -6,6 +6,9 @@ from recon_lite import FormalReConEngine, Graph, Node, NodeState, NodeType
 from recon_lite_chess.autogrowth import (
     EdgeMateDistanceTrainingConfig,
     NativeQuorumMaterializationConfig,
+    APPROACH_KING_STEP_ID,
+    APPROACH_TO_WAYPOINT_SKILL_ID,
+    APPROACH_TO_WAYPOINT_SKILL_ROOT_ID,
     CHASE_DEFER_MATE2_STEP_ID,
     CHASE_KING_APPROACH_STEP_ID,
     CHASE_KING_PURSUIT_STEP_ID,
@@ -26,6 +29,7 @@ from recon_lite_chess.autogrowth import (
     run_mate_in_one_basin_recognizer,
     run_krk_policy,
     resolve_establish_fence_move,
+    run_approach_to_waypoint_skill,
     run_establish_fence_skill,
     run_fence_established_recognizer,
     run_fence_reply_quantifier,
@@ -1019,6 +1023,55 @@ def test_phase28i_chase_regressions_are_symmetric_across_edges() -> None:
             assert audit["confirmed"] == base["confirmed"]
             assert audit["branch"] == base["branch"]
             assert audit["bound_move"] == _orient_move(base["bound_move"], orientation)
+
+
+def test_phase28k_approach_to_waypoint_binds_king_step_with_trace() -> None:
+    board = chess.Board("1R6/4K3/8/8/8/8/8/k7 w - - 0 1")
+
+    audit = run_approach_to_waypoint_skill(board, record_trace=True)
+    traced = _trace_messages(audit["trace"])
+
+    assert fence_established_geometry(board)
+    assert audit["confirmed"]
+    assert audit["branch"] == "king_approach"
+    assert audit["bound_move"] == "e7d6"
+    assert (
+        APPROACH_TO_WAYPOINT_SKILL_ROOT_ID,
+        APPROACH_TO_WAYPOINT_SKILL_ID,
+        "SUB",
+        "request",
+    ) in traced
+    assert (
+        APPROACH_TO_WAYPOINT_SKILL_ID,
+        APPROACH_KING_STEP_ID,
+        "SUB",
+        "request",
+    ) in traced
+    assert (
+        APPROACH_KING_STEP_ID,
+        APPROACH_TO_WAYPOINT_SKILL_ID,
+        "SUR",
+        "confirm",
+    ) in traced
+    assert (
+        APPROACH_TO_WAYPOINT_SKILL_ID,
+        APPROACH_TO_WAYPOINT_SKILL_ROOT_ID,
+        "SUR",
+        "confirm",
+    ) in traced
+
+
+def test_phase28k_approach_regression_is_symmetric_across_edges() -> None:
+    base_board = chess.Board("1R6/4K3/8/8/8/8/8/k7 w - - 0 1")
+    base = run_approach_to_waypoint_skill(base_board, record_trace=False)
+
+    for orientation in ("a", "h", "1", "8"):
+        board = _orient_board(base_board, orientation)
+        audit = run_approach_to_waypoint_skill(board, record_trace=False)
+
+        assert audit["confirmed"] == base["confirmed"]
+        assert audit["branch"] == base["branch"]
+        assert audit["bound_move"] == _orient_move(base["bound_move"], orientation)
 
 
 def _repetition_key(board: chess.Board) -> str:
