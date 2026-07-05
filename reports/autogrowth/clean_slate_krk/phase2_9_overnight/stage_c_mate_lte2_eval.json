@@ -1,0 +1,167 @@
+{
+  "black_base_seed": 20271903,
+  "black_policy": "fixed-seed uniform legal",
+  "elapsed_seconds": 9.833725214004517,
+  "paired_table": {
+    "without_loss__with_loss": 1,
+    "without_loss__with_win": 2,
+    "without_win__with_win": 497
+  },
+  "pool": "mate_lte2",
+  "reference": "with_approach_vs_without_approach",
+  "repetition_draw_delta": -2,
+  "row_count": 500,
+  "schema_version": "phase2_9_stage_c_pool_eval.v0",
+  "start_generation_attempts": 19900,
+  "start_seed": 20270903,
+  "win_delta": 0.0040000000000000036,
+  "with_approach": {
+    "approach_branch_counts": {
+      "king_approach": 15,
+      "not_applicable": 16
+    },
+    "branch_counts": {
+      "approach_to_waypoint": 11,
+      "chase_to_mate": 13,
+      "enter_mate2": 11,
+      "establish_fence": 9,
+      "fallback": 11,
+      "mate_in_1": 499,
+      "mate_in_2": 367
+    },
+    "chase_branch_counts": {
+      "king_approach": 8,
+      "not_applicable": 31,
+      "rook_escape_slide": 5
+    },
+    "draw_breakdown": {
+      "repetition": 1
+    },
+    "draw_taxonomy": {
+      "checkmate": 499,
+      "repetition": 1
+    },
+    "frames_max_per_white_move": 67,
+    "frames_mean_per_white_move": 1.794788273615635,
+    "games": 500,
+    "loss_breakdown": {},
+    "plies_to_mate_mean": 2.6713426853707416,
+    "plies_to_mate_median": 3,
+    "repetition_guard_activations": 1,
+    "skill_violation_count": 0,
+    "skill_violations": [],
+    "white_moves_to_mate_mean": 1.8356713426853708,
+    "white_moves_to_mate_median": 2,
+    "wilson_95": [
+      0.9887592932948532,
+      0.9996468636054407
+    ],
+    "win_rate": 0.998,
+    "wins": 499
+  },
+  "with_approach_nonwin_fens": [
+    {
+      "fen": "4K2k/8/8/8/8/6R1/8/8 w - - 0 1",
+      "final_fen": "4K2k/8/6R1/8/8/8/8/8 b - - 9 5",
+      "reason": "repetition",
+      "row_id": 162,
+      "sample_moves": [
+        {
+          "branch": "enter_mate2",
+          "fen": "4K2k/8/8/8/8/6R1/8/8 w - - 0 1",
+          "move": "g3g6",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "4K2k/8/6R1/8/8/8/8/8 b - - 1 1",
+          "move": "h8h7",
+          "side": "black"
+        },
+        {
+          "branch": "establish_fence",
+          "fen": "4K3/7k/6R1/8/8/8/8/8 w - - 2 2",
+          "move": "g6g1",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "4K3/7k/8/8/8/8/8/6R1 b - - 3 2",
+          "move": "h7h8",
+          "side": "black"
+        },
+        {
+          "branch": "enter_mate2",
+          "fen": "4K2k/8/8/8/8/8/8/6R1 w - - 4 3",
+          "move": "g1g6",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "4K2k/8/6R1/8/8/8/8/8 b - - 5 3",
+          "move": "h8h7",
+          "side": "black"
+        },
+        {
+          "branch": "establish_fence",
+          "fen": "4K3/7k/6R1/8/8/8/8/8 w - - 6 4",
+          "move": "g6g1",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "4K3/7k/8/8/8/8/8/6R1 b - - 7 4",
+          "move": "h7h8",
+          "side": "black"
+        },
+        {
+          "branch": "enter_mate2",
+          "fen": "4K2k/8/8/8/8/8/8/6R1 w - - 8 5",
+          "move": "g1g6",
+          "side": "white"
+        }
+      ],
+      "stratum": "ungated_exact_mate2_now"
+    }
+  ],
+  "without_approach": {
+    "approach_branch_counts": {},
+    "branch_counts": {
+      "chase_to_mate": 16,
+      "enter_mate2": 9,
+      "establish_fence": 13,
+      "fallback": 19,
+      "mate_in_1": 497,
+      "mate_in_2": 365
+    },
+    "chase_branch_counts": {
+      "king_approach": 10,
+      "not_applicable": 32,
+      "rook_escape_slide": 6
+    },
+    "draw_breakdown": {
+      "repetition": 3
+    },
+    "draw_taxonomy": {
+      "checkmate": 497,
+      "repetition": 3
+    },
+    "frames_max_per_white_move": 67,
+    "frames_mean_per_white_move": 1.7965179542981502,
+    "games": 500,
+    "loss_breakdown": {},
+    "plies_to_mate_mean": 2.6056338028169015,
+    "plies_to_mate_median": 3,
+    "repetition_guard_activations": 0,
+    "skill_violation_count": 0,
+    "skill_violations": [],
+    "white_moves_to_mate_mean": 1.8028169014084507,
+    "white_moves_to_mate_median": 2,
+    "wilson_95": [
+      0.9825097478959467,
+      0.9979574037280398
+    ],
+    "win_rate": 0.994,
+    "wins": 497
+  }
+}

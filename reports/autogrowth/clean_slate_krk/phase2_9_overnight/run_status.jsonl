@@ -1,0 +1,16 @@
+{"game_count_per_pool": 500, "stage": "C", "status": "started", "workers": 8}
+{"pool": "fence_rung", "stage": "C", "status": "pool_complete", "with_wins": 496, "without_wins": 348}
+{"pool": "general", "stage": "C", "status": "pool_complete", "with_wins": 489, "without_wins": 379}
+{"pool": "mate_lte2", "stage": "C", "status": "pool_complete", "with_wins": 499, "without_wins": 497}
+{"elapsed_seconds": 3489.249731063843, "stage": "C", "status": "complete"}
+{"heldout_count": 128, "stage": "A", "status": "started", "train_count": 600}
+{"ceiling_rate": 0.640625, "exceeds": true, "seed": 20272911, "stage": "A", "status": "seed_complete", "success_rate": 0.7109375}
+{"ceiling_rate": 0.609375, "exceeds": true, "seed": 20272912, "stage": "A", "status": "seed_complete", "success_rate": 0.6875}
+{"ceiling_rate": 0.59375, "exceeds": true, "seed": 20272913, "stage": "A", "status": "seed_complete", "success_rate": 0.671875}
+{"any_seed_exceeds_ceiling": true, "stage": "A", "status": "complete"}
+{"heldout_count": 128, "stage": "B", "status": "started", "train_count": 600}
+{"dispatcher_rate": 0.796875, "exceeds": false, "seed": 20272911, "stage": "B", "status": "seed_complete", "success_rate": 0.703125}
+{"dispatcher_rate": 0.734375, "exceeds": false, "seed": 20272912, "stage": "B", "status": "seed_complete", "success_rate": 0.6796875}
+{"dispatcher_rate": 0.7578125, "exceeds": false, "seed": 20272913, "stage": "B", "status": "seed_complete", "success_rate": 0.6953125}
+{"any_seed_exceeds_dispatcher": false, "stage": "B", "status": "complete"}
+{"artifact_count": 6, "stage": "D", "status": "complete"}

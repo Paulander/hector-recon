@@ -35,6 +35,6 @@ chase-bound move, so they are skill bugs, not follow-on fallback behavior. Strat
 true-middle, one mate1-now. Example FENs: `6k1/4KR2/8/8/8/8/8/8 w - - 0 1` and
 `8/8/8/8/8/8/1K3R2/3k4 w - - 0 1`.
 Integration no-adopt: Phase 2.8i paired 200 games with-chase 137/200 vs without 134/200 (+0.015), paired 128 win/win, 9 loss/win, 6 win/loss, 57 loss/loss; repetitions 61 vs 56; skill violations 0.
-Phase 2.8k pre-waypoint forensics: nonwins mostly died before waypoint/chase-bound progress; fallback broke the fence 202 times. Approach standalone reached waypoint 70/100.
-Accepted: middle rung closed end-to-end by hand ceilings; paired 200 games with approach 197/200 vs 137/200, repetitions 3 vs 61, skill violations 0. Next: 2.9 autonomous-discovery probe, target = approach rung (primary, easiest) + near-corner residual (stretch), graded against the 2.8k and 2.8i ceilings.
+Phase 2.9 overnight artifacts: reports/autogrowth/clean_slate_krk/phase2_9_overnight/. Stage C scaled 500 paired/pool with-approach wins fence/general/mate<=2 = 496/489/499 vs 348/379/497; all residual nonwins were repetitions, skill violations 0.
+Stage A approach substrate: learned 91/88/86 of 128 beats exact approach ceilings 82/78/76, first learned-beats-hand result. Stage B true-middle: learned 90/87/89 misses dispatcher 102/94/97. Stage D weight dumps written. Next: 2.9 analysis + autonomous-discovery probe design.
 No-go: new TG names, new report documents, training logic changes, `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.

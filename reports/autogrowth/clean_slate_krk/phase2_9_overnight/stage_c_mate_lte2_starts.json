@@ -1,0 +1,3008 @@
+{
+  "attempts": 19900,
+  "pool": "mate_lte2",
+  "rows": [
+    {
+      "fen": "8/8/8/8/2R5/5K2/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 0,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/8/5K2/7k/1R6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 1,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/4K3/8/7k/5R2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 2,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5R2/8/8/8/2K5/8/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 3,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/3R4/8/8/8/3K4/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 4,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/3R4/k2K4/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 5,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/k7/1RK5/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 6,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5K2/7k/8/8/R7/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 7,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/4K2k/4R3/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 8,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/4R3/8/5K1k/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 9,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/5K1k/8/8/8/6R1/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 10,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/4R3/5K2/8/6k1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 11,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/R7/8/8/4K3/8/4k3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 12,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "4k3/8/3K4/8/8/8/8/5R2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 13,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/6R1/2K5/8/3k4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 14,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/6K1/8/8/8/R7/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 15,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "k7/8/3K4/6R1/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 16,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/k1K5/6R1/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 17,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/k1K5/3R4/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 18,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7R/8/8/8/K7/8/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 19,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/4R3/5K2/7k/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 20,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/1R6/4K3/8/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 21,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/3K4/k7/6R1/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 22,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5K1k/8/8/8/8/6R1/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 23,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/7R/3K4/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 24,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/5K1k/8/8/8/4R3/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 25,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "3R4/k1K5/8/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 26,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/4K3/8/1R6/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 27,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/k1K5/8/8/7R w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 28,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/2R5/1K6/8/8/1k6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 29,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/6K1/8/8/R7/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 30,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/8/K2R4/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 31,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/K6R/8/1k6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 32,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/1K6/8/k7/5R2/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 33,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/3R4/8/8/3K4/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 34,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/2R5/8/4K3/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 35,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4k3/8/4K3/8/8/8/3R4/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 36,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/3R4/5K1k/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 37,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/5K1k/8/8/8/5R2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 38,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/5R2/8/8/8/1K6/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 39,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "6k1/8/7K/8/8/3R4/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 40,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/4R3/5K2/8/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 41,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4R3/8/8/8/8/2K5/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 42,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/7K/8/8/8/3R4/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 43,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/4R3/8/8/7K/8/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 44,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/2R5/8/8/6K1/8/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 45,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "3k4/8/5K2/8/2R5/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 46,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/2R5/8/8/5K2/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 47,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "3R4/8/8/8/8/8/5K2/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 48,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/6R1/k7/8/3K4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 49,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/1R6/8/8/k1K5/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 50,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "6k1/8/7K/5R2/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 51,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/3R4/5K1k/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 52,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/4R3/7k/4K3/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 53,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4R3/8/k1K5/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 54,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "5k2/8/8/7K/8/8/4R3/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 55,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/7R/8/8/8/k1K5/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 56,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/6R1/4K3/8/4k3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 57,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "2k5/8/2K5/8/8/8/4R3/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 58,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "2k5/8/2K5/8/8/8/8/R7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 59,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/8/1K6/4R3/1k6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 60,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/5R2/8/8/3K4/8/4k3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 61,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5K2/7k/4R3/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 62,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/4K3/8/7k/3R4/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 63,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "3k4/8/8/2K5/8/8/8/4R3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 64,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/3R4/7k/8/5K2/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 65,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/1K5R/8/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 66,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2k5/8/1K6/7R/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 67,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4K3/7k/4R3/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 68,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5R2/8/8/8/8/8/8/k1K5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 69,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "2k5/8/8/3K4/8/8/8/1R6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 70,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/1R6/8/8/8/k1K5/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 71,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/5R2/8/8/8/8/k2K4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 72,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/2R5/8/8/8/3K4/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 73,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/2R5/8/8/8/4K3/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 74,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/4R3/5K2/7k/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 75,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/5K2/8/8/8/3R4/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 76,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "6R1/8/k1K5/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 77,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/7K/4R3/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 78,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/7R/6K1/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 79,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/k7/2K5/8/8/8/6R1/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 80,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/k7/2K5/3R4/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 81,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/6R1/8/8/2K5/8/3k4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 82,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "3R4/8/8/8/1K6/8/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 83,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/7R/k7/8/1K6/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 84,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/7K/8/4R3/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 85,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/3R4/8/7k/5K2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 86,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/5K1k/2R5/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 87,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/4R3/8/8/8/1K6/8/3k4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 88,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4R3/8/8/8/8/6K1/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 89,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4k3/8/5R2/4K3/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 90,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/5R2/8/8/4K3/8/8/4k3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 91,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/k1K5/8/5R2/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 92,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "5R2/8/8/5K1k/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 93,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/R7/8/8/8/8/8/4K2k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 94,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/k7/2K5/8/8/8/8/6R1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 95,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/5R2/8/8/8/4K3/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 96,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/5R2/8/2K5/k7/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 97,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/7k/5K2/8/8/8/8/3R4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 98,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "3k4/8/3K4/8/8/7R/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 99,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/5K1k/4R3/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 100,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2k5/8/8/1K1R4/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 101,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4R3/8/8/8/2K5/k7/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 102,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2k5/8/2K5/8/8/8/8/7R w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 103,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "2R5/8/8/8/8/1K6/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 104,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "k7/8/1K6/8/8/8/5R2/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 105,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "6k1/8/7K/8/1R6/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 106,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "6k1/8/7R/5K2/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 107,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2k5/8/1K6/8/1R6/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 108,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/5R2/K7/8/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 109,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/R7/7k/8/6K1/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 110,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/6R1/k7/8/2K5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 111,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2k5/8/1RK5/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 112,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/5K2/7k/4R3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 113,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/5K1k/8/6R1/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 114,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/2R5/8/8/8/K7/8/1k6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 115,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/5K2/3R4/4k3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 116,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/4R3/2K5/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 117,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "k1K5/8/8/8/8/8/1R6/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 118,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/k7/2K5/8/7R w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 119,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "3R4/8/8/8/8/6K1/8/4k3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 120,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/8/K5R1/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 121,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "4k3/2R5/4K3/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 122,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/4R3/8/6K1/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 123,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "3k4/8/8/4K3/2R5/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 124,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/2K2R2/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 125,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/6R1/6K1/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 126,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/8/2K5/8/8/4R3/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 127,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/7R/8/2K5/8/1k6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 128,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "6k1/8/7K/8/4R3/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 129,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/5K2/8/8/8/8/2R5/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 130,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "k7/8/K7/8/8/7R/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 131,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/7R/6K1/8/6k1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 132,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/6R1/8/3K4/8/3k4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 133,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "1k6/8/8/1K6/8/8/8/2R5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 134,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/k7/2K5/4R3/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 135,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/2R5/8/2K5/8/3k4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 136,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/R4K2/8/4k3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 137,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/8/7K/8/8/R7/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 138,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/8/3R4/1K6/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 139,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "6k1/8/7K/R7/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 140,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "3K4/8/k7/6R1/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 141,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "3R4/8/8/8/8/5K1k/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 142,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "1k6/8/K7/8/8/8/8/2R5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 143,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5k2/7K/4R3/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 144,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/7k/5K2/8/1R6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 145,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "3R4/8/8/8/8/8/K7/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 146,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/3R4/8/8/8/k1K5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 147,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/5R2/8/k1K5/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 148,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "3R4/8/8/8/8/2K5/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 149,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/3R4/8/8/8/8/3K4/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 150,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1k6/7R/1K6/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 151,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/3K4/k7/2R5/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 152,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/5R2/8/8/8/2K5/8/3k4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 153,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/1R6/8/8/8/6K1/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 154,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/8/2K5/8/1R6/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 155,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1R6/8/8/8/k1K5/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 156,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/5K1k/8/8/8/8/2R5/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 157,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "k7/8/8/K7/8/8/8/5R2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 158,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/5K2/7k/8/8/1R6/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 159,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7R/k7/8/3K4/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 160,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/1K6/3R4/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 161,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4K2k/8/8/8/8/6R1/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 162,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/7k/5K2/8/3R4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 163,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/3K3R/8/4k3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 164,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/1K6/8/k7/4R3/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 165,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1k6/8/K7/5R2/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 166,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "6k1/8/6K1/8/8/8/6R1/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 167,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/5K2/7k/2R5/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 168,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/8/3R4/K7/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 169,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/4R3/4K2k/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 170,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5K2/7k/8/8/8/8/3R4/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 171,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1k6/2R5/K7/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 172,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k2K4/8/8/8/2R5/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 173,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1k6/8/1K6/8/R7/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 174,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4R3/8/8/8/1K6/8/8/3k4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 175,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/7R/8/8/3K4/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 176,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/5R2/k7/2K5/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 177,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/8/4K2k/3R4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 178,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/5K1k/3R4/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 179,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4k3/8/4K3/1R6/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 180,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "7R/8/8/8/8/1K6/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 181,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/3R4/8/5K2/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 182,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "6k1/8/8/6K1/5R2/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 183,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/4R3/8/2K5/8/8/3k4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 184,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/6K1/1R6/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 185,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "2k5/4K3/8/8/1R6/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 186,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/8/6K1/4R3/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 187,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/8/7K/8/8/4R3/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 188,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/6R1/8/8/8/3K4/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 189,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/R7/8/8/8/6K1/8/6k1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 190,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "3k4/8/3KR3/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 191,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/2K5/8/8/8/8/8/7R w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 192,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/K7/7R/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 193,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1k6/8/8/K7/8/8/2R5/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 194,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/4R3/k7/8/3K4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 195,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2R5/8/8/8/8/2K5/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 196,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/k7/2K5/8/5R2/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 197,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/7R/8/8/8/5K2/8/6k1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 198,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "3k4/8/2K5/8/8/8/7R/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 199,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/3R4/1K6/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 200,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/5K1k/8/8/8/8/5R2/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 201,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/3R4/3K4/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 202,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/8/1K4R1/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 203,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "6k1/8/5R2/6K1/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 204,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/2R5/8/8/7K/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 205,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/5R2/8/2K5/8/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 206,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2k5/8/2K1R3/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 207,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "6k1/8/5K2/3R4/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 208,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k2K4/8/8/8/8/7R/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 209,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/8/1KR5/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 210,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/2R5/8/8/8/6K1/8/6k1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 211,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "7k/4K3/8/8/8/8/5R2/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 212,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4k3/8/5K2/8/8/8/8/1R6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 213,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/K3R3/8/1k6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 214,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1k6/8/1K6/8/3R4/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 215,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/2R5/5K2/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 216,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/1R6/7K/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 217,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/k1K5/8/8/8/3R4/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 218,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/6R1/8/8/8/6K1/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 219,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/4R3/k7/3K4/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 220,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4R3/8/8/8/7K/8/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 221,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/5R2/2K5/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 222,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "3k4/8/4K3/8/8/R7/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 223,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1R6/8/7k/5K2/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 224,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7R/8/2K5/k7/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 225,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/3K4/k7/5R2/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 226,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4K2k/8/8/8/4R3/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 227,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/2R5/8/8/2K5/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 228,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "3k4/1K6/8/4R3/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 229,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/3R4/8/8/6K1/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 230,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/2R5/8/8/7k/5K2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 231,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/5R2/8/8/8/8/8/4K2k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 232,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/2R5/8/8/8/4K3/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 233,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/6R1/8/8/8/1K6/8/1k6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 234,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/R7/8/7K/8/6k1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 235,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/7k/5K2/8/8/3R4/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 236,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/5K1k/5R2/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 237,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2k5/8/8/4K3/1R6/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 238,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/5R2/8/2K5/8/4k3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 239,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1R6/8/8/8/8/5K2/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 240,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2k5/3R4/1K6/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 241,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1K6/8/k7/7R/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 242,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/4K3/8/2R5/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 243,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "6k1/8/6K1/1R6/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 244,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "5k2/8/4K3/8/6R1/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 245,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/7R/8/8/4K3/8/8/6k1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 246,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/3R1K2/8/4k3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 247,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1R6/5K2/7k/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 248,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4k3/8/8/5K2/8/8/8/3R4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 249,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/7K/2R5/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 250,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/3R4/k7/8/2K5/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 251,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2R5/7k/8/5K2/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 252,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/5R1K/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 253,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/2R5/8/8/k1K5/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 254,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "3R4/8/8/8/8/8/k7/2K5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 255,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/4R3/8/8/5K2/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 256,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/k7/2K5/4R3/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 257,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/4K3/8/4R3/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 258,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/4R3/2K5/8/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 259,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/6R1/8/5K2/8/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 260,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/5K2/7k/R7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 261,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5R2/8/8/8/8/6K1/8/6k1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 262,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/k1K5/8/8/8/7R/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 263,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "k7/8/1K6/8/4R3/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 264,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "3k4/8/3K4/8/8/8/8/2R5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 265,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/3R4/k7/8/3K4/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 266,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "3k4/8/4K3/6R1/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 267,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/k1K5/8/8/8/1R6/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 268,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/1R6/8/8/3K4/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 269,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/1R6/4K2k/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 270,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/2R5/8/8/8/8/7k/5K2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 271,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/5K2/8/R7/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 272,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1R6/8/8/8/8/3K4/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 273,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/K7/4R3/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 274,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/4K3/7k/1R6/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 275,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/6R1/8/8/2K5/8/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 276,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/5R2/6K1/8/8/6k1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 277,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/2R5/5K1k/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 278,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/6K1/8/4R3/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 279,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/4R3/8/8/3K4/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 280,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5k2/8/6K1/8/3R4/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 281,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1k6/8/8/1K6/2R5/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 282,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/R7/8/6K1/8/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 283,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/k1K5/8/8/8/6R1/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 284,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "5k2/7K/8/8/8/8/8/4R3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 285,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5k2/8/8/6K1/8/8/4R3/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 286,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/3K4/8/8/8/7R/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 287,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2k5/8/1K6/8/8/8/8/7R w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 288,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5K2/7k/8/8/8/1R6/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 289,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/4K3/7k/2R5/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 290,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/8/2KR4/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 291,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "R7/8/8/8/8/8/4K3/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 292,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "6k1/8/7K/8/8/8/8/5R2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 293,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/5K2/8/6R1/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 294,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "3k4/8/2K5/8/8/7R/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 295,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5K2/8/7k/R7/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 296,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/5K2/8/8/8/8/5R2/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 297,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "k7/8/8/2K5/8/8/5R2/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 298,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "3k4/8/4K3/7R/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 299,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/5R2/8/3K4/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 300,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/3R4/4K2k/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 301,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/2K5/k7/8/8/8/8/2R5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 302,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1R6/7k/8/4K3/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 303,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/5K2/2R5/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 304,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/6R1/5K2/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 305,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/5K2/7k/3R4/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 306,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2k5/8/3K4/1R6/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 307,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4k3/8/3K1R2/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 308,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/3K1R2/8/3k4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 309,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/3K4/8/k7/4R3/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 310,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1k6/8/R7/3K4/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 311,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/1R6/8/4K3/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 312,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/1K6/8/k7/6R1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 313,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/k7/2K3R1/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 314,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/3R4/8/8/8/8/k7/2K5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 315,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1k6/8/1K6/8/4R3/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 316,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "2k5/8/2K5/8/8/7R/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 317,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/3R4/8/8/4K3/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 318,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/3K4/R7/8/1k6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 319,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/5R2/8/8/3K4/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 320,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/5K2/R7/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 321,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1R6/8/8/8/8/8/2K5/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 322,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/7R/8/8/7K/8/6k1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 323,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2k5/8/3K4/8/8/8/8/1R6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 324,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/3R4/8/7k/5K2/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 325,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/4R3/8/8/2K5/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 326,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4R3/8/8/8/8/2K5/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 327,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/k1K5/8/8/8/8/8/2R5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 328,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "7k/8/8/6K1/2R5/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 329,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/5K2/7k/6R1/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 330,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/5R2/7K/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 331,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "5k2/8/5K2/8/8/8/6R1/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 332,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/7k/5K2/R7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 333,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/8/k2K4/7R w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 334,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4k3/8/3K4/8/8/8/8/6R1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 335,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/4R3/8/8/5K2/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 336,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/8/4K2k/1R6/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 337,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4k3/8/8/5K2/8/8/3R4/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 338,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/R7/8/5K2/8/4k3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 339,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "3k4/8/3K4/4R3/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 340,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/2R5/k7/8/1K6/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 341,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/2R5/8/5K1k/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 342,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "4K2k/8/8/6R1/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 343,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/2R5/8/k7/2K5/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 344,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "6R1/8/8/8/8/8/3K4/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 345,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/5K1k/8/6R1/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 346,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/k1K5/5R2/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 347,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/3R4/8/8/8/7k/5K2/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 348,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/2R5/8/8/8/5K2/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 349,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/3R1K2/8/8/4k3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 350,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/1K6/6R1/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 351,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/4K2R/8/8/6k1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 352,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1K6/8/k7/2R5/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 353,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5k2/8/4R2K/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 354,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/k1K5/8/8/8/8/8/5R2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 355,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/3R4/k7/8/3K4/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 356,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4k3/8/5K2/5R2/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 357,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5R2/8/8/8/5K2/8/8/6k1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 358,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/8/6R1/2K5/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 359,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/6K1/8/8/8/8/5R2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 360,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/4R3/8/k1K5/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 361,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "k7/2K2R2/8/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 362,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/6K1/6R1/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 363,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "6k1/8/6K1/8/8/2R5/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 364,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/4R3/k7/8/3K4/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 365,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/R7/8/8/5K1k/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 366,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "k7/8/1K6/8/8/8/8/5R2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 367,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/8/8/k1K1R3/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 368,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/k1K5/8/6R1/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 369,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "k7/8/8/1K6/8/8/8/4R3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 370,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/5R2/5K1k/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 371,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/6R1/8/k1K5/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 372,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/8/6R1/k7/2K5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 373,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/3R4/k7/8/3K4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 374,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/8/5K2/8/8/3R4/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 375,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/5K1k/8/8/8/6R1/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 376,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "R7/8/8/5K1k/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 377,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "5k2/8/3K4/8/8/6R1/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 378,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/3R4/8/8/1K6/8/1k6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 379,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/7k/5K2/8/8/8/1R6/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 380,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/7k/5K2/8/8/2R5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 381,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "3k4/8/4K3/R7/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 382,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/5R2/2K5/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 383,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5k2/7R/5K2/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 384,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/7k/5K2/8/8/2R5/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 385,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/6R1/8/8/8/3K4/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 386,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/8/1K6/2R5/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 387,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "4k3/8/4K3/8/8/8/1R6/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 388,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "k2K4/8/8/8/8/4R3/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 389,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/1R6/8/8/8/2K5/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 390,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/R7/8/7k/5K2/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 391,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/2K5/k7/8/8/8/8/4R3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 392,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4k3/8/8/3K4/5R2/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 393,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/2R5/8/8/8/8/8/k1K5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 394,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/4R3/8/8/8/k7/2K5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 395,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/5R2/8/8/8/5K1k/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 396,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/5K1k/8/2R5/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 397,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "6k1/1R6/6K1/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 398,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/2R5/8/2K5/8/1k6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 399,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5k2/8/5K2/8/8/4R3/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 400,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k1K5/8/8/6R1/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 401,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "2k5/8/2K5/3R4/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 402,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/8/3K4/8/6R1/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 403,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/R7/8/8/5K1k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 404,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "7k/8/8/5K2/8/8/4R3/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 405,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/4R3/2K5/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 406,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/4R1K1/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 407,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "1R6/8/8/8/8/1K6/8/1k6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 408,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2k5/8/8/2K5/8/8/1R6/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 409,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/k1K5/5R2/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 410,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/6R1/8/1K6/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 411,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/6R1/8/8/3K4/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 412,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/8/1K6/8/8/8/2R5/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 413,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "1k6/8/1K6/8/7R/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 414,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "k7/8/2K5/8/8/7R/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 415,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2K5/k7/8/8/8/8/8/2R5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 416,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2k5/8/3K4/8/8/7R/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 417,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "6k1/8/6K1/8/2R5/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 418,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "1R6/8/8/8/8/3K4/8/4k3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 419,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/5K2/4R3/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 420,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "5R2/8/8/8/8/8/3K4/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 421,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5k2/8/5K2/8/8/8/R7/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 422,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "3k4/8/8/1K6/4R3/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 423,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/7R/8/8/8/8/8/k2K4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 424,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/3K4/4R3/8/3k4 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 425,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5k2/8/6K1/3R4/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 426,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/4K3/8/8/6R1/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 427,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/6R1/8/6K1/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 428,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/7k/5K2/8/8/R7/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 429,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4k3/8/5K2/8/3R4/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 430,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/4R3/8/7K/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 431,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/8/8/1K6/6R1/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 432,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/5K2/8/8/R7/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 433,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/5K2/3R4/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 434,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/3R4/7k/5K2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 435,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2K5/8/k7/7R/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 436,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/4K3/1R6/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 437,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/4R3/k7/2K5/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 438,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/5K2/8/8/8/2R5/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 439,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/1R6/8/4K3/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 440,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/k1K5/8/4R3/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 441,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/8/8/k1K5/1R6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 442,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/6R1/3K4/8/4k3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 443,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/2R5/8/8/5K2/7k/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 444,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1k6/8/8/1K6/R7/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 445,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "R7/8/8/8/8/2K5/8/2k5 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 446,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/4K3/8/7k/5R2/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 447,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/5K1k/8/4R3/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 448,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "k7/8/8/K7/8/3R4/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 449,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/8/1K6/8/8/8/3R4/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 450,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "5k2/8/4K3/4R3/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 451,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/4R3/8/8/8/4K3/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 452,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/k2K4/7R/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 453,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/6R1/8/5K1k/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 454,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "5K2/7k/8/8/8/8/5R2/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 455,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/1K6/8/k7/3R4/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 456,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/3R4/8/8/2K5/k7/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 457,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/k7/2K5/8/7R/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 458,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/2R5/8/k1K5/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 459,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/2R5/8/8/8/8/4K2k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 460,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "6k1/5R2/5K2/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 461,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/6R1/8/8/8/4K3/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 462,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/R7/6K1/8/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 463,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/8/8/1R3K1k/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 464,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/4R3/8/8/7k/5K2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 465,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "1k6/8/8/K1R5/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 466,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/8/3R4/2K5/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 467,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/7R/K7/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 468,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/5K2/7k/8/8/R7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 469,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/5K2/3R4/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 470,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/5K2/8/8/2R5/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 471,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/7R/5K2/8/6k1 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 472,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/K1R5/8/1k6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 473,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/2R5/8/8/4K3/8/5k2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 474,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "4k3/8/8/3RK3/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 475,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/8/2R2K1k/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 476,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "2k5/8/1K6/8/3R4/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 477,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/2K5/5R2/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 478,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "4k3/8/4K3/8/7R/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 479,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/4R3/8/8/5K1k/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 480,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "1K6/8/k7/5R2/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 481,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/5K2/7k/6R1/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 482,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/7K/8/8/8/R7/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 483,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/1R6/8/8/7k/5K2/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 484,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/4R1K1/8/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 485,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/8/K5R1/8/8/k7 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 486,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "R7/8/8/7k/5K2/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 487,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/5R2/8/8/7k/5K2 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 488,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "6k1/8/8/6KR/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 489,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/8/3K4/k7/7R w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 490,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/5R2/8/K7/8/1k6 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 491,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/8/8/6K1/8/R7/7k w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 492,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "7k/8/7K/8/8/1R6/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 493,
+      "stratum": "mate1_now"
+    },
+    {
+      "fen": "8/8/8/3K4/k7/6R1/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 494,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "6k1/8/8/6K1/8/8/8/7R w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 495,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "8/8/6R1/k1K5/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 496,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5k2/8/5K2/4R3/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 497,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "k7/3K4/8/2R5/8/8/8/8 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 498,
+      "stratum": "ungated_exact_mate2_now"
+    },
+    {
+      "fen": "5k2/8/6K1/8/8/8/8/4R3 w - - 0 1",
+      "pool": "mate_lte2",
+      "row_id": 499,
+      "stratum": "ungated_exact_mate2_now"
+    }
+  ],
+  "schema_version": "phase2_9_stage_c_start_pool.v0",
+  "seed": 20270903
+}

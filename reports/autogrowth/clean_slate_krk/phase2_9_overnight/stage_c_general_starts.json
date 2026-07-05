@@ -1,0 +1,3008 @@
+{
+  "attempts": 717,
+  "pool": "general",
+  "rows": [
+    {
+      "fen": "8/8/1R6/4k3/8/3K4/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 0,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/1R4K1/8/8/4k3/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 1,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "K2k4/8/8/8/8/8/R7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 2,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/2K5/4R3/6k1 w - - 0 1",
+      "pool": "general",
+      "row_id": 3,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6k1/8/R7/8/8/7K/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 4,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7K/8/8/2R5/8/8/4k3 w - - 0 1",
+      "pool": "general",
+      "row_id": 5,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "R7/8/8/K7/8/1k6/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 6,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2R5/8/8/3K1k2/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 7,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "k2K4/8/8/6R1/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 8,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2K5/8/8/8/8/k7/2R5 w - - 0 1",
+      "pool": "general",
+      "row_id": 9,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/4k3/8/K7/8/8/R7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 10,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3k4/5R2/8/8/8/K7/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 11,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2R5/3K4/8/8/8/8/6k1 w - - 0 1",
+      "pool": "general",
+      "row_id": 12,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5R2/8/2k5/8/8/1K6/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 13,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/R7/8/1k6/8/8/2K5 w - - 0 1",
+      "pool": "general",
+      "row_id": 14,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7K/8/8/R7/8/8/3k4 w - - 0 1",
+      "pool": "general",
+      "row_id": 15,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/1K6/8/8/7R/1k6/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 16,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2R5/8/8/3k4/1K6/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 17,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "R7/8/8/3k1K2/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 18,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2k5/8/8/8/1R6/8/8/4K3 w - - 0 1",
+      "pool": "general",
+      "row_id": 19,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/1K6/8/5k2/4R3 w - - 0 1",
+      "pool": "general",
+      "row_id": 20,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2R5/2K5/8/8/8/7k/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 21,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/4k1K1/8/8/1R6/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 22,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1k2K3/8/8/6R1/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 23,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/4K3/8/4k3/3R4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 24,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/K7/6R1/8/8/4k3/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 25,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1R6/8/8/8/8/8/8/2K2k2 w - - 0 1",
+      "pool": "general",
+      "row_id": 26,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/5K2/8/2R5/8/k7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 27,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7K/3R4/8/8/5k2/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 28,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/3K4/1R6/8/8/8/2k5/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 29,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/1k6/2R1K3/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 30,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/K7/6k1/3R4/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 31,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5K2/7R/8/8/8/8/k7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 32,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5k2/8/8/2K5/2R5/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 33,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5R2/1K6/8/8/8/k7/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 34,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/K3k3/1R6/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 35,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/7k/8/5R2/8/8/3K4 w - - 0 1",
+      "pool": "general",
+      "row_id": 36,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7K/5R2/8/6k1/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 37,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/7R/8/8/k2K4 w - - 0 1",
+      "pool": "general",
+      "row_id": 38,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3K4/5R2/8/8/8/8/2k5/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 39,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/1K6/1R6/k7/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 40,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "k7/6R1/8/8/8/6K1/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 41,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/6k1/8/8/1R2K3/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 42,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2K5/8/8/2R5/k7/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 43,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3K4/8/5k2/8/8/8/8/3R4 w - - 0 1",
+      "pool": "general",
+      "row_id": 44,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "K7/8/8/8/4k3/R7/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 45,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4K3/8/4k3/8/8/8/3R4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 46,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7R/8/7K/8/8/8/1k6/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 47,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/4K3/8/3k4/8/8/2R5/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 48,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1k6/8/8/K6R/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 49,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/1k4K1/8/8/8/8/2R5/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 50,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/1R6/k7/2K5/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 51,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5k2/8/8/8/8/8/8/2R1K3 w - - 0 1",
+      "pool": "general",
+      "row_id": 52,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/6KR/8/8/2k5 w - - 0 1",
+      "pool": "general",
+      "row_id": 53,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/K7/8/8/3R4/8/8/k7 w - - 0 1",
+      "pool": "general",
+      "row_id": 54,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/3R4/8/8/4K1k1/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 55,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/3K3R/8/8/3k4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 56,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/2K5/8/7R/k7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 57,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6R1/4k3/8/5K2/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 58,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/5K2/7R/2k5/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 59,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2K4R/8/8/8/8/2k5/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 60,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3R4/4k3/8/4K3/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 61,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/1K1R4/8/1k6/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 62,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4R3/5k2/8/8/6K1/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 63,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2K5/8/8/5k2/8/8/7R w - - 0 1",
+      "pool": "general",
+      "row_id": 64,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5k2/8/8/R4K2/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 65,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/k7/8/8/8/2K4R/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 66,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2K5/8/8/8/4R3/8/6k1/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 67,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/5K2/8/2k5/R7 w - - 0 1",
+      "pool": "general",
+      "row_id": 68,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "6k1/8/8/8/6K1/8/8/2R5 w - - 0 1",
+      "pool": "general",
+      "row_id": 69,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4k3/8/3R4/8/8/1K6/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 70,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4R3/8/8/8/3K4/5k2/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 71,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/R7/8/8/8/6k1/K7 w - - 0 1",
+      "pool": "general",
+      "row_id": 72,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/6k1/8/8/2K2R2 w - - 0 1",
+      "pool": "general",
+      "row_id": 73,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/7k/4R3/2K5/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 74,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/3K2R1/8/8/8/8/8/k7 w - - 0 1",
+      "pool": "general",
+      "row_id": 75,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/1R6/8/7k/8/8/1K6 w - - 0 1",
+      "pool": "general",
+      "row_id": 76,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/5R2/8/8/k7/6K1 w - - 0 1",
+      "pool": "general",
+      "row_id": 77,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/3K4/7R/8/3k4/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 78,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3K4/8/8/8/3R4/8/7k/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 79,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/k4K2/8/8/8/8/8/4R3 w - - 0 1",
+      "pool": "general",
+      "row_id": 80,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/3R4/8/7k/5K2/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 81,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/KR6/8/8/2k5/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 82,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4K3/R7/8/8/8/8/1k6/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 83,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2R5/8/1K6/8/3k4/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 84,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/1R6/8/8/8/4k3/8/4K3 w - - 0 1",
+      "pool": "general",
+      "row_id": 85,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7K/8/2R5/8/6k1/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 86,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1R6/8/2k5/5K2/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 87,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/2R5/6k1/K7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 88,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4K3/8/8/8/4k3/1R6/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 89,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/K7/8/6k1/8/3R4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 90,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/7K/8/R7/8/2k5 w - - 0 1",
+      "pool": "general",
+      "row_id": 91,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/3K4/8/8/R7/1k6/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 92,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/4K3/8/8/4k3/8/3R4 w - - 0 1",
+      "pool": "general",
+      "row_id": 93,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/k7/8/8/8/8/8/1K1R4 w - - 0 1",
+      "pool": "general",
+      "row_id": 94,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4R3/4K3/8/4k3/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 95,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/1R6/7k/3K4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 96,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2R5/2K5/8/8/8/8/6k1 w - - 0 1",
+      "pool": "general",
+      "row_id": 97,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1K6/8/8/8/3R4/8/5k2/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 98,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6K1/8/5k2/8/8/4R3/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 99,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/2k5/8/8/5KR1 w - - 0 1",
+      "pool": "general",
+      "row_id": 100,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "6k1/8/8/8/R6K/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 101,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/K7/8/k7/8/3R4/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 102,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/k2KR3/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 103,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/7K/8/7k/R7/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 104,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2k5/7R/8/7K/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 105,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/6k1/8/8/3R4/3K4 w - - 0 1",
+      "pool": "general",
+      "row_id": 106,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/k7/8/1K6/4R3/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 107,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7R/8/8/8/5K2/8/8/1k6 w - - 0 1",
+      "pool": "general",
+      "row_id": 108,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/K7/8/k7/8/2R5/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 109,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2k5/8/3R4/8/8/8/6K1 w - - 0 1",
+      "pool": "general",
+      "row_id": 110,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/R2K4/8/8/3k4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 111,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/5k2/8/8/8/3KR3 w - - 0 1",
+      "pool": "general",
+      "row_id": 112,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3k4/8/8/5R2/5K2/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 113,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/k7/2K5/8/2R5 w - - 0 1",
+      "pool": "general",
+      "row_id": 114,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/1R6/8/8/k7/8/K7 w - - 0 1",
+      "pool": "general",
+      "row_id": 115,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1K2k3/R7/8/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 116,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1R6/4k3/8/5K2/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 117,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/6KR/8/2k5 w - - 0 1",
+      "pool": "general",
+      "row_id": 118,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/5R2/K7/3k4 w - - 0 1",
+      "pool": "general",
+      "row_id": 119,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7k/8/8/8/8/R4K2/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 120,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2K5/8/8/8/8/2k5/6R1/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 121,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/1K6/8/8/1k6/8/R7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 122,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/3K4/8/8/7k/8/4R3 w - - 0 1",
+      "pool": "general",
+      "row_id": 123,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1K6/8/8/8/8/1k6/2R5/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 124,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/5R2/6k1/8/6K1/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 125,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5R2/8/8/8/8/6k1/8/K7 w - - 0 1",
+      "pool": "general",
+      "row_id": 126,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "6k1/8/1R6/5K2/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 127,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/6k1/8/8/8/1RK5/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 128,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4K3/8/R7/2k5/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 129,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "k7/8/8/K3R3/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 130,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "K7/8/8/8/R7/4k3/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 131,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/7k/4K3/8/8/4R3 w - - 0 1",
+      "pool": "general",
+      "row_id": 132,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/k7/6R1/1K6 w - - 0 1",
+      "pool": "general",
+      "row_id": 133,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/5k2/8/R7/5K2/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 134,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/2k5/8/8/5K2/8/7R w - - 0 1",
+      "pool": "general",
+      "row_id": 135,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7k/5R2/8/8/8/8/3K4 w - - 0 1",
+      "pool": "general",
+      "row_id": 136,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3R4/8/8/k7/8/2K5/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 137,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/R7/8/8/4K3/8/6k1 w - - 0 1",
+      "pool": "general",
+      "row_id": 138,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/3RK3/8/8/8/5k2/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 139,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2R5/8/8/8/5K2/8/6k1 w - - 0 1",
+      "pool": "general",
+      "row_id": 140,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3k4/8/8/8/8/5K2/8/6R1 w - - 0 1",
+      "pool": "general",
+      "row_id": 141,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5R2/K7/8/8/8/6k1/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 142,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/4K3/8/4k3/8/8/8/5R2 w - - 0 1",
+      "pool": "general",
+      "row_id": 143,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/1R1K4/8/8/3k4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 144,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/6R1/8/8/3K4/7k/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 145,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/5R2/2K1k3/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 146,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/R7/8/1K6/8/8/4k3/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 147,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/3R4/8/K7/8/8/5k2 w - - 0 1",
+      "pool": "general",
+      "row_id": 148,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "k6K/8/3R4/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 149,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/k3K3/8/8/8/8/5R2 w - - 0 1",
+      "pool": "general",
+      "row_id": 150,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "K1R5/8/4k3/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 151,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/1R1K4/8/8/8/6k1/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 152,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/2K3R1/8/4k3 w - - 0 1",
+      "pool": "general",
+      "row_id": 153,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5K2/k7/8/8/8/8/8/6R1 w - - 0 1",
+      "pool": "general",
+      "row_id": 154,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/2k5/8/8/8/3K2R1/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 155,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5k2/8/8/8/8/4K3/8/1R6 w - - 0 1",
+      "pool": "general",
+      "row_id": 156,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1k6/8/8/8/8/3R4/8/5K2 w - - 0 1",
+      "pool": "general",
+      "row_id": 157,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/6R1/8/8/k7/7K w - - 0 1",
+      "pool": "general",
+      "row_id": 158,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "6R1/8/8/8/8/4k2K/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 159,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/5K2/8/8/3R4/8/8/1k6 w - - 0 1",
+      "pool": "general",
+      "row_id": 160,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4R3/8/3K1k2/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 161,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1k6/8/8/3K4/4R3/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 162,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7R/k7/8/K7/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 163,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7K/8/8/8/5R2/8/k7 w - - 0 1",
+      "pool": "general",
+      "row_id": 164,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/5K2/3k4/1R6/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 165,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2K5/8/8/7k/R7/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 166,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/6R1/1k6/8/3K4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 167,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1k6/8/8/2K5/8/3R4/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 168,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/3k4/8/8/K7/8/8/2R5 w - - 0 1",
+      "pool": "general",
+      "row_id": 169,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3K3R/8/8/8/3k4/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 170,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/7k/R7/8/2K5 w - - 0 1",
+      "pool": "general",
+      "row_id": 171,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/5RK1/3k4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 172,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3RK3/7k/8/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 173,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5R2/8/8/8/2k4K/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 174,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/k7/8/4K2R/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 175,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6k1/8/8/8/8/2K5/1R6 w - - 0 1",
+      "pool": "general",
+      "row_id": 176,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "6R1/8/8/8/k7/3K4/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 177,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/2k2K2/8/1R6/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 178,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2K5/8/1R6/8/7k/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 179,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "K7/8/1k6/8/7R/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 180,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6K1/R7/8/8/8/8/4k3 w - - 0 1",
+      "pool": "general",
+      "row_id": 181,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/1R6/2K5/8/8/2k5/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 182,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/3R4/8/8/2k5/8/4K3 w - - 0 1",
+      "pool": "general",
+      "row_id": 183,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7k/8/R2K4/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 184,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/1R6/5K2/8/8/8/k7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 185,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3R4/8/8/4K3/8/8/7k/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 186,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3K4/5k2/7R/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 187,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/1K6/8/8/4k3/8/5R2 w - - 0 1",
+      "pool": "general",
+      "row_id": 188,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/3k4/7R/8/8/8/5K2 w - - 0 1",
+      "pool": "general",
+      "row_id": 189,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7K/8/1k6/8/6R1/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 190,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/KR6/8/4k3/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 191,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/5K2/8/2R5/8/k7/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 192,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4k3/3R4/8/8/7K/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 193,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/3k4/8/8/3K3R w - - 0 1",
+      "pool": "general",
+      "row_id": 194,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/3K4/1k6/8/8/4R3/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 195,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/4K3/8/8/6k1/8/3R4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 196,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4k3/8/3R4/8/8/8/8/K7 w - - 0 1",
+      "pool": "general",
+      "row_id": 197,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1k6/7R/8/8/8/8/3K4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 198,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/4K3/8/6R1/8/8/4k3 w - - 0 1",
+      "pool": "general",
+      "row_id": 199,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/5K2/2k5/5R2/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 200,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2R5/8/8/8/3k4/8/8/2K5 w - - 0 1",
+      "pool": "general",
+      "row_id": 201,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5K2/8/4R3/8/8/8/8/1k6 w - - 0 1",
+      "pool": "general",
+      "row_id": 202,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/3K4/8/8/5k2/6R1/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 203,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2k5/6K1/8/8/6R1/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 204,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1R6/8/2k1K3/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 205,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/4k3/8/5R2/8/K7/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 206,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/2k5/6K1/1R6/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 207,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/6K1/k7/2R5/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 208,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/4R3/8/8/2k2K2/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 209,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/1k5K/8/8/R7 w - - 0 1",
+      "pool": "general",
+      "row_id": 210,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/3R4/8/5k1K/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 211,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/R7/8/8/8/8/2K5/6k1 w - - 0 1",
+      "pool": "general",
+      "row_id": 212,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/5k2/8/4K3/2R5/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 213,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/2R2K2/8/7k/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 214,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/1k6/4R3/5K2/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 215,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/k7/8/8/3K3R/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 216,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2R5/8/8/8/7K/8/5k2/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 217,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/8/R1K5/6k1 w - - 0 1",
+      "pool": "general",
+      "row_id": 218,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1k3K2/8/8/2R5/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 219,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6K1/8/8/8/6k1/8/2R5 w - - 0 1",
+      "pool": "general",
+      "row_id": 220,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4K3/8/k7/8/8/8/4R3/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 221,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1k6/6R1/8/8/8/8/7K/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 222,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7R/8/8/8/8/8/2k3K1/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 223,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/K2k4/8/8/8/R7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 224,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4k1K1/8/6R1/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 225,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1K6/8/8/8/7k/8/8/1R6 w - - 0 1",
+      "pool": "general",
+      "row_id": 226,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/5K2/3R4/k7/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 227,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1k6/8/8/8/R7/7K/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 228,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/4k3/8/8/8/R1K5/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 229,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4R3/4K1k1/8/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 230,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2k5/1R6/8/8/8/5K2/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 231,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7k/8/8/8/5K2/6R1/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 232,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/k7/8/8/8/8/8/3KR3 w - - 0 1",
+      "pool": "general",
+      "row_id": 233,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/5K2/8/7R/8/8/3k4 w - - 0 1",
+      "pool": "general",
+      "row_id": 234,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/4R3/7K/8/1k6/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 235,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6K1/8/6R1/8/8/8/4k3 w - - 0 1",
+      "pool": "general",
+      "row_id": 236,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/3R4/1K5k/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 237,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/1k6/8/8/5K2/8/3R4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 238,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/2k5/8/8/5R2/8/3K4 w - - 0 1",
+      "pool": "general",
+      "row_id": 239,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5k2/8/8/8/3K4/8/8/3R4 w - - 0 1",
+      "pool": "general",
+      "row_id": 240,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7k/8/8/8/1RK5/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 241,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/8/k7/2K3R1 w - - 0 1",
+      "pool": "general",
+      "row_id": 242,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5R2/8/8/8/8/4k3/1K6/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 243,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2k5/4R3/8/8/8/8/8/4K3 w - - 0 1",
+      "pool": "general",
+      "row_id": 244,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3R4/8/5K2/8/8/8/4k3/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 245,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3R4/8/1k6/8/6K1/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 246,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5R2/8/8/8/2K5/8/8/2k5 w - - 0 1",
+      "pool": "general",
+      "row_id": 247,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/k7/3R4/8/7K w - - 0 1",
+      "pool": "general",
+      "row_id": 248,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7k/8/8/8/8/3R4/1K6/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 249,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/5k2/8/8/6K1/R7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 250,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "6k1/8/3K4/8/8/8/8/R7 w - - 0 1",
+      "pool": "general",
+      "row_id": 251,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/5K2/8/8/6k1/8/1R6/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 252,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/4R3/8/8/4K3/k7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 253,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2k5/5K2/8/1R6/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 254,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/6K1/k7/8/8/8/7R w - - 0 1",
+      "pool": "general",
+      "row_id": 255,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6k1/8/8/8/8/2R5/4K3 w - - 0 1",
+      "pool": "general",
+      "row_id": 256,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/R7/4K3/1k6/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 257,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6R1/2K5/4k3/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 258,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/2R5/1k6/6K1 w - - 0 1",
+      "pool": "general",
+      "row_id": 259,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/3K4/1k6/8/3R4 w - - 0 1",
+      "pool": "general",
+      "row_id": 260,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/7R/1k6/4K3 w - - 0 1",
+      "pool": "general",
+      "row_id": 261,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4k2K/8/2R5/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 262,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/6R1/7K/3k4 w - - 0 1",
+      "pool": "general",
+      "row_id": 263,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4R3/5K1k/8/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 264,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/5k2/8/1R6/8/K7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 265,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/5R2/8/4K3/8/2k5 w - - 0 1",
+      "pool": "general",
+      "row_id": 266,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/1k6/8/8/3K4/6R1 w - - 0 1",
+      "pool": "general",
+      "row_id": 267,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/2K2R2/8/3k4/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 268,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "k4K2/8/1R6/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 269,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/1K2k3/8/1R6/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 270,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/2R5/4k3/6K1 w - - 0 1",
+      "pool": "general",
+      "row_id": 271,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/2K5/2R5/6k1/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 272,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2R5/8/8/8/1k4K1/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 273,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2R5/k7/8/8/3K4/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 274,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/1R6/5k2/3K4/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 275,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6k1/8/8/K7/8/8/1R6 w - - 0 1",
+      "pool": "general",
+      "row_id": 276,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3K3k/8/8/8/8/4R3/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 277,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/4k3/8/8/1K6/2R5/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 278,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/4k3/8/8/6R1/6K1/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 279,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/K7/8/8/8/4R3/7k w - - 0 1",
+      "pool": "general",
+      "row_id": 280,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/3k4/8/3K4/3R4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 281,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "6R1/8/8/7k/3K4/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 282,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/2k5/8/8/3K4/8/R7 w - - 0 1",
+      "pool": "general",
+      "row_id": 283,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5k2/6R1/8/8/8/8/3K4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 284,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/5k2/8/8/8/8/2K1R3/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 285,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/6K1/8/6R1/8/8/4k3 w - - 0 1",
+      "pool": "general",
+      "row_id": 286,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/5K2/2k5/1R6/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 287,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/k7/8/8/3RK3/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 288,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/4R3/8/8/8/1K3k2 w - - 0 1",
+      "pool": "general",
+      "row_id": 289,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/6k1/8/5R1K/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 290,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/7R/8/1K6/4k3/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 291,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/4R3/3K4/5k2/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 292,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7k/8/8/8/8/8/8/2K1R3 w - - 0 1",
+      "pool": "general",
+      "row_id": 293,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7K/8/8/6R1/2k5/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 294,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/7k/8/5R2/7K/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 295,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/6k1/8/1R6/8/1K6 w - - 0 1",
+      "pool": "general",
+      "row_id": 296,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/7K/8/k7/5R2/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 297,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6k1/7R/8/7K/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 298,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/1k3K2/4R3/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 299,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4R3/8/8/8/6k1/1K6/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 300,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6k1/8/8/8/6K1/1R6/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 301,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1K2R3/8/8/8/8/8/8/1k6 w - - 0 1",
+      "pool": "general",
+      "row_id": 302,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/5K2/8/8/8/4R3/8/2k5 w - - 0 1",
+      "pool": "general",
+      "row_id": 303,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6K1/8/1k6/8/8/8/2R5 w - - 0 1",
+      "pool": "general",
+      "row_id": 304,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2K5/8/8/8/8/3R4/6k1 w - - 0 1",
+      "pool": "general",
+      "row_id": 305,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/2R3K1/1k6/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 306,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7k/8/8/8/7K/3R4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 307,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/4k3/8/8/8/8/1R5K/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 308,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/7k/8/8/R3K3/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 309,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/1k6/3K4/8/8/8/R7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 310,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/6k1/8/7K/8/R7 w - - 0 1",
+      "pool": "general",
+      "row_id": 311,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/2k5/8/8/1K1R4/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 312,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5K2/3k4/8/8/8/8/5R2/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 313,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2R5/8/8/6K1/8/8/3k4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 314,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7k/8/7K/8/8/5R2/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 315,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2k5/8/8/8/3R4/8/5K2/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 316,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2k5/8/5K2/8/5R2/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 317,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5k2/8/8/2R5/2K5/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 318,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2K5/8/5k2/3R4/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 319,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/1K2R3/7k/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 320,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/8/K5R1/7k w - - 0 1",
+      "pool": "general",
+      "row_id": 321,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/R7/6k1/8/8/7K/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 322,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/7R/8/6K1/8/k7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 323,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/4K3/6k1/8/8/8/8/7R w - - 0 1",
+      "pool": "general",
+      "row_id": 324,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/1K4k1/8/8/1R6 w - - 0 1",
+      "pool": "general",
+      "row_id": 325,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/6k1/8/3R4/6K1/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 326,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7k/8/8/2K5/R7/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 327,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/3R4/8/4k3/8/7K/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 328,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/R7/5k2/8/1K6 w - - 0 1",
+      "pool": "general",
+      "row_id": 329,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/1R6/7k/8/8/8/8/6K1 w - - 0 1",
+      "pool": "general",
+      "row_id": 330,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7K/8/1R6/8/8/5k2/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 331,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/7k/6R1/1K6/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 332,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/3K4/7R/8/8/8/k7 w - - 0 1",
+      "pool": "general",
+      "row_id": 333,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/3R4/8/7K/8/6k1 w - - 0 1",
+      "pool": "general",
+      "row_id": 334,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2k5/8/4R3/8/8/8/2K5 w - - 0 1",
+      "pool": "general",
+      "row_id": 335,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/4R3/8/1k6/8/4K3/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 336,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1K6/6R1/8/1k6/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 337,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7K/8/8/7k/4R3/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 338,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2k5/5R2/8/8/5K2/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 339,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/4R3/3k2K1/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 340,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1R6/7K/8/8/3k4/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 341,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2R5/8/8/8/8/8/8/1k3K2 w - - 0 1",
+      "pool": "general",
+      "row_id": 342,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7K/8/8/8/2k5/8/8/4R3 w - - 0 1",
+      "pool": "general",
+      "row_id": 343,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "k6K/8/8/8/8/8/8/5R2 w - - 0 1",
+      "pool": "general",
+      "row_id": 344,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2R5/1k6/6K1/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 345,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1K6/8/8/R7/8/8/8/6k1 w - - 0 1",
+      "pool": "general",
+      "row_id": 346,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/4K3/k7/8/3R4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 347,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7R/8/8/1K6/8/6k1/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 348,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "k7/6R1/8/8/8/8/8/1K6 w - - 0 1",
+      "pool": "general",
+      "row_id": 349,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2K5/3R4/8/8/8/2k5/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 350,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/3R2K1/8/8/8/8/5k2 w - - 0 1",
+      "pool": "general",
+      "row_id": 351,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3K4/8/8/8/8/8/3R4/5k2 w - - 0 1",
+      "pool": "general",
+      "row_id": 352,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/4K3/8/4k3/8/8/8/R7 w - - 0 1",
+      "pool": "general",
+      "row_id": 353,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7k/8/4K3/8/8/8/8/4R3 w - - 0 1",
+      "pool": "general",
+      "row_id": 354,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/3K4/8/R7/8/8/6k1/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 355,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/3R4/8/2K5/8/7k w - - 0 1",
+      "pool": "general",
+      "row_id": 356,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/3R4/6k1/8/8/6K1/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 357,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "6K1/8/8/8/8/8/2R5/3k4 w - - 0 1",
+      "pool": "general",
+      "row_id": 358,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2R5/8/8/5k2/K7/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 359,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5R2/8/8/8/1K6/8/4k3/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 360,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/7R/k5K1/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 361,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7K/8/8/8/4k3/8/7R/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 362,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/K4k2/8/8/8/1R6 w - - 0 1",
+      "pool": "general",
+      "row_id": 363,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/2k5/K7/8/8/1R6 w - - 0 1",
+      "pool": "general",
+      "row_id": 364,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/2R5/6k1/8/5K2/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 365,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/1K6/8/4k3/1R6/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 366,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/4K3/8/8/7R/4k3/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 367,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4k3/1R6/8/8/8/8/2K5/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 368,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/4R3/6k1/8/4K3/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 369,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5k2/7R/8/8/7K/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 370,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2k5/R7/8/1K6/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 371,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/3k4/8/2K5/4R3/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 372,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/6R1/8/1K6/8/k7 w - - 0 1",
+      "pool": "general",
+      "row_id": 373,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/5R2/6k1/8/3K4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 374,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/2R5/8/8/3k4/8/4K3 w - - 0 1",
+      "pool": "general",
+      "row_id": 375,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/7k/8/3K4/5R2/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 376,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6k1/8/3R4/8/8/K7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 377,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/3k4/8/8/5K2/7R/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 378,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/5k2/8/7R/8/6K1/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 379,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4K3/4R3/2k5/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 380,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4K3/8/8/8/1k6/3R4/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 381,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/2R5/8/8/7K/8/6k1 w - - 0 1",
+      "pool": "general",
+      "row_id": 382,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/2K5/6k1/1R6/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 383,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/5R2/3K4/8/8/8/8/1k6 w - - 0 1",
+      "pool": "general",
+      "row_id": 384,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5k2/7K/1R6/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 385,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5R2/K7/8/8/8/8/8/7k w - - 0 1",
+      "pool": "general",
+      "row_id": 386,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/k1K5/8/8/8/6R1/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 387,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1R6/8/3k4/8/8/5K2/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 388,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/k7/8/3R4/7K w - - 0 1",
+      "pool": "general",
+      "row_id": 389,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "k7/8/8/8/3R4/2K5/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 390,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1RK5/8/8/7k/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 391,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "6K1/8/k7/8/8/2R5/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 392,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/k7/8/8/6R1/8/8/1K6 w - - 0 1",
+      "pool": "general",
+      "row_id": 393,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/4R3/8/1k3K2/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 394,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1K6/6R1/8/8/8/8/8/2k5 w - - 0 1",
+      "pool": "general",
+      "row_id": 395,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/K3k3/8/5R2/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 396,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/1R6/8/8/8/2K4k/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 397,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/k7/2K2R2/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 398,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2R5/2K4k/8/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 399,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2k5/8/8/2K5/3R4/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 400,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/7K/7R/8/8/k7 w - - 0 1",
+      "pool": "general",
+      "row_id": 401,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4R3/8/7K/8/5k2/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 402,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/6R1/3K4/8/k7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 403,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/1R6/8/8/7K/2k5 w - - 0 1",
+      "pool": "general",
+      "row_id": 404,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "K3k3/8/8/8/3R4/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 405,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6k1/8/8/7R/8/8/7K w - - 0 1",
+      "pool": "general",
+      "row_id": 406,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6K1/8/8/3k4/8/5R2/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 407,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/6K1/8/8/2R5/7k w - - 0 1",
+      "pool": "general",
+      "row_id": 408,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/3k4/8/K7/5R2/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 409,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/6K1/2k5/8/8/5R2 w - - 0 1",
+      "pool": "general",
+      "row_id": 410,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "6K1/8/3k4/8/5R2/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 411,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/3K4/k7/8/8/4R3 w - - 0 1",
+      "pool": "general",
+      "row_id": 412,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/3k4/8/R7/K7 w - - 0 1",
+      "pool": "general",
+      "row_id": 413,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/7k/8/4R3/8/6K1 w - - 0 1",
+      "pool": "general",
+      "row_id": 414,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4R3/8/8/K7/8/k7/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 415,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/4k3/8/8/8/3R4/8/6K1 w - - 0 1",
+      "pool": "general",
+      "row_id": 416,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5K2/8/8/8/2R5/8/k7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 417,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7K/8/8/8/3R4/k7/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 418,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2K5/8/1k6/3R4/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 419,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3k4/8/8/8/4R3/8/K7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 420,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3R4/k7/8/8/4K3/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 421,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3k4/4R3/8/8/8/8/1K6/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 422,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/k7/7R/8/8/K7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 423,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7K/8/4k3/8/2R5/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 424,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "6K1/R7/8/8/8/8/8/2k5 w - - 0 1",
+      "pool": "general",
+      "row_id": 425,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2R5/8/8/8/1k2K3/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 426,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/7k/5K2/4R3/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 427,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/5R2/8/5K2/8/7k/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 428,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2R5/8/8/5K2/8/3k4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 429,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7k/6R1/8/8/8/2K5/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 430,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/4k3/8/8/R7/8/1K6 w - - 0 1",
+      "pool": "general",
+      "row_id": 431,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/1K1R4/8/4k3/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 432,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/1k6/8/8/8/1K6/8/4R3 w - - 0 1",
+      "pool": "general",
+      "row_id": 433,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "R7/8/8/8/6k1/8/8/K7 w - - 0 1",
+      "pool": "general",
+      "row_id": 434,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/k7/8/8/4R3/K7/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 435,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/3K4/8/8/7R/8/8/6k1 w - - 0 1",
+      "pool": "general",
+      "row_id": 436,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2K5/4R3/7k/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 437,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/3k4/8/8/8/8/1KR5 w - - 0 1",
+      "pool": "general",
+      "row_id": 438,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/7R/k7/8/7K/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 439,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/1R4K1/8/8/8/8/8/k7 w - - 0 1",
+      "pool": "general",
+      "row_id": 440,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7K/8/k7/1R6/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 441,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "3R4/6K1/8/8/8/6k1/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 442,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "k7/7K/8/8/8/8/2R5/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 443,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6R1/8/8/8/2k5/8/K7 w - - 0 1",
+      "pool": "general",
+      "row_id": 444,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/1k6/4R3/8/8/8/3K4 w - - 0 1",
+      "pool": "general",
+      "row_id": 445,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2K3R1/8/8/8/4k3/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 446,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2k1K3/8/8/8/7R/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 447,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/5K2/8/8/2k5/8/8/1R6 w - - 0 1",
+      "pool": "general",
+      "row_id": 448,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "R7/1K6/8/8/8/8/6k1/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 449,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4K2k/8/8/8/8/8/5R2/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 450,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/2K3R1/7k/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 451,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/1K4k1/8/4R3/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 452,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/2R5/8/8/5k2/1K6 w - - 0 1",
+      "pool": "general",
+      "row_id": 453,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/1K6/8/1k6/3R4/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 454,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4K3/6k1/8/8/8/4R3/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 455,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5K2/8/4R3/8/8/5k2/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 456,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/4k3/8/3R1K2/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 457,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/k7/5R2/8/8/8/4K3/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 458,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/1K4k1/8/8/8/8/3R4 w - - 0 1",
+      "pool": "general",
+      "row_id": 459,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1K2R3/8/8/8/8/6k1/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 460,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6k1/8/8/8/8/K7/3R4 w - - 0 1",
+      "pool": "general",
+      "row_id": 461,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "6k1/8/8/8/4K3/8/8/7R w - - 0 1",
+      "pool": "general",
+      "row_id": 462,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/4K3/8/8/1R6/3k4/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 463,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/2k5/8/4R3/8/8/4K3 w - - 0 1",
+      "pool": "general",
+      "row_id": 464,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/2K1R3/8/8/1k6/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 465,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6R1/7K/8/4k3/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 466,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2K5/R7/8/8/8/8/7k/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 467,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/5k2/8/K1R5 w - - 0 1",
+      "pool": "general",
+      "row_id": 468,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/5k2/8/8/8/8/6KR w - - 0 1",
+      "pool": "general",
+      "row_id": 469,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "K7/8/8/8/8/5k2/2R5/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 470,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "6k1/8/7K/8/8/8/8/7R w - - 0 1",
+      "pool": "general",
+      "row_id": 471,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/3R4/1K2k3/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 472,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4K3/8/8/3R4/4k3/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 473,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/6R1/8/3K4/5k2 w - - 0 1",
+      "pool": "general",
+      "row_id": 474,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/7k/8/8/4R3/5K2/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 475,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2k5/8/R7/8/8/5K2/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 476,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "K7/8/8/4R3/1k6/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 477,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "4R3/8/8/8/3k1K2/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 478,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/4k3/8/K5R1/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 479,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7k/6R1/8/8/8/8/8/1K6 w - - 0 1",
+      "pool": "general",
+      "row_id": 480,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/2K4R/8/8/4k3/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 481,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/6K1/5R2/8/7k/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 482,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5k2/8/8/8/8/8/5KR1/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 483,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/3k4/5K2/8/8/1R6 w - - 0 1",
+      "pool": "general",
+      "row_id": 484,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/3K1k2/8/8/8/8/8/2R5 w - - 0 1",
+      "pool": "general",
+      "row_id": 485,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/1k6/8/8/8/4K3/5R2 w - - 0 1",
+      "pool": "general",
+      "row_id": 486,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5K2/8/8/8/6R1/8/8/4k3 w - - 0 1",
+      "pool": "general",
+      "row_id": 487,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7K/8/4k3/8/3R4/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 488,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "5R2/8/8/8/4k3/8/2K5/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 489,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/6k1/8/R6K/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 490,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7K/8/1k6/8/8/8/5R2/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 491,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/4k3/8/8/8/5K2/3R4 w - - 0 1",
+      "pool": "general",
+      "row_id": 492,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "6K1/8/4R3/8/8/8/8/7k w - - 0 1",
+      "pool": "general",
+      "row_id": 493,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2K5/7R/8/8/8/8/6k1/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 494,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/8/8/8/k7/3R4/5K2 w - - 0 1",
+      "pool": "general",
+      "row_id": 495,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "2K5/8/3k4/8/8/5R2/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 496,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "7k/3KR3/8/8/8/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 497,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "8/8/k7/8/8/3R4/4K3/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 498,
+      "stratum": "valid_general_krk_white_to_move"
+    },
+    {
+      "fen": "1K2k3/8/8/8/5R2/8/8/8 w - - 0 1",
+      "pool": "general",
+      "row_id": 499,
+      "stratum": "valid_general_krk_white_to_move"
+    }
+  ],
+  "schema_version": "phase2_9_stage_c_start_pool.v0",
+  "seed": 20270902
+}

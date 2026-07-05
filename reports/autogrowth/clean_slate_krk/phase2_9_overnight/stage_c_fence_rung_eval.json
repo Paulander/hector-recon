@@ -1,0 +1,533 @@
+{
+  "black_base_seed": 20271901,
+  "black_policy": "fixed-seed uniform legal",
+  "elapsed_seconds": 1385.373336315155,
+  "paired_table": {
+    "without_loss__with_loss": 1,
+    "without_loss__with_win": 151,
+    "without_win__with_loss": 3,
+    "without_win__with_win": 345
+  },
+  "pool": "fence_rung",
+  "reference": "with_approach_vs_without_approach",
+  "repetition_draw_delta": -134,
+  "row_count": 500,
+  "schema_version": "phase2_9_stage_c_pool_eval.v0",
+  "start_generation_attempts": 14492,
+  "start_seed": 20270901,
+  "win_delta": 0.29600000000000004,
+  "with_approach": {
+    "approach_branch_counts": {
+      "king_approach": 1650,
+      "not_applicable": 226
+    },
+    "branch_counts": {
+      "approach_to_waypoint": 1504,
+      "chase_to_mate": 534,
+      "enter_mate2": 308,
+      "establish_fence": 183,
+      "fallback": 189,
+      "mate_in_1": 496,
+      "mate_in_2": 375
+    },
+    "chase_branch_counts": {
+      "king_approach": 155,
+      "king_lateral_pursuit": 331,
+      "king_unblock": 2,
+      "not_applicable": 1831,
+      "rook_escape_slide": 46,
+      "rook_waiting_tempo": 45
+    },
+    "draw_breakdown": {
+      "repetition": 4
+    },
+    "draw_taxonomy": {
+      "checkmate": 496,
+      "repetition": 4
+    },
+    "frames_max_per_white_move": 46,
+    "frames_mean_per_white_move": 2.8138757314015046,
+    "games": 500,
+    "loss_breakdown": {},
+    "plies_to_mate_mean": 13.330645161290322,
+    "plies_to_mate_median": 13.0,
+    "repetition_guard_activations": 53,
+    "skill_violation_count": 0,
+    "skill_violations": [],
+    "white_moves_to_mate_mean": 7.165322580645161,
+    "white_moves_to_mate_median": 7.0,
+    "wilson_95": [
+      0.9796129641658948,
+      0.9968846848199377
+    ],
+    "win_rate": 0.992,
+    "wins": 496
+  },
+  "with_approach_nonwin_fens": [
+    {
+      "fen": "8/1R6/8/8/8/k7/8/2K5 w - - 0 1",
+      "final_fen": "8/k7/8/8/K7/8/8/1R6 b - - 17 9",
+      "reason": "repetition",
+      "row_id": 48,
+      "sample_moves": [
+        {
+          "branch": "chase_to_mate",
+          "fen": "8/1R6/8/8/8/k7/8/2K5 w - - 0 1",
+          "move": "c1b1",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/1R6/8/8/8/k7/8/1K6 b - - 1 1",
+          "move": "a3a4",
+          "side": "black"
+        },
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "8/1R6/8/8/k7/8/8/1K6 w - - 2 2",
+          "move": "b1a2",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/1R6/8/8/k7/8/K7/8 b - - 3 2",
+          "move": "a4a5",
+          "side": "black"
+        },
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "8/1R6/8/k7/8/8/K7/8 w - - 4 3",
+          "move": "a2a3",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/1R6/8/k7/8/K7/8/8 b - - 5 3",
+          "move": "a5a6",
+          "side": "black"
+        },
+        {
+          "branch": "establish_fence",
+          "fen": "8/1R6/k7/8/8/K7/8/8 w - - 6 4",
+          "move": "b7b1",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/k7/8/8/K7/8/1R6 b - - 7 4",
+          "move": "a6a7",
+          "side": "black"
+        },
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "8/k7/8/8/8/K7/8/1R6 w - - 8 5",
+          "move": "a3a4",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/k7/8/8/K7/8/8/1R6 b - - 9 5",
+          "move": "a7a6",
+          "side": "black"
+        },
+        {
+          "branch": "fallback",
+          "fen": "8/8/k7/8/K7/8/8/1R6 w - - 10 6",
+          "move": "b1b8",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "1R6/8/k7/8/K7/8/8/8 b - - 11 6",
+          "move": "a6a7",
+          "side": "black"
+        },
+        {
+          "branch": "establish_fence",
+          "fen": "1R6/k7/8/8/K7/8/8/8 w - - 12 7",
+          "move": "b8b1",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/k7/8/8/K7/8/8/1R6 b - - 13 7",
+          "move": "a7a6",
+          "side": "black"
+        },
+        {
+          "branch": "fallback",
+          "fen": "8/8/k7/8/K7/8/8/1R6 w - - 14 8",
+          "move": "b1b8",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "1R6/8/k7/8/K7/8/8/8 b - - 15 8",
+          "move": "a6a7",
+          "side": "black"
+        }
+      ],
+      "stratum": "fence_established_true_middle_no_mate1_mate2_mate3"
+    },
+    {
+      "fen": "8/K7/7k/8/6R1/8/8/8 w - - 0 1",
+      "final_fen": "8/8/7k/5K2/8/8/8/6R1 w - - 20 11",
+      "reason": "repetition",
+      "row_id": 149,
+      "sample_moves": [
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "8/K7/7k/8/6R1/8/8/8 w - - 0 1",
+          "move": "a7b6",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/1K5k/8/6R1/8/8/8 b - - 1 1",
+          "move": "h6h5",
+          "side": "black"
+        },
+        {
+          "branch": "establish_fence",
+          "fen": "8/8/1K6/7k/6R1/8/8/8 w - - 2 2",
+          "move": "g4g1",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/1K6/7k/8/8/8/6R1 b - - 3 2",
+          "move": "h5h6",
+          "side": "black"
+        },
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "8/8/1K5k/8/8/8/8/6R1 w - - 4 3",
+          "move": "b6c5",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/7k/2K5/8/8/8/6R1 b - - 5 3",
+          "move": "h6h7",
+          "side": "black"
+        },
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "8/7k/8/2K5/8/8/8/6R1 w - - 6 4",
+          "move": "c5d5",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/7k/8/3K4/8/8/8/6R1 b - - 7 4",
+          "move": "h7h8",
+          "side": "black"
+        },
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "7k/8/8/3K4/8/8/8/6R1 w - - 8 5",
+          "move": "d5e5",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "7k/8/8/4K3/8/8/8/6R1 b - - 9 5",
+          "move": "h8h7",
+          "side": "black"
+        },
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "8/7k/8/4K3/8/8/8/6R1 w - - 10 6",
+          "move": "e5f5",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/7k/8/5K2/8/8/8/6R1 b - - 11 6",
+          "move": "h7h6",
+          "side": "black"
+        },
+        {
+          "branch": "chase_to_mate",
+          "fen": "8/8/7k/5K2/8/8/8/6R1 w - - 12 7",
+          "move": "f5f6",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/5K1k/8/8/8/8/6R1 b - - 13 7",
+          "move": "h6h5",
+          "side": "black"
+        },
+        {
+          "branch": "chase_to_mate",
+          "fen": "8/8/5K2/7k/8/8/8/6R1 w - - 14 8",
+          "move": "f6f5",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/8/5K1k/8/8/8/6R1 b - - 15 8",
+          "move": "h5h6",
+          "side": "black"
+        }
+      ],
+      "stratum": "fence_established_true_middle_no_mate1_mate2_mate3"
+    },
+    {
+      "fen": "8/8/k7/8/8/8/8/1R2K3 w - - 0 1",
+      "final_fen": "8/8/k7/2K5/8/8/8/1R6 w - - 16 9",
+      "reason": "repetition",
+      "row_id": 193,
+      "sample_moves": [
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "8/8/k7/8/8/8/8/1R2K3 w - - 0 1",
+          "move": "e1d2",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/k7/8/8/8/3K4/1R6 b - - 1 1",
+          "move": "a6a7",
+          "side": "black"
+        },
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "8/k7/8/8/8/8/3K4/1R6 w - - 2 2",
+          "move": "d2c3",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/k7/8/8/8/2K5/8/1R6 b - - 3 2",
+          "move": "a7a8",
+          "side": "black"
+        },
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "k7/8/8/8/8/2K5/8/1R6 w - - 4 3",
+          "move": "c3c4",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "k7/8/8/8/2K5/8/8/1R6 b - - 5 3",
+          "move": "a8a7",
+          "side": "black"
+        },
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "8/k7/8/8/2K5/8/8/1R6 w - - 6 4",
+          "move": "c4c5",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/k7/8/2K5/8/8/8/1R6 b - - 7 4",
+          "move": "a7a6",
+          "side": "black"
+        },
+        {
+          "branch": "chase_to_mate",
+          "fen": "8/8/k7/2K5/8/8/8/1R6 w - - 8 5",
+          "move": "c5c6",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/k1K5/8/8/8/8/1R6 b - - 9 5",
+          "move": "a6a5",
+          "side": "black"
+        },
+        {
+          "branch": "chase_to_mate",
+          "fen": "8/8/2K5/k7/8/8/8/1R6 w - - 10 6",
+          "move": "c6c5",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/8/k1K5/8/8/8/1R6 b - - 11 6",
+          "move": "a5a6",
+          "side": "black"
+        },
+        {
+          "branch": "chase_to_mate",
+          "fen": "8/8/k7/2K5/8/8/8/1R6 w - - 12 7",
+          "move": "c5c6",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/k1K5/8/8/8/8/1R6 b - - 13 7",
+          "move": "a6a5",
+          "side": "black"
+        },
+        {
+          "branch": "chase_to_mate",
+          "fen": "8/8/2K5/k7/8/8/8/1R6 w - - 14 8",
+          "move": "c6c5",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/8/k1K5/8/8/8/1R6 b - - 15 8",
+          "move": "a5a6",
+          "side": "black"
+        }
+      ],
+      "stratum": "fence_established_true_middle_no_mate1_mate2_mate3"
+    },
+    {
+      "fen": "8/8/k7/8/8/6K1/1R6/8 w - - 0 1",
+      "final_fen": "8/8/k7/2K5/8/8/1R6/8 w - - 16 9",
+      "reason": "repetition",
+      "row_id": 411,
+      "sample_moves": [
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "8/8/k7/8/8/6K1/1R6/8 w - - 0 1",
+          "move": "g3f4",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/k7/8/5K2/8/1R6/8 b - - 1 1",
+          "move": "a6a7",
+          "side": "black"
+        },
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "8/k7/8/8/5K2/8/1R6/8 w - - 2 2",
+          "move": "f4e5",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/k7/8/4K3/8/8/1R6/8 b - - 3 2",
+          "move": "a7a6",
+          "side": "black"
+        },
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "8/8/k7/4K3/8/8/1R6/8 w - - 4 3",
+          "move": "e5d5",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/k7/3K4/8/8/1R6/8 b - - 5 3",
+          "move": "a6a7",
+          "side": "black"
+        },
+        {
+          "branch": "approach_to_waypoint",
+          "fen": "8/k7/8/3K4/8/8/1R6/8 w - - 6 4",
+          "move": "d5c5",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/k7/8/2K5/8/8/1R6/8 b - - 7 4",
+          "move": "a7a6",
+          "side": "black"
+        },
+        {
+          "branch": "chase_to_mate",
+          "fen": "8/8/k7/2K5/8/8/1R6/8 w - - 8 5",
+          "move": "c5c6",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/k1K5/8/8/8/1R6/8 b - - 9 5",
+          "move": "a6a5",
+          "side": "black"
+        },
+        {
+          "branch": "chase_to_mate",
+          "fen": "8/8/2K5/k7/8/8/1R6/8 w - - 10 6",
+          "move": "c6c5",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/8/k1K5/8/8/1R6/8 b - - 11 6",
+          "move": "a5a6",
+          "side": "black"
+        },
+        {
+          "branch": "chase_to_mate",
+          "fen": "8/8/k7/2K5/8/8/1R6/8 w - - 12 7",
+          "move": "c5c6",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/k1K5/8/8/8/1R6/8 b - - 13 7",
+          "move": "a6a5",
+          "side": "black"
+        },
+        {
+          "branch": "chase_to_mate",
+          "fen": "8/8/2K5/k7/8/8/1R6/8 w - - 14 8",
+          "move": "c6c5",
+          "side": "white"
+        },
+        {
+          "branch": "fixed_seed_uniform",
+          "fen": "8/8/8/k1K5/8/8/1R6/8 b - - 15 8",
+          "move": "a5a6",
+          "side": "black"
+        }
+      ],
+      "stratum": "fence_established_true_middle_no_mate1_mate2_mate3"
+    }
+  ],
+  "without_approach": {
+    "approach_branch_counts": {},
+    "branch_counts": {
+      "chase_to_mate": 353,
+      "enter_mate2": 126,
+      "establish_fence": 1210,
+      "fallback": 5684,
+      "mate_in_1": 348,
+      "mate_in_2": 224
+    },
+    "chase_branch_counts": {
+      "king_approach": 125,
+      "king_lateral_pursuit": 159,
+      "king_unblock": 4,
+      "not_applicable": 6856,
+      "rook_escape_slide": 65,
+      "rook_waiting_tempo": 38
+    },
+    "draw_breakdown": {
+      "fifty_move": 14,
+      "repetition": 138
+    },
+    "draw_taxonomy": {
+      "checkmate": 348,
+      "fifty_move": 14,
+      "repetition": 138
+    },
+    "frames_max_per_white_move": 113,
+    "frames_mean_per_white_move": 48.87564505978603,
+    "games": 500,
+    "loss_breakdown": {},
+    "plies_to_mate_mean": 28.54597701149425,
+    "plies_to_mate_median": 23.0,
+    "repetition_guard_activations": 145,
+    "skill_violation_count": 0,
+    "skill_violations": [],
+    "white_moves_to_mate_mean": 14.772988505747126,
+    "white_moves_to_mate_median": 12.0,
+    "wilson_95": [
+      0.6543133215963362,
+      0.7346979369427353
+    ],
+    "win_rate": 0.696,
+    "wins": 348
+  }
+}
