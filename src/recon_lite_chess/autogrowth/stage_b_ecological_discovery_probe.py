@@ -14,6 +14,8 @@ from typing import Any, Callable, Iterable, Mapping, Sequence
 
 import chess
 
+from recon_lite_hector.nodes.stem_cell import StemCellState, StemCellTerminal
+
 from .approach_discovery_probe import _after_move_repetition_key
 from .features import (
     extract_learner_features,
@@ -85,6 +87,14 @@ class StageBEcologicalDiscoveryConfig:
     atom_score_scale: float = 1.0
     fast_exact_judge: bool = True
     ecology_mode: str = "global"
+    stem_initial_xp: int = 50
+    stem_mature_xp: int = 100
+    stem_prune_xp: int = 0
+    stem_min_mature_exposures: int = 3
+    stem_inactive_decay_scale: float = 1.0
+    max_mature_ablation_subjects: int = 8
+    pruned_rescue_audit_limit: int = 8
+    pruned_rescue_heldout_limit: int = 32
 
 
 def run_stage_b_ecological_discovery_probe(
@@ -217,6 +227,32 @@ def run_stage_b_ecological_habitat_probe(
     return summary
 
 
+def run_stage_b_graph_native_ecology_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_0_graph_native_ecology",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        train_row_limit=None,
+        heldout_row_limit=None,
+        max_population_per_habitat=2,
+        max_guided_births=8,
+        max_births_per_decision=1,
+        max_samples=8,
+        ecology_mode="stem_cell_graph",
+    )
+    summary = run_stage_b_ecological_discovery_probe(config=cfg)
+    summary["schema_version"] = "phase3_0_stage_b_graph_native_ecology.v0"
+    summary["phase"] = "Phase 3.0"
+    summary["cross_seed_composite_analysis"] = _cross_seed_composite_analysis(summary["seed_results"])
+    summary["enrichment_summary"] = _enrichment_summary(summary["seed_results"])
+    summary["maturity_summary"] = _maturity_summary(summary["seed_results"])
+    summary["tables"]["phase3_0_headline"] = _phase30_headline(summary)
+    _write_json(Path(cfg.output_dir) / "summary.json", summary)
+    return summary
+
+
 def _design_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
     return {
         "schema_version": "phase2_9e_design_spec.v0",
@@ -245,7 +281,8 @@ def _design_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
                 "conflict, novel percept signatures, repeated trace uncertainty, and "
                 "yoked random births. Survival uses local credit/debt plus passive decay; "
                 "habitat-local mode restricts decay and competition to revisited percept "
-                "signatures."
+                "signatures; graph-native mode stores composites as StemCellTerminal "
+                "TRIAL/MATURE/PRUNED cells with parent-local resource accounting."
             ),
             "arm2_guided_residual_control": (
                 "Quarantined expressivity probe. Births are aimed at atom-only failure "
@@ -274,6 +311,7 @@ def _run_arm(
 ) -> dict[str, Any]:
     rng = random.Random(seed)
     population: dict[str, dict[str, Any]] = {}
+    stem_cells: dict[str, StemCellTerminal] = {}
     seen_signatures: Counter[str] = Counter()
     signature_outcomes: dict[str, Counter[str]] = defaultdict(Counter)
     trigger_counts: Counter[str] = Counter()
@@ -299,6 +337,7 @@ def _run_arm(
                 step=step,
                 seed=seed,
                 trigger_counts=trigger_counts,
+                stem_cells=stem_cells,
             )
 
         selected = _rollout_policy(
@@ -325,6 +364,7 @@ def _run_arm(
                         signature_outcomes=signature_outcomes,
                         trigger_counts=trigger_counts,
                         rng=rng,
+                        stem_cells=stem_cells,
                     )
                 ),
             ),
@@ -347,16 +387,29 @@ def _run_arm(
             population=population,
             judge_cache=train_judge_cache,
         )
-        _apply_contrastive_nutrition(
-            cfg,
-            population,
-            selected=selected,
-            alternative=alternative,
-            step=step,
-        )
+        if cfg.ecology_mode == "stem_cell_graph":
+            _apply_stem_cell_local_economy(
+                cfg,
+                population,
+                stem_cells,
+                selected=selected,
+                alternative=alternative,
+                step=step,
+            )
+        else:
+            _apply_contrastive_nutrition(
+                cfg,
+                population,
+                selected=selected,
+                alternative=alternative,
+                step=step,
+            )
         for signature in selected["percept_signatures"]:
             signature_outcomes[signature]["success" if selected["success"] else "failure"] += 1
-        _cap_population(cfg, population, step=step)
+        if cfg.ecology_mode == "stem_cell_graph":
+            _cap_stem_cell_parent_budgets(cfg, population, stem_cells, step=step)
+        else:
+            _cap_population(cfg, population, step=step)
         if step % 25 == 0 or step == len(train_rows) - 1:
             birth_curve.append(_population_snapshot(population, step=step))
         if len(traces) < cfg.max_samples:
@@ -379,6 +432,20 @@ def _run_arm(
 
     survivors = [dict(item) for item in population.values() if item["state"] in {"TRIAL", "MATURE"}]
     survivors.sort(key=lambda item: (-float(item["nutrition"]), item["composite_id"]))
+    if cfg.ecology_mode == "stem_cell_graph":
+        mature_subjects = [dict(item) for item in survivors if item.get("state") == "MATURE"]
+        mature_subjects.sort(
+            key=lambda item: (
+                float(item.get("local_resource", item.get("nutrition", 0.0))),
+                int(item.get("stem_cell_xp") or 0),
+                int(item.get("activation_count", 0)),
+                str(item["composite_id"]),
+            ),
+            reverse=True,
+        )
+        ablation_subjects = mature_subjects[: max(0, int(cfg.max_mature_ablation_subjects))]
+    else:
+        ablation_subjects = survivors
     structure = _structure_summary(
         cfg,
         arm=arm,
@@ -396,9 +463,22 @@ def _run_arm(
         cfg,
         heldout_rows,
         atom_weights=atom_weights,
-        composites=survivors,
+        composites=ablation_subjects,
         seed=seed + 700,
         policy_name=f"{arm}_survivor_trial",
+    )
+    pruned_rescue_audit = (
+        _pruned_rescue_audit(
+            cfg,
+            heldout_rows,
+            atom_weights=atom_weights,
+            survivors=ablation_subjects,
+            population=population,
+            survivor_eval=health["full_evaluation"],
+            seed=seed + 760,
+        )
+        if cfg.ecology_mode == "stem_cell_graph" and arm == "arm1_unguided_ecological"
+        else {"enabled": False}
     )
     promoted = [
         dict(item, m4_state="MATURE", heldout_counterfactual_delta=int(record["ablation_delta"]))
@@ -437,7 +517,7 @@ def _run_arm(
         cfg,
         heldout_rows,
         atom_weights=atom_weights,
-        composites=survivors,
+        composites=ablation_subjects,
         atom_eval=atom_eval,
         seed=seed + 990,
     )
@@ -454,6 +534,15 @@ def _run_arm(
         "structure": structure,
         "birth_death_curve": birth_curve,
         "train_trace_sample": traces,
+        "post_hoc_ablation_subject": (
+            "top_mature_composites_by_local_resource"
+            if cfg.ecology_mode == "stem_cell_graph"
+            else "all_live_survivors"
+        ),
+        "post_hoc_ablation_subject_count": len(ablation_subjects),
+        "post_hoc_ablation_subject_limit": (
+            int(cfg.max_mature_ablation_subjects) if cfg.ecology_mode == "stem_cell_graph" else None
+        ),
         "post_hoc_ablation": health,
         "promotion": {
             "rule": "promote_positive_heldout_counterfactual_delta_only",
@@ -467,11 +556,13 @@ def _run_arm(
             "promoted_positive_only": promoted_eval,
         },
         "post_hoc_failure_enrichment": enrichment,
+        "pruned_rescue_audit": pruned_rescue_audit,
+        "candidate_fate_log": _candidate_fate_log(population) if cfg.ecology_mode == "stem_cell_graph" else [],
         "survivor_composite_dumps": _survivor_dumps(
             cfg,
             heldout_rows,
             atom_weights=atom_weights,
-            composites=survivors,
+            composites=ablation_subjects,
             health=health,
             seed=seed + 1_025,
         ),
@@ -479,7 +570,7 @@ def _run_arm(
             cfg,
             heldout_rows,
             atom_weights=atom_weights,
-            composites=survivors,
+            composites=ablation_subjects,
             health=health,
             seed=seed + 1_050,
         ),
@@ -499,6 +590,7 @@ def _spawn_arm1_from_context(
     signature_outcomes: Mapping[str, Counter[str]],
     trigger_counts: Counter[str],
     rng: random.Random,
+    stem_cells: dict[str, StemCellTerminal] | None = None,
 ) -> None:
     triggers = _internal_triggers(cfg, ctx, seen_signatures, signature_outcomes)
     signature = str(ctx["percept_signature"])
@@ -520,6 +612,7 @@ def _spawn_arm1_from_context(
             rng=rng,
             oracle_targeted=False,
             source_signature=signature,
+            stem_cells=stem_cells,
         ):
             trigger_counts[trigger] += 1
             spawned += 1
@@ -536,9 +629,13 @@ def _spawn_arm1_from_context(
             rng=rng,
             oracle_targeted=False,
             source_signature=signature,
+            stem_cells=stem_cells,
         ):
             trigger_counts["random_yoked_birth"] += 1
-    _cap_population(cfg, population, step=int(ctx["step"]))
+    if cfg.ecology_mode == "stem_cell_graph":
+        _cap_stem_cell_parent_budgets(cfg, population, stem_cells or {}, step=int(ctx["step"]))
+    else:
+        _cap_population(cfg, population, step=int(ctx["step"]))
 
 
 def _internal_triggers(
@@ -578,6 +675,7 @@ def _spawn_guided_for_row(
     step: int,
     seed: int,
     trigger_counts: Counter[str],
+    stem_cells: dict[str, StemCellTerminal] | None = None,
 ) -> None:
     if not plans:
         return
@@ -595,9 +693,13 @@ def _spawn_guided_for_row(
             oracle_targeted=True,
             source_signature=str(plan["source_signature"]),
             target_move=str(plan["target_move"]),
+            stem_cells=stem_cells,
         ):
             trigger_counts["oracle_atom_failure_residual"] += 1
-    _cap_population(cfg, population, step=step)
+    if cfg.ecology_mode == "stem_cell_graph":
+        _cap_stem_cell_parent_budgets(cfg, population, stem_cells or {}, step=step)
+    else:
+        _cap_population(cfg, population, step=step)
 
 
 def _spawn_composite(
@@ -613,6 +715,7 @@ def _spawn_composite(
     oracle_targeted: bool,
     source_signature: str,
     target_move: str | None = None,
+    stem_cells: dict[str, StemCellTerminal] | None = None,
 ) -> bool:
     pool = tuple(dict.fromkeys(key for key in child_pool if not learner_visible_key_firewall_leaks([key])))
     if len(pool) < cfg.composite_width:
@@ -626,6 +729,21 @@ def _spawn_composite(
     composite_id = _composite_id(arm, children)
     if composite_id in population:
         return False
+    stem_cell: StemCellTerminal | None = None
+    parent_id = _stem_parent_id(source_signature)
+    if cfg.ecology_mode == "stem_cell_graph":
+        stem_cell = _new_composite_stem_cell(
+            cfg,
+            composite_id=composite_id,
+            children=children,
+            parent_id=parent_id,
+            source_signature=source_signature,
+            trigger=trigger,
+            arm=arm,
+            birth_step=birth_step,
+        )
+        if stem_cells is not None:
+            stem_cells[composite_id] = stem_cell
     population[composite_id] = {
         "composite_id": composite_id,
         "node_type": "SCRIPT",
@@ -637,18 +755,111 @@ def _spawn_composite(
         "birth_trigger": trigger,
         "birth_step": birth_step,
         "birth_row_id": birth_row_id,
+        "parent_id": parent_id,
         "source_signature": source_signature,
         "target_move": target_move,
         "oracle_targeted_birth": oracle_targeted,
         "nutrition": cfg.initial_nutrition,
-        "state": "TRIAL",
+        "local_resource": cfg.initial_nutrition,
+        "state": stem_cell.state.name if stem_cell is not None else "TRIAL",
+        "stem_cell_id": stem_cell.cell_id if stem_cell is not None else None,
+        "stem_cell_xp": stem_cell.xp if stem_cell is not None else None,
         "credit_events": 0,
         "debt_events": 0,
+        "neutral_events": 0,
+        "exposure_count": 0,
         "passive_decay_events": 0,
         "activation_count": 0,
         "weight": cfg.initial_weight,
+        "fate_events": [
+            {
+                "step": birth_step,
+                "event": "birth",
+                "parent_id": parent_id,
+                "source_signature": source_signature,
+                "trigger": trigger,
+                "state": stem_cell.state.name if stem_cell is not None else "TRIAL",
+                "xp": stem_cell.xp if stem_cell is not None else None,
+                "local_resource": cfg.initial_nutrition,
+            }
+        ] if cfg.ecology_mode == "stem_cell_graph" else [],
     }
     return True
+
+
+def _stem_parent_id(source_signature: str) -> str:
+    digest = hashlib.sha256(str(source_signature).encode("utf-8")).hexdigest()
+    return f"stage_b_habitat_{digest[:12]}"
+
+
+def _new_composite_stem_cell(
+    cfg: StageBEcologicalDiscoveryConfig,
+    *,
+    composite_id: str,
+    children: Sequence[str],
+    parent_id: str,
+    source_signature: str,
+    trigger: str,
+    arm: str,
+    birth_step: int,
+) -> StemCellTerminal:
+    cell = StemCellTerminal(f"stem_{composite_id}")
+    cell.state = StemCellState.TRIAL
+    cell.trial_node_id = f"TRIAL_{cell.cell_id}"
+    cell.trial_parent_id = parent_id
+    cell.xp = int(cfg.stem_initial_xp)
+    cell.XP_SOLIDIFY = int(cfg.stem_mature_xp)
+    cell.is_composition = True
+    cell.children = list(children)
+    cell.depth = 1
+    cell.metadata.update(
+        {
+            "origin": "phase3_0_stage_b_graph_native_ecology",
+            "composite_id": composite_id,
+            "source_signature": source_signature,
+            "birth_trigger": trigger,
+            "birth_step": birth_step,
+            "arm": arm,
+            "lifecycle_substrate": "StemCellTerminal",
+        }
+    )
+    return cell
+
+
+def _sync_stem_cell_record(item: dict[str, Any], cell: StemCellTerminal) -> None:
+    item["state"] = cell.state.name
+    item["stem_cell_xp"] = int(cell.xp)
+    item["stem_cell_snapshot"] = {
+        "cell_id": cell.cell_id,
+        "state": cell.state.name,
+        "xp": int(cell.xp),
+        "trial_parent_id": cell.trial_parent_id,
+        "candidate_stats": cell.candidate_stats.to_dict(),
+        "children": list(cell.children),
+        "is_composition": bool(cell.is_composition),
+    }
+
+
+def _record_fate_event(
+    item: dict[str, Any],
+    *,
+    step: int,
+    event: str,
+    cell: StemCellTerminal | None = None,
+    **payload: Any,
+) -> None:
+    record = {
+        "step": int(step),
+        "event": event,
+        "state": item.get("state"),
+        "xp": item.get("stem_cell_xp"),
+        "local_resource": round(float(item.get("local_resource", item.get("nutrition", 0.0))), 6),
+    }
+    if cell is not None:
+        record["state"] = cell.state.name
+        record["xp"] = int(cell.xp)
+    record.update(payload)
+    item.setdefault("fate_events", []).append(record)
 
 
 def _candidate_child_pool(ctx: Mapping[str, Any], *, trigger: str) -> tuple[str, ...]:
@@ -700,6 +911,7 @@ def _choose_ecological_move(
         atom_weights=atom_weights,
         composites=population.values(),
         disabled_composite_ids=disabled_composite_ids,
+        cfg=cfg,
     )
     if not options:
         return None
@@ -720,6 +932,7 @@ def _choose_ecological_move(
             atom_weights=atom_weights,
             composites=population.values(),
             disabled_composite_ids=disabled_composite_ids,
+            cfg=cfg,
         )
     rng = random.Random(seed)
     rows = [(float(item["score"]), rng.random(), str(item["move"]), item["move"]) for item in options]
@@ -756,6 +969,7 @@ def _score_options(
     atom_weights: Mapping[str, float],
     composites: Iterable[Mapping[str, Any]],
     disabled_composite_ids: set[str],
+    cfg: StageBEcologicalDiscoveryConfig | None = None,
 ) -> list[dict[str, Any]]:
     legal = _legal_without_third_repetition(board, counts)
     if not legal:
@@ -765,16 +979,26 @@ def _score_options(
         if item.get("state", "TRIAL") in {"TRIAL", "MATURE"}
         and str(item["composite_id"]) not in disabled_composite_ids
     ]
+    parent_local = bool(cfg is not None and cfg.ecology_mode == "stem_cell_graph")
+    by_parent: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    if parent_local:
+        for item in live_composites:
+            by_parent[str(item.get("source_signature", ""))].append(item)
     options: list[dict[str, Any]] = []
     for move in legal:
         active_scales = _sealed_action_key_scales(board, move)
         active = {key for key, _scale in active_scales}
+        option_composites = (
+            by_parent.get(_percept_signature(active), ())
+            if parent_local
+            else live_composites
+        )
         pos = sum(max(0.0, atom_weights.get(key, 0.0) * scale) for key, scale in active_scales)
         neg = sum(min(0.0, atom_weights.get(key, 0.0) * scale) for key, scale in active_scales)
         atom_score = pos + neg
         active_composites = []
         composite_score = 0.0
-        for comp in live_composites:
+        for comp in option_composites:
             children = tuple(map(str, comp["children"]))
             if all(child in active for child in children):
                 active_composites.append(str(comp["composite_id"]))
@@ -871,9 +1095,15 @@ def _rollout_policy(
             break
         if collect_composites and population:
             active = set(_sealed_action_keys(board, move))
-            percept_signatures.append(_percept_signature(active))
+            active_signature = _percept_signature(active)
+            percept_signatures.append(active_signature)
             for comp in population.values():
                 if comp.get("state") not in {"TRIAL", "MATURE"}:
+                    continue
+                if (
+                    cfg.ecology_mode == "stem_cell_graph"
+                    and str(comp.get("source_signature", "")) != active_signature
+                ):
                     continue
                 if all(str(child) in active for child in comp["children"]):
                     active_composite_ids.add(str(comp["composite_id"]))
@@ -938,6 +1168,7 @@ def _evaluate_policy(
     samples: list[dict[str, Any]] = []
     plies_to_success: list[int] = []
     active_composite_ids: set[str] = set()
+    active_composite_ids_by_row: dict[str, list[str]] = {}
     active_judge_cache = judge_cache if judge_cache is not None else _new_judge_cache()
     for index, row in enumerate(rows):
         outcome = _rollout_policy(
@@ -950,7 +1181,9 @@ def _evaluate_policy(
             collect_composites=collect_composites,
             population=population,
         )
-        active_composite_ids.update(map(str, outcome.get("active_composite_ids", ())))
+        row_active_ids = sorted(map(str, outcome.get("active_composite_ids", ())))
+        active_composite_ids.update(row_active_ids)
+        active_composite_ids_by_row[str(row["row_id"])] = row_active_ids
         success_by_row[str(row["row_id"])] = bool(outcome["success"])
         endpoints[str(outcome["endpoint"])] += 1
         if outcome["success"]:
@@ -975,6 +1208,7 @@ def _evaluate_policy(
         "endpoint_counts": dict(sorted(endpoints.items())),
         "success_by_row": success_by_row,
         "active_composite_ids": sorted(active_composite_ids),
+        "active_composite_ids_by_row": active_composite_ids_by_row,
         "mean_plies_to_success": None if not plies_to_success else sum(plies_to_success) / len(plies_to_success),
         "sample_nonwins": samples,
     }
@@ -1024,6 +1258,138 @@ def _apply_contrastive_nutrition(
             comp["weight"] = _composite_weight(comp, cfg=cfg)
 
 
+def _apply_stem_cell_local_economy(
+    cfg: StageBEcologicalDiscoveryConfig,
+    population: dict[str, dict[str, Any]],
+    stem_cells: dict[str, StemCellTerminal],
+    *,
+    selected: Mapping[str, Any],
+    alternative: Mapping[str, Any],
+    step: int,
+) -> None:
+    selected_ids = set(map(str, selected["active_composite_ids"]))
+    alternative_ids = set(map(str, alternative["active_composite_ids"]))
+    exposed_signatures = set(map(str, selected.get("percept_signatures", ()))) | set(
+        map(str, alternative.get("percept_signatures", ()))
+    )
+    reward_delta = float(selected["reward"]) - float(alternative["reward"])
+    evidence: Counter[str] = Counter()
+    if reward_delta > 0:
+        evidence.update({cid: 1 for cid in selected_ids})
+        evidence.update({cid: -1 for cid in alternative_ids})
+    elif reward_delta < 0:
+        evidence.update({cid: -1 for cid in selected_ids})
+        evidence.update({cid: 1 for cid in alternative_ids})
+    else:
+        evidence.update({cid: 0 for cid in selected_ids | alternative_ids})
+
+    exposed_parent_ids = {_stem_parent_id(signature) for signature in exposed_signatures}
+    for cid, comp in population.items():
+        if comp["state"] not in {"TRIAL", "MATURE"}:
+            continue
+        cell = stem_cells.get(cid)
+        if cell is None:
+            continue
+        parent_id = str(comp.get("parent_id", ""))
+        parent_exposed = parent_id in exposed_parent_ids
+        active = cid in selected_ids or cid in alternative_ids
+        if not parent_exposed and not active:
+            if cell.state == StemCellState.TRIAL:
+                comp["local_resource"] = (
+                    float(comp.get("local_resource", comp.get("nutrition", 0.0)))
+                    - cfg.passive_decay * cfg.stem_inactive_decay_scale
+                )
+                comp["nutrition"] = float(comp["local_resource"])
+                comp["passive_decay_events"] = int(comp.get("passive_decay_events", 0)) + 1
+                if float(comp.get("local_resource", 0.0)) <= 0.0:
+                    cell.state = StemCellState.PRUNED
+                    comp["state"] = "PRUNED"
+                    comp["prune_reason"] = "local_inactive_decay_depleted"
+                    comp["pruned_step"] = step
+                    _record_fate_event(
+                        comp,
+                        step=step,
+                        event="prune",
+                        cell=cell,
+                        reason="local_inactive_decay_depleted",
+                    )
+                comp["weight"] = _composite_weight(comp, cfg=cfg)
+                _sync_stem_cell_record(comp, cell)
+            continue
+
+        if parent_exposed:
+            cell.record_candidate_request(parent_id=parent_id)
+            comp["exposure_count"] = int(comp.get("exposure_count", 0)) + 1
+            comp["local_resource"] = float(comp.get("local_resource", comp.get("nutrition", 0.0))) - cfg.passive_decay
+            comp["nutrition"] = float(comp["local_resource"])
+            comp["passive_decay_events"] = int(comp.get("passive_decay_events", 0)) + 1
+            cell.decay_xp()
+            _record_fate_event(
+                comp,
+                step=step,
+                event="exposure",
+                cell=cell,
+                parent_id=parent_id,
+            )
+
+        if active:
+            cell.record_candidate_activation(parent_id=parent_id)
+            comp["activation_count"] = int(comp.get("activation_count", 0)) + 1
+            direction = int(evidence.get(cid, 0))
+            if direction > 0:
+                cell.update_xp(1.0)
+                cell.mark_confirmed(step)
+                comp["local_resource"] = float(comp.get("local_resource", comp.get("nutrition", 0.0))) + cfg.positive_credit
+                comp["credit_events"] = int(comp.get("credit_events", 0)) + 1
+                event = "local_credit"
+            elif direction < 0:
+                cell.update_xp(-1.0)
+                comp["local_resource"] = float(comp.get("local_resource", comp.get("nutrition", 0.0))) - cfg.negative_debt
+                comp["debt_events"] = int(comp.get("debt_events", 0)) + 1
+                event = "local_debt"
+            else:
+                cell.record_candidate_intervention("neutral", cycle=step)
+                comp["neutral_events"] = int(comp.get("neutral_events", 0)) + 1
+                event = "local_neutral"
+            comp["nutrition"] = float(comp["local_resource"])
+            _record_fate_event(
+                comp,
+                step=step,
+                event=event,
+                cell=cell,
+                reward_delta=round(reward_delta, 6),
+            )
+
+        if (
+            cell.state == StemCellState.TRIAL
+            and int(cell.xp) >= cfg.stem_mature_xp
+            and int(comp.get("exposure_count", 0)) >= cfg.stem_min_mature_exposures
+            and cell.candidate_can_mature()
+        ):
+            cell.state = StemCellState.MATURE
+            comp["state"] = "MATURE"
+            comp["mature_step"] = step
+            _record_fate_event(comp, step=step, event="mature", cell=cell)
+
+        if cell.state != StemCellState.MATURE and (
+            float(comp.get("local_resource", 0.0)) <= 0.0 or int(cell.xp) <= cfg.stem_prune_xp
+        ):
+            cell.state = StemCellState.PRUNED
+            comp["state"] = "PRUNED"
+            comp["prune_reason"] = (
+                "local_resource_depleted"
+                if float(comp.get("local_resource", 0.0)) <= 0.0
+                else "stem_xp_depleted"
+            )
+            comp["pruned_step"] = step
+            _record_fate_event(comp, step=step, event="prune", cell=cell, reason=comp["prune_reason"])
+
+        comp["weight"] = _composite_weight(comp, cfg=cfg)
+        _sync_stem_cell_record(comp, cell)
+
+    _record_exposed_sibling_ranks(population, step=step, parent_ids=exposed_parent_ids)
+
+
 def _cap_population(
     cfg: StageBEcologicalDiscoveryConfig,
     population: dict[str, dict[str, Any]],
@@ -1031,7 +1397,7 @@ def _cap_population(
     step: int,
 ) -> None:
     live_trial = [item for item in population.values() if item["state"] == "TRIAL"]
-    if cfg.ecology_mode != "habitat_local":
+    if cfg.ecology_mode == "global":
         _prune_lowest_nutrition(
             live_trial,
             overflow=len(live_trial) - cfg.max_population,
@@ -1065,6 +1431,89 @@ def _cap_population(
         step=step,
         reason="total_population_cap",
     )
+
+
+def _cap_stem_cell_parent_budgets(
+    cfg: StageBEcologicalDiscoveryConfig,
+    population: dict[str, dict[str, Any]],
+    stem_cells: dict[str, StemCellTerminal],
+    *,
+    step: int,
+) -> None:
+    by_parent: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for item in population.values():
+        if item["state"] in {"TRIAL", "MATURE"}:
+            by_parent[str(item.get("parent_id", ""))].append(item)
+
+    for parent_id, siblings in by_parent.items():
+        overflow = len(siblings) - cfg.max_population_per_habitat
+        if overflow <= 0:
+            continue
+        siblings.sort(
+            key=lambda item: (
+                1 if item["state"] == "MATURE" else 0,
+                float(item.get("local_resource", item.get("nutrition", 0.0))),
+                int(item.get("stem_cell_xp") or 0),
+                -int(item.get("birth_step", 0)),
+                str(item["composite_id"]),
+            )
+        )
+        for item in siblings[:overflow]:
+            cid = str(item["composite_id"])
+            cell = stem_cells.get(cid)
+            if cell is not None:
+                cell.state = StemCellState.PRUNED
+            item["state"] = "PRUNED"
+            item["prune_reason"] = "parent_local_resource_budget"
+            item["pruned_step"] = step
+            if cell is not None:
+                _sync_stem_cell_record(item, cell)
+            _record_fate_event(
+                item,
+                step=step,
+                event="prune",
+                cell=cell,
+                reason="parent_local_resource_budget",
+                parent_id=parent_id,
+            )
+
+
+def _record_exposed_sibling_ranks(
+    population: Mapping[str, dict[str, Any]],
+    *,
+    step: int,
+    parent_ids: set[str],
+) -> None:
+    if not parent_ids:
+        return
+    by_parent: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for item in population.values():
+        if item["state"] in {"TRIAL", "MATURE"} and str(item.get("parent_id", "")) in parent_ids:
+            by_parent[str(item.get("parent_id", ""))].append(item)
+    for parent_id, siblings in by_parent.items():
+        siblings.sort(
+            key=lambda item: (
+                item["state"] == "MATURE",
+                float(item.get("local_resource", item.get("nutrition", 0.0))),
+                int(item.get("stem_cell_xp") or 0),
+                str(item["composite_id"]),
+            ),
+            reverse=True,
+        )
+        for rank, item in enumerate(siblings, start=1):
+            history = item.setdefault("sibling_rank_history", [])
+            if history and history[-1].get("rank") == rank and int(history[-1].get("step", -1)) == step:
+                continue
+            history.append(
+                {
+                    "step": int(step),
+                    "parent_id": parent_id,
+                    "rank": rank,
+                    "sibling_count": len(siblings),
+                    "local_resource": round(float(item.get("local_resource", 0.0)), 6),
+                    "xp": item.get("stem_cell_xp"),
+                }
+            )
 
 
 def _prune_lowest_nutrition(
@@ -1116,14 +1565,26 @@ def _composite_ablation_health(
         population=population,
     )
     active_on_full = set(map(str, full_eval.get("active_composite_ids", ())))
+    active_by_row = {
+        str(row_id): set(map(str, ids))
+        for row_id, ids in full_eval.get("active_composite_ids_by_row", {}).items()
+    }
     records: list[dict[str, Any]] = []
     counts: Counter[str] = Counter()
     for comp in composites:
         cid = str(comp["composite_id"])
         if cid in active_on_full:
+            active_rows = [
+                row for row in rows
+                if cid in active_by_row.get(str(row["row_id"]), set())
+            ]
+            full_active_wins = sum(
+                int(bool(full_eval["success_by_row"].get(str(row["row_id"]), False)))
+                for row in active_rows
+            )
             ablated = _evaluate_policy(
                 cfg,
-                rows,
+                active_rows,
                 lambda board, counts, row_id, ply, rng, cid=cid: _choose_ecological_move(
                     cfg,
                     board,
@@ -1139,9 +1600,11 @@ def _composite_ablation_health(
                 policy_name=f"{policy_name}_without_{cid}",
                 judge_cache=judge_cache,
             )
-            ablated_wins = int(ablated["wins"])
-            delta = int(full_eval["wins"]) - ablated_wins
+            ablated_active_wins = int(ablated["wins"])
+            ablated_wins = int(full_eval["wins"]) - full_active_wins + ablated_active_wins
+            delta = full_active_wins - ablated_active_wins
         else:
+            active_rows = []
             ablated_wins = int(full_eval["wins"])
             delta = 0
         classification = "load_bearing" if delta > 0 else "inert" if delta == 0 else "harmful"
@@ -1154,6 +1617,7 @@ def _composite_ablation_health(
                 "ablated_wins": ablated_wins,
                 "ablation_delta": delta,
                 "active_on_full_heldout": cid in active_on_full,
+                "active_row_count": len(active_rows),
                 "birth_trigger": comp.get("birth_trigger"),
                 "state": comp.get("state"),
                 "nutrition": float(comp.get("nutrition", 0.0)),
@@ -1169,6 +1633,108 @@ def _composite_ablation_health(
         "inert_count": int(counts["inert"]),
         "harmful_count": int(counts["harmful"]),
         "nontrivial_delta_count": int(counts["load_bearing"] + counts["harmful"]),
+        "records": records,
+    }
+
+
+def _pruned_rescue_audit(
+    cfg: StageBEcologicalDiscoveryConfig,
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    atom_weights: Mapping[str, float],
+    survivors: Sequence[Mapping[str, Any]],
+    population: Mapping[str, Mapping[str, Any]],
+    survivor_eval: Mapping[str, Any],
+    seed: int,
+) -> dict[str, Any]:
+    pruned = [
+        dict(item)
+        for item in population.values()
+        if item.get("state") == "PRUNED" and int(item.get("activation_count", 0)) > 0
+    ]
+    pruned.sort(
+        key=lambda item: (
+            -int(item.get("credit_events", 0)),
+            -int(item.get("activation_count", 0)),
+            int(item.get("pruned_step", 10**9)),
+            str(item["composite_id"]),
+        )
+    )
+    audited = pruned[: max(0, int(cfg.pruned_rescue_audit_limit))]
+    audit_rows = list(rows[: max(0, int(cfg.pruned_rescue_heldout_limit))])
+    survivor_population = {str(item["composite_id"]): dict(item) for item in survivors}
+    records: list[dict[str, Any]] = []
+    judge_cache = _new_judge_cache()
+    baseline_screen_eval = _evaluate_policy(
+        cfg,
+        audit_rows,
+        lambda board, counts, row_id, ply, rng, pop=survivor_population: _choose_ecological_move(
+            cfg,
+            board,
+            counts,
+            atom_weights=atom_weights,
+            population=pop,
+            seed=seed + int(row_id) * 57 + ply,
+            disabled_composite_ids=set(),
+            row_id=row_id,
+            ply=ply,
+        ),
+        seed=seed,
+        policy_name="pruned_addback_screen_baseline",
+        judge_cache=judge_cache,
+    )
+    baseline_screen_wins = int(baseline_screen_eval["wins"])
+    for index, comp in enumerate(audited):
+        rescued = dict(comp)
+        rescued["state"] = "TRIAL"
+        rescued["weight"] = max(float(rescued.get("weight", 0.0)), _composite_weight(rescued, cfg=cfg))
+        rescue_population = {**survivor_population, str(rescued["composite_id"]): rescued}
+        rescue_eval = _evaluate_policy(
+            cfg,
+            audit_rows,
+            lambda board, counts, row_id, ply, rng, pop=rescue_population: _choose_ecological_move(
+                cfg,
+                board,
+                counts,
+                atom_weights=atom_weights,
+                population=pop,
+                seed=seed + int(row_id) * 59 + ply,
+                disabled_composite_ids=set(),
+                row_id=row_id,
+                ply=ply,
+            ),
+            seed=seed + index * 31,
+            policy_name=f"pruned_addback_{rescued['composite_id']}",
+            judge_cache=judge_cache,
+        )
+        delta = int(rescue_eval["wins"]) - baseline_screen_wins
+        records.append(
+            {
+                "composite_id": str(rescued["composite_id"]),
+                "children": list(rescued.get("children", ())),
+                "birth_trigger": rescued.get("birth_trigger"),
+                "birth_step": rescued.get("birth_step"),
+                "pruned_step": rescued.get("pruned_step"),
+                "prune_reason": rescued.get("prune_reason"),
+                "training_credit_events": int(rescued.get("credit_events", 0)),
+                "training_debt_events": int(rescued.get("debt_events", 0)),
+                "training_activation_count": int(rescued.get("activation_count", 0)),
+                "full_baseline_survivor_wins": int(survivor_eval["wins"]),
+                "screen_baseline_survivor_wins": baseline_screen_wins,
+                "addback_wins": int(rescue_eval["wins"]),
+                "addback_delta": delta,
+                "classification": "load_bearing_but_pruned" if delta > 0 else "inert_or_harmful_when_rescued",
+            }
+        )
+    return {
+        "enabled": True,
+        "audit_method": "individual add-back of pruned candidates with training activation against final survivor policy",
+        "audit_row_count": len(audit_rows),
+        "full_heldout_row_count": int(survivor_eval["row_count"]),
+        "candidate_pool_count": len(pruned),
+        "audited_count": len(audited),
+        "audit_limit": int(cfg.pruned_rescue_audit_limit),
+        "load_bearing_but_pruned_count": sum(1 for record in records if int(record["addback_delta"]) > 0),
         "records": records,
     }
 
@@ -1508,6 +2074,11 @@ def _structure_summary(
 ) -> dict[str, Any]:
     all_children = sorted({child for comp in survivors for child in comp["children"]})
     counts = Counter(str(item["state"]) for item in population.values())
+    live_parent_ids = {
+        str(item.get("parent_id", ""))
+        for item in population.values()
+        if item["state"] in {"TRIAL", "MATURE"}
+    }
     return {
         "schema_version": "phase2_9e_structure_summary.v0",
         "arm": arm,
@@ -1524,6 +2095,10 @@ def _structure_summary(
         "cap_pruned_count": sum(1 for item in population.values() if item.get("prune_reason") == "immature_population_cap"),
         "habitat_cap_pruned_count": sum(1 for item in population.values() if item.get("prune_reason") == "habitat_population_cap"),
         "total_cap_pruned_count": sum(1 for item in population.values() if item.get("prune_reason") == "total_population_cap"),
+        "parent_budget_pruned_count": sum(1 for item in population.values() if item.get("prune_reason") == "parent_local_resource_budget"),
+        "local_resource_pruned_count": sum(1 for item in population.values() if item.get("prune_reason") == "local_resource_depleted"),
+        "inactive_decay_pruned_count": sum(1 for item in population.values() if item.get("prune_reason") == "local_inactive_decay_depleted"),
+        "live_parent_count": len(live_parent_ids),
         "oracle_targeted_birth_count": sum(1 for item in population.values() if item.get("oracle_targeted_birth")),
         "trigger_distribution": dict(sorted(trigger_counts.items())),
         "error_set_targeted_birth_count": sum(len(items) for items in guided_plan.values()),
@@ -1537,8 +2112,12 @@ def _structure_summary(
                 "state": item["state"],
                 "birth_trigger": item["birth_trigger"],
                 "nutrition": round(float(item["nutrition"]), 6),
+                "local_resource": round(float(item.get("local_resource", item.get("nutrition", 0.0))), 6),
+                "stem_cell_xp": item.get("stem_cell_xp"),
+                "parent_id": item.get("parent_id"),
                 "weight": round(_composite_weight(item), 6),
                 "activation_count": int(item.get("activation_count", 0)),
+                "exposure_count": int(item.get("exposure_count", 0)),
                 "children": list(item["children"]),
             }
             for item in survivors[:16]
@@ -1553,6 +2132,11 @@ def _population_snapshot(population: Mapping[str, Mapping[str, Any]], *, step: i
         for item in population.values()
         if item["state"] in {"TRIAL", "MATURE"}
     }
+    mature_habitats = {
+        str(item.get("source_signature", ""))
+        for item in population.values()
+        if item["state"] == "MATURE"
+    }
     return {
         "step": step,
         "births_total": len(population),
@@ -1561,7 +2145,40 @@ def _population_snapshot(population: Mapping[str, Mapping[str, Any]], *, step: i
         "mature": int(counts["MATURE"]),
         "pruned": int(counts["PRUNED"]),
         "alive_habitat_count": len(alive_habitats),
+        "mature_habitat_count": len(mature_habitats),
     }
+
+
+def _candidate_fate_log(population: Mapping[str, Mapping[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for item in sorted(population.values(), key=lambda row: (int(row.get("birth_step", 0)), str(row["composite_id"]))):
+        rows.append(
+            {
+                "composite_id": str(item["composite_id"]),
+                "children": list(item.get("children", ())),
+                "birth_trigger": item.get("birth_trigger"),
+                "birth_step": item.get("birth_step"),
+                "birth_row_id": item.get("birth_row_id"),
+                "parent_id": item.get("parent_id"),
+                "source_signature": item.get("source_signature"),
+                "state": item.get("state"),
+                "mature_step": item.get("mature_step"),
+                "pruned_step": item.get("pruned_step"),
+                "prune_reason": item.get("prune_reason"),
+                "stem_cell_id": item.get("stem_cell_id"),
+                "stem_cell_xp": item.get("stem_cell_xp"),
+                "local_resource": float(item.get("local_resource", item.get("nutrition", 0.0))),
+                "exposure_count": int(item.get("exposure_count", 0)),
+                "activation_count": int(item.get("activation_count", 0)),
+                "credit_events": int(item.get("credit_events", 0)),
+                "debt_events": int(item.get("debt_events", 0)),
+                "neutral_events": int(item.get("neutral_events", 0)),
+                "stem_cell_snapshot": item.get("stem_cell_snapshot"),
+                "sibling_rank_history": list(item.get("sibling_rank_history", ())),
+                "fate_events": list(item.get("fate_events", ())),
+            }
+        )
+    return rows
 
 
 def _survivor_failure_enrichment(
@@ -1702,7 +2319,6 @@ def _firing_cluster(
     comp: Mapping[str, Any],
     limit: int,
 ) -> list[dict[str, Any]]:
-    del cfg
     firing_cluster = []
     for row in heldout_rows:
         board = chess.Board(str(row["fen"]))
@@ -1712,6 +2328,7 @@ def _firing_cluster(
             atom_weights=atom_weights,
             composites=[comp],
             disabled_composite_ids=set(),
+            cfg=cfg,
         )
         fires = [
             str(option["move"])
@@ -1909,6 +2526,80 @@ def _phase29f_headline(summary: Mapping[str, Any]) -> dict[str, Any]:
             int(row["wins"]) - 92 for row in arm_rows
         ],
         "recurring_load_bearing": summary["cross_seed_composite_analysis"]["recurring_load_bearing"],
+    }
+
+
+def _maturity_summary(seed_results: Mapping[str, Any]) -> dict[str, Any]:
+    mature_recurrence: dict[tuple[str, ...], dict[str, Any]] = {}
+    per_seed = []
+    for seed, result in seed_results.items():
+        arm = result["arm1_unguided_ecological"]
+        mature_candidates = [
+            row for row in arm.get("candidate_fate_log", ())
+            if row.get("state") == "MATURE"
+        ]
+        per_seed.append(
+            {
+                "seed": int(seed),
+                "mature_count": len(mature_candidates),
+                "survivor_count": int(arm["structure"]["survivor_count"]),
+                "live_parent_count": int(arm["structure"].get("live_parent_count", 0)),
+                "load_bearing_count": int(arm["post_hoc_ablation"]["load_bearing_count"]),
+                "load_bearing_but_pruned_count": int(
+                    arm.get("pruned_rescue_audit", {}).get("load_bearing_but_pruned_count", 0)
+                ),
+                "birth_death_curve": arm.get("birth_death_curve", ()),
+            }
+        )
+        for row in mature_candidates:
+            key = tuple(_normalized_children(row.get("children", ())))
+            item = mature_recurrence.setdefault(
+                key,
+                {
+                    "normalized_children": list(key),
+                    "mature_seed_count": 0,
+                    "seeds": [],
+                    "birth_triggers": Counter(),
+                },
+            )
+            item["mature_seed_count"] += 1
+            item["seeds"].append(int(seed))
+            item["birth_triggers"][str(row.get("birth_trigger", "unknown"))] += 1
+    recurrence_rows = [
+        {
+            "normalized_children": row["normalized_children"],
+            "mature_seed_count": int(row["mature_seed_count"]),
+            "seeds": row["seeds"],
+            "birth_triggers": dict(sorted(row["birth_triggers"].items())),
+        }
+        for row in mature_recurrence.values()
+    ]
+    recurrence_rows.sort(key=lambda row: (int(row["mature_seed_count"]), row["normalized_children"]), reverse=True)
+    return {
+        "per_seed": per_seed,
+        "recurring_mature_composites": [
+            row for row in recurrence_rows if int(row["mature_seed_count"]) > 1
+        ],
+        "all_mature_composites": recurrence_rows,
+    }
+
+
+def _phase30_headline(summary: Mapping[str, Any]) -> dict[str, Any]:
+    arm_rows = [
+        row for row in summary["tables"]["arm_seed_table"]
+        if row["arm"] == "arm1_unguided_ecological"
+    ]
+    maturity = summary.get("maturity_summary", {})
+    per_seed = maturity.get("per_seed", ())
+    return {
+        "arm1_mature_counts": [int(row["mature"]) for row in arm_rows],
+        "arm1_load_bearing_counts": [int(row["load_bearing"]) for row in arm_rows],
+        "arm1_wins": [int(row["wins"]) for row in arm_rows],
+        "recurring_mature_composites": maturity.get("recurring_mature_composites", []),
+        "recurring_load_bearing": summary["cross_seed_composite_analysis"]["recurring_load_bearing"],
+        "load_bearing_but_pruned_counts": [
+            int(row.get("load_bearing_but_pruned_count", 0)) for row in per_seed
+        ],
     }
 
 

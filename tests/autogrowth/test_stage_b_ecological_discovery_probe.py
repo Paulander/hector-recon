@@ -3,6 +3,7 @@ from pathlib import Path
 from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     StageBEcologicalDiscoveryConfig,
     _fast_enter_mate2_audit,
+    run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
     run_stage_b_ecological_discovery_scale_probe,
@@ -117,3 +118,29 @@ def test_phase29g_habitat_probe_uses_local_ecology(tmp_path: Path) -> None:
     assert arm1["structure"]["leak_count"] == 0
     assert "habitat_cap_pruned_count" in arm1["structure"]
     assert "alive_habitat_count" in arm1["birth_death_curve"][-1]
+
+
+def test_phase30_graph_native_probe_records_stem_cell_fates(tmp_path: Path) -> None:
+    summary = run_stage_b_graph_native_ecology_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_0_probe"),
+            seeds=(20272931,),
+            train_row_limit=2,
+            heldout_row_limit=2,
+            max_population_per_habitat=1,
+            max_guided_births=2,
+            max_births_per_decision=1,
+            max_samples=2,
+            pruned_rescue_audit_limit=1,
+            ecology_mode="stem_cell_graph",
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_0_stage_b_graph_native_ecology.v0"
+    assert "phase3_0_headline" in summary["tables"]
+    assert "maturity_summary" in summary
+    arm1 = summary["seed_results"]["20272931"]["arm1_unguided_ecological"]
+    assert arm1["structure"]["leak_count"] == 0
+    assert "parent_budget_pruned_count" in arm1["structure"]
+    assert "candidate_fate_log" in arm1
+    assert arm1["pruned_rescue_audit"]["enabled"] is True
