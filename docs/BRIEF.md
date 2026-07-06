@@ -35,6 +35,7 @@ chase-bound move, so they are skill bugs, not follow-on fallback behavior. Strat
 true-middle, one mate1-now. Example FENs: `6k1/4KR2/8/8/8/8/8/8 w - - 0 1` and
 `8/8/8/8/8/8/1K3R2/3k4 w - - 0 1`.
 Integration no-adopt: Phase 2.8i paired 200 games with-chase 137/200 vs without 134/200 (+0.015), paired 128 win/win, 9 loss/win, 6 win/loss, 57 loss/loss; repetitions 61 vs 56; skill violations 0.
-Phase 2.9a sealed firewall: leaks removed (`black_reply_mobility_after`, `is_stalemate_after`, terminal-only aliases, micro mobility/risk); sealed Stage A/B retrains 94/97/95 and 93/92/92, leaked terminal count 0.
-Phase 2.9b autonomous discovery: 56/69/72 of 128 vs fallback 20, random 6, flat official 94/97/95, ceiling 77; ablation 10/10/6, leaks 0, quorum layer mixed. Next: 2.9c discovery-operator review/refinement.
+Phase 2.9a sealed firewall: leaks removed (`black_reply_mobility_after`, `is_stalemate_after`, terminal-only aliases, micro mobility/risk); sealed Stage A/B retrains 94/97/95 and 93/92/92, leaked terminal count 0. Stage B learned is ~0.72 (93/128) vs dispatcher ~0.65 (83/128); boundary finding: the deep conditional rung defeats both flat weighting and the current hand dispatcher - open frontier, not "flat learner wins."
+Phase 2.9b autonomous discovery: 56/69/72 of 128 vs fallback 20, random 6, flat official 94/97/95, ceiling 77; ablation 10/10/6, leaks 0, quorum layer mixed.
+Phase 2.9c discovery-operator refinement: failure-localized spawning plus heldout M4-successor promotion gives 54/70/66 of 128, all above fallback 20 but below hand ceiling 77 and clean flat replay 86/90/89; spawned quorum health 0 load-bearing, 32/32/28 inert, 16/16/20 harmful; M4 promotes 0 affordances and 0 vetoes. Next: repair promotion/spawn signal before graph-native plasticity migration.
 No-go: new TG names, new report documents, training logic changes, `docs/autogrowth/ACTIVE_BRIEF.md`, `reports/autogrowth/pools/`, and `archive/`.

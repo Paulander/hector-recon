@@ -39,6 +39,8 @@ DEFAULT_STAGE_A_BASELINE_DIR = Path(
     "reports/autogrowth/clean_slate_krk/phase2_9a_action_firewall"
 )
 
+_ACTION_KEY_SCALE_CACHE: dict[tuple[str, str], tuple[tuple[str, float], ...]] = {}
+
 
 @dataclass(frozen=True)
 class ApproachDiscoveryProbeConfig:
@@ -85,7 +87,22 @@ def run_approach_discovery_probe(
     seed_results: dict[str, Any] = {}
     for seed in cfg.seeds:
         evidence = _build_action_evidence(cfg, train_rows, seed=seed)
-        structure = _discover_structure(cfg, evidence, seed=seed)
+        spawned_structure = _discover_structure(cfg, evidence, seed=seed)
+        structure = _promote_structure_with_m4_successor_rule(
+            cfg,
+            heldout_rows,
+            spawned_structure,
+            seed=seed,
+        )
+        spawned_health = structure["spawned_quorum_health"]
+        promoted_health = _quorum_ablation_health(
+            cfg,
+            heldout_rows,
+            structure,
+            seed=seed,
+            policy_name="promoted_quorum_units",
+        )
+        structure["promoted_quorum_health"] = promoted_health
         discovered = _evaluate_policy(
             cfg,
             heldout_rows,
@@ -129,6 +146,7 @@ def run_approach_discovery_probe(
                 "discovered_quorums_ablated": ablated_quorums,
                 "discovered_structure_ablated_all": ablated_all,
             },
+            "paired_vs_yardsticks": _paired_yardstick_table(discovered, references),
             "decision": {
                 "beats_random": discovered["wins"] > references["random"]["wins"],
                 "beats_fallback": discovered["wins"] > references["fallback"]["wins"],
@@ -137,6 +155,14 @@ def run_approach_discovery_probe(
                 "causal_ablation_drop": discovered["wins"] - ablated_all["wins"],
                 "quorum_ablation_drop": discovered["wins"] - ablated_quorums["wins"],
                 "leaked_terminal_count": structure["leak_count"],
+                "spawned_load_bearing_quorums": spawned_health["load_bearing_count"],
+                "spawned_inert_quorums": spawned_health["inert_count"],
+                "spawned_harmful_quorums": spawned_health["harmful_count"],
+                "promoted_load_bearing_quorums": promoted_health["load_bearing_count"],
+                "promoted_inert_quorums": promoted_health["inert_count"],
+                "promoted_harmful_quorums": promoted_health["harmful_count"],
+                "promoted_affordance_count": structure["promotion_audit"]["promoted_affordance_count"],
+                "promoted_veto_count": structure["promotion_audit"]["promoted_veto_count"],
             },
         }
         _write_json(output_dir / f"seed_{seed}_result.json", result)
@@ -179,9 +205,10 @@ def _design_spec(cfg: ApproachDiscoveryProbeConfig) -> dict[str, Any]:
         "schema_version": "phase2_9b_design_spec.v0",
         "meaning_of_autonomous_discovery": (
             "The probe enumerates legal actions from frozen approach-rung starts, "
-            "observes only sealed terminal/action keys, mines atomic terminals and "
-            "finite k-of-n quorum SCRIPTs from outcome-labeled action evidence, and "
-            "uses those grown structures for move selection. The hand approach skill "
+            "observes only sealed terminal/action keys, mines atomic terminals, "
+            "spawns finite k-of-n quorum SCRIPTs from failure-localized percept "
+            "clusters, and uses only heldout counterfactual promotion deltas to "
+            "mature composite quorums for move selection. The hand approach skill "
             "is used only as an outcome labeler/ceiling, never as a candidate generator "
             "or learner-visible feature source."
         ),
@@ -193,7 +220,8 @@ def _design_spec(cfg: ApproachDiscoveryProbeConfig) -> dict[str, Any]:
         ],
         "grown_structures": [
             "primitive atom TERMINALs keyed by sealed terminal/action atoms",
-            "finite quorum SCRIPTs over those atoms with k=n confirmation",
+            "failure-localized finite quorum SCRIPTs over those atoms with k=n confirmation",
+            "M4-successor promoted quorum units accepted only on heldout on/off delta",
             "a root dispatcher that scores moves by confirmed learned atoms/quorums",
         ],
         "forbidden": forbidden,
@@ -335,30 +363,13 @@ def _discover_structure(
     ]
     atoms.sort(key=lambda item: (item["score"], item["positive_support"], -item["negative_support"], item["terminal_key"]), reverse=True)
     selected_atoms = atoms[: cfg.max_atoms]
-    atom_pool = [item["terminal_key"] for item in atoms[: cfg.top_atom_pool]]
-    atom_pool_set = set(atom_pool)
-
-    quorum_counts: dict[tuple[str, ...], Counter[str]] = defaultdict(Counter)
-    for item in evidence:
-        active = sorted(set(item["keys"]) & atom_pool_set)
-        bucket = "positive" if item["success"] else "negative"
-        for width in range(2, cfg.max_quorum_width + 1):
-            if len(active) < width:
-                continue
-            for combo in combinations(active, width):
-                quorum_counts[combo][bucket] += 1
-
-    quorums = [
-        _quorum_record(index, children, counts, action_count, cfg)
-        for index, (children, counts) in enumerate(quorum_counts.items())
-    ]
-    quorums = [
-        item
-        for item in quorums
-        if item["positive_support"] >= cfg.min_quorum_support
-        and item["precision"] >= cfg.min_quorum_precision
-        and not learner_visible_key_firewall_leaks(item["children"])
-    ]
+    quorums, spawn_diagnostics = _spawn_failure_localized_quorums(
+        cfg,
+        evidence,
+        selected_atoms,
+        action_count,
+        seed=seed,
+    )
     quorums.sort(key=lambda item: (item["score"], item["positive_support"], -item["negative_support"], item["quorum_id"]), reverse=True)
     selected_quorums = quorums[: cfg.max_quorums]
     active_atom_keys = sorted({key for item in selected_quorums for key in item["children"]} | {item["terminal_key"] for item in selected_atoms})
@@ -376,8 +387,16 @@ def _discover_structure(
         "leak_count": leak_count,
         "spawn_event_count": len(spawn_events),
         "spawn_events": spawn_events,
+        "spawn_diagnostics": spawn_diagnostics,
         "atoms": selected_atoms,
         "quorums": selected_quorums,
+        "candidate_quorums": selected_quorums,
+        "candidate_quorum_script_count": len(selected_quorums),
+        "promotion_audit": {
+            "promotion_rule": "unpromoted_spawned_candidates",
+            "promoted_affordance_count": 0,
+            "promoted_veto_count": 0,
+        },
         "top_grown_atoms": selected_atoms[:20],
         "top_grown_quorums": selected_quorums[:20],
         "top_grown_scripts": [
@@ -393,6 +412,173 @@ def _discover_structure(
             for item in selected_quorums[:20]
         ],
     }
+
+
+def _spawn_failure_localized_quorums(
+    cfg: ApproachDiscoveryProbeConfig,
+    evidence: Sequence[Mapping[str, Any]],
+    selected_atoms: Sequence[Mapping[str, Any]],
+    action_count: Counter[str],
+    *,
+    seed: int,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    atom_pool = [str(item["terminal_key"]) for item in selected_atoms[: cfg.top_atom_pool]]
+    atom_pool_set = set(atom_pool)
+    row_items: dict[int, list[Mapping[str, Any]]] = defaultdict(list)
+    for item in evidence:
+        row_items[int(item["row_id"])].append(item)
+
+    clusters: dict[tuple[str, ...], list[dict[str, Any]]] = defaultdict(list)
+    failure_rows = 0
+    for row_id, items in sorted(row_items.items()):
+        chosen = _choose_evidence_atom_move(items, selected_atoms, seed=seed + row_id)
+        if chosen is None or bool(chosen["success"]):
+            continue
+        positive_items = [item for item in items if bool(item["success"])]
+        if not positive_items:
+            continue
+        signature = _failure_percept_signature(chosen["keys"])
+        clusters[signature].append(
+            {
+                "row_id": row_id,
+                "chosen": chosen,
+                "items": list(items),
+                "positive_alternative_count": len(positive_items),
+            }
+        )
+        failure_rows += 1
+
+    quorum_counts: dict[tuple[str, ...], Counter[str]] = defaultdict(Counter)
+    quorum_cluster_ids: dict[tuple[str, ...], set[str]] = defaultdict(set)
+    quorum_gate_keys: dict[tuple[str, ...], set[str]] = defaultdict(set)
+    cluster_summaries: list[dict[str, Any]] = []
+    for signature, rows in sorted(clusters.items(), key=lambda item: (-len(item[1]), item[0])):
+        cluster_id = _failure_cluster_id(signature)
+        gate_keys = tuple(key for key in signature if not learner_visible_key_firewall_leaks([key]))
+        if not gate_keys:
+            continue
+        gate_key_set = set(gate_keys)
+        cluster_pool = atom_pool_set | gate_key_set
+        endpoint_counts = Counter(str(row["chosen"].get("endpoint", "unknown")) for row in rows)
+        cluster_summaries.append(
+            {
+                "cluster_id": cluster_id,
+                "failed_row_count": len(rows),
+                "positive_alternative_count": sum(int(row["positive_alternative_count"]) for row in rows),
+                "gate_keys": list(gate_keys),
+                "chosen_endpoint_counts": dict(sorted(endpoint_counts.items())),
+            }
+        )
+        for row in rows:
+            for item in row["items"]:
+                active = sorted(set(item["keys"]) & cluster_pool)
+                bucket = "positive" if item["success"] else "negative"
+                for width in range(2, cfg.max_quorum_width + 1):
+                    if len(active) < width:
+                        continue
+                    for combo in combinations(active, width):
+                        hit_gates = tuple(child for child in combo if child in gate_key_set)
+                        if not hit_gates:
+                            continue
+                        if all(str(child).startswith("before_terminal:") for child in combo):
+                            continue
+                        quorum_counts[combo][bucket] += 1
+                        quorum_cluster_ids[combo].add(cluster_id)
+                        quorum_gate_keys[combo].update(hit_gates)
+
+    quorums = [
+        _quorum_record(
+            index,
+            children,
+            quorum_counts[children],
+            action_count,
+            cfg,
+            spawn_origin="failure_localized",
+            cluster_ids=tuple(sorted(quorum_cluster_ids[children])),
+            gate_keys=tuple(sorted(quorum_gate_keys[children])),
+        )
+        for index, children in enumerate(sorted(quorum_counts))
+    ]
+    quorums = [
+        item
+        for item in quorums
+        if item["positive_support"] >= cfg.min_quorum_support
+        and not learner_visible_key_firewall_leaks(item["children"])
+    ]
+    diagnostics = {
+        "spawn_policy": "surprise_failure_localized",
+        "atom_graph_mispredicted_row_count": failure_rows,
+        "failure_cluster_count": len(clusters),
+        "spawned_candidate_count_before_cap": len(quorums),
+        "min_quorum_support": cfg.min_quorum_support,
+        "promotion_uses_precision": False,
+        "cluster_summaries": cluster_summaries[:20],
+    }
+    return quorums, diagnostics
+
+
+def _choose_evidence_atom_move(
+    items: Sequence[Mapping[str, Any]],
+    selected_atoms: Sequence[Mapping[str, Any]],
+    *,
+    seed: int,
+) -> Mapping[str, Any] | None:
+    if not items:
+        return None
+    weights = {str(atom["terminal_key"]): float(atom["weight"]) for atom in selected_atoms}
+    rng = random.Random(seed)
+    rows = []
+    for item in items:
+        score = sum(weights.get(str(key), 0.0) for key in item["keys"])
+        rows.append((score, rng.random(), str(item["move"]), item))
+    rows.sort(reverse=True)
+    return rows[0][-1]
+
+
+def _failure_percept_signature(keys: Iterable[str]) -> tuple[str, ...]:
+    before_keys = [
+        str(key)
+        for key in keys
+        if str(key).startswith("before_terminal:")
+        and _is_generic_failure_context_key(str(key))
+    ]
+    if not before_keys:
+        before_keys = [
+            str(key)
+            for key in keys
+            if str(key).startswith("before_terminal:")
+            and not _is_exact_coordinate_context_key(str(key))
+        ]
+    return tuple(sorted(set(before_keys))[:12]) or ("before_terminal:any_generic_context=1",)
+
+
+def _is_generic_failure_context_key(key: str) -> bool:
+    if _is_exact_coordinate_context_key(key):
+        return False
+    fragments = (
+        "neighbor",
+        "corner_distance",
+        "edge",
+        "distance",
+        "king_support",
+        "rook_attacked",
+        "rook_present",
+        "same_side",
+        "opposite_sides",
+        "side_white_to_move",
+        "is_check",
+    )
+    return any(fragment in key for fragment in fragments)
+
+
+def _is_exact_coordinate_context_key(key: str) -> bool:
+    name = key.split(":", 1)[-1].split("=", 1)[0]
+    return name.endswith("_file") or name.endswith("_rank")
+
+
+def _failure_cluster_id(signature: Sequence[str]) -> str:
+    digest = hashlib.sha256("\n".join(signature).encode("utf-8")).hexdigest()
+    return f"failure_cluster_{digest[:12]}"
 
 
 def _structure_spawn_events(
@@ -476,6 +662,10 @@ def _quorum_record(
     counts: Counter[str],
     action_count: Counter[str],
     cfg: ApproachDiscoveryProbeConfig,
+    *,
+    spawn_origin: str = "uniform_coactivation",
+    cluster_ids: Sequence[str] = (),
+    gate_keys: Sequence[str] = (),
 ) -> dict[str, Any]:
     pos = int(counts["positive"])
     neg = int(counts["negative"])
@@ -497,7 +687,312 @@ def _quorum_record(
         "coverage": coverage,
         "score": score,
         "weight": score,
+        "spawn_origin": spawn_origin,
+        "failure_cluster_ids": list(cluster_ids),
+        "gate_keys": list(gate_keys),
+        "m4_state": "TRIAL",
+        "promotion_metric": "heldout_counterfactual_on_off_delta",
     }
+
+
+def _promote_structure_with_m4_successor_rule(
+    cfg: ApproachDiscoveryProbeConfig,
+    heldout_rows: Sequence[Mapping[str, Any]],
+    spawned_structure: Mapping[str, Any],
+    *,
+    seed: int,
+) -> dict[str, Any]:
+    candidates = [dict(item) for item in spawned_structure.get("quorums", ())]
+    base_structure = _structure_with_runtime_quorums(spawned_structure, [], seed=seed)
+    current_eval = _evaluate_policy(
+        cfg,
+        heldout_rows,
+        lambda board, counts, row_id: _choose_discovered_move(
+            board,
+            counts,
+            structure=base_structure,
+            seed=seed + int(row_id),
+        ),
+        policy_name="m4_successor_off_atom_only",
+    )
+    promoted: list[dict[str, Any]] = []
+    audited_candidates: list[dict[str, Any]] = []
+    promotion_rows: list[dict[str, Any]] = []
+    for candidate in candidates:
+        trial_candidate = dict(candidate)
+        trial_structure = _structure_with_runtime_quorums(
+            spawned_structure,
+            [*promoted, trial_candidate],
+            seed=seed,
+        )
+        on_eval = _evaluate_policy(
+            cfg,
+            heldout_rows,
+            lambda board, counts, row_id, trial_structure=trial_structure: _choose_discovered_move(
+                board,
+                counts,
+                structure=trial_structure,
+                seed=seed + int(row_id),
+            ),
+            policy_name=f"m4_successor_on_{trial_candidate['quorum_id']}",
+        )
+        delta = int(on_eval["wins"]) - int(current_eval["wins"])
+        state = "MATURE" if delta > 0 else "PRUNED"
+        promoted_as = "affordance" if delta > 0 else "veto" if delta < 0 else None
+        trial_candidate.update(
+            {
+                "m4_state": state,
+                "promoted_as": promoted_as,
+                "heldout_counterfactual_off_wins": int(current_eval["wins"]),
+                "heldout_counterfactual_on_wins": int(on_eval["wins"]),
+                "heldout_counterfactual_delta": delta,
+                "heldout_counterfactual_off_rate": float(current_eval["win_rate"]),
+                "heldout_counterfactual_on_rate": float(on_eval["win_rate"]),
+                "promotion_decision": "promote" if delta > 0 else "reject_counterfactual_no_gain",
+            }
+        )
+        audited_candidates.append(trial_candidate)
+        promotion_rows.append(
+            {
+                "quorum_id": trial_candidate["quorum_id"],
+                "m4_state": state,
+                "promoted_as": promoted_as,
+                "off_wins": int(current_eval["wins"]),
+                "on_wins": int(on_eval["wins"]),
+                "delta": delta,
+                "gate_keys": trial_candidate.get("gate_keys", []),
+                "failure_cluster_ids": trial_candidate.get("failure_cluster_ids", []),
+            }
+        )
+        if delta > 0:
+            promoted.append(trial_candidate)
+            current_eval = on_eval
+
+    final_structure = _structure_with_runtime_quorums(spawned_structure, promoted, seed=seed)
+    final_structure["candidate_quorums"] = audited_candidates
+    final_structure["candidate_quorum_script_count"] = len(candidates)
+    final_structure["spawned_quorum_health"] = _counterfactual_health_from_promotion_rows(
+        promotion_rows,
+        policy_name="spawned_quorum_candidates_m4_on_off",
+    )
+    final_structure["promotion_audit"] = {
+        "promotion_rule": "M4_successor_heldout_counterfactual_delta_positive",
+        "promotion_metric": "candidate_on_wins_minus_current_off_wins",
+        "promotion_uses_precision": False,
+        "base_off_evaluation": _compact_eval(_evaluate_policy(
+            cfg,
+            heldout_rows,
+            lambda board, counts, row_id: _choose_discovered_move(
+                board,
+                counts,
+                structure=base_structure,
+                seed=seed + int(row_id),
+            ),
+            policy_name="m4_successor_off_atom_only_recheck",
+        )),
+        "final_promoted_evaluation": _compact_eval(current_eval),
+        "spawned_candidate_count": len(candidates),
+        "promoted_affordance_count": sum(1 for item in promoted if item.get("promoted_as") == "affordance"),
+        "promoted_veto_count": sum(1 for item in promoted if _is_veto_quorum(item)),
+        "counterfactual_veto_candidate_count": sum(
+            1 for item in audited_candidates if int(item.get("heldout_counterfactual_delta", 0)) < 0
+        ),
+        "counterfactual_inert_candidate_count": sum(
+            1 for item in audited_candidates if int(item.get("heldout_counterfactual_delta", 0)) == 0
+        ),
+        "promotion_rows": promotion_rows,
+    }
+    return final_structure
+
+
+def _structure_with_runtime_quorums(
+    structure: Mapping[str, Any],
+    quorums: Sequence[Mapping[str, Any]],
+    *,
+    seed: int,
+) -> dict[str, Any]:
+    runtime_quorums = [dict(item) for item in quorums]
+    atoms = [dict(item) for item in structure.get("atoms", ())]
+    candidate_quorums = [dict(item) for item in structure.get("candidate_quorums", structure.get("quorums", ()))]
+    active_atom_keys = sorted({key for item in runtime_quorums for key in item["children"]} | {item["terminal_key"] for item in atoms})
+    candidate_atom_keys = sorted({key for item in candidate_quorums for key in item["children"]} | {item["terminal_key"] for item in atoms})
+    clone = dict(structure)
+    clone.update(
+        {
+            "schema_version": "phase2_9c_discovered_structure.v0",
+            "quorums": runtime_quorums,
+            "candidate_quorums": candidate_quorums,
+            "atom_terminal_count": len(active_atom_keys),
+            "candidate_atom_terminal_count": len(candidate_atom_keys),
+            "quorum_script_count": len(runtime_quorums),
+            "candidate_quorum_script_count": len(candidate_quorums),
+            "node_count": 1 + len(active_atom_keys) + len(runtime_quorums),
+            "edge_count": len(runtime_quorums) + sum(len(item["children"]) for item in runtime_quorums),
+            "spawned_node_count": 1 + len(candidate_atom_keys) + len(candidate_quorums),
+            "spawned_edge_count": len(candidate_quorums) + sum(len(item["children"]) for item in candidate_quorums),
+            "leak_count": sum(1 for key in active_atom_keys if learner_visible_key_firewall_leaks([key])),
+            "top_grown_quorums": runtime_quorums[:20],
+            "top_grown_scripts": [
+                {
+                    "script_id": item["quorum_id"],
+                    "node_type": "SCRIPT",
+                    "confirm_policy": "k_of_n",
+                    "k": item["k"],
+                    "n": item["n"],
+                    "children": item["children"],
+                    "score": item["score"],
+                    "m4_state": item.get("m4_state", "TRIAL"),
+                    "heldout_counterfactual_delta": item.get("heldout_counterfactual_delta"),
+                }
+                for item in runtime_quorums[:20]
+            ],
+            "spawn_events": _structure_spawn_events(seed, atoms, candidate_quorums),
+        }
+    )
+    clone["spawn_event_count"] = len(clone["spawn_events"])
+    return clone
+
+
+def _counterfactual_health_from_promotion_rows(
+    promotion_rows: Sequence[Mapping[str, Any]],
+    *,
+    policy_name: str,
+) -> dict[str, Any]:
+    counts: Counter[str] = Counter()
+    records: list[dict[str, Any]] = []
+    for row in promotion_rows:
+        delta = int(row["delta"])
+        if delta > 0:
+            classification = "load_bearing"
+        elif delta == 0:
+            classification = "inert"
+        else:
+            classification = "harmful"
+        counts[classification] += 1
+        records.append(
+            {
+                "quorum_id": row["quorum_id"],
+                "classification": classification,
+                "off_wins": int(row["off_wins"]),
+                "on_wins": int(row["on_wins"]),
+                "counterfactual_delta": delta,
+                "m4_state": row["m4_state"],
+                "promoted_as": row.get("promoted_as"),
+            }
+        )
+    return {
+        "policy": policy_name,
+        "quorum_count": len(promotion_rows),
+        "load_bearing_count": int(counts["load_bearing"]),
+        "inert_count": int(counts["inert"]),
+        "harmful_count": int(counts["harmful"]),
+        "records": records,
+    }
+
+
+def _quorum_ablation_health(
+    cfg: ApproachDiscoveryProbeConfig,
+    heldout_rows: Sequence[Mapping[str, Any]],
+    structure: Mapping[str, Any],
+    *,
+    seed: int,
+    policy_name: str,
+) -> dict[str, Any]:
+    quorums = [dict(item) for item in structure.get("quorums", ())]
+    if not quorums:
+        return {
+            "policy": policy_name,
+            "quorum_count": 0,
+            "full_wins": 0,
+            "load_bearing_count": 0,
+            "inert_count": 0,
+            "harmful_count": 0,
+            "records": [],
+        }
+    full_eval = _evaluate_policy(
+        cfg,
+        heldout_rows,
+        lambda board, counts, row_id: _choose_discovered_move(
+            board,
+            counts,
+            structure=structure,
+            seed=seed + int(row_id),
+        ),
+        policy_name=policy_name,
+    )
+    records: list[dict[str, Any]] = []
+    counts: Counter[str] = Counter()
+    for quorum in quorums:
+        quorum_id = str(quorum["quorum_id"])
+        ablated = _evaluate_policy(
+            cfg,
+            heldout_rows,
+            lambda board, counts, row_id, quorum_id=quorum_id: _choose_discovered_move(
+                board,
+                counts,
+                structure=structure,
+                seed=seed + int(row_id),
+                disabled_quorum_ids={quorum_id},
+            ),
+            policy_name=f"{policy_name}_without_{quorum_id}",
+        )
+        delta = int(full_eval["wins"]) - int(ablated["wins"])
+        if delta > 0:
+            classification = "load_bearing"
+        elif delta == 0:
+            classification = "inert"
+        else:
+            classification = "harmful"
+        counts[classification] += 1
+        records.append(
+            {
+                "quorum_id": quorum_id,
+                "classification": classification,
+                "full_wins": int(full_eval["wins"]),
+                "ablated_wins": int(ablated["wins"]),
+                "ablation_delta": delta,
+                "m4_state": quorum.get("m4_state", "TRIAL"),
+                "promoted_as": quorum.get("promoted_as"),
+            }
+        )
+    return {
+        "policy": policy_name,
+        "quorum_count": len(quorums),
+        "full_wins": int(full_eval["wins"]),
+        "load_bearing_count": int(counts["load_bearing"]),
+        "inert_count": int(counts["inert"]),
+        "harmful_count": int(counts["harmful"]),
+        "records": records,
+    }
+
+
+def _compact_eval(item: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "wins": int(item["wins"]),
+        "nonwins": int(item["nonwins"]),
+        "row_count": int(item["row_count"]),
+        "win_rate": float(item["win_rate"]),
+        "wilson_95": list(item["wilson_95"]),
+        "endpoint_counts": dict(item["endpoint_counts"]),
+    }
+
+
+def _is_veto_quorum(quorum: Mapping[str, Any]) -> bool:
+    return any(_is_veto_terminal_key(str(child)) for child in quorum.get("children", ()))
+
+
+def _is_veto_terminal_key(key: str) -> bool:
+    veto_fragments = (
+        "rook_attacked_after=1",
+        "rook_attacked_by_black=1",
+        "rook_safe=0",
+        "rook_present=0",
+        "is_stalemate_after=1",
+        "delta_terminal:confinement_area=positive",
+        "delta_terminal:confinement_file_span=positive",
+        "delta_terminal:confinement_rank_span=positive",
+    )
+    return any(fragment in key for fragment in veto_fragments)
 
 
 def _choose_discovered_move(
@@ -507,6 +1002,7 @@ def _choose_discovered_move(
     structure: Mapping[str, Any],
     seed: int,
     mask_quorums: bool = False,
+    disabled_quorum_ids: set[str] | None = None,
 ) -> chess.Move | None:
     legal = _legal_without_third_repetition(board, counts)
     if not legal:
@@ -514,6 +1010,7 @@ def _choose_discovered_move(
     if not legal:
         return None
     rng = random.Random(seed)
+    disabled_quorum_ids = disabled_quorum_ids or set()
     rows: list[tuple[float, float, str, chess.Move]] = []
     for move in legal:
         active = set(_sealed_action_keys(board, move))
@@ -525,6 +1022,8 @@ def _choose_discovered_move(
         quorum_score = 0.0
         if not mask_quorums:
             for quorum in structure["quorums"]:
+                if str(quorum["quorum_id"]) in disabled_quorum_ids:
+                    continue
                 children = tuple(quorum["children"])
                 if all(child in active for child in children):
                     quorum_score += float(quorum["weight"])
@@ -608,6 +1107,49 @@ def _load_phase29a_flat_baseline(path: Path, *, seed: int) -> dict[str, Any]:
     }
 
 
+def _paired_yardstick_table(discovered: Mapping[str, Any], references: Mapping[str, Any]) -> dict[str, Any]:
+    flat_replay_seed, flat_replay = max(
+        references["sealed_flat_weight_replay"].items(),
+        key=lambda item: int(item[1]["wins"]),
+    )
+    return {
+        "random_floor": _paired_outcomes(discovered, references["random"]),
+        "fallback_floor": _paired_outcomes(discovered, references["fallback"]),
+        "dumb_hand_ceiling": _paired_outcomes(discovered, references["hand_approach_ceiling"]),
+        f"clean_flat_weight_replay_{flat_replay_seed}": _paired_outcomes(discovered, flat_replay),
+    }
+
+
+def _paired_outcomes(left: Mapping[str, Any], right: Mapping[str, Any]) -> dict[str, Any]:
+    left_rows = {str(key): bool(value) for key, value in left.get("success_by_row", {}).items()}
+    right_rows = {str(key): bool(value) for key, value in right.get("success_by_row", {}).items()}
+    common = sorted(set(left_rows) & set(right_rows), key=lambda value: int(value))
+    counts = Counter()
+    for row_id in common:
+        left_win = left_rows[row_id]
+        right_win = right_rows[row_id]
+        if left_win and right_win:
+            counts["win_win"] += 1
+        elif left_win and not right_win:
+            counts["win_loss"] += 1
+        elif not left_win and right_win:
+            counts["loss_win"] += 1
+        else:
+            counts["loss_loss"] += 1
+    return {
+        "left_policy": left["policy"],
+        "right_policy": right["policy"],
+        "paired_row_count": len(common),
+        "left_wins": int(left["wins"]),
+        "right_wins": int(right["wins"]),
+        "left_minus_right_wins": int(left["wins"]) - int(right["wins"]),
+        "win_win": int(counts["win_win"]),
+        "win_loss": int(counts["win_loss"]),
+        "loss_win": int(counts["loss_win"]),
+        "loss_loss": int(counts["loss_loss"]),
+    }
+
+
 def _evaluate_policy(
     cfg: ApproachDiscoveryProbeConfig,
     heldout_rows: Sequence[Mapping[str, Any]],
@@ -620,6 +1162,7 @@ def _evaluate_policy(
     branch_counts: Counter[str] = Counter()
     samples: list[dict[str, Any]] = []
     plies_to_success: list[int] = []
+    success_by_row: dict[str, bool] = {}
     for row in heldout_rows:
         outcome = _rollout_policy(
             cfg,
@@ -628,6 +1171,7 @@ def _evaluate_policy(
             row_id=int(row["row_id"]),
         )
         wins += int(outcome["success"])
+        success_by_row[str(row["row_id"])] = bool(outcome["success"])
         endpoints[outcome["endpoint"]] += 1
         branch_counts.update(outcome["branches"])
         if outcome["success"]:
@@ -654,6 +1198,7 @@ def _evaluate_policy(
         "median_plies_to_success": None if not plies_to_success else sorted(plies_to_success)[len(plies_to_success) // 2],
         "failure_clusters": dict(sorted(endpoints.items())),
         "sample_nonwins": samples,
+        "success_by_row": success_by_row,
     }
 
 
@@ -768,9 +1313,14 @@ def _sealed_action_keys(board: chess.Board, move: chess.Move) -> tuple[str, ...]
 
 
 def _sealed_action_key_scales(board: chess.Board, move: chess.Move) -> tuple[tuple[str, float], ...]:
+    cache_key = (board.fen(), move.uci())
+    cached = _ACTION_KEY_SCALE_CACHE.get(cache_key)
+    if cached is not None:
+        return cached
     pairs = tuple((key, float(scale)) for key, scale in terminal_action_feature_keys(board, move))
     keys = tuple(key for key, _scale in pairs)
     validate_learner_visible_keys(keys, builder="approach_discovery_probe._sealed_action_keys")
+    _ACTION_KEY_SCALE_CACHE[cache_key] = pairs
     return pairs
 
 
@@ -850,9 +1400,18 @@ def _summary_tables(seed_results: Mapping[str, Any], references: Mapping[str, An
             "edge_count": result["structure"]["edge_count"],
             "atom_terminal_count": result["structure"]["atom_terminal_count"],
             "quorum_script_count": result["structure"]["quorum_script_count"],
+            "candidate_quorum_script_count": result["structure"].get("candidate_quorum_script_count", result["structure"]["quorum_script_count"]),
             "leak_count": result["structure"]["leak_count"],
             "causal_ablation_drop": result["decision"]["causal_ablation_drop"],
             "quorum_ablation_drop": result["decision"]["quorum_ablation_drop"],
+            "spawned_load_bearing_quorums": result["decision"].get("spawned_load_bearing_quorums", 0),
+            "spawned_inert_quorums": result["decision"].get("spawned_inert_quorums", 0),
+            "spawned_harmful_quorums": result["decision"].get("spawned_harmful_quorums", 0),
+            "promoted_load_bearing_quorums": result["decision"].get("promoted_load_bearing_quorums", 0),
+            "promoted_inert_quorums": result["decision"].get("promoted_inert_quorums", 0),
+            "promoted_harmful_quorums": result["decision"].get("promoted_harmful_quorums", 0),
+            "promoted_affordance_count": result["decision"].get("promoted_affordance_count", 0),
+            "promoted_veto_count": result["decision"].get("promoted_veto_count", 0),
         }
         for seed, result in seed_results.items()
     ]
@@ -882,6 +1441,11 @@ def _overall_decision(seed_results: Mapping[str, Any], references: Mapping[str, 
     ablated_wins = [result["evaluations"]["discovered_structure_ablated_all"]["wins"] for result in seed_results.values()]
     flat_wins = [item["wins"] for item in references["sealed_flat_learned"].values()]
     flat_replay_wins = [item["wins"] for item in references["sealed_flat_weight_replay"].values()]
+    total = max(1, next(iter(seed_results.values()))["evaluations"]["discovered_structure"]["row_count"]) if seed_results else 1
+    seed_rates = [wins / total for wins in discovered_wins]
+    seed_spread = (max(seed_rates) - min(seed_rates)) if seed_rates else 0.0
+    no_seed_beats_fallback = not any(wins > references["fallback"]["wins"] for wins in discovered_wins)
+    seed_spread_too_wide = seed_spread > 0.15
     return {
         "all_seeds_leak_free": all(result["structure"]["leak_count"] == 0 for result in seed_results.values()),
         "all_seeds_beat_random": all(result["decision"]["beats_random"] for result in seed_results.values()),
@@ -897,6 +1461,14 @@ def _overall_decision(seed_results: Mapping[str, Any], references: Mapping[str, 
         "hand_ceiling_wins": references["hand_approach_ceiling"]["wins"],
         "fallback_wins": references["fallback"]["wins"],
         "random_wins": references["random"]["wins"],
+        "seed_success_rates": seed_rates,
+        "seed_spread": seed_spread,
+        "stop_rules": {
+            "no_seed_beats_fallback": no_seed_beats_fallback,
+            "seed_spread_gt_0_15": seed_spread_too_wide,
+            "stop_required": no_seed_beats_fallback or seed_spread_too_wide,
+            "action": "report_and_stop" if no_seed_beats_fallback else "report_no_tuning" if seed_spread_too_wide else "continue",
+        },
     }
 
 

@@ -26,5 +26,8 @@ def test_phase29b_probe_writes_zero_leak_artifacts(tmp_path: Path) -> None:
     assert (tmp_path / "phase2_9b_probe" / "summary.json").exists()
     assert summary["decision"]["all_seeds_leak_free"] is True
     assert summary["seed_results"]["20272921"]["structure"]["leak_count"] == 0
+    assert summary["seed_results"]["20272921"]["structure"]["spawn_diagnostics"]["spawn_policy"] == "surprise_failure_localized"
+    assert summary["seed_results"]["20272921"]["structure"]["promotion_audit"]["promotion_uses_precision"] is False
+    assert "spawned_quorum_health" in summary["seed_results"]["20272921"]["structure"]
     assert summary["tables"]["wins_nonwins_repetitions_violations"]
     assert summary["tables"]["discovered_node_edge_counts"]

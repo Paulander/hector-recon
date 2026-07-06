@@ -53,10 +53,11 @@
   ],
   "grown_structures": [
     "primitive atom TERMINALs keyed by sealed terminal/action atoms",
-    "finite quorum SCRIPTs over those atoms with k=n confirmation",
+    "failure-localized finite quorum SCRIPTs over those atoms with k=n confirmation",
+    "M4-successor promoted quorum units accepted only on heldout on/off delta",
     "a root dispatcher that scores moves by confirmed learned atoms/quorums"
   ],
-  "meaning_of_autonomous_discovery": "The probe enumerates legal actions from frozen approach-rung starts, observes only sealed terminal/action keys, mines atomic terminals and finite k-of-n quorum SCRIPTs from outcome-labeled action evidence, and uses those grown structures for move selection. The hand approach skill is used only as an outcome labeler/ceiling, never as a candidate generator or learner-visible feature source.",
+  "meaning_of_autonomous_discovery": "The probe enumerates legal actions from frozen approach-rung starts, observes only sealed terminal/action keys, mines atomic terminals, spawns finite k-of-n quorum SCRIPTs from failure-localized percept clusters, and uses only heldout counterfactual promotion deltas to mature composite quorums for move selection. The hand approach skill is used only as an outcome labeler/ceiling, never as a candidate generator or learner-visible feature source.",
   "schema_version": "phase2_9b_design_spec.v0",
   "success_definition": "Useful if discovered topology beats fallback/random, leaks zero keys, and ablation reduces heldout conversion. Competitive if it reaches the sealed flat learned baseline band."
 }
