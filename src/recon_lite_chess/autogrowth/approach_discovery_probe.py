@@ -60,6 +60,9 @@ class ApproachDiscoveryProbeConfig:
     min_quorum_support: int = 8
     min_quorum_precision: float = 0.55
     quorum_bonus: float = 1.25
+    quorum_initial_weight_scale: float = 0.04
+    quorum_initial_weight_cap: float = 0.12
+    quorum_initial_weight_floor: float = 0.04
     atom_weight_scale: float = 0.50
     max_samples: int = 24
 
@@ -137,7 +140,7 @@ def run_approach_discovery_probe(
             policy_name="discovered_quorums_ablated",
         )
         result = {
-            "schema_version": "phase2_9b_seed_result.v0",
+            "schema_version": "phase2_9d_seed_result.v0",
             "seed": seed,
             "evidence_summary": _evidence_summary(evidence),
             "structure": structure,
@@ -158,18 +161,20 @@ def run_approach_discovery_probe(
                 "spawned_load_bearing_quorums": spawned_health["load_bearing_count"],
                 "spawned_inert_quorums": spawned_health["inert_count"],
                 "spawned_harmful_quorums": spawned_health["harmful_count"],
+                "spawned_nontrivial_quorum_ablations": spawned_health["nontrivial_delta_count"],
                 "promoted_load_bearing_quorums": promoted_health["load_bearing_count"],
                 "promoted_inert_quorums": promoted_health["inert_count"],
                 "promoted_harmful_quorums": promoted_health["harmful_count"],
                 "promoted_affordance_count": structure["promotion_audit"]["promoted_affordance_count"],
                 "promoted_veto_count": structure["promotion_audit"]["promoted_veto_count"],
+                "pruned_negative_ablation_delta_count": structure["promotion_audit"]["pruned_negative_ablation_delta_count"],
             },
         }
         _write_json(output_dir / f"seed_{seed}_result.json", result)
         seed_results[str(seed)] = result
 
     summary = {
-        "schema_version": "phase2_9b_approach_discovery_probe.v0",
+        "schema_version": "phase2_9d_approach_discovery_probe.v0",
         "config": asdict(cfg),
         "design_spec_path": str(output_dir / "design_spec.json"),
         "dataset": {
@@ -202,13 +207,15 @@ def _design_spec(cfg: ApproachDiscoveryProbeConfig) -> dict[str, Any]:
         "silent retries or cherry-picked seeds",
     ]
     return {
-        "schema_version": "phase2_9b_design_spec.v0",
+        "schema_version": "phase2_9d_design_spec.v0",
         "meaning_of_autonomous_discovery": (
             "The probe enumerates legal actions from frozen approach-rung starts, "
             "observes only sealed terminal/action keys, mines atomic terminals, "
             "spawns finite k-of-n quorum SCRIPTs from failure-localized percept "
-            "clusters, and uses only heldout counterfactual promotion deltas to "
-            "mature composite quorums for move selection. The hand approach skill "
+            "clusters, immediately routes them with a low advisory initial weight, "
+            "prunes harmful composites, and uses only heldout counterfactual "
+            "ablation deltas to mature composite quorums for move selection. "
+            "The hand approach skill "
             "is used only as an outcome labeler/ceiling, never as a candidate generator "
             "or learner-visible feature source."
         ),
@@ -221,7 +228,8 @@ def _design_spec(cfg: ApproachDiscoveryProbeConfig) -> dict[str, Any]:
         "grown_structures": [
             "primitive atom TERMINALs keyed by sealed terminal/action atoms",
             "failure-localized finite quorum SCRIPTs over those atoms with k=n confirmation",
-            "M4-successor promoted quorum units accepted only on heldout on/off delta",
+            "trial-routed quorum SCRIPTs with capped advisory initial weights",
+            "M4-successor promoted quorum units accepted only on positive heldout ablation delta",
             "a root dispatcher that scores moves by confirmed learned atoms/quorums",
         ],
         "forbidden": forbidden,
@@ -376,7 +384,7 @@ def _discover_structure(
     leak_count = sum(1 for key in active_atom_keys if learner_visible_key_firewall_leaks([key]))
     spawn_events = _structure_spawn_events(seed, selected_atoms, selected_quorums)
     return {
-        "schema_version": "phase2_9b_discovered_structure.v0",
+        "schema_version": "phase2_9d_discovered_structure.v0",
         "seed": seed,
         "atom_terminal_count": len(active_atom_keys),
         "selected_atom_count": len(selected_atoms),
@@ -408,6 +416,8 @@ def _discover_structure(
                 "n": item["n"],
                 "children": item["children"],
                 "score": item["score"],
+                "initial_weight": item.get("initial_weight"),
+                "weight": item.get("weight"),
             }
             for item in selected_quorums[:20]
         ],
@@ -674,6 +684,7 @@ def _quorum_record(
     base_rate = action_count["positive"] / max(1, action_count["positive"] + action_count["negative"])
     lift = precision - base_rate
     score = cfg.quorum_bonus * lift * math.log1p(pos) * (1.0 + 0.1 * (len(children) - 1))
+    initial_weight = _advisory_quorum_weight(score, cfg)
     return {
         "quorum_id": f"approach_auto_quorum_{index:05d}",
         "node_type": "SCRIPT",
@@ -686,13 +697,20 @@ def _quorum_record(
         "precision": precision,
         "coverage": coverage,
         "score": score,
-        "weight": score,
+        "credit_score": score,
+        "initial_weight": initial_weight,
+        "weight": initial_weight,
         "spawn_origin": spawn_origin,
         "failure_cluster_ids": list(cluster_ids),
         "gate_keys": list(gate_keys),
         "m4_state": "TRIAL",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
     }
+
+
+def _advisory_quorum_weight(score: float, cfg: ApproachDiscoveryProbeConfig) -> float:
+    scaled = abs(score) * cfg.quorum_initial_weight_scale
+    return min(cfg.quorum_initial_weight_cap, max(cfg.quorum_initial_weight_floor, scaled))
 
 
 def _promote_structure_with_m4_successor_rule(
@@ -704,7 +722,7 @@ def _promote_structure_with_m4_successor_rule(
 ) -> dict[str, Any]:
     candidates = [dict(item) for item in spawned_structure.get("quorums", ())]
     base_structure = _structure_with_runtime_quorums(spawned_structure, [], seed=seed)
-    current_eval = _evaluate_policy(
+    base_eval = _evaluate_policy(
         cfg,
         heldout_rows,
         lambda board, counts, row_id: _choose_discovered_move(
@@ -715,40 +733,41 @@ def _promote_structure_with_m4_successor_rule(
         ),
         policy_name="m4_successor_off_atom_only",
     )
+    trial_structure = _structure_with_runtime_quorums(spawned_structure, candidates, seed=seed)
+    trial_health = _quorum_ablation_health(
+        cfg,
+        heldout_rows,
+        trial_structure,
+        seed=seed,
+        policy_name="spawned_trial_quorum_units",
+    )
+    health_by_id = {str(row["quorum_id"]): row for row in trial_health["records"]}
     promoted: list[dict[str, Any]] = []
     audited_candidates: list[dict[str, Any]] = []
     promotion_rows: list[dict[str, Any]] = []
     for candidate in candidates:
         trial_candidate = dict(candidate)
-        trial_structure = _structure_with_runtime_quorums(
-            spawned_structure,
-            [*promoted, trial_candidate],
-            seed=seed,
-        )
-        on_eval = _evaluate_policy(
-            cfg,
-            heldout_rows,
-            lambda board, counts, row_id, trial_structure=trial_structure: _choose_discovered_move(
-                board,
-                counts,
-                structure=trial_structure,
-                seed=seed + int(row_id),
-            ),
-            policy_name=f"m4_successor_on_{trial_candidate['quorum_id']}",
-        )
-        delta = int(on_eval["wins"]) - int(current_eval["wins"])
+        health_row = health_by_id.get(str(trial_candidate["quorum_id"]), {})
+        delta = int(health_row.get("ablation_delta", 0))
         state = "MATURE" if delta > 0 else "PRUNED"
         promoted_as = "affordance" if delta > 0 else "veto" if delta < 0 else None
+        decision = (
+            "promote_positive_ablation_delta"
+            if delta > 0
+            else "prune_negative_ablation_delta"
+            if delta < 0
+            else "reject_counterfactual_no_gain"
+        )
         trial_candidate.update(
             {
                 "m4_state": state,
                 "promoted_as": promoted_as,
-                "heldout_counterfactual_off_wins": int(current_eval["wins"]),
-                "heldout_counterfactual_on_wins": int(on_eval["wins"]),
+                "heldout_counterfactual_off_wins": int(health_row.get("ablated_wins", trial_health["full_wins"])),
+                "heldout_counterfactual_on_wins": int(trial_health["full_wins"]),
                 "heldout_counterfactual_delta": delta,
-                "heldout_counterfactual_off_rate": float(current_eval["win_rate"]),
-                "heldout_counterfactual_on_rate": float(on_eval["win_rate"]),
-                "promotion_decision": "promote" if delta > 0 else "reject_counterfactual_no_gain",
+                "heldout_counterfactual_off_rate": int(health_row.get("ablated_wins", trial_health["full_wins"])) / max(1, len(heldout_rows)),
+                "heldout_counterfactual_on_rate": int(trial_health["full_wins"]) / max(1, len(heldout_rows)),
+                "promotion_decision": decision,
             }
         )
         audited_candidates.append(trial_candidate)
@@ -757,43 +776,53 @@ def _promote_structure_with_m4_successor_rule(
                 "quorum_id": trial_candidate["quorum_id"],
                 "m4_state": state,
                 "promoted_as": promoted_as,
-                "off_wins": int(current_eval["wins"]),
-                "on_wins": int(on_eval["wins"]),
+                "off_wins": int(health_row.get("ablated_wins", trial_health["full_wins"])),
+                "on_wins": int(trial_health["full_wins"]),
                 "delta": delta,
+                "promotion_decision": decision,
                 "gate_keys": trial_candidate.get("gate_keys", []),
                 "failure_cluster_ids": trial_candidate.get("failure_cluster_ids", []),
             }
         )
         if delta > 0:
             promoted.append(trial_candidate)
-            current_eval = on_eval
 
     final_structure = _structure_with_runtime_quorums(spawned_structure, promoted, seed=seed)
     final_structure["candidate_quorums"] = audited_candidates
     final_structure["candidate_quorum_script_count"] = len(candidates)
-    final_structure["spawned_quorum_health"] = _counterfactual_health_from_promotion_rows(
-        promotion_rows,
-        policy_name="spawned_quorum_candidates_m4_on_off",
+    final_structure["spawned_quorum_health"] = trial_health
+    final_eval = _evaluate_policy(
+        cfg,
+        heldout_rows,
+        lambda board, counts, row_id: _choose_discovered_move(
+            board,
+            counts,
+            structure=final_structure,
+            seed=seed + int(row_id),
+        ),
+        policy_name="m4_successor_promoted_positive_only",
     )
     final_structure["promotion_audit"] = {
-        "promotion_rule": "M4_successor_heldout_counterfactual_delta_positive",
-        "promotion_metric": "candidate_on_wins_minus_current_off_wins",
+        "promotion_rule": "M4_successor_trial_route_then_promote_positive_ablation_delta",
+        "promotion_metric": "trial_layer_full_wins_minus_candidate_ablated_wins",
         "promotion_uses_precision": False,
-        "base_off_evaluation": _compact_eval(_evaluate_policy(
-            cfg,
-            heldout_rows,
-            lambda board, counts, row_id: _choose_discovered_move(
-                board,
-                counts,
-                structure=base_structure,
-                seed=seed + int(row_id),
-            ),
-            policy_name="m4_successor_off_atom_only_recheck",
-        )),
-        "final_promoted_evaluation": _compact_eval(current_eval),
+        "trial_route_initial_weight": {
+            "scale": cfg.quorum_initial_weight_scale,
+            "cap": cfg.quorum_initial_weight_cap,
+            "floor": cfg.quorum_initial_weight_floor,
+        },
+        "base_off_evaluation": _compact_eval(base_eval),
+        "trial_routed_evaluation": trial_health.get("full_evaluation", {}),
+        "final_promoted_evaluation": _compact_eval(final_eval),
         "spawned_candidate_count": len(candidates),
         "promoted_affordance_count": sum(1 for item in promoted if item.get("promoted_as") == "affordance"),
         "promoted_veto_count": sum(1 for item in promoted if _is_veto_quorum(item)),
+        "pruned_negative_ablation_delta_count": sum(
+            1 for item in audited_candidates if int(item.get("heldout_counterfactual_delta", 0)) < 0
+        ),
+        "nontrivial_ablation_delta_count": sum(
+            1 for item in audited_candidates if int(item.get("heldout_counterfactual_delta", 0)) != 0
+        ),
         "counterfactual_veto_candidate_count": sum(
             1 for item in audited_candidates if int(item.get("heldout_counterfactual_delta", 0)) < 0
         ),
@@ -819,7 +848,7 @@ def _structure_with_runtime_quorums(
     clone = dict(structure)
     clone.update(
         {
-            "schema_version": "phase2_9c_discovered_structure.v0",
+            "schema_version": "phase2_9d_discovered_structure.v0",
             "quorums": runtime_quorums,
             "candidate_quorums": candidate_quorums,
             "atom_terminal_count": len(active_atom_keys),
@@ -841,6 +870,8 @@ def _structure_with_runtime_quorums(
                     "n": item["n"],
                     "children": item["children"],
                     "score": item["score"],
+                    "initial_weight": item.get("initial_weight"),
+                    "weight": item.get("weight"),
                     "m4_state": item.get("m4_state", "TRIAL"),
                     "heldout_counterfactual_delta": item.get("heldout_counterfactual_delta"),
                 }
@@ -904,9 +935,11 @@ def _quorum_ablation_health(
             "policy": policy_name,
             "quorum_count": 0,
             "full_wins": 0,
+            "full_evaluation": {},
             "load_bearing_count": 0,
             "inert_count": 0,
             "harmful_count": 0,
+            "nontrivial_delta_count": 0,
             "records": [],
         }
     full_eval = _evaluate_policy(
@@ -959,9 +992,11 @@ def _quorum_ablation_health(
         "policy": policy_name,
         "quorum_count": len(quorums),
         "full_wins": int(full_eval["wins"]),
+        "full_evaluation": _compact_eval(full_eval),
         "load_bearing_count": int(counts["load_bearing"]),
         "inert_count": int(counts["inert"]),
         "harmful_count": int(counts["harmful"]),
+        "nontrivial_delta_count": int(counts["load_bearing"] + counts["harmful"]),
         "records": records,
     }
 
@@ -1407,6 +1442,8 @@ def _summary_tables(seed_results: Mapping[str, Any], references: Mapping[str, An
             "spawned_load_bearing_quorums": result["decision"].get("spawned_load_bearing_quorums", 0),
             "spawned_inert_quorums": result["decision"].get("spawned_inert_quorums", 0),
             "spawned_harmful_quorums": result["decision"].get("spawned_harmful_quorums", 0),
+            "spawned_nontrivial_quorum_ablations": result["decision"].get("spawned_nontrivial_quorum_ablations", 0),
+            "pruned_negative_ablation_delta_count": result["decision"].get("pruned_negative_ablation_delta_count", 0),
             "promoted_load_bearing_quorums": result["decision"].get("promoted_load_bearing_quorums", 0),
             "promoted_inert_quorums": result["decision"].get("promoted_inert_quorums", 0),
             "promoted_harmful_quorums": result["decision"].get("promoted_harmful_quorums", 0),
@@ -1446,6 +1483,11 @@ def _overall_decision(seed_results: Mapping[str, Any], references: Mapping[str, 
     seed_spread = (max(seed_rates) - min(seed_rates)) if seed_rates else 0.0
     no_seed_beats_fallback = not any(wins > references["fallback"]["wins"] for wins in discovered_wins)
     seed_spread_too_wide = seed_spread > 0.15
+    load_bearing_counts = [int(result["decision"].get("spawned_load_bearing_quorums", 0)) for result in seed_results.values()]
+    nontrivial_ablation_counts = [
+        int(result["decision"].get("spawned_nontrivial_quorum_ablations", 0)) for result in seed_results.values()
+    ]
+    all_load_bearing_zero = bool(load_bearing_counts) and all(count == 0 for count in load_bearing_counts)
     return {
         "all_seeds_leak_free": all(result["structure"]["leak_count"] == 0 for result in seed_results.values()),
         "all_seeds_beat_random": all(result["decision"]["beats_random"] for result in seed_results.values()),
@@ -1463,11 +1505,22 @@ def _overall_decision(seed_results: Mapping[str, Any], references: Mapping[str, 
         "random_wins": references["random"]["wins"],
         "seed_success_rates": seed_rates,
         "seed_spread": seed_spread,
+        "spawned_load_bearing_quorum_counts": load_bearing_counts,
+        "spawned_nontrivial_quorum_ablation_counts": nontrivial_ablation_counts,
         "stop_rules": {
             "no_seed_beats_fallback": no_seed_beats_fallback,
             "seed_spread_gt_0_15": seed_spread_too_wide,
-            "stop_required": no_seed_beats_fallback or seed_spread_too_wide,
-            "action": "report_and_stop" if no_seed_beats_fallback else "report_no_tuning" if seed_spread_too_wide else "continue",
+            "all_load_bearing_zero": all_load_bearing_zero,
+            "stop_required": no_seed_beats_fallback or seed_spread_too_wide or all_load_bearing_zero,
+            "action": (
+                "report_and_stop_load_bearing_zero"
+                if all_load_bearing_zero
+                else "report_and_stop"
+                if no_seed_beats_fallback
+                else "report_no_tuning"
+                if seed_spread_too_wide
+                else "continue"
+            ),
         },
     }
 

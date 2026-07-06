@@ -10,10 +10,12 @@
     "promoted_inert_quorums": 0,
     "promoted_load_bearing_quorums": 0,
     "promoted_veto_count": 0,
+    "pruned_negative_ablation_delta_count": 0,
     "quorum_ablation_drop": 0,
-    "spawned_harmful_quorums": 16,
-    "spawned_inert_quorums": 32,
-    "spawned_load_bearing_quorums": 0
+    "spawned_harmful_quorums": 0,
+    "spawned_inert_quorums": 48,
+    "spawned_load_bearing_quorums": 0,
+    "spawned_nontrivial_quorum_ablations": 0
   },
   "evaluations": {
     "discovered_quorums_ablated": {
@@ -1211,7 +1213,7 @@
       "win_win": 3
     }
   },
-  "schema_version": "phase2_9b_seed_result.v0",
+  "schema_version": "phase2_9d_seed_result.v0",
   "seed": 20272921,
   "structure": {
     "atom_terminal_count": 64,
@@ -1868,6 +1870,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.029179030662710187,
+        "credit_score": 3.4540551803073107,
         "failure_cluster_ids": [
           "failure_cluster_09ca7e41fef0",
           "failure_cluster_5ede4d72adb0",
@@ -1883,10 +1886,11 @@
           "before_terminal:bk_neighbor_sw_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -1900,7 +1904,7 @@
         "quorum_id": "approach_auto_quorum_32741",
         "score": 3.4540551803073107,
         "spawn_origin": "failure_localized",
-        "weight": 3.4540551803073107
+        "weight": 0.12
       },
       {
         "children": [
@@ -1910,6 +1914,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.029179030662710187,
+        "credit_score": 3.4540551803073107,
         "failure_cluster_ids": [
           "failure_cluster_09ca7e41fef0",
           "failure_cluster_5ede4d72adb0",
@@ -1925,10 +1930,11 @@
           "before_terminal:bk_neighbor_sw_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -1942,7 +1948,7 @@
         "quorum_id": "approach_auto_quorum_31720",
         "score": 3.4540551803073107,
         "spawn_origin": "failure_localized",
-        "weight": 3.4540551803073107
+        "weight": 0.12
       },
       {
         "children": [
@@ -1952,6 +1958,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.029179030662710187,
+        "credit_score": 3.4540551803073107,
         "failure_cluster_ids": [
           "failure_cluster_09ca7e41fef0",
           "failure_cluster_5ede4d72adb0",
@@ -1967,10 +1974,11 @@
           "before_terminal:bk_neighbor_sw_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -1984,7 +1992,7 @@
         "quorum_id": "approach_auto_quorum_25120",
         "score": 3.4540551803073107,
         "spawn_origin": "failure_localized",
-        "weight": 3.4540551803073107
+        "weight": 0.12
       },
       {
         "children": [
@@ -1994,6 +2002,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.029179030662710187,
+        "credit_score": 3.4540551803073107,
         "failure_cluster_ids": [
           "failure_cluster_09ca7e41fef0",
           "failure_cluster_5ede4d72adb0",
@@ -2009,10 +2018,11 @@
           "before_terminal:bk_neighbor_sw_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2026,7 +2036,7 @@
         "quorum_id": "approach_auto_quorum_25098",
         "score": 3.4540551803073107,
         "spawn_origin": "failure_localized",
-        "weight": 3.4540551803073107
+        "weight": 0.12
       },
       {
         "children": [
@@ -2036,6 +2046,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.0066765578635014835,
+        "credit_score": 3.31078359288655,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -2052,11 +2063,12 @@
         "gate_keys": [
           "before_terminal:bk_neighbor_nw_available=0"
         ],
-        "heldout_counterfactual_delta": -3,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
         "heldout_counterfactual_on_rate": 0.3984375,
         "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2064,13 +2076,13 @@
         "node_type": "SCRIPT",
         "positive_support": 27,
         "precision": 1.0,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_41146",
         "score": 3.31078359288655,
         "spawn_origin": "failure_localized",
-        "weight": 3.31078359288655
+        "weight": 0.12
       },
       {
         "children": [
@@ -2080,6 +2092,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.0066765578635014835,
+        "credit_score": 3.31078359288655,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -2096,11 +2109,12 @@
         "gate_keys": [
           "before_terminal:bk_neighbor_nw_available=0"
         ],
-        "heldout_counterfactual_delta": -3,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
         "heldout_counterfactual_on_rate": 0.3984375,
         "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2108,13 +2122,13 @@
         "node_type": "SCRIPT",
         "positive_support": 27,
         "precision": 1.0,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_25581",
         "score": 3.31078359288655,
         "spawn_origin": "failure_localized",
-        "weight": 3.31078359288655
+        "weight": 0.12
       },
       {
         "children": [
@@ -2124,6 +2138,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.031404549950544015,
+        "credit_score": 3.178841172846656,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_40dacdd9c0c7",
@@ -2141,10 +2156,11 @@
           "before_terminal:bk_neighbor_nw_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2158,7 +2174,7 @@
         "quorum_id": "approach_auto_quorum_32735",
         "score": 3.178841172846656,
         "spawn_origin": "failure_localized",
-        "weight": 3.178841172846656
+        "weight": 0.12
       },
       {
         "children": [
@@ -2168,6 +2184,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.031404549950544015,
+        "credit_score": 3.178841172846656,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_40dacdd9c0c7",
@@ -2185,10 +2202,11 @@
           "before_terminal:bk_neighbor_nw_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2202,7 +2220,7 @@
         "quorum_id": "approach_auto_quorum_31714",
         "score": 3.178841172846656,
         "spawn_origin": "failure_localized",
-        "weight": 3.178841172846656
+        "weight": 0.12
       },
       {
         "children": [
@@ -2212,6 +2230,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.031404549950544015,
+        "credit_score": 3.178841172846656,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_40dacdd9c0c7",
@@ -2229,10 +2248,11 @@
           "before_terminal:bk_neighbor_nw_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2246,7 +2266,7 @@
         "quorum_id": "approach_auto_quorum_25114",
         "score": 3.178841172846656,
         "spawn_origin": "failure_localized",
-        "weight": 3.178841172846656
+        "weight": 0.12
       },
       {
         "children": [
@@ -2256,6 +2276,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.031404549950544015,
+        "credit_score": 3.178841172846656,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_40dacdd9c0c7",
@@ -2273,10 +2294,11 @@
           "before_terminal:bk_neighbor_nw_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2290,7 +2312,7 @@
         "quorum_id": "approach_auto_quorum_25092",
         "score": 3.178841172846656,
         "spawn_origin": "failure_localized",
-        "weight": 3.178841172846656
+        "weight": 0.12
       },
       {
         "children": [
@@ -2300,6 +2322,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.0056874381800197825,
+        "credit_score": 3.1576238633303473,
         "failure_cluster_ids": [
           "failure_cluster_2f7428074730",
           "failure_cluster_7fc2d57ef815",
@@ -2309,10 +2332,11 @@
           "before_terminal:bk_neighbor_w_available=1"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2326,7 +2350,7 @@
         "quorum_id": "approach_auto_quorum_41454",
         "score": 3.1576238633303473,
         "spawn_origin": "failure_localized",
-        "weight": 3.1576238633303473
+        "weight": 0.12
       },
       {
         "children": [
@@ -2336,6 +2360,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.0056874381800197825,
+        "credit_score": 3.1576238633303473,
         "failure_cluster_ids": [
           "failure_cluster_2f7428074730",
           "failure_cluster_7fc2d57ef815",
@@ -2345,10 +2370,11 @@
           "before_terminal:bk_neighbor_w_available=1"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2362,7 +2388,7 @@
         "quorum_id": "approach_auto_quorum_25889",
         "score": 3.1576238633303473,
         "spawn_origin": "failure_localized",
-        "weight": 3.1576238633303473
+        "weight": 0.12
       },
       {
         "children": [
@@ -2372,6 +2398,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.007665677546983185,
+        "credit_score": 3.128389685086901,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -2390,11 +2417,12 @@
         "gate_keys": [
           "before_terminal:is_check=0"
         ],
-        "heldout_counterfactual_delta": -3,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
         "heldout_counterfactual_on_rate": 0.3984375,
         "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2402,13 +2430,13 @@
         "node_type": "SCRIPT",
         "positive_support": 31,
         "precision": 0.9393939393939394,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_41622",
         "score": 3.128389685086901,
         "spawn_origin": "failure_localized",
-        "weight": 3.128389685086901
+        "weight": 0.12
       },
       {
         "children": [
@@ -2418,6 +2446,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.007665677546983185,
+        "credit_score": 3.128389685086901,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -2436,11 +2465,12 @@
         "gate_keys": [
           "before_terminal:black_king_on_edge=1"
         ],
-        "heldout_counterfactual_delta": -3,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
         "heldout_counterfactual_on_rate": 0.3984375,
         "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2448,13 +2478,13 @@
         "node_type": "SCRIPT",
         "positive_support": 31,
         "precision": 0.9393939393939394,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_41596",
         "score": 3.128389685086901,
         "spawn_origin": "failure_localized",
-        "weight": 3.128389685086901
+        "weight": 0.12
       },
       {
         "children": [
@@ -2464,6 +2494,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.007665677546983185,
+        "credit_score": 3.128389685086901,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -2482,11 +2513,12 @@
         "gate_keys": [
           "before_terminal:black_king_nearest_edge_distance=0"
         ],
-        "heldout_counterfactual_delta": -3,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
         "heldout_counterfactual_on_rate": 0.3984375,
         "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2494,13 +2526,13 @@
         "node_type": "SCRIPT",
         "positive_support": 31,
         "precision": 0.9393939393939394,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_41569",
         "score": 3.128389685086901,
         "spawn_origin": "failure_localized",
-        "weight": 3.128389685086901
+        "weight": 0.12
       },
       {
         "children": [
@@ -2510,6 +2542,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.007665677546983185,
+        "credit_score": 3.128389685086901,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -2528,11 +2561,12 @@
         "gate_keys": [
           "before_terminal:is_check=0"
         ],
-        "heldout_counterfactual_delta": -3,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
         "heldout_counterfactual_on_rate": 0.3984375,
         "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2540,13 +2574,13 @@
         "node_type": "SCRIPT",
         "positive_support": 31,
         "precision": 0.9393939393939394,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_26057",
         "score": 3.128389685086901,
         "spawn_origin": "failure_localized",
-        "weight": 3.128389685086901
+        "weight": 0.12
       },
       {
         "children": [
@@ -2556,6 +2590,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.007665677546983185,
+        "credit_score": 3.128389685086901,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -2574,11 +2609,12 @@
         "gate_keys": [
           "before_terminal:black_king_on_edge=1"
         ],
-        "heldout_counterfactual_delta": -3,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
         "heldout_counterfactual_on_rate": 0.3984375,
         "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2586,13 +2622,13 @@
         "node_type": "SCRIPT",
         "positive_support": 31,
         "precision": 0.9393939393939394,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_26031",
         "score": 3.128389685086901,
         "spawn_origin": "failure_localized",
-        "weight": 3.128389685086901
+        "weight": 0.12
       },
       {
         "children": [
@@ -2602,6 +2638,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.007665677546983185,
+        "credit_score": 3.128389685086901,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -2620,11 +2657,12 @@
         "gate_keys": [
           "before_terminal:black_king_nearest_edge_distance=0"
         ],
-        "heldout_counterfactual_delta": -3,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
         "heldout_counterfactual_on_rate": 0.3984375,
         "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2632,13 +2670,13 @@
         "node_type": "SCRIPT",
         "positive_support": 31,
         "precision": 0.9393939393939394,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_26004",
         "score": 3.128389685086901,
         "spawn_origin": "failure_localized",
-        "weight": 3.128389685086901
+        "weight": 0.12
       },
       {
         "children": [
@@ -2648,6 +2686,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.031404549950544015,
+        "credit_score": 3.110936987915956,
         "failure_cluster_ids": [
           "failure_cluster_09ca7e41fef0",
           "failure_cluster_2a90174d5968",
@@ -2665,10 +2704,11 @@
           "before_terminal:bk_neighbor_se_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2682,7 +2722,7 @@
         "quorum_id": "approach_auto_quorum_32739",
         "score": 3.110936987915956,
         "spawn_origin": "failure_localized",
-        "weight": 3.110936987915956
+        "weight": 0.12
       },
       {
         "children": [
@@ -2692,6 +2732,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.031404549950544015,
+        "credit_score": 3.110936987915956,
         "failure_cluster_ids": [
           "failure_cluster_09ca7e41fef0",
           "failure_cluster_2a90174d5968",
@@ -2709,10 +2750,11 @@
           "before_terminal:bk_neighbor_se_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2726,7 +2768,7 @@
         "quorum_id": "approach_auto_quorum_31718",
         "score": 3.110936987915956,
         "spawn_origin": "failure_localized",
-        "weight": 3.110936987915956
+        "weight": 0.12
       },
       {
         "children": [
@@ -2736,6 +2778,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.031404549950544015,
+        "credit_score": 3.110936987915956,
         "failure_cluster_ids": [
           "failure_cluster_09ca7e41fef0",
           "failure_cluster_2a90174d5968",
@@ -2753,10 +2796,11 @@
           "before_terminal:bk_neighbor_se_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2770,7 +2814,7 @@
         "quorum_id": "approach_auto_quorum_25118",
         "score": 3.110936987915956,
         "spawn_origin": "failure_localized",
-        "weight": 3.110936987915956
+        "weight": 0.12
       },
       {
         "children": [
@@ -2780,6 +2824,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.031404549950544015,
+        "credit_score": 3.110936987915956,
         "failure_cluster_ids": [
           "failure_cluster_09ca7e41fef0",
           "failure_cluster_2a90174d5968",
@@ -2797,10 +2842,11 @@
           "before_terminal:bk_neighbor_se_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2814,7 +2860,7 @@
         "quorum_id": "approach_auto_quorum_25096",
         "score": 3.110936987915956,
         "spawn_origin": "failure_localized",
-        "weight": 3.110936987915956
+        "weight": 0.12
       },
       {
         "children": [
@@ -2824,6 +2870,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.00741839762611276,
+        "credit_score": 3.0899756815946886,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -2840,11 +2887,12 @@
         "gate_keys": [
           "before_terminal:bk_neighbor_se_available=0"
         ],
-        "heldout_counterfactual_delta": -1,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.4140625,
-        "heldout_counterfactual_on_wins": 53,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2852,13 +2900,13 @@
         "node_type": "SCRIPT",
         "positive_support": 30,
         "precision": 0.9375,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_41282",
         "score": 3.0899756815946886,
         "spawn_origin": "failure_localized",
-        "weight": 3.0899756815946886
+        "weight": 0.12
       },
       {
         "children": [
@@ -2868,6 +2916,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.00741839762611276,
+        "credit_score": 3.0899756815946886,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -2884,11 +2933,12 @@
         "gate_keys": [
           "before_terminal:bk_neighbor_se_available=0"
         ],
-        "heldout_counterfactual_delta": -1,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.4140625,
-        "heldout_counterfactual_on_wins": 53,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2896,13 +2946,13 @@
         "node_type": "SCRIPT",
         "positive_support": 30,
         "precision": 0.9375,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_25717",
         "score": 3.0899756815946886,
         "spawn_origin": "failure_localized",
-        "weight": 3.0899756815946886
+        "weight": 0.12
       },
       {
         "children": [
@@ -2912,6 +2962,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.0051928783382789315,
+        "credit_score": 3.0711718348152712,
         "failure_cluster_ids": [
           "failure_cluster_2f7428074730",
           "failure_cluster_5ede4d72adb0",
@@ -2925,11 +2976,12 @@
         "gate_keys": [
           "before_terminal:bk_neighbor_sw_available=0"
         ],
-        "heldout_counterfactual_delta": -3,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
         "heldout_counterfactual_on_rate": 0.3984375,
         "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2937,13 +2989,13 @@
         "node_type": "SCRIPT",
         "positive_support": 21,
         "precision": 1.0,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_41355",
         "score": 3.0711718348152712,
         "spawn_origin": "failure_localized",
-        "weight": 3.0711718348152712
+        "weight": 0.12
       },
       {
         "children": [
@@ -2953,6 +3005,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.0051928783382789315,
+        "credit_score": 3.0711718348152712,
         "failure_cluster_ids": [
           "failure_cluster_2f7428074730",
           "failure_cluster_5ede4d72adb0",
@@ -2966,11 +3019,12 @@
         "gate_keys": [
           "before_terminal:bk_neighbor_sw_available=0"
         ],
-        "heldout_counterfactual_delta": -3,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
         "heldout_counterfactual_on_rate": 0.3984375,
         "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -2978,13 +3032,13 @@
         "node_type": "SCRIPT",
         "positive_support": 21,
         "precision": 1.0,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_25790",
         "score": 3.0711718348152712,
         "spawn_origin": "failure_localized",
-        "weight": 3.0711718348152712
+        "weight": 0.12
       },
       {
         "children": [
@@ -2994,6 +3048,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.03214638971315529,
+        "credit_score": 3.0581746099523515,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_40dacdd9c0c7",
@@ -3011,10 +3066,11 @@
           "before_terminal:bk_neighbor_ne_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3028,7 +3084,7 @@
         "quorum_id": "approach_auto_quorum_32733",
         "score": 3.0581746099523515,
         "spawn_origin": "failure_localized",
-        "weight": 3.0581746099523515
+        "weight": 0.12
       },
       {
         "children": [
@@ -3038,6 +3094,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.03214638971315529,
+        "credit_score": 3.0581746099523515,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_40dacdd9c0c7",
@@ -3055,10 +3112,11 @@
           "before_terminal:bk_neighbor_ne_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3072,7 +3130,7 @@
         "quorum_id": "approach_auto_quorum_31712",
         "score": 3.0581746099523515,
         "spawn_origin": "failure_localized",
-        "weight": 3.0581746099523515
+        "weight": 0.12
       },
       {
         "children": [
@@ -3082,6 +3140,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.03214638971315529,
+        "credit_score": 3.0581746099523515,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_40dacdd9c0c7",
@@ -3099,10 +3158,11 @@
           "before_terminal:bk_neighbor_ne_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3116,7 +3176,7 @@
         "quorum_id": "approach_auto_quorum_25112",
         "score": 3.0581746099523515,
         "spawn_origin": "failure_localized",
-        "weight": 3.0581746099523515
+        "weight": 0.12
       },
       {
         "children": [
@@ -3126,6 +3186,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.03214638971315529,
+        "credit_score": 3.0581746099523515,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_40dacdd9c0c7",
@@ -3143,10 +3204,11 @@
           "before_terminal:bk_neighbor_ne_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3160,7 +3222,7 @@
         "quorum_id": "approach_auto_quorum_25090",
         "score": 3.0581746099523515,
         "spawn_origin": "failure_localized",
-        "weight": 3.0581746099523515
+        "weight": 0.12
       },
       {
         "children": [
@@ -3170,6 +3232,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.0071711177052423344,
+        "credit_score": 3.0501848132903673,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -3187,11 +3250,12 @@
         "gate_keys": [
           "before_terminal:bk_neighbor_ne_available=0"
         ],
-        "heldout_counterfactual_delta": -3,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
         "heldout_counterfactual_on_rate": 0.3984375,
         "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3199,13 +3263,13 @@
         "node_type": "SCRIPT",
         "positive_support": 29,
         "precision": 0.9354838709677419,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_41069",
         "score": 3.0501848132903673,
         "spawn_origin": "failure_localized",
-        "weight": 3.0501848132903673
+        "weight": 0.12
       },
       {
         "children": [
@@ -3215,6 +3279,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.0071711177052423344,
+        "credit_score": 3.0501848132903673,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -3232,11 +3297,12 @@
         "gate_keys": [
           "before_terminal:bk_neighbor_ne_available=0"
         ],
-        "heldout_counterfactual_delta": -3,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
         "heldout_counterfactual_on_rate": 0.3984375,
         "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3244,13 +3310,13 @@
         "node_type": "SCRIPT",
         "positive_support": 29,
         "precision": 0.9354838709677419,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_25504",
         "score": 3.0501848132903673,
         "spawn_origin": "failure_localized",
-        "weight": 3.0501848132903673
+        "weight": 0.12
       },
       {
         "children": [
@@ -3260,6 +3326,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.004945598417408506,
+        "credit_score": 3.024950870875476,
         "failure_cluster_ids": [
           "failure_cluster_46a0fe5da03e",
           "failure_cluster_5ede4d72adb0",
@@ -3272,10 +3339,11 @@
           "before_terminal:bk_neighbor_n_available=1"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3289,7 +3357,7 @@
         "quorum_id": "approach_auto_quorum_41018",
         "score": 3.024950870875476,
         "spawn_origin": "failure_localized",
-        "weight": 3.024950870875476
+        "weight": 0.12
       },
       {
         "children": [
@@ -3299,6 +3367,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.004945598417408506,
+        "credit_score": 3.024950870875476,
         "failure_cluster_ids": [
           "failure_cluster_46a0fe5da03e",
           "failure_cluster_5ede4d72adb0",
@@ -3311,10 +3380,11 @@
           "before_terminal:bk_neighbor_n_available=1"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3328,7 +3398,7 @@
         "quorum_id": "approach_auto_quorum_25453",
         "score": 3.024950870875476,
         "spawn_origin": "failure_localized",
-        "weight": 3.024950870875476
+        "weight": 0.12
       },
       {
         "children": [
@@ -3338,6 +3408,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.01162215628090999,
+        "credit_score": 3.001689505291455,
         "failure_cluster_ids": [
           "failure_cluster_2f7428074730",
           "failure_cluster_7c6ec803efc5",
@@ -3348,10 +3419,11 @@
           "before_terminal:bk_neighbor_w_available=1"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3365,7 +3437,7 @@
         "quorum_id": "approach_auto_quorum_50458",
         "score": 3.001689505291455,
         "spawn_origin": "failure_localized",
-        "weight": 3.001689505291455
+        "weight": 0.12
       },
       {
         "children": [
@@ -3375,6 +3447,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.01162215628090999,
+        "credit_score": 3.001689505291455,
         "failure_cluster_ids": [
           "failure_cluster_2f7428074730",
           "failure_cluster_7c6ec803efc5",
@@ -3385,10 +3458,11 @@
           "before_terminal:bk_neighbor_w_available=1"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.12,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3402,7 +3476,7 @@
         "quorum_id": "approach_auto_quorum_30207",
         "score": 3.001689505291455,
         "spawn_origin": "failure_localized",
-        "weight": 3.001689505291455
+        "weight": 0.12
       },
       {
         "children": [
@@ -3412,6 +3486,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.015578635014836795,
+        "credit_score": 2.997907061493432,
         "failure_cluster_ids": [
           "failure_cluster_09ca7e41fef0",
           "failure_cluster_5ede4d72adb0",
@@ -3423,10 +3498,11 @@
           "before_terminal:bk_neighbor_s_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.11991628245973728,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3440,7 +3516,7 @@
         "quorum_id": "approach_auto_quorum_32737",
         "score": 2.997907061493432,
         "spawn_origin": "failure_localized",
-        "weight": 2.997907061493432
+        "weight": 0.11991628245973728
       },
       {
         "children": [
@@ -3450,6 +3526,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.015578635014836795,
+        "credit_score": 2.997907061493432,
         "failure_cluster_ids": [
           "failure_cluster_09ca7e41fef0",
           "failure_cluster_5ede4d72adb0",
@@ -3461,10 +3538,11 @@
           "before_terminal:bk_neighbor_s_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.11991628245973728,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3478,7 +3556,7 @@
         "quorum_id": "approach_auto_quorum_31716",
         "score": 2.997907061493432,
         "spawn_origin": "failure_localized",
-        "weight": 2.997907061493432
+        "weight": 0.11991628245973728
       },
       {
         "children": [
@@ -3488,6 +3566,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.015578635014836795,
+        "credit_score": 2.997907061493432,
         "failure_cluster_ids": [
           "failure_cluster_09ca7e41fef0",
           "failure_cluster_5ede4d72adb0",
@@ -3499,10 +3578,11 @@
           "before_terminal:bk_neighbor_s_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.11991628245973728,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3516,7 +3596,7 @@
         "quorum_id": "approach_auto_quorum_25116",
         "score": 2.997907061493432,
         "spawn_origin": "failure_localized",
-        "weight": 2.997907061493432
+        "weight": 0.11991628245973728
       },
       {
         "children": [
@@ -3526,6 +3606,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.015578635014836795,
+        "credit_score": 2.997907061493432,
         "failure_cluster_ids": [
           "failure_cluster_09ca7e41fef0",
           "failure_cluster_5ede4d72adb0",
@@ -3537,10 +3618,11 @@
           "before_terminal:bk_neighbor_s_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.11991628245973728,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3554,7 +3636,7 @@
         "quorum_id": "approach_auto_quorum_25094",
         "score": 2.997907061493432,
         "spawn_origin": "failure_localized",
-        "weight": 2.997907061493432
+        "weight": 0.11991628245973728
       },
       {
         "children": [
@@ -3564,6 +3646,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.018298714144411473,
+        "credit_score": 2.9666321516534455,
         "failure_cluster_ids": [
           "failure_cluster_5ede4d72adb0",
           "failure_cluster_6a574a3d4d08",
@@ -3576,10 +3659,11 @@
           "before_terminal:bk_neighbor_w_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.11866528606613783,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3593,7 +3677,7 @@
         "quorum_id": "approach_auto_quorum_32743",
         "score": 2.9666321516534455,
         "spawn_origin": "failure_localized",
-        "weight": 2.9666321516534455
+        "weight": 0.11866528606613783
       },
       {
         "children": [
@@ -3603,6 +3687,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.018298714144411473,
+        "credit_score": 2.9666321516534455,
         "failure_cluster_ids": [
           "failure_cluster_5ede4d72adb0",
           "failure_cluster_6a574a3d4d08",
@@ -3615,10 +3700,11 @@
           "before_terminal:bk_neighbor_w_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.11866528606613783,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3632,7 +3718,7 @@
         "quorum_id": "approach_auto_quorum_31722",
         "score": 2.9666321516534455,
         "spawn_origin": "failure_localized",
-        "weight": 2.9666321516534455
+        "weight": 0.11866528606613783
       },
       {
         "children": [
@@ -3642,6 +3728,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.018298714144411473,
+        "credit_score": 2.9666321516534455,
         "failure_cluster_ids": [
           "failure_cluster_5ede4d72adb0",
           "failure_cluster_6a574a3d4d08",
@@ -3654,10 +3741,11 @@
           "before_terminal:bk_neighbor_w_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.11866528606613783,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3671,7 +3759,7 @@
         "quorum_id": "approach_auto_quorum_25122",
         "score": 2.9666321516534455,
         "spawn_origin": "failure_localized",
-        "weight": 2.9666321516534455
+        "weight": 0.11866528606613783
       },
       {
         "children": [
@@ -3681,6 +3769,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.018298714144411473,
+        "credit_score": 2.9666321516534455,
         "failure_cluster_ids": [
           "failure_cluster_5ede4d72adb0",
           "failure_cluster_6a574a3d4d08",
@@ -3693,10 +3782,11 @@
           "before_terminal:bk_neighbor_w_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.11866528606613783,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3710,7 +3800,7 @@
         "quorum_id": "approach_auto_quorum_25100",
         "score": 2.9666321516534455,
         "spawn_origin": "failure_localized",
-        "weight": 2.9666321516534455
+        "weight": 0.11866528606613783
       },
       {
         "children": [
@@ -3720,6 +3810,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.0066765578635014835,
+        "credit_score": 2.966072781489115,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -3736,11 +3827,12 @@
         "gate_keys": [
           "before_terminal:bk_neighbor_se_available=0"
         ],
-        "heldout_counterfactual_delta": -3,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
         "heldout_counterfactual_on_rate": 0.3984375,
         "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.1186429112595646,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3748,13 +3840,13 @@
         "node_type": "SCRIPT",
         "positive_support": 27,
         "precision": 0.9310344827586207,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_41290",
         "score": 2.966072781489115,
         "spawn_origin": "failure_localized",
-        "weight": 2.966072781489115
+        "weight": 0.1186429112595646
       },
       {
         "children": [
@@ -3764,6 +3856,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.0066765578635014835,
+        "credit_score": 2.966072781489115,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -3780,11 +3873,12 @@
         "gate_keys": [
           "before_terminal:bk_neighbor_se_available=0"
         ],
-        "heldout_counterfactual_delta": -3,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
+        "heldout_counterfactual_delta": 0,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
         "heldout_counterfactual_on_rate": 0.3984375,
         "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.1186429112595646,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3792,13 +3886,13 @@
         "node_type": "SCRIPT",
         "positive_support": 27,
         "precision": 0.9310344827586207,
-        "promoted_as": "veto",
+        "promoted_as": null,
         "promotion_decision": "reject_counterfactual_no_gain",
         "promotion_metric": "heldout_counterfactual_on_off_delta",
         "quorum_id": "approach_auto_quorum_25725",
         "score": 2.966072781489115,
         "spawn_origin": "failure_localized",
-        "weight": 2.966072781489115
+        "weight": 0.1186429112595646
       },
       {
         "children": [
@@ -3808,6 +3902,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.0056874381800197825,
+        "credit_score": 2.958995498933601,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -3822,10 +3917,11 @@
           "before_terminal:bk_neighbor_e_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.11835981995734404,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3839,7 +3935,7 @@
         "quorum_id": "approach_auto_quorum_40888",
         "score": 2.958995498933601,
         "spawn_origin": "failure_localized",
-        "weight": 2.958995498933601
+        "weight": 0.11835981995734404
       },
       {
         "children": [
@@ -3849,6 +3945,7 @@
         ],
         "confirm_policy": "k_of_n",
         "coverage": 0.0056874381800197825,
+        "credit_score": 2.958995498933601,
         "failure_cluster_ids": [
           "failure_cluster_2a90174d5968",
           "failure_cluster_2f7428074730",
@@ -3863,10 +3960,11 @@
           "before_terminal:bk_neighbor_e_available=0"
         ],
         "heldout_counterfactual_delta": 0,
-        "heldout_counterfactual_off_rate": 0.421875,
-        "heldout_counterfactual_off_wins": 54,
-        "heldout_counterfactual_on_rate": 0.421875,
-        "heldout_counterfactual_on_wins": 54,
+        "heldout_counterfactual_off_rate": 0.3984375,
+        "heldout_counterfactual_off_wins": 51,
+        "heldout_counterfactual_on_rate": 0.3984375,
+        "heldout_counterfactual_on_wins": 51,
+        "initial_weight": 0.11835981995734404,
         "k": 3,
         "m4_state": "PRUNED",
         "n": 3,
@@ -3880,17 +3978,19 @@
         "quorum_id": "approach_auto_quorum_25323",
         "score": 2.958995498933601,
         "spawn_origin": "failure_localized",
-        "weight": 2.958995498933601
+        "weight": 0.11835981995734404
       }
     ],
     "edge_count": 0,
     "leak_count": 0,
     "node_count": 65,
     "promoted_quorum_health": {
+      "full_evaluation": {},
       "full_wins": 0,
       "harmful_count": 0,
       "inert_count": 0,
       "load_bearing_count": 0,
+      "nontrivial_delta_count": 0,
       "policy": "promoted_quorum_units",
       "quorum_count": 0,
       "records": []
@@ -3911,8 +4011,8 @@
         "win_rate": 0.421875,
         "wins": 54
       },
-      "counterfactual_inert_candidate_count": 32,
-      "counterfactual_veto_candidate_count": 16,
+      "counterfactual_inert_candidate_count": 48,
+      "counterfactual_veto_candidate_count": 0,
       "final_promoted_evaluation": {
         "endpoint_counts": {
           "fence_broken": 65,
@@ -3928,9 +4028,10 @@
         "win_rate": 0.421875,
         "wins": 54
       },
+      "nontrivial_ablation_delta_count": 0,
       "promoted_affordance_count": 0,
       "promoted_veto_count": 0,
-      "promotion_metric": "candidate_on_wins_minus_current_off_wins",
+      "promotion_metric": "trial_layer_full_wins_minus_candidate_ablated_wins",
       "promotion_rows": [
         {
           "delta": 0,
@@ -3949,9 +4050,10 @@
             "before_terminal:bk_neighbor_sw_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_32741"
         },
         {
@@ -3971,9 +4073,10 @@
             "before_terminal:bk_neighbor_sw_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_31720"
         },
         {
@@ -3993,9 +4096,10 @@
             "before_terminal:bk_neighbor_sw_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25120"
         },
         {
@@ -4015,13 +4119,14 @@
             "before_terminal:bk_neighbor_sw_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25098"
         },
         {
-          "delta": -3,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2a90174d5968",
             "failure_cluster_2f7428074730",
@@ -4039,13 +4144,14 @@
             "before_terminal:bk_neighbor_nw_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
+          "off_wins": 51,
           "on_wins": 51,
-          "promoted_as": "veto",
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_41146"
         },
         {
-          "delta": -3,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2a90174d5968",
             "failure_cluster_2f7428074730",
@@ -4063,9 +4169,10 @@
             "before_terminal:bk_neighbor_nw_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
+          "off_wins": 51,
           "on_wins": 51,
-          "promoted_as": "veto",
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25581"
         },
         {
@@ -4087,9 +4194,10 @@
             "before_terminal:bk_neighbor_nw_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_32735"
         },
         {
@@ -4111,9 +4219,10 @@
             "before_terminal:bk_neighbor_nw_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_31714"
         },
         {
@@ -4135,9 +4244,10 @@
             "before_terminal:bk_neighbor_nw_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25114"
         },
         {
@@ -4159,9 +4269,10 @@
             "before_terminal:bk_neighbor_nw_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25092"
         },
         {
@@ -4175,9 +4286,10 @@
             "before_terminal:bk_neighbor_w_available=1"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_41454"
         },
         {
@@ -4191,13 +4303,14 @@
             "before_terminal:bk_neighbor_w_available=1"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25889"
         },
         {
-          "delta": -3,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2a90174d5968",
             "failure_cluster_2f7428074730",
@@ -4217,13 +4330,14 @@
             "before_terminal:is_check=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
+          "off_wins": 51,
           "on_wins": 51,
-          "promoted_as": "veto",
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_41622"
         },
         {
-          "delta": -3,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2a90174d5968",
             "failure_cluster_2f7428074730",
@@ -4243,13 +4357,14 @@
             "before_terminal:black_king_on_edge=1"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
+          "off_wins": 51,
           "on_wins": 51,
-          "promoted_as": "veto",
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_41596"
         },
         {
-          "delta": -3,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2a90174d5968",
             "failure_cluster_2f7428074730",
@@ -4269,13 +4384,14 @@
             "before_terminal:black_king_nearest_edge_distance=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
+          "off_wins": 51,
           "on_wins": 51,
-          "promoted_as": "veto",
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_41569"
         },
         {
-          "delta": -3,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2a90174d5968",
             "failure_cluster_2f7428074730",
@@ -4295,13 +4411,14 @@
             "before_terminal:is_check=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
+          "off_wins": 51,
           "on_wins": 51,
-          "promoted_as": "veto",
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_26057"
         },
         {
-          "delta": -3,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2a90174d5968",
             "failure_cluster_2f7428074730",
@@ -4321,13 +4438,14 @@
             "before_terminal:black_king_on_edge=1"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
+          "off_wins": 51,
           "on_wins": 51,
-          "promoted_as": "veto",
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_26031"
         },
         {
-          "delta": -3,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2a90174d5968",
             "failure_cluster_2f7428074730",
@@ -4347,9 +4465,10 @@
             "before_terminal:black_king_nearest_edge_distance=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
+          "off_wins": 51,
           "on_wins": 51,
-          "promoted_as": "veto",
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_26004"
         },
         {
@@ -4371,9 +4490,10 @@
             "before_terminal:bk_neighbor_se_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_32739"
         },
         {
@@ -4395,9 +4515,10 @@
             "before_terminal:bk_neighbor_se_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_31718"
         },
         {
@@ -4419,9 +4540,10 @@
             "before_terminal:bk_neighbor_se_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25118"
         },
         {
@@ -4443,13 +4565,14 @@
             "before_terminal:bk_neighbor_se_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25096"
         },
         {
-          "delta": -1,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2a90174d5968",
             "failure_cluster_2f7428074730",
@@ -4467,13 +4590,14 @@
             "before_terminal:bk_neighbor_se_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 53,
-          "promoted_as": "veto",
+          "off_wins": 51,
+          "on_wins": 51,
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_41282"
         },
         {
-          "delta": -1,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2a90174d5968",
             "failure_cluster_2f7428074730",
@@ -4491,13 +4615,14 @@
             "before_terminal:bk_neighbor_se_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 53,
-          "promoted_as": "veto",
+          "off_wins": 51,
+          "on_wins": 51,
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25717"
         },
         {
-          "delta": -3,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2f7428074730",
             "failure_cluster_5ede4d72adb0",
@@ -4512,13 +4637,14 @@
             "before_terminal:bk_neighbor_sw_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
+          "off_wins": 51,
           "on_wins": 51,
-          "promoted_as": "veto",
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_41355"
         },
         {
-          "delta": -3,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2f7428074730",
             "failure_cluster_5ede4d72adb0",
@@ -4533,9 +4659,10 @@
             "before_terminal:bk_neighbor_sw_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
+          "off_wins": 51,
           "on_wins": 51,
-          "promoted_as": "veto",
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25790"
         },
         {
@@ -4557,9 +4684,10 @@
             "before_terminal:bk_neighbor_ne_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_32733"
         },
         {
@@ -4581,9 +4709,10 @@
             "before_terminal:bk_neighbor_ne_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_31712"
         },
         {
@@ -4605,9 +4734,10 @@
             "before_terminal:bk_neighbor_ne_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25112"
         },
         {
@@ -4629,13 +4759,14 @@
             "before_terminal:bk_neighbor_ne_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25090"
         },
         {
-          "delta": -3,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2a90174d5968",
             "failure_cluster_2f7428074730",
@@ -4654,13 +4785,14 @@
             "before_terminal:bk_neighbor_ne_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
+          "off_wins": 51,
           "on_wins": 51,
-          "promoted_as": "veto",
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_41069"
         },
         {
-          "delta": -3,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2a90174d5968",
             "failure_cluster_2f7428074730",
@@ -4679,9 +4811,10 @@
             "before_terminal:bk_neighbor_ne_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
+          "off_wins": 51,
           "on_wins": 51,
-          "promoted_as": "veto",
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25504"
         },
         {
@@ -4698,9 +4831,10 @@
             "before_terminal:bk_neighbor_n_available=1"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_41018"
         },
         {
@@ -4717,9 +4851,10 @@
             "before_terminal:bk_neighbor_n_available=1"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25453"
         },
         {
@@ -4734,9 +4869,10 @@
             "before_terminal:bk_neighbor_w_available=1"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_50458"
         },
         {
@@ -4751,9 +4887,10 @@
             "before_terminal:bk_neighbor_w_available=1"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_30207"
         },
         {
@@ -4769,9 +4906,10 @@
             "before_terminal:bk_neighbor_s_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_32737"
         },
         {
@@ -4787,9 +4925,10 @@
             "before_terminal:bk_neighbor_s_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_31716"
         },
         {
@@ -4805,9 +4944,10 @@
             "before_terminal:bk_neighbor_s_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25116"
         },
         {
@@ -4823,9 +4963,10 @@
             "before_terminal:bk_neighbor_s_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25094"
         },
         {
@@ -4842,9 +4983,10 @@
             "before_terminal:bk_neighbor_w_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_32743"
         },
         {
@@ -4861,9 +5003,10 @@
             "before_terminal:bk_neighbor_w_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_31722"
         },
         {
@@ -4880,9 +5023,10 @@
             "before_terminal:bk_neighbor_w_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25122"
         },
         {
@@ -4899,13 +5043,14 @@
             "before_terminal:bk_neighbor_w_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25100"
         },
         {
-          "delta": -3,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2a90174d5968",
             "failure_cluster_2f7428074730",
@@ -4923,13 +5068,14 @@
             "before_terminal:bk_neighbor_se_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
+          "off_wins": 51,
           "on_wins": 51,
-          "promoted_as": "veto",
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_41290"
         },
         {
-          "delta": -3,
+          "delta": 0,
           "failure_cluster_ids": [
             "failure_cluster_2a90174d5968",
             "failure_cluster_2f7428074730",
@@ -4947,9 +5093,10 @@
             "before_terminal:bk_neighbor_se_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
+          "off_wins": 51,
           "on_wins": 51,
-          "promoted_as": "veto",
+          "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25725"
         },
         {
@@ -4968,9 +5115,10 @@
             "before_terminal:bk_neighbor_e_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_40888"
         },
         {
@@ -4989,20 +5137,42 @@
             "before_terminal:bk_neighbor_e_available=0"
           ],
           "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "off_wins": 51,
+          "on_wins": 51,
           "promoted_as": null,
+          "promotion_decision": "reject_counterfactual_no_gain",
           "quorum_id": "approach_auto_quorum_25323"
         }
       ],
-      "promotion_rule": "M4_successor_heldout_counterfactual_delta_positive",
+      "promotion_rule": "M4_successor_trial_route_then_promote_positive_ablation_delta",
       "promotion_uses_precision": false,
-      "spawned_candidate_count": 48
+      "pruned_negative_ablation_delta_count": 0,
+      "spawned_candidate_count": 48,
+      "trial_route_initial_weight": {
+        "cap": 0.12,
+        "floor": 0.04,
+        "scale": 0.04
+      },
+      "trial_routed_evaluation": {
+        "endpoint_counts": {
+          "fence_broken": 61,
+          "horizon": 16,
+          "waypoint_reached": 51
+        },
+        "nonwins": 77,
+        "row_count": 128,
+        "wilson_95": [
+          0.3177758511189852,
+          0.4850175931240712
+        ],
+        "win_rate": 0.3984375,
+        "wins": 51
+      }
     },
     "quorum_script_count": 0,
     "quorums": [],
     "root_script_count": 1,
-    "schema_version": "phase2_9c_discovered_structure.v0",
+    "schema_version": "phase2_9d_discovered_structure.v0",
     "seed": 20272921,
     "selected_atom_count": 64,
     "spawn_diagnostics": {
@@ -7172,441 +7342,458 @@
     "spawned_edge_count": 192,
     "spawned_node_count": 125,
     "spawned_quorum_health": {
-      "harmful_count": 16,
-      "inert_count": 32,
+      "full_evaluation": {
+        "endpoint_counts": {
+          "fence_broken": 61,
+          "horizon": 16,
+          "waypoint_reached": 51
+        },
+        "nonwins": 77,
+        "row_count": 128,
+        "wilson_95": [
+          0.3177758511189852,
+          0.4850175931240712
+        ],
+        "win_rate": 0.3984375,
+        "wins": 51
+      },
+      "full_wins": 51,
+      "harmful_count": 0,
+      "inert_count": 48,
       "load_bearing_count": 0,
-      "policy": "spawned_quorum_candidates_m4_on_off",
+      "nontrivial_delta_count": 0,
+      "policy": "spawned_trial_quorum_units",
       "quorum_count": 48,
       "records": [
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_32741"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_31720"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25120"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25098"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -3,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 51,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_41146"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -3,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 51,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25581"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_32735"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_31714"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25114"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25092"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_41454"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25889"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -3,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 51,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_41622"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -3,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 51,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_41596"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -3,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 51,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_41569"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -3,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 51,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_26057"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -3,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 51,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_26031"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -3,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 51,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_26004"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_32739"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_31718"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25118"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25096"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -1,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 53,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_41282"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -1,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 53,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25717"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -3,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 51,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_41355"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -3,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 51,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25790"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_32733"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_31712"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25112"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25090"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -3,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 51,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_41069"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -3,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 51,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25504"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_41018"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25453"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_50458"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_30207"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_32737"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_31716"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25116"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25094"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_32743"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_31722"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25122"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25100"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -3,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 51,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_41290"
         },
         {
-          "classification": "harmful",
-          "counterfactual_delta": -3,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 51,
-          "promoted_as": "veto",
+          "ablated_wins": 51,
+          "ablation_delta": 0,
+          "classification": "inert",
+          "full_wins": 51,
+          "m4_state": "TRIAL",
+          "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25725"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_40888"
         },
         {
+          "ablated_wins": 51,
+          "ablation_delta": 0,
           "classification": "inert",
-          "counterfactual_delta": 0,
-          "m4_state": "PRUNED",
-          "off_wins": 54,
-          "on_wins": 54,
+          "full_wins": 51,
+          "m4_state": "TRIAL",
           "promoted_as": null,
           "quorum_id": "approach_auto_quorum_25323"
         }
