@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReCoN Growth Events</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body { margin: 0; background: #fafafa; color: #172033; }
+    header {
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+      padding: 12px 16px; border-bottom: 1px solid #d8dee9; background: white;
+      position: sticky; top: 0; z-index: 5;
+    }
+    h1 { margin: 0 12px 0 0; font-size: 16px; }
+    button {
+      border: 1px solid #b8c2d4; background: #fff; border-radius: 6px;
+      padding: 6px 10px; font-size: 13px; cursor: pointer;
+    }
+    button:hover { background: #eef3fb; }
+    input[type="range"] { width: min(620px, 52vw); }
+    .metric { font-size: 12px; color: #4b5870; }
+    #status { color: #7f1d1d; font-size: 12px; }
+    #chart { width: 100vw; height: calc(100vh - 58px); overflow: hidden; }
+    svg { width: 100%; height: 100%; display: block; background: #fafafa; }
+    .link { fill: none; stroke: #94a3b8; stroke-width: 1.4px; }
+    .node circle { stroke: #27364d; stroke-width: 1px; }
+    .node text { font-size: 10px; paint-order: stroke; stroke: #fafafa; stroke-width: 3px; fill: #172033; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Autonomous Growth Events</h1>
+    <button id="play">Play</button>
+    <button id="prev">Step -</button>
+    <button id="next">Step +</button>
+    <input id="scrub" type="range" min="0" max="0" value="0" step="1">
+    <span class="metric" id="stepLabel">step 0/0</span>
+    <span class="metric" id="summary"></span>
+    <span id="status"></span>
+  </header>
+  <main id="chart"></main>
+  <script>
+    const short = id => id.length > 48 ? id.slice(0, 24) + "..." + id.slice(-20) : id;
+    const color = type => type === "SCRIPT" ? "#2563eb" : "#10b981";
+
+    async function main() {
+      if (!window.d3) throw new Error("D3 failed to load from cdnjs");
+      const data = await fetch("growth_events.json").then(r => r.json());
+      const events = data.events.slice().sort((a, b) => a.step - b.step);
+      const maxStep = d3.max(events, d => d.step) || 0;
+      const scrub = document.getElementById("scrub");
+      scrub.max = maxStep;
+      document.getElementById("summary").textContent = `${events.length} events, seed ${data.seed}`;
+
+      const svg = d3.select("#chart").append("svg");
+      const g = svg.append("g");
+      svg.call(d3.zoom().scaleExtent([0.15, 3]).on("zoom", ev => g.attr("transform", ev.transform)));
+      let current = 0;
+      let timer = null;
+
+      function visibleRows(step) {
+        const rows = events.filter(e => e.step <= step).map(e => ({
+          id: e.node_id,
+          parent: e.parent_id || "",
+          type: e.type,
+          step: e.step
+        }));
+        const ids = new Set(rows.map(r => r.id));
+        return rows.filter(r => !r.parent || ids.has(r.parent));
+      }
+
+      function render(step) {
+        current = Math.max(0, Math.min(maxStep, step));
+        const rows = visibleRows(current);
+        g.selectAll("*").remove();
+        if (!rows.length) return;
+        const root = d3.stratify().id(d => d.id).parentId(d => d.parent || null)(rows);
+        const descendants = root.descendants();
+        const width = Math.max(1400, descendants.length * 9);
+        const height = Math.max(820, (root.height + 2) * 150);
+        svg.attr("viewBox", [0, 0, width, height]);
+        d3.tree().nodeSize([20, 145])(root);
+        const minX = d3.min(descendants, d => d.x) || 0;
+        const maxX = d3.max(descendants, d => d.x) || 0;
+        const xOffset = (maxX - minX) / 2 - minX + 90;
+        root.each(d => { d.x += xOffset; d.y += 70; });
+        g.append("g").selectAll("path").data(root.links()).join("path")
+          .attr("class", "link")
+          .attr("d", d3.linkVertical().x(d => d.x).y(d => d.y));
+        const nodes = g.append("g").selectAll("g").data(descendants).join("g")
+          .attr("class", "node")
+          .attr("transform", d => `translate(${d.x},${d.y})`);
+        nodes.append("circle").attr("r", d => d.data.type === "SCRIPT" ? 6 : 4.4).attr("fill", d => color(d.data.type));
+        nodes.append("title").text(d => `${d.id}\n${d.data.type}\nstep ${d.data.step}`);
+        nodes.append("text").attr("dy", -8).attr("text-anchor", "middle").text(d => short(d.id));
+        scrub.value = current;
+        document.getElementById("stepLabel").textContent = `step ${current}/${maxStep}`;
+      }
+
+      function play() {
+        if (timer) {
+          clearInterval(timer); timer = null; document.getElementById("play").textContent = "Play"; return;
+        }
+        document.getElementById("play").textContent = "Pause";
+        timer = setInterval(() => {
+          if (current >= maxStep) { clearInterval(timer); timer = null; document.getElementById("play").textContent = "Play"; return; }
+          render(current + 1);
+        }, 80);
+      }
+      document.getElementById("play").onclick = play;
+      document.getElementById("prev").onclick = () => render(current - 1);
+      document.getElementById("next").onclick = () => render(current + 1);
+      scrub.oninput = e => render(+e.target.value);
+      render(0);
+    }
+    main().catch(err => { document.getElementById("status").textContent = err.message; console.error(err); });
+  </script>
+</body>
+</html>

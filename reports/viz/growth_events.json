@@ -1,0 +1,1723 @@
+{
+  "event_count": 245,
+  "events": [
+    {
+      "edge_type": null,
+      "node_id": "approach_auto_root_seed_20272921",
+      "parent_id": null,
+      "step": 0,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19322",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 1,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19322::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19322",
+      "step": 2,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19322::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19322",
+      "step": 3,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19322::delta_terminal:bk_neighbor_sw_available=zero",
+      "parent_id": "approach_auto_quorum_19322",
+      "step": 4,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19316",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 5,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19316::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19316",
+      "step": 6,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19316::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19316",
+      "step": 7,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19316::delta_terminal:bk_neighbor_sw_available=zero",
+      "parent_id": "approach_auto_quorum_19316",
+      "step": 8,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19284",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 9,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19284::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19284",
+      "step": 10,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19284::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19284",
+      "step": 11,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19284::delta_terminal:bk_neighbor_sw_available=zero",
+      "parent_id": "approach_auto_quorum_19284",
+      "step": 12,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19277",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 13,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19277::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19277",
+      "step": 14,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19277::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19277",
+      "step": 15,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19277::delta_terminal:bk_neighbor_sw_available=zero",
+      "parent_id": "approach_auto_quorum_19277",
+      "step": 16,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19305",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 17,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19305::after_terminal:bk_neighbor_sw_available=0",
+      "parent_id": "approach_auto_quorum_19305",
+      "step": 18,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19305::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19305",
+      "step": 19,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19305::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19305",
+      "step": 20,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19304",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 21,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19304::after_terminal:bk_neighbor_sw_available=0",
+      "parent_id": "approach_auto_quorum_19304",
+      "step": 22,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19304::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19304",
+      "step": 23,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19304::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19304",
+      "step": 24,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19265",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 25,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19265::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19265",
+      "step": 26,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19265::after_terminal:bk_neighbor_sw_available=0",
+      "parent_id": "approach_auto_quorum_19265",
+      "step": 27,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19265::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19265",
+      "step": 28,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19264",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 29,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19264::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19264",
+      "step": 30,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19264::after_terminal:bk_neighbor_sw_available=0",
+      "parent_id": "approach_auto_quorum_19264",
+      "step": 31,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19264::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19264",
+      "step": 32,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19300",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 33,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19300::after_terminal:bk_neighbor_ne_available=0",
+      "parent_id": "approach_auto_quorum_19300",
+      "step": 34,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19300::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19300",
+      "step": 35,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19300::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19300",
+      "step": 36,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19299",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 37,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19299::after_terminal:bk_neighbor_ne_available=0",
+      "parent_id": "approach_auto_quorum_19299",
+      "step": 38,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19299::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19299",
+      "step": 39,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19299::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19299",
+      "step": 40,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19260",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 41,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19260::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19260",
+      "step": 42,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19260::after_terminal:bk_neighbor_ne_available=0",
+      "parent_id": "approach_auto_quorum_19260",
+      "step": 43,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19260::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19260",
+      "step": 44,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19259",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 45,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19259::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19259",
+      "step": 46,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19259::after_terminal:bk_neighbor_ne_available=0",
+      "parent_id": "approach_auto_quorum_19259",
+      "step": 47,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19259::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19259",
+      "step": 48,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19302",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 49,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19302::after_terminal:bk_neighbor_se_available=0",
+      "parent_id": "approach_auto_quorum_19302",
+      "step": 50,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19302::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19302",
+      "step": 51,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19302::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19302",
+      "step": 52,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19301",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 53,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19301::after_terminal:bk_neighbor_se_available=0",
+      "parent_id": "approach_auto_quorum_19301",
+      "step": 54,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19301::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19301",
+      "step": 55,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19301::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19301",
+      "step": 56,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19262",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 57,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19262::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19262",
+      "step": 58,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19262::after_terminal:bk_neighbor_se_available=0",
+      "parent_id": "approach_auto_quorum_19262",
+      "step": 59,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19262::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19262",
+      "step": 60,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19261",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 61,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19261::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19261",
+      "step": 62,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19261::after_terminal:bk_neighbor_se_available=0",
+      "parent_id": "approach_auto_quorum_19261",
+      "step": 63,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19261::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19261",
+      "step": 64,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19324",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 65,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19324::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19324",
+      "step": 66,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19324::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19324",
+      "step": 67,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19324::delta_terminal:rook_fence_depth_relative_to_black_king_edge=zero",
+      "parent_id": "approach_auto_quorum_19324",
+      "step": 68,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19323",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 69,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19323::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19323",
+      "step": 70,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19323::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19323",
+      "step": 71,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19323::delta_terminal:rook_distance_to_black_king_edge_line=zero",
+      "parent_id": "approach_auto_quorum_19323",
+      "step": 72,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19318",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 73,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19318::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19318",
+      "step": 74,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19318::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19318",
+      "step": 75,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19318::delta_terminal:rook_fence_depth_relative_to_black_king_edge=zero",
+      "parent_id": "approach_auto_quorum_19318",
+      "step": 76,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19317",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 77,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19317::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19317",
+      "step": 78,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19317::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19317",
+      "step": 79,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19317::delta_terminal:rook_distance_to_black_king_edge_line=zero",
+      "parent_id": "approach_auto_quorum_19317",
+      "step": 80,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19313",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 81,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19313::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19313",
+      "step": 82,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19313::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19313",
+      "step": 83,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19313::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19313",
+      "step": 84,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19286",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 85,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19286::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19286",
+      "step": 86,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19286::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19286",
+      "step": 87,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19286::delta_terminal:rook_fence_depth_relative_to_black_king_edge=zero",
+      "parent_id": "approach_auto_quorum_19286",
+      "step": 88,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19285",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 89,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19285::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19285",
+      "step": 90,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19285::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19285",
+      "step": 91,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19285::delta_terminal:rook_distance_to_black_king_edge_line=zero",
+      "parent_id": "approach_auto_quorum_19285",
+      "step": 92,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19283",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 93,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19283::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19283",
+      "step": 94,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19283::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19283",
+      "step": 95,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19283::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19283",
+      "step": 96,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19279",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 97,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19279::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19279",
+      "step": 98,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19279::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19279",
+      "step": 99,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19279::delta_terminal:rook_fence_depth_relative_to_black_king_edge=zero",
+      "parent_id": "approach_auto_quorum_19279",
+      "step": 100,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19278",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 101,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19278::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19278",
+      "step": 102,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19278::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19278",
+      "step": 103,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19278::delta_terminal:rook_distance_to_black_king_edge_line=zero",
+      "parent_id": "approach_auto_quorum_19278",
+      "step": 104,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19276",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 105,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19276::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19276",
+      "step": 106,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19276::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19276",
+      "step": 107,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19276::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19276",
+      "step": 108,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19273",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 109,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19273::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19273",
+      "step": 110,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19273::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19273",
+      "step": 111,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19273::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19273",
+      "step": 112,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19258",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 113,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19258::action_pattern:pair:rook_safety:gives_check=0:0",
+      "parent_id": "approach_auto_quorum_19258",
+      "step": 114,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19258::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19258",
+      "step": 115,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19258::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19258",
+      "step": 116,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19257",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 117,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19257::action_pattern:pair:rook_safety:gives_check=0:0",
+      "parent_id": "approach_auto_quorum_19257",
+      "step": 118,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19257::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19257",
+      "step": 119,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19257::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19257",
+      "step": 120,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19256",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 121,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19256::action_pattern:pair:rook_safety:gives_check=0:0",
+      "parent_id": "approach_auto_quorum_19256",
+      "step": 122,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19256::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19256",
+      "step": 123,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19256::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_19256",
+      "step": 124,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19255",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 125,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19255::action_pattern:pair:rook_safety:gives_check=0:0",
+      "parent_id": "approach_auto_quorum_19255",
+      "step": 126,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19255::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19255",
+      "step": 127,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19255::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_19255",
+      "step": 128,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_34356",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 129,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_34356::action_pattern:piece_type=6",
+      "parent_id": "approach_auto_quorum_34356",
+      "step": 130,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_34356::after_terminal:bk_neighbor_ne_available=0",
+      "parent_id": "approach_auto_quorum_34356",
+      "step": 131,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_34356::before_terminal:white_rook_to_black_king_distance=6",
+      "parent_id": "approach_auto_quorum_34356",
+      "step": 132,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_34311",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 133,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_34311::action_pattern:pair:piece:gives_check=6:0",
+      "parent_id": "approach_auto_quorum_34311",
+      "step": 134,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_34311::after_terminal:bk_neighbor_ne_available=0",
+      "parent_id": "approach_auto_quorum_34311",
+      "step": 135,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_34311::before_terminal:white_rook_to_black_king_distance=6",
+      "parent_id": "approach_auto_quorum_34311",
+      "step": 136,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29644",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 137,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29644::action_pattern:piece_type=6",
+      "parent_id": "approach_auto_quorum_29644",
+      "step": 138,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29644::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_29644",
+      "step": 139,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29644::delta_terminal:bk_neighbor_sw_available=zero",
+      "parent_id": "approach_auto_quorum_29644",
+      "step": 140,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29620",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 141,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29620::action_pattern:piece_type=6",
+      "parent_id": "approach_auto_quorum_29620",
+      "step": 142,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29620::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_29620",
+      "step": 143,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29620::delta_terminal:bk_neighbor_sw_available=zero",
+      "parent_id": "approach_auto_quorum_29620",
+      "step": 144,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29577",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 145,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29577::action_pattern:pair:piece:gives_check=6:0",
+      "parent_id": "approach_auto_quorum_29577",
+      "step": 146,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29577::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_29577",
+      "step": 147,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29577::delta_terminal:bk_neighbor_sw_available=zero",
+      "parent_id": "approach_auto_quorum_29577",
+      "step": 148,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29553",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 149,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29553::action_pattern:pair:piece:gives_check=6:0",
+      "parent_id": "approach_auto_quorum_29553",
+      "step": 150,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29553::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_29553",
+      "step": 151,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_29553::delta_terminal:bk_neighbor_sw_available=zero",
+      "parent_id": "approach_auto_quorum_29553",
+      "step": 152,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08350",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 153,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08350::after_terminal:bk_neighbor_ne_available=0",
+      "parent_id": "approach_auto_quorum_08350",
+      "step": 154,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08350::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_08350",
+      "step": 155,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08350::after_terminal:white_rook_to_black_king_distance=4",
+      "parent_id": "approach_auto_quorum_08350",
+      "step": 156,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08338",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 157,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08338::after_terminal:bk_neighbor_ne_available=0",
+      "parent_id": "approach_auto_quorum_08338",
+      "step": 158,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08338::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_08338",
+      "step": 159,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08338::after_terminal:white_rook_to_black_king_distance=4",
+      "parent_id": "approach_auto_quorum_08338",
+      "step": 160,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08162",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 161,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08162::action_pattern:white_rook_to_black_king_after=4",
+      "parent_id": "approach_auto_quorum_08162",
+      "step": 162,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08162::after_terminal:bk_neighbor_ne_available=0",
+      "parent_id": "approach_auto_quorum_08162",
+      "step": 163,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08162::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_08162",
+      "step": 164,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08161",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 165,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08161::action_pattern:white_rook_to_black_king_after=4",
+      "parent_id": "approach_auto_quorum_08161",
+      "step": 166,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08161::after_terminal:bk_neighbor_ne_available=0",
+      "parent_id": "approach_auto_quorum_08161",
+      "step": 167,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08161::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_08161",
+      "step": 168,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19336",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 169,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19336::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19336",
+      "step": 170,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19336::delta_terminal:rook_fence_depth_relative_to_black_king_edge=zero",
+      "parent_id": "approach_auto_quorum_19336",
+      "step": 171,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19336::delta_terminal:white_rook_rank=zero",
+      "parent_id": "approach_auto_quorum_19336",
+      "step": 172,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19335",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 173,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19335::after_terminal:white_rook_to_black_king_distance=5",
+      "parent_id": "approach_auto_quorum_19335",
+      "step": 174,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19335::delta_terminal:rook_distance_to_black_king_edge_line=zero",
+      "parent_id": "approach_auto_quorum_19335",
+      "step": 175,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19335::delta_terminal:white_rook_rank=zero",
+      "parent_id": "approach_auto_quorum_19335",
+      "step": 176,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19298",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 177,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19298::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19298",
+      "step": 178,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19298::delta_terminal:rook_fence_depth_relative_to_black_king_edge=zero",
+      "parent_id": "approach_auto_quorum_19298",
+      "step": 179,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19298::delta_terminal:white_rook_rank=zero",
+      "parent_id": "approach_auto_quorum_19298",
+      "step": 180,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19297",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 181,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19297::action_pattern:white_rook_to_black_king_after=5",
+      "parent_id": "approach_auto_quorum_19297",
+      "step": 182,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19297::delta_terminal:rook_distance_to_black_king_edge_line=zero",
+      "parent_id": "approach_auto_quorum_19297",
+      "step": 183,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_19297::delta_terminal:white_rook_rank=zero",
+      "parent_id": "approach_auto_quorum_19297",
+      "step": 184,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08394",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 185,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08394::after_terminal:bk_neighbor_se_available=0",
+      "parent_id": "approach_auto_quorum_08394",
+      "step": 186,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08394::after_terminal:rook_fence_depth_relative_to_black_king_edge=1",
+      "parent_id": "approach_auto_quorum_08394",
+      "step": 187,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08394::after_terminal:white_rook_to_black_king_distance=4",
+      "parent_id": "approach_auto_quorum_08394",
+      "step": 188,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08382",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 189,
+      "type": "SCRIPT"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08382::after_terminal:bk_neighbor_se_available=0",
+      "parent_id": "approach_auto_quorum_08382",
+      "step": 190,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08382::after_terminal:rook_distance_to_black_king_edge_line=1",
+      "parent_id": "approach_auto_quorum_08382",
+      "step": 191,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "approach_auto_quorum_08382::after_terminal:white_rook_to_black_king_distance=4",
+      "parent_id": "approach_auto_quorum_08382",
+      "step": 192,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::after_terminal:white_king_to_black_king_distance=2",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 193,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::after_terminal:king_support_chebyshev_distance=2",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 194,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:white_king_to_black_king_after=2",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 195,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:white_king_to_black_king_distance=negative",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 196,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:king_support_chebyshev_distance=negative",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 197,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:white_king_file=negative",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 198,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:king_delta_file_abs=negative",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 199,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:king_delta_file_abs=positive",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 200,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:king_support_manhattan_distance=negative",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 201,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:white_king_rank=negative",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 202,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:king_delta_rank_abs=negative",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 203,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:white_king_file=positive",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 204,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:king_support_manhattan_distance=positive",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 205,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:king_support_l_shape=positive",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 206,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:king_pair_knight_distance_like=positive",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 207,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::after_terminal:king_support_l_shape=1",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 208,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::after_terminal:king_pair_knight_distance_like=1",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 209,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:king_delta_rank_abs=positive",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 210,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:white_king_rank=positive",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 211,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:pair:piece:file_rank_delta=6:-1:-1",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 212,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:pair:piece:file_rank_delta=6:1:0",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 213,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:pair:piece:file_rank_delta=6:-1:1",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 214,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:white_king_to_black_king_distance=positive",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 215,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:king_support_chebyshev_distance=positive",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 216,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:pair:piece:file_rank_delta=6:-1:0",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 217,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:pair:piece:file_rank_delta=6:1:-1",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 218,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:pair:piece:file_rank_delta=6:0:-1",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 219,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:pair:piece:file_rank_delta=6:1:1",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 220,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=positive",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 221,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:pair:piece:file_rank_delta=6:0:1",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 222,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:file_delta_magnitude=1",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 223,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:rank_delta_magnitude=1",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 224,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=negative",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 225,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:from_rank_edge_distance=3",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 226,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:from_file_edge_distance=3",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 227,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::after_terminal:king_support_manhattan_distance=2",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 228,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::after_terminal:white_rook_file=6",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 229,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::after_terminal:white_rook_file=1",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 230,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::after_terminal:white_rook_rank=6",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 231,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::after_terminal:rook_black_king_opposite_sides_of_white_king_on_primary_axis=1",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 232,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:from_file_edge_distance=2",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 233,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::after_terminal:white_rook_to_black_king_distance=3",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 234,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:white_rook_to_black_king_after=3",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 235,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::after_terminal:rook_black_king_same_side_of_white_king_on_primary_axis=0",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 236,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::after_terminal:white_rook_rank=1",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 237,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::action_pattern:from_rank_edge_distance=2",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 238,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:white_rook_to_black_king_distance=zero",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 239,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::delta_terminal:white_rook_file=zero",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 240,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::before_terminal:white_rook_to_black_king_distance=7",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 241,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::after_terminal:white_king_rank=4",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 242,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::after_terminal:white_king_file=4",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 243,
+      "type": "TERMINAL"
+    },
+    {
+      "edge_type": "SUB",
+      "node_id": "atom::before_terminal:white_king_rank=3",
+      "parent_id": "approach_auto_root_seed_20272921",
+      "step": 244,
+      "type": "TERMINAL"
+    }
+  ],
+  "schema_version": "phase_viz_growth_events.v0",
+  "seed": 20272921,
+  "source": "reports/viz/phase2_9b_spawn_capture/seed_20272921_result.json"
+}

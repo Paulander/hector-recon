@@ -363,6 +363,7 @@ def _discover_structure(
     selected_quorums = quorums[: cfg.max_quorums]
     active_atom_keys = sorted({key for item in selected_quorums for key in item["children"]} | {item["terminal_key"] for item in selected_atoms})
     leak_count = sum(1 for key in active_atom_keys if learner_visible_key_firewall_leaks([key]))
+    spawn_events = _structure_spawn_events(seed, selected_atoms, selected_quorums)
     return {
         "schema_version": "phase2_9b_discovered_structure.v0",
         "seed": seed,
@@ -373,6 +374,8 @@ def _discover_structure(
         "node_count": 1 + len(active_atom_keys) + len(selected_quorums),
         "edge_count": len(selected_quorums) + sum(len(item["children"]) for item in selected_quorums),
         "leak_count": leak_count,
+        "spawn_event_count": len(spawn_events),
+        "spawn_events": spawn_events,
         "atoms": selected_atoms,
         "quorums": selected_quorums,
         "top_grown_atoms": selected_atoms[:20],
@@ -390,6 +393,57 @@ def _discover_structure(
             for item in selected_quorums[:20]
         ],
     }
+
+
+def _structure_spawn_events(
+    seed: int,
+    selected_atoms: Sequence[Mapping[str, Any]],
+    selected_quorums: Sequence[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    root_id = f"approach_auto_root_seed_{seed}"
+    events: list[dict[str, Any]] = [
+        {"step": 0, "node_id": root_id, "type": "SCRIPT", "parent_id": None, "edge_type": None}
+    ]
+    step = 1
+    child_keys = {str(child) for quorum in selected_quorums for child in quorum["children"]}
+    for quorum in selected_quorums:
+        quorum_id = str(quorum["quorum_id"])
+        events.append(
+            {
+                "step": step,
+                "node_id": quorum_id,
+                "type": "SCRIPT",
+                "parent_id": root_id,
+                "edge_type": "SUB",
+            }
+        )
+        step += 1
+        for child in quorum["children"]:
+            events.append(
+                {
+                    "step": step,
+                    "node_id": f"{quorum_id}::{child}",
+                    "type": "TERMINAL",
+                    "parent_id": quorum_id,
+                    "edge_type": "SUB",
+                }
+            )
+            step += 1
+    for atom in selected_atoms:
+        key = str(atom["terminal_key"])
+        if key in child_keys:
+            continue
+        events.append(
+            {
+                "step": step,
+                "node_id": f"atom::{key}",
+                "type": "TERMINAL",
+                "parent_id": root_id,
+                "edge_type": "SUB",
+            }
+        )
+        step += 1
+    return events
 
 
 def _atom_record(

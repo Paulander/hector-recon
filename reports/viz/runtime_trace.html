@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReCoN Runtime Trace</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body { margin: 0; background: #f7f8fb; color: #1d2433; }
+    header {
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+      padding: 12px 16px; border-bottom: 1px solid #d8deea; background: #fff;
+      position: sticky; top: 0; z-index: 10;
+    }
+    h1 { font-size: 16px; margin: 0 10px 0 0; font-weight: 700; }
+    button {
+      border: 1px solid #b8c2d4; background: #fff; color: #1d2433;
+      border-radius: 6px; padding: 6px 10px; font-size: 13px; cursor: pointer;
+    }
+    button:hover { background: #eef3fb; }
+    input[type="range"] { width: min(520px, 42vw); }
+    .metric { font-size: 12px; color: #4b5870; }
+    #status { font-size: 12px; color: #6a1b1a; }
+    #chart { width: 100vw; height: calc(100vh - 58px); overflow: hidden; }
+    svg { width: 100%; height: 100%; display: block; background: #f7f8fb; }
+    .link { fill: none; stroke: #9aa8bd; stroke-width: 1.3px; }
+    .por-link { fill: none; stroke: #64748b; stroke-width: 1.2px; stroke-dasharray: 5 4; }
+    .link.active, .por-link.active { stroke: #f59e0b; stroke-width: 3px; filter: drop-shadow(0 0 5px #f59e0b); }
+    .link.final-sur { stroke: #16a34a; stroke-width: 3px; filter: drop-shadow(0 0 6px #16a34a); }
+    .node circle { stroke: #27364d; stroke-width: 1px; }
+    .node.real circle { filter: drop-shadow(0 0 4px rgba(37, 99, 235, 0.35)); }
+    .node.bound circle { stroke: #f97316; stroke-width: 4px; animation: flash 0.85s infinite alternate; }
+    .node text { font-size: 10px; paint-order: stroke; stroke: #f7f8fb; stroke-width: 3px; fill: #1d2433; }
+    .legend { display: flex; gap: 10px; align-items: center; }
+    .swatch { width: 10px; height: 10px; border-radius: 50%; display: inline-block; border: 1px solid #475569; }
+    @keyframes flash { from { opacity: 1; } to { opacity: 0.45; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mate-in-2 Runtime Trace</h1>
+    <button id="play">Play</button>
+    <button id="prev">Step -</button>
+    <button id="next">Step +</button>
+    <input id="scrub" type="range" min="0" max="0" value="0" step="1">
+    <span class="metric" id="tickLabel">tick 0/0</span>
+    <span class="metric" id="summary"></span>
+    <span class="legend">
+      <span><i class="swatch" style="background:#e5e7eb"></i> idle</span>
+      <span><i class="swatch" style="background:#fbbf24"></i> requested</span>
+      <span><i class="swatch" style="background:#3b82f6"></i> active</span>
+      <span><i class="swatch" style="background:#22c55e"></i> confirmed</span>
+      <span><i class="swatch" style="background:#ef4444"></i> failed</span>
+    </span>
+    <span id="status"></span>
+  </header>
+  <main id="chart"></main>
+  <script>
+    const stateColor = {
+      inactive: "#e5e7eb",
+      requested: "#fbbf24",
+      active: "#3b82f6",
+      suppressed: "#fb923c",
+      waiting: "#60a5fa",
+      true: "#86efac",
+      confirmed: "#22c55e",
+      failed: "#ef4444"
+    };
+    const nodeOpacity = d => d.data.frame === "real" ? 1 : (d.data.virtual_depth <= 1 ? 0.5 : 0.3);
+    const edgeKeyForMessage = m => {
+      if (m.link_type === "SUB") return `${m.src}->${m.dst}->SUB`;
+      if (m.link_type === "SUR") return `${m.dst}->${m.src}->SUB`;
+      if (m.link_type === "POR") return `${m.src}->${m.dst}->POR`;
+      if (m.link_type === "RET") return `${m.dst}->${m.src}->POR`;
+      return `${m.src}->${m.dst}->${m.link_type}`;
+    };
+    const short = id => id.length > 42 ? id.slice(0, 20) + "..." + id.slice(-18) : id;
+
+    async function main() {
+      if (!window.d3) throw new Error("D3 failed to load from cdnjs");
+      const data = await fetch("runtime_trace_mate2.json").then(r => r.json());
+      const byId = new Map(data.node_table.map(n => [n.id, n]));
+      const treeRows = data.node_table.map(n => ({...n, parent: n.sub_parent_id || ""}));
+      const stratify = d3.stratify().id(d => d.id).parentId(d => d.parent || null);
+      const root = stratify(treeRows);
+      const width = Math.max(1600, root.descendants().length * 10);
+      const height = Math.max(900, (root.height + 2) * 150);
+      const tree = d3.tree().nodeSize([18, 140]);
+      tree(root);
+      const minX = d3.min(root.descendants(), d => d.x) || 0;
+      const maxX = d3.max(root.descendants(), d => d.x) || 0;
+      const xOffset = (maxX - minX) / 2 - minX + 80;
+      root.each(d => { d.x += xOffset; d.y += 70; });
+      const positions = new Map(root.descendants().map(d => [d.id, d]));
+
+      const svg = d3.select("#chart").append("svg").attr("viewBox", [0, 0, Math.max(width, maxX - minX + 220), height]);
+      const g = svg.append("g");
+      svg.call(d3.zoom().scaleExtent([0.15, 3]).on("zoom", ev => g.attr("transform", ev.transform)));
+
+      const subLinks = root.links().map(l => ({source: l.source, target: l.target, key: `${l.source.id}->${l.target.id}->SUB`}));
+      const porLinks = data.edges
+        .filter(e => e.link_type === "POR" && positions.has(e.src) && positions.has(e.dst))
+        .map(e => ({source: positions.get(e.src), target: positions.get(e.dst), key: `${e.src}->${e.dst}->POR`}));
+
+      const link = g.append("g").selectAll("path").data(subLinks).join("path")
+        .attr("class", "link")
+        .attr("data-key", d => d.key)
+        .attr("opacity", d => Math.min(nodeOpacity(d.source), nodeOpacity(d.target)))
+        .attr("d", d3.linkVertical().x(d => d.x).y(d => d.y));
+
+      const por = g.append("g").selectAll("path").data(porLinks).join("path")
+        .attr("class", "por-link")
+        .attr("data-key", d => d.key)
+        .attr("opacity", d => Math.min(nodeOpacity(d.source), nodeOpacity(d.target)))
+        .attr("d", d => {
+          const midY = (d.source.y + d.target.y) / 2;
+          return `M${d.source.x},${d.source.y} C${d.source.x},${midY} ${d.target.x},${midY} ${d.target.x},${d.target.y}`;
+        });
+
+      const nodes = g.append("g").selectAll("g").data(root.descendants()).join("g")
+        .attr("class", d => `node ${d.data.frame}`)
+        .attr("transform", d => `translate(${d.x},${d.y})`)
+        .attr("opacity", nodeOpacity);
+      nodes.append("circle").attr("r", d => d.data.type === "SCRIPT" ? 5.5 : 4);
+      nodes.append("title").text(d => `${d.id}\n${d.data.type} ${d.data.role || ""}\n${d.data.frame} depth=${d.data.virtual_depth}`);
+      nodes.append("text").attr("dy", -8).attr("text-anchor", "middle").text(d => short(d.data.role || d.id));
+
+      const finalSurKeys = new Set();
+      for (const tick of data.ticks) {
+        for (const m of tick.messages) if (m.link_type === "SUR" && m.message === "confirm") finalSurKeys.add(edgeKeyForMessage(m));
+      }
+
+      let index = 0;
+      let timer = null;
+      const scrub = document.getElementById("scrub");
+      scrub.max = Math.max(0, data.ticks.length - 1);
+      document.getElementById("summary").textContent =
+        `${data.summary.node_count} nodes, ${data.summary.tick_count} ticks, real ${data.summary.real_node_count}, virtual ${data.summary.virtual_node_count}, max depth ${data.summary.max_virtual_depth}`;
+
+      function render(i) {
+        index = Math.max(0, Math.min(data.ticks.length - 1, i));
+        const tick = data.ticks[index];
+        const activeKeys = new Set(tick.messages.map(edgeKeyForMessage));
+        nodes.classed("bound", d => index === data.ticks.length - 1 && d.id === data.bound_actuator_id);
+        nodes.select("circle").attr("fill", d => stateColor[tick.node_states[d.id] || "inactive"] || "#e5e7eb");
+        link.classed("active", d => activeKeys.has(d.key))
+          .classed("final-sur", d => index === data.ticks.length - 1 && finalSurKeys.has(d.key));
+        por.classed("active", d => activeKeys.has(d.key));
+        scrub.value = index;
+        document.getElementById("tickLabel").textContent = `tick ${tick.tick_index}/${data.ticks[data.ticks.length - 1].tick_index}`;
+      }
+      function play() {
+        if (timer) {
+          clearInterval(timer); timer = null; document.getElementById("play").textContent = "Play"; return;
+        }
+        document.getElementById("play").textContent = "Pause";
+        timer = setInterval(() => {
+          if (index >= data.ticks.length - 1) { clearInterval(timer); timer = null; document.getElementById("play").textContent = "Play"; return; }
+          render(index + 1);
+        }, 120);
+      }
+      document.getElementById("play").onclick = play;
+      document.getElementById("prev").onclick = () => render(index - 1);
+      document.getElementById("next").onclick = () => render(index + 1);
+      scrub.oninput = e => render(+e.target.value);
+      render(0);
+    }
+    main().catch(err => { document.getElementById("status").textContent = err.message; console.error(err); });
+  </script>
+</body>
+</html>
