@@ -25,6 +25,7 @@ from .features import (
 from .quorum_basin import (
     _edge_mate_enter_mate2_audit,
     _edge_mate_fixed_seed_black_reply,
+    _king_support_waypoint_geometry,
     _position_repetition_key,
     _white_rook_square,
     fence_established_geometry,
@@ -41,6 +42,9 @@ DEFAULT_OUTPUT_DIR = Path(
 DEFAULT_STAGE_B_ROWS = Path(
     "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_b_rows.json"
 )
+DEFAULT_STAGE_A_ROWS = Path(
+    "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_a_rows.json"
+)
 DEFAULT_STAGE_B_BASELINE_DIR = Path(
     "reports/autogrowth/clean_slate_krk/phase2_9a_action_firewall"
 )
@@ -55,10 +59,12 @@ _FAST_MATE1_CACHE: dict[str, bool] = {}
 @dataclass(frozen=True)
 class StageBEcologicalDiscoveryConfig:
     output_dir: str = str(DEFAULT_OUTPUT_DIR)
+    stage_a_rows_path: str = str(DEFAULT_STAGE_A_ROWS)
     stage_b_rows_path: str = str(DEFAULT_STAGE_B_ROWS)
     stage_b_baseline_dir: str = str(DEFAULT_STAGE_B_BASELINE_DIR)
     seeds: tuple[int, ...] = (20272931, 20272932, 20272933)
     flat_baseline_seeds: tuple[int, ...] = (20272911, 20272912, 20272913)
+    stage_a_train_row_limit: int | None = None
     train_row_limit: int | None = None
     heldout_row_limit: int | None = None
     horizon_plies: int = 16
@@ -250,6 +256,144 @@ def run_stage_b_graph_native_ecology_probe(
     summary["maturity_summary"] = _maturity_summary(summary["seed_results"])
     summary["tables"]["phase3_0_headline"] = _phase30_headline(summary)
     _write_json(Path(cfg.output_dir) / "summary.json", summary)
+    return summary
+
+
+def run_stage_ab_graph_native_carryover_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_1_stage_ab_graph_native_carryover",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        stage_a_train_row_limit=128,
+        train_row_limit=128,
+        heldout_row_limit=64,
+        max_population_per_habitat=2,
+        max_guided_births=8,
+        max_births_per_decision=1,
+        max_samples=8,
+        pruned_rescue_audit_limit=4,
+        ecology_mode="stem_cell_graph",
+    )
+    output_dir = Path(cfg.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    design = _design_spec(cfg)
+    design["schema_version"] = "phase3_1_stage_ab_carryover_design_spec.v0"
+    design["curriculum_carryover"] = {
+        "scope": "Stage A warm-up followed by Stage B chase, same composite/stem-cell population",
+        "not_claimed": "full Mate_In_1/Mate_In_2-to-StageB curriculum competence",
+        "stage_labels_learner_visible": False,
+    }
+    design["discovery_boundary"]["learner_visible"] = [
+        "board state",
+        "legal moves",
+        "sealed terminal_action_feature_keys",
+        "stage-appropriate sealed flat atom weights for the scheduled training segment",
+        "trial composite activations and local nutrition",
+    ]
+    _write_json(output_dir / "design_spec.json", design)
+
+    stage_a_rows_payload = json.loads(Path(cfg.stage_a_rows_path).read_text(encoding="utf-8"))
+    stage_b_rows_payload = json.loads(Path(cfg.stage_b_rows_path).read_text(encoding="utf-8"))
+    stage_a_train_rows = list(stage_a_rows_payload["train"])
+    stage_b_train_rows = list(stage_b_rows_payload["train"])
+    heldout_rows = list(stage_b_rows_payload["heldout"])
+    stage_a_limit = cfg.stage_a_train_row_limit if cfg.stage_a_train_row_limit is not None else cfg.train_row_limit
+    if stage_a_limit is not None:
+        stage_a_train_rows = stage_a_train_rows[: int(stage_a_limit)]
+    if cfg.train_row_limit is not None:
+        stage_b_train_rows = stage_b_train_rows[: int(cfg.train_row_limit)]
+    if cfg.heldout_row_limit is not None:
+        heldout_rows = heldout_rows[: int(cfg.heldout_row_limit)]
+
+    references = _reference_baselines(cfg, heldout_rows)
+    seed_results: dict[str, Any] = {}
+    for index, seed in enumerate(cfg.seeds):
+        flat_seed = int(cfg.flat_baseline_seeds[index % len(cfg.flat_baseline_seeds)])
+        stage_a_atom_weights = _load_weight_table(
+            Path(cfg.stage_b_baseline_dir)
+            / f"stage_d_A_sealed_seed_{flat_seed}_weights.json"
+        )
+        stage_b_atom_weights = _load_weight_table(
+            Path(cfg.stage_b_baseline_dir)
+            / f"stage_d_B_sealed_seed_{flat_seed}_weights.json"
+        )
+        training_segments = (
+            {
+                "name": "stage_a_approach_warmup",
+                "rows": stage_a_train_rows,
+                "atom_weights": stage_a_atom_weights,
+                "success_kind": "approach_waypoint",
+                "guided_births": False,
+            },
+            {
+                "name": "stage_b_true_middle_chase",
+                "rows": stage_b_train_rows,
+                "atom_weights": stage_b_atom_weights,
+                "success_kind": "stage_b_enter_mate2",
+                "guided_births": True,
+            },
+        )
+        arm1 = _run_arm_curriculum(
+            cfg,
+            training_segments,
+            heldout_rows,
+            seed=seed,
+            flat_seed=flat_seed,
+            final_atom_weights=stage_b_atom_weights,
+            atom_eval_reference=references["sealed_flat_weight_replay"][str(flat_seed)],
+            arm="arm1_unguided_ecological",
+        )
+        arm2 = _run_arm_curriculum(
+            cfg,
+            training_segments,
+            heldout_rows,
+            seed=seed + 10_000,
+            flat_seed=flat_seed,
+            final_atom_weights=stage_b_atom_weights,
+            atom_eval_reference=references["sealed_flat_weight_replay"][str(flat_seed)],
+            arm="arm2_guided_residual_control",
+        )
+        result = {
+            "schema_version": "phase3_1_stage_ab_graph_native_carryover_seed.v0",
+            "seed": seed,
+            "flat_baseline_seed": flat_seed,
+            "arm1_unguided_ecological": arm1,
+            "arm2_guided_residual_control": arm2,
+            "paired_vs_yardsticks": {
+                "arm1": _paired_yardstick_table(arm1["evaluations"]["survivor_trial"], references),
+                "arm2": _paired_yardstick_table(arm2["evaluations"]["survivor_trial"], references),
+            },
+            "decision": _seed_decision(arm1, arm2),
+        }
+        _write_json(output_dir / f"seed_{seed}_result.json", result)
+        seed_results[str(seed)] = result
+
+    summary = {
+        "schema_version": "phase3_1_stage_ab_graph_native_carryover.v0",
+        "phase": "Phase 3.1",
+        "config": asdict(cfg),
+        "dataset": {
+            "stage_a_rows_path": str(cfg.stage_a_rows_path),
+            "stage_b_rows_path": str(cfg.stage_b_rows_path),
+            "stage_a_train_count": len(stage_a_train_rows),
+            "stage_b_train_count": len(stage_b_train_rows),
+            "stage_b_heldout_count": len(heldout_rows),
+            "stage_labels_learner_visible": False,
+            "same_population_across_stage_a_b": True,
+            "full_foundation_curriculum": False,
+        },
+        "reference_baselines": references,
+        "seed_results": seed_results,
+        "tables": _summary_tables(seed_results, references),
+        "cross_seed_composite_analysis": _cross_seed_composite_analysis(seed_results),
+        "enrichment_summary": _enrichment_summary(seed_results),
+        "maturity_summary": _maturity_summary(seed_results),
+        "decision": _overall_decision(seed_results),
+    }
+    summary["tables"]["phase3_1_headline"] = _phase31_headline(summary)
+    _write_json(output_dir / "summary.json", summary)
     return summary
 
 
@@ -581,6 +725,346 @@ def _run_arm(
     }
 
 
+def _run_arm_curriculum(
+    cfg: StageBEcologicalDiscoveryConfig,
+    training_segments: Sequence[Mapping[str, Any]],
+    heldout_rows: Sequence[Mapping[str, Any]],
+    *,
+    seed: int,
+    flat_seed: int,
+    final_atom_weights: Mapping[str, float],
+    atom_eval_reference: Mapping[str, Any],
+    arm: str,
+) -> dict[str, Any]:
+    rng = random.Random(seed)
+    population: dict[str, dict[str, Any]] = {}
+    stem_cells: dict[str, StemCellTerminal] = {}
+    seen_signatures: Counter[str] = Counter()
+    signature_outcomes: dict[str, Counter[str]] = defaultdict(Counter)
+    trigger_counts: Counter[str] = Counter()
+    birth_curve: list[dict[str, Any]] = []
+    traces: list[dict[str, Any]] = []
+    train_judge_cache = _new_judge_cache()
+    early_stop_reason: str | None = None
+    processed_train_count = 0
+    segment_summaries: list[dict[str, Any]] = []
+    guided_plans: dict[str, Mapping[int, Sequence[Mapping[str, Any]]]] = {}
+    for segment in training_segments:
+        name = str(segment["name"])
+        rows = list(segment["rows"])
+        weights = segment["atom_weights"]
+        success_kind = str(segment.get("success_kind", "stage_b_enter_mate2"))
+        guided_plans[name] = (
+            _guided_residual_birth_plan(cfg, rows, weights, seed=seed, success_kind=success_kind)
+            if arm == "arm2_guided_residual_control" and bool(segment.get("guided_births", False))
+            else {}
+        )
+
+    for segment in training_segments:
+        segment_name = str(segment["name"])
+        rows = list(segment["rows"])
+        atom_weights = segment["atom_weights"]
+        success_kind = str(segment.get("success_kind", "stage_b_enter_mate2"))
+        segment_start_births = len(population)
+        segment_start_pruned = sum(1 for item in population.values() if item["state"] == "PRUNED")
+        segment_start_mature = sum(1 for item in population.values() if item["state"] == "MATURE")
+        for local_step, row in enumerate(rows):
+            global_step = processed_train_count
+            processed_train_count += 1
+            if arm == "arm2_guided_residual_control":
+                _spawn_guided_for_row(
+                    cfg,
+                    population,
+                    row,
+                    guided_plans.get(segment_name, {}).get(int(row["row_id"]), ()),
+                    step=global_step,
+                    seed=seed,
+                    trigger_counts=trigger_counts,
+                    stem_cells=stem_cells,
+                    birth_segment=segment_name,
+                )
+
+            selected = _rollout_policy(
+                cfg,
+                row,
+                lambda board, counts, row_id, ply, rng, segment_name=segment_name: _choose_ecological_move(
+                    cfg,
+                    board,
+                    counts,
+                    atom_weights=atom_weights,
+                    population=population,
+                    seed=seed + int(row_id) * 37 + ply,
+                    disabled_composite_ids=set(),
+                    row_id=row_id,
+                    ply=global_step * max(1, cfg.horizon_plies) + ply,
+                    segment_name=segment_name,
+                    spawn_hook=(
+                        None
+                        if arm == "arm2_guided_residual_control"
+                        else lambda ctx: _spawn_arm1_from_context(
+                            cfg,
+                            population,
+                            ctx,
+                            seen_signatures=seen_signatures,
+                            signature_outcomes=signature_outcomes,
+                            trigger_counts=trigger_counts,
+                            rng=rng,
+                            stem_cells=stem_cells,
+                        )
+                    ),
+                ),
+                seed=seed + global_step * 31,
+                collect_composites=True,
+                population=population,
+                judge_cache=train_judge_cache,
+                success_kind=success_kind,
+            )
+            alternative = _rollout_policy(
+                cfg,
+                row,
+                lambda board, counts, row_id, ply, rng: _choose_atom_move(
+                    board,
+                    counts,
+                    atom_weights=atom_weights,
+                    seed=seed + 50_000 + int(row_id) * 37 + ply,
+                ),
+                seed=seed + 100_000 + global_step * 31,
+                collect_composites=True,
+                population=population,
+                judge_cache=train_judge_cache,
+                success_kind=success_kind,
+            )
+            if cfg.ecology_mode == "stem_cell_graph":
+                _apply_stem_cell_local_economy(
+                    cfg,
+                    population,
+                    stem_cells,
+                    selected=selected,
+                    alternative=alternative,
+                    step=global_step,
+                )
+            else:
+                _apply_contrastive_nutrition(
+                    cfg,
+                    population,
+                    selected=selected,
+                    alternative=alternative,
+                    step=global_step,
+                )
+            for signature in selected["percept_signatures"]:
+                signature_outcomes[signature]["success" if selected["success"] else "failure"] += 1
+            if cfg.ecology_mode == "stem_cell_graph":
+                _cap_stem_cell_parent_budgets(cfg, population, stem_cells, step=global_step)
+            else:
+                _cap_population(cfg, population, step=global_step)
+            if global_step % 25 == 0 or local_step == len(rows) - 1:
+                snapshot = _population_snapshot(population, step=global_step)
+                snapshot["segment"] = segment_name
+                birth_curve.append(snapshot)
+            if len(traces) < cfg.max_samples:
+                traces.append(
+                    {
+                        "segment": segment_name,
+                        "row_id": int(row["row_id"]),
+                        "selected_endpoint": selected["endpoint"],
+                        "selected_success": bool(selected["success"]),
+                        "alternative_endpoint": alternative["endpoint"],
+                        "alternative_success": bool(alternative["success"]),
+                        "reward_delta": selected["reward"] - alternative["reward"],
+                        "active_composite_count": len(selected["active_composite_ids"]),
+                    }
+                )
+            if population and not any(item["state"] in {"TRIAL", "MATURE"} for item in population.values()):
+                early_stop_reason = f"population_collapse_to_zero:{segment_name}"
+                if not birth_curve or birth_curve[-1]["step"] != global_step:
+                    snapshot = _population_snapshot(population, step=global_step)
+                    snapshot["segment"] = segment_name
+                    birth_curve.append(snapshot)
+                break
+        segment_summaries.append(
+            {
+                "name": segment_name,
+                "success_kind": success_kind,
+                "row_count": len(rows),
+                "births_after_segment": len(population),
+                "births_during_segment": len(population) - segment_start_births,
+                "mature_after_segment": sum(1 for item in population.values() if item["state"] == "MATURE"),
+                "mature_delta": sum(1 for item in population.values() if item["state"] == "MATURE") - segment_start_mature,
+                "pruned_after_segment": sum(1 for item in population.values() if item["state"] == "PRUNED"),
+                "pruned_delta": sum(1 for item in population.values() if item["state"] == "PRUNED") - segment_start_pruned,
+            }
+        )
+        if early_stop_reason is not None:
+            break
+
+    survivors = [dict(item) for item in population.values() if item["state"] in {"TRIAL", "MATURE"}]
+    survivors.sort(key=lambda item: (-float(item["nutrition"]), item["composite_id"]))
+    if cfg.ecology_mode == "stem_cell_graph":
+        mature_subjects = [dict(item) for item in survivors if item.get("state") == "MATURE"]
+        mature_subjects.sort(
+            key=lambda item: (
+                float(item.get("local_resource", item.get("nutrition", 0.0))),
+                int(item.get("stem_cell_xp") or 0),
+                int(item.get("activation_count", 0)),
+                str(item["composite_id"]),
+            ),
+            reverse=True,
+        )
+        ablation_subjects = mature_subjects[: max(0, int(cfg.max_mature_ablation_subjects))]
+    else:
+        ablation_subjects = survivors
+    merged_guided_plan: dict[int, list[Mapping[str, Any]]] = defaultdict(list)
+    for plan in guided_plans.values():
+        for row_id, items in plan.items():
+            merged_guided_plan[int(row_id)].extend(items)
+    structure = _structure_summary(
+        cfg,
+        arm=arm,
+        seed=seed,
+        flat_seed=flat_seed,
+        atom_weights=final_atom_weights,
+        population=population,
+        survivors=survivors,
+        trigger_counts=trigger_counts,
+        guided_plan=merged_guided_plan,
+        processed_train_count=processed_train_count,
+        early_stop_reason=early_stop_reason,
+    )
+    structure["curriculum_carryover"] = {
+        "same_population_across_segments": True,
+        "segments": segment_summaries,
+        "births_by_segment": dict(sorted(Counter(str(item.get("birth_segment", "unknown")) for item in population.values()).items())),
+        "survivors_by_birth_segment": dict(
+            sorted(Counter(str(item.get("birth_segment", "unknown")) for item in survivors).items())
+        ),
+    }
+    health = _composite_ablation_health(
+        cfg,
+        heldout_rows,
+        atom_weights=final_atom_weights,
+        composites=ablation_subjects,
+        seed=seed + 700,
+        policy_name=f"{arm}_stage_b_survivor_trial_after_stage_a_carryover",
+    )
+    pruned_rescue_audit = (
+        _pruned_rescue_audit(
+            cfg,
+            heldout_rows,
+            atom_weights=final_atom_weights,
+            survivors=ablation_subjects,
+            population=population,
+            survivor_eval=health["full_evaluation"],
+            seed=seed + 760,
+        )
+        if cfg.ecology_mode == "stem_cell_graph" and arm == "arm1_unguided_ecological"
+        else {"enabled": False}
+    )
+    promoted = [
+        dict(item, m4_state="MATURE", heldout_counterfactual_delta=int(record["ablation_delta"]))
+        for item in survivors
+        for record in health["records"]
+        if record["composite_id"] == item["composite_id"] and int(record["ablation_delta"]) > 0
+    ]
+    pruned_harmful = [
+        str(record["composite_id"])
+        for record in health["records"]
+        if int(record["ablation_delta"]) < 0
+    ]
+    survivor_eval = health["full_evaluation"]
+    atom_eval = {**atom_eval_reference, "policy": f"{arm}_stage_b_atom_only_replay"}
+    if promoted:
+        promoted_eval = _evaluate_policy(
+            cfg,
+            heldout_rows,
+            lambda board, counts, row_id, ply, rng: _choose_ecological_move(
+                cfg,
+                board,
+                counts,
+                atom_weights=final_atom_weights,
+                population={item["composite_id"]: item for item in promoted},
+                seed=seed + int(row_id) * 41 + ply,
+                disabled_composite_ids=set(),
+                row_id=row_id,
+                ply=ply,
+            ),
+            seed=seed + 900,
+            policy_name=f"{arm}_stage_b_promoted_positive_only",
+        )
+    else:
+        promoted_eval = {**atom_eval, "policy": f"{arm}_stage_b_promoted_positive_only"}
+    enrichment = _survivor_failure_enrichment(
+        cfg,
+        heldout_rows,
+        atom_weights=final_atom_weights,
+        composites=ablation_subjects,
+        atom_eval=atom_eval,
+        seed=seed + 990,
+    )
+    collapse = bool(structure["birth_count"] > 0 and structure["survivor_count"] == 0)
+    population_limit = cfg.max_total_population or cfg.max_population
+    explosion = bool(structure["survivor_count"] > population_limit * 2)
+    return {
+        "schema_version": "phase3_1_curriculum_arm_result.v0",
+        "arm": arm,
+        "seed": seed,
+        "flat_baseline_seed": flat_seed,
+        "autogrowth_evidence": arm == "arm1_unguided_ecological",
+        "uses_oracle_birth": arm == "arm2_guided_residual_control",
+        "curriculum_carryover": {
+            "same_population_across_segments": True,
+            "segments": segment_summaries,
+            "final_eval_segment": "stage_b_true_middle_chase",
+        },
+        "structure": structure,
+        "birth_death_curve": birth_curve,
+        "train_trace_sample": traces,
+        "post_hoc_ablation_subject": (
+            "top_mature_composites_by_local_resource"
+            if cfg.ecology_mode == "stem_cell_graph"
+            else "all_live_survivors"
+        ),
+        "post_hoc_ablation_subject_count": len(ablation_subjects),
+        "post_hoc_ablation_subject_limit": (
+            int(cfg.max_mature_ablation_subjects) if cfg.ecology_mode == "stem_cell_graph" else None
+        ),
+        "post_hoc_ablation": health,
+        "promotion": {
+            "rule": "promote_positive_heldout_counterfactual_delta_only",
+            "promoted_count": len(promoted),
+            "pruned_negative_ablation_delta_count": len(pruned_harmful),
+            "pruned_negative_ablation_delta_ids": pruned_harmful[: cfg.max_samples],
+        },
+        "evaluations": {
+            "atom_only_replay": atom_eval,
+            "survivor_trial": survivor_eval,
+            "promoted_positive_only": promoted_eval,
+        },
+        "post_hoc_failure_enrichment": enrichment,
+        "pruned_rescue_audit": pruned_rescue_audit,
+        "candidate_fate_log": _candidate_fate_log(population) if cfg.ecology_mode == "stem_cell_graph" else [],
+        "survivor_composite_dumps": _survivor_dumps(
+            cfg,
+            heldout_rows,
+            atom_weights=final_atom_weights,
+            composites=ablation_subjects,
+            health=health,
+            seed=seed + 1_025,
+        ),
+        "load_bearing_composite_dumps": _load_bearing_dumps(
+            cfg,
+            heldout_rows,
+            atom_weights=final_atom_weights,
+            composites=ablation_subjects,
+            health=health,
+            seed=seed + 1_050,
+        ),
+        "stop_rule": {
+            "population_collapse_to_zero": collapse,
+            "unbounded_explosion_cap_pressure": explosion,
+        },
+    }
+
+
 def _spawn_arm1_from_context(
     cfg: StageBEcologicalDiscoveryConfig,
     population: dict[str, dict[str, Any]],
@@ -613,6 +1097,7 @@ def _spawn_arm1_from_context(
             oracle_targeted=False,
             source_signature=signature,
             stem_cells=stem_cells,
+            birth_segment=str(ctx.get("segment", "")) or None,
         ):
             trigger_counts[trigger] += 1
             spawned += 1
@@ -630,6 +1115,7 @@ def _spawn_arm1_from_context(
             oracle_targeted=False,
             source_signature=signature,
             stem_cells=stem_cells,
+            birth_segment=str(ctx.get("segment", "")) or None,
         ):
             trigger_counts["random_yoked_birth"] += 1
     if cfg.ecology_mode == "stem_cell_graph":
@@ -676,6 +1162,7 @@ def _spawn_guided_for_row(
     seed: int,
     trigger_counts: Counter[str],
     stem_cells: dict[str, StemCellTerminal] | None = None,
+    birth_segment: str | None = None,
 ) -> None:
     if not plans:
         return
@@ -694,6 +1181,7 @@ def _spawn_guided_for_row(
             source_signature=str(plan["source_signature"]),
             target_move=str(plan["target_move"]),
             stem_cells=stem_cells,
+            birth_segment=birth_segment,
         ):
             trigger_counts["oracle_atom_failure_residual"] += 1
     if cfg.ecology_mode == "stem_cell_graph":
@@ -716,6 +1204,7 @@ def _spawn_composite(
     source_signature: str,
     target_move: str | None = None,
     stem_cells: dict[str, StemCellTerminal] | None = None,
+    birth_segment: str | None = None,
 ) -> bool:
     pool = tuple(dict.fromkeys(key for key in child_pool if not learner_visible_key_firewall_leaks([key])))
     if len(pool) < cfg.composite_width:
@@ -753,6 +1242,7 @@ def _spawn_composite(
         "children": list(children),
         "arm": arm,
         "birth_trigger": trigger,
+        "birth_segment": birth_segment,
         "birth_step": birth_step,
         "birth_row_id": birth_row_id,
         "parent_id": parent_id,
@@ -778,6 +1268,7 @@ def _spawn_composite(
                 "parent_id": parent_id,
                 "source_signature": source_signature,
                 "trigger": trigger,
+                "birth_segment": birth_segment,
                 "state": stem_cell.state.name if stem_cell is not None else "TRIAL",
                 "xp": stem_cell.xp if stem_cell is not None else None,
                 "local_resource": cfg.initial_nutrition,
@@ -903,6 +1394,7 @@ def _choose_ecological_move(
     disabled_composite_ids: set[str],
     row_id: int | None = None,
     ply: int | None = None,
+    segment_name: str | None = None,
     spawn_hook: Callable[[Mapping[str, Any]], None] | None = None,
 ) -> chess.Move | None:
     options = _score_options(
@@ -924,6 +1416,7 @@ def _choose_ecological_move(
             seed=seed,
             row_id=row_id,
             ply=ply,
+            segment_name=segment_name,
         )
         spawn_hook(ctx)
         options = _score_options(
@@ -1029,6 +1522,7 @@ def _decision_context(
     seed: int,
     row_id: int | None,
     ply: int | None,
+    segment_name: str | None = None,
 ) -> dict[str, Any]:
     del cfg
     ordered = sorted(options, key=lambda item: (float(item["atom_score"]), str(item["move"])), reverse=True)
@@ -1039,6 +1533,7 @@ def _decision_context(
         "board_fen": board.fen(),
         "row_id": int(row_id) if row_id is not None else _stable_seed(board.fen()) % 10_000_000,
         "step": int(ply) if ply is not None else seed % 10_000_000,
+        "segment": segment_name,
         "counts": dict(counts),
         "options": tuple(options),
         "top_option": top,
@@ -1058,8 +1553,9 @@ def _rollout_policy(
     collect_composites: bool = False,
     population: Mapping[str, Mapping[str, Any]] | None = None,
     judge_cache: _JudgeCache | None = None,
+    success_kind: str = "stage_b_enter_mate2",
 ) -> dict[str, Any]:
-    scorer = None if cfg.fast_exact_judge else load_canonical_mate2_first_scorer()
+    scorer = None if cfg.fast_exact_judge or success_kind == "approach_waypoint" else load_canonical_mate2_first_scorer()
     mate2_cache, enter_cache = judge_cache if judge_cache is not None else _new_judge_cache()
     board = chess.Board(str(row["fen"]))
     rng = random.Random(seed)
@@ -1070,17 +1566,16 @@ def _rollout_policy(
     endpoint = "horizon"
     success = False
     for ply in range(cfg.horizon_plies):
-        if cfg.fast_exact_judge:
-            audit = _fast_enter_mate2_audit(board)
-        else:
-            audit = _edge_mate_enter_mate2_audit(
-                board,
-                scorer=scorer,
-                mate2_cache=mate2_cache,
-                enter_cache=enter_cache,
-            )
-        if audit["confirmed"]:
-            endpoint = "ungated_exact_mate3_or_better_confirmed"
+        success_now, success_endpoint = _rollout_success_check(
+            cfg,
+            board,
+            success_kind=success_kind,
+            scorer=scorer,
+            mate2_cache=mate2_cache,
+            enter_cache=enter_cache,
+        )
+        if success_now:
+            endpoint = success_endpoint
             success = True
             break
         if board.turn != chess.WHITE or board.is_game_over(claim_draw=False):
@@ -1138,6 +1633,9 @@ def _rollout_policy(
         if not fence_established_geometry(board):
             endpoint = "fence_broken"
             break
+    if not success and success_kind == "approach_waypoint" and _approach_waypoint_success(board):
+        endpoint = "waypoint_reached"
+        success = True
     reward = 6.0 if success else -6.0 if endpoint in {"fence_broken", "rook_lost", "stalemate", "illegal"} else -1.0
     return {
         "policy": policy_name,
@@ -1152,6 +1650,39 @@ def _rollout_policy(
     }
 
 
+def _rollout_success_check(
+    cfg: StageBEcologicalDiscoveryConfig,
+    board: chess.Board,
+    *,
+    success_kind: str,
+    scorer: Any,
+    mate2_cache: dict[str, dict[str, Any]],
+    enter_cache: dict[str, dict[str, Any]],
+) -> tuple[bool, str]:
+    if success_kind == "approach_waypoint":
+        return (
+            _approach_waypoint_success(board),
+            "waypoint_reached",
+        )
+    if cfg.fast_exact_judge:
+        audit = _fast_enter_mate2_audit(board)
+    else:
+        audit = _edge_mate_enter_mate2_audit(
+            board,
+            scorer=scorer,
+            mate2_cache=mate2_cache,
+            enter_cache=enter_cache,
+        )
+    return (
+        bool(audit["confirmed"]),
+        "ungated_exact_mate3_or_better_confirmed",
+    )
+
+
+def _approach_waypoint_success(board: chess.Board) -> bool:
+    return bool(_king_support_waypoint_geometry(board) and fence_established_geometry(board))
+
+
 def _evaluate_policy(
     cfg: StageBEcologicalDiscoveryConfig,
     rows: Sequence[Mapping[str, Any]],
@@ -1162,6 +1693,7 @@ def _evaluate_policy(
     judge_cache: _JudgeCache | None = None,
     collect_composites: bool = False,
     population: Mapping[str, Mapping[str, Any]] | None = None,
+    success_kind: str = "stage_b_enter_mate2",
 ) -> dict[str, Any]:
     endpoints: Counter[str] = Counter()
     success_by_row: dict[str, bool] = {}
@@ -1180,6 +1712,7 @@ def _evaluate_policy(
             judge_cache=active_judge_cache,
             collect_composites=collect_composites,
             population=population,
+            success_kind=success_kind,
         )
         row_active_ids = sorted(map(str, outcome.get("active_composite_ids", ())))
         active_composite_ids.update(row_active_ids)
@@ -1745,6 +2278,7 @@ def _guided_residual_birth_plan(
     atom_weights: Mapping[str, float],
     *,
     seed: int,
+    success_kind: str = "stage_b_enter_mate2",
 ) -> dict[int, list[dict[str, Any]]]:
     plan: dict[int, list[dict[str, Any]]] = defaultdict(list)
     budget = cfg.max_guided_births
@@ -1763,6 +2297,7 @@ def _guided_residual_birth_plan(
             ),
             seed=seed + index * 17,
             judge_cache=judge_cache,
+            success_kind=success_kind,
         )
         if atom_outcome["success"]:
             continue
@@ -1783,6 +2318,7 @@ def _guided_residual_birth_plan(
                 atom_weights=atom_weights,
                 seed=seed + index * 19,
                 judge_cache=judge_cache,
+                success_kind=success_kind,
             )
             candidates.append((int(forced["success"]), float(option["atom_score"]), str(option["move"]), option))
         candidates.sort(reverse=True)
@@ -1808,6 +2344,7 @@ def _rollout_forced_first_move(
     atom_weights: Mapping[str, float],
     seed: int,
     judge_cache: _JudgeCache | None = None,
+    success_kind: str = "stage_b_enter_mate2",
 ) -> dict[str, Any]:
     used = False
 
@@ -1825,7 +2362,7 @@ def _rollout_forced_first_move(
         del rng
         return _choose_atom_move(board, counts, atom_weights=atom_weights, seed=seed + row_id * 59 + ply)
 
-    return _rollout_policy(cfg, row, chooser, seed=seed, judge_cache=judge_cache)
+    return _rollout_policy(cfg, row, chooser, seed=seed, judge_cache=judge_cache, success_kind=success_kind)
 
 
 def _reference_baselines(
@@ -2111,6 +2648,7 @@ def _structure_summary(
                 "composite_id": item["composite_id"],
                 "state": item["state"],
                 "birth_trigger": item["birth_trigger"],
+                "birth_segment": item.get("birth_segment"),
                 "nutrition": round(float(item["nutrition"]), 6),
                 "local_resource": round(float(item.get("local_resource", item.get("nutrition", 0.0))), 6),
                 "stem_cell_xp": item.get("stem_cell_xp"),
@@ -2157,6 +2695,7 @@ def _candidate_fate_log(population: Mapping[str, Mapping[str, Any]]) -> list[dic
                 "composite_id": str(item["composite_id"]),
                 "children": list(item.get("children", ())),
                 "birth_trigger": item.get("birth_trigger"),
+                "birth_segment": item.get("birth_segment"),
                 "birth_step": item.get("birth_step"),
                 "birth_row_id": item.get("birth_row_id"),
                 "parent_id": item.get("parent_id"),
@@ -2260,6 +2799,7 @@ def _survivor_dumps(
                 "full_wins": int(record.get("full_wins", health.get("full_wins", 0))),
                 "ablated_wins": int(record.get("ablated_wins", health.get("full_wins", 0))),
                 "birth_trigger": comp.get("birth_trigger"),
+                "birth_segment": comp.get("birth_segment"),
                 "birth_row_id": comp.get("birth_row_id"),
                 "state": comp.get("state"),
                 "nutrition": float(comp.get("nutrition", 0.0)),
@@ -2304,6 +2844,7 @@ def _load_bearing_dumps(
                 "composite_id": comp["composite_id"],
                 "ablation_delta": int(record["ablation_delta"]),
                 "birth_trigger": comp.get("birth_trigger"),
+                "birth_segment": comp.get("birth_segment"),
                 "children": list(comp["children"]),
                 "firing_cluster": firing_cluster,
             }
@@ -2601,6 +3142,28 @@ def _phase30_headline(summary: Mapping[str, Any]) -> dict[str, Any]:
             int(row.get("load_bearing_but_pruned_count", 0)) for row in per_seed
         ],
     }
+
+
+def _phase31_headline(summary: Mapping[str, Any]) -> dict[str, Any]:
+    base = _phase30_headline(summary)
+    carryover_rows = []
+    for seed, result in summary["seed_results"].items():
+        arm = result["arm1_unguided_ecological"]
+        carryover = arm["structure"].get("curriculum_carryover", {})
+        carryover_rows.append(
+            {
+                "seed": int(seed),
+                "births_by_segment": carryover.get("births_by_segment", {}),
+                "survivors_by_birth_segment": carryover.get("survivors_by_birth_segment", {}),
+                "segments": carryover.get("segments", []),
+            }
+        )
+    base["carryover"] = {
+        "same_population_across_stage_a_b": True,
+        "full_foundation_curriculum": False,
+        "per_seed": carryover_rows,
+    }
+    return base
 
 
 def _seed_decision(arm1: Mapping[str, Any], arm2: Mapping[str, Any]) -> dict[str, Any]:

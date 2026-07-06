@@ -3,6 +3,7 @@ from pathlib import Path
 from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     StageBEcologicalDiscoveryConfig,
     _fast_enter_mate2_audit,
+    run_stage_ab_graph_native_carryover_probe,
     run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
@@ -144,3 +145,33 @@ def test_phase30_graph_native_probe_records_stem_cell_fates(tmp_path: Path) -> N
     assert "parent_budget_pruned_count" in arm1["structure"]
     assert "candidate_fate_log" in arm1
     assert arm1["pruned_rescue_audit"]["enabled"] is True
+
+
+def test_phase31_stage_ab_carryover_reuses_same_population(tmp_path: Path) -> None:
+    summary = run_stage_ab_graph_native_carryover_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_1_probe"),
+            seeds=(20272931,),
+            stage_a_train_row_limit=2,
+            train_row_limit=2,
+            heldout_row_limit=2,
+            max_population_per_habitat=1,
+            max_guided_births=2,
+            max_births_per_decision=1,
+            max_samples=2,
+            pruned_rescue_audit_limit=1,
+            ecology_mode="stem_cell_graph",
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_1_stage_ab_graph_native_carryover.v0"
+    assert summary["dataset"]["same_population_across_stage_a_b"] is True
+    assert summary["dataset"]["full_foundation_curriculum"] is False
+    assert "phase3_1_headline" in summary["tables"]
+    arm1 = summary["seed_results"]["20272931"]["arm1_unguided_ecological"]
+    assert arm1["curriculum_carryover"]["same_population_across_segments"] is True
+    assert [item["name"] for item in arm1["curriculum_carryover"]["segments"]] == [
+        "stage_a_approach_warmup",
+        "stage_b_true_middle_chase",
+    ]
+    assert "births_by_segment" in arm1["structure"]["curriculum_carryover"]
