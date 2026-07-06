@@ -2,8 +2,15 @@ from pathlib import Path
 
 from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     StageBEcologicalDiscoveryConfig,
+    _fast_enter_mate2_audit,
     run_stage_b_ecological_discovery_probe,
+    run_stage_b_ecological_discovery_scale_probe,
 )
+from recon_lite_chess.autogrowth.quorum_basin import (
+    _edge_mate_enter_mate2_audit,
+    load_canonical_mate2_first_scorer,
+)
+import chess
 
 
 def test_phase29e_stage_b_ecological_probe_keeps_arms_quarantined(tmp_path: Path) -> None:
@@ -40,3 +47,47 @@ def test_phase29e_stage_b_ecological_probe_keeps_arms_quarantined(tmp_path: Path
     assert arm2["uses_oracle_birth"] is True
     assert "error_set_targeted_birth_count" in arm2["structure"]
     assert {"survivor_trial", "promoted_positive_only", "atom_only_replay"} <= set(arm2["evaluations"])
+
+
+def test_phase29e_fast_enter_mate2_matches_slow_exact_audit() -> None:
+    scorer = load_canonical_mate2_first_scorer()
+    mate2_cache: dict[str, dict] = {}
+    enter_cache: dict[str, dict] = {}
+    fens = [
+        "8/6R1/8/6K1/8/8/7k/8 w - - 0 1",
+        "3k4/5R2/8/5K2/8/8/8/8 w - - 0 1",
+        "8/8/8/K7/7k/8/6R1/8 w - - 0 1",
+    ]
+
+    for fen in fens:
+        board = chess.Board(fen)
+        slow = _edge_mate_enter_mate2_audit(
+            board,
+            scorer=scorer,
+            mate2_cache=mate2_cache,
+            enter_cache=enter_cache,
+        )
+        fast = _fast_enter_mate2_audit(board)
+        assert fast["confirmed"] == slow["confirmed"]
+
+
+def test_phase29f_scale_probe_writes_characterization_fields(tmp_path: Path) -> None:
+    summary = run_stage_b_ecological_discovery_scale_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase2_9f_probe"),
+            seeds=(20272931,),
+            train_row_limit=2,
+            heldout_row_limit=2,
+            max_population=4,
+            max_guided_births=4,
+            max_births_per_decision=1,
+            max_samples=2,
+        )
+    )
+
+    assert summary["schema_version"] == "phase2_9f_stage_b_ecological_scale.v0"
+    assert "cross_seed_composite_analysis" in summary
+    assert "enrichment_summary" in summary
+    assert "phase2_9f_headline" in summary["tables"]
+    arm1 = summary["seed_results"]["20272931"]["arm1_unguided_ecological"]
+    assert "survivor_composite_dumps" in arm1

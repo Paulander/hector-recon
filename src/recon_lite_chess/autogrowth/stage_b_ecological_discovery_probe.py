@@ -16,6 +16,7 @@ import chess
 
 from .approach_discovery_probe import _after_move_repetition_key
 from .features import (
+    extract_learner_features,
     learner_visible_key_firewall_leaks,
     validate_learner_visible_keys,
 )
@@ -44,6 +45,9 @@ DEFAULT_STAGE_B_BASELINE_DIR = Path(
 
 _ACTION_KEY_SCALE_CACHE: dict[tuple[str, str], tuple[tuple[str, float], ...]] = {}
 _JudgeCache = tuple[dict[str, dict[str, Any]], dict[str, dict[str, Any]]]
+_FAST_ENTER_MATE2_CACHE: dict[str, dict[str, Any]] = {}
+_FAST_EXACT_MATE2_CACHE: dict[str, bool] = {}
+_FAST_MATE1_CACHE: dict[str, bool] = {}
 
 
 @dataclass(frozen=True)
@@ -77,6 +81,7 @@ class StageBEcologicalDiscoveryConfig:
     nutrition_weight_scale: float = 0.035
     max_advisory_weight: float = 0.180
     atom_score_scale: float = 1.0
+    fast_exact_judge: bool = True
 
 
 def run_stage_b_ecological_discovery_probe(
@@ -158,6 +163,30 @@ def run_stage_b_ecological_discovery_probe(
     return summary
 
 
+def run_stage_b_ecological_discovery_scale_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase2_9f_ecological_scale",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        train_row_limit=None,
+        heldout_row_limit=None,
+        max_population=4,
+        max_guided_births=4,
+        max_births_per_decision=1,
+        max_samples=8,
+    )
+    summary = run_stage_b_ecological_discovery_probe(config=cfg)
+    summary["schema_version"] = "phase2_9f_stage_b_ecological_scale.v0"
+    summary["phase"] = "Phase 2.9f"
+    summary["cross_seed_composite_analysis"] = _cross_seed_composite_analysis(summary["seed_results"])
+    summary["enrichment_summary"] = _enrichment_summary(summary["seed_results"])
+    summary["tables"]["phase2_9f_headline"] = _phase29f_headline(summary)
+    _write_json(Path(cfg.output_dir) / "summary.json", summary)
+    return summary
+
+
 def _design_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
     return {
         "schema_version": "phase2_9e_design_spec.v0",
@@ -219,6 +248,8 @@ def _run_arm(
     birth_curve: list[dict[str, Any]] = []
     traces: list[dict[str, Any]] = []
     train_judge_cache = _new_judge_cache()
+    early_stop_reason: str | None = None
+    processed_train_count = 0
     guided_plan = (
         _guided_residual_birth_plan(cfg, train_rows, atom_weights, seed=seed)
         if arm == "arm2_guided_residual_control"
@@ -226,6 +257,7 @@ def _run_arm(
     )
 
     for step, row in enumerate(train_rows):
+        processed_train_count = step + 1
         if arm == "arm2_guided_residual_control":
             _spawn_guided_for_row(
                 cfg,
@@ -307,6 +339,11 @@ def _run_arm(
                     "active_composite_count": len(selected["active_composite_ids"]),
                 }
             )
+        if population and not any(item["state"] in {"TRIAL", "MATURE"} for item in population.values()):
+            early_stop_reason = "population_collapse_to_zero"
+            if not birth_curve or birth_curve[-1]["step"] != step:
+                birth_curve.append(_population_snapshot(population, step=step))
+            break
 
     survivors = [dict(item) for item in population.values() if item["state"] in {"TRIAL", "MATURE"}]
     survivors.sort(key=lambda item: (-float(item["nutrition"]), item["composite_id"]))
@@ -320,6 +357,8 @@ def _run_arm(
         survivors=survivors,
         trigger_counts=trigger_counts,
         guided_plan=guided_plan,
+        processed_train_count=processed_train_count,
+        early_stop_reason=early_stop_reason,
     )
     health = _composite_ablation_health(
         cfg,
@@ -395,6 +434,14 @@ def _run_arm(
             "promoted_positive_only": promoted_eval,
         },
         "post_hoc_failure_enrichment": enrichment,
+        "survivor_composite_dumps": _survivor_dumps(
+            cfg,
+            heldout_rows,
+            atom_weights=atom_weights,
+            composites=survivors,
+            health=health,
+            seed=seed + 1_025,
+        ),
         "load_bearing_composite_dumps": _load_bearing_dumps(
             cfg,
             heldout_rows,
@@ -755,9 +802,7 @@ def _rollout_policy(
     population: Mapping[str, Mapping[str, Any]] | None = None,
     judge_cache: _JudgeCache | None = None,
 ) -> dict[str, Any]:
-    scorer = load_canonical_mate2_first_scorer()
-    gate = load_chain_confidence_gate()
-    del gate
+    scorer = None if cfg.fast_exact_judge else load_canonical_mate2_first_scorer()
     mate2_cache, enter_cache = judge_cache if judge_cache is not None else _new_judge_cache()
     board = chess.Board(str(row["fen"]))
     rng = random.Random(seed)
@@ -768,12 +813,15 @@ def _rollout_policy(
     endpoint = "horizon"
     success = False
     for ply in range(cfg.horizon_plies):
-        audit = _edge_mate_enter_mate2_audit(
-            board,
-            scorer=scorer,
-            mate2_cache=mate2_cache,
-            enter_cache=enter_cache,
-        )
+        if cfg.fast_exact_judge:
+            audit = _fast_enter_mate2_audit(board)
+        else:
+            audit = _edge_mate_enter_mate2_audit(
+                board,
+                scorer=scorer,
+                mate2_cache=mate2_cache,
+                enter_cache=enter_cache,
+            )
         if audit["confirmed"]:
             endpoint = "ungated_exact_mate3_or_better_confirmed"
             success = True
@@ -1276,6 +1324,95 @@ def _new_judge_cache() -> _JudgeCache:
     return ({}, {})
 
 
+def _fast_enter_mate2_audit(board: chess.Board) -> dict[str, Any]:
+    cache_key = _position_repetition_key(board)
+    cached = _FAST_ENTER_MATE2_CACHE.get(cache_key)
+    if cached is not None:
+        return cached
+    confirmed = _fast_enter_mate2_confirmed(board)
+    audit = {
+        "confirmed": confirmed,
+        "frames": 0,
+        "bound_move": None,
+    }
+    _FAST_ENTER_MATE2_CACHE[cache_key] = audit
+    return audit
+
+
+def _fast_enter_mate2_confirmed(board: chess.Board) -> bool:
+    if board.turn != chess.WHITE or board.is_game_over(claim_draw=False):
+        return False
+    features = extract_learner_features(board)
+    if (
+        features["black_king_nearest_edge_distance"] != 0.0
+        or not fence_established_geometry(board)
+    ):
+        return False
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        after_white = _after_move(board, move)
+        if _white_rook_square(after_white) is None:
+            continue
+        replies = tuple(sorted(after_white.legal_moves, key=lambda item: item.uci()))
+        if not replies:
+            if after_white.is_check():
+                return True
+            continue
+        candidate_ok = True
+        for reply in replies:
+            successor = _after_move(after_white, reply)
+            if (
+                _white_rook_square(successor) is None
+                or successor.is_stalemate()
+                or not _fast_exact_mate2_confirmed(successor)
+            ):
+                candidate_ok = False
+                break
+        if candidate_ok:
+            return True
+    return False
+
+
+def _fast_exact_mate2_confirmed(board: chess.Board) -> bool:
+    cache_key = _position_repetition_key(board)
+    cached = _FAST_EXACT_MATE2_CACHE.get(cache_key)
+    if cached is not None:
+        return cached
+    confirmed = False
+    if board.turn == chess.WHITE and not board.is_game_over(claim_draw=False) and not _fast_has_mate1(board):
+        for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+            after_first = _after_move(board, move)
+            replies = tuple(sorted(after_first.legal_moves, key=lambda item: item.uci()))
+            if replies and all(_fast_has_mate1(_after_move(after_first, reply)) for reply in replies):
+                confirmed = True
+                break
+    _FAST_EXACT_MATE2_CACHE[cache_key] = confirmed
+    return confirmed
+
+
+def _fast_has_mate1(board: chess.Board) -> bool:
+    cache_key = _position_repetition_key(board)
+    cached = _FAST_MATE1_CACHE.get(cache_key)
+    if cached is not None:
+        return cached
+    if board.turn != chess.WHITE or board.is_game_over(claim_draw=False):
+        result = False
+    else:
+        result = False
+        for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+            after = _after_move(board, move)
+            if after.is_checkmate():
+                result = True
+                break
+    _FAST_MATE1_CACHE[cache_key] = result
+    return result
+
+
+def _after_move(board: chess.Board, move: chess.Move) -> chess.Board:
+    after = board.copy(stack=False)
+    after.push(move)
+    return after
+
+
 def _structure_summary(
     cfg: StageBEcologicalDiscoveryConfig,
     *,
@@ -1287,6 +1424,8 @@ def _structure_summary(
     survivors: Sequence[Mapping[str, Any]],
     trigger_counts: Mapping[str, int],
     guided_plan: Mapping[int, Sequence[Mapping[str, Any]]],
+    processed_train_count: int,
+    early_stop_reason: str | None,
 ) -> dict[str, Any]:
     all_children = sorted({child for comp in survivors for child in comp["children"]})
     counts = Counter(str(item["state"]) for item in population.values())
@@ -1295,6 +1434,8 @@ def _structure_summary(
         "arm": arm,
         "seed": seed,
         "flat_baseline_seed": flat_seed,
+        "processed_train_count": processed_train_count,
+        "early_stop_reason": early_stop_reason,
         "atom_terminal_count": len(atom_weights),
         "birth_count": len(population),
         "survivor_count": len(survivors),
@@ -1385,6 +1526,50 @@ def _survivor_failure_enrichment(
     }
 
 
+def _survivor_dumps(
+    cfg: StageBEcologicalDiscoveryConfig,
+    heldout_rows: Sequence[Mapping[str, Any]],
+    *,
+    atom_weights: Mapping[str, float],
+    composites: Sequence[Mapping[str, Any]],
+    health: Mapping[str, Any],
+    seed: int,
+) -> list[dict[str, Any]]:
+    del seed
+    by_health = {str(record["composite_id"]): record for record in health["records"]}
+    dumps: list[dict[str, Any]] = []
+    for comp in composites:
+        cid = str(comp["composite_id"])
+        record = by_health.get(cid, {})
+        firing_cluster = _firing_cluster(
+            cfg,
+            heldout_rows,
+            atom_weights=atom_weights,
+            comp=comp,
+            limit=cfg.max_samples,
+        )
+        dumps.append(
+            {
+                "composite_id": cid,
+                "classification": record.get("classification", "unclassified"),
+                "ablation_delta": int(record.get("ablation_delta", 0)),
+                "full_wins": int(record.get("full_wins", health.get("full_wins", 0))),
+                "ablated_wins": int(record.get("ablated_wins", health.get("full_wins", 0))),
+                "birth_trigger": comp.get("birth_trigger"),
+                "birth_row_id": comp.get("birth_row_id"),
+                "state": comp.get("state"),
+                "nutrition": float(comp.get("nutrition", 0.0)),
+                "activation_count": int(comp.get("activation_count", 0)),
+                "credit_events": int(comp.get("credit_events", 0)),
+                "debt_events": int(comp.get("debt_events", 0)),
+                "children": list(comp.get("children", ())),
+                "normalized_children": _normalized_children(comp.get("children", ())),
+                "firing_cluster": firing_cluster,
+            }
+        )
+    return dumps
+
+
 def _load_bearing_dumps(
     cfg: StageBEcologicalDiscoveryConfig,
     heldout_rows: Sequence[Mapping[str, Any]],
@@ -1394,7 +1579,7 @@ def _load_bearing_dumps(
     health: Mapping[str, Any],
     seed: int,
 ) -> list[dict[str, Any]]:
-    del cfg, seed
+    del seed
     by_id = {str(item["composite_id"]): item for item in composites}
     load_bearing = [
         record for record in health["records"]
@@ -1403,31 +1588,13 @@ def _load_bearing_dumps(
     dumps: list[dict[str, Any]] = []
     for record in load_bearing:
         comp = by_id[str(record["composite_id"])]
-        firing_cluster = []
-        for row in heldout_rows:
-            board = chess.Board(str(row["fen"]))
-            options = _score_options(
-                board,
-                Counter({_position_repetition_key(board): 1, board._transposition_key(): 1}),
-                atom_weights=atom_weights,
-                composites=[comp],
-                disabled_composite_ids=set(),
-            )
-            fires = [
-                str(option["move"])
-                for option in options
-                if str(comp["composite_id"]) in option["active_composite_ids"]
-            ]
-            if fires:
-                firing_cluster.append(
-                    {
-                        "row_id": int(row["row_id"]),
-                        "fen": row["fen"],
-                        "firing_moves": fires[:4],
-                    }
-                )
-            if len(firing_cluster) >= 6:
-                break
+        firing_cluster = _firing_cluster(
+            cfg,
+            heldout_rows,
+            atom_weights=atom_weights,
+            comp=comp,
+            limit=6,
+        )
         dumps.append(
             {
                 "composite_id": comp["composite_id"],
@@ -1438,6 +1605,43 @@ def _load_bearing_dumps(
             }
         )
     return dumps
+
+
+def _firing_cluster(
+    cfg: StageBEcologicalDiscoveryConfig,
+    heldout_rows: Sequence[Mapping[str, Any]],
+    *,
+    atom_weights: Mapping[str, float],
+    comp: Mapping[str, Any],
+    limit: int,
+) -> list[dict[str, Any]]:
+    del cfg
+    firing_cluster = []
+    for row in heldout_rows:
+        board = chess.Board(str(row["fen"]))
+        options = _score_options(
+            board,
+            Counter({_position_repetition_key(board): 1, board._transposition_key(): 1}),
+            atom_weights=atom_weights,
+            composites=[comp],
+            disabled_composite_ids=set(),
+        )
+        fires = [
+            str(option["move"])
+            for option in options
+            if str(comp["composite_id"]) in option["active_composite_ids"]
+        ]
+        if fires:
+            firing_cluster.append(
+                {
+                    "row_id": int(row["row_id"]),
+                    "fen": row["fen"],
+                    "firing_moves": fires[:4],
+                }
+            )
+        if len(firing_cluster) >= limit:
+            break
+    return firing_cluster
 
 
 def _paired_yardstick_table(discovered: Mapping[str, Any], references: Mapping[str, Any]) -> dict[str, Any]:
@@ -1519,6 +1723,106 @@ def _summary_tables(seed_results: Mapping[str, Any], references: Mapping[str, An
         },
     }
     return {"arm_seed_table": rows, "yardsticks": yardsticks}
+
+
+def _cross_seed_composite_analysis(seed_results: Mapping[str, Any]) -> dict[str, Any]:
+    recurrence: dict[tuple[str, ...], dict[str, Any]] = {}
+    for seed, result in seed_results.items():
+        arm = result["arm1_unguided_ecological"]
+        for dump in arm.get("survivor_composite_dumps", ()):
+            key = tuple(dump["normalized_children"])
+            row = recurrence.setdefault(
+                key,
+                {
+                    "normalized_children": list(key),
+                    "survivor_seed_count": 0,
+                    "load_bearing_seed_count": 0,
+                    "seeds": [],
+                    "load_bearing_seeds": [],
+                    "classifications": Counter(),
+                    "ablation_deltas": [],
+                    "birth_triggers": Counter(),
+                },
+            )
+            row["survivor_seed_count"] += 1
+            row["seeds"].append(int(seed))
+            classification = str(dump.get("classification", "unclassified"))
+            row["classifications"][classification] += 1
+            row["ablation_deltas"].append(int(dump.get("ablation_delta", 0)))
+            row["birth_triggers"][str(dump.get("birth_trigger", "unknown"))] += 1
+            if classification == "load_bearing":
+                row["load_bearing_seed_count"] += 1
+                row["load_bearing_seeds"].append(int(seed))
+    rows = []
+    for row in recurrence.values():
+        rows.append(
+            {
+                **{
+                    key: value
+                    for key, value in row.items()
+                    if key not in {"classifications", "birth_triggers"}
+                },
+                "classifications": dict(sorted(row["classifications"].items())),
+                "birth_triggers": dict(sorted(row["birth_triggers"].items())),
+            }
+        )
+    rows.sort(
+        key=lambda item: (
+            int(item["load_bearing_seed_count"]),
+            int(item["survivor_seed_count"]),
+            sum(int(delta) for delta in item["ablation_deltas"]),
+            item["normalized_children"],
+        ),
+        reverse=True,
+    )
+    return {
+        "survivor_unique_composite_count": len(rows),
+        "recurring_survivors": [row for row in rows if int(row["survivor_seed_count"]) > 1],
+        "recurring_load_bearing": [row for row in rows if int(row["load_bearing_seed_count"]) > 1],
+        "all_survivor_composites": rows,
+    }
+
+
+def _enrichment_summary(seed_results: Mapping[str, Any]) -> dict[str, Any]:
+    rows = []
+    for seed, result in seed_results.items():
+        enrichment = result["arm1_unguided_ecological"]["post_hoc_failure_enrichment"]
+        rows.append(
+            {
+                "seed": int(seed),
+                "atom_failure_row_count": int(enrichment["atom_failure_row_count"]),
+                "atom_success_row_count": int(enrichment["atom_success_row_count"]),
+                "survivor_count": int(enrichment["survivor_count"]),
+                "survivors_firing_on_atom_failure_count": int(
+                    enrichment["survivors_firing_on_atom_failure_count"]
+                ),
+                "survivors_firing_on_atom_success_count": int(
+                    enrichment["survivors_firing_on_atom_success_count"]
+                ),
+                "top_enriched": enrichment["top_enriched"],
+            }
+        )
+    return {"per_seed": rows}
+
+
+def _phase29f_headline(summary: Mapping[str, Any]) -> dict[str, Any]:
+    arm_rows = [
+        row for row in summary["tables"]["arm_seed_table"]
+        if row["arm"] == "arm1_unguided_ecological"
+    ]
+    return {
+        "arm1_load_bearing_counts": [
+            int(row["load_bearing"]) for row in arm_rows
+        ],
+        "arm1_wins": [int(row["wins"]) for row in arm_rows],
+        "arm1_vs_dispatcher_81": [
+            int(row["wins"]) - 81 for row in arm_rows
+        ],
+        "arm1_vs_official_flat_92": [
+            int(row["wins"]) - 92 for row in arm_rows
+        ],
+        "recurring_load_bearing": summary["cross_seed_composite_analysis"]["recurring_load_bearing"],
+    }
 
 
 def _seed_decision(arm1: Mapping[str, Any], arm2: Mapping[str, Any]) -> dict[str, Any]:
@@ -1619,6 +1923,10 @@ def _composite_id(arm: str, children: Sequence[str]) -> str:
     digest = hashlib.sha256((arm + "\n" + "\n".join(children)).encode("utf-8")).hexdigest()
     prefix = "eco" if arm == "arm1_unguided_ecological" else "guided"
     return f"stage_b_{prefix}_quorum_{digest[:12]}"
+
+
+def _normalized_children(children: Iterable[str]) -> list[str]:
+    return sorted(map(str, children))
 
 
 def _percept_signature(keys: Iterable[str]) -> str:
