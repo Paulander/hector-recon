@@ -62,6 +62,8 @@ class StageBEcologicalDiscoveryConfig:
     horizon_plies: int = 16
     max_samples: int = 16
     max_population: int = 48
+    max_total_population: int | None = None
+    max_population_per_habitat: int = 2
     max_births_per_decision: int = 2
     max_guided_births: int = 48
     composite_width: int = 2
@@ -82,6 +84,7 @@ class StageBEcologicalDiscoveryConfig:
     max_advisory_weight: float = 0.180
     atom_score_scale: float = 1.0
     fast_exact_judge: bool = True
+    ecology_mode: str = "global"
 
 
 def run_stage_b_ecological_discovery_probe(
@@ -187,6 +190,33 @@ def run_stage_b_ecological_discovery_scale_probe(
     return summary
 
 
+def run_stage_b_ecological_habitat_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase2_9g_habitat_ecology",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        train_row_limit=None,
+        heldout_row_limit=None,
+        max_population=4,
+        max_total_population=4,
+        max_population_per_habitat=2,
+        max_guided_births=8,
+        max_births_per_decision=1,
+        max_samples=8,
+        ecology_mode="habitat_local",
+    )
+    summary = run_stage_b_ecological_discovery_probe(config=cfg)
+    summary["schema_version"] = "phase2_9g_stage_b_habitat_ecology.v0"
+    summary["phase"] = "Phase 2.9g"
+    summary["cross_seed_composite_analysis"] = _cross_seed_composite_analysis(summary["seed_results"])
+    summary["enrichment_summary"] = _enrichment_summary(summary["seed_results"])
+    summary["tables"]["phase2_9g_headline"] = _phase29f_headline(summary)
+    _write_json(Path(cfg.output_dir) / "summary.json", summary)
+    return summary
+
+
 def _design_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
     return {
         "schema_version": "phase2_9e_design_spec.v0",
@@ -213,7 +243,9 @@ def _design_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
             "arm1_unguided_ecological": (
                 "Births use learner-internal triggers only: low margin, active atom "
                 "conflict, novel percept signatures, repeated trace uncertainty, and "
-                "yoked random births. Survival uses local credit/debt plus passive decay."
+                "yoked random births. Survival uses local credit/debt plus passive decay; "
+                "habitat-local mode restricts decay and competition to revisited percept "
+                "signatures."
             ),
             "arm2_guided_residual_control": (
                 "Quarantined expressivity probe. Births are aimed at atom-only failure "
@@ -410,7 +442,8 @@ def _run_arm(
         seed=seed + 990,
     )
     collapse = bool(structure["birth_count"] > 0 and structure["survivor_count"] == 0)
-    explosion = bool(structure["survivor_count"] > cfg.max_population * 2)
+    population_limit = cfg.max_total_population or cfg.max_population
+    explosion = bool(structure["survivor_count"] > population_limit * 2)
     return {
         "schema_version": "phase2_9e_arm_result.v0",
         "arm": arm,
@@ -957,13 +990,19 @@ def _apply_contrastive_nutrition(
 ) -> None:
     selected_ids = set(map(str, selected["active_composite_ids"]))
     alternative_ids = set(map(str, alternative["active_composite_ids"]))
+    exposed_signatures = set(map(str, selected.get("percept_signatures", ()))) | set(
+        map(str, alternative.get("percept_signatures", ()))
+    )
     reward_delta = float(selected["reward"]) - float(alternative["reward"])
     for comp in population.values():
         if comp["state"] not in {"TRIAL", "MATURE"}:
             continue
-        comp["nutrition"] = float(comp["nutrition"]) - cfg.passive_decay
-        comp["passive_decay_events"] = int(comp["passive_decay_events"]) + 1
         cid = str(comp["composite_id"])
+        habitat_exposed = str(comp.get("source_signature", "")) in exposed_signatures
+        active = cid in selected_ids or cid in alternative_ids
+        if cfg.ecology_mode != "habitat_local" or habitat_exposed or active:
+            comp["nutrition"] = float(comp["nutrition"]) - cfg.passive_decay
+            comp["passive_decay_events"] = int(comp["passive_decay_events"]) + 1
         if cid in selected_ids:
             comp["activation_count"] = int(comp["activation_count"]) + 1
             if reward_delta > 0:
@@ -991,17 +1030,57 @@ def _cap_population(
     *,
     step: int,
 ) -> None:
-    live_trial = [
+    live_trial = [item for item in population.values() if item["state"] == "TRIAL"]
+    if cfg.ecology_mode != "habitat_local":
+        _prune_lowest_nutrition(
+            live_trial,
+            overflow=len(live_trial) - cfg.max_population,
+            step=step,
+            reason="immature_population_cap",
+        )
+        return
+
+    live_items = [
         item for item in population.values()
-        if item["state"] == "TRIAL"
+        if item["state"] in {"TRIAL", "MATURE"}
     ]
-    overflow = len(live_trial) - cfg.max_population
+    by_habitat: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for item in live_items:
+        by_habitat[str(item.get("source_signature", ""))].append(item)
+    for habitat_items in by_habitat.values():
+        _prune_lowest_nutrition(
+            habitat_items,
+            overflow=len(habitat_items) - cfg.max_population_per_habitat,
+            step=step,
+            reason="habitat_population_cap",
+        )
+    total_limit = cfg.max_total_population or cfg.max_population
+    remaining_live = [
+        item for item in population.values()
+        if item["state"] in {"TRIAL", "MATURE"}
+    ]
+    _prune_lowest_nutrition(
+        remaining_live,
+        overflow=len(remaining_live) - total_limit,
+        step=step,
+        reason="total_population_cap",
+    )
+
+
+def _prune_lowest_nutrition(
+    items: Sequence[dict[str, Any]],
+    *,
+    overflow: int,
+    step: int,
+    reason: str,
+) -> None:
     if overflow <= 0:
         return
-    live_trial.sort(key=lambda item: (float(item["nutrition"]), int(item["birth_step"]), item["composite_id"]))
-    for item in live_trial[:overflow]:
+    ordered = list(items)
+    ordered.sort(key=lambda item: (float(item["nutrition"]), int(item["birth_step"]), item["composite_id"]))
+    for item in ordered[:overflow]:
         item["state"] = "PRUNED"
-        item["prune_reason"] = "immature_population_cap"
+        item["prune_reason"] = reason
         item["pruned_step"] = step
 
 
@@ -1443,6 +1522,8 @@ def _structure_summary(
         "trial_count": int(counts["TRIAL"]),
         "pruned_count": int(counts["PRUNED"]),
         "cap_pruned_count": sum(1 for item in population.values() if item.get("prune_reason") == "immature_population_cap"),
+        "habitat_cap_pruned_count": sum(1 for item in population.values() if item.get("prune_reason") == "habitat_population_cap"),
+        "total_cap_pruned_count": sum(1 for item in population.values() if item.get("prune_reason") == "total_population_cap"),
         "oracle_targeted_birth_count": sum(1 for item in population.values() if item.get("oracle_targeted_birth")),
         "trigger_distribution": dict(sorted(trigger_counts.items())),
         "error_set_targeted_birth_count": sum(len(items) for items in guided_plan.values()),
@@ -1467,6 +1548,11 @@ def _structure_summary(
 
 def _population_snapshot(population: Mapping[str, Mapping[str, Any]], *, step: int) -> dict[str, Any]:
     counts = Counter(str(item["state"]) for item in population.values())
+    alive_habitats = {
+        str(item.get("source_signature", ""))
+        for item in population.values()
+        if item["state"] in {"TRIAL", "MATURE"}
+    }
     return {
         "step": step,
         "births_total": len(population),
@@ -1474,6 +1560,7 @@ def _population_snapshot(population: Mapping[str, Mapping[str, Any]], *, step: i
         "trial": int(counts["TRIAL"]),
         "mature": int(counts["MATURE"]),
         "pruned": int(counts["PRUNED"]),
+        "alive_habitat_count": len(alive_habitats),
     }
 
 
