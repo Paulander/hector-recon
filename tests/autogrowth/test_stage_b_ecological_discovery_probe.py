@@ -11,6 +11,7 @@ from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     run_phase35_equivalence_forensics_probe,
     run_phase36_yardstick_sovereignty_probe,
     run_phase37_recent_curriculum_black_resistance_probe,
+    run_phase38_persistent_staged_ladder_probe,
     run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
@@ -440,3 +441,36 @@ def test_phase37_recent_curriculum_black_resistance_uses_recent_stage_ab_only(tm
     assert set(row["stage_a"]) == {"fixed_seed", "exact_adversarial"}
     assert set(row["stage_b"]) == {"fixed_seed", "exact_adversarial"}
     assert "stage_a_fixed_wins" in summary["tables"]["phase3_7_headline"][0]
+
+
+def test_phase38_persistent_staged_ladder_records_provenance_and_gates(tmp_path: Path) -> None:
+    summary = run_phase38_persistent_staged_ladder_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_8_ladder_probe"),
+            seeds=(20272931,),
+            flat_baseline_seeds=(20272911,),
+            stage_a_train_row_limit=1,
+            train_row_limit=1,
+            heldout_row_limit=1,
+            max_samples=1,
+            max_guided_births=0,
+            ecology_mode="stem_cell_graph",
+            native_foundation_train_repetitions=1,
+            native_foundation_continuation_repetitions=1,
+            native_foundation_max_mate1_positions=2,
+            native_foundation_max_mate2_positions=1,
+            native_foundation_prototype_scan_triplets=32,
+            native_foundation_key_mode="coarse",
+            real_native_engine_max_ticks=80,
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_8_persistent_staged_ladder.v0"
+    assert summary["provenance_law"]["default_tick_budget"] == 80
+    assert summary["decision"]["ecology_deferred"] is True
+    assert summary["dataset"]["recent_curriculum_only_for_stage_a_b"] is True
+    assert summary["dataset"]["old_krk_curriculum_imported_for_stage_a_b"] is False
+    assert "phase3_8_gate_matrix" in summary["tables"]
+    row = summary["per_seed"][0]
+    assert row["baselines"]["stage_a_exact_adversarial_flat"]["runner_config"]["black_reply_policy"] == "exact_adversarial"
+    assert row["baselines"]["stage_b_exact_adversarial_flat"]["success_by_row"]

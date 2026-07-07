@@ -1395,6 +1395,286 @@ def run_phase37_recent_curriculum_black_resistance_probe(
     return summary
 
 
+def run_phase38_persistent_staged_ladder_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_8_persistent_staged_ladder",
+        seeds=(20272931, 20272932, 20272933),
+        flat_baseline_seeds=(20272911, 20272912, 20272913),
+        stage_a_train_row_limit=128,
+        train_row_limit=128,
+        heldout_row_limit=None,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+        real_native_engine_max_ticks=80,
+    )
+    output_dir = Path(cfg.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    design = _design_spec(cfg)
+    design["schema_version"] = "phase3_8_persistent_staged_ladder_design_spec.v0"
+    design["phase_alias"] = "User-requested Phase 3.7 persistent-graph staged curriculum"
+    design["provenance_law"] = _phase38_provenance_law(cfg)
+    _write_json(output_dir / "design_spec.json", design)
+
+    stage_a_payload = json.loads(Path(cfg.stage_a_rows_path).read_text(encoding="utf-8"))
+    stage_b_payload = json.loads(Path(cfg.stage_b_rows_path).read_text(encoding="utf-8"))
+    stage_a_train = list(stage_a_payload["train"])
+    stage_b_train = list(stage_b_payload["train"])
+    stage_a_heldout = list(stage_a_payload["heldout"])
+    stage_b_heldout = list(stage_b_payload["heldout"])
+    stage_a_limit = cfg.stage_a_train_row_limit if cfg.stage_a_train_row_limit is not None else cfg.train_row_limit
+    if stage_a_limit is not None:
+        stage_a_train = stage_a_train[: int(stage_a_limit)]
+    if cfg.train_row_limit is not None:
+        stage_b_train = stage_b_train[: int(cfg.train_row_limit)]
+    if cfg.heldout_row_limit is not None:
+        stage_a_heldout = stage_a_heldout[: int(cfg.heldout_row_limit)]
+        stage_b_heldout = stage_b_heldout[: int(cfg.heldout_row_limit)]
+
+    rebaseline = _phase38_rebaseline_phase29e_discovery(cfg, stage_b_heldout)
+    _write_json(output_dir / "phase2_9e_rebaseline_audit.json", rebaseline)
+
+    per_seed: list[dict[str, Any]] = []
+    for index, seed in enumerate(cfg.seeds):
+        flat_seed = int(cfg.flat_baseline_seeds[index % len(cfg.flat_baseline_seeds)])
+        foundation = _train_native_foundation_for_ecology(cfg)
+        native_graph = foundation["graph"]
+        stage_a_weights = _load_weight_table(
+            Path(cfg.stage_b_baseline_dir) / f"stage_d_A_sealed_seed_{flat_seed}_weights.json"
+        )
+        stage_b_weights = _load_weight_table(
+            Path(cfg.stage_b_baseline_dir) / f"stage_d_B_sealed_seed_{flat_seed}_weights.json"
+        )
+        stage_a_baseline = _phase38_flat_policy_traces(
+            cfg,
+            stage_a_heldout,
+            atom_weights=stage_a_weights,
+            flat_seed=flat_seed,
+            seed=int(seed) + 700,
+            policy_name=f"phase3_8_stage_a_executable_flat_exact_adversarial_{flat_seed}",
+            success_kind="approach_waypoint",
+        )
+        stage_b_baseline = _phase38_flat_policy_traces(
+            cfg,
+            stage_b_heldout,
+            atom_weights=stage_b_weights,
+            flat_seed=flat_seed,
+            seed=int(seed) + 900,
+            policy_name=f"phase3_8_stage_b_executable_flat_exact_adversarial_{flat_seed}",
+            success_kind="stage_b_enter_mate2",
+        )
+
+        foundation_gate = {
+            "rung": "foundation_mate1_mate2",
+            "passed": bool(foundation["summary"]["decision"]["checkpoint_pass"]),
+            "mate1_accuracy": float(foundation["summary"]["mate1"]["evaluation"]["accuracy"]),
+            "mate2_conversion_rate": float(foundation["summary"]["mate2"]["evaluation"]["conversion_rate"]),
+            "tick_budget": int(cfg.native_foundation_max_ticks),
+        }
+        seed_result: dict[str, Any] = {
+            "schema_version": "phase3_8_persistent_staged_ladder_seed.v0",
+            "seed": int(seed),
+            "flat_seed": flat_seed,
+            "runner_provenance": _phase38_provenance_law(cfg),
+            "foundation": foundation["summary"],
+            "baselines": {
+                "stage_a_exact_adversarial_flat": stage_a_baseline,
+                "stage_b_exact_adversarial_flat": stage_b_baseline,
+            },
+            "gate_matrix": {
+                "after_foundation": {
+                    "foundation": foundation_gate,
+                    "stage_a_approach": None,
+                    "stage_b_chase": None,
+                }
+            },
+            "stop_reasons": [],
+        }
+        if not foundation_gate["passed"]:
+            seed_result["stop_reasons"].append("foundation_gate_failed")
+            _write_json(output_dir / f"seed_{seed}_ladder.json", seed_result)
+            per_seed.append(seed_result)
+            continue
+
+        stage_a_provider = _MigratedStageBFlatGraphScoreProvider(
+            cfg,
+            native_graph,
+            atom_weights=stage_a_weights,
+            flat_seed=flat_seed,
+            policy_parent_id="stage_a_policy_migrated_flat",
+            terminal_namespace=f"phase3_8_stage_a_{flat_seed}",
+        )
+        stage_a_acceptance = stage_a_provider.acceptance_check(stage_a_heldout[0], seed=int(seed)) if stage_a_heldout else {}
+        stage_a_training = _phase38_train_migrated_provider_on_rung(
+            cfg,
+            stage_a_train,
+            stage_a_provider,
+            seed=int(seed) + 10_000,
+            success_kind="approach_waypoint",
+            rung_name="stage_a_approach",
+        )
+        stage_a_eval = _phase38_migrated_provider_traces(
+            cfg,
+            stage_a_heldout,
+            stage_a_provider,
+            seed=int(seed) + 11_000,
+            policy_name=f"phase3_8_stage_a_persistent_host_{seed}",
+            success_kind="approach_waypoint",
+        )
+        stage_a_gate = _phase38_gate_result(
+            rung="stage_a_approach",
+            evaluation=stage_a_eval,
+            baseline=stage_a_baseline,
+        )
+        seed_result["stage_a"] = {
+            "acceptance_check": stage_a_acceptance,
+            "training": stage_a_training,
+            "evaluation": stage_a_eval,
+            "gate": stage_a_gate,
+            "host_stats": stage_a_provider.stats(),
+        }
+        seed_result["gate_matrix"]["after_stage_a"] = {
+            "foundation": foundation_gate,
+            "stage_a_approach": stage_a_gate,
+            "stage_b_chase": None,
+        }
+        if not stage_a_gate["passed"]:
+            seed_result["stop_reasons"].append("stage_a_gate_unreachable_after_budget")
+            _write_json(output_dir / f"seed_{seed}_ladder.json", seed_result)
+            per_seed.append(seed_result)
+            continue
+
+        stage_b_provider = _MigratedStageBFlatGraphScoreProvider(
+            cfg,
+            native_graph,
+            atom_weights=stage_b_weights,
+            flat_seed=flat_seed,
+            policy_parent_id="stage_b_policy_migrated_flat_ladder",
+            terminal_namespace=f"phase3_8_stage_b_{flat_seed}",
+        )
+        stage_b_acceptance = stage_b_provider.acceptance_check(stage_b_heldout[0], seed=int(seed)) if stage_b_heldout else {}
+        stage_b_training = _phase38_train_migrated_provider_on_rung(
+            cfg,
+            stage_b_train,
+            stage_b_provider,
+            seed=int(seed) + 20_000,
+            success_kind="stage_b_enter_mate2",
+            rung_name="stage_b_chase",
+        )
+        stage_b_eval = _phase38_migrated_provider_traces(
+            cfg,
+            stage_b_heldout,
+            stage_b_provider,
+            seed=int(seed) + 21_000,
+            policy_name=f"phase3_8_stage_b_persistent_host_{seed}",
+            success_kind="stage_b_enter_mate2",
+        )
+        stage_a_regression_eval = _phase38_migrated_provider_traces(
+            cfg,
+            stage_a_heldout,
+            stage_a_provider,
+            seed=int(seed) + 22_000,
+            policy_name=f"phase3_8_stage_a_regression_after_stage_b_{seed}",
+            success_kind="approach_waypoint",
+        )
+        stage_b_gate = _phase38_gate_result(
+            rung="stage_b_chase",
+            evaluation=stage_b_eval,
+            baseline=stage_b_baseline,
+        )
+        stage_a_regression_gate = _phase38_gate_result(
+            rung="stage_a_approach_regression",
+            evaluation=stage_a_regression_eval,
+            baseline=stage_a_baseline,
+        )
+        seed_result["stage_b"] = {
+            "acceptance_check": stage_b_acceptance,
+            "training": stage_b_training,
+            "evaluation": stage_b_eval,
+            "gate": stage_b_gate,
+            "host_stats": stage_b_provider.stats(),
+        }
+        seed_result["regression_checks"] = {
+            "stage_a_after_stage_b": {
+                "evaluation": stage_a_regression_eval,
+                "gate": stage_a_regression_gate,
+            }
+        }
+        seed_result["gate_matrix"]["after_stage_b"] = {
+            "foundation": foundation_gate,
+            "stage_a_approach": stage_a_regression_gate,
+            "stage_b_chase": stage_b_gate,
+        }
+        if not stage_b_gate["passed"]:
+            seed_result["stop_reasons"].append("stage_b_gate_unreachable_after_budget")
+        if not stage_a_regression_gate["passed"]:
+            seed_result["stop_reasons"].append("stage_a_regression_after_stage_b")
+        seed_result["intermediate_stratum"] = {
+            "needed": bool(stage_a_regression_gate["passed"] and not stage_b_gate["passed"]),
+            "ran": False,
+            "reason": (
+                "not needed; Stage B gate stood"
+                if stage_b_gate["passed"]
+                else "gap detected between recent Stage A and Stage B; fresh intermediate stratum is the next bounded run"
+            ),
+            "old_curriculum_imported": False,
+        }
+        _write_json(output_dir / f"seed_{seed}_ladder.json", seed_result)
+        per_seed.append(seed_result)
+
+    dispatcher_side_eval = _phase38_dispatcher_side_eval(cfg, stage_b_heldout)
+    standing_ladder = all(
+        not row.get("stop_reasons")
+        and bool(row.get("gate_matrix", {}).get("after_stage_b", {}).get("foundation", {}).get("passed"))
+        and bool(row.get("gate_matrix", {}).get("after_stage_b", {}).get("stage_a_approach", {}).get("passed"))
+        and bool(row.get("gate_matrix", {}).get("after_stage_b", {}).get("stage_b_chase", {}).get("passed"))
+        for row in per_seed
+    )
+    summary = {
+        "schema_version": "phase3_8_persistent_staged_ladder.v0",
+        "phase": "User-requested Phase 3.7 persistent-graph staged curriculum",
+        "artifact_path_note": "phase3_8 path used because phase3_7_recent_curriculum_black_resistance already exists",
+        "config": asdict(cfg),
+        "provenance_law": _phase38_provenance_law(cfg),
+        "dataset": {
+            "recent_curriculum_only_for_stage_a_b": True,
+            "old_krk_curriculum_imported_for_stage_a_b": False,
+            "foundation_rung": "native Mate1/Mate2 sanity graph",
+            "stage_a_rows_path": str(cfg.stage_a_rows_path),
+            "stage_b_rows_path": str(cfg.stage_b_rows_path),
+            "stage_a_train_count": len(stage_a_train),
+            "stage_b_train_count": len(stage_b_train),
+            "stage_a_heldout_count": len(stage_a_heldout),
+            "stage_b_heldout_count": len(stage_b_heldout),
+        },
+        "rebaseline_audit": rebaseline,
+        "per_seed": per_seed,
+        "dispatcher_side_eval": dispatcher_side_eval,
+        "tables": {
+            "phase3_8_gate_matrix": _phase38_gate_matrix_table(per_seed),
+            "phase3_8_rebaseline_correction": _phase38_rebaseline_table(rebaseline),
+        },
+        "decision": {
+            "ecology_deferred": True,
+            "standing_ladder_all_seeds_green": standing_ladder,
+            "run_phase3_8_ecology_next": standing_ladder,
+            "stop_reasons_by_seed": {
+                str(row["seed"]): list(row.get("stop_reasons", ())) for row in per_seed
+            },
+            "intermediate_stratum_needed": any(
+                bool(row.get("intermediate_stratum", {}).get("needed")) for row in per_seed
+            ),
+        },
+    }
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
 class _MigratedStageBFlatGraphScoreProvider:
     policy_parent_id = "stage_b_policy_migrated_flat"
 
@@ -1405,17 +1685,26 @@ class _MigratedStageBFlatGraphScoreProvider:
         *,
         atom_weights: Mapping[str, float],
         flat_seed: int,
+        policy_parent_id: str | None = None,
+        terminal_namespace: str | None = None,
     ) -> None:
         self.cfg = cfg
         self.native_graph = native_graph
         self.flat_seed = int(flat_seed)
+        if policy_parent_id is not None:
+            self.policy_parent_id = str(policy_parent_id)
+        self.terminal_namespace = None if terminal_namespace is None else str(terminal_namespace)
         self.atom_weights = {
             str(key): float(value)
             for key, value in atom_weights.items()
             if abs(float(value)) > 0.0 and not learner_visible_key_firewall_leaks([str(key)])
         }
         self.terminal_ids = {
-            key: _phase33_stage_b_atom_terminal_id(key, self.flat_seed)
+            key: (
+                _phase38_migrated_atom_terminal_id(self.terminal_namespace, key, self.flat_seed)
+                if self.terminal_namespace
+                else _phase33_stage_b_atom_terminal_id(key, self.flat_seed)
+            )
             for key in sorted(self.atom_weights)
         }
         self.cache: dict[str, dict[str, float]] = {}
@@ -1436,7 +1725,7 @@ class _MigratedStageBFlatGraphScoreProvider:
                     NodeType.SCRIPT,
                     meta={
                         "origin": "phase3_3_migrated_flat_native_ecology",
-                        "role": "stage_b_policy_parent",
+                        "role": self.policy_parent_id,
                         "confirm_policy": "or",
                         "request_policy": "active_subset",
                         "flat_seed": self.flat_seed,
@@ -1462,7 +1751,36 @@ class _MigratedStageBFlatGraphScoreProvider:
                     )
                 )
                 self.materialized_terminal_count += 1
+            else:
+                graph.nodes[node_id].meta.update(
+                    {
+                        "terminal_key": key,
+                        "local_weight": float(self.atom_weights[key]),
+                        "flat_seed": self.flat_seed,
+                    }
+                )
             _add_graph_pair_once(self.native_graph, self.policy_parent_id, node_id, weight=float(self.atom_weights[key]))
+
+    def set_atom_weight(self, key: str, value: float) -> None:
+        key = str(key)
+        if key not in self.atom_weights or key not in self.terminal_ids:
+            return
+        value = float(max(-1.5, min(1.5, value)))
+        self.atom_weights[key] = value
+        self.cache.clear()
+        node_id = self.terminal_ids[key]
+        node = self.native_graph.graph.nodes.get(node_id)
+        if node is not None:
+            node.meta["local_weight"] = value
+        edge = self.native_graph.graph.get_edge(self.policy_parent_id, node_id, LinkType.SUB)
+        if edge is not None:
+            edge.w = value
+
+    def adjust_atom_weight(self, key: str, delta: float) -> None:
+        key = str(key)
+        if key not in self.atom_weights:
+            return
+        self.set_atom_weight(key, float(self.atom_weights[key]) + float(delta))
 
     def __call__(self, board: chess.Board, counts: Mapping[Any, int]) -> Mapping[str, float]:
         del counts
@@ -1626,6 +1944,456 @@ class _MigratedStageBFlatGraphScoreProvider:
             "mean_ticks_per_policy_call": self.engine_tick_total / max(1, self.engine_call_count),
             "engine_tick_samples": list(self.engine_tick_samples),
         }
+
+
+def _phase38_migrated_atom_terminal_id(namespace: str | None, key: str, flat_seed: int) -> str:
+    if not namespace:
+        return _phase33_stage_b_atom_terminal_id(key, flat_seed)
+    digest = hashlib.sha256(
+        json.dumps([str(namespace), str(flat_seed), str(key)], sort_keys=True).encode("utf-8")
+    ).hexdigest()
+    return f"{namespace}_atom_{digest[:16]}"
+
+
+def _phase38_provenance_law(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
+    return {
+        "law": (
+            "All Phase 3.7+ artifacts must store row-level outcomes plus complete runner config: "
+            "black policy, seed schedule, judge version, fence-check timing, and tick budget."
+        ),
+        "required_fields": [
+            "success_by_row",
+            "endpoint_by_row",
+            "trace_digest_by_row",
+            "runner_config.black_reply_policy",
+            "runner_config.seed_schedule",
+            "runner_config.judge_version",
+            "runner_config.fence_check_timing",
+            "runner_config.tick_budget",
+        ],
+        "default_tick_budget": int(cfg.real_native_engine_max_ticks),
+        "stage_labels_learner_visible": False,
+        "runtime_tablebase_or_dtm_move_source": False,
+    }
+
+
+def _phase38_runner_config(
+    cfg: StageBEcologicalDiscoveryConfig,
+    *,
+    seed: int,
+    success_kind: str,
+    black_reply_policy: str,
+    row_count: int,
+) -> dict[str, Any]:
+    return {
+        "runner": "_rollout_policy",
+        "row_count": int(row_count),
+        "seed": int(seed),
+        "seed_schedule": "seed + heldout_index * 31",
+        "horizon_white_moves": int(cfg.horizon_plies),
+        "success_kind": str(success_kind),
+        "judge_version": (
+            "_fast_enter_mate2_audit"
+            if cfg.fast_exact_judge and success_kind != "approach_waypoint"
+            else "_approach_waypoint_success"
+            if success_kind == "approach_waypoint"
+            else "_edge_mate_enter_mate2_audit"
+        ),
+        "judge_gating": "exact ungated judge after the fact",
+        "black_reply_policy": str(black_reply_policy),
+        "black_reply_contract": (
+            "legal black reply minimizing the same post-hoc success predicate, "
+            "preferring fence break / rook loss / stalemate"
+            if black_reply_policy == "exact_adversarial"
+            else "_edge_mate_fixed_seed_black_reply(board, rollout_rng)"
+        ),
+        "fence_check_timing": (
+            "hard failure checked after each white move for rook/stalemate/checkmate, "
+            "then after each black reply for rook/stalemate/fence_established_geometry"
+        ),
+        "third_repetition_filter": "_legal_without_third_repetition before white selection",
+        "tick_budget": int(cfg.real_native_engine_max_ticks),
+        "learner_visible_stage_labels": False,
+        "runtime_tablebase_or_dtm_move_source": False,
+    }
+
+
+def _phase38_flat_policy_traces(
+    cfg: StageBEcologicalDiscoveryConfig,
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    atom_weights: Mapping[str, float],
+    flat_seed: int,
+    seed: int,
+    policy_name: str,
+    success_kind: str,
+) -> dict[str, Any]:
+    return _phase36_policy_traces(
+        cfg,
+        rows,
+        lambda board, counts, row_id, ply, rng, weights=atom_weights: _choose_official_flat_replay_move(
+            board,
+            counts,
+            atom_weights=weights,
+        ),
+        seed=int(seed),
+        policy_name=policy_name,
+        success_kind=success_kind,
+        black_reply_policy="exact_adversarial",
+    )
+
+
+def _phase38_migrated_provider_traces(
+    cfg: StageBEcologicalDiscoveryConfig,
+    rows: Sequence[Mapping[str, Any]],
+    provider: _MigratedStageBFlatGraphScoreProvider,
+    *,
+    seed: int,
+    policy_name: str,
+    success_kind: str,
+) -> dict[str, Any]:
+    return _phase36_policy_traces(
+        cfg,
+        rows,
+        lambda board, counts, row_id, ply, rng, score_provider=provider: _choose_migrated_flat_host_move(
+            board,
+            counts,
+            score_provider=score_provider,
+            seed=int(seed) + int(row_id) * 17 + int(ply),
+        ),
+        seed=int(seed),
+        policy_name=policy_name,
+        success_kind=success_kind,
+        black_reply_policy="exact_adversarial",
+    )
+
+
+def _phase38_rebaseline_phase29e_discovery(
+    cfg: StageBEcologicalDiscoveryConfig,
+    heldout_rows: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    summary_path = DEFAULT_OUTPUT_DIR / "summary.json"
+    if not summary_path.exists():
+        return {
+            "enabled": False,
+            "reason": f"missing prior 2.9e summary: {summary_path}",
+            "row_level_outcomes_stored": False,
+        }
+    prior = json.loads(summary_path.read_text(encoding="utf-8"))
+    replay_cfg_values = asdict(cfg)
+    replay_cfg_values["ecology_mode"] = "global"
+    replay_cfg = StageBEcologicalDiscoveryConfig(**replay_cfg_values)
+    rows: list[dict[str, Any]] = []
+    for seed_text, result in sorted(prior.get("seed_results", {}).items(), key=lambda item: int(item[0])):
+        arm = result.get("arm1_unguided_ecological", {})
+        flat_seed = int(arm.get("flat_baseline_seed", result.get("flat_baseline_seed", 0)))
+        if flat_seed <= 0:
+            continue
+        atom_weights = _load_weight_table(
+            Path(cfg.stage_b_baseline_dir) / f"stage_d_B_sealed_seed_{flat_seed}_weights.json"
+        )
+        survivors = [
+            dict(item)
+            for item in arm.get("structure", {}).get("top_survivors", ())
+            if isinstance(item, Mapping)
+        ]
+        population = {str(item["composite_id"]): item for item in survivors if "composite_id" in item}
+        flat = _phase38_flat_policy_traces(
+            cfg,
+            heldout_rows,
+            atom_weights=atom_weights,
+            flat_seed=flat_seed,
+            seed=flat_seed + 700,
+            policy_name=f"phase3_8_rebaseline_flat_exact_adversarial_{flat_seed}",
+            success_kind="stage_b_enter_mate2",
+        )
+        arm1 = _phase36_policy_traces(
+            replay_cfg,
+            heldout_rows,
+            lambda board, counts, row_id, ply, rng, weights=atom_weights, pop=population, seed_base=int(seed_text): _choose_ecological_move(
+                replay_cfg,
+                board,
+                counts,
+                atom_weights=weights,
+                population=pop,
+                seed=seed_base + int(row_id) * 37 + int(ply),
+                disabled_composite_ids=set(),
+                row_id=int(row_id),
+                ply=int(ply),
+            ),
+            seed=int(seed_text) + 700,
+            policy_name=f"phase3_8_rebaseline_phase2_9e_arm1_exact_adversarial_{seed_text}",
+            success_kind="stage_b_enter_mate2",
+            black_reply_policy="exact_adversarial",
+            collect_composites=True,
+            population=population,
+        )
+        rows.append(
+            {
+                "phase2_9e_seed": int(seed_text),
+                "flat_seed": flat_seed,
+                "old_reported_arm1_wins_fixed_runner": int(
+                    arm.get("evaluations", {}).get("survivor_trial", {}).get("wins", -1)
+                ),
+                "replayed_arm1_exact_adversarial_wins": int(arm1["wins"]),
+                "replayed_flat_exact_adversarial_wins": int(flat["wins"]),
+                "delta_arm1_minus_flat": int(arm1["wins"]) - int(flat["wins"]),
+                "active_composite_ids": list(arm1.get("active_composite_ids", ())),
+                "paired_vs_flat": _paired_outcomes(arm1, flat),
+                "arm1_trace_digest": arm1["trace_digest"],
+                "flat_trace_digest": flat["trace_digest"],
+                "arm1_runner_config": arm1["runner_config"],
+                "flat_runner_config": flat["runner_config"],
+                "arm1_success_by_row": arm1["success_by_row"],
+                "flat_success_by_row": flat["success_by_row"],
+            }
+        )
+    return {
+        "enabled": True,
+        "source_summary": str(summary_path),
+        "runner": "one identical exact-adversarial _rollout_policy runner for Arm1 survivors and executable flat",
+        "row_level_outcomes_stored": True,
+        "comparison_rows": rows,
+        "correction": (
+            "2.9e remains an existence proof for causal composites under its original runner; "
+            "under the current exact-adversarial runner the honest comparison is Arm1 survivors "
+            "versus executable flat on the same heldout and seed schedule, not versus count-only 93/92/92."
+        ),
+    }
+
+
+def _phase38_train_migrated_provider_on_rung(
+    cfg: StageBEcologicalDiscoveryConfig,
+    rows: Sequence[Mapping[str, Any]],
+    provider: _MigratedStageBFlatGraphScoreProvider,
+    *,
+    seed: int,
+    success_kind: str,
+    rung_name: str,
+) -> dict[str, Any]:
+    rng = random.Random(seed)
+    ordered = list(rows)
+    rng.shuffle(ordered)
+    judge_cache = _new_judge_cache()
+    endpoint_pairs: Counter[str] = Counter()
+    update_count = 0
+    selected_better = 0
+    alternative_better = 0
+    tied = 0
+    samples: list[dict[str, Any]] = []
+    learning_rate = 0.010
+    for step, row in enumerate(ordered):
+        board = chess.Board(str(row["fen"]))
+        counts: Counter[Any] = Counter({_position_repetition_key(board): 1, board._transposition_key(): 1})
+        selected = _choose_migrated_flat_host_move(
+            board,
+            counts,
+            score_provider=provider,
+            seed=int(seed) + step,
+        )
+        legal = [move for move in _legal_without_third_repetition(board, counts) if move != selected]
+        if not legal:
+            legal = [move for move in sorted(board.legal_moves, key=lambda item: item.uci()) if move != selected]
+        if selected is None or not legal:
+            continue
+        alternative = legal[(int(seed) + int(row["row_id"]) + step) % len(legal)]
+        selected_out = _phase38_rollout_forced_first_move_provider(
+            cfg,
+            row,
+            selected,
+            provider,
+            seed=int(seed) + step * 41,
+            judge_cache=judge_cache,
+            success_kind=success_kind,
+        )
+        alternative_out = _phase38_rollout_forced_first_move_provider(
+            cfg,
+            row,
+            alternative,
+            provider,
+            seed=int(seed) + step * 41 + 17,
+            judge_cache=judge_cache,
+            success_kind=success_kind,
+        )
+        endpoint_pairs[f"{selected_out['endpoint']}|{alternative_out['endpoint']}"] += 1
+        reward_delta = float(selected_out["reward"]) - float(alternative_out["reward"])
+        if reward_delta > 0:
+            selected_better += 1
+        elif reward_delta < 0:
+            alternative_better += 1
+        else:
+            tied += 1
+            continue
+        direction = 1.0 if reward_delta > 0 else -1.0
+        scaled_lr = learning_rate * min(1.0, abs(reward_delta) / 12.0)
+        selected_keys = _phase38_active_weighted_keys(provider, board, selected)
+        alternative_keys = _phase38_active_weighted_keys(provider, board, alternative)
+        for key in selected_keys:
+            provider.adjust_atom_weight(key, direction * scaled_lr)
+            update_count += 1
+        for key in alternative_keys:
+            provider.adjust_atom_weight(key, -direction * scaled_lr)
+            update_count += 1
+        if len(samples) < int(cfg.max_samples):
+            samples.append(
+                {
+                    "row_id": int(row["row_id"]),
+                    "selected": selected.uci(),
+                    "alternative": alternative.uci(),
+                    "selected_endpoint": selected_out["endpoint"],
+                    "alternative_endpoint": alternative_out["endpoint"],
+                    "reward_delta": round(reward_delta, 6),
+                    "selected_weighted_key_count": len(selected_keys),
+                    "alternative_weighted_key_count": len(alternative_keys),
+                }
+            )
+    return {
+        "rung": rung_name,
+        "row_count": len(ordered),
+        "black_reply_policy": "exact_adversarial",
+        "success_kind": success_kind,
+        "contrastive_selection": "current host move versus deterministic legal alternative; judge labels outcomes after the fact",
+        "learning_rate": learning_rate,
+        "selected_better_count": selected_better,
+        "alternative_better_count": alternative_better,
+        "tied_count": tied,
+        "weight_update_count": update_count,
+        "endpoint_pair_counts": dict(sorted(endpoint_pairs.items())),
+        "samples": samples,
+    }
+
+
+def _phase38_rollout_forced_first_move_provider(
+    cfg: StageBEcologicalDiscoveryConfig,
+    row: Mapping[str, Any],
+    first_move: chess.Move,
+    provider: _MigratedStageBFlatGraphScoreProvider,
+    *,
+    seed: int,
+    judge_cache: _JudgeCache | None,
+    success_kind: str,
+) -> dict[str, Any]:
+    used = False
+
+    def chooser(
+        board: chess.Board,
+        counts: Mapping[Any, int],
+        row_id: int,
+        ply: int,
+        rng: random.Random,
+    ) -> chess.Move | None:
+        nonlocal used
+        if not used:
+            used = True
+            return first_move if first_move in board.legal_moves else None
+        del rng
+        return _choose_migrated_flat_host_move(
+            board,
+            counts,
+            score_provider=provider,
+            seed=int(seed) + int(row_id) * 43 + int(ply),
+        )
+
+    return _rollout_policy(
+        cfg,
+        row,
+        chooser,
+        seed=int(seed),
+        judge_cache=judge_cache,
+        success_kind=success_kind,
+        black_reply_policy="exact_adversarial",
+    )
+
+
+def _phase38_active_weighted_keys(
+    provider: _MigratedStageBFlatGraphScoreProvider,
+    board: chess.Board,
+    move: chess.Move,
+) -> tuple[str, ...]:
+    return tuple(
+        key
+        for key, _scale in _sealed_action_key_scales(board, move)
+        if key in provider.atom_weights
+    )
+
+
+def _phase38_gate_result(
+    *,
+    rung: str,
+    evaluation: Mapping[str, Any],
+    baseline: Mapping[str, Any],
+) -> dict[str, Any]:
+    wins = int(evaluation["wins"])
+    threshold = int(baseline["wins"])
+    return {
+        "rung": rung,
+        "wins": wins,
+        "baseline_wins": threshold,
+        "delta_vs_executable_flat": wins - threshold,
+        "row_count": int(evaluation["row_count"]),
+        "passed": wins >= threshold,
+        "endpoint_counts": dict(evaluation["endpoint_counts"]),
+    }
+
+
+def _phase38_gate_matrix_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    table: list[dict[str, Any]] = []
+    for row in per_seed:
+        final_gate = row.get("gate_matrix", {}).get("after_stage_b") or row.get("gate_matrix", {}).get("after_stage_a") or row.get("gate_matrix", {}).get("after_foundation", {})
+        foundation = final_gate.get("foundation") or {}
+        stage_a = final_gate.get("stage_a_approach") or {}
+        stage_b = final_gate.get("stage_b_chase") or {}
+        table.append(
+            {
+                "seed": int(row["seed"]),
+                "flat_seed": int(row["flat_seed"]),
+                "foundation_pass": bool(foundation.get("passed", False)),
+                "stage_a_pass": None if not stage_a else bool(stage_a.get("passed", False)),
+                "stage_a_wins": None if not stage_a else int(stage_a.get("wins", 0)),
+                "stage_a_baseline": None if not stage_a else int(stage_a.get("baseline_wins", 0)),
+                "stage_b_pass": None if not stage_b else bool(stage_b.get("passed", False)),
+                "stage_b_wins": None if not stage_b else int(stage_b.get("wins", 0)),
+                "stage_b_baseline": None if not stage_b else int(stage_b.get("baseline_wins", 0)),
+                "stop_reasons": list(row.get("stop_reasons", ())),
+            }
+        )
+    return table
+
+
+def _phase38_rebaseline_table(rebaseline: Mapping[str, Any]) -> list[dict[str, Any]]:
+    return [
+        {
+            "phase2_9e_seed": int(row["phase2_9e_seed"]),
+            "flat_seed": int(row["flat_seed"]),
+            "old_arm1_wins": int(row["old_reported_arm1_wins_fixed_runner"]),
+            "arm1_exact_adv_wins": int(row["replayed_arm1_exact_adversarial_wins"]),
+            "flat_exact_adv_wins": int(row["replayed_flat_exact_adversarial_wins"]),
+            "delta_arm1_minus_flat": int(row["delta_arm1_minus_flat"]),
+        }
+        for row in rebaseline.get("comparison_rows", ())
+    ]
+
+
+def _phase38_dispatcher_side_eval(
+    cfg: StageBEcologicalDiscoveryConfig,
+    rows: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    scorer = load_canonical_mate2_first_scorer()
+    gate = load_chain_confidence_gate()
+    return _phase36_policy_traces(
+        cfg,
+        rows,
+        lambda board, counts, row_id, ply, rng: _choose_dispatcher_move(
+            board,
+            counts,
+            scorer=scorer,
+            gate=gate,
+        ),
+        seed=20273802,
+        policy_name="phase3_8_dispatcher_side_eval_exact_adversarial",
+        success_kind="stage_b_enter_mate2",
+        black_reply_policy="exact_adversarial",
+    )
 
 
 class _GraphNativeCompositeRuntime:
@@ -2933,6 +3701,10 @@ def _phase36_policy_traces(
     *,
     seed: int,
     policy_name: str,
+    success_kind: str = "stage_b_enter_mate2",
+    black_reply_policy: str = "fixed_seed",
+    collect_composites: bool = False,
+    population: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
     endpoints: Counter[str] = Counter()
     success_by_row: dict[str, bool] = {}
@@ -2948,6 +3720,10 @@ def _phase36_policy_traces(
             seed=seed + index * 31,
             policy_name=policy_name,
             judge_cache=judge_cache,
+            success_kind=success_kind,
+            black_reply_policy=black_reply_policy,
+            collect_composites=collect_composites,
+            population=population,
         )
         row_id = str(row["row_id"])
         trace = {
@@ -2957,6 +3733,8 @@ def _phase36_policy_traces(
             "endpoint": str(outcome["endpoint"]),
             "plies": int(outcome["plies"]),
             "white_steps": list(outcome["white_steps"]),
+            "active_composite_ids": list(outcome.get("active_composite_ids", ())),
+            "percept_signatures": list(outcome.get("percept_signatures", ())),
         }
         digest = _phase36_digest(trace)
         endpoints[str(outcome["endpoint"])] += 1
@@ -2968,6 +3746,13 @@ def _phase36_policy_traces(
     wins = sum(int(value) for value in success_by_row.values())
     return {
         "policy": policy_name,
+        "runner_config": _phase38_runner_config(
+            cfg,
+            seed=seed,
+            success_kind=success_kind,
+            black_reply_policy=black_reply_policy,
+            row_count=len(rows),
+        ),
         "row_count": len(rows),
         "wins": wins,
         "nonwins": len(rows) - wins,
