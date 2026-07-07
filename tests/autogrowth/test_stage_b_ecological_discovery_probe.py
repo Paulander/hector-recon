@@ -5,6 +5,7 @@ from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     _fast_enter_mate2_audit,
     run_stage_ab_graph_native_carryover_probe,
     run_stage_ab_native_foundation_ecology_probe,
+    run_phase32_real_native_graph_ecology_probe,
     run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
@@ -209,3 +210,45 @@ def test_phase32_native_foundation_ecology_reports_coverage(tmp_path: Path) -> N
     arm1 = summary["seed_results"]["20272931"]["arm1_unguided_ecological"]
     assert arm1["autogrowth_evidence"] is True
     assert arm1["uses_oracle_birth"] is False
+
+
+def test_phase32_real_native_graph_ecology_acceptance_path(tmp_path: Path) -> None:
+    summary = run_phase32_real_native_graph_ecology_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_2_real_native_probe"),
+            seeds=(20272931,),
+            real_native_foundation_row_limit=1,
+            train_row_limit=1,
+            heldout_row_limit=1,
+            max_samples=2,
+            max_guided_births=0,
+            ecology_mode="stem_cell_graph",
+            native_foundation_train_repetitions=1,
+            native_foundation_continuation_repetitions=1,
+            native_foundation_max_mate1_positions=2,
+            native_foundation_max_mate2_positions=1,
+            native_foundation_prototype_scan_triplets=32,
+            native_foundation_key_mode="coarse",
+            real_native_max_live_composites=4,
+            real_native_max_live_siblings_per_parent=2,
+            real_native_engine_max_ticks=80,
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_2_real_native_graph_ecology.v0"
+    assert summary["dataset"]["one_persistent_graph_per_seed_foundation_then_chase"] is True
+    assert "FormalReConEngine.run(active_nodes={ROOT_ID,parent_script,composite_terminal})" in summary["acceptance_spec"]["call_chain"]
+
+    result = summary["seed_results"]["20272931"]
+    acceptance = result["acceptance_check"]
+    proof = acceptance["dynamic_proof"]
+    assert acceptance["passed"] is True
+    assert proof["request_sub_message_to_composite_seen"] is True
+    assert proof["predicate_evaluated"] is True
+    assert proof["terminal_requested"] is True
+    assert proof["formal_engine_eval_count_after"] > proof["formal_engine_eval_count_before"]
+    assert proof["formal_ticks_run"] <= 80
+
+    instrumentation = result["runtime_instrumentation"]
+    assert instrumentation["formal_engine_composite_call_count"] >= instrumentation["formal_engine_composite_eval_count"] > 0
+    assert instrumentation["engine_tick_samples"]

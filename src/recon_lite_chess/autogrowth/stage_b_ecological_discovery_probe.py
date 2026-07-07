@@ -14,6 +14,7 @@ from typing import Any, Callable, Iterable, Mapping, Sequence
 
 import chess
 
+from recon_lite import FormalReConEngine, LinkType, Node, NodeState, NodeType
 from recon_lite_hector.nodes.stem_cell import StemCellState, StemCellTerminal
 
 from .approach_discovery_probe import _after_move_repetition_key
@@ -27,6 +28,7 @@ from .features import (
 from .native_single_graph_curriculum import (
     NativeReConKRKGraph,
     NativeSingleGraphConfig,
+    ROOT_ID,
     _evaluate_mate1_stage,
     _evaluate_mate2_stage,
     _train_mate1_stage,
@@ -119,6 +121,19 @@ class StageBEcologicalDiscoveryConfig:
     native_foundation_max_mate1_positions: int | None = None
     native_foundation_max_mate2_positions: int | None = None
     native_foundation_prototype_scan_triplets: int = 512
+    real_native_foundation_row_limit: int = 24
+    real_native_max_live_composites: int = 24
+    real_native_max_live_siblings_per_parent: int = 4
+    real_native_max_births_per_row: int = 1
+    real_native_trial_grace_exposures: int = 3
+    real_native_dormant_decay: float = 0.001
+    real_native_active_decay: float = 0.040
+    real_native_credit: float = 0.090
+    real_native_debt: float = 0.110
+    real_native_initial_resource: float = 0.40
+    real_native_mature_resource: float = 0.75
+    real_native_max_ablation_subjects: int = 4
+    real_native_engine_max_ticks: int = 80
 
 
 def run_stage_b_ecological_discovery_probe(
@@ -579,6 +594,1043 @@ def run_stage_ab_native_foundation_ecology_probe(
     summary["tables"]["phase3_2_headline"] = _phase32_headline(summary)
     _write_json(output_dir / "summary.json", summary)
     return summary
+
+
+def run_phase32_real_native_graph_ecology_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_2_real_native_graph_ecology",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        train_row_limit=24,
+        heldout_row_limit=16,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+    )
+    output_dir = Path(cfg.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    design = _design_spec(cfg)
+    design["schema_version"] = "phase3_2_real_native_graph_ecology_design_spec.v0"
+    design["real_graph_native_acceptance"] = _real_native_acceptance_spec()
+    _write_json(output_dir / "design_spec.json", design)
+
+    rows_b = json.loads(Path(cfg.stage_b_rows_path).read_text(encoding="utf-8"))
+    stage_b_train_rows = list(rows_b["train"])
+    heldout_rows = list(rows_b["heldout"])
+    if cfg.train_row_limit is not None:
+        stage_b_train_rows = stage_b_train_rows[: int(cfg.train_row_limit)]
+    if cfg.heldout_row_limit is not None:
+        heldout_rows = heldout_rows[: int(cfg.heldout_row_limit)]
+
+    seed_results: dict[str, Any] = {}
+    stop_reasons: list[str] = []
+    for seed in cfg.seeds:
+        foundation = _train_native_foundation_for_ecology(cfg)
+        native_graph = foundation["graph"]
+        score_provider = _NativeFoundationScoreProvider(native_graph)
+        runtime = _GraphNativeCompositeRuntime(cfg, native_graph, seed=seed)
+        foundation_rows = _foundation_ecology_rows(cfg, seed=seed)
+        acceptance = runtime.acceptance_check(foundation_rows[0] if foundation_rows else stage_b_train_rows[0])
+        if not acceptance["passed"]:
+            stop_reasons.append(f"acceptance_check_failed:{seed}")
+            result = {
+                "schema_version": "phase3_2_real_native_graph_ecology_seed.v0",
+                "seed": seed,
+                "native_foundation": foundation["summary"],
+                "acceptance_check": acceptance,
+                "stop_rule": {"acceptance_check_failed": True},
+            }
+            _write_json(output_dir / f"seed_{seed}_result.json", result)
+            seed_results[str(seed)] = result
+            continue
+
+        foundation_train = _real_native_train_segment(
+            cfg,
+            runtime,
+            score_provider,
+            foundation_rows,
+            segment_name="foundation_mate1_mate2",
+            seed=seed,
+        )
+        stage_b_train = _real_native_train_segment(
+            cfg,
+            runtime,
+            score_provider,
+            stage_b_train_rows,
+            segment_name="stage_b_true_middle_chase",
+            seed=seed + 10_000,
+        )
+        full_eval = _real_native_evaluate_policy(
+            cfg,
+            heldout_rows,
+            runtime,
+            score_provider,
+            seed=seed + 20_000,
+            policy_name="real_native_graph_ecology",
+        )
+        ablation = _real_native_ablation_health(
+            cfg,
+            heldout_rows,
+            runtime,
+            score_provider,
+            full_eval=full_eval,
+            seed=seed + 30_000,
+        )
+        rescue = _real_native_pruned_rescue_audit(
+            cfg,
+            heldout_rows,
+            runtime,
+            score_provider,
+            full_eval=full_eval,
+            seed=seed + 40_000,
+        )
+        population_stop = runtime.population_stop_rule()
+        result = {
+            "schema_version": "phase3_2_real_native_graph_ecology_seed.v0",
+            "seed": seed,
+            "native_foundation": foundation["summary"],
+            "acceptance_check": acceptance,
+            "foundation_training": foundation_train,
+            "stage_b_training": stage_b_train,
+            "population": runtime.population_summary(),
+            "birth_death_curve": runtime.birth_curve,
+            "evaluations": {"heldout": full_eval},
+            "post_hoc_ablation": ablation,
+            "pruned_rescue_audit": rescue,
+            "candidate_fate_log": runtime.fate_log(),
+            "runtime_instrumentation": runtime.instrumentation_summary(score_provider),
+            "stop_rule": {
+                "acceptance_check_failed": False,
+                **population_stop,
+            },
+        }
+        if population_stop["population_collapse_to_zero"] or population_stop["unbounded_explosion"]:
+            stop_reasons.append(f"population_stop:{seed}")
+        if population_stop["mature_population_failed_to_form"]:
+            stop_reasons.append(f"mature_population_failed_to_form:{seed}")
+        _write_json(output_dir / f"seed_{seed}_result.json", result)
+        seed_results[str(seed)] = result
+
+    summary = {
+        "schema_version": "phase3_2_real_native_graph_ecology.v0",
+        "phase": "Phase 3.2 real native graph ecology",
+        "config": asdict(cfg),
+        "dataset": {
+            "foundation_row_limit": int(cfg.real_native_foundation_row_limit),
+            "stage_b_rows_path": str(cfg.stage_b_rows_path),
+            "stage_b_train_count": len(stage_b_train_rows),
+            "stage_b_heldout_count": len(heldout_rows),
+            "stage_labels_learner_visible": False,
+            "one_persistent_graph_per_seed_foundation_then_chase": True,
+        },
+        "acceptance_spec": _real_native_acceptance_spec(),
+        "seed_results": seed_results,
+        "cross_seed_recurring_mature_composites": _phase32_real_recurring_mature_composites(seed_results),
+        "cross_rung_load_bearing_survivors": _phase32_real_cross_rung_load_bearing_survivors(seed_results),
+        "tables": {"phase3_2_real_headline": _phase32_real_headline(seed_results)},
+        "decision": {
+            "stop_reasons": stop_reasons,
+            "acceptance_all_passed": all(
+                bool(result.get("acceptance_check", {}).get("passed"))
+                for result in seed_results.values()
+            ),
+            "population_stop": bool(stop_reasons),
+        },
+    }
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
+class _GraphNativeCompositeRuntime:
+    def __init__(self, cfg: StageBEcologicalDiscoveryConfig, native_graph: NativeReConKRKGraph, *, seed: int) -> None:
+        self.cfg = cfg
+        self.native_graph = native_graph
+        self.seed = int(seed)
+        self.population: dict[str, dict[str, Any]] = {}
+        self.cells: dict[str, StemCellTerminal] = {}
+        self.trigger_counts: Counter[str] = Counter()
+        self.birth_curve: list[dict[str, Any]] = []
+        self.engine_call_count = 0
+        self.engine_eval_count = 0
+        self.engine_tick_total = 0
+        self.engine_tick_samples: list[dict[str, Any]] = []
+        self.formal_eval_node_ids: set[str] = set()
+
+    def acceptance_check(self, row: Mapping[str, Any]) -> dict[str, Any]:
+        board = chess.Board(str(row["fen"]))
+        legal = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+        if not legal:
+            return {"passed": False, "reason": "no_legal_moves"}
+        move = legal[0]
+        children = _generic_child_pool(_sealed_action_keys(board, move))[: self.cfg.composite_width]
+        if len(children) < self.cfg.composite_width:
+            return {"passed": False, "reason": "insufficient_child_keys"}
+        comp = self.spawn(
+            children,
+            trigger="acceptance_probe",
+            birth_segment="acceptance_probe",
+            birth_row_id=int(row.get("row_id", -1)),
+            source_signature=_percept_signature(_sealed_action_keys(board, move)),
+            acceptance_probe=True,
+        )
+        before_count = int(self.native_graph.graph.nodes[comp["node_id"]].meta.get("formal_engine_eval_count", 0))
+        evaluation = self.evaluate_composite(comp, board, move, record_trace=True)
+        after_count = int(self.native_graph.graph.nodes[comp["node_id"]].meta.get("formal_engine_eval_count", 0))
+        comp["state"] = "PRUNED"
+        comp["prune_reason"] = "acceptance_probe_not_training_evidence"
+        self.native_graph.graph.nodes[comp["node_id"]].meta["stem_cell_state"] = StemCellState.PRUNED.name
+        messages = [
+            message
+            for frame in evaluation.get("trace", [])
+            for message in frame.get("messages", [])
+        ]
+        request_edge_seen = any(
+            message.get("message") == "request"
+            and message.get("link_type") == "SUB"
+            and message.get("dst") == comp["node_id"]
+            for message in messages
+        )
+        passed = bool(
+            after_count > before_count
+            and evaluation["predicate_evaluated"]
+            and evaluation["terminal_requested"]
+            and evaluation["terminal_state"] in {"TRUE", "CONFIRMED", "FAILED"}
+            and evaluation["parent_state"] in {"TRUE", "CONFIRMED", "FAILED"}
+            and request_edge_seen
+        )
+        return {
+            "passed": passed,
+            "call_chain": _real_native_acceptance_spec()["call_chain"],
+            "dynamic_proof": {
+                "composite_node_id": comp["node_id"],
+                "parent_script_id": comp["parent_id"],
+                "formal_engine_eval_count_before": before_count,
+                "formal_engine_eval_count_after": after_count,
+                "terminal_state": evaluation["terminal_state"],
+                "parent_state": evaluation["parent_state"],
+                "formal_ticks_run": evaluation["ticks"],
+                "predicate_evaluated": evaluation["predicate_evaluated"],
+                "terminal_requested": evaluation["terminal_requested"],
+                "request_sub_message_to_composite_seen": request_edge_seen,
+                "trace_frame_count": len(evaluation.get("trace", [])),
+            },
+        }
+
+    def spawn(
+        self,
+        children: Sequence[str],
+        *,
+        trigger: str,
+        birth_segment: str,
+        birth_row_id: int,
+        source_signature: str,
+        acceptance_probe: bool = False,
+    ) -> dict[str, Any]:
+        clean_children = tuple(dict.fromkeys(str(child) for child in children if not learner_visible_key_firewall_leaks([str(child)])))
+        composite_id = _real_native_composite_id(clean_children, source_signature, trigger)
+        if composite_id in self.population:
+            return self.population[composite_id]
+        parent_id = _real_native_parent_id(source_signature)
+        node_id = f"{composite_id}_terminal"
+        cell = StemCellTerminal(f"stem_{composite_id}")
+        cell.state = StemCellState.TRIAL
+        cell.trial_node_id = node_id
+        cell.trial_parent_id = parent_id
+        cell.xp = int(self.cfg.stem_initial_xp)
+        cell.XP_SOLIDIFY = int(self.cfg.stem_mature_xp)
+        cell.is_composition = True
+        cell.children = list(clean_children)
+        cell.depth = 1
+        self.cells[composite_id] = cell
+        item = {
+            "composite_id": composite_id,
+            "node_id": node_id,
+            "parent_id": parent_id,
+            "children": list(clean_children),
+            "source_signature": source_signature,
+            "birth_trigger": trigger,
+            "birth_segment": birth_segment,
+            "birth_row_id": int(birth_row_id),
+            "state": "TRIAL",
+            "stem_cell_id": cell.cell_id,
+            "stem_cell_xp": int(cell.xp),
+            "local_resource": float(self.cfg.real_native_initial_resource),
+            "requested_exposures": 0,
+            "activation_count": 0,
+            "formal_engine_eval_count": 0,
+            "credit_events": 0,
+            "debt_events": 0,
+            "neutral_events": 0,
+            "fate_events": [
+                {
+                    "event": "birth",
+                    "segment": birth_segment,
+                    "trigger": trigger,
+                    "state": "TRIAL",
+                    "xp": int(cell.xp),
+                    "acceptance_probe": acceptance_probe,
+                }
+            ],
+        }
+        self.population[composite_id] = item
+        self._materialize_graph_nodes(item)
+        return item
+
+    def _materialize_graph_nodes(self, item: Mapping[str, Any]) -> None:
+        parent_id = str(item["parent_id"])
+        node_id = str(item["node_id"])
+        if parent_id not in self.native_graph.graph.nodes:
+            self.native_graph.graph.add_node(
+                Node(
+                    parent_id,
+                    NodeType.SCRIPT,
+                    meta={
+                        "origin": "phase3_2_real_native_graph_ecology",
+                        "role": "ecological_habitat_parent",
+                        "confirm_policy": "or",
+                        "request_policy": "active_subset",
+                        "tier": "trial",
+                    },
+                )
+            )
+        if node_id not in self.native_graph.graph.nodes:
+            self.native_graph.graph.add_node(
+                Node(
+                    node_id,
+                    NodeType.TERMINAL,
+                    predicate=_real_native_composite_predicate(str(item["composite_id"])),
+                    meta={
+                        "origin": "phase3_2_real_native_graph_ecology",
+                        "node_type": "StemCellTerminal",
+                        "terminal_kind": "ecological_composite",
+                        "stem_cell_id": item["stem_cell_id"],
+                        "stem_cell_state": StemCellState.TRIAL.name,
+                        "children": list(item["children"]),
+                        "formal_engine_eval_count": 0,
+                        "tier": "trial",
+                    },
+                )
+            )
+        _add_graph_pair_once(self.native_graph, ROOT_ID, parent_id, weight=0.0)
+        _add_graph_pair_once(self.native_graph, parent_id, node_id, weight=0.0)
+
+    def evaluate_composite(
+        self,
+        item: Mapping[str, Any],
+        board: chess.Board,
+        move: chess.Move,
+        *,
+        record_trace: bool = False,
+    ) -> dict[str, Any]:
+        node_id = str(item["node_id"])
+        parent_id = str(item["parent_id"])
+        active_nodes = {ROOT_ID, parent_id, node_id}
+        self.native_graph._reset_runtime_states(active_nodes)
+        env = {
+            "board": board,
+            "candidate_move_uci": move.uci(),
+            "real_native_ecology_composites": {
+                str(item["composite_id"]): {
+                    "children": list(item["children"]),
+                    "state": item["state"],
+                }
+            },
+        }
+        before_count = int(self.native_graph.graph.nodes[node_id].meta.get("formal_engine_eval_count", 0))
+        engine = FormalReConEngine(self.native_graph.graph, validate_pairs=False, record_trace=record_trace)
+        engine.request(ROOT_ID)
+        engine.run(
+            max_ticks=int(self.cfg.real_native_engine_max_ticks),
+            env=env,
+            active_nodes=active_nodes,
+            until=lambda _engine: (
+                self.native_graph.graph.nodes[parent_id].state
+                in (NodeState.TRUE, NodeState.CONFIRMED, NodeState.FAILED)
+            ),
+        )
+        terminal = self.native_graph.graph.nodes[node_id]
+        parent = self.native_graph.graph.nodes[parent_id]
+        after_count = int(terminal.meta.get("formal_engine_eval_count", 0))
+        predicate_evaluated = after_count > before_count
+        terminal_requested = terminal.state != NodeState.INACTIVE or predicate_evaluated
+        terminal_confirmed = terminal.state in (NodeState.TRUE, NodeState.CONFIRMED)
+        parent_confirmed = parent.state in (NodeState.TRUE, NodeState.CONFIRMED)
+        self.engine_call_count += 1
+        self.engine_eval_count += int(predicate_evaluated)
+        self.engine_tick_total += int(engine.tick)
+        if predicate_evaluated:
+            self.formal_eval_node_ids.add(node_id)
+        if len(self.engine_tick_samples) < self.cfg.max_samples:
+            self.engine_tick_samples.append(
+                {
+                    "node_id": node_id,
+                    "move": move.uci(),
+                    "ticks": int(engine.tick),
+                    "terminal_state": terminal.state.name,
+                    "parent_state": parent.state.name,
+                    "predicate_evaluated": bool(predicate_evaluated),
+                    "terminal_requested": bool(terminal_requested),
+                }
+            )
+        return {
+            "composite_id": str(item["composite_id"]),
+            "node_id": node_id,
+            "parent_id": parent_id,
+            "confirmed": parent_confirmed,
+            "terminal_confirmed": terminal_confirmed,
+            "parent_confirmed": parent_confirmed,
+            "predicate_evaluated": predicate_evaluated,
+            "terminal_requested": terminal_requested,
+            "predicate_eval_delta": after_count - before_count,
+            "terminal_state": terminal.state.name,
+            "parent_state": parent.state.name,
+            "ticks": int(engine.tick),
+            "trace": engine.trace if record_trace else [],
+        }
+
+    def choose_move(
+        self,
+        board: chess.Board,
+        counts: Mapping[Any, int],
+        score_provider: _NativeFoundationScoreProvider,
+        *,
+        seed: int,
+        disabled: set[str] | None = None,
+    ) -> dict[str, Any]:
+        disabled = disabled or set()
+        legal = _legal_without_third_repetition(board, counts)
+        if not legal:
+            legal = tuple(sorted(board.legal_moves, key=lambda move: move.uci()))
+        base_scores = score_provider(board, counts)
+        rng = random.Random(seed)
+        scored: list[tuple[float, float, str, chess.Move, list[str], list[str]]] = []
+        for move in legal:
+            active = set(_sealed_action_keys(board, move))
+            signature = _percept_signature(active)
+            active_ids: list[str] = []
+            requested_ids: list[str] = []
+            composite_score = 0.0
+            for item in self.population.values():
+                if item["state"] not in {"TRIAL", "MATURE"}:
+                    continue
+                if str(item["composite_id"]) in disabled:
+                    continue
+                if str(item.get("source_signature")) != signature:
+                    continue
+                evaluation = self.evaluate_composite(item, board, move)
+                if evaluation["terminal_requested"]:
+                    requested_ids.append(str(item["composite_id"]))
+                    item["requested_exposures"] = int(item.get("requested_exposures", 0)) + 1
+                    self.cells[str(item["composite_id"])].record_candidate_request(parent_id=str(item["parent_id"]))
+                if evaluation["predicate_evaluated"]:
+                    item["formal_engine_eval_count"] = int(item.get("formal_engine_eval_count", 0)) + 1
+                if evaluation["confirmed"]:
+                    active_ids.append(str(item["composite_id"]))
+                    self.cells[str(item["composite_id"])].record_candidate_activation(parent_id=str(item["parent_id"]))
+                    composite_score += _real_native_composite_weight(item, self.cfg)
+            score = float(base_scores.get(move.uci(), 0.0)) + composite_score
+            scored.append((score, rng.random(), move.uci(), move, active_ids, requested_ids))
+        scored.sort(reverse=True)
+        if not scored:
+            return {"move": None, "active_composite_ids": [], "requested_composite_ids": [], "base_move": None}
+        base_move = _choose_base_score_move(board, counts, score_provider=score_provider, seed=seed)
+        score, _tie, _uci, move, active_ids, requested_ids = scored[0]
+        return {
+            "move": move,
+            "score": score,
+            "active_composite_ids": active_ids,
+            "requested_composite_ids": requested_ids,
+            "base_move": base_move,
+        }
+
+    def apply_local_credit(
+        self,
+        *,
+        requested_ids: Sequence[str],
+        active_ids: Sequence[str],
+        changed_base_choice: bool,
+        step: int,
+    ) -> None:
+        requested_now = set(map(str, requested_ids))
+        active = set(map(str, active_ids))
+        for cid, item in self.population.items():
+            if item["state"] not in {"TRIAL", "MATURE"}:
+                continue
+            requested = int(item.get("requested_exposures", 0))
+            if cid in active:
+                item["activation_count"] = int(item.get("activation_count", 0)) + 1
+                if changed_base_choice:
+                    item["local_resource"] = float(item.get("local_resource", 0.0)) + self.cfg.real_native_credit
+                    item["credit_events"] = int(item.get("credit_events", 0)) + 1
+                    self.cells[cid].update_xp(1.0)
+                    self.cells[cid].mark_confirmed(step)
+                    event = "local_credit_parent_confirmation_changed_choice"
+                else:
+                    item["local_resource"] = float(item.get("local_resource", 0.0)) - self.cfg.real_native_active_decay
+                    item["neutral_events"] = int(item.get("neutral_events", 0)) + 1
+                    self.cells[cid].record_candidate_intervention("neutral", cycle=step)
+                    event = "active_neutral_rent"
+            elif cid in requested_now:
+                item["local_resource"] = float(item.get("local_resource", 0.0)) - self.cfg.real_native_dormant_decay
+                event = "dormant_near_zero_rent"
+            else:
+                event = None
+            cell = self.cells[cid]
+            item["stem_cell_xp"] = int(cell.xp)
+            if (
+                item["state"] == "TRIAL"
+                and requested >= int(self.cfg.real_native_trial_grace_exposures)
+                and int(item.get("credit_events", 0)) > 0
+                and float(item.get("local_resource", 0.0)) >= self.cfg.real_native_mature_resource
+            ):
+                item["state"] = "MATURE"
+                cell.state = StemCellState.MATURE
+                event = "mature"
+            if item["state"] == "TRIAL" and float(item.get("local_resource", 0.0)) <= 0.0:
+                item["state"] = "PRUNED"
+                item["prune_reason"] = "activation_conditioned_resource_depleted"
+                cell.state = StemCellState.PRUNED
+                event = "prune"
+            if event is not None:
+                item.setdefault("fate_events", []).append(
+                    {
+                        "step": int(step),
+                        "event": event,
+                        "state": item["state"],
+                        "requested_exposures": int(item.get("requested_exposures", 0)),
+                        "activation_count": int(item.get("activation_count", 0)),
+                        "local_resource": round(float(item.get("local_resource", 0.0)), 6),
+                        "xp": int(item.get("stem_cell_xp", 0)),
+                    }
+                )
+            node_id = str(item["node_id"])
+            if node_id in self.native_graph.graph.nodes:
+                node = self.native_graph.graph.nodes[node_id]
+                node.meta["stem_cell_state"] = item["state"]
+                node.meta["local_resource"] = float(item.get("local_resource", 0.0))
+                node.meta["requested_exposures"] = int(item.get("requested_exposures", 0))
+                node.meta["activation_count"] = int(item.get("activation_count", 0))
+        self._enforce_parent_budgets(step=step)
+
+    def _enforce_parent_budgets(self, *, step: int) -> None:
+        by_parent: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for item in self.population.values():
+            if item["state"] in {"TRIAL", "MATURE"}:
+                by_parent[str(item["parent_id"])].append(item)
+        sibling_budget = int(self.cfg.real_native_max_live_siblings_per_parent)
+        for parent_id, live in by_parent.items():
+            overflow = len(live) - sibling_budget
+            if overflow <= 0:
+                continue
+            candidates = [
+                item for item in live
+                if int(item.get("requested_exposures", 0)) >= int(self.cfg.real_native_trial_grace_exposures)
+                and item["state"] != "MATURE"
+            ]
+            candidates.sort(
+                key=lambda item: (
+                    float(item.get("local_resource", 0.0)),
+                    int(item.get("requested_exposures", 0)),
+                    str(item["composite_id"]),
+                )
+            )
+            for item in candidates[:overflow]:
+                item["state"] = "PRUNED"
+                item["prune_reason"] = "post_grace_parent_sibling_budget"
+                self.cells[str(item["composite_id"])].state = StemCellState.PRUNED
+                item.setdefault("fate_events", []).append(
+                    {
+                        "step": int(step),
+                        "event": "prune",
+                        "reason": "post_grace_parent_sibling_budget",
+                        "parent_id": parent_id,
+                        "sibling_budget": sibling_budget,
+                        "local_resource": round(float(item.get("local_resource", 0.0)), 6),
+                    }
+                )
+
+    def snapshot(self, *, step: int, segment: str) -> dict[str, Any]:
+        counts = Counter(str(item["state"]) for item in self.population.values())
+        row = {
+            "step": int(step),
+            "segment": segment,
+            "births_total": len(self.population),
+            "trial": int(counts["TRIAL"]),
+            "mature": int(counts["MATURE"]),
+            "pruned": int(counts["PRUNED"]),
+            "alive_total": int(counts["TRIAL"] + counts["MATURE"]),
+        }
+        self.birth_curve.append(row)
+        return row
+
+    def population_summary(self) -> dict[str, Any]:
+        counts = Counter(str(item["state"]) for item in self.population.values())
+        return {
+            "birth_count": len(self.population),
+            "trial_count": int(counts["TRIAL"]),
+            "mature_count": int(counts["MATURE"]),
+            "pruned_count": int(counts["PRUNED"]),
+            "survivors_by_birth_segment": dict(
+                sorted(Counter(str(item.get("birth_segment")) for item in self.population.values() if item["state"] in {"TRIAL", "MATURE"}).items())
+            ),
+            "trigger_distribution": dict(sorted(self.trigger_counts.items())),
+            "top_alive": [
+                {
+                    "composite_id": item["composite_id"],
+                    "state": item["state"],
+                    "birth_segment": item["birth_segment"],
+                    "birth_trigger": item["birth_trigger"],
+                    "local_resource": round(float(item.get("local_resource", 0.0)), 6),
+                    "requested_exposures": int(item.get("requested_exposures", 0)),
+                    "activation_count": int(item.get("activation_count", 0)),
+                    "credit_events": int(item.get("credit_events", 0)),
+                    "children": list(item["children"]),
+                }
+                for item in sorted(
+                    (item for item in self.population.values() if item["state"] in {"TRIAL", "MATURE"}),
+                    key=lambda row: (float(row.get("local_resource", 0.0)), str(row["composite_id"])),
+                    reverse=True,
+                )[: self.cfg.max_samples]
+            ],
+        }
+
+    def population_stop_rule(self) -> dict[str, bool]:
+        births = len([item for item in self.population.values() if item.get("birth_segment") != "acceptance_probe"])
+        alive = sum(1 for item in self.population.values() if item["state"] in {"TRIAL", "MATURE"})
+        mature = sum(1 for item in self.population.values() if item["state"] == "MATURE")
+        return {
+            "population_collapse_to_zero": bool(births > 0 and alive == 0),
+            "unbounded_explosion": bool(alive > int(self.cfg.real_native_max_live_composites) * 2),
+            "mature_population_failed_to_form": bool(births > 0 and mature == 0),
+        }
+
+    def fate_log(self) -> list[dict[str, Any]]:
+        return [
+            {
+                "composite_id": str(item["composite_id"]),
+                "node_id": str(item["node_id"]),
+                "parent_id": str(item["parent_id"]),
+                "state": str(item["state"]),
+                "birth_segment": item.get("birth_segment"),
+                "birth_trigger": item.get("birth_trigger"),
+                "children": list(item.get("children", ())),
+                "local_resource": float(item.get("local_resource", 0.0)),
+                "requested_exposures": int(item.get("requested_exposures", 0)),
+                "activation_count": int(item.get("activation_count", 0)),
+                "credit_events": int(item.get("credit_events", 0)),
+                "debt_events": int(item.get("debt_events", 0)),
+                "neutral_events": int(item.get("neutral_events", 0)),
+                "formal_engine_eval_count": int(item.get("formal_engine_eval_count", 0)),
+                "prune_reason": item.get("prune_reason"),
+                "fate_events": list(item.get("fate_events", ())),
+            }
+            for item in sorted(self.population.values(), key=lambda row: str(row["composite_id"]))
+            if item.get("birth_segment") != "acceptance_probe"
+        ]
+
+    def instrumentation_summary(self, score_provider: _NativeFoundationScoreProvider) -> dict[str, Any]:
+        return {
+            "formal_engine_composite_eval_count": int(self.engine_eval_count),
+            "formal_engine_composite_call_count": int(self.engine_call_count),
+            "formal_engine_tick_total": int(self.engine_tick_total),
+            "mean_ticks_per_engine_call": self.engine_tick_total / max(1, self.engine_call_count),
+            "mean_ticks_per_predicate_eval": self.engine_tick_total / max(1, self.engine_eval_count),
+            "formal_eval_node_count": len(self.formal_eval_node_ids),
+            "engine_tick_samples": list(self.engine_tick_samples),
+            "native_score_provider": score_provider.stats(),
+        }
+
+
+def _real_native_train_segment(
+    cfg: StageBEcologicalDiscoveryConfig,
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: _NativeFoundationScoreProvider,
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    segment_name: str,
+    seed: int,
+) -> dict[str, Any]:
+    trace: list[dict[str, Any]] = []
+    for index, row in enumerate(rows):
+        board = chess.Board(str(row["fen"]))
+        counts: Counter[Any] = Counter({_position_repetition_key(board): 1, board._transposition_key(): 1})
+        base_scores = score_provider(board, counts)
+        options = _score_options(
+            board,
+            counts,
+            atom_weights={},
+            base_move_scores=base_scores,
+            composites=(),
+            disabled_composite_ids=set(),
+        )
+        if options:
+            ctx = _decision_context(
+                cfg,
+                board,
+                counts,
+                options,
+                seed=seed + index,
+                row_id=int(row.get("row_id", index)),
+                ply=index,
+                segment_name=segment_name,
+            )
+            _real_native_spawn_from_context(cfg, runtime, ctx, rng=random.Random(seed + index))
+        selected = runtime.choose_move(board, counts, score_provider, seed=seed + index * 31)
+        base_move = selected.get("base_move")
+        move = selected.get("move")
+        changed = bool(move is not None and base_move is not None and move != base_move)
+        runtime.apply_local_credit(
+            requested_ids=selected.get("requested_composite_ids", ()),
+            active_ids=selected.get("active_composite_ids", ()),
+            changed_base_choice=changed,
+            step=index,
+        )
+        if index % 8 == 0 or index == len(rows) - 1:
+            runtime.snapshot(step=index, segment=segment_name)
+        if len(trace) < cfg.max_samples:
+            trace.append(
+                {
+                    "row_id": int(row.get("row_id", index)),
+                    "base_move": None if base_move is None else base_move.uci(),
+                    "selected_move": None if move is None else move.uci(),
+                    "requested_composite_ids": list(selected.get("requested_composite_ids", ())),
+                    "active_composite_ids": list(selected.get("active_composite_ids", ())),
+                    "changed_base_choice": changed,
+                }
+            )
+    return {
+        "segment": segment_name,
+        "row_count": len(rows),
+        "trace_sample": trace,
+        "population_snapshot": runtime.population_summary(),
+    }
+
+
+def _real_native_spawn_from_context(
+    cfg: StageBEcologicalDiscoveryConfig,
+    runtime: _GraphNativeCompositeRuntime,
+    ctx: Mapping[str, Any],
+    *,
+    rng: random.Random,
+) -> None:
+    triggers = _internal_triggers(cfg, ctx, Counter(), defaultdict(Counter))
+    spawned = 0
+    for trigger in triggers:
+        if spawned >= int(cfg.real_native_max_births_per_row):
+            break
+        children = _candidate_child_pool(ctx, trigger=trigger)
+        if len(children) < cfg.composite_width:
+            continue
+        combos = list(combinations(children[: cfg.max_child_pool], cfg.composite_width))
+        if not combos:
+            continue
+        selected_children = tuple(sorted(rng.choice(combos)))
+        runtime.spawn(
+            selected_children,
+            trigger=trigger,
+            birth_segment=str(ctx.get("segment", "unknown")),
+            birth_row_id=int(ctx.get("row_id", -1)),
+            source_signature=str(ctx["percept_signature"]),
+        )
+        runtime.trigger_counts[trigger] += 1
+        spawned += 1
+
+
+def _real_native_evaluate_policy(
+    cfg: StageBEcologicalDiscoveryConfig,
+    heldout_rows: Sequence[Mapping[str, Any]],
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: _NativeFoundationScoreProvider,
+    *,
+    seed: int,
+    policy_name: str,
+    disabled: set[str] | None = None,
+) -> dict[str, Any]:
+    disabled = disabled or set()
+    return _evaluate_policy(
+        cfg,
+        heldout_rows,
+        lambda board, counts, row_id, ply, rng: runtime.choose_move(
+            board,
+            counts,
+            score_provider,
+            seed=seed + int(row_id) * 47 + ply,
+            disabled=disabled,
+        )["move"],
+        seed=seed,
+        policy_name=policy_name,
+    )
+
+
+def _real_native_ablation_health(
+    cfg: StageBEcologicalDiscoveryConfig,
+    heldout_rows: Sequence[Mapping[str, Any]],
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: _NativeFoundationScoreProvider,
+    *,
+    full_eval: Mapping[str, Any],
+    seed: int,
+) -> dict[str, Any]:
+    subjects = [
+        item for item in runtime.population.values()
+        if item["state"] == "MATURE"
+    ][: int(cfg.real_native_max_ablation_subjects)]
+    records: list[dict[str, Any]] = []
+    counts: Counter[str] = Counter()
+    for index, item in enumerate(subjects):
+        ablated = _real_native_evaluate_policy(
+            cfg,
+            heldout_rows,
+            runtime,
+            score_provider,
+            seed=seed + index * 101,
+            policy_name=f"without_{item['composite_id']}",
+            disabled={str(item["composite_id"])},
+        )
+        delta = int(full_eval["wins"]) - int(ablated["wins"])
+        classification = "load_bearing" if delta > 0 else "inert" if delta == 0 else "harmful"
+        counts[classification] += 1
+        records.append(
+            {
+                "composite_id": str(item["composite_id"]),
+                "classification": classification,
+                "ablation_delta": delta,
+                "full_wins": int(full_eval["wins"]),
+                "ablated_wins": int(ablated["wins"]),
+                "birth_segment": item.get("birth_segment"),
+                "children": list(item.get("children", ())),
+            }
+        )
+    return {
+        "subject": "mature_composites_only",
+        "composite_count": len(subjects),
+        "load_bearing_count": int(counts["load_bearing"]),
+        "inert_count": int(counts["inert"]),
+        "harmful_count": int(counts["harmful"]),
+        "records": records,
+    }
+
+
+def _real_native_pruned_rescue_audit(
+    cfg: StageBEcologicalDiscoveryConfig,
+    heldout_rows: Sequence[Mapping[str, Any]],
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: _NativeFoundationScoreProvider,
+    *,
+    full_eval: Mapping[str, Any],
+    seed: int,
+) -> dict[str, Any]:
+    pruned = [
+        item for item in runtime.population.values()
+        if item["state"] == "PRUNED" and int(item.get("activation_count", 0)) > 0 and item.get("birth_segment") != "acceptance_probe"
+    ]
+    pruned.sort(key=lambda row: (-int(row.get("credit_events", 0)), -int(row.get("activation_count", 0)), str(row["composite_id"])))
+    audited = pruned[: int(cfg.pruned_rescue_audit_limit)]
+    records: list[dict[str, Any]] = []
+    for index, item in enumerate(audited):
+        old_state = item["state"]
+        item["state"] = "TRIAL"
+        rescued = _real_native_evaluate_policy(
+            cfg,
+            heldout_rows,
+            runtime,
+            score_provider,
+            seed=seed + index * 103,
+            policy_name=f"rescued_{item['composite_id']}",
+        )
+        item["state"] = old_state
+        delta = int(rescued["wins"]) - int(full_eval["wins"])
+        records.append(
+            {
+                "composite_id": str(item["composite_id"]),
+                "addback_delta": delta,
+                "classification": "load_bearing_but_pruned" if delta > 0 else "inert_or_harmful_when_rescued",
+                "birth_segment": item.get("birth_segment"),
+                "prune_reason": item.get("prune_reason"),
+                "children": list(item.get("children", ())),
+            }
+        )
+    return {
+        "audited_count": len(audited),
+        "load_bearing_but_pruned_count": sum(1 for row in records if int(row["addback_delta"]) > 0),
+        "records": records,
+    }
+
+
+def _foundation_ecology_rows(cfg: StageBEcologicalDiscoveryConfig, *, seed: int) -> list[dict[str, Any]]:
+    entries = curated_stage_entries(include_symmetries=True)
+    rows = [
+        {"fen": entry.fen, "row_id": index, "task": entry.stage_name}
+        for index, entry in enumerate(entries)
+        if entry.stage_name in {"Mate_In_1", "Mate_In_2"}
+    ]
+    rng = random.Random(seed)
+    rng.shuffle(rows)
+    return rows[: int(cfg.real_native_foundation_row_limit)]
+
+
+def _real_native_composite_predicate(composite_id: str):
+    def predicate(node: Node, env: dict[str, Any]) -> tuple[bool, bool]:
+        payload = env["real_native_ecology_composites"][composite_id]
+        if payload.get("state") not in {"TRIAL", "MATURE"}:
+            node.activation.value = 0.0
+            return True, False
+        board = env["board"]
+        move = chess.Move.from_uci(str(env["candidate_move_uci"]))
+        if move not in board.legal_moves:
+            node.activation.value = 0.0
+            return True, False
+        active = set(_sealed_action_keys(board, move))
+        success = all(str(child) in active for child in payload["children"])
+        node.meta["formal_engine_eval_count"] = int(node.meta.get("formal_engine_eval_count", 0)) + 1
+        node.meta["last_candidate_move_uci"] = move.uci()
+        node.meta["last_confirmed"] = bool(success)
+        node.activation.value = 1.0 if success else 0.0
+        return True, success
+
+    return predicate
+
+
+def _real_native_acceptance_spec() -> dict[str, Any]:
+    return {
+        "call_chain": [
+            "run_phase32_real_native_graph_ecology_probe",
+            "_GraphNativeCompositeRuntime.choose_move or acceptance_check",
+            "_GraphNativeCompositeRuntime.evaluate_composite",
+            "FormalReConEngine.request(ROOT_ID)",
+            "FormalReConEngine.run(active_nodes={ROOT_ID,parent_script,composite_terminal})",
+            "FormalReConEngine._evaluate_terminal",
+            "_real_native_composite_predicate",
+        ],
+        "required_dynamic_evidence": [
+            "SUB request message to composite terminal",
+            "formal_engine_eval_count increments on the composite node",
+            "terminal reaches TRUE/CONFIRMED/FAILED inside FormalReConEngine",
+        ],
+    }
+
+
+def _phase32_real_headline(seed_results: Mapping[str, Any]) -> dict[str, Any]:
+    rows = []
+    for seed, result in seed_results.items():
+        population = result.get("population", {})
+        evals = result.get("evaluations", {}).get("heldout", {})
+        rescue = result.get("pruned_rescue_audit", {})
+        rows.append(
+            {
+                "seed": int(seed),
+                "acceptance_passed": bool(result.get("acceptance_check", {}).get("passed")),
+                "mature_count": int(population.get("mature_count", 0)),
+                "trial_count": int(population.get("trial_count", 0)),
+                "pruned_count": int(population.get("pruned_count", 0)),
+                "wins": int(evals.get("wins", 0)),
+                "load_bearing_but_pruned_count": int(rescue.get("load_bearing_but_pruned_count", 0)),
+                "survivors_by_birth_segment": population.get("survivors_by_birth_segment", {}),
+                "birth_death_curve": [
+                    {
+                        "segment": row.get("segment"),
+                        "step": int(row.get("step", 0)),
+                        "trial": int(row.get("trial", 0)),
+                        "mature": int(row.get("mature", 0)),
+                        "pruned": int(row.get("pruned", 0)),
+                        "alive_total": int(row.get("alive_total", 0)),
+                    }
+                    for row in result.get("birth_death_curve", [])
+                ],
+            }
+        )
+    return {
+        "acceptance_passed": [row["acceptance_passed"] for row in rows],
+        "mature_counts": [row["mature_count"] for row in rows],
+        "wins": [row["wins"] for row in rows],
+        "load_bearing_but_pruned_counts": [row["load_bearing_but_pruned_count"] for row in rows],
+        "per_seed": rows,
+    }
+
+
+def _phase32_real_recurring_mature_composites(seed_results: Mapping[str, Any]) -> list[dict[str, Any]]:
+    by_children: dict[tuple[str, ...], dict[str, Any]] = {}
+    for seed, result in seed_results.items():
+        for item in result.get("candidate_fate_log", []):
+            if item.get("state") != "MATURE":
+                continue
+            children = tuple(str(child) for child in item.get("children", ()))
+            row = by_children.setdefault(
+                children,
+                {
+                    "children": list(children),
+                    "seed_count": 0,
+                    "seeds": [],
+                    "birth_segments": Counter(),
+                    "composite_ids": [],
+                },
+            )
+            row["seed_count"] += 1
+            row["seeds"].append(int(seed))
+            row["birth_segments"].update([str(item.get("birth_segment"))])
+            row["composite_ids"].append(str(item.get("composite_id")))
+    records = []
+    for row in by_children.values():
+        records.append(
+            {
+                "children": row["children"],
+                "seed_count": int(row["seed_count"]),
+                "seeds": list(row["seeds"]),
+                "birth_segments": dict(sorted(row["birth_segments"].items())),
+                "composite_ids": list(row["composite_ids"]),
+            }
+        )
+    records.sort(key=lambda row: (-int(row["seed_count"]), row["children"]))
+    return records
+
+
+def _phase32_real_cross_rung_load_bearing_survivors(seed_results: Mapping[str, Any]) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for seed, result in seed_results.items():
+        for row in result.get("post_hoc_ablation", {}).get("records", []):
+            if row.get("birth_segment") != "foundation_mate1_mate2":
+                continue
+            if row.get("classification") != "load_bearing":
+                continue
+            records.append(
+                {
+                    "seed": int(seed),
+                    "composite_id": str(row.get("composite_id")),
+                    "ablation_delta": int(row.get("ablation_delta", 0)),
+                    "children": list(row.get("children", ())),
+                }
+            )
+    return records
+
+
+def _real_native_composite_id(children: Sequence[str], source_signature: str, trigger: str) -> str:
+    digest = hashlib.sha256(json.dumps([list(children), source_signature, trigger], sort_keys=True).encode("utf-8")).hexdigest()
+    return f"real_native_composite_{digest[:16]}"
+
+
+def _real_native_parent_id(source_signature: str) -> str:
+    digest = hashlib.sha256(source_signature.encode("utf-8")).hexdigest()
+    return f"real_native_habitat_{digest[:12]}"
+
+
+def _real_native_composite_weight(item: Mapping[str, Any], cfg: StageBEcologicalDiscoveryConfig) -> float:
+    resource = max(0.0, float(item.get("local_resource", 0.0)))
+    return min(float(cfg.max_advisory_weight), float(cfg.initial_weight) + 0.04 * resource)
+
+
+def _add_graph_pair_once(graph: NativeReConKRKGraph, parent: str, child: str, *, weight: float) -> None:
+    if graph.graph.get_edge(parent, child, LinkType.SUB) is None:
+        graph.graph.add_edge(parent, child, LinkType.SUB)
+    if graph.graph.get_edge(child, parent, LinkType.SUR) is None:
+        graph.graph.add_edge(child, parent, LinkType.SUR)
+    sub = graph.graph.get_edge(parent, child, LinkType.SUB)
+    if sub is not None:
+        sub.w = float(weight)
+        sub.meta.update({"trainable": True, "tier": "trial", "stem_cell_state": StemCellState.TRIAL.name})
 
 
 class _NativeFoundationScoreProvider:
