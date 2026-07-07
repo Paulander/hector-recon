@@ -1,0 +1,4984 @@
+{
+  "black_reply_policies": {
+    "exact_adversarial": "legal black reply selected to minimize the same post-hoc success predicate, then prefer fence break / rook loss / stalemate; used only as opponent/evaluator",
+    "fixed_seed": "_edge_mate_fixed_seed_black_reply(board, rollout_rng)",
+    "runtime_tablebase_or_dtm_move_source": false,
+    "white_oracle_move_provider": false
+  },
+  "config": {
+    "atom_score_scale": 1.0,
+    "composite_width": 2,
+    "conflict_abs_threshold": 0.05,
+    "ecology_mode": "stem_cell_graph",
+    "fast_exact_judge": true,
+    "flat_baseline_seeds": [
+      20272911,
+      20272912,
+      20272913
+    ],
+    "heldout_row_limit": null,
+    "horizon_plies": 16,
+    "initial_nutrition": 0.34,
+    "initial_weight": 0.05,
+    "low_margin_threshold": 0.035,
+    "mature_nutrition": 1.1,
+    "max_advisory_weight": 0.18,
+    "max_births_per_decision": 2,
+    "max_child_pool": 16,
+    "max_guided_births": 0,
+    "max_mature_ablation_subjects": 8,
+    "max_population": 48,
+    "max_population_per_habitat": 2,
+    "max_samples": 8,
+    "max_total_population": null,
+    "native_foundation_continuation_repetitions": 2,
+    "native_foundation_key_mode": "coarse",
+    "native_foundation_max_mate1_positions": null,
+    "native_foundation_max_mate2_positions": null,
+    "native_foundation_max_ticks": 80,
+    "native_foundation_prototype_scan_triplets": 128,
+    "native_foundation_train_repetitions": 5,
+    "negative_debt": 0.18,
+    "novelty_seen_threshold": 1,
+    "nutrition_weight_scale": 0.035,
+    "output_dir": "reports/autogrowth/clean_slate_krk/phase3_7_recent_curriculum_black_resistance",
+    "passive_decay": 0.01,
+    "phase33_equivalence_tolerance_wins": 3,
+    "positive_credit": 0.16,
+    "pruned_rescue_audit_limit": 8,
+    "pruned_rescue_heldout_limit": 32,
+    "real_native_active_decay": 0.04,
+    "real_native_credit": 0.09,
+    "real_native_debt": 0.11,
+    "real_native_dormant_decay": 0.001,
+    "real_native_engine_max_ticks": 80,
+    "real_native_foundation_row_limit": 24,
+    "real_native_initial_resource": 0.4,
+    "real_native_mature_resource": 0.75,
+    "real_native_max_ablation_subjects": 4,
+    "real_native_max_births_per_row": 1,
+    "real_native_max_live_composites": 24,
+    "real_native_max_live_siblings_per_parent": 4,
+    "real_native_trial_grace_exposures": 3,
+    "seeds": [
+      20272931,
+      20272932,
+      20272933,
+      20272934,
+      20272935
+    ],
+    "stage_a_rows_path": "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_a_rows.json",
+    "stage_a_train_row_limit": null,
+    "stage_b_baseline_dir": "reports/autogrowth/clean_slate_krk/phase2_9a_action_firewall",
+    "stage_b_rows_path": "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_b_rows.json",
+    "stem_inactive_decay_scale": 1.0,
+    "stem_initial_xp": 50,
+    "stem_mature_xp": 100,
+    "stem_min_mature_exposures": 3,
+    "stem_prune_xp": 0,
+    "train_row_limit": 24,
+    "uncertainty_high": 0.65,
+    "uncertainty_low": 0.35,
+    "uncertainty_min_visits": 3
+  },
+  "dataset": {
+    "old_krk_curriculum_imported": false,
+    "recent_curriculum_only": true,
+    "stage_a_heldout_count": 128,
+    "stage_a_rows_path": "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_a_rows.json",
+    "stage_a_stratum": "approach_fence_established_king_far",
+    "stage_a_task": "A",
+    "stage_b_heldout_count": 128,
+    "stage_b_rows_path": "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_b_rows.json",
+    "stage_b_stratum": "true_middle_fence_established_king_far",
+    "stage_b_task": "B",
+    "stage_labels_learner_visible": false
+  },
+  "decision": {
+    "next_allowed_step": "train one persistent native graph through recent Stage A then Stage B with exact-adversarial black and regression gates, then rerun ecology only after host competence survives the harder opponent",
+    "recent_curriculum_continuity_gap_measured": true,
+    "run_ecology": false
+  },
+  "per_flat_seed": [
+    {
+      "deltas": {
+        "stage_a_exact_adversarial_minus_fixed": -24,
+        "stage_b_exact_adversarial_minus_fixed": -26
+      },
+      "flat_seed": 20272911,
+      "stage_a": {
+        "exact_adversarial": {
+          "active_composite_ids": [],
+          "active_composite_ids_by_row": {
+            "600": [],
+            "601": [],
+            "602": [],
+            "603": [],
+            "604": [],
+            "605": [],
+            "606": [],
+            "607": [],
+            "608": [],
+            "609": [],
+            "610": [],
+            "611": [],
+            "612": [],
+            "613": [],
+            "614": [],
+            "615": [],
+            "616": [],
+            "617": [],
+            "618": [],
+            "619": [],
+            "620": [],
+            "621": [],
+            "622": [],
+            "623": [],
+            "624": [],
+            "625": [],
+            "626": [],
+            "627": [],
+            "628": [],
+            "629": [],
+            "630": [],
+            "631": [],
+            "632": [],
+            "633": [],
+            "634": [],
+            "635": [],
+            "636": [],
+            "637": [],
+            "638": [],
+            "639": [],
+            "640": [],
+            "641": [],
+            "642": [],
+            "643": [],
+            "644": [],
+            "645": [],
+            "646": [],
+            "647": [],
+            "648": [],
+            "649": [],
+            "650": [],
+            "651": [],
+            "652": [],
+            "653": [],
+            "654": [],
+            "655": [],
+            "656": [],
+            "657": [],
+            "658": [],
+            "659": [],
+            "660": [],
+            "661": [],
+            "662": [],
+            "663": [],
+            "664": [],
+            "665": [],
+            "666": [],
+            "667": [],
+            "668": [],
+            "669": [],
+            "670": [],
+            "671": [],
+            "672": [],
+            "673": [],
+            "674": [],
+            "675": [],
+            "676": [],
+            "677": [],
+            "678": [],
+            "679": [],
+            "680": [],
+            "681": [],
+            "682": [],
+            "683": [],
+            "684": [],
+            "685": [],
+            "686": [],
+            "687": [],
+            "688": [],
+            "689": [],
+            "690": [],
+            "691": [],
+            "692": [],
+            "693": [],
+            "694": [],
+            "695": [],
+            "696": [],
+            "697": [],
+            "698": [],
+            "699": [],
+            "700": [],
+            "701": [],
+            "702": [],
+            "703": [],
+            "704": [],
+            "705": [],
+            "706": [],
+            "707": [],
+            "708": [],
+            "709": [],
+            "710": [],
+            "711": [],
+            "712": [],
+            "713": [],
+            "714": [],
+            "715": [],
+            "716": [],
+            "717": [],
+            "718": [],
+            "719": [],
+            "720": [],
+            "721": [],
+            "722": [],
+            "723": [],
+            "724": [],
+            "725": [],
+            "726": [],
+            "727": []
+          },
+          "black_reply_policy": "exact_adversarial",
+          "endpoint_counts": {
+            "fence_broken": 71,
+            "waypoint_reached": 57
+          },
+          "mean_plies_to_success": 7.157894736842105,
+          "nonwins": 71,
+          "policy": "phase3_7_stage_a_exact_adversarial_20272911",
+          "row_count": 128,
+          "sample_nonwins": [
+            {
+              "endpoint": "fence_broken",
+              "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+                  "move": "h8g8"
+                },
+                {
+                  "fen": "1k4K1/6R1/8/8/8/8/8/8 w - - 2 2",
+                  "move": "g8f7"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+                  "move": "g4f3"
+                },
+                {
+                  "fen": "8/8/8/8/8/5K2/4R3/2k5 w - - 2 2",
+                  "move": "f3e4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+                  "move": "b8a7"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/k7/8/8/3K4/8/1R6/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/k7/8/8/3K4/8/1R6/8 w - - 0 1",
+                  "move": "d4c5"
+                },
+                {
+                  "fen": "k7/8/8/2K5/8/8/1R6/8 w - - 2 2",
+                  "move": "c5b6"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+                  "move": "g1f2"
+                },
+                {
+                  "fen": "8/8/8/1R6/8/k7/5K2/8 w - - 2 2",
+                  "move": "f2e3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+                  "move": "e1d2"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "1R6/8/8/8/k5K1/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "1R6/8/8/8/k5K1/8/8/8 w - - 0 1",
+                  "move": "g4f5"
+                },
+                {
+                  "fen": "1R6/8/8/k4K2/8/8/8/8 w - - 2 2",
+                  "move": "f5e6"
+                },
+                {
+                  "fen": "1R6/8/k3K3/8/8/8/8/8 w - - 4 3",
+                  "move": "e6d5"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "5k2/7R/8/6K1/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "5k2/7R/8/6K1/8/8/8/8 w - - 0 1",
+                  "move": "g5f6"
+                }
+              ]
+            }
+          ],
+          "success_by_row": {
+            "600": true,
+            "601": true,
+            "602": false,
+            "603": true,
+            "604": false,
+            "605": true,
+            "606": true,
+            "607": true,
+            "608": false,
+            "609": false,
+            "610": false,
+            "611": true,
+            "612": false,
+            "613": true,
+            "614": true,
+            "615": true,
+            "616": false,
+            "617": true,
+            "618": false,
+            "619": false,
+            "620": true,
+            "621": true,
+            "622": false,
+            "623": true,
+            "624": true,
+            "625": false,
+            "626": false,
+            "627": false,
+            "628": false,
+            "629": false,
+            "630": false,
+            "631": true,
+            "632": true,
+            "633": true,
+            "634": false,
+            "635": false,
+            "636": true,
+            "637": false,
+            "638": false,
+            "639": false,
+            "640": true,
+            "641": true,
+            "642": true,
+            "643": false,
+            "644": false,
+            "645": true,
+            "646": false,
+            "647": false,
+            "648": false,
+            "649": false,
+            "650": false,
+            "651": false,
+            "652": false,
+            "653": false,
+            "654": false,
+            "655": false,
+            "656": true,
+            "657": false,
+            "658": false,
+            "659": false,
+            "660": true,
+            "661": false,
+            "662": false,
+            "663": true,
+            "664": true,
+            "665": true,
+            "666": true,
+            "667": false,
+            "668": false,
+            "669": true,
+            "670": false,
+            "671": true,
+            "672": false,
+            "673": false,
+            "674": false,
+            "675": true,
+            "676": true,
+            "677": true,
+            "678": false,
+            "679": false,
+            "680": true,
+            "681": false,
+            "682": false,
+            "683": true,
+            "684": false,
+            "685": false,
+            "686": false,
+            "687": false,
+            "688": false,
+            "689": false,
+            "690": false,
+            "691": true,
+            "692": true,
+            "693": false,
+            "694": true,
+            "695": true,
+            "696": true,
+            "697": true,
+            "698": true,
+            "699": false,
+            "700": true,
+            "701": false,
+            "702": false,
+            "703": true,
+            "704": false,
+            "705": true,
+            "706": false,
+            "707": true,
+            "708": true,
+            "709": false,
+            "710": true,
+            "711": true,
+            "712": false,
+            "713": true,
+            "714": false,
+            "715": true,
+            "716": true,
+            "717": false,
+            "718": false,
+            "719": false,
+            "720": true,
+            "721": true,
+            "722": false,
+            "723": false,
+            "724": false,
+            "725": true,
+            "726": false,
+            "727": true
+          },
+          "wilson_95": [
+            0.36205524949299805,
+            0.5317566050994169
+          ],
+          "win_rate": 0.4453125,
+          "wins": 57
+        },
+        "fixed_seed": {
+          "active_composite_ids": [],
+          "active_composite_ids_by_row": {
+            "600": [],
+            "601": [],
+            "602": [],
+            "603": [],
+            "604": [],
+            "605": [],
+            "606": [],
+            "607": [],
+            "608": [],
+            "609": [],
+            "610": [],
+            "611": [],
+            "612": [],
+            "613": [],
+            "614": [],
+            "615": [],
+            "616": [],
+            "617": [],
+            "618": [],
+            "619": [],
+            "620": [],
+            "621": [],
+            "622": [],
+            "623": [],
+            "624": [],
+            "625": [],
+            "626": [],
+            "627": [],
+            "628": [],
+            "629": [],
+            "630": [],
+            "631": [],
+            "632": [],
+            "633": [],
+            "634": [],
+            "635": [],
+            "636": [],
+            "637": [],
+            "638": [],
+            "639": [],
+            "640": [],
+            "641": [],
+            "642": [],
+            "643": [],
+            "644": [],
+            "645": [],
+            "646": [],
+            "647": [],
+            "648": [],
+            "649": [],
+            "650": [],
+            "651": [],
+            "652": [],
+            "653": [],
+            "654": [],
+            "655": [],
+            "656": [],
+            "657": [],
+            "658": [],
+            "659": [],
+            "660": [],
+            "661": [],
+            "662": [],
+            "663": [],
+            "664": [],
+            "665": [],
+            "666": [],
+            "667": [],
+            "668": [],
+            "669": [],
+            "670": [],
+            "671": [],
+            "672": [],
+            "673": [],
+            "674": [],
+            "675": [],
+            "676": [],
+            "677": [],
+            "678": [],
+            "679": [],
+            "680": [],
+            "681": [],
+            "682": [],
+            "683": [],
+            "684": [],
+            "685": [],
+            "686": [],
+            "687": [],
+            "688": [],
+            "689": [],
+            "690": [],
+            "691": [],
+            "692": [],
+            "693": [],
+            "694": [],
+            "695": [],
+            "696": [],
+            "697": [],
+            "698": [],
+            "699": [],
+            "700": [],
+            "701": [],
+            "702": [],
+            "703": [],
+            "704": [],
+            "705": [],
+            "706": [],
+            "707": [],
+            "708": [],
+            "709": [],
+            "710": [],
+            "711": [],
+            "712": [],
+            "713": [],
+            "714": [],
+            "715": [],
+            "716": [],
+            "717": [],
+            "718": [],
+            "719": [],
+            "720": [],
+            "721": [],
+            "722": [],
+            "723": [],
+            "724": [],
+            "725": [],
+            "726": [],
+            "727": []
+          },
+          "black_reply_policy": "fixed_seed",
+          "endpoint_counts": {
+            "fence_broken": 45,
+            "stalemate": 2,
+            "waypoint_reached": 81
+          },
+          "mean_plies_to_success": 6.271604938271605,
+          "nonwins": 47,
+          "policy": "phase3_7_stage_a_fixed_seed_20272911",
+          "row_count": 128,
+          "sample_nonwins": [
+            {
+              "endpoint": "fence_broken",
+              "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+                  "move": "h8g8"
+                },
+                {
+                  "fen": "1k4K1/6R1/8/8/8/8/8/8 w - - 2 2",
+                  "move": "g8f7"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+                  "move": "g4f3"
+                },
+                {
+                  "fen": "8/8/8/8/8/5K2/4R3/2k5 w - - 2 2",
+                  "move": "f3e4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+                  "move": "b8a7"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/k7/8/8/3K4/8/1R6/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/k7/8/8/3K4/8/1R6/8 w - - 0 1",
+                  "move": "d4c5"
+                },
+                {
+                  "fen": "k7/8/8/2K5/8/8/1R6/8 w - - 2 2",
+                  "move": "c5b6"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+                  "move": "g1f2"
+                },
+                {
+                  "fen": "8/8/8/1R6/8/8/5K2/k7 w - - 2 2",
+                  "move": "f2e3"
+                },
+                {
+                  "fen": "8/8/8/1R6/8/4K3/k7/8 w - - 4 3",
+                  "move": "e3d4"
+                },
+                {
+                  "fen": "8/8/8/1R6/3K4/k7/8/8 w - - 6 4",
+                  "move": "d4c3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "5k2/7R/8/6K1/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "5k2/7R/8/6K1/8/8/8/8 w - - 0 1",
+                  "move": "g5f6"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+                  "move": "f2e3"
+                },
+                {
+                  "fen": "7k/4R3/8/8/8/4K3/8/8 w - - 2 2",
+                  "move": "e3f4"
+                },
+                {
+                  "fen": "6k1/4R3/8/8/5K2/8/8/8 w - - 4 3",
+                  "move": "f4e5"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+                  "move": "b6a5"
+                }
+              ]
+            }
+          ],
+          "success_by_row": {
+            "600": true,
+            "601": true,
+            "602": false,
+            "603": true,
+            "604": false,
+            "605": true,
+            "606": true,
+            "607": true,
+            "608": false,
+            "609": false,
+            "610": false,
+            "611": true,
+            "612": true,
+            "613": true,
+            "614": true,
+            "615": true,
+            "616": true,
+            "617": true,
+            "618": false,
+            "619": false,
+            "620": true,
+            "621": true,
+            "622": true,
+            "623": true,
+            "624": true,
+            "625": true,
+            "626": false,
+            "627": false,
+            "628": true,
+            "629": true,
+            "630": false,
+            "631": true,
+            "632": true,
+            "633": false,
+            "634": false,
+            "635": false,
+            "636": true,
+            "637": false,
+            "638": false,
+            "639": true,
+            "640": true,
+            "641": true,
+            "642": true,
+            "643": true,
+            "644": true,
+            "645": true,
+            "646": false,
+            "647": false,
+            "648": false,
+            "649": true,
+            "650": false,
+            "651": false,
+            "652": false,
+            "653": true,
+            "654": false,
+            "655": false,
+            "656": false,
+            "657": false,
+            "658": true,
+            "659": true,
+            "660": true,
+            "661": true,
+            "662": true,
+            "663": true,
+            "664": true,
+            "665": true,
+            "666": true,
+            "667": true,
+            "668": true,
+            "669": true,
+            "670": false,
+            "671": true,
+            "672": true,
+            "673": false,
+            "674": false,
+            "675": true,
+            "676": true,
+            "677": false,
+            "678": false,
+            "679": false,
+            "680": true,
+            "681": true,
+            "682": true,
+            "683": true,
+            "684": false,
+            "685": false,
+            "686": false,
+            "687": false,
+            "688": true,
+            "689": true,
+            "690": false,
+            "691": true,
+            "692": true,
+            "693": false,
+            "694": true,
+            "695": true,
+            "696": true,
+            "697": false,
+            "698": true,
+            "699": true,
+            "700": true,
+            "701": false,
+            "702": true,
+            "703": true,
+            "704": true,
+            "705": true,
+            "706": true,
+            "707": true,
+            "708": false,
+            "709": true,
+            "710": true,
+            "711": true,
+            "712": true,
+            "713": true,
+            "714": false,
+            "715": true,
+            "716": true,
+            "717": false,
+            "718": false,
+            "719": false,
+            "720": true,
+            "721": true,
+            "722": false,
+            "723": false,
+            "724": true,
+            "725": true,
+            "726": false,
+            "727": true
+          },
+          "wilson_95": [
+            0.5465700424986025,
+            0.7113154534912468
+          ],
+          "win_rate": 0.6328125,
+          "wins": 81
+        }
+      },
+      "stage_b": {
+        "exact_adversarial": {
+          "active_composite_ids": [],
+          "active_composite_ids_by_row": {
+            "600": [],
+            "601": [],
+            "602": [],
+            "603": [],
+            "604": [],
+            "605": [],
+            "606": [],
+            "607": [],
+            "608": [],
+            "609": [],
+            "610": [],
+            "611": [],
+            "612": [],
+            "613": [],
+            "614": [],
+            "615": [],
+            "616": [],
+            "617": [],
+            "618": [],
+            "619": [],
+            "620": [],
+            "621": [],
+            "622": [],
+            "623": [],
+            "624": [],
+            "625": [],
+            "626": [],
+            "627": [],
+            "628": [],
+            "629": [],
+            "630": [],
+            "631": [],
+            "632": [],
+            "633": [],
+            "634": [],
+            "635": [],
+            "636": [],
+            "637": [],
+            "638": [],
+            "639": [],
+            "640": [],
+            "641": [],
+            "642": [],
+            "643": [],
+            "644": [],
+            "645": [],
+            "646": [],
+            "647": [],
+            "648": [],
+            "649": [],
+            "650": [],
+            "651": [],
+            "652": [],
+            "653": [],
+            "654": [],
+            "655": [],
+            "656": [],
+            "657": [],
+            "658": [],
+            "659": [],
+            "660": [],
+            "661": [],
+            "662": [],
+            "663": [],
+            "664": [],
+            "665": [],
+            "666": [],
+            "667": [],
+            "668": [],
+            "669": [],
+            "670": [],
+            "671": [],
+            "672": [],
+            "673": [],
+            "674": [],
+            "675": [],
+            "676": [],
+            "677": [],
+            "678": [],
+            "679": [],
+            "680": [],
+            "681": [],
+            "682": [],
+            "683": [],
+            "684": [],
+            "685": [],
+            "686": [],
+            "687": [],
+            "688": [],
+            "689": [],
+            "690": [],
+            "691": [],
+            "692": [],
+            "693": [],
+            "694": [],
+            "695": [],
+            "696": [],
+            "697": [],
+            "698": [],
+            "699": [],
+            "700": [],
+            "701": [],
+            "702": [],
+            "703": [],
+            "704": [],
+            "705": [],
+            "706": [],
+            "707": [],
+            "708": [],
+            "709": [],
+            "710": [],
+            "711": [],
+            "712": [],
+            "713": [],
+            "714": [],
+            "715": [],
+            "716": [],
+            "717": [],
+            "718": [],
+            "719": [],
+            "720": [],
+            "721": [],
+            "722": [],
+            "723": [],
+            "724": [],
+            "725": [],
+            "726": [],
+            "727": []
+          },
+          "black_reply_policy": "exact_adversarial",
+          "endpoint_counts": {
+            "fence_broken": 83,
+            "ungated_exact_mate3_or_better_confirmed": 45
+          },
+          "mean_plies_to_success": 8.622222222222222,
+          "nonwins": 83,
+          "policy": "phase3_7_stage_b_exact_adversarial_20272911",
+          "row_count": 128,
+          "sample_nonwins": [
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/6R1/8/6K1/8/8/7k/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/6R1/8/6K1/8/8/7k/8 w - - 0 1",
+                  "move": "g5f4"
+                },
+                {
+                  "fen": "8/6R1/8/8/5K2/7k/8/8 w - - 2 2",
+                  "move": "f4f3"
+                },
+                {
+                  "fen": "8/6R1/8/8/7k/5K2/8/8 w - - 4 3",
+                  "move": "f3f4"
+                },
+                {
+                  "fen": "8/6R1/8/7k/5K2/8/8/8 w - - 6 4",
+                  "move": "f4f5"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/K7/7k/8/6R1/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/K7/7k/8/6R1/8 w - - 0 1",
+                  "move": "a5b4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/2K5/8/8/8/4R3/6k1 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/2K5/8/8/8/4R3/6k1 w - - 0 1",
+                  "move": "c6d5"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "K7/6R1/8/7k/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "K7/6R1/8/7k/8/8/8/8 w - - 0 1",
+                  "move": "a8b7"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/8/K7/2R5/5k2 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/8/K7/2R5/5k2 w - - 0 1",
+                  "move": "a3b3"
+                },
+                {
+                  "fen": "8/8/8/8/8/1K6/2R5/6k1 w - - 2 2",
+                  "move": "b3c4"
+                },
+                {
+                  "fen": "8/8/8/8/2K5/8/2R5/7k w - - 4 3",
+                  "move": "c4d3"
+                },
+                {
+                  "fen": "8/8/8/8/8/3K4/2R5/6k1 w - - 6 4",
+                  "move": "d3e3"
+                },
+                {
+                  "fen": "8/8/8/8/8/4K3/2R5/5k2 w - - 8 5",
+                  "move": "e3f3"
+                },
+                {
+                  "fen": "8/8/8/8/8/5K2/2R5/4k3 w - - 10 6",
+                  "move": "f3e3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/7K/8/1R6/8/k7 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/7K/8/1R6/8/k7 w - - 0 1",
+                  "move": "h5g4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "7K/8/8/8/8/8/6R1/1k6 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "7K/8/8/8/8/8/6R1/1k6 w - - 0 1",
+                  "move": "h8g7"
+                },
+                {
+                  "fen": "8/6K1/8/8/8/8/6R1/2k5 w - - 2 2",
+                  "move": "g7f6"
+                },
+                {
+                  "fen": "8/8/5K2/8/8/8/6R1/3k4 w - - 4 3",
+                  "move": "f6e5"
+                },
+                {
+                  "fen": "8/8/8/4K3/8/8/6R1/4k3 w - - 6 4",
+                  "move": "e5f4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "6k1/3R4/1K6/8/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "6k1/3R4/1K6/8/8/8/8/8 w - - 0 1",
+                  "move": "b6c6"
+                },
+                {
+                  "fen": "7k/3R4/2K5/8/8/8/8/8 w - - 2 2",
+                  "move": "c6d5"
+                },
+                {
+                  "fen": "6k1/3R4/8/3K4/8/8/8/8 w - - 4 3",
+                  "move": "d5e6"
+                },
+                {
+                  "fen": "5k2/3R4/4K3/8/8/8/8/8 w - - 6 4",
+                  "move": "e6f6"
+                }
+              ]
+            }
+          ],
+          "success_by_row": {
+            "600": false,
+            "601": true,
+            "602": false,
+            "603": false,
+            "604": false,
+            "605": false,
+            "606": false,
+            "607": true,
+            "608": true,
+            "609": false,
+            "610": true,
+            "611": true,
+            "612": true,
+            "613": false,
+            "614": false,
+            "615": true,
+            "616": true,
+            "617": true,
+            "618": false,
+            "619": true,
+            "620": false,
+            "621": false,
+            "622": false,
+            "623": false,
+            "624": false,
+            "625": true,
+            "626": true,
+            "627": true,
+            "628": true,
+            "629": false,
+            "630": true,
+            "631": false,
+            "632": true,
+            "633": true,
+            "634": false,
+            "635": true,
+            "636": false,
+            "637": false,
+            "638": true,
+            "639": false,
+            "640": false,
+            "641": false,
+            "642": false,
+            "643": false,
+            "644": false,
+            "645": false,
+            "646": true,
+            "647": false,
+            "648": true,
+            "649": false,
+            "650": false,
+            "651": true,
+            "652": false,
+            "653": true,
+            "654": false,
+            "655": false,
+            "656": true,
+            "657": false,
+            "658": false,
+            "659": false,
+            "660": false,
+            "661": false,
+            "662": false,
+            "663": false,
+            "664": false,
+            "665": true,
+            "666": true,
+            "667": false,
+            "668": true,
+            "669": true,
+            "670": false,
+            "671": false,
+            "672": false,
+            "673": true,
+            "674": false,
+            "675": false,
+            "676": false,
+            "677": true,
+            "678": false,
+            "679": false,
+            "680": false,
+            "681": false,
+            "682": false,
+            "683": false,
+            "684": false,
+            "685": true,
+            "686": false,
+            "687": false,
+            "688": false,
+            "689": true,
+            "690": false,
+            "691": false,
+            "692": true,
+            "693": false,
+            "694": false,
+            "695": false,
+            "696": false,
+            "697": false,
+            "698": true,
+            "699": true,
+            "700": true,
+            "701": false,
+            "702": true,
+            "703": true,
+            "704": true,
+            "705": false,
+            "706": false,
+            "707": false,
+            "708": false,
+            "709": true,
+            "710": true,
+            "711": false,
+            "712": false,
+            "713": true,
+            "714": false,
+            "715": false,
+            "716": false,
+            "717": false,
+            "718": false,
+            "719": false,
+            "720": false,
+            "721": false,
+            "722": false,
+            "723": false,
+            "724": true,
+            "725": true,
+            "726": true,
+            "727": false
+          },
+          "wilson_95": [
+            0.2742728728140724,
+            0.43750216107962536
+          ],
+          "win_rate": 0.3515625,
+          "wins": 45
+        },
+        "fixed_seed": {
+          "active_composite_ids": [],
+          "active_composite_ids_by_row": {
+            "600": [],
+            "601": [],
+            "602": [],
+            "603": [],
+            "604": [],
+            "605": [],
+            "606": [],
+            "607": [],
+            "608": [],
+            "609": [],
+            "610": [],
+            "611": [],
+            "612": [],
+            "613": [],
+            "614": [],
+            "615": [],
+            "616": [],
+            "617": [],
+            "618": [],
+            "619": [],
+            "620": [],
+            "621": [],
+            "622": [],
+            "623": [],
+            "624": [],
+            "625": [],
+            "626": [],
+            "627": [],
+            "628": [],
+            "629": [],
+            "630": [],
+            "631": [],
+            "632": [],
+            "633": [],
+            "634": [],
+            "635": [],
+            "636": [],
+            "637": [],
+            "638": [],
+            "639": [],
+            "640": [],
+            "641": [],
+            "642": [],
+            "643": [],
+            "644": [],
+            "645": [],
+            "646": [],
+            "647": [],
+            "648": [],
+            "649": [],
+            "650": [],
+            "651": [],
+            "652": [],
+            "653": [],
+            "654": [],
+            "655": [],
+            "656": [],
+            "657": [],
+            "658": [],
+            "659": [],
+            "660": [],
+            "661": [],
+            "662": [],
+            "663": [],
+            "664": [],
+            "665": [],
+            "666": [],
+            "667": [],
+            "668": [],
+            "669": [],
+            "670": [],
+            "671": [],
+            "672": [],
+            "673": [],
+            "674": [],
+            "675": [],
+            "676": [],
+            "677": [],
+            "678": [],
+            "679": [],
+            "680": [],
+            "681": [],
+            "682": [],
+            "683": [],
+            "684": [],
+            "685": [],
+            "686": [],
+            "687": [],
+            "688": [],
+            "689": [],
+            "690": [],
+            "691": [],
+            "692": [],
+            "693": [],
+            "694": [],
+            "695": [],
+            "696": [],
+            "697": [],
+            "698": [],
+            "699": [],
+            "700": [],
+            "701": [],
+            "702": [],
+            "703": [],
+            "704": [],
+            "705": [],
+            "706": [],
+            "707": [],
+            "708": [],
+            "709": [],
+            "710": [],
+            "711": [],
+            "712": [],
+            "713": [],
+            "714": [],
+            "715": [],
+            "716": [],
+            "717": [],
+            "718": [],
+            "719": [],
+            "720": [],
+            "721": [],
+            "722": [],
+            "723": [],
+            "724": [],
+            "725": [],
+            "726": [],
+            "727": []
+          },
+          "black_reply_policy": "fixed_seed",
+          "endpoint_counts": {
+            "fence_broken": 55,
+            "horizon": 2,
+            "ungated_exact_mate3_or_better_confirmed": 71
+          },
+          "mean_plies_to_success": 7.070422535211268,
+          "nonwins": 57,
+          "policy": "phase3_7_stage_b_fixed_seed_20272911",
+          "row_count": 128,
+          "sample_nonwins": [
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/K7/7k/8/6R1/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/K7/7k/8/6R1/8 w - - 0 1",
+                  "move": "a5b4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "K7/6R1/8/7k/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "K7/6R1/8/7k/8/8/8/8 w - - 0 1",
+                  "move": "a8b7"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/7K/8/1R6/8/k7 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/7K/8/1R6/8/k7 w - - 0 1",
+                  "move": "h5g4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "4k3/1R6/8/8/8/8/6K1/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "4k3/1R6/8/8/8/8/6K1/8 w - - 0 1",
+                  "move": "g2f3"
+                },
+                {
+                  "fen": "3k4/1R6/8/8/8/5K2/8/8 w - - 2 2",
+                  "move": "f3e4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "1R6/8/8/8/k7/8/8/K7 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "1R6/8/8/8/k7/8/8/K7 w - - 0 1",
+                  "move": "a1a2"
+                },
+                {
+                  "fen": "1R6/8/8/k7/8/8/K7/8 w - - 2 2",
+                  "move": "a2a3"
+                },
+                {
+                  "fen": "1R6/8/k7/8/8/K7/8/8 w - - 4 3",
+                  "move": "a3a4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/7k/3K4/8/6R1 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/7k/3K4/8/6R1 w - - 0 1",
+                  "move": "d3e4"
+                },
+                {
+                  "fen": "8/8/8/8/4K3/7k/8/6R1 w - - 2 2",
+                  "move": "e4f3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "6R1/8/8/8/1K6/7k/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "6R1/8/8/8/1K6/7k/8/8 w - - 0 1",
+                  "move": "b4c5"
+                },
+                {
+                  "fen": "6R1/8/8/2K5/8/8/7k/8 w - - 2 2",
+                  "move": "c5d4"
+                },
+                {
+                  "fen": "6R1/8/8/8/3K4/7k/8/8 w - - 4 3",
+                  "move": "d4e5"
+                },
+                {
+                  "fen": "6R1/8/8/4K3/7k/8/8/8 w - - 6 4",
+                  "move": "e5f4"
+                },
+                {
+                  "fen": "6R1/8/8/7k/5K2/8/8/8 w - - 8 5",
+                  "move": "f4f5"
+                },
+                {
+                  "fen": "6R1/8/7k/5K2/8/8/8/8 w - - 10 6",
+                  "move": "f5f6"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "7k/5R2/8/8/2K5/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "7k/5R2/8/8/2K5/8/8/8 w - - 0 1",
+                  "move": "c4d5"
+                }
+              ]
+            }
+          ],
+          "success_by_row": {
+            "600": true,
+            "601": true,
+            "602": false,
+            "603": true,
+            "604": false,
+            "605": true,
+            "606": false,
+            "607": true,
+            "608": true,
+            "609": true,
+            "610": false,
+            "611": true,
+            "612": true,
+            "613": true,
+            "614": false,
+            "615": true,
+            "616": false,
+            "617": true,
+            "618": true,
+            "619": true,
+            "620": false,
+            "621": false,
+            "622": true,
+            "623": false,
+            "624": false,
+            "625": true,
+            "626": true,
+            "627": true,
+            "628": true,
+            "629": true,
+            "630": true,
+            "631": false,
+            "632": true,
+            "633": true,
+            "634": false,
+            "635": true,
+            "636": false,
+            "637": true,
+            "638": true,
+            "639": true,
+            "640": false,
+            "641": false,
+            "642": false,
+            "643": false,
+            "644": true,
+            "645": true,
+            "646": true,
+            "647": false,
+            "648": true,
+            "649": true,
+            "650": false,
+            "651": false,
+            "652": true,
+            "653": true,
+            "654": false,
+            "655": true,
+            "656": false,
+            "657": false,
+            "658": true,
+            "659": false,
+            "660": false,
+            "661": true,
+            "662": true,
+            "663": true,
+            "664": false,
+            "665": true,
+            "666": false,
+            "667": true,
+            "668": false,
+            "669": true,
+            "670": true,
+            "671": false,
+            "672": false,
+            "673": false,
+            "674": true,
+            "675": false,
+            "676": false,
+            "677": false,
+            "678": false,
+            "679": true,
+            "680": true,
+            "681": false,
+            "682": false,
+            "683": false,
+            "684": false,
+            "685": true,
+            "686": false,
+            "687": false,
+            "688": true,
+            "689": true,
+            "690": false,
+            "691": false,
+            "692": true,
+            "693": true,
+            "694": false,
+            "695": false,
+            "696": false,
+            "697": false,
+            "698": true,
+            "699": true,
+            "700": true,
+            "701": true,
+            "702": true,
+            "703": true,
+            "704": true,
+            "705": true,
+            "706": false,
+            "707": true,
+            "708": false,
+            "709": false,
+            "710": true,
+            "711": true,
+            "712": true,
+            "713": true,
+            "714": true,
+            "715": false,
+            "716": true,
+            "717": true,
+            "718": false,
+            "719": false,
+            "720": false,
+            "721": false,
+            "722": true,
+            "723": false,
+            "724": true,
+            "725": true,
+            "726": true,
+            "727": false
+          },
+          "wilson_95": [
+            0.4682433949005831,
+            0.637944750507002
+          ],
+          "win_rate": 0.5546875,
+          "wins": 71
+        }
+      }
+    },
+    {
+      "deltas": {
+        "stage_a_exact_adversarial_minus_fixed": -20,
+        "stage_b_exact_adversarial_minus_fixed": -30
+      },
+      "flat_seed": 20272912,
+      "stage_a": {
+        "exact_adversarial": {
+          "active_composite_ids": [],
+          "active_composite_ids_by_row": {
+            "600": [],
+            "601": [],
+            "602": [],
+            "603": [],
+            "604": [],
+            "605": [],
+            "606": [],
+            "607": [],
+            "608": [],
+            "609": [],
+            "610": [],
+            "611": [],
+            "612": [],
+            "613": [],
+            "614": [],
+            "615": [],
+            "616": [],
+            "617": [],
+            "618": [],
+            "619": [],
+            "620": [],
+            "621": [],
+            "622": [],
+            "623": [],
+            "624": [],
+            "625": [],
+            "626": [],
+            "627": [],
+            "628": [],
+            "629": [],
+            "630": [],
+            "631": [],
+            "632": [],
+            "633": [],
+            "634": [],
+            "635": [],
+            "636": [],
+            "637": [],
+            "638": [],
+            "639": [],
+            "640": [],
+            "641": [],
+            "642": [],
+            "643": [],
+            "644": [],
+            "645": [],
+            "646": [],
+            "647": [],
+            "648": [],
+            "649": [],
+            "650": [],
+            "651": [],
+            "652": [],
+            "653": [],
+            "654": [],
+            "655": [],
+            "656": [],
+            "657": [],
+            "658": [],
+            "659": [],
+            "660": [],
+            "661": [],
+            "662": [],
+            "663": [],
+            "664": [],
+            "665": [],
+            "666": [],
+            "667": [],
+            "668": [],
+            "669": [],
+            "670": [],
+            "671": [],
+            "672": [],
+            "673": [],
+            "674": [],
+            "675": [],
+            "676": [],
+            "677": [],
+            "678": [],
+            "679": [],
+            "680": [],
+            "681": [],
+            "682": [],
+            "683": [],
+            "684": [],
+            "685": [],
+            "686": [],
+            "687": [],
+            "688": [],
+            "689": [],
+            "690": [],
+            "691": [],
+            "692": [],
+            "693": [],
+            "694": [],
+            "695": [],
+            "696": [],
+            "697": [],
+            "698": [],
+            "699": [],
+            "700": [],
+            "701": [],
+            "702": [],
+            "703": [],
+            "704": [],
+            "705": [],
+            "706": [],
+            "707": [],
+            "708": [],
+            "709": [],
+            "710": [],
+            "711": [],
+            "712": [],
+            "713": [],
+            "714": [],
+            "715": [],
+            "716": [],
+            "717": [],
+            "718": [],
+            "719": [],
+            "720": [],
+            "721": [],
+            "722": [],
+            "723": [],
+            "724": [],
+            "725": [],
+            "726": [],
+            "727": []
+          },
+          "black_reply_policy": "exact_adversarial",
+          "endpoint_counts": {
+            "fence_broken": 69,
+            "waypoint_reached": 59
+          },
+          "mean_plies_to_success": 7.11864406779661,
+          "nonwins": 69,
+          "policy": "phase3_7_stage_a_exact_adversarial_20272912",
+          "row_count": 128,
+          "sample_nonwins": [
+            {
+              "endpoint": "fence_broken",
+              "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+                  "move": "h8g8"
+                },
+                {
+                  "fen": "1k4K1/6R1/8/8/8/8/8/8 w - - 2 2",
+                  "move": "g8f7"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+                  "move": "g4f3"
+                },
+                {
+                  "fen": "8/8/8/8/8/5K2/4R3/2k5 w - - 2 2",
+                  "move": "f3e4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+                  "move": "b8a7"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/k7/8/8/3K4/8/1R6/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/k7/8/8/3K4/8/1R6/8 w - - 0 1",
+                  "move": "d4c5"
+                },
+                {
+                  "fen": "k7/8/8/2K5/8/8/1R6/8 w - - 2 2",
+                  "move": "c5b6"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+                  "move": "g1f2"
+                },
+                {
+                  "fen": "8/8/8/1R6/8/k7/5K2/8 w - - 2 2",
+                  "move": "f2e3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+                  "move": "e1d2"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "1R6/8/8/8/k5K1/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "1R6/8/8/8/k5K1/8/8/8 w - - 0 1",
+                  "move": "g4f5"
+                },
+                {
+                  "fen": "1R6/8/8/k4K2/8/8/8/8 w - - 2 2",
+                  "move": "f5e6"
+                },
+                {
+                  "fen": "1R6/8/k3K3/8/8/8/8/8 w - - 4 3",
+                  "move": "e6d5"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "5k2/7R/8/6K1/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "5k2/7R/8/6K1/8/8/8/8 w - - 0 1",
+                  "move": "g5f6"
+                }
+              ]
+            }
+          ],
+          "success_by_row": {
+            "600": true,
+            "601": true,
+            "602": false,
+            "603": true,
+            "604": false,
+            "605": true,
+            "606": true,
+            "607": true,
+            "608": false,
+            "609": false,
+            "610": false,
+            "611": true,
+            "612": false,
+            "613": true,
+            "614": true,
+            "615": true,
+            "616": false,
+            "617": true,
+            "618": false,
+            "619": false,
+            "620": true,
+            "621": true,
+            "622": false,
+            "623": true,
+            "624": true,
+            "625": false,
+            "626": false,
+            "627": false,
+            "628": false,
+            "629": false,
+            "630": false,
+            "631": true,
+            "632": true,
+            "633": true,
+            "634": false,
+            "635": false,
+            "636": true,
+            "637": false,
+            "638": false,
+            "639": false,
+            "640": true,
+            "641": true,
+            "642": true,
+            "643": false,
+            "644": false,
+            "645": true,
+            "646": false,
+            "647": false,
+            "648": false,
+            "649": false,
+            "650": true,
+            "651": false,
+            "652": false,
+            "653": false,
+            "654": false,
+            "655": false,
+            "656": true,
+            "657": false,
+            "658": false,
+            "659": false,
+            "660": true,
+            "661": false,
+            "662": false,
+            "663": true,
+            "664": true,
+            "665": true,
+            "666": true,
+            "667": false,
+            "668": false,
+            "669": true,
+            "670": false,
+            "671": true,
+            "672": false,
+            "673": false,
+            "674": false,
+            "675": true,
+            "676": true,
+            "677": true,
+            "678": false,
+            "679": false,
+            "680": true,
+            "681": false,
+            "682": false,
+            "683": true,
+            "684": false,
+            "685": false,
+            "686": false,
+            "687": false,
+            "688": false,
+            "689": false,
+            "690": false,
+            "691": true,
+            "692": true,
+            "693": false,
+            "694": true,
+            "695": true,
+            "696": true,
+            "697": true,
+            "698": true,
+            "699": false,
+            "700": true,
+            "701": true,
+            "702": false,
+            "703": true,
+            "704": false,
+            "705": true,
+            "706": false,
+            "707": true,
+            "708": true,
+            "709": false,
+            "710": true,
+            "711": true,
+            "712": false,
+            "713": true,
+            "714": false,
+            "715": true,
+            "716": true,
+            "717": false,
+            "718": false,
+            "719": false,
+            "720": true,
+            "721": true,
+            "722": false,
+            "723": false,
+            "724": false,
+            "725": true,
+            "726": false,
+            "727": true
+          },
+          "wilson_95": [
+            0.3769811559809195,
+            0.5471701687279483
+          ],
+          "win_rate": 0.4609375,
+          "wins": 59
+        },
+        "fixed_seed": {
+          "active_composite_ids": [],
+          "active_composite_ids_by_row": {
+            "600": [],
+            "601": [],
+            "602": [],
+            "603": [],
+            "604": [],
+            "605": [],
+            "606": [],
+            "607": [],
+            "608": [],
+            "609": [],
+            "610": [],
+            "611": [],
+            "612": [],
+            "613": [],
+            "614": [],
+            "615": [],
+            "616": [],
+            "617": [],
+            "618": [],
+            "619": [],
+            "620": [],
+            "621": [],
+            "622": [],
+            "623": [],
+            "624": [],
+            "625": [],
+            "626": [],
+            "627": [],
+            "628": [],
+            "629": [],
+            "630": [],
+            "631": [],
+            "632": [],
+            "633": [],
+            "634": [],
+            "635": [],
+            "636": [],
+            "637": [],
+            "638": [],
+            "639": [],
+            "640": [],
+            "641": [],
+            "642": [],
+            "643": [],
+            "644": [],
+            "645": [],
+            "646": [],
+            "647": [],
+            "648": [],
+            "649": [],
+            "650": [],
+            "651": [],
+            "652": [],
+            "653": [],
+            "654": [],
+            "655": [],
+            "656": [],
+            "657": [],
+            "658": [],
+            "659": [],
+            "660": [],
+            "661": [],
+            "662": [],
+            "663": [],
+            "664": [],
+            "665": [],
+            "666": [],
+            "667": [],
+            "668": [],
+            "669": [],
+            "670": [],
+            "671": [],
+            "672": [],
+            "673": [],
+            "674": [],
+            "675": [],
+            "676": [],
+            "677": [],
+            "678": [],
+            "679": [],
+            "680": [],
+            "681": [],
+            "682": [],
+            "683": [],
+            "684": [],
+            "685": [],
+            "686": [],
+            "687": [],
+            "688": [],
+            "689": [],
+            "690": [],
+            "691": [],
+            "692": [],
+            "693": [],
+            "694": [],
+            "695": [],
+            "696": [],
+            "697": [],
+            "698": [],
+            "699": [],
+            "700": [],
+            "701": [],
+            "702": [],
+            "703": [],
+            "704": [],
+            "705": [],
+            "706": [],
+            "707": [],
+            "708": [],
+            "709": [],
+            "710": [],
+            "711": [],
+            "712": [],
+            "713": [],
+            "714": [],
+            "715": [],
+            "716": [],
+            "717": [],
+            "718": [],
+            "719": [],
+            "720": [],
+            "721": [],
+            "722": [],
+            "723": [],
+            "724": [],
+            "725": [],
+            "726": [],
+            "727": []
+          },
+          "black_reply_policy": "fixed_seed",
+          "endpoint_counts": {
+            "fence_broken": 49,
+            "waypoint_reached": 79
+          },
+          "mean_plies_to_success": 6.0,
+          "nonwins": 49,
+          "policy": "phase3_7_stage_a_fixed_seed_20272912",
+          "row_count": 128,
+          "sample_nonwins": [
+            {
+              "endpoint": "fence_broken",
+              "fen": "k6K/8/8/8/8/1R6/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "k6K/8/8/8/8/1R6/8/8 w - - 0 1",
+                  "move": "h8g7"
+                },
+                {
+                  "fen": "8/k5K1/8/8/8/1R6/8/8 w - - 2 2",
+                  "move": "g7f6"
+                },
+                {
+                  "fen": "8/8/k4K2/8/8/1R6/8/8 w - - 4 3",
+                  "move": "f6e5"
+                },
+                {
+                  "fen": "8/8/8/k3K3/8/1R6/8/8 w - - 6 4",
+                  "move": "e5d4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/1R6/8/8/6K1/8/8/k7 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/1R6/8/8/6K1/8/8/k7 w - - 0 1",
+                  "move": "g4f3"
+                },
+                {
+                  "fen": "8/1R6/8/8/8/5K2/k7/8 w - - 2 2",
+                  "move": "f3e4"
+                },
+                {
+                  "fen": "8/1R6/8/8/4K3/k7/8/8 w - - 4 3",
+                  "move": "e4d5"
+                },
+                {
+                  "fen": "8/1R6/8/3K4/8/8/k7/8 w - - 6 4",
+                  "move": "d5c4"
+                },
+                {
+                  "fen": "8/1R6/8/8/2K5/8/8/k7 w - - 8 5",
+                  "move": "c4b3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+                  "move": "e1d2"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+                  "move": "f2e3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "1R6/8/8/k7/8/8/8/6K1 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "1R6/8/8/k7/8/8/8/6K1 w - - 0 1",
+                  "move": "g1f2"
+                },
+                {
+                  "fen": "1R6/8/k7/8/8/8/5K2/8 w - - 2 2",
+                  "move": "f2e3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "k7/3R4/8/8/8/3K4/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "k7/3R4/8/8/8/3K4/8/8 w - - 0 1",
+                  "move": "d3c4"
+                },
+                {
+                  "fen": "1k6/3R4/8/8/2K5/8/8/8 w - - 2 2",
+                  "move": "c4d5"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/1K6/8/8/1R6/8/k7 w - - 0 1",
+                  "move": "b6a5"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "k7/8/1R6/8/8/8/8/7K w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "k7/8/1R6/8/8/8/8/7K w - - 0 1",
+                  "move": "h1g2"
+                }
+              ]
+            }
+          ],
+          "success_by_row": {
+            "600": true,
+            "601": true,
+            "602": true,
+            "603": false,
+            "604": true,
+            "605": false,
+            "606": true,
+            "607": true,
+            "608": true,
+            "609": true,
+            "610": true,
+            "611": true,
+            "612": false,
+            "613": true,
+            "614": true,
+            "615": true,
+            "616": true,
+            "617": true,
+            "618": true,
+            "619": false,
+            "620": true,
+            "621": true,
+            "622": false,
+            "623": true,
+            "624": true,
+            "625": false,
+            "626": false,
+            "627": false,
+            "628": true,
+            "629": false,
+            "630": true,
+            "631": true,
+            "632": true,
+            "633": true,
+            "634": true,
+            "635": false,
+            "636": true,
+            "637": false,
+            "638": true,
+            "639": false,
+            "640": true,
+            "641": true,
+            "642": true,
+            "643": false,
+            "644": false,
+            "645": true,
+            "646": false,
+            "647": false,
+            "648": false,
+            "649": true,
+            "650": true,
+            "651": true,
+            "652": false,
+            "653": true,
+            "654": true,
+            "655": false,
+            "656": true,
+            "657": false,
+            "658": false,
+            "659": false,
+            "660": false,
+            "661": true,
+            "662": false,
+            "663": true,
+            "664": false,
+            "665": true,
+            "666": true,
+            "667": true,
+            "668": false,
+            "669": true,
+            "670": false,
+            "671": true,
+            "672": true,
+            "673": false,
+            "674": true,
+            "675": true,
+            "676": true,
+            "677": true,
+            "678": true,
+            "679": true,
+            "680": true,
+            "681": false,
+            "682": false,
+            "683": true,
+            "684": false,
+            "685": false,
+            "686": false,
+            "687": false,
+            "688": true,
+            "689": true,
+            "690": true,
+            "691": true,
+            "692": true,
+            "693": false,
+            "694": true,
+            "695": true,
+            "696": true,
+            "697": true,
+            "698": false,
+            "699": false,
+            "700": true,
+            "701": true,
+            "702": false,
+            "703": true,
+            "704": false,
+            "705": false,
+            "706": false,
+            "707": true,
+            "708": true,
+            "709": false,
+            "710": true,
+            "711": true,
+            "712": false,
+            "713": false,
+            "714": true,
+            "715": true,
+            "716": true,
+            "717": true,
+            "718": false,
+            "719": false,
+            "720": true,
+            "721": true,
+            "722": false,
+            "723": true,
+            "724": false,
+            "725": true,
+            "726": false,
+            "727": true
+          },
+          "wilson_95": [
+            0.5307322844502991,
+            0.6968137414230975
+          ],
+          "win_rate": 0.6171875,
+          "wins": 79
+        }
+      },
+      "stage_b": {
+        "exact_adversarial": {
+          "active_composite_ids": [],
+          "active_composite_ids_by_row": {
+            "600": [],
+            "601": [],
+            "602": [],
+            "603": [],
+            "604": [],
+            "605": [],
+            "606": [],
+            "607": [],
+            "608": [],
+            "609": [],
+            "610": [],
+            "611": [],
+            "612": [],
+            "613": [],
+            "614": [],
+            "615": [],
+            "616": [],
+            "617": [],
+            "618": [],
+            "619": [],
+            "620": [],
+            "621": [],
+            "622": [],
+            "623": [],
+            "624": [],
+            "625": [],
+            "626": [],
+            "627": [],
+            "628": [],
+            "629": [],
+            "630": [],
+            "631": [],
+            "632": [],
+            "633": [],
+            "634": [],
+            "635": [],
+            "636": [],
+            "637": [],
+            "638": [],
+            "639": [],
+            "640": [],
+            "641": [],
+            "642": [],
+            "643": [],
+            "644": [],
+            "645": [],
+            "646": [],
+            "647": [],
+            "648": [],
+            "649": [],
+            "650": [],
+            "651": [],
+            "652": [],
+            "653": [],
+            "654": [],
+            "655": [],
+            "656": [],
+            "657": [],
+            "658": [],
+            "659": [],
+            "660": [],
+            "661": [],
+            "662": [],
+            "663": [],
+            "664": [],
+            "665": [],
+            "666": [],
+            "667": [],
+            "668": [],
+            "669": [],
+            "670": [],
+            "671": [],
+            "672": [],
+            "673": [],
+            "674": [],
+            "675": [],
+            "676": [],
+            "677": [],
+            "678": [],
+            "679": [],
+            "680": [],
+            "681": [],
+            "682": [],
+            "683": [],
+            "684": [],
+            "685": [],
+            "686": [],
+            "687": [],
+            "688": [],
+            "689": [],
+            "690": [],
+            "691": [],
+            "692": [],
+            "693": [],
+            "694": [],
+            "695": [],
+            "696": [],
+            "697": [],
+            "698": [],
+            "699": [],
+            "700": [],
+            "701": [],
+            "702": [],
+            "703": [],
+            "704": [],
+            "705": [],
+            "706": [],
+            "707": [],
+            "708": [],
+            "709": [],
+            "710": [],
+            "711": [],
+            "712": [],
+            "713": [],
+            "714": [],
+            "715": [],
+            "716": [],
+            "717": [],
+            "718": [],
+            "719": [],
+            "720": [],
+            "721": [],
+            "722": [],
+            "723": [],
+            "724": [],
+            "725": [],
+            "726": [],
+            "727": []
+          },
+          "black_reply_policy": "exact_adversarial",
+          "endpoint_counts": {
+            "fence_broken": 84,
+            "horizon": 1,
+            "ungated_exact_mate3_or_better_confirmed": 43
+          },
+          "mean_plies_to_success": 8.418604651162791,
+          "nonwins": 85,
+          "policy": "phase3_7_stage_b_exact_adversarial_20272912",
+          "row_count": 128,
+          "sample_nonwins": [
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/6R1/8/6K1/8/8/7k/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/6R1/8/6K1/8/8/7k/8 w - - 0 1",
+                  "move": "g5f4"
+                },
+                {
+                  "fen": "8/6R1/8/8/5K2/7k/8/8 w - - 2 2",
+                  "move": "f4f3"
+                },
+                {
+                  "fen": "8/6R1/8/8/7k/5K2/8/8 w - - 4 3",
+                  "move": "f3f4"
+                },
+                {
+                  "fen": "8/6R1/8/7k/5K2/8/8/8 w - - 6 4",
+                  "move": "f4f5"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/K7/7k/8/6R1/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/K7/7k/8/6R1/8 w - - 0 1",
+                  "move": "a5b4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/2K5/8/8/8/4R3/6k1 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/2K5/8/8/8/4R3/6k1 w - - 0 1",
+                  "move": "c6d5"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "K7/6R1/8/7k/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "K7/6R1/8/7k/8/8/8/8 w - - 0 1",
+                  "move": "a8b7"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/8/K7/2R5/5k2 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/8/K7/2R5/5k2 w - - 0 1",
+                  "move": "a3b3"
+                },
+                {
+                  "fen": "8/8/8/8/8/1K6/2R5/6k1 w - - 2 2",
+                  "move": "b3c3"
+                },
+                {
+                  "fen": "8/8/8/8/8/2K5/2R5/7k w - - 4 3",
+                  "move": "c3d3"
+                },
+                {
+                  "fen": "8/8/8/8/8/3K4/2R5/6k1 w - - 6 4",
+                  "move": "d3e3"
+                },
+                {
+                  "fen": "8/8/8/8/8/4K3/2R5/5k2 w - - 8 5",
+                  "move": "e3f3"
+                },
+                {
+                  "fen": "8/8/8/8/8/5K2/2R5/4k3 w - - 10 6",
+                  "move": "f3e3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/7K/8/1R6/8/k7 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/7K/8/1R6/8/k7 w - - 0 1",
+                  "move": "h5g4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "7K/8/8/8/8/8/6R1/1k6 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "7K/8/8/8/8/8/6R1/1k6 w - - 0 1",
+                  "move": "h8g7"
+                },
+                {
+                  "fen": "8/6K1/8/8/8/8/6R1/2k5 w - - 2 2",
+                  "move": "g7f6"
+                },
+                {
+                  "fen": "8/8/5K2/8/8/8/6R1/3k4 w - - 4 3",
+                  "move": "f6e5"
+                },
+                {
+                  "fen": "8/8/8/4K3/8/8/6R1/4k3 w - - 6 4",
+                  "move": "e5f4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "6k1/3R4/1K6/8/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "6k1/3R4/1K6/8/8/8/8/8 w - - 0 1",
+                  "move": "b6c6"
+                },
+                {
+                  "fen": "7k/3R4/2K5/8/8/8/8/8 w - - 2 2",
+                  "move": "c6d6"
+                },
+                {
+                  "fen": "6k1/3R4/3K4/8/8/8/8/8 w - - 4 3",
+                  "move": "d6e6"
+                },
+                {
+                  "fen": "5k2/3R4/4K3/8/8/8/8/8 w - - 6 4",
+                  "move": "e6f6"
+                }
+              ]
+            }
+          ],
+          "success_by_row": {
+            "600": false,
+            "601": true,
+            "602": false,
+            "603": false,
+            "604": false,
+            "605": false,
+            "606": false,
+            "607": true,
+            "608": true,
+            "609": false,
+            "610": true,
+            "611": true,
+            "612": true,
+            "613": false,
+            "614": false,
+            "615": true,
+            "616": true,
+            "617": true,
+            "618": false,
+            "619": true,
+            "620": false,
+            "621": false,
+            "622": false,
+            "623": false,
+            "624": false,
+            "625": true,
+            "626": true,
+            "627": false,
+            "628": true,
+            "629": false,
+            "630": true,
+            "631": false,
+            "632": true,
+            "633": true,
+            "634": false,
+            "635": true,
+            "636": false,
+            "637": false,
+            "638": true,
+            "639": false,
+            "640": false,
+            "641": false,
+            "642": false,
+            "643": false,
+            "644": false,
+            "645": false,
+            "646": true,
+            "647": false,
+            "648": true,
+            "649": false,
+            "650": false,
+            "651": true,
+            "652": false,
+            "653": true,
+            "654": false,
+            "655": false,
+            "656": true,
+            "657": false,
+            "658": false,
+            "659": false,
+            "660": false,
+            "661": false,
+            "662": false,
+            "663": false,
+            "664": false,
+            "665": true,
+            "666": false,
+            "667": false,
+            "668": true,
+            "669": true,
+            "670": false,
+            "671": false,
+            "672": false,
+            "673": true,
+            "674": false,
+            "675": false,
+            "676": false,
+            "677": true,
+            "678": false,
+            "679": false,
+            "680": false,
+            "681": false,
+            "682": false,
+            "683": false,
+            "684": false,
+            "685": true,
+            "686": false,
+            "687": false,
+            "688": false,
+            "689": true,
+            "690": false,
+            "691": false,
+            "692": true,
+            "693": false,
+            "694": false,
+            "695": false,
+            "696": false,
+            "697": false,
+            "698": true,
+            "699": true,
+            "700": true,
+            "701": false,
+            "702": true,
+            "703": true,
+            "704": true,
+            "705": false,
+            "706": false,
+            "707": false,
+            "708": false,
+            "709": true,
+            "710": true,
+            "711": false,
+            "712": false,
+            "713": true,
+            "714": false,
+            "715": false,
+            "716": false,
+            "717": false,
+            "718": false,
+            "719": false,
+            "720": false,
+            "721": false,
+            "722": false,
+            "723": false,
+            "724": true,
+            "725": true,
+            "726": true,
+            "727": false
+          },
+          "wilson_95": [
+            0.2599537727882833,
+            0.4214817909889617
+          ],
+          "win_rate": 0.3359375,
+          "wins": 43
+        },
+        "fixed_seed": {
+          "active_composite_ids": [],
+          "active_composite_ids_by_row": {
+            "600": [],
+            "601": [],
+            "602": [],
+            "603": [],
+            "604": [],
+            "605": [],
+            "606": [],
+            "607": [],
+            "608": [],
+            "609": [],
+            "610": [],
+            "611": [],
+            "612": [],
+            "613": [],
+            "614": [],
+            "615": [],
+            "616": [],
+            "617": [],
+            "618": [],
+            "619": [],
+            "620": [],
+            "621": [],
+            "622": [],
+            "623": [],
+            "624": [],
+            "625": [],
+            "626": [],
+            "627": [],
+            "628": [],
+            "629": [],
+            "630": [],
+            "631": [],
+            "632": [],
+            "633": [],
+            "634": [],
+            "635": [],
+            "636": [],
+            "637": [],
+            "638": [],
+            "639": [],
+            "640": [],
+            "641": [],
+            "642": [],
+            "643": [],
+            "644": [],
+            "645": [],
+            "646": [],
+            "647": [],
+            "648": [],
+            "649": [],
+            "650": [],
+            "651": [],
+            "652": [],
+            "653": [],
+            "654": [],
+            "655": [],
+            "656": [],
+            "657": [],
+            "658": [],
+            "659": [],
+            "660": [],
+            "661": [],
+            "662": [],
+            "663": [],
+            "664": [],
+            "665": [],
+            "666": [],
+            "667": [],
+            "668": [],
+            "669": [],
+            "670": [],
+            "671": [],
+            "672": [],
+            "673": [],
+            "674": [],
+            "675": [],
+            "676": [],
+            "677": [],
+            "678": [],
+            "679": [],
+            "680": [],
+            "681": [],
+            "682": [],
+            "683": [],
+            "684": [],
+            "685": [],
+            "686": [],
+            "687": [],
+            "688": [],
+            "689": [],
+            "690": [],
+            "691": [],
+            "692": [],
+            "693": [],
+            "694": [],
+            "695": [],
+            "696": [],
+            "697": [],
+            "698": [],
+            "699": [],
+            "700": [],
+            "701": [],
+            "702": [],
+            "703": [],
+            "704": [],
+            "705": [],
+            "706": [],
+            "707": [],
+            "708": [],
+            "709": [],
+            "710": [],
+            "711": [],
+            "712": [],
+            "713": [],
+            "714": [],
+            "715": [],
+            "716": [],
+            "717": [],
+            "718": [],
+            "719": [],
+            "720": [],
+            "721": [],
+            "722": [],
+            "723": [],
+            "724": [],
+            "725": [],
+            "726": [],
+            "727": []
+          },
+          "black_reply_policy": "fixed_seed",
+          "endpoint_counts": {
+            "fence_broken": 52,
+            "horizon": 3,
+            "ungated_exact_mate3_or_better_confirmed": 73
+          },
+          "mean_plies_to_success": 7.4520547945205475,
+          "nonwins": 55,
+          "policy": "phase3_7_stage_b_fixed_seed_20272912",
+          "row_count": 128,
+          "sample_nonwins": [
+            {
+              "endpoint": "fence_broken",
+              "fen": "K7/6R1/8/7k/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "K7/6R1/8/7k/8/8/8/8 w - - 0 1",
+                  "move": "a8b7"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/8/K7/2R5/5k2 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/8/K7/2R5/5k2 w - - 0 1",
+                  "move": "a3b3"
+                },
+                {
+                  "fen": "8/8/8/8/8/1K6/2R5/4k3 w - - 2 2",
+                  "move": "b3c3"
+                },
+                {
+                  "fen": "8/8/8/8/8/2K5/2R5/5k2 w - - 4 3",
+                  "move": "c3d3"
+                },
+                {
+                  "fen": "8/8/8/8/8/3K4/2R5/4k3 w - - 6 4",
+                  "move": "d3e3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/7K/8/1R6/8/k7 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/7K/8/1R6/8/k7 w - - 0 1",
+                  "move": "h5g4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "4k3/1R6/8/8/8/8/6K1/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "4k3/1R6/8/8/8/8/6K1/8 w - - 0 1",
+                  "move": "g2f3"
+                },
+                {
+                  "fen": "3k4/1R6/8/8/8/5K2/8/8 w - - 2 2",
+                  "move": "f3e4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "1R6/8/8/8/k7/8/8/K7 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "1R6/8/8/8/k7/8/8/K7 w - - 0 1",
+                  "move": "a1a2"
+                },
+                {
+                  "fen": "1R6/8/8/k7/8/8/K7/8 w - - 2 2",
+                  "move": "a2a3"
+                },
+                {
+                  "fen": "1R6/8/k7/8/8/K7/8/8 w - - 4 3",
+                  "move": "a3a4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/7k/3K4/8/6R1 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/7k/3K4/8/6R1 w - - 0 1",
+                  "move": "d3e4"
+                },
+                {
+                  "fen": "8/8/8/7k/4K3/8/8/6R1 w - - 2 2",
+                  "move": "e4f5"
+                },
+                {
+                  "fen": "8/8/8/5K2/7k/8/8/6R1 w - - 4 3",
+                  "move": "f5f4"
+                },
+                {
+                  "fen": "8/8/8/8/5K2/7k/8/6R1 w - - 6 4",
+                  "move": "f4f3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "4k3/1R6/1K6/8/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "4k3/1R6/1K6/8/8/8/8/8 w - - 0 1",
+                  "move": "b6c6"
+                },
+                {
+                  "fen": "3k4/1R6/2K5/8/8/8/8/8 w - - 2 2",
+                  "move": "c6d6"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/5K2/6R1/8/8/8/7k w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/5K2/6R1/8/8/8/7k w - - 0 1",
+                  "move": "f6e5"
+                },
+                {
+                  "fen": "8/8/8/4K1R1/8/8/7k/8 w - - 2 2",
+                  "move": "e5f4"
+                },
+                {
+                  "fen": "8/8/8/6R1/5K2/7k/8/8 w - - 4 3",
+                  "move": "f4f3"
+                }
+              ]
+            }
+          ],
+          "success_by_row": {
+            "600": true,
+            "601": true,
+            "602": true,
+            "603": true,
+            "604": false,
+            "605": false,
+            "606": false,
+            "607": true,
+            "608": true,
+            "609": true,
+            "610": false,
+            "611": true,
+            "612": true,
+            "613": true,
+            "614": false,
+            "615": true,
+            "616": false,
+            "617": false,
+            "618": false,
+            "619": true,
+            "620": true,
+            "621": false,
+            "622": true,
+            "623": true,
+            "624": true,
+            "625": true,
+            "626": true,
+            "627": false,
+            "628": true,
+            "629": false,
+            "630": true,
+            "631": false,
+            "632": true,
+            "633": true,
+            "634": true,
+            "635": true,
+            "636": false,
+            "637": true,
+            "638": false,
+            "639": false,
+            "640": false,
+            "641": false,
+            "642": false,
+            "643": true,
+            "644": false,
+            "645": true,
+            "646": true,
+            "647": true,
+            "648": true,
+            "649": true,
+            "650": true,
+            "651": true,
+            "652": false,
+            "653": true,
+            "654": true,
+            "655": false,
+            "656": true,
+            "657": false,
+            "658": true,
+            "659": false,
+            "660": true,
+            "661": true,
+            "662": false,
+            "663": true,
+            "664": true,
+            "665": true,
+            "666": true,
+            "667": false,
+            "668": false,
+            "669": true,
+            "670": true,
+            "671": false,
+            "672": false,
+            "673": true,
+            "674": false,
+            "675": false,
+            "676": true,
+            "677": false,
+            "678": true,
+            "679": false,
+            "680": true,
+            "681": false,
+            "682": false,
+            "683": true,
+            "684": false,
+            "685": true,
+            "686": false,
+            "687": true,
+            "688": true,
+            "689": true,
+            "690": false,
+            "691": false,
+            "692": true,
+            "693": true,
+            "694": false,
+            "695": false,
+            "696": false,
+            "697": true,
+            "698": true,
+            "699": true,
+            "700": true,
+            "701": false,
+            "702": false,
+            "703": true,
+            "704": true,
+            "705": true,
+            "706": false,
+            "707": false,
+            "708": false,
+            "709": true,
+            "710": true,
+            "711": false,
+            "712": false,
+            "713": true,
+            "714": false,
+            "715": false,
+            "716": true,
+            "717": false,
+            "718": true,
+            "719": true,
+            "720": false,
+            "721": false,
+            "722": false,
+            "723": false,
+            "724": true,
+            "725": true,
+            "726": true,
+            "727": true
+          },
+          "wilson_95": [
+            0.48373932885040405,
+            0.6527882866736338
+          ],
+          "win_rate": 0.5703125,
+          "wins": 73
+        }
+      }
+    },
+    {
+      "deltas": {
+        "stage_a_exact_adversarial_minus_fixed": -24,
+        "stage_b_exact_adversarial_minus_fixed": -29
+      },
+      "flat_seed": 20272913,
+      "stage_a": {
+        "exact_adversarial": {
+          "active_composite_ids": [],
+          "active_composite_ids_by_row": {
+            "600": [],
+            "601": [],
+            "602": [],
+            "603": [],
+            "604": [],
+            "605": [],
+            "606": [],
+            "607": [],
+            "608": [],
+            "609": [],
+            "610": [],
+            "611": [],
+            "612": [],
+            "613": [],
+            "614": [],
+            "615": [],
+            "616": [],
+            "617": [],
+            "618": [],
+            "619": [],
+            "620": [],
+            "621": [],
+            "622": [],
+            "623": [],
+            "624": [],
+            "625": [],
+            "626": [],
+            "627": [],
+            "628": [],
+            "629": [],
+            "630": [],
+            "631": [],
+            "632": [],
+            "633": [],
+            "634": [],
+            "635": [],
+            "636": [],
+            "637": [],
+            "638": [],
+            "639": [],
+            "640": [],
+            "641": [],
+            "642": [],
+            "643": [],
+            "644": [],
+            "645": [],
+            "646": [],
+            "647": [],
+            "648": [],
+            "649": [],
+            "650": [],
+            "651": [],
+            "652": [],
+            "653": [],
+            "654": [],
+            "655": [],
+            "656": [],
+            "657": [],
+            "658": [],
+            "659": [],
+            "660": [],
+            "661": [],
+            "662": [],
+            "663": [],
+            "664": [],
+            "665": [],
+            "666": [],
+            "667": [],
+            "668": [],
+            "669": [],
+            "670": [],
+            "671": [],
+            "672": [],
+            "673": [],
+            "674": [],
+            "675": [],
+            "676": [],
+            "677": [],
+            "678": [],
+            "679": [],
+            "680": [],
+            "681": [],
+            "682": [],
+            "683": [],
+            "684": [],
+            "685": [],
+            "686": [],
+            "687": [],
+            "688": [],
+            "689": [],
+            "690": [],
+            "691": [],
+            "692": [],
+            "693": [],
+            "694": [],
+            "695": [],
+            "696": [],
+            "697": [],
+            "698": [],
+            "699": [],
+            "700": [],
+            "701": [],
+            "702": [],
+            "703": [],
+            "704": [],
+            "705": [],
+            "706": [],
+            "707": [],
+            "708": [],
+            "709": [],
+            "710": [],
+            "711": [],
+            "712": [],
+            "713": [],
+            "714": [],
+            "715": [],
+            "716": [],
+            "717": [],
+            "718": [],
+            "719": [],
+            "720": [],
+            "721": [],
+            "722": [],
+            "723": [],
+            "724": [],
+            "725": [],
+            "726": [],
+            "727": []
+          },
+          "black_reply_policy": "exact_adversarial",
+          "endpoint_counts": {
+            "fence_broken": 69,
+            "rook_lost": 1,
+            "waypoint_reached": 58
+          },
+          "mean_plies_to_success": 6.931034482758621,
+          "nonwins": 70,
+          "policy": "phase3_7_stage_a_exact_adversarial_20272913",
+          "row_count": 128,
+          "sample_nonwins": [
+            {
+              "endpoint": "fence_broken",
+              "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+                  "move": "h8g8"
+                },
+                {
+                  "fen": "1k4K1/6R1/8/8/8/8/8/8 w - - 2 2",
+                  "move": "g8f7"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+                  "move": "g4f3"
+                },
+                {
+                  "fen": "8/8/8/8/8/5K2/4R3/2k5 w - - 2 2",
+                  "move": "f3e4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "1K6/8/8/8/1R6/8/k7/8 w - - 0 1",
+                  "move": "b8a7"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/k7/8/8/3K4/8/1R6/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/k7/8/8/3K4/8/1R6/8 w - - 0 1",
+                  "move": "d4c5"
+                },
+                {
+                  "fen": "k7/8/8/2K5/8/8/1R6/8 w - - 2 2",
+                  "move": "c5b6"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+                  "move": "g1f2"
+                },
+                {
+                  "fen": "8/8/8/1R6/8/k7/5K2/8 w - - 2 2",
+                  "move": "f2e3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+                  "move": "e1d2"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "1R6/8/8/8/k5K1/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "1R6/8/8/8/k5K1/8/8/8 w - - 0 1",
+                  "move": "g4f5"
+                },
+                {
+                  "fen": "1R6/8/8/k4K2/8/8/8/8 w - - 2 2",
+                  "move": "f5e6"
+                },
+                {
+                  "fen": "1R6/8/k3K3/8/8/8/8/8 w - - 4 3",
+                  "move": "e6d5"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "5k2/7R/8/6K1/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "5k2/7R/8/6K1/8/8/8/8 w - - 0 1",
+                  "move": "g5f6"
+                }
+              ]
+            }
+          ],
+          "success_by_row": {
+            "600": true,
+            "601": true,
+            "602": false,
+            "603": true,
+            "604": false,
+            "605": true,
+            "606": true,
+            "607": true,
+            "608": false,
+            "609": false,
+            "610": false,
+            "611": true,
+            "612": false,
+            "613": true,
+            "614": true,
+            "615": true,
+            "616": false,
+            "617": true,
+            "618": false,
+            "619": false,
+            "620": true,
+            "621": true,
+            "622": false,
+            "623": true,
+            "624": true,
+            "625": false,
+            "626": false,
+            "627": false,
+            "628": false,
+            "629": false,
+            "630": false,
+            "631": true,
+            "632": true,
+            "633": true,
+            "634": false,
+            "635": false,
+            "636": true,
+            "637": false,
+            "638": false,
+            "639": false,
+            "640": true,
+            "641": true,
+            "642": true,
+            "643": false,
+            "644": false,
+            "645": true,
+            "646": false,
+            "647": false,
+            "648": false,
+            "649": true,
+            "650": false,
+            "651": false,
+            "652": false,
+            "653": true,
+            "654": false,
+            "655": false,
+            "656": true,
+            "657": false,
+            "658": false,
+            "659": false,
+            "660": true,
+            "661": false,
+            "662": false,
+            "663": true,
+            "664": true,
+            "665": false,
+            "666": true,
+            "667": false,
+            "668": false,
+            "669": true,
+            "670": false,
+            "671": true,
+            "672": false,
+            "673": false,
+            "674": false,
+            "675": true,
+            "676": true,
+            "677": true,
+            "678": false,
+            "679": false,
+            "680": true,
+            "681": false,
+            "682": false,
+            "683": true,
+            "684": false,
+            "685": false,
+            "686": false,
+            "687": false,
+            "688": false,
+            "689": false,
+            "690": false,
+            "691": true,
+            "692": true,
+            "693": false,
+            "694": true,
+            "695": true,
+            "696": true,
+            "697": true,
+            "698": true,
+            "699": false,
+            "700": true,
+            "701": false,
+            "702": false,
+            "703": true,
+            "704": false,
+            "705": true,
+            "706": false,
+            "707": true,
+            "708": true,
+            "709": false,
+            "710": true,
+            "711": true,
+            "712": false,
+            "713": true,
+            "714": false,
+            "715": true,
+            "716": true,
+            "717": false,
+            "718": false,
+            "719": false,
+            "720": true,
+            "721": true,
+            "722": false,
+            "723": false,
+            "724": false,
+            "725": true,
+            "726": false,
+            "727": true
+          },
+          "wilson_95": [
+            0.36950795637281275,
+            0.5394736332778287
+          ],
+          "win_rate": 0.453125,
+          "wins": 58
+        },
+        "fixed_seed": {
+          "active_composite_ids": [],
+          "active_composite_ids_by_row": {
+            "600": [],
+            "601": [],
+            "602": [],
+            "603": [],
+            "604": [],
+            "605": [],
+            "606": [],
+            "607": [],
+            "608": [],
+            "609": [],
+            "610": [],
+            "611": [],
+            "612": [],
+            "613": [],
+            "614": [],
+            "615": [],
+            "616": [],
+            "617": [],
+            "618": [],
+            "619": [],
+            "620": [],
+            "621": [],
+            "622": [],
+            "623": [],
+            "624": [],
+            "625": [],
+            "626": [],
+            "627": [],
+            "628": [],
+            "629": [],
+            "630": [],
+            "631": [],
+            "632": [],
+            "633": [],
+            "634": [],
+            "635": [],
+            "636": [],
+            "637": [],
+            "638": [],
+            "639": [],
+            "640": [],
+            "641": [],
+            "642": [],
+            "643": [],
+            "644": [],
+            "645": [],
+            "646": [],
+            "647": [],
+            "648": [],
+            "649": [],
+            "650": [],
+            "651": [],
+            "652": [],
+            "653": [],
+            "654": [],
+            "655": [],
+            "656": [],
+            "657": [],
+            "658": [],
+            "659": [],
+            "660": [],
+            "661": [],
+            "662": [],
+            "663": [],
+            "664": [],
+            "665": [],
+            "666": [],
+            "667": [],
+            "668": [],
+            "669": [],
+            "670": [],
+            "671": [],
+            "672": [],
+            "673": [],
+            "674": [],
+            "675": [],
+            "676": [],
+            "677": [],
+            "678": [],
+            "679": [],
+            "680": [],
+            "681": [],
+            "682": [],
+            "683": [],
+            "684": [],
+            "685": [],
+            "686": [],
+            "687": [],
+            "688": [],
+            "689": [],
+            "690": [],
+            "691": [],
+            "692": [],
+            "693": [],
+            "694": [],
+            "695": [],
+            "696": [],
+            "697": [],
+            "698": [],
+            "699": [],
+            "700": [],
+            "701": [],
+            "702": [],
+            "703": [],
+            "704": [],
+            "705": [],
+            "706": [],
+            "707": [],
+            "708": [],
+            "709": [],
+            "710": [],
+            "711": [],
+            "712": [],
+            "713": [],
+            "714": [],
+            "715": [],
+            "716": [],
+            "717": [],
+            "718": [],
+            "719": [],
+            "720": [],
+            "721": [],
+            "722": [],
+            "723": [],
+            "724": [],
+            "725": [],
+            "726": [],
+            "727": []
+          },
+          "black_reply_policy": "fixed_seed",
+          "endpoint_counts": {
+            "fence_broken": 45,
+            "stalemate": 1,
+            "waypoint_reached": 82
+          },
+          "mean_plies_to_success": 6.024390243902439,
+          "nonwins": 46,
+          "policy": "phase3_7_stage_a_fixed_seed_20272913",
+          "row_count": 128,
+          "sample_nonwins": [
+            {
+              "endpoint": "fence_broken",
+              "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "k6K/6R1/8/8/8/8/8/8 w - - 0 1",
+                  "move": "h8g8"
+                },
+                {
+                  "fen": "1k4K1/6R1/8/8/8/8/8/8 w - - 2 2",
+                  "move": "g8f7"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/6K1/8/4R3/1k6 w - - 0 1",
+                  "move": "g4f3"
+                },
+                {
+                  "fen": "8/8/8/8/8/5K2/4R3/2k5 w - - 2 2",
+                  "move": "f3e4"
+                },
+                {
+                  "fen": "8/8/8/8/4K3/8/4R3/1k6 w - - 4 3",
+                  "move": "e4d3"
+                },
+                {
+                  "fen": "8/8/8/8/8/3K4/4R3/k7 w - - 6 4",
+                  "move": "d3c2"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/1R6/8/8/k7/6K1 w - - 0 1",
+                  "move": "g1f2"
+                },
+                {
+                  "fen": "8/8/8/1R6/8/k7/5K2/8 w - - 2 2",
+                  "move": "f2e3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/8/k7/8/1R2K3 w - - 0 1",
+                  "move": "e1d2"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "5k2/7R/8/6K1/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "5k2/7R/8/6K1/8/8/8/8 w - - 0 1",
+                  "move": "g5f6"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "6k1/4R3/8/8/8/8/5K2/8 w - - 0 1",
+                  "move": "f2e3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "1R6/8/8/k7/8/8/8/6K1 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "1R6/8/8/k7/8/8/8/6K1 w - - 0 1",
+                  "move": "g1f2"
+                },
+                {
+                  "fen": "1R6/8/k7/8/8/8/5K2/8 w - - 2 2",
+                  "move": "f2e3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "k7/3R4/8/8/8/3K4/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "k7/3R4/8/8/8/3K4/8/8 w - - 0 1",
+                  "move": "d3c4"
+                },
+                {
+                  "fen": "1k6/3R4/8/8/2K5/8/8/8 w - - 2 2",
+                  "move": "c4d5"
+                }
+              ]
+            }
+          ],
+          "success_by_row": {
+            "600": true,
+            "601": true,
+            "602": false,
+            "603": true,
+            "604": false,
+            "605": true,
+            "606": true,
+            "607": true,
+            "608": true,
+            "609": true,
+            "610": false,
+            "611": true,
+            "612": false,
+            "613": true,
+            "614": true,
+            "615": true,
+            "616": true,
+            "617": true,
+            "618": false,
+            "619": false,
+            "620": true,
+            "621": true,
+            "622": false,
+            "623": true,
+            "624": true,
+            "625": false,
+            "626": false,
+            "627": false,
+            "628": true,
+            "629": false,
+            "630": true,
+            "631": true,
+            "632": true,
+            "633": true,
+            "634": true,
+            "635": false,
+            "636": true,
+            "637": false,
+            "638": false,
+            "639": false,
+            "640": true,
+            "641": true,
+            "642": true,
+            "643": false,
+            "644": true,
+            "645": true,
+            "646": false,
+            "647": true,
+            "648": false,
+            "649": true,
+            "650": false,
+            "651": true,
+            "652": false,
+            "653": true,
+            "654": true,
+            "655": false,
+            "656": true,
+            "657": false,
+            "658": true,
+            "659": true,
+            "660": true,
+            "661": true,
+            "662": false,
+            "663": true,
+            "664": false,
+            "665": true,
+            "666": true,
+            "667": true,
+            "668": true,
+            "669": true,
+            "670": false,
+            "671": true,
+            "672": true,
+            "673": false,
+            "674": true,
+            "675": true,
+            "676": false,
+            "677": true,
+            "678": false,
+            "679": false,
+            "680": true,
+            "681": false,
+            "682": false,
+            "683": true,
+            "684": false,
+            "685": false,
+            "686": false,
+            "687": true,
+            "688": true,
+            "689": true,
+            "690": false,
+            "691": true,
+            "692": true,
+            "693": false,
+            "694": true,
+            "695": true,
+            "696": true,
+            "697": false,
+            "698": true,
+            "699": false,
+            "700": false,
+            "701": false,
+            "702": true,
+            "703": true,
+            "704": true,
+            "705": true,
+            "706": false,
+            "707": true,
+            "708": true,
+            "709": true,
+            "710": true,
+            "711": true,
+            "712": false,
+            "713": true,
+            "714": true,
+            "715": true,
+            "716": true,
+            "717": true,
+            "718": true,
+            "719": false,
+            "720": true,
+            "721": true,
+            "722": false,
+            "723": false,
+            "724": true,
+            "725": true,
+            "726": false,
+            "727": true
+          },
+          "wilson_95": [
+            0.5545225368033344,
+            0.7185326942447414
+          ],
+          "win_rate": 0.640625,
+          "wins": 82
+        }
+      },
+      "stage_b": {
+        "exact_adversarial": {
+          "active_composite_ids": [],
+          "active_composite_ids_by_row": {
+            "600": [],
+            "601": [],
+            "602": [],
+            "603": [],
+            "604": [],
+            "605": [],
+            "606": [],
+            "607": [],
+            "608": [],
+            "609": [],
+            "610": [],
+            "611": [],
+            "612": [],
+            "613": [],
+            "614": [],
+            "615": [],
+            "616": [],
+            "617": [],
+            "618": [],
+            "619": [],
+            "620": [],
+            "621": [],
+            "622": [],
+            "623": [],
+            "624": [],
+            "625": [],
+            "626": [],
+            "627": [],
+            "628": [],
+            "629": [],
+            "630": [],
+            "631": [],
+            "632": [],
+            "633": [],
+            "634": [],
+            "635": [],
+            "636": [],
+            "637": [],
+            "638": [],
+            "639": [],
+            "640": [],
+            "641": [],
+            "642": [],
+            "643": [],
+            "644": [],
+            "645": [],
+            "646": [],
+            "647": [],
+            "648": [],
+            "649": [],
+            "650": [],
+            "651": [],
+            "652": [],
+            "653": [],
+            "654": [],
+            "655": [],
+            "656": [],
+            "657": [],
+            "658": [],
+            "659": [],
+            "660": [],
+            "661": [],
+            "662": [],
+            "663": [],
+            "664": [],
+            "665": [],
+            "666": [],
+            "667": [],
+            "668": [],
+            "669": [],
+            "670": [],
+            "671": [],
+            "672": [],
+            "673": [],
+            "674": [],
+            "675": [],
+            "676": [],
+            "677": [],
+            "678": [],
+            "679": [],
+            "680": [],
+            "681": [],
+            "682": [],
+            "683": [],
+            "684": [],
+            "685": [],
+            "686": [],
+            "687": [],
+            "688": [],
+            "689": [],
+            "690": [],
+            "691": [],
+            "692": [],
+            "693": [],
+            "694": [],
+            "695": [],
+            "696": [],
+            "697": [],
+            "698": [],
+            "699": [],
+            "700": [],
+            "701": [],
+            "702": [],
+            "703": [],
+            "704": [],
+            "705": [],
+            "706": [],
+            "707": [],
+            "708": [],
+            "709": [],
+            "710": [],
+            "711": [],
+            "712": [],
+            "713": [],
+            "714": [],
+            "715": [],
+            "716": [],
+            "717": [],
+            "718": [],
+            "719": [],
+            "720": [],
+            "721": [],
+            "722": [],
+            "723": [],
+            "724": [],
+            "725": [],
+            "726": [],
+            "727": []
+          },
+          "black_reply_policy": "exact_adversarial",
+          "endpoint_counts": {
+            "fence_broken": 84,
+            "horizon": 2,
+            "ungated_exact_mate3_or_better_confirmed": 42
+          },
+          "mean_plies_to_success": 7.428571428571429,
+          "nonwins": 86,
+          "policy": "phase3_7_stage_b_exact_adversarial_20272913",
+          "row_count": 128,
+          "sample_nonwins": [
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/6R1/8/6K1/8/8/7k/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/6R1/8/6K1/8/8/7k/8 w - - 0 1",
+                  "move": "g5f4"
+                },
+                {
+                  "fen": "8/6R1/8/8/5K2/7k/8/8 w - - 2 2",
+                  "move": "f4f3"
+                },
+                {
+                  "fen": "8/6R1/8/8/7k/5K2/8/8 w - - 4 3",
+                  "move": "f3f4"
+                },
+                {
+                  "fen": "8/6R1/8/7k/5K2/8/8/8 w - - 6 4",
+                  "move": "f4f5"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/K7/7k/8/6R1/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/K7/7k/8/6R1/8 w - - 0 1",
+                  "move": "a5b4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/2K5/8/8/8/4R3/6k1 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/2K5/8/8/8/4R3/6k1 w - - 0 1",
+                  "move": "c6d5"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "K7/6R1/8/7k/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "K7/6R1/8/7k/8/8/8/8 w - - 0 1",
+                  "move": "a8b7"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/8/8/K7/2R5/5k2 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/8/8/K7/2R5/5k2 w - - 0 1",
+                  "move": "a3b3"
+                },
+                {
+                  "fen": "8/8/8/8/8/1K6/2R5/6k1 w - - 2 2",
+                  "move": "b3c4"
+                },
+                {
+                  "fen": "8/8/8/8/2K5/8/2R5/7k w - - 4 3",
+                  "move": "c4d3"
+                },
+                {
+                  "fen": "8/8/8/8/8/3K4/2R5/6k1 w - - 6 4",
+                  "move": "d3e3"
+                },
+                {
+                  "fen": "8/8/8/8/8/4K3/2R5/5k2 w - - 8 5",
+                  "move": "e3f3"
+                },
+                {
+                  "fen": "8/8/8/8/8/5K2/2R5/4k3 w - - 10 6",
+                  "move": "f3e3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/7K/8/1R6/8/k7 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/7K/8/1R6/8/k7 w - - 0 1",
+                  "move": "h5g4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "7K/8/8/8/8/8/6R1/1k6 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "7K/8/8/8/8/8/6R1/1k6 w - - 0 1",
+                  "move": "h8g7"
+                },
+                {
+                  "fen": "8/6K1/8/8/8/8/6R1/2k5 w - - 2 2",
+                  "move": "g7f6"
+                },
+                {
+                  "fen": "8/8/5K2/8/8/8/6R1/3k4 w - - 4 3",
+                  "move": "f6e5"
+                },
+                {
+                  "fen": "8/8/8/4K3/8/8/6R1/4k3 w - - 6 4",
+                  "move": "e5f4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "6k1/3R4/1K6/8/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "6k1/3R4/1K6/8/8/8/8/8 w - - 0 1",
+                  "move": "b6c6"
+                },
+                {
+                  "fen": "7k/3R4/2K5/8/8/8/8/8 w - - 2 2",
+                  "move": "c6d5"
+                },
+                {
+                  "fen": "6k1/3R4/8/3K4/8/8/8/8 w - - 4 3",
+                  "move": "d5e6"
+                },
+                {
+                  "fen": "5k2/3R4/4K3/8/8/8/8/8 w - - 6 4",
+                  "move": "e6f6"
+                }
+              ]
+            }
+          ],
+          "success_by_row": {
+            "600": false,
+            "601": true,
+            "602": false,
+            "603": false,
+            "604": false,
+            "605": false,
+            "606": false,
+            "607": true,
+            "608": true,
+            "609": false,
+            "610": true,
+            "611": true,
+            "612": true,
+            "613": false,
+            "614": false,
+            "615": true,
+            "616": false,
+            "617": true,
+            "618": false,
+            "619": true,
+            "620": false,
+            "621": false,
+            "622": false,
+            "623": false,
+            "624": false,
+            "625": true,
+            "626": true,
+            "627": true,
+            "628": true,
+            "629": false,
+            "630": true,
+            "631": false,
+            "632": true,
+            "633": true,
+            "634": false,
+            "635": true,
+            "636": false,
+            "637": false,
+            "638": false,
+            "639": false,
+            "640": false,
+            "641": true,
+            "642": false,
+            "643": false,
+            "644": false,
+            "645": false,
+            "646": true,
+            "647": false,
+            "648": true,
+            "649": false,
+            "650": false,
+            "651": true,
+            "652": false,
+            "653": true,
+            "654": false,
+            "655": false,
+            "656": true,
+            "657": false,
+            "658": false,
+            "659": false,
+            "660": false,
+            "661": false,
+            "662": false,
+            "663": false,
+            "664": false,
+            "665": true,
+            "666": true,
+            "667": false,
+            "668": true,
+            "669": true,
+            "670": false,
+            "671": false,
+            "672": false,
+            "673": true,
+            "674": false,
+            "675": false,
+            "676": false,
+            "677": true,
+            "678": false,
+            "679": false,
+            "680": false,
+            "681": false,
+            "682": false,
+            "683": false,
+            "684": false,
+            "685": false,
+            "686": false,
+            "687": false,
+            "688": false,
+            "689": true,
+            "690": false,
+            "691": false,
+            "692": true,
+            "693": false,
+            "694": false,
+            "695": false,
+            "696": false,
+            "697": false,
+            "698": true,
+            "699": true,
+            "700": true,
+            "701": false,
+            "702": false,
+            "703": true,
+            "704": true,
+            "705": false,
+            "706": false,
+            "707": false,
+            "708": false,
+            "709": true,
+            "710": true,
+            "711": false,
+            "712": false,
+            "713": true,
+            "714": false,
+            "715": false,
+            "716": false,
+            "717": false,
+            "718": false,
+            "719": false,
+            "720": false,
+            "721": false,
+            "722": false,
+            "723": false,
+            "724": true,
+            "725": true,
+            "726": true,
+            "727": false
+          },
+          "wilson_95": [
+            0.25282984471663306,
+            0.41343598400238546
+          ],
+          "win_rate": 0.328125,
+          "wins": 42
+        },
+        "fixed_seed": {
+          "active_composite_ids": [],
+          "active_composite_ids_by_row": {
+            "600": [],
+            "601": [],
+            "602": [],
+            "603": [],
+            "604": [],
+            "605": [],
+            "606": [],
+            "607": [],
+            "608": [],
+            "609": [],
+            "610": [],
+            "611": [],
+            "612": [],
+            "613": [],
+            "614": [],
+            "615": [],
+            "616": [],
+            "617": [],
+            "618": [],
+            "619": [],
+            "620": [],
+            "621": [],
+            "622": [],
+            "623": [],
+            "624": [],
+            "625": [],
+            "626": [],
+            "627": [],
+            "628": [],
+            "629": [],
+            "630": [],
+            "631": [],
+            "632": [],
+            "633": [],
+            "634": [],
+            "635": [],
+            "636": [],
+            "637": [],
+            "638": [],
+            "639": [],
+            "640": [],
+            "641": [],
+            "642": [],
+            "643": [],
+            "644": [],
+            "645": [],
+            "646": [],
+            "647": [],
+            "648": [],
+            "649": [],
+            "650": [],
+            "651": [],
+            "652": [],
+            "653": [],
+            "654": [],
+            "655": [],
+            "656": [],
+            "657": [],
+            "658": [],
+            "659": [],
+            "660": [],
+            "661": [],
+            "662": [],
+            "663": [],
+            "664": [],
+            "665": [],
+            "666": [],
+            "667": [],
+            "668": [],
+            "669": [],
+            "670": [],
+            "671": [],
+            "672": [],
+            "673": [],
+            "674": [],
+            "675": [],
+            "676": [],
+            "677": [],
+            "678": [],
+            "679": [],
+            "680": [],
+            "681": [],
+            "682": [],
+            "683": [],
+            "684": [],
+            "685": [],
+            "686": [],
+            "687": [],
+            "688": [],
+            "689": [],
+            "690": [],
+            "691": [],
+            "692": [],
+            "693": [],
+            "694": [],
+            "695": [],
+            "696": [],
+            "697": [],
+            "698": [],
+            "699": [],
+            "700": [],
+            "701": [],
+            "702": [],
+            "703": [],
+            "704": [],
+            "705": [],
+            "706": [],
+            "707": [],
+            "708": [],
+            "709": [],
+            "710": [],
+            "711": [],
+            "712": [],
+            "713": [],
+            "714": [],
+            "715": [],
+            "716": [],
+            "717": [],
+            "718": [],
+            "719": [],
+            "720": [],
+            "721": [],
+            "722": [],
+            "723": [],
+            "724": [],
+            "725": [],
+            "726": [],
+            "727": []
+          },
+          "black_reply_policy": "fixed_seed",
+          "endpoint_counts": {
+            "fence_broken": 57,
+            "ungated_exact_mate3_or_better_confirmed": 71
+          },
+          "mean_plies_to_success": 7.605633802816901,
+          "nonwins": 57,
+          "policy": "phase3_7_stage_b_fixed_seed_20272913",
+          "row_count": 128,
+          "sample_nonwins": [
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/K7/7k/8/6R1/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/K7/7k/8/6R1/8 w - - 0 1",
+                  "move": "a5b4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/2K5/8/8/8/4R3/6k1 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/2K5/8/8/8/4R3/6k1 w - - 0 1",
+                  "move": "c6d5"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "K7/6R1/8/7k/8/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "K7/6R1/8/7k/8/8/8/8 w - - 0 1",
+                  "move": "a8b7"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "8/8/8/7K/8/1R6/8/k7 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "8/8/8/7K/8/1R6/8/k7 w - - 0 1",
+                  "move": "h5g4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "7K/8/8/8/8/8/6R1/1k6 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "7K/8/8/8/8/8/6R1/1k6 w - - 0 1",
+                  "move": "h8g7"
+                },
+                {
+                  "fen": "8/6K1/8/8/8/8/6R1/k7 w - - 2 2",
+                  "move": "g7f6"
+                },
+                {
+                  "fen": "8/8/5K2/8/8/8/6R1/1k6 w - - 4 3",
+                  "move": "f6e5"
+                },
+                {
+                  "fen": "8/8/8/4K3/8/8/6R1/2k5 w - - 6 4",
+                  "move": "e5d4"
+                },
+                {
+                  "fen": "8/8/8/8/3K4/8/6R1/3k4 w - - 8 5",
+                  "move": "d4d3"
+                },
+                {
+                  "fen": "8/8/8/8/8/3K4/6R1/4k3 w - - 10 6",
+                  "move": "d3e3"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "1R6/8/8/8/k7/8/8/K7 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "1R6/8/8/8/k7/8/8/K7 w - - 0 1",
+                  "move": "a1a2"
+                },
+                {
+                  "fen": "1R6/8/8/k7/8/8/K7/8 w - - 2 2",
+                  "move": "a2a3"
+                },
+                {
+                  "fen": "1R6/8/k7/8/8/K7/8/8 w - - 4 3",
+                  "move": "a3a4"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "7k/5R2/8/8/2K5/8/8/8 w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "7k/5R2/8/8/2K5/8/8/8 w - - 0 1",
+                  "move": "c4d5"
+                }
+              ]
+            },
+            {
+              "endpoint": "fence_broken",
+              "fen": "4K3/8/6R1/8/8/8/8/7k w - - 0 1",
+              "white_steps": [
+                {
+                  "fen": "4K3/8/6R1/8/8/8/8/7k w - - 0 1",
+                  "move": "e8f7"
+                },
+                {
+                  "fen": "8/5K2/6R1/8/8/8/7k/8 w - - 2 2",
+                  "move": "f7e6"
+                },
+                {
+                  "fen": "8/8/4K1R1/8/8/7k/8/8 w - - 4 3",
+                  "move": "e6f5"
+                },
+                {
+                  "fen": "8/8/6R1/5K2/7k/8/8/8 w - - 6 4",
+                  "move": "f5f4"
+                }
+              ]
+            }
+          ],
+          "success_by_row": {
+            "600": true,
+            "601": true,
+            "602": false,
+            "603": false,
+            "604": false,
+            "605": true,
+            "606": false,
+            "607": true,
+            "608": true,
+            "609": false,
+            "610": true,
+            "611": true,
+            "612": true,
+            "613": true,
+            "614": false,
+            "615": true,
+            "616": true,
+            "617": true,
+            "618": true,
+            "619": true,
+            "620": true,
+            "621": false,
+            "622": false,
+            "623": true,
+            "624": false,
+            "625": true,
+            "626": true,
+            "627": true,
+            "628": true,
+            "629": false,
+            "630": true,
+            "631": false,
+            "632": true,
+            "633": true,
+            "634": false,
+            "635": true,
+            "636": true,
+            "637": true,
+            "638": true,
+            "639": false,
+            "640": true,
+            "641": true,
+            "642": false,
+            "643": false,
+            "644": true,
+            "645": true,
+            "646": true,
+            "647": false,
+            "648": true,
+            "649": true,
+            "650": false,
+            "651": true,
+            "652": false,
+            "653": true,
+            "654": true,
+            "655": false,
+            "656": true,
+            "657": false,
+            "658": true,
+            "659": true,
+            "660": false,
+            "661": false,
+            "662": false,
+            "663": true,
+            "664": false,
+            "665": true,
+            "666": false,
+            "667": false,
+            "668": false,
+            "669": true,
+            "670": true,
+            "671": false,
+            "672": false,
+            "673": false,
+            "674": false,
+            "675": true,
+            "676": true,
+            "677": true,
+            "678": false,
+            "679": true,
+            "680": false,
+            "681": false,
+            "682": true,
+            "683": false,
+            "684": false,
+            "685": false,
+            "686": false,
+            "687": true,
+            "688": true,
+            "689": true,
+            "690": false,
+            "691": false,
+            "692": true,
+            "693": true,
+            "694": false,
+            "695": false,
+            "696": false,
+            "697": false,
+            "698": true,
+            "699": true,
+            "700": true,
+            "701": true,
+            "702": false,
+            "703": true,
+            "704": true,
+            "705": false,
+            "706": true,
+            "707": false,
+            "708": false,
+            "709": true,
+            "710": true,
+            "711": true,
+            "712": false,
+            "713": true,
+            "714": false,
+            "715": false,
+            "716": false,
+            "717": true,
+            "718": false,
+            "719": true,
+            "720": false,
+            "721": true,
+            "722": false,
+            "723": false,
+            "724": true,
+            "725": true,
+            "726": true,
+            "727": false
+          },
+          "wilson_95": [
+            0.4682433949005831,
+            0.637944750507002
+          ],
+          "win_rate": 0.5546875,
+          "wins": 71
+        }
+      }
+    }
+  ],
+  "phase": "Phase 3.7 recent curriculum black resistance audit",
+  "schema_version": "phase3_7_recent_curriculum_black_resistance.v0",
+  "tables": {
+    "phase3_7_headline": [
+      {
+        "flat_seed": 20272911,
+        "stage_a_delta": -24,
+        "stage_a_exact_adversarial_endpoints": {
+          "fence_broken": 71,
+          "waypoint_reached": 57
+        },
+        "stage_a_exact_adversarial_wins": 57,
+        "stage_a_fixed_wins": 81,
+        "stage_b_delta": -26,
+        "stage_b_exact_adversarial_endpoints": {
+          "fence_broken": 83,
+          "ungated_exact_mate3_or_better_confirmed": 45
+        },
+        "stage_b_exact_adversarial_wins": 45,
+        "stage_b_fixed_wins": 71
+      },
+      {
+        "flat_seed": 20272912,
+        "stage_a_delta": -20,
+        "stage_a_exact_adversarial_endpoints": {
+          "fence_broken": 69,
+          "waypoint_reached": 59
+        },
+        "stage_a_exact_adversarial_wins": 59,
+        "stage_a_fixed_wins": 79,
+        "stage_b_delta": -30,
+        "stage_b_exact_adversarial_endpoints": {
+          "fence_broken": 84,
+          "horizon": 1,
+          "ungated_exact_mate3_or_better_confirmed": 43
+        },
+        "stage_b_exact_adversarial_wins": 43,
+        "stage_b_fixed_wins": 73
+      },
+      {
+        "flat_seed": 20272913,
+        "stage_a_delta": -24,
+        "stage_a_exact_adversarial_endpoints": {
+          "fence_broken": 69,
+          "rook_lost": 1,
+          "waypoint_reached": 58
+        },
+        "stage_a_exact_adversarial_wins": 58,
+        "stage_a_fixed_wins": 82,
+        "stage_b_delta": -29,
+        "stage_b_exact_adversarial_endpoints": {
+          "fence_broken": 84,
+          "horizon": 2,
+          "ungated_exact_mate3_or_better_confirmed": 42
+        },
+        "stage_b_exact_adversarial_wins": 42,
+        "stage_b_fixed_wins": 71
+      }
+    ]
+  }
+}

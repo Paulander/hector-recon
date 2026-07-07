@@ -10,6 +10,7 @@ from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     run_phase34_host_tiebreak_alignment_probe,
     run_phase35_equivalence_forensics_probe,
     run_phase36_yardstick_sovereignty_probe,
+    run_phase37_recent_curriculum_black_resistance_probe,
     run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
@@ -404,3 +405,38 @@ def test_phase36_yardstick_sovereignty_writes_executable_manifest(tmp_path: Path
     assert row["baseline_manifest"]["current_executable_success_by_row"]
     assert row["baseline_manifest"]["current_executable_trace_digest_by_row"]
     assert row["baseline_manifest"]["initial_score_vector_mismatch_count"] == 0
+
+
+def test_phase37_recent_curriculum_black_resistance_uses_recent_stage_ab_only(tmp_path: Path) -> None:
+    summary = run_phase37_recent_curriculum_black_resistance_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_7_recent_curriculum_probe"),
+            seeds=(20272931,),
+            flat_baseline_seeds=(20272911,),
+            real_native_foundation_row_limit=1,
+            train_row_limit=1,
+            heldout_row_limit=2,
+            max_samples=2,
+            max_guided_births=0,
+            ecology_mode="stem_cell_graph",
+            native_foundation_train_repetitions=1,
+            native_foundation_continuation_repetitions=1,
+            native_foundation_max_mate1_positions=2,
+            native_foundation_max_mate2_positions=1,
+            native_foundation_prototype_scan_triplets=32,
+            native_foundation_key_mode="coarse",
+            real_native_max_live_composites=4,
+            real_native_max_live_siblings_per_parent=2,
+            real_native_engine_max_ticks=80,
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_7_recent_curriculum_black_resistance.v0"
+    assert summary["dataset"]["recent_curriculum_only"] is True
+    assert summary["dataset"]["old_krk_curriculum_imported"] is False
+    assert summary["black_reply_policies"]["runtime_tablebase_or_dtm_move_source"] is False
+    assert summary["black_reply_policies"]["white_oracle_move_provider"] is False
+    row = summary["per_flat_seed"][0]
+    assert set(row["stage_a"]) == {"fixed_seed", "exact_adversarial"}
+    assert set(row["stage_b"]) == {"fixed_seed", "exact_adversarial"}
+    assert "stage_a_fixed_wins" in summary["tables"]["phase3_7_headline"][0]

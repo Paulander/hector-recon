@@ -1273,6 +1273,128 @@ def run_phase36_yardstick_sovereignty_probe(
     return summary
 
 
+def run_phase37_recent_curriculum_black_resistance_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_7_recent_curriculum_black_resistance",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        train_row_limit=24,
+        heldout_row_limit=None,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+    )
+    output_dir = Path(cfg.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    _write_json(output_dir / "design_spec.json", _design_spec(cfg))
+
+    stage_a_payload = json.loads(Path(cfg.stage_a_rows_path).read_text(encoding="utf-8"))
+    stage_b_payload = json.loads(Path(cfg.stage_b_rows_path).read_text(encoding="utf-8"))
+    stage_a_heldout = list(stage_a_payload["heldout"])
+    stage_b_heldout = list(stage_b_payload["heldout"])
+    if cfg.heldout_row_limit is not None:
+        stage_a_heldout = stage_a_heldout[: int(cfg.heldout_row_limit)]
+        stage_b_heldout = stage_b_heldout[: int(cfg.heldout_row_limit)]
+
+    per_seed: list[dict[str, Any]] = []
+    for flat_seed in cfg.flat_baseline_seeds:
+        stage_a_weights = _load_weight_table(
+            Path(cfg.stage_b_baseline_dir)
+            / f"stage_d_A_sealed_seed_{flat_seed}_weights.json"
+        )
+        stage_b_weights = _load_weight_table(
+            Path(cfg.stage_b_baseline_dir)
+            / f"stage_d_B_sealed_seed_{flat_seed}_weights.json"
+        )
+        row = {
+            "flat_seed": int(flat_seed),
+            "stage_a": {
+                policy: _evaluate_policy(
+                    cfg,
+                    stage_a_heldout,
+                    lambda board, counts, row_id, ply, rng, weights=stage_a_weights: _choose_official_flat_replay_move(
+                        board,
+                        counts,
+                        atom_weights=weights,
+                    ),
+                    seed=int(flat_seed) + 700,
+                    policy_name=f"phase3_7_stage_a_{policy}_{flat_seed}",
+                    success_kind="approach_waypoint",
+                    black_reply_policy=policy,
+                )
+                for policy in ("fixed_seed", "exact_adversarial")
+            },
+            "stage_b": {
+                policy: _evaluate_policy(
+                    cfg,
+                    stage_b_heldout,
+                    lambda board, counts, row_id, ply, rng, weights=stage_b_weights: _choose_official_flat_replay_move(
+                        board,
+                        counts,
+                        atom_weights=weights,
+                    ),
+                    seed=int(flat_seed) + 700,
+                    policy_name=f"phase3_7_stage_b_{policy}_{flat_seed}",
+                    success_kind="stage_b_enter_mate2",
+                    black_reply_policy=policy,
+                )
+                for policy in ("fixed_seed", "exact_adversarial")
+            },
+        }
+        row["deltas"] = {
+            "stage_a_exact_adversarial_minus_fixed": int(row["stage_a"]["exact_adversarial"]["wins"])
+            - int(row["stage_a"]["fixed_seed"]["wins"]),
+            "stage_b_exact_adversarial_minus_fixed": int(row["stage_b"]["exact_adversarial"]["wins"])
+            - int(row["stage_b"]["fixed_seed"]["wins"]),
+        }
+        _write_json(output_dir / f"seed_{flat_seed}_result.json", row)
+        per_seed.append(row)
+
+    summary = {
+        "schema_version": "phase3_7_recent_curriculum_black_resistance.v0",
+        "phase": "Phase 3.7 recent curriculum black resistance audit",
+        "config": asdict(cfg),
+        "dataset": {
+            "recent_curriculum_only": True,
+            "old_krk_curriculum_imported": False,
+            "stage_a_rows_path": str(cfg.stage_a_rows_path),
+            "stage_b_rows_path": str(cfg.stage_b_rows_path),
+            "stage_a_task": str(stage_a_heldout[0].get("task", "")) if stage_a_heldout else "",
+            "stage_b_task": str(stage_b_heldout[0].get("task", "")) if stage_b_heldout else "",
+            "stage_a_stratum": str(stage_a_heldout[0].get("stratum", "")) if stage_a_heldout else "",
+            "stage_b_stratum": str(stage_b_heldout[0].get("stratum", "")) if stage_b_heldout else "",
+            "stage_a_heldout_count": len(stage_a_heldout),
+            "stage_b_heldout_count": len(stage_b_heldout),
+            "stage_labels_learner_visible": False,
+        },
+        "black_reply_policies": {
+            "fixed_seed": "_edge_mate_fixed_seed_black_reply(board, rollout_rng)",
+            "exact_adversarial": (
+                "legal black reply selected to minimize the same post-hoc success predicate, "
+                "then prefer fence break / rook loss / stalemate; used only as opponent/evaluator"
+            ),
+            "runtime_tablebase_or_dtm_move_source": False,
+            "white_oracle_move_provider": False,
+        },
+        "per_flat_seed": per_seed,
+        "tables": {"phase3_7_headline": _phase37_headline(per_seed)},
+        "decision": {
+            "run_ecology": False,
+            "recent_curriculum_continuity_gap_measured": True,
+            "next_allowed_step": (
+                "train one persistent native graph through recent Stage A then Stage B with exact-adversarial black "
+                "and regression gates, then rerun ecology only after host competence survives the harder opponent"
+            ),
+        },
+    }
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
 class _MigratedStageBFlatGraphScoreProvider:
     policy_parent_id = "stage_b_policy_migrated_flat"
 
@@ -2961,6 +3083,27 @@ def _phase36_digest(payload: Any) -> str:
     ).hexdigest()
 
 
+def _phase37_headline(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for row in per_seed:
+        stage_a = row["stage_a"]
+        stage_b = row["stage_b"]
+        rows.append(
+            {
+                "flat_seed": int(row["flat_seed"]),
+                "stage_a_fixed_wins": int(stage_a["fixed_seed"]["wins"]),
+                "stage_a_exact_adversarial_wins": int(stage_a["exact_adversarial"]["wins"]),
+                "stage_a_delta": int(row["deltas"]["stage_a_exact_adversarial_minus_fixed"]),
+                "stage_b_fixed_wins": int(stage_b["fixed_seed"]["wins"]),
+                "stage_b_exact_adversarial_wins": int(stage_b["exact_adversarial"]["wins"]),
+                "stage_b_delta": int(row["deltas"]["stage_b_exact_adversarial_minus_fixed"]),
+                "stage_a_exact_adversarial_endpoints": stage_a["exact_adversarial"]["endpoint_counts"],
+                "stage_b_exact_adversarial_endpoints": stage_b["exact_adversarial"]["endpoint_counts"],
+            }
+        )
+    return rows
+
+
 def _phase33_host_acceptance_spec() -> dict[str, Any]:
     return {
         "call_chain": [
@@ -4562,6 +4705,7 @@ def _rollout_policy(
     population: Mapping[str, Mapping[str, Any]] | None = None,
     judge_cache: _JudgeCache | None = None,
     success_kind: str = "stage_b_enter_mate2",
+    black_reply_policy: str = "fixed_seed",
 ) -> dict[str, Any]:
     scorer = None if cfg.fast_exact_judge or success_kind == "approach_waypoint" else load_canonical_mate2_first_scorer()
     mate2_cache, enter_cache = judge_cache if judge_cache is not None else _new_judge_cache()
@@ -4624,7 +4768,16 @@ def _rollout_policy(
             endpoint = "mate_delivered"
             success = True
             break
-        reply = _edge_mate_fixed_seed_black_reply(board, rng)
+        reply = _select_black_reply_for_rollout(
+            cfg,
+            board,
+            rng,
+            success_kind=success_kind,
+            scorer=scorer,
+            mate2_cache=mate2_cache,
+            enter_cache=enter_cache,
+            black_reply_policy=black_reply_policy,
+        )
         if reply is None:
             endpoint = "mate_delivered" if board.is_check() else "stalemate"
             success = board.is_check()
@@ -4647,6 +4800,7 @@ def _rollout_policy(
     reward = 6.0 if success else -6.0 if endpoint in {"fence_broken", "rook_lost", "stalemate", "illegal"} else -1.0
     return {
         "policy": policy_name,
+        "black_reply_policy": black_reply_policy,
         "row_id": int(row["row_id"]),
         "success": success,
         "endpoint": endpoint,
@@ -4687,6 +4841,54 @@ def _rollout_success_check(
     )
 
 
+def _select_black_reply_for_rollout(
+    cfg: StageBEcologicalDiscoveryConfig,
+    board: chess.Board,
+    rng: random.Random,
+    *,
+    success_kind: str,
+    scorer: Any,
+    mate2_cache: dict[str, dict[str, Any]],
+    enter_cache: dict[str, dict[str, Any]],
+    black_reply_policy: str,
+) -> chess.Move | None:
+    if black_reply_policy == "fixed_seed":
+        return _edge_mate_fixed_seed_black_reply(board, rng)
+    if black_reply_policy != "exact_adversarial":
+        raise ValueError(f"unknown black reply policy: {black_reply_policy}")
+    if board.turn != chess.BLACK or board.is_game_over(claim_draw=False):
+        return None
+    candidates: list[tuple[tuple[int, int, int, int, str], chess.Move]] = []
+    for reply in sorted(board.legal_moves, key=lambda item: item.uci()):
+        successor = board.copy(stack=False)
+        successor.push(reply)
+        success_now, _endpoint = _rollout_success_check(
+            cfg,
+            successor,
+            success_kind=success_kind,
+            scorer=scorer,
+            mate2_cache=mate2_cache,
+            enter_cache=enter_cache,
+        )
+        rook_lost = _white_rook_square(successor) is None
+        stalemate = successor.is_stalemate()
+        fence_broken = not fence_established_geometry(successor)
+        # Sort descending: black prefers to avoid the white success predicate,
+        # then force hard failures, then choose a deterministic UCI tiebreak.
+        rank = (
+            int(not success_now),
+            int(rook_lost or stalemate or fence_broken),
+            int(fence_broken),
+            int(rook_lost),
+            reply.uci(),
+        )
+        candidates.append((rank, reply))
+    if not candidates:
+        return None
+    candidates.sort(reverse=True)
+    return candidates[0][1]
+
+
 def _approach_waypoint_success(board: chess.Board) -> bool:
     return bool(_king_support_waypoint_geometry(board) and fence_established_geometry(board))
 
@@ -4702,6 +4904,7 @@ def _evaluate_policy(
     collect_composites: bool = False,
     population: Mapping[str, Mapping[str, Any]] | None = None,
     success_kind: str = "stage_b_enter_mate2",
+    black_reply_policy: str = "fixed_seed",
 ) -> dict[str, Any]:
     endpoints: Counter[str] = Counter()
     success_by_row: dict[str, bool] = {}
@@ -4721,6 +4924,7 @@ def _evaluate_policy(
             collect_composites=collect_composites,
             population=population,
             success_kind=success_kind,
+            black_reply_policy=black_reply_policy,
         )
         row_active_ids = sorted(map(str, outcome.get("active_composite_ids", ())))
         active_composite_ids.update(row_active_ids)
@@ -4741,6 +4945,7 @@ def _evaluate_policy(
     total = len(rows)
     return {
         "policy": policy_name,
+        "black_reply_policy": black_reply_policy,
         "wins": wins,
         "nonwins": total - wins,
         "row_count": total,
