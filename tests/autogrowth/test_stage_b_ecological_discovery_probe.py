@@ -9,6 +9,7 @@ from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     run_phase33_migrated_flat_native_ecology_probe,
     run_phase34_host_tiebreak_alignment_probe,
     run_phase35_equivalence_forensics_probe,
+    run_phase36_yardstick_sovereignty_probe,
     run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
@@ -365,3 +366,41 @@ def test_phase35_equivalence_forensics_records_predicates_without_ecology(tmp_pa
     assert summary["decision"]["ecology_ran"] is False
     row = summary["per_flat_seed"][0]
     assert row["current_executable_replay_wins"] == row["migrated_host_wins"]
+
+
+def test_phase36_yardstick_sovereignty_writes_executable_manifest(tmp_path: Path) -> None:
+    summary = run_phase36_yardstick_sovereignty_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_6_yardstick_probe"),
+            seeds=(20272931,),
+            flat_baseline_seeds=(20272911,),
+            real_native_foundation_row_limit=1,
+            train_row_limit=1,
+            heldout_row_limit=2,
+            max_samples=2,
+            max_guided_births=0,
+            ecology_mode="stem_cell_graph",
+            native_foundation_train_repetitions=1,
+            native_foundation_continuation_repetitions=1,
+            native_foundation_max_mate1_positions=2,
+            native_foundation_max_mate2_positions=1,
+            native_foundation_prototype_scan_triplets=32,
+            native_foundation_key_mode="coarse",
+            real_native_max_live_composites=4,
+            real_native_max_live_siblings_per_parent=2,
+            real_native_engine_max_ticks=80,
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_6_yardstick_sovereignty.v0"
+    assert summary["historical_provenance"]["classification"] == "non_replayable_count_only_yardstick"
+    assert "full_row_traces" in summary["historical_provenance"]["missing_replay_fields"]
+    assert summary["decision"]["ecology_ran"] is False
+    assert summary["decision"]["executable_host_equivalence_passed"] is True
+    row = summary["per_flat_seed"][0]
+    assert row["full_trace_equivalence"]["passed"] is True
+    assert row["full_trace_equivalence"]["mismatch_count"] == 0
+    assert row["evaluation_contract"]["black_reply_policy"].startswith("_edge_mate_fixed_seed_black_reply")
+    assert row["baseline_manifest"]["current_executable_success_by_row"]
+    assert row["baseline_manifest"]["current_executable_trace_digest_by_row"]
+    assert row["baseline_manifest"]["initial_score_vector_mismatch_count"] == 0

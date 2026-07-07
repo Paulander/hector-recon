@@ -1105,6 +1105,174 @@ def run_phase35_equivalence_forensics_probe(
     return summary
 
 
+def run_phase36_yardstick_sovereignty_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_6_yardstick_sovereignty",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        train_row_limit=24,
+        heldout_row_limit=None,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+    )
+    output_dir = Path(cfg.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    _write_json(output_dir / "design_spec.json", _design_spec(cfg))
+
+    rows = json.loads(Path(cfg.stage_b_rows_path).read_text(encoding="utf-8"))
+    heldout_rows = list(rows["heldout"])
+    if cfg.heldout_row_limit is not None:
+        heldout_rows = heldout_rows[: int(cfg.heldout_row_limit)]
+
+    historical_provenance = _phase36_historical_provenance_classification(cfg, heldout_rows)
+    per_seed: list[dict[str, Any]] = []
+    for flat_seed in cfg.flat_baseline_seeds:
+        atom_weights = _load_weight_table(
+            Path(cfg.stage_b_baseline_dir)
+            / f"stage_d_B_sealed_seed_{flat_seed}_weights.json"
+        )
+        official = _load_official_flat_artifact(
+            Path(cfg.stage_b_baseline_dir) / f"stage_b_sealed_seed_{flat_seed}.json",
+            seed=int(flat_seed),
+        )
+        foundation = _train_native_foundation_for_ecology(cfg)
+        provider = _MigratedStageBFlatGraphScoreProvider(
+            cfg,
+            foundation["graph"],
+            atom_weights=atom_weights,
+            flat_seed=int(flat_seed),
+        )
+        current_traces = _phase36_policy_traces(
+            cfg,
+            heldout_rows,
+            lambda board, counts, row_id, ply, rng, weights=atom_weights: _choose_official_flat_replay_move(
+                board,
+                counts,
+                atom_weights=weights,
+            ),
+            seed=int(flat_seed) + 700,
+            policy_name=f"phase3_6_current_executable_flat_replay_{flat_seed}",
+        )
+        migrated_traces = _phase36_policy_traces(
+            cfg,
+            heldout_rows,
+            lambda board, counts, row_id, ply, rng, score_provider=provider: _choose_migrated_flat_host_move(
+                board,
+                counts,
+                score_provider=score_provider,
+                seed=int(flat_seed) + int(row_id) * 61 + ply,
+            ),
+            seed=int(flat_seed) + 700,
+            policy_name=f"phase3_6_migrated_native_host_{flat_seed}",
+        )
+        score_vector_digest = _phase36_initial_score_vector_digest(
+            heldout_rows,
+            atom_weights=atom_weights,
+            score_provider=provider,
+        )
+        trace_equivalence = _phase36_full_trace_equivalence(
+            current_traces,
+            migrated_traces,
+            atom_weights=atom_weights,
+            score_provider=provider,
+            mismatch_limit=int(cfg.max_samples),
+        )
+        row = {
+            "flat_seed": int(flat_seed),
+            "historical_artifact_wins": int(official["wins"]),
+            "historical_artifact_classification": historical_provenance["classification"],
+            "current_executable_wins": int(current_traces["wins"]),
+            "migrated_host_wins": int(migrated_traces["wins"]),
+            "delta_migrated_minus_current_executable": int(migrated_traces["wins"]) - int(current_traces["wins"]),
+            "delta_current_executable_minus_historical": int(current_traces["wins"]) - int(official["wins"]),
+            "endpoint_counts": {
+                "current_executable": current_traces["endpoint_counts"],
+                "migrated_host": migrated_traces["endpoint_counts"],
+            },
+            "evaluation_contract": _phase36_evaluation_contract(cfg, flat_seed=int(flat_seed)),
+            "baseline_manifest": {
+                "current_executable_trace_digest": current_traces["trace_digest"],
+                "migrated_host_trace_digest": migrated_traces["trace_digest"],
+                "current_executable_success_by_row": current_traces["success_by_row"],
+                "current_executable_endpoint_by_row": current_traces["endpoint_by_row"],
+                "current_executable_trace_digest_by_row": current_traces["trace_digest_by_row"],
+                "migrated_host_trace_digest_by_row": migrated_traces["trace_digest_by_row"],
+                "initial_score_vector_digest_by_row": score_vector_digest["digest_by_row"],
+                "initial_score_vector_mismatch_count": score_vector_digest["mismatch_count"],
+                "initial_score_vector_samples": score_vector_digest["samples"],
+            },
+            "full_trace_equivalence": trace_equivalence,
+            "host_provider_stats": provider.stats(),
+        }
+        _write_json(output_dir / f"executable_baseline_seed_{flat_seed}.json", current_traces)
+        _write_json(output_dir / f"migrated_host_seed_{flat_seed}.json", migrated_traces)
+        _write_json(output_dir / f"yardstick_seed_{flat_seed}.json", row)
+        per_seed.append(row)
+
+    executable_host_equivalence_passed = all(
+        bool(row["full_trace_equivalence"]["passed"]) for row in per_seed
+    )
+    summary = {
+        "schema_version": "phase3_6_yardstick_sovereignty.v0",
+        "phase": "Phase 3.6 yardstick sovereignty repair",
+        "config": asdict(cfg),
+        "dataset": {
+            "source_rows_path": str(cfg.stage_b_rows_path),
+            "heldout_count": len(heldout_rows),
+        },
+        "historical_provenance": historical_provenance,
+        "canonical_yardstick_decision": {
+            "historical_93_92_92_status": historical_provenance["classification"],
+            "canonical_gate": "current_executable_flat_replay_full_trace",
+            "canonical_host_baseline_wins": [
+                {
+                    "flat_seed": row["flat_seed"],
+                    "wins": row["current_executable_wins"],
+                    "historical_wins": row["historical_artifact_wins"],
+                    "delta_current_minus_historical": row["delta_current_executable_minus_historical"],
+                }
+                for row in per_seed
+            ],
+            "native_host_equivalence_gate": "full_trace_identity_against_current_executable_replay",
+            "native_host_equivalence_passed": executable_host_equivalence_passed,
+        },
+        "per_flat_seed": per_seed,
+        "tables": {
+            "phase3_6_headline": {
+                "historical_artifact_classification": historical_provenance["classification"],
+                "equivalence_wins": [
+                    {
+                        "flat_seed": row["flat_seed"],
+                        "historical_artifact_wins": row["historical_artifact_wins"],
+                        "current_executable_wins": row["current_executable_wins"],
+                        "migrated_host_wins": row["migrated_host_wins"],
+                        "trace_differences": row["full_trace_equivalence"]["mismatch_count"],
+                    }
+                    for row in per_seed
+                ],
+            }
+        },
+        "decision": {
+            "ecology_ran": False,
+            "historical_artifact_is_gating_yardstick": False,
+            "executable_host_equivalence_passed": executable_host_equivalence_passed,
+            "next_allowed_step": (
+                "run native ecology against current executable flat replay baseline"
+                if executable_host_equivalence_passed
+                else "repair current executable replay versus migrated host"
+            ),
+            "stop_reasons": [] if executable_host_equivalence_passed else ["current_executable_host_equivalence_failed"],
+        },
+    }
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
 class _MigratedStageBFlatGraphScoreProvider:
     policy_parent_id = "stage_b_policy_migrated_flat"
 
@@ -2522,6 +2690,275 @@ def _phase35_score_vectors_for_difference(
             "migrated_host": _phase34_migrated_score_vector(board, counts, score_provider=score_provider),
         }
     return vectors
+
+
+def _phase36_historical_provenance_classification(
+    cfg: StageBEcologicalDiscoveryConfig,
+    heldout_rows: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    artifacts: list[dict[str, Any]] = []
+    for flat_seed in cfg.flat_baseline_seeds:
+        artifact_path = Path(cfg.stage_b_baseline_dir) / f"stage_b_sealed_seed_{flat_seed}.json"
+        payload = json.loads(artifact_path.read_text(encoding="utf-8"))
+        heldout = payload.get("heldout_eval", {})
+        sample_failures = list(heldout.get("sample_failures", ()))
+        has_full_row_traces = any(
+            key in heldout for key in ("rows", "row_traces", "traces_by_row", "trace_digest_by_row")
+        )
+        has_row_success = any(
+            key in heldout for key in ("success_by_row", "row_success", "success_by_fen")
+        )
+        artifacts.append(
+            {
+                "flat_seed": int(flat_seed),
+                "artifact_path": str(artifact_path),
+                "schema_version": str(payload.get("schema_version", "")),
+                "stored_success_count": int(heldout.get("success_count", 0)),
+                "row_count": int(heldout.get("row_count", payload.get("heldout_count", 0))),
+                "sample_failure_count": len(sample_failures),
+                "has_full_row_traces": bool(has_full_row_traces),
+                "has_row_level_success_vector": bool(has_row_success),
+                "has_trace_digest_by_row": "trace_digest_by_row" in heldout,
+                "has_black_reply_policy_name": "black_reply_policy" in heldout or "black_reply_policy" in payload,
+                "has_evaluator_contract": "evaluation_contract" in payload or "evaluator_contract" in payload,
+                "has_exact_runner_entrypoint": "runner" in payload or "producer_script" in payload,
+            }
+        )
+    missing = sorted(
+        {
+            field
+            for item in artifacts
+            for field, present in (
+                ("full_row_traces", item["has_full_row_traces"]),
+                ("row_level_success_vector", item["has_row_level_success_vector"]),
+                ("trace_digest_by_row", item["has_trace_digest_by_row"]),
+                ("black_reply_policy_name", item["has_black_reply_policy_name"]),
+                ("evaluator_contract", item["has_evaluator_contract"]),
+                ("exact_runner_entrypoint", item["has_exact_runner_entrypoint"]),
+            )
+            if not present
+        }
+    )
+    replayable = not missing and all(
+        int(item["row_count"]) == len(heldout_rows) for item in artifacts
+    )
+    return {
+        "classification": "replayable_executable_yardstick" if replayable else "non_replayable_count_only_yardstick",
+        "artifact_family": "phase2_9a_stage_b_sealed_seed.v0",
+        "stored_counts": [int(item["stored_success_count"]) for item in artifacts],
+        "artifact_files": artifacts,
+        "missing_replay_fields": missing,
+        "recovery_search": {
+            "current_tree_exact_callable_runner": "not_found",
+            "git_history_exact_callable_runner": "not_found_in_phase3_6_search",
+            "retained_callable_family": (
+                "current executable replay uses _choose_official_flat_replay_move + _rollout_policy; "
+                "it reproduces the migrated native host traces, not the historical count-only artifact"
+            ),
+        },
+        "decision": (
+            "Historical 93/92/92 remains background evidence only; it is not a gating yardstick "
+            "until a full executable runner or row-level trace contract is recovered."
+        ),
+    }
+
+
+def _phase36_evaluation_contract(
+    cfg: StageBEcologicalDiscoveryConfig,
+    *,
+    flat_seed: int,
+) -> dict[str, Any]:
+    return {
+        "contract_id": "phase3_6_current_executable_stage_b_flat_rollout.v0",
+        "flat_seed": int(flat_seed),
+        "policy": "current_executable_flat_replay",
+        "chooser": "_choose_official_flat_replay_move",
+        "move_scoring": "sum sealed atom weights over _sealed_action_key_scales(board, move)",
+        "weight_file": str(
+            Path(cfg.stage_b_baseline_dir) / f"stage_d_B_sealed_seed_{flat_seed}_weights.json"
+        ),
+        "tiebreak": "sort legal candidates by (score, uci), descending",
+        "legal_move_filter": "_legal_without_third_repetition; fallback to sorted legal UCI if empty",
+        "black_reply_policy": "_edge_mate_fixed_seed_black_reply(board, rollout_rng)",
+        "rollout_seed_by_row": "flat_seed + 700 + heldout_index * 31",
+        "horizon_white_moves": int(cfg.horizon_plies),
+        "success_kind": "stage_b_enter_mate2",
+        "success_judge": (
+            "_rollout_success_check -> _fast_enter_mate2_audit"
+            if cfg.fast_exact_judge
+            else "_rollout_success_check -> _edge_mate_enter_mate2_audit"
+        ),
+        "gating": "ungated exact judge after the fact; no learner-visible stage labels",
+        "native_host_gate": (
+            "_choose_migrated_flat_host_move -> _MigratedStageBFlatGraphScoreProvider "
+            "-> FormalReConEngine request/run terminal confirmations"
+        ),
+        "required_baseline_artifact_fields": [
+            "evaluation_contract",
+            "success_by_row",
+            "endpoint_by_row",
+            "trace_digest_by_row",
+            "full_row_traces",
+            "trace_digest",
+        ],
+    }
+
+
+def _phase36_policy_traces(
+    cfg: StageBEcologicalDiscoveryConfig,
+    rows: Sequence[Mapping[str, Any]],
+    chooser: Callable[[chess.Board, Mapping[Any, int], int, int, random.Random], chess.Move | None],
+    *,
+    seed: int,
+    policy_name: str,
+) -> dict[str, Any]:
+    endpoints: Counter[str] = Counter()
+    success_by_row: dict[str, bool] = {}
+    endpoint_by_row: dict[str, str] = {}
+    trace_digest_by_row: dict[str, str] = {}
+    traces: list[dict[str, Any]] = []
+    judge_cache = _new_judge_cache()
+    for index, row in enumerate(rows):
+        outcome = _rollout_policy(
+            cfg,
+            row,
+            chooser,
+            seed=seed + index * 31,
+            policy_name=policy_name,
+            judge_cache=judge_cache,
+        )
+        row_id = str(row["row_id"])
+        trace = {
+            "row_id": int(row["row_id"]),
+            "fen": str(row["fen"]),
+            "success": bool(outcome["success"]),
+            "endpoint": str(outcome["endpoint"]),
+            "plies": int(outcome["plies"]),
+            "white_steps": list(outcome["white_steps"]),
+        }
+        digest = _phase36_digest(trace)
+        endpoints[str(outcome["endpoint"])] += 1
+        success_by_row[row_id] = bool(outcome["success"])
+        endpoint_by_row[row_id] = str(outcome["endpoint"])
+        trace_digest_by_row[row_id] = digest
+        trace["trace_digest"] = digest
+        traces.append(trace)
+    wins = sum(int(value) for value in success_by_row.values())
+    return {
+        "policy": policy_name,
+        "row_count": len(rows),
+        "wins": wins,
+        "nonwins": len(rows) - wins,
+        "win_rate": wins / max(1, len(rows)),
+        "wilson_95": _wilson(wins, len(rows)),
+        "endpoint_counts": dict(sorted(endpoints.items())),
+        "success_by_row": success_by_row,
+        "endpoint_by_row": endpoint_by_row,
+        "trace_digest_by_row": trace_digest_by_row,
+        "trace_digest": _phase36_digest(trace_digest_by_row),
+        "full_row_traces": traces,
+    }
+
+
+def _phase36_full_trace_equivalence(
+    current_traces: Mapping[str, Any],
+    migrated_traces: Mapping[str, Any],
+    *,
+    atom_weights: Mapping[str, float],
+    score_provider: _MigratedStageBFlatGraphScoreProvider,
+    mismatch_limit: int,
+) -> dict[str, Any]:
+    current_by_row = {
+        str(trace["row_id"]): trace
+        for trace in current_traces.get("full_row_traces", ())
+        if isinstance(trace, Mapping)
+    }
+    migrated_by_row = {
+        str(trace["row_id"]): trace
+        for trace in migrated_traces.get("full_row_traces", ())
+        if isinstance(trace, Mapping)
+    }
+    mismatches: list[dict[str, Any]] = []
+    for row_id in sorted(set(current_by_row) | set(migrated_by_row), key=lambda item: int(item)):
+        current = current_by_row.get(row_id)
+        migrated = migrated_by_row.get(row_id)
+        if current == migrated:
+            continue
+        diff = None
+        if isinstance(current, Mapping) and isinstance(migrated, Mapping):
+            diff = _phase35_white_step_difference(
+                current.get("white_steps", ()),
+                migrated.get("white_steps", ()),
+            )
+        mismatch = {
+            "row_id": int(row_id),
+            "current_endpoint": None if current is None else current.get("endpoint"),
+            "migrated_endpoint": None if migrated is None else migrated.get("endpoint"),
+            "current_success": None if current is None else current.get("success"),
+            "migrated_success": None if migrated is None else migrated.get("success"),
+            "first_differing_ply": None if diff is None else diff["ply"],
+            "current_step": None if diff is None else diff["left_step"],
+            "migrated_step": None if diff is None else diff["right_step"],
+            "score_vectors": _phase35_score_vectors_for_difference(
+                atom_weights=atom_weights,
+                score_provider=score_provider,
+                diff=diff,
+            ),
+        }
+        if len(mismatches) < int(mismatch_limit):
+            mismatches.append(mismatch)
+    return {
+        "passed": (
+            str(current_traces.get("trace_digest")) == str(migrated_traces.get("trace_digest"))
+            and int(current_traces.get("wins", -1)) == int(migrated_traces.get("wins", -2))
+        ),
+        "mismatch_count": sum(
+            int(left != right)
+            for left, right in zip(
+                [current_traces.get("trace_digest_by_row", {}).get(key) for key in sorted(current_by_row, key=int)],
+                [migrated_traces.get("trace_digest_by_row", {}).get(key) for key in sorted(current_by_row, key=int)],
+            )
+        )
+        + len(set(migrated_by_row) - set(current_by_row)),
+        "current_trace_digest": current_traces.get("trace_digest"),
+        "migrated_trace_digest": migrated_traces.get("trace_digest"),
+        "sample_mismatches": mismatches,
+    }
+
+
+def _phase36_initial_score_vector_digest(
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    atom_weights: Mapping[str, float],
+    score_provider: _MigratedStageBFlatGraphScoreProvider,
+) -> dict[str, Any]:
+    digest_by_row: dict[str, str] = {}
+    samples: list[dict[str, Any]] = []
+    mismatch_count = 0
+    for row in rows:
+        board = chess.Board(str(row["fen"]))
+        counts: Counter[Any] = Counter({_position_repetition_key(board): 1, board._transposition_key(): 1})
+        current = _phase34_official_score_vector(board, counts, atom_weights=atom_weights)
+        migrated = _phase34_migrated_score_vector(board, counts, score_provider=score_provider)
+        current_compact = [(item["move"], item["score"]) for item in current]
+        migrated_compact = [(item["move"], item["score"]) for item in migrated]
+        if current_compact != migrated_compact:
+            mismatch_count += 1
+        score_vectors = {
+            "current_executable_flat": current,
+            "migrated_host": migrated,
+        }
+        row_id = str(row["row_id"])
+        digest_by_row[row_id] = _phase36_digest(score_vectors)
+        if len(samples) < 5:
+            samples.append({"row_id": int(row["row_id"]), "fen": str(row["fen"]), "score_vectors": score_vectors})
+    return {"digest_by_row": digest_by_row, "mismatch_count": mismatch_count, "samples": samples}
+
+
+def _phase36_digest(payload: Any) -> str:
+    return hashlib.sha256(
+        json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
 
 
 def _phase33_host_acceptance_spec() -> dict[str, Any]:
