@@ -1,0 +1,1460 @@
+{
+  "config": {
+    "atom_score_scale": 1.0,
+    "composite_width": 2,
+    "conflict_abs_threshold": 0.05,
+    "ecology_mode": "stem_cell_graph",
+    "fast_exact_judge": true,
+    "flat_baseline_seeds": [
+      20272911,
+      20272912,
+      20272913
+    ],
+    "heldout_row_limit": null,
+    "horizon_plies": 16,
+    "initial_nutrition": 0.34,
+    "initial_weight": 0.05,
+    "low_margin_threshold": 0.035,
+    "mature_nutrition": 1.1,
+    "max_advisory_weight": 0.18,
+    "max_births_per_decision": 2,
+    "max_child_pool": 16,
+    "max_guided_births": 0,
+    "max_mature_ablation_subjects": 8,
+    "max_population": 48,
+    "max_population_per_habitat": 2,
+    "max_samples": 8,
+    "max_total_population": null,
+    "native_foundation_continuation_repetitions": 2,
+    "native_foundation_key_mode": "coarse",
+    "native_foundation_max_mate1_positions": null,
+    "native_foundation_max_mate2_positions": null,
+    "native_foundation_max_ticks": 80,
+    "native_foundation_prototype_scan_triplets": 128,
+    "native_foundation_train_repetitions": 5,
+    "negative_debt": 0.18,
+    "novelty_seen_threshold": 1,
+    "nutrition_weight_scale": 0.035,
+    "output_dir": "reports/autogrowth/clean_slate_krk/phase3_5_equivalence_forensics",
+    "passive_decay": 0.01,
+    "phase33_equivalence_tolerance_wins": 3,
+    "positive_credit": 0.16,
+    "pruned_rescue_audit_limit": 8,
+    "pruned_rescue_heldout_limit": 32,
+    "real_native_active_decay": 0.04,
+    "real_native_credit": 0.09,
+    "real_native_debt": 0.11,
+    "real_native_dormant_decay": 0.001,
+    "real_native_engine_max_ticks": 80,
+    "real_native_foundation_row_limit": 24,
+    "real_native_initial_resource": 0.4,
+    "real_native_mature_resource": 0.75,
+    "real_native_max_ablation_subjects": 4,
+    "real_native_max_births_per_row": 1,
+    "real_native_max_live_composites": 24,
+    "real_native_max_live_siblings_per_parent": 4,
+    "real_native_trial_grace_exposures": 3,
+    "seeds": [
+      20272931,
+      20272932,
+      20272933,
+      20272934,
+      20272935
+    ],
+    "stage_a_rows_path": "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_a_rows.json",
+    "stage_a_train_row_limit": null,
+    "stage_b_baseline_dir": "reports/autogrowth/clean_slate_krk/phase2_9a_action_firewall",
+    "stage_b_rows_path": "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_b_rows.json",
+    "stem_inactive_decay_scale": 1.0,
+    "stem_initial_xp": 50,
+    "stem_mature_xp": 100,
+    "stem_min_mature_exposures": 3,
+    "stem_prune_xp": 0,
+    "train_row_limit": 24,
+    "uncertainty_high": 0.65,
+    "uncertainty_low": 0.35,
+    "uncertainty_min_visits": 3
+  },
+  "dataset": {
+    "heldout_count": 128,
+    "source_rows_path": "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_b_rows.json"
+  },
+  "decision": {
+    "ecology_ran": false,
+    "host_equivalence_passed": false,
+    "stop_reasons": [
+      "official_artifact_continuation_provenance_unrecovered"
+    ]
+  },
+  "one_line_diff": "Official artifact and migrated gate are both 16-white-move ungated enter-mate2 rollouts, but the saved artifact's downstream continuation provenance is not reproduced by the current executable replay; current replay and migrated host have identical current traces.",
+  "per_flat_seed": [
+    {
+      "artifact_sample_divergence": [
+        {
+          "artifact_endpoint": "fence_broken",
+          "artifact_step": null,
+          "artifact_step_count": 2,
+          "divergence_kind": "trace_length",
+          "fen": "3k4/6R1/8/8/8/8/7K/8 w - - 0 1",
+          "first_differing_ply": 2,
+          "migrated_endpoint": "fence_broken",
+          "migrated_step": {
+            "fen": "3k4/6R1/8/8/5K2/8/8/8 w - - 4 3",
+            "move": "f4e5"
+          },
+          "migrated_step_count": 8,
+          "note": "Artifact stores only sample failure traces, so this localizes the first available stored artifact-vs-migrated divergence, not a complete row-level artifact replay.",
+          "row_id": 640,
+          "score_vectors": {
+            "left": null,
+            "right": {
+              "current_executable_flat": [
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=-1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=3",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:-1:1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f4e5",
+                  "score": 22.407397408
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=0",
+                    "action_pattern:file_delta_sign=0",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=3",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:0:1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f4f5",
+                  "score": 21.552645788
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=-1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=3",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:-1:0",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f4e4",
+                  "score": 21.283477322
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=-1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=3",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:-1:-1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f4e3",
+                  "score": 21.113390929
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=3",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:1:1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f4g5",
+                  "score": 21.109341253
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=0",
+                    "action_pattern:file_delta_sign=0",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=3",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:0:-1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f4f3",
+                  "score": 20.339902808
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=3",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:1:-1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f4g3",
+                  "score": 20.248920086
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=3",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:1:0",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f4g4",
+                  "score": 20.078563715
+                }
+              ],
+              "fen": "3k4/6R1/8/8/5K2/8/8/8 w - - 4 3",
+              "migrated_host": [
+                {
+                  "move": "f4e5",
+                  "score": 22.407397408
+                },
+                {
+                  "move": "f4f5",
+                  "score": 21.552645788
+                },
+                {
+                  "move": "f4e4",
+                  "score": 21.283477322
+                },
+                {
+                  "move": "f4e3",
+                  "score": 21.113390929
+                },
+                {
+                  "move": "f4g5",
+                  "score": 21.109341253
+                },
+                {
+                  "move": "f4f3",
+                  "score": 20.339902808
+                },
+                {
+                  "move": "f4g3",
+                  "score": 20.248920086
+                },
+                {
+                  "move": "f4g4",
+                  "score": 20.078563715
+                }
+              ],
+              "move_in_trace": "f4e5"
+            }
+          }
+        }
+      ],
+      "current_executable_replay_wins": 71,
+      "current_replay_endpoint_counts": {
+        "fence_broken": 55,
+        "horizon": 2,
+        "ungated_exact_mate3_or_better_confirmed": 71
+      },
+      "current_vs_migrated_full_trace_differences": [],
+      "delta_current_minus_official": -22,
+      "delta_migrated_minus_official": -22,
+      "flat_seed": 20272911,
+      "host_provider_stats": {
+        "cache_hit_count": 492,
+        "cached_board_count": 456,
+        "engine_tick_samples": [
+          {
+            "active_weighted_key_count": 121,
+            "confirmed_key_count": 121,
+            "evaluated_terminal_count": 121,
+            "move": "g5f4",
+            "parent_state": "WAITING",
+            "score": 21.348002,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 121,
+            "confirmed_key_count": 121,
+            "evaluated_terminal_count": 121,
+            "move": "g5f5",
+            "parent_state": "WAITING",
+            "score": 19.535907,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 121,
+            "confirmed_key_count": 121,
+            "evaluated_terminal_count": 121,
+            "move": "g5f6",
+            "parent_state": "WAITING",
+            "score": 19.764039,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 121,
+            "confirmed_key_count": 121,
+            "evaluated_terminal_count": 121,
+            "move": "g5g4",
+            "parent_state": "WAITING",
+            "score": 20.069924,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 121,
+            "confirmed_key_count": 121,
+            "evaluated_terminal_count": 121,
+            "move": "g5g6",
+            "parent_state": "WAITING",
+            "score": 18.482721,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 121,
+            "confirmed_key_count": 121,
+            "evaluated_terminal_count": 121,
+            "move": "g5h4",
+            "parent_state": "WAITING",
+            "score": 21.223002,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 121,
+            "confirmed_key_count": 121,
+            "evaluated_terminal_count": 121,
+            "move": "g5h5",
+            "parent_state": "WAITING",
+            "score": 19.463553,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 121,
+            "confirmed_key_count": 121,
+            "evaluated_terminal_count": 121,
+            "move": "g5h6",
+            "parent_state": "WAITING",
+            "score": 19.320734,
+            "ticks": 6
+          }
+        ],
+        "flat_seed": 20272911,
+        "formal_engine_atom_eval_count": 1134151,
+        "formal_engine_policy_call_count": 9299,
+        "formal_engine_tick_total": 55794,
+        "materialized_terminal_count": 468,
+        "mean_ticks_per_policy_call": 6.0,
+        "new_terminal_count": 468,
+        "provider": "MigratedStageBFlatGraphScoreProvider"
+      },
+      "migrated_endpoint_counts": {
+        "fence_broken": 55,
+        "horizon": 2,
+        "ungated_exact_mate3_or_better_confirmed": 71
+      },
+      "migrated_host_wins": 71,
+      "official_artifact_wins": 93
+    },
+    {
+      "artifact_sample_divergence": [
+        {
+          "artifact_endpoint": "fence_broken",
+          "artifact_step": {
+            "fen": "3K3k/1R6/8/8/8/8/8/8 w - - 6 4",
+            "move": "d8e8"
+          },
+          "artifact_step_count": 13,
+          "divergence_kind": "position_diverged_before_white_choice",
+          "fen": "6k1/1RK5/8/8/8/8/8/8 w - - 0 1",
+          "first_differing_ply": 3,
+          "migrated_endpoint": "fence_broken",
+          "migrated_step": {
+            "fen": "3K1k2/1R6/8/8/8/8/8/8 w - - 6 4",
+            "move": "d8c8"
+          },
+          "migrated_step_count": 5,
+          "note": "Artifact stores only sample failure traces, so this localizes the first available stored artifact-vs-migrated divergence, not a complete row-level artifact replay.",
+          "row_id": 627,
+          "score_vectors": {
+            "left": {
+              "current_executable_flat": [
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=1",
+                    "action_pattern:from_file_edge_distance=3",
+                    "action_pattern:from_rank_edge_distance=0",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:1:0",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "d8e8",
+                  "score": 19.987113402
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=1",
+                    "action_pattern:from_file_edge_distance=3",
+                    "action_pattern:from_rank_edge_distance=0",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:1:-1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "d8e7",
+                  "score": 19.158648339
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=-1",
+                    "action_pattern:from_file_edge_distance=3",
+                    "action_pattern:from_rank_edge_distance=0",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:-1:0",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "d8c8",
+                  "score": 18.69558992
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=-1",
+                    "action_pattern:from_file_edge_distance=3",
+                    "action_pattern:from_rank_edge_distance=0",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:-1:-1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "d8c7",
+                  "score": 18.201317297
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=0",
+                    "action_pattern:file_delta_sign=0",
+                    "action_pattern:from_file_edge_distance=3",
+                    "action_pattern:from_rank_edge_distance=0",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:0:-1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "d8d7",
+                  "score": 17.682989691
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=1",
+                    "action_pattern:from_file_edge_distance=1",
+                    "action_pattern:from_rank_edge_distance=1",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=4:1:0",
+                    "action_pattern:pair:piece:gives_check=4:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=4"
+                  ],
+                  "move": "b7c7",
+                  "score": 13.922966781
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=0",
+                    "action_pattern:file_delta_sign=0",
+                    "action_pattern:from_file_edge_distance=1",
+                    "action_pattern:from_rank_edge_distance=1",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=4:0:-1",
+                    "action_pattern:pair:piece:gives_check=4:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=4"
+                  ],
+                  "move": "b7b6",
+                  "score": 13.466781214
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=-1",
+                    "action_pattern:from_file_edge_distance=1",
+                    "action_pattern:from_rank_edge_distance=1",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=4:-1:0",
+                    "action_pattern:pair:piece:gives_check=4:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=4"
+                  ],
+                  "move": "b7a7",
+                  "score": 13.302978236
+                }
+              ],
+              "fen": "3K3k/1R6/8/8/8/8/8/8 w - - 6 4",
+              "migrated_host": [
+                {
+                  "move": "d8e8",
+                  "score": 19.987113402
+                },
+                {
+                  "move": "d8e7",
+                  "score": 19.158648339
+                },
+                {
+                  "move": "d8c8",
+                  "score": 18.69558992
+                },
+                {
+                  "move": "d8c7",
+                  "score": 18.201317297
+                },
+                {
+                  "move": "d8d7",
+                  "score": 17.682989691
+                },
+                {
+                  "move": "b7c7",
+                  "score": 13.922966781
+                },
+                {
+                  "move": "b7b6",
+                  "score": 13.466781214
+                },
+                {
+                  "move": "b7a7",
+                  "score": 13.302978236
+                }
+              ],
+              "move_in_trace": "d8e8"
+            },
+            "right": {
+              "current_executable_flat": [
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=-1",
+                    "action_pattern:from_file_edge_distance=3",
+                    "action_pattern:from_rank_edge_distance=0",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:-1:0",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "d8c8",
+                  "score": 19.855670103
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=0",
+                    "action_pattern:file_delta_sign=0",
+                    "action_pattern:from_file_edge_distance=3",
+                    "action_pattern:from_rank_edge_distance=0",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:0:-1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "d8d7",
+                  "score": 19.456758305
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=-1",
+                    "action_pattern:from_file_edge_distance=3",
+                    "action_pattern:from_rank_edge_distance=0",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:-1:-1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "d8c7",
+                  "score": 18.963058419
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=1",
+                    "action_pattern:from_file_edge_distance=1",
+                    "action_pattern:from_rank_edge_distance=1",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=4:1:0",
+                    "action_pattern:pair:piece:gives_check=4:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=4"
+                  ],
+                  "move": "b7c7",
+                  "score": 16.261168385
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=-1",
+                    "action_pattern:from_file_edge_distance=1",
+                    "action_pattern:from_rank_edge_distance=1",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=4:-1:0",
+                    "action_pattern:pair:piece:gives_check=4:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=4"
+                  ],
+                  "move": "b7a7",
+                  "score": 15.814719359
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=2",
+                    "action_pattern:file_delta_sign=1",
+                    "action_pattern:from_file_edge_distance=1",
+                    "action_pattern:from_rank_edge_distance=1",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=4:1:0",
+                    "action_pattern:pair:piece:gives_check=4:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=4"
+                  ],
+                  "move": "b7d7",
+                  "score": 15.347079038
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=0",
+                    "action_pattern:file_delta_sign=0",
+                    "action_pattern:from_file_edge_distance=1",
+                    "action_pattern:from_rank_edge_distance=1",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=4:0:-1",
+                    "action_pattern:pair:piece:gives_check=4:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=4"
+                  ],
+                  "move": "b7b6",
+                  "score": 14.619129439
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=3",
+                    "action_pattern:file_delta_sign=1",
+                    "action_pattern:from_file_edge_distance=1",
+                    "action_pattern:from_rank_edge_distance=1",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=4:1:0",
+                    "action_pattern:pair:piece:gives_check=4:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=4"
+                  ],
+                  "move": "b7h7",
+                  "score": 14.485681558
+                }
+              ],
+              "fen": "3K1k2/1R6/8/8/8/8/8/8 w - - 6 4",
+              "migrated_host": [
+                {
+                  "move": "d8c8",
+                  "score": 19.855670103
+                },
+                {
+                  "move": "d8d7",
+                  "score": 19.456758305
+                },
+                {
+                  "move": "d8c7",
+                  "score": 18.963058419
+                },
+                {
+                  "move": "b7c7",
+                  "score": 16.261168385
+                },
+                {
+                  "move": "b7a7",
+                  "score": 15.814719359
+                },
+                {
+                  "move": "b7d7",
+                  "score": 15.347079038
+                },
+                {
+                  "move": "b7b6",
+                  "score": 14.619129439
+                },
+                {
+                  "move": "b7h7",
+                  "score": 14.485681558
+                }
+              ],
+              "move_in_trace": "d8c8"
+            }
+          }
+        }
+      ],
+      "current_executable_replay_wins": 73,
+      "current_replay_endpoint_counts": {
+        "fence_broken": 52,
+        "horizon": 3,
+        "ungated_exact_mate3_or_better_confirmed": 73
+      },
+      "current_vs_migrated_full_trace_differences": [],
+      "delta_current_minus_official": -19,
+      "delta_migrated_minus_official": -19,
+      "flat_seed": 20272912,
+      "host_provider_stats": {
+        "cache_hit_count": 519,
+        "cached_board_count": 498,
+        "engine_tick_samples": [
+          {
+            "active_weighted_key_count": 121,
+            "confirmed_key_count": 121,
+            "evaluated_terminal_count": 121,
+            "move": "g5f4",
+            "parent_state": "WAITING",
+            "score": 21.045533,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 121,
+            "confirmed_key_count": 121,
+            "evaluated_terminal_count": 121,
+            "move": "g5f5",
+            "parent_state": "WAITING",
+            "score": 19.349084,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 121,
+            "confirmed_key_count": 121,
+            "evaluated_terminal_count": 121,
+            "move": "g5f6",
+            "parent_state": "WAITING",
+            "score": 19.546678,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 121,
+            "confirmed_key_count": 121,
+            "evaluated_terminal_count": 121,
+            "move": "g5g4",
+            "parent_state": "WAITING",
+            "score": 19.715636,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 122,
+            "confirmed_key_count": 122,
+            "evaluated_terminal_count": 122,
+            "move": "g5g6",
+            "parent_state": "WAITING",
+            "score": 18.193013,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 121,
+            "confirmed_key_count": 121,
+            "evaluated_terminal_count": 121,
+            "move": "g5h4",
+            "parent_state": "WAITING",
+            "score": 20.892898,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 121,
+            "confirmed_key_count": 121,
+            "evaluated_terminal_count": 121,
+            "move": "g5h5",
+            "parent_state": "WAITING",
+            "score": 19.241123,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 121,
+            "confirmed_key_count": 121,
+            "evaluated_terminal_count": 121,
+            "move": "g5h6",
+            "parent_state": "WAITING",
+            "score": 19.063288,
+            "ticks": 6
+          }
+        ],
+        "flat_seed": 20272912,
+        "formal_engine_atom_eval_count": 1238108,
+        "formal_engine_policy_call_count": 10151,
+        "formal_engine_tick_total": 60906,
+        "materialized_terminal_count": 466,
+        "mean_ticks_per_policy_call": 6.0,
+        "new_terminal_count": 466,
+        "provider": "MigratedStageBFlatGraphScoreProvider"
+      },
+      "migrated_endpoint_counts": {
+        "fence_broken": 52,
+        "horizon": 3,
+        "ungated_exact_mate3_or_better_confirmed": 73
+      },
+      "migrated_host_wins": 73,
+      "official_artifact_wins": 92
+    },
+    {
+      "artifact_sample_divergence": [
+        {
+          "artifact_endpoint": "fence_broken",
+          "artifact_step": {
+            "fen": "3k4/1R6/8/8/8/5K2/8/8 w - - 2 2",
+            "move": "f3e4"
+          },
+          "artifact_step_count": 2,
+          "divergence_kind": "position_diverged_before_white_choice",
+          "fen": "4k3/1R6/8/8/8/8/6K1/8 w - - 0 1",
+          "first_differing_ply": 1,
+          "migrated_endpoint": "ungated_exact_mate3_or_better_confirmed",
+          "migrated_step": {
+            "fen": "5k2/1R6/8/8/8/5K2/8/8 w - - 2 2",
+            "move": "f3e4"
+          },
+          "migrated_step_count": 5,
+          "note": "Artifact stores only sample failure traces, so this localizes the first available stored artifact-vs-migrated divergence, not a complete row-level artifact replay.",
+          "row_id": 610,
+          "score_vectors": {
+            "left": {
+              "current_executable_flat": [
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=-1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:-1:1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3e4",
+                  "score": 21.475971922
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=0",
+                    "action_pattern:file_delta_sign=0",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:0:1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3f4",
+                  "score": 20.580723542
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=-1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:-1:0",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3e3",
+                  "score": 20.198974082
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:1:1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3g4",
+                  "score": 19.990280778
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=-1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:-1:-1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3e2",
+                  "score": 19.392008639
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:1:0",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3g3",
+                  "score": 18.917926566
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=0",
+                    "action_pattern:file_delta_sign=0",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:0:-1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3f2",
+                  "score": 18.653887689
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:1:-1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3g2",
+                  "score": 18.649568035
+                }
+              ],
+              "fen": "3k4/1R6/8/8/8/5K2/8/8 w - - 2 2",
+              "migrated_host": [
+                {
+                  "move": "f3e4",
+                  "score": 21.475971922
+                },
+                {
+                  "move": "f3f4",
+                  "score": 20.580723542
+                },
+                {
+                  "move": "f3e3",
+                  "score": 20.198974082
+                },
+                {
+                  "move": "f3g4",
+                  "score": 19.990280778
+                },
+                {
+                  "move": "f3e2",
+                  "score": 19.392008639
+                },
+                {
+                  "move": "f3g3",
+                  "score": 18.917926566
+                },
+                {
+                  "move": "f3f2",
+                  "score": 18.653887689
+                },
+                {
+                  "move": "f3g2",
+                  "score": 18.649568035
+                }
+              ],
+              "move_in_trace": "f3e4"
+            },
+            "right": {
+              "current_executable_flat": [
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=-1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:-1:1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3e4",
+                  "score": 21.308855292
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=0",
+                    "action_pattern:file_delta_sign=0",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:0:1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3f4",
+                  "score": 20.970572354
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=-1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:-1:0",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3e3",
+                  "score": 20.090442765
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:1:1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3g4",
+                  "score": 20.054805616
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=-1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:-1:-1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3e2",
+                  "score": 19.618790497
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=0",
+                    "action_pattern:file_delta_sign=0",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:0:-1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3f2",
+                  "score": 19.0337473
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:1:0",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3g3",
+                  "score": 18.983801296
+                },
+                {
+                  "active_weighted_keys": [
+                    "action_pattern:black_king_edge_after=0",
+                    "action_pattern:file_delta_magnitude=1",
+                    "action_pattern:file_delta_sign=1",
+                    "action_pattern:from_file_edge_distance=2",
+                    "action_pattern:from_rank_edge_distance=2",
+                    "action_pattern:gives_check=0",
+                    "action_pattern:is_capture=0",
+                    "action_pattern:pair:gives_check:black_king_edge_after=0:0",
+                    "action_pattern:pair:piece:file_rank_delta=6:1:-1",
+                    "action_pattern:pair:piece:gives_check=6:0",
+                    "action_pattern:pair:rook_safety:gives_check=0:0",
+                    "action_pattern:piece_type=6"
+                  ],
+                  "move": "f3g2",
+                  "score": 18.703563715
+                }
+              ],
+              "fen": "5k2/1R6/8/8/8/5K2/8/8 w - - 2 2",
+              "migrated_host": [
+                {
+                  "move": "f3e4",
+                  "score": 21.308855292
+                },
+                {
+                  "move": "f3f4",
+                  "score": 20.970572354
+                },
+                {
+                  "move": "f3e3",
+                  "score": 20.090442765
+                },
+                {
+                  "move": "f3g4",
+                  "score": 20.054805616
+                },
+                {
+                  "move": "f3e2",
+                  "score": 19.618790497
+                },
+                {
+                  "move": "f3f2",
+                  "score": 19.0337473
+                },
+                {
+                  "move": "f3g3",
+                  "score": 18.983801296
+                },
+                {
+                  "move": "f3g2",
+                  "score": 18.703563715
+                }
+              ],
+              "move_in_trace": "f3e4"
+            }
+          }
+        }
+      ],
+      "current_executable_replay_wins": 71,
+      "current_replay_endpoint_counts": {
+        "fence_broken": 57,
+        "ungated_exact_mate3_or_better_confirmed": 71
+      },
+      "current_vs_migrated_full_trace_differences": [],
+      "delta_current_minus_official": -21,
+      "delta_migrated_minus_official": -21,
+      "flat_seed": 20272913,
+      "host_provider_stats": {
+        "cache_hit_count": 494,
+        "cached_board_count": 475,
+        "engine_tick_samples": [
+          {
+            "active_weighted_key_count": 122,
+            "confirmed_key_count": 122,
+            "evaluated_terminal_count": 122,
+            "move": "g5f4",
+            "parent_state": "WAITING",
+            "score": 21.280238,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 122,
+            "confirmed_key_count": 122,
+            "evaluated_terminal_count": 122,
+            "move": "g5f5",
+            "parent_state": "WAITING",
+            "score": 19.37554,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 122,
+            "confirmed_key_count": 122,
+            "evaluated_terminal_count": 122,
+            "move": "g5f6",
+            "parent_state": "WAITING",
+            "score": 19.765389,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 122,
+            "confirmed_key_count": 122,
+            "evaluated_terminal_count": 122,
+            "move": "g5g4",
+            "parent_state": "WAITING",
+            "score": 19.99973,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 122,
+            "confirmed_key_count": 122,
+            "evaluated_terminal_count": 122,
+            "move": "g5g6",
+            "parent_state": "WAITING",
+            "score": 18.515929,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 122,
+            "confirmed_key_count": 122,
+            "evaluated_terminal_count": 122,
+            "move": "g5h4",
+            "parent_state": "WAITING",
+            "score": 21.109341,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 122,
+            "confirmed_key_count": 122,
+            "evaluated_terminal_count": 122,
+            "move": "g5h5",
+            "parent_state": "WAITING",
+            "score": 19.289687,
+            "ticks": 6
+          },
+          {
+            "active_weighted_key_count": 122,
+            "confirmed_key_count": 122,
+            "evaluated_terminal_count": 122,
+            "move": "g5h6",
+            "parent_state": "WAITING",
+            "score": 19.276998,
+            "ticks": 6
+          }
+        ],
+        "flat_seed": 20272913,
+        "formal_engine_atom_eval_count": 1179506,
+        "formal_engine_policy_call_count": 9679,
+        "formal_engine_tick_total": 58074,
+        "materialized_terminal_count": 468,
+        "mean_ticks_per_policy_call": 6.0,
+        "new_terminal_count": 468,
+        "provider": "MigratedStageBFlatGraphScoreProvider"
+      },
+      "migrated_endpoint_counts": {
+        "fence_broken": 57,
+        "ungated_exact_mate3_or_better_confirmed": 71
+      },
+      "migrated_host_wins": 71,
+      "official_artifact_wins": 92
+    }
+  ],
+  "phase": "Phase 3.5 equivalence forensics",
+  "schema_version": "phase3_5_equivalence_forensics.v0",
+  "success_predicates": {
+    "official_stage_b_artifact": {
+      "artifact_schema": "phase2_9a_stage_b_sealed_seed.v0",
+      "horizon_white_moves": 16,
+      "learner_visible_stage_labels": false,
+      "observed_failure_endpoints": [
+        "fence_broken",
+        "horizon"
+      ],
+      "procedure": "full played rollout over the Stage B heldout, not a single argmax move label; artifact stores 16-white-step sample failures and endpoint_counts",
+      "retained_code_family": "TerminalAffordanceLearner.choose / quorum_basin edge-mate rollout family; the exact one-off artifact writer is not present as a callable script",
+      "row_level_success_vector_stored": false,
+      "stored_metric": "heldout_eval.success_count",
+      "success_endpoint": "ungated_exact_mate3_or_better_confirmed",
+      "success_judge": "ungated exact enter-mate2 / mate3-or-better audit"
+    },
+    "phase3_5_migrated_equivalence_check": {
+      "chooser": "_choose_migrated_flat_host_move",
+      "extra_current_runtime_endpoints": [
+        "third_repetition",
+        "rook_lost",
+        "stalemate",
+        "illegal",
+        "terminal"
+      ],
+      "function": "_phase33_host_equivalence_checks -> _evaluate_policy -> _rollout_policy",
+      "horizon_white_moves": 16,
+      "host_policy_path": "_choose_migrated_flat_host_move -> _MigratedStageBFlatGraphScoreProvider.score_move -> evaluate_active_atoms -> FormalReConEngine.request/run -> TERMINAL predicate",
+      "learner_visible_stage_labels": false,
+      "success_judge": "_rollout_success_check -> _fast_enter_mate2_audit",
+      "success_kind": "stage_b_enter_mate2"
+    }
+  },
+  "tables": {
+    "phase3_5_headline": {
+      "equivalence_wins": [
+        {
+          "artifact_sample_divergences": 1,
+          "current_executable_replay_wins": 71,
+          "current_vs_migrated_trace_differences": 0,
+          "delta_migrated_minus_official": -22,
+          "flat_seed": 20272911,
+          "migrated_host_wins": 71,
+          "official_artifact_wins": 93
+        },
+        {
+          "artifact_sample_divergences": 1,
+          "current_executable_replay_wins": 73,
+          "current_vs_migrated_trace_differences": 0,
+          "delta_migrated_minus_official": -19,
+          "flat_seed": 20272912,
+          "migrated_host_wins": 73,
+          "official_artifact_wins": 92
+        },
+        {
+          "artifact_sample_divergences": 1,
+          "current_executable_replay_wins": 71,
+          "current_vs_migrated_trace_differences": 0,
+          "delta_migrated_minus_official": -21,
+          "flat_seed": 20272913,
+          "migrated_host_wins": 71,
+          "official_artifact_wins": 92
+        }
+      ]
+    }
+  }
+}
