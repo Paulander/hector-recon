@@ -6,6 +6,7 @@ from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     run_stage_ab_graph_native_carryover_probe,
     run_stage_ab_native_foundation_ecology_probe,
     run_phase32_real_native_graph_ecology_probe,
+    run_phase33_migrated_flat_native_ecology_probe,
     run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
@@ -252,3 +253,42 @@ def test_phase32_real_native_graph_ecology_acceptance_path(tmp_path: Path) -> No
     instrumentation = result["runtime_instrumentation"]
     assert instrumentation["formal_engine_composite_call_count"] >= instrumentation["formal_engine_composite_eval_count"] > 0
     assert instrumentation["engine_tick_samples"]
+
+
+def test_phase33_migrated_flat_host_equivalence_gate(tmp_path: Path) -> None:
+    summary = run_phase33_migrated_flat_native_ecology_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_3_migrated_flat_probe"),
+            seeds=(20272931,),
+            flat_baseline_seeds=(20272911,),
+            real_native_foundation_row_limit=1,
+            train_row_limit=1,
+            heldout_row_limit=2,
+            max_samples=2,
+            max_guided_births=0,
+            ecology_mode="stem_cell_graph",
+            native_foundation_train_repetitions=1,
+            native_foundation_continuation_repetitions=1,
+            native_foundation_max_mate1_positions=2,
+            native_foundation_max_mate2_positions=1,
+            native_foundation_prototype_scan_triplets=32,
+            native_foundation_key_mode="coarse",
+            real_native_max_live_composites=4,
+            real_native_max_live_siblings_per_parent=2,
+            real_native_engine_max_ticks=80,
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_3_migrated_flat_native_ecology.v0"
+    equivalence = summary["host_equivalence"]
+    assert equivalence["all_passed"] is True
+    row = equivalence["per_flat_seed"][0]
+    proof = row["acceptance_check"]["dynamic_proof"]
+    assert row["migrated_wins"] == row["sealed_wins"]
+    assert proof["request_sub_message_to_atom_seen"] is True
+    assert proof["formal_engine_eval_count_after"] > proof["formal_engine_eval_count_before"]
+    assert "FormalReConEngine.run(active_nodes={ROOT_ID,stage_b_policy_parent,active_atom_terminals})" in row["acceptance_check"]["call_chain"]
+
+    result = summary["seed_results"]["20272931"]
+    assert result["host_instrumentation"]["formal_engine_atom_eval_count"] > 0
+    assert "host_plus_minus_host_wins" in result["evaluations"]
