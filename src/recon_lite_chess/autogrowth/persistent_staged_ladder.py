@@ -33,6 +33,15 @@ from .stage_b_ecological_discovery_probe import (
     _write_json,
 )
 
+_PHASE40_HARD_ENDPOINTS = (
+    "fence_broken",
+    "rook_lost",
+    "horizon",
+    "third_repetition",
+    "stalemate",
+    "illegal",
+)
+
 
 def run_phase39_stable_plasticity_probe(
     *,
@@ -345,6 +354,339 @@ def run_phase39_stable_plasticity_probe(
     return summary
 
 
+def run_phase40_stratified_acceptance_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    """Phase 3.9/3.10 repair: stratified validation plus endpoint non-regression."""
+
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_10_stratified_acceptance",
+        seeds=(20272931, 20272932, 20272933),
+        flat_baseline_seeds=(20272911, 20272912, 20272913),
+        stage_a_train_row_limit=128,
+        train_row_limit=128,
+        heldout_row_limit=None,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+        real_native_engine_max_ticks=80,
+    )
+    output_dir = Path(cfg.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    design = _design_spec(cfg)
+    design["schema_version"] = "phase3_10_stratified_acceptance_design_spec.v0"
+    design["phase_alias"] = "stratified stable-plasticity acceptance repair"
+    design["split_law"] = _phase39_split_law(cfg)
+    design["consolidation"] = _phase40_consolidation_spec()
+    _write_json(output_dir / "design_spec.json", design)
+
+    stage_a_payload = json.loads(Path(cfg.stage_a_rows_path).read_text(encoding="utf-8"))
+    stage_b_payload = json.loads(Path(cfg.stage_b_rows_path).read_text(encoding="utf-8"))
+    stage_a_train_pool = list(stage_a_payload["train"])
+    stage_b_train_pool = list(stage_b_payload["train"])
+    stage_a_gate_rows = list(stage_a_payload["heldout"])
+    stage_b_gate_rows = list(stage_b_payload["heldout"])
+    stage_a_limit = cfg.stage_a_train_row_limit if cfg.stage_a_train_row_limit is not None else cfg.train_row_limit
+    if stage_a_limit is not None:
+        stage_a_train_pool = stage_a_train_pool[: int(stage_a_limit)]
+    if cfg.train_row_limit is not None:
+        stage_b_train_pool = stage_b_train_pool[: int(cfg.train_row_limit)]
+    if cfg.heldout_row_limit is not None:
+        stage_a_gate_rows = stage_a_gate_rows[: int(cfg.heldout_row_limit)]
+        stage_b_gate_rows = stage_b_gate_rows[: int(cfg.heldout_row_limit)]
+
+    rebaseline = _phase38_rebaseline_phase29e_discovery(cfg, stage_b_gate_rows)
+    _write_json(output_dir / "phase2_9e_rebaseline_audit.json", rebaseline)
+
+    per_seed: list[dict[str, Any]] = []
+    for index, seed in enumerate(cfg.seeds):
+        flat_seed = int(cfg.flat_baseline_seeds[index % len(cfg.flat_baseline_seeds)])
+        foundation = _train_native_foundation_for_ecology(cfg)
+        native_graph = foundation["graph"]
+        stage_a_weights = _load_weight_table(
+            Path(cfg.stage_b_baseline_dir) / f"stage_d_A_sealed_seed_{flat_seed}_weights.json"
+        )
+        stage_b_weights = _load_weight_table(
+            Path(cfg.stage_b_baseline_dir) / f"stage_d_B_sealed_seed_{flat_seed}_weights.json"
+        )
+        stage_a_train_rows, stage_a_validation_rows, stage_a_split_diag = _phase40_stratified_train_validation_split(
+            cfg,
+            stage_a_train_pool,
+            atom_weights=stage_a_weights,
+            flat_seed=flat_seed,
+            seed=int(seed) + 101,
+            success_kind="approach_waypoint",
+            policy_name=f"phase3_10_stage_a_train_pool_stratifier_{flat_seed}_{seed}",
+        )
+        stage_a_baseline = _phase38_flat_policy_traces(
+            cfg,
+            stage_a_gate_rows,
+            atom_weights=stage_a_weights,
+            flat_seed=flat_seed,
+            seed=int(seed) + 700,
+            policy_name=f"phase3_10_stage_a_executable_flat_exact_adversarial_{flat_seed}",
+            success_kind="approach_waypoint",
+        )
+        foundation_gate = _phase39_foundation_gate(foundation, cfg)
+        seed_result: dict[str, Any] = {
+            "schema_version": "phase3_10_stratified_acceptance_seed.v0",
+            "seed": int(seed),
+            "flat_seed": flat_seed,
+            "split_law": _phase39_split_law(cfg),
+            "split_manifest": {
+                "stage_a": _phase40_split_manifest(
+                    stage_a_train_rows,
+                    stage_a_validation_rows,
+                    stage_a_gate_rows,
+                    stage_a_split_diag,
+                ),
+                "stage_b": None,
+            },
+            "foundation": foundation["summary"],
+            "baselines": {
+                "stage_a_exact_adversarial_flat_gate": stage_a_baseline,
+            },
+            "gate_matrix": {
+                "after_foundation": {
+                    "foundation": foundation_gate,
+                    "stage_a_approach": None,
+                    "stage_b_chase": None,
+                }
+            },
+            "stop_reasons": [],
+        }
+        if not foundation_gate["passed"]:
+            seed_result["stop_reasons"].append("foundation_gate_failed")
+            _write_json(output_dir / f"seed_{seed}_stratified_acceptance.json", seed_result)
+            per_seed.append(seed_result)
+            continue
+
+        stage_a_provider = _MigratedStageBFlatGraphScoreProvider(
+            cfg,
+            native_graph,
+            atom_weights=stage_a_weights,
+            flat_seed=flat_seed,
+            policy_parent_id="stage_a_policy_stratified_acceptance",
+            terminal_namespace=f"phase3_10_stage_a_{flat_seed}",
+        )
+        stage_a_acceptance = (
+            stage_a_provider.acceptance_check(stage_a_gate_rows[0], seed=int(seed))
+            if stage_a_gate_rows
+            else {}
+        )
+        stage_a_training = _phase39_train_with_fast_slow_consolidation(
+            cfg,
+            provider=stage_a_provider,
+            train_rows=stage_a_train_rows,
+            validation_rows=stage_a_validation_rows,
+            prior_replay_checks=(),
+            seed=int(seed) + 10_000,
+            success_kind="approach_waypoint",
+            rung_name="stage_a_approach",
+            endpoint_non_regression=True,
+        )
+        stage_a_gate_eval = _phase38_migrated_provider_traces(
+            cfg,
+            stage_a_gate_rows,
+            stage_a_provider,
+            seed=int(seed) + 11_000,
+            policy_name=f"phase3_10_stage_a_slow_host_gate_{seed}",
+            success_kind="approach_waypoint",
+        )
+        stage_a_gate = _phase38_gate_result(
+            rung="stage_a_approach",
+            evaluation=stage_a_gate_eval,
+            baseline=stage_a_baseline,
+        )
+        seed_result["stage_a"] = {
+            "acceptance_check": stage_a_acceptance,
+            "training": stage_a_training,
+            "gate_evaluation": stage_a_gate_eval,
+            "gate": stage_a_gate,
+            "host_stats": stage_a_provider.stats(),
+        }
+        seed_result["gate_matrix"]["after_stage_a"] = {
+            "foundation": foundation_gate,
+            "stage_a_approach": stage_a_gate,
+            "stage_b_chase": None,
+        }
+        if int(stage_a_training["chunks_consolidated"]) == 0:
+            seed_result["stop_reasons"].append("stage_a_zero_chunks_consolidated")
+        if not stage_a_gate["passed"]:
+            seed_result["stop_reasons"].append("stage_a_gate_unreachable_after_budget")
+        if seed_result["stop_reasons"]:
+            _write_json(output_dir / f"seed_{seed}_stratified_acceptance.json", seed_result)
+            per_seed.append(seed_result)
+            continue
+
+        stage_b_train_rows, stage_b_validation_rows, stage_b_split_diag = _phase40_stratified_train_validation_split(
+            cfg,
+            stage_b_train_pool,
+            atom_weights=stage_b_weights,
+            flat_seed=flat_seed,
+            seed=int(seed) + 202,
+            success_kind="stage_b_enter_mate2",
+            policy_name=f"phase3_10_stage_b_train_pool_stratifier_{flat_seed}_{seed}",
+        )
+        seed_result["split_manifest"]["stage_b"] = _phase40_split_manifest(
+            stage_b_train_rows,
+            stage_b_validation_rows,
+            stage_b_gate_rows,
+            stage_b_split_diag,
+        )
+        stage_b_baseline = _phase38_flat_policy_traces(
+            cfg,
+            stage_b_gate_rows,
+            atom_weights=stage_b_weights,
+            flat_seed=flat_seed,
+            seed=int(seed) + 900,
+            policy_name=f"phase3_10_stage_b_executable_flat_exact_adversarial_{flat_seed}",
+            success_kind="stage_b_enter_mate2",
+        )
+        seed_result["baselines"]["stage_b_exact_adversarial_flat_gate"] = stage_b_baseline
+        stage_b_provider = _MigratedStageBFlatGraphScoreProvider(
+            cfg,
+            native_graph,
+            atom_weights=stage_b_weights,
+            flat_seed=flat_seed,
+            policy_parent_id="stage_b_policy_stratified_acceptance",
+            terminal_namespace=f"phase3_10_stage_b_{flat_seed}",
+        )
+        stage_b_acceptance = (
+            stage_b_provider.acceptance_check(stage_b_gate_rows[0], seed=int(seed))
+            if stage_b_gate_rows
+            else {}
+        )
+
+        def stage_a_prior_replay() -> dict[str, Any]:
+            return _phase38_migrated_provider_traces(
+                cfg,
+                stage_a_validation_rows,
+                stage_a_provider,
+                seed=int(seed) + 12_000,
+                policy_name=f"phase3_10_stage_a_validation_replay_for_stage_b_{seed}",
+                success_kind="approach_waypoint",
+            )
+
+        stage_b_training = _phase39_train_with_fast_slow_consolidation(
+            cfg,
+            provider=stage_b_provider,
+            train_rows=stage_b_train_rows,
+            validation_rows=stage_b_validation_rows,
+            prior_replay_checks=(
+                {
+                    "name": "stage_a_validation_replay",
+                    "evaluate": stage_a_prior_replay,
+                },
+            ),
+            seed=int(seed) + 20_000,
+            success_kind="stage_b_enter_mate2",
+            rung_name="stage_b_chase",
+            endpoint_non_regression=True,
+        )
+        stage_b_gate_eval = _phase38_migrated_provider_traces(
+            cfg,
+            stage_b_gate_rows,
+            stage_b_provider,
+            seed=int(seed) + 21_000,
+            policy_name=f"phase3_10_stage_b_slow_host_gate_{seed}",
+            success_kind="stage_b_enter_mate2",
+        )
+        stage_a_regression_eval = _phase38_migrated_provider_traces(
+            cfg,
+            stage_a_gate_rows,
+            stage_a_provider,
+            seed=int(seed) + 22_000,
+            policy_name=f"phase3_10_stage_a_regression_gate_after_stage_b_{seed}",
+            success_kind="approach_waypoint",
+        )
+        stage_b_gate = _phase38_gate_result(
+            rung="stage_b_chase",
+            evaluation=stage_b_gate_eval,
+            baseline=stage_b_baseline,
+        )
+        stage_a_regression_gate = _phase38_gate_result(
+            rung="stage_a_approach_regression",
+            evaluation=stage_a_regression_eval,
+            baseline=stage_a_baseline,
+        )
+        seed_result["stage_b"] = {
+            "acceptance_check": stage_b_acceptance,
+            "training": stage_b_training,
+            "gate_evaluation": stage_b_gate_eval,
+            "gate": stage_b_gate,
+            "host_stats": stage_b_provider.stats(),
+        }
+        seed_result["regression_checks"] = {
+            "stage_a_after_stage_b": {
+                "gate_evaluation": stage_a_regression_eval,
+                "gate": stage_a_regression_gate,
+            }
+        }
+        seed_result["gate_matrix"]["after_stage_b"] = {
+            "foundation": foundation_gate,
+            "stage_a_approach": stage_a_regression_gate,
+            "stage_b_chase": stage_b_gate,
+        }
+        if int(stage_b_training["chunks_consolidated"]) == 0:
+            seed_result["stop_reasons"].append("stage_b_zero_chunks_consolidated")
+        if not stage_b_gate["passed"]:
+            seed_result["stop_reasons"].append("stage_b_gate_unreachable_after_budget")
+        if not stage_a_regression_gate["passed"]:
+            seed_result["stop_reasons"].append("stage_a_regression_after_stage_b")
+        _write_json(output_dir / f"seed_{seed}_stratified_acceptance.json", seed_result)
+        per_seed.append(seed_result)
+
+    dispatcher_side_eval = _phase38_dispatcher_side_eval(cfg, stage_b_gate_rows)
+    standing_ladder = all(
+        not row.get("stop_reasons")
+        and bool(row.get("gate_matrix", {}).get("after_stage_b", {}).get("foundation", {}).get("passed"))
+        and bool(row.get("gate_matrix", {}).get("after_stage_b", {}).get("stage_a_approach", {}).get("passed"))
+        and bool(row.get("gate_matrix", {}).get("after_stage_b", {}).get("stage_b_chase", {}).get("passed"))
+        for row in per_seed
+    )
+    summary = {
+        "schema_version": "phase3_10_stratified_acceptance.v0",
+        "phase": "stratified stable-plasticity acceptance repair",
+        "config": asdict(cfg),
+        "split_law": _phase39_split_law(cfg),
+        "consolidation": _phase40_consolidation_spec(),
+        "dataset": {
+            "recent_curriculum_only_for_stage_a_b": True,
+            "old_krk_curriculum_imported_for_stage_a_b": False,
+            "foundation_rung": "native Mate1/Mate2 sanity graph",
+            "stage_a_rows_path": str(cfg.stage_a_rows_path),
+            "stage_b_rows_path": str(cfg.stage_b_rows_path),
+            "stage_a_train_pool_count": len(stage_a_train_pool),
+            "stage_b_train_pool_count": len(stage_b_train_pool),
+            "stage_a_gate_heldout_count": len(stage_a_gate_rows),
+            "stage_b_gate_heldout_count": len(stage_b_gate_rows),
+            "gate_rows_consulted_by_update_decisions": False,
+        },
+        "rebaseline_audit": rebaseline,
+        "per_seed": per_seed,
+        "dispatcher_side_eval": dispatcher_side_eval,
+        "tables": {
+            "phase3_10_gate_matrix": _phase39_gate_matrix_table(per_seed),
+            "phase3_10_consolidation": _phase39_consolidation_table(per_seed),
+            "phase3_10_rebaseline_correction": _phase38_rebaseline_table(rebaseline),
+        },
+        "decision": {
+            "ecology_deferred": True,
+            "standing_ladder_all_seeds_green": standing_ladder,
+            "run_ecology_next": standing_ladder,
+            "stop_reasons_by_seed": {
+                str(row["seed"]): list(row.get("stop_reasons", ())) for row in per_seed
+            },
+        },
+    }
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
 def _phase39_split_law(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
     return {
         "law": (
@@ -378,6 +720,21 @@ def _phase39_consolidation_spec() -> dict[str, Any]:
     }
 
 
+def _phase40_consolidation_spec() -> dict[str, Any]:
+    spec = _phase39_consolidation_spec()
+    spec.update(
+        {
+            "acceptance": (
+                "stratified validation wins non-regress, hard endpoint counts non-regress, "
+                "and all prior-rung replay checks satisfy the same endpoint-aware rule"
+            ),
+            "validation_split": "train-pool rows stratified by initial exact-adversarial endpoint family",
+            "endpoint_non_regression": True,
+        }
+    )
+    return spec
+
+
 def _phase39_foundation_gate(foundation: Mapping[str, Any], cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
     summary = foundation["summary"]
     return {
@@ -405,6 +762,102 @@ def _phase39_split_train_validation(
     return train, validation
 
 
+def _phase40_stratified_train_validation_split(
+    cfg: StageBEcologicalDiscoveryConfig,
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    atom_weights: Mapping[str, float],
+    flat_seed: int,
+    seed: int,
+    success_kind: str,
+    policy_name: str,
+) -> tuple[list[Mapping[str, Any]], list[Mapping[str, Any]], dict[str, Any]]:
+    pool = list(rows)
+    if len(pool) <= 1:
+        return pool, list(pool), {
+            "stratifier_policy": policy_name,
+            "endpoint_counts": {},
+            "validation_endpoint_counts": {},
+            "fallback": "pool_too_small",
+        }
+    traces = _phase38_flat_policy_traces(
+        cfg,
+        pool,
+        atom_weights=atom_weights,
+        flat_seed=flat_seed,
+        seed=int(seed) + 404,
+        policy_name=policy_name,
+        success_kind=success_kind,
+    )
+    by_endpoint: dict[str, list[Mapping[str, Any]]] = {}
+    rows_by_id = {str(row["row_id"]): row for row in pool}
+    for row_id, endpoint in traces.get("endpoint_by_row", {}).items():
+        row = rows_by_id.get(str(row_id))
+        if row is None:
+            continue
+        by_endpoint.setdefault(str(endpoint), []).append(row)
+    rng = random.Random(seed)
+    for bucket in by_endpoint.values():
+        rng.shuffle(bucket)
+    validation_target = max(1, min(len(pool) - 1, max(16, len(pool) // 3)))
+    priority = [
+        "rook_lost",
+        "stalemate",
+        "illegal",
+        "third_repetition",
+        "fence_broken",
+        "horizon",
+        "terminal",
+        "waypoint_reached",
+        "ungated_exact_mate3_or_better_confirmed",
+        "mate_delivered",
+    ]
+    validation_ids: set[int] = set()
+    validation: list[Mapping[str, Any]] = []
+
+    def take(row: Mapping[str, Any]) -> None:
+        row_id = int(row["row_id"])
+        if row_id in validation_ids or len(validation) >= validation_target:
+            return
+        validation_ids.add(row_id)
+        validation.append(row)
+
+    per_hard_family = max(2, validation_target // 8)
+    for endpoint in priority[:6]:
+        for row in by_endpoint.get(endpoint, ())[:per_hard_family]:
+            take(row)
+    cursor = 0
+    while len(validation) < validation_target and by_endpoint:
+        endpoint = priority[cursor % len(priority)]
+        bucket = by_endpoint.get(endpoint, ())
+        if bucket:
+            take(bucket[(cursor // len(priority)) % len(bucket)])
+        cursor += 1
+        if cursor > len(priority) * (len(pool) + 1):
+            break
+    if len(validation) < validation_target:
+        shuffled = list(pool)
+        rng.shuffle(shuffled)
+        for row in shuffled:
+            take(row)
+            if len(validation) >= validation_target:
+                break
+    train = [row for row in pool if int(row["row_id"]) not in validation_ids]
+    validation_endpoint_counts = Counter(
+        str(traces.get("endpoint_by_row", {}).get(str(row["row_id"]), "unknown"))
+        for row in validation
+    )
+    return train, validation, {
+        "stratifier_policy": policy_name,
+        "stratifier_runner_config": traces.get("runner_config", {}),
+        "endpoint_counts": dict(sorted(Counter(traces.get("endpoint_by_row", {}).values()).items())),
+        "validation_endpoint_counts": dict(sorted(validation_endpoint_counts.items())),
+        "validation_target": validation_target,
+        "hard_endpoint_priority": priority[:6],
+        "gate_rows_consulted_by_update_decisions": False,
+    }
+
+
 def _phase39_split_manifest(
     train_rows: Sequence[Mapping[str, Any]],
     validation_rows: Sequence[Mapping[str, Any]],
@@ -429,6 +882,18 @@ def _phase39_split_manifest(
     }
 
 
+def _phase40_split_manifest(
+    train_rows: Sequence[Mapping[str, Any]],
+    validation_rows: Sequence[Mapping[str, Any]],
+    gate_rows: Sequence[Mapping[str, Any]],
+    split_diag: Mapping[str, Any],
+) -> dict[str, Any]:
+    manifest = _phase39_split_manifest(train_rows, validation_rows, gate_rows)
+    manifest["split_strategy"] = "stratified_by_train_pool_initial_endpoint"
+    manifest["stratification"] = dict(split_diag)
+    return manifest
+
+
 def _phase39_train_with_fast_slow_consolidation(
     cfg: StageBEcologicalDiscoveryConfig,
     *,
@@ -439,6 +904,7 @@ def _phase39_train_with_fast_slow_consolidation(
     seed: int,
     success_kind: str,
     rung_name: str,
+    endpoint_non_regression: bool = False,
 ) -> dict[str, Any]:
     chunk_size = _phase39_chunk_size(cfg)
     chunks = [
@@ -482,10 +948,18 @@ def _phase39_train_with_fast_slow_consolidation(
             name: _phase39_eval_delta(prior_before[name], prior_after[name])
             for name in prior_after
         }
-        accepted_chunk = (
-            int(validation_after["wins"]) >= int(validation_before["wins"])
-            and all(int(after["wins"]) >= int(prior_before[name]["wins"]) for name, after in prior_after.items())
+        validation_pass = _phase40_acceptance_delta_pass(
+            validation_delta,
+            endpoint_non_regression=endpoint_non_regression,
         )
+        prior_passes = {
+            name: _phase40_acceptance_delta_pass(
+                delta,
+                endpoint_non_regression=endpoint_non_regression,
+            )
+            for name, delta in prior_deltas.items()
+        }
+        accepted_chunk = validation_pass and all(prior_passes.values())
         if accepted_chunk:
             accepted += 1
         else:
@@ -497,9 +971,17 @@ def _phase39_train_with_fast_slow_consolidation(
                 "row_count": len(chunk),
                 "row_ids": [int(row["row_id"]) for row in chunk],
                 "accepted": accepted_chunk,
-                "reason": "non_regression_passed" if accepted_chunk else "validation_or_prior_replay_regressed",
+                "reason": (
+                    "endpoint_aware_non_regression_passed"
+                    if accepted_chunk and endpoint_non_regression
+                    else "non_regression_passed"
+                    if accepted_chunk
+                    else "validation_or_prior_replay_regressed"
+                ),
                 "training": chunk_train,
                 "validation_delta": validation_delta,
+                "validation_acceptance_pass": validation_pass,
+                "prior_replay_acceptance_passes": prior_passes,
                 "prior_replay_deltas": prior_deltas,
             }
         )
@@ -517,6 +999,8 @@ def _phase39_train_with_fast_slow_consolidation(
         "weight_update_count": total_updates,
         "m3_m4_restored": True,
         "gate_heldout_consulted": False,
+        "endpoint_non_regression_required": endpoint_non_regression,
+        "acceptance_endpoint_keys": list(_PHASE40_HARD_ENDPOINTS),
         "near_miss_margins": near_miss,
         "chunk_records": chunk_records,
     }
@@ -714,6 +1198,19 @@ def _phase39_eval_delta(before: Mapping[str, Any], after: Mapping[str, Any]) -> 
             for endpoint in endpoints
         },
     }
+
+
+def _phase40_acceptance_delta_pass(
+    delta: Mapping[str, Any],
+    *,
+    endpoint_non_regression: bool,
+) -> bool:
+    if int(delta.get("delta_wins", 0)) < 0:
+        return False
+    if not endpoint_non_regression:
+        return True
+    endpoint_deltas = delta.get("endpoint_deltas", {})
+    return all(int(endpoint_deltas.get(endpoint, 0)) <= 0 for endpoint in _PHASE40_HARD_ENDPOINTS)
 
 
 def _phase39_near_miss(chunk_records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:

@@ -1404,6 +1404,15 @@ def run_phase39_stable_plasticity_probe(
     return _run(config=config)
 
 
+def run_phase40_stratified_acceptance_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    from .persistent_staged_ladder import run_phase40_stratified_acceptance_probe as _run
+
+    return _run(config=config)
+
+
 def run_phase38_persistent_staged_ladder_probe(
     *,
     config: StageBEcologicalDiscoveryConfig | None = None,

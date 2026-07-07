@@ -13,6 +13,7 @@ from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     run_phase37_recent_curriculum_black_resistance_probe,
     run_phase38_persistent_staged_ladder_probe,
     run_phase39_stable_plasticity_probe,
+    run_phase40_stratified_acceptance_probe,
     run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
@@ -510,3 +511,37 @@ def test_phase39_stable_plasticity_records_split_law_and_consolidation(tmp_path:
         assert training["m3_m4_restored"] is True
         assert training["gate_heldout_consulted"] is False
         assert "chunks_consolidated" in training
+
+
+def test_phase40_stratified_acceptance_records_endpoint_non_regression(tmp_path: Path) -> None:
+    summary = run_phase40_stratified_acceptance_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_10_stratified_probe"),
+            seeds=(20272931,),
+            flat_baseline_seeds=(20272911,),
+            stage_a_train_row_limit=2,
+            train_row_limit=2,
+            heldout_row_limit=1,
+            max_samples=1,
+            max_guided_births=0,
+            ecology_mode="stem_cell_graph",
+            native_foundation_train_repetitions=1,
+            native_foundation_continuation_repetitions=1,
+            native_foundation_max_mate1_positions=2,
+            native_foundation_max_mate2_positions=1,
+            native_foundation_prototype_scan_triplets=32,
+            native_foundation_key_mode="coarse",
+            real_native_engine_max_ticks=80,
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_10_stratified_acceptance.v0"
+    assert summary["consolidation"]["endpoint_non_regression"] is True
+    assert summary["dataset"]["gate_rows_consulted_by_update_decisions"] is False
+    assert "phase3_10_consolidation" in summary["tables"]
+    row = summary["per_seed"][0]
+    assert row["split_manifest"]["stage_a"]["split_strategy"] == "stratified_by_train_pool_initial_endpoint"
+    if "stage_a" in row:
+        training = row["stage_a"]["training"]
+        assert training["endpoint_non_regression_required"] is True
+        assert "fence_broken" in training["acceptance_endpoint_keys"]
