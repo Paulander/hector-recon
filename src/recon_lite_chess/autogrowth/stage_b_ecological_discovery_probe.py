@@ -17,10 +17,21 @@ import chess
 from recon_lite_hector.nodes.stem_cell import StemCellState, StemCellTerminal
 
 from .approach_discovery_probe import _after_move_repetition_key
+from .curated_replay_curriculum import _mate2_buckets
+from .curated_terminal_curriculum import curated_stage_entries
 from .features import (
     extract_learner_features,
     learner_visible_key_firewall_leaks,
     validate_learner_visible_keys,
+)
+from .native_single_graph_curriculum import (
+    NativeReConKRKGraph,
+    NativeSingleGraphConfig,
+    _evaluate_mate1_stage,
+    _evaluate_mate2_stage,
+    _train_mate1_stage,
+    _train_mate2_stage,
+    _unique,
 )
 from .quorum_basin import (
     _edge_mate_enter_mate2_audit,
@@ -101,6 +112,13 @@ class StageBEcologicalDiscoveryConfig:
     max_mature_ablation_subjects: int = 8
     pruned_rescue_audit_limit: int = 8
     pruned_rescue_heldout_limit: int = 32
+    native_foundation_key_mode: str = "coarse"
+    native_foundation_max_ticks: int = 80
+    native_foundation_train_repetitions: int = 5
+    native_foundation_continuation_repetitions: int = 2
+    native_foundation_max_mate1_positions: int | None = None
+    native_foundation_max_mate2_positions: int | None = None
+    native_foundation_prototype_scan_triplets: int = 512
 
 
 def run_stage_b_ecological_discovery_probe(
@@ -395,6 +413,299 @@ def run_stage_ab_graph_native_carryover_probe(
     summary["tables"]["phase3_1_headline"] = _phase31_headline(summary)
     _write_json(output_dir / "summary.json", summary)
     return summary
+
+
+def run_stage_ab_native_foundation_ecology_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_2_native_foundation_ecology",
+        seeds=(20272931, 20272932, 20272933),
+        stage_a_train_row_limit=16,
+        train_row_limit=16,
+        heldout_row_limit=16,
+        max_population_per_habitat=1,
+        max_guided_births=0,
+        max_births_per_decision=1,
+        max_samples=6,
+        pruned_rescue_audit_limit=2,
+        pruned_rescue_heldout_limit=16,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+    )
+    output_dir = Path(cfg.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    design = _design_spec(cfg)
+    design["schema_version"] = "phase3_2_native_foundation_ecology_design_spec.v0"
+    design["native_foundation_ecology"] = {
+        "scope": "Mate_In_1/Mate_In_2 native foundation graph supplies the base move scores; ecological composites persist across Stage A then Stage B.",
+        "not_claimed": "composites are not yet materialized as native ReCoN graph nodes inside the foundation graph",
+        "stage_labels_learner_visible": False,
+        "fallback_when_native_has_no_candidate": "random legal tie-break over zero base scores",
+    }
+    design["discovery_boundary"]["learner_visible"] = [
+        "board state",
+        "legal moves",
+        "native same-graph Mate_In_1/Mate_In_2 confirmed action candidates and scores",
+        "sealed terminal_action_feature_keys for spawned composite children",
+        "trial composite activations and local nutrition",
+    ]
+    _write_json(output_dir / "design_spec.json", design)
+
+    foundation = _train_native_foundation_for_ecology(cfg)
+    native_graph = foundation["graph"]
+    score_provider = _NativeFoundationScoreProvider(native_graph)
+
+    stage_a_rows_payload = json.loads(Path(cfg.stage_a_rows_path).read_text(encoding="utf-8"))
+    stage_b_rows_payload = json.loads(Path(cfg.stage_b_rows_path).read_text(encoding="utf-8"))
+    stage_a_train_rows = list(stage_a_rows_payload["train"])
+    stage_b_train_rows = list(stage_b_rows_payload["train"])
+    heldout_rows = list(stage_b_rows_payload["heldout"])
+    stage_a_limit = cfg.stage_a_train_row_limit if cfg.stage_a_train_row_limit is not None else cfg.train_row_limit
+    if stage_a_limit is not None:
+        stage_a_train_rows = stage_a_train_rows[: int(stage_a_limit)]
+    if cfg.train_row_limit is not None:
+        stage_b_train_rows = stage_b_train_rows[: int(cfg.train_row_limit)]
+    if cfg.heldout_row_limit is not None:
+        heldout_rows = heldout_rows[: int(cfg.heldout_row_limit)]
+
+    references = _reference_baselines(cfg, heldout_rows)
+    native_base_eval = _evaluate_policy(
+        cfg,
+        heldout_rows,
+        lambda board, counts, row_id, ply, rng: _choose_base_score_move(
+            board,
+            counts,
+            score_provider=score_provider,
+            seed=20273100 + int(row_id) * 43 + ply,
+        ),
+        seed=20273100,
+        policy_name="native_foundation_base_with_random_no_candidate_fallback",
+    )
+    references["native_foundation_base"] = native_base_eval
+    native_coverage = {
+        "stage_a_train": _native_foundation_coverage(score_provider, stage_a_train_rows),
+        "stage_b_train": _native_foundation_coverage(score_provider, stage_b_train_rows),
+        "stage_b_heldout": _native_foundation_coverage(score_provider, heldout_rows),
+        "score_provider_cache": score_provider.stats(),
+    }
+
+    training_segments = (
+        {
+            "name": "stage_a_approach_warmup",
+            "rows": stage_a_train_rows,
+            "atom_weights": {},
+            "base_score_provider": score_provider,
+            "success_kind": "approach_waypoint",
+            "guided_births": False,
+        },
+        {
+            "name": "stage_b_true_middle_chase",
+            "rows": stage_b_train_rows,
+            "atom_weights": {},
+            "base_score_provider": score_provider,
+            "success_kind": "stage_b_enter_mate2",
+            "guided_births": False,
+        },
+    )
+
+    seed_results: dict[str, Any] = {}
+    for seed in cfg.seeds:
+        arm1 = _run_arm_curriculum(
+            cfg,
+            training_segments,
+            heldout_rows,
+            seed=seed,
+            flat_seed=0,
+            final_atom_weights={},
+            final_base_score_provider=score_provider,
+            atom_eval_reference=native_base_eval,
+            arm="arm1_unguided_ecological",
+        )
+        arm2 = _run_arm_curriculum(
+            cfg,
+            training_segments,
+            heldout_rows,
+            seed=seed + 10_000,
+            flat_seed=0,
+            final_atom_weights={},
+            final_base_score_provider=score_provider,
+            atom_eval_reference=native_base_eval,
+            arm="arm2_no_oracle_native_base_control",
+        )
+        result = {
+            "schema_version": "phase3_2_native_foundation_ecology_seed.v0",
+            "seed": seed,
+            "native_foundation_key_mode": cfg.native_foundation_key_mode,
+            "arm1_unguided_ecological": arm1,
+            "arm2_no_oracle_native_base_control": arm2,
+            "paired_vs_yardsticks": {
+                "arm1": _paired_yardstick_table(arm1["evaluations"]["survivor_trial"], references),
+                "arm2": _paired_yardstick_table(arm2["evaluations"]["survivor_trial"], references),
+                "native_foundation_base": _paired_yardstick_table(native_base_eval, references),
+            },
+            "decision": _seed_decision(arm1, arm2),
+        }
+        _write_json(output_dir / f"seed_{seed}_result.json", result)
+        seed_results[str(seed)] = result
+
+    native_coverage["score_provider_cache_after_run"] = score_provider.stats()
+    summary = {
+        "schema_version": "phase3_2_native_foundation_ecology.v0",
+        "phase": "Phase 3.2",
+        "config": asdict(cfg),
+        "dataset": {
+            "stage_a_rows_path": str(cfg.stage_a_rows_path),
+            "stage_b_rows_path": str(cfg.stage_b_rows_path),
+            "stage_a_train_count": len(stage_a_train_rows),
+            "stage_b_train_count": len(stage_b_train_rows),
+            "stage_b_heldout_count": len(heldout_rows),
+            "stage_labels_learner_visible": False,
+            "same_native_foundation_graph_across_stage_a_b": True,
+            "same_ecological_population_across_stage_a_b": True,
+        },
+        "native_foundation": foundation["summary"],
+        "native_foundation_coverage": native_coverage,
+        "reference_baselines": references,
+        "seed_results": seed_results,
+        "tables": _summary_tables(seed_results, references),
+        "cross_seed_composite_analysis": _cross_seed_composite_analysis(seed_results),
+        "enrichment_summary": _enrichment_summary(seed_results),
+        "maturity_summary": _maturity_summary(seed_results),
+        "decision": _overall_decision(seed_results),
+    }
+    summary["tables"]["phase3_2_headline"] = _phase32_headline(summary)
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
+class _NativeFoundationScoreProvider:
+    def __init__(self, graph: NativeReConKRKGraph) -> None:
+        self.graph = graph
+        self.cache: dict[str, dict[str, float]] = {}
+        self.audit_count = 0
+        self.cache_hit_count = 0
+        self.candidate_row_count = 0
+        self.confirmed_row_count = 0
+
+    def __call__(self, board: chess.Board, counts: Mapping[Any, int]) -> Mapping[str, float]:
+        del counts
+        key = board.fen()
+        cached = self.cache.get(key)
+        if cached is not None:
+            self.cache_hit_count += 1
+            return cached
+        self.audit_count += 1
+        audit = self.graph.audit_choice(board)
+        candidates = list(audit.get("confirmed_candidates", ()))
+        self.candidate_row_count += int(int(audit.get("candidate_triplet_count", 0)) > 0)
+        self.confirmed_row_count += int(bool(candidates))
+        scores: dict[str, float] = {}
+        for rank, item in enumerate(candidates):
+            move = str(item["move"])
+            score = max(0.05, 1.0 - 0.03 * rank)
+            scores[move] = max(scores.get(move, 0.0), score)
+        self.cache[key] = scores
+        return scores
+
+    def stats(self) -> dict[str, Any]:
+        return {
+            "audit_count": self.audit_count,
+            "cache_hit_count": self.cache_hit_count,
+            "cached_board_count": len(self.cache),
+            "candidate_row_count": self.candidate_row_count,
+            "confirmed_row_count": self.confirmed_row_count,
+        }
+
+
+def _train_native_foundation_for_ecology(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
+    native_cfg = NativeSingleGraphConfig(
+        include_symmetries=True,
+        train_repetitions=int(cfg.native_foundation_train_repetitions),
+        continuation_repetitions=int(cfg.native_foundation_continuation_repetitions),
+        max_ticks=int(cfg.native_foundation_max_ticks),
+        max_samples=int(cfg.max_samples),
+        key_mode=str(cfg.native_foundation_key_mode),
+        prototype_distance_threshold=12,
+        max_prototype_scan_triplets=int(cfg.native_foundation_prototype_scan_triplets),
+        max_mate1_positions=cfg.native_foundation_max_mate1_positions,
+        max_mate2_positions=cfg.native_foundation_max_mate2_positions,
+    )
+    entries = curated_stage_entries(include_symmetries=native_cfg.include_symmetries)
+    mate1_fens = _unique(
+        entry.fen
+        for entry in entries
+        if entry.stage_name == "Mate_In_1" and entry.mate_in_one_moves
+    )
+    mate2_buckets = _mate2_buckets(entries)
+    mate2_fens = _unique(fen for bucket in mate2_buckets for fen in bucket["fens"])
+    if native_cfg.max_mate1_positions is not None:
+        mate1_fens = mate1_fens[: native_cfg.max_mate1_positions]
+    if native_cfg.max_mate2_positions is not None:
+        mate2_fens = mate2_fens[: native_cfg.max_mate2_positions]
+
+    graph = NativeReConKRKGraph(config=native_cfg)
+    mate1_training = _train_mate1_stage(graph, mate1_fens, config=native_cfg)
+    mate1_eval = _evaluate_mate1_stage(graph, mate1_fens, config=native_cfg)
+    maturation = graph.mature_existing_graph()
+    mate2_training = _train_mate2_stage(graph, mate2_fens, config=native_cfg)
+    mate2_eval = _evaluate_mate2_stage(graph, mate2_fens, config=native_cfg)
+    if mate2_eval["conversion_rate"] >= native_cfg.mate2_threshold:
+        graph.m4_event_count += 1
+    summary = {
+        "schema_version": "phase3_2_native_foundation_summary.v0",
+        "config": asdict(native_cfg),
+        "dataset": {
+            "mate1_position_count": len(mate1_fens),
+            "mate2_position_count": len(mate2_fens),
+            "raw_mate2_bucket_entry_count": sum(len(bucket["fens"]) for bucket in mate2_buckets),
+        },
+        "mate1": {"training": mate1_training, "evaluation": mate1_eval},
+        "maturation": maturation,
+        "mate2": {"training": mate2_training, "evaluation": mate2_eval},
+        "graph": graph.to_dict(),
+        "decision": {
+            "checkpoint_pass": (
+                mate1_eval["accuracy"] >= native_cfg.mate1_threshold
+                and mate2_eval["conversion_rate"] >= native_cfg.mate2_threshold
+                and mate2_eval["same_graph_second_move_count"] > 0
+            ),
+            "same_native_graph_foundation": True,
+            "key_mode": native_cfg.key_mode,
+        },
+    }
+    return {"graph": graph, "summary": summary}
+
+
+def _native_foundation_coverage(
+    score_provider: _NativeFoundationScoreProvider,
+    rows: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    candidate_rows = 0
+    samples: list[dict[str, Any]] = []
+    for row in rows:
+        board = chess.Board(str(row["fen"]))
+        scores = score_provider(board, {})
+        candidate_rows += int(bool(scores))
+        if len(samples) < 4 and scores:
+            samples.append(
+                {
+                    "row_id": int(row["row_id"]),
+                    "scored_move_count": len(scores),
+                    "top_moves": [
+                        {"move": move, "score": round(float(score), 6)}
+                        for move, score in sorted(scores.items(), key=lambda item: (item[1], item[0]), reverse=True)[:4]
+                    ],
+                }
+            )
+    return {
+        "row_count": len(rows),
+        "native_scored_row_count": candidate_rows,
+        "native_scored_row_rate": candidate_rows / max(1, len(rows)),
+        "samples": samples,
+    }
 
 
 def _design_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
@@ -735,6 +1046,7 @@ def _run_arm_curriculum(
     final_atom_weights: Mapping[str, float],
     atom_eval_reference: Mapping[str, Any],
     arm: str,
+    final_base_score_provider: Any | None = None,
 ) -> dict[str, Any]:
     rng = random.Random(seed)
     population: dict[str, dict[str, Any]] = {}
@@ -764,6 +1076,7 @@ def _run_arm_curriculum(
         segment_name = str(segment["name"])
         rows = list(segment["rows"])
         atom_weights = segment["atom_weights"]
+        base_score_provider = segment.get("base_score_provider")
         success_kind = str(segment.get("success_kind", "stage_b_enter_mate2"))
         segment_start_births = len(population)
         segment_start_pruned = sum(1 for item in population.values() if item["state"] == "PRUNED")
@@ -793,6 +1106,7 @@ def _run_arm_curriculum(
                     counts,
                     atom_weights=atom_weights,
                     population=population,
+                    base_move_scores=_call_base_score_provider(base_score_provider, board, counts),
                     seed=seed + int(row_id) * 37 + ply,
                     disabled_composite_ids=set(),
                     row_id=row_id,
@@ -822,12 +1136,21 @@ def _run_arm_curriculum(
             alternative = _rollout_policy(
                 cfg,
                 row,
-                lambda board, counts, row_id, ply, rng: _choose_atom_move(
-                    board,
-                    counts,
-                    atom_weights=atom_weights,
-                    seed=seed + 50_000 + int(row_id) * 37 + ply,
-                ),
+                (
+                    lambda board, counts, row_id, ply, rng: _choose_base_score_move(
+                        board,
+                        counts,
+                        score_provider=base_score_provider,
+                        seed=seed + 50_000 + int(row_id) * 37 + ply,
+                    )
+                )
+                if base_score_provider is not None
+                else lambda board, counts, row_id, ply, rng: _choose_atom_move(
+                        board,
+                        counts,
+                        atom_weights=atom_weights,
+                        seed=seed + 50_000 + int(row_id) * 37 + ply,
+                    ),
                 seed=seed + 100_000 + global_step * 31,
                 collect_composites=True,
                 population=population,
@@ -942,6 +1265,7 @@ def _run_arm_curriculum(
         cfg,
         heldout_rows,
         atom_weights=final_atom_weights,
+        base_score_provider=final_base_score_provider,
         composites=ablation_subjects,
         seed=seed + 700,
         policy_name=f"{arm}_stage_b_survivor_trial_after_stage_a_carryover",
@@ -951,6 +1275,7 @@ def _run_arm_curriculum(
             cfg,
             heldout_rows,
             atom_weights=final_atom_weights,
+            base_score_provider=final_base_score_provider,
             survivors=ablation_subjects,
             population=population,
             survivor_eval=health["full_evaluation"],
@@ -982,6 +1307,7 @@ def _run_arm_curriculum(
                 counts,
                 atom_weights=final_atom_weights,
                 population={item["composite_id"]: item for item in promoted},
+                base_move_scores=_call_base_score_provider(final_base_score_provider, board, counts),
                 seed=seed + int(row_id) * 41 + ply,
                 disabled_composite_ids=set(),
                 row_id=row_id,
@@ -996,6 +1322,7 @@ def _run_arm_curriculum(
         cfg,
         heldout_rows,
         atom_weights=final_atom_weights,
+        base_score_provider=final_base_score_provider,
         composites=ablation_subjects,
         atom_eval=atom_eval,
         seed=seed + 990,
@@ -1390,6 +1717,7 @@ def _choose_ecological_move(
     *,
     atom_weights: Mapping[str, float],
     population: Mapping[str, Mapping[str, Any]],
+    base_move_scores: Mapping[str, float] | None = None,
     seed: int,
     disabled_composite_ids: set[str],
     row_id: int | None = None,
@@ -1401,6 +1729,7 @@ def _choose_ecological_move(
         board,
         counts,
         atom_weights=atom_weights,
+        base_move_scores=base_move_scores,
         composites=population.values(),
         disabled_composite_ids=disabled_composite_ids,
         cfg=cfg,
@@ -1423,6 +1752,7 @@ def _choose_ecological_move(
             board,
             counts,
             atom_weights=atom_weights,
+            base_move_scores=base_move_scores,
             composites=population.values(),
             disabled_composite_ids=disabled_composite_ids,
             cfg=cfg,
@@ -1455,11 +1785,40 @@ def _choose_atom_move(
     return rows[0][-1]
 
 
+def _choose_base_score_move(
+    board: chess.Board,
+    counts: Mapping[Any, int],
+    *,
+    score_provider: Any,
+    seed: int,
+) -> chess.Move | None:
+    legal = _legal_without_third_repetition(board, counts)
+    if not legal:
+        legal = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+    if not legal:
+        return None
+    scores = _call_base_score_provider(score_provider, board, counts)
+    rng = random.Random(seed)
+    rows = [
+        (float(scores.get(move.uci(), 0.0)), rng.random(), move.uci(), move)
+        for move in legal
+    ]
+    rows.sort(reverse=True)
+    return rows[0][-1]
+
+
+def _call_base_score_provider(provider: Any, board: chess.Board, counts: Mapping[Any, int]) -> Mapping[str, float] | None:
+    if provider is None:
+        return None
+    return provider(board, counts)
+
+
 def _score_options(
     board: chess.Board,
     counts: Mapping[Any, int],
     *,
     atom_weights: Mapping[str, float],
+    base_move_scores: Mapping[str, float] | None = None,
     composites: Iterable[Mapping[str, Any]],
     disabled_composite_ids: set[str],
     cfg: StageBEcologicalDiscoveryConfig | None = None,
@@ -1486,9 +1845,14 @@ def _score_options(
             if parent_local
             else live_composites
         )
-        pos = sum(max(0.0, atom_weights.get(key, 0.0) * scale) for key, scale in active_scales)
-        neg = sum(min(0.0, atom_weights.get(key, 0.0) * scale) for key, scale in active_scales)
-        atom_score = pos + neg
+        if base_move_scores is None:
+            pos = sum(max(0.0, atom_weights.get(key, 0.0) * scale) for key, scale in active_scales)
+            neg = sum(min(0.0, atom_weights.get(key, 0.0) * scale) for key, scale in active_scales)
+            atom_score = pos + neg
+        else:
+            atom_score = float(base_move_scores.get(move.uci(), 0.0))
+            pos = max(0.0, atom_score)
+            neg = min(0.0, atom_score)
         active_composites = []
         composite_score = 0.0
         for comp in option_composites:
@@ -2071,6 +2435,7 @@ def _composite_ablation_health(
     rows: Sequence[Mapping[str, Any]],
     *,
     atom_weights: Mapping[str, float],
+    base_score_provider: Any | None = None,
     composites: Sequence[Mapping[str, Any]],
     seed: int,
     policy_name: str,
@@ -2086,6 +2451,7 @@ def _composite_ablation_health(
             counts,
             atom_weights=atom_weights,
             population=population,
+            base_move_scores=_call_base_score_provider(base_score_provider, board, counts),
             seed=seed + int(row_id) * 47 + ply,
             disabled_composite_ids=set(),
             row_id=row_id,
@@ -2124,6 +2490,7 @@ def _composite_ablation_health(
                     counts,
                     atom_weights=atom_weights,
                     population=population,
+                    base_move_scores=_call_base_score_provider(base_score_provider, board, counts),
                     seed=seed + int(row_id) * 47 + ply,
                     disabled_composite_ids={cid},
                     row_id=row_id,
@@ -2175,6 +2542,7 @@ def _pruned_rescue_audit(
     rows: Sequence[Mapping[str, Any]],
     *,
     atom_weights: Mapping[str, float],
+    base_score_provider: Any | None = None,
     survivors: Sequence[Mapping[str, Any]],
     population: Mapping[str, Mapping[str, Any]],
     survivor_eval: Mapping[str, Any],
@@ -2207,6 +2575,7 @@ def _pruned_rescue_audit(
             counts,
             atom_weights=atom_weights,
             population=pop,
+            base_move_scores=_call_base_score_provider(base_score_provider, board, counts),
             seed=seed + int(row_id) * 57 + ply,
             disabled_composite_ids=set(),
             row_id=row_id,
@@ -2231,6 +2600,7 @@ def _pruned_rescue_audit(
                 counts,
                 atom_weights=atom_weights,
                 population=pop,
+                base_move_scores=_call_base_score_provider(base_score_provider, board, counts),
                 seed=seed + int(row_id) * 59 + ply,
                 disabled_composite_ids=set(),
                 row_id=row_id,
@@ -2725,6 +3095,7 @@ def _survivor_failure_enrichment(
     heldout_rows: Sequence[Mapping[str, Any]],
     *,
     atom_weights: Mapping[str, float],
+    base_score_provider: Any | None = None,
     composites: Sequence[Mapping[str, Any]],
     atom_eval: Mapping[str, Any],
     seed: int,
@@ -2737,11 +3108,21 @@ def _survivor_failure_enrichment(
     by_id = {str(item["composite_id"]): item for item in composites}
     for row in heldout_rows:
         board = chess.Board(str(row["fen"]))
-        move = _choose_atom_move(
-            board,
-            Counter({_position_repetition_key(board): 1, board._transposition_key(): 1}),
-            atom_weights=atom_weights,
-            seed=seed + int(row["row_id"]),
+        counts = Counter({_position_repetition_key(board): 1, board._transposition_key(): 1})
+        move = (
+            _choose_base_score_move(
+                board,
+                counts,
+                score_provider=base_score_provider,
+                seed=seed + int(row["row_id"]),
+            )
+            if base_score_provider is not None
+            else _choose_atom_move(
+                board,
+                counts,
+                atom_weights=atom_weights,
+                seed=seed + int(row["row_id"]),
+            )
         )
         if move is None:
             continue
@@ -2934,7 +3315,11 @@ def _paired_outcomes(left: Mapping[str, Any], right: Mapping[str, Any]) -> dict[
 def _summary_tables(seed_results: Mapping[str, Any], references: Mapping[str, Any]) -> dict[str, Any]:
     rows = []
     for seed, result in seed_results.items():
-        for arm_name in ("arm1_unguided_ecological", "arm2_guided_residual_control"):
+        arm_names = [
+            key for key, value in result.items()
+            if isinstance(value, Mapping) and str(key).startswith("arm")
+        ]
+        for arm_name in arm_names:
             arm = result[arm_name]
             health = arm["post_hoc_ablation"]
             eval_row = arm["evaluations"]["survivor_trial"]
@@ -2967,6 +3352,8 @@ def _summary_tables(seed_results: Mapping[str, Any], references: Mapping[str, An
             for seed, item in references["official_stage_b_flat"].items()
         },
     }
+    if "native_foundation_base" in references:
+        yardsticks["native_foundation_base"] = _compact_eval(references["native_foundation_base"])
     return {"arm_seed_table": rows, "yardsticks": yardsticks}
 
 
@@ -3166,6 +3553,20 @@ def _phase31_headline(summary: Mapping[str, Any]) -> dict[str, Any]:
     return base
 
 
+def _phase32_headline(summary: Mapping[str, Any]) -> dict[str, Any]:
+    base = _phase30_headline(summary)
+    coverage = summary.get("native_foundation_coverage", {})
+    native_eval = summary.get("reference_baselines", {}).get("native_foundation_base", {})
+    base["native_foundation"] = {
+        "key_mode": summary.get("native_foundation", {}).get("decision", {}).get("key_mode"),
+        "foundation_checkpoint_pass": summary.get("native_foundation", {}).get("decision", {}).get("checkpoint_pass"),
+        "base_wins": native_eval.get("wins"),
+        "base_row_count": native_eval.get("row_count"),
+        "coverage": coverage,
+    }
+    return base
+
+
 def _seed_decision(arm1: Mapping[str, Any], arm2: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "arm1_load_bearing_gt_zero": int(arm1["post_hoc_ablation"]["load_bearing_count"]) > 0,
@@ -3181,7 +3582,7 @@ def _overall_decision(seed_results: Mapping[str, Any]) -> dict[str, Any]:
         for result in seed_results.values()
     ]
     arm2_load = [
-        int(result["arm2_guided_residual_control"]["post_hoc_ablation"]["load_bearing_count"])
+        int(result.get("arm2_guided_residual_control", {}).get("post_hoc_ablation", {}).get("load_bearing_count", 0))
         for result in seed_results.values()
     ]
     arm1_wins = [

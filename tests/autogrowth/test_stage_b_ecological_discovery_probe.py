@@ -4,6 +4,7 @@ from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     StageBEcologicalDiscoveryConfig,
     _fast_enter_mate2_audit,
     run_stage_ab_graph_native_carryover_probe,
+    run_stage_ab_native_foundation_ecology_probe,
     run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
@@ -175,3 +176,36 @@ def test_phase31_stage_ab_carryover_reuses_same_population(tmp_path: Path) -> No
         "stage_b_true_middle_chase",
     ]
     assert "births_by_segment" in arm1["structure"]["curriculum_carryover"]
+
+
+def test_phase32_native_foundation_ecology_reports_coverage(tmp_path: Path) -> None:
+    summary = run_stage_ab_native_foundation_ecology_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_2_probe"),
+            seeds=(20272931,),
+            stage_a_train_row_limit=2,
+            train_row_limit=2,
+            heldout_row_limit=2,
+            max_population_per_habitat=1,
+            max_guided_births=0,
+            max_births_per_decision=1,
+            max_samples=2,
+            pruned_rescue_audit_limit=1,
+            ecology_mode="stem_cell_graph",
+            native_foundation_train_repetitions=1,
+            native_foundation_continuation_repetitions=1,
+            native_foundation_max_mate1_positions=4,
+            native_foundation_max_mate2_positions=2,
+            native_foundation_key_mode="coarse",
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_2_native_foundation_ecology.v0"
+    assert summary["dataset"]["same_native_foundation_graph_across_stage_a_b"] is True
+    assert summary["dataset"]["same_ecological_population_across_stage_a_b"] is True
+    assert "phase3_2_headline" in summary["tables"]
+    assert "native_foundation_coverage" in summary
+    assert "native_foundation_base" in summary["reference_baselines"]
+    arm1 = summary["seed_results"]["20272931"]["arm1_unguided_ecological"]
+    assert arm1["autogrowth_evidence"] is True
+    assert arm1["uses_oracle_birth"] is False
