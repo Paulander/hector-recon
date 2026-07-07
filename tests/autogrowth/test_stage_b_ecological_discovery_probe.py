@@ -12,6 +12,7 @@ from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     run_phase36_yardstick_sovereignty_probe,
     run_phase37_recent_curriculum_black_resistance_probe,
     run_phase38_persistent_staged_ladder_probe,
+    run_phase39_stable_plasticity_probe,
     run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
@@ -474,3 +475,38 @@ def test_phase38_persistent_staged_ladder_records_provenance_and_gates(tmp_path:
     row = summary["per_seed"][0]
     assert row["baselines"]["stage_a_exact_adversarial_flat"]["runner_config"]["black_reply_policy"] == "exact_adversarial"
     assert row["baselines"]["stage_b_exact_adversarial_flat"]["success_by_row"]
+
+
+def test_phase39_stable_plasticity_records_split_law_and_consolidation(tmp_path: Path) -> None:
+    summary = run_phase39_stable_plasticity_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_9_stable_probe"),
+            seeds=(20272931,),
+            flat_baseline_seeds=(20272911,),
+            stage_a_train_row_limit=2,
+            train_row_limit=2,
+            heldout_row_limit=1,
+            max_samples=1,
+            max_guided_births=0,
+            ecology_mode="stem_cell_graph",
+            native_foundation_train_repetitions=1,
+            native_foundation_continuation_repetitions=1,
+            native_foundation_max_mate1_positions=2,
+            native_foundation_max_mate2_positions=1,
+            native_foundation_prototype_scan_triplets=32,
+            native_foundation_key_mode="coarse",
+            real_native_engine_max_ticks=80,
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_9_stable_plasticity.v0"
+    assert summary["split_law"]["gate_void_if_consulted"] is True
+    assert summary["dataset"]["gate_rows_consulted_by_update_decisions"] is False
+    assert "phase3_9_consolidation" in summary["tables"]
+    row = summary["per_seed"][0]
+    assert row["split_manifest"]["stage_a"]["gate_rows_consulted_by_update_decisions"] is False
+    if "stage_a" in row:
+        training = row["stage_a"]["training"]
+        assert training["m3_m4_restored"] is True
+        assert training["gate_heldout_consulted"] is False
+        assert "chunks_consolidated" in training

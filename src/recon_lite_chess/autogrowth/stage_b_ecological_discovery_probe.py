@@ -1395,6 +1395,15 @@ def run_phase37_recent_curriculum_black_resistance_probe(
     return summary
 
 
+def run_phase39_stable_plasticity_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    from .persistent_staged_ladder import run_phase39_stable_plasticity_probe as _run
+
+    return _run(config=config)
+
+
 def run_phase38_persistent_staged_ladder_probe(
     *,
     config: StageBEcologicalDiscoveryConfig | None = None,
