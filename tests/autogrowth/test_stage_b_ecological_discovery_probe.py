@@ -7,6 +7,7 @@ from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     run_stage_ab_native_foundation_ecology_probe,
     run_phase32_real_native_graph_ecology_probe,
     run_phase33_migrated_flat_native_ecology_probe,
+    run_phase34_host_tiebreak_alignment_probe,
     run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
@@ -292,3 +293,40 @@ def test_phase33_migrated_flat_host_equivalence_gate(tmp_path: Path) -> None:
     result = summary["seed_results"]["20272931"]
     assert result["host_instrumentation"]["formal_engine_atom_eval_count"] > 0
     assert "host_plus_minus_host_wins" in result["evaluations"]
+
+
+def test_phase34_host_tiebreak_alignment_uses_deterministic_contract(tmp_path: Path) -> None:
+    summary = run_phase34_host_tiebreak_alignment_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_4_tiebreak_probe"),
+            seeds=(20272931,),
+            flat_baseline_seeds=(20272911,),
+            real_native_foundation_row_limit=1,
+            train_row_limit=1,
+            heldout_row_limit=2,
+            max_samples=2,
+            max_guided_births=0,
+            ecology_mode="stem_cell_graph",
+            native_foundation_train_repetitions=1,
+            native_foundation_continuation_repetitions=1,
+            native_foundation_max_mate1_positions=2,
+            native_foundation_max_mate2_positions=1,
+            native_foundation_prototype_scan_triplets=32,
+            native_foundation_key_mode="coarse",
+            real_native_max_live_composites=4,
+            real_native_max_live_siblings_per_parent=2,
+            real_native_engine_max_ticks=80,
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_4_host_tiebreak_alignment.v0"
+    assert summary["tiebreak_repair"]["migrated_host_tiebreak"] == "(score, uci)"
+    assert "phase3_4_headline" in summary["tables"]
+    assert summary["host_equivalence"]["tiebreak_alignment"]["same_repetition_guard"] is True
+    assert summary["host_equivalence"]["tiebreak_alignment"]["same_sealed_action_key_scales"] is True
+    assert summary["host_equivalence"]["residual_diagnostic_source"] == (
+        "current_executable_official_terminal_sum_vs_migrated_host"
+    )
+    row = summary["host_equivalence"]["per_flat_seed"][0]
+    assert row["tiebreak_alignment"]["official_executable_replay"] == "(score, uci)"
+    assert row["migrated_wins"] == row["sealed_wins"]

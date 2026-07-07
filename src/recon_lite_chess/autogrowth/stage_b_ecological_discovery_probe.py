@@ -934,6 +934,36 @@ def run_phase33_migrated_flat_native_ecology_probe(
     return summary
 
 
+def run_phase34_host_tiebreak_alignment_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_4_host_tiebreak_alignment",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        train_row_limit=24,
+        heldout_row_limit=None,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+    )
+    summary = run_phase33_migrated_flat_native_ecology_probe(config=cfg)
+    summary["schema_version"] = "phase3_4_host_tiebreak_alignment.v0"
+    summary["phase"] = "Phase 3.4 host tiebreak alignment"
+    summary["tiebreak_repair"] = {
+        "migrated_host_tiebreak": "(score, uci)",
+        "official_replay_tiebreak": "(score, uci)",
+        "uses_same_repetition_guard": True,
+        "uses_same_sealed_action_key_scales": True,
+    }
+    if "phase3_3_headline" in summary.get("tables", {}):
+        summary["tables"]["phase3_4_headline"] = dict(summary["tables"]["phase3_3_headline"])
+    _write_json(Path(cfg.output_dir) / "summary.json", summary)
+    return summary
+
+
 class _MigratedStageBFlatGraphScoreProvider:
     policy_parent_id = "stage_b_policy_migrated_flat"
 
@@ -1904,15 +1934,15 @@ def _choose_migrated_flat_host_move(
     score_provider: _MigratedStageBFlatGraphScoreProvider,
     seed: int,
 ) -> chess.Move | None:
+    del seed
     legal = _legal_without_third_repetition(board, counts)
     if not legal:
         legal = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
     if not legal:
         return None
     scores = score_provider(board, counts)
-    rng = random.Random(seed)
     rows = [
-        (float(scores.get(move.uci(), 0.0)), rng.random(), move.uci(), move)
+        (float(scores.get(move.uci(), 0.0)), move.uci(), move)
         for move in legal
     ]
     rows.sort(reverse=True)
@@ -1995,19 +2025,34 @@ def _phase33_host_equivalence_checks(
             policy_name=f"phase3_3_migrated_flat_replay_{flat_seed}",
         )
         paired = _paired_outcomes(migrated, reference) if reference.get("success_by_row") else {}
+        passed = bool(
+            acceptance.get("passed")
+            and abs(int(migrated["wins"]) - int(reference["wins"])) <= tolerance
+            and int(migrated["row_count"]) == int(reference["row_count"])
+        )
         row = {
             "flat_seed": int(flat_seed),
             "acceptance_check": acceptance,
             "reference_source": reference_source,
+            "residual_diagnostic_source": "current_executable_official_terminal_sum_vs_migrated_host",
             "sealed_wins": int(reference["wins"]),
             "migrated_wins": int(migrated["wins"]),
             "win_delta_migrated_minus_sealed": int(migrated["wins"]) - int(reference["wins"]),
             "row_count": int(migrated["row_count"]),
             "tolerance_wins": tolerance,
-            "passed": bool(
-                acceptance.get("passed")
-                and abs(int(migrated["wins"]) - int(reference["wins"])) <= tolerance
-                and int(migrated["row_count"]) == int(reference["row_count"])
+            "passed": passed,
+            "tiebreak_alignment": {
+                "migrated_host": "(score, uci)",
+                "official_executable_replay": "(score, uci)",
+                "same_repetition_guard": True,
+                "same_sealed_action_key_scales": True,
+            },
+            "residual_move_differences": [] if passed else _phase34_host_move_differences(
+                cfg,
+                heldout_rows,
+                atom_weights=atom_weights,
+                score_provider=provider,
+                limit=5,
             ),
             "paired_outcomes": paired,
             "sealed_eval": reference,
@@ -2020,9 +2065,99 @@ def _phase33_host_equivalence_checks(
         "schema_version": "phase3_3_host_equivalence.v0",
         "heldout_row_count": len(heldout_rows),
         "tolerance_wins": tolerance,
+        "residual_diagnostic_source": "current_executable_official_terminal_sum_vs_migrated_host",
+        "residual_move_difference_count": sum(
+            len(row.get("residual_move_differences", ())) for row in rows
+        ),
+        "tiebreak_alignment": {
+            "migrated_host": "(score, uci)",
+            "official_executable_replay": "(score, uci)",
+            "same_repetition_guard": True,
+            "same_sealed_action_key_scales": True,
+        },
         "all_passed": all(row["passed"] for row in rows),
         "per_flat_seed": rows,
     }
+
+
+def _phase34_host_move_differences(
+    cfg: StageBEcologicalDiscoveryConfig,
+    heldout_rows: Sequence[Mapping[str, Any]],
+    *,
+    atom_weights: Mapping[str, float],
+    score_provider: _MigratedStageBFlatGraphScoreProvider,
+    limit: int,
+) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for row in heldout_rows:
+        board = chess.Board(str(row["fen"]))
+        counts: Counter[Any] = Counter({_position_repetition_key(board): 1, board._transposition_key(): 1})
+        official_move = _choose_official_flat_replay_move(board, counts, atom_weights=atom_weights)
+        migrated_move = _choose_migrated_flat_host_move(
+            board,
+            counts,
+            score_provider=score_provider,
+            seed=0,
+        )
+        if official_move == migrated_move:
+            continue
+        records.append(
+            {
+                "row_id": int(row.get("row_id", -1)),
+                "fen": str(row["fen"]),
+                "official_move": None if official_move is None else official_move.uci(),
+                "migrated_move": None if migrated_move is None else migrated_move.uci(),
+                "official_score_vector": _phase34_official_score_vector(board, counts, atom_weights=atom_weights),
+                "migrated_score_vector": _phase34_migrated_score_vector(board, counts, score_provider=score_provider),
+            }
+        )
+        if len(records) >= int(limit):
+            break
+    return records
+
+
+def _phase34_official_score_vector(
+    board: chess.Board,
+    counts: Mapping[Any, int],
+    *,
+    atom_weights: Mapping[str, float],
+    limit: int = 8,
+) -> list[dict[str, Any]]:
+    legal = _legal_without_third_repetition(board, counts)
+    if not legal:
+        legal = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+    rows = []
+    for move in legal:
+        active_keys = tuple(key for key, _scale in _sealed_action_key_scales(board, move))
+        score = sum(float(atom_weights.get(key, 0.0)) for key in active_keys)
+        rows.append(
+            {
+                "move": move.uci(),
+                "score": round(float(score), 9),
+                "active_weighted_keys": sorted(key for key in active_keys if key in atom_weights)[:12],
+            }
+        )
+    rows.sort(key=lambda item: (float(item["score"]), str(item["move"])), reverse=True)
+    return rows[: int(limit)]
+
+
+def _phase34_migrated_score_vector(
+    board: chess.Board,
+    counts: Mapping[Any, int],
+    *,
+    score_provider: _MigratedStageBFlatGraphScoreProvider,
+    limit: int = 8,
+) -> list[dict[str, Any]]:
+    legal = _legal_without_third_repetition(board, counts)
+    if not legal:
+        legal = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+    scores = score_provider(board, counts)
+    rows = [
+        {"move": move.uci(), "score": round(float(scores.get(move.uci(), 0.0)), 9)}
+        for move in legal
+    ]
+    rows.sort(key=lambda item: (float(item["score"]), str(item["move"])), reverse=True)
+    return rows[: int(limit)]
 
 
 def _phase33_host_acceptance_spec() -> dict[str, Any]:
