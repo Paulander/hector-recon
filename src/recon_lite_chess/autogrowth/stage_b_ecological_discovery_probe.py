@@ -152,6 +152,9 @@ class StageBEcologicalDiscoveryConfig:
     real_native_audition_starvation_min_per_cell: float = 0.0
     real_native_scheduled_audition_chunk_size: int = 0
     real_native_scheduled_unjudged_fraction_stop: float = 0.0
+    real_native_scheduled_complete_flush: bool = False
+    real_native_homeostatic_backlog_threshold: float = 0.0
+    real_native_continue_after_seed_stop: bool = False
     phase33_equivalence_tolerance_wins: int = 3
 
 
@@ -1476,6 +1479,15 @@ def run_phase45_scheduled_audition_economy_probe(
     return _run(config=config)
 
 
+def run_phase46_homeostatic_audition_economy_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    from .persistent_staged_ladder import run_phase46_homeostatic_audition_economy_probe as _run
+
+    return _run(config=config)
+
+
 def run_phase38_persistent_staged_ladder_probe(
     *,
     config: StageBEcologicalDiscoveryConfig | None = None,
@@ -2562,6 +2574,7 @@ class _GraphNativeCompositeRuntime:
         birth_segment: str,
         birth_row_id: int,
         source_signature: str,
+        birth_step: int | None = None,
         acceptance_probe: bool = False,
     ) -> dict[str, Any]:
         clean_children = tuple(dict.fromkeys(str(child) for child in children if not learner_visible_key_firewall_leaks([str(child)])))
@@ -2589,6 +2602,7 @@ class _GraphNativeCompositeRuntime:
             "birth_trigger": trigger,
             "birth_segment": birth_segment,
             "birth_row_id": int(birth_row_id),
+            "birth_step": None if birth_step is None else int(birth_step),
             "state": "TRIAL",
             "stem_cell_id": cell.cell_id,
             "stem_cell_xp": int(cell.xp),
@@ -2616,6 +2630,7 @@ class _GraphNativeCompositeRuntime:
                     "event": "birth",
                     "segment": birth_segment,
                     "trigger": trigger,
+                    "step": None if birth_step is None else int(birth_step),
                     "state": "TRIAL",
                     "xp": int(cell.xp),
                     "acceptance_probe": acceptance_probe,
@@ -3251,12 +3266,13 @@ class _GraphNativeCompositeRuntime:
         step: int,
         reason: str,
         sample_count: int,
+        prune_reason: str = "scheduled_redundancy_all_samples_agreed_with_host",
     ) -> bool:
         item = self.population.get(str(composite_id))
         if not item or item["state"] != "TRIAL":
             return False
         item["state"] = "PRUNED"
-        item["prune_reason"] = "scheduled_redundancy_all_samples_agreed_with_host"
+        item["prune_reason"] = str(prune_reason)
         item["redundancy_prune_events"] = int(item.get("redundancy_prune_events", 0)) + 1
         item["scheduled_audition_sample_count"] = (
             int(item.get("scheduled_audition_sample_count", 0)) + int(sample_count)
@@ -3355,6 +3371,7 @@ class _GraphNativeCompositeRuntime:
                     "state": item["state"],
                     "birth_segment": item["birth_segment"],
                     "birth_trigger": item["birth_trigger"],
+                    "birth_step": item.get("birth_step"),
                     "local_resource": round(float(item.get("local_resource", 0.0)), 6),
                     "requested_exposures": int(item.get("requested_exposures", 0)),
                     "activation_count": int(item.get("activation_count", 0)),
@@ -3396,6 +3413,7 @@ class _GraphNativeCompositeRuntime:
                 "state": str(item["state"]),
                 "birth_segment": item.get("birth_segment"),
                 "birth_trigger": item.get("birth_trigger"),
+                "birth_step": item.get("birth_step"),
                 "children": list(item.get("children", ())),
                 "local_resource": float(item.get("local_resource", 0.0)),
                 "requested_exposures": int(item.get("requested_exposures", 0)),

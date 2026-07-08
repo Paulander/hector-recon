@@ -30,6 +30,7 @@ from .stage_b_ecological_discovery_probe import (
     _new_judge_cache,
     _phase32_real_recurring_mature_composites,
     _real_native_ablation_health,
+    _real_native_parent_id,
     _real_native_pruned_rescue_audit,
     _real_native_spawn_from_context,
     _phase38_dispatcher_side_eval,
@@ -2290,7 +2291,8 @@ def run_phase44_audition_cell_economy_probe(
                 or any("audition_starved" in reason for reason in seed_result["stop_reasons"])
                 or any("scheduled_unjudged" in reason for reason in seed_result["stop_reasons"])
             ):
-                break
+                if not bool(getattr(cfg, "real_native_continue_after_seed_stop", False)):
+                    break
             continue
 
         stage_b_pool_traces = _phase38_flat_policy_traces(
@@ -2516,7 +2518,8 @@ def run_phase44_audition_cell_economy_probe(
             or any("audition_starved" in reason for reason in seed_result["stop_reasons"])
             or any("scheduled_unjudged" in reason for reason in seed_result["stop_reasons"])
         ):
-            break
+            if not bool(getattr(cfg, "real_native_continue_after_seed_stop", False)):
+                break
 
     seed_results = {str(row["seed"]): row for row in per_seed}
     recurrence = _phase32_real_recurring_mature_composites(seed_results)
@@ -2613,6 +2616,8 @@ def run_phase45_scheduled_audition_economy_probe(
         real_native_audition_starvation_min_per_cell=0.0,
         real_native_scheduled_audition_chunk_size=8,
         real_native_scheduled_unjudged_fraction_stop=0.25,
+        real_native_scheduled_complete_flush=False,
+        real_native_homeostatic_backlog_threshold=0.0,
     )
     output_dir = Path(cfg.output_dir)
     summary = run_phase44_audition_cell_economy_probe(config=cfg)
@@ -2653,6 +2658,106 @@ def run_phase45_scheduled_audition_economy_probe(
     summary["decision"]["scheduled_unjudged_stop"] = any(
         "scheduled_unjudged" in reason
         for reason in summary.get("decision", {}).get("stop_reasons", ())
+    )
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
+def run_phase46_homeostatic_audition_economy_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    """Phase 3.16: scheduled auditions with homeostatic birth gating."""
+
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_16_homeostatic_audition_economy",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        flat_baseline_seeds=(20272911, 20272912, 20272913),
+        stage_a_train_row_limit=128,
+        train_row_limit=128,
+        heldout_row_limit=None,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+        real_native_engine_max_ticks=80,
+        real_native_max_live_composites=32,
+        real_native_max_live_siblings_per_parent=4,
+        real_native_trial_grace_exposures=3,
+        real_native_dormant_decay=0.002,
+        real_native_critical_period_exposures=5,
+        real_native_critical_period_credit_multiplier=1.75,
+        real_native_critical_period_optimism=0.025,
+        real_native_positive_flip_credit=0.060,
+        real_native_positive_flip_window=2,
+        real_native_choice_change_mature_events=3,
+        real_native_choice_change_neutral_rent=0.006,
+        real_native_near_zero_choice_change_rate=0.01,
+        real_native_stability_band_multiplier=5,
+        real_native_audition_budget_per_cell=10,
+        real_native_audition_per_ply_cap=2,
+        real_native_audition_horizon_plies=8,
+        real_native_audition_mature_better_events=3,
+        real_native_audition_neutral_rent=0.004,
+        real_native_audition_debt_threshold=3,
+        real_native_audition_starvation_min_per_cell=0.0,
+        real_native_scheduled_audition_chunk_size=8,
+        real_native_scheduled_unjudged_fraction_stop=0.25,
+        real_native_scheduled_complete_flush=True,
+        real_native_homeostatic_backlog_threshold=0.30,
+        real_native_continue_after_seed_stop=True,
+        real_native_max_ablation_subjects=256,
+    )
+    output_dir = Path(cfg.output_dir)
+    summary = run_phase44_audition_cell_economy_probe(config=cfg)
+    correspondence = _phase45_composite_correspondence_table()
+    phase315_diagnosis = _phase46_phase315_under_k_diagnosis()
+    family_recurrence = _phase46_mature_family_recurrence(summary.get("per_seed", []))
+    gate_margin = _phase41_gate_margin_wins()
+    design = _design_spec(cfg)
+    design["schema_version"] = "phase3_16_homeostatic_audition_economy_design_spec.v0"
+    design["phase_alias"] = "User-requested Phase 3.16 homeostatic audition economy"
+    design["host_ladder"] = {
+        "base_commit": "d9680ea",
+        "frozen_from": "Phase 3.15 scheduled audition mechanics, with only flush completion and backlog birth gating added",
+        "paired_gate_spec": _phase41_paired_gate_spec(gate_margin),
+    }
+    design["ecology"] = _phase46_ecology_spec(cfg)
+    design["phase3_15_under_k_diagnosis"] = phase315_diagnosis
+    design["cross_experiment_composite_correspondence"] = correspondence
+    _write_json(output_dir / "design_spec.json", design)
+
+    for row in summary.get("per_seed", []):
+        row["schema_version"] = "phase3_16_homeostatic_audition_economy_seed.v0"
+        row["ecology_spec"] = _phase46_ecology_spec(cfg)
+        row["cross_experiment_composite_correspondence"] = correspondence
+        row["phase3_15_under_k_diagnosis"] = phase315_diagnosis
+        _write_json(output_dir / f"seed_{row['seed']}_audition_cell_economy.json", row)
+        _write_json(output_dir / f"seed_{row['seed']}_homeostatic_audition_economy.json", row)
+
+    tables = dict(summary.get("tables", {}))
+    summary["schema_version"] = "phase3_16_homeostatic_audition_economy.v0"
+    summary["phase"] = "Phase 3.16 homeostatic audition economy"
+    summary["ecology"] = _phase46_ecology_spec(cfg)
+    summary["phase3_15_under_k_diagnosis"] = phase315_diagnosis
+    summary["cross_experiment_composite_correspondence"] = correspondence
+    summary["cross_seed_recurring_mature_families"] = family_recurrence
+    summary["tables"] = {
+        "phase3_16_headline": _phase46_headline_table(summary.get("per_seed", [])),
+        "phase3_16_audition_signal": tables.get("phase3_14_audition_signal", []),
+        "phase3_16_acceptance_margins": tables.get("phase3_14_acceptance_margins", []),
+        "phase3_16_mature_recurrence_by_family": family_recurrence,
+        "phase3_16_cross_rung_survivors": summary.get("cross_rung_load_bearing_survivors", []),
+        "phase3_16_cross_experiment_composite_correspondence": correspondence,
+        "phase3_16_phase3_15_under_k_diagnosis": phase315_diagnosis,
+    }
+    summary["decision"]["scheduled_unjudged_stop"] = any(
+        "scheduled_unjudged" in reason
+        for reason in summary.get("decision", {}).get("stop_reasons", ())
+    )
+    summary["decision"]["recurring_mature_family_count"] = sum(
+        1 for row in family_recurrence if bool(row.get("recurs_3_of_5"))
     )
     _write_json(output_dir / "summary.json", summary)
     return summary
@@ -2850,6 +2955,39 @@ def _phase45_ecology_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any
                 ),
                 "spontaneous_live_auditions": "remain enabled and count against the same per-cell budget",
                 "unjudged_fraction_stop": float(cfg.real_native_scheduled_unjudged_fraction_stop),
+            },
+        }
+    )
+    return spec
+
+
+def _phase46_ecology_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
+    spec = _phase45_ecology_spec(cfg)
+    spec.update(
+        {
+            "scheduled_auditions": {
+                **spec["scheduled_auditions"],
+                "complete_end_of_stage_flush": bool(cfg.real_native_scheduled_complete_flush),
+                "complete_flush_rule": (
+                    "before stability checks, actively scan host trajectories over the segment rows to fill each "
+                    "TRIAL cell's own firing set; spend the remaining per-cell budget, sampling with replacement "
+                    "from that firing set if needed; cells with no firing samples are pruned as no-firing"
+                ),
+                "complete_flush_compute_reported": True,
+            },
+            "homeostatic_birth_gate": {
+                "enabled": float(cfg.real_native_homeostatic_backlog_threshold) > 0.0,
+                "backlog_threshold": float(cfg.real_native_homeostatic_backlog_threshold),
+                "rule": (
+                    "internal spawn triggers fire only when the under-K TRIAL fraction is below the threshold; "
+                    "otherwise the trigger is counted as deferred and may reappear naturally if still valid"
+                ),
+            },
+            "recurrence_families": {
+                "FAMILY-CONFINE": "both atoms match bk_neighbor_*_available=zero",
+                "FAMILY-SAFEROOK": "rook_attacked_after=0 AND to_file_or_rank_edge_distance=k",
+                "other": "exact sorted child-atom conjunction",
+                "recurrence_rule": "same predeclared family matures in at least 3 of 5 seeds",
             },
         }
     )
@@ -4089,6 +4227,9 @@ def _phase44_train_audition_ecology_segment(
     verdict_endpoints: Counter[str] = Counter()
     scheduled_stats: Counter[str] = Counter()
     firing_buffer: defaultdict[str, list[dict[str, Any]]] = defaultdict(list)
+    birth_deferred_stats: Counter[str] = Counter()
+    backlog_curve: list[dict[str, Any]] = []
+    complete_flush_report: dict[str, Any] = {}
     blocked_before = sum(runtime.births_blocked_by_capacity.values())
     for index, row in enumerate(rows):
         row_decisions: list[dict[str, Any]] = []
@@ -4114,12 +4255,15 @@ def _phase44_train_audition_ecology_segment(
                     ply=ply,
                     segment_name=segment_name,
                 )
-                _phase43_spawn_from_context(
+                ctx["global_step"] = int(step_offset) + index * 100 + ply
+                ctx["segment_row_index"] = int(index)
+                spawn_report = _phase46_spawn_from_context(
                     cfg,
                     runtime,
                     ctx,
                     rng=random.Random(int(seed) + index * 1009 + ply),
                 )
+                birth_deferred_stats.update(spawn_report)
             selected = runtime.choose_move(
                 board,
                 counts,
@@ -4270,6 +4414,16 @@ def _phase44_train_audition_ecology_segment(
             verdict_endpoints.update(scheduled["verdict_reason_counts"])
             audition_count += int(scheduled["audition_count"])
             audition_frames_spent += int(scheduled["audition_frames_spent"])
+            backlog_curve.append(
+                _phase46_backlog_snapshot(
+                    cfg,
+                    runtime,
+                    segment=segment_name,
+                    step=int(step_offset) + index,
+                    row_index=index,
+                    event="scheduled_chunk",
+                )
+            )
         if len(trace_sample) < int(cfg.max_samples):
             trace_sample.append(
                 {
@@ -4280,6 +4434,71 @@ def _phase44_train_audition_ecology_segment(
                     "decisions": row_decisions[: int(cfg.max_samples)],
                 }
             )
+    chunk_size = int(getattr(cfg, "real_native_scheduled_audition_chunk_size", 0))
+    if chunk_size > 0 and bool(getattr(cfg, "real_native_scheduled_complete_flush", False)):
+        before_flush = _phase45_scheduled_coverage(runtime, int(cfg.real_native_audition_budget_per_cell))
+        before_explanation = _phase46_under_k_explanation(
+            runtime,
+            firing_buffer=firing_buffer,
+            budget=int(cfg.real_native_audition_budget_per_cell),
+        )
+        collected = _phase46_collect_complete_flush_samples(
+            cfg,
+            runtime=runtime,
+            score_provider=score_provider,
+            rows=rows,
+            firing_buffer=firing_buffer,
+            success_kind=success_kind,
+            seed=int(seed) + 91_000,
+        )
+        scheduled = _phase45_run_scheduled_auditions(
+            cfg,
+            runtime=runtime,
+            score_provider=score_provider,
+            firing_buffer=firing_buffer,
+            success_kind=success_kind,
+            seed=int(seed) + 92_000,
+            step=int(step_offset) + len(rows),
+            max_trace_samples=int(cfg.max_samples),
+            complete_flush=True,
+        )
+        scheduled_stats.update(scheduled["counter"])
+        verdicts.update(scheduled["verdict_counts"])
+        verdict_endpoints.update(scheduled["verdict_reason_counts"])
+        audition_count += int(scheduled["audition_count"])
+        audition_frames_spent += int(scheduled["audition_frames_spent"])
+        after_flush = _phase45_scheduled_coverage(runtime, int(cfg.real_native_audition_budget_per_cell))
+        after_explanation = _phase46_under_k_explanation(
+            runtime,
+            firing_buffer=firing_buffer,
+            budget=int(cfg.real_native_audition_budget_per_cell),
+        )
+        complete_flush_report = {
+            "enabled": True,
+            "before_coverage": before_flush,
+            "after_coverage": after_flush,
+            "before_under_k_explanation": before_explanation,
+            "after_under_k_explanation": after_explanation,
+            "active_scan": collected,
+            "scheduled_flush_counter": dict(sorted(scheduled["counter"].items())),
+            "scheduled_flush_verdict_counts": dict(sorted(scheduled["verdict_counts"].items())),
+            "scheduled_flush_frames_spent": int(scheduled["audition_frames_spent"]),
+            "scheduled_flush_auditions": int(scheduled["audition_count"]),
+            "scheduled_flush_frames_per_audition": (
+                int(scheduled["audition_frames_spent"]) / max(1, int(scheduled["audition_count"]))
+            ),
+        }
+        runtime.snapshot(step=int(step_offset) + len(rows), segment=segment_name)
+        backlog_curve.append(
+            _phase46_backlog_snapshot(
+                cfg,
+                runtime,
+                segment=segment_name,
+                step=int(step_offset) + len(rows),
+                row_index=len(rows),
+                event="complete_flush",
+            )
+        )
     blocked_after = sum(runtime.births_blocked_by_capacity.values())
     distribution = _phase44_audition_distribution(runtime)
     scheduled_coverage = _phase45_scheduled_coverage(runtime, int(cfg.real_native_audition_budget_per_cell))
@@ -4313,6 +4532,23 @@ def _phase44_train_audition_ecology_segment(
         "audition_starvation_min_per_cell": float(cfg.real_native_audition_starvation_min_per_cell),
         "scheduled_audition_stats": dict(sorted(scheduled_stats.items())),
         "scheduled_coverage": scheduled_coverage,
+        "complete_flush": complete_flush_report or {"enabled": False},
+        "backlog_curve": backlog_curve,
+        "births_deferred_by_backlog_total": int(birth_deferred_stats["births_deferred_by_backlog"]),
+        "births_deferred_by_backlog_by_trigger": {
+            key.removeprefix("births_deferred_by_backlog_trigger:")
+            if key.startswith("births_deferred_by_backlog_trigger:")
+            else key: int(value)
+            for key, value in sorted(birth_deferred_stats.items())
+            if key.startswith("births_deferred_by_backlog_trigger:")
+        },
+        "births_deferred_by_backlog_by_parent": {
+            key.removeprefix("births_deferred_by_backlog_parent:")
+            if key.startswith("births_deferred_by_backlog_parent:")
+            else key: int(value)
+            for key, value in sorted(birth_deferred_stats.items())
+            if key.startswith("births_deferred_by_backlog_parent:")
+        },
         "requested_composite_count": requested_total,
         "active_composite_count": active_total,
         "births_blocked_by_capacity_delta": int(blocked_after - blocked_before),
@@ -4609,6 +4845,7 @@ def _phase45_run_scheduled_auditions(
     seed: int,
     step: int,
     max_trace_samples: int,
+    complete_flush: bool = False,
 ) -> dict[str, Any]:
     counter: Counter[str] = Counter()
     verdict_counts: Counter[str] = Counter()
@@ -4637,10 +4874,25 @@ def _phase45_run_scheduled_auditions(
         samples = list(firing_buffer.get(cid, ()))
         if not samples:
             counter["trial_cells_without_firing_samples"] += 1
+            if complete_flush:
+                if runtime.apply_redundancy_prune(
+                    composite_id=cid,
+                    step=int(step),
+                    reason="complete_flush_no_firing_samples",
+                    sample_count=0,
+                    prune_reason="complete_flush_no_firing_samples",
+                ):
+                    counter["complete_flush_no_firing_prunes"] += 1
+                    verdict_counts["no_firing_prune"] += 1
+                    verdict_reason_counts["complete_flush_no_firing_samples"] += 1
             continue
-        sample_count = min(remaining, len(samples))
         rng = random.Random(int(seed) + _phase45_stable_int(cid))
-        selected = rng.sample(samples, sample_count) if len(samples) > sample_count else samples[:sample_count]
+        if complete_flush and len(samples) < remaining:
+            selected = [rng.choice(samples) for _ in range(remaining)]
+            counter["complete_flush_replacement_samples"] += remaining - len(samples)
+        else:
+            sample_count = min(remaining, len(samples))
+            selected = rng.sample(samples, sample_count) if len(samples) > sample_count else samples[:sample_count]
         counter["scheduled_samples"] += len(selected)
         disagreements = [sample for sample in selected if not bool(sample.get("agrees_with_host"))]
         if not disagreements and len(selected) >= remaining:
@@ -4649,6 +4901,7 @@ def _phase45_run_scheduled_auditions(
                 step=int(step),
                 reason="scheduled_all_sampled_firings_agreed_with_host",
                 sample_count=len(selected),
+                prune_reason="scheduled_redundancy_all_samples_agreed_with_host",
             ):
                 counter["redundancy_prunes"] += 1
                 verdict_counts["redundancy_prune"] += 1
@@ -4768,6 +5021,308 @@ def _phase45_scheduled_unjudged_stop(
     }
 
 
+def _phase46_backlog_snapshot(
+    cfg: StageBEcologicalDiscoveryConfig,
+    runtime: _GraphNativeCompositeRuntime,
+    *,
+    segment: str,
+    step: int,
+    row_index: int,
+    event: str,
+) -> dict[str, Any]:
+    coverage = _phase45_scheduled_coverage(runtime, int(cfg.real_native_audition_budget_per_cell))
+    return {
+        "segment": segment,
+        "step": int(step),
+        "row_index": int(row_index),
+        "event": str(event),
+        "trial_cell_count": int(coverage.get("trial_cell_count", 0)),
+        "under_budget_trial_count": int(coverage.get("under_budget_trial_count", 0)),
+        "under_budget_trial_fraction": float(coverage.get("under_budget_trial_fraction", 0.0)),
+        "threshold": float(getattr(cfg, "real_native_homeostatic_backlog_threshold", 0.0)),
+        "histogram": dict(coverage.get("histogram", {})),
+    }
+
+
+def _phase46_under_k_explanation(
+    runtime: _GraphNativeCompositeRuntime,
+    *,
+    firing_buffer: Mapping[str, Sequence[Mapping[str, Any]]],
+    budget: int,
+) -> dict[str, Any]:
+    reasons: Counter[str] = Counter()
+    judged_hist: Counter[int] = Counter()
+    buffer_hist: Counter[int] = Counter()
+    examples: list[dict[str, Any]] = []
+    for cid, item in sorted(runtime.population.items()):
+        if item.get("state") != "TRIAL" or item.get("birth_segment") == "acceptance_probe":
+            continue
+        judged = int(item.get("audition_count", 0)) + int(item.get("scheduled_audition_sample_count", 0))
+        if judged >= int(budget):
+            continue
+        remaining = int(budget) - judged
+        buffer_count = len(firing_buffer.get(cid, ()))
+        judged_hist[judged] += 1
+        buffer_hist[min(buffer_count, int(budget))] += 1
+        if buffer_count <= 0:
+            reason = "no_firing_samples_in_replay_buffer"
+        elif buffer_count < remaining:
+            reason = "firing_set_smaller_than_remaining_budget"
+        else:
+            reason = "scheduler_did_not_spend_available_samples"
+        reasons[reason] += 1
+        if len(examples) < 8:
+            examples.append(
+                {
+                    "composite_id": cid,
+                    "judged": judged,
+                    "remaining": remaining,
+                    "buffer_samples": buffer_count,
+                    "birth_step": item.get("birth_step"),
+                    "children": list(item.get("children", ())),
+                }
+            )
+    return {
+        "under_budget_trial_count": int(sum(reasons.values())),
+        "reason_counts": dict(sorted(reasons.items())),
+        "judged_histogram": {str(key): int(value) for key, value in sorted(judged_hist.items())},
+        "buffer_sample_histogram_capped_at_budget": {
+            str(key): int(value) for key, value in sorted(buffer_hist.items())
+        },
+        "examples": examples,
+    }
+
+
+def _phase46_collect_complete_flush_samples(
+    cfg: StageBEcologicalDiscoveryConfig,
+    *,
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: Any,
+    rows: Sequence[Mapping[str, Any]],
+    firing_buffer: defaultdict[str, list[dict[str, Any]]],
+    success_kind: str,
+    seed: int,
+) -> dict[str, Any]:
+    budget = int(cfg.real_native_audition_budget_per_cell)
+    target_ids = {
+        str(cid)
+        for cid, item in runtime.population.items()
+        if item.get("state") == "TRIAL"
+        and item.get("birth_segment") != "acceptance_probe"
+        and int(item.get("audition_count", 0)) + int(item.get("scheduled_audition_sample_count", 0)) < budget
+    }
+    if not target_ids:
+        return {
+            "target_trial_cells": 0,
+            "rows_scanned": 0,
+            "white_positions_scanned": 0,
+            "samples_added": 0,
+            "cells_with_samples_after_scan": 0,
+        }
+    scorer = None if cfg.fast_exact_judge or success_kind == "approach_waypoint" else load_canonical_mate2_first_scorer()
+    mate2_cache, enter_cache = _new_judge_cache()
+    seen: set[tuple[str, str, str, str]] = set()
+    for cid, samples in firing_buffer.items():
+        for sample in samples:
+            seen.add(
+                (
+                    str(cid),
+                    str(sample.get("fen")),
+                    str(sample.get("host_move_uci")),
+                    str(sample.get("cell_move_uci")),
+                )
+            )
+    rows_scanned = 0
+    white_positions_scanned = 0
+    samples_added = 0
+    rng = random.Random(seed)
+    for row_index, row in enumerate(rows):
+        if all(len(firing_buffer.get(cid, ())) >= budget for cid in target_ids):
+            break
+        rows_scanned += 1
+        board = chess.Board(str(row["fen"]))
+        counts: Counter[Any] = Counter({_position_repetition_key(board): 1, board._transposition_key(): 1})
+        for ply in range(int(cfg.horizon_plies)):
+            if board.turn != chess.WHITE or board.is_game_over(claim_draw=False):
+                break
+            white_positions_scanned += 1
+            selected = runtime.choose_move(
+                board,
+                counts,
+                score_provider,
+                seed=int(seed) + row_index * 997 + ply,
+                discriminative=True,
+                include_trial_proposals=True,
+            )
+            for firing in selected.get("trial_cell_firings", ()):
+                cid = str(firing.get("composite_id"))
+                if cid not in target_ids or len(firing_buffer.get(cid, ())) >= budget:
+                    continue
+                if firing.get("move") is None or firing.get("host_move") is None:
+                    continue
+                key = (
+                    cid,
+                    board.fen(),
+                    str(firing.get("host_move_uci")),
+                    str(firing.get("move_uci")),
+                )
+                if key in seen:
+                    continue
+                seen.add(key)
+                firing_buffer[cid].append(
+                    {
+                        "fen": board.fen(),
+                        "counts": Counter(counts),
+                        "host_move_uci": str(firing["host_move_uci"]),
+                        "cell_move_uci": str(firing["move_uci"]),
+                        "agrees_with_host": bool(firing.get("agrees_with_host", False)),
+                        "row_id": int(row.get("row_id", row_index)),
+                        "ply": int(ply),
+                        "source": "complete_flush_active_scan",
+                    }
+                )
+                samples_added += 1
+            move = _phase44_host_argmax_move(board, counts, score_provider)
+            if move is None or move not in board.legal_moves:
+                break
+            if int(counts.get(_after_move_repetition_key(board, move), 0)) >= 2:
+                break
+            board.push(move)
+            counts[_position_repetition_key(board)] += 1
+            counts[board._transposition_key()] += 1
+            if board.is_game_over(claim_draw=False):
+                break
+            reply = _select_black_reply_for_rollout(
+                cfg,
+                board,
+                rng,
+                success_kind=success_kind,
+                scorer=scorer,
+                mate2_cache=mate2_cache,
+                enter_cache=enter_cache,
+                black_reply_policy="exact_adversarial",
+            )
+            if reply is None or reply not in board.legal_moves:
+                break
+            board.push(reply)
+            counts[_position_repetition_key(board)] += 1
+            counts[board._transposition_key()] += 1
+    cells_with_samples = sum(1 for cid in target_ids if len(firing_buffer.get(cid, ())) > 0)
+    return {
+        "target_trial_cells": len(target_ids),
+        "rows_scanned": rows_scanned,
+        "white_positions_scanned": white_positions_scanned,
+        "samples_added": samples_added,
+        "cells_with_samples_after_scan": cells_with_samples,
+        "cells_without_samples_after_scan": len(target_ids) - cells_with_samples,
+    }
+
+
+def _phase46_phase315_under_k_diagnosis() -> dict[str, Any]:
+    path = Path("reports/autogrowth/clean_slate_krk/phase3_15_scheduled_audition_economy/summary.json")
+    if not path.exists():
+        return {"available": False, "path": str(path)}
+    summary = json.loads(path.read_text(encoding="utf-8"))
+    rows = list(summary.get("per_seed", ()))
+    if not rows:
+        return {"available": False, "path": str(path), "reason": "no_per_seed_rows"}
+    row = rows[0]
+    stage_a_training = row.get("stage_a", {}).get("ecology_training", {})
+    coverage = stage_a_training.get("scheduled_coverage", {})
+    stats = stage_a_training.get("scheduled_audition_stats", {})
+    return {
+        "available": True,
+        "source_schema": summary.get("schema_version"),
+        "source_seed": int(row.get("seed", 0)),
+        "under_k": {
+            "trial_cell_count": int(coverage.get("trial_cell_count", 0)),
+            "under_budget_trial_count": int(coverage.get("under_budget_trial_count", 0)),
+            "under_budget_trial_fraction": float(coverage.get("under_budget_trial_fraction", 0.0)),
+            "histogram": dict(coverage.get("histogram", {})),
+        },
+        "cap_forensics": {
+            "live_audition_per_ply_cap_skips": int(stage_a_training.get("audition_cap_skip_count", 0)),
+            "scheduled_per_chunk_compute_cap": False,
+            "scheduled_complete_flush_existed": False,
+            "scheduled_samples": int(stats.get("scheduled_samples", 0)),
+            "agreement_only_underfilled_events": int(stats.get("agreement_only_underfilled", 0)),
+            "trial_cells_without_firing_samples_events": int(stats.get("trial_cells_without_firing_samples", 0)),
+        },
+        "conclusion": (
+            "The 3.15 court was not blocked by the live per-ply audition cap. It reused only the replay "
+            "firing buffer, so agreement-only cells with fewer than K samples and cells with no buffered "
+            "firings survived under-K. Birth timing was not stored in 3.15, so late-birth contribution "
+            "cannot be reconstructed from that artifact."
+        ),
+    }
+
+
+def _phase46_composite_family(children: Sequence[str]) -> str:
+    atoms = sorted(str(child) for child in children)
+    neighbor_zero = [
+        atom for atom in atoms
+        if "bk_neighbor_" in atom and "available=zero" in atom
+    ]
+    if len(atoms) == 2 and len(neighbor_zero) == 2:
+        return "FAMILY-CONFINE"
+    has_safe_rook = any("rook_attacked_after=0" in atom for atom in atoms)
+    has_edge_distance = any(
+        "to_file_edge_distance=" in atom or "to_rank_edge_distance=" in atom
+        for atom in atoms
+    )
+    if len(atoms) == 2 and has_safe_rook and has_edge_distance:
+        return "FAMILY-SAFEROOK"
+    return "FAMILY-EXACT:" + " AND ".join(atoms)
+
+
+def _phase46_mature_family_recurrence(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    families: dict[str, dict[str, Any]] = {}
+    for row in per_seed:
+        seed = int(row.get("seed", 0))
+        for item in row.get("candidate_fate_log", ()):
+            if item.get("state") != "MATURE":
+                continue
+            family = _phase46_composite_family(item.get("children", ()))
+            record = families.setdefault(
+                family,
+                {
+                    "family": family,
+                    "seeds": set(),
+                    "mature_count": 0,
+                    "examples": [],
+                    "birth_segments": Counter(),
+                },
+            )
+            record["seeds"].add(seed)
+            record["mature_count"] += 1
+            record["birth_segments"][str(item.get("birth_segment"))] += 1
+            if len(record["examples"]) < 8:
+                record["examples"].append(
+                    {
+                        "seed": seed,
+                        "composite_id": str(item.get("composite_id")),
+                        "children": list(item.get("children", ())),
+                        "birth_segment": str(item.get("birth_segment")),
+                    }
+                )
+    rows: list[dict[str, Any]] = []
+    for family, record in families.items():
+        seeds = sorted(record["seeds"])
+        rows.append(
+            {
+                "family": family,
+                "seed_count": len(seeds),
+                "seeds": seeds,
+                "mature_count": int(record["mature_count"]),
+                "recurs_3_of_5": len(seeds) >= 3,
+                "birth_segments": dict(sorted(record["birth_segments"].items())),
+                "examples": record["examples"],
+            }
+        )
+    rows.sort(key=lambda item: (-int(item["seed_count"]), str(item["family"])))
+    return rows
+
+
 def _phase44_audition_starvation(training: Mapping[str, Any]) -> dict[str, Any]:
     distribution = training.get("auditions_per_cell_distribution", {})
     mean = float(distribution.get("mean", 0.0)) if isinstance(distribution, Mapping) else 0.0
@@ -4782,6 +5337,33 @@ def _phase44_audition_starvation(training: Mapping[str, Any]) -> dict[str, Any]:
         "audition_request_count": int(training.get("audition_request_count", 0)),
         "audition_count": int(training.get("audition_count", 0)),
     }
+
+
+def _phase46_spawn_from_context(
+    cfg: StageBEcologicalDiscoveryConfig,
+    runtime: _GraphNativeCompositeRuntime,
+    ctx: Mapping[str, Any],
+    *,
+    rng: random.Random,
+) -> Counter[str]:
+    stats: Counter[str] = Counter()
+    threshold = float(getattr(cfg, "real_native_homeostatic_backlog_threshold", 0.0))
+    triggers = _internal_triggers(cfg, ctx, Counter(), defaultdict(Counter))
+    source_signature = str(ctx["percept_signature"])
+    if threshold > 0.0:
+        coverage = _phase45_scheduled_coverage(runtime, int(cfg.real_native_audition_budget_per_cell))
+        trial_count = int(coverage.get("trial_cell_count", 0))
+        backlog = float(coverage.get("under_budget_trial_fraction", 0.0))
+        if trial_count > 0 and backlog >= threshold:
+            for trigger in triggers[: int(cfg.real_native_max_births_per_row)]:
+                stats["births_deferred_by_backlog"] += 1
+                stats[f"births_deferred_by_backlog_trigger:{trigger}"] += 1
+                stats[f"births_deferred_by_backlog_parent:{_real_native_parent_id(source_signature)}"] += 1
+            return stats
+    before = len(runtime.population)
+    _phase43_spawn_from_context(cfg, runtime, ctx, rng=rng)
+    stats["births_spawned_after_backlog_gate"] += max(0, len(runtime.population) - before)
+    return stats
 
 
 def _phase43_spawn_from_context(
@@ -4814,6 +5396,7 @@ def _phase43_spawn_from_context(
             birth_segment=str(ctx.get("segment", "unknown")),
             birth_row_id=int(ctx.get("row_id", -1)),
             source_signature=source_signature,
+            birth_step=int(ctx.get("global_step", ctx.get("step", -1))),
         )
         if len(runtime.population) > before:
             runtime.trigger_counts[trigger] += 1
@@ -5701,6 +6284,17 @@ def _phase44_audition_signal_table(per_seed: Sequence[Mapping[str, Any]]) -> lis
                     "audition_frames_spent": int(training.get("audition_frames_spent", 0)),
                     "scheduled_audition_stats": dict(training.get("scheduled_audition_stats", {})),
                     "scheduled_coverage": dict(training.get("scheduled_coverage", {})),
+                    "complete_flush": dict(training.get("complete_flush", {})),
+                    "backlog_curve": list(training.get("backlog_curve", ())),
+                    "births_deferred_by_backlog_total": int(
+                        training.get("births_deferred_by_backlog_total", 0)
+                    ),
+                    "births_deferred_by_backlog_by_trigger": dict(
+                        training.get("births_deferred_by_backlog_by_trigger", {})
+                    ),
+                    "births_deferred_by_backlog_by_parent": dict(
+                        training.get("births_deferred_by_backlog_by_parent", {})
+                    ),
                     "audition_cap_skip_count": int(training.get("audition_cap_skip_count", 0)),
                     "audition_budget_skip_count": int(training.get("audition_budget_skip_count", 0)),
                     "births_blocked_by_capacity_delta": int(
@@ -5712,6 +6306,41 @@ def _phase44_audition_signal_table(per_seed: Sequence[Mapping[str, Any]]) -> lis
                 }
             )
     return rows
+
+
+def _phase46_headline_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    table = _phase44_headline_table(per_seed)
+    by_seed = {int(row["seed"]): row for row in table}
+    for row in per_seed:
+        seed = int(row["seed"])
+        target = by_seed.get(seed)
+        if target is None:
+            continue
+        stage_a = row.get("stage_a", {}) if isinstance(row.get("stage_a"), Mapping) else {}
+        stage_b = row.get("stage_b", {}) if isinstance(row.get("stage_b"), Mapping) else {}
+        stage_a_training = stage_a.get("ecology_training", {}) if isinstance(stage_a, Mapping) else {}
+        stage_b_training = stage_b.get("ecology_training", {}) if isinstance(stage_b, Mapping) else {}
+        family_counts = Counter(
+            _phase46_composite_family(item.get("children", ()))
+            for item in row.get("candidate_fate_log", ())
+            if item.get("state") == "MATURE"
+        )
+        target.update(
+            {
+                "stage_a_backlog_curve": list(stage_a_training.get("backlog_curve", ())),
+                "stage_b_backlog_curve": list(stage_b_training.get("backlog_curve", ())),
+                "stage_a_complete_flush": dict(stage_a_training.get("complete_flush", {})),
+                "stage_b_complete_flush": dict(stage_b_training.get("complete_flush", {})),
+                "stage_a_births_deferred_by_backlog": int(
+                    stage_a_training.get("births_deferred_by_backlog_total", 0)
+                ),
+                "stage_b_births_deferred_by_backlog": int(
+                    stage_b_training.get("births_deferred_by_backlog_total", 0)
+                ),
+                "mature_family_counts": dict(sorted(family_counts.items())),
+            }
+        )
+    return table
 
 
 def _phase42_acceptance_margin_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
