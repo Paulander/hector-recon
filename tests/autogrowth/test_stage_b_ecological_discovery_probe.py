@@ -17,6 +17,7 @@ from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     run_phase41_credit_precision_paired_gates_probe,
     run_phase42_standing_ladder_ecology_probe,
     run_phase43_discriminative_cell_economy_probe,
+    run_phase44_audition_cell_economy_probe,
     run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
@@ -670,3 +671,56 @@ def test_phase43_discriminative_cell_economy_records_choice_signal(tmp_path: Pat
     assert "acceptance_check" in row
     if "stage_a" in row and "ecology_training" in row["stage_a"]:
         assert "choice_changed_ply_rate" in row["stage_a"]["ecology_training"]
+
+
+def test_phase44_audition_cell_economy_records_verdicts(tmp_path: Path) -> None:
+    summary = run_phase44_audition_cell_economy_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_14_audition_probe"),
+            seeds=(20272931,),
+            flat_baseline_seeds=(20272911,),
+            stage_a_train_row_limit=2,
+            train_row_limit=2,
+            heldout_row_limit=1,
+            max_samples=1,
+            max_guided_births=0,
+            ecology_mode="stem_cell_graph",
+            native_foundation_train_repetitions=1,
+            native_foundation_continuation_repetitions=1,
+            native_foundation_max_mate1_positions=2,
+            native_foundation_max_mate2_positions=1,
+            native_foundation_prototype_scan_triplets=32,
+            native_foundation_key_mode="coarse",
+            real_native_engine_max_ticks=80,
+            real_native_foundation_row_limit=1,
+            real_native_max_live_composites=4,
+            real_native_max_live_siblings_per_parent=2,
+            real_native_trial_grace_exposures=1,
+            real_native_critical_period_exposures=2,
+            real_native_critical_period_credit_multiplier=1.5,
+            real_native_critical_period_optimism=0.01,
+            real_native_positive_flip_credit=0.02,
+            real_native_positive_flip_window=1,
+            real_native_choice_change_mature_events=1,
+            real_native_choice_change_neutral_rent=0.001,
+            real_native_near_zero_choice_change_rate=0.0,
+            real_native_stability_band_multiplier=5,
+            real_native_audition_budget_per_cell=2,
+            real_native_audition_per_ply_cap=1,
+            real_native_audition_horizon_plies=2,
+            real_native_audition_mature_better_events=1,
+            real_native_audition_neutral_rent=0.001,
+            real_native_audition_debt_threshold=1,
+            real_native_audition_starvation_min_per_cell=0.0,
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_14_audition_cell_economy.v0"
+    assert summary["ecology"]["audition_economy"]["per_cell_budget"] == 2
+    assert summary["ecology"]["audition_economy"]["per_ply_cap"] == 1
+    assert "phase3_14_headline" in summary["tables"]
+    assert "phase3_14_audition_signal" in summary["tables"]
+    row = summary["per_seed"][0]
+    assert "acceptance_check" in row
+    if "stage_a" in row and "ecology_training" in row["stage_a"]:
+        assert "auditions_per_cell_distribution" in row["stage_a"]["ecology_training"]

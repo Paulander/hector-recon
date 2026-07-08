@@ -1,0 +1,111 @@
+{
+  "enabled": true,
+  "margin_wins": 3,
+  "rows": [
+    {
+      "interpretation": "still_regressing",
+      "old_total_gate_passed": false,
+      "paired_gate": {
+        "discordant_delta_left_minus_right": -6,
+        "discordants_favor_left": false,
+        "label": "phase3_10_stage_a_gate_recomputed",
+        "left_minus_right_wins": -6,
+        "left_policy": "phase3_10_stage_a_slow_host_gate_20272931",
+        "left_wins": 51,
+        "loss_loss": 67,
+        "loss_win": 10,
+        "non_inferior": false,
+        "non_inferiority_margin_wins": 3,
+        "paired_row_count": 128,
+        "passed": false,
+        "right_policy": "phase3_10_stage_a_executable_flat_exact_adversarial_20272911",
+        "right_wins": 57,
+        "win_loss": 4,
+        "win_win": 47
+      },
+      "paired_gate_passed": false,
+      "rung": "stage_a",
+      "seed": 20272931
+    },
+    {
+      "interpretation": "passed_under_both",
+      "old_total_gate_passed": true,
+      "paired_gate": {
+        "discordant_delta_left_minus_right": 4,
+        "discordants_favor_left": true,
+        "label": "phase3_10_stage_a_gate_recomputed",
+        "left_minus_right_wins": 4,
+        "left_policy": "phase3_10_stage_a_slow_host_gate_20272932",
+        "left_wins": 63,
+        "loss_loss": 64,
+        "loss_win": 1,
+        "non_inferior": true,
+        "non_inferiority_margin_wins": 3,
+        "paired_row_count": 128,
+        "passed": true,
+        "right_policy": "phase3_10_stage_a_executable_flat_exact_adversarial_20272912",
+        "right_wins": 59,
+        "win_loss": 5,
+        "win_win": 58
+      },
+      "paired_gate_passed": true,
+      "rung": "stage_a",
+      "seed": 20272932
+    },
+    {
+      "interpretation": "passed_under_both",
+      "old_total_gate_passed": true,
+      "paired_gate": {
+        "discordant_delta_left_minus_right": 6,
+        "discordants_favor_left": true,
+        "label": "phase3_10_stage_b_gate_recomputed",
+        "left_minus_right_wins": 6,
+        "left_policy": "phase3_10_stage_b_slow_host_gate_20272932",
+        "left_wins": 49,
+        "loss_loss": 77,
+        "loss_win": 2,
+        "non_inferior": true,
+        "non_inferiority_margin_wins": 3,
+        "paired_row_count": 128,
+        "passed": true,
+        "right_policy": "phase3_10_stage_b_executable_flat_exact_adversarial_20272912",
+        "right_wins": 43,
+        "win_loss": 8,
+        "win_win": 41
+      },
+      "paired_gate_passed": true,
+      "rung": "stage_b",
+      "seed": 20272932
+    },
+    {
+      "interpretation": "noise_level_parity",
+      "old_total_gate_passed": false,
+      "paired_gate": {
+        "discordant_delta_left_minus_right": -2,
+        "discordants_favor_left": false,
+        "label": "phase3_10_stage_a_gate_recomputed",
+        "left_minus_right_wins": -2,
+        "left_policy": "phase3_10_stage_a_slow_host_gate_20272933",
+        "left_wins": 56,
+        "loss_loss": 68,
+        "loss_win": 4,
+        "non_inferior": true,
+        "non_inferiority_margin_wins": 3,
+        "paired_row_count": 128,
+        "passed": true,
+        "right_policy": "phase3_10_stage_a_executable_flat_exact_adversarial_20272913",
+        "right_wins": 58,
+        "win_loss": 2,
+        "win_win": 54
+      },
+      "paired_gate_passed": true,
+      "rung": "stage_a",
+      "seed": 20272933
+    }
+  ],
+  "seed31_33_stage_a_interpretation": {
+    "20272931": "still_regressing",
+    "20272933": "noise_level_parity"
+  },
+  "source_artifact": "reports/autogrowth/clean_slate_krk/phase3_10_stratified_acceptance/summary.json"
+}

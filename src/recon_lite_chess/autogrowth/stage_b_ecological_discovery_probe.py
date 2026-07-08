@@ -143,6 +143,13 @@ class StageBEcologicalDiscoveryConfig:
     real_native_choice_change_neutral_rent: float = 0.0
     real_native_near_zero_choice_change_rate: float = 0.0
     real_native_stability_band_multiplier: int = 5
+    real_native_audition_budget_per_cell: int = 0
+    real_native_audition_per_ply_cap: int = 0
+    real_native_audition_horizon_plies: int = 0
+    real_native_audition_mature_better_events: int = 0
+    real_native_audition_neutral_rent: float = 0.0
+    real_native_audition_debt_threshold: int = 0
+    real_native_audition_starvation_min_per_cell: float = 0.0
     phase33_equivalence_tolerance_wins: int = 3
 
 
@@ -1449,6 +1456,15 @@ def run_phase43_discriminative_cell_economy_probe(
     return _run(config=config)
 
 
+def run_phase44_audition_cell_economy_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    from .persistent_staged_ladder import run_phase44_audition_cell_economy_probe as _run
+
+    return _run(config=config)
+
+
 def run_phase38_persistent_staged_ladder_probe(
     *,
     config: StageBEcologicalDiscoveryConfig | None = None,
@@ -2576,6 +2592,12 @@ class _GraphNativeCompositeRuntime:
             "choice_change_positive_events": 0,
             "choice_change_negative_events": 0,
             "choice_change_neutral_events": 0,
+            "audition_count": 0,
+            "audition_requested_count": 0,
+            "audition_better_events": 0,
+            "audition_worse_events": 0,
+            "audition_tie_events": 0,
+            "audition_frames_spent": 0,
             "fate_events": [
                 {
                     "event": "birth",
@@ -2728,6 +2750,7 @@ class _GraphNativeCompositeRuntime:
         seed: int,
         disabled: set[str] | None = None,
         discriminative: bool = False,
+        include_trial_proposals: bool = False,
     ) -> dict[str, Any]:
         disabled = disabled or set()
         legal = _legal_without_third_repetition(board, counts)
@@ -2736,6 +2759,7 @@ class _GraphNativeCompositeRuntime:
         base_scores = score_provider(board, counts)
         rng = random.Random(seed)
         scored: list[dict[str, Any]] = []
+        trial_proposals: dict[str, dict[str, Any]] = {}
         for move in legal:
             active = set(_sealed_action_keys(board, move))
             signature = _percept_signature(active)
@@ -2768,6 +2792,24 @@ class _GraphNativeCompositeRuntime:
                             "weight": float(weight),
                         }
                     )
+                    if include_trial_proposals and item["state"] == "TRIAL":
+                        proposal_score = float(base_scores.get(move.uci(), 0.0)) + float(weight)
+                        current = trial_proposals.get(str(item["composite_id"]))
+                        if current is None or (
+                            proposal_score,
+                            move.uci(),
+                        ) > (
+                            float(current["proposal_score"]),
+                            str(current["move_uci"]),
+                        ):
+                            trial_proposals[str(item["composite_id"])] = {
+                                "composite_id": str(item["composite_id"]),
+                                "move": move,
+                                "move_uci": move.uci(),
+                                "base_score": float(base_scores.get(move.uci(), 0.0)),
+                                "proposal_score": proposal_score,
+                                "weight": float(weight),
+                            }
             score = float(base_scores.get(move.uci(), 0.0)) + composite_score
             scored.append(
                 {
@@ -2813,6 +2855,31 @@ class _GraphNativeCompositeRuntime:
                     break
                 running += float(contribution["weight"])
                 responsible_ids.append(str(contribution["composite_id"]))
+        proposal_rows: list[dict[str, Any]] = []
+        if include_trial_proposals and base_move is not None:
+            for proposal in trial_proposals.values():
+                proposal_move = proposal["move"]
+                if proposal_move == base_move:
+                    continue
+                proposal_rows.append(
+                    {
+                        "composite_id": str(proposal["composite_id"]),
+                        "move": proposal_move,
+                        "move_uci": str(proposal["move_uci"]),
+                        "host_move": base_move,
+                        "host_move_uci": base_move.uci(),
+                        "base_score": float(proposal["base_score"]),
+                        "proposal_score": float(proposal["proposal_score"]),
+                        "weight": float(proposal["weight"]),
+                    }
+                )
+            proposal_rows.sort(
+                key=lambda item: (
+                    -float(item["proposal_score"]),
+                    str(item["composite_id"]),
+                    str(item["move_uci"]),
+                )
+            )
         return {
             "move": move,
             "score": float(selected["score"]),
@@ -2824,6 +2891,7 @@ class _GraphNativeCompositeRuntime:
             "responsible_composite_ids": responsible_ids,
             "responsibility_margin": round(float(responsibility_margin), 6),
             "selected_composite_score": round(float(selected["composite_score"]), 6),
+            "trial_cell_proposals": proposal_rows,
         }
 
     def critical_period_fraction(self, item: Mapping[str, Any]) -> float:
@@ -3067,6 +3135,93 @@ class _GraphNativeCompositeRuntime:
         self._enforce_parent_budgets(step=step)
         return event_count
 
+    def apply_audition_verdict(
+        self,
+        *,
+        composite_id: str,
+        verdict: str,
+        step: int,
+        reason: str,
+        frames_spent: int,
+    ) -> bool:
+        item = self.population.get(str(composite_id))
+        if not item or item["state"] != "TRIAL":
+            return False
+        cell = self.cells[str(composite_id)]
+        multiplier = self.critical_period_multiplier(item)
+        verdict_key = str(verdict)
+        if verdict_key == "cell_better":
+            delta = float(self.cfg.real_native_positive_flip_credit) * multiplier
+            item["local_resource"] = float(item.get("local_resource", 0.0)) + delta
+            item["credit_events"] = int(item.get("credit_events", 0)) + 1
+            item["audition_better_events"] = int(item.get("audition_better_events", 0)) + 1
+            cell.update_xp(1.0 * multiplier)
+            cell.mark_confirmed(step)
+            event = "audition_cell_better_credit"
+        elif verdict_key == "cell_worse":
+            delta = -float(self.cfg.real_native_debt) * multiplier
+            item["local_resource"] = float(item.get("local_resource", 0.0)) + delta
+            item["debt_events"] = int(item.get("debt_events", 0)) + 1
+            item["audition_worse_events"] = int(item.get("audition_worse_events", 0)) + 1
+            cell.record_candidate_intervention("negative", cycle=step)
+            event = "audition_cell_worse_debt"
+        else:
+            delta = -float(getattr(self.cfg, "real_native_audition_neutral_rent", 0.0)) * multiplier
+            item["local_resource"] = float(item.get("local_resource", 0.0)) + delta
+            item["neutral_events"] = int(item.get("neutral_events", 0)) + 1
+            item["audition_tie_events"] = int(item.get("audition_tie_events", 0)) + 1
+            cell.record_candidate_intervention("neutral", cycle=step)
+            event = "audition_tie_neutral_rent"
+        item["audition_count"] = int(item.get("audition_count", 0)) + 1
+        item["audition_frames_spent"] = int(item.get("audition_frames_spent", 0)) + int(frames_spent)
+        item["stem_cell_xp"] = int(cell.xp)
+        better = int(item.get("audition_better_events", 0))
+        worse = int(item.get("audition_worse_events", 0))
+        budget = int(getattr(self.cfg, "real_native_audition_budget_per_cell", 0))
+        mature_threshold = int(getattr(self.cfg, "real_native_audition_mature_better_events", 0))
+        debt_threshold = int(getattr(self.cfg, "real_native_audition_debt_threshold", 0))
+        if mature_threshold > 0 and better >= mature_threshold:
+            item["state"] = "MATURE"
+            cell.state = StemCellState.MATURE
+            event = "mature_on_audition_better_events"
+        elif debt_threshold > 0 and worse >= debt_threshold:
+            item["state"] = "PRUNED"
+            item["prune_reason"] = "audition_debt_threshold"
+            cell.state = StemCellState.PRUNED
+            event = "prune_on_audition_debt_threshold"
+        elif budget > 0 and int(item.get("audition_count", 0)) >= budget and better - worse <= 0:
+            item["state"] = "PRUNED"
+            item["prune_reason"] = "audition_budget_exhausted_net_nonpositive"
+            cell.state = StemCellState.PRUNED
+            event = "prune_on_audition_budget_exhausted"
+        item.setdefault("fate_events", []).append(
+            {
+                "step": int(step),
+                "event": event,
+                "reason": str(reason),
+                "verdict": verdict_key,
+                "resource_delta": round(float(delta), 6),
+                "state": item["state"],
+                "audition_count": int(item.get("audition_count", 0)),
+                "audition_better_events": better,
+                "audition_worse_events": worse,
+                "audition_tie_events": int(item.get("audition_tie_events", 0)),
+                "audition_frames_spent": int(item.get("audition_frames_spent", 0)),
+                "local_resource": round(float(item.get("local_resource", 0.0)), 6),
+                "xp": int(item.get("stem_cell_xp", 0)),
+                "critical_period_multiplier": round(float(multiplier), 6),
+            }
+        )
+        node_id = str(item["node_id"])
+        if node_id in self.native_graph.graph.nodes:
+            node = self.native_graph.graph.nodes[node_id]
+            node.meta["stem_cell_state"] = item["state"]
+            node.meta["local_resource"] = float(item.get("local_resource", 0.0))
+            node.meta["audition_count"] = int(item.get("audition_count", 0))
+            node.meta["audition_better_events"] = int(item.get("audition_better_events", 0))
+        self._enforce_parent_budgets(step=step)
+        return True
+
     def _enforce_parent_budgets(self, *, step: int) -> None:
         by_parent: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for item in self.population.values():
@@ -3144,6 +3299,10 @@ class _GraphNativeCompositeRuntime:
                     "credit_events": int(item.get("credit_events", 0)),
                     "choice_change_positive_events": int(item.get("choice_change_positive_events", 0)),
                     "choice_change_negative_events": int(item.get("choice_change_negative_events", 0)),
+                    "audition_count": int(item.get("audition_count", 0)),
+                    "audition_better_events": int(item.get("audition_better_events", 0)),
+                    "audition_worse_events": int(item.get("audition_worse_events", 0)),
+                    "audition_tie_events": int(item.get("audition_tie_events", 0)),
                     "children": list(item["children"]),
                 }
                 for item in sorted(
@@ -3184,6 +3343,12 @@ class _GraphNativeCompositeRuntime:
                 "choice_change_positive_events": int(item.get("choice_change_positive_events", 0)),
                 "choice_change_negative_events": int(item.get("choice_change_negative_events", 0)),
                 "choice_change_neutral_events": int(item.get("choice_change_neutral_events", 0)),
+                "audition_count": int(item.get("audition_count", 0)),
+                "audition_requested_count": int(item.get("audition_requested_count", 0)),
+                "audition_better_events": int(item.get("audition_better_events", 0)),
+                "audition_worse_events": int(item.get("audition_worse_events", 0)),
+                "audition_tie_events": int(item.get("audition_tie_events", 0)),
+                "audition_frames_spent": int(item.get("audition_frames_spent", 0)),
                 "formal_engine_eval_count": int(item.get("formal_engine_eval_count", 0)),
                 "prune_reason": item.get("prune_reason"),
                 "fate_events": list(item.get("fate_events", ())),

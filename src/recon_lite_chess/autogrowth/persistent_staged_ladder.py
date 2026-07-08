@@ -17,6 +17,7 @@ from .stage_b_ecological_discovery_probe import (
     _GraphNativeCompositeRuntime,
     _MigratedStageBFlatGraphScoreProvider,
     _NativeFoundationScoreProvider,
+    _after_move_repetition_key,
     _approach_waypoint_success,
     _candidate_child_pool,
     _choose_migrated_flat_host_move,
@@ -43,7 +44,11 @@ from .stage_b_ecological_discovery_probe import (
     _rollout_policy,
     _score_options,
     _sealed_action_key_scales,
+    _select_black_reply_for_rollout,
     _train_native_foundation_for_ecology,
+    _white_rook_square,
+    fence_established_geometry,
+    load_canonical_mate2_first_scorer,
     _write_json,
 )
 
@@ -2027,6 +2032,526 @@ def run_phase43_discriminative_cell_economy_probe(
     return summary
 
 
+def run_phase44_audition_cell_economy_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    """Phase 3.14: imagination-paired auditions for TRIAL ecological cells."""
+
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_14_audition_cell_economy",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        flat_baseline_seeds=(20272911, 20272912, 20272913),
+        stage_a_train_row_limit=128,
+        train_row_limit=128,
+        heldout_row_limit=None,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+        real_native_engine_max_ticks=80,
+        real_native_max_live_composites=32,
+        real_native_max_live_siblings_per_parent=4,
+        real_native_trial_grace_exposures=3,
+        real_native_dormant_decay=0.002,
+        real_native_critical_period_exposures=5,
+        real_native_critical_period_credit_multiplier=1.75,
+        real_native_critical_period_optimism=0.025,
+        real_native_positive_flip_credit=0.060,
+        real_native_positive_flip_window=2,
+        real_native_choice_change_mature_events=3,
+        real_native_choice_change_neutral_rent=0.006,
+        real_native_near_zero_choice_change_rate=0.01,
+        real_native_stability_band_multiplier=5,
+        real_native_audition_budget_per_cell=12,
+        real_native_audition_per_ply_cap=2,
+        real_native_audition_horizon_plies=8,
+        real_native_audition_mature_better_events=3,
+        real_native_audition_neutral_rent=0.004,
+        real_native_audition_debt_threshold=3,
+        real_native_audition_starvation_min_per_cell=1.0,
+    )
+    output_dir = Path(cfg.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    gate_margin = _phase41_gate_margin_wins()
+    design = _design_spec(cfg)
+    design["schema_version"] = "phase3_14_audition_cell_economy_design_spec.v0"
+    design["phase_alias"] = "User-requested Phase 3.14 audition cell economy"
+    design["host_ladder"] = {
+        "base_commit": "175da26",
+        "frozen_from": "Phase 3.13 ladder, gates, ratchet, spawn triggers, capacity throttle, and boundary",
+        "paired_gate_spec": _phase41_paired_gate_spec(gate_margin),
+    }
+    design["ecology"] = _phase44_ecology_spec(cfg)
+    _write_json(output_dir / "design_spec.json", design)
+
+    stage_a_payload = json.loads(Path(cfg.stage_a_rows_path).read_text(encoding="utf-8"))
+    stage_b_payload = json.loads(Path(cfg.stage_b_rows_path).read_text(encoding="utf-8"))
+    stage_a_train_pool = list(stage_a_payload["train"])
+    stage_b_train_pool = list(stage_b_payload["train"])
+    stage_a_gate_rows = list(stage_a_payload["heldout"])
+    stage_b_gate_rows = list(stage_b_payload["heldout"])
+    stage_a_limit = cfg.stage_a_train_row_limit if cfg.stage_a_train_row_limit is not None else cfg.train_row_limit
+    if stage_a_limit is not None:
+        stage_a_train_pool = stage_a_train_pool[: int(stage_a_limit)]
+    if cfg.train_row_limit is not None:
+        stage_b_train_pool = stage_b_train_pool[: int(cfg.train_row_limit)]
+    if cfg.heldout_row_limit is not None:
+        stage_a_gate_rows = stage_a_gate_rows[: int(cfg.heldout_row_limit)]
+        stage_b_gate_rows = stage_b_gate_rows[: int(cfg.heldout_row_limit)]
+
+    calibration = _phase41_calibrate_phase310_paired_gates(gate_margin)
+    _write_json(output_dir / "phase3_10_paired_gate_calibration.json", calibration)
+
+    per_seed: list[dict[str, Any]] = []
+    global_stop_reasons: list[str] = []
+    for index, seed in enumerate(cfg.seeds):
+        flat_seed = int(cfg.flat_baseline_seeds[index % len(cfg.flat_baseline_seeds)])
+        foundation = _train_native_foundation_for_ecology(cfg)
+        native_graph = foundation["graph"]
+        runtime = _GraphNativeCompositeRuntime(cfg, native_graph, seed=int(seed))
+        foundation_rows = _foundation_ecology_rows(cfg, seed=int(seed))
+        acceptance_row = foundation_rows[0] if foundation_rows else stage_a_train_pool[0]
+        acceptance = runtime.acceptance_check(acceptance_row)
+        foundation_gate = _phase39_foundation_gate(foundation, cfg)
+        stage_a_weights = _load_weight_table(
+            Path(cfg.stage_b_baseline_dir) / f"stage_d_A_sealed_seed_{flat_seed}_weights.json"
+        )
+        stage_b_weights = _load_weight_table(
+            Path(cfg.stage_b_baseline_dir) / f"stage_d_B_sealed_seed_{flat_seed}_weights.json"
+        )
+        stage_a_pool_traces = _phase38_flat_policy_traces(
+            cfg,
+            stage_a_train_pool,
+            atom_weights=stage_a_weights,
+            flat_seed=flat_seed,
+            seed=int(seed) + 404,
+            policy_name=f"phase3_14_stage_a_train_pool_stratifier_{flat_seed}_{seed}",
+            success_kind="approach_waypoint",
+        )
+        stage_a_baseline = _phase38_flat_policy_traces(
+            cfg,
+            stage_a_gate_rows,
+            atom_weights=stage_a_weights,
+            flat_seed=flat_seed,
+            seed=int(seed) + 700,
+            policy_name=f"phase3_14_stage_a_executable_flat_exact_adversarial_{flat_seed}",
+            success_kind="approach_waypoint",
+        )
+        seed_result: dict[str, Any] = {
+            "schema_version": "phase3_14_audition_cell_economy_seed.v0",
+            "seed": int(seed),
+            "flat_seed": flat_seed,
+            "acceptance_check": acceptance,
+            "foundation": foundation["summary"],
+            "foundation_gate": foundation_gate,
+            "ecology_spec": _phase44_ecology_spec(cfg),
+            "split_manifest": {
+                "stage_a": _phase41_pool_manifest(stage_a_train_pool, stage_a_gate_rows, stage_a_pool_traces),
+                "stage_b": None,
+            },
+            "baselines": {
+                "stage_a_exact_adversarial_flat_gate": stage_a_baseline,
+            },
+            "stop_reasons": [],
+        }
+        if not acceptance["passed"]:
+            seed_result["stop_reasons"].append("acceptance_check_failed")
+        if not foundation_gate["passed"]:
+            seed_result["stop_reasons"].append("foundation_gate_failed")
+        if seed_result["stop_reasons"]:
+            _write_json(output_dir / f"seed_{seed}_audition_cell_economy.json", seed_result)
+            per_seed.append(seed_result)
+            global_stop_reasons.extend(f"{reason}:{seed}" for reason in seed_result["stop_reasons"])
+            continue
+
+        foundation_provider = _NativeFoundationScoreProvider(native_graph)
+        seed_result["foundation_ecology_training"] = _phase44_train_audition_ecology_segment(
+            cfg,
+            runtime=runtime,
+            score_provider=foundation_provider,
+            rows=foundation_rows,
+            segment_name="foundation_mate1_mate2",
+            success_kind="stage_b_enter_mate2",
+            seed=int(seed) + 3_000,
+            step_offset=0,
+        )
+
+        stage_a_provider = _MigratedStageBFlatGraphScoreProvider(
+            cfg,
+            native_graph,
+            atom_weights=stage_a_weights,
+            flat_seed=flat_seed,
+            policy_parent_id="stage_a_policy_phase3_14",
+            terminal_namespace=f"phase3_14_stage_a_{flat_seed}",
+        )
+        stage_a_training = _phase41_train_credit_precision(
+            cfg,
+            provider=stage_a_provider,
+            train_pool_rows=stage_a_train_pool,
+            pool_endpoint_by_row=stage_a_pool_traces["endpoint_by_row"],
+            prior_replay_checks=(),
+            seed=int(seed) + 10_000,
+            success_kind="approach_waypoint",
+            rung_name="stage_a_approach",
+        )
+        stage_a_host_gate_eval = _phase38_migrated_provider_traces(
+            cfg,
+            stage_a_gate_rows,
+            stage_a_provider,
+            seed=int(seed) + 11_000,
+            policy_name=f"phase3_14_stage_a_host_gate_{seed}",
+            success_kind="approach_waypoint",
+        )
+        stage_a_host_gate = _phase41_gate_result_paired(
+            rung="stage_a_approach_host",
+            learner=stage_a_host_gate_eval,
+            flat=stage_a_baseline,
+            margin_wins=gate_margin,
+        )
+        seed_result["stage_a"] = {
+            "host_training": stage_a_training,
+            "host_gate_evaluation": stage_a_host_gate_eval,
+            "host_gate": stage_a_host_gate,
+        }
+        if int(stage_a_training["chunks_consolidated"]) == 0:
+            seed_result["stop_reasons"].append("stage_a_zero_chunks_consolidated")
+        if not stage_a_host_gate["passed"]:
+            seed_result["stop_reasons"].append("stage_a_host_gate_unreachable_after_budget")
+        if seed_result["stop_reasons"]:
+            _write_json(output_dir / f"seed_{seed}_audition_cell_economy.json", seed_result)
+            per_seed.append(seed_result)
+            global_stop_reasons.extend(f"{reason}:{seed}" for reason in seed_result["stop_reasons"])
+            continue
+
+        seed_result["stage_a"]["ecology_training"] = _phase44_train_audition_ecology_segment(
+            cfg,
+            runtime=runtime,
+            score_provider=stage_a_provider,
+            rows=stage_a_train_pool,
+            segment_name="stage_a_approach",
+            success_kind="approach_waypoint",
+            seed=int(seed) + 12_000,
+            step_offset=10_000,
+        )
+        stage_a_ecology_gates = _phase42_ecology_gate_bundle(
+            cfg,
+            runtime=runtime,
+            score_provider=stage_a_provider,
+            gate_rows=stage_a_gate_rows,
+            flat_baseline=stage_a_baseline,
+            host_eval=stage_a_host_gate_eval,
+            seed=int(seed) + 13_000,
+            rung="stage_a_approach",
+            success_kind="approach_waypoint",
+            gate_margin=gate_margin,
+        )
+        seed_result["stage_a"]["ecology_gates"] = stage_a_ecology_gates
+        stage_a_stability = _phase43_population_stability(
+            cfg,
+            runtime.birth_curve,
+            segment="stage_a_approach",
+        )
+        seed_result["stage_a"]["population_stability"] = stage_a_stability
+        stage_a_starvation = _phase44_audition_starvation(seed_result["stage_a"]["ecology_training"])
+        seed_result["stage_a"]["audition_starvation"] = stage_a_starvation
+        if not stage_a_ecology_gates["mature_vs_flat_gate"]["passed"]:
+            seed_result["stop_reasons"].append("stage_a_mature_cell_gate_regression_vs_flat")
+        if not stage_a_ecology_gates["live_vs_flat_gate"]["passed"]:
+            seed_result["stop_reasons"].append("stage_a_live_cell_gate_regression_vs_flat")
+        population_stop = _phase43_population_stop_rule(cfg, runtime)
+        if population_stop["population_collapse_to_zero"] or population_stop["unbounded_explosion"]:
+            seed_result["stop_reasons"].append("population_stop_after_stage_a")
+        if not stage_a_stability["stable"]:
+            seed_result["stop_reasons"].append("population_unstable_after_stage_a")
+        if stage_a_starvation["starved"]:
+            seed_result["stop_reasons"].append("audition_starved_after_stage_a")
+        if seed_result["stop_reasons"]:
+            seed_result["population"] = runtime.population_summary()
+            seed_result["birth_death_curve"] = runtime.birth_curve
+            seed_result["candidate_fate_log"] = runtime.fate_log()
+            _write_json(output_dir / f"seed_{seed}_audition_cell_economy.json", seed_result)
+            per_seed.append(seed_result)
+            global_stop_reasons.extend(f"{reason}:{seed}" for reason in seed_result["stop_reasons"])
+            if (
+                any("population" in reason for reason in seed_result["stop_reasons"])
+                or any("gate_regression" in reason for reason in seed_result["stop_reasons"])
+                or any("audition_starved" in reason for reason in seed_result["stop_reasons"])
+            ):
+                break
+            continue
+
+        stage_b_pool_traces = _phase38_flat_policy_traces(
+            cfg,
+            stage_b_train_pool,
+            atom_weights=stage_b_weights,
+            flat_seed=flat_seed,
+            seed=int(seed) + 504,
+            policy_name=f"phase3_14_stage_b_train_pool_stratifier_{flat_seed}_{seed}",
+            success_kind="stage_b_enter_mate2",
+        )
+        seed_result["split_manifest"]["stage_b"] = _phase41_pool_manifest(
+            stage_b_train_pool,
+            stage_b_gate_rows,
+            stage_b_pool_traces,
+        )
+        stage_b_baseline = _phase38_flat_policy_traces(
+            cfg,
+            stage_b_gate_rows,
+            atom_weights=stage_b_weights,
+            flat_seed=flat_seed,
+            seed=int(seed) + 900,
+            policy_name=f"phase3_14_stage_b_executable_flat_exact_adversarial_{flat_seed}",
+            success_kind="stage_b_enter_mate2",
+        )
+        seed_result["baselines"]["stage_b_exact_adversarial_flat_gate"] = stage_b_baseline
+        stage_b_provider = _MigratedStageBFlatGraphScoreProvider(
+            cfg,
+            native_graph,
+            atom_weights=stage_b_weights,
+            flat_seed=flat_seed,
+            policy_parent_id="stage_b_policy_phase3_14",
+            terminal_namespace=f"phase3_14_stage_b_{flat_seed}",
+        )
+        stage_a_replay_rows = _phase41_stratified_fold_from_endpoint_map(
+            stage_a_train_pool,
+            stage_a_pool_traces["endpoint_by_row"],
+            seed=int(seed) + 60_000,
+            excluded_row_ids=set(),
+            target_count=_phase41_validation_target_count(stage_a_train_pool),
+        )[0]
+
+        def stage_a_prior_replay() -> dict[str, Any]:
+            return _phase38_migrated_provider_traces(
+                cfg,
+                stage_a_replay_rows,
+                stage_a_provider,
+                seed=int(seed) + 14_000,
+                policy_name=f"phase3_14_stage_a_replay_for_stage_b_{seed}",
+                success_kind="approach_waypoint",
+            )
+
+        stage_b_training = _phase41_train_credit_precision(
+            cfg,
+            provider=stage_b_provider,
+            train_pool_rows=stage_b_train_pool,
+            pool_endpoint_by_row=stage_b_pool_traces["endpoint_by_row"],
+            prior_replay_checks=(
+                {
+                    "name": "stage_a_replay",
+                    "evaluate": stage_a_prior_replay,
+                },
+            ),
+            seed=int(seed) + 20_000,
+            success_kind="stage_b_enter_mate2",
+            rung_name="stage_b_chase",
+        )
+        stage_b_host_gate_eval = _phase38_migrated_provider_traces(
+            cfg,
+            stage_b_gate_rows,
+            stage_b_provider,
+            seed=int(seed) + 21_000,
+            policy_name=f"phase3_14_stage_b_host_gate_{seed}",
+            success_kind="stage_b_enter_mate2",
+        )
+        stage_a_regression_host_eval = _phase38_migrated_provider_traces(
+            cfg,
+            stage_a_gate_rows,
+            stage_a_provider,
+            seed=int(seed) + 22_000,
+            policy_name=f"phase3_14_stage_a_host_regression_after_stage_b_{seed}",
+            success_kind="approach_waypoint",
+        )
+        stage_b_host_gate = _phase41_gate_result_paired(
+            rung="stage_b_chase_host",
+            learner=stage_b_host_gate_eval,
+            flat=stage_b_baseline,
+            margin_wins=gate_margin,
+        )
+        stage_a_host_regression_gate = _phase41_gate_result_paired(
+            rung="stage_a_approach_host_regression_after_stage_b",
+            learner=stage_a_regression_host_eval,
+            flat=stage_a_baseline,
+            margin_wins=gate_margin,
+        )
+        seed_result["stage_b"] = {
+            "host_training": stage_b_training,
+            "host_gate_evaluation": stage_b_host_gate_eval,
+            "host_gate": stage_b_host_gate,
+        }
+        seed_result["regression_checks"] = {
+            "stage_a_host_after_stage_b": {
+                "gate_evaluation": stage_a_regression_host_eval,
+                "gate": stage_a_host_regression_gate,
+            }
+        }
+        if int(stage_b_training["chunks_consolidated"]) == 0:
+            seed_result["stop_reasons"].append("stage_b_zero_chunks_consolidated")
+        if not stage_b_host_gate["passed"]:
+            seed_result["stop_reasons"].append("stage_b_host_gate_unreachable_after_budget")
+        if not stage_a_host_regression_gate["passed"]:
+            seed_result["stop_reasons"].append("stage_a_host_regression_after_stage_b")
+        if seed_result["stop_reasons"]:
+            seed_result["population"] = runtime.population_summary()
+            seed_result["birth_death_curve"] = runtime.birth_curve
+            seed_result["candidate_fate_log"] = runtime.fate_log()
+            _write_json(output_dir / f"seed_{seed}_audition_cell_economy.json", seed_result)
+            per_seed.append(seed_result)
+            global_stop_reasons.extend(f"{reason}:{seed}" for reason in seed_result["stop_reasons"])
+            continue
+
+        seed_result["stage_b"]["ecology_training"] = _phase44_train_audition_ecology_segment(
+            cfg,
+            runtime=runtime,
+            score_provider=stage_b_provider,
+            rows=stage_b_train_pool,
+            segment_name="stage_b_chase",
+            success_kind="stage_b_enter_mate2",
+            seed=int(seed) + 23_000,
+            step_offset=20_000,
+        )
+        stage_b_ecology_gates = _phase42_ecology_gate_bundle(
+            cfg,
+            runtime=runtime,
+            score_provider=stage_b_provider,
+            gate_rows=stage_b_gate_rows,
+            flat_baseline=stage_b_baseline,
+            host_eval=stage_b_host_gate_eval,
+            seed=int(seed) + 24_000,
+            rung="stage_b_chase",
+            success_kind="stage_b_enter_mate2",
+            gate_margin=gate_margin,
+        )
+        stage_a_ecology_regression_gates = _phase42_ecology_gate_bundle(
+            cfg,
+            runtime=runtime,
+            score_provider=stage_a_provider,
+            gate_rows=stage_a_gate_rows,
+            flat_baseline=stage_a_baseline,
+            host_eval=stage_a_regression_host_eval,
+            seed=int(seed) + 25_000,
+            rung="stage_a_approach_regression_after_stage_b",
+            success_kind="approach_waypoint",
+            gate_margin=gate_margin,
+        )
+        stage_b_mature_eval = stage_b_ecology_gates["mature_eval"]
+        ablation = _real_native_ablation_health(
+            cfg,
+            stage_b_gate_rows,
+            runtime,
+            stage_b_provider,
+            full_eval=stage_b_mature_eval,
+            seed=int(seed) + 30_000,
+        )
+        rescue = _real_native_pruned_rescue_audit(
+            cfg,
+            stage_b_gate_rows,
+            runtime,
+            stage_b_provider,
+            full_eval=stage_b_mature_eval,
+            seed=int(seed) + 40_000,
+        )
+        seed_result["stage_b"]["ecology_gates"] = stage_b_ecology_gates
+        seed_result["stage_b"]["population_stability"] = _phase43_population_stability(
+            cfg,
+            runtime.birth_curve,
+            segment="stage_b_chase",
+        )
+        seed_result["stage_b"]["audition_starvation"] = _phase44_audition_starvation(
+            seed_result["stage_b"]["ecology_training"]
+        )
+        seed_result["regression_checks"]["stage_a_ecology_after_stage_b"] = stage_a_ecology_regression_gates
+        seed_result["post_hoc_ablation"] = ablation
+        seed_result["pruned_rescue_audit"] = rescue
+        seed_result["population"] = runtime.population_summary()
+        seed_result["birth_death_curve"] = runtime.birth_curve
+        seed_result["candidate_fate_log"] = runtime.fate_log()
+        seed_result["runtime_instrumentation"] = runtime.instrumentation_summary(stage_b_provider)
+        seed_result["host_instrumentation"] = {
+            "stage_a": stage_a_provider.stats(),
+            "stage_b": stage_b_provider.stats(),
+        }
+        population_stop = _phase43_population_stop_rule(cfg, runtime)
+        seed_result["population_stop"] = population_stop
+        if population_stop["population_collapse_to_zero"] or population_stop["unbounded_explosion"]:
+            seed_result["stop_reasons"].append("population_stop_after_stage_b")
+        if not seed_result["stage_b"]["population_stability"]["stable"]:
+            seed_result["stop_reasons"].append("population_unstable_after_stage_b")
+        if seed_result["stage_b"]["audition_starvation"]["starved"]:
+            seed_result["stop_reasons"].append("audition_starved_after_stage_b")
+        if not stage_b_ecology_gates["mature_vs_flat_gate"]["passed"]:
+            seed_result["stop_reasons"].append("stage_b_mature_cell_gate_regression_vs_flat")
+        if not stage_b_ecology_gates["live_vs_flat_gate"]["passed"]:
+            seed_result["stop_reasons"].append("stage_b_live_cell_gate_regression_vs_flat")
+        if not stage_a_ecology_regression_gates["mature_vs_flat_gate"]["passed"]:
+            seed_result["stop_reasons"].append("stage_a_mature_cell_regression_after_stage_b")
+        if not stage_a_ecology_regression_gates["live_vs_flat_gate"]["passed"]:
+            seed_result["stop_reasons"].append("stage_a_live_cell_regression_after_stage_b")
+        if seed_result["stop_reasons"]:
+            global_stop_reasons.extend(f"{reason}:{seed}" for reason in seed_result["stop_reasons"])
+        _write_json(output_dir / f"seed_{seed}_audition_cell_economy.json", seed_result)
+        per_seed.append(seed_result)
+        if (
+            any("population" in reason for reason in seed_result["stop_reasons"])
+            or any("gate_regression" in reason or "regression_after_stage_b" in reason for reason in seed_result["stop_reasons"])
+            or any("audition_starved" in reason for reason in seed_result["stop_reasons"])
+        ):
+            break
+
+    seed_results = {str(row["seed"]): row for row in per_seed}
+    recurrence = _phase32_real_recurring_mature_composites(seed_results)
+    cross_rung = _phase42_cross_rung_load_bearing_survivors(seed_results)
+    summary = {
+        "schema_version": "phase3_14_audition_cell_economy.v0",
+        "phase": "Phase 3.14 audition economy for TRIAL cells",
+        "config": asdict(cfg),
+        "dataset": {
+            "recent_curriculum_only_for_stage_a_b": True,
+            "old_krk_curriculum_imported_for_stage_a_b": False,
+            "foundation_row_count_per_seed": int(cfg.real_native_foundation_row_limit),
+            "stage_a_train_pool_count": len(stage_a_train_pool),
+            "stage_b_train_pool_count": len(stage_b_train_pool),
+            "stage_a_gate_heldout_count": len(stage_a_gate_rows),
+            "stage_b_gate_heldout_count": len(stage_b_gate_rows),
+            "gate_rows_consulted_by_update_decisions": False,
+        },
+        "host_ladder": {
+            "paired_gate_spec": _phase41_paired_gate_spec(gate_margin),
+            "consolidation": _phase41_consolidation_spec(),
+        },
+        "ecology": _phase44_ecology_spec(cfg),
+        "phase3_10_paired_gate_calibration": calibration,
+        "per_seed": per_seed,
+        "cross_seed_recurring_mature_composites": recurrence,
+        "cross_rung_load_bearing_survivors": cross_rung,
+        "tables": {
+            "phase3_14_headline": _phase44_headline_table(per_seed),
+            "phase3_14_audition_signal": _phase44_audition_signal_table(per_seed),
+            "phase3_14_acceptance_margins": _phase42_acceptance_margin_table(per_seed),
+            "phase3_14_mature_recurrence": recurrence,
+            "phase3_14_cross_rung_survivors": cross_rung,
+        },
+        "decision": {
+            "stop_reasons": global_stop_reasons,
+            "population_stop": any("population" in reason for reason in global_stop_reasons),
+            "gate_regression_stop": any("gate_regression" in reason or "regression_after_stage_b" in reason for reason in global_stop_reasons),
+            "audition_starvation_stop": any("audition_starved" in reason for reason in global_stop_reasons),
+            "mature_population_formed_any_seed": any(
+                int(row.get("population", {}).get("mature_count", 0)) > 0 for row in per_seed
+            ),
+            "helpful_pruned_total": sum(
+                int(row.get("pruned_rescue_audit", {}).get("load_bearing_but_pruned_count", 0))
+                for row in per_seed
+            ),
+            "cross_rung_survivor_count": len(cross_rung),
+            "recurring_mature_composite_count": sum(1 for row in recurrence if int(row.get("seed_count", 0)) > 1),
+        },
+    }
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
 def _phase39_split_law(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
     return {
         "law": (
@@ -2165,6 +2690,39 @@ def _phase43_ecology_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any
                 "alive_limit": int(cfg.real_native_max_live_composites) * int(cfg.real_native_stability_band_multiplier),
                 "trial_plateau_window": 4,
                 "trial_plateau_tolerance": max(4, int(cfg.real_native_max_live_composites)),
+            },
+        }
+    )
+    return spec
+
+
+def _phase44_ecology_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
+    spec = _phase43_ecology_spec(cfg)
+    spec.update(
+        {
+            "audition_economy": {
+                "trigger": (
+                    "TRIAL cell requests an audition when its own active-proposal argmax "
+                    "differs from the host-alone argmax on a training ply"
+                ),
+                "per_cell_budget": int(cfg.real_native_audition_budget_per_cell),
+                "per_ply_cap": int(cfg.real_native_audition_per_ply_cap),
+                "audition_horizon_white_plies": int(cfg.real_native_audition_horizon_plies),
+                "maturity_rule": f"{int(cfg.real_native_audition_mature_better_events)} cell-better verdicts",
+                "debt_prune_threshold": int(cfg.real_native_audition_debt_threshold),
+                "budget_exhaustion_rule": "prune TRIAL cell when audition budget is exhausted with better-worse <= 0",
+                "neutral_rent": float(cfg.real_native_audition_neutral_rent),
+                "played_moves": "unchanged host+advisory path from Phase 3.13",
+                "imagination_only": True,
+            },
+            "purity_notes": {
+                "adversarial_black": "opponent-side exact-adversarial reply selection in paired virtual rollouts",
+                "white_move_source": "cell's own active-proposal move versus host-alone argmax; no white oracle",
+                "verdict_source": "internal recognizer flips from the paired virtual lines",
+                "exact_judges": "post-hoc reporting only for audition verdicts",
+            },
+            "starvation_stop": {
+                "min_auditions_per_cell": float(cfg.real_native_audition_starvation_min_per_cell),
             },
         }
     )
@@ -3355,6 +3913,519 @@ def _phase43_train_discriminative_ecology_segment(
     }
 
 
+def _phase44_train_audition_ecology_segment(
+    cfg: StageBEcologicalDiscoveryConfig,
+    *,
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: Any,
+    rows: Sequence[Mapping[str, Any]],
+    segment_name: str,
+    success_kind: str,
+    seed: int,
+    step_offset: int,
+) -> dict[str, Any]:
+    judge_cache = _new_judge_cache()
+    audition_judge_cache = _new_judge_cache()
+    endpoints: Counter[str] = Counter()
+    success_by_row: dict[str, bool] = {}
+    endpoint_by_row: dict[str, str] = {}
+    trace_sample: list[dict[str, Any]] = []
+    decision_ply_count = 0
+    choice_changed_count = 0
+    requested_total = 0
+    active_total = 0
+    proposal_count = 0
+    request_count = 0
+    budget_skip_count = 0
+    cap_skip_count = 0
+    audition_count = 0
+    audition_frames_spent = 0
+    disagreement_ply_count = 0
+    verdicts: Counter[str] = Counter()
+    verdict_endpoints: Counter[str] = Counter()
+    blocked_before = sum(runtime.births_blocked_by_capacity.values())
+    for index, row in enumerate(rows):
+        row_decisions: list[dict[str, Any]] = []
+
+        def choose(board: chess.Board, counts: Mapping[Any, int], row_id: int, ply: int, rng: random.Random) -> chess.Move | None:
+            base_scores = score_provider(board, counts)
+            options = _score_options(
+                board,
+                counts,
+                atom_weights={},
+                base_move_scores=base_scores,
+                composites=(),
+                disabled_composite_ids=set(),
+            )
+            if options:
+                ctx = _decision_context(
+                    cfg,
+                    board,
+                    counts,
+                    options,
+                    seed=int(seed) + index * 1000 + ply,
+                    row_id=row_id,
+                    ply=ply,
+                    segment_name=segment_name,
+                )
+                _phase43_spawn_from_context(
+                    cfg,
+                    runtime,
+                    ctx,
+                    rng=random.Random(int(seed) + index * 1009 + ply),
+                )
+            selected = runtime.choose_move(
+                board,
+                counts,
+                score_provider,
+                seed=int(seed) + int(row_id) * 47 + ply,
+                discriminative=True,
+                include_trial_proposals=True,
+            )
+            move = selected.get("move")
+            nonlocal decision_ply_count, choice_changed_count, requested_total, active_total
+            nonlocal proposal_count, request_count, budget_skip_count, cap_skip_count
+            nonlocal audition_count, audition_frames_spent, disagreement_ply_count
+            decision_ply_count += 1
+            requested_total += len(selected.get("requested_composite_ids", ()))
+            active_total += len(selected.get("active_composite_ids", ()))
+            changed = bool(selected.get("choice_changed_by_cells"))
+            choice_changed_count += int(changed)
+            proposals = [
+                proposal for proposal in selected.get("trial_cell_proposals", ())
+                if proposal.get("move") is not None and proposal.get("host_move") is not None
+            ]
+            proposal_count += len(proposals)
+            eligible: list[dict[str, Any]] = []
+            for proposal in proposals:
+                cid = str(proposal["composite_id"])
+                item = runtime.population.get(cid)
+                if not item or item.get("state") != "TRIAL":
+                    continue
+                if int(item.get("audition_count", 0)) >= int(cfg.real_native_audition_budget_per_cell):
+                    budget_skip_count += 1
+                    continue
+                item["audition_requested_count"] = int(item.get("audition_requested_count", 0)) + 1
+                request_count += 1
+                eligible.append(proposal)
+            sampled = eligible
+            cap = int(cfg.real_native_audition_per_ply_cap)
+            if cap > 0 and len(eligible) > cap:
+                local_rng = random.Random(int(seed) + int(row_id) * 997 + ply)
+                sampled = local_rng.sample(eligible, cap)
+                cap_skip_count += len(eligible) - cap
+            if sampled:
+                disagreement_ply_count += 1
+            audition_records: list[dict[str, Any]] = []
+            for proposal in sampled:
+                host_move = proposal["host_move"]
+                cell_move = proposal["move"]
+                audition = _phase44_run_audition_pair(
+                    cfg,
+                    board,
+                    counts,
+                    score_provider=score_provider,
+                    host_move=host_move,
+                    cell_move=cell_move,
+                    success_kind=success_kind,
+                    seed=int(seed) + int(row_id) * 7919 + ply * 101 + audition_count,
+                    judge_cache=audition_judge_cache,
+                )
+                verdict = str(audition["verdict"])
+                verdicts[verdict] += 1
+                verdict_endpoints[str(audition["verdict_reason"])] += 1
+                audition_count += 1
+                audition_frames_spent += int(audition["frames_spent"])
+                runtime.apply_audition_verdict(
+                    composite_id=str(proposal["composite_id"]),
+                    verdict=verdict,
+                    step=int(step_offset) + index * 100 + ply,
+                    reason=str(audition["verdict_reason"]),
+                    frames_spent=int(audition["frames_spent"]),
+                )
+                if len(audition_records) < int(cfg.max_samples):
+                    audition_records.append(
+                        {
+                            "composite_id": str(proposal["composite_id"]),
+                            "host_move": host_move.uci(),
+                            "cell_move": cell_move.uci(),
+                            "verdict": verdict,
+                            "verdict_reason": str(audition["verdict_reason"]),
+                            "host_flip": audition["host"].get("first_flip"),
+                            "cell_flip": audition["cell"].get("first_flip"),
+                            "frames_spent": int(audition["frames_spent"]),
+                        }
+                    )
+            row_decisions.append(
+                {
+                    "ply": int(ply),
+                    "move": None if move is None else move.uci(),
+                    "host_move": None if selected.get("base_move") is None else selected["base_move"].uci(),
+                    "choice_changed_by_cells": changed,
+                    "trial_cell_proposal_count": len(proposals),
+                    "audition_eligible_count": len(eligible),
+                    "audition_run_count": len(sampled),
+                    "auditions": audition_records,
+                }
+            )
+            return move
+
+        outcome = _rollout_policy(
+            cfg,
+            row,
+            choose,
+            seed=int(seed) + index * 31,
+            policy_name=f"phase3_14_{segment_name}_ecology_train",
+            judge_cache=judge_cache,
+            success_kind=success_kind,
+            black_reply_policy="exact_adversarial",
+        )
+        endpoints[str(outcome["endpoint"])] += 1
+        success_by_row[str(row["row_id"])] = bool(outcome["success"])
+        endpoint_by_row[str(row["row_id"])] = str(outcome["endpoint"])
+        if index % 8 == 0 or index == len(rows) - 1:
+            runtime.snapshot(step=int(step_offset) + index, segment=segment_name)
+        if len(trace_sample) < int(cfg.max_samples):
+            trace_sample.append(
+                {
+                    "row_id": int(row["row_id"]),
+                    "endpoint": str(outcome["endpoint"]),
+                    "success": bool(outcome["success"]),
+                    "white_step_count": len(outcome.get("white_steps", ())),
+                    "decisions": row_decisions[: int(cfg.max_samples)],
+                }
+            )
+    blocked_after = sum(runtime.births_blocked_by_capacity.values())
+    distribution = _phase44_audition_distribution(runtime)
+    return {
+        "segment": segment_name,
+        "row_count": len(rows),
+        "success_kind": success_kind,
+        "black_reply_policy": "exact_adversarial",
+        "endpoint_counts": dict(sorted(endpoints.items())),
+        "success_by_row": success_by_row,
+        "endpoint_by_row": endpoint_by_row,
+        "decision_ply_count": decision_ply_count,
+        "choice_changed_ply_count": choice_changed_count,
+        "choice_changed_ply_rate": choice_changed_count / max(1, decision_ply_count),
+        "trial_cell_proposal_count": proposal_count,
+        "audition_request_count": request_count,
+        "audition_budget_skip_count": budget_skip_count,
+        "audition_cap_skip_count": cap_skip_count,
+        "disagreement_ply_count": disagreement_ply_count,
+        "disagreement_ply_rate": disagreement_ply_count / max(1, decision_ply_count),
+        "audition_count": audition_count,
+        "auditions_per_cell_distribution": distribution,
+        "audition_verdict_counts": dict(sorted(verdicts.items())),
+        "audition_verdict_rates": {
+            key: value / max(1, audition_count)
+            for key, value in sorted(verdicts.items())
+        },
+        "audition_verdict_reason_counts": dict(sorted(verdict_endpoints.items())),
+        "audition_frames_spent": audition_frames_spent,
+        "audition_starvation_min_per_cell": float(cfg.real_native_audition_starvation_min_per_cell),
+        "requested_composite_count": requested_total,
+        "active_composite_count": active_total,
+        "births_blocked_by_capacity_delta": int(blocked_after - blocked_before),
+        "births_blocked_by_capacity_total": int(blocked_after),
+        "population_snapshot": runtime.population_summary(),
+        "runner_config": _phase38_runner_config(
+            cfg,
+            seed=int(seed),
+            success_kind=success_kind,
+            black_reply_policy="exact_adversarial",
+            row_count=len(rows),
+        ),
+        "trace_sample": trace_sample,
+    }
+
+
+def _phase44_run_audition_pair(
+    cfg: StageBEcologicalDiscoveryConfig,
+    board: chess.Board,
+    counts: Mapping[Any, int],
+    *,
+    score_provider: Any,
+    host_move: chess.Move,
+    cell_move: chess.Move,
+    success_kind: str,
+    seed: int,
+    judge_cache: tuple[dict[str, dict[str, Any]], dict[str, dict[str, Any]]],
+) -> dict[str, Any]:
+    host = _phase44_audition_rollout(
+        cfg,
+        board,
+        counts,
+        score_provider=score_provider,
+        first_move=host_move,
+        success_kind=success_kind,
+        seed=int(seed),
+        judge_cache=judge_cache,
+    )
+    cell = _phase44_audition_rollout(
+        cfg,
+        board,
+        counts,
+        score_provider=score_provider,
+        first_move=cell_move,
+        success_kind=success_kind,
+        seed=int(seed),
+        judge_cache=judge_cache,
+    )
+    verdict, reason = _phase44_compare_audition_flips(host.get("first_flip"), cell.get("first_flip"))
+    return {
+        "host": host,
+        "cell": cell,
+        "verdict": verdict,
+        "verdict_reason": reason,
+        "frames_spent": int(host.get("frames_spent", 0)) + int(cell.get("frames_spent", 0)),
+    }
+
+
+def _phase44_audition_rollout(
+    cfg: StageBEcologicalDiscoveryConfig,
+    board: chess.Board,
+    counts: Mapping[Any, int],
+    *,
+    score_provider: Any,
+    first_move: chess.Move,
+    success_kind: str,
+    seed: int,
+    judge_cache: tuple[dict[str, dict[str, Any]], dict[str, dict[str, Any]]],
+) -> dict[str, Any]:
+    scorer = None if cfg.fast_exact_judge or success_kind == "approach_waypoint" else load_canonical_mate2_first_scorer()
+    mate2_cache, enter_cache = judge_cache
+    local_board = board.copy(stack=False)
+    local_counts: Counter[Any] = Counter(counts)
+    rng = random.Random(seed)
+    transitions: list[dict[str, Any]] = []
+    endpoint = "horizon"
+    first_flip: dict[str, Any] | None = None
+    horizon = max(1, int(cfg.real_native_audition_horizon_plies))
+    for ply in range(horizon):
+        if local_board.turn != chess.WHITE or local_board.is_game_over(claim_draw=False):
+            endpoint = "terminal"
+            break
+        move = first_move if ply == 0 else _phase44_host_argmax_move(local_board, local_counts, score_provider)
+        if move is None or move not in local_board.legal_moves:
+            endpoint = "illegal"
+            break
+        if int(local_counts.get(_after_move_repetition_key(local_board, move), 0)) >= 2:
+            endpoint = "third_repetition"
+            break
+        transition = {
+            "ply": int(ply),
+            "before_fen": local_board.fen(),
+            "white_move": move.uci(),
+            "before_fence_established": bool(fence_established_geometry(local_board)),
+            "before_rook_present": bool(_white_rook_square(local_board) is not None),
+        }
+        local_board.push(move)
+        local_counts[_position_repetition_key(local_board)] += 1
+        local_counts[local_board._transposition_key()] += 1
+        transition.update(
+            {
+                "after_white_fen": local_board.fen(),
+                "after_white_fence_established": bool(fence_established_geometry(local_board)),
+                "after_white_rook_present": bool(_white_rook_square(local_board) is not None),
+            }
+        )
+        first_flip = _phase44_transition_flip_event(transition)
+        if first_flip is not None:
+            endpoint = str(first_flip["reason"])
+            transitions.append(transition)
+            break
+        if _white_rook_square(local_board) is None:
+            endpoint = "rook_lost"
+            transitions.append(transition)
+            break
+        if local_board.is_stalemate():
+            endpoint = "stalemate"
+            transitions.append(transition)
+            break
+        if local_board.is_checkmate():
+            first_flip = {"ply": int(ply), "valence": "positive", "reason": "mate_delivered_after_white"}
+            endpoint = "mate_delivered"
+            transitions.append(transition)
+            break
+        reply = _select_black_reply_for_rollout(
+            cfg,
+            local_board,
+            rng,
+            success_kind=success_kind,
+            scorer=scorer,
+            mate2_cache=mate2_cache,
+            enter_cache=enter_cache,
+            black_reply_policy="exact_adversarial",
+        )
+        if reply is None:
+            endpoint = "mate_delivered" if local_board.is_check() else "stalemate"
+            if local_board.is_check():
+                first_flip = {"ply": int(ply), "valence": "positive", "reason": "mate_delivered_black_no_reply"}
+            transition["black_reply"] = None
+            transitions.append(transition)
+            break
+        transition["black_reply"] = reply.uci()
+        local_board.push(reply)
+        local_counts[_position_repetition_key(local_board)] += 1
+        local_counts[local_board._transposition_key()] += 1
+        transition.update(
+            {
+                "after_black_fen": local_board.fen(),
+                "after_black_fence_established": bool(fence_established_geometry(local_board)),
+                "after_black_rook_present": bool(_white_rook_square(local_board) is not None),
+            }
+        )
+        first_flip = _phase44_transition_flip_event(transition)
+        transitions.append(transition)
+        if first_flip is not None:
+            endpoint = str(first_flip["reason"])
+            break
+        if _white_rook_square(local_board) is None:
+            endpoint = "rook_lost"
+            break
+        if local_board.is_stalemate():
+            endpoint = "stalemate"
+            break
+        if not fence_established_geometry(local_board):
+            first_flip = {"ply": int(ply), "valence": "negative", "reason": "fence_broken_after_black"}
+            endpoint = "fence_broken_after_black"
+            break
+    return {
+        "first_move": first_move.uci(),
+        "endpoint": endpoint,
+        "first_flip": first_flip,
+        "frames_spent": len(transitions),
+        "transition_sample": transitions[: int(cfg.max_samples)],
+    }
+
+
+def _phase44_host_argmax_move(
+    board: chess.Board,
+    counts: Mapping[Any, int],
+    score_provider: Any,
+) -> chess.Move | None:
+    legal = _legal_without_third_repetition(board, counts)
+    if not legal:
+        legal = tuple(sorted(board.legal_moves, key=lambda move: move.uci()))
+    if not legal:
+        return None
+    scores = score_provider(board, counts)
+    rows = [(float(scores.get(move.uci(), 0.0)), move.uci(), move) for move in legal]
+    rows.sort(reverse=True)
+    return rows[0][-1]
+
+
+def _phase44_transition_flip_event(transition: Mapping[str, Any]) -> dict[str, Any] | None:
+    ply = int(transition.get("ply", 0))
+    before_fence = bool(transition.get("before_fence_established"))
+    before_rook = bool(transition.get("before_rook_present"))
+    before_waypoint = _phase42_waypoint_from_fen(transition.get("before_fen"))
+    after_white_fence = transition.get("after_white_fence_established")
+    after_white_rook = transition.get("after_white_rook_present")
+    after_white_waypoint = _phase42_waypoint_from_fen(transition.get("after_white_fen"))
+    if before_rook and after_white_rook is False:
+        return {"ply": ply, "valence": "negative", "reason": "rook_lost_after_white"}
+    if before_fence and after_white_fence is False:
+        return {"ply": ply, "valence": "negative", "reason": "fence_broken_after_white"}
+    if before_fence is False and after_white_fence is True:
+        return {"ply": ply, "valence": "positive", "reason": "fence_established_after_white"}
+    if before_waypoint is False and after_white_waypoint is True:
+        return {"ply": ply, "valence": "positive", "reason": "waypoint_entered_after_white"}
+    if "after_black_fen" not in transition:
+        return None
+    after_black_fence = transition.get("after_black_fence_established")
+    after_black_rook = transition.get("after_black_rook_present")
+    after_black_waypoint = _phase42_waypoint_from_fen(transition.get("after_black_fen"))
+    if after_white_rook is True and after_black_rook is False:
+        return {"ply": ply, "valence": "negative", "reason": "rook_lost_after_black"}
+    if after_white_fence is True and after_black_fence is False:
+        return {"ply": ply, "valence": "negative", "reason": "fence_broken_after_black"}
+    if after_white_fence is False and after_black_fence is True:
+        return {"ply": ply, "valence": "positive", "reason": "fence_established_after_black"}
+    if after_white_waypoint is False and after_black_waypoint is True:
+        return {"ply": ply, "valence": "positive", "reason": "waypoint_entered_after_black"}
+    return None
+
+
+def _phase44_compare_audition_flips(
+    host_flip: Any,
+    cell_flip: Any,
+) -> tuple[str, str]:
+    host = host_flip if isinstance(host_flip, Mapping) else None
+    cell = cell_flip if isinstance(cell_flip, Mapping) else None
+    if host is None and cell is None:
+        return "tie", "no_flip_both_lines"
+    if host is None and cell is not None:
+        return (
+            ("cell_better", "cell_positive_host_no_flip")
+            if cell.get("valence") == "positive"
+            else ("cell_worse", "cell_negative_host_no_flip")
+        )
+    if host is not None and cell is None:
+        return (
+            ("cell_worse", "host_positive_cell_no_flip")
+            if host.get("valence") == "positive"
+            else ("cell_better", "host_negative_cell_no_flip")
+        )
+    host_valence = str(host.get("valence"))
+    cell_valence = str(cell.get("valence"))
+    host_ply = int(host.get("ply", 0))
+    cell_ply = int(cell.get("ply", 0))
+    if cell_valence == "positive" and host_valence == "negative":
+        return "cell_better", "cell_positive_host_negative"
+    if cell_valence == "negative" and host_valence == "positive":
+        return "cell_worse", "cell_negative_host_positive"
+    if cell_valence == "positive" and host_valence == "positive":
+        if cell_ply < host_ply:
+            return "cell_better", "cell_positive_first"
+        if host_ply < cell_ply:
+            return "cell_worse", "host_positive_first"
+        return "tie", "same_positive_flip_ply"
+    if cell_valence == "negative" and host_valence == "negative":
+        if host_ply < cell_ply:
+            return "cell_better", "host_negative_first"
+        if cell_ply < host_ply:
+            return "cell_worse", "cell_negative_first"
+        return "tie", "same_negative_flip_ply"
+    return "tie", "unclassified_equal_flip"
+
+
+def _phase44_audition_distribution(runtime: _GraphNativeCompositeRuntime) -> dict[str, Any]:
+    counts = [
+        int(item.get("audition_count", 0))
+        for item in runtime.population.values()
+        if item.get("birth_segment") != "acceptance_probe"
+    ]
+    histogram = Counter(counts)
+    sorted_counts = sorted(counts)
+    median = sorted_counts[len(sorted_counts) // 2] if sorted_counts else 0
+    return {
+        "cell_count": len(counts),
+        "min": min(counts) if counts else 0,
+        "median": median,
+        "max": max(counts) if counts else 0,
+        "mean": sum(counts) / max(1, len(counts)),
+        "histogram": {str(key): int(value) for key, value in sorted(histogram.items())},
+    }
+
+
+def _phase44_audition_starvation(training: Mapping[str, Any]) -> dict[str, Any]:
+    distribution = training.get("auditions_per_cell_distribution", {})
+    mean = float(distribution.get("mean", 0.0)) if isinstance(distribution, Mapping) else 0.0
+    cell_count = int(distribution.get("cell_count", 0)) if isinstance(distribution, Mapping) else 0
+    threshold = float(training.get("audition_starvation_min_per_cell", 1.0))
+    return {
+        "starved": bool(cell_count > 0 and mean < threshold),
+        "mean_auditions_per_cell": mean,
+        "cell_count": cell_count,
+        "threshold": threshold,
+        "trial_cell_proposal_count": int(training.get("trial_cell_proposal_count", 0)),
+        "audition_request_count": int(training.get("audition_request_count", 0)),
+        "audition_count": int(training.get("audition_count", 0)),
+    }
+
+
 def _phase43_spawn_from_context(
     cfg: StageBEcologicalDiscoveryConfig,
     runtime: _GraphNativeCompositeRuntime,
@@ -4184,6 +5255,105 @@ def _phase43_choice_change_table(per_seed: Sequence[Mapping[str, Any]]) -> list[
     return rows
 
 
+def _phase44_headline_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    table: list[dict[str, Any]] = []
+    for row in per_seed:
+        population = row.get("population", {})
+        rescue = row.get("pruned_rescue_audit", {})
+        ablation = row.get("post_hoc_ablation", {})
+        stage_a = row.get("stage_a", {}) if isinstance(row.get("stage_a"), Mapping) else {}
+        stage_b = row.get("stage_b", {}) if isinstance(row.get("stage_b"), Mapping) else {}
+        stage_b_gates = stage_b.get("ecology_gates", {}) if isinstance(stage_b, Mapping) else {}
+        stage_a_training = stage_a.get("ecology_training", {}) if isinstance(stage_a, Mapping) else {}
+        stage_b_training = stage_b.get("ecology_training", {}) if isinstance(stage_b, Mapping) else {}
+        table.append(
+            {
+                "seed": int(row["seed"]),
+                "flat_seed": int(row["flat_seed"]),
+                "stop_reasons": list(row.get("stop_reasons", ())),
+                "stage_a_auditions_per_cell_mean": _phase42_nested_float(stage_a_training, ("auditions_per_cell_distribution", "mean")),
+                "stage_b_auditions_per_cell_mean": _phase42_nested_float(stage_b_training, ("auditions_per_cell_distribution", "mean")),
+                "stage_a_verdict_counts": dict(stage_a_training.get("audition_verdict_counts", {})) if isinstance(stage_a_training, Mapping) else {},
+                "stage_b_verdict_counts": dict(stage_b_training.get("audition_verdict_counts", {})) if isinstance(stage_b_training, Mapping) else {},
+                "stage_a_audition_frames": int(stage_a_training.get("audition_frames_spent", 0)) if isinstance(stage_a_training, Mapping) else 0,
+                "stage_b_audition_frames": int(stage_b_training.get("audition_frames_spent", 0)) if isinstance(stage_b_training, Mapping) else 0,
+                "mature_count": int(population.get("mature_count", 0)),
+                "trial_count": int(population.get("trial_count", 0)),
+                "pruned_count": int(population.get("pruned_count", 0)),
+                "births_blocked_by_capacity": int(population.get("births_blocked_by_capacity_total", 0)),
+                "stage_a_population_stable": _phase42_nested_bool(stage_a, ("population_stability", "stable")),
+                "stage_b_population_stable": _phase42_nested_bool(stage_b, ("population_stability", "stable")),
+                "birth_death_curve": [
+                    {
+                        "segment": curve.get("segment"),
+                        "step": int(curve.get("step", 0)),
+                        "trial": int(curve.get("trial", 0)),
+                        "mature": int(curve.get("mature", 0)),
+                        "pruned": int(curve.get("pruned", 0)),
+                        "alive_total": int(curve.get("alive_total", 0)),
+                    }
+                    for curve in row.get("birth_death_curve", ())
+                ],
+                "load_bearing_mature": int(ablation.get("load_bearing_count", 0)),
+                "inert_mature": int(ablation.get("inert_count", 0)),
+                "harmful_mature": int(ablation.get("harmful_count", 0)),
+                "helpful_pruned": int(rescue.get("load_bearing_but_pruned_count", 0)),
+                "stage_b_host_plus_mature_wins": _phase42_nested_int(stage_b_gates, ("mature_eval", "wins")),
+                "stage_b_host_wins": _phase42_nested_int(stage_b, ("host_gate", "wins")),
+                "stage_b_mature_minus_host": int(stage_b_gates.get("mature_minus_host_wins", 0)) if stage_b_gates else None,
+                "top_alive": list(population.get("top_alive", ())),
+            }
+        )
+    return table
+
+
+def _phase44_audition_signal_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for row in per_seed:
+        segments = [
+            ("foundation", row.get("foundation_ecology_training", {})),
+        ]
+        stage_a = row.get("stage_a", {}) if isinstance(row.get("stage_a"), Mapping) else {}
+        stage_b = row.get("stage_b", {}) if isinstance(row.get("stage_b"), Mapping) else {}
+        segments.append(("stage_a", stage_a.get("ecology_training", {})))
+        segments.append(("stage_b", stage_b.get("ecology_training", {})))
+        for segment_name, training in segments:
+            if not isinstance(training, Mapping) or not training:
+                continue
+            rows.append(
+                {
+                    "seed": int(row["seed"]),
+                    "flat_seed": int(row["flat_seed"]),
+                    "segment": segment_name,
+                    "decision_ply_count": int(training.get("decision_ply_count", 0)),
+                    "choice_changed_ply_rate": float(training.get("choice_changed_ply_rate", 0.0)),
+                    "trial_cell_proposal_count": int(training.get("trial_cell_proposal_count", 0)),
+                    "disagreement_ply_count": int(training.get("disagreement_ply_count", 0)),
+                    "disagreement_ply_rate": float(training.get("disagreement_ply_rate", 0.0)),
+                    "audition_request_count": int(training.get("audition_request_count", 0)),
+                    "audition_count": int(training.get("audition_count", 0)),
+                    "auditions_per_cell_distribution": dict(
+                        training.get("auditions_per_cell_distribution", {})
+                    ),
+                    "audition_verdict_counts": dict(training.get("audition_verdict_counts", {})),
+                    "audition_verdict_rates": dict(training.get("audition_verdict_rates", {})),
+                    "audition_verdict_reason_counts": dict(
+                        training.get("audition_verdict_reason_counts", {})
+                    ),
+                    "audition_frames_spent": int(training.get("audition_frames_spent", 0)),
+                    "audition_cap_skip_count": int(training.get("audition_cap_skip_count", 0)),
+                    "audition_budget_skip_count": int(training.get("audition_budget_skip_count", 0)),
+                    "births_blocked_by_capacity_delta": int(
+                        training.get("births_blocked_by_capacity_delta", 0)
+                    ),
+                    "births_blocked_by_capacity_total": int(
+                        training.get("births_blocked_by_capacity_total", 0)
+                    ),
+                }
+            )
+    return rows
+
+
 def _phase42_acceptance_margin_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for row in per_seed:
@@ -4249,6 +5419,15 @@ def _phase42_nested_int(row: Mapping[str, Any], path: Sequence[str]) -> int | No
             return None
         current = current[key]
     return int(current)
+
+
+def _phase42_nested_float(row: Mapping[str, Any], path: Sequence[str]) -> float | None:
+    current: Any = row
+    for key in path:
+        if not isinstance(current, Mapping) or key not in current:
+            return None
+        current = current[key]
+    return float(current)
 
 
 def _phase42_nested_bool(row: Mapping[str, Any], path: Sequence[str]) -> bool | None:
