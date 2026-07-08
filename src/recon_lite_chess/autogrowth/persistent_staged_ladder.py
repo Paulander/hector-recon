@@ -30,6 +30,7 @@ from .stage_b_ecological_discovery_probe import (
     _new_judge_cache,
     _phase32_real_recurring_mature_composites,
     _real_native_ablation_health,
+    _real_native_composite_weight,
     _real_native_parent_id,
     _real_native_pruned_rescue_audit,
     _real_native_spawn_from_context,
@@ -1106,6 +1107,7 @@ def run_phase42_standing_ladder_ecology_probe(
 
     per_seed: list[dict[str, Any]] = []
     global_stop_reasons: list[str] = []
+
     for index, seed in enumerate(cfg.seeds):
         flat_seed = int(cfg.flat_baseline_seeds[index % len(cfg.flat_baseline_seeds)])
         foundation = _train_native_foundation_for_ecology(cfg)
@@ -1592,6 +1594,7 @@ def run_phase43_discriminative_cell_economy_probe(
 
     per_seed: list[dict[str, Any]] = []
     global_stop_reasons: list[str] = []
+
     for index, seed in enumerate(cfg.seeds):
         flat_seed = int(cfg.flat_baseline_seeds[index % len(cfg.flat_baseline_seeds)])
         foundation = _train_native_foundation_for_ecology(cfg)
@@ -2107,9 +2110,24 @@ def run_phase44_audition_cell_economy_probe(
 
     per_seed: list[dict[str, Any]] = []
     global_stop_reasons: list[str] = []
+
+    def write_probation_progress(seed_value: int, status: str, payload: Mapping[str, Any] | None = None) -> None:
+        if not bool(getattr(cfg, "real_native_probation_enabled", False)):
+            return
+        _write_json(
+            output_dir / f"seed_{seed_value}_probation_progress.json",
+            {
+                "seed": int(seed_value),
+                "status": str(status),
+                "payload": dict(payload or {}),
+            },
+        )
+
     for index, seed in enumerate(cfg.seeds):
         flat_seed = int(cfg.flat_baseline_seeds[index % len(cfg.flat_baseline_seeds)])
+        write_probation_progress(int(seed), "foundation_training_start", {"flat_seed": flat_seed})
         foundation = _train_native_foundation_for_ecology(cfg)
+        write_probation_progress(int(seed), "foundation_training_done")
         native_graph = foundation["graph"]
         runtime = _GraphNativeCompositeRuntime(cfg, native_graph, seed=int(seed))
         foundation_rows = _foundation_ecology_rows(cfg, seed=int(seed))
@@ -2162,12 +2180,14 @@ def run_phase44_audition_cell_economy_probe(
         if not foundation_gate["passed"]:
             seed_result["stop_reasons"].append("foundation_gate_failed")
         if seed_result["stop_reasons"]:
+            write_probation_progress(int(seed), "stopped_after_acceptance_or_foundation", {"stop_reasons": seed_result["stop_reasons"]})
             _write_json(output_dir / f"seed_{seed}_audition_cell_economy.json", seed_result)
             per_seed.append(seed_result)
             global_stop_reasons.extend(f"{reason}:{seed}" for reason in seed_result["stop_reasons"])
             continue
 
         foundation_provider = _NativeFoundationScoreProvider(native_graph)
+        write_probation_progress(int(seed), "foundation_ecology_start")
         seed_result["foundation_ecology_training"] = _phase44_train_audition_ecology_segment(
             cfg,
             runtime=runtime,
@@ -2178,6 +2198,11 @@ def run_phase44_audition_cell_economy_probe(
             seed=int(seed) + 3_000,
             step_offset=0,
         )
+        write_probation_progress(
+            int(seed),
+            "foundation_ecology_done",
+            {"population": runtime.population_summary()},
+        )
 
         stage_a_provider = _MigratedStageBFlatGraphScoreProvider(
             cfg,
@@ -2187,6 +2212,7 @@ def run_phase44_audition_cell_economy_probe(
             policy_parent_id="stage_a_policy_phase3_14",
             terminal_namespace=f"phase3_14_stage_a_{flat_seed}",
         )
+        write_probation_progress(int(seed), "stage_a_host_training_start")
         stage_a_training = _phase41_train_credit_precision(
             cfg,
             provider=stage_a_provider,
@@ -2197,6 +2223,7 @@ def run_phase44_audition_cell_economy_probe(
             success_kind="approach_waypoint",
             rung_name="stage_a_approach",
         )
+        write_probation_progress(int(seed), "stage_a_host_training_done", {"chunks_consolidated": int(stage_a_training["chunks_consolidated"])})
         stage_a_host_gate_eval = _phase38_migrated_provider_traces(
             cfg,
             stage_a_gate_rows,
@@ -2221,11 +2248,13 @@ def run_phase44_audition_cell_economy_probe(
         if not stage_a_host_gate["passed"]:
             seed_result["stop_reasons"].append("stage_a_host_gate_unreachable_after_budget")
         if seed_result["stop_reasons"]:
+            write_probation_progress(int(seed), "stopped_after_stage_a_host", {"stop_reasons": seed_result["stop_reasons"]})
             _write_json(output_dir / f"seed_{seed}_audition_cell_economy.json", seed_result)
             per_seed.append(seed_result)
             global_stop_reasons.extend(f"{reason}:{seed}" for reason in seed_result["stop_reasons"])
             continue
 
+        write_probation_progress(int(seed), "stage_a_ecology_start")
         seed_result["stage_a"]["ecology_training"] = _phase44_train_audition_ecology_segment(
             cfg,
             runtime=runtime,
@@ -2235,6 +2264,11 @@ def run_phase44_audition_cell_economy_probe(
             success_kind="approach_waypoint",
             seed=int(seed) + 12_000,
             step_offset=10_000,
+        )
+        write_probation_progress(
+            int(seed),
+            "stage_a_ecology_done",
+            {"population": runtime.population_summary()},
         )
         stage_a_ecology_gates = _phase42_ecology_gate_bundle(
             cfg,
@@ -2279,6 +2313,7 @@ def run_phase44_audition_cell_economy_probe(
         if stage_a_scheduled_stop["stop"]:
             seed_result["stop_reasons"].append("scheduled_unjudged_after_stage_a")
         if seed_result["stop_reasons"]:
+            write_probation_progress(int(seed), "stopped_after_stage_a_ecology", {"stop_reasons": seed_result["stop_reasons"]})
             seed_result["population"] = runtime.population_summary()
             seed_result["birth_death_curve"] = runtime.birth_curve
             seed_result["candidate_fate_log"] = runtime.fate_log()
@@ -2345,6 +2380,7 @@ def run_phase44_audition_cell_economy_probe(
                 success_kind="approach_waypoint",
             )
 
+        write_probation_progress(int(seed), "stage_b_host_training_start")
         stage_b_training = _phase41_train_credit_precision(
             cfg,
             provider=stage_b_provider,
@@ -2360,6 +2396,7 @@ def run_phase44_audition_cell_economy_probe(
             success_kind="stage_b_enter_mate2",
             rung_name="stage_b_chase",
         )
+        write_probation_progress(int(seed), "stage_b_host_training_done", {"chunks_consolidated": int(stage_b_training["chunks_consolidated"])})
         stage_b_host_gate_eval = _phase38_migrated_provider_traces(
             cfg,
             stage_b_gate_rows,
@@ -2406,6 +2443,7 @@ def run_phase44_audition_cell_economy_probe(
         if not stage_a_host_regression_gate["passed"]:
             seed_result["stop_reasons"].append("stage_a_host_regression_after_stage_b")
         if seed_result["stop_reasons"]:
+            write_probation_progress(int(seed), "stopped_after_stage_b_host", {"stop_reasons": seed_result["stop_reasons"]})
             seed_result["population"] = runtime.population_summary()
             seed_result["birth_death_curve"] = runtime.birth_curve
             seed_result["candidate_fate_log"] = runtime.fate_log()
@@ -2414,6 +2452,7 @@ def run_phase44_audition_cell_economy_probe(
             global_stop_reasons.extend(f"{reason}:{seed}" for reason in seed_result["stop_reasons"])
             continue
 
+        write_probation_progress(int(seed), "stage_b_ecology_start")
         seed_result["stage_b"]["ecology_training"] = _phase44_train_audition_ecology_segment(
             cfg,
             runtime=runtime,
@@ -2423,6 +2462,11 @@ def run_phase44_audition_cell_economy_probe(
             success_kind="stage_b_enter_mate2",
             seed=int(seed) + 23_000,
             step_offset=20_000,
+        )
+        write_probation_progress(
+            int(seed),
+            "stage_b_ecology_done",
+            {"population": runtime.population_summary()},
         )
         stage_b_ecology_gates = _phase42_ecology_gate_bundle(
             cfg,
@@ -2510,6 +2554,7 @@ def run_phase44_audition_cell_economy_probe(
             seed_result["stop_reasons"].append("stage_a_live_cell_regression_after_stage_b")
         if seed_result["stop_reasons"]:
             global_stop_reasons.extend(f"{reason}:{seed}" for reason in seed_result["stop_reasons"])
+        write_probation_progress(int(seed), "seed_done", {"stop_reasons": seed_result["stop_reasons"]})
         _write_json(output_dir / f"seed_{seed}_audition_cell_economy.json", seed_result)
         per_seed.append(seed_result)
         if (
@@ -2858,6 +2903,121 @@ def run_phase47_supply_side_audition_economy_probe(
     return summary
 
 
+def run_phase48_probation_audition_economy_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    """Phase 3.18: audition nominates, validation counterfactual confirms."""
+
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_18_probation_audition_economy",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        flat_baseline_seeds=(20272911, 20272912, 20272913),
+        stage_a_train_row_limit=128,
+        train_row_limit=128,
+        heldout_row_limit=None,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+        real_native_engine_max_ticks=80,
+        real_native_max_live_composites=32,
+        real_native_max_live_siblings_per_parent=4,
+        real_native_trial_grace_exposures=3,
+        real_native_dormant_decay=0.002,
+        real_native_critical_period_exposures=5,
+        real_native_critical_period_credit_multiplier=1.75,
+        real_native_critical_period_optimism=0.025,
+        real_native_positive_flip_credit=0.060,
+        real_native_positive_flip_window=2,
+        real_native_choice_change_mature_events=3,
+        real_native_choice_change_neutral_rent=0.006,
+        real_native_near_zero_choice_change_rate=0.01,
+        real_native_stability_band_multiplier=5,
+        real_native_audition_budget_per_cell=10,
+        real_native_audition_per_ply_cap=2,
+        real_native_audition_horizon_plies=8,
+        real_native_audition_mature_better_events=3,
+        real_native_audition_neutral_rent=0.004,
+        real_native_audition_debt_threshold=3,
+        real_native_audition_starvation_min_per_cell=0.0,
+        real_native_scheduled_audition_chunk_size=8,
+        real_native_scheduled_unjudged_fraction_stop=0.0,
+        real_native_scheduled_complete_flush=True,
+        real_native_homeostatic_backlog_threshold=0.0,
+        real_native_pool_scan_auditions=True,
+        real_native_trial_band_min=20,
+        real_native_trial_band_max=60,
+        real_native_court_throughput_per_chunk=0,
+        real_native_probation_enabled=True,
+        real_native_probation_validation_rows=32,
+        real_native_probation_noise_margin_wins=1,
+        real_native_probation_max_retests=2,
+        real_native_continue_after_seed_stop=True,
+        real_native_max_ablation_subjects=256,
+    )
+    output_dir = Path(cfg.output_dir)
+    forensics = _phase48_phase317_forensics()
+    summary = run_phase44_audition_cell_economy_probe(config=cfg)
+    correspondence = _phase45_composite_correspondence_table()
+    confirmed_recurrence = _phase48_family_recurrence(summary.get("per_seed", []), tier="confirmed")
+    nomination_recurrence = _phase48_family_recurrence(summary.get("per_seed", []), tier="nomination")
+    confirmed_dumps = _phase48_confirmed_cell_dumps(summary.get("per_seed", []))
+    funnel = _phase48_funnel_table(summary.get("per_seed", []))
+    gate_margin = _phase41_gate_margin_wins()
+    design = _design_spec(cfg)
+    design["schema_version"] = "phase3_18_probation_audition_economy_design_spec.v0"
+    design["phase_alias"] = "User-requested Phase 3.18 probation tier: nominate by audition, confirm by counterfactual"
+    design["host_ladder"] = {
+        "base_commit": "ad0fd99",
+        "frozen_from": "Phase 3.17 supply-side audition economy, with only the lifecycle acceptance tier changed",
+        "paired_gate_spec": _phase41_paired_gate_spec(gate_margin),
+    }
+    design["ecology"] = _phase48_ecology_spec(cfg)
+    design["phase3_17_forensics_before_mechanism"] = forensics
+    design["cross_experiment_composite_correspondence"] = correspondence
+    _write_json(output_dir / "design_spec.json", design)
+
+    for row in summary.get("per_seed", []):
+        row["schema_version"] = "phase3_18_probation_audition_economy_seed.v0"
+        row["ecology_spec"] = _phase48_ecology_spec(cfg)
+        row["phase3_17_forensics_before_mechanism"] = forensics
+        row["cross_experiment_composite_correspondence"] = correspondence
+        _write_json(output_dir / f"seed_{row['seed']}_probation_audition_economy.json", row)
+
+    tables = dict(summary.get("tables", {}))
+    summary["schema_version"] = "phase3_18_probation_audition_economy.v0"
+    summary["phase"] = "Phase 3.18 probation tier: nominate by audition, confirm by counterfactual"
+    summary["ecology"] = _phase48_ecology_spec(cfg)
+    summary["phase3_17_forensics_before_mechanism"] = forensics
+    summary["cross_experiment_composite_correspondence"] = correspondence
+    summary["cross_seed_recurring_confirmed_families"] = confirmed_recurrence
+    summary["cross_seed_recurring_nomination_families"] = nomination_recurrence
+    summary["confirmed_cell_dumps"] = confirmed_dumps
+    summary["tables"] = {
+        "phase3_18_forensics": [forensics],
+        "phase3_18_funnel": funnel,
+        "phase3_18_confirmed_recurrence_by_family": confirmed_recurrence,
+        "phase3_18_nomination_recurrence_by_family": nomination_recurrence,
+        "phase3_18_confirmed_cell_dumps": confirmed_dumps,
+        "phase3_18_headline": _phase48_headline_table(summary.get("per_seed", [])),
+        "phase3_18_audition_signal": tables.get("phase3_14_audition_signal", []),
+        "phase3_18_acceptance_margins": tables.get("phase3_14_acceptance_margins", []),
+        "phase3_18_cross_rung_survivors": summary.get("cross_rung_load_bearing_survivors", []),
+        "phase3_18_cross_experiment_composite_correspondence": correspondence,
+    }
+    summary["decision"]["confirmed_cell_count"] = len(confirmed_dumps)
+    summary["decision"]["recurring_confirmed_family_count"] = sum(
+        1 for row in confirmed_recurrence if bool(row.get("recurs_3_of_5"))
+    )
+    summary["decision"]["recurring_nomination_family_count"] = sum(
+        1 for row in nomination_recurrence if bool(row.get("recurs_3_of_5"))
+    )
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
 def _phase39_split_law(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
     return {
         "law": (
@@ -3126,6 +3286,273 @@ def _phase47_ecology_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any
         }
     )
     return spec
+
+
+def _phase48_ecology_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
+    spec = _phase47_ecology_spec(cfg)
+    spec["probation_confirmation"] = {
+        "enabled": bool(getattr(cfg, "real_native_probation_enabled", False)),
+        "lifecycle": "TRIAL -> PROBATION on audition nomination -> MATURE only after validation counterfactual confirmation",
+        "validation_source": "fresh sample from the current rung train pool; gate heldout remains post-hoc only",
+        "validation_rows": int(getattr(cfg, "real_native_probation_validation_rows", 32)),
+        "noise_margin_wins": int(getattr(cfg, "real_native_probation_noise_margin_wins", 1)),
+        "max_retests_before_prune": int(getattr(cfg, "real_native_probation_max_retests", 2)),
+        "confirmation_cadence": "after each rung's complete audition flush, before stability and gate checks",
+        "weight_rule": (
+            "probation freezes the audition-time advisory weight as routing_weight_override; "
+            "confirmation preserves that weight, so MATURE routing has no promotion-time scale jump"
+        ),
+        "recurrence_claim_tier": "confirmed/MATURE after validation, not audition nomination",
+    }
+    return spec
+
+
+def _phase48_phase317_forensics(
+    path: str = "reports/autogrowth/clean_slate_krk/phase3_17_supply_side_audition_economy/summary.json",
+) -> dict[str, Any]:
+    artifact = Path(path)
+    if not artifact.exists():
+        return {"artifact": str(artifact), "available": False, "reason": "phase3_17_summary_not_found"}
+    payload = json.loads(artifact.read_text(encoding="utf-8"))
+    deltas: list[int] = []
+    paired_available = True
+    for seed_row in payload.get("per_seed", ()):
+        for record in seed_row.get("post_hoc_ablation", {}).get("records", ()):
+            deltas.append(int(record.get("ablation_delta", 0)))
+            paired_available = paired_available and isinstance(record.get("paired"), Mapping)
+    abs_deltas = sorted(abs(value) for value in deltas)
+
+    def quantile(q: float) -> int | None:
+        if not abs_deltas:
+            return None
+        return int(abs_deltas[int(q * (len(abs_deltas) - 1))])
+
+    negative = sum(1 for value in deltas if value < 0)
+    zero = sum(1 for value in deltas if value == 0)
+    positive = sum(1 for value in deltas if value > 0)
+    return {
+        "artifact": str(artifact),
+        "available": True,
+        "mature_cell_count": len(deltas),
+        "delta_sign_counts": {"negative": negative, "zero": zero, "positive": positive},
+        "delta_range": {"min": min(deltas) if deltas else None, "max": max(deltas) if deltas else None},
+        "absolute_delta_distribution": {
+            "min": quantile(0.0),
+            "p25": quantile(0.25),
+            "median": quantile(0.50),
+            "p75": quantile(0.75),
+            "p90": quantile(0.90),
+            "max": quantile(1.0),
+            "mean": (sum(abs_deltas) / len(abs_deltas)) if abs_deltas else None,
+            "count_abs_le_1": sum(1 for value in abs_deltas if value <= 1),
+            "count_abs_le_3": sum(1 for value in abs_deltas if value <= 3),
+            "count_abs_le_5": sum(1 for value in abs_deltas if value <= 5),
+        },
+        "paired_discordant_tables_available": bool(paired_available and deltas),
+        "paired_discordant_tables_gap": (
+            None if paired_available and deltas
+            else "3.17 persisted full/ablated win counts but not per-cell ablated success_by_row vectors; exact row flip tables cannot be reconstructed"
+        ),
+        "maturation_weight_forensics": {
+            "state_label_enters_weight_formula": False,
+            "formula": "min(max_advisory_weight, initial_weight + 0.04 * local_resource + critical_period_optimism)",
+            "explicit_mature_scale_jump": False,
+            "remaining_confound": "resource/optimism can drift before maturity; Phase 3.18 freezes audition-time routed weight at PROBATION",
+        },
+        "verdict": (
+            "154_harmful_survives_magnitude_scrutiny"
+            if len(deltas) == 154 and negative == 154 and abs_deltas and min(abs_deltas) > 5
+            else "inspect_distribution"
+        ),
+    }
+
+
+def _phase48_probation_records(seed_row: Mapping[str, Any]) -> list[dict[str, Any]]:
+    segments: list[Mapping[str, Any]] = []
+    foundation = seed_row.get("foundation_ecology_training", {})
+    if isinstance(foundation, Mapping):
+        segments.append(foundation)
+    stage_a = seed_row.get("stage_a", {}) if isinstance(seed_row.get("stage_a"), Mapping) else {}
+    stage_b = seed_row.get("stage_b", {}) if isinstance(seed_row.get("stage_b"), Mapping) else {}
+    for segment in (stage_a.get("ecology_training", {}), stage_b.get("ecology_training", {})):
+        if isinstance(segment, Mapping):
+            segments.append(segment)
+    records: list[dict[str, Any]] = []
+    for segment in segments:
+        records.extend(dict(record) for record in segment.get("probation_confirmation_records", ()))
+    return records
+
+
+def _phase48_funnel_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for seed_row in per_seed:
+        fate_log = list(seed_row.get("candidate_fate_log", ()))
+        nominated_ids = {
+            str(item.get("composite_id"))
+            for item in fate_log
+            if item.get("probation_entry_weight") is not None
+            or any(str(event.get("event", "")).startswith("probation_") for event in item.get("fate_events", ()))
+        }
+        records = _phase48_probation_records(seed_row)
+        decision_counts = Counter(str(record.get("decision", "unknown")) for record in records)
+        final_counts = Counter(str(item.get("state", "unknown")) for item in fate_log if str(item.get("composite_id")) in nominated_ids)
+        rows.append(
+            {
+                "seed": int(seed_row.get("seed", 0)),
+                "nominated": len(nominated_ids),
+                "probation_tests": len(records),
+                "confirmed": int(decision_counts["confirmed"]),
+                "demoted": int(decision_counts["demoted"]),
+                "parked": int(decision_counts["parked"]),
+                "final_mature_confirmed": int(final_counts["MATURE"]),
+                "final_probation": int(final_counts["PROBATION"]),
+                "final_pruned_after_probation": int(final_counts["PRUNED"]),
+                "validation_win_loss": sum(int(record.get("paired", {}).get("win_loss", 0)) for record in records),
+                "validation_loss_win": sum(int(record.get("paired", {}).get("loss_win", 0)) for record in records),
+                "max_abs_promotion_weight_jump": max(
+                    [abs(float(record.get("promotion_weight_jump", 0.0))) for record in records] or [0.0]
+                ),
+            }
+        )
+    return rows
+
+
+def _phase48_family_recurrence(per_seed: Sequence[Mapping[str, Any]], *, tier: str) -> list[dict[str, Any]]:
+    families: dict[str, dict[str, Any]] = {}
+    for seed_row in per_seed:
+        seed = int(seed_row.get("seed", 0))
+        if tier == "confirmed":
+            source_items = [
+                item for item in seed_row.get("candidate_fate_log", ())
+                if item.get("state") == "MATURE" and item.get("probation_entry_weight") is not None
+            ]
+        else:
+            source_items = [
+                item for item in seed_row.get("candidate_fate_log", ())
+                if item.get("probation_entry_weight") is not None
+            ]
+        for item in source_items:
+            family = _phase46_composite_family(item.get("children", ()))
+            record = families.setdefault(
+                family,
+                {
+                    "family": family,
+                    "tier": tier,
+                    "seeds": set(),
+                    "cell_count": 0,
+                    "examples": [],
+                    "birth_segments": Counter(),
+                },
+            )
+            record["seeds"].add(seed)
+            record["cell_count"] += 1
+            record["birth_segments"][str(item.get("birth_segment"))] += 1
+            if len(record["examples"]) < 8:
+                record["examples"].append(
+                    {
+                        "seed": seed,
+                        "composite_id": str(item.get("composite_id")),
+                        "children": list(item.get("children", ())),
+                        "birth_segment": str(item.get("birth_segment")),
+                        "state": str(item.get("state")),
+                    }
+                )
+    rows: list[dict[str, Any]] = []
+    for record in families.values():
+        seeds = sorted(record["seeds"])
+        rows.append(
+            {
+                "family": str(record["family"]),
+                "tier": str(record["tier"]),
+                "seed_count": len(seeds),
+                "seeds": seeds,
+                "cell_count": int(record["cell_count"]),
+                "recurs_3_of_5": len(seeds) >= 3,
+                "birth_segments": dict(sorted(record["birth_segments"].items())),
+                "examples": list(record["examples"]),
+            }
+        )
+    rows.sort(key=lambda item: (-int(item["seed_count"]), str(item["family"])))
+    return rows
+
+
+def _phase48_confirmed_cell_dumps(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    dumps: list[dict[str, Any]] = []
+    for seed_row in per_seed:
+        seed = int(seed_row.get("seed", 0))
+        ablation_by_id = {
+            str(record.get("composite_id")): record
+            for record in seed_row.get("post_hoc_ablation", {}).get("records", ())
+        }
+        validation_by_id: dict[str, dict[str, Any]] = {}
+        for record in _phase48_probation_records(seed_row):
+            if record.get("decision") == "confirmed":
+                validation_by_id[str(record.get("composite_id"))] = record
+        for item in seed_row.get("candidate_fate_log", ()):
+            cid = str(item.get("composite_id"))
+            if item.get("state") != "MATURE" or item.get("probation_entry_weight") is None:
+                continue
+            validation = validation_by_id.get(cid, {})
+            ablation = ablation_by_id.get(cid, {})
+            dumps.append(
+                {
+                    "seed": seed,
+                    "composite_id": cid,
+                    "family": _phase46_composite_family(item.get("children", ())),
+                    "children": list(item.get("children", ())),
+                    "birth_segment": str(item.get("birth_segment")),
+                    "probation_entry_event": item.get("probation_entry_event"),
+                    "validation_delta_on_minus_off": validation.get("validation_delta_on_minus_off"),
+                    "validation_paired": validation.get("paired", {}),
+                    "heldout_ablation_delta": ablation.get("ablation_delta"),
+                    "heldout_classification": ablation.get("classification"),
+                    "heldout_paired": ablation.get("paired", {}),
+                    "routing_weight": item.get("routing_weight_override"),
+                }
+            )
+    dumps.sort(key=lambda item: (int(item["seed"]), str(item["family"]), str(item["composite_id"])))
+    return dumps
+
+
+def _phase48_headline_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    funnel_by_seed = {int(row["seed"]): row for row in _phase48_funnel_table(per_seed)}
+    rows: list[dict[str, Any]] = []
+    for seed_row in per_seed:
+        population = seed_row.get("population", {})
+        stage_b = seed_row.get("stage_b", {}) if isinstance(seed_row.get("stage_b"), Mapping) else {}
+        stage_b_training = stage_b.get("ecology_training", {}) if isinstance(stage_b, Mapping) else {}
+        stage_b_gates = stage_b.get("ecology_gates", {}) if isinstance(stage_b, Mapping) else {}
+        funnel = funnel_by_seed.get(int(seed_row.get("seed", 0)), {})
+        rows.append(
+            {
+                "seed": int(seed_row.get("seed", 0)),
+                "stop_reasons": list(seed_row.get("stop_reasons", ())),
+                "nominated": int(funnel.get("nominated", 0)),
+                "confirmed": int(funnel.get("confirmed", 0)),
+                "demoted": int(funnel.get("demoted", 0)),
+                "parked": int(funnel.get("parked", 0)),
+                "trial_count": int(population.get("trial_count", 0)),
+                "probation_count": int(population.get("probation_count", 0)),
+                "mature_count": int(population.get("mature_count", 0)),
+                "pruned_count": int(population.get("pruned_count", 0)),
+                "stage_b_population_curve": [
+                    {
+                        "step": int(curve.get("step", 0)),
+                        "trial": int(curve.get("trial", 0)),
+                        "probation": int(curve.get("probation", 0)),
+                        "mature": int(curve.get("mature", 0)),
+                        "pruned": int(curve.get("pruned", 0)),
+                    }
+                    for curve in seed_row.get("birth_death_curve", ())
+                    if curve.get("segment") == "stage_b_chase"
+                ],
+                "stage_b_probation_stats": dict(stage_b_training.get("probation_confirmation_stats", {})) if isinstance(stage_b_training, Mapping) else {},
+                "stage_b_host_plus_confirmed_wins": _phase42_nested_int(stage_b_gates, ("mature_eval", "wins")),
+                "stage_b_host_wins": _phase42_nested_int(stage_b, ("host_gate", "wins")),
+                "stage_b_confirmed_minus_host": int(stage_b_gates.get("mature_minus_host_wins", 0)) if stage_b_gates else None,
+            }
+        )
+    return rows
 
 
 def _phase45_composite_correspondence_table() -> list[dict[str, Any]]:
@@ -4360,6 +4787,8 @@ def _phase44_train_audition_ecology_segment(
     verdicts: Counter[str] = Counter()
     verdict_endpoints: Counter[str] = Counter()
     scheduled_stats: Counter[str] = Counter()
+    probation_stats: Counter[str] = Counter()
+    probation_records: list[dict[str, Any]] = []
     firing_buffer: defaultdict[str, list[dict[str, Any]]] = defaultdict(list)
     birth_deferred_stats: Counter[str] = Counter()
     backlog_curve: list[dict[str, Any]] = []
@@ -4491,6 +4920,7 @@ def _phase44_train_audition_ecology_segment(
                 verdict_endpoints[str(audition["verdict_reason"])] += 1
                 audition_count += 1
                 audition_frames_spent += int(audition["frames_spent"])
+                before_state = str(runtime.population.get(str(proposal["composite_id"]), {}).get("state", "missing"))
                 runtime.apply_audition_verdict(
                     composite_id=str(proposal["composite_id"]),
                     verdict=verdict,
@@ -4498,6 +4928,9 @@ def _phase44_train_audition_ecology_segment(
                     reason=str(audition["verdict_reason"]),
                     frames_spent=int(audition["frames_spent"]),
                 )
+                after_state = str(runtime.population.get(str(proposal["composite_id"]), {}).get("state", "missing"))
+                if before_state == "TRIAL" and after_state == "PROBATION":
+                    probation_stats["probation_nominated_live_audition"] += 1
                 if len(audition_records) < int(cfg.max_samples):
                     audition_records.append(
                         {
@@ -4661,6 +5094,19 @@ def _phase44_train_audition_ecology_segment(
         verdict_endpoints.update(scheduled["verdict_reason_counts"])
         audition_count += int(scheduled["audition_count"])
         audition_frames_spent += int(scheduled["audition_frames_spent"])
+        if bool(getattr(cfg, "real_native_probation_enabled", False)):
+            probation = _phase48_confirm_probation_cells(
+                cfg,
+                runtime=runtime,
+                score_provider=score_provider,
+                rows=rows,
+                success_kind=success_kind,
+                seed=int(seed) + 93_000,
+                step=int(step_offset) + len(rows),
+                segment_name=segment_name,
+            )
+            probation_stats.update(probation["counter"])
+            probation_records.extend(probation["records"])
         after_flush = _phase45_scheduled_coverage(runtime, int(cfg.real_native_audition_budget_per_cell))
         after_explanation = _phase46_under_k_explanation(
             runtime,
@@ -4725,6 +5171,8 @@ def _phase44_train_audition_ecology_segment(
         "audition_frames_spent": audition_frames_spent,
         "audition_starvation_min_per_cell": float(cfg.real_native_audition_starvation_min_per_cell),
         "scheduled_audition_stats": dict(sorted(scheduled_stats.items())),
+        "probation_confirmation_stats": dict(sorted(probation_stats.items())),
+        "probation_confirmation_records": probation_records,
         "pool_supply_stats": dict(sorted(pool_supply_stats.items())),
         "court_throughput_per_chunk": _phase47_court_throughput_per_chunk(cfg),
         "scheduled_coverage": scheduled_coverage,
@@ -5495,6 +5943,8 @@ def _phase47_run_pool_scan_auditions(
                 frames_spent=int(audition["frames_spent"]),
             )
             after = runtime.population.get(cid, {})
+            if before_state == "TRIAL" and after.get("state") == "PROBATION":
+                counter["probation_nominations"] += 1
             if before_state == "TRIAL" and after.get("state") == "PRUNED":
                 reason = str(after.get("prune_reason", "unknown"))
                 counter[f"prune_class:{reason}"] += 1
@@ -5524,6 +5974,112 @@ def _phase47_run_pool_scan_auditions(
         "audition_count": audition_count,
         "audition_frames_spent": audition_frames_spent,
     }
+
+
+def _phase48_confirm_probation_cells(
+    cfg: StageBEcologicalDiscoveryConfig,
+    *,
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: Any,
+    rows: Sequence[Mapping[str, Any]],
+    success_kind: str,
+    seed: int,
+    step: int,
+    segment_name: str,
+) -> dict[str, Any]:
+    counter: Counter[str] = Counter()
+    records: list[dict[str, Any]] = []
+    targets = [
+        (str(cid), item)
+        for cid, item in sorted(runtime.population.items())
+        if item.get("state") == "PROBATION" and item.get("birth_segment") != "acceptance_probe"
+    ]
+    if not targets:
+        return {"counter": counter, "records": records}
+    row_pool = list(rows)
+    if not row_pool:
+        return {"counter": counter, "records": records}
+    target_count = min(
+        len(row_pool),
+        max(1, int(getattr(cfg, "real_native_probation_validation_rows", 32))),
+    )
+    margin = int(getattr(cfg, "real_native_probation_noise_margin_wins", 1))
+    for cid, item in targets:
+        rng = random.Random(int(seed) + _phase45_stable_int(cid))
+        validation_rows = rng.sample(row_pool, target_count) if len(row_pool) > target_count else list(row_pool)
+        row_ids = [int(row.get("row_id", index)) for index, row in enumerate(validation_rows)]
+        eval_seed = int(seed) + _phase45_stable_int(cid) + 17
+        off_eval = _phase42_ecology_policy_traces(
+            cfg,
+            validation_rows,
+            runtime,
+            score_provider,
+            seed=eval_seed,
+            policy_name=f"phase3_18_{segment_name}_probation_off_{cid}",
+            success_kind=success_kind,
+            mature_only=True,
+        )
+        on_eval = _phase42_ecology_policy_traces(
+            cfg,
+            validation_rows,
+            runtime,
+            score_provider,
+            seed=eval_seed,
+            policy_name=f"phase3_18_{segment_name}_probation_on_{cid}",
+            success_kind=success_kind,
+            mature_only=True,
+            enabled_non_mature_ids=(cid,),
+        )
+        paired = _phase41_paired_outcome_table(
+            on_eval,
+            off_eval,
+            margin_wins=margin,
+            label=f"{segment_name}_probation_{cid}_on_vs_off",
+        )
+        discordant = int(paired["discordant_delta_left_minus_right"])
+        if discordant > margin:
+            decision = "confirmed"
+        elif discordant < -margin:
+            decision = "demoted"
+        else:
+            decision = "parked"
+        before_weight = float(item.get("routing_weight_override", _real_native_composite_weight(item, cfg)))
+        runtime.apply_probation_confirmation(
+            composite_id=cid,
+            decision=decision,
+            step=int(step),
+            reason=f"{segment_name}_validation_discordant_delta_{discordant}_margin_{margin}",
+            paired=paired,
+            validation_row_ids=row_ids,
+        )
+        after_item = runtime.population.get(cid, {})
+        after_weight = float(after_item.get("routing_weight_override", _real_native_composite_weight(after_item or item, cfg)))
+        counter["probation_cells_tested"] += 1
+        counter[f"probation_{decision}"] += 1
+        counter[f"probation_state_after:{after_item.get('state', 'missing')}"] += 1
+        records.append(
+            {
+                "segment": str(segment_name),
+                "composite_id": cid,
+                "decision": decision,
+                "state_after": str(after_item.get("state", "missing")),
+                "children": list(item.get("children", ())),
+                "birth_segment": item.get("birth_segment"),
+                "probation_entry_event": item.get("probation_entry_event"),
+                "probation_retest_count_after": int(after_item.get("probation_retest_count", 0)),
+                "validation_row_ids": row_ids,
+                "validation_row_count": len(validation_rows),
+                "validation_margin_wins": margin,
+                "paired": paired,
+                "wins_on": int(on_eval["wins"]),
+                "wins_off": int(off_eval["wins"]),
+                "validation_delta_on_minus_off": int(on_eval["wins"]) - int(off_eval["wins"]),
+                "routing_weight_before": round(before_weight, 6),
+                "routing_weight_after": round(after_weight, 6),
+                "promotion_weight_jump": round(after_weight - before_weight, 6),
+            }
+        )
+    return {"counter": counter, "records": records}
 
 
 def _phase46_backlog_snapshot(
@@ -5881,10 +6437,11 @@ def _phase47_spawn_from_context(
     stats: Counter[str] = Counter()
     triggers = _internal_triggers(cfg, ctx, Counter(), defaultdict(Counter))
     source_signature = str(ctx["percept_signature"])
+    live_trial_states = {"TRIAL", "PROBATION"} if bool(getattr(cfg, "real_native_probation_enabled", False)) else {"TRIAL"}
     trial_count = sum(
         1
         for item in runtime.population.values()
-        if item.get("state") == "TRIAL" and item.get("birth_segment") != "acceptance_probe"
+        if item.get("state") in live_trial_states and item.get("birth_segment") != "acceptance_probe"
     )
     under_k_count = int(
         _phase45_scheduled_coverage(
@@ -6012,7 +6569,10 @@ def _phase43_population_stability(
     alive_limit = int(cfg.real_native_max_live_composites) * int(cfg.real_native_stability_band_multiplier)
     alive_ok = int(final.get("alive_total", 0)) <= alive_limit
     window = rows[-4:] if len(rows) >= 4 else rows
-    trial_values = [int(row.get("trial", 0)) for row in window]
+    trial_values = [
+        int(row.get("trial", 0)) + int(row.get("probation", 0))
+        for row in window
+    ]
     plateau_tolerance = max(4, int(cfg.real_native_max_live_composites))
     trial_plateau = (max(trial_values) - min(trial_values)) <= plateau_tolerance if trial_values else False
     first_mp = int(rows[0].get("mature", 0)) + int(rows[0].get("pruned", 0))
@@ -6024,7 +6584,7 @@ def _phase43_population_stability(
         "alive_limit": alive_limit,
         "final_alive": int(final.get("alive_total", 0)),
         "trial_plateau": bool(trial_plateau),
-        "trial_plateau_window_values": trial_values,
+        "trial_plus_probation_plateau_window_values": trial_values,
         "trial_plateau_tolerance": plateau_tolerance,
         "mature_or_pruned_growing": bool(mature_or_pruned_growing),
         "first_mature_plus_pruned": first_mp,
@@ -6042,7 +6602,7 @@ def _phase43_population_stop_rule(
             if item.get("birth_segment") != "acceptance_probe"
         ]
     )
-    alive = sum(1 for item in runtime.population.values() if item["state"] in {"TRIAL", "MATURE"})
+    alive = sum(1 for item in runtime.population.values() if item["state"] in {"TRIAL", "PROBATION", "MATURE"})
     mature = sum(1 for item in runtime.population.values() if item["state"] == "MATURE")
     alive_limit = int(cfg.real_native_max_live_composites) * int(cfg.real_native_stability_band_multiplier)
     return {
@@ -6134,8 +6694,17 @@ def _phase42_ecology_policy_traces(
     policy_name: str,
     success_kind: str,
     mature_only: bool,
+    enabled_non_mature_ids: Sequence[str] = (),
 ) -> dict[str, Any]:
-    disabled = _phase42_disabled_non_mature(runtime) if mature_only else set()
+    if mature_only:
+        enabled = set(map(str, enabled_non_mature_ids))
+        disabled = {
+            str(item["composite_id"])
+            for item in runtime.population.values()
+            if item.get("state") != "MATURE" and str(item["composite_id"]) not in enabled
+        }
+    else:
+        disabled = set()
     endpoints: Counter[str] = Counter()
     success_by_row: dict[str, bool] = {}
     endpoint_by_row: dict[str, str] = {}

@@ -68,6 +68,7 @@ class StemCellState(Enum):
     
     Tier 2 (Probationary):
         TRIAL: Transient vertex in graph, earning XP to prove utility
+        PROBATION: Nominated by local evidence, awaiting counterfactual confirmation
     
     Tier 3 (Solidified):
         MATURE: Permanent node in topology.json, fully trusted
@@ -80,6 +81,7 @@ class StemCellState(Enum):
     EXPLORING = auto()    # Tier 1: Actively collecting samples
     CANDIDATE = auto()    # Tier 1: Ready for trial consideration
     TRIAL = auto()        # Tier 2: Transient vertex with XP system
+    PROBATION = auto()    # Tier 2b: Nominated, awaiting counterfactual confirmation
     MATURE = auto()       # Tier 3: Permanent node, solidified
     SPECIALIZED = auto()  # Legacy alias for MATURE
     PRUNED = auto()       # Removed/deleted

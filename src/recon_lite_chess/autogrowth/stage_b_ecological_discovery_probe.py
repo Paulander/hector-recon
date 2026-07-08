@@ -158,6 +158,10 @@ class StageBEcologicalDiscoveryConfig:
     real_native_trial_band_min: int = 0
     real_native_trial_band_max: int = 0
     real_native_court_throughput_per_chunk: int = 0
+    real_native_probation_enabled: bool = False
+    real_native_probation_validation_rows: int = 32
+    real_native_probation_noise_margin_wins: int = 1
+    real_native_probation_max_retests: int = 2
     real_native_continue_after_seed_stop: bool = False
     phase33_equivalence_tolerance_wins: int = 3
 
@@ -1501,6 +1505,15 @@ def run_phase47_supply_side_audition_economy_probe(
     return _run(config=config)
 
 
+def run_phase48_probation_audition_economy_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    from .persistent_staged_ladder import run_phase48_probation_audition_economy_probe as _run
+
+    return _run(config=config)
+
+
 def run_phase38_persistent_staged_ladder_probe(
     *,
     config: StageBEcologicalDiscoveryConfig | None = None,
@@ -2640,6 +2653,8 @@ class _GraphNativeCompositeRuntime:
             "redundancy_prune_events": 0,
             "vacuous_prune_events": 0,
             "budget_offered_prune_events": 0,
+            "probation_retest_count": 0,
+            "probation_validation_events": 0,
             "fate_events": [
                 {
                     "event": "birth",
@@ -2661,7 +2676,7 @@ class _GraphNativeCompositeRuntime:
         live = sum(
             1
             for item in self.population.values()
-            if str(item.get("parent_id")) == parent_id and item.get("state") in {"TRIAL", "MATURE"}
+            if str(item.get("parent_id")) == parent_id and item.get("state") in {"TRIAL", "PROBATION", "MATURE"}
         )
         return live < int(self.cfg.real_native_max_live_siblings_per_parent)
 
@@ -2811,7 +2826,7 @@ class _GraphNativeCompositeRuntime:
             composite_score = 0.0
             contributions: list[dict[str, Any]] = []
             for item in self.population.values():
-                if item["state"] not in {"TRIAL", "MATURE"}:
+                if item["state"] not in {"TRIAL", "PROBATION", "MATURE"}:
                     continue
                 if str(item["composite_id"]) in disabled:
                     continue
@@ -2970,7 +2985,7 @@ class _GraphNativeCompositeRuntime:
         requested_now = set(map(str, requested_ids))
         active = set(map(str, active_ids))
         for cid, item in self.population.items():
-            if item["state"] not in {"TRIAL", "MATURE"}:
+            if item["state"] not in {"TRIAL", "PROBATION", "MATURE"}:
                 continue
             requested = int(item.get("requested_exposures", 0))
             multiplier = self.critical_period_multiplier(item)
@@ -3006,9 +3021,13 @@ class _GraphNativeCompositeRuntime:
                 and int(item.get("credit_events", 0)) > 0
                 and float(item.get("local_resource", 0.0)) >= self.cfg.real_native_mature_resource
             ):
-                item["state"] = "MATURE"
-                cell.state = StemCellState.MATURE
-                event = "mature"
+                if bool(getattr(self.cfg, "real_native_probation_enabled", False)):
+                    self._enter_probation(item, step=step, event="probation_on_local_credit_mature_signal")
+                    event = "probation_on_local_credit_mature_signal"
+                else:
+                    item["state"] = "MATURE"
+                    cell.state = StemCellState.MATURE
+                    event = "mature"
             if item["state"] == "TRIAL" and float(item.get("local_resource", 0.0)) <= 0.0:
                 item["state"] = "PRUNED"
                 item["prune_reason"] = "activation_conditioned_resource_depleted"
@@ -3050,7 +3069,7 @@ class _GraphNativeCompositeRuntime:
             return 0
         for cid in set(map(str, active_ids)):
             item = self.population.get(cid)
-            if not item or item["state"] not in {"TRIAL", "MATURE"}:
+            if not item or item["state"] not in {"TRIAL", "PROBATION", "MATURE"}:
                 continue
             cell = self.cells[cid]
             multiplier = self.critical_period_multiplier(item)
@@ -3067,9 +3086,13 @@ class _GraphNativeCompositeRuntime:
                 and int(item.get("requested_exposures", 0)) >= int(self.cfg.real_native_trial_grace_exposures)
                 and float(item.get("local_resource", 0.0)) >= self.cfg.real_native_mature_resource
             ):
-                item["state"] = "MATURE"
-                cell.state = StemCellState.MATURE
-                event = "mature_on_positive_achievement_flip"
+                if bool(getattr(self.cfg, "real_native_probation_enabled", False)):
+                    self._enter_probation(item, step=step, event="probation_on_positive_achievement_flip_signal")
+                    event = "probation_on_positive_achievement_flip_signal"
+                else:
+                    item["state"] = "MATURE"
+                    cell.state = StemCellState.MATURE
+                    event = "mature_on_positive_achievement_flip"
             item.setdefault("fate_events", []).append(
                 {
                     "step": int(step),
@@ -3107,7 +3130,7 @@ class _GraphNativeCompositeRuntime:
         event_count = 0
         for cid in set(map(str, responsible_ids)):
             item = self.population.get(cid)
-            if not item or item["state"] not in {"TRIAL", "MATURE"}:
+            if not item or item["state"] not in {"TRIAL", "PROBATION", "MATURE"}:
                 continue
             cell = self.cells[cid]
             multiplier = self.critical_period_multiplier(item)
@@ -3141,9 +3164,13 @@ class _GraphNativeCompositeRuntime:
                 and int(item.get("requested_exposures", 0)) >= int(self.cfg.real_native_trial_grace_exposures)
                 and int(item.get("choice_change_positive_events", 0)) >= mature_threshold
             ):
-                item["state"] = "MATURE"
-                cell.state = StemCellState.MATURE
-                event = "mature_on_choice_changing_positive_events"
+                if bool(getattr(self.cfg, "real_native_probation_enabled", False)):
+                    self._enter_probation(item, step=step, event="probation_on_choice_changing_positive_events")
+                    event = "probation_on_choice_changing_positive_events"
+                else:
+                    item["state"] = "MATURE"
+                    cell.state = StemCellState.MATURE
+                    event = "mature_on_choice_changing_positive_events"
             elif (
                 mature_threshold <= 0
                 and item["state"] == "TRIAL"
@@ -3151,9 +3178,13 @@ class _GraphNativeCompositeRuntime:
                 and int(item.get("credit_events", 0)) > 0
                 and float(item.get("local_resource", 0.0)) >= self.cfg.real_native_mature_resource
             ):
-                item["state"] = "MATURE"
-                cell.state = StemCellState.MATURE
-                event = "mature"
+                if bool(getattr(self.cfg, "real_native_probation_enabled", False)):
+                    self._enter_probation(item, step=step, event="probation_on_resource_mature_signal")
+                    event = "probation_on_resource_mature_signal"
+                else:
+                    item["state"] = "MATURE"
+                    cell.state = StemCellState.MATURE
+                    event = "mature"
             if item["state"] == "TRIAL" and float(item.get("local_resource", 0.0)) <= 0.0:
                 item["state"] = "PRUNED"
                 item["prune_reason"] = f"{valence}_choice_change_resource_depleted"
@@ -3233,9 +3264,13 @@ class _GraphNativeCompositeRuntime:
         mature_threshold = int(getattr(self.cfg, "real_native_audition_mature_better_events", 0))
         debt_threshold = int(getattr(self.cfg, "real_native_audition_debt_threshold", 0))
         if mature_threshold > 0 and better >= mature_threshold:
-            item["state"] = "MATURE"
-            cell.state = StemCellState.MATURE
-            event = "mature_on_audition_better_events"
+            if bool(getattr(self.cfg, "real_native_probation_enabled", False)):
+                self._enter_probation(item, step=step, event="probation_on_audition_better_events")
+                event = "probation_on_audition_better_events"
+            else:
+                item["state"] = "MATURE"
+                cell.state = StemCellState.MATURE
+                event = "mature_on_audition_better_events"
         elif debt_threshold > 0 and worse >= debt_threshold:
             item["state"] = "PRUNED"
             item["prune_reason"] = "audition_debt_threshold"
@@ -3271,6 +3306,100 @@ class _GraphNativeCompositeRuntime:
             node.meta["local_resource"] = float(item.get("local_resource", 0.0))
             node.meta["audition_count"] = int(item.get("audition_count", 0))
             node.meta["audition_better_events"] = int(item.get("audition_better_events", 0))
+        self._enforce_parent_budgets(step=step)
+        return True
+
+    def _enter_probation(self, item: dict[str, Any], *, step: int, event: str) -> None:
+        cid = str(item["composite_id"])
+        if item.get("state") != "TRIAL":
+            return
+        weight = _real_native_composite_weight(item, self.cfg)
+        item["state"] = "PROBATION"
+        item["probation_step"] = int(step)
+        item["probation_entry_event"] = str(event)
+        item["probation_entry_weight"] = float(weight)
+        item["routing_weight_override"] = float(weight)
+        item["probation_entry_local_resource"] = float(item.get("local_resource", 0.0))
+        item["probation_retest_count"] = int(item.get("probation_retest_count", 0))
+        cell = self.cells[cid]
+        cell.state = StemCellState.PROBATION
+        node_id = str(item["node_id"])
+        if node_id in self.native_graph.graph.nodes:
+            node = self.native_graph.graph.nodes[node_id]
+            node.meta["stem_cell_state"] = item["state"]
+            node.meta["routing_weight_override"] = float(weight)
+        item.setdefault("fate_events", []).append(
+            {
+                "step": int(step),
+                "event": str(event),
+                "state": "PROBATION",
+                "routing_weight_override": round(float(weight), 6),
+                "local_resource": round(float(item.get("local_resource", 0.0)), 6),
+                "audition_better_events": int(item.get("audition_better_events", 0)),
+                "audition_worse_events": int(item.get("audition_worse_events", 0)),
+            }
+        )
+
+    def apply_probation_confirmation(
+        self,
+        *,
+        composite_id: str,
+        decision: str,
+        step: int,
+        reason: str,
+        paired: Mapping[str, Any],
+        validation_row_ids: Sequence[int],
+    ) -> bool:
+        item = self.population.get(str(composite_id))
+        if not item or item.get("state") != "PROBATION":
+            return False
+        cid = str(composite_id)
+        decision_key = str(decision)
+        item["probation_validation_events"] = int(item.get("probation_validation_events", 0)) + 1
+        item["probation_last_paired"] = dict(paired)
+        item["probation_last_validation_row_ids"] = [int(row_id) for row_id in validation_row_ids]
+        item["probation_last_reason"] = str(reason)
+        if decision_key == "confirmed":
+            item["state"] = "MATURE"
+            item["confirmed_step"] = int(step)
+            item["mature_entry_weight"] = float(item.get("routing_weight_override", _real_native_composite_weight(item, self.cfg)))
+            self.cells[cid].state = StemCellState.MATURE
+            event = "mature_on_probation_counterfactual_confirmation"
+        elif decision_key == "demoted":
+            item["state"] = "PRUNED"
+            item["prune_reason"] = "probation_negative_validation"
+            self.cells[cid].state = StemCellState.PRUNED
+            event = "prune_on_probation_negative_validation"
+        else:
+            item["probation_retest_count"] = int(item.get("probation_retest_count", 0)) + 1
+            if int(item["probation_retest_count"]) >= int(getattr(self.cfg, "real_native_probation_max_retests", 2)):
+                item["state"] = "PRUNED"
+                item["prune_reason"] = "probation_noise_retest_exhausted"
+                self.cells[cid].state = StemCellState.PRUNED
+                event = "prune_on_probation_noise_retest_exhausted"
+            else:
+                item["state"] = "PROBATION"
+                self.cells[cid].state = StemCellState.PROBATION
+                event = "probation_parked_within_noise"
+        node_id = str(item["node_id"])
+        if node_id in self.native_graph.graph.nodes:
+            node = self.native_graph.graph.nodes[node_id]
+            node.meta["stem_cell_state"] = item["state"]
+            node.meta["probation_validation_events"] = int(item.get("probation_validation_events", 0))
+            node.meta["routing_weight_override"] = float(item.get("routing_weight_override", _real_native_composite_weight(item, self.cfg)))
+        item.setdefault("fate_events", []).append(
+            {
+                "step": int(step),
+                "event": event,
+                "decision": decision_key,
+                "reason": str(reason),
+                "state": item["state"],
+                "probation_retest_count": int(item.get("probation_retest_count", 0)),
+                "paired": dict(paired),
+                "validation_row_ids": [int(row_id) for row_id in validation_row_ids],
+                "routing_weight": round(float(item.get("routing_weight_override", _real_native_composite_weight(item, self.cfg))), 6),
+            }
+        )
         self._enforce_parent_budgets(step=step)
         return True
 
@@ -3386,7 +3515,7 @@ class _GraphNativeCompositeRuntime:
     def _enforce_parent_budgets(self, *, step: int) -> None:
         by_parent: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for item in self.population.values():
-            if item["state"] in {"TRIAL", "MATURE"}:
+            if item["state"] in {"TRIAL", "PROBATION", "MATURE"}:
                 by_parent[str(item["parent_id"])].append(item)
         sibling_budget = int(self.cfg.real_native_max_live_siblings_per_parent)
         for parent_id, live in by_parent.items():
@@ -3427,9 +3556,10 @@ class _GraphNativeCompositeRuntime:
             "segment": segment,
             "births_total": len(self.population),
             "trial": int(counts["TRIAL"]),
+            "probation": int(counts["PROBATION"]),
             "mature": int(counts["MATURE"]),
             "pruned": int(counts["PRUNED"]),
-            "alive_total": int(counts["TRIAL"] + counts["MATURE"]),
+            "alive_total": int(counts["TRIAL"] + counts["PROBATION"] + counts["MATURE"]),
         }
         self.birth_curve.append(row)
         return row
@@ -3439,10 +3569,11 @@ class _GraphNativeCompositeRuntime:
         return {
             "birth_count": len(self.population),
             "trial_count": int(counts["TRIAL"]),
+            "probation_count": int(counts["PROBATION"]),
             "mature_count": int(counts["MATURE"]),
             "pruned_count": int(counts["PRUNED"]),
             "survivors_by_birth_segment": dict(
-                sorted(Counter(str(item.get("birth_segment")) for item in self.population.values() if item["state"] in {"TRIAL", "MATURE"}).items())
+                sorted(Counter(str(item.get("birth_segment")) for item in self.population.values() if item["state"] in {"TRIAL", "PROBATION", "MATURE"}).items())
             ),
             "trigger_distribution": dict(sorted(self.trigger_counts.items())),
             "births_blocked_by_capacity_total": int(sum(self.births_blocked_by_capacity.values())),
@@ -3466,13 +3597,19 @@ class _GraphNativeCompositeRuntime:
                     "audition_worse_events": int(item.get("audition_worse_events", 0)),
                     "audition_tie_events": int(item.get("audition_tie_events", 0)),
                     "scheduled_audition_sample_count": int(item.get("scheduled_audition_sample_count", 0)),
+                    "probation_validation_events": int(item.get("probation_validation_events", 0)),
+                    "probation_retest_count": int(item.get("probation_retest_count", 0)),
+                    "routing_weight_override": (
+                        None if "routing_weight_override" not in item
+                        else round(float(item.get("routing_weight_override", 0.0)), 6)
+                    ),
                     "redundancy_prune_events": int(item.get("redundancy_prune_events", 0)),
                     "vacuous_prune_events": int(item.get("vacuous_prune_events", 0)),
                     "budget_offered_prune_events": int(item.get("budget_offered_prune_events", 0)),
                     "children": list(item["children"]),
                 }
                 for item in sorted(
-                    (item for item in self.population.values() if item["state"] in {"TRIAL", "MATURE"}),
+                    (item for item in self.population.values() if item["state"] in {"TRIAL", "PROBATION", "MATURE"}),
                     key=lambda row: (float(row.get("local_resource", 0.0)), str(row["composite_id"])),
                     reverse=True,
                 )[: self.cfg.max_samples]
@@ -3481,7 +3618,7 @@ class _GraphNativeCompositeRuntime:
 
     def population_stop_rule(self) -> dict[str, bool]:
         births = len([item for item in self.population.values() if item.get("birth_segment") != "acceptance_probe"])
-        alive = sum(1 for item in self.population.values() if item["state"] in {"TRIAL", "MATURE"})
+        alive = sum(1 for item in self.population.values() if item["state"] in {"TRIAL", "PROBATION", "MATURE"})
         mature = sum(1 for item in self.population.values() if item["state"] == "MATURE")
         return {
             "population_collapse_to_zero": bool(births > 0 and alive == 0),
@@ -3517,6 +3654,10 @@ class _GraphNativeCompositeRuntime:
                 "audition_tie_events": int(item.get("audition_tie_events", 0)),
                 "audition_frames_spent": int(item.get("audition_frames_spent", 0)),
                 "scheduled_audition_sample_count": int(item.get("scheduled_audition_sample_count", 0)),
+                "probation_retest_count": int(item.get("probation_retest_count", 0)),
+                "probation_validation_events": int(item.get("probation_validation_events", 0)),
+                "probation_entry_weight": item.get("probation_entry_weight"),
+                "routing_weight_override": item.get("routing_weight_override"),
                 "redundancy_prune_events": int(item.get("redundancy_prune_events", 0)),
                 "vacuous_prune_events": int(item.get("vacuous_prune_events", 0)),
                 "budget_offered_prune_events": int(item.get("budget_offered_prune_events", 0)),
@@ -3662,6 +3803,49 @@ def _real_native_evaluate_policy(
     )
 
 
+def _success_by_row_paired_table(
+    left: Mapping[str, Any],
+    right: Mapping[str, Any],
+    *,
+    label: str,
+) -> dict[str, Any]:
+    left_rows = {str(key): bool(value) for key, value in left.get("success_by_row", {}).items()}
+    right_rows = {str(key): bool(value) for key, value in right.get("success_by_row", {}).items()}
+    common = sorted(set(left_rows) & set(right_rows), key=lambda value: int(value))
+    win_win: list[int] = []
+    win_loss: list[int] = []
+    loss_win: list[int] = []
+    loss_loss: list[int] = []
+    for row_id in common:
+        left_success = left_rows[row_id]
+        right_success = right_rows[row_id]
+        target = (
+            win_win if left_success and right_success
+            else win_loss if left_success and not right_success
+            else loss_win if not left_success and right_success
+            else loss_loss
+        )
+        target.append(int(row_id))
+    left_wins = len(win_win) + len(win_loss)
+    right_wins = len(win_win) + len(loss_win)
+    return {
+        "label": str(label),
+        "left_policy": str(left.get("policy", "left")),
+        "right_policy": str(right.get("policy", "right")),
+        "paired_row_count": len(common),
+        "left_wins": int(left_wins),
+        "right_wins": int(right_wins),
+        "left_minus_right_wins": int(left_wins - right_wins),
+        "win_win": len(win_win),
+        "win_loss": len(win_loss),
+        "loss_win": len(loss_win),
+        "loss_loss": len(loss_loss),
+        "discordant_delta_left_minus_right": len(win_loss) - len(loss_win),
+        "win_loss_row_ids": win_loss,
+        "loss_win_row_ids": loss_win,
+    }
+
+
 def _real_native_ablation_health(
     cfg: StageBEcologicalDiscoveryConfig,
     heldout_rows: Sequence[Mapping[str, Any]],
@@ -3697,6 +3881,11 @@ def _real_native_ablation_health(
                 "ablation_delta": delta,
                 "full_wins": int(full_eval["wins"]),
                 "ablated_wins": int(ablated["wins"]),
+                "paired": _success_by_row_paired_table(
+                    full_eval,
+                    ablated,
+                    label=f"cell_on_vs_removed_{item['composite_id']}",
+                ),
                 "birth_segment": item.get("birth_segment"),
                 "children": list(item.get("children", ())),
             }
@@ -4782,6 +4971,8 @@ def _real_native_parent_id(source_signature: str) -> str:
 
 
 def _real_native_composite_weight(item: Mapping[str, Any], cfg: StageBEcologicalDiscoveryConfig) -> float:
+    if bool(getattr(cfg, "real_native_probation_enabled", False)) and "routing_weight_override" in item:
+        return float(item.get("routing_weight_override", 0.0))
     resource = max(0.0, float(item.get("local_resource", 0.0)))
     optimism = 0.0
     exposure_window = int(getattr(cfg, "real_native_critical_period_exposures", 0))
