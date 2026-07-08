@@ -150,6 +150,8 @@ class StageBEcologicalDiscoveryConfig:
     real_native_audition_neutral_rent: float = 0.0
     real_native_audition_debt_threshold: int = 0
     real_native_audition_starvation_min_per_cell: float = 0.0
+    real_native_scheduled_audition_chunk_size: int = 0
+    real_native_scheduled_unjudged_fraction_stop: float = 0.0
     phase33_equivalence_tolerance_wins: int = 3
 
 
@@ -1465,6 +1467,15 @@ def run_phase44_audition_cell_economy_probe(
     return _run(config=config)
 
 
+def run_phase45_scheduled_audition_economy_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    from .persistent_staged_ladder import run_phase45_scheduled_audition_economy_probe as _run
+
+    return _run(config=config)
+
+
 def run_phase38_persistent_staged_ladder_probe(
     *,
     config: StageBEcologicalDiscoveryConfig | None = None,
@@ -2598,6 +2609,8 @@ class _GraphNativeCompositeRuntime:
             "audition_worse_events": 0,
             "audition_tie_events": 0,
             "audition_frames_spent": 0,
+            "scheduled_audition_sample_count": 0,
+            "redundancy_prune_events": 0,
             "fate_events": [
                 {
                     "event": "birth",
@@ -2856,21 +2869,29 @@ class _GraphNativeCompositeRuntime:
                 running += float(contribution["weight"])
                 responsible_ids.append(str(contribution["composite_id"]))
         proposal_rows: list[dict[str, Any]] = []
+        firing_rows: list[dict[str, Any]] = []
         if include_trial_proposals and base_move is not None:
             for proposal in trial_proposals.values():
                 proposal_move = proposal["move"]
+                row = {
+                    "composite_id": str(proposal["composite_id"]),
+                    "move": proposal_move,
+                    "move_uci": str(proposal["move_uci"]),
+                    "host_move": base_move,
+                    "host_move_uci": base_move.uci(),
+                    "base_score": float(proposal["base_score"]),
+                    "proposal_score": float(proposal["proposal_score"]),
+                    "weight": float(proposal["weight"]),
+                    "agrees_with_host": bool(proposal_move == base_move),
+                }
+                firing_rows.append(row)
                 if proposal_move == base_move:
                     continue
                 proposal_rows.append(
                     {
-                        "composite_id": str(proposal["composite_id"]),
-                        "move": proposal_move,
-                        "move_uci": str(proposal["move_uci"]),
-                        "host_move": base_move,
-                        "host_move_uci": base_move.uci(),
-                        "base_score": float(proposal["base_score"]),
-                        "proposal_score": float(proposal["proposal_score"]),
-                        "weight": float(proposal["weight"]),
+                        key: value
+                        for key, value in row.items()
+                        if key != "agrees_with_host"
                     }
                 )
             proposal_rows.sort(
@@ -2892,6 +2913,7 @@ class _GraphNativeCompositeRuntime:
             "responsibility_margin": round(float(responsibility_margin), 6),
             "selected_composite_score": round(float(selected["composite_score"]), 6),
             "trial_cell_proposals": proposal_rows,
+            "trial_cell_firings": firing_rows,
         }
 
     def critical_period_fraction(self, item: Mapping[str, Any]) -> float:
@@ -3222,6 +3244,46 @@ class _GraphNativeCompositeRuntime:
         self._enforce_parent_budgets(step=step)
         return True
 
+    def apply_redundancy_prune(
+        self,
+        *,
+        composite_id: str,
+        step: int,
+        reason: str,
+        sample_count: int,
+    ) -> bool:
+        item = self.population.get(str(composite_id))
+        if not item or item["state"] != "TRIAL":
+            return False
+        item["state"] = "PRUNED"
+        item["prune_reason"] = "scheduled_redundancy_all_samples_agreed_with_host"
+        item["redundancy_prune_events"] = int(item.get("redundancy_prune_events", 0)) + 1
+        item["scheduled_audition_sample_count"] = (
+            int(item.get("scheduled_audition_sample_count", 0)) + int(sample_count)
+        )
+        cell = self.cells[str(composite_id)]
+        cell.state = StemCellState.PRUNED
+        cell.record_candidate_intervention("neutral", cycle=step)
+        item.setdefault("fate_events", []).append(
+            {
+                "step": int(step),
+                "event": "prune_on_scheduled_redundancy",
+                "reason": str(reason),
+                "sample_count": int(sample_count),
+                "state": item["state"],
+                "audition_count": int(item.get("audition_count", 0)),
+                "scheduled_audition_sample_count": int(item.get("scheduled_audition_sample_count", 0)),
+                "local_resource": round(float(item.get("local_resource", 0.0)), 6),
+            }
+        )
+        node_id = str(item["node_id"])
+        if node_id in self.native_graph.graph.nodes:
+            node = self.native_graph.graph.nodes[node_id]
+            node.meta["stem_cell_state"] = item["state"]
+            node.meta["redundancy_prune_events"] = int(item.get("redundancy_prune_events", 0))
+        self._enforce_parent_budgets(step=step)
+        return True
+
     def _enforce_parent_budgets(self, *, step: int) -> None:
         by_parent: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for item in self.population.values():
@@ -3303,6 +3365,8 @@ class _GraphNativeCompositeRuntime:
                     "audition_better_events": int(item.get("audition_better_events", 0)),
                     "audition_worse_events": int(item.get("audition_worse_events", 0)),
                     "audition_tie_events": int(item.get("audition_tie_events", 0)),
+                    "scheduled_audition_sample_count": int(item.get("scheduled_audition_sample_count", 0)),
+                    "redundancy_prune_events": int(item.get("redundancy_prune_events", 0)),
                     "children": list(item["children"]),
                 }
                 for item in sorted(
@@ -3349,6 +3413,8 @@ class _GraphNativeCompositeRuntime:
                 "audition_worse_events": int(item.get("audition_worse_events", 0)),
                 "audition_tie_events": int(item.get("audition_tie_events", 0)),
                 "audition_frames_spent": int(item.get("audition_frames_spent", 0)),
+                "scheduled_audition_sample_count": int(item.get("scheduled_audition_sample_count", 0)),
+                "redundancy_prune_events": int(item.get("redundancy_prune_events", 0)),
                 "formal_engine_eval_count": int(item.get("formal_engine_eval_count", 0)),
                 "prune_reason": item.get("prune_reason"),
                 "fate_events": list(item.get("fate_events", ())),

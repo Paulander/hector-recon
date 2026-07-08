@@ -2256,6 +2256,14 @@ def run_phase44_audition_cell_economy_probe(
         seed_result["stage_a"]["population_stability"] = stage_a_stability
         stage_a_starvation = _phase44_audition_starvation(seed_result["stage_a"]["ecology_training"])
         seed_result["stage_a"]["audition_starvation"] = stage_a_starvation
+        if int(getattr(cfg, "real_native_scheduled_audition_chunk_size", 0)) > 0:
+            stage_a_scheduled_stop = _phase45_scheduled_unjudged_stop(
+                cfg,
+                seed_result["stage_a"]["ecology_training"],
+            )
+            seed_result["stage_a"]["scheduled_unjudged"] = stage_a_scheduled_stop
+        else:
+            stage_a_scheduled_stop = {"stop": False}
         if not stage_a_ecology_gates["mature_vs_flat_gate"]["passed"]:
             seed_result["stop_reasons"].append("stage_a_mature_cell_gate_regression_vs_flat")
         if not stage_a_ecology_gates["live_vs_flat_gate"]["passed"]:
@@ -2267,6 +2275,8 @@ def run_phase44_audition_cell_economy_probe(
             seed_result["stop_reasons"].append("population_unstable_after_stage_a")
         if stage_a_starvation["starved"]:
             seed_result["stop_reasons"].append("audition_starved_after_stage_a")
+        if stage_a_scheduled_stop["stop"]:
+            seed_result["stop_reasons"].append("scheduled_unjudged_after_stage_a")
         if seed_result["stop_reasons"]:
             seed_result["population"] = runtime.population_summary()
             seed_result["birth_death_curve"] = runtime.birth_curve
@@ -2278,6 +2288,7 @@ def run_phase44_audition_cell_economy_probe(
                 any("population" in reason for reason in seed_result["stop_reasons"])
                 or any("gate_regression" in reason for reason in seed_result["stop_reasons"])
                 or any("audition_starved" in reason for reason in seed_result["stop_reasons"])
+                or any("scheduled_unjudged" in reason for reason in seed_result["stop_reasons"])
             ):
                 break
             continue
@@ -2461,6 +2472,11 @@ def run_phase44_audition_cell_economy_probe(
         seed_result["stage_b"]["audition_starvation"] = _phase44_audition_starvation(
             seed_result["stage_b"]["ecology_training"]
         )
+        if int(getattr(cfg, "real_native_scheduled_audition_chunk_size", 0)) > 0:
+            seed_result["stage_b"]["scheduled_unjudged"] = _phase45_scheduled_unjudged_stop(
+                cfg,
+                seed_result["stage_b"]["ecology_training"],
+            )
         seed_result["regression_checks"]["stage_a_ecology_after_stage_b"] = stage_a_ecology_regression_gates
         seed_result["post_hoc_ablation"] = ablation
         seed_result["pruned_rescue_audit"] = rescue
@@ -2480,6 +2496,8 @@ def run_phase44_audition_cell_economy_probe(
             seed_result["stop_reasons"].append("population_unstable_after_stage_b")
         if seed_result["stage_b"]["audition_starvation"]["starved"]:
             seed_result["stop_reasons"].append("audition_starved_after_stage_b")
+        if seed_result.get("stage_b", {}).get("scheduled_unjudged", {}).get("stop"):
+            seed_result["stop_reasons"].append("scheduled_unjudged_after_stage_b")
         if not stage_b_ecology_gates["mature_vs_flat_gate"]["passed"]:
             seed_result["stop_reasons"].append("stage_b_mature_cell_gate_regression_vs_flat")
         if not stage_b_ecology_gates["live_vs_flat_gate"]["passed"]:
@@ -2496,6 +2514,7 @@ def run_phase44_audition_cell_economy_probe(
             any("population" in reason for reason in seed_result["stop_reasons"])
             or any("gate_regression" in reason or "regression_after_stage_b" in reason for reason in seed_result["stop_reasons"])
             or any("audition_starved" in reason for reason in seed_result["stop_reasons"])
+            or any("scheduled_unjudged" in reason for reason in seed_result["stop_reasons"])
         ):
             break
 
@@ -2537,6 +2556,7 @@ def run_phase44_audition_cell_economy_probe(
             "population_stop": any("population" in reason for reason in global_stop_reasons),
             "gate_regression_stop": any("gate_regression" in reason or "regression_after_stage_b" in reason for reason in global_stop_reasons),
             "audition_starvation_stop": any("audition_starved" in reason for reason in global_stop_reasons),
+            "scheduled_unjudged_stop": any("scheduled_unjudged" in reason for reason in global_stop_reasons),
             "mature_population_formed_any_seed": any(
                 int(row.get("population", {}).get("mature_count", 0)) > 0 for row in per_seed
             ),
@@ -2548,6 +2568,92 @@ def run_phase44_audition_cell_economy_probe(
             "recurring_mature_composite_count": sum(1 for row in recurrence if int(row.get("seed_count", 0)) > 1),
         },
     }
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
+def run_phase45_scheduled_audition_economy_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    """Phase 3.15: scheduled auditions so every TRIAL cell gets judged."""
+
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_15_scheduled_audition_economy",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        flat_baseline_seeds=(20272911, 20272912, 20272913),
+        stage_a_train_row_limit=128,
+        train_row_limit=128,
+        heldout_row_limit=None,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+        real_native_engine_max_ticks=80,
+        real_native_max_live_composites=32,
+        real_native_max_live_siblings_per_parent=4,
+        real_native_trial_grace_exposures=3,
+        real_native_dormant_decay=0.002,
+        real_native_critical_period_exposures=5,
+        real_native_critical_period_credit_multiplier=1.75,
+        real_native_critical_period_optimism=0.025,
+        real_native_positive_flip_credit=0.060,
+        real_native_positive_flip_window=2,
+        real_native_choice_change_mature_events=3,
+        real_native_choice_change_neutral_rent=0.006,
+        real_native_near_zero_choice_change_rate=0.01,
+        real_native_stability_band_multiplier=5,
+        real_native_audition_budget_per_cell=10,
+        real_native_audition_per_ply_cap=2,
+        real_native_audition_horizon_plies=8,
+        real_native_audition_mature_better_events=3,
+        real_native_audition_neutral_rent=0.004,
+        real_native_audition_debt_threshold=3,
+        real_native_audition_starvation_min_per_cell=0.0,
+        real_native_scheduled_audition_chunk_size=8,
+        real_native_scheduled_unjudged_fraction_stop=0.25,
+    )
+    output_dir = Path(cfg.output_dir)
+    summary = run_phase44_audition_cell_economy_probe(config=cfg)
+    correspondence = _phase45_composite_correspondence_table()
+    gate_margin = _phase41_gate_margin_wins()
+    design = _design_spec(cfg)
+    design["schema_version"] = "phase3_15_scheduled_audition_economy_design_spec.v0"
+    design["phase_alias"] = "User-requested Phase 3.15 scheduled audition economy"
+    design["host_ladder"] = {
+        "base_commit": "2086dd6",
+        "frozen_from": "Phase 3.14 audition mechanics with scheduled coverage added",
+        "paired_gate_spec": _phase41_paired_gate_spec(gate_margin),
+    }
+    design["ecology"] = _phase45_ecology_spec(cfg)
+    design["cross_experiment_composite_correspondence"] = correspondence
+    _write_json(output_dir / "design_spec.json", design)
+
+    for row in summary.get("per_seed", []):
+        row["schema_version"] = "phase3_15_scheduled_audition_economy_seed.v0"
+        row["ecology_spec"] = _phase45_ecology_spec(cfg)
+        row["cross_experiment_composite_correspondence"] = correspondence
+        _write_json(output_dir / f"seed_{row['seed']}_audition_cell_economy.json", row)
+        _write_json(output_dir / f"seed_{row['seed']}_scheduled_audition_economy.json", row)
+
+    tables = dict(summary.get("tables", {}))
+    summary["schema_version"] = "phase3_15_scheduled_audition_economy.v0"
+    summary["phase"] = "Phase 3.15 scheduled audition economy"
+    summary["ecology"] = _phase45_ecology_spec(cfg)
+    summary["cross_experiment_composite_correspondence"] = correspondence
+    summary["tables"] = {
+        "phase3_15_headline": tables.get("phase3_14_headline", []),
+        "phase3_15_audition_signal": tables.get("phase3_14_audition_signal", []),
+        "phase3_15_acceptance_margins": tables.get("phase3_14_acceptance_margins", []),
+        "phase3_15_mature_recurrence": tables.get("phase3_14_mature_recurrence", []),
+        "phase3_15_cross_rung_survivors": tables.get("phase3_14_cross_rung_survivors", []),
+        "phase3_15_cross_experiment_composite_correspondence": correspondence,
+    }
+    summary["decision"]["scheduled_unjudged_stop"] = any(
+        "scheduled_unjudged" in reason
+        for reason in summary.get("decision", {}).get("stop_reasons", ())
+    )
     _write_json(output_dir / "summary.json", summary)
     return summary
 
@@ -2727,6 +2833,44 @@ def _phase44_ecology_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any
         }
     )
     return spec
+
+
+def _phase45_ecology_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
+    spec = _phase44_ecology_spec(cfg)
+    spec.update(
+        {
+            "scheduled_auditions": {
+                "enabled": True,
+                "chunk_size_rows": int(cfg.real_native_scheduled_audition_chunk_size),
+                "per_cell_budget": int(cfg.real_native_audition_budget_per_cell),
+                "firing_replay_buffer": "training positions tagged by TRIAL cells whose own proposal fired",
+                "agreement_rule": (
+                    "if all sampled firing positions agree with host-alone for the remaining budget, "
+                    "prune as scheduled_redundancy, distinct from debt pruning"
+                ),
+                "spontaneous_live_auditions": "remain enabled and count against the same per-cell budget",
+                "unjudged_fraction_stop": float(cfg.real_native_scheduled_unjudged_fraction_stop),
+            },
+        }
+    )
+    return spec
+
+
+def _phase45_composite_correspondence_table() -> list[dict[str, Any]]:
+    return [
+        {
+            "concept": "safe rook reposition",
+            "phase2_9e_survivor": "rook_attacked_after=0 AND to_file_edge_distance=2",
+            "phase3_14_survivor": "rook_attacked_after=0 AND to_rank_edge_distance=2",
+            "interpretation": "safe rook move onto a working edge-distance file/rank under different substrate/economy/opponent",
+        },
+        {
+            "concept": "confinement",
+            "phase2_9e_survivor": "bk_neighbor_ne_available=zero AND bk_neighbor_se_available=zero",
+            "phase3_14_survivor": "bk_neighbor_s_available=zero AND bk_neighbor_w_available=zero",
+            "interpretation": "two black-king escape squares sealed; orientation differs but conjunction family recurs",
+        },
+    ]
 
 
 def _phase41_gate_margin_wins() -> int:
@@ -3943,6 +4087,8 @@ def _phase44_train_audition_ecology_segment(
     disagreement_ply_count = 0
     verdicts: Counter[str] = Counter()
     verdict_endpoints: Counter[str] = Counter()
+    scheduled_stats: Counter[str] = Counter()
+    firing_buffer: defaultdict[str, list[dict[str, Any]]] = defaultdict(list)
     blocked_before = sum(runtime.births_blocked_by_capacity.values())
     for index, row in enumerate(rows):
         row_decisions: list[dict[str, Any]] = []
@@ -3986,6 +4132,7 @@ def _phase44_train_audition_ecology_segment(
             nonlocal decision_ply_count, choice_changed_count, requested_total, active_total
             nonlocal proposal_count, request_count, budget_skip_count, cap_skip_count
             nonlocal audition_count, audition_frames_spent, disagreement_ply_count
+            nonlocal scheduled_stats
             decision_ply_count += 1
             requested_total += len(selected.get("requested_composite_ids", ()))
             active_total += len(selected.get("active_composite_ids", ()))
@@ -3995,6 +4142,26 @@ def _phase44_train_audition_ecology_segment(
                 proposal for proposal in selected.get("trial_cell_proposals", ())
                 if proposal.get("move") is not None and proposal.get("host_move") is not None
             ]
+            firings = [
+                firing for firing in selected.get("trial_cell_firings", ())
+                if firing.get("move") is not None and firing.get("host_move") is not None
+            ]
+            for firing in firings:
+                cid = str(firing["composite_id"])
+                item = runtime.population.get(cid)
+                if not item or item.get("state") != "TRIAL":
+                    continue
+                firing_buffer[cid].append(
+                    {
+                        "fen": board.fen(),
+                        "counts": Counter(counts),
+                        "host_move_uci": str(firing["host_move_uci"]),
+                        "cell_move_uci": str(firing["move_uci"]),
+                        "agrees_with_host": bool(firing.get("agrees_with_host", False)),
+                        "row_id": int(row_id),
+                        "ply": int(ply),
+                    }
+                )
             proposal_count += len(proposals)
             eligible: list[dict[str, Any]] = []
             for proposal in proposals:
@@ -4062,6 +4229,7 @@ def _phase44_train_audition_ecology_segment(
                     "move": None if move is None else move.uci(),
                     "host_move": None if selected.get("base_move") is None else selected["base_move"].uci(),
                     "choice_changed_by_cells": changed,
+                    "trial_cell_firing_count": len(firings),
                     "trial_cell_proposal_count": len(proposals),
                     "audition_eligible_count": len(eligible),
                     "audition_run_count": len(sampled),
@@ -4085,6 +4253,23 @@ def _phase44_train_audition_ecology_segment(
         endpoint_by_row[str(row["row_id"])] = str(outcome["endpoint"])
         if index % 8 == 0 or index == len(rows) - 1:
             runtime.snapshot(step=int(step_offset) + index, segment=segment_name)
+        chunk_size = int(getattr(cfg, "real_native_scheduled_audition_chunk_size", 0))
+        if chunk_size > 0 and ((index + 1) % chunk_size == 0 or index == len(rows) - 1):
+            scheduled = _phase45_run_scheduled_auditions(
+                cfg,
+                runtime=runtime,
+                score_provider=score_provider,
+                firing_buffer=firing_buffer,
+                success_kind=success_kind,
+                seed=int(seed) + index * 10_003,
+                step=int(step_offset) + index,
+                max_trace_samples=int(cfg.max_samples),
+            )
+            scheduled_stats.update(scheduled["counter"])
+            verdicts.update(scheduled["verdict_counts"])
+            verdict_endpoints.update(scheduled["verdict_reason_counts"])
+            audition_count += int(scheduled["audition_count"])
+            audition_frames_spent += int(scheduled["audition_frames_spent"])
         if len(trace_sample) < int(cfg.max_samples):
             trace_sample.append(
                 {
@@ -4097,6 +4282,8 @@ def _phase44_train_audition_ecology_segment(
             )
     blocked_after = sum(runtime.births_blocked_by_capacity.values())
     distribution = _phase44_audition_distribution(runtime)
+    scheduled_coverage = _phase45_scheduled_coverage(runtime, int(cfg.real_native_audition_budget_per_cell))
+    verdict_total = sum(verdicts.values())
     return {
         "segment": segment_name,
         "row_count": len(rows),
@@ -4118,12 +4305,14 @@ def _phase44_train_audition_ecology_segment(
         "auditions_per_cell_distribution": distribution,
         "audition_verdict_counts": dict(sorted(verdicts.items())),
         "audition_verdict_rates": {
-            key: value / max(1, audition_count)
+            key: value / max(1, verdict_total)
             for key, value in sorted(verdicts.items())
         },
         "audition_verdict_reason_counts": dict(sorted(verdict_endpoints.items())),
         "audition_frames_spent": audition_frames_spent,
         "audition_starvation_min_per_cell": float(cfg.real_native_audition_starvation_min_per_cell),
+        "scheduled_audition_stats": dict(sorted(scheduled_stats.items())),
+        "scheduled_coverage": scheduled_coverage,
         "requested_composite_count": requested_total,
         "active_composite_count": active_total,
         "births_blocked_by_capacity_delta": int(blocked_after - blocked_before),
@@ -4407,6 +4596,175 @@ def _phase44_audition_distribution(runtime: _GraphNativeCompositeRuntime) -> dic
         "max": max(counts) if counts else 0,
         "mean": sum(counts) / max(1, len(counts)),
         "histogram": {str(key): int(value) for key, value in sorted(histogram.items())},
+    }
+
+
+def _phase45_run_scheduled_auditions(
+    cfg: StageBEcologicalDiscoveryConfig,
+    *,
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: Any,
+    firing_buffer: Mapping[str, Sequence[Mapping[str, Any]]],
+    success_kind: str,
+    seed: int,
+    step: int,
+    max_trace_samples: int,
+) -> dict[str, Any]:
+    counter: Counter[str] = Counter()
+    verdict_counts: Counter[str] = Counter()
+    verdict_reason_counts: Counter[str] = Counter()
+    audition_count = 0
+    audition_frames_spent = 0
+    budget = int(cfg.real_native_audition_budget_per_cell)
+    if budget <= 0:
+        return {
+            "counter": counter,
+            "verdict_counts": verdict_counts,
+            "verdict_reason_counts": verdict_reason_counts,
+            "audition_count": 0,
+            "audition_frames_spent": 0,
+        }
+    judge_cache = _new_judge_cache()
+    for cid, item in sorted(runtime.population.items()):
+        if item.get("state") != "TRIAL" or item.get("birth_segment") == "acceptance_probe":
+            continue
+        counter["trial_cells_considered"] += 1
+        already = int(item.get("audition_count", 0)) + int(item.get("scheduled_audition_sample_count", 0))
+        remaining = max(0, budget - already)
+        if remaining <= 0:
+            counter["trial_cells_budget_satisfied"] += 1
+            continue
+        samples = list(firing_buffer.get(cid, ()))
+        if not samples:
+            counter["trial_cells_without_firing_samples"] += 1
+            continue
+        sample_count = min(remaining, len(samples))
+        rng = random.Random(int(seed) + _phase45_stable_int(cid))
+        selected = rng.sample(samples, sample_count) if len(samples) > sample_count else samples[:sample_count]
+        counter["scheduled_samples"] += len(selected)
+        disagreements = [sample for sample in selected if not bool(sample.get("agrees_with_host"))]
+        if not disagreements and len(selected) >= remaining:
+            if runtime.apply_redundancy_prune(
+                composite_id=cid,
+                step=int(step),
+                reason="scheduled_all_sampled_firings_agreed_with_host",
+                sample_count=len(selected),
+            ):
+                counter["redundancy_prunes"] += 1
+                verdict_counts["redundancy_prune"] += 1
+                verdict_reason_counts["scheduled_all_sampled_firings_agreed_with_host"] += 1
+            continue
+        agreement_count = len(selected) - len(disagreements)
+        if agreement_count:
+            item["scheduled_audition_sample_count"] = (
+                int(item.get("scheduled_audition_sample_count", 0)) + agreement_count
+            )
+        if not disagreements:
+            counter["agreement_only_underfilled"] += 1
+            continue
+        for sample in disagreements:
+            if item.get("state") != "TRIAL":
+                break
+            if int(item.get("audition_count", 0)) >= budget:
+                counter["scheduled_budget_reached_mid_cell"] += 1
+                break
+            board = chess.Board(str(sample["fen"]))
+            host_move = chess.Move.from_uci(str(sample["host_move_uci"]))
+            cell_move = chess.Move.from_uci(str(sample["cell_move_uci"]))
+            if host_move not in board.legal_moves or cell_move not in board.legal_moves:
+                counter["scheduled_illegal_sample_skip"] += 1
+                continue
+            audition = _phase44_run_audition_pair(
+                cfg,
+                board,
+                sample["counts"],
+                score_provider=score_provider,
+                host_move=host_move,
+                cell_move=cell_move,
+                success_kind=success_kind,
+                seed=int(seed) + _phase45_stable_int(cid) + audition_count,
+                judge_cache=judge_cache,
+            )
+            verdict = str(audition["verdict"])
+            verdict_counts[verdict] += 1
+            verdict_reason_counts[str(audition["verdict_reason"])] += 1
+            audition_count += 1
+            audition_frames_spent += int(audition["frames_spent"])
+            counter["scheduled_paired_auditions"] += 1
+            runtime.apply_audition_verdict(
+                composite_id=cid,
+                verdict=verdict,
+                step=int(step),
+                reason=f"scheduled:{audition['verdict_reason']}",
+                frames_spent=int(audition["frames_spent"]),
+            )
+            if counter["scheduled_trace_samples"] < max_trace_samples:
+                counter["scheduled_trace_samples"] += 1
+        refreshed = runtime.population.get(cid)
+        if refreshed and refreshed.get("state") == "TRIAL":
+            judged = int(refreshed.get("audition_count", 0)) + int(
+                refreshed.get("scheduled_audition_sample_count", 0)
+            )
+            if judged < budget:
+                counter["trial_cells_under_budget_after_schedule"] += 1
+    return {
+        "counter": counter,
+        "verdict_counts": verdict_counts,
+        "verdict_reason_counts": verdict_reason_counts,
+        "audition_count": audition_count,
+        "audition_frames_spent": audition_frames_spent,
+    }
+
+
+def _phase45_stable_int(text: str) -> int:
+    total = 0
+    for char in str(text):
+        total = (total * 131 + ord(char)) % 1_000_000_007
+    return total
+
+
+def _phase45_scheduled_coverage(
+    runtime: _GraphNativeCompositeRuntime,
+    budget: int,
+) -> dict[str, Any]:
+    trial_cells = [
+        item for item in runtime.population.values()
+        if item.get("state") == "TRIAL" and item.get("birth_segment") != "acceptance_probe"
+    ]
+    judged_counts = [
+        int(item.get("audition_count", 0)) + int(item.get("scheduled_audition_sample_count", 0))
+        for item in trial_cells
+    ]
+    under = [count for count in judged_counts if count < int(budget)]
+    histogram = Counter(judged_counts)
+    return {
+        "trial_cell_count": len(trial_cells),
+        "budget": int(budget),
+        "under_budget_trial_count": len(under),
+        "under_budget_trial_fraction": len(under) / max(1, len(trial_cells)),
+        "min_judged": min(judged_counts) if judged_counts else 0,
+        "median_judged": sorted(judged_counts)[len(judged_counts) // 2] if judged_counts else 0,
+        "max_judged": max(judged_counts) if judged_counts else 0,
+        "histogram": {str(key): int(value) for key, value in sorted(histogram.items())},
+    }
+
+
+def _phase45_scheduled_unjudged_stop(
+    cfg: StageBEcologicalDiscoveryConfig,
+    training: Mapping[str, Any],
+) -> dict[str, Any]:
+    coverage = training.get("scheduled_coverage", {})
+    fraction = float(coverage.get("under_budget_trial_fraction", 0.0)) if isinstance(coverage, Mapping) else 0.0
+    trial_count = int(coverage.get("trial_cell_count", 0)) if isinstance(coverage, Mapping) else 0
+    threshold = float(getattr(cfg, "real_native_scheduled_unjudged_fraction_stop", 0.0))
+    return {
+        "stop": bool(trial_count > 0 and threshold > 0.0 and fraction > threshold),
+        "under_budget_trial_fraction": fraction,
+        "under_budget_trial_count": int(coverage.get("under_budget_trial_count", 0)) if isinstance(coverage, Mapping) else 0,
+        "trial_cell_count": trial_count,
+        "threshold": threshold,
+        "coverage": dict(coverage) if isinstance(coverage, Mapping) else {},
+        "scheduled_audition_stats": dict(training.get("scheduled_audition_stats", {})),
     }
 
 
@@ -5341,6 +5699,8 @@ def _phase44_audition_signal_table(per_seed: Sequence[Mapping[str, Any]]) -> lis
                         training.get("audition_verdict_reason_counts", {})
                     ),
                     "audition_frames_spent": int(training.get("audition_frames_spent", 0)),
+                    "scheduled_audition_stats": dict(training.get("scheduled_audition_stats", {})),
+                    "scheduled_coverage": dict(training.get("scheduled_coverage", {})),
                     "audition_cap_skip_count": int(training.get("audition_cap_skip_count", 0)),
                     "audition_budget_skip_count": int(training.get("audition_budget_skip_count", 0)),
                     "births_blocked_by_capacity_delta": int(
