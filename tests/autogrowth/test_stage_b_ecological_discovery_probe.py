@@ -20,6 +20,7 @@ from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     run_phase44_audition_cell_economy_probe,
     run_phase45_scheduled_audition_economy_probe,
     run_phase46_homeostatic_audition_economy_probe,
+    run_phase47_supply_side_audition_economy_probe,
     run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
@@ -841,3 +842,65 @@ def test_phase46_homeostatic_audition_economy_records_flush_and_families(tmp_pat
         training = row["stage_a"]["ecology_training"]
         assert "complete_flush" in training
         assert "backlog_curve" in training
+
+
+def test_phase47_supply_side_audition_economy_records_pool_supply(tmp_path: Path) -> None:
+    summary = run_phase47_supply_side_audition_economy_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_17_supply_side_probe"),
+            seeds=(20272931,),
+            flat_baseline_seeds=(20272911,),
+            stage_a_train_row_limit=2,
+            train_row_limit=2,
+            heldout_row_limit=1,
+            max_samples=1,
+            max_guided_births=0,
+            ecology_mode="stem_cell_graph",
+            native_foundation_train_repetitions=1,
+            native_foundation_continuation_repetitions=1,
+            native_foundation_max_mate1_positions=2,
+            native_foundation_max_mate2_positions=1,
+            native_foundation_prototype_scan_triplets=32,
+            native_foundation_key_mode="coarse",
+            real_native_engine_max_ticks=80,
+            real_native_foundation_row_limit=1,
+            real_native_max_live_composites=4,
+            real_native_max_live_siblings_per_parent=2,
+            real_native_trial_grace_exposures=1,
+            real_native_critical_period_exposures=2,
+            real_native_critical_period_credit_multiplier=1.5,
+            real_native_critical_period_optimism=0.01,
+            real_native_positive_flip_credit=0.02,
+            real_native_positive_flip_window=1,
+            real_native_choice_change_mature_events=1,
+            real_native_choice_change_neutral_rent=0.001,
+            real_native_near_zero_choice_change_rate=0.0,
+            real_native_stability_band_multiplier=5,
+            real_native_audition_budget_per_cell=2,
+            real_native_audition_per_ply_cap=1,
+            real_native_audition_horizon_plies=2,
+            real_native_audition_mature_better_events=1,
+            real_native_audition_neutral_rent=0.001,
+            real_native_audition_debt_threshold=1,
+            real_native_audition_starvation_min_per_cell=0.0,
+            real_native_scheduled_audition_chunk_size=1,
+            real_native_scheduled_unjudged_fraction_stop=0.0,
+            real_native_scheduled_complete_flush=True,
+            real_native_pool_scan_auditions=True,
+            real_native_trial_band_min=1,
+            real_native_trial_band_max=3,
+            real_native_court_throughput_per_chunk=3,
+            real_native_continue_after_seed_stop=True,
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_17_supply_side_audition_economy.v0"
+    assert summary["ecology"]["scheduled_auditions"]["supply_source"]
+    assert summary["ecology"]["count_homeostasis"]["trial_band"] == [1, 3]
+    assert "phase3_17_mature_recurrence_by_family" in summary["tables"]
+    row = summary["per_seed"][0]
+    assert row["schema_version"] == "phase3_17_supply_side_audition_economy_seed.v0"
+    if "stage_a" in row and "ecology_training" in row["stage_a"]:
+        training = row["stage_a"]["ecology_training"]
+        assert "pool_supply_stats" in training
+        assert "court_throughput_per_chunk" in training

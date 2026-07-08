@@ -154,6 +154,10 @@ class StageBEcologicalDiscoveryConfig:
     real_native_scheduled_unjudged_fraction_stop: float = 0.0
     real_native_scheduled_complete_flush: bool = False
     real_native_homeostatic_backlog_threshold: float = 0.0
+    real_native_pool_scan_auditions: bool = False
+    real_native_trial_band_min: int = 0
+    real_native_trial_band_max: int = 0
+    real_native_court_throughput_per_chunk: int = 0
     real_native_continue_after_seed_stop: bool = False
     phase33_equivalence_tolerance_wins: int = 3
 
@@ -1488,6 +1492,15 @@ def run_phase46_homeostatic_audition_economy_probe(
     return _run(config=config)
 
 
+def run_phase47_supply_side_audition_economy_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    from .persistent_staged_ladder import run_phase47_supply_side_audition_economy_probe as _run
+
+    return _run(config=config)
+
+
 def run_phase38_persistent_staged_ladder_probe(
     *,
     config: StageBEcologicalDiscoveryConfig | None = None,
@@ -2625,6 +2638,8 @@ class _GraphNativeCompositeRuntime:
             "audition_frames_spent": 0,
             "scheduled_audition_sample_count": 0,
             "redundancy_prune_events": 0,
+            "vacuous_prune_events": 0,
+            "budget_offered_prune_events": 0,
             "fate_events": [
                 {
                     "event": "birth",
@@ -3300,6 +3315,74 @@ class _GraphNativeCompositeRuntime:
         self._enforce_parent_budgets(step=step)
         return True
 
+    def apply_vacuous_prune(
+        self,
+        *,
+        composite_id: str,
+        step: int,
+        reason: str,
+    ) -> bool:
+        item = self.population.get(str(composite_id))
+        if not item or item["state"] != "TRIAL":
+            return False
+        item["state"] = "PRUNED"
+        item["prune_reason"] = "pool_scan_vacuous_no_firing_set"
+        item["vacuous_prune_events"] = int(item.get("vacuous_prune_events", 0)) + 1
+        cell = self.cells[str(composite_id)]
+        cell.state = StemCellState.PRUNED
+        cell.record_candidate_intervention("neutral", cycle=step)
+        item.setdefault("fate_events", []).append(
+            {
+                "step": int(step),
+                "event": "prune_on_pool_scan_vacuous",
+                "reason": str(reason),
+                "state": item["state"],
+                "audition_count": int(item.get("audition_count", 0)),
+                "scheduled_audition_sample_count": int(item.get("scheduled_audition_sample_count", 0)),
+            }
+        )
+        node_id = str(item["node_id"])
+        if node_id in self.native_graph.graph.nodes:
+            self.native_graph.graph.nodes[node_id].meta["stem_cell_state"] = item["state"]
+        self._enforce_parent_budgets(step=step)
+        return True
+
+    def apply_budget_offered_prune(
+        self,
+        *,
+        composite_id: str,
+        step: int,
+        reason: str,
+        offered_count: int,
+    ) -> bool:
+        item = self.population.get(str(composite_id))
+        if not item or item["state"] != "TRIAL":
+            return False
+        item["state"] = "PRUNED"
+        item["prune_reason"] = "audition_budget_offered_net_nonpositive"
+        item["budget_offered_prune_events"] = int(item.get("budget_offered_prune_events", 0)) + 1
+        cell = self.cells[str(composite_id)]
+        cell.state = StemCellState.PRUNED
+        cell.record_candidate_intervention("neutral", cycle=step)
+        item.setdefault("fate_events", []).append(
+            {
+                "step": int(step),
+                "event": "prune_on_audition_budget_offered",
+                "reason": str(reason),
+                "state": item["state"],
+                "offered_count": int(offered_count),
+                "audition_count": int(item.get("audition_count", 0)),
+                "scheduled_audition_sample_count": int(item.get("scheduled_audition_sample_count", 0)),
+                "audition_better_events": int(item.get("audition_better_events", 0)),
+                "audition_worse_events": int(item.get("audition_worse_events", 0)),
+            }
+        )
+        node_id = str(item["node_id"])
+        if node_id in self.native_graph.graph.nodes:
+            self.native_graph.graph.nodes[node_id].meta["stem_cell_state"] = item["state"]
+        self._enforce_parent_budgets(step=step)
+        return True
+
     def _enforce_parent_budgets(self, *, step: int) -> None:
         by_parent: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for item in self.population.values():
@@ -3384,6 +3467,8 @@ class _GraphNativeCompositeRuntime:
                     "audition_tie_events": int(item.get("audition_tie_events", 0)),
                     "scheduled_audition_sample_count": int(item.get("scheduled_audition_sample_count", 0)),
                     "redundancy_prune_events": int(item.get("redundancy_prune_events", 0)),
+                    "vacuous_prune_events": int(item.get("vacuous_prune_events", 0)),
+                    "budget_offered_prune_events": int(item.get("budget_offered_prune_events", 0)),
                     "children": list(item["children"]),
                 }
                 for item in sorted(
@@ -3433,6 +3518,8 @@ class _GraphNativeCompositeRuntime:
                 "audition_frames_spent": int(item.get("audition_frames_spent", 0)),
                 "scheduled_audition_sample_count": int(item.get("scheduled_audition_sample_count", 0)),
                 "redundancy_prune_events": int(item.get("redundancy_prune_events", 0)),
+                "vacuous_prune_events": int(item.get("vacuous_prune_events", 0)),
+                "budget_offered_prune_events": int(item.get("budget_offered_prune_events", 0)),
                 "formal_engine_eval_count": int(item.get("formal_engine_eval_count", 0)),
                 "prune_reason": item.get("prune_reason"),
                 "fate_events": list(item.get("fate_events", ())),
