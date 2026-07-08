@@ -1413,6 +1413,15 @@ def run_phase40_stratified_acceptance_probe(
     return _run(config=config)
 
 
+def run_phase41_credit_precision_paired_gates_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    from .persistent_staged_ladder import run_phase41_credit_precision_paired_gates_probe as _run
+
+    return _run(config=config)
+
+
 def run_phase38_persistent_staged_ladder_probe(
     *,
     config: StageBEcologicalDiscoveryConfig | None = None,
@@ -3751,6 +3760,7 @@ def _phase36_policy_traces(
             "endpoint": str(outcome["endpoint"]),
             "plies": int(outcome["plies"]),
             "white_steps": list(outcome["white_steps"]),
+            "transition_steps": list(outcome.get("transition_steps", ())),
             "active_composite_ids": list(outcome.get("active_composite_ids", ())),
             "percept_signatures": list(outcome.get("percept_signatures", ())),
         }
@@ -5516,6 +5526,7 @@ def _rollout_policy(
     rng = random.Random(seed)
     counts: Counter[Any] = Counter({_position_repetition_key(board): 1, board._transposition_key(): 1})
     white_steps: list[dict[str, str]] = []
+    transition_steps: list[dict[str, Any]] = []
     active_composite_ids: set[str] = set()
     percept_signatures: list[str] = []
     endpoint = "horizon"
@@ -5543,6 +5554,13 @@ def _rollout_policy(
         if int(counts.get(_after_move_repetition_key(board, move), 0)) >= 2:
             endpoint = "third_repetition"
             break
+        transition = {
+            "ply": int(ply),
+            "before_fen": board.fen(),
+            "white_move": move.uci(),
+            "before_fence_established": bool(fence_established_geometry(board)),
+            "before_rook_present": bool(_white_rook_square(board) is not None),
+        }
         if collect_composites and population:
             active = set(_sealed_action_keys(board, move))
             active_signature = _percept_signature(active)
@@ -5561,15 +5579,31 @@ def _rollout_policy(
         board.push(move)
         counts[_position_repetition_key(board)] += 1
         counts[board._transposition_key()] += 1
+        transition.update(
+            {
+                "after_white_fen": board.fen(),
+                "after_white_fence_established": bool(fence_established_geometry(board)),
+                "after_white_rook_present": bool(_white_rook_square(board) is not None),
+            }
+        )
         if _white_rook_square(board) is None:
             endpoint = "rook_lost"
+            transition["terminal_after"] = "white_move"
+            transition["endpoint_after"] = endpoint
+            transition_steps.append(transition)
             break
         if board.is_stalemate():
             endpoint = "stalemate"
+            transition["terminal_after"] = "white_move"
+            transition["endpoint_after"] = endpoint
+            transition_steps.append(transition)
             break
         if board.is_checkmate():
             endpoint = "mate_delivered"
             success = True
+            transition["terminal_after"] = "white_move"
+            transition["endpoint_after"] = endpoint
+            transition_steps.append(transition)
             break
         reply = _select_black_reply_for_rollout(
             cfg,
@@ -5584,19 +5618,41 @@ def _rollout_policy(
         if reply is None:
             endpoint = "mate_delivered" if board.is_check() else "stalemate"
             success = board.is_check()
+            transition["black_reply"] = None
+            transition["terminal_after"] = "black_no_reply"
+            transition["endpoint_after"] = endpoint
+            transition_steps.append(transition)
             break
+        transition["black_reply"] = reply.uci()
         board.push(reply)
         counts[_position_repetition_key(board)] += 1
         counts[board._transposition_key()] += 1
+        transition.update(
+            {
+                "after_black_fen": board.fen(),
+                "after_black_fence_established": bool(fence_established_geometry(board)),
+                "after_black_rook_present": bool(_white_rook_square(board) is not None),
+            }
+        )
         if _white_rook_square(board) is None:
             endpoint = "rook_lost"
+            transition["terminal_after"] = "black_reply"
+            transition["endpoint_after"] = endpoint
+            transition_steps.append(transition)
             break
         if board.is_stalemate():
             endpoint = "stalemate"
+            transition["terminal_after"] = "black_reply"
+            transition["endpoint_after"] = endpoint
+            transition_steps.append(transition)
             break
         if not fence_established_geometry(board):
             endpoint = "fence_broken"
+            transition["terminal_after"] = "black_reply"
+            transition["endpoint_after"] = endpoint
+            transition_steps.append(transition)
             break
+        transition_steps.append(transition)
     if not success and success_kind == "approach_waypoint" and _approach_waypoint_success(board):
         endpoint = "waypoint_reached"
         success = True
@@ -5610,6 +5666,7 @@ def _rollout_policy(
         "reward": reward,
         "plies": len(white_steps) * 2,
         "white_steps": white_steps,
+        "transition_steps": transition_steps,
         "active_composite_ids": sorted(active_composite_ids),
         "percept_signatures": percept_signatures,
     }

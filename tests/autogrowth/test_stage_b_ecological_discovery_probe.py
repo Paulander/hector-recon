@@ -14,6 +14,7 @@ from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     run_phase38_persistent_staged_ladder_probe,
     run_phase39_stable_plasticity_probe,
     run_phase40_stratified_acceptance_probe,
+    run_phase41_credit_precision_paired_gates_probe,
     run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
@@ -545,3 +546,40 @@ def test_phase40_stratified_acceptance_records_endpoint_non_regression(tmp_path:
         training = row["stage_a"]["training"]
         assert training["endpoint_non_regression_required"] is True
         assert "fence_broken" in training["acceptance_endpoint_keys"]
+
+
+def test_phase41_credit_precision_records_paired_gates_and_flip_stats(tmp_path: Path) -> None:
+    summary = run_phase41_credit_precision_paired_gates_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_11_credit_probe"),
+            seeds=(20272931,),
+            flat_baseline_seeds=(20272911,),
+            stage_a_train_row_limit=2,
+            train_row_limit=2,
+            heldout_row_limit=1,
+            max_samples=1,
+            max_guided_births=0,
+            ecology_mode="stem_cell_graph",
+            native_foundation_train_repetitions=1,
+            native_foundation_continuation_repetitions=1,
+            native_foundation_max_mate1_positions=2,
+            native_foundation_max_mate2_positions=1,
+            native_foundation_prototype_scan_triplets=32,
+            native_foundation_key_mode="coarse",
+            real_native_engine_max_ticks=80,
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_11_credit_precision_paired_gates.v0"
+    assert summary["paired_gate_spec"]["paired_rows"] is True
+    assert summary["credit_precision"]["features_changed"] is False
+    assert "phase3_11_paired_gates" in summary["tables"]
+    assert "phase3_11_flip_ply" in summary["tables"]
+    assert summary["phase3_10_paired_gate_calibration"]["enabled"] in {True, False}
+    row = summary["per_seed"][0]
+    if "stage_a" in row:
+        training = row["stage_a"]["training"]
+        assert training["fresh_validation_fold_per_chunk"] is True
+        assert training["paired_acceptance"] is True
+        assert "flip_ply_identification_rate" in training
+        assert "paired_gate" in row["stage_a"]["gate"]

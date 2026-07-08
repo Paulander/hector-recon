@@ -1,0 +1,159 @@
+{
+  "arms": {
+    "arm1_unguided_ecological": "Births use learner-internal triggers only: low margin, active atom conflict, novel percept signatures, repeated trace uncertainty, and yoked random births. Survival uses local credit/debt plus passive decay; habitat-local mode restricts decay and competition to revisited percept signatures; graph-native mode stores composites as StemCellTerminal TRIAL/MATURE/PRUNED cells with parent-local resource accounting.",
+    "arm2_guided_residual_control": "Quarantined expressivity probe. Births are aimed at atom-only failure rows and must not be counted as autogrowth evidence."
+  },
+  "config": {
+    "atom_score_scale": 1.0,
+    "composite_width": 2,
+    "conflict_abs_threshold": 0.05,
+    "ecology_mode": "stem_cell_graph",
+    "fast_exact_judge": true,
+    "flat_baseline_seeds": [
+      20272911,
+      20272912,
+      20272913
+    ],
+    "heldout_row_limit": null,
+    "horizon_plies": 16,
+    "initial_nutrition": 0.34,
+    "initial_weight": 0.05,
+    "low_margin_threshold": 0.035,
+    "mature_nutrition": 1.1,
+    "max_advisory_weight": 0.18,
+    "max_births_per_decision": 2,
+    "max_child_pool": 16,
+    "max_guided_births": 0,
+    "max_mature_ablation_subjects": 8,
+    "max_population": 48,
+    "max_population_per_habitat": 2,
+    "max_samples": 8,
+    "max_total_population": null,
+    "native_foundation_continuation_repetitions": 2,
+    "native_foundation_key_mode": "coarse",
+    "native_foundation_max_mate1_positions": null,
+    "native_foundation_max_mate2_positions": null,
+    "native_foundation_max_ticks": 80,
+    "native_foundation_prototype_scan_triplets": 128,
+    "native_foundation_train_repetitions": 5,
+    "negative_debt": 0.18,
+    "novelty_seen_threshold": 1,
+    "nutrition_weight_scale": 0.035,
+    "output_dir": "reports/autogrowth/clean_slate_krk/phase3_11_credit_precision_paired_gates",
+    "passive_decay": 0.01,
+    "phase33_equivalence_tolerance_wins": 3,
+    "positive_credit": 0.16,
+    "pruned_rescue_audit_limit": 8,
+    "pruned_rescue_heldout_limit": 32,
+    "real_native_active_decay": 0.04,
+    "real_native_credit": 0.09,
+    "real_native_debt": 0.11,
+    "real_native_dormant_decay": 0.001,
+    "real_native_engine_max_ticks": 80,
+    "real_native_foundation_row_limit": 24,
+    "real_native_initial_resource": 0.4,
+    "real_native_mature_resource": 0.75,
+    "real_native_max_ablation_subjects": 4,
+    "real_native_max_births_per_row": 1,
+    "real_native_max_live_composites": 24,
+    "real_native_max_live_siblings_per_parent": 4,
+    "real_native_trial_grace_exposures": 3,
+    "seeds": [
+      20272931,
+      20272932,
+      20272933
+    ],
+    "stage_a_rows_path": "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_a_rows.json",
+    "stage_a_train_row_limit": 128,
+    "stage_b_baseline_dir": "reports/autogrowth/clean_slate_krk/phase2_9a_action_firewall",
+    "stage_b_rows_path": "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_b_rows.json",
+    "stem_inactive_decay_scale": 1.0,
+    "stem_initial_xp": 50,
+    "stem_mature_xp": 100,
+    "stem_min_mature_exposures": 3,
+    "stem_prune_xp": 0,
+    "train_row_limit": 128,
+    "uncertainty_high": 0.65,
+    "uncertainty_low": 0.35,
+    "uncertainty_min_visits": 3
+  },
+  "consolidation": {
+    "acceptance": "paired after-vs-before validation pass, hard endpoint non-regression, and paired prior-rung replay pass",
+    "chunk_budget": 12,
+    "contrast_rule_changed": false,
+    "credit_precision": {
+      "discounts": {
+        "flip_ply": 1.0,
+        "previous_1": 0.5,
+        "previous_2": 0.25
+      },
+      "fallback": "hard failures without an identified flip-ply use the previous first-move endpoint credit",
+      "features_changed": false,
+      "flip_ply_rule": "find first transition where fence_established or rook_present flips from true to false; assign negative credit to that white ply plus discounted shares to the previous two white plies",
+      "hard_fail_endpoints": [
+        "fence_broken",
+        "rook_lost"
+      ]
+    },
+    "endpoint_delta_instrumentation": [
+      "fence_broken",
+      "rook_lost",
+      "horizon",
+      "third_repetition",
+      "stalemate",
+      "illegal"
+    ],
+    "endpoint_non_regression": true,
+    "learner_visible_features_changed": false,
+    "rejection": "discard fast deltas and restore slow host weights",
+    "validation_split": "fresh endpoint-stratified validation fold resampled from train pool each chunk",
+    "variable_changed": "update acceptance only"
+  },
+  "credit_precision": {
+    "discounts": {
+      "flip_ply": 1.0,
+      "previous_1": 0.5,
+      "previous_2": 0.25
+    },
+    "fallback": "hard failures without an identified flip-ply use the previous first-move endpoint credit",
+    "features_changed": false,
+    "flip_ply_rule": "find first transition where fence_established or rook_present flips from true to false; assign negative credit to that white ply plus discounted shares to the previous two white plies",
+    "hard_fail_endpoints": [
+      "fence_broken",
+      "rook_lost"
+    ]
+  },
+  "discovery_boundary": {
+    "exact_judge_use": "after-the-fact rollout outcome and heldout ablation only",
+    "forbidden_for_arm1_birth": [
+      "stage labels",
+      "selector-owner ids",
+      "hand chase features as causal features",
+      "exact judge failures or success labels",
+      "human-selected spawn sites",
+      "global top-K promotion"
+    ],
+    "learner_visible": [
+      "board state",
+      "legal moves",
+      "sealed terminal_action_feature_keys",
+      "atom weights from sealed Stage B learner",
+      "trial composite activations and local nutrition"
+    ]
+  },
+  "paired_gates": {
+    "gate_rows_consulted_by_update_decisions": false,
+    "gate_rule": "pass if discordant pairs favor learner, or learner is non-inferior within the declared margin",
+    "margin_interpretation": "3/128 = 2.34 percentage points; smaller folds scale proportionally with minimum 1",
+    "non_inferiority_margin_wins_on_128": 3,
+    "paired_rows": true
+  },
+  "phase_alias": "User-requested Phase 3.9 credit precision + honest gates",
+  "rung": "Stage B / true-middle chase stratum",
+  "schema_version": "phase3_11_credit_precision_paired_gates_design_spec.v0",
+  "stop_rules": [
+    "Arm1 population collapse-to-zero after nonzero births",
+    "Arm1 cap pressure on more than half of train decisions",
+    "Arm1 load-bearing count remains zero across all seeds"
+  ]
+}
