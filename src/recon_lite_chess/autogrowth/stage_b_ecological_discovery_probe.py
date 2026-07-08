@@ -134,6 +134,11 @@ class StageBEcologicalDiscoveryConfig:
     real_native_mature_resource: float = 0.75
     real_native_max_ablation_subjects: int = 4
     real_native_engine_max_ticks: int = 80
+    real_native_critical_period_exposures: int = 0
+    real_native_critical_period_credit_multiplier: float = 1.0
+    real_native_critical_period_optimism: float = 0.0
+    real_native_positive_flip_credit: float = 0.0
+    real_native_positive_flip_window: int = 2
     phase33_equivalence_tolerance_wins: int = 3
 
 
@@ -1422,6 +1427,15 @@ def run_phase41_credit_precision_paired_gates_probe(
     return _run(config=config)
 
 
+def run_phase42_standing_ladder_ecology_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    from .persistent_staged_ladder import run_phase42_standing_ladder_ecology_probe as _run
+
+    return _run(config=config)
+
+
 def run_phase38_persistent_staged_ladder_probe(
     *,
     config: StageBEcologicalDiscoveryConfig | None = None,
@@ -2543,6 +2557,7 @@ class _GraphNativeCompositeRuntime:
             "credit_events": 0,
             "debt_events": 0,
             "neutral_events": 0,
+            "positive_flip_events": 0,
             "fate_events": [
                 {
                     "event": "birth",
@@ -2727,6 +2742,19 @@ class _GraphNativeCompositeRuntime:
             "base_move": base_move,
         }
 
+    def critical_period_fraction(self, item: Mapping[str, Any]) -> float:
+        exposure_window = int(getattr(self.cfg, "real_native_critical_period_exposures", 0))
+        if exposure_window <= 0:
+            return 0.0
+        requested = int(item.get("requested_exposures", 0))
+        return max(0.0, (exposure_window - requested) / exposure_window)
+
+    def critical_period_multiplier(self, item: Mapping[str, Any]) -> float:
+        base = float(getattr(self.cfg, "real_native_critical_period_credit_multiplier", 1.0))
+        if base <= 1.0:
+            return 1.0
+        return 1.0 + (base - 1.0) * self.critical_period_fraction(item)
+
     def apply_local_credit(
         self,
         *,
@@ -2741,16 +2769,23 @@ class _GraphNativeCompositeRuntime:
             if item["state"] not in {"TRIAL", "MATURE"}:
                 continue
             requested = int(item.get("requested_exposures", 0))
+            multiplier = self.critical_period_multiplier(item)
             if cid in active:
                 item["activation_count"] = int(item.get("activation_count", 0)) + 1
                 if changed_base_choice:
-                    item["local_resource"] = float(item.get("local_resource", 0.0)) + self.cfg.real_native_credit
+                    item["local_resource"] = (
+                        float(item.get("local_resource", 0.0))
+                        + self.cfg.real_native_credit * multiplier
+                    )
                     item["credit_events"] = int(item.get("credit_events", 0)) + 1
-                    self.cells[cid].update_xp(1.0)
+                    self.cells[cid].update_xp(1.0 * multiplier)
                     self.cells[cid].mark_confirmed(step)
                     event = "local_credit_parent_confirmation_changed_choice"
                 else:
-                    item["local_resource"] = float(item.get("local_resource", 0.0)) - self.cfg.real_native_active_decay
+                    item["local_resource"] = (
+                        float(item.get("local_resource", 0.0))
+                        - self.cfg.real_native_active_decay * multiplier
+                    )
                     item["neutral_events"] = int(item.get("neutral_events", 0)) + 1
                     self.cells[cid].record_candidate_intervention("neutral", cycle=step)
                     event = "active_neutral_rent"
@@ -2785,6 +2820,7 @@ class _GraphNativeCompositeRuntime:
                         "activation_count": int(item.get("activation_count", 0)),
                         "local_resource": round(float(item.get("local_resource", 0.0)), 6),
                         "xp": int(item.get("stem_cell_xp", 0)),
+                        "critical_period_multiplier": round(float(multiplier), 6),
                     }
                 )
             node_id = str(item["node_id"])
@@ -2795,6 +2831,65 @@ class _GraphNativeCompositeRuntime:
                 node.meta["requested_exposures"] = int(item.get("requested_exposures", 0))
                 node.meta["activation_count"] = int(item.get("activation_count", 0))
         self._enforce_parent_budgets(step=step)
+
+    def apply_positive_flip_nutrition(
+        self,
+        *,
+        active_ids: Sequence[str],
+        step: int,
+        reason: str,
+        discount: float = 1.0,
+    ) -> int:
+        event_count = 0
+        base_credit = float(getattr(self.cfg, "real_native_positive_flip_credit", 0.0))
+        if base_credit <= 0.0:
+            return 0
+        for cid in set(map(str, active_ids)):
+            item = self.population.get(cid)
+            if not item or item["state"] not in {"TRIAL", "MATURE"}:
+                continue
+            cell = self.cells[cid]
+            multiplier = self.critical_period_multiplier(item)
+            gain = base_credit * float(discount) * multiplier
+            item["local_resource"] = float(item.get("local_resource", 0.0)) + gain
+            item["credit_events"] = int(item.get("credit_events", 0)) + 1
+            item["positive_flip_events"] = int(item.get("positive_flip_events", 0)) + 1
+            cell.update_xp(1.0 * multiplier)
+            cell.mark_confirmed(step)
+            item["stem_cell_xp"] = int(cell.xp)
+            event = "positive_achievement_flip_nutrition"
+            if (
+                item["state"] == "TRIAL"
+                and int(item.get("requested_exposures", 0)) >= int(self.cfg.real_native_trial_grace_exposures)
+                and float(item.get("local_resource", 0.0)) >= self.cfg.real_native_mature_resource
+            ):
+                item["state"] = "MATURE"
+                cell.state = StemCellState.MATURE
+                event = "mature_on_positive_achievement_flip"
+            item.setdefault("fate_events", []).append(
+                {
+                    "step": int(step),
+                    "event": event,
+                    "reason": str(reason),
+                    "state": item["state"],
+                    "discount": round(float(discount), 6),
+                    "gain": round(float(gain), 6),
+                    "requested_exposures": int(item.get("requested_exposures", 0)),
+                    "activation_count": int(item.get("activation_count", 0)),
+                    "local_resource": round(float(item.get("local_resource", 0.0)), 6),
+                    "xp": int(item.get("stem_cell_xp", 0)),
+                    "critical_period_multiplier": round(float(multiplier), 6),
+                }
+            )
+            node_id = str(item["node_id"])
+            if node_id in self.native_graph.graph.nodes:
+                node = self.native_graph.graph.nodes[node_id]
+                node.meta["stem_cell_state"] = item["state"]
+                node.meta["local_resource"] = float(item.get("local_resource", 0.0))
+                node.meta["positive_flip_events"] = int(item.get("positive_flip_events", 0))
+            event_count += 1
+        self._enforce_parent_budgets(step=step)
+        return event_count
 
     def _enforce_parent_budgets(self, *, step: int) -> None:
         by_parent: dict[str, list[dict[str, Any]]] = defaultdict(list)
@@ -2904,6 +2999,7 @@ class _GraphNativeCompositeRuntime:
                 "credit_events": int(item.get("credit_events", 0)),
                 "debt_events": int(item.get("debt_events", 0)),
                 "neutral_events": int(item.get("neutral_events", 0)),
+                "positive_flip_events": int(item.get("positive_flip_events", 0)),
                 "formal_engine_eval_count": int(item.get("formal_engine_eval_count", 0)),
                 "prune_reason": item.get("prune_reason"),
                 "fate_events": list(item.get("fate_events", ())),
@@ -4167,7 +4263,13 @@ def _real_native_parent_id(source_signature: str) -> str:
 
 def _real_native_composite_weight(item: Mapping[str, Any], cfg: StageBEcologicalDiscoveryConfig) -> float:
     resource = max(0.0, float(item.get("local_resource", 0.0)))
-    return min(float(cfg.max_advisory_weight), float(cfg.initial_weight) + 0.04 * resource)
+    optimism = 0.0
+    exposure_window = int(getattr(cfg, "real_native_critical_period_exposures", 0))
+    if exposure_window > 0:
+        requested = int(item.get("requested_exposures", 0))
+        fraction = max(0.0, (exposure_window - requested) / exposure_window)
+        optimism = float(getattr(cfg, "real_native_critical_period_optimism", 0.0)) * fraction
+    return min(float(cfg.max_advisory_weight), float(cfg.initial_weight) + 0.04 * resource + optimism)
 
 
 def _add_graph_pair_once(graph: NativeReConKRKGraph, parent: str, child: str, *, weight: float) -> None:

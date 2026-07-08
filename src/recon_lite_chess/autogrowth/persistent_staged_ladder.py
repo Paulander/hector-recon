@@ -13,12 +13,21 @@ import chess
 
 from .stage_b_ecological_discovery_probe import (
     StageBEcologicalDiscoveryConfig,
+    _GraphNativeCompositeRuntime,
     _MigratedStageBFlatGraphScoreProvider,
+    _NativeFoundationScoreProvider,
+    _approach_waypoint_success,
     _choose_migrated_flat_host_move,
+    _decision_context,
     _design_spec,
+    _foundation_ecology_rows,
     _legal_without_third_repetition,
     _load_weight_table,
     _new_judge_cache,
+    _phase32_real_recurring_mature_composites,
+    _real_native_ablation_health,
+    _real_native_pruned_rescue_audit,
+    _real_native_spawn_from_context,
     _phase38_dispatcher_side_eval,
     _phase38_flat_policy_traces,
     _phase38_gate_result,
@@ -26,8 +35,10 @@ from .stage_b_ecological_discovery_probe import (
     _phase38_provenance_law,
     _phase38_rebaseline_phase29e_discovery,
     _phase38_rebaseline_table,
+    _phase38_runner_config,
     _position_repetition_key,
     _rollout_policy,
+    _score_options,
     _sealed_action_key_scales,
     _train_native_foundation_for_ecology,
     _write_json,
@@ -1023,6 +1034,488 @@ def run_phase41_credit_precision_paired_gates_probe(
     return summary
 
 
+def run_phase42_standing_ladder_ecology_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    """Phase 3.12: graph-native stem-cell ecology on the standing 3.9 ladder."""
+
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_12_standing_ladder_ecology",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        flat_baseline_seeds=(20272911, 20272912, 20272913),
+        stage_a_train_row_limit=128,
+        train_row_limit=128,
+        heldout_row_limit=None,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+        real_native_engine_max_ticks=80,
+        real_native_max_live_composites=32,
+        real_native_max_live_siblings_per_parent=4,
+        real_native_trial_grace_exposures=3,
+        real_native_critical_period_exposures=5,
+        real_native_critical_period_credit_multiplier=1.75,
+        real_native_critical_period_optimism=0.025,
+        real_native_positive_flip_credit=0.060,
+        real_native_positive_flip_window=2,
+    )
+    output_dir = Path(cfg.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    gate_margin = _phase41_gate_margin_wins()
+    design = _design_spec(cfg)
+    design["schema_version"] = "phase3_12_standing_ladder_ecology_design_spec.v0"
+    design["phase_alias"] = "User-requested Phase 3.12 ecology on the standing ladder"
+    design["host_ladder"] = {
+        "base_commit": "67edd64",
+        "consolidation_and_paired_gate": _phase41_consolidation_spec(),
+        "paired_gate_spec": _phase41_paired_gate_spec(gate_margin),
+        "exact_adversarial_black": True,
+    }
+    design["ecology"] = _phase42_ecology_spec(cfg)
+    _write_json(output_dir / "design_spec.json", design)
+
+    stage_a_payload = json.loads(Path(cfg.stage_a_rows_path).read_text(encoding="utf-8"))
+    stage_b_payload = json.loads(Path(cfg.stage_b_rows_path).read_text(encoding="utf-8"))
+    stage_a_train_pool = list(stage_a_payload["train"])
+    stage_b_train_pool = list(stage_b_payload["train"])
+    stage_a_gate_rows = list(stage_a_payload["heldout"])
+    stage_b_gate_rows = list(stage_b_payload["heldout"])
+    stage_a_limit = cfg.stage_a_train_row_limit if cfg.stage_a_train_row_limit is not None else cfg.train_row_limit
+    if stage_a_limit is not None:
+        stage_a_train_pool = stage_a_train_pool[: int(stage_a_limit)]
+    if cfg.train_row_limit is not None:
+        stage_b_train_pool = stage_b_train_pool[: int(cfg.train_row_limit)]
+    if cfg.heldout_row_limit is not None:
+        stage_a_gate_rows = stage_a_gate_rows[: int(cfg.heldout_row_limit)]
+        stage_b_gate_rows = stage_b_gate_rows[: int(cfg.heldout_row_limit)]
+
+    calibration = _phase41_calibrate_phase310_paired_gates(gate_margin)
+    _write_json(output_dir / "phase3_10_paired_gate_calibration.json", calibration)
+
+    per_seed: list[dict[str, Any]] = []
+    global_stop_reasons: list[str] = []
+    for index, seed in enumerate(cfg.seeds):
+        flat_seed = int(cfg.flat_baseline_seeds[index % len(cfg.flat_baseline_seeds)])
+        foundation = _train_native_foundation_for_ecology(cfg)
+        native_graph = foundation["graph"]
+        runtime = _GraphNativeCompositeRuntime(cfg, native_graph, seed=int(seed))
+        foundation_rows = _foundation_ecology_rows(cfg, seed=int(seed))
+        acceptance_row = foundation_rows[0] if foundation_rows else stage_a_train_pool[0]
+        acceptance = runtime.acceptance_check(acceptance_row)
+        foundation_gate = _phase39_foundation_gate(foundation, cfg)
+        stage_a_weights = _load_weight_table(
+            Path(cfg.stage_b_baseline_dir) / f"stage_d_A_sealed_seed_{flat_seed}_weights.json"
+        )
+        stage_b_weights = _load_weight_table(
+            Path(cfg.stage_b_baseline_dir) / f"stage_d_B_sealed_seed_{flat_seed}_weights.json"
+        )
+        stage_a_pool_traces = _phase38_flat_policy_traces(
+            cfg,
+            stage_a_train_pool,
+            atom_weights=stage_a_weights,
+            flat_seed=flat_seed,
+            seed=int(seed) + 404,
+            policy_name=f"phase3_12_stage_a_train_pool_stratifier_{flat_seed}_{seed}",
+            success_kind="approach_waypoint",
+        )
+        stage_a_baseline = _phase38_flat_policy_traces(
+            cfg,
+            stage_a_gate_rows,
+            atom_weights=stage_a_weights,
+            flat_seed=flat_seed,
+            seed=int(seed) + 700,
+            policy_name=f"phase3_12_stage_a_executable_flat_exact_adversarial_{flat_seed}",
+            success_kind="approach_waypoint",
+        )
+        seed_result: dict[str, Any] = {
+            "schema_version": "phase3_12_standing_ladder_ecology_seed.v0",
+            "seed": int(seed),
+            "flat_seed": flat_seed,
+            "acceptance_check": acceptance,
+            "foundation": foundation["summary"],
+            "foundation_gate": foundation_gate,
+            "ecology_spec": _phase42_ecology_spec(cfg),
+            "split_manifest": {
+                "stage_a": _phase41_pool_manifest(stage_a_train_pool, stage_a_gate_rows, stage_a_pool_traces),
+                "stage_b": None,
+            },
+            "baselines": {
+                "stage_a_exact_adversarial_flat_gate": stage_a_baseline,
+            },
+            "stop_reasons": [],
+        }
+        if not acceptance["passed"]:
+            seed_result["stop_reasons"].append("acceptance_check_failed")
+        if not foundation_gate["passed"]:
+            seed_result["stop_reasons"].append("foundation_gate_failed")
+        if seed_result["stop_reasons"]:
+            _write_json(output_dir / f"seed_{seed}_standing_ladder_ecology.json", seed_result)
+            per_seed.append(seed_result)
+            global_stop_reasons.extend(f"{reason}:{seed}" for reason in seed_result["stop_reasons"])
+            continue
+
+        foundation_provider = _NativeFoundationScoreProvider(native_graph)
+        seed_result["foundation_ecology_training"] = _phase42_train_ecology_segment(
+            cfg,
+            runtime=runtime,
+            score_provider=foundation_provider,
+            rows=foundation_rows,
+            segment_name="foundation_mate1_mate2",
+            success_kind="stage_b_enter_mate2",
+            seed=int(seed) + 3_000,
+            step_offset=0,
+        )
+
+        stage_a_provider = _MigratedStageBFlatGraphScoreProvider(
+            cfg,
+            native_graph,
+            atom_weights=stage_a_weights,
+            flat_seed=flat_seed,
+            policy_parent_id="stage_a_policy_phase3_12",
+            terminal_namespace=f"phase3_12_stage_a_{flat_seed}",
+        )
+        stage_a_training = _phase41_train_credit_precision(
+            cfg,
+            provider=stage_a_provider,
+            train_pool_rows=stage_a_train_pool,
+            pool_endpoint_by_row=stage_a_pool_traces["endpoint_by_row"],
+            prior_replay_checks=(),
+            seed=int(seed) + 10_000,
+            success_kind="approach_waypoint",
+            rung_name="stage_a_approach",
+        )
+        stage_a_host_gate_eval = _phase38_migrated_provider_traces(
+            cfg,
+            stage_a_gate_rows,
+            stage_a_provider,
+            seed=int(seed) + 11_000,
+            policy_name=f"phase3_12_stage_a_host_gate_{seed}",
+            success_kind="approach_waypoint",
+        )
+        stage_a_host_gate = _phase41_gate_result_paired(
+            rung="stage_a_approach_host",
+            learner=stage_a_host_gate_eval,
+            flat=stage_a_baseline,
+            margin_wins=gate_margin,
+        )
+        seed_result["stage_a"] = {
+            "host_training": stage_a_training,
+            "host_gate_evaluation": stage_a_host_gate_eval,
+            "host_gate": stage_a_host_gate,
+        }
+        if int(stage_a_training["chunks_consolidated"]) == 0:
+            seed_result["stop_reasons"].append("stage_a_zero_chunks_consolidated")
+        if not stage_a_host_gate["passed"]:
+            seed_result["stop_reasons"].append("stage_a_host_gate_unreachable_after_budget")
+        if seed_result["stop_reasons"]:
+            _write_json(output_dir / f"seed_{seed}_standing_ladder_ecology.json", seed_result)
+            per_seed.append(seed_result)
+            global_stop_reasons.extend(f"{reason}:{seed}" for reason in seed_result["stop_reasons"])
+            continue
+
+        seed_result["stage_a"]["ecology_training"] = _phase42_train_ecology_segment(
+            cfg,
+            runtime=runtime,
+            score_provider=stage_a_provider,
+            rows=stage_a_train_pool,
+            segment_name="stage_a_approach",
+            success_kind="approach_waypoint",
+            seed=int(seed) + 12_000,
+            step_offset=10_000,
+        )
+        stage_a_ecology_gates = _phase42_ecology_gate_bundle(
+            cfg,
+            runtime=runtime,
+            score_provider=stage_a_provider,
+            gate_rows=stage_a_gate_rows,
+            flat_baseline=stage_a_baseline,
+            host_eval=stage_a_host_gate_eval,
+            seed=int(seed) + 13_000,
+            rung="stage_a_approach",
+            success_kind="approach_waypoint",
+            gate_margin=gate_margin,
+        )
+        seed_result["stage_a"]["ecology_gates"] = stage_a_ecology_gates
+        if not stage_a_ecology_gates["mature_vs_flat_gate"]["passed"]:
+            seed_result["stop_reasons"].append("stage_a_mature_cell_gate_regression_vs_flat")
+        if not stage_a_ecology_gates["live_vs_flat_gate"]["passed"]:
+            seed_result["stop_reasons"].append("stage_a_live_cell_gate_regression_vs_flat")
+        population_stop = runtime.population_stop_rule()
+        if population_stop["population_collapse_to_zero"] or population_stop["unbounded_explosion"]:
+            seed_result["stop_reasons"].append("population_stop_after_stage_a")
+        if seed_result["stop_reasons"]:
+            seed_result["population"] = runtime.population_summary()
+            seed_result["birth_death_curve"] = runtime.birth_curve
+            seed_result["candidate_fate_log"] = runtime.fate_log()
+            _write_json(output_dir / f"seed_{seed}_standing_ladder_ecology.json", seed_result)
+            per_seed.append(seed_result)
+            global_stop_reasons.extend(f"{reason}:{seed}" for reason in seed_result["stop_reasons"])
+            if (
+                "population_stop_after_stage_a" in seed_result["stop_reasons"]
+                or any("gate_regression" in reason for reason in seed_result["stop_reasons"])
+            ):
+                break
+            continue
+
+        stage_b_pool_traces = _phase38_flat_policy_traces(
+            cfg,
+            stage_b_train_pool,
+            atom_weights=stage_b_weights,
+            flat_seed=flat_seed,
+            seed=int(seed) + 504,
+            policy_name=f"phase3_12_stage_b_train_pool_stratifier_{flat_seed}_{seed}",
+            success_kind="stage_b_enter_mate2",
+        )
+        seed_result["split_manifest"]["stage_b"] = _phase41_pool_manifest(
+            stage_b_train_pool,
+            stage_b_gate_rows,
+            stage_b_pool_traces,
+        )
+        stage_b_baseline = _phase38_flat_policy_traces(
+            cfg,
+            stage_b_gate_rows,
+            atom_weights=stage_b_weights,
+            flat_seed=flat_seed,
+            seed=int(seed) + 900,
+            policy_name=f"phase3_12_stage_b_executable_flat_exact_adversarial_{flat_seed}",
+            success_kind="stage_b_enter_mate2",
+        )
+        seed_result["baselines"]["stage_b_exact_adversarial_flat_gate"] = stage_b_baseline
+        stage_b_provider = _MigratedStageBFlatGraphScoreProvider(
+            cfg,
+            native_graph,
+            atom_weights=stage_b_weights,
+            flat_seed=flat_seed,
+            policy_parent_id="stage_b_policy_phase3_12",
+            terminal_namespace=f"phase3_12_stage_b_{flat_seed}",
+        )
+        stage_a_replay_rows = _phase41_stratified_fold_from_endpoint_map(
+            stage_a_train_pool,
+            stage_a_pool_traces["endpoint_by_row"],
+            seed=int(seed) + 60_000,
+            excluded_row_ids=set(),
+            target_count=_phase41_validation_target_count(stage_a_train_pool),
+        )[0]
+
+        def stage_a_prior_replay() -> dict[str, Any]:
+            return _phase38_migrated_provider_traces(
+                cfg,
+                stage_a_replay_rows,
+                stage_a_provider,
+                seed=int(seed) + 14_000,
+                policy_name=f"phase3_12_stage_a_replay_for_stage_b_{seed}",
+                success_kind="approach_waypoint",
+            )
+
+        stage_b_training = _phase41_train_credit_precision(
+            cfg,
+            provider=stage_b_provider,
+            train_pool_rows=stage_b_train_pool,
+            pool_endpoint_by_row=stage_b_pool_traces["endpoint_by_row"],
+            prior_replay_checks=(
+                {
+                    "name": "stage_a_replay",
+                    "evaluate": stage_a_prior_replay,
+                },
+            ),
+            seed=int(seed) + 20_000,
+            success_kind="stage_b_enter_mate2",
+            rung_name="stage_b_chase",
+        )
+        stage_b_host_gate_eval = _phase38_migrated_provider_traces(
+            cfg,
+            stage_b_gate_rows,
+            stage_b_provider,
+            seed=int(seed) + 21_000,
+            policy_name=f"phase3_12_stage_b_host_gate_{seed}",
+            success_kind="stage_b_enter_mate2",
+        )
+        stage_a_regression_host_eval = _phase38_migrated_provider_traces(
+            cfg,
+            stage_a_gate_rows,
+            stage_a_provider,
+            seed=int(seed) + 22_000,
+            policy_name=f"phase3_12_stage_a_host_regression_after_stage_b_{seed}",
+            success_kind="approach_waypoint",
+        )
+        stage_b_host_gate = _phase41_gate_result_paired(
+            rung="stage_b_chase_host",
+            learner=stage_b_host_gate_eval,
+            flat=stage_b_baseline,
+            margin_wins=gate_margin,
+        )
+        stage_a_host_regression_gate = _phase41_gate_result_paired(
+            rung="stage_a_approach_host_regression_after_stage_b",
+            learner=stage_a_regression_host_eval,
+            flat=stage_a_baseline,
+            margin_wins=gate_margin,
+        )
+        seed_result["stage_b"] = {
+            "host_training": stage_b_training,
+            "host_gate_evaluation": stage_b_host_gate_eval,
+            "host_gate": stage_b_host_gate,
+        }
+        seed_result["regression_checks"] = {
+            "stage_a_host_after_stage_b": {
+                "gate_evaluation": stage_a_regression_host_eval,
+                "gate": stage_a_host_regression_gate,
+            }
+        }
+        if int(stage_b_training["chunks_consolidated"]) == 0:
+            seed_result["stop_reasons"].append("stage_b_zero_chunks_consolidated")
+        if not stage_b_host_gate["passed"]:
+            seed_result["stop_reasons"].append("stage_b_host_gate_unreachable_after_budget")
+        if not stage_a_host_regression_gate["passed"]:
+            seed_result["stop_reasons"].append("stage_a_host_regression_after_stage_b")
+        if seed_result["stop_reasons"]:
+            seed_result["population"] = runtime.population_summary()
+            seed_result["birth_death_curve"] = runtime.birth_curve
+            seed_result["candidate_fate_log"] = runtime.fate_log()
+            _write_json(output_dir / f"seed_{seed}_standing_ladder_ecology.json", seed_result)
+            per_seed.append(seed_result)
+            global_stop_reasons.extend(f"{reason}:{seed}" for reason in seed_result["stop_reasons"])
+            continue
+
+        seed_result["stage_b"]["ecology_training"] = _phase42_train_ecology_segment(
+            cfg,
+            runtime=runtime,
+            score_provider=stage_b_provider,
+            rows=stage_b_train_pool,
+            segment_name="stage_b_chase",
+            success_kind="stage_b_enter_mate2",
+            seed=int(seed) + 23_000,
+            step_offset=20_000,
+        )
+        stage_b_ecology_gates = _phase42_ecology_gate_bundle(
+            cfg,
+            runtime=runtime,
+            score_provider=stage_b_provider,
+            gate_rows=stage_b_gate_rows,
+            flat_baseline=stage_b_baseline,
+            host_eval=stage_b_host_gate_eval,
+            seed=int(seed) + 24_000,
+            rung="stage_b_chase",
+            success_kind="stage_b_enter_mate2",
+            gate_margin=gate_margin,
+        )
+        stage_a_ecology_regression_gates = _phase42_ecology_gate_bundle(
+            cfg,
+            runtime=runtime,
+            score_provider=stage_a_provider,
+            gate_rows=stage_a_gate_rows,
+            flat_baseline=stage_a_baseline,
+            host_eval=stage_a_regression_host_eval,
+            seed=int(seed) + 25_000,
+            rung="stage_a_approach_regression_after_stage_b",
+            success_kind="approach_waypoint",
+            gate_margin=gate_margin,
+        )
+        stage_b_mature_eval = stage_b_ecology_gates["mature_eval"]
+        ablation = _real_native_ablation_health(
+            cfg,
+            stage_b_gate_rows,
+            runtime,
+            stage_b_provider,
+            full_eval=stage_b_mature_eval,
+            seed=int(seed) + 30_000,
+        )
+        rescue = _real_native_pruned_rescue_audit(
+            cfg,
+            stage_b_gate_rows,
+            runtime,
+            stage_b_provider,
+            full_eval=stage_b_mature_eval,
+            seed=int(seed) + 40_000,
+        )
+        seed_result["stage_b"]["ecology_gates"] = stage_b_ecology_gates
+        seed_result["regression_checks"]["stage_a_ecology_after_stage_b"] = stage_a_ecology_regression_gates
+        seed_result["post_hoc_ablation"] = ablation
+        seed_result["pruned_rescue_audit"] = rescue
+        seed_result["population"] = runtime.population_summary()
+        seed_result["birth_death_curve"] = runtime.birth_curve
+        seed_result["candidate_fate_log"] = runtime.fate_log()
+        seed_result["runtime_instrumentation"] = runtime.instrumentation_summary(stage_b_provider)
+        seed_result["host_instrumentation"] = {
+            "stage_a": stage_a_provider.stats(),
+            "stage_b": stage_b_provider.stats(),
+        }
+        population_stop = runtime.population_stop_rule()
+        seed_result["population_stop"] = population_stop
+        if population_stop["population_collapse_to_zero"] or population_stop["unbounded_explosion"]:
+            seed_result["stop_reasons"].append("population_stop_after_stage_b")
+        if not stage_b_ecology_gates["mature_vs_flat_gate"]["passed"]:
+            seed_result["stop_reasons"].append("stage_b_mature_cell_gate_regression_vs_flat")
+        if not stage_b_ecology_gates["live_vs_flat_gate"]["passed"]:
+            seed_result["stop_reasons"].append("stage_b_live_cell_gate_regression_vs_flat")
+        if not stage_a_ecology_regression_gates["mature_vs_flat_gate"]["passed"]:
+            seed_result["stop_reasons"].append("stage_a_mature_cell_regression_after_stage_b")
+        if not stage_a_ecology_regression_gates["live_vs_flat_gate"]["passed"]:
+            seed_result["stop_reasons"].append("stage_a_live_cell_regression_after_stage_b")
+        if seed_result["stop_reasons"]:
+            global_stop_reasons.extend(f"{reason}:{seed}" for reason in seed_result["stop_reasons"])
+        _write_json(output_dir / f"seed_{seed}_standing_ladder_ecology.json", seed_result)
+        per_seed.append(seed_result)
+        if (
+            population_stop["population_collapse_to_zero"]
+            or population_stop["unbounded_explosion"]
+            or any("gate_regression" in reason or "regression_after_stage_b" in reason for reason in seed_result["stop_reasons"])
+        ):
+            break
+
+    seed_results = {str(row["seed"]): row for row in per_seed}
+    recurrence = _phase32_real_recurring_mature_composites(seed_results)
+    cross_rung = _phase42_cross_rung_load_bearing_survivors(seed_results)
+    summary = {
+        "schema_version": "phase3_12_standing_ladder_ecology.v0",
+        "phase": "Phase 3.12 ecology on the standing persistent ladder",
+        "config": asdict(cfg),
+        "dataset": {
+            "recent_curriculum_only_for_stage_a_b": True,
+            "old_krk_curriculum_imported_for_stage_a_b": False,
+            "foundation_row_count_per_seed": int(cfg.real_native_foundation_row_limit),
+            "stage_a_train_pool_count": len(stage_a_train_pool),
+            "stage_b_train_pool_count": len(stage_b_train_pool),
+            "stage_a_gate_heldout_count": len(stage_a_gate_rows),
+            "stage_b_gate_heldout_count": len(stage_b_gate_rows),
+            "gate_rows_consulted_by_update_decisions": False,
+        },
+        "host_ladder": {
+            "paired_gate_spec": _phase41_paired_gate_spec(gate_margin),
+            "consolidation": _phase41_consolidation_spec(),
+        },
+        "ecology": _phase42_ecology_spec(cfg),
+        "phase3_10_paired_gate_calibration": calibration,
+        "per_seed": per_seed,
+        "cross_seed_recurring_mature_composites": recurrence,
+        "cross_rung_load_bearing_survivors": cross_rung,
+        "tables": {
+            "phase3_12_headline": _phase42_headline_table(per_seed),
+            "phase3_12_acceptance_margins": _phase42_acceptance_margin_table(per_seed),
+            "phase3_12_mature_recurrence": recurrence,
+            "phase3_12_cross_rung_survivors": cross_rung,
+        },
+        "decision": {
+            "stop_reasons": global_stop_reasons,
+            "population_stop": any("population_stop" in reason for reason in global_stop_reasons),
+            "gate_regression_stop": any("gate_regression" in reason or "regression_after_stage_b" in reason for reason in global_stop_reasons),
+            "mature_population_formed_any_seed": any(
+                int(row.get("population", {}).get("mature_count", 0)) > 0 for row in per_seed
+            ),
+            "helpful_pruned_total": sum(
+                int(row.get("pruned_rescue_audit", {}).get("load_bearing_but_pruned_count", 0))
+                for row in per_seed
+            ),
+            "cross_rung_survivor_count": len(cross_rung),
+            "recurring_mature_composite_count": sum(1 for row in recurrence if int(row.get("seed_count", 0)) > 1),
+        },
+    }
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
 def _phase39_split_law(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
     return {
         "law": (
@@ -1110,6 +1603,35 @@ def _phase41_consolidation_spec() -> dict[str, Any]:
         }
     )
     return spec
+
+
+def _phase42_ecology_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
+    return {
+        "substrate": "GraphNativeCompositeRuntime StemCellTerminal nodes inside the persistent FormalReConEngine graph",
+        "birth_boundary": "internal surprise triggers only; guided residual arm quarantined and disabled",
+        "guided_birth_budget": int(cfg.max_guided_births),
+        "cells_carried_across_rungs": True,
+        "trial_cells_advisory_during_training": True,
+        "final_headline_eval": "host plus MATURE cells versus host alone; all-live gate also checked for interference",
+        "activation_conditioned_decay": True,
+        "trial_grace_requested_exposures": int(cfg.real_native_trial_grace_exposures),
+        "critical_period": {
+            "requested_exposure_window": int(cfg.real_native_critical_period_exposures),
+            "credit_multiplier_initial": float(cfg.real_native_critical_period_credit_multiplier),
+            "optimism_bonus_initial": float(cfg.real_native_critical_period_optimism),
+            "anneals_to": {"credit_multiplier": 1.0, "optimism_bonus": 0.0},
+        },
+        "positive_achievement_flip_nutrition": {
+            "credit": float(cfg.real_native_positive_flip_credit),
+            "eligibility_window_white_plies": int(cfg.real_native_positive_flip_window),
+            "recognizers": [
+                "fence_established_geometry false->true",
+                "_approach_waypoint_success false->true",
+                "post-hoc success endpoint fallback if no geometric flip fires",
+            ],
+            "exact_judges_decide_birth_sites": False,
+        },
+    }
 
 
 def _phase41_gate_margin_wins() -> int:
@@ -1986,6 +2508,385 @@ def _phase41_flip_credit_targets(
     return targets
 
 
+def _phase42_train_ecology_segment(
+    cfg: StageBEcologicalDiscoveryConfig,
+    *,
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: Any,
+    rows: Sequence[Mapping[str, Any]],
+    segment_name: str,
+    success_kind: str,
+    seed: int,
+    step_offset: int,
+) -> dict[str, Any]:
+    judge_cache = _new_judge_cache()
+    endpoints: Counter[str] = Counter()
+    success_by_row: dict[str, bool] = {}
+    endpoint_by_row: dict[str, str] = {}
+    trace_sample: list[dict[str, Any]] = []
+    positive_flip_rows = 0
+    positive_flip_credit_events = 0
+    requested_total = 0
+    active_total = 0
+    changed_base_choice_count = 0
+    for index, row in enumerate(rows):
+        row_decisions: list[dict[str, Any]] = []
+
+        def choose(board: chess.Board, counts: Mapping[Any, int], row_id: int, ply: int, rng: random.Random) -> chess.Move | None:
+            base_scores = score_provider(board, counts)
+            options = _score_options(
+                board,
+                counts,
+                atom_weights={},
+                base_move_scores=base_scores,
+                composites=(),
+                disabled_composite_ids=set(),
+            )
+            if options:
+                ctx = _decision_context(
+                    cfg,
+                    board,
+                    counts,
+                    options,
+                    seed=int(seed) + index * 1000 + ply,
+                    row_id=row_id,
+                    ply=ply,
+                    segment_name=segment_name,
+                )
+                _real_native_spawn_from_context(
+                    cfg,
+                    runtime,
+                    ctx,
+                    rng=random.Random(int(seed) + index * 1009 + ply),
+                )
+            selected = runtime.choose_move(
+                board,
+                counts,
+                score_provider,
+                seed=int(seed) + int(row_id) * 47 + ply,
+            )
+            move = selected.get("move")
+            base_move = selected.get("base_move")
+            changed = bool(move is not None and base_move is not None and move != base_move)
+            nonlocal requested_total, active_total, changed_base_choice_count
+            requested_total += len(selected.get("requested_composite_ids", ()))
+            active_total += len(selected.get("active_composite_ids", ()))
+            changed_base_choice_count += int(changed)
+            runtime.apply_local_credit(
+                requested_ids=selected.get("requested_composite_ids", ()),
+                active_ids=selected.get("active_composite_ids", ()),
+                changed_base_choice=changed,
+                step=int(step_offset) + index * 100 + ply,
+            )
+            row_decisions.append(
+                {
+                    "ply": int(ply),
+                    "move": None if move is None else move.uci(),
+                    "base_move": None if base_move is None else base_move.uci(),
+                    "changed_base_choice": changed,
+                    "requested_composite_ids": list(selected.get("requested_composite_ids", ())),
+                    "active_composite_ids": list(selected.get("active_composite_ids", ())),
+                }
+            )
+            return move
+
+        outcome = _rollout_policy(
+            cfg,
+            row,
+            choose,
+            seed=int(seed) + index * 31,
+            policy_name=f"phase3_12_{segment_name}_ecology_train",
+            judge_cache=judge_cache,
+            success_kind=success_kind,
+            black_reply_policy="exact_adversarial",
+        )
+        flip_targets = _phase42_positive_flip_targets(cfg, outcome, row_decisions, success_kind=success_kind)
+        if flip_targets:
+            positive_flip_rows += 1
+            for target in flip_targets:
+                positive_flip_credit_events += runtime.apply_positive_flip_nutrition(
+                    active_ids=target["active_composite_ids"],
+                    step=int(step_offset) + index * 100 + int(target["ply"]),
+                    reason=str(target["reason"]),
+                    discount=float(target["discount"]),
+                )
+        endpoints[str(outcome["endpoint"])] += 1
+        success_by_row[str(row["row_id"])] = bool(outcome["success"])
+        endpoint_by_row[str(row["row_id"])] = str(outcome["endpoint"])
+        if index % 8 == 0 or index == len(rows) - 1:
+            runtime.snapshot(step=int(step_offset) + index, segment=segment_name)
+        if len(trace_sample) < int(cfg.max_samples):
+            trace_sample.append(
+                {
+                    "row_id": int(row["row_id"]),
+                    "endpoint": str(outcome["endpoint"]),
+                    "success": bool(outcome["success"]),
+                    "white_step_count": len(outcome.get("white_steps", ())),
+                    "positive_flip_targets": flip_targets,
+                    "decisions": row_decisions[: int(cfg.max_samples)],
+                }
+            )
+    return {
+        "segment": segment_name,
+        "row_count": len(rows),
+        "success_kind": success_kind,
+        "black_reply_policy": "exact_adversarial",
+        "endpoint_counts": dict(sorted(endpoints.items())),
+        "success_by_row": success_by_row,
+        "endpoint_by_row": endpoint_by_row,
+        "positive_flip_row_count": positive_flip_rows,
+        "positive_flip_credit_event_count": positive_flip_credit_events,
+        "requested_composite_count": requested_total,
+        "active_composite_count": active_total,
+        "changed_base_choice_count": changed_base_choice_count,
+        "population_snapshot": runtime.population_summary(),
+        "runner_config": _phase38_runner_config(
+            cfg,
+            seed=int(seed),
+            success_kind=success_kind,
+            black_reply_policy="exact_adversarial",
+            row_count=len(rows),
+        ),
+        "trace_sample": trace_sample,
+    }
+
+
+def _phase42_positive_flip_targets(
+    cfg: StageBEcologicalDiscoveryConfig,
+    outcome: Mapping[str, Any],
+    decisions: Sequence[Mapping[str, Any]],
+    *,
+    success_kind: str,
+) -> list[dict[str, Any]]:
+    decision_by_ply = {int(item.get("ply", -1)): item for item in decisions}
+    transitions = [item for item in outcome.get("transition_steps", ()) if isinstance(item, Mapping)]
+    flip_index: int | None = None
+    reason = ""
+    for index, step in enumerate(transitions):
+        before_fence = bool(step.get("before_fence_established"))
+        after_white_fence = step.get("after_white_fence_established")
+        after_black_fence = step.get("after_black_fence_established")
+        before_waypoint = _phase42_waypoint_from_fen(step.get("before_fen"))
+        after_white_waypoint = _phase42_waypoint_from_fen(step.get("after_white_fen"))
+        after_black_waypoint = _phase42_waypoint_from_fen(step.get("after_black_fen"))
+        if before_fence is False and after_white_fence is True:
+            flip_index = index
+            reason = "fence_established_after_white"
+            break
+        if after_white_fence is False and after_black_fence is True:
+            flip_index = index
+            reason = "fence_established_after_black"
+            break
+        if before_waypoint is False and after_white_waypoint is True:
+            flip_index = index
+            reason = "waypoint_entered_after_white"
+            break
+        if after_white_waypoint is False and after_black_waypoint is True:
+            flip_index = index
+            reason = "waypoint_entered_after_black"
+            break
+    if flip_index is None and bool(outcome.get("success")) and decisions:
+        flip_index = max(int(item.get("ply", 0)) for item in decisions)
+        reason = f"{success_kind}_success_endpoint_confirmed"
+    if flip_index is None:
+        return []
+    targets: list[dict[str, Any]] = []
+    for offset in range(0, int(cfg.real_native_positive_flip_window) + 1):
+        ply = int(flip_index) - offset
+        decision = decision_by_ply.get(ply)
+        if not decision:
+            continue
+        active_ids = list(decision.get("active_composite_ids", ()))
+        if not active_ids:
+            continue
+        targets.append(
+            {
+                "ply": ply,
+                "discount": 1.0 if offset == 0 else 0.5 if offset == 1 else 0.25,
+                "reason": reason if offset == 0 else "pre_positive_flip_eligibility",
+                "active_composite_ids": active_ids,
+            }
+        )
+    return targets
+
+
+def _phase42_waypoint_from_fen(fen: Any) -> bool | None:
+    if not fen:
+        return None
+    try:
+        return bool(_approach_waypoint_success(chess.Board(str(fen))))
+    except ValueError:
+        return None
+
+
+def _phase42_ecology_policy_traces(
+    cfg: StageBEcologicalDiscoveryConfig,
+    rows: Sequence[Mapping[str, Any]],
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: Any,
+    *,
+    seed: int,
+    policy_name: str,
+    success_kind: str,
+    mature_only: bool,
+) -> dict[str, Any]:
+    disabled = _phase42_disabled_non_mature(runtime) if mature_only else set()
+    endpoints: Counter[str] = Counter()
+    success_by_row: dict[str, bool] = {}
+    endpoint_by_row: dict[str, str] = {}
+    active_by_row: dict[str, list[str]] = {}
+    all_active: set[str] = set()
+    samples: list[dict[str, Any]] = []
+    judge_cache = _new_judge_cache()
+    for index, row in enumerate(rows):
+        row_active: set[str] = set()
+
+        def choose(board: chess.Board, counts: Mapping[Any, int], row_id: int, ply: int, rng: random.Random) -> chess.Move | None:
+            selected = runtime.choose_move(
+                board,
+                counts,
+                score_provider,
+                seed=int(seed) + int(row_id) * 47 + ply,
+                disabled=disabled,
+            )
+            row_active.update(map(str, selected.get("active_composite_ids", ())))
+            return selected.get("move")
+
+        outcome = _rollout_policy(
+            cfg,
+            row,
+            choose,
+            seed=int(seed) + index * 31,
+            policy_name=policy_name,
+            judge_cache=judge_cache,
+            success_kind=success_kind,
+            black_reply_policy="exact_adversarial",
+        )
+        success_by_row[str(row["row_id"])] = bool(outcome["success"])
+        endpoint_by_row[str(row["row_id"])] = str(outcome["endpoint"])
+        endpoints[str(outcome["endpoint"])] += 1
+        active_by_row[str(row["row_id"])] = sorted(row_active)
+        all_active.update(row_active)
+        if not outcome["success"] and len(samples) < int(cfg.max_samples):
+            samples.append(
+                {
+                    "fen": row["fen"],
+                    "endpoint": outcome["endpoint"],
+                    "white_steps": outcome["white_steps"],
+                    "active_composite_ids": sorted(row_active),
+                }
+            )
+    wins = sum(int(value) for value in success_by_row.values())
+    total = len(rows)
+    return {
+        "policy": policy_name,
+        "black_reply_policy": "exact_adversarial",
+        "mature_only": bool(mature_only),
+        "wins": wins,
+        "nonwins": total - wins,
+        "row_count": total,
+        "win_rate": wins / max(1, total),
+        "wilson_95": _wilson_local(wins, total),
+        "endpoint_counts": dict(sorted(endpoints.items())),
+        "success_by_row": success_by_row,
+        "endpoint_by_row": endpoint_by_row,
+        "active_composite_ids": sorted(all_active),
+        "active_composite_ids_by_row": active_by_row,
+        "runner_config": _phase38_runner_config(
+            cfg,
+            seed=int(seed),
+            success_kind=success_kind,
+            black_reply_policy="exact_adversarial",
+            row_count=total,
+        ),
+        "sample_nonwins": samples,
+    }
+
+
+def _phase42_disabled_non_mature(runtime: _GraphNativeCompositeRuntime) -> set[str]:
+    return {
+        str(item["composite_id"])
+        for item in runtime.population.values()
+        if item.get("state") != "MATURE"
+    }
+
+
+def _phase42_ecology_gate_bundle(
+    cfg: StageBEcologicalDiscoveryConfig,
+    *,
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: Any,
+    gate_rows: Sequence[Mapping[str, Any]],
+    flat_baseline: Mapping[str, Any],
+    host_eval: Mapping[str, Any],
+    seed: int,
+    rung: str,
+    success_kind: str,
+    gate_margin: int,
+) -> dict[str, Any]:
+    mature_eval = _phase42_ecology_policy_traces(
+        cfg,
+        gate_rows,
+        runtime,
+        score_provider,
+        seed=int(seed),
+        policy_name=f"phase3_12_{rung}_host_plus_mature",
+        success_kind=success_kind,
+        mature_only=True,
+    )
+    live_eval = _phase42_ecology_policy_traces(
+        cfg,
+        gate_rows,
+        runtime,
+        score_provider,
+        seed=int(seed) + 991,
+        policy_name=f"phase3_12_{rung}_host_plus_all_live",
+        success_kind=success_kind,
+        mature_only=False,
+    )
+    return {
+        "mature_eval": mature_eval,
+        "live_eval": live_eval,
+        "mature_vs_flat_gate": _phase41_gate_result_paired(
+            rung=f"{rung}_host_plus_mature",
+            learner=mature_eval,
+            flat=flat_baseline,
+            margin_wins=gate_margin,
+        ),
+        "live_vs_flat_gate": _phase41_gate_result_paired(
+            rung=f"{rung}_host_plus_all_live",
+            learner=live_eval,
+            flat=flat_baseline,
+            margin_wins=gate_margin,
+        ),
+        "mature_vs_host_paired": _phase41_paired_outcome_table(
+            mature_eval,
+            host_eval,
+            margin_wins=gate_margin,
+            label=f"{rung}_host_plus_mature_vs_host_alone",
+        ),
+        "live_vs_host_paired": _phase41_paired_outcome_table(
+            live_eval,
+            host_eval,
+            margin_wins=gate_margin,
+            label=f"{rung}_host_plus_all_live_vs_host_alone",
+        ),
+        "mature_minus_host_wins": int(mature_eval["wins"]) - int(host_eval["wins"]),
+        "live_minus_host_wins": int(live_eval["wins"]) - int(host_eval["wins"]),
+    }
+
+
+def _wilson_local(wins: int, total: int) -> list[float]:
+    if total <= 0:
+        return [0.0, 0.0]
+    z = 1.959963984540054
+    p = wins / total
+    denom = 1.0 + z * z / total
+    center = (p + z * z / (2 * total)) / denom
+    half = z * ((p * (1 - p) + z * z / (4 * total)) / total) ** 0.5 / denom
+    return [center - half, center + half]
+
+
 def _phase39_apply_contrastive_fast_chunk(
     cfg: StageBEcologicalDiscoveryConfig,
     provider: _MigratedStageBFlatGraphScoreProvider,
@@ -2299,3 +3200,128 @@ def _phase41_flip_ply_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[
                 }
             )
     return table
+
+
+def _phase42_headline_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    table: list[dict[str, Any]] = []
+    for row in per_seed:
+        population = row.get("population", {})
+        rescue = row.get("pruned_rescue_audit", {})
+        ablation = row.get("post_hoc_ablation", {})
+        stage_b_gates = row.get("stage_b", {}).get("ecology_gates", {}) if isinstance(row.get("stage_b"), Mapping) else {}
+        stage_a_regression = (
+            row.get("regression_checks", {}).get("stage_a_ecology_after_stage_b", {})
+            if isinstance(row.get("regression_checks"), Mapping)
+            else {}
+        )
+        table.append(
+            {
+                "seed": int(row["seed"]),
+                "flat_seed": int(row["flat_seed"]),
+                "stop_reasons": list(row.get("stop_reasons", ())),
+                "mature_count": int(population.get("mature_count", 0)),
+                "trial_count": int(population.get("trial_count", 0)),
+                "pruned_count": int(population.get("pruned_count", 0)),
+                "survivors_by_birth_segment": dict(population.get("survivors_by_birth_segment", {})),
+                "birth_death_curve": [
+                    {
+                        "segment": curve.get("segment"),
+                        "step": int(curve.get("step", 0)),
+                        "trial": int(curve.get("trial", 0)),
+                        "mature": int(curve.get("mature", 0)),
+                        "pruned": int(curve.get("pruned", 0)),
+                        "alive_total": int(curve.get("alive_total", 0)),
+                    }
+                    for curve in row.get("birth_death_curve", ())
+                ],
+                "load_bearing_mature": int(ablation.get("load_bearing_count", 0)),
+                "inert_mature": int(ablation.get("inert_count", 0)),
+                "harmful_mature": int(ablation.get("harmful_count", 0)),
+                "helpful_pruned": int(rescue.get("load_bearing_but_pruned_count", 0)),
+                "stage_b_host_plus_mature_wins": _phase42_nested_int(stage_b_gates, ("mature_eval", "wins")),
+                "stage_b_host_wins": _phase42_nested_int(row.get("stage_b", {}), ("host_gate", "wins")),
+                "stage_b_mature_minus_host": int(stage_b_gates.get("mature_minus_host_wins", 0)) if stage_b_gates else None,
+                "stage_b_live_minus_host": int(stage_b_gates.get("live_minus_host_wins", 0)) if stage_b_gates else None,
+                "stage_b_mature_gate_pass": _phase42_nested_bool(stage_b_gates, ("mature_vs_flat_gate", "passed")),
+                "stage_b_live_gate_pass": _phase42_nested_bool(stage_b_gates, ("live_vs_flat_gate", "passed")),
+                "stage_a_regression_mature_gate_pass": _phase42_nested_bool(stage_a_regression, ("mature_vs_flat_gate", "passed")),
+                "stage_a_regression_live_gate_pass": _phase42_nested_bool(stage_a_regression, ("live_vs_flat_gate", "passed")),
+            }
+        )
+    return table
+
+
+def _phase42_acceptance_margin_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for row in per_seed:
+        for stage_name in ("stage_a", "stage_b"):
+            stage = row.get(stage_name)
+            if not isinstance(stage, Mapping):
+                continue
+            training = stage.get("host_training", {})
+            if not training:
+                continue
+            chunk_records = list(training.get("chunk_records", ()))
+            accepted_deltas = [
+                int(record.get("validation_paired", {}).get("discordant_delta_left_minus_right", 0))
+                for record in chunk_records
+                if bool(record.get("accepted"))
+            ]
+            rejected_deltas = [
+                int(record.get("validation_paired", {}).get("discordant_delta_left_minus_right", 0))
+                for record in chunk_records
+                if not bool(record.get("accepted"))
+            ]
+            rows.append(
+                {
+                    "seed": int(row["seed"]),
+                    "flat_seed": int(row["flat_seed"]),
+                    "rung": stage_name,
+                    "chunks_consolidated": int(training.get("chunks_consolidated", 0)),
+                    "chunks_rejected": int(training.get("chunks_rejected", 0)),
+                    "accepted_validation_discordant_deltas": accepted_deltas,
+                    "rejected_validation_discordant_deltas": rejected_deltas,
+                    "min_accepted_delta": None if not accepted_deltas else min(accepted_deltas),
+                    "max_rejected_delta": None if not rejected_deltas else max(rejected_deltas),
+                    "hard_fail_flip_identification_rate": float(training.get("flip_ply_identification_rate", 0.0)),
+                }
+            )
+    return rows
+
+
+def _phase42_cross_rung_load_bearing_survivors(seed_results: Mapping[str, Any]) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for seed, result in seed_results.items():
+        for row in result.get("post_hoc_ablation", {}).get("records", []):
+            if row.get("birth_segment") not in {"foundation_mate1_mate2", "stage_a_approach"}:
+                continue
+            if row.get("classification") != "load_bearing":
+                continue
+            records.append(
+                {
+                    "seed": int(seed),
+                    "composite_id": str(row.get("composite_id")),
+                    "birth_segment": str(row.get("birth_segment")),
+                    "ablation_delta": int(row.get("ablation_delta", 0)),
+                    "children": list(row.get("children", ())),
+                }
+            )
+    return records
+
+
+def _phase42_nested_int(row: Mapping[str, Any], path: Sequence[str]) -> int | None:
+    current: Any = row
+    for key in path:
+        if not isinstance(current, Mapping) or key not in current:
+            return None
+        current = current[key]
+    return int(current)
+
+
+def _phase42_nested_bool(row: Mapping[str, Any], path: Sequence[str]) -> bool | None:
+    current: Any = row
+    for key in path:
+        if not isinstance(current, Mapping) or key not in current:
+            return None
+        current = current[key]
+    return bool(current)

@@ -15,6 +15,7 @@ from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     run_phase39_stable_plasticity_probe,
     run_phase40_stratified_acceptance_probe,
     run_phase41_credit_precision_paired_gates_probe,
+    run_phase42_standing_ladder_ecology_probe,
     run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
@@ -583,3 +584,42 @@ def test_phase41_credit_precision_records_paired_gates_and_flip_stats(tmp_path: 
         assert training["paired_acceptance"] is True
         assert "flip_ply_identification_rate" in training
         assert "paired_gate" in row["stage_a"]["gate"]
+
+
+def test_phase42_standing_ladder_ecology_records_lifecycle_summary(tmp_path: Path) -> None:
+    summary = run_phase42_standing_ladder_ecology_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_12_ecology_probe"),
+            seeds=(20272931,),
+            flat_baseline_seeds=(20272911,),
+            stage_a_train_row_limit=2,
+            train_row_limit=2,
+            heldout_row_limit=1,
+            max_samples=1,
+            max_guided_births=0,
+            ecology_mode="stem_cell_graph",
+            native_foundation_train_repetitions=1,
+            native_foundation_continuation_repetitions=1,
+            native_foundation_max_mate1_positions=2,
+            native_foundation_max_mate2_positions=1,
+            native_foundation_prototype_scan_triplets=32,
+            native_foundation_key_mode="coarse",
+            real_native_engine_max_ticks=80,
+            real_native_foundation_row_limit=1,
+            real_native_critical_period_exposures=2,
+            real_native_critical_period_credit_multiplier=1.5,
+            real_native_critical_period_optimism=0.01,
+            real_native_positive_flip_credit=0.02,
+            real_native_positive_flip_window=1,
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_12_standing_ladder_ecology.v0"
+    assert summary["ecology"]["cells_carried_across_rungs"] is True
+    assert summary["ecology"]["guided_birth_budget"] == 0
+    assert "phase3_12_headline" in summary["tables"]
+    assert "phase3_12_acceptance_margins" in summary["tables"]
+    row = summary["per_seed"][0]
+    assert "acceptance_check" in row
+    if "population" in row:
+        assert "mature_count" in row["population"]
