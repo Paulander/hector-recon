@@ -139,6 +139,10 @@ class StageBEcologicalDiscoveryConfig:
     real_native_critical_period_optimism: float = 0.0
     real_native_positive_flip_credit: float = 0.0
     real_native_positive_flip_window: int = 2
+    real_native_choice_change_mature_events: int = 0
+    real_native_choice_change_neutral_rent: float = 0.0
+    real_native_near_zero_choice_change_rate: float = 0.0
+    real_native_stability_band_multiplier: int = 5
     phase33_equivalence_tolerance_wins: int = 3
 
 
@@ -1436,6 +1440,15 @@ def run_phase42_standing_ladder_ecology_probe(
     return _run(config=config)
 
 
+def run_phase43_discriminative_cell_economy_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    from .persistent_staged_ladder import run_phase43_discriminative_cell_economy_probe as _run
+
+    return _run(config=config)
+
+
 def run_phase38_persistent_staged_ladder_probe(
     *,
     config: StageBEcologicalDiscoveryConfig | None = None,
@@ -2451,6 +2464,8 @@ class _GraphNativeCompositeRuntime:
         self.engine_tick_total = 0
         self.engine_tick_samples: list[dict[str, Any]] = []
         self.formal_eval_node_ids: set[str] = set()
+        self.births_blocked_by_capacity: Counter[str] = Counter()
+        self.births_blocked_by_capacity_by_parent: Counter[str] = Counter()
 
     def acceptance_check(self, row: Mapping[str, Any]) -> dict[str, Any]:
         board = chess.Board(str(row["fen"]))
@@ -2558,6 +2573,9 @@ class _GraphNativeCompositeRuntime:
             "debt_events": 0,
             "neutral_events": 0,
             "positive_flip_events": 0,
+            "choice_change_positive_events": 0,
+            "choice_change_negative_events": 0,
+            "choice_change_neutral_events": 0,
             "fate_events": [
                 {
                     "event": "birth",
@@ -2572,6 +2590,20 @@ class _GraphNativeCompositeRuntime:
         self.population[composite_id] = item
         self._materialize_graph_nodes(item)
         return item
+
+    def parent_capacity_open(self, source_signature: str) -> bool:
+        parent_id = _real_native_parent_id(str(source_signature))
+        live = sum(
+            1
+            for item in self.population.values()
+            if str(item.get("parent_id")) == parent_id and item.get("state") in {"TRIAL", "MATURE"}
+        )
+        return live < int(self.cfg.real_native_max_live_siblings_per_parent)
+
+    def record_birth_blocked_by_capacity(self, *, trigger: str, source_signature: str) -> None:
+        parent_id = _real_native_parent_id(str(source_signature))
+        self.births_blocked_by_capacity[str(trigger)] += 1
+        self.births_blocked_by_capacity_by_parent[parent_id] += 1
 
     def _materialize_graph_nodes(self, item: Mapping[str, Any]) -> None:
         parent_id = str(item["parent_id"])
@@ -2695,6 +2727,7 @@ class _GraphNativeCompositeRuntime:
         *,
         seed: int,
         disabled: set[str] | None = None,
+        discriminative: bool = False,
     ) -> dict[str, Any]:
         disabled = disabled or set()
         legal = _legal_without_third_repetition(board, counts)
@@ -2702,13 +2735,14 @@ class _GraphNativeCompositeRuntime:
             legal = tuple(sorted(board.legal_moves, key=lambda move: move.uci()))
         base_scores = score_provider(board, counts)
         rng = random.Random(seed)
-        scored: list[tuple[float, float, str, chess.Move, list[str], list[str]]] = []
+        scored: list[dict[str, Any]] = []
         for move in legal:
             active = set(_sealed_action_keys(board, move))
             signature = _percept_signature(active)
             active_ids: list[str] = []
             requested_ids: list[str] = []
             composite_score = 0.0
+            contributions: list[dict[str, Any]] = []
             for item in self.population.values():
                 if item["state"] not in {"TRIAL", "MATURE"}:
                     continue
@@ -2726,20 +2760,70 @@ class _GraphNativeCompositeRuntime:
                 if evaluation["confirmed"]:
                     active_ids.append(str(item["composite_id"]))
                     self.cells[str(item["composite_id"])].record_candidate_activation(parent_id=str(item["parent_id"]))
-                    composite_score += _real_native_composite_weight(item, self.cfg)
+                    weight = _real_native_composite_weight(item, self.cfg)
+                    composite_score += weight
+                    contributions.append(
+                        {
+                            "composite_id": str(item["composite_id"]),
+                            "weight": float(weight),
+                        }
+                    )
             score = float(base_scores.get(move.uci(), 0.0)) + composite_score
-            scored.append((score, rng.random(), move.uci(), move, active_ids, requested_ids))
-        scored.sort(reverse=True)
+            scored.append(
+                {
+                    "score": score,
+                    "tie": rng.random(),
+                    "uci": move.uci(),
+                    "move": move,
+                    "active_ids": active_ids,
+                    "requested_ids": requested_ids,
+                    "base_score": float(base_scores.get(move.uci(), 0.0)),
+                    "composite_score": composite_score,
+                    "contributions": contributions,
+                }
+            )
+        if discriminative:
+            scored.sort(key=lambda item: (float(item["score"]), str(item["uci"])), reverse=True)
+        else:
+            scored.sort(key=lambda item: (float(item["score"]), float(item["tie"]), str(item["uci"])), reverse=True)
         if not scored:
             return {"move": None, "active_composite_ids": [], "requested_composite_ids": [], "base_move": None}
-        base_move = _choose_base_score_move(board, counts, score_provider=score_provider, seed=seed)
-        score, _tie, _uci, move, active_ids, requested_ids = scored[0]
+        if discriminative:
+            base_rows = [
+                (float(base_scores.get(move.uci(), 0.0)), move.uci(), move)
+                for move in legal
+            ]
+            base_rows.sort(reverse=True)
+            base_move = base_rows[0][-1] if base_rows else None
+        else:
+            base_move = _choose_base_score_move(board, counts, score_provider=score_provider, seed=seed)
+        selected = scored[0]
+        move = selected["move"]
+        active_ids = selected["active_ids"]
+        requested_ids = selected["requested_ids"]
+        responsible_ids: list[str] = []
+        responsibility_margin = 0.0
+        if discriminative and base_move is not None and move != base_move:
+            host_plus_base_row = next((item for item in scored if item["move"] == base_move), None)
+            host_plus_score = float(host_plus_base_row["score"]) if host_plus_base_row is not None else float(base_scores.get(base_move.uci(), 0.0))
+            responsibility_margin = host_plus_score - float(selected["base_score"])
+            running = float(selected["base_score"])
+            for contribution in sorted(selected["contributions"], key=lambda item: (-float(item["weight"]), str(item["composite_id"]))):
+                if running > host_plus_score:
+                    break
+                running += float(contribution["weight"])
+                responsible_ids.append(str(contribution["composite_id"]))
         return {
             "move": move,
-            "score": score,
+            "score": float(selected["score"]),
             "active_composite_ids": active_ids,
             "requested_composite_ids": requested_ids,
             "base_move": base_move,
+            "base_score": None if base_move is None else float(base_scores.get(base_move.uci(), 0.0)),
+            "choice_changed_by_cells": bool(discriminative and base_move is not None and move != base_move and responsible_ids),
+            "responsible_composite_ids": responsible_ids,
+            "responsibility_margin": round(float(responsibility_margin), 6),
+            "selected_composite_score": round(float(selected["composite_score"]), 6),
         }
 
     def critical_period_fraction(self, item: Mapping[str, Any]) -> float:
@@ -2891,6 +2975,98 @@ class _GraphNativeCompositeRuntime:
         self._enforce_parent_budgets(step=step)
         return event_count
 
+    def apply_choice_change_attribution(
+        self,
+        *,
+        responsible_ids: Sequence[str],
+        valence: str,
+        step: int,
+        reason: str,
+        discount: float = 1.0,
+    ) -> int:
+        event_count = 0
+        for cid in set(map(str, responsible_ids)):
+            item = self.population.get(cid)
+            if not item or item["state"] not in {"TRIAL", "MATURE"}:
+                continue
+            cell = self.cells[cid]
+            multiplier = self.critical_period_multiplier(item)
+            if valence == "positive":
+                delta = float(self.cfg.real_native_positive_flip_credit) * float(discount) * multiplier
+                item["local_resource"] = float(item.get("local_resource", 0.0)) + delta
+                item["credit_events"] = int(item.get("credit_events", 0)) + 1
+                item["choice_change_positive_events"] = int(item.get("choice_change_positive_events", 0)) + 1
+                cell.update_xp(1.0 * multiplier)
+                cell.mark_confirmed(step)
+                event = "choice_changing_positive_flip_credit"
+            elif valence == "negative":
+                delta = -float(self.cfg.real_native_debt) * float(discount) * multiplier
+                item["local_resource"] = float(item.get("local_resource", 0.0)) + delta
+                item["debt_events"] = int(item.get("debt_events", 0)) + 1
+                item["choice_change_negative_events"] = int(item.get("choice_change_negative_events", 0)) + 1
+                cell.record_candidate_intervention("negative", cycle=step)
+                event = "choice_changing_failure_flip_debt"
+            else:
+                delta = -float(getattr(self.cfg, "real_native_choice_change_neutral_rent", 0.0)) * multiplier
+                item["local_resource"] = float(item.get("local_resource", 0.0)) + delta
+                item["neutral_events"] = int(item.get("neutral_events", 0)) + 1
+                item["choice_change_neutral_events"] = int(item.get("choice_change_neutral_events", 0)) + 1
+                cell.record_candidate_intervention("neutral", cycle=step)
+                event = "choice_changing_neutral_rent"
+            item["stem_cell_xp"] = int(cell.xp)
+            mature_threshold = int(getattr(self.cfg, "real_native_choice_change_mature_events", 0))
+            if (
+                mature_threshold > 0
+                and item["state"] == "TRIAL"
+                and int(item.get("requested_exposures", 0)) >= int(self.cfg.real_native_trial_grace_exposures)
+                and int(item.get("choice_change_positive_events", 0)) >= mature_threshold
+            ):
+                item["state"] = "MATURE"
+                cell.state = StemCellState.MATURE
+                event = "mature_on_choice_changing_positive_events"
+            elif (
+                mature_threshold <= 0
+                and item["state"] == "TRIAL"
+                and int(item.get("requested_exposures", 0)) >= int(self.cfg.real_native_trial_grace_exposures)
+                and int(item.get("credit_events", 0)) > 0
+                and float(item.get("local_resource", 0.0)) >= self.cfg.real_native_mature_resource
+            ):
+                item["state"] = "MATURE"
+                cell.state = StemCellState.MATURE
+                event = "mature"
+            if item["state"] == "TRIAL" and float(item.get("local_resource", 0.0)) <= 0.0:
+                item["state"] = "PRUNED"
+                item["prune_reason"] = f"{valence}_choice_change_resource_depleted"
+                cell.state = StemCellState.PRUNED
+                event = "prune"
+            item.setdefault("fate_events", []).append(
+                {
+                    "step": int(step),
+                    "event": event,
+                    "reason": str(reason),
+                    "valence": str(valence),
+                    "discount": round(float(discount), 6),
+                    "resource_delta": round(float(delta), 6),
+                    "state": item["state"],
+                    "requested_exposures": int(item.get("requested_exposures", 0)),
+                    "choice_change_positive_events": int(item.get("choice_change_positive_events", 0)),
+                    "choice_change_negative_events": int(item.get("choice_change_negative_events", 0)),
+                    "choice_change_neutral_events": int(item.get("choice_change_neutral_events", 0)),
+                    "local_resource": round(float(item.get("local_resource", 0.0)), 6),
+                    "xp": int(item.get("stem_cell_xp", 0)),
+                    "critical_period_multiplier": round(float(multiplier), 6),
+                }
+            )
+            node_id = str(item["node_id"])
+            if node_id in self.native_graph.graph.nodes:
+                node = self.native_graph.graph.nodes[node_id]
+                node.meta["stem_cell_state"] = item["state"]
+                node.meta["local_resource"] = float(item.get("local_resource", 0.0))
+                node.meta["choice_change_positive_events"] = int(item.get("choice_change_positive_events", 0))
+            event_count += 1
+        self._enforce_parent_budgets(step=step)
+        return event_count
+
     def _enforce_parent_budgets(self, *, step: int) -> None:
         by_parent: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for item in self.population.values():
@@ -2953,6 +3129,9 @@ class _GraphNativeCompositeRuntime:
                 sorted(Counter(str(item.get("birth_segment")) for item in self.population.values() if item["state"] in {"TRIAL", "MATURE"}).items())
             ),
             "trigger_distribution": dict(sorted(self.trigger_counts.items())),
+            "births_blocked_by_capacity_total": int(sum(self.births_blocked_by_capacity.values())),
+            "births_blocked_by_capacity_by_trigger": dict(sorted(self.births_blocked_by_capacity.items())),
+            "births_blocked_by_capacity_by_parent": dict(sorted(self.births_blocked_by_capacity_by_parent.items())),
             "top_alive": [
                 {
                     "composite_id": item["composite_id"],
@@ -2963,6 +3142,8 @@ class _GraphNativeCompositeRuntime:
                     "requested_exposures": int(item.get("requested_exposures", 0)),
                     "activation_count": int(item.get("activation_count", 0)),
                     "credit_events": int(item.get("credit_events", 0)),
+                    "choice_change_positive_events": int(item.get("choice_change_positive_events", 0)),
+                    "choice_change_negative_events": int(item.get("choice_change_negative_events", 0)),
                     "children": list(item["children"]),
                 }
                 for item in sorted(
@@ -3000,6 +3181,9 @@ class _GraphNativeCompositeRuntime:
                 "debt_events": int(item.get("debt_events", 0)),
                 "neutral_events": int(item.get("neutral_events", 0)),
                 "positive_flip_events": int(item.get("positive_flip_events", 0)),
+                "choice_change_positive_events": int(item.get("choice_change_positive_events", 0)),
+                "choice_change_negative_events": int(item.get("choice_change_negative_events", 0)),
+                "choice_change_neutral_events": int(item.get("choice_change_neutral_events", 0)),
                 "formal_engine_eval_count": int(item.get("formal_engine_eval_count", 0)),
                 "prune_reason": item.get("prune_reason"),
                 "fate_events": list(item.get("fate_events", ())),
