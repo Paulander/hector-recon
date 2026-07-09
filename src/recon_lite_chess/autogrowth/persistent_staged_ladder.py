@@ -7,6 +7,7 @@ import copy
 from dataclasses import asdict, replace
 from itertools import combinations
 import json
+import math
 from pathlib import Path
 import random
 from typing import Any, Mapping, Sequence
@@ -3633,6 +3634,182 @@ def run_phase51_addend_control_confirmed_audit_probe(
     return summary
 
 
+def run_phase52_powered_confirmation_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    """Phase 3.22: powered conditional confirmation for the gate/addend arms."""
+
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_22_powered_confirmation",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        flat_baseline_seeds=(20272911, 20272912, 20272913),
+        stage_a_train_row_limit=128,
+        train_row_limit=128,
+        heldout_row_limit=None,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+        real_native_engine_max_ticks=80,
+        real_native_max_live_composites=32,
+        real_native_max_live_siblings_per_parent=4,
+        real_native_trial_grace_exposures=3,
+        real_native_dormant_decay=0.002,
+        real_native_critical_period_exposures=5,
+        real_native_critical_period_credit_multiplier=1.75,
+        real_native_critical_period_optimism=0.025,
+        real_native_positive_flip_credit=0.060,
+        real_native_positive_flip_window=2,
+        real_native_choice_change_mature_events=3,
+        real_native_choice_change_neutral_rent=0.006,
+        real_native_near_zero_choice_change_rate=0.01,
+        real_native_stability_band_multiplier=5,
+        real_native_audition_budget_per_cell=10,
+        real_native_audition_per_ply_cap=2,
+        real_native_audition_horizon_plies=8,
+        real_native_audition_mature_better_events=3,
+        real_native_audition_neutral_rent=0.004,
+        real_native_audition_debt_threshold=3,
+        real_native_audition_starvation_min_per_cell=0.0,
+        real_native_scheduled_audition_chunk_size=8,
+        real_native_scheduled_unjudged_fraction_stop=0.0,
+        real_native_scheduled_complete_flush=True,
+        real_native_homeostatic_backlog_threshold=0.0,
+        real_native_pool_scan_auditions=True,
+        real_native_trial_band_min=20,
+        real_native_trial_band_max=60,
+        real_native_court_throughput_per_chunk=0,
+        real_native_probation_enabled=True,
+        real_native_probation_validation_rows=32,
+        real_native_probation_noise_margin_wins=1,
+        real_native_probation_max_retests=2,
+        real_native_probation_dose_response_enabled=True,
+        real_native_probation_dose_multipliers=(1.0, 3.0, 9.0, 27.0),
+        real_native_addend_control_enabled=True,
+        real_native_powered_confirmation_enabled=True,
+        real_native_powered_validation_rows=512,
+        real_native_powered_primary_alpha=0.05,
+        real_native_powered_min_firing_rows=8,
+        real_native_powered_use_full_train_pool=True,
+        real_native_controlled_ablation_enabled=True,
+        real_native_outcome_audition_enabled=True,
+        real_native_outcome_audition_horizon_plies=16,
+        real_native_outcome_audition_verdict_is_standing=True,
+        real_native_conditional_gate_enabled=True,
+        real_native_conditional_gate_mode="action_pattern_eligibility",
+        real_native_conditional_gate_states=("PROBATION", "MATURE"),
+        real_native_continue_after_seed_stop=True,
+        real_native_max_ablation_subjects=256,
+    )
+    output_dir = Path(cfg.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    gate_margin = _phase41_gate_margin_wins()
+    gate_proof = _phase50_constructed_gate_flip_proof(cfg)
+    seed33_repro = _phase52_seed33_reproducibility_check()
+    design = _design_spec(cfg)
+    design["schema_version"] = "phase3_22_powered_confirmation_design_spec.v0"
+    design["phase_alias"] = "User-requested Phase 3.22 powered confirmation"
+    design["host_ladder"] = {
+        "frozen_from": "Phase 3.21 gate/addend control, guard invariant, ladder, gates, ratchet, spawn triggers, and boundary",
+        "paired_gate_spec": _phase41_paired_gate_spec(gate_margin),
+    }
+    design["conditional_gate"] = _phase50_conditional_gate_spec(cfg)
+    design["addend_control"] = _phase51_addend_control_spec(cfg)
+    design["powered_confirmation"] = _phase52_powered_confirmation_spec(cfg)
+    design["constructed_move_flip_proof"] = gate_proof
+    design["seed33_reproducibility_check"] = seed33_repro
+    design["ecology"] = _phase50_ecology_spec(cfg)
+    _write_json(output_dir / "design_spec.json", design)
+    if not bool(gate_proof.get("passed", False)):
+        summary = {
+            "schema_version": "phase3_22_powered_confirmation.v0",
+            "phase": "Phase 3.22 powered confirmation",
+            "config": asdict(cfg),
+            "constructed_move_flip_proof": gate_proof,
+            "seed33_reproducibility_check": seed33_repro,
+            "per_seed": [],
+            "decision": {
+                "acceptance_check_passed": False,
+                "stop_reason": "constructed_conditional_gate_move_flip_proof_failed",
+            },
+        }
+        _write_json(output_dir / "summary.json", summary)
+        return summary
+
+    summary = run_phase44_audition_cell_economy_probe(config=cfg)
+    correspondence = _phase45_composite_correspondence_table()
+    confirmed_recurrence = _phase48_family_recurrence(summary.get("per_seed", []), tier="confirmed")
+    nomination_recurrence = _phase48_family_recurrence(summary.get("per_seed", []), tier="nomination")
+    two_arm_table = _phase52_two_arm_confirmed_table(summary.get("per_seed", []))
+    power_table = _phase52_power_table(summary.get("per_seed", []))
+    confirmed_dumps = _phase51_confirmed_cell_audit(summary.get("per_seed", []), cfg)
+    cross_rung_biographies = _phase51_cross_rung_biographies(
+        summary.get("per_seed", []),
+        summary.get("cross_rung_load_bearing_survivors", ()),
+        cfg,
+    )
+    seed33_instability = _phase51_seed33_population_unstable_cause(summary.get("per_seed", []), output_dir)
+    gate_validation = _phase50_gate_validation_table(summary.get("per_seed", []))
+
+    design["ecology"] = _phase50_ecology_spec(cfg)
+    design["cross_experiment_composite_correspondence"] = correspondence
+    _write_json(output_dir / "design_spec.json", design)
+    for row in summary.get("per_seed", []):
+        row["schema_version"] = "phase3_22_powered_confirmation_seed.v0"
+        row["ecology_spec"] = _phase50_ecology_spec(cfg)
+        row["constructed_move_flip_proof"] = gate_proof
+        row["cross_experiment_composite_correspondence"] = correspondence
+        _write_json(output_dir / f"seed_{row['seed']}_powered_confirmation.json", row)
+
+    tables = dict(summary.get("tables", {}))
+    summary["schema_version"] = "phase3_22_powered_confirmation.v0"
+    summary["phase"] = "Phase 3.22 powered confirmation"
+    summary["conditional_gate"] = _phase50_conditional_gate_spec(cfg)
+    summary["addend_control"] = _phase51_addend_control_spec(cfg)
+    summary["powered_confirmation"] = _phase52_powered_confirmation_spec(cfg)
+    summary["constructed_move_flip_proof"] = gate_proof
+    summary["seed33_reproducibility_check"] = seed33_repro
+    summary["ecology"] = _phase50_ecology_spec(cfg)
+    summary["cross_experiment_composite_correspondence"] = correspondence
+    summary["cross_seed_recurring_confirmed_families"] = confirmed_recurrence
+    summary["cross_seed_recurring_nomination_families"] = nomination_recurrence
+    summary["confirmed_cell_dumps"] = confirmed_dumps
+    summary["cross_rung_survivor_biographies"] = cross_rung_biographies
+    summary["seed33_population_unstable_after_stage_b"] = seed33_instability
+    summary["tables"] = {
+        "phase3_22_power_table": power_table,
+        "phase3_22_two_arm_confirmed": two_arm_table,
+        "phase3_22_confirmed_cell_dumps": confirmed_dumps,
+        "phase3_22_cross_rung_survivor_biographies": cross_rung_biographies,
+        "phase3_22_seed33_population_unstable": [seed33_instability] if seed33_instability else [],
+        "phase3_22_gate_validation": gate_validation,
+        "phase3_22_confirmed_recurrence_by_family": confirmed_recurrence,
+        "phase3_22_nomination_recurrence_by_family": nomination_recurrence,
+        "phase3_22_headline": _phase48_headline_table(summary.get("per_seed", [])),
+        "phase3_22_audition_signal": tables.get("phase3_14_audition_signal", []),
+        "phase3_22_acceptance_margins": tables.get("phase3_14_acceptance_margins", []),
+        "phase3_22_cross_experiment_composite_correspondence": correspondence,
+    }
+    gate_confirmed = sum(int(row.get("G_confirmed", 0)) for row in two_arm_table)
+    addend_confirmed = sum(int(row.get("L_confirmed", 0)) for row in two_arm_table)
+    guard_failures = sum(
+        int(row.get("G_predicate_eval_failures", 0)) + int(row.get("L_predicate_eval_failures", 0))
+        for row in two_arm_table
+    )
+    summary["decision"]["constructed_gate_flip_proof_passed"] = bool(gate_proof.get("passed", False))
+    summary["decision"]["gate_arm_confirmed_count"] = gate_confirmed
+    summary["decision"]["addend_arm_confirmed_count"] = addend_confirmed
+    summary["decision"]["two_arm_predicate_eval_guard_failures"] = guard_failures
+    summary["decision"]["confirmed_cell_dump_count"] = len(confirmed_dumps)
+    summary["decision"]["adequate_power_nominee_count"] = sum(
+        1 for row in power_table if bool(row.get("adequate_power", False))
+    )
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
 def _phase51_addend_control_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
     return {
         "enabled": bool(getattr(cfg, "real_native_addend_control_enabled", False)),
@@ -3647,6 +3824,150 @@ def _phase51_addend_control_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[s
         ),
         "control_side_effects": "Arm L snapshots and restores population/cell counters after evaluation.",
     }
+
+
+def _phase52_powered_confirmation_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
+    return {
+        "enabled": bool(getattr(cfg, "real_native_powered_confirmation_enabled", False)),
+        "validation_row_target": int(getattr(cfg, "real_native_powered_validation_rows", 512)),
+        "validation_source": (
+            "standing recent-curriculum exact-stratified train split when available; gate heldout is never consulted"
+        ),
+        "fresh_generation_status": (
+            "not regenerated here because this branch has no standalone recent Stage-A/B generator; "
+            "the artifact marks the expanded pool provenance explicitly instead of importing an older curriculum"
+        ),
+        "primary_test": {
+            "unit": "cell firing subset",
+            "statistic": "paired discordant balance on on-vs-off outcomes",
+            "test": "one-sided exact binomial over discordant firing rows",
+            "alpha": float(getattr(cfg, "real_native_powered_primary_alpha", 0.05)),
+            "minimum_firing_rows": int(getattr(cfg, "real_native_powered_min_firing_rows", 8)),
+        },
+        "secondary_test": {
+            "unit": "full expanded validation pool",
+            "statistic": "global non-harm bound; non-firing rows are paired-identical by static predicate",
+            "margin_wins": "phase41 scaled gate margin for the expanded pool",
+        },
+        "confirm_rule": "primary_pass AND secondary_pass AND predicate-evaluation guard passes",
+    }
+
+
+def _phase52_seed33_reproducibility_check() -> dict[str, Any]:
+    p320 = Path("reports/autogrowth/clean_slate_krk/phase3_20_conditional_gate_composites/summary.json")
+    p321 = Path("reports/autogrowth/clean_slate_krk/phase3_21_addend_control_confirmed_audit/summary.json")
+    if not p320.exists() or not p321.exists():
+        return {
+            "status": "prior_artifacts_missing",
+            "phase3_20_summary_exists": p320.exists(),
+            "phase3_21_summary_exists": p321.exists(),
+        }
+    s320 = json.loads(p320.read_text(encoding="utf-8"))
+    s321 = json.loads(p321.read_text(encoding="utf-8"))
+    r320 = next((row for row in s320.get("per_seed", []) if int(row.get("seed", 0)) == 20272933), {})
+    r321 = next((row for row in s321.get("per_seed", []) if int(row.get("seed", 0)) == 20272933), {})
+    c320 = dict(s320.get("config", {}))
+    c321 = dict(s321.get("config", {}))
+    changed_flags = {
+        key: [c320.get(key), c321.get(key)]
+        for key in (
+            "real_native_addend_control_enabled",
+            "real_native_controlled_ablation_enabled",
+            "real_native_conditional_gate_enabled",
+            "real_native_outcome_audition_verdict_is_standing",
+            "real_native_probation_dose_response_enabled",
+            "real_native_probation_validation_rows",
+        )
+        if c320.get(key) != c321.get(key)
+    }
+    return {
+        "status": "mechanism_divergence_not_seed_replay",
+        "diagnosis": (
+            "The seed33 instability did not reproduce in Phase 3.21 because Phase 3.21 changed the "
+            "confirmation/control path and guard behavior relative to Phase 3.20; this artifact-level "
+            "comparison does not show an unpinned RNG replay of the same mechanism."
+        ),
+        "determinism_controls_in_code_path": {
+            "stable_child_rng": "_phase45_stable_int is deterministic and does not use Python hash()",
+            "legal_move_order": "legal moves are sorted by UCI in the inspected policy paths",
+            "population_iteration": "probation targets iterate sorted(runtime.population.items())",
+            "parallelism": "no parallel confirmation workers in this runner",
+        },
+        "phase3_20_seed33": {
+            "stop_reasons": list(r320.get("stop_reasons", ())),
+            "population": dict(r320.get("population", {})),
+        },
+        "phase3_21_seed33": {
+            "stop_reasons": list(r321.get("stop_reasons", ())),
+            "population": dict(r321.get("population", {})),
+        },
+        "changed_mechanism_flags": changed_flags,
+    }
+
+
+def _phase52_two_arm_confirmed_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    rows = _phase51_two_arm_confirmed_table(per_seed)
+    by_seed = {int(row.get("seed", 0)): row for row in rows}
+    for seed_row in per_seed:
+        seed = int(seed_row.get("seed", 0))
+        row = by_seed.get(seed)
+        if row is None:
+            continue
+        records = _phase48_probation_records(seed_row)
+        for arm_key in ("G", "L"):
+            powered_pass = 0
+            adequate = 0
+            firing_rows = 0
+            for record in records:
+                arm = record.get("arm_records", {}).get(arm_key, {})
+                if not arm:
+                    continue
+                for dose in arm.get("dose_records", ()):
+                    powered = dose.get("powered_confirmation", {})
+                    powered_pass += int(bool(powered.get("primary_pass")) and bool(powered.get("secondary_pass")))
+                    adequate += int(bool(powered.get("adequate_power")))
+                    firing_rows += int(powered.get("runtime_firing_row_count", 0))
+            row[f"{arm_key}_powered_primary_secondary_pass_dose_tests"] = powered_pass
+            row[f"{arm_key}_adequate_power_dose_tests"] = adequate
+            row[f"{arm_key}_runtime_firing_rows_total"] = firing_rows
+    return rows
+
+
+def _phase52_power_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for seed_row in per_seed:
+        seed = int(seed_row.get("seed", 0))
+        for record in _phase48_probation_records(seed_row):
+            arm = record.get("arm_records", {}).get("G", {})
+            power_records = [
+                dose.get("powered_confirmation", {})
+                for dose in arm.get("dose_records", ())
+                if dose.get("powered_confirmation")
+            ]
+            if not power_records:
+                continue
+            max_power = max(power_records, key=lambda item: int(item.get("runtime_firing_row_count", 0)))
+            rows.append(
+                {
+                    "seed": seed,
+                    "segment": str(record.get("segment", "")),
+                    "composite_id": str(record.get("composite_id", "")),
+                    "children": list(record.get("children", ())),
+                    "validation_pool_rows_old": int(record.get("old_validation_row_count", 0)),
+                    "validation_pool_rows_new": int(record.get("validation_row_count", 0)),
+                    "static_firing_rows": int(record.get("static_firing_row_count", 0)),
+                    "runtime_firing_rows": int(max_power.get("runtime_firing_row_count", 0)),
+                    "max_possible_discordants": int(max_power.get("max_possible_discordants", 0)),
+                    "min_detectable_discordants": max_power.get("min_detectable_discordants"),
+                    "min_detectable_effect_rate": max_power.get("min_detectable_effect_rate"),
+                    "exact_binomial_p": max_power.get("exact_binomial_p"),
+                    "adequate_power": bool(max_power.get("adequate_power", False)),
+                    "primary_pass_any_dose": any(bool(item.get("primary_pass")) for item in power_records),
+                    "secondary_pass_any_dose": any(bool(item.get("secondary_pass")) for item in power_records),
+                }
+            )
+    rows.sort(key=lambda item: (int(item["seed"]), str(item["segment"]), str(item["composite_id"])))
+    return rows
 
 
 def _phase51_two_arm_confirmed_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
@@ -3717,6 +4038,8 @@ def _phase51_compact_arm_record(record: Mapping[str, Any]) -> dict[str, Any]:
                 "conditional_gate_applied_count": int(dose.get("conditional_gate_applied_count", 0)),
                 "conditional_gate_changed_choice_count": int(dose.get("conditional_gate_changed_choice_count", 0)),
                 "paired": dose.get("paired", {}),
+                "secondary_full_pool_nonharm": dose.get("secondary_full_pool_nonharm", {}),
+                "powered_confirmation": dose.get("powered_confirmation", {}),
             }
             for dose in record.get("dose_records", ())
         ],
@@ -6381,7 +6704,9 @@ def _phase44_train_audition_ecology_segment(
         audition_count += int(scheduled["audition_count"])
         audition_frames_spent += int(scheduled["audition_frames_spent"])
         if bool(getattr(cfg, "real_native_probation_enabled", False)):
-            if bool(getattr(cfg, "real_native_addend_control_enabled", False)):
+            if bool(getattr(cfg, "real_native_powered_confirmation_enabled", False)):
+                confirm = _phase52_confirm_probation_cells_powered_two_arm
+            elif bool(getattr(cfg, "real_native_addend_control_enabled", False)):
                 confirm = _phase51_confirm_probation_cells_two_arm_dose_response
             elif bool(getattr(cfg, "real_native_probation_dose_response_enabled", False)):
                 confirm = _phase49_confirm_probation_cells_dose_response
@@ -8082,6 +8407,586 @@ def _phase51_eval_probation_arm(
         "paired": paired_for_decision,
         "validation_delta_on_minus_off": int(paired_for_decision.get("left_minus_right_wins", 0)) if paired_for_decision else 0,
     }
+
+
+def _phase52_confirm_probation_cells_powered_two_arm(
+    cfg: StageBEcologicalDiscoveryConfig,
+    *,
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: Any,
+    rows: Sequence[Mapping[str, Any]],
+    success_kind: str,
+    seed: int,
+    step: int,
+    segment_name: str,
+) -> dict[str, Any]:
+    counter: Counter[str] = Counter()
+    records: list[dict[str, Any]] = []
+    targets = [
+        (str(cid), item)
+        for cid, item in sorted(runtime.population.items())
+        if item.get("state") == "PROBATION" and item.get("birth_segment") != "acceptance_probe"
+    ]
+    if not targets:
+        return {"counter": counter, "records": records}
+    validation_pool, pool_provenance = _phase52_powered_validation_pool(
+        cfg,
+        rows,
+        segment_name=segment_name,
+        seed=int(seed),
+    )
+    if not validation_pool:
+        return {"counter": counter, "records": records}
+    old_target_count = min(
+        len(rows),
+        max(1, int(getattr(cfg, "real_native_probation_validation_rows", 32))),
+    )
+    full_pool_margin = _phase41_margin_for_count(len(validation_pool))
+    old_margin = int(getattr(cfg, "real_native_probation_noise_margin_wins", 1))
+    doses = tuple(float(value) for value in getattr(cfg, "real_native_probation_dose_multipliers", (1.0,)) if float(value) > 0)
+    if not doses:
+        doses = (1.0,)
+    gate_cfg = replace(cfg, real_native_conditional_gate_enabled=True)
+    addend_cfg = replace(cfg, real_native_conditional_gate_enabled=False)
+    for cid, item in targets:
+        rng = random.Random(int(seed) + _phase45_stable_int(cid))
+        old_rows = rng.sample(list(rows), old_target_count) if len(rows) > old_target_count else list(rows)
+        children = list(map(str, item.get("children", ())))
+        source_signature = str(item.get("source_signature", ""))
+        firing_rows = _phase52_static_firing_rows(validation_pool, children, source_signature=source_signature)
+        old_firing_rows = _phase52_static_firing_rows(old_rows, children, source_signature=source_signature)
+        row_ids = [int(row.get("row_id", index)) for index, row in enumerate(validation_pool)]
+        firing_row_ids = [int(row.get("row_id", index)) for index, row in enumerate(firing_rows)]
+        eval_seed = int(seed) + _phase45_stable_int(cid) + 52
+        original_override = item.get("routing_weight_override")
+        base_weight = float(original_override if original_override is not None else _real_native_composite_weight(item, cfg))
+        arm_records = {
+            "G": _phase52_eval_probation_arm_powered(
+                gate_cfg,
+                runtime=runtime,
+                score_provider=score_provider,
+                rows=firing_rows,
+                full_pool_count=len(validation_pool),
+                success_kind=success_kind,
+                seed=eval_seed,
+                segment_name=segment_name,
+                cid=cid,
+                item=item,
+                base_weight=base_weight,
+                doses=doses,
+                full_pool_margin=full_pool_margin,
+                route_mode="conditional_gate",
+                arm_label="G",
+                restore_after=False,
+            ),
+            "L": _phase52_eval_probation_arm_powered(
+                addend_cfg,
+                runtime=runtime,
+                score_provider=score_provider,
+                rows=firing_rows,
+                full_pool_count=len(validation_pool),
+                success_kind=success_kind,
+                seed=eval_seed,
+                segment_name=segment_name,
+                cid=cid,
+                item=item,
+                base_weight=base_weight,
+                doses=doses,
+                full_pool_margin=full_pool_margin,
+                route_mode="score_addend",
+                arm_label="L",
+                restore_after=True,
+            ),
+        }
+        item = runtime.population.get(cid, item)
+        if original_override is None:
+            item.pop("routing_weight_override", None)
+        else:
+            item["routing_weight_override"] = float(original_override)
+
+        gate_arm = arm_records["G"]
+        decision = str(gate_arm["decision"])
+        decision_class = str(gate_arm["decision_class"])
+        confirmed_weight = gate_arm.get("confirmed_routing_weight")
+        confirmed_dose = gate_arm.get("confirmed_dose_multiplier")
+        if decision == "void":
+            apply_decision = "parked"
+            confirmed_weight = None
+            confirmed_dose = None
+        else:
+            apply_decision = decision
+        paired_for_decision = gate_arm.get("paired", {})
+        runtime.apply_probation_confirmation(
+            composite_id=cid,
+            decision=apply_decision,
+            step=int(step),
+            reason=f"{segment_name}_powered_two_arm_{decision_class}_alpha_{float(getattr(cfg, 'real_native_powered_primary_alpha', 0.05)):g}",
+            paired=paired_for_decision,
+            validation_row_ids=firing_row_ids,
+            confirmed_routing_weight=None if confirmed_weight is None else float(confirmed_weight),
+            confirmed_dose_multiplier=None if confirmed_dose is None else float(confirmed_dose),
+            validation_dose_records=gate_arm.get("dose_records", ()),
+            decision_class=decision_class,
+        )
+        after_item = runtime.population.get(cid, {})
+        old_power = _phase52_power_descriptor(
+            full_pool_count=len(old_rows),
+            firing_count=len(old_firing_rows),
+            margin=old_margin,
+            alpha=float(getattr(cfg, "real_native_powered_primary_alpha", 0.05)),
+            min_firing_rows=int(getattr(cfg, "real_native_powered_min_firing_rows", 8)),
+        )
+        new_power = _phase52_power_descriptor(
+            full_pool_count=len(validation_pool),
+            firing_count=len(firing_rows),
+            margin=full_pool_margin,
+            alpha=float(getattr(cfg, "real_native_powered_primary_alpha", 0.05)),
+            min_firing_rows=int(getattr(cfg, "real_native_powered_min_firing_rows", 8)),
+        )
+        counter["probation_cells_tested"] += 1
+        counter[f"probation_{apply_decision}"] += 1
+        counter[f"probation_gate_arm_{decision}"] += 1
+        counter[f"probation_addend_arm_{arm_records['L']['decision']}"] += 1
+        counter[f"probation_decision_class:{decision_class}"] += 1
+        counter[f"probation_state_after:{after_item.get('state', 'missing')}"] += 1
+        counter["powered_validation_rows_total"] += len(validation_pool)
+        counter["powered_static_firing_rows_total"] += len(firing_rows)
+        for arm_key, arm in arm_records.items():
+            counter[f"{arm_key}_predicate_eval_failures"] += int(arm.get("predicate_eval_failure_count", 0))
+            counter[f"{arm_key}_nonzero_discordant_dose_tests"] += int(arm.get("nonzero_discordant_dose_tests", 0))
+            counter[f"{arm_key}_primary_pass_dose_tests"] += int(arm.get("primary_pass_dose_tests", 0))
+            counter[f"{arm_key}_secondary_pass_dose_tests"] += int(arm.get("secondary_pass_dose_tests", 0))
+            if arm.get("confirmed_dose_multiplier") is not None:
+                counter[f"{arm_key}_confirmed_dose:{arm['confirmed_dose_multiplier']:g}"] += 1
+        records.append(
+            {
+                "segment": str(segment_name),
+                "composite_id": cid,
+                "decision": apply_decision,
+                "gate_arm_decision": decision,
+                "addend_arm_decision": str(arm_records["L"]["decision"]),
+                "decision_class": decision_class,
+                "state_after": str(after_item.get("state", "missing")),
+                "children": children,
+                "birth_segment": item.get("birth_segment"),
+                "probation_entry_event": item.get("probation_entry_event"),
+                "probation_retest_count_after": int(after_item.get("probation_retest_count", 0)),
+                "validation_row_ids": row_ids,
+                "validation_row_count": len(validation_pool),
+                "validation_firing_row_ids": firing_row_ids,
+                "static_firing_row_count": len(firing_rows),
+                "old_validation_row_count": len(old_rows),
+                "old_static_firing_row_count": len(old_firing_rows),
+                "old_power": old_power,
+                "new_power": new_power,
+                "validation_pool_provenance": pool_provenance,
+                "validation_margin_wins": full_pool_margin,
+                "base_routing_weight": round(base_weight, 6),
+                "confirmed_dose_multiplier": confirmed_dose,
+                "confirmed_routing_weight": None if confirmed_weight is None else round(float(confirmed_weight), 6),
+                "dose_records": list(gate_arm.get("dose_records", ())),
+                "paired": paired_for_decision,
+                "validation_delta_on_minus_off": int(paired_for_decision.get("left_minus_right_wins", 0)),
+                "arm_records": arm_records,
+                "predicate_eval_guard_passed": bool(
+                    gate_arm.get("predicate_eval_guard_passed", False)
+                    and arm_records["L"].get("predicate_eval_guard_passed", False)
+                ),
+            }
+        )
+    return {"counter": counter, "records": records}
+
+
+def _phase52_eval_probation_arm_powered(
+    arm_cfg: StageBEcologicalDiscoveryConfig,
+    *,
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: Any,
+    rows: Sequence[Mapping[str, Any]],
+    full_pool_count: int,
+    success_kind: str,
+    seed: int,
+    segment_name: str,
+    cid: str,
+    item: dict[str, Any],
+    base_weight: float,
+    doses: Sequence[float],
+    full_pool_margin: int,
+    route_mode: str,
+    arm_label: str,
+    restore_after: bool,
+) -> dict[str, Any]:
+    original_cfg = runtime.cfg
+    original_override = item.get("routing_weight_override")
+    population_snapshot: dict[str, dict[str, Any]] | None = None
+    cells_snapshot: dict[str, Any] | None = None
+    node_meta_snapshot: dict[str, dict[str, Any]] | None = None
+    if restore_after:
+        population_snapshot = copy.deepcopy(runtime.population)
+        cells_snapshot = copy.deepcopy(runtime.cells)
+        node_meta_snapshot = {
+            str(node_id): copy.deepcopy(runtime.native_graph.graph.nodes[str(node_id)].meta)
+            for node_id in (
+                str(pop_item.get("node_id"))
+                for pop_item in runtime.population.values()
+                if pop_item.get("node_id") is not None
+            )
+            if str(node_id) in runtime.native_graph.graph.nodes
+        }
+    dose_records: list[dict[str, Any]] = []
+    confirmed_dose: float | None = None
+    confirmed_weight: float | None = None
+    representative_paired: Mapping[str, Any] | None = None
+    try:
+        runtime.cfg = arm_cfg
+        off_eval = _phase42_ecology_policy_traces(
+            arm_cfg,
+            rows,
+            runtime,
+            score_provider,
+            seed=int(seed),
+            policy_name=f"phase3_22_{segment_name}_{arm_label}_powered_off_{cid}",
+            success_kind=success_kind,
+            mature_only=True,
+        )
+        for dose in doses:
+            routed_weight = float(base_weight * float(dose))
+            item["routing_weight_override"] = routed_weight
+            before_eval_count = int(item.get("formal_engine_eval_count", 0))
+            on_eval = _phase42_ecology_policy_traces(
+                arm_cfg,
+                rows,
+                runtime,
+                score_provider,
+                seed=int(seed),
+                policy_name=f"phase3_22_{segment_name}_{arm_label}_dose_{float(dose):g}_powered_on_{cid}",
+                success_kind=success_kind,
+                mature_only=True,
+                enabled_non_mature_ids=(cid,),
+            )
+            after_eval_count = int(item.get("formal_engine_eval_count", 0))
+            eval_delta = after_eval_count - before_eval_count
+            runtime_firing_ids = [
+                str(row_id)
+                for row_id, active_ids in on_eval.get("active_composite_ids_by_row", {}).items()
+                if str(cid) in set(map(str, active_ids))
+            ]
+            firing_on = _phase52_subset_eval(on_eval, runtime_firing_ids, f"{on_eval['policy']}_firing_subset")
+            firing_off = _phase52_subset_eval(off_eval, runtime_firing_ids, f"{off_eval['policy']}_firing_subset")
+            paired = _phase41_paired_outcome_table(
+                firing_on,
+                firing_off,
+                margin_wins=0,
+                label=f"{segment_name}_{arm_label}_powered_{cid}_dose_{float(dose):g}_firing_on_vs_off",
+            )
+            secondary_paired = {
+                **paired,
+                "paired_row_count": int(full_pool_count),
+                "non_inferiority_margin_wins": int(full_pool_margin),
+                "non_inferior": int(paired.get("left_minus_right_wins", 0)) >= -int(full_pool_margin),
+                "non_firing_rows_assumed_identical_by_static_predicate": int(full_pool_count) - int(paired.get("paired_row_count", 0)),
+            }
+            powered = _phase52_powered_test_result(
+                paired,
+                full_pool_count=int(full_pool_count),
+                runtime_firing_count=len(runtime_firing_ids),
+                margin=int(full_pool_margin),
+                alpha=float(getattr(arm_cfg, "real_native_powered_primary_alpha", 0.05)),
+                min_firing_rows=int(getattr(arm_cfg, "real_native_powered_min_firing_rows", 8)),
+                predicate_guard_passed=eval_delta > 0,
+            )
+            discordant = int(paired["discordant_delta_left_minus_right"])
+            row = {
+                "arm": str(arm_label),
+                "route_mode": str(route_mode),
+                "dose_multiplier": float(dose),
+                "routed_weight": round(routed_weight, 6),
+                "wins_on": int(firing_on["wins"]),
+                "wins_off": int(firing_off["wins"]),
+                "validation_delta_on_minus_off": int(firing_on["wins"]) - int(firing_off["wins"]),
+                "discordant_delta": discordant,
+                "target_predicate_eval_count_before": before_eval_count,
+                "target_predicate_eval_count_after": after_eval_count,
+                "target_predicate_eval_delta": eval_delta,
+                "predicate_eval_guard_passed": eval_delta > 0,
+                "record_void": eval_delta <= 0,
+                "conditional_gate_applied_count": int(on_eval.get("conditional_gate_applied_count", 0)),
+                "conditional_gate_changed_choice_count": int(on_eval.get("conditional_gate_changed_choice_count", 0)),
+                "conditional_gate_composite_ids": list(on_eval.get("conditional_gate_composite_ids", ())),
+                "off_conditional_gate_applied_count": int(off_eval.get("conditional_gate_applied_count", 0)),
+                "off_conditional_gate_changed_choice_count": int(off_eval.get("conditional_gate_changed_choice_count", 0)),
+                "active_composite_ids": list(on_eval.get("active_composite_ids", ())),
+                "runtime_firing_row_ids": sorted(runtime_firing_ids, key=lambda value: int(value)),
+                "paired": paired,
+                "secondary_full_pool_nonharm": secondary_paired,
+                "powered_confirmation": powered,
+            }
+            dose_records.append(row)
+            if (
+                eval_delta > 0
+                and confirmed_dose is None
+                and bool(powered["primary_pass"])
+                and bool(powered["secondary_pass"])
+            ):
+                confirmed_dose = float(dose)
+                confirmed_weight = routed_weight
+                representative_paired = paired
+    finally:
+        runtime.cfg = original_cfg
+        if population_snapshot is not None:
+            runtime.population.clear()
+            runtime.population.update(population_snapshot)
+        if cells_snapshot is not None:
+            runtime.cells.clear()
+            runtime.cells.update(cells_snapshot)
+        if node_meta_snapshot is not None:
+            for node_id, meta in node_meta_snapshot.items():
+                if node_id in runtime.native_graph.graph.nodes:
+                    runtime.native_graph.graph.nodes[node_id].meta.clear()
+                    runtime.native_graph.graph.nodes[node_id].meta.update(meta)
+            item = runtime.population.get(cid, item)
+        if original_override is None:
+            item.pop("routing_weight_override", None)
+        else:
+            item["routing_weight_override"] = float(original_override)
+
+    predicate_failures = sum(1 for record in dose_records if not bool(record.get("predicate_eval_guard_passed", False)))
+    primary_passes = sum(1 for record in dose_records if bool(record.get("powered_confirmation", {}).get("primary_pass", False)))
+    secondary_passes = sum(1 for record in dose_records if bool(record.get("powered_confirmation", {}).get("secondary_pass", False)))
+    discordants = [int(record["discordant_delta"]) for record in dose_records]
+    if predicate_failures:
+        decision = "void"
+        decision_class = "predicate_not_evaluated"
+        paired_for_decision = dose_records[-1]["paired"] if dose_records else {}
+    elif confirmed_dose is not None:
+        decision = "confirmed"
+        decision_class = "powered_primary_and_secondary_pass_lowest_dose"
+        paired_for_decision = representative_paired or dose_records[0]["paired"]
+    elif dose_records and all(
+        int(record.get("powered_confirmation", {}).get("unfavorable", 0))
+        > int(record.get("powered_confirmation", {}).get("favorable", 0))
+        for record in dose_records
+    ):
+        decision = "demoted"
+        decision_class = "negative_all_powered_doses"
+        paired_for_decision = dose_records[-1]["paired"]
+    elif discordants and all(value == 0 for value in discordants):
+        decision = "parked"
+        decision_class = "flat_all_powered_doses"
+        paired_for_decision = dose_records[-1]["paired"]
+    else:
+        decision = "parked"
+        decision_class = "mixed_or_underpowered_nonconfirming"
+        paired_for_decision = dose_records[-1]["paired"] if dose_records else {}
+    return {
+        "arm": str(arm_label),
+        "route_mode": str(route_mode),
+        "decision": decision,
+        "decision_class": decision_class,
+        "predicate_eval_guard_passed": predicate_failures == 0 and bool(dose_records),
+        "predicate_eval_failure_count": predicate_failures,
+        "confirmed_dose_multiplier": confirmed_dose,
+        "confirmed_routing_weight": None if confirmed_weight is None else round(float(confirmed_weight), 6),
+        "nonzero_discordant_dose_tests": sum(1 for value in discordants if value != 0),
+        "primary_pass_dose_tests": primary_passes,
+        "secondary_pass_dose_tests": secondary_passes,
+        "dose_records": dose_records,
+        "paired": paired_for_decision,
+        "validation_delta_on_minus_off": int(paired_for_decision.get("left_minus_right_wins", 0)) if paired_for_decision else 0,
+    }
+
+
+def _phase52_powered_validation_pool(
+    cfg: StageBEcologicalDiscoveryConfig,
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    segment_name: str,
+    seed: int,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    source_rows = [dict(row) for row in rows]
+    source_path = ""
+    source_split = "current_segment_rows"
+    if bool(getattr(cfg, "real_native_powered_use_full_train_pool", True)):
+        if segment_name == "stage_a_approach":
+            source_path = str(cfg.stage_a_rows_path)
+        elif segment_name == "stage_b_chase":
+            source_path = str(cfg.stage_b_rows_path)
+        if source_path:
+            payload = json.loads(Path(source_path).read_text(encoding="utf-8"))
+            source_rows = [dict(row) for row in payload.get("train", ())]
+            source_split = "train"
+    target_count = max(1, int(getattr(cfg, "real_native_powered_validation_rows", 512)))
+    rng_seed = int(seed) + _phase45_stable_int(segment_name) + 52_000
+    rng = random.Random(rng_seed)
+    selected = rng.sample(source_rows, target_count) if len(source_rows) > target_count else list(source_rows)
+    return selected, {
+        "source": "standing_recent_curriculum_exact_stratified_train_pool" if source_path else "current_segment_rows",
+        "source_path": source_path,
+        "source_split": source_split,
+        "available_rows": len(source_rows),
+        "target_rows": target_count,
+        "selected_rows": len(selected),
+        "gate_heldout_consulted": False,
+        "fresh_generated_rows": False,
+        "rng_seed": rng_seed,
+    }
+
+
+def _phase52_static_firing_rows(
+    rows: Sequence[Mapping[str, Any]],
+    children: Sequence[str],
+    *,
+    source_signature: str = "",
+) -> list[dict[str, Any]]:
+    wanted = set(map(str, children))
+    if not wanted:
+        return []
+    matches: list[dict[str, Any]] = []
+    for index, row in enumerate(rows):
+        try:
+            board = chess.Board(str(row["fen"]))
+        except (KeyError, ValueError):
+            continue
+        if board.turn != chess.WHITE:
+            continue
+        row_matches = 0
+        for move in _legal_without_third_repetition(board, Counter()):
+            keys = {str(key) for key, _scale in _sealed_action_key_scales(board, move)}
+            if source_signature and _percept_signature(keys) != str(source_signature):
+                continue
+            if wanted.issubset(keys):
+                row_matches += 1
+        if row_matches:
+            copied = dict(row)
+            copied.setdefault("row_id", int(row.get("row_id", index)))
+            copied["phase3_22_static_matching_move_count"] = row_matches
+            matches.append(copied)
+    return matches
+
+
+def _phase52_subset_eval(
+    evaluation: Mapping[str, Any],
+    row_ids: Sequence[str],
+    policy_name: str,
+) -> dict[str, Any]:
+    wanted = set(map(str, row_ids))
+    success_by_row = {
+        str(row_id): bool(value)
+        for row_id, value in evaluation.get("success_by_row", {}).items()
+        if str(row_id) in wanted
+    }
+    endpoint_by_row = {
+        str(row_id): str(value)
+        for row_id, value in evaluation.get("endpoint_by_row", {}).items()
+        if str(row_id) in wanted
+    }
+    endpoints = Counter(endpoint_by_row.values())
+    wins = sum(int(value) for value in success_by_row.values())
+    total = len(success_by_row)
+    return {
+        "policy": policy_name,
+        "wins": wins,
+        "nonwins": total - wins,
+        "row_count": total,
+        "win_rate": wins / max(1, total),
+        "endpoint_counts": dict(sorted(endpoints.items())),
+        "success_by_row": success_by_row,
+        "endpoint_by_row": endpoint_by_row,
+    }
+
+
+def _phase52_powered_test_result(
+    paired: Mapping[str, Any],
+    *,
+    full_pool_count: int,
+    runtime_firing_count: int,
+    margin: int,
+    alpha: float,
+    min_firing_rows: int,
+    predicate_guard_passed: bool,
+) -> dict[str, Any]:
+    favorable = int(paired.get("win_loss", 0))
+    unfavorable = int(paired.get("loss_win", 0))
+    discordants = favorable + unfavorable
+    p_value = _phase52_exact_binomial_upper_tail(favorable, discordants)
+    primary_pass = (
+        bool(predicate_guard_passed)
+        and int(runtime_firing_count) >= int(min_firing_rows)
+        and favorable > unfavorable
+        and p_value <= float(alpha)
+    )
+    secondary_pass = int(paired.get("left_minus_right_wins", 0)) >= -int(margin)
+    descriptor = _phase52_power_descriptor(
+        full_pool_count=int(full_pool_count),
+        firing_count=int(runtime_firing_count),
+        margin=int(margin),
+        alpha=float(alpha),
+        min_firing_rows=int(min_firing_rows),
+    )
+    return {
+        **descriptor,
+        "runtime_firing_row_count": int(runtime_firing_count),
+        "favorable": favorable,
+        "unfavorable": unfavorable,
+        "discordant_count": discordants,
+        "discordant_delta": favorable - unfavorable,
+        "exact_binomial_p": p_value,
+        "primary_pass": primary_pass,
+        "secondary_pass": secondary_pass,
+        "predicate_guard_passed": bool(predicate_guard_passed),
+    }
+
+
+def _phase52_power_descriptor(
+    *,
+    full_pool_count: int,
+    firing_count: int,
+    margin: int,
+    alpha: float,
+    min_firing_rows: int,
+) -> dict[str, Any]:
+    max_discordants = int(firing_count)
+    min_detectable = _phase52_min_exact_detectable_delta(max_discordants, alpha=float(alpha))
+    margin_detectable = int(margin) + 1
+    if min_detectable is None:
+        detectable = None
+        effect = None
+    else:
+        detectable = max(int(min_detectable), int(margin_detectable))
+        effect = detectable / max(1, max_discordants)
+    return {
+        "full_pool_row_count": int(full_pool_count),
+        "firing_row_count": int(firing_count),
+        "max_possible_discordants": max_discordants,
+        "min_firing_rows": int(min_firing_rows),
+        "nonharm_margin_wins": int(margin),
+        "margin_min_detectable_discordants": margin_detectable,
+        "exact_alpha": float(alpha),
+        "min_detectable_discordants": detectable,
+        "min_detectable_effect_rate": effect,
+        "adequate_power": bool(max_discordants >= int(min_firing_rows) and detectable is not None and detectable <= max_discordants),
+    }
+
+
+def _phase52_min_exact_detectable_delta(n: int, *, alpha: float) -> int | None:
+    n = int(n)
+    if n <= 0:
+        return None
+    for favorable in range((n // 2) + 1, n + 1):
+        p_value = _phase52_exact_binomial_upper_tail(favorable, n)
+        if p_value <= float(alpha):
+            return favorable - (n - favorable)
+    return None
+
+
+def _phase52_exact_binomial_upper_tail(k: int, n: int) -> float:
+    k = int(k)
+    n = int(n)
+    if n <= 0:
+        return 1.0
+    if k <= 0:
+        return 1.0
+    return sum(math.comb(n, i) for i in range(k, n + 1)) / (2 ** n)
 
 
 def _phase49_noop_ablation_control_old_pipeline(
