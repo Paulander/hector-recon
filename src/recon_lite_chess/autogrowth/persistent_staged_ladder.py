@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 import copy
 from dataclasses import asdict, replace
+import hashlib
 from itertools import combinations
 import json
 import math
@@ -15,6 +16,17 @@ from typing import Any, Mapping, Sequence
 import chess
 
 from recon_lite_hector.nodes.stem_cell import StemCellState
+
+from .measurement_integrity import (
+    CounterfactualSnapshot,
+    apply_live_routing_weight,
+    assert_complete_arm_record,
+    counterfactual_plan,
+    holm_adjusted_pvalues,
+    live_population_item,
+    paired_binary_outcomes,
+    validate_analysis_population,
+)
 
 from .stage_b_ecological_discovery_probe import (
     StageBEcologicalDiscoveryConfig,
@@ -3780,6 +3792,7 @@ def run_phase52_powered_confirmation_probe(
     summary["seed33_population_unstable_after_stage_b"] = seed33_instability
     summary["tables"] = {
         "phase3_22_power_table": power_table,
+        "phase3_22_detectability_table": power_table,
         "phase3_22_two_arm_confirmed": two_arm_table,
         "phase3_22_confirmed_cell_dumps": confirmed_dumps,
         "phase3_22_cross_rung_survivor_biographies": cross_rung_biographies,
@@ -3806,6 +3819,12 @@ def run_phase52_powered_confirmation_probe(
     summary["decision"]["adequate_power_nominee_count"] = sum(
         1 for row in power_table if bool(row.get("adequate_power", False))
     )
+    summary["decision"]["detectability_bound_nominee_count"] = sum(
+        1 for row in power_table if bool(row.get("detectability_bound_satisfied", False))
+    )
+    summary["decision"]["power_terminology_correction"] = (
+        "adequate_power is a retained legacy key; the calculation is a detectability bound, not statistical power"
+    )
     _write_json(output_dir / "summary.json", summary)
     return summary
 
@@ -3814,15 +3833,16 @@ def _phase51_addend_control_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[s
     return {
         "enabled": bool(getattr(cfg, "real_native_addend_control_enabled", False)),
         "arms": {
-            "G": "Phase 3.20 conditional action-pattern eligibility gate; this arm decides cell fate.",
-            "L": "Score-addend routing with the same nominees, validation rows, seeds, and dose ladder; observational control only.",
+            "G": "Binary off/on conditional action-pattern eligibility gate; it has no routing-weight dose.",
+            "L": "Score-addend routing with the same nominees, validation rows, seeds, and a weight-dose ladder; observational control only.",
         },
-        "dose_multipliers": list(map(float, getattr(cfg, "real_native_probation_dose_multipliers", (1.0,)))),
+        "G_interventions": ["off", "on"],
+        "L_dose_multipliers": list(map(float, getattr(cfg, "real_native_probation_dose_multipliers", (1.0,)))),
         "predicate_eval_guard": (
-            "For every arm and dose, the target composite's FormalReCon predicate-evaluation counter "
+            "For every G intervention and L dose, the target composite's FormalReCon predicate-evaluation counter "
             "must increase during the on-path evaluation; otherwise that arm record is void."
         ),
-        "control_side_effects": "Arm L snapshots and restores population/cell counters after evaluation.",
+        "control_side_effects": "Every off/on/dose starts from one common snapshot covering runtime, cells, graph states/meta, counters, and overrides.",
     }
 
 
@@ -3838,18 +3858,19 @@ def _phase52_powered_confirmation_spec(cfg: StageBEcologicalDiscoveryConfig) -> 
             "the artifact marks the expanded pool provenance explicitly instead of importing an older curriculum"
         ),
         "primary_test": {
-            "unit": "cell firing subset",
-            "statistic": "paired discordant balance on on-vs-off outcomes",
-            "test": "one-sided exact binomial over discordant firing rows",
+            "unit": "full predeclared validation pool",
+            "statistic": "paired discordant balance on on-vs-off outcomes; runtime firing subset is diagnostic only",
+            "test": "one-sided exact binomial with Holm step-down correction within each predeclared arm/intervention family",
             "alpha": float(getattr(cfg, "real_native_powered_primary_alpha", 0.05)),
             "minimum_firing_rows": int(getattr(cfg, "real_native_powered_min_firing_rows", 8)),
         },
         "secondary_test": {
             "unit": "full expanded validation pool",
-            "statistic": "global non-harm bound; non-firing rows are paired-identical by static predicate",
-            "margin_wins": "phase41 scaled gate margin for the expanded pool",
+            "statistic": "global paired non-harm confidence bound; static non-firing equality is verified",
+            "margin_wins": "phase41 scaled gate margin for the expanded pool, applied to the paired Wilson lower bound",
         },
-        "confirm_rule": "primary_pass AND secondary_pass AND predicate-evaluation guard passes",
+        "detectability_descriptor": "maximum-discordant detectability bound; not a beta/power calculation",
+        "confirm_rule": "Holm-adjusted primary_pass AND confidence-bound secondary_pass AND predicate-evaluation guard passes",
     }
 
 
@@ -3922,13 +3943,14 @@ def _phase52_two_arm_confirmed_table(per_seed: Sequence[Mapping[str, Any]]) -> l
                 arm = record.get("arm_records", {}).get(arm_key, {})
                 if not arm:
                     continue
-                for dose in arm.get("dose_records", ()):
+                for dose in arm.get("intervention_records", arm.get("dose_records", ())):
                     powered = dose.get("powered_confirmation", {})
                     powered_pass += int(bool(powered.get("primary_pass")) and bool(powered.get("secondary_pass")))
                     adequate += int(bool(powered.get("adequate_power")))
                     firing_rows += int(powered.get("runtime_firing_row_count", 0))
             row[f"{arm_key}_powered_primary_secondary_pass_dose_tests"] = powered_pass
             row[f"{arm_key}_adequate_power_dose_tests"] = adequate
+            row[f"{arm_key}_detectability_bound_intervention_tests"] = adequate
             row[f"{arm_key}_runtime_firing_rows_total"] = firing_rows
     return rows
 
@@ -3941,7 +3963,7 @@ def _phase52_power_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str
             arm = record.get("arm_records", {}).get("G", {})
             power_records = [
                 dose.get("powered_confirmation", {})
-                for dose in arm.get("dose_records", ())
+                for dose in arm.get("intervention_records", arm.get("dose_records", ()))
                 if dose.get("powered_confirmation")
             ]
             if not power_records:
@@ -3962,6 +3984,8 @@ def _phase52_power_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str
                     "min_detectable_effect_rate": max_power.get("min_detectable_effect_rate"),
                     "exact_binomial_p": max_power.get("exact_binomial_p"),
                     "adequate_power": bool(max_power.get("adequate_power", False)),
+                    "detectability_bound_satisfied": bool(max_power.get("detectability_bound_satisfied", False)),
+                    "terminology": str(max_power.get("terminology", "detectability bound; not statistical power")),
                     "primary_pass_any_dose": any(bool(item.get("primary_pass")) for item in power_records),
                     "secondary_pass_any_dose": any(bool(item.get("secondary_pass")) for item in power_records),
                 }
@@ -3982,6 +4006,7 @@ def _phase51_two_arm_confirmed_table(per_seed: Sequence[Mapping[str, Any]]) -> l
             decisions: Counter[str] = Counter()
             classes: Counter[str] = Counter()
             dose_tests = 0
+            intervention_tests = 0
             nonzero = 0
             predicate_failures = 0
             confirmed_cells: list[dict[str, Any]] = []
@@ -4000,8 +4025,11 @@ def _phase51_two_arm_confirmed_table(per_seed: Sequence[Mapping[str, Any]]) -> l
                             "validation_delta": int(arm.get("validation_delta_on_minus_off", 0)),
                         }
                     )
+                interventions = arm.get("intervention_records", arm.get("dose_records", ()))
+                intervention_tests += len(interventions)
                 for dose in arm.get("dose_records", ()):
                     dose_tests += 1
+                for dose in interventions:
                     nonzero += int(int(dose.get("discordant_delta", 0)) != 0)
                     predicate_failures += int(not bool(dose.get("predicate_eval_guard_passed", False)))
             row[f"{arm_key}_confirmed"] = int(decisions["confirmed"])
@@ -4009,6 +4037,7 @@ def _phase51_two_arm_confirmed_table(per_seed: Sequence[Mapping[str, Any]]) -> l
             row[f"{arm_key}_parked"] = int(decisions["parked"])
             row[f"{arm_key}_void"] = int(decisions["void"])
             row[f"{arm_key}_dose_tests"] = dose_tests
+            row[f"{arm_key}_intervention_tests"] = intervention_tests
             row[f"{arm_key}_nonzero_discordant_dose_tests"] = nonzero
             row[f"{arm_key}_predicate_eval_failures"] = predicate_failures
             row[f"{arm_key}_decision_classes"] = dict(sorted(classes.items()))
@@ -4042,6 +4071,22 @@ def _phase51_compact_arm_record(record: Mapping[str, Any]) -> dict[str, Any]:
                 "powered_confirmation": dose.get("powered_confirmation", {}),
             }
             for dose in record.get("dose_records", ())
+        ],
+        "binary_records": [
+            {
+                "dose_multiplier": None,
+                "routed_weight": intervention.get("routed_weight"),
+                "validation_delta_on_minus_off": int(intervention.get("validation_delta_on_minus_off", 0)),
+                "discordant_delta": int(intervention.get("discordant_delta", 0)),
+                "target_predicate_eval_delta": int(intervention.get("target_predicate_eval_delta", 0)),
+                "record_void": bool(intervention.get("record_void", False)),
+                "conditional_gate_applied_count": int(intervention.get("conditional_gate_applied_count", 0)),
+                "conditional_gate_changed_choice_count": int(intervention.get("conditional_gate_changed_choice_count", 0)),
+                "paired": intervention.get("paired", {}),
+                "secondary_full_pool_nonharm": intervention.get("secondary_full_pool_nonharm", {}),
+                "powered_confirmation": intervention.get("powered_confirmation", {}),
+            }
+            for intervention in record.get("binary_records", ())
         ],
     }
 
@@ -4406,12 +4451,13 @@ def _phase50_gate_validation_table(per_seed: Sequence[Mapping[str, Any]]) -> lis
         nonzero_discordants = 0
         confirmed_gate = 0
         for record in records:
+            interventions = record.get("binary_intervention_records", record.get("dose_records", ()))
             if record.get("decision") == "confirmed":
                 confirmed_gate += int(any(
                     int(dose.get("conditional_gate_applied_count", 0)) > 0
-                    for dose in record.get("dose_records", ())
+                    for dose in interventions
                 ))
-            for dose in record.get("dose_records", ()):
+            for dose in interventions:
                 gate_applied += int(dose.get("conditional_gate_applied_count", 0))
                 gate_changed += int(dose.get("conditional_gate_changed_choice_count", 0))
                 nonzero_discordants += int(int(dose.get("discordant_delta", 0)) != 0)
@@ -5198,6 +5244,13 @@ def _phase41_paired_outcome_table(
     right_wins = int(sum(int(right_rows[row_id]) for row_id in common))
     discordant_delta = int(counts["win_loss"]) - int(counts["loss_win"])
     left_minus_right = left_wins - right_wins
+    margin_rate = int(margin_wins) / max(1, len(common))
+    paired_ci = paired_binary_outcomes(
+        [left_rows[row_id] for row_id in common],
+        [right_rows[row_id] for row_id in common],
+        confidence=0.95,
+        noninferiority_margin=margin_rate,
+    )
     return {
         "label": label,
         "left_policy": str(left.get("policy", "left")),
@@ -5213,8 +5266,10 @@ def _phase41_paired_outcome_table(
         "discordant_delta_left_minus_right": discordant_delta,
         "discordants_favor_left": discordant_delta > 0,
         "non_inferiority_margin_wins": int(margin_wins),
-        "non_inferior": left_minus_right >= -int(margin_wins),
-        "passed": bool(discordant_delta > 0 or left_minus_right >= -int(margin_wins)),
+        "non_inferiority_margin_rate": margin_rate,
+        "paired_confidence_interval": paired_ci,
+        "non_inferior": bool(paired_ci["noninferior"]),
+        "passed": bool(paired_ci["superior"] or paired_ci["noninferior"]),
     }
 
 
@@ -7852,7 +7907,7 @@ def _phase48_confirm_probation_cells(
     counter: Counter[str] = Counter()
     records: list[dict[str, Any]] = []
     targets = [
-        (str(cid), item)
+        str(cid)
         for cid, item in sorted(runtime.population.items())
         if item.get("state") == "PROBATION" and item.get("birth_segment") != "acceptance_probe"
     ]
@@ -7866,7 +7921,8 @@ def _phase48_confirm_probation_cells(
         max(1, int(getattr(cfg, "real_native_probation_validation_rows", 32))),
     )
     margin = int(getattr(cfg, "real_native_probation_noise_margin_wins", 1))
-    for cid, item in targets:
+    for cid in targets:
+        item = live_population_item(runtime, cid)
         rng = random.Random(int(seed) + _phase45_stable_int(cid))
         validation_rows = rng.sample(row_pool, target_count) if len(row_pool) > target_count else list(row_pool)
         row_ids = [int(row.get("row_id", index)) for index, row in enumerate(validation_rows)]
@@ -7958,7 +8014,7 @@ def _phase49_confirm_probation_cells_dose_response(
     counter: Counter[str] = Counter()
     records: list[dict[str, Any]] = []
     targets = [
-        (str(cid), item)
+        str(cid)
         for cid, item in sorted(runtime.population.items())
         if item.get("state") == "PROBATION" and item.get("birth_segment") != "acceptance_probe"
     ]
@@ -7975,7 +8031,8 @@ def _phase49_confirm_probation_cells_dose_response(
     doses = tuple(float(value) for value in getattr(cfg, "real_native_probation_dose_multipliers", (1.0,)) if float(value) > 0)
     if not doses:
         doses = (1.0,)
-    for cid, item in targets:
+    for cid in targets:
+        item = live_population_item(runtime, cid)
         rng = random.Random(int(seed) + _phase45_stable_int(cid))
         validation_rows = rng.sample(row_pool, target_count) if len(row_pool) > target_count else list(row_pool)
         row_ids = [int(row.get("row_id", index)) for index, row in enumerate(validation_rows)]
@@ -8140,6 +8197,7 @@ def _phase51_confirm_probation_cells_two_arm_dose_response(
         eval_seed = int(seed) + _phase45_stable_int(cid) + 17
         original_override = item.get("routing_weight_override")
         base_weight = float(original_override if original_override is not None else _real_native_composite_weight(item, cfg))
+        common_snapshot = CounterfactualSnapshot.capture(runtime)
         arm_records = {
             "G": _phase51_eval_probation_arm(
                 gate_cfg,
@@ -8150,13 +8208,12 @@ def _phase51_confirm_probation_cells_two_arm_dose_response(
                 seed=eval_seed,
                 segment_name=segment_name,
                 cid=cid,
-                item=item,
+                common_snapshot=common_snapshot,
                 base_weight=base_weight,
                 doses=doses,
                 margin=margin,
                 route_mode="conditional_gate",
                 arm_label="G",
-                restore_after=False,
             ),
             "L": _phase51_eval_probation_arm(
                 addend_cfg,
@@ -8167,16 +8224,16 @@ def _phase51_confirm_probation_cells_two_arm_dose_response(
                 seed=eval_seed,
                 segment_name=segment_name,
                 cid=cid,
-                item=item,
+                common_snapshot=common_snapshot,
                 base_weight=base_weight,
                 doses=doses,
                 margin=margin,
                 route_mode="score_addend",
                 arm_label="L",
-                restore_after=True,
             ),
         }
-        item = runtime.population.get(cid, item)
+        common_snapshot.restore(runtime)
+        item = live_population_item(runtime, cid)
         if original_override is None:
             item.pop("routing_weight_override", None)
         else:
@@ -8203,7 +8260,7 @@ def _phase51_confirm_probation_cells_two_arm_dose_response(
             validation_row_ids=row_ids,
             confirmed_routing_weight=None if confirmed_weight is None else float(confirmed_weight),
             confirmed_dose_multiplier=None if confirmed_dose is None else float(confirmed_dose),
-            validation_dose_records=gate_arm.get("dose_records", ()),
+            validation_dose_records=gate_arm.get("intervention_records", ()),
             decision_class=decision_class,
         )
         after_item = runtime.population.get(cid, {})
@@ -8238,6 +8295,7 @@ def _phase51_confirm_probation_cells_two_arm_dose_response(
                 "confirmed_dose_multiplier": confirmed_dose,
                 "confirmed_routing_weight": None if confirmed_weight is None else round(float(confirmed_weight), 6),
                 "dose_records": list(gate_arm.get("dose_records", ())),
+                "binary_intervention_records": list(gate_arm.get("binary_records", ())),
                 "paired": paired_for_decision,
                 "validation_delta_on_minus_off": int(paired_for_decision.get("left_minus_right_wins", 0)),
                 "arm_records": arm_records,
@@ -8260,36 +8318,20 @@ def _phase51_eval_probation_arm(
     seed: int,
     segment_name: str,
     cid: str,
-    item: dict[str, Any],
+    common_snapshot: CounterfactualSnapshot,
     base_weight: float,
     doses: Sequence[float],
     margin: int,
     route_mode: str,
     arm_label: str,
-    restore_after: bool,
 ) -> dict[str, Any]:
     original_cfg = runtime.cfg
-    original_override = item.get("routing_weight_override")
-    population_snapshot: dict[str, dict[str, Any]] | None = None
-    cells_snapshot: dict[str, Any] | None = None
-    node_meta_snapshot: dict[str, dict[str, Any]] | None = None
-    if restore_after:
-        population_snapshot = copy.deepcopy(runtime.population)
-        cells_snapshot = copy.deepcopy(runtime.cells)
-        node_meta_snapshot = {
-            str(node_id): copy.deepcopy(runtime.native_graph.graph.nodes[str(node_id)].meta)
-            for node_id in (
-                str(pop_item.get("node_id"))
-                for pop_item in runtime.population.values()
-                if pop_item.get("node_id") is not None
-            )
-            if str(node_id) in runtime.native_graph.graph.nodes
-        }
-    dose_records: list[dict[str, Any]] = []
+    intervention_records: list[dict[str, Any]] = []
     confirmed_dose: float | None = None
     confirmed_weight: float | None = None
     representative_paired: Mapping[str, Any] | None = None
     try:
+        common_snapshot.restore(runtime)
         runtime.cfg = arm_cfg
         off_eval = _phase42_ecology_policy_traces(
             arm_cfg,
@@ -8301,9 +8343,17 @@ def _phase51_eval_probation_arm(
             success_kind=success_kind,
             mature_only=True,
         )
-        for dose in doses:
-            routed_weight = float(base_weight * float(dose))
-            item["routing_weight_override"] = routed_weight
+        for intervention in counterfactual_plan(arm_label, doses)[1:]:
+            common_snapshot.restore(runtime)
+            runtime.cfg = arm_cfg
+            item = live_population_item(runtime, cid)
+            dose = intervention["dose_multiplier"]
+            routed_weight = None if dose is None else float(base_weight * float(dose))
+            weight_observation = (
+                {"requested_routing_weight": None, "observed_routing_weight": None}
+                if routed_weight is None
+                else apply_live_routing_weight(runtime, cid, routed_weight)
+            )
             before_eval_count = int(item.get("formal_engine_eval_count", 0))
             on_eval = _phase42_ecology_policy_traces(
                 arm_cfg,
@@ -8311,25 +8361,36 @@ def _phase51_eval_probation_arm(
                 runtime,
                 score_provider,
                 seed=int(seed),
-                policy_name=f"phase3_21_{segment_name}_{arm_label}_dose_{float(dose):g}_probation_on_{cid}",
+                policy_name=(
+                    f"phase3_21_{segment_name}_{arm_label}_binary_on_{cid}"
+                    if dose is None
+                    else f"phase3_21_{segment_name}_{arm_label}_dose_{float(dose):g}_probation_on_{cid}"
+                ),
                 success_kind=success_kind,
                 mature_only=True,
                 enabled_non_mature_ids=(cid,),
             )
+            item = live_population_item(runtime, cid)
             after_eval_count = int(item.get("formal_engine_eval_count", 0))
             eval_delta = after_eval_count - before_eval_count
             paired = _phase41_paired_outcome_table(
                 on_eval,
                 off_eval,
                 margin_wins=margin,
-                label=f"{segment_name}_{arm_label}_probation_{cid}_dose_{float(dose):g}_on_vs_off",
+                label=(
+                    f"{segment_name}_{arm_label}_probation_{cid}_binary_on_vs_off"
+                    if dose is None
+                    else f"{segment_name}_{arm_label}_probation_{cid}_dose_{float(dose):g}_on_vs_off"
+                ),
             )
             discordant = int(paired["discordant_delta_left_minus_right"])
             row = {
                 "arm": str(arm_label),
                 "route_mode": str(route_mode),
-                "dose_multiplier": float(dose),
-                "routed_weight": round(routed_weight, 6),
+                "intervention": "on",
+                "dose_multiplier": None if dose is None else float(dose),
+                "routed_weight": None if routed_weight is None else round(routed_weight, 6),
+                **weight_observation,
                 "wins_on": int(on_eval["wins"]),
                 "wins_off": int(off_eval["wins"]),
                 "validation_delta_on_minus_off": int(on_eval["wins"]) - int(off_eval["wins"]),
@@ -8345,65 +8406,64 @@ def _phase51_eval_probation_arm(
                 "off_conditional_gate_applied_count": int(off_eval.get("conditional_gate_applied_count", 0)),
                 "off_conditional_gate_changed_choice_count": int(off_eval.get("conditional_gate_changed_choice_count", 0)),
                 "active_composite_ids": list(on_eval.get("active_composite_ids", ())),
+                "on_evaluation": on_eval,
+                "off_evaluation": off_eval,
                 "paired": paired,
             }
-            dose_records.append(row)
-            if eval_delta > 0 and confirmed_dose is None and discordant > margin:
-                confirmed_dose = float(dose)
-                confirmed_weight = routed_weight
+            intervention_records.append(row)
+            if (
+                eval_delta > 0
+                and representative_paired is None
+                and bool(paired.get("paired_confidence_interval", {}).get("superior", False))
+            ):
+                confirmed_dose = None if dose is None else float(dose)
+                confirmed_weight = None if routed_weight is None else float(routed_weight)
                 representative_paired = paired
     finally:
         runtime.cfg = original_cfg
-        if population_snapshot is not None:
-            runtime.population.clear()
-            runtime.population.update(population_snapshot)
-        if cells_snapshot is not None:
-            runtime.cells.clear()
-            runtime.cells.update(cells_snapshot)
-        if node_meta_snapshot is not None:
-            for node_id, meta in node_meta_snapshot.items():
-                if node_id in runtime.native_graph.graph.nodes:
-                    runtime.native_graph.graph.nodes[node_id].meta.clear()
-                    runtime.native_graph.graph.nodes[node_id].meta.update(meta)
-            item = runtime.population.get(cid, item)
-        if original_override is None:
-            item.pop("routing_weight_override", None)
-        else:
-            item["routing_weight_override"] = float(original_override)
+        common_snapshot.restore(runtime)
 
-    predicate_failures = sum(1 for record in dose_records if not bool(record.get("predicate_eval_guard_passed", False)))
-    discordants = [int(record["discordant_delta"]) for record in dose_records]
+    predicate_failures = sum(1 for record in intervention_records if not bool(record.get("predicate_eval_guard_passed", False)))
+    discordants = [int(record["discordant_delta"]) for record in intervention_records]
     if predicate_failures:
         decision = "void"
         decision_class = "predicate_not_evaluated"
-        paired_for_decision = dose_records[-1]["paired"] if dose_records else {}
-    elif confirmed_dose is not None:
+        paired_for_decision = intervention_records[-1]["paired"] if intervention_records else {}
+    elif representative_paired is not None:
         decision = "confirmed"
-        decision_class = "positive_lowest_dose"
-        paired_for_decision = representative_paired or dose_records[0]["paired"]
-    elif discordants and all(value < -margin for value in discordants):
+        decision_class = "positive_binary_gate" if str(arm_label).upper() == "G" else "positive_lowest_dose"
+        paired_for_decision = representative_paired
+    elif intervention_records and all(
+        float(record["paired"].get("paired_confidence_interval", {}).get("ci_high", 0.0))
+        < -(int(margin) / max(1, int(record["paired"].get("paired_row_count", 0))))
+        for record in intervention_records
+    ):
         decision = "demoted"
-        decision_class = "negative_all_doses"
-        paired_for_decision = dose_records[-1]["paired"]
+        decision_class = "negative_binary_gate" if str(arm_label).upper() == "G" else "negative_all_doses"
+        paired_for_decision = intervention_records[-1]["paired"]
     elif discordants and all(abs(value) <= margin for value in discordants):
         decision = "parked"
-        decision_class = "flat_all_doses"
-        paired_for_decision = dose_records[-1]["paired"]
+        decision_class = "flat_binary_gate" if str(arm_label).upper() == "G" else "flat_all_doses"
+        paired_for_decision = intervention_records[-1]["paired"]
     else:
         decision = "parked"
         decision_class = "mixed_nonconfirming"
-        paired_for_decision = dose_records[-1]["paired"] if dose_records else {}
+        paired_for_decision = intervention_records[-1]["paired"] if intervention_records else {}
+    is_gate = str(arm_label).upper() == "G"
     return {
         "arm": str(arm_label),
         "route_mode": str(route_mode),
         "decision": decision,
         "decision_class": decision_class,
-        "predicate_eval_guard_passed": predicate_failures == 0 and bool(dose_records),
+        "predicate_eval_guard_passed": predicate_failures == 0 and bool(intervention_records),
         "predicate_eval_failure_count": predicate_failures,
         "confirmed_dose_multiplier": confirmed_dose,
         "confirmed_routing_weight": None if confirmed_weight is None else round(float(confirmed_weight), 6),
-        "nonzero_discordant_dose_tests": sum(1 for value in discordants if value != 0),
-        "dose_records": dose_records,
+        "nonzero_discordant_dose_tests": 0 if is_gate else sum(1 for value in discordants if value != 0),
+        "nonzero_discordant_intervention_tests": sum(1 for value in discordants if value != 0),
+        "dose_records": [] if is_gate else intervention_records,
+        "binary_records": intervention_records if is_gate else [],
+        "intervention_records": intervention_records,
         "paired": paired_for_decision,
         "validation_delta_on_minus_off": int(paired_for_decision.get("left_minus_right_wins", 0)) if paired_for_decision else 0,
     }
@@ -8460,45 +8520,47 @@ def _phase52_confirm_probation_cells_powered_two_arm(
         eval_seed = int(seed) + _phase45_stable_int(cid) + 52
         original_override = item.get("routing_weight_override")
         base_weight = float(original_override if original_override is not None else _real_native_composite_weight(item, cfg))
+        common_snapshot = CounterfactualSnapshot.capture(runtime)
         arm_records = {
             "G": _phase52_eval_probation_arm_powered(
                 gate_cfg,
                 runtime=runtime,
                 score_provider=score_provider,
-                rows=firing_rows,
+                rows=validation_pool,
+                static_eligible_row_ids=firing_row_ids,
                 full_pool_count=len(validation_pool),
                 success_kind=success_kind,
                 seed=eval_seed,
                 segment_name=segment_name,
                 cid=cid,
-                item=item,
+                common_snapshot=common_snapshot,
                 base_weight=base_weight,
                 doses=doses,
                 full_pool_margin=full_pool_margin,
                 route_mode="conditional_gate",
                 arm_label="G",
-                restore_after=False,
             ),
             "L": _phase52_eval_probation_arm_powered(
                 addend_cfg,
                 runtime=runtime,
                 score_provider=score_provider,
-                rows=firing_rows,
+                rows=validation_pool,
+                static_eligible_row_ids=firing_row_ids,
                 full_pool_count=len(validation_pool),
                 success_kind=success_kind,
                 seed=eval_seed,
                 segment_name=segment_name,
                 cid=cid,
-                item=item,
+                common_snapshot=common_snapshot,
                 base_weight=base_weight,
                 doses=doses,
                 full_pool_margin=full_pool_margin,
                 route_mode="score_addend",
                 arm_label="L",
-                restore_after=True,
             ),
         }
-        item = runtime.population.get(cid, item)
+        common_snapshot.restore(runtime)
+        item = live_population_item(runtime, cid)
         if original_override is None:
             item.pop("routing_weight_override", None)
         else:
@@ -8525,7 +8587,7 @@ def _phase52_confirm_probation_cells_powered_two_arm(
             validation_row_ids=firing_row_ids,
             confirmed_routing_weight=None if confirmed_weight is None else float(confirmed_weight),
             confirmed_dose_multiplier=None if confirmed_dose is None else float(confirmed_dose),
-            validation_dose_records=gate_arm.get("dose_records", ()),
+            validation_dose_records=gate_arm.get("intervention_records", ()),
             decision_class=decision_class,
         )
         after_item = runtime.population.get(cid, {})
@@ -8579,12 +8641,15 @@ def _phase52_confirm_probation_cells_powered_two_arm(
                 "old_static_firing_row_count": len(old_firing_rows),
                 "old_power": old_power,
                 "new_power": new_power,
+                "old_detectability": old_power,
+                "new_detectability": new_power,
                 "validation_pool_provenance": pool_provenance,
                 "validation_margin_wins": full_pool_margin,
                 "base_routing_weight": round(base_weight, 6),
                 "confirmed_dose_multiplier": confirmed_dose,
                 "confirmed_routing_weight": None if confirmed_weight is None else round(float(confirmed_weight), 6),
                 "dose_records": list(gate_arm.get("dose_records", ())),
+                "binary_intervention_records": list(gate_arm.get("binary_records", ())),
                 "paired": paired_for_decision,
                 "validation_delta_on_minus_off": int(paired_for_decision.get("left_minus_right_wins", 0)),
                 "arm_records": arm_records,
@@ -8603,41 +8668,26 @@ def _phase52_eval_probation_arm_powered(
     runtime: _GraphNativeCompositeRuntime,
     score_provider: Any,
     rows: Sequence[Mapping[str, Any]],
+    static_eligible_row_ids: Sequence[int],
     full_pool_count: int,
     success_kind: str,
     seed: int,
     segment_name: str,
     cid: str,
-    item: dict[str, Any],
+    common_snapshot: CounterfactualSnapshot,
     base_weight: float,
     doses: Sequence[float],
     full_pool_margin: int,
     route_mode: str,
     arm_label: str,
-    restore_after: bool,
 ) -> dict[str, Any]:
     original_cfg = runtime.cfg
-    original_override = item.get("routing_weight_override")
-    population_snapshot: dict[str, dict[str, Any]] | None = None
-    cells_snapshot: dict[str, Any] | None = None
-    node_meta_snapshot: dict[str, dict[str, Any]] | None = None
-    if restore_after:
-        population_snapshot = copy.deepcopy(runtime.population)
-        cells_snapshot = copy.deepcopy(runtime.cells)
-        node_meta_snapshot = {
-            str(node_id): copy.deepcopy(runtime.native_graph.graph.nodes[str(node_id)].meta)
-            for node_id in (
-                str(pop_item.get("node_id"))
-                for pop_item in runtime.population.values()
-                if pop_item.get("node_id") is not None
-            )
-            if str(node_id) in runtime.native_graph.graph.nodes
-        }
-    dose_records: list[dict[str, Any]] = []
+    intervention_records: list[dict[str, Any]] = []
     confirmed_dose: float | None = None
     confirmed_weight: float | None = None
     representative_paired: Mapping[str, Any] | None = None
     try:
+        common_snapshot.restore(runtime)
         runtime.cfg = arm_cfg
         off_eval = _phase42_ecology_policy_traces(
             arm_cfg,
@@ -8649,9 +8699,17 @@ def _phase52_eval_probation_arm_powered(
             success_kind=success_kind,
             mature_only=True,
         )
-        for dose in doses:
-            routed_weight = float(base_weight * float(dose))
-            item["routing_weight_override"] = routed_weight
+        for intervention in counterfactual_plan(arm_label, doses)[1:]:
+            common_snapshot.restore(runtime)
+            runtime.cfg = arm_cfg
+            item = live_population_item(runtime, cid)
+            dose = intervention["dose_multiplier"]
+            routed_weight = None if dose is None else float(base_weight * float(dose))
+            weight_observation = (
+                {"requested_routing_weight": None, "observed_routing_weight": None}
+                if routed_weight is None
+                else apply_live_routing_weight(runtime, cid, routed_weight)
+            )
             before_eval_count = int(item.get("formal_engine_eval_count", 0))
             on_eval = _phase42_ecology_policy_traces(
                 arm_cfg,
@@ -8659,11 +8717,16 @@ def _phase52_eval_probation_arm_powered(
                 runtime,
                 score_provider,
                 seed=int(seed),
-                policy_name=f"phase3_22_{segment_name}_{arm_label}_dose_{float(dose):g}_powered_on_{cid}",
+                policy_name=(
+                    f"phase3_22_{segment_name}_{arm_label}_binary_on_{cid}"
+                    if dose is None
+                    else f"phase3_22_{segment_name}_{arm_label}_dose_{float(dose):g}_powered_on_{cid}"
+                ),
                 success_kind=success_kind,
                 mature_only=True,
                 enabled_non_mature_ids=(cid,),
             )
+            item = live_population_item(runtime, cid)
             after_eval_count = int(item.get("formal_engine_eval_count", 0))
             eval_delta = after_eval_count - before_eval_count
             runtime_firing_ids = [
@@ -8674,17 +8737,37 @@ def _phase52_eval_probation_arm_powered(
             firing_on = _phase52_subset_eval(on_eval, runtime_firing_ids, f"{on_eval['policy']}_firing_subset")
             firing_off = _phase52_subset_eval(off_eval, runtime_firing_ids, f"{off_eval['policy']}_firing_subset")
             paired = _phase41_paired_outcome_table(
+                on_eval,
+                off_eval,
+                margin_wins=int(full_pool_margin),
+                label=(
+                    f"{segment_name}_{arm_label}_powered_{cid}_binary_on_vs_off"
+                    if dose is None
+                    else f"{segment_name}_{arm_label}_powered_{cid}_dose_{float(dose):g}_on_vs_off"
+                ),
+            )
+            firing_paired = _phase41_paired_outcome_table(
                 firing_on,
                 firing_off,
                 margin_wins=0,
-                label=f"{segment_name}_{arm_label}_powered_{cid}_dose_{float(dose):g}_firing_on_vs_off",
+                label=f"{segment_name}_{arm_label}_{cid}_runtime_firing_subset_diagnostic",
+            )
+            static_ids = set(map(int, static_eligible_row_ids))
+            all_ids = set(map(int, on_eval["source_manifest"]["row_ids"]))
+            on_active = on_eval.get("active_composite_ids_by_row", {})
+            off_active = off_eval.get("active_composite_ids_by_row", {})
+            validate_analysis_population(
+                predeclared_row_ids=all_ids,
+                analyzed_row_ids=all_ids,
+                static_eligible_row_ids=static_ids,
+                off_nonfiring_by_row={row_id: cid not in set(map(str, off_active.get(str(row_id), ()))) for row_id in all_ids - static_ids},
+                on_nonfiring_by_row={row_id: cid not in set(map(str, on_active.get(str(row_id), ()))) for row_id in all_ids - static_ids},
             )
             secondary_paired = {
                 **paired,
-                "paired_row_count": int(full_pool_count),
-                "non_inferiority_margin_wins": int(full_pool_margin),
-                "non_inferior": int(paired.get("left_minus_right_wins", 0)) >= -int(full_pool_margin),
-                "non_firing_rows_assumed_identical_by_static_predicate": int(full_pool_count) - int(paired.get("paired_row_count", 0)),
+                "analysis_population": "full_predeclared_pool",
+                "static_eligible_row_ids": sorted(static_ids),
+                "non_firing_rows_verified_equal": len(all_ids - static_ids),
             }
             powered = _phase52_powered_test_result(
                 paired,
@@ -8699,11 +8782,13 @@ def _phase52_eval_probation_arm_powered(
             row = {
                 "arm": str(arm_label),
                 "route_mode": str(route_mode),
-                "dose_multiplier": float(dose),
-                "routed_weight": round(routed_weight, 6),
-                "wins_on": int(firing_on["wins"]),
-                "wins_off": int(firing_off["wins"]),
-                "validation_delta_on_minus_off": int(firing_on["wins"]) - int(firing_off["wins"]),
+                "intervention": "on",
+                "dose_multiplier": None if dose is None else float(dose),
+                "routed_weight": None if routed_weight is None else round(routed_weight, 6),
+                **weight_observation,
+                "wins_on": int(on_eval["wins"]),
+                "wins_off": int(off_eval["wins"]),
+                "validation_delta_on_minus_off": int(on_eval["wins"]) - int(off_eval["wins"]),
                 "discordant_delta": discordant,
                 "target_predicate_eval_count_before": before_eval_count,
                 "target_predicate_eval_count_after": after_eval_count,
@@ -8717,80 +8802,84 @@ def _phase52_eval_probation_arm_powered(
                 "off_conditional_gate_changed_choice_count": int(off_eval.get("conditional_gate_changed_choice_count", 0)),
                 "active_composite_ids": list(on_eval.get("active_composite_ids", ())),
                 "runtime_firing_row_ids": sorted(runtime_firing_ids, key=lambda value: int(value)),
+                "on_evaluation": on_eval,
+                "off_evaluation": off_eval,
                 "paired": paired,
+                "runtime_firing_subset_paired": firing_paired,
                 "secondary_full_pool_nonharm": secondary_paired,
                 "powered_confirmation": powered,
             }
-            dose_records.append(row)
-            if (
-                eval_delta > 0
-                and confirmed_dose is None
-                and bool(powered["primary_pass"])
-                and bool(powered["secondary_pass"])
-            ):
-                confirmed_dose = float(dose)
-                confirmed_weight = routed_weight
-                representative_paired = paired
+            intervention_records.append(row)
     finally:
         runtime.cfg = original_cfg
-        if population_snapshot is not None:
-            runtime.population.clear()
-            runtime.population.update(population_snapshot)
-        if cells_snapshot is not None:
-            runtime.cells.clear()
-            runtime.cells.update(cells_snapshot)
-        if node_meta_snapshot is not None:
-            for node_id, meta in node_meta_snapshot.items():
-                if node_id in runtime.native_graph.graph.nodes:
-                    runtime.native_graph.graph.nodes[node_id].meta.clear()
-                    runtime.native_graph.graph.nodes[node_id].meta.update(meta)
-            item = runtime.population.get(cid, item)
-        if original_override is None:
-            item.pop("routing_weight_override", None)
-        else:
-            item["routing_weight_override"] = float(original_override)
+        common_snapshot.restore(runtime)
 
-    predicate_failures = sum(1 for record in dose_records if not bool(record.get("predicate_eval_guard_passed", False)))
-    primary_passes = sum(1 for record in dose_records if bool(record.get("powered_confirmation", {}).get("primary_pass", False)))
-    secondary_passes = sum(1 for record in dose_records if bool(record.get("powered_confirmation", {}).get("secondary_pass", False)))
-    discordants = [int(record["discordant_delta"]) for record in dose_records]
+    holm_rows = holm_adjusted_pvalues(
+        [float(record["powered_confirmation"]["exact_binomial_p"]) for record in intervention_records],
+        alpha=float(getattr(arm_cfg, "real_native_powered_primary_alpha", 0.05)),
+    )
+    for record, holm in zip(intervention_records, holm_rows, strict=True):
+        powered = record["powered_confirmation"]
+        powered["multiplicity_method"] = "Holm step-down within the predeclared arm/intervention family"
+        powered["holm"] = holm
+        powered["primary_pass"] = bool(powered["primary_pass_unadjusted"] and holm["rejected"])
+        if (
+            record["predicate_eval_guard_passed"]
+            and representative_paired is None
+            and bool(powered["primary_pass"])
+            and bool(powered["secondary_pass"])
+        ):
+            dose = record["dose_multiplier"]
+            routed_weight = record["routed_weight"]
+            confirmed_dose = None if dose is None else float(dose)
+            confirmed_weight = None if routed_weight is None else float(routed_weight)
+            representative_paired = record["paired"]
+
+    predicate_failures = sum(1 for record in intervention_records if not bool(record.get("predicate_eval_guard_passed", False)))
+    primary_passes = sum(1 for record in intervention_records if bool(record.get("powered_confirmation", {}).get("primary_pass", False)))
+    secondary_passes = sum(1 for record in intervention_records if bool(record.get("powered_confirmation", {}).get("secondary_pass", False)))
+    discordants = [int(record["discordant_delta"]) for record in intervention_records]
     if predicate_failures:
         decision = "void"
         decision_class = "predicate_not_evaluated"
-        paired_for_decision = dose_records[-1]["paired"] if dose_records else {}
-    elif confirmed_dose is not None:
+        paired_for_decision = intervention_records[-1]["paired"] if intervention_records else {}
+    elif representative_paired is not None:
         decision = "confirmed"
-        decision_class = "powered_primary_and_secondary_pass_lowest_dose"
-        paired_for_decision = representative_paired or dose_records[0]["paired"]
-    elif dose_records and all(
+        decision_class = "adjusted_primary_and_secondary_pass_binary_gate" if str(arm_label).upper() == "G" else "adjusted_primary_and_secondary_pass_lowest_dose"
+        paired_for_decision = representative_paired
+    elif intervention_records and all(
         int(record.get("powered_confirmation", {}).get("unfavorable", 0))
         > int(record.get("powered_confirmation", {}).get("favorable", 0))
-        for record in dose_records
+        for record in intervention_records
     ):
         decision = "demoted"
         decision_class = "negative_all_powered_doses"
-        paired_for_decision = dose_records[-1]["paired"]
+        paired_for_decision = intervention_records[-1]["paired"]
     elif discordants and all(value == 0 for value in discordants):
         decision = "parked"
         decision_class = "flat_all_powered_doses"
-        paired_for_decision = dose_records[-1]["paired"]
+        paired_for_decision = intervention_records[-1]["paired"]
     else:
         decision = "parked"
         decision_class = "mixed_or_underpowered_nonconfirming"
-        paired_for_decision = dose_records[-1]["paired"] if dose_records else {}
+        paired_for_decision = intervention_records[-1]["paired"] if intervention_records else {}
+    is_gate = str(arm_label).upper() == "G"
     return {
         "arm": str(arm_label),
         "route_mode": str(route_mode),
         "decision": decision,
         "decision_class": decision_class,
-        "predicate_eval_guard_passed": predicate_failures == 0 and bool(dose_records),
+        "predicate_eval_guard_passed": predicate_failures == 0 and bool(intervention_records),
         "predicate_eval_failure_count": predicate_failures,
         "confirmed_dose_multiplier": confirmed_dose,
         "confirmed_routing_weight": None if confirmed_weight is None else round(float(confirmed_weight), 6),
-        "nonzero_discordant_dose_tests": sum(1 for value in discordants if value != 0),
+        "nonzero_discordant_dose_tests": 0 if is_gate else sum(1 for value in discordants if value != 0),
+        "nonzero_discordant_intervention_tests": sum(1 for value in discordants if value != 0),
         "primary_pass_dose_tests": primary_passes,
         "secondary_pass_dose_tests": secondary_passes,
-        "dose_records": dose_records,
+        "dose_records": [] if is_gate else intervention_records,
+        "binary_records": intervention_records if is_gate else [],
+        "intervention_records": intervention_records,
         "paired": paired_for_decision,
         "validation_delta_on_minus_off": int(paired_for_decision.get("left_minus_right_wins", 0)) if paired_for_decision else 0,
     }
@@ -8909,13 +8998,13 @@ def _phase52_powered_test_result(
     unfavorable = int(paired.get("loss_win", 0))
     discordants = favorable + unfavorable
     p_value = _phase52_exact_binomial_upper_tail(favorable, discordants)
-    primary_pass = (
+    primary_pass_unadjusted = (
         bool(predicate_guard_passed)
         and int(runtime_firing_count) >= int(min_firing_rows)
         and favorable > unfavorable
         and p_value <= float(alpha)
     )
-    secondary_pass = int(paired.get("left_minus_right_wins", 0)) >= -int(margin)
+    secondary_pass = bool(paired.get("paired_confidence_interval", {}).get("noninferior", False))
     descriptor = _phase52_power_descriptor(
         full_pool_count=int(full_pool_count),
         firing_count=int(runtime_firing_count),
@@ -8931,7 +9020,8 @@ def _phase52_powered_test_result(
         "discordant_count": discordants,
         "discordant_delta": favorable - unfavorable,
         "exact_binomial_p": p_value,
-        "primary_pass": primary_pass,
+        "primary_pass_unadjusted": primary_pass_unadjusted,
+        "primary_pass": False,
         "secondary_pass": secondary_pass,
         "predicate_guard_passed": bool(predicate_guard_passed),
     }
@@ -8955,6 +9045,7 @@ def _phase52_power_descriptor(
         detectable = max(int(min_detectable), int(margin_detectable))
         effect = detectable / max(1, max_discordants)
     return {
+        "terminology": "detectability bound; this is not a statistical power calculation",
         "full_pool_row_count": int(full_pool_count),
         "firing_row_count": int(firing_count),
         "max_possible_discordants": max_discordants,
@@ -8964,7 +9055,9 @@ def _phase52_power_descriptor(
         "exact_alpha": float(alpha),
         "min_detectable_discordants": detectable,
         "min_detectable_effect_rate": effect,
+        "detectability_bound_satisfied": bool(max_discordants >= int(min_firing_rows) and detectable is not None and detectable <= max_discordants),
         "adequate_power": bool(max_discordants >= int(min_firing_rows) and detectable is not None and detectable <= max_discordants),
+        "adequate_power_legacy_field_note": "legacy key retained for artifact compatibility; interpret as detectability_bound_satisfied",
     }
 
 
@@ -9772,6 +9865,9 @@ def _phase42_ecology_policy_traces(
     success_by_row: dict[str, bool] = {}
     endpoint_by_row: dict[str, str] = {}
     active_by_row: dict[str, list[str]] = {}
+    predicate_evaluated_by_row: dict[str, list[str]] = {}
+    action_by_row: dict[str, list[str]] = {}
+    trace_digest_by_row: dict[str, str] = {}
     all_active: set[str] = set()
     gate_applied_count = 0
     gate_changed_count = 0
@@ -9780,6 +9876,8 @@ def _phase42_ecology_policy_traces(
     judge_cache = _new_judge_cache()
     for index, row in enumerate(rows):
         row_active: set[str] = set()
+        row_predicate_evaluated: set[str] = set()
+        row_actions: list[str] = []
         row_gate_applied = 0
         row_gate_changed = 0
 
@@ -9793,6 +9891,7 @@ def _phase42_ecology_policy_traces(
                 disabled=disabled,
             )
             row_active.update(map(str, selected.get("active_composite_ids", ())))
+            row_predicate_evaluated.update(map(str, selected.get("requested_composite_ids", ())))
             gate_ids = list(map(str, selected.get("conditional_gate_composite_ids", ())))
             if bool(selected.get("conditional_gate_applied", False)):
                 gate_applied_count += 1
@@ -9801,7 +9900,10 @@ def _phase42_ecology_policy_traces(
             if bool(selected.get("conditional_gate_changed_choice", False)):
                 gate_changed_count += 1
                 row_gate_changed += 1
-            return selected.get("move")
+            move = selected.get("move")
+            if move is not None:
+                row_actions.append(move.uci())
+            return move
 
         outcome = _rollout_policy(
             cfg,
@@ -9817,6 +9919,17 @@ def _phase42_ecology_policy_traces(
         endpoint_by_row[str(row["row_id"])] = str(outcome["endpoint"])
         endpoints[str(outcome["endpoint"])] += 1
         active_by_row[str(row["row_id"])] = sorted(row_active)
+        predicate_evaluated_by_row[str(row["row_id"])] = sorted(row_predicate_evaluated)
+        action_by_row[str(row["row_id"])] = list(row_actions)
+        trace_payload = {
+            "success": bool(outcome["success"]),
+            "endpoint": str(outcome["endpoint"]),
+            "white_steps": list(outcome.get("white_steps", ())),
+            "transition_steps": list(outcome.get("transition_steps", ())),
+        }
+        trace_digest_by_row[str(row["row_id"])] = hashlib.sha256(
+            json.dumps(trace_payload, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
+        ).hexdigest()
         all_active.update(row_active)
         if not outcome["success"] and len(samples) < int(cfg.max_samples):
             samples.append(
@@ -9831,7 +9944,32 @@ def _phase42_ecology_policy_traces(
             )
     wins = sum(int(value) for value in success_by_row.values())
     total = len(rows)
-    return {
+    row_ids = [int(row["row_id"]) for row in rows]
+    source_payload = [
+        {"row_id": int(row["row_id"]), "fen": str(row.get("fen", ""))}
+        for row in rows
+    ]
+    source_manifest = {
+        "split": "confirmation_validation",
+        "sha256": hashlib.sha256(
+            json.dumps(source_payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest(),
+        "row_ids": row_ids,
+    }
+    runner_config = _phase38_runner_config(
+        cfg,
+        seed=int(seed),
+        success_kind=success_kind,
+        black_reply_policy="exact_adversarial",
+        row_count=total,
+    )
+    runner_config.update(
+        {
+            "tie_break": "seeded score/tie/uci ordering; identical seed schedule across paired arms",
+            "deterministic_row_order": row_ids,
+        }
+    )
+    result = {
         "policy": policy_name,
         "black_reply_policy": "exact_adversarial",
         "mature_only": bool(mature_only),
@@ -9845,18 +9983,18 @@ def _phase42_ecology_policy_traces(
         "endpoint_by_row": endpoint_by_row,
         "active_composite_ids": sorted(all_active),
         "active_composite_ids_by_row": active_by_row,
+        "predicate_evaluated_ids_by_row": predicate_evaluated_by_row,
+        "action_by_row": action_by_row,
+        "trace_digest_by_row": trace_digest_by_row,
         "conditional_gate_applied_count": gate_applied_count,
         "conditional_gate_changed_choice_count": gate_changed_count,
         "conditional_gate_composite_ids": sorted(gate_composite_ids),
-        "runner_config": _phase38_runner_config(
-            cfg,
-            seed=int(seed),
-            success_kind=success_kind,
-            black_reply_policy="exact_adversarial",
-            row_count=total,
-        ),
+        "runner_config": runner_config,
+        "source_manifest": source_manifest,
         "sample_nonwins": samples,
     }
+    assert_complete_arm_record(result)
+    return result
 
 
 def _phase42_disabled_non_mature(runtime: _GraphNativeCompositeRuntime) -> set[str]:
