@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
-from dataclasses import asdict
+import copy
+from dataclasses import asdict, replace
 from itertools import combinations
 import json
 from pathlib import Path
@@ -3472,6 +3473,442 @@ def run_phase50_conditional_gate_composite_probe(
     return summary
 
 
+def run_phase51_addend_control_confirmed_audit_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    """Phase 3.21: paired gate-vs-addend probation control plus confirmed-cell audit."""
+
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_21_addend_control_confirmed_audit",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        flat_baseline_seeds=(20272911, 20272912, 20272913),
+        stage_a_train_row_limit=128,
+        train_row_limit=128,
+        heldout_row_limit=None,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+        real_native_engine_max_ticks=80,
+        real_native_max_live_composites=32,
+        real_native_max_live_siblings_per_parent=4,
+        real_native_trial_grace_exposures=3,
+        real_native_dormant_decay=0.002,
+        real_native_critical_period_exposures=5,
+        real_native_critical_period_credit_multiplier=1.75,
+        real_native_critical_period_optimism=0.025,
+        real_native_positive_flip_credit=0.060,
+        real_native_positive_flip_window=2,
+        real_native_choice_change_mature_events=3,
+        real_native_choice_change_neutral_rent=0.006,
+        real_native_near_zero_choice_change_rate=0.01,
+        real_native_stability_band_multiplier=5,
+        real_native_audition_budget_per_cell=10,
+        real_native_audition_per_ply_cap=2,
+        real_native_audition_horizon_plies=8,
+        real_native_audition_mature_better_events=3,
+        real_native_audition_neutral_rent=0.004,
+        real_native_audition_debt_threshold=3,
+        real_native_audition_starvation_min_per_cell=0.0,
+        real_native_scheduled_audition_chunk_size=8,
+        real_native_scheduled_unjudged_fraction_stop=0.0,
+        real_native_scheduled_complete_flush=True,
+        real_native_homeostatic_backlog_threshold=0.0,
+        real_native_pool_scan_auditions=True,
+        real_native_trial_band_min=20,
+        real_native_trial_band_max=60,
+        real_native_court_throughput_per_chunk=0,
+        real_native_probation_enabled=True,
+        real_native_probation_validation_rows=32,
+        real_native_probation_noise_margin_wins=1,
+        real_native_probation_max_retests=2,
+        real_native_probation_dose_response_enabled=True,
+        real_native_probation_dose_multipliers=(1.0, 3.0, 9.0, 27.0),
+        real_native_addend_control_enabled=True,
+        real_native_controlled_ablation_enabled=True,
+        real_native_outcome_audition_enabled=True,
+        real_native_outcome_audition_horizon_plies=16,
+        real_native_outcome_audition_verdict_is_standing=True,
+        real_native_conditional_gate_enabled=True,
+        real_native_conditional_gate_mode="action_pattern_eligibility",
+        real_native_conditional_gate_states=("PROBATION", "MATURE"),
+        real_native_continue_after_seed_stop=True,
+        real_native_max_ablation_subjects=256,
+    )
+    output_dir = Path(cfg.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    gate_margin = _phase41_gate_margin_wins()
+    gate_proof = _phase50_constructed_gate_flip_proof(cfg)
+    design = _design_spec(cfg)
+    design["schema_version"] = "phase3_21_addend_control_confirmed_audit_design_spec.v0"
+    design["phase_alias"] = "User-requested Phase 3.21 addend-control arm and confirmed-cell audit"
+    design["host_ladder"] = {
+        "frozen_from": "Phase 3.20 conditional-gate routing, outcome auditions, dose-response probation, gates, ratchet, and boundary",
+        "paired_gate_spec": _phase41_paired_gate_spec(gate_margin),
+    }
+    design["conditional_gate"] = _phase50_conditional_gate_spec(cfg)
+    design["addend_control"] = _phase51_addend_control_spec(cfg)
+    design["constructed_move_flip_proof"] = gate_proof
+    design["ecology"] = _phase50_ecology_spec(cfg)
+    _write_json(output_dir / "design_spec.json", design)
+    if not bool(gate_proof.get("passed", False)):
+        summary = {
+            "schema_version": "phase3_21_addend_control_confirmed_audit.v0",
+            "phase": "Phase 3.21 addend-control arm and confirmed-cell audit",
+            "config": asdict(cfg),
+            "constructed_move_flip_proof": gate_proof,
+            "per_seed": [],
+            "decision": {
+                "acceptance_check_passed": False,
+                "stop_reason": "constructed_conditional_gate_move_flip_proof_failed",
+            },
+        }
+        _write_json(output_dir / "summary.json", summary)
+        return summary
+
+    summary = run_phase44_audition_cell_economy_probe(config=cfg)
+    correspondence = _phase45_composite_correspondence_table()
+    confirmed_recurrence = _phase48_family_recurrence(summary.get("per_seed", []), tier="confirmed")
+    nomination_recurrence = _phase48_family_recurrence(summary.get("per_seed", []), tier="nomination")
+    two_arm_table = _phase51_two_arm_confirmed_table(summary.get("per_seed", []))
+    confirmed_dumps = _phase51_confirmed_cell_audit(summary.get("per_seed", []), cfg)
+    cross_rung_biographies = _phase51_cross_rung_biographies(
+        summary.get("per_seed", []),
+        summary.get("cross_rung_load_bearing_survivors", ()),
+        cfg,
+    )
+    seed33_instability = _phase51_seed33_population_unstable_cause(summary.get("per_seed", []), output_dir)
+    gate_validation = _phase50_gate_validation_table(summary.get("per_seed", []))
+
+    design["ecology"] = _phase50_ecology_spec(cfg)
+    design["cross_experiment_composite_correspondence"] = correspondence
+    _write_json(output_dir / "design_spec.json", design)
+    for row in summary.get("per_seed", []):
+        row["schema_version"] = "phase3_21_addend_control_confirmed_audit_seed.v0"
+        row["ecology_spec"] = _phase50_ecology_spec(cfg)
+        row["constructed_move_flip_proof"] = gate_proof
+        row["cross_experiment_composite_correspondence"] = correspondence
+        _write_json(output_dir / f"seed_{row['seed']}_addend_control_confirmed_audit.json", row)
+
+    tables = dict(summary.get("tables", {}))
+    summary["schema_version"] = "phase3_21_addend_control_confirmed_audit.v0"
+    summary["phase"] = "Phase 3.21 addend-control arm and confirmed-cell audit"
+    summary["conditional_gate"] = _phase50_conditional_gate_spec(cfg)
+    summary["addend_control"] = _phase51_addend_control_spec(cfg)
+    summary["constructed_move_flip_proof"] = gate_proof
+    summary["ecology"] = _phase50_ecology_spec(cfg)
+    summary["cross_experiment_composite_correspondence"] = correspondence
+    summary["cross_seed_recurring_confirmed_families"] = confirmed_recurrence
+    summary["cross_seed_recurring_nomination_families"] = nomination_recurrence
+    summary["confirmed_cell_dumps"] = confirmed_dumps
+    summary["cross_rung_survivor_biographies"] = cross_rung_biographies
+    summary["seed33_population_unstable_after_stage_b"] = seed33_instability
+    summary["tables"] = {
+        "phase3_21_two_arm_confirmed": two_arm_table,
+        "phase3_21_confirmed_cell_dumps": confirmed_dumps,
+        "phase3_21_cross_rung_survivor_biographies": cross_rung_biographies,
+        "phase3_21_seed33_population_unstable": [seed33_instability] if seed33_instability else [],
+        "phase3_21_gate_validation": gate_validation,
+        "phase3_21_confirmed_recurrence_by_family": confirmed_recurrence,
+        "phase3_21_nomination_recurrence_by_family": nomination_recurrence,
+        "phase3_21_headline": _phase48_headline_table(summary.get("per_seed", [])),
+        "phase3_21_audition_signal": tables.get("phase3_14_audition_signal", []),
+        "phase3_21_acceptance_margins": tables.get("phase3_14_acceptance_margins", []),
+        "phase3_21_cross_experiment_composite_correspondence": correspondence,
+    }
+    gate_confirmed = sum(int(row.get("G_confirmed", 0)) for row in two_arm_table)
+    addend_confirmed = sum(int(row.get("L_confirmed", 0)) for row in two_arm_table)
+    guard_failures = sum(
+        int(row.get("G_predicate_eval_failures", 0)) + int(row.get("L_predicate_eval_failures", 0))
+        for row in two_arm_table
+    )
+    summary["decision"]["constructed_gate_flip_proof_passed"] = bool(gate_proof.get("passed", False))
+    summary["decision"]["gate_arm_confirmed_count"] = gate_confirmed
+    summary["decision"]["addend_arm_confirmed_count"] = addend_confirmed
+    summary["decision"]["two_arm_predicate_eval_guard_failures"] = guard_failures
+    summary["decision"]["confirmed_cell_dump_count"] = len(confirmed_dumps)
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
+def _phase51_addend_control_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
+    return {
+        "enabled": bool(getattr(cfg, "real_native_addend_control_enabled", False)),
+        "arms": {
+            "G": "Phase 3.20 conditional action-pattern eligibility gate; this arm decides cell fate.",
+            "L": "Score-addend routing with the same nominees, validation rows, seeds, and dose ladder; observational control only.",
+        },
+        "dose_multipliers": list(map(float, getattr(cfg, "real_native_probation_dose_multipliers", (1.0,)))),
+        "predicate_eval_guard": (
+            "For every arm and dose, the target composite's FormalReCon predicate-evaluation counter "
+            "must increase during the on-path evaluation; otherwise that arm record is void."
+        ),
+        "control_side_effects": "Arm L snapshots and restores population/cell counters after evaluation.",
+    }
+
+
+def _phase51_two_arm_confirmed_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for seed_row in per_seed:
+        records = _phase48_probation_records(seed_row)
+        row: dict[str, Any] = {
+            "seed": int(seed_row.get("seed", 0)),
+            "probation_tests": len(records),
+        }
+        for arm_key in ("G", "L"):
+            decisions: Counter[str] = Counter()
+            classes: Counter[str] = Counter()
+            dose_tests = 0
+            nonzero = 0
+            predicate_failures = 0
+            confirmed_cells: list[dict[str, Any]] = []
+            for record in records:
+                arm = dict(record.get("arm_records", {}).get(arm_key, {}))
+                if not arm:
+                    continue
+                decisions[str(arm.get("decision", "unknown"))] += 1
+                classes[str(arm.get("decision_class", "unknown"))] += 1
+                if arm.get("decision") == "confirmed":
+                    confirmed_cells.append(
+                        {
+                            "composite_id": str(record.get("composite_id")),
+                            "children": list(record.get("children", ())),
+                            "dose": arm.get("confirmed_dose_multiplier"),
+                            "validation_delta": int(arm.get("validation_delta_on_minus_off", 0)),
+                        }
+                    )
+                for dose in arm.get("dose_records", ()):
+                    dose_tests += 1
+                    nonzero += int(int(dose.get("discordant_delta", 0)) != 0)
+                    predicate_failures += int(not bool(dose.get("predicate_eval_guard_passed", False)))
+            row[f"{arm_key}_confirmed"] = int(decisions["confirmed"])
+            row[f"{arm_key}_demoted"] = int(decisions["demoted"])
+            row[f"{arm_key}_parked"] = int(decisions["parked"])
+            row[f"{arm_key}_void"] = int(decisions["void"])
+            row[f"{arm_key}_dose_tests"] = dose_tests
+            row[f"{arm_key}_nonzero_discordant_dose_tests"] = nonzero
+            row[f"{arm_key}_predicate_eval_failures"] = predicate_failures
+            row[f"{arm_key}_decision_classes"] = dict(sorted(classes.items()))
+            row[f"{arm_key}_confirmed_cells"] = confirmed_cells
+        rows.append(row)
+    return rows
+
+
+def _phase51_compact_arm_record(record: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "decision": str(record.get("decision", "unknown")),
+        "decision_class": str(record.get("decision_class", "unknown")),
+        "route_mode": str(record.get("route_mode", "")),
+        "confirmed_dose_multiplier": record.get("confirmed_dose_multiplier"),
+        "confirmed_routing_weight": record.get("confirmed_routing_weight"),
+        "validation_delta_on_minus_off": int(record.get("validation_delta_on_minus_off", 0)),
+        "predicate_eval_guard_passed": bool(record.get("predicate_eval_guard_passed", False)),
+        "predicate_eval_failure_count": int(record.get("predicate_eval_failure_count", 0)),
+        "dose_records": [
+            {
+                "dose_multiplier": float(dose.get("dose_multiplier", 0.0)),
+                "routed_weight": dose.get("routed_weight"),
+                "validation_delta_on_minus_off": int(dose.get("validation_delta_on_minus_off", 0)),
+                "discordant_delta": int(dose.get("discordant_delta", 0)),
+                "target_predicate_eval_delta": int(dose.get("target_predicate_eval_delta", 0)),
+                "record_void": bool(dose.get("record_void", False)),
+                "conditional_gate_applied_count": int(dose.get("conditional_gate_applied_count", 0)),
+                "conditional_gate_changed_choice_count": int(dose.get("conditional_gate_changed_choice_count", 0)),
+                "paired": dose.get("paired", {}),
+            }
+            for dose in record.get("dose_records", ())
+        ],
+    }
+
+
+def _phase51_confirmed_cell_audit(
+    per_seed: Sequence[Mapping[str, Any]],
+    cfg: StageBEcologicalDiscoveryConfig,
+) -> list[dict[str, Any]]:
+    dumps = _phase48_confirmed_cell_dumps(per_seed)
+    record_by_seed_id: dict[tuple[int, str], Mapping[str, Any]] = {}
+    fate_by_seed_id: dict[tuple[int, str], Mapping[str, Any]] = {}
+    for seed_row in per_seed:
+        seed = int(seed_row.get("seed", 0))
+        for record in _phase48_probation_records(seed_row):
+            record_by_seed_id[(seed, str(record.get("composite_id")))] = record
+        for item in seed_row.get("candidate_fate_log", ()):
+            fate_by_seed_id[(seed, str(item.get("composite_id")))] = item
+    enriched: list[dict[str, Any]] = []
+    for dump in dumps:
+        seed = int(dump.get("seed", 0))
+        cid = str(dump.get("composite_id"))
+        record = record_by_seed_id.get((seed, cid), {})
+        item = fate_by_seed_id.get((seed, cid), {})
+        children = list(dump.get("children", ()))
+        gate_action_keys = list(dump.get("gate_action_keys", ()))
+        if not gate_action_keys:
+            gate_action_keys = [
+                str(child)
+                for child in children
+                if str(child).startswith("action_pattern:")
+            ]
+        enriched.append(
+            {
+                "seed": seed,
+                "composite_id": cid,
+                "family": str(dump.get("family", _phase46_composite_family(children))),
+                "atom_composition": children,
+                "gate_mechanism": dump.get("gate_mechanism") or item.get("conditional_gate_mechanism"),
+                "gate_action_pattern_eligibility": gate_action_keys,
+                "birth_segment": str(item.get("birth_segment", dump.get("birth_segment", ""))),
+                "birth_trigger": str(item.get("birth_trigger", "")),
+                "probation_entry_event": dump.get("probation_entry_event"),
+                "validation_arms": {
+                    arm_key: _phase51_compact_arm_record(record.get("arm_records", {}).get(arm_key, {}))
+                    for arm_key in ("G", "L")
+                    if record.get("arm_records", {}).get(arm_key)
+                },
+                "validation_delta_on_minus_off": dump.get("validation_delta_on_minus_off"),
+                "heldout_ablation_delta": dump.get("heldout_ablation_delta"),
+                "heldout_classification": dump.get("heldout_classification"),
+                "heldout_paired": dump.get("heldout_paired", {}),
+                "routing_weight": dump.get("routing_weight"),
+                "firing_cluster_positions": _phase51_firing_cluster(cfg, children, limit=8),
+            }
+        )
+    enriched.sort(key=lambda item: (int(item["seed"]), str(item["family"]), str(item["composite_id"])))
+    return enriched
+
+
+def _phase51_firing_cluster(
+    cfg: StageBEcologicalDiscoveryConfig,
+    children: Sequence[str],
+    *,
+    limit: int,
+) -> list[dict[str, Any]]:
+    wanted = set(map(str, children))
+    if not wanted:
+        return []
+    payload = json.loads(Path(cfg.stage_b_rows_path).read_text(encoding="utf-8"))
+    matches: list[dict[str, Any]] = []
+    for split in ("train", "heldout"):
+        for row in payload.get(split, ()):
+            board = chess.Board(str(row["fen"]))
+            if board.turn != chess.WHITE:
+                continue
+            move_matches: list[str] = []
+            for move in _legal_without_third_repetition(board, Counter()):
+                keys = {str(key) for key, _scale in _sealed_action_key_scales(board, move)}
+                if wanted.issubset(keys):
+                    move_matches.append(move.uci())
+            if move_matches:
+                matches.append(
+                    {
+                        "split": split,
+                        "row_id": int(row.get("row_id", -1)),
+                        "fen": str(row["fen"]),
+                        "matching_moves": move_matches[:8],
+                        "matching_move_count": len(move_matches),
+                    }
+                )
+                if len(matches) >= int(limit):
+                    return matches
+    return matches
+
+
+def _phase51_cross_rung_biographies(
+    per_seed: Sequence[Mapping[str, Any]],
+    survivors: Sequence[Mapping[str, Any]],
+    cfg: StageBEcologicalDiscoveryConfig,
+) -> list[dict[str, Any]]:
+    biographies: list[dict[str, Any]] = []
+    seed_rows = {int(seed_row.get("seed", 0)): seed_row for seed_row in per_seed}
+    for survivor in survivors:
+        seed = int(survivor.get("seed", 0))
+        seed_row = seed_rows.get(seed, {})
+        fate_by_id = {str(item.get("composite_id")): item for item in seed_row.get("candidate_fate_log", ())}
+        probation_by_id = {
+            str(record.get("composite_id")): record
+            for record in _phase48_probation_records(seed_row)
+        }
+        cid = str(survivor.get("composite_id"))
+        item = fate_by_id.get(cid, {})
+        children = list(item.get("children", survivor.get("children", ())))
+        biography_events = [
+            dict(event)
+            for event in item.get("fate_events", ())
+            if any(token in str(event.get("event", "")) for token in ("audition", "probation", "mature", "prune"))
+        ]
+        biographies.append(
+            {
+                "seed": seed,
+                "composite_id": cid,
+                "family": _phase46_composite_family(children),
+                "atom_composition": children,
+                "birth_trigger": str(item.get("birth_trigger", "")),
+                "birth_segment": str(item.get("birth_segment", survivor.get("birth_segment", ""))),
+                "birth_row_id": item.get("birth_row_id"),
+                "birth_step": item.get("birth_step"),
+                "state": str(item.get("state", "")),
+                "stage_b_ablation_delta": survivor.get("stage_b_ablation_delta", survivor.get("ablation_delta")),
+                "audition_history": {
+                    "audition_count": int(item.get("audition_count", 0)),
+                    "better": int(item.get("audition_better_events", 0)),
+                    "worse": int(item.get("audition_worse_events", 0)),
+                    "tie": int(item.get("audition_tie_events", 0)),
+                },
+                "probation_history": _phase51_compact_arm_record(
+                    probation_by_id.get(cid, {}).get("arm_records", {}).get("G", {})
+                ),
+                "fate_events": biography_events[:32],
+                "stage_b_firing_positions": _phase51_firing_cluster(cfg, children, limit=12),
+            }
+        )
+    return biographies
+
+
+def _phase51_seed33_population_unstable_cause(
+    per_seed: Sequence[Mapping[str, Any]],
+    output_dir: Path,
+) -> dict[str, Any]:
+    target = next((row for row in per_seed if int(row.get("seed", 0)) == 20272933), None)
+    if target is None:
+        return {}
+    fate_log = list(target.get("candidate_fate_log", ()))
+    fate_path = output_dir / "seed_20272933_population_unstable_fate_log.json"
+    _write_json(fate_path, {"seed": 20272933, "candidate_fate_log": fate_log})
+    stage_b = target.get("stage_b", {}) if isinstance(target.get("stage_b"), Mapping) else {}
+    stability = stage_b.get("population_stability", {}) if isinstance(stage_b, Mapping) else {}
+    curve = [
+        {
+            "step": int(row.get("step", 0)),
+            "trial": int(row.get("trial", 0)),
+            "probation": int(row.get("probation", 0)),
+            "mature": int(row.get("mature", 0)),
+            "pruned": int(row.get("pruned", 0)),
+        }
+        for row in target.get("birth_death_curve", ())
+        if row.get("segment") == "stage_b_chase"
+    ]
+    states = Counter(str(item.get("state", "unknown")) for item in fate_log)
+    prune_reasons = Counter(str(item.get("prune_reason", "none")) for item in fate_log if item.get("state") == "PRUNED")
+    live_items = [item for item in fate_log if item.get("state") in {"TRIAL", "PROBATION", "MATURE"}]
+    live_segments = Counter(str(item.get("birth_segment", "unknown")) for item in live_items)
+    cause = "not_unstable_or_no_stage_b_stop"
+    if "population_unstable_after_stage_b" in set(map(str, target.get("stop_reasons", ()))):
+        cause = "post_stage_b_population_stability_band_failed"
+    return {
+        "seed": 20272933,
+        "stop_reasons": list(target.get("stop_reasons", ())),
+        "cause": cause,
+        "population_stability": dict(stability),
+        "final_population": dict(target.get("population", {})),
+        "state_counts": dict(sorted(states.items())),
+        "top_prune_reasons": dict(prune_reasons.most_common(8)),
+        "live_birth_segments": dict(sorted(live_segments.items())),
+        "stage_b_curve_tail": curve[-8:],
+        "full_fate_log_path": str(fate_path),
+    }
+
+
 def _phase50_conditional_gate_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
     return {
         "enabled": bool(getattr(cfg, "real_native_conditional_gate_enabled", False)),
@@ -5944,11 +6381,12 @@ def _phase44_train_audition_ecology_segment(
         audition_count += int(scheduled["audition_count"])
         audition_frames_spent += int(scheduled["audition_frames_spent"])
         if bool(getattr(cfg, "real_native_probation_enabled", False)):
-            confirm = (
-                _phase49_confirm_probation_cells_dose_response
-                if bool(getattr(cfg, "real_native_probation_dose_response_enabled", False))
-                else _phase48_confirm_probation_cells
-            )
+            if bool(getattr(cfg, "real_native_addend_control_enabled", False)):
+                confirm = _phase51_confirm_probation_cells_two_arm_dose_response
+            elif bool(getattr(cfg, "real_native_probation_dose_response_enabled", False)):
+                confirm = _phase49_confirm_probation_cells_dose_response
+            else:
+                confirm = _phase48_confirm_probation_cells
             probation = confirm(
                 cfg,
                 runtime=runtime,
@@ -7335,6 +7773,315 @@ def _phase49_confirm_probation_cells_dose_response(
             }
         )
     return {"counter": counter, "records": records}
+
+
+def _phase51_confirm_probation_cells_two_arm_dose_response(
+    cfg: StageBEcologicalDiscoveryConfig,
+    *,
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: Any,
+    rows: Sequence[Mapping[str, Any]],
+    success_kind: str,
+    seed: int,
+    step: int,
+    segment_name: str,
+) -> dict[str, Any]:
+    counter: Counter[str] = Counter()
+    records: list[dict[str, Any]] = []
+    targets = [
+        (str(cid), item)
+        for cid, item in sorted(runtime.population.items())
+        if item.get("state") == "PROBATION" and item.get("birth_segment") != "acceptance_probe"
+    ]
+    if not targets:
+        return {"counter": counter, "records": records}
+    row_pool = list(rows)
+    if not row_pool:
+        return {"counter": counter, "records": records}
+    target_count = min(
+        len(row_pool),
+        max(1, int(getattr(cfg, "real_native_probation_validation_rows", 32))),
+    )
+    margin = int(getattr(cfg, "real_native_probation_noise_margin_wins", 1))
+    doses = tuple(float(value) for value in getattr(cfg, "real_native_probation_dose_multipliers", (1.0,)) if float(value) > 0)
+    if not doses:
+        doses = (1.0,)
+    gate_cfg = replace(cfg, real_native_conditional_gate_enabled=True)
+    addend_cfg = replace(cfg, real_native_conditional_gate_enabled=False)
+    for cid, item in targets:
+        rng = random.Random(int(seed) + _phase45_stable_int(cid))
+        validation_rows = rng.sample(row_pool, target_count) if len(row_pool) > target_count else list(row_pool)
+        row_ids = [int(row.get("row_id", index)) for index, row in enumerate(validation_rows)]
+        eval_seed = int(seed) + _phase45_stable_int(cid) + 17
+        original_override = item.get("routing_weight_override")
+        base_weight = float(original_override if original_override is not None else _real_native_composite_weight(item, cfg))
+        arm_records = {
+            "G": _phase51_eval_probation_arm(
+                gate_cfg,
+                runtime=runtime,
+                score_provider=score_provider,
+                rows=validation_rows,
+                success_kind=success_kind,
+                seed=eval_seed,
+                segment_name=segment_name,
+                cid=cid,
+                item=item,
+                base_weight=base_weight,
+                doses=doses,
+                margin=margin,
+                route_mode="conditional_gate",
+                arm_label="G",
+                restore_after=False,
+            ),
+            "L": _phase51_eval_probation_arm(
+                addend_cfg,
+                runtime=runtime,
+                score_provider=score_provider,
+                rows=validation_rows,
+                success_kind=success_kind,
+                seed=eval_seed,
+                segment_name=segment_name,
+                cid=cid,
+                item=item,
+                base_weight=base_weight,
+                doses=doses,
+                margin=margin,
+                route_mode="score_addend",
+                arm_label="L",
+                restore_after=True,
+            ),
+        }
+        item = runtime.population.get(cid, item)
+        if original_override is None:
+            item.pop("routing_weight_override", None)
+        else:
+            item["routing_weight_override"] = float(original_override)
+
+        gate_arm = arm_records["G"]
+        decision = str(gate_arm["decision"])
+        decision_class = str(gate_arm["decision_class"])
+        confirmed_weight = gate_arm.get("confirmed_routing_weight")
+        confirmed_dose = gate_arm.get("confirmed_dose_multiplier")
+        if decision == "void":
+            apply_decision = "parked"
+            confirmed_weight = None
+            confirmed_dose = None
+        else:
+            apply_decision = decision
+        paired_for_decision = gate_arm.get("paired", {})
+        runtime.apply_probation_confirmation(
+            composite_id=cid,
+            decision=apply_decision,
+            step=int(step),
+            reason=f"{segment_name}_two_arm_dose_response_{decision_class}_margin_{margin}",
+            paired=paired_for_decision,
+            validation_row_ids=row_ids,
+            confirmed_routing_weight=None if confirmed_weight is None else float(confirmed_weight),
+            confirmed_dose_multiplier=None if confirmed_dose is None else float(confirmed_dose),
+            validation_dose_records=gate_arm.get("dose_records", ()),
+            decision_class=decision_class,
+        )
+        after_item = runtime.population.get(cid, {})
+        counter["probation_cells_tested"] += 1
+        counter[f"probation_{apply_decision}"] += 1
+        counter[f"probation_gate_arm_{decision}"] += 1
+        counter[f"probation_addend_arm_{arm_records['L']['decision']}"] += 1
+        counter[f"probation_decision_class:{decision_class}"] += 1
+        counter[f"probation_state_after:{after_item.get('state', 'missing')}"] += 1
+        for arm_key, arm in arm_records.items():
+            counter[f"{arm_key}_predicate_eval_failures"] += int(arm.get("predicate_eval_failure_count", 0))
+            counter[f"{arm_key}_nonzero_discordant_dose_tests"] += int(arm.get("nonzero_discordant_dose_tests", 0))
+            if arm.get("confirmed_dose_multiplier") is not None:
+                counter[f"{arm_key}_confirmed_dose:{arm['confirmed_dose_multiplier']:g}"] += 1
+        records.append(
+            {
+                "segment": str(segment_name),
+                "composite_id": cid,
+                "decision": apply_decision,
+                "gate_arm_decision": decision,
+                "addend_arm_decision": str(arm_records["L"]["decision"]),
+                "decision_class": decision_class,
+                "state_after": str(after_item.get("state", "missing")),
+                "children": list(item.get("children", ())),
+                "birth_segment": item.get("birth_segment"),
+                "probation_entry_event": item.get("probation_entry_event"),
+                "probation_retest_count_after": int(after_item.get("probation_retest_count", 0)),
+                "validation_row_ids": row_ids,
+                "validation_row_count": len(validation_rows),
+                "validation_margin_wins": margin,
+                "base_routing_weight": round(base_weight, 6),
+                "confirmed_dose_multiplier": confirmed_dose,
+                "confirmed_routing_weight": None if confirmed_weight is None else round(float(confirmed_weight), 6),
+                "dose_records": list(gate_arm.get("dose_records", ())),
+                "paired": paired_for_decision,
+                "validation_delta_on_minus_off": int(paired_for_decision.get("left_minus_right_wins", 0)),
+                "arm_records": arm_records,
+                "predicate_eval_guard_passed": bool(
+                    gate_arm.get("predicate_eval_guard_passed", False)
+                    and arm_records["L"].get("predicate_eval_guard_passed", False)
+                ),
+            }
+        )
+    return {"counter": counter, "records": records}
+
+
+def _phase51_eval_probation_arm(
+    arm_cfg: StageBEcologicalDiscoveryConfig,
+    *,
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: Any,
+    rows: Sequence[Mapping[str, Any]],
+    success_kind: str,
+    seed: int,
+    segment_name: str,
+    cid: str,
+    item: dict[str, Any],
+    base_weight: float,
+    doses: Sequence[float],
+    margin: int,
+    route_mode: str,
+    arm_label: str,
+    restore_after: bool,
+) -> dict[str, Any]:
+    original_cfg = runtime.cfg
+    original_override = item.get("routing_weight_override")
+    population_snapshot: dict[str, dict[str, Any]] | None = None
+    cells_snapshot: dict[str, Any] | None = None
+    node_meta_snapshot: dict[str, dict[str, Any]] | None = None
+    if restore_after:
+        population_snapshot = copy.deepcopy(runtime.population)
+        cells_snapshot = copy.deepcopy(runtime.cells)
+        node_meta_snapshot = {
+            str(node_id): copy.deepcopy(runtime.native_graph.graph.nodes[str(node_id)].meta)
+            for node_id in (
+                str(pop_item.get("node_id"))
+                for pop_item in runtime.population.values()
+                if pop_item.get("node_id") is not None
+            )
+            if str(node_id) in runtime.native_graph.graph.nodes
+        }
+    dose_records: list[dict[str, Any]] = []
+    confirmed_dose: float | None = None
+    confirmed_weight: float | None = None
+    representative_paired: Mapping[str, Any] | None = None
+    try:
+        runtime.cfg = arm_cfg
+        off_eval = _phase42_ecology_policy_traces(
+            arm_cfg,
+            rows,
+            runtime,
+            score_provider,
+            seed=int(seed),
+            policy_name=f"phase3_21_{segment_name}_{arm_label}_dose_probation_off_{cid}",
+            success_kind=success_kind,
+            mature_only=True,
+        )
+        for dose in doses:
+            routed_weight = float(base_weight * float(dose))
+            item["routing_weight_override"] = routed_weight
+            before_eval_count = int(item.get("formal_engine_eval_count", 0))
+            on_eval = _phase42_ecology_policy_traces(
+                arm_cfg,
+                rows,
+                runtime,
+                score_provider,
+                seed=int(seed),
+                policy_name=f"phase3_21_{segment_name}_{arm_label}_dose_{float(dose):g}_probation_on_{cid}",
+                success_kind=success_kind,
+                mature_only=True,
+                enabled_non_mature_ids=(cid,),
+            )
+            after_eval_count = int(item.get("formal_engine_eval_count", 0))
+            eval_delta = after_eval_count - before_eval_count
+            paired = _phase41_paired_outcome_table(
+                on_eval,
+                off_eval,
+                margin_wins=margin,
+                label=f"{segment_name}_{arm_label}_probation_{cid}_dose_{float(dose):g}_on_vs_off",
+            )
+            discordant = int(paired["discordant_delta_left_minus_right"])
+            row = {
+                "arm": str(arm_label),
+                "route_mode": str(route_mode),
+                "dose_multiplier": float(dose),
+                "routed_weight": round(routed_weight, 6),
+                "wins_on": int(on_eval["wins"]),
+                "wins_off": int(off_eval["wins"]),
+                "validation_delta_on_minus_off": int(on_eval["wins"]) - int(off_eval["wins"]),
+                "discordant_delta": discordant,
+                "target_predicate_eval_count_before": before_eval_count,
+                "target_predicate_eval_count_after": after_eval_count,
+                "target_predicate_eval_delta": eval_delta,
+                "predicate_eval_guard_passed": eval_delta > 0,
+                "record_void": eval_delta <= 0,
+                "conditional_gate_applied_count": int(on_eval.get("conditional_gate_applied_count", 0)),
+                "conditional_gate_changed_choice_count": int(on_eval.get("conditional_gate_changed_choice_count", 0)),
+                "conditional_gate_composite_ids": list(on_eval.get("conditional_gate_composite_ids", ())),
+                "off_conditional_gate_applied_count": int(off_eval.get("conditional_gate_applied_count", 0)),
+                "off_conditional_gate_changed_choice_count": int(off_eval.get("conditional_gate_changed_choice_count", 0)),
+                "active_composite_ids": list(on_eval.get("active_composite_ids", ())),
+                "paired": paired,
+            }
+            dose_records.append(row)
+            if eval_delta > 0 and confirmed_dose is None and discordant > margin:
+                confirmed_dose = float(dose)
+                confirmed_weight = routed_weight
+                representative_paired = paired
+    finally:
+        runtime.cfg = original_cfg
+        if population_snapshot is not None:
+            runtime.population.clear()
+            runtime.population.update(population_snapshot)
+        if cells_snapshot is not None:
+            runtime.cells.clear()
+            runtime.cells.update(cells_snapshot)
+        if node_meta_snapshot is not None:
+            for node_id, meta in node_meta_snapshot.items():
+                if node_id in runtime.native_graph.graph.nodes:
+                    runtime.native_graph.graph.nodes[node_id].meta.clear()
+                    runtime.native_graph.graph.nodes[node_id].meta.update(meta)
+            item = runtime.population.get(cid, item)
+        if original_override is None:
+            item.pop("routing_weight_override", None)
+        else:
+            item["routing_weight_override"] = float(original_override)
+
+    predicate_failures = sum(1 for record in dose_records if not bool(record.get("predicate_eval_guard_passed", False)))
+    discordants = [int(record["discordant_delta"]) for record in dose_records]
+    if predicate_failures:
+        decision = "void"
+        decision_class = "predicate_not_evaluated"
+        paired_for_decision = dose_records[-1]["paired"] if dose_records else {}
+    elif confirmed_dose is not None:
+        decision = "confirmed"
+        decision_class = "positive_lowest_dose"
+        paired_for_decision = representative_paired or dose_records[0]["paired"]
+    elif discordants and all(value < -margin for value in discordants):
+        decision = "demoted"
+        decision_class = "negative_all_doses"
+        paired_for_decision = dose_records[-1]["paired"]
+    elif discordants and all(abs(value) <= margin for value in discordants):
+        decision = "parked"
+        decision_class = "flat_all_doses"
+        paired_for_decision = dose_records[-1]["paired"]
+    else:
+        decision = "parked"
+        decision_class = "mixed_nonconfirming"
+        paired_for_decision = dose_records[-1]["paired"] if dose_records else {}
+    return {
+        "arm": str(arm_label),
+        "route_mode": str(route_mode),
+        "decision": decision,
+        "decision_class": decision_class,
+        "predicate_eval_guard_passed": predicate_failures == 0 and bool(dose_records),
+        "predicate_eval_failure_count": predicate_failures,
+        "confirmed_dose_multiplier": confirmed_dose,
+        "confirmed_routing_weight": None if confirmed_weight is None else round(float(confirmed_weight), 6),
+        "nonzero_discordant_dose_tests": sum(1 for value in discordants if value != 0),
+        "dose_records": dose_records,
+        "paired": paired_for_decision,
+        "validation_delta_on_minus_off": int(paired_for_decision.get("left_minus_right_wins", 0)) if paired_for_decision else 0,
+    }
 
 
 def _phase49_noop_ablation_control_old_pipeline(

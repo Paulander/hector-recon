@@ -164,6 +164,7 @@ class StageBEcologicalDiscoveryConfig:
     real_native_probation_max_retests: int = 2
     real_native_probation_dose_response_enabled: bool = False
     real_native_probation_dose_multipliers: tuple[float, ...] = (1.0,)
+    real_native_addend_control_enabled: bool = False
     real_native_noop_ablation_control_enabled: bool = False
     real_native_controlled_ablation_enabled: bool = False
     real_native_outcome_audition_enabled: bool = False
@@ -1547,6 +1548,15 @@ def run_phase50_conditional_gate_composite_probe(
     config: StageBEcologicalDiscoveryConfig | None = None,
 ) -> dict[str, Any]:
     from .persistent_staged_ladder import run_phase50_conditional_gate_composite_probe as _run
+
+    return _run(config=config)
+
+
+def run_phase51_addend_control_confirmed_audit_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    from .persistent_staged_ladder import run_phase51_addend_control_confirmed_audit_probe as _run
 
     return _run(config=config)
 

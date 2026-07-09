@@ -25,6 +25,7 @@ from recon_lite_chess.autogrowth.stage_b_ecological_discovery_probe import (
     run_phase49_dose_response_outcome_audition_probe,
     run_phase49_noop_ablation_control_probe,
     run_phase50_conditional_gate_composite_probe,
+    run_phase51_addend_control_confirmed_audit_probe,
     run_stage_b_graph_native_ecology_probe,
     run_stage_b_ecological_habitat_probe,
     run_stage_b_ecological_discovery_probe,
@@ -1171,3 +1172,79 @@ def test_phase50_conditional_gate_composite_probe_records_gate_proof(tmp_path: P
     assert summary["conditional_gate"]["enabled"] is True
     assert summary["ecology"]["audition_verdict"]["standing_verdict"] == "bounded_outcome_paired_rollout"
     assert "phase3_20_gate_validation" in summary["tables"]
+
+
+def test_phase51_addend_control_confirmed_audit_records_two_arm_tables(tmp_path: Path) -> None:
+    summary = run_phase51_addend_control_confirmed_audit_probe(
+        config=StageBEcologicalDiscoveryConfig(
+            output_dir=str(tmp_path / "phase3_21_addend_control_probe"),
+            seeds=(20272931,),
+            flat_baseline_seeds=(20272911,),
+            stage_a_train_row_limit=2,
+            train_row_limit=2,
+            heldout_row_limit=1,
+            max_samples=1,
+            max_guided_births=0,
+            ecology_mode="stem_cell_graph",
+            native_foundation_train_repetitions=1,
+            native_foundation_continuation_repetitions=1,
+            native_foundation_max_mate1_positions=2,
+            native_foundation_max_mate2_positions=1,
+            native_foundation_prototype_scan_triplets=32,
+            native_foundation_key_mode="coarse",
+            real_native_engine_max_ticks=80,
+            real_native_foundation_row_limit=1,
+            real_native_max_live_composites=4,
+            real_native_max_live_siblings_per_parent=2,
+            real_native_trial_grace_exposures=1,
+            real_native_critical_period_exposures=2,
+            real_native_critical_period_credit_multiplier=1.5,
+            real_native_critical_period_optimism=0.01,
+            real_native_positive_flip_credit=0.02,
+            real_native_positive_flip_window=1,
+            real_native_choice_change_mature_events=1,
+            real_native_choice_change_neutral_rent=0.001,
+            real_native_near_zero_choice_change_rate=0.0,
+            real_native_stability_band_multiplier=5,
+            real_native_audition_budget_per_cell=2,
+            real_native_audition_per_ply_cap=1,
+            real_native_audition_horizon_plies=2,
+            real_native_audition_mature_better_events=1,
+            real_native_audition_neutral_rent=0.001,
+            real_native_audition_debt_threshold=1,
+            real_native_audition_starvation_min_per_cell=0.0,
+            real_native_scheduled_audition_chunk_size=1,
+            real_native_scheduled_unjudged_fraction_stop=0.0,
+            real_native_scheduled_complete_flush=True,
+            real_native_pool_scan_auditions=True,
+            real_native_trial_band_min=1,
+            real_native_trial_band_max=3,
+            real_native_court_throughput_per_chunk=3,
+            real_native_probation_enabled=True,
+            real_native_probation_validation_rows=1,
+            real_native_probation_noise_margin_wins=0,
+            real_native_probation_max_retests=1,
+            real_native_probation_dose_response_enabled=True,
+            real_native_probation_dose_multipliers=(1.0, 3.0),
+            real_native_addend_control_enabled=True,
+            real_native_controlled_ablation_enabled=True,
+            real_native_outcome_audition_enabled=True,
+            real_native_outcome_audition_horizon_plies=2,
+            real_native_outcome_audition_verdict_is_standing=True,
+            real_native_conditional_gate_enabled=True,
+            real_native_conditional_gate_states=("PROBATION", "MATURE"),
+            real_native_continue_after_seed_stop=True,
+        )
+    )
+
+    assert summary["schema_version"] == "phase3_21_addend_control_confirmed_audit.v0"
+    assert summary["constructed_move_flip_proof"]["passed"] is True
+    assert summary["addend_control"]["enabled"] is True
+    assert "phase3_21_two_arm_confirmed" in summary["tables"]
+    assert "phase3_21_confirmed_cell_dumps" in summary["tables"]
+    assert "gate_arm_confirmed_count" in summary["decision"]
+    for seed_row in summary["per_seed"]:
+        for record in seed_row.get("stage_b", {}).get("ecology_training", {}).get("probation_confirmation_records", ()):
+            assert {"G", "L"} <= set(record.get("arm_records", {}))
+            for arm in record["arm_records"].values():
+                assert "predicate_eval_guard_passed" in arm
