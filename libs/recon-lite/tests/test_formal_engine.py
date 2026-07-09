@@ -32,6 +32,28 @@ def test_single_terminal_child_confirms_parent_through_sur():
     assert _message_seen(engine.trace, "sensor", "root", LinkType.SUR, FormalMessage.CONFIRM)
 
 
+@pytest.mark.parametrize(
+    ("left", "right", "confirmed"),
+    [(False, False, False), (False, True, True), (True, False, True), (True, True, False)],
+)
+def test_formal_xor_confirmation_requires_exactly_one_child(left, right, confirmed):
+    graph = Graph()
+    graph.add_node(Node("xor", NodeType.SCRIPT, meta={"confirm_policy": "xor"}))
+    graph.add_node(Node("left", NodeType.TERMINAL, predicate=lambda _node, _env: (True, left)))
+    graph.add_node(Node("right", NodeType.TERMINAL, predicate=lambda _node, _env: (True, right)))
+    graph.add_hierarchy_pair("xor", "left")
+    graph.add_hierarchy_pair("xor", "right")
+
+    engine = FormalReConEngine(graph)
+    engine.request("xor")
+    engine.run(
+        max_ticks=12,
+        until=lambda formal: formal.g.nodes["xor"].state in {NodeState.CONFIRMED, NodeState.FAILED},
+    )
+
+    assert (graph.nodes["xor"].state == NodeState.CONFIRMED) is confirmed
+
+
 def test_subset_scheduler_updates_only_active_real_edges():
     graph = Graph()
     graph.add_node(Node("root", NodeType.SCRIPT))

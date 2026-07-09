@@ -388,7 +388,7 @@ class FormalReConEngine:
 
     def _next_quorum_script_state(self, node: Node) -> Optional[NodeState]:
         policy = str(node.meta.get("confirm_policy", "or")).lower()
-        if policy not in {"and", "k_of_n", "quorum"}:
+        if policy not in {"and", "xor", "k_of_n", "quorum"}:
             return None
 
         children = self.g.children(node.nid)
@@ -403,6 +403,12 @@ class FormalReConEngine:
         confirmed = sum(1 for child in children if self.g.nodes[child].state == NodeState.CONFIRMED)
         failed = sum(1 for child in children if self.g.nodes[child].state == NodeState.FAILED)
         pending = len(children) - confirmed - failed
+        if policy == "xor":
+            if confirmed > 1:
+                return NodeState.FAILED
+            if pending == 0:
+                return NodeState.TRUE if confirmed == 1 else NodeState.FAILED
+            return NodeState.WAITING
         if confirmed >= threshold:
             return NodeState.TRUE
         if confirmed + pending < threshold:
