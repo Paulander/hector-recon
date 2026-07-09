@@ -162,6 +162,12 @@ class StageBEcologicalDiscoveryConfig:
     real_native_probation_validation_rows: int = 32
     real_native_probation_noise_margin_wins: int = 1
     real_native_probation_max_retests: int = 2
+    real_native_probation_dose_response_enabled: bool = False
+    real_native_probation_dose_multipliers: tuple[float, ...] = (1.0,)
+    real_native_noop_ablation_control_enabled: bool = False
+    real_native_controlled_ablation_enabled: bool = False
+    real_native_outcome_audition_enabled: bool = False
+    real_native_outcome_audition_horizon_plies: int = 16
     real_native_continue_after_seed_stop: bool = False
     phase33_equivalence_tolerance_wins: int = 3
 
@@ -1510,6 +1516,24 @@ def run_phase48_probation_audition_economy_probe(
     config: StageBEcologicalDiscoveryConfig | None = None,
 ) -> dict[str, Any]:
     from .persistent_staged_ladder import run_phase48_probation_audition_economy_probe as _run
+
+    return _run(config=config)
+
+
+def run_phase49_noop_ablation_control_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    from .persistent_staged_ladder import run_phase49_noop_ablation_control_probe as _run
+
+    return _run(config=config)
+
+
+def run_phase49_dose_response_outcome_audition_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    from .persistent_staged_ladder import run_phase49_dose_response_outcome_audition_probe as _run
 
     return _run(config=config)
 
@@ -3349,6 +3373,10 @@ class _GraphNativeCompositeRuntime:
         reason: str,
         paired: Mapping[str, Any],
         validation_row_ids: Sequence[int],
+        confirmed_routing_weight: float | None = None,
+        confirmed_dose_multiplier: float | None = None,
+        validation_dose_records: Sequence[Mapping[str, Any]] = (),
+        decision_class: str | None = None,
     ) -> bool:
         item = self.population.get(str(composite_id))
         if not item or item.get("state") != "PROBATION":
@@ -3359,7 +3387,14 @@ class _GraphNativeCompositeRuntime:
         item["probation_last_paired"] = dict(paired)
         item["probation_last_validation_row_ids"] = [int(row_id) for row_id in validation_row_ids]
         item["probation_last_reason"] = str(reason)
+        item["probation_last_dose_records"] = [dict(record) for record in validation_dose_records]
+        if decision_class is not None:
+            item["probation_decision_class"] = str(decision_class)
         if decision_key == "confirmed":
+            if confirmed_routing_weight is not None:
+                item["routing_weight_override"] = float(confirmed_routing_weight)
+            if confirmed_dose_multiplier is not None:
+                item["confirmed_dose_multiplier"] = float(confirmed_dose_multiplier)
             item["state"] = "MATURE"
             item["confirmed_step"] = int(step)
             item["mature_entry_weight"] = float(item.get("routing_weight_override", _real_native_composite_weight(item, self.cfg)))
@@ -3397,6 +3432,9 @@ class _GraphNativeCompositeRuntime:
                 "probation_retest_count": int(item.get("probation_retest_count", 0)),
                 "paired": dict(paired),
                 "validation_row_ids": [int(row_id) for row_id in validation_row_ids],
+                "validation_dose_records": [dict(record) for record in validation_dose_records],
+                "decision_class": None if decision_class is None else str(decision_class),
+                "confirmed_dose_multiplier": None if confirmed_dose_multiplier is None else float(confirmed_dose_multiplier),
                 "routing_weight": round(float(item.get("routing_weight_override", _real_native_composite_weight(item, self.cfg))), 6),
             }
         )

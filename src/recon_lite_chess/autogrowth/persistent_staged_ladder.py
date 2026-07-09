@@ -31,6 +31,7 @@ from .stage_b_ecological_discovery_probe import (
     _phase32_real_recurring_mature_composites,
     _real_native_ablation_health,
     _real_native_composite_weight,
+    _real_native_evaluate_policy,
     _real_native_parent_id,
     _real_native_pruned_rescue_audit,
     _real_native_spawn_from_context,
@@ -44,6 +45,7 @@ from .stage_b_ecological_discovery_probe import (
     _phase38_runner_config,
     _position_repetition_key,
     _rollout_policy,
+    _rollout_success_check,
     _score_options,
     _sealed_action_key_scales,
     _select_black_reply_for_rollout,
@@ -1425,14 +1427,35 @@ def run_phase42_standing_ladder_ecology_probe(
             gate_margin=gate_margin,
         )
         stage_b_mature_eval = stage_b_ecology_gates["mature_eval"]
-        ablation = _real_native_ablation_health(
-            cfg,
-            stage_b_gate_rows,
-            runtime,
-            stage_b_provider,
-            full_eval=stage_b_mature_eval,
-            seed=int(seed) + 30_000,
-        )
+        noop_control = None
+        if bool(getattr(cfg, "real_native_noop_ablation_control_enabled", False)):
+            noop_control = _phase49_noop_ablation_control_old_pipeline(
+                cfg,
+                stage_b_gate_rows,
+                runtime,
+                stage_b_provider,
+                full_eval=stage_b_mature_eval,
+                seed=int(seed) + 30_000,
+            )
+        if bool(getattr(cfg, "real_native_controlled_ablation_enabled", False)):
+            ablation = _phase49_controlled_ablation_health(
+                cfg,
+                stage_b_gate_rows,
+                runtime,
+                stage_b_provider,
+                full_eval=stage_b_mature_eval,
+                seed=int(seed) + 24_000,
+                success_kind="stage_b_enter_mate2",
+            )
+        else:
+            ablation = _real_native_ablation_health(
+                cfg,
+                stage_b_gate_rows,
+                runtime,
+                stage_b_provider,
+                full_eval=stage_b_mature_eval,
+                seed=int(seed) + 30_000,
+            )
         rescue = _real_native_pruned_rescue_audit(
             cfg,
             stage_b_gate_rows,
@@ -1444,6 +1467,8 @@ def run_phase42_standing_ladder_ecology_probe(
         seed_result["stage_b"]["ecology_gates"] = stage_b_ecology_gates
         seed_result["regression_checks"]["stage_a_ecology_after_stage_b"] = stage_a_ecology_regression_gates
         seed_result["post_hoc_ablation"] = ablation
+        if noop_control is not None:
+            seed_result["noop_ablation_control"] = noop_control
         seed_result["pruned_rescue_audit"] = rescue
         seed_result["population"] = runtime.population_summary()
         seed_result["birth_death_curve"] = runtime.birth_curve
@@ -1923,14 +1948,35 @@ def run_phase43_discriminative_cell_economy_probe(
             gate_margin=gate_margin,
         )
         stage_b_mature_eval = stage_b_ecology_gates["mature_eval"]
-        ablation = _real_native_ablation_health(
-            cfg,
-            stage_b_gate_rows,
-            runtime,
-            stage_b_provider,
-            full_eval=stage_b_mature_eval,
-            seed=int(seed) + 30_000,
-        )
+        noop_control = None
+        if bool(getattr(cfg, "real_native_noop_ablation_control_enabled", False)):
+            noop_control = _phase49_noop_ablation_control_old_pipeline(
+                cfg,
+                stage_b_gate_rows,
+                runtime,
+                stage_b_provider,
+                full_eval=stage_b_mature_eval,
+                seed=int(seed) + 30_000,
+            )
+        if bool(getattr(cfg, "real_native_controlled_ablation_enabled", False)):
+            ablation = _phase49_controlled_ablation_health(
+                cfg,
+                stage_b_gate_rows,
+                runtime,
+                stage_b_provider,
+                full_eval=stage_b_mature_eval,
+                seed=int(seed) + 24_000,
+                success_kind="stage_b_enter_mate2",
+            )
+        else:
+            ablation = _real_native_ablation_health(
+                cfg,
+                stage_b_gate_rows,
+                runtime,
+                stage_b_provider,
+                full_eval=stage_b_mature_eval,
+                seed=int(seed) + 30_000,
+            )
         rescue = _real_native_pruned_rescue_audit(
             cfg,
             stage_b_gate_rows,
@@ -1947,6 +1993,8 @@ def run_phase43_discriminative_cell_economy_probe(
         )
         seed_result["regression_checks"]["stage_a_ecology_after_stage_b"] = stage_a_ecology_regression_gates
         seed_result["post_hoc_ablation"] = ablation
+        if noop_control is not None:
+            seed_result["noop_ablation_control"] = noop_control
         seed_result["pruned_rescue_audit"] = rescue
         seed_result["population"] = runtime.population_summary()
         seed_result["birth_death_curve"] = runtime.birth_curve
@@ -2493,14 +2541,35 @@ def run_phase44_audition_cell_economy_probe(
             gate_margin=gate_margin,
         )
         stage_b_mature_eval = stage_b_ecology_gates["mature_eval"]
-        ablation = _real_native_ablation_health(
-            cfg,
-            stage_b_gate_rows,
-            runtime,
-            stage_b_provider,
-            full_eval=stage_b_mature_eval,
-            seed=int(seed) + 30_000,
-        )
+        noop_control = None
+        if bool(getattr(cfg, "real_native_noop_ablation_control_enabled", False)):
+            noop_control = _phase49_noop_ablation_control_old_pipeline(
+                cfg,
+                stage_b_gate_rows,
+                runtime,
+                stage_b_provider,
+                full_eval=stage_b_mature_eval,
+                seed=int(seed) + 30_000,
+            )
+        if bool(getattr(cfg, "real_native_controlled_ablation_enabled", False)):
+            ablation = _phase49_controlled_ablation_health(
+                cfg,
+                stage_b_gate_rows,
+                runtime,
+                stage_b_provider,
+                full_eval=stage_b_mature_eval,
+                seed=int(seed) + 24_000,
+                success_kind="stage_b_enter_mate2",
+            )
+        else:
+            ablation = _real_native_ablation_health(
+                cfg,
+                stage_b_gate_rows,
+                runtime,
+                stage_b_provider,
+                full_eval=stage_b_mature_eval,
+                seed=int(seed) + 30_000,
+            )
         rescue = _real_native_pruned_rescue_audit(
             cfg,
             stage_b_gate_rows,
@@ -2525,6 +2594,8 @@ def run_phase44_audition_cell_economy_probe(
             )
         seed_result["regression_checks"]["stage_a_ecology_after_stage_b"] = stage_a_ecology_regression_gates
         seed_result["post_hoc_ablation"] = ablation
+        if noop_control is not None:
+            seed_result["noop_ablation_control"] = noop_control
         seed_result["pruned_rescue_audit"] = rescue
         seed_result["population"] = runtime.population_summary()
         seed_result["birth_death_curve"] = runtime.birth_curve
@@ -3018,6 +3089,220 @@ def run_phase48_probation_audition_economy_probe(
     return summary
 
 
+def run_phase49_noop_ablation_control_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    """Phase 3.19 Part 0: no-op control for the old 3.17 ablation path."""
+
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_19_noop_ablation_control",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        flat_baseline_seeds=(20272911, 20272912, 20272913),
+        stage_a_train_row_limit=128,
+        train_row_limit=128,
+        heldout_row_limit=None,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+        real_native_engine_max_ticks=80,
+        real_native_max_live_composites=32,
+        real_native_max_live_siblings_per_parent=4,
+        real_native_trial_grace_exposures=3,
+        real_native_dormant_decay=0.002,
+        real_native_critical_period_exposures=5,
+        real_native_critical_period_credit_multiplier=1.75,
+        real_native_critical_period_optimism=0.025,
+        real_native_positive_flip_credit=0.060,
+        real_native_positive_flip_window=2,
+        real_native_choice_change_mature_events=3,
+        real_native_choice_change_neutral_rent=0.006,
+        real_native_near_zero_choice_change_rate=0.01,
+        real_native_stability_band_multiplier=5,
+        real_native_audition_budget_per_cell=10,
+        real_native_audition_per_ply_cap=2,
+        real_native_audition_horizon_plies=8,
+        real_native_audition_mature_better_events=3,
+        real_native_audition_neutral_rent=0.004,
+        real_native_audition_debt_threshold=3,
+        real_native_audition_starvation_min_per_cell=0.0,
+        real_native_scheduled_audition_chunk_size=8,
+        real_native_scheduled_unjudged_fraction_stop=0.0,
+        real_native_scheduled_complete_flush=True,
+        real_native_homeostatic_backlog_threshold=0.0,
+        real_native_pool_scan_auditions=True,
+        real_native_trial_band_min=20,
+        real_native_trial_band_max=60,
+        real_native_court_throughput_per_chunk=0,
+        real_native_continue_after_seed_stop=True,
+        real_native_max_ablation_subjects=256,
+        real_native_noop_ablation_control_enabled=True,
+    )
+    output_dir = Path(cfg.output_dir)
+    summary = run_phase44_audition_cell_economy_probe(config=cfg)
+    correspondence = _phase45_composite_correspondence_table()
+    noop_table = _phase49_noop_control_table(summary.get("per_seed", []))
+    gate_margin = _phase41_gate_margin_wins()
+    design = _design_spec(cfg)
+    design["schema_version"] = "phase3_19_noop_ablation_control_design_spec.v0"
+    design["phase_alias"] = "User-requested Phase 3.19 Part 0 no-op ablation provenance control"
+    design["host_ladder"] = {
+        "base_commit": "04e7c33",
+        "frozen_from": "Phase 3.17 supply-side audition economy; no mechanism change, no-op ablation control only",
+        "paired_gate_spec": _phase41_paired_gate_spec(gate_margin),
+    }
+    design["ecology"] = _phase47_ecology_spec(cfg)
+    design["ablation_control"] = {
+        "control": "old 3.17 ablation path with disabled=set(), compared against the full ecology gate path",
+        "required_before_verdicts_count": True,
+    }
+    design["cross_experiment_composite_correspondence"] = correspondence
+    _write_json(output_dir / "design_spec.json", design)
+
+    for row in summary.get("per_seed", []):
+        row["schema_version"] = "phase3_19_noop_ablation_control_seed.v0"
+        row["ecology_spec"] = _phase47_ecology_spec(cfg)
+        row["cross_experiment_composite_correspondence"] = correspondence
+        _write_json(output_dir / f"seed_{row['seed']}_noop_ablation_control.json", row)
+
+    tables = dict(summary.get("tables", {}))
+    summary["schema_version"] = "phase3_19_noop_ablation_control.v0"
+    summary["phase"] = "Phase 3.19 Part 0: no-op control for 3.17 ablation provenance"
+    summary["ecology"] = _phase47_ecology_spec(cfg)
+    summary["cross_experiment_composite_correspondence"] = correspondence
+    summary["noop_ablation_control_verdict"] = _phase49_noop_control_verdict(noop_table)
+    summary["tables"] = {
+        "phase3_19_noop_control": noop_table,
+        "phase3_19_noop_config_diff": _phase49_noop_config_diff_table(summary.get("per_seed", [])),
+        "phase3_19_underlying_3_17_headline": _phase47_headline_table(summary.get("per_seed", [])),
+        "phase3_19_underlying_audition_signal": tables.get("phase3_14_audition_signal", []),
+        "phase3_19_cross_experiment_composite_correspondence": correspondence,
+    }
+    summary["decision"]["noop_ablation_control_passed"] = bool(summary["noop_ablation_control_verdict"]["passed"])
+    summary["decision"]["old_ablation_verdicts_valid"] = bool(summary["noop_ablation_control_verdict"]["passed"])
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
+def run_phase49_dose_response_outcome_audition_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    """Phase 3.19: dose-response probation plus outcome-aligned audition accounting."""
+
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_19_dose_response_outcome_audition",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        flat_baseline_seeds=(20272911, 20272912, 20272913),
+        stage_a_train_row_limit=128,
+        train_row_limit=128,
+        heldout_row_limit=None,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+        real_native_engine_max_ticks=80,
+        real_native_max_live_composites=32,
+        real_native_max_live_siblings_per_parent=4,
+        real_native_trial_grace_exposures=3,
+        real_native_dormant_decay=0.002,
+        real_native_critical_period_exposures=5,
+        real_native_critical_period_credit_multiplier=1.75,
+        real_native_critical_period_optimism=0.025,
+        real_native_positive_flip_credit=0.060,
+        real_native_positive_flip_window=2,
+        real_native_choice_change_mature_events=3,
+        real_native_choice_change_neutral_rent=0.006,
+        real_native_near_zero_choice_change_rate=0.01,
+        real_native_stability_band_multiplier=5,
+        real_native_audition_budget_per_cell=10,
+        real_native_audition_per_ply_cap=2,
+        real_native_audition_horizon_plies=8,
+        real_native_audition_mature_better_events=3,
+        real_native_audition_neutral_rent=0.004,
+        real_native_audition_debt_threshold=3,
+        real_native_audition_starvation_min_per_cell=0.0,
+        real_native_scheduled_audition_chunk_size=8,
+        real_native_scheduled_unjudged_fraction_stop=0.0,
+        real_native_scheduled_complete_flush=True,
+        real_native_homeostatic_backlog_threshold=0.0,
+        real_native_pool_scan_auditions=True,
+        real_native_trial_band_min=20,
+        real_native_trial_band_max=60,
+        real_native_court_throughput_per_chunk=0,
+        real_native_probation_enabled=True,
+        real_native_probation_validation_rows=32,
+        real_native_probation_noise_margin_wins=1,
+        real_native_probation_max_retests=2,
+        real_native_probation_dose_response_enabled=True,
+        real_native_probation_dose_multipliers=(1.0, 3.0, 9.0, 27.0),
+        real_native_controlled_ablation_enabled=True,
+        real_native_outcome_audition_enabled=True,
+        real_native_outcome_audition_horizon_plies=16,
+        real_native_continue_after_seed_stop=True,
+        real_native_max_ablation_subjects=256,
+    )
+    output_dir = Path(cfg.output_dir)
+    summary = run_phase44_audition_cell_economy_probe(config=cfg)
+    correspondence = _phase45_composite_correspondence_table()
+    confirmed_recurrence = _phase48_family_recurrence(summary.get("per_seed", []), tier="confirmed")
+    nomination_recurrence = _phase48_family_recurrence(summary.get("per_seed", []), tier="nomination")
+    confirmed_dumps = _phase48_confirmed_cell_dumps(summary.get("per_seed", []))
+    funnel = _phase48_funnel_table(summary.get("per_seed", []))
+    dose_table = _phase49_dose_response_table(summary.get("per_seed", []))
+    outcome_table = _phase49_outcome_agreement_table(summary.get("per_seed", []))
+    gate_margin = _phase41_gate_margin_wins()
+    design = _design_spec(cfg)
+    design["schema_version"] = "phase3_19_dose_response_outcome_audition_design_spec.v0"
+    design["phase_alias"] = "User-requested Phase 3.19 dose-response probation and outcome-aligned auditions"
+    design["host_ladder"] = {
+        "base_commit": "04e7c33",
+        "frozen_from": "Phase 3.18 probation funnel; supply, homeostasis, spawn triggers, gates, ratchet, boundary, funnel structure frozen",
+        "paired_gate_spec": _phase41_paired_gate_spec(gate_margin),
+    }
+    design["ecology"] = _phase49_ecology_spec(cfg)
+    design["cross_experiment_composite_correspondence"] = correspondence
+    _write_json(output_dir / "design_spec.json", design)
+
+    for row in summary.get("per_seed", []):
+        row["schema_version"] = "phase3_19_dose_response_outcome_audition_seed.v0"
+        row["ecology_spec"] = _phase49_ecology_spec(cfg)
+        row["cross_experiment_composite_correspondence"] = correspondence
+        _write_json(output_dir / f"seed_{row['seed']}_dose_response_outcome_audition.json", row)
+
+    tables = dict(summary.get("tables", {}))
+    summary["schema_version"] = "phase3_19_dose_response_outcome_audition.v0"
+    summary["phase"] = "Phase 3.19 dose-response probation and outcome-aligned auditions"
+    summary["ecology"] = _phase49_ecology_spec(cfg)
+    summary["cross_experiment_composite_correspondence"] = correspondence
+    summary["cross_seed_recurring_confirmed_families"] = confirmed_recurrence
+    summary["cross_seed_recurring_nomination_families"] = nomination_recurrence
+    summary["confirmed_cell_dumps"] = confirmed_dumps
+    summary["tables"] = {
+        "phase3_19_funnel": funnel,
+        "phase3_19_dose_response": dose_table,
+        "phase3_19_first_flip_vs_outcome": outcome_table,
+        "phase3_19_confirmed_recurrence_by_family": confirmed_recurrence,
+        "phase3_19_nomination_recurrence_by_family": nomination_recurrence,
+        "phase3_19_confirmed_cell_dumps": confirmed_dumps,
+        "phase3_19_headline": _phase48_headline_table(summary.get("per_seed", [])),
+        "phase3_19_audition_signal": tables.get("phase3_14_audition_signal", []),
+        "phase3_19_acceptance_margins": tables.get("phase3_14_acceptance_margins", []),
+        "phase3_19_cross_rung_survivors": summary.get("cross_rung_load_bearing_survivors", []),
+        "phase3_19_cross_experiment_composite_correspondence": correspondence,
+    }
+    summary["decision"]["confirmed_cell_count"] = len(confirmed_dumps)
+    summary["decision"]["recurring_confirmed_family_count"] = sum(
+        1 for row in confirmed_recurrence if bool(row.get("recurs_3_of_5"))
+    )
+    summary["decision"]["first_flip_vs_outcome_agreement_rate"] = _phase49_weighted_outcome_agreement(outcome_table)
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
 def _phase39_split_law(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
     return {
         "law": (
@@ -3307,6 +3592,40 @@ def _phase48_ecology_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any
     return spec
 
 
+def _phase49_ecology_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
+    spec = _phase48_ecology_spec(cfg)
+    spec["probation_confirmation"].update(
+        {
+            "dose_response_enabled": bool(getattr(cfg, "real_native_probation_dose_response_enabled", False)),
+            "dose_multipliers": [
+                float(value) for value in getattr(cfg, "real_native_probation_dose_multipliers", (1.0,))
+            ],
+            "dose_rule": (
+                "test each nominee at audition weight times the predeclared ladder; confirm at the "
+                "lowest dose with positive paired discordant balance beyond margin, demote only if "
+                "all doses are negative beyond margin, otherwise park as flat or mixed"
+            ),
+            "confirmed_routing_rule": "confirmed cells route at their selected validation dose",
+        }
+    )
+    spec["outcome_aligned_auditions"] = {
+        "enabled": bool(getattr(cfg, "real_native_outcome_audition_enabled", False)),
+        "horizon_plies": int(getattr(cfg, "real_native_outcome_audition_horizon_plies", 16)),
+        "parallel_accounting_only": True,
+        "standing_first_flip_verdicts_unchanged": True,
+        "outcome_verdict": (
+            "paired virtual rollout from identical position, host move versus cell move, exact-adversarial "
+            "black, bounded by horizon or terminal; win/loss/draw pair decides better/worse/tie"
+        ),
+    }
+    spec["controlled_ablation"] = {
+        "enabled": bool(getattr(cfg, "real_native_controlled_ablation_enabled", False)),
+        "no_op_required_before_verdicts_count": True,
+        "evaluator": "_phase42_ecology_policy_traces exact-adversarial path for full, no-op, and cell-off",
+    }
+    return spec
+
+
 def _phase48_phase317_forensics(
     path: str = "reports/autogrowth/clean_slate_krk/phase3_17_supply_side_audition_economy/summary.json",
 ) -> dict[str, Any]:
@@ -3553,6 +3872,141 @@ def _phase48_headline_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[
             }
         )
     return rows
+
+
+def _phase49_noop_control_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for seed_row in per_seed:
+        control = seed_row.get("noop_ablation_control", {})
+        if not isinstance(control, Mapping):
+            control = {}
+        rows.append(
+            {
+                "seed": int(seed_row.get("seed", 0)),
+                "flat_seed": int(seed_row.get("flat_seed", 0)),
+                "stop_reasons": list(seed_row.get("stop_reasons", ())),
+                "control_available": bool(control),
+                "passed": bool(control.get("passed", False)),
+                "subject_count": int(control.get("subject_count", 0)),
+                "nonzero_offset_count": int(control.get("nonzero_offset_count", 0)),
+                "offset_min": control.get("offset_min"),
+                "offset_median": control.get("offset_median"),
+                "offset_max": control.get("offset_max"),
+                "verdict": str(control.get("verdict", "not_run")),
+            }
+        )
+    return rows
+
+
+def _phase49_noop_config_diff_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    seen: set[tuple[tuple[str, str], ...]] = set()
+    for seed_row in per_seed:
+        control = seed_row.get("noop_ablation_control", {})
+        if not isinstance(control, Mapping):
+            continue
+        diff = control.get("config_diff", {})
+        if not isinstance(diff, Mapping):
+            continue
+        key = tuple(sorted((str(k), str(v)) for k, v in diff.items()))
+        if key in seen:
+            continue
+        seen.add(key)
+        rows.append({str(k): v for k, v in sorted(diff.items())})
+    return rows
+
+
+def _phase49_noop_control_verdict(table: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    available = [row for row in table if bool(row.get("control_available"))]
+    nonzero_total = sum(int(row.get("nonzero_offset_count", 0)) for row in available)
+    subject_total = sum(int(row.get("subject_count", 0)) for row in available)
+    passed = bool(available) and subject_total > 0 and nonzero_total == 0
+    return {
+        "passed": passed,
+        "control_seed_count": len(available),
+        "subject_count": subject_total,
+        "nonzero_offset_count": nonzero_total,
+        "verdict": "pass_no_offset" if passed else "fail_runner_provenance_offset",
+    }
+
+
+def _phase49_dose_response_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for seed_row in per_seed:
+        records = _phase48_probation_records(seed_row)
+        decisions = Counter(str(record.get("decision", "unknown")) for record in records)
+        classes = Counter(str(record.get("decision_class", "legacy")) for record in records)
+        confirmed_doses = Counter(
+            str(record.get("confirmed_dose_multiplier"))
+            for record in records
+            if record.get("confirmed_dose_multiplier") is not None
+        )
+        dose_tests = 0
+        dose_discordants: list[int] = []
+        for record in records:
+            for dose_record in record.get("dose_records", ()):
+                dose_tests += 1
+                dose_discordants.append(int(dose_record.get("discordant_delta", 0)))
+        rows.append(
+            {
+                "seed": int(seed_row.get("seed", 0)),
+                "probation_tests": len(records),
+                "dose_tests": dose_tests,
+                "confirmed": int(decisions["confirmed"]),
+                "demoted": int(decisions["demoted"]),
+                "parked": int(decisions["parked"]),
+                "decision_classes": dict(sorted(classes.items())),
+                "confirmed_doses": dict(sorted(confirmed_doses.items())),
+                "min_dose_discordant": min(dose_discordants) if dose_discordants else None,
+                "max_dose_discordant": max(dose_discordants) if dose_discordants else None,
+                "nonzero_dose_discordants": sum(1 for value in dose_discordants if value != 0),
+            }
+        )
+    return rows
+
+
+def _phase49_outcome_agreement_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for seed_row in per_seed:
+        segments = [
+            ("foundation", seed_row.get("foundation_ecology_training", {})),
+        ]
+        stage_a = seed_row.get("stage_a", {}) if isinstance(seed_row.get("stage_a"), Mapping) else {}
+        stage_b = seed_row.get("stage_b", {}) if isinstance(seed_row.get("stage_b"), Mapping) else {}
+        segments.append(("stage_a", stage_a.get("ecology_training", {})))
+        segments.append(("stage_b", stage_b.get("ecology_training", {})))
+        for segment_name, training in segments:
+            if not isinstance(training, Mapping) or not training:
+                continue
+            counts = {
+                str(key): int(value)
+                for key, value in dict(training.get("first_flip_vs_outcome_counts", {})).items()
+            }
+            total = sum(counts.values())
+            agreement = sum(
+                value
+                for key, value in counts.items()
+                if "->" in key and key.split("->", 1)[0] == key.split("->", 1)[1]
+            )
+            rows.append(
+                {
+                    "seed": int(seed_row.get("seed", 0)),
+                    "segment": segment_name,
+                    "outcome_auditions": total,
+                    "agreement_count": agreement,
+                    "agreement_rate": agreement / max(1, total),
+                    "counts": counts,
+                    "outcome_verdict_counts": dict(training.get("outcome_audition_verdict_counts", {})),
+                    "first_flip_verdict_counts": dict(training.get("audition_verdict_counts", {})),
+                }
+            )
+    return rows
+
+
+def _phase49_weighted_outcome_agreement(table: Sequence[Mapping[str, Any]]) -> float:
+    total = sum(int(row.get("outcome_auditions", 0)) for row in table)
+    agreement = sum(int(row.get("agreement_count", 0)) for row in table)
+    return agreement / max(1, total)
 
 
 def _phase45_composite_correspondence_table() -> list[dict[str, Any]]:
@@ -4786,6 +5240,8 @@ def _phase44_train_audition_ecology_segment(
     disagreement_ply_count = 0
     verdicts: Counter[str] = Counter()
     verdict_endpoints: Counter[str] = Counter()
+    outcome_verdicts: Counter[str] = Counter()
+    first_flip_vs_outcome: Counter[str] = Counter()
     scheduled_stats: Counter[str] = Counter()
     probation_stats: Counter[str] = Counter()
     probation_records: list[dict[str, Any]] = []
@@ -4918,8 +5374,12 @@ def _phase44_train_audition_ecology_segment(
                 verdict = str(audition["verdict"])
                 verdicts[verdict] += 1
                 verdict_endpoints[str(audition["verdict_reason"])] += 1
+                outcome_verdict = audition.get("outcome_verdict")
+                if outcome_verdict is not None:
+                    outcome_verdicts[str(outcome_verdict)] += 1
+                    first_flip_vs_outcome[f"{verdict}->{outcome_verdict}"] += 1
                 audition_count += 1
-                audition_frames_spent += int(audition["frames_spent"])
+                audition_frames_spent += int(audition["frames_spent"]) + int(audition.get("outcome_frames_spent", 0))
                 before_state = str(runtime.population.get(str(proposal["composite_id"]), {}).get("state", "missing"))
                 runtime.apply_audition_verdict(
                     composite_id=str(proposal["composite_id"]),
@@ -4939,9 +5399,11 @@ def _phase44_train_audition_ecology_segment(
                             "cell_move": cell_move.uci(),
                             "verdict": verdict,
                             "verdict_reason": str(audition["verdict_reason"]),
+                            "outcome_verdict": audition.get("outcome_verdict"),
+                            "outcome_verdict_reason": audition.get("outcome_verdict_reason"),
                             "host_flip": audition["host"].get("first_flip"),
                             "cell_flip": audition["cell"].get("first_flip"),
-                            "frames_spent": int(audition["frames_spent"]),
+                            "frames_spent": int(audition["frames_spent"]) + int(audition.get("outcome_frames_spent", 0)),
                         }
                     )
             row_decisions.append(
@@ -5014,6 +5476,8 @@ def _phase44_train_audition_ecology_segment(
             scheduled_stats.update(scheduled["counter"])
             verdicts.update(scheduled["verdict_counts"])
             verdict_endpoints.update(scheduled["verdict_reason_counts"])
+            outcome_verdicts.update(scheduled.get("outcome_verdict_counts", {}))
+            first_flip_vs_outcome.update(scheduled.get("first_flip_vs_outcome_counts", {}))
             audition_count += int(scheduled["audition_count"])
             audition_frames_spent += int(scheduled["audition_frames_spent"])
             backlog_curve.append(
@@ -5092,10 +5556,17 @@ def _phase44_train_audition_ecology_segment(
         scheduled_stats.update(scheduled["counter"])
         verdicts.update(scheduled["verdict_counts"])
         verdict_endpoints.update(scheduled["verdict_reason_counts"])
+        outcome_verdicts.update(scheduled.get("outcome_verdict_counts", {}))
+        first_flip_vs_outcome.update(scheduled.get("first_flip_vs_outcome_counts", {}))
         audition_count += int(scheduled["audition_count"])
         audition_frames_spent += int(scheduled["audition_frames_spent"])
         if bool(getattr(cfg, "real_native_probation_enabled", False)):
-            probation = _phase48_confirm_probation_cells(
+            confirm = (
+                _phase49_confirm_probation_cells_dose_response
+                if bool(getattr(cfg, "real_native_probation_dose_response_enabled", False))
+                else _phase48_confirm_probation_cells
+            )
+            probation = confirm(
                 cfg,
                 runtime=runtime,
                 score_provider=score_provider,
@@ -5143,6 +5614,12 @@ def _phase44_train_audition_ecology_segment(
     distribution = _phase44_audition_distribution(runtime)
     scheduled_coverage = _phase45_scheduled_coverage(runtime, int(cfg.real_native_audition_budget_per_cell))
     verdict_total = sum(verdicts.values())
+    outcome_total = sum(outcome_verdicts.values())
+    outcome_agree = sum(
+        value
+        for key, value in first_flip_vs_outcome.items()
+        if key.split("->", 1)[0] == key.split("->", 1)[1]
+    )
     return {
         "segment": segment_name,
         "row_count": len(rows),
@@ -5168,6 +5645,15 @@ def _phase44_train_audition_ecology_segment(
             for key, value in sorted(verdicts.items())
         },
         "audition_verdict_reason_counts": dict(sorted(verdict_endpoints.items())),
+        "outcome_audition_enabled": bool(getattr(cfg, "real_native_outcome_audition_enabled", False)),
+        "outcome_audition_horizon_plies": int(getattr(cfg, "real_native_outcome_audition_horizon_plies", 0)),
+        "outcome_audition_verdict_counts": dict(sorted(outcome_verdicts.items())),
+        "outcome_audition_verdict_rates": {
+            key: value / max(1, outcome_total)
+            for key, value in sorted(outcome_verdicts.items())
+        },
+        "first_flip_vs_outcome_counts": dict(sorted(first_flip_vs_outcome.items())),
+        "first_flip_vs_outcome_agreement_rate": outcome_agree / max(1, outcome_total),
         "audition_frames_spent": audition_frames_spent,
         "audition_starvation_min_per_cell": float(cfg.real_native_audition_starvation_min_per_cell),
         "scheduled_audition_stats": dict(sorted(scheduled_stats.items())),
@@ -5259,6 +5745,66 @@ def _phase44_run_audition_pair(
         judge_cache=judge_cache,
     )
     verdict, reason = _phase44_compare_audition_flips(host.get("first_flip"), cell.get("first_flip"))
+    result = {
+        "host": host,
+        "cell": cell,
+        "verdict": verdict,
+        "verdict_reason": reason,
+        "frames_spent": int(host.get("frames_spent", 0)) + int(cell.get("frames_spent", 0)),
+    }
+    if bool(getattr(cfg, "real_native_outcome_audition_enabled", False)):
+        outcome = _phase49_run_audition_outcome_pair(
+            cfg,
+            board,
+            counts,
+            score_provider=score_provider,
+            host_move=host_move,
+            cell_move=cell_move,
+            success_kind=success_kind,
+            seed=int(seed) + 53_000,
+            judge_cache=judge_cache,
+        )
+        result["outcome_verdict"] = outcome["verdict"]
+        result["outcome_verdict_reason"] = outcome["verdict_reason"]
+        result["outcome_pair"] = outcome
+        result["outcome_frames_spent"] = int(outcome["frames_spent"])
+        result["first_flip_outcome_agree"] = bool(outcome["verdict"] == verdict)
+    return result
+
+
+def _phase49_run_audition_outcome_pair(
+    cfg: StageBEcologicalDiscoveryConfig,
+    board: chess.Board,
+    counts: Mapping[Any, int],
+    *,
+    score_provider: Any,
+    host_move: chess.Move,
+    cell_move: chess.Move,
+    success_kind: str,
+    seed: int,
+    judge_cache: tuple[dict[str, dict[str, Any]], dict[str, dict[str, Any]]],
+) -> dict[str, Any]:
+    host = _phase49_audition_outcome_rollout(
+        cfg,
+        board,
+        counts,
+        score_provider=score_provider,
+        first_move=host_move,
+        success_kind=success_kind,
+        seed=int(seed),
+        judge_cache=judge_cache,
+    )
+    cell = _phase49_audition_outcome_rollout(
+        cfg,
+        board,
+        counts,
+        score_provider=score_provider,
+        first_move=cell_move,
+        success_kind=success_kind,
+        seed=int(seed),
+        judge_cache=judge_cache,
+    )
+    verdict, reason = _phase49_compare_outcomes(host, cell)
     return {
         "host": host,
         "cell": cell,
@@ -5266,6 +5812,132 @@ def _phase44_run_audition_pair(
         "verdict_reason": reason,
         "frames_spent": int(host.get("frames_spent", 0)) + int(cell.get("frames_spent", 0)),
     }
+
+
+def _phase49_audition_outcome_rollout(
+    cfg: StageBEcologicalDiscoveryConfig,
+    board: chess.Board,
+    counts: Mapping[Any, int],
+    *,
+    score_provider: Any,
+    first_move: chess.Move,
+    success_kind: str,
+    seed: int,
+    judge_cache: tuple[dict[str, dict[str, Any]], dict[str, dict[str, Any]]],
+) -> dict[str, Any]:
+    scorer = None if cfg.fast_exact_judge or success_kind == "approach_waypoint" else load_canonical_mate2_first_scorer()
+    mate2_cache, enter_cache = judge_cache
+    local_board = board.copy(stack=False)
+    local_counts: Counter[Any] = Counter(counts)
+    rng = random.Random(seed)
+    horizon = max(1, int(getattr(cfg, "real_native_outcome_audition_horizon_plies", 16)))
+    transitions: list[dict[str, Any]] = []
+    endpoint = "horizon"
+    success = False
+    for ply in range(horizon):
+        success_now, success_endpoint = _rollout_success_check(
+            cfg,
+            local_board,
+            success_kind=success_kind,
+            scorer=scorer,
+            mate2_cache=mate2_cache,
+            enter_cache=enter_cache,
+        )
+        if success_now:
+            endpoint = success_endpoint
+            success = True
+            break
+        if local_board.turn != chess.WHITE or local_board.is_game_over(claim_draw=False):
+            endpoint = "terminal"
+            break
+        move = first_move if ply == 0 else _phase44_host_argmax_move(local_board, local_counts, score_provider)
+        if move is None or move not in local_board.legal_moves:
+            endpoint = "illegal"
+            break
+        if int(local_counts.get(_after_move_repetition_key(local_board, move), 0)) >= 2:
+            endpoint = "third_repetition"
+            break
+        transition = {
+            "ply": int(ply),
+            "before_fen": local_board.fen(),
+            "white_move": move.uci(),
+        }
+        local_board.push(move)
+        local_counts[_position_repetition_key(local_board)] += 1
+        local_counts[local_board._transposition_key()] += 1
+        transition["after_white_fen"] = local_board.fen()
+        if _white_rook_square(local_board) is None:
+            endpoint = "rook_lost"
+            transitions.append(transition)
+            break
+        if local_board.is_stalemate():
+            endpoint = "stalemate"
+            transitions.append(transition)
+            break
+        if local_board.is_checkmate():
+            endpoint = "mate_delivered"
+            success = True
+            transitions.append(transition)
+            break
+        reply = _select_black_reply_for_rollout(
+            cfg,
+            local_board,
+            rng,
+            success_kind=success_kind,
+            scorer=scorer,
+            mate2_cache=mate2_cache,
+            enter_cache=enter_cache,
+            black_reply_policy="exact_adversarial",
+        )
+        if reply is None:
+            endpoint = "mate_delivered" if local_board.is_check() else "stalemate"
+            success = local_board.is_check()
+            transition["black_reply"] = None
+            transitions.append(transition)
+            break
+        transition["black_reply"] = reply.uci()
+        local_board.push(reply)
+        local_counts[_position_repetition_key(local_board)] += 1
+        local_counts[local_board._transposition_key()] += 1
+        transition["after_black_fen"] = local_board.fen()
+        transitions.append(transition)
+        if _white_rook_square(local_board) is None:
+            endpoint = "rook_lost"
+            break
+        if local_board.is_stalemate():
+            endpoint = "stalemate"
+            break
+        if not fence_established_geometry(local_board):
+            endpoint = "fence_broken"
+            break
+    if not success and success_kind == "approach_waypoint" and _approach_waypoint_success(local_board):
+        endpoint = "waypoint_reached"
+        success = True
+    hard_loss = endpoint in {"fence_broken", "rook_lost", "stalemate", "illegal"}
+    outcome = "win" if success else "loss" if hard_loss else "draw"
+    score = 1 if outcome == "win" else -1 if outcome == "loss" else 0
+    return {
+        "first_move": first_move.uci(),
+        "endpoint": endpoint,
+        "success": bool(success),
+        "outcome": outcome,
+        "outcome_score": score,
+        "frames_spent": len(transitions),
+        "transition_sample": transitions[: int(cfg.max_samples)],
+    }
+
+
+def _phase49_compare_outcomes(
+    host: Mapping[str, Any],
+    cell: Mapping[str, Any],
+) -> tuple[str, str]:
+    host_score = int(host.get("outcome_score", 0))
+    cell_score = int(cell.get("outcome_score", 0))
+    if cell_score > host_score:
+        return "cell_better", f"cell_{cell.get('outcome')}_host_{host.get('outcome')}"
+    if cell_score < host_score:
+        return "cell_worse", f"cell_{cell.get('outcome')}_host_{host.get('outcome')}"
+    return "tie", f"both_{cell.get('outcome')}"
 
 
 def _phase44_audition_rollout(
@@ -5511,6 +6183,8 @@ def _phase45_run_scheduled_auditions(
     counter: Counter[str] = Counter()
     verdict_counts: Counter[str] = Counter()
     verdict_reason_counts: Counter[str] = Counter()
+    outcome_verdict_counts: Counter[str] = Counter()
+    first_flip_vs_outcome_counts: Counter[str] = Counter()
     audition_count = 0
     audition_frames_spent = 0
     budget = int(cfg.real_native_audition_budget_per_cell)
@@ -5519,6 +6193,8 @@ def _phase45_run_scheduled_auditions(
             "counter": counter,
             "verdict_counts": verdict_counts,
             "verdict_reason_counts": verdict_reason_counts,
+            "outcome_verdict_counts": outcome_verdict_counts,
+            "first_flip_vs_outcome_counts": first_flip_vs_outcome_counts,
             "audition_count": 0,
             "audition_frames_spent": 0,
         }
@@ -5848,6 +6524,8 @@ def _phase47_run_pool_scan_auditions(
     counter: Counter[str] = Counter()
     verdict_counts: Counter[str] = Counter()
     verdict_reason_counts: Counter[str] = Counter()
+    outcome_verdict_counts: Counter[str] = Counter()
+    first_flip_vs_outcome_counts: Counter[str] = Counter()
     audition_count = 0
     audition_frames_spent = 0
     budget = int(cfg.real_native_audition_budget_per_cell)
@@ -5856,6 +6534,8 @@ def _phase47_run_pool_scan_auditions(
             "counter": counter,
             "verdict_counts": verdict_counts,
             "verdict_reason_counts": verdict_reason_counts,
+            "outcome_verdict_counts": outcome_verdict_counts,
+            "first_flip_vs_outcome_counts": first_flip_vs_outcome_counts,
             "audition_count": 0,
             "audition_frames_spent": 0,
         }
@@ -5931,8 +6611,12 @@ def _phase47_run_pool_scan_auditions(
             verdict = str(audition["verdict"])
             verdict_counts[verdict] += 1
             verdict_reason_counts[str(audition["verdict_reason"])] += 1
+            outcome_verdict = audition.get("outcome_verdict")
+            if outcome_verdict is not None:
+                outcome_verdict_counts[str(outcome_verdict)] += 1
+                first_flip_vs_outcome_counts[f"{verdict}->{outcome_verdict}"] += 1
             audition_count += 1
-            audition_frames_spent += int(audition["frames_spent"])
+            audition_frames_spent += int(audition["frames_spent"]) + int(audition.get("outcome_frames_spent", 0))
             counter["pool_paired_auditions"] += 1
             before_state = str(refreshed.get("state"))
             runtime.apply_audition_verdict(
@@ -5971,6 +6655,8 @@ def _phase47_run_pool_scan_auditions(
         "counter": counter,
         "verdict_counts": verdict_counts,
         "verdict_reason_counts": verdict_reason_counts,
+        "outcome_verdict_counts": outcome_verdict_counts,
+        "first_flip_vs_outcome_counts": first_flip_vs_outcome_counts,
         "audition_count": audition_count,
         "audition_frames_spent": audition_frames_spent,
     }
@@ -6080,6 +6766,308 @@ def _phase48_confirm_probation_cells(
             }
         )
     return {"counter": counter, "records": records}
+
+
+def _phase49_confirm_probation_cells_dose_response(
+    cfg: StageBEcologicalDiscoveryConfig,
+    *,
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: Any,
+    rows: Sequence[Mapping[str, Any]],
+    success_kind: str,
+    seed: int,
+    step: int,
+    segment_name: str,
+) -> dict[str, Any]:
+    counter: Counter[str] = Counter()
+    records: list[dict[str, Any]] = []
+    targets = [
+        (str(cid), item)
+        for cid, item in sorted(runtime.population.items())
+        if item.get("state") == "PROBATION" and item.get("birth_segment") != "acceptance_probe"
+    ]
+    if not targets:
+        return {"counter": counter, "records": records}
+    row_pool = list(rows)
+    if not row_pool:
+        return {"counter": counter, "records": records}
+    target_count = min(
+        len(row_pool),
+        max(1, int(getattr(cfg, "real_native_probation_validation_rows", 32))),
+    )
+    margin = int(getattr(cfg, "real_native_probation_noise_margin_wins", 1))
+    doses = tuple(float(value) for value in getattr(cfg, "real_native_probation_dose_multipliers", (1.0,)) if float(value) > 0)
+    if not doses:
+        doses = (1.0,)
+    for cid, item in targets:
+        rng = random.Random(int(seed) + _phase45_stable_int(cid))
+        validation_rows = rng.sample(row_pool, target_count) if len(row_pool) > target_count else list(row_pool)
+        row_ids = [int(row.get("row_id", index)) for index, row in enumerate(validation_rows)]
+        eval_seed = int(seed) + _phase45_stable_int(cid) + 17
+        original_override = item.get("routing_weight_override")
+        base_weight = float(original_override if original_override is not None else _real_native_composite_weight(item, cfg))
+        off_eval = _phase42_ecology_policy_traces(
+            cfg,
+            validation_rows,
+            runtime,
+            score_provider,
+            seed=eval_seed,
+            policy_name=f"phase3_19_{segment_name}_dose_probation_off_{cid}",
+            success_kind=success_kind,
+            mature_only=True,
+        )
+        dose_records: list[dict[str, Any]] = []
+        confirmed_dose: float | None = None
+        confirmed_weight: float | None = None
+        representative_paired: Mapping[str, Any] | None = None
+        for dose in doses:
+            item["routing_weight_override"] = float(base_weight * dose)
+            on_eval = _phase42_ecology_policy_traces(
+                cfg,
+                validation_rows,
+                runtime,
+                score_provider,
+                seed=eval_seed,
+                policy_name=f"phase3_19_{segment_name}_dose_{dose:g}_probation_on_{cid}",
+                success_kind=success_kind,
+                mature_only=True,
+                enabled_non_mature_ids=(cid,),
+            )
+            paired = _phase41_paired_outcome_table(
+                on_eval,
+                off_eval,
+                margin_wins=margin,
+                label=f"{segment_name}_probation_{cid}_dose_{dose:g}_on_vs_off",
+            )
+            discordant = int(paired["discordant_delta_left_minus_right"])
+            row = {
+                "dose_multiplier": float(dose),
+                "routed_weight": round(float(base_weight * dose), 6),
+                "wins_on": int(on_eval["wins"]),
+                "wins_off": int(off_eval["wins"]),
+                "validation_delta_on_minus_off": int(on_eval["wins"]) - int(off_eval["wins"]),
+                "discordant_delta": discordant,
+                "paired": paired,
+            }
+            dose_records.append(row)
+            if confirmed_dose is None and discordant > margin:
+                confirmed_dose = float(dose)
+                confirmed_weight = float(base_weight * dose)
+                representative_paired = paired
+        if original_override is None:
+            item.pop("routing_weight_override", None)
+        else:
+            item["routing_weight_override"] = float(original_override)
+        discordants = [int(record["discordant_delta"]) for record in dose_records]
+        if confirmed_dose is not None:
+            decision = "confirmed"
+            decision_class = "positive_lowest_dose"
+            paired_for_decision = representative_paired or dose_records[0]["paired"]
+        elif discordants and all(value < -margin for value in discordants):
+            decision = "demoted"
+            decision_class = "negative_all_doses"
+            paired_for_decision = dose_records[-1]["paired"]
+        elif discordants and all(abs(value) <= margin for value in discordants):
+            decision = "parked"
+            decision_class = "flat_all_doses"
+            paired_for_decision = dose_records[-1]["paired"]
+        else:
+            decision = "parked"
+            decision_class = "mixed_nonconfirming"
+            paired_for_decision = dose_records[-1]["paired"]
+        runtime.apply_probation_confirmation(
+            composite_id=cid,
+            decision=decision,
+            step=int(step),
+            reason=f"{segment_name}_dose_response_{decision_class}_margin_{margin}",
+            paired=paired_for_decision,
+            validation_row_ids=row_ids,
+            confirmed_routing_weight=confirmed_weight,
+            confirmed_dose_multiplier=confirmed_dose,
+            validation_dose_records=dose_records,
+            decision_class=decision_class,
+        )
+        after_item = runtime.population.get(cid, {})
+        counter["probation_cells_tested"] += 1
+        counter[f"probation_{decision}"] += 1
+        counter[f"probation_decision_class:{decision_class}"] += 1
+        counter[f"probation_state_after:{after_item.get('state', 'missing')}"] += 1
+        if confirmed_dose is not None:
+            counter[f"confirmed_dose:{confirmed_dose:g}"] += 1
+        records.append(
+            {
+                "segment": str(segment_name),
+                "composite_id": cid,
+                "decision": decision,
+                "decision_class": decision_class,
+                "state_after": str(after_item.get("state", "missing")),
+                "children": list(item.get("children", ())),
+                "birth_segment": item.get("birth_segment"),
+                "probation_entry_event": item.get("probation_entry_event"),
+                "probation_retest_count_after": int(after_item.get("probation_retest_count", 0)),
+                "validation_row_ids": row_ids,
+                "validation_row_count": len(validation_rows),
+                "validation_margin_wins": margin,
+                "base_routing_weight": round(base_weight, 6),
+                "confirmed_dose_multiplier": confirmed_dose,
+                "confirmed_routing_weight": None if confirmed_weight is None else round(float(confirmed_weight), 6),
+                "dose_records": dose_records,
+                "paired": paired_for_decision,
+                "validation_delta_on_minus_off": int(paired_for_decision.get("left_minus_right_wins", 0)),
+            }
+        )
+    return {"counter": counter, "records": records}
+
+
+def _phase49_noop_ablation_control_old_pipeline(
+    cfg: StageBEcologicalDiscoveryConfig,
+    heldout_rows: Sequence[Mapping[str, Any]],
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: Any,
+    *,
+    full_eval: Mapping[str, Any],
+    seed: int,
+) -> dict[str, Any]:
+    subjects = [
+        item for item in runtime.population.values()
+        if item["state"] == "MATURE"
+    ][: int(cfg.real_native_max_ablation_subjects)]
+    records: list[dict[str, Any]] = []
+    offsets: list[int] = []
+    for index, item in enumerate(subjects):
+        noop = _real_native_evaluate_policy(
+            cfg,
+            heldout_rows,
+            runtime,
+            score_provider,
+            seed=int(seed) + index * 101,
+            policy_name=f"noop_without_{item['composite_id']}",
+            disabled=set(),
+        )
+        offset = int(full_eval["wins"]) - int(noop["wins"])
+        offsets.append(offset)
+        records.append(
+            {
+                "composite_id": str(item["composite_id"]),
+                "children": list(item.get("children", ())),
+                "full_wins": int(full_eval["wins"]),
+                "noop_wins": int(noop["wins"]),
+                "noop_offset_full_minus_noop": offset,
+                "paired": _phase41_paired_outcome_table(
+                    full_eval,
+                    noop,
+                    margin_wins=0,
+                    label=f"noop_old_ablation_path_{item['composite_id']}",
+                ),
+            }
+        )
+    nonzero = [value for value in offsets if value != 0]
+    return {
+        "control": "old_3_17_ablation_pipeline_noop_disable_none",
+        "subject_count": len(subjects),
+        "nonzero_offset_count": len(nonzero),
+        "passed": bool(not nonzero),
+        "offset_min": min(offsets) if offsets else None,
+        "offset_median": sorted(offsets)[len(offsets) // 2] if offsets else None,
+        "offset_max": max(offsets) if offsets else None,
+        "config_diff": {
+            "full_eval_path": "_phase42_ecology_policy_traces",
+            "full_eval_black_reply_policy": str(full_eval.get("black_reply_policy", "unknown")),
+            "noop_path": "_real_native_evaluate_policy -> _evaluate_policy",
+            "noop_default_black_reply_policy": "fixed_seed",
+            "seed_schedule_same_as_old_ablation": True,
+        },
+        "verdict": (
+            "pass_no_offset"
+            if not nonzero
+            else "fail_runner_provenance_offset"
+        ),
+        "records": records,
+    }
+
+
+def _phase49_controlled_ablation_health(
+    cfg: StageBEcologicalDiscoveryConfig,
+    heldout_rows: Sequence[Mapping[str, Any]],
+    runtime: _GraphNativeCompositeRuntime,
+    score_provider: Any,
+    *,
+    full_eval: Mapping[str, Any],
+    seed: int,
+    success_kind: str,
+) -> dict[str, Any]:
+    subjects = [
+        item for item in runtime.population.values()
+        if item["state"] == "MATURE"
+    ][: int(cfg.real_native_max_ablation_subjects)]
+    records: list[dict[str, Any]] = []
+    counts: Counter[str] = Counter()
+    noop = _phase42_ecology_policy_traces(
+        cfg,
+        heldout_rows,
+        runtime,
+        score_provider,
+        seed=int(seed),
+        policy_name="controlled_ablation_noop",
+        success_kind=success_kind,
+        mature_only=True,
+    )
+    noop_paired = _phase41_paired_outcome_table(
+        full_eval,
+        noop,
+        margin_wins=0,
+        label="controlled_ablation_noop_full_vs_noop",
+    )
+    noop_passed = int(noop_paired["discordant_delta_left_minus_right"]) == 0 and int(noop_paired["left_minus_right_wins"]) == 0
+    for item in subjects:
+        ablated = _phase42_ecology_policy_traces(
+            cfg,
+            heldout_rows,
+            runtime,
+            score_provider,
+            seed=int(seed),
+            policy_name=f"controlled_without_{item['composite_id']}",
+            success_kind=success_kind,
+            mature_only=True,
+            disabled_mature_ids=(str(item["composite_id"]),),
+        )
+        paired = _phase41_paired_outcome_table(
+            full_eval,
+            ablated,
+            margin_wins=0,
+            label=f"controlled_cell_on_vs_removed_{item['composite_id']}",
+        )
+        delta = int(full_eval["wins"]) - int(ablated["wins"])
+        classification = "load_bearing" if delta > 0 else "inert" if delta == 0 else "harmful"
+        counts[classification] += 1
+        records.append(
+            {
+                "composite_id": str(item["composite_id"]),
+                "classification": classification,
+                "ablation_delta": delta,
+                "full_wins": int(full_eval["wins"]),
+                "ablated_wins": int(ablated["wins"]),
+                "paired": paired,
+                "birth_segment": item.get("birth_segment"),
+                "confirmed_dose_multiplier": item.get("confirmed_dose_multiplier"),
+                "routing_weight": item.get("routing_weight_override"),
+                "children": list(item.get("children", ())),
+            }
+        )
+    return {
+        "subject": "mature_composites_only_controlled_exact_adversarial",
+        "control_noop_passed": bool(noop_passed),
+        "control_noop": {
+            "full_wins": int(full_eval["wins"]),
+            "noop_wins": int(noop["wins"]),
+            "paired": noop_paired,
+        },
+        "composite_count": len(subjects),
+        "load_bearing_count": int(counts["load_bearing"]),
+        "inert_count": int(counts["inert"]),
+        "harmful_count": int(counts["harmful"]),
+        "records": records,
+    }
 
 
 def _phase46_backlog_snapshot(
@@ -6695,13 +7683,18 @@ def _phase42_ecology_policy_traces(
     success_kind: str,
     mature_only: bool,
     enabled_non_mature_ids: Sequence[str] = (),
+    disabled_mature_ids: Sequence[str] = (),
 ) -> dict[str, Any]:
     if mature_only:
         enabled = set(map(str, enabled_non_mature_ids))
+        disabled_mature = set(map(str, disabled_mature_ids))
         disabled = {
             str(item["composite_id"])
             for item in runtime.population.values()
-            if item.get("state") != "MATURE" and str(item["composite_id"]) not in enabled
+            if (
+                (item.get("state") != "MATURE" and str(item["composite_id"]) not in enabled)
+                or str(item["composite_id"]) in disabled_mature
+            )
         }
     else:
         disabled = set()

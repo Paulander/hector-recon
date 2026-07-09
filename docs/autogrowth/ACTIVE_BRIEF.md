@@ -4,6 +4,13 @@ Status: learning-core reset branch.
 
 The previous branch mode over-optimized for not approving bad mechanisms. This branch should optimize for allowing a minimal learner to act in sandbox, receive credit, promote or delete candidate topology, and prove whether the loop is alive.
 
+## Current Phase 3.19 Checkpoint
+
+- Provenance control result: 3.17's "154 harmful mature cells" verdict is invalid. Phase 3.19 re-ran the old per-cell ablation path with `disabled=set()` and got nonzero no-op offsets for 154/154 subjects, median full-minus-noop offsets -31 to -35 by seed. The config diff is decisive: full eval used `_phase42_ecology_policy_traces` with exact-adversarial black, while no-op/ablated eval used `_real_native_evaluate_policy -> _evaluate_policy` with fixed-seed black. Corollary: per-cell ablation verdicts count only after a no-op control passes under the same evaluator, judge, black policy, and seed schedule.
+- Dose-response probation result: the 3.19 full run tested all probation nominees at audition weight x1/x3/x9/x27. Across 5 seeds there were 198 probation tests and 792 dose tests; all were `flat_all_doses`, with 0 confirmed, 0 demoted, and 0 nonzero dose discordants. Controlled exact-adversarial ablation no-op passed, but there were 0 confirmed/MATURE cells to ablate.
+- Outcome-audition accounting result: first-flip verdicts and bounded outcome-paired verdicts disagree heavily. Overall agreement is 0.480; Stage B agreement by seed is 0.467/0.505/0.433/0.368/0.400. This supports replacing first-flip as the standing nomination verdict, but the dose ladder also shows the current nominees are causally silent in validation even at high dose.
+- Current next step: Phase 3.20 should use outcome-paired audition verdicts for nomination and instrument validation-side activation/proposal/choice-change per dose. The question to answer is whether nominees fail to activate/propose, fail to change choices, or change choices without changing outcomes. Do not add new spawn triggers or claim cell utility until the effect channel is measured.
+
 ## Latest Clean-Slate Checkpoint
 
 - TG46d is the current promoted clean foundation parent. Use only `reports/autogrowth/clean_slate_krk/tg46d_m4_foundation_consolidation/promoted_tg46d_foundation.json` for the next clean KRK stages. The parent foundation must remain loaded/frozen with zero M3/M4 deltas during child-stage training.
