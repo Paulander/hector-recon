@@ -1,5 +1,7 @@
 # ReCoN‑lite (Request–Confirmation Network) — Chess Sandbox
 
+> **Research status:** this README contains historical architecture and milestone descriptions, including older M3-planned language. See [`docs/BRIEF.md`](docs/BRIEF.md) for the audited current claims, corrections, and next decision gate.
+
 ReCoN‑lite is a small, dependency‑light Python implementation of a **Request–Confirmation Network (ReCoN)** plus a set of chess‑focused demos (KRK/KPK endgames, macrograph, visualization, and training/eval tooling). The goal is to explore ReCoNs as an **orchestrator** for scripts, heuristics, and learned components — not as a monolithic learner — while keeping the internal graph state explainable and easy to visualize.
 
 Current medium‑term target: a ReCoN‑driven chess player that can play full games in the ~1900 Elo range, with a clear story for *why* it plays the moves it plays.

@@ -1,5 +1,7 @@
 # Active Brief: KRK Autogrowth v0
 
+> **SUPERSEDED / HISTORICAL:** this chronological checkpoint log is retained for provenance, not as the current claim ledger. Use [`docs/BRIEF.md`](../BRIEF.md) for the audited scientific state and ordered decision gate.
+
 Status: learning-core reset branch.
 
 The previous branch mode over-optimized for not approving bad mechanisms. This branch should optimize for allowing a minimal learner to act in sandbox, receive credit, promote or delete candidate topology, and prove whether the loop is alive.
