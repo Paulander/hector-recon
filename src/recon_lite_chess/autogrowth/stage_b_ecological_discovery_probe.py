@@ -168,6 +168,10 @@ class StageBEcologicalDiscoveryConfig:
     real_native_controlled_ablation_enabled: bool = False
     real_native_outcome_audition_enabled: bool = False
     real_native_outcome_audition_horizon_plies: int = 16
+    real_native_outcome_audition_verdict_is_standing: bool = False
+    real_native_conditional_gate_enabled: bool = False
+    real_native_conditional_gate_mode: str = "action_pattern_eligibility"
+    real_native_conditional_gate_states: tuple[str, ...] = ("PROBATION", "MATURE")
     real_native_continue_after_seed_stop: bool = False
     phase33_equivalence_tolerance_wins: int = 3
 
@@ -1538,6 +1542,15 @@ def run_phase49_dose_response_outcome_audition_probe(
     return _run(config=config)
 
 
+def run_phase50_conditional_gate_composite_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    from .persistent_staged_ladder import run_phase50_conditional_gate_composite_probe as _run
+
+    return _run(config=config)
+
+
 def run_phase38_persistent_staged_ladder_probe(
     *,
     config: StageBEcologicalDiscoveryConfig | None = None,
@@ -2866,12 +2879,23 @@ class _GraphNativeCompositeRuntime:
                 if evaluation["confirmed"]:
                     active_ids.append(str(item["composite_id"]))
                     self.cells[str(item["composite_id"])].record_candidate_activation(parent_id=str(item["parent_id"]))
-                    weight = _real_native_composite_weight(item, self.cfg)
+                    conditional_state = _real_native_conditional_gate_state(item, self.cfg)
+                    routes_as_gate = _real_native_routes_as_conditional_gate(item, self.cfg)
+                    weight = 0.0 if conditional_state else _real_native_composite_weight(item, self.cfg)
                     composite_score += weight
+                    route = (
+                        "conditional_gate"
+                        if routes_as_gate
+                        else "conditional_gate_no_action_keys"
+                        if conditional_state
+                        else "additive_score"
+                    )
                     contributions.append(
                         {
                             "composite_id": str(item["composite_id"]),
                             "weight": float(weight),
+                            "route": route,
+                            "gate_action_keys": _real_native_gate_action_keys(item) if routes_as_gate else [],
                         }
                     )
                     if include_trial_proposals and item["state"] == "TRIAL":
@@ -2901,6 +2925,7 @@ class _GraphNativeCompositeRuntime:
                     "move": move,
                     "active_ids": active_ids,
                     "requested_ids": requested_ids,
+                    "active_keys": tuple(sorted(active)),
                     "base_score": float(base_scores.get(move.uci(), 0.0)),
                     "composite_score": composite_score,
                     "contributions": contributions,
@@ -2921,13 +2946,25 @@ class _GraphNativeCompositeRuntime:
             base_move = base_rows[0][-1] if base_rows else None
         else:
             base_move = _choose_base_score_move(board, counts, score_provider=score_provider, seed=seed)
-        selected = scored[0]
+        additive_selected = scored[0]
+        gate_selection = _real_native_select_conditional_gate_row(
+            scored,
+            self.population,
+            self.cfg,
+            discriminative=discriminative,
+        )
+        selected = gate_selection["row"] if gate_selection is not None else additive_selected
         move = selected["move"]
         active_ids = selected["active_ids"]
         requested_ids = selected["requested_ids"]
         responsible_ids: list[str] = []
         responsibility_margin = 0.0
-        if discriminative and base_move is not None and move != base_move:
+        gate_composite_ids = [] if gate_selection is None else list(gate_selection["composite_ids"])
+        gate_changed = bool(gate_selection is not None and base_move is not None and move != base_move)
+        if gate_changed:
+            responsible_ids = list(gate_composite_ids)
+            responsibility_margin = float(base_scores.get(base_move.uci(), 0.0)) - float(selected["base_score"])
+        elif discriminative and base_move is not None and move != base_move:
             host_plus_base_row = next((item for item in scored if item["move"] == base_move), None)
             host_plus_score = float(host_plus_base_row["score"]) if host_plus_base_row is not None else float(base_scores.get(base_move.uci(), 0.0))
             responsibility_margin = host_plus_score - float(selected["base_score"])
@@ -2977,10 +3014,17 @@ class _GraphNativeCompositeRuntime:
             "requested_composite_ids": requested_ids,
             "base_move": base_move,
             "base_score": None if base_move is None else float(base_scores.get(base_move.uci(), 0.0)),
-            "choice_changed_by_cells": bool(discriminative and base_move is not None and move != base_move and responsible_ids),
+            "choice_changed_by_cells": bool(base_move is not None and move != base_move and responsible_ids),
             "responsible_composite_ids": responsible_ids,
             "responsibility_margin": round(float(responsibility_margin), 6),
             "selected_composite_score": round(float(selected["composite_score"]), 6),
+            "conditional_gate_applied": bool(gate_selection is not None),
+            "conditional_gate_changed_choice": bool(gate_changed),
+            "conditional_gate_composite_ids": gate_composite_ids,
+            "conditional_gate_action_keys": [] if gate_selection is None else list(gate_selection["gate_action_keys"]),
+            "conditional_gate_candidate_count": 0 if gate_selection is None else int(gate_selection["candidate_count"]),
+            "ungated_additive_move": additive_selected["move"],
+            "ungated_additive_move_uci": str(additive_selected["uci"]),
             "trial_cell_proposals": proposal_rows,
             "trial_cell_firings": firing_rows,
         }
@@ -3343,6 +3387,9 @@ class _GraphNativeCompositeRuntime:
         item["probation_entry_event"] = str(event)
         item["probation_entry_weight"] = float(weight)
         item["routing_weight_override"] = float(weight)
+        if _real_native_routes_as_conditional_gate(item, self.cfg):
+            item["conditional_gate_mechanism"] = str(getattr(self.cfg, "real_native_conditional_gate_mode", "action_pattern_eligibility"))
+            item["conditional_gate_action_keys"] = _real_native_gate_action_keys(item)
         item["probation_entry_local_resource"] = float(item.get("local_resource", 0.0))
         item["probation_retest_count"] = int(item.get("probation_retest_count", 0))
         cell = self.cells[cid]
@@ -3352,12 +3399,17 @@ class _GraphNativeCompositeRuntime:
             node = self.native_graph.graph.nodes[node_id]
             node.meta["stem_cell_state"] = item["state"]
             node.meta["routing_weight_override"] = float(weight)
+            if item.get("conditional_gate_mechanism") is not None:
+                node.meta["conditional_gate_mechanism"] = str(item["conditional_gate_mechanism"])
+                node.meta["conditional_gate_action_keys"] = list(item.get("conditional_gate_action_keys", ()))
         item.setdefault("fate_events", []).append(
             {
                 "step": int(step),
                 "event": str(event),
                 "state": "PROBATION",
                 "routing_weight_override": round(float(weight), 6),
+                "conditional_gate_mechanism": item.get("conditional_gate_mechanism"),
+                "conditional_gate_action_keys": list(item.get("conditional_gate_action_keys", ())),
                 "local_resource": round(float(item.get("local_resource", 0.0)), 6),
                 "audition_better_events": int(item.get("audition_better_events", 0)),
                 "audition_worse_events": int(item.get("audition_worse_events", 0)),
@@ -3390,6 +3442,13 @@ class _GraphNativeCompositeRuntime:
         item["probation_last_dose_records"] = [dict(record) for record in validation_dose_records]
         if decision_class is not None:
             item["probation_decision_class"] = str(decision_class)
+        if _real_native_conditional_gate_state(item, self.cfg):
+            gate_action_keys = _real_native_gate_action_keys(item)
+            if gate_action_keys:
+                item["conditional_gate_mechanism"] = str(
+                    getattr(self.cfg, "real_native_conditional_gate_mode", "action_pattern_eligibility")
+                )
+                item["conditional_gate_action_keys"] = gate_action_keys
         if decision_key == "confirmed":
             if confirmed_routing_weight is not None:
                 item["routing_weight_override"] = float(confirmed_routing_weight)
@@ -3422,6 +3481,9 @@ class _GraphNativeCompositeRuntime:
             node.meta["stem_cell_state"] = item["state"]
             node.meta["probation_validation_events"] = int(item.get("probation_validation_events", 0))
             node.meta["routing_weight_override"] = float(item.get("routing_weight_override", _real_native_composite_weight(item, self.cfg)))
+            if item.get("conditional_gate_mechanism") is not None:
+                node.meta["conditional_gate_mechanism"] = str(item["conditional_gate_mechanism"])
+                node.meta["conditional_gate_action_keys"] = list(item.get("conditional_gate_action_keys", ()))
         item.setdefault("fate_events", []).append(
             {
                 "step": int(step),
@@ -3436,6 +3498,8 @@ class _GraphNativeCompositeRuntime:
                 "decision_class": None if decision_class is None else str(decision_class),
                 "confirmed_dose_multiplier": None if confirmed_dose_multiplier is None else float(confirmed_dose_multiplier),
                 "routing_weight": round(float(item.get("routing_weight_override", _real_native_composite_weight(item, self.cfg))), 6),
+                "conditional_gate_mechanism": item.get("conditional_gate_mechanism"),
+                "conditional_gate_action_keys": list(item.get("conditional_gate_action_keys", ())),
             }
         )
         self._enforce_parent_budgets(step=step)
@@ -4867,7 +4931,7 @@ def _phase33_stage_b_atom_predicate(atom_key: str):
 def _real_native_composite_predicate(composite_id: str):
     def predicate(node: Node, env: dict[str, Any]) -> tuple[bool, bool]:
         payload = env["real_native_ecology_composites"][composite_id]
-        if payload.get("state") not in {"TRIAL", "MATURE"}:
+        if payload.get("state") not in {"TRIAL", "PROBATION", "MATURE"}:
             node.activation.value = 0.0
             return True, False
         board = env["board"]
@@ -5006,6 +5070,71 @@ def _real_native_composite_id(children: Sequence[str], source_signature: str, tr
 def _real_native_parent_id(source_signature: str) -> str:
     digest = hashlib.sha256(source_signature.encode("utf-8")).hexdigest()
     return f"real_native_habitat_{digest[:12]}"
+
+
+def _real_native_gate_action_keys(item: Mapping[str, Any]) -> list[str]:
+    return sorted(
+        str(child)
+        for child in item.get("children", ())
+        if str(child).startswith("action_pattern:")
+    )
+
+
+def _real_native_conditional_gate_state(
+    item: Mapping[str, Any],
+    cfg: StageBEcologicalDiscoveryConfig,
+) -> bool:
+    if not bool(getattr(cfg, "real_native_conditional_gate_enabled", False)):
+        return False
+    allowed_states = set(map(str, getattr(cfg, "real_native_conditional_gate_states", ("PROBATION", "MATURE"))))
+    return str(item.get("state")) in allowed_states
+
+
+def _real_native_routes_as_conditional_gate(
+    item: Mapping[str, Any],
+    cfg: StageBEcologicalDiscoveryConfig,
+) -> bool:
+    if str(getattr(cfg, "real_native_conditional_gate_mode", "")) != "action_pattern_eligibility":
+        return False
+    if not _real_native_conditional_gate_state(item, cfg):
+        return False
+    return bool(_real_native_gate_action_keys(item))
+
+
+def _real_native_select_conditional_gate_row(
+    scored: Sequence[Mapping[str, Any]],
+    population: Mapping[str, Mapping[str, Any]],
+    cfg: StageBEcologicalDiscoveryConfig,
+    *,
+    discriminative: bool,
+) -> dict[str, Any] | None:
+    if not bool(getattr(cfg, "real_native_conditional_gate_enabled", False)):
+        return None
+    candidates: list[tuple[dict[str, Any], list[str], list[str]]] = []
+    for row in scored:
+        gate_ids: list[str] = []
+        gate_action_keys: list[str] = []
+        for cid in map(str, row.get("active_ids", ())):
+            item = population.get(cid)
+            if item is None or not _real_native_routes_as_conditional_gate(item, cfg):
+                continue
+            gate_ids.append(cid)
+            gate_action_keys.extend(_real_native_gate_action_keys(item))
+        if gate_ids:
+            candidates.append((dict(row), sorted(set(gate_ids)), sorted(set(gate_action_keys))))
+    if not candidates:
+        return None
+    if discriminative:
+        candidates.sort(key=lambda item: (float(item[0]["base_score"]), str(item[0]["uci"])), reverse=True)
+    else:
+        candidates.sort(key=lambda item: (float(item[0]["base_score"]), float(item[0]["tie"]), str(item[0]["uci"])), reverse=True)
+    row, gate_ids, gate_action_keys = candidates[0]
+    return {
+        "row": row,
+        "composite_ids": gate_ids,
+        "gate_action_keys": gate_action_keys,
+        "candidate_count": len(candidates),
+    }
 
 
 def _real_native_composite_weight(item: Mapping[str, Any], cfg: StageBEcologicalDiscoveryConfig) -> float:

@@ -12,6 +12,8 @@ from typing import Any, Mapping, Sequence
 
 import chess
 
+from recon_lite_hector.nodes.stem_cell import StemCellState
+
 from .stage_b_ecological_discovery_probe import (
     StageBEcologicalDiscoveryConfig,
     _GraphNativeCompositeRuntime,
@@ -24,6 +26,7 @@ from .stage_b_ecological_discovery_probe import (
     _decision_context,
     _design_spec,
     _foundation_ecology_rows,
+    _generic_child_pool,
     _internal_triggers,
     _legal_without_third_repetition,
     _load_weight_table,
@@ -43,6 +46,7 @@ from .stage_b_ecological_discovery_probe import (
     _phase38_rebaseline_phase29e_discovery,
     _phase38_rebaseline_table,
     _phase38_runner_config,
+    _percept_signature,
     _position_repetition_key,
     _rollout_policy,
     _rollout_success_check,
@@ -3303,6 +3307,367 @@ def run_phase49_dose_response_outcome_audition_probe(
     return summary
 
 
+def run_phase50_conditional_gate_composite_probe(
+    *,
+    config: StageBEcologicalDiscoveryConfig | None = None,
+) -> dict[str, Any]:
+    """Phase 3.20: route probation/confirmed composites as conditional gates."""
+
+    cfg = config or StageBEcologicalDiscoveryConfig(
+        output_dir="reports/autogrowth/clean_slate_krk/phase3_20_conditional_gate_composites",
+        seeds=(20272931, 20272932, 20272933, 20272934, 20272935),
+        flat_baseline_seeds=(20272911, 20272912, 20272913),
+        stage_a_train_row_limit=128,
+        train_row_limit=128,
+        heldout_row_limit=None,
+        max_samples=8,
+        max_guided_births=0,
+        ecology_mode="stem_cell_graph",
+        native_foundation_key_mode="coarse",
+        native_foundation_prototype_scan_triplets=128,
+        real_native_engine_max_ticks=80,
+        real_native_max_live_composites=32,
+        real_native_max_live_siblings_per_parent=4,
+        real_native_trial_grace_exposures=3,
+        real_native_dormant_decay=0.002,
+        real_native_critical_period_exposures=5,
+        real_native_critical_period_credit_multiplier=1.75,
+        real_native_critical_period_optimism=0.025,
+        real_native_positive_flip_credit=0.060,
+        real_native_positive_flip_window=2,
+        real_native_choice_change_mature_events=3,
+        real_native_choice_change_neutral_rent=0.006,
+        real_native_near_zero_choice_change_rate=0.01,
+        real_native_stability_band_multiplier=5,
+        real_native_audition_budget_per_cell=10,
+        real_native_audition_per_ply_cap=2,
+        real_native_audition_horizon_plies=8,
+        real_native_audition_mature_better_events=3,
+        real_native_audition_neutral_rent=0.004,
+        real_native_audition_debt_threshold=3,
+        real_native_audition_starvation_min_per_cell=0.0,
+        real_native_scheduled_audition_chunk_size=8,
+        real_native_scheduled_unjudged_fraction_stop=0.0,
+        real_native_scheduled_complete_flush=True,
+        real_native_homeostatic_backlog_threshold=0.0,
+        real_native_pool_scan_auditions=True,
+        real_native_trial_band_min=20,
+        real_native_trial_band_max=60,
+        real_native_court_throughput_per_chunk=0,
+        real_native_probation_enabled=True,
+        real_native_probation_validation_rows=32,
+        real_native_probation_noise_margin_wins=1,
+        real_native_probation_max_retests=2,
+        real_native_probation_dose_response_enabled=True,
+        real_native_probation_dose_multipliers=(1.0, 3.0, 9.0, 27.0),
+        real_native_controlled_ablation_enabled=True,
+        real_native_outcome_audition_enabled=True,
+        real_native_outcome_audition_horizon_plies=16,
+        real_native_outcome_audition_verdict_is_standing=True,
+        real_native_conditional_gate_enabled=True,
+        real_native_conditional_gate_mode="action_pattern_eligibility",
+        real_native_conditional_gate_states=("PROBATION", "MATURE"),
+        real_native_continue_after_seed_stop=True,
+        real_native_max_ablation_subjects=256,
+    )
+    output_dir = Path(cfg.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    gate_margin = _phase41_gate_margin_wins()
+    gate_proof = _phase50_constructed_gate_flip_proof(cfg)
+    design = _design_spec(cfg)
+    design["schema_version"] = "phase3_20_conditional_gate_composites_design_spec.v0"
+    design["phase_alias"] = "User-requested Phase 3.20 conditional-gate routing for composites"
+    design["linear_host_boundary_record"] = {
+        "phase3_19_result": "792/792 dose tests were flat_all_doses with zero nonzero validation discordants",
+        "interpretation": "additive composite routing is structurally inert on the linear atom-sum host",
+        "effect_channel_changed": "conditional action-pattern eligibility gate",
+    }
+    design["conditional_gate"] = _phase50_conditional_gate_spec(cfg)
+    design["constructed_move_flip_proof"] = gate_proof
+    design["host_ladder"] = {
+        "frozen_from": "Phase 3.19 supply, homeostasis, spawn triggers, gates, ratchet, boundary, and funnel structure",
+        "paired_gate_spec": _phase41_paired_gate_spec(gate_margin),
+    }
+    design["ecology"] = _phase50_ecology_spec(cfg)
+    _write_json(output_dir / "design_spec.json", design)
+    if not bool(gate_proof.get("passed", False)):
+        summary = {
+            "schema_version": "phase3_20_conditional_gate_composites.v0",
+            "phase": "Phase 3.20 conditional-gate composite routing",
+            "config": asdict(cfg),
+            "constructed_move_flip_proof": gate_proof,
+            "per_seed": [],
+            "decision": {
+                "acceptance_check_passed": False,
+                "stop_reason": "constructed_conditional_gate_move_flip_proof_failed",
+                "confirmed_through_gate_count": 0,
+            },
+        }
+        _write_json(output_dir / "summary.json", summary)
+        return summary
+
+    summary = run_phase44_audition_cell_economy_probe(config=cfg)
+    correspondence = _phase45_composite_correspondence_table()
+    confirmed_recurrence = _phase48_family_recurrence(summary.get("per_seed", []), tier="confirmed")
+    nomination_recurrence = _phase48_family_recurrence(summary.get("per_seed", []), tier="nomination")
+    confirmed_dumps = _phase48_confirmed_cell_dumps(summary.get("per_seed", []))
+    funnel = _phase48_funnel_table(summary.get("per_seed", []))
+    dose_table = _phase49_dose_response_table(summary.get("per_seed", []))
+    outcome_table = _phase49_outcome_agreement_table(summary.get("per_seed", []))
+    gate_validation = _phase50_gate_validation_table(summary.get("per_seed", []))
+
+    design["ecology"] = _phase50_ecology_spec(cfg)
+    design["cross_experiment_composite_correspondence"] = correspondence
+    _write_json(output_dir / "design_spec.json", design)
+    for row in summary.get("per_seed", []):
+        row["schema_version"] = "phase3_20_conditional_gate_composites_seed.v0"
+        row["ecology_spec"] = _phase50_ecology_spec(cfg)
+        row["constructed_move_flip_proof"] = gate_proof
+        row["cross_experiment_composite_correspondence"] = correspondence
+        _write_json(output_dir / f"seed_{row['seed']}_conditional_gate_composites.json", row)
+
+    tables = dict(summary.get("tables", {}))
+    summary["schema_version"] = "phase3_20_conditional_gate_composites.v0"
+    summary["phase"] = "Phase 3.20 conditional-gate composite routing"
+    summary["linear_host_boundary_record"] = design["linear_host_boundary_record"]
+    summary["conditional_gate"] = _phase50_conditional_gate_spec(cfg)
+    summary["constructed_move_flip_proof"] = gate_proof
+    summary["ecology"] = _phase50_ecology_spec(cfg)
+    summary["cross_experiment_composite_correspondence"] = correspondence
+    summary["cross_seed_recurring_confirmed_families"] = confirmed_recurrence
+    summary["cross_seed_recurring_nomination_families"] = nomination_recurrence
+    summary["confirmed_cell_dumps"] = confirmed_dumps
+    summary["tables"] = {
+        "phase3_20_constructed_gate_flip_proof": [gate_proof],
+        "phase3_20_funnel": funnel,
+        "phase3_20_dose_response": dose_table,
+        "phase3_20_gate_validation": gate_validation,
+        "phase3_20_first_flip_vs_outcome": outcome_table,
+        "phase3_20_confirmed_recurrence_by_family": confirmed_recurrence,
+        "phase3_20_nomination_recurrence_by_family": nomination_recurrence,
+        "phase3_20_confirmed_cell_dumps": confirmed_dumps,
+        "phase3_20_headline": _phase48_headline_table(summary.get("per_seed", [])),
+        "phase3_20_audition_signal": tables.get("phase3_14_audition_signal", []),
+        "phase3_20_acceptance_margins": tables.get("phase3_14_acceptance_margins", []),
+        "phase3_20_cross_rung_survivors": summary.get("cross_rung_load_bearing_survivors", []),
+        "phase3_20_cross_experiment_composite_correspondence": correspondence,
+    }
+    confirmed_gate_count = sum(
+        int(row.get("confirmed_gate_cells", 0))
+        for row in gate_validation
+    )
+    nonzero_validation_discordants = sum(
+        int(row.get("nonzero_gate_validation_discordants", 0))
+        for row in gate_validation
+    )
+    summary["decision"]["constructed_gate_flip_proof_passed"] = bool(gate_proof.get("passed", False))
+    summary["decision"]["confirmed_through_gate_count"] = confirmed_gate_count
+    summary["decision"]["nonzero_gate_validation_discordants"] = nonzero_validation_discordants
+    summary["decision"]["terminal_substrate_finding"] = bool(
+        gate_proof.get("passed", False)
+        and confirmed_gate_count == 0
+        and nonzero_validation_discordants == 0
+    )
+    _write_json(output_dir / "summary.json", summary)
+    return summary
+
+
+def _phase50_conditional_gate_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
+    return {
+        "enabled": bool(getattr(cfg, "real_native_conditional_gate_enabled", False)),
+        "mode": str(getattr(cfg, "real_native_conditional_gate_mode", "")),
+        "eligible_states": list(map(str, getattr(cfg, "real_native_conditional_gate_states", ()))),
+        "mechanism": (
+            "A PROBATION/MATURE composite with at least one action_pattern child stops contributing "
+            "an additive score. When it confirms, the runtime restricts the argmax to moves where "
+            "an eligible gate composite confirms, then chooses the host-best move inside that gated set."
+        ),
+        "fallback": "If no eligible gate composite confirms on any legal move, the host/additive selector is unchanged.",
+        "non_additive_for_gate_states": True,
+        "constructed_flip_required_before_full_run": True,
+    }
+
+
+def _phase50_ecology_spec(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
+    spec = _phase49_ecology_spec(cfg)
+    spec["audition_verdict"] = {
+        "first_flip_retired_as_standing_verdict": bool(
+            getattr(cfg, "real_native_outcome_audition_verdict_is_standing", False)
+        ),
+        "standing_verdict": (
+            "bounded_outcome_paired_rollout"
+            if bool(getattr(cfg, "real_native_outcome_audition_verdict_is_standing", False))
+            else "first_flip"
+        ),
+        "outcome_horizon_plies": int(getattr(cfg, "real_native_outcome_audition_horizon_plies", 0)),
+    }
+    spec["conditional_gate"] = _phase50_conditional_gate_spec(cfg)
+    return spec
+
+
+def _phase50_constructed_gate_flip_proof(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
+    if not bool(getattr(cfg, "real_native_conditional_gate_enabled", False)):
+        return {"passed": False, "reason": "conditional_gate_disabled"}
+    stage_b_payload = json.loads(Path(cfg.stage_b_rows_path).read_text(encoding="utf-8"))
+    row_pool = list(stage_b_payload.get("train", ())) + list(stage_b_payload.get("heldout", ()))
+    if not row_pool:
+        return {"passed": False, "reason": "no_stage_b_rows"}
+    flat_seed = int(cfg.flat_baseline_seeds[0])
+    foundation = _train_native_foundation_for_ecology(cfg)
+    native_graph = foundation["graph"]
+    stage_b_weights = _load_weight_table(
+        Path(cfg.stage_b_baseline_dir) / f"stage_d_B_sealed_seed_{flat_seed}_weights.json"
+    )
+    provider = _MigratedStageBFlatGraphScoreProvider(
+        cfg,
+        native_graph,
+        atom_weights=stage_b_weights,
+        flat_seed=flat_seed,
+        policy_parent_id="phase3_20_gate_proof_stage_b_policy",
+        terminal_namespace=f"phase3_20_gate_proof_stage_b_{flat_seed}",
+    )
+    runtime = _GraphNativeCompositeRuntime(cfg, native_graph, seed=int(cfg.seeds[0]) if cfg.seeds else 0)
+    inspected = 0
+    for row in row_pool[: max(32, int(getattr(cfg, "max_samples", 8)) * 16)]:
+        board = chess.Board(str(row["fen"]))
+        if board.turn != chess.WHITE:
+            continue
+        counts: Counter[Any] = Counter()
+        legal = _legal_without_third_repetition(board, counts)
+        if len(legal) < 2:
+            continue
+        inspected += 1
+        base_scores = provider(board, counts)
+        host_rows = [(float(base_scores.get(move.uci(), 0.0)), move.uci(), move) for move in legal]
+        host_rows.sort(reverse=True)
+        host_move = host_rows[0][-1]
+        host_keys = set(key for key, _scale in _sealed_action_key_scales(board, host_move))
+        for _score, _uci, target_move in reversed(host_rows):
+            if target_move == host_move:
+                continue
+            target_keys = tuple(key for key, _scale in _sealed_action_key_scales(board, target_move))
+            action_keys = [key for key in target_keys if str(key).startswith("action_pattern:")]
+            distinguishing_action_keys = [key for key in action_keys if key not in host_keys]
+            if not distinguishing_action_keys:
+                continue
+            child_pool = tuple(dict.fromkeys(distinguishing_action_keys + action_keys + list(_generic_child_pool(target_keys))))
+            if len(child_pool) < int(cfg.composite_width):
+                continue
+            children = tuple(child_pool[: int(cfg.composite_width)])
+            source_signature = _percept_signature(target_keys)
+            item = runtime.spawn(
+                children,
+                trigger="phase3_20_constructed_gate_flip_proof",
+                birth_segment="constructed_gate_flip_proof",
+                birth_row_id=int(row.get("row_id", -1)),
+                source_signature=source_signature,
+                birth_step=0,
+            )
+            cid = str(item["composite_id"])
+            item["state"] = "PROBATION"
+            item["probation_entry_weight"] = 0.0
+            item["routing_weight_override"] = 0.0
+            item["conditional_gate_mechanism"] = str(getattr(cfg, "real_native_conditional_gate_mode", "action_pattern_eligibility"))
+            item["conditional_gate_action_keys"] = [
+                str(child)
+                for child in children
+                if str(child).startswith("action_pattern:")
+            ]
+            runtime.cells[cid].state = StemCellState.PROBATION
+            node_id = str(item["node_id"])
+            if node_id in native_graph.graph.nodes:
+                node = native_graph.graph.nodes[node_id]
+                node.meta["stem_cell_state"] = StemCellState.PROBATION.name
+                node.meta["conditional_gate_mechanism"] = item["conditional_gate_mechanism"]
+                node.meta["conditional_gate_action_keys"] = list(item["conditional_gate_action_keys"])
+            off = runtime.choose_move(
+                board,
+                counts,
+                provider,
+                seed=20272050,
+                disabled={cid},
+                discriminative=True,
+            )
+            on = runtime.choose_move(
+                board,
+                counts,
+                provider,
+                seed=20272050,
+                discriminative=True,
+            )
+            off_move = off.get("move")
+            on_move = on.get("move")
+            passed = bool(
+                off_move is not None
+                and on_move is not None
+                and off_move != on_move
+                and on.get("conditional_gate_applied")
+                and on.get("conditional_gate_changed_choice")
+            )
+            proof = {
+                "passed": passed,
+                "mechanism": "action_pattern_eligibility",
+                "row_id": int(row.get("row_id", -1)),
+                "fen": str(row["fen"]),
+                "flat_seed": flat_seed,
+                "composite_id": cid,
+                "children": list(children),
+                "distinguishing_action_keys": list(distinguishing_action_keys),
+                "gate_action_keys": list(item["conditional_gate_action_keys"]),
+                "host_off_move": None if off_move is None else off_move.uci(),
+                "gated_on_move": None if on_move is None else on_move.uci(),
+                "target_gate_move": target_move.uci(),
+                "host_base_score": float(base_scores.get(host_move.uci(), 0.0)),
+                "target_base_score": float(base_scores.get(target_move.uci(), 0.0)),
+                "conditional_gate_candidate_count": int(on.get("conditional_gate_candidate_count", 0)),
+                "conditional_gate_composite_ids": list(on.get("conditional_gate_composite_ids", ())),
+                "inspected_white_positions": inspected,
+                "runtime_path": "GraphNativeCompositeRuntime.choose_move -> evaluate_composite -> FormalReConEngine request/confirmation -> conditional gate eligibility",
+            }
+            if passed:
+                return proof
+            item["state"] = "PRUNED"
+            item["prune_reason"] = "constructed_gate_flip_probe_no_flip"
+            runtime.cells[cid].state = StemCellState.PRUNED
+    return {
+        "passed": False,
+        "reason": "no_constructed_action_pattern_gate_flipped_move",
+        "inspected_white_positions": inspected,
+        "mechanism": "action_pattern_eligibility",
+    }
+
+
+def _phase50_gate_validation_table(per_seed: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for seed_row in per_seed:
+        records = _phase48_probation_records(seed_row)
+        gate_applied = 0
+        gate_changed = 0
+        nonzero_discordants = 0
+        confirmed_gate = 0
+        for record in records:
+            if record.get("decision") == "confirmed":
+                confirmed_gate += int(any(
+                    int(dose.get("conditional_gate_applied_count", 0)) > 0
+                    for dose in record.get("dose_records", ())
+                ))
+            for dose in record.get("dose_records", ()):
+                gate_applied += int(dose.get("conditional_gate_applied_count", 0))
+                gate_changed += int(dose.get("conditional_gate_changed_choice_count", 0))
+                nonzero_discordants += int(int(dose.get("discordant_delta", 0)) != 0)
+        rows.append(
+            {
+                "seed": int(seed_row.get("seed", 0)),
+                "probation_tests": len(records),
+                "confirmed_gate_cells": confirmed_gate,
+                "gate_validation_applied_count": gate_applied,
+                "gate_validation_changed_choice_count": gate_changed,
+                "nonzero_gate_validation_discordants": nonzero_discordants,
+            }
+        )
+    return rows
+
+
 def _phase39_split_law(cfg: StageBEcologicalDiscoveryConfig) -> dict[str, Any]:
     return {
         "law": (
@@ -3813,6 +4178,16 @@ def _phase48_confirmed_cell_dumps(per_seed: Sequence[Mapping[str, Any]]) -> list
                 continue
             validation = validation_by_id.get(cid, {})
             ablation = ablation_by_id.get(cid, {})
+            gate_action_keys = list(item.get("conditional_gate_action_keys", ()))
+            if not gate_action_keys:
+                gate_action_keys = [
+                    str(child)
+                    for child in item.get("children", ())
+                    if str(child).startswith("action_pattern:")
+                ]
+            gate_mechanism = item.get("conditional_gate_mechanism")
+            if gate_mechanism is None and gate_action_keys:
+                gate_mechanism = "action_pattern_eligibility"
             dumps.append(
                 {
                     "seed": seed,
@@ -3823,10 +4198,14 @@ def _phase48_confirmed_cell_dumps(per_seed: Sequence[Mapping[str, Any]]) -> list
                     "probation_entry_event": item.get("probation_entry_event"),
                     "validation_delta_on_minus_off": validation.get("validation_delta_on_minus_off"),
                     "validation_paired": validation.get("paired", {}),
+                    "validation_dose_records": validation.get("dose_records", ()),
                     "heldout_ablation_delta": ablation.get("ablation_delta"),
                     "heldout_classification": ablation.get("classification"),
                     "heldout_paired": ablation.get("paired", {}),
                     "routing_weight": item.get("routing_weight_override"),
+                    "gate_mechanism": gate_mechanism,
+                    "gate_action_keys": gate_action_keys,
+                    "flipped_move_proof": item.get("conditional_gate_flip_sample"),
                 }
             )
     dumps.sort(key=lambda item: (int(item["seed"]), str(item["family"]), str(item["composite_id"])))
@@ -5371,13 +5750,14 @@ def _phase44_train_audition_ecology_segment(
                     seed=int(seed) + int(row_id) * 7919 + ply * 101 + audition_count,
                     judge_cache=audition_judge_cache,
                 )
-                verdict = str(audition["verdict"])
+                applied = _phase50_applied_audition_verdict(cfg, audition)
+                verdict = str(applied["verdict"])
                 verdicts[verdict] += 1
-                verdict_endpoints[str(audition["verdict_reason"])] += 1
+                verdict_endpoints[str(applied["verdict_reason"])] += 1
                 outcome_verdict = audition.get("outcome_verdict")
                 if outcome_verdict is not None:
                     outcome_verdicts[str(outcome_verdict)] += 1
-                    first_flip_vs_outcome[f"{verdict}->{outcome_verdict}"] += 1
+                    first_flip_vs_outcome[f"{audition['verdict']}->{outcome_verdict}"] += 1
                 audition_count += 1
                 audition_frames_spent += int(audition["frames_spent"]) + int(audition.get("outcome_frames_spent", 0))
                 before_state = str(runtime.population.get(str(proposal["composite_id"]), {}).get("state", "missing"))
@@ -5385,8 +5765,8 @@ def _phase44_train_audition_ecology_segment(
                     composite_id=str(proposal["composite_id"]),
                     verdict=verdict,
                     step=int(step_offset) + index * 100 + ply,
-                    reason=str(audition["verdict_reason"]),
-                    frames_spent=int(audition["frames_spent"]),
+                    reason=str(applied["verdict_reason"]),
+                    frames_spent=int(applied["frames_spent"]),
                 )
                 after_state = str(runtime.population.get(str(proposal["composite_id"]), {}).get("state", "missing"))
                 if before_state == "TRIAL" and after_state == "PROBATION":
@@ -5398,7 +5778,10 @@ def _phase44_train_audition_ecology_segment(
                             "host_move": host_move.uci(),
                             "cell_move": cell_move.uci(),
                             "verdict": verdict,
-                            "verdict_reason": str(audition["verdict_reason"]),
+                            "verdict_reason": str(applied["verdict_reason"]),
+                            "verdict_source": str(applied["verdict_source"]),
+                            "first_flip_verdict": str(audition["verdict"]),
+                            "first_flip_verdict_reason": str(audition["verdict_reason"]),
                             "outcome_verdict": audition.get("outcome_verdict"),
                             "outcome_verdict_reason": audition.get("outcome_verdict_reason"),
                             "host_flip": audition["host"].get("first_flip"),
@@ -5770,6 +6153,28 @@ def _phase44_run_audition_pair(
         result["outcome_frames_spent"] = int(outcome["frames_spent"])
         result["first_flip_outcome_agree"] = bool(outcome["verdict"] == verdict)
     return result
+
+
+def _phase50_applied_audition_verdict(
+    cfg: StageBEcologicalDiscoveryConfig,
+    audition: Mapping[str, Any],
+) -> dict[str, Any]:
+    if (
+        bool(getattr(cfg, "real_native_outcome_audition_verdict_is_standing", False))
+        and audition.get("outcome_verdict") is not None
+    ):
+        return {
+            "verdict": str(audition["outcome_verdict"]),
+            "verdict_reason": str(audition.get("outcome_verdict_reason", "bounded_outcome")),
+            "verdict_source": "bounded_outcome",
+            "frames_spent": int(audition.get("frames_spent", 0)) + int(audition.get("outcome_frames_spent", 0)),
+        }
+    return {
+        "verdict": str(audition["verdict"]),
+        "verdict_reason": str(audition["verdict_reason"]),
+        "verdict_source": "first_flip",
+        "frames_spent": int(audition.get("frames_spent", 0)),
+    }
 
 
 def _phase49_run_audition_outcome_pair(
@@ -6275,18 +6680,23 @@ def _phase45_run_scheduled_auditions(
                 seed=int(seed) + _phase45_stable_int(cid) + audition_count,
                 judge_cache=judge_cache,
             )
-            verdict = str(audition["verdict"])
+            applied = _phase50_applied_audition_verdict(cfg, audition)
+            verdict = str(applied["verdict"])
             verdict_counts[verdict] += 1
-            verdict_reason_counts[str(audition["verdict_reason"])] += 1
+            verdict_reason_counts[str(applied["verdict_reason"])] += 1
+            outcome_verdict = audition.get("outcome_verdict")
+            if outcome_verdict is not None:
+                outcome_verdict_counts[str(outcome_verdict)] += 1
+                first_flip_vs_outcome_counts[f"{audition['verdict']}->{outcome_verdict}"] += 1
             audition_count += 1
-            audition_frames_spent += int(audition["frames_spent"])
+            audition_frames_spent += int(audition["frames_spent"]) + int(audition.get("outcome_frames_spent", 0))
             counter["scheduled_paired_auditions"] += 1
             runtime.apply_audition_verdict(
                 composite_id=cid,
                 verdict=verdict,
                 step=int(step),
-                reason=f"scheduled:{audition['verdict_reason']}",
-                frames_spent=int(audition["frames_spent"]),
+                reason=f"scheduled:{applied['verdict_reason']}",
+                frames_spent=int(applied["frames_spent"]),
             )
             if counter["scheduled_trace_samples"] < max_trace_samples:
                 counter["scheduled_trace_samples"] += 1
@@ -6301,6 +6711,8 @@ def _phase45_run_scheduled_auditions(
         "counter": counter,
         "verdict_counts": verdict_counts,
         "verdict_reason_counts": verdict_reason_counts,
+        "outcome_verdict_counts": outcome_verdict_counts,
+        "first_flip_vs_outcome_counts": first_flip_vs_outcome_counts,
         "audition_count": audition_count,
         "audition_frames_spent": audition_frames_spent,
     }
@@ -6608,13 +7020,14 @@ def _phase47_run_pool_scan_auditions(
                 seed=int(seed) + _phase45_stable_int(cid) + audition_count,
                 judge_cache=judge_cache,
             )
-            verdict = str(audition["verdict"])
+            applied = _phase50_applied_audition_verdict(cfg, audition)
+            verdict = str(applied["verdict"])
             verdict_counts[verdict] += 1
-            verdict_reason_counts[str(audition["verdict_reason"])] += 1
+            verdict_reason_counts[str(applied["verdict_reason"])] += 1
             outcome_verdict = audition.get("outcome_verdict")
             if outcome_verdict is not None:
                 outcome_verdict_counts[str(outcome_verdict)] += 1
-                first_flip_vs_outcome_counts[f"{verdict}->{outcome_verdict}"] += 1
+                first_flip_vs_outcome_counts[f"{audition['verdict']}->{outcome_verdict}"] += 1
             audition_count += 1
             audition_frames_spent += int(audition["frames_spent"]) + int(audition.get("outcome_frames_spent", 0))
             counter["pool_paired_auditions"] += 1
@@ -6623,8 +7036,8 @@ def _phase47_run_pool_scan_auditions(
                 composite_id=cid,
                 verdict=verdict,
                 step=int(step),
-                reason=f"pool_scan:{audition['verdict_reason']}",
-                frames_spent=int(audition["frames_spent"]),
+                reason=f"pool_scan:{applied['verdict_reason']}",
+                frames_spent=int(applied["frames_spent"]),
             )
             after = runtime.population.get(cid, {})
             if before_state == "TRIAL" and after.get("state") == "PROBATION":
@@ -6847,6 +7260,11 @@ def _phase49_confirm_probation_cells_dose_response(
                 "wins_off": int(off_eval["wins"]),
                 "validation_delta_on_minus_off": int(on_eval["wins"]) - int(off_eval["wins"]),
                 "discordant_delta": discordant,
+                "conditional_gate_applied_count": int(on_eval.get("conditional_gate_applied_count", 0)),
+                "conditional_gate_changed_choice_count": int(on_eval.get("conditional_gate_changed_choice_count", 0)),
+                "conditional_gate_composite_ids": list(on_eval.get("conditional_gate_composite_ids", ())),
+                "off_conditional_gate_applied_count": int(off_eval.get("conditional_gate_applied_count", 0)),
+                "off_conditional_gate_changed_choice_count": int(off_eval.get("conditional_gate_changed_choice_count", 0)),
                 "paired": paired,
             }
             dose_records.append(row)
@@ -7703,12 +8121,18 @@ def _phase42_ecology_policy_traces(
     endpoint_by_row: dict[str, str] = {}
     active_by_row: dict[str, list[str]] = {}
     all_active: set[str] = set()
+    gate_applied_count = 0
+    gate_changed_count = 0
+    gate_composite_ids: set[str] = set()
     samples: list[dict[str, Any]] = []
     judge_cache = _new_judge_cache()
     for index, row in enumerate(rows):
         row_active: set[str] = set()
+        row_gate_applied = 0
+        row_gate_changed = 0
 
         def choose(board: chess.Board, counts: Mapping[Any, int], row_id: int, ply: int, rng: random.Random) -> chess.Move | None:
+            nonlocal gate_applied_count, gate_changed_count, row_gate_applied, row_gate_changed
             selected = runtime.choose_move(
                 board,
                 counts,
@@ -7717,6 +8141,14 @@ def _phase42_ecology_policy_traces(
                 disabled=disabled,
             )
             row_active.update(map(str, selected.get("active_composite_ids", ())))
+            gate_ids = list(map(str, selected.get("conditional_gate_composite_ids", ())))
+            if bool(selected.get("conditional_gate_applied", False)):
+                gate_applied_count += 1
+                row_gate_applied += 1
+                gate_composite_ids.update(gate_ids)
+            if bool(selected.get("conditional_gate_changed_choice", False)):
+                gate_changed_count += 1
+                row_gate_changed += 1
             return selected.get("move")
 
         outcome = _rollout_policy(
@@ -7741,6 +8173,8 @@ def _phase42_ecology_policy_traces(
                     "endpoint": outcome["endpoint"],
                     "white_steps": outcome["white_steps"],
                     "active_composite_ids": sorted(row_active),
+                    "conditional_gate_applied_count": row_gate_applied,
+                    "conditional_gate_changed_choice_count": row_gate_changed,
                 }
             )
     wins = sum(int(value) for value in success_by_row.values())
@@ -7759,6 +8193,9 @@ def _phase42_ecology_policy_traces(
         "endpoint_by_row": endpoint_by_row,
         "active_composite_ids": sorted(all_active),
         "active_composite_ids_by_row": active_by_row,
+        "conditional_gate_applied_count": gate_applied_count,
+        "conditional_gate_changed_choice_count": gate_changed_count,
+        "conditional_gate_composite_ids": sorted(gate_composite_ids),
         "runner_config": _phase38_runner_config(
             cfg,
             seed=int(seed),
