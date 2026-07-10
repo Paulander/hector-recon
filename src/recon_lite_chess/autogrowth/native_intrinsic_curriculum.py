@@ -305,6 +305,11 @@ def run_native_intrinsic_curriculum(
         if cfg.run_redundant_child_ablation:
             arm_names = (*arm_names, "child_ablation")
         for arm_name in arm_names:
+            arm_epoch_budget = (
+                cfg.r1_epochs
+                if arm_name == "full_intrinsic"
+                else int(arms["full_intrinsic"]["training"]["stopped_epoch"])
+            )
             arm_graph = copy.deepcopy(r0_graph)
             arm_credit = copy.deepcopy(r0_credit)
             arms[arm_name] = _run_r1_arm(
@@ -315,6 +320,7 @@ def run_native_intrinsic_curriculum(
                 pools,
                 r0_replay_memory=r0_replay_memory,
                 r0_child_triplet_ids=r0_child_triplet_ids,
+                max_epochs=arm_epoch_budget,
                 config=cfg,
             )
             if arm_name == "full_intrinsic":
@@ -637,6 +643,7 @@ def _run_r1_arm(
     *,
     r0_replay_memory: Sequence[_R0ReplayExperience],
     r0_child_triplet_ids: frozenset[str],
+    max_epochs: int,
     config: NativeIntrinsicCurriculumConfig,
 ) -> dict[str, Any]:
     credit.register(R1_COMPETENCE_ID, mature=False, hierarchy_depth=0)
@@ -662,7 +669,10 @@ def _run_r1_arm(
         else None
     )
     checkpoints: list[dict[str, Any]] = []
-    for epoch in range(config.r1_epochs):
+    epoch_budget = max(1, int(max_epochs))
+    stopped_epoch = epoch_budget
+    joint_mastery = False
+    for epoch in range(epoch_budget):
         for position_index, fen in enumerate(pools.r1_train):
             board = chess.Board(fen)
             move, triplet_id, confirmed = _scheduled_confirmed_action(
@@ -740,7 +750,7 @@ def _run_r1_arm(
         replay_confirmation_failures += replay["formal_confirmation_failures"]
         replay_outcome_mismatches += replay["cached_outcome_mismatches"]
         replay_seconds += replay["duration_seconds"]
-        if epoch in {0, config.r1_epochs - 1} or (epoch + 1) % 20 == 0:
+        if epoch in {0, epoch_budget - 1} or (epoch + 1) % 20 == 0:
             metrics = _evaluate_r1(
                 graph,
                 pools.r1_validation,
@@ -756,17 +766,44 @@ def _run_r1_arm(
                 r0_child_triplet_ids=evaluation_child_triplet_ids,
                 child_dispatch_cache=evaluation_child_dispatch_cache,
             )
-            checkpoints.append(
-                {
-                    "epoch": epoch + 1,
-                    "validation_conversion_rate": metrics["conversion_rate"],
-                    "child_handoff_count": child_handoffs,
-                    "r0_retention_accuracy": retention["accuracy"],
-                }
-            )
+            checkpoint = {
+                "epoch": epoch + 1,
+                "validation_conversion_rate": metrics["conversion_rate"],
+                "child_handoff_count": child_handoffs,
+                "r0_retention_accuracy": retention["accuracy"],
+            }
+            if (
+                arm_name == "full_intrinsic"
+                and metrics["conversion_rate"] >= config.r1_mastery_threshold
+                and retention["accuracy"] >= config.r0_mastery_threshold
+            ):
+                regression_probe = _evaluate_r1(
+                    graph,
+                    pools.r1_regression,
+                    max_samples=0,
+                    stop_after_first_failure=True,
+                    r0_child_triplet_ids=evaluation_child_triplet_ids,
+                    child_dispatch_cache=evaluation_child_dispatch_cache,
+                )
+                checkpoint["regression_conversion_rate_at_mastery_probe"] = (
+                    regression_probe["conversion_rate"]
+                )
+                joint_mastery = bool(
+                    regression_probe["conversion_rate"]
+                    >= config.r1_mastery_threshold
+                )
+                checkpoint["joint_mastery"] = joint_mastery
+                if joint_mastery:
+                    stopped_epoch = epoch + 1
+            checkpoints.append(checkpoint)
+            if joint_mastery:
+                break
     return {
         "training": {
             "episodes": episodes,
+            "epoch_budget": epoch_budget,
+            "stopped_epoch": stopped_epoch,
+            "joint_mastery": joint_mastery,
             "duration_seconds": round(perf_counter() - started, 6),
             "child_handoff_count": child_handoffs,
             "virtual_frame_query_count": virtual_frame_queries,
@@ -956,6 +993,8 @@ def _build_r0_replay_memory(
 def _arm_progress_summary(arm: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "training_episodes": arm["training"]["episodes"],
+        "stopped_epoch": arm["training"]["stopped_epoch"],
+        "joint_mastery": arm["training"]["joint_mastery"],
         "child_handoff_count": arm["training"]["child_handoff_count"],
         "r0_replay_episode_count": arm["training"]["r0_replay_episode_count"],
         "validation_conversion_rate": arm["validation"]["conversion_rate"],
