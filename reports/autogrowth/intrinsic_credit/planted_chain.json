@@ -1,0 +1,772 @@
+{
+  "benchmark": "intrinsic_competence_chain_v1",
+  "cell_ids_are_semantically_anonymous": true,
+  "config": {
+    "episodes_per_rung": 12,
+    "eta_fast": 0.4,
+    "eta_slow": 1.0,
+    "gamma": 0.97,
+    "min_grounding_evidence": 3,
+    "output_path": "reports/autogrowth/intrinsic_credit/planted_chain.json",
+    "real_move_cost": 0.01
+  },
+  "controls": {
+    "cycle_event": {
+      "cycle_rejected": true,
+      "decision_id": "cell_000",
+      "event_index": 37,
+      "immediate_reward": -0.01,
+      "predicted_value": 0.98784498548736,
+      "provider_ids": [],
+      "real_step": true,
+      "successor_value": 0.0,
+      "td_error": -0.99784498548736,
+      "terminal_kind": null,
+      "updated_values": {
+        "cell_000": 0.588706991292416
+      }
+    },
+    "immature_provider_event": {
+      "cycle_rejected": false,
+      "decision_id": "parent",
+      "event_index": 13,
+      "immediate_reward": -0.01,
+      "predicted_value": 0.0,
+      "provider_ids": [],
+      "real_step": true,
+      "successor_value": 0.0,
+      "td_error": -0.01,
+      "terminal_kind": null,
+      "updated_values": {
+        "parent": -0.004
+      }
+    },
+    "no_bootstrap_fast_value": -0.00997823217664
+  },
+  "engine_snapshot": {
+    "config": {
+      "causal_epsilon": 0.01,
+      "confidence_prior": 3.0,
+      "eligibility_decay": 0.8,
+      "eta_fast": 0.4,
+      "eta_slow": 1.0,
+      "gamma": 0.97,
+      "min_causal_confirmations": 1,
+      "min_grounding_evidence": 3,
+      "parent_learning_decay": 0.6,
+      "real_move_cost": 0.01,
+      "terminal_draw_value": -0.25,
+      "terminal_failure_value": -1.0,
+      "terminal_win_value": 1.0,
+      "value_max": 1.0,
+      "value_min": -1.0,
+      "virtual_frame_cost": 0.001
+    },
+    "event_count": 37,
+    "events": [
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_000",
+        "event_index": 1,
+        "immediate_reward": 0.99,
+        "predicted_value": 0.0,
+        "provider_ids": [],
+        "real_step": true,
+        "successor_value": 0.0,
+        "td_error": 0.99,
+        "terminal_kind": "mate",
+        "updated_values": {
+          "cell_000": 0.396
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_000",
+        "event_index": 2,
+        "immediate_reward": 0.99,
+        "predicted_value": 0.396,
+        "provider_ids": [],
+        "real_step": true,
+        "successor_value": 0.0,
+        "td_error": 0.594,
+        "terminal_kind": "mate",
+        "updated_values": {
+          "cell_000": 0.6336
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_000",
+        "event_index": 3,
+        "immediate_reward": 0.99,
+        "predicted_value": 0.6336,
+        "provider_ids": [],
+        "real_step": true,
+        "successor_value": 0.0,
+        "td_error": 0.35639999999999994,
+        "terminal_kind": "mate",
+        "updated_values": {
+          "cell_000": 0.7761600000000001
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_000",
+        "event_index": 4,
+        "immediate_reward": 0.99,
+        "predicted_value": 0.7761600000000001,
+        "provider_ids": [],
+        "real_step": true,
+        "successor_value": 0.0,
+        "td_error": 0.21383999999999992,
+        "terminal_kind": "mate",
+        "updated_values": {
+          "cell_000": 0.861696
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_000",
+        "event_index": 5,
+        "immediate_reward": 0.99,
+        "predicted_value": 0.861696,
+        "provider_ids": [],
+        "real_step": true,
+        "successor_value": 0.0,
+        "td_error": 0.12830399999999997,
+        "terminal_kind": "mate",
+        "updated_values": {
+          "cell_000": 0.9130176
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_000",
+        "event_index": 6,
+        "immediate_reward": 0.99,
+        "predicted_value": 0.9130176,
+        "provider_ids": [],
+        "real_step": true,
+        "successor_value": 0.0,
+        "td_error": 0.0769824,
+        "terminal_kind": "mate",
+        "updated_values": {
+          "cell_000": 0.94381056
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_000",
+        "event_index": 7,
+        "immediate_reward": 0.99,
+        "predicted_value": 0.94381056,
+        "provider_ids": [],
+        "real_step": true,
+        "successor_value": 0.0,
+        "td_error": 0.046189440000000026,
+        "terminal_kind": "mate",
+        "updated_values": {
+          "cell_000": 0.962286336
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_000",
+        "event_index": 8,
+        "immediate_reward": 0.99,
+        "predicted_value": 0.962286336,
+        "provider_ids": [],
+        "real_step": true,
+        "successor_value": 0.0,
+        "td_error": 0.02771366399999997,
+        "terminal_kind": "mate",
+        "updated_values": {
+          "cell_000": 0.9733718016
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_000",
+        "event_index": 9,
+        "immediate_reward": 0.99,
+        "predicted_value": 0.9733718016,
+        "provider_ids": [],
+        "real_step": true,
+        "successor_value": 0.0,
+        "td_error": 0.01662819839999996,
+        "terminal_kind": "mate",
+        "updated_values": {
+          "cell_000": 0.98002308096
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_000",
+        "event_index": 10,
+        "immediate_reward": 0.99,
+        "predicted_value": 0.98002308096,
+        "provider_ids": [],
+        "real_step": true,
+        "successor_value": 0.0,
+        "td_error": 0.009976919039999976,
+        "terminal_kind": "mate",
+        "updated_values": {
+          "cell_000": 0.984013848576
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_000",
+        "event_index": 11,
+        "immediate_reward": 0.99,
+        "predicted_value": 0.984013848576,
+        "provider_ids": [],
+        "real_step": true,
+        "successor_value": 0.0,
+        "td_error": 0.005986151423999941,
+        "terminal_kind": "mate",
+        "updated_values": {
+          "cell_000": 0.9864083091456001
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_000",
+        "event_index": 12,
+        "immediate_reward": 0.99,
+        "predicted_value": 0.9864083091456001,
+        "provider_ids": [],
+        "real_step": true,
+        "successor_value": 0.0,
+        "td_error": 0.0035916908543999204,
+        "terminal_kind": "mate",
+        "updated_values": {
+          "cell_000": 0.98784498548736
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_001",
+        "event_index": 13,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.0,
+        "provider_ids": [
+          "cell_000"
+        ],
+        "real_step": true,
+        "successor_value": 0.98784498548736,
+        "td_error": 0.9482096359227392,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_001": 0.37928385436909573
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_001",
+        "event_index": 14,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.37928385436909573,
+        "provider_ids": [
+          "cell_000"
+        ],
+        "real_step": true,
+        "successor_value": 0.98784498548736,
+        "td_error": 0.5689257815536435,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_001": 0.6068541669905532
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_001",
+        "event_index": 15,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.6068541669905532,
+        "provider_ids": [
+          "cell_000"
+        ],
+        "real_step": true,
+        "successor_value": 0.98784498548736,
+        "td_error": 0.34135546893218605,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_001": 0.7433963545634276
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_001",
+        "event_index": 16,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.7433963545634276,
+        "provider_ids": [
+          "cell_000"
+        ],
+        "real_step": true,
+        "successor_value": 0.98784498548736,
+        "td_error": 0.20481328135931165,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_001": 0.8253216671071523
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_001",
+        "event_index": 17,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.8253216671071523,
+        "provider_ids": [
+          "cell_000"
+        ],
+        "real_step": true,
+        "successor_value": 0.98784498548736,
+        "td_error": 0.12288796881558695,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_001": 0.8744768546333871
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_001",
+        "event_index": 18,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.8744768546333871,
+        "provider_ids": [
+          "cell_000"
+        ],
+        "real_step": true,
+        "successor_value": 0.98784498548736,
+        "td_error": 0.07373278128935212,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_001": 0.9039699671491279
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_001",
+        "event_index": 19,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.9039699671491279,
+        "provider_ids": [
+          "cell_000"
+        ],
+        "real_step": true,
+        "successor_value": 0.98784498548736,
+        "td_error": 0.044239668773611296,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_001": 0.9216658346585724
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_001",
+        "event_index": 20,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.9216658346585724,
+        "provider_ids": [
+          "cell_000"
+        ],
+        "real_step": true,
+        "successor_value": 0.98784498548736,
+        "td_error": 0.026543801264166778,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_001": 0.9322833551642391
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_001",
+        "event_index": 21,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.9322833551642391,
+        "provider_ids": [
+          "cell_000"
+        ],
+        "real_step": true,
+        "successor_value": 0.98784498548736,
+        "td_error": 0.01592628075850011,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_001": 0.9386538674676391
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_001",
+        "event_index": 22,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.9386538674676391,
+        "provider_ids": [
+          "cell_000"
+        ],
+        "real_step": true,
+        "successor_value": 0.98784498548736,
+        "td_error": 0.009555768455100089,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_001": 0.9424761748496792
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_001",
+        "event_index": 23,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.9424761748496792,
+        "provider_ids": [
+          "cell_000"
+        ],
+        "real_step": true,
+        "successor_value": 0.98784498548736,
+        "td_error": 0.005733461073060053,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_001": 0.9447695592789032
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_001",
+        "event_index": 24,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.9447695592789032,
+        "provider_ids": [
+          "cell_000"
+        ],
+        "real_step": true,
+        "successor_value": 0.98784498548736,
+        "td_error": 0.003440076643836054,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_001": 0.9461455899364376
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_002",
+        "event_index": 25,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.0,
+        "provider_ids": [
+          "cell_001"
+        ],
+        "real_step": true,
+        "successor_value": 0.9461455899364376,
+        "td_error": 0.9077612222383444,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_002": 0.3631044888953378
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_002",
+        "event_index": 26,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.3631044888953378,
+        "provider_ids": [
+          "cell_001"
+        ],
+        "real_step": true,
+        "successor_value": 0.9461455899364376,
+        "td_error": 0.5446567333430066,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_002": 0.5809671822325404
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_002",
+        "event_index": 27,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.5809671822325404,
+        "provider_ids": [
+          "cell_001"
+        ],
+        "real_step": true,
+        "successor_value": 0.9461455899364376,
+        "td_error": 0.32679404000580403,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_002": 0.711684798234862
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_002",
+        "event_index": 28,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.711684798234862,
+        "provider_ids": [
+          "cell_001"
+        ],
+        "real_step": true,
+        "successor_value": 0.9461455899364376,
+        "td_error": 0.19607642400348246,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_002": 0.7901153678362549
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_002",
+        "event_index": 29,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.7901153678362549,
+        "provider_ids": [
+          "cell_001"
+        ],
+        "real_step": true,
+        "successor_value": 0.9461455899364376,
+        "td_error": 0.11764585440208952,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_002": 0.8371737095970907
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_002",
+        "event_index": 30,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.8371737095970907,
+        "provider_ids": [
+          "cell_001"
+        ],
+        "real_step": true,
+        "successor_value": 0.9461455899364376,
+        "td_error": 0.07058751264125374,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_002": 0.8654087146535921
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_002",
+        "event_index": 31,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.8654087146535921,
+        "provider_ids": [
+          "cell_001"
+        ],
+        "real_step": true,
+        "successor_value": 0.9461455899364376,
+        "td_error": 0.042352507584752286,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_002": 0.882349717687493
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_002",
+        "event_index": 32,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.882349717687493,
+        "provider_ids": [
+          "cell_001"
+        ],
+        "real_step": true,
+        "successor_value": 0.9461455899364376,
+        "td_error": 0.025411504550851394,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_002": 0.8925143195078336
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_002",
+        "event_index": 33,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.8925143195078336,
+        "provider_ids": [
+          "cell_001"
+        ],
+        "real_step": true,
+        "successor_value": 0.9461455899364376,
+        "td_error": 0.01524690273051088,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_002": 0.8986130806000379
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_002",
+        "event_index": 34,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.8986130806000379,
+        "provider_ids": [
+          "cell_001"
+        ],
+        "real_step": true,
+        "successor_value": 0.9461455899364376,
+        "td_error": 0.009148141638306573,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_002": 0.9022723372553605
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_002",
+        "event_index": 35,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.9022723372553605,
+        "provider_ids": [
+          "cell_001"
+        ],
+        "real_step": true,
+        "successor_value": 0.9461455899364376,
+        "td_error": 0.005488884982983944,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_002": 0.9044678912485541
+        }
+      },
+      {
+        "cycle_rejected": false,
+        "decision_id": "cell_002",
+        "event_index": 36,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.9044678912485541,
+        "provider_ids": [
+          "cell_001"
+        ],
+        "real_step": true,
+        "successor_value": 0.9461455899364376,
+        "td_error": 0.003293330989790344,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_002": 0.9057852236444702
+        }
+      },
+      {
+        "cycle_rejected": true,
+        "decision_id": "cell_000",
+        "event_index": 37,
+        "immediate_reward": -0.01,
+        "predicted_value": 0.98784498548736,
+        "provider_ids": [],
+        "real_step": true,
+        "successor_value": 0.0,
+        "td_error": -0.99784498548736,
+        "terminal_kind": null,
+        "updated_values": {
+          "cell_000": 0.588706991292416
+        }
+      }
+    ],
+    "states": {
+      "cell_000": {
+        "can_emit": true,
+        "causal_confirmations": 1,
+        "causal_failures": 0,
+        "cell_id": "cell_000",
+        "confidence": 0.8,
+        "eligibility": 1.0,
+        "fast_value": 0.588706991292416,
+        "grounding_ancestors": [],
+        "grounding_evidence": 12,
+        "grounding_level": 0,
+        "handoff_evidence": 0,
+        "hierarchy_depth": 0,
+        "last_provider_ids": [],
+        "mature": true,
+        "slow_value": 0.98784498548736,
+        "terminal_evidence": 12,
+        "value_updates": 13
+      },
+      "cell_001": {
+        "can_emit": true,
+        "causal_confirmations": 1,
+        "causal_failures": 0,
+        "cell_id": "cell_001",
+        "confidence": 0.8,
+        "eligibility": 0.0,
+        "fast_value": 0.9461455899364376,
+        "grounding_ancestors": [
+          "cell_000"
+        ],
+        "grounding_evidence": 12,
+        "grounding_level": 1,
+        "handoff_evidence": 12,
+        "hierarchy_depth": 0,
+        "last_provider_ids": [
+          "cell_000"
+        ],
+        "mature": true,
+        "slow_value": 0.9461455899364376,
+        "terminal_evidence": 0,
+        "value_updates": 12
+      },
+      "cell_002": {
+        "can_emit": true,
+        "causal_confirmations": 1,
+        "causal_failures": 0,
+        "cell_id": "cell_002",
+        "confidence": 0.8,
+        "eligibility": 0.0,
+        "fast_value": 0.9057852236444702,
+        "grounding_ancestors": [
+          "cell_000",
+          "cell_001"
+        ],
+        "grounding_evidence": 12,
+        "grounding_level": 2,
+        "handoff_evidence": 12,
+        "hierarchy_depth": 0,
+        "last_provider_ids": [
+          "cell_001"
+        ],
+        "mature": true,
+        "slow_value": 0.9057852236444702,
+        "terminal_evidence": 0,
+        "value_updates": 12
+      }
+    }
+  },
+  "gates": {
+    "cycle_guard": true,
+    "immature_provider_blocked": true,
+    "intermediate_reward_labels_used": false,
+    "no_bootstrap_control": true,
+    "recursive_handoff": true,
+    "terminal_anchor": true,
+    "value_orders_by_distance": true
+  },
+  "grounding_ancestors": {
+    "cell_000": [],
+    "cell_001": [
+      "cell_000"
+    ],
+    "cell_002": [
+      "cell_000",
+      "cell_001"
+    ]
+  },
+  "grounding_levels": {
+    "cell_000": 0,
+    "cell_001": 1,
+    "cell_002": 2
+  },
+  "paired_confirmation_source": "complete enabled/disabled rollout outcomes",
+  "pass": true,
+  "root_reward_source": "terminal outcome only",
+  "values": {
+    "cell_000": 0.98784498548736,
+    "cell_001": 0.9461455899364376,
+    "cell_002": 0.9057852236444702
+  }
+}

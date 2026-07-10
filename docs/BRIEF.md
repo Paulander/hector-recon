@@ -31,8 +31,24 @@ No causal classification counts unless full/no-op share evaluator, rows, seeds, 
 
 The planted-composition certification passed. The one authorized v1 KRK closure was preregistered at commits `ae59486` and `3ecf76b`, then stopped at its first binding rule: the frozen fresh-pool law is infeasible. Exact enumeration found only 43/34/39/30/25 eligible D4 orbits at king-distance strata 3/4/5/6/7 after the five named prior-pool orbit exclusions, versus required totals 154/154/154/153/153. No TRAIN/VALIDATION/FINAL manifests were created, no arm ran, and FINAL-TEST touch count is zero. This is an instrument/pool-capacity stop, not evidence for or against point cells, widening, routing, or outcome-only learning.
 
+Intrinsic hierarchical credit is now an implemented bounded mechanism. A mature,
+causally confirmed, outcome-grounded child may emit consolidated value; local
+eligibility updates existing M3 edges; trial firing and cyclic provenance cannot
+create reward. The anonymous three-rung planted chain passes without intermediate
+labels. TG46d-to-TG48a2 live handoff also emits value without validator or geometry
+shaping. The first gated smoke is not a KRK gain: all starts were already accepted
+by the foundation gate, so parent and trained arms were all 1.0. Current blocker:
+learn a nonlinear outcome-calibrated competence basin from broader real rollouts,
+then construct starts outside that basin which can enter it within one to three
+White decisions.
+
 ## Ordered next decision
 
-KRK is frozen as a regression/transfer benchmark. Do not repair the stopped closure by weakening its exclusions, shrinking its pools, changing strata, or adding a rescue arm after observing feasibility. The next research question is KPK opposition/tempo under a fresh domain-specific preregistration, using the generic planted-benchmark measurement pattern and permanent tripwires.
+The stopped v1 closure remains frozen exactly as preregistered; do not weaken or
+rerun it. By explicit project direction, KRK development continues as a distinct
+intrinsic-curriculum workstream without touching that FINAL pool. Next: grow and
+validate an outcome-calibrated nonlinear `AVAILABLE` subgraph, then rerun a
+high-resolution adjacent-rung curriculum with no-bootstrap and child-ablation
+controls. KPK remains the subsequent transfer domain.
 
 No-go: runtime tablebase/DTM or Stockfish provider, learner-visible stage/hand-skill features, direct move-provider overrides, hidden oracles, new TG chronology, or claims from a counterfactual path that fails no-op parity.

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 from dataclasses import asdict, dataclass
+from functools import lru_cache
 import gzip
 import json
 from pathlib import Path
@@ -40,6 +41,10 @@ from .handoff_reachability_audit import (
     _foundation_artifact_sanity,
     _reconstruct_parent_foundation_from_m4_audit,
 )
+from .intrinsic_krk_credit import (
+    KRKIntrinsicCredit,
+    KRKIntrinsicCreditConfig,
+)
 from .real_clean_slate_foundation import _git_head
 from .terminal_substrate import TerminalAffordanceLearner
 from .tg48a2_same_side_microstage import (
@@ -75,6 +80,7 @@ class TG48a2SameSideEpisodeTrainingConfig:
     board_sample_path: str = str(DEFAULT_OUTPUT_DIR / "pools" / "board_samples.md")
     parent_foundation_artifact_path: str = str(DEFAULT_TG46D_DIR / "promoted_tg46d_foundation.json")
     parent_foundation_m4_audit_path: str = str(DEFAULT_TG46D_DIR / "pools" / "tg46d_m4_audit.jsonl.gz")
+    parent_foundation_m4_eval_path: str = str(DEFAULT_TG46D_DIR / "pools" / "tg46d_m4_only_eval.jsonl.gz")
     seed: int = 20260701
     train_count: int = 80
     heldout_count: int = 32
@@ -93,6 +99,40 @@ class TG48a2SameSideEpisodeTrainingConfig:
     m4_min_positive_support: int = 3
     m4_min_negative_support: int = 3
     m3_plus_m4_trial_scale: float = 0.25
+    credit_mode: str = "legacy_shaped"
+    intrinsic_gamma: float = 0.97
+    intrinsic_real_move_cost: float = 0.01
+
+
+_INTRINSIC_CREDIT_MODE = "intrinsic_foundation_value"
+
+
+@lru_cache(maxsize=8)
+def _intrinsic_credit_context(
+    artifact_path: str,
+    m4_eval_path: str,
+    gamma: float,
+    real_move_cost: float,
+) -> KRKIntrinsicCredit:
+    return KRKIntrinsicCredit.from_artifacts(
+        _load_json(artifact_path),
+        m4_eval_path=m4_eval_path,
+        config=KRKIntrinsicCreditConfig(
+            gamma=float(gamma),
+            real_move_cost=float(real_move_cost),
+        ),
+    )
+
+
+def _intrinsic_credit_for_config(
+    config: TG48a2SameSideEpisodeTrainingConfig,
+) -> KRKIntrinsicCredit:
+    return _intrinsic_credit_context(
+        config.parent_foundation_artifact_path,
+        config.parent_foundation_m4_eval_path,
+        config.intrinsic_gamma,
+        config.intrinsic_real_move_cost,
+    )
 
 
 @dataclass(frozen=True)
@@ -121,6 +161,8 @@ def run_tg48a2_same_side_episode_training(
     *,
     config: TG48a2SameSideEpisodeTrainingConfig,
 ) -> TG48a2SameSideEpisodeTrainingResult:
+    if config.credit_mode not in {"legacy_shaped", _INTRINSIC_CREDIT_MODE}:
+        raise ValueError(f"unsupported credit mode: {config.credit_mode}")
     start = time.perf_counter()
     parent_artifact = _load_json(config.parent_foundation_artifact_path)
     parent_hash = _file_sha256(config.parent_foundation_artifact_path)
@@ -286,6 +328,13 @@ def run_tg48a2_same_side_episode_training(
             "runtime_tablebase_or_dtm_move_source": False,
             "primary_training_unit": "episode_trajectory",
             "move_local_reward_primary": False,
+            "credit_mode": config.credit_mode,
+            "trainer_authored_shaping_used_for_reward": (
+                config.credit_mode != _INTRINSIC_CREDIT_MODE
+            ),
+            "native_mature_child_value_used_for_reward": (
+                config.credit_mode == _INTRINSIC_CREDIT_MODE
+            ),
         },
         "training_strategy": {
             "strategy_note": "docs/autogrowth/TRAINING_STRATEGY_NOTE.md",
@@ -293,6 +342,11 @@ def run_tg48a2_same_side_episode_training(
             "move_local_scoring_diagnostic_only": True,
             "eligibility_trace_discount": config.gamma,
             "trainer_side_playout_not_runtime_selector": True,
+            "known_positive_state_source": (
+                "mature_outcome_grounded_child_graph_value"
+                if config.credit_mode == _INTRINSIC_CREDIT_MODE
+                else "trainer_shaped_endpoint_classifier"
+            ),
         },
         "parent_foundation": {
             "frozen": True,
@@ -332,6 +386,11 @@ def run_tg48a2_same_side_episode_training(
         },
         "reward_channel_audit": _reward_channel_summary(train_traces),
         "m4_audit": m4_audit,
+        "intrinsic_credit": (
+            _intrinsic_credit_for_config(config).snapshot()
+            if config.credit_mode == _INTRINSIC_CREDIT_MODE
+            else None
+        ),
         "artifact_paths": {
             "main": config.output_path,
             "markdown": config.markdown_path,
@@ -483,6 +542,8 @@ def _play_episode(
     classifier_mode: str = "repaired",
     forced_first_move_uci: str | None = None,
 ) -> dict[str, Any]:
+    if config.credit_mode == _INTRINSIC_CREDIT_MODE and classifier_mode == "repaired":
+        classifier_mode = "intrinsic_graph_competence"
     board = chess.Board(str(row["fen"]))
     positions = [board.fen()]
     white_moves: list[str] = []
@@ -573,7 +634,16 @@ def _play_episode(
         endpoint_diagnostics = _endpoint_board_diagnostics(board, parent=parent, config=config)
         _accumulate_episode_diagnostics(episode_diagnostics, endpoint_diagnostics)
     endpoint_diagnostics = {**endpoint_diagnostics, **episode_diagnostics}
-    reward_channels, trajectory_reward = _trajectory_reward(endpoint_type, endpoint_diagnostics)
+    intrinsic_credit_audit: dict[str, Any] = {}
+    if config.credit_mode == _INTRINSIC_CREDIT_MODE:
+        reward_channels, trajectory_reward, intrinsic_credit_audit = _intrinsic_trajectory_reward(
+            endpoint_type,
+            endpoint_diagnostics,
+            real_white_moves=len(white_moves),
+            config=config,
+        )
+    else:
+        reward_channels, trajectory_reward = _trajectory_reward(endpoint_type, endpoint_diagnostics)
     credit_assignments = _credit_assignments(
         terminal_activations_by_white_ply=terminal_activations_by_white_ply,
         reward_channels=reward_channels,
@@ -603,6 +673,9 @@ def _play_episode(
         "endpoint_validated_mate2": bool(endpoint_diagnostics.get("validated_mate2_entry", False)),
         "endpoint_killbox_friendly": bool(endpoint_diagnostics.get("killbox_friendly", False)),
         "endpoint_opposed_side_or_safer_geometry": bool(endpoint_diagnostics.get("geometry_transition", False)),
+        "endpoint_mature_competence_available": bool(
+            endpoint_diagnostics.get("native_foundation_graph_all_reply", False)
+        ),
         "rook_blunder": bool(endpoint_diagnostics.get("rook_blunder", False)),
         "stalemate": bool(endpoint_diagnostics.get("stalemate", False)),
         "illegal": endpoint_type == "illegal",
@@ -616,13 +689,16 @@ def _play_episode(
         "trajectory_reward": trajectory_reward,
         "reward_channels": reward_channels,
         "credit_assignments": credit_assignments,
-        "episode_success": _episode_success(endpoint_type),
+        "episode_success": _episode_success(endpoint_type, credit_mode=config.credit_mode),
         "same_side_subskill_success": endpoint_type == "safer_opposed_or_killbox_geometry",
         "lateral_escape_success": bool(
             endpoint_diagnostics.get("lateral_escape_survived_reply", False)
             and not endpoint_diagnostics.get("rook_blunder", False)
         ),
         "trainer_side_playout_used_for_reward": True,
+        "trainer_authored_shaping_used_for_reward": config.credit_mode != _INTRINSIC_CREDIT_MODE,
+        "credit_mode": config.credit_mode,
+        "intrinsic_credit_audit": intrinsic_credit_audit,
         "trainer_side_playout_used_for_runtime_selection": False,
         "learner_visible_labels": False,
     }
@@ -675,6 +751,19 @@ def _select_contrastive_first_move(
     candidates = [move for move in sorted(board.legal_moves, key=lambda item: item.uci()) if move.uci() != selected_uci]
     if not candidates:
         return None
+    if config.credit_mode == _INTRINSIC_CREDIT_MODE:
+        ranked = sorted(
+            (
+                (
+                    _intrinsic_candidate_return(board, move, parent=parent, config=config),
+                    move.uci(),
+                    move,
+                )
+                for move in candidates
+            ),
+            reverse=True,
+        )
+        return ranked[0][-1]
     ranked = sorted(
         (
             (
@@ -724,6 +813,9 @@ def _contrastive_summary(trace: Mapping[str, Any]) -> dict[str, Any]:
         "lateral_escape_success": trace["lateral_escape_success"],
         "endpoint_validated_entry": trace["endpoint_validated_entry"],
         "endpoint_opposed_side_or_safer_geometry": trace["endpoint_opposed_side_or_safer_geometry"],
+        "endpoint_mature_competence_available": trace.get(
+            "endpoint_mature_competence_available", False
+        ),
         "rook_blunder": trace["rook_blunder"],
         "stalemate": trace["stalemate"],
         "illegal": trace["illegal"],
@@ -752,6 +844,8 @@ def _accumulate_episode_diagnostics(flags: dict[str, bool], diag: Mapping[str, A
 
 
 _STOP_ENDPOINTS = {
+    "checkmate",
+    "mature_foundation_competence_available",
     "validated_mate1_entry",
     "validated_mate2_entry",
     "validated_foundation_entry",
@@ -777,8 +871,40 @@ def _select_white_move(
     if not moves:
         return None
     if training and rng.random() < config.exploration_rate:
+        if config.credit_mode == _INTRINSIC_CREDIT_MODE:
+            intrinsic = [
+                (_intrinsic_candidate_return(board, move, parent=parent, config=config), move)
+                for move in moves
+            ]
+            best = max(score for score, _move in intrinsic)
+            # A mature-child or terminal signal may guide one-ply imagination.
+            # Otherwise explore among equal-cost legal hypotheses without a
+            # trainer-authored geometry score.
+            if best > -config.intrinsic_real_move_cost + 1e-12:
+                best_moves = [move for score, move in intrinsic if abs(score - best) <= 1e-12]
+                return rng.choice(best_moves)
+            return rng.choice(moves)
         ranked = sorted(
             ((_trainer_exploration_score(board, move, parent=parent, config=config), move.uci(), move) for move in moves),
+            reverse=True,
+        )
+        return ranked[0][-1]
+    if config.credit_mode == _INTRINSIC_CREDIT_MODE:
+        ranked = sorted(
+            (
+                (
+                    _intrinsic_runtime_move_score(
+                        board,
+                        move,
+                        parent=parent,
+                        learner=learner,
+                        config=config,
+                    ),
+                    move.uci(),
+                    move,
+                )
+                for move in moves
+            ),
             reverse=True,
         )
         return ranked[0][-1]
@@ -787,6 +913,62 @@ def _select_white_move(
         reverse=True,
     )
     return ranked[0][-1]
+
+
+def _intrinsic_candidate_return(
+    board: chess.Board,
+    move: chess.Move,
+    *,
+    parent: dict[str, TerminalAffordanceLearner] | None,
+    config: TG48a2SameSideEpisodeTrainingConfig,
+) -> float:
+    if move not in board.legal_moves:
+        terminal_kind = "illegal"
+        response: Mapping[str, Any] = {}
+    else:
+        after = board.copy(stack=False)
+        after.push(move)
+        response = _intrinsic_credit_for_config(config).native_response(after, parent)
+        if after.is_checkmate():
+            terminal_kind = "mate"
+        elif after.is_stalemate():
+            terminal_kind = "stalemate"
+        elif not bool(after.pieces(chess.ROOK, chess.WHITE)) or _rook_capturable_by_reply(after):
+            terminal_kind = "rook_loss"
+        else:
+            terminal_kind = None
+    _channels, value, _audit = _intrinsic_credit_for_config(config).episode_return(
+        response,
+        real_white_moves=1,
+        terminal_kind=terminal_kind,
+    )
+    return value
+
+
+def _intrinsic_runtime_move_score(
+    board: chess.Board,
+    move: chess.Move,
+    *,
+    parent: dict[str, TerminalAffordanceLearner] | None,
+    learner: TerminalAffordanceLearner | None,
+    config: TG48a2SameSideEpisodeTrainingConfig,
+) -> float:
+    child_weight = 0.0
+    if learner is not None:
+        child_weight = sum(
+            learner.terminals[key].local_weight * scale
+            for key, scale in _micro_terminal_keys(board, move)
+            if key in learner.terminals
+        )
+    # A direct mature-foundation reply is an ordinary graph proposal/value,
+    # not a Python override. The learned same-side terminals remain free to
+    # outweigh it as their local evidence accumulates.
+    return child_weight + 0.20 * _intrinsic_candidate_return(
+        board,
+        move,
+        parent=parent,
+        config=config,
+    )
 
 
 def _trainer_exploration_score(
@@ -838,6 +1020,18 @@ def _classify_endpoint(
     diag = _endpoint_board_diagnostics(board, parent=parent, config=config)
     if classifier_mode == "legacy_availability_diagnostic":
         return _classify_legacy_availability_endpoint(diag), diag
+    if classifier_mode == "intrinsic_graph_competence":
+        if diag["checkmate"]:
+            return "checkmate", diag
+        if diag["rook_blunder"] or diag["rook_missing"]:
+            return "rook_blunder", diag
+        if diag["stalemate"]:
+            return "stalemate", diag
+        if diag["illegal"]:
+            return "illegal", diag
+        if diag["native_foundation_graph_all_reply"]:
+            return "mature_foundation_competence_available", diag
+        return "no_progress", diag
     if diag["rook_blunder"] or diag["rook_missing"]:
         return "rook_blunder", diag
     if diag["stalemate"]:
@@ -906,7 +1100,20 @@ def _endpoint_board_diagnostics(
     # `_move_metrics` is move-based; direct endpoint fields below are authoritative.
     f = extract_diagnostic_features(_white_turn_copy(board))
     axis = _axis_pattern(f)
-    response = _foundation_response_for_board(board, parent=parent, config=config)
+    if config.credit_mode == _INTRINSIC_CREDIT_MODE:
+        # The exact validator is deliberately absent from the intrinsic
+        # training path. It remains available in the legacy/evaluation path.
+        response = _empty_foundation_response_flags()
+        native_response = _intrinsic_credit_for_config(config).native_response(board, parent)
+    else:
+        response = _foundation_response_for_board(board, parent=parent, config=config)
+        native_response = {
+            "graph_positive": False,
+            "graph_all_reply": False,
+            "graph_partial_reply": False,
+            "provider_ids": [],
+            "validator_consulted": False,
+        }
     diag = {
         "validated_entry": response["validated_entry"],
         "validated_mate1_entry": response["validated_mate1_entry"],
@@ -931,6 +1138,12 @@ def _endpoint_board_diagnostics(
         "geometry_transition": axis != 1 and int(f["black_king_on_edge"]) == 1 and _support_band(f),
         "lateral_escape_survived_reply": axis != 1 and not _rook_capturable_by_reply(_white_turn_copy(board)),
         "illegal": False,
+        "checkmate": board.is_checkmate(),
+        "native_foundation_graph_positive": bool(native_response["graph_positive"]),
+        "native_foundation_graph_all_reply": bool(native_response["graph_all_reply"]),
+        "native_foundation_graph_partial_reply": bool(native_response["graph_partial_reply"]),
+        "native_foundation_provider_ids": list(native_response["provider_ids"]),
+        "native_foundation_validator_consulted": bool(native_response["validator_consulted"]),
         "metrics_note": metrics["illegal"],
     }
     return diag
@@ -1108,6 +1321,33 @@ def _trajectory_reward(endpoint_type: str, diag: Mapping[str, Any]) -> tuple[dic
     return channels, reward
 
 
+def _intrinsic_trajectory_reward(
+    endpoint_type: str,
+    diag: Mapping[str, Any],
+    *,
+    real_white_moves: int,
+    config: TG48a2SameSideEpisodeTrainingConfig,
+) -> tuple[dict[str, float], float, dict[str, Any]]:
+    terminal_kind = None
+    if endpoint_type == "checkmate" or diag.get("checkmate"):
+        terminal_kind = "mate"
+    elif endpoint_type == "rook_blunder" or diag.get("rook_missing"):
+        terminal_kind = "rook_loss"
+    elif endpoint_type == "stalemate" or diag.get("stalemate"):
+        terminal_kind = "stalemate"
+    elif endpoint_type == "illegal" or diag.get("illegal"):
+        terminal_kind = "illegal"
+    native_response = {
+        "graph_all_reply": bool(diag.get("native_foundation_graph_all_reply")),
+        "provider_ids": list(diag.get("native_foundation_provider_ids", ())),
+    }
+    return _intrinsic_credit_for_config(config).episode_return(
+        native_response,
+        real_white_moves=real_white_moves,
+        terminal_kind=terminal_kind,
+    )
+
+
 def _credit_assignments(
     *,
     terminal_activations_by_white_ply: list[list[str]],
@@ -1218,6 +1458,7 @@ def _terminal_episode_audit(
                     "lateral_escape_episode_activation_count": 0,
                     "geometry_transition_episode_activation_count": 0,
                     "validated_entry_episode_activation_count": 0,
+                    "mature_competence_episode_activation_count": 0,
                     "false_basin_episode_activation_count": 0,
                     "unsafe_episode_activation_count": 0,
                     "decoy_false_handoff_activation_count": 0,
@@ -1231,6 +1472,9 @@ def _terminal_episode_audit(
             item["lateral_escape_episode_activation_count"] += int(outcome["lateral_escape_success"])
             item["geometry_transition_episode_activation_count"] += int(outcome["endpoint_opposed_side_or_safer_geometry"])
             item["validated_entry_episode_activation_count"] += int(outcome["endpoint_validated_entry"])
+            item["mature_competence_episode_activation_count"] += int(
+                outcome.get("endpoint_mature_competence_available", False)
+            )
             item["false_basin_episode_activation_count"] += int(
                 outcome["graph_positive_false_basin"] or outcome["partial_only_near_basin"]
             )
@@ -1238,7 +1482,11 @@ def _terminal_episode_audit(
                 outcome["rook_blunder"] or outcome["stalemate"] or outcome["illegal"] or outcome["confinement_regression"]
             )
             item["decoy_false_handoff_activation_count"] += int(
-                trace["family"] in {"decoy_edge_killbox", "hard_decoy_edge_killbox"} and outcome["endpoint_validated_entry"]
+                trace["family"] in {"decoy_edge_killbox", "hard_decoy_edge_killbox"}
+                and (
+                    outcome["endpoint_validated_entry"]
+                    or outcome.get("endpoint_mature_competence_available", False)
+                )
             )
             if signed_credit > 0:
                 item["discounted_credit_sum"] += signed_credit
@@ -1284,7 +1532,10 @@ def _promote_m4(
             and audit.get("unsafe_episode_activation_count", 0) == 0
             and audit.get("decoy_false_handoff_activation_count", 0) == 0
         ):
-            if audit.get("validated_entry_episode_activation_count", 0) > 0:
+            if (
+                audit.get("mature_competence_episode_activation_count", 0) > 0
+                or audit.get("validated_entry_episode_activation_count", 0) > 0
+            ):
                 promoted_as = "foundation_handoff_affordance"
             elif audit.get("geometry_transition_episode_activation_count", 0) > 0:
                 promoted_as = "geometry_transition_affordance"
@@ -1348,6 +1599,10 @@ def _summarize_episodes(traces: list[dict[str, Any]]) -> dict[str, Any]:
         "safe_lateral_rook_available_rate": _rate(sum(int(_safe_lateral_available(chess.Board(trace["start_fen"]))) for trace in traces), total),
         "transition_to_opposed_or_killbox_rate": _rate(sum(int(trace["endpoint_opposed_side_or_safer_geometry"]) for trace in traces), total),
         "validated_entry_rate": _rate(sum(int(trace["endpoint_validated_entry"]) for trace in traces), total),
+        "mature_competence_entry_rate": _rate(
+            sum(int(trace.get("endpoint_mature_competence_available", False)) for trace in traces),
+            total,
+        ),
         "validated_mate1_entry_rate": _rate(sum(int(trace["endpoint_validated_mate1"]) for trace in traces), total),
         "validated_mate2_entry_rate": _rate(sum(int(trace["endpoint_validated_mate2"]) for trace in traces), total),
         "graph_positive_false_basin_count": sum(int(trace["graph_positive_false_basin"]) for trace in traces),
@@ -1384,7 +1639,9 @@ def _safe_lateral_available(board: chess.Board) -> bool:
     return False
 
 
-def _episode_success(endpoint_type: str) -> bool:
+def _episode_success(endpoint_type: str, *, credit_mode: str = "legacy_shaped") -> bool:
+    if credit_mode == _INTRINSIC_CREDIT_MODE:
+        return endpoint_type in {"checkmate", "mature_foundation_competence_available"}
     return endpoint_type in {
         "validated_mate1_entry",
         "validated_mate2_entry",
@@ -1677,6 +1934,7 @@ def _decision(
         "safe_lateral_rook_available_rate": m4_eval["safe_lateral_rook_available_rate"],
         "transition_to_opposed_or_killbox_rate": m4_eval["transition_to_opposed_or_killbox_rate"],
         "validated_entry_rate": m4_eval["validated_entry_rate"],
+        "mature_competence_entry_rate": m4_eval["mature_competence_entry_rate"],
         "validated_mate1_entry_rate": m4_eval["validated_mate1_entry_rate"],
         "validated_mate2_entry_rate": m4_eval["validated_mate2_entry_rate"],
         "graph_positive_false_basin_count": m4_eval["graph_positive_false_basin_count"],
@@ -1698,6 +1956,13 @@ def _decision(
         "parent_foundation_weight_delta_during_stage": parent_delta,
         "primary_training_unit": "episode_trajectory",
         "move_local_reward_primary": False,
+        "credit_mode": config.credit_mode,
+        "trainer_authored_shaping_used_for_reward": (
+            config.credit_mode != _INTRINSIC_CREDIT_MODE
+        ),
+        "native_mature_child_value_used_for_reward": (
+            config.credit_mode == _INTRINSIC_CREDIT_MODE
+        ),
         **_purity_boundary(),
         "total_seconds": total_seconds,
     }
