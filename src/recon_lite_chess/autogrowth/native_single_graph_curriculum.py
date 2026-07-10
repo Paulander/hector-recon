@@ -12,6 +12,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 import hashlib
 import json
+import math
 from pathlib import Path
 from time import perf_counter
 from typing import Any, Iterable, Mapping
@@ -59,6 +60,7 @@ class NativeSingleGraphConfig:
     max_shared_atom_candidates_per_choice: int = 12
     prune_redundant_exact_terminals: bool = False
     score_action_pattern_atoms: bool = False
+    terminal_score_normalization: str = "mean"
     max_mate1_positions: int | None = None
     max_mate2_positions: int | None = None
 
@@ -131,7 +133,8 @@ class NativeReConKRKGraph:
         self.graph = Graph()
         self.graph.add_node(Node(ROOT_ID, NodeType.SCRIPT, meta={
             "origin": "tg26o_native_single_graph",
-            "confirm_policy": "or",
+            "confirm_policy": "k_of_n",
+            "confirm_k": 1,
             "tier": "mature",
         }))
         self.triplet_ids: set[str] = set()
@@ -293,22 +296,32 @@ class NativeReConKRKGraph:
         *,
         masked_triplets: set[str] | None = None,
     ) -> dict[str, Any]:
-        candidate_moves = self._candidate_triplets_for_board(board, legal)
-        if masked_triplets:
-            candidate_moves = {
-                triplet_id: move for triplet_id, move in candidate_moves.items() if triplet_id not in masked_triplets
-            }
-        if len(candidate_moves) > self.config.max_shared_atom_candidates_per_choice:
-            ranked = sorted(
-                candidate_moves.items(),
-                key=lambda item: (self._triplet_root_weight(item[0]), item[0]),
+        candidate_pairs: list[tuple[str, str, int]] = []
+        seen_pairs: set[tuple[str, str]] = set()
+        for move_uci, move in legal.items():
+            keys = _triplet_keys(board, move, key_mode=self.config.key_mode)
+            for retrieval_rank, triplet_id in enumerate(self._triplets_from_active_shared_atoms(keys)):
+                pair = (triplet_id, move_uci)
+                if pair in seen_pairs or (masked_triplets and triplet_id in masked_triplets):
+                    continue
+                seen_pairs.add(pair)
+                candidate_pairs.append((triplet_id, move_uci, retrieval_rank))
+        if len(candidate_pairs) > self.config.max_shared_atom_candidates_per_choice:
+            candidate_pairs.sort(
+                key=lambda item: (
+                    self._triplet_root_weight(item[0]),
+                    -item[2],
+                    item[0],
+                    item[1],
+                ),
                 reverse=True,
             )
-            candidate_moves = dict(ranked[: self.config.max_shared_atom_candidates_per_choice])
+            candidate_pairs = candidate_pairs[: self.config.max_shared_atom_candidates_per_choice]
+        unique_triplets = {triplet_id for triplet_id, _move, _rank in candidate_pairs}
         self.scheduler_stats["choose_calls"] += 1
-        self.scheduler_stats["candidate_triplets_ticked"] += len(candidate_moves)
-        self.scheduler_stats["triplets_skipped_by_index"] += max(0, len(self.triplet_ids) - len(candidate_moves))
-        if not candidate_moves:
+        self.scheduler_stats["candidate_triplets_ticked"] += len(candidate_pairs)
+        self.scheduler_stats["triplets_skipped_by_index"] += max(0, len(self.triplet_ids) - len(unique_triplets))
+        if not candidate_pairs:
             self.scheduler_stats["empty_candidate_calls"] += 1
             return {
                 "selected_move": None,
@@ -317,7 +330,8 @@ class NativeReConKRKGraph:
                 "confirmed_candidates": [],
             }
         candidates: list[tuple[float, str, str]] = []
-        for triplet_id, move_uci in candidate_moves.items():
+        triplet_key_cache: dict[tuple[str, str, str], tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]] = {}
+        for triplet_id, move_uci, _retrieval_rank in candidate_pairs:
             active_nodes = self._active_nodes_for_triplets({triplet_id})
             self.scheduler_stats["active_nodes_ticked"] += len(active_nodes)
             self.scheduler_stats["full_graph_node_resets_avoided"] += max(0, len(self.graph.nodes) - len(active_nodes))
@@ -326,6 +340,7 @@ class NativeReConKRKGraph:
                 "board": board,
                 "candidate_move_by_triplet": {triplet_id: move_uci},
                 "shared_atom_move_uci": move_uci,
+                "__triplet_keys_cache": triplet_key_cache,
             }
             engine = FormalReConEngine(self.graph, validate_pairs=False, record_trace=False)
             engine.request(ROOT_ID)
@@ -346,7 +361,8 @@ class NativeReConKRKGraph:
         if not candidates:
             return {
                 "selected_move": None,
-                "candidate_triplet_count": len(candidate_moves),
+                "candidate_triplet_count": len(candidate_pairs),
+                "unique_candidate_triplet_count": len(unique_triplets),
                 "confirmed_candidate_count": 0,
                 "confirmed_candidates": [],
             }
@@ -356,7 +372,8 @@ class NativeReConKRKGraph:
             "selected_move": candidates[0][1],
             "selected_triplet": candidates[0][2],
             "selected_score": round(float(candidates[0][0]), 6),
-            "candidate_triplet_count": len(candidate_moves),
+            "candidate_triplet_count": len(candidate_pairs),
+            "unique_candidate_triplet_count": len(unique_triplets),
             "confirmed_candidate_count": len(candidates),
             "confirmed_candidates": [
                 {"score": round(float(score), 6), "move": move_uci, "triplet_id": triplet_id}
@@ -377,6 +394,46 @@ class NativeReConKRKGraph:
             else:
                 updates["neutral"] += 1
         return updates
+
+    def apply_intrinsic_td(
+        self,
+        board: chess.Board,
+        move: chess.Move,
+        *,
+        td_error: float,
+        stage_diagnostic: str,
+    ) -> str:
+        """Apply one outcome-grounded TD error to an observed action branch.
+
+        Unlike train_action_rewards, this method neither enumerates rewards for
+        unplayed legal moves nor accepts a positive-move label set. The caller
+        must first execute/observe this exact action and derive the scalar from
+        the generic intrinsic-credit engine.
+        """
+
+        if move not in board.legal_moves:
+            raise ValueError(f"cannot credit illegal observed move: {move.uci()}")
+        triplet_id = self.ensure_triplet(board, move, stage=stage_diagnostic)
+        self._apply_m3(triplet_id, reward=float(td_error))
+        return triplet_id
+
+    def learned_state_audit(self) -> dict[str, Any]:
+        """Return the minimal state needed to certify an empty learned start."""
+
+        trainable_edges = [edge for edge in self.graph.edges if edge.meta.get("trainable")]
+        return {
+            "node_count": len(self.graph.nodes),
+            "edge_count": len(self.graph.edges),
+            "triplet_count": len(self.triplet_ids),
+            "trainable_edge_count": len(trainable_edges),
+            "nonzero_trainable_edge_count": sum(abs(float(edge.w)) > 1e-15 for edge in trainable_edges),
+            "nonzero_local_weight_node_count": sum(
+                abs(float(node.meta.get("local_weight", 0.0))) > 1e-15
+                for node in self.graph.nodes.values()
+            ),
+            "m3_update_count": self.m3_update_count,
+            "m4_event_count": self.m4_event_count,
+        }
 
     def ensure_triplet(self, board: chess.Board, move: chess.Move, *, stage: str) -> str:
         before_keys, action_delta_keys, after_keys = _triplet_keys(board, move, key_mode=self.config.key_mode)
@@ -498,6 +555,30 @@ class NativeReConKRKGraph:
             "total_node_count": len(self.graph.nodes),
             "total_edge_count": len(self.graph.edges),
             "m4_event_count": self.m4_event_count,
+        }
+
+    def freeze_existing_parameters(self, *, reason: str) -> dict[str, Any]:
+        """Consolidate the current topology while leaving future growth plastic."""
+
+        frozen_nodes = 0
+        for node in self.graph.nodes.values():
+            if "local_weight" not in node.meta:
+                continue
+            if not node.meta.get("plasticity_frozen"):
+                frozen_nodes += 1
+            node.meta["plasticity_frozen"] = True
+            node.meta["plasticity_freeze_reason"] = str(reason)
+        frozen_edges = 0
+        for edge in self.graph.edges:
+            if not edge.meta.get("trainable"):
+                continue
+            if not edge.meta.get("plasticity_frozen"):
+                frozen_edges += 1
+            edge.meta["plasticity_frozen"] = True
+            edge.meta["plasticity_freeze_reason"] = str(reason)
+        return {
+            "frozen_node_parameter_count": frozen_nodes,
+            "frozen_edge_parameter_count": frozen_edges,
         }
 
     def apply_shared_atom_pruning(self, *, terminal_threshold: float = -0.20, triplet_threshold: float = -0.25) -> dict[str, Any]:
@@ -783,6 +864,8 @@ class NativeReConKRKGraph:
                 node.meta["negative_confirm_count"] = int(node.meta.get("negative_confirm_count", 0)) + 1
                 if node.meta.get("shared_feature_atom"):
                     node.meta["false_positive_count"] = int(node.meta.get("false_positive_count", 0)) + 1
+            if node.meta.get("plasticity_frozen"):
+                continue
             node.meta["local_weight"] = _bounded(
                 float(node.meta.get("local_weight", 0.0)) + self.config.eta_m3 * bounded_reward,
                 self.config.max_abs_local_weight,
@@ -805,6 +888,8 @@ class NativeReConKRKGraph:
                     - 0.02 * int(node.meta.get("false_positive_count", 0))
                 )
         for edge in self.triplet_trainable_edges.get(triplet_id, []):
+            if edge.meta.get("plasticity_frozen"):
+                continue
             edge.w = _bounded(float(edge.w) + self.config.eta_m3 * bounded_reward, self.config.max_abs_local_weight)
             self.m3_update_count += 1
 
@@ -957,9 +1042,22 @@ class NativeReConKRKGraph:
             move_uci = str((candidate_move_by_triplet or {}).get(triplet_id, action.meta["action_uci"]))
             if move_uci not in legal:
                 continue
-            triplet_weight = float(self.graph.get_edge(ROOT_ID, ids.triplet, LinkType.SUB).w)  # type: ignore[union-attr]
+            stored_action_uci = str(triplet.meta.get("action_uci", action.meta["action_uci"]))
+            triplet_weight = (
+                float(self.graph.get_edge(ROOT_ID, ids.triplet, LinkType.SUB).w)  # type: ignore[union-attr]
+                if move_uci == stored_action_uci
+                else 0.0
+            )
             terminal_score, active_count = self._confirmed_terminal_score(triplet_id)
-            terminal_score /= max(1, active_count)
+            normalization = str(self.config.terminal_score_normalization).lower()
+            if normalization == "mean":
+                terminal_score /= max(1, active_count)
+            elif normalization == "sqrt":
+                terminal_score /= math.sqrt(max(1, active_count))
+            elif normalization != "sum":
+                raise ValueError(
+                    "terminal_score_normalization must be mean, sqrt, or sum"
+                )
             score = self.config.terminal_score_scale * terminal_score + self.config.triplet_credit_scale * triplet_weight
             candidates.append((score, move_uci, triplet_id))
         return candidates
@@ -1290,7 +1388,7 @@ def _same_graph_chain_positive_first_moves(graph: NativeReConKRKGraph, board: ch
 
 
 def _candidate_meta(node_type: str, stage: str, *, role: str, action_uci: str) -> dict[str, Any]:
-    return {
+    payload = {
         "origin": "tg26o_native_single_graph",
         "node_type": node_type,
         "role": role,
@@ -1303,6 +1401,9 @@ def _candidate_meta(node_type: str, stage: str, *, role: str, action_uci: str) -
         "request_exposures": 0,
         "confirm_count": 0,
     }
+    if node_type == "SCRIPT":
+        payload.update({"confirm_policy": "k_of_n", "confirm_k": 1})
+    return payload
 
 
 def _terminal_meta(stage: str, role: str, action_uci: str, keys: tuple[str, ...]) -> dict[str, Any]:
@@ -1366,7 +1467,12 @@ def _pattern_predicate(role: str, action_uci: str, expected_keys: tuple[str, ...
         if move not in board.legal_moves:
             node.activation.value = 0.0
             return True, False
-        before_keys, action_delta_keys, after_keys = _triplet_keys(board, move, key_mode=key_mode)
+        before_keys, action_delta_keys, after_keys = _cached_runtime_triplet_keys(
+            env,
+            board,
+            move,
+            key_mode=key_mode,
+        )
         actual = {
             "before": frozenset(before_keys),
             "delta": frozenset(action_delta_keys),
@@ -1392,7 +1498,12 @@ def _single_key_predicate(role: str, action_uci: str, expected_key: str, key_mod
         if move not in board.legal_moves:
             node.activation.value = 0.0
             return True, False
-        before_keys, action_delta_keys, after_keys = _triplet_keys(board, move, key_mode=key_mode)
+        before_keys, action_delta_keys, after_keys = _cached_runtime_triplet_keys(
+            env,
+            board,
+            move,
+            key_mode=key_mode,
+        )
         actual = {
             "before": before_keys,
             "delta": action_delta_keys,
@@ -1415,7 +1526,12 @@ def _shared_atom_predicate(role: str, expected_key: str, key_mode: str):
         if move not in board.legal_moves:
             node.activation.value = 0.0
             return True, False
-        before_keys, action_delta_keys, after_keys = _triplet_keys(board, move, key_mode=key_mode)
+        before_keys, action_delta_keys, after_keys = _cached_runtime_triplet_keys(
+            env,
+            board,
+            move,
+            key_mode=key_mode,
+        )
         actual = {
             "before_feature": before_keys,
             "delta_feature": action_delta_keys,
@@ -1429,6 +1545,22 @@ def _shared_atom_predicate(role: str, expected_key: str, key_mode: str):
         return True, success
 
     return predicate
+
+
+def _cached_runtime_triplet_keys(
+    env: dict[str, Any],
+    board: chess.Board,
+    move: chess.Move,
+    *,
+    key_mode: str,
+) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+    cache = env.setdefault("__triplet_keys_cache", {})
+    key = (board.fen(), move.uci(), str(key_mode))
+    cached = cache.get(key)
+    if cached is None:
+        cached = _triplet_keys(board, move, key_mode=key_mode)
+        cache[key] = cached
+    return cached
 
 
 def _prototype_match(

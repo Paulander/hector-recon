@@ -17,6 +17,8 @@ from .intrinsic_credit import (
     IntrinsicCreditConfig,
     IntrinsicCreditEngine,
     OutcomeCalibratedCompetenceGate,
+    OutcomeCalibratedPrototypeGate,
+    PrototypeCompetenceGateConfig,
     Responsibility,
     apply_credit_event_to_edges,
 )
@@ -36,6 +38,8 @@ __all__ = [
     "IntrinsicCreditConfig",
     "IntrinsicCreditEngine",
     "OutcomeCalibratedCompetenceGate",
+    "OutcomeCalibratedPrototypeGate",
+    "PrototypeCompetenceGateConfig",
     "Responsibility",
     "apply_credit_event_to_edges",
 ]

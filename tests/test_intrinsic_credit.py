@@ -10,6 +10,8 @@ from recon_lite_hector.learning import (
     IntrinsicCreditConfig,
     IntrinsicCreditEngine,
     OutcomeCalibratedCompetenceGate,
+    OutcomeCalibratedPrototypeGate,
+    PrototypeCompetenceGateConfig,
     Responsibility,
     apply_credit_event_to_edges,
 )
@@ -270,3 +272,35 @@ def test_outcome_calibrated_gate_requires_selective_validation_before_maturity()
     assert gate.confirms((0.9, 0.9)) is True
     assert gate.confirms((0.1, 0.1)) is False
     assert gate.validation_metrics["false_positive"] == 0
+
+
+def test_outcome_calibrated_prototype_gate_learns_nonlinear_xor_boundary() -> None:
+    train = [
+        CompetenceGateExample((0.0, 0.0), True),
+        CompetenceGateExample((1.0, 1.0), True),
+        CompetenceGateExample((0.0, 1.0), False),
+        CompetenceGateExample((1.0, 0.0), False),
+    ] * 8
+    validation = [
+        CompetenceGateExample((0.05, 0.05), True),
+        CompetenceGateExample((0.95, 0.95), True),
+        CompetenceGateExample((0.05, 0.95), False),
+        CompetenceGateExample((0.95, 0.05), False),
+    ] * 6
+    gate = OutcomeCalibratedPrototypeGate.fit(
+        ("response_a", "response_b"),
+        train,
+        validation,
+        PrototypeCompetenceGateConfig(
+            neighbors=3,
+            min_validation_true_positives=10,
+            max_validation_false_positives=0,
+            min_validation_precision=1.0,
+        ),
+    )
+
+    assert gate.mature is True
+    assert gate.validation_metrics["true_positive"] == 12
+    assert gate.validation_metrics["false_positive"] == 0
+    assert gate.confirms((0.02, 0.02)) is True
+    assert gate.confirms((0.02, 0.98)) is False

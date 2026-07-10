@@ -304,6 +304,11 @@ from .native_single_graph_curriculum import (
     NativeSingleGraphResult,
     run_native_single_graph_curriculum,
 )
+from .native_intrinsic_curriculum import (
+    NativeIntrinsicCurriculumConfig,
+    NativeIntrinsicCurriculumResult,
+    run_native_intrinsic_curriculum,
+)
 from .native_scheduler_replay_audit import (
     NativeSchedulerReplayAuditConfig,
     NativeSchedulerReplayAuditResult,
@@ -768,6 +773,8 @@ __all__ = [
     "SharedAtomUtilityVotingResult",
     "NativeQuorumMaterializationConfig",
     "NativeQuorumMaterializationResult",
+    "NativeIntrinsicCurriculumConfig",
+    "NativeIntrinsicCurriculumResult",
     "NativeQuorumMate2ChainingConfig",
     "NativeQuorumMate2ChainingResult",
     "InternalHandoffAffordanceConfig",
@@ -832,6 +839,7 @@ __all__ = [
     "run_shared_feature_atom_experiment",
     "run_shared_atom_utility_voting",
     "run_native_quorum_materialization",
+    "run_native_intrinsic_curriculum",
     "run_native_quorum_mate2_chaining",
     "run_internal_handoff_affordance_guard_audit",
     "run_terminal_lifecycle_modest_scale",

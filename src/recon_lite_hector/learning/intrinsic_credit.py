@@ -289,6 +289,159 @@ class OutcomeCalibratedCompetenceGate:
         }
 
 
+@dataclass(frozen=True)
+class PrototypeCompetenceGateConfig:
+    """Content-blind local voting for a nonlinear AVAILABLE boundary."""
+
+    neighbors: int = 3
+    threshold: float = 0.50
+    min_validation_true_positives: int = 10
+    max_validation_false_positives: int = 0
+    min_validation_precision: float = 0.95
+
+
+@dataclass
+class OutcomeCalibratedPrototypeGate:
+    """Outcome-grounded prototype cells with local inverse-distance voting."""
+
+    feature_names: tuple[str, ...]
+    offsets: tuple[float, ...]
+    scales: tuple[float, ...]
+    prototypes: tuple[tuple[float, ...], ...]
+    outcomes: tuple[bool, ...]
+    neighbors: int
+    threshold: float
+    train_metrics: Mapping[str, Any]
+    validation_metrics: Mapping[str, Any]
+    mature: bool
+
+    @classmethod
+    def fit(
+        cls,
+        feature_names: Sequence[str],
+        train: Sequence[CompetenceGateExample],
+        validation: Sequence[CompetenceGateExample],
+        config: Optional[PrototypeCompetenceGateConfig] = None,
+    ) -> "OutcomeCalibratedPrototypeGate":
+        cfg = config or PrototypeCompetenceGateConfig()
+        names = tuple(map(str, feature_names))
+        if not names or not train or not validation:
+            raise ValueError("prototype gate requires named train and validation examples")
+        if any(len(example.features) != len(names) for example in (*train, *validation)):
+            raise ValueError("prototype gate feature width mismatch")
+        positives = sum(int(example.success) for example in train)
+        if positives == 0 or positives == len(train):
+            raise ValueError("prototype gate training requires both outcome classes")
+        offsets = tuple(
+            min(float(example.features[index]) for example in train)
+            for index in range(len(names))
+        )
+        scales = tuple(
+            max(
+                1e-9,
+                max(float(example.features[index]) for example in train)
+                - offsets[index],
+            )
+            for index in range(len(names))
+        )
+        prototypes = tuple(
+            tuple(
+                (float(value) - offsets[index]) / scales[index]
+                for index, value in enumerate(example.features)
+            )
+            for example in train
+        )
+        provisional = cls(
+            feature_names=names,
+            offsets=offsets,
+            scales=scales,
+            prototypes=prototypes,
+            outcomes=tuple(bool(example.success) for example in train),
+            neighbors=max(1, min(int(cfg.neighbors), len(train))),
+            threshold=float(cfg.threshold),
+            train_metrics={},
+            validation_metrics={},
+            mature=False,
+        )
+        provisional.train_metrics = provisional.evaluate(train)
+        provisional.validation_metrics = provisional.evaluate(validation)
+        metrics = provisional.validation_metrics
+        provisional.mature = bool(
+            metrics["true_positive"] >= cfg.min_validation_true_positives
+            and metrics["false_positive"] <= cfg.max_validation_false_positives
+            and metrics["precision"] >= cfg.min_validation_precision
+        )
+        return provisional
+
+    def probability(self, features: Sequence[float]) -> float:
+        if len(features) != len(self.feature_names):
+            raise ValueError("prototype gate feature width mismatch")
+        vector = tuple(
+            (float(value) - self.offsets[index]) / self.scales[index]
+            for index, value in enumerate(features)
+        )
+        distances = sorted(
+            (
+                sum((value - prototype[index]) ** 2 for index, value in enumerate(vector)),
+                outcome,
+                prototype_index,
+            )
+            for prototype_index, (prototype, outcome) in enumerate(
+                zip(self.prototypes, self.outcomes)
+            )
+        )
+        nearest = distances[: self.neighbors]
+        exact = [outcome for distance, outcome, _index in nearest if distance <= 1e-15]
+        if exact:
+            return sum(float(outcome) for outcome in exact) / len(exact)
+        weights = [1.0 / max(1e-12, distance**0.5) for distance, _outcome, _index in nearest]
+        return sum(
+            weight * float(outcome)
+            for weight, (_distance, outcome, _index) in zip(weights, nearest)
+        ) / sum(weights)
+
+    def confirms(self, features: Sequence[float]) -> bool:
+        return self.mature and self.probability(features) >= self.threshold
+
+    def evaluate(self, examples: Sequence[CompetenceGateExample]) -> dict[str, Any]:
+        true_positive = false_positive = true_negative = false_negative = 0
+        for example in examples:
+            predicted = self.probability(example.features) >= self.threshold
+            true_positive += int(predicted and example.success)
+            false_positive += int(predicted and not example.success)
+            true_negative += int(not predicted and not example.success)
+            false_negative += int(not predicted and example.success)
+        predicted_positive = true_positive + false_positive
+        actual_positive = true_positive + false_negative
+        return {
+            "count": len(examples),
+            "true_positive": true_positive,
+            "false_positive": false_positive,
+            "true_negative": true_negative,
+            "false_negative": false_negative,
+            "precision": 0.0 if predicted_positive == 0 else true_positive / predicted_positive,
+            "recall": 0.0 if actual_positive == 0 else true_positive / actual_positive,
+        }
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "gate_family": "outcome_calibrated_prototype_cells",
+            "feature_names": list(self.feature_names),
+            "offsets": list(self.offsets),
+            "scales": list(self.scales),
+            "neighbors": self.neighbors,
+            "threshold": self.threshold,
+            "prototype_count": len(self.prototypes),
+            "positive_prototype_count": sum(map(int, self.outcomes)),
+            "negative_prototype_count": len(self.outcomes) - sum(map(int, self.outcomes)),
+            "prototype_sha256": _hash_prototypes(self.prototypes, self.outcomes),
+            "train_metrics": dict(self.train_metrics),
+            "validation_metrics": dict(self.validation_metrics),
+            "mature": self.mature,
+            "learner_visible_labels": False,
+        }
+
+
 class IntrinsicCreditEngine:
     """Local TD/eligibility engine with recursively grounded child value."""
 
@@ -618,3 +771,18 @@ def apply_credit_event_to_edges(
 def _sigmoid(value: float) -> float:
     bounded = max(-30.0, min(30.0, float(value)))
     return 1.0 / (1.0 + math.exp(-bounded))
+
+
+def _hash_prototypes(
+    prototypes: Sequence[Sequence[float]],
+    outcomes: Sequence[bool],
+) -> str:
+    import hashlib
+    import json
+
+    payload = {
+        "prototypes": [list(map(float, row)) for row in prototypes],
+        "outcomes": list(map(bool, outcomes)),
+    }
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()

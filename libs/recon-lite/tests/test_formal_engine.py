@@ -54,6 +54,37 @@ def test_formal_xor_confirmation_requires_exactly_one_child(left, right, confirm
     assert (graph.nodes["xor"].state == NodeState.CONFIRMED) is confirmed
 
 
+def test_formal_k_of_n_waits_for_slow_success_after_fast_failure():
+    graph = Graph()
+    graph.add_node(Node("root", NodeType.SCRIPT, meta={"confirm_policy": "k_of_n", "confirm_k": 1}))
+    calls = {"slow": 0}
+
+    def slow_success(_node, _env):
+        calls["slow"] += 1
+        if calls["slow"] == 1:
+            return False, False
+        return True, True
+
+    graph.add_node(Node("fast_failure", NodeType.TERMINAL, predicate=lambda _node, _env: (True, False)))
+    graph.add_node(Node("slow_success", NodeType.TERMINAL, predicate=slow_success))
+    graph.add_hierarchy_pair("root", "fast_failure")
+    graph.add_hierarchy_pair("root", "slow_success")
+
+    engine = FormalReConEngine(graph)
+    engine.request("root")
+    engine.run(
+        max_ticks=16,
+        until=lambda formal: formal.g.nodes["root"].state in {
+            NodeState.CONFIRMED,
+            NodeState.FAILED,
+        },
+    )
+
+    assert graph.nodes["fast_failure"].state == NodeState.FAILED
+    assert graph.nodes["slow_success"].state == NodeState.CONFIRMED
+    assert graph.nodes["root"].state == NodeState.CONFIRMED
+
+
 def test_subset_scheduler_updates_only_active_real_edges():
     graph = Graph()
     graph.add_node(Node("root", NodeType.SCRIPT))

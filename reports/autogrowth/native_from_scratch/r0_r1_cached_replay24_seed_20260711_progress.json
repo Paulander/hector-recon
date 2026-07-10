@@ -1,0 +1,37 @@
+{
+  "completed_r1_arms": {
+    "child_ablation": {
+      "child_handoff_count": 0,
+      "r0_replay_episode_count": 192,
+      "r0_retention_accuracy": 1.0,
+      "regression_conversion_rate": 0.0,
+      "training_episodes": 192,
+      "validation_conversion_rate": 0.0
+    },
+    "full_intrinsic": {
+      "child_handoff_count": 34,
+      "r0_replay_episode_count": 192,
+      "r0_retention_accuracy": 0.75,
+      "regression_conversion_rate": 0.25,
+      "training_episodes": 192,
+      "validation_conversion_rate": 0.0
+    },
+    "no_bootstrap": {
+      "child_handoff_count": 0,
+      "r0_replay_episode_count": 192,
+      "r0_retention_accuracy": 1.0,
+      "regression_conversion_rate": 0.0,
+      "training_episodes": 192,
+      "validation_conversion_rate": 0.0
+    }
+  },
+  "ecology_uuid": "229f59ec0a3e722f229bc7a1",
+  "r0": {
+    "availability_mode": "virtual_frame_verified",
+    "pass": true,
+    "regression_accuracy": 1.0,
+    "stopped_epoch": 40,
+    "validation_accuracy": 1.0
+  },
+  "schema_version": "krk_native_intrinsic_r0_r1_progress.v0"
+}

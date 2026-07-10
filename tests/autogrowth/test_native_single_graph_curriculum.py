@@ -106,3 +106,25 @@ def test_tg26o_native_graph_contract_without_full_curriculum() -> None:
     assert payload["node_type_counts"]["TERMINAL"] > payload["actuator_terminal_count"]
     assert payload["edge_type_counts"]["SUB"] == payload["edge_type_counts"]["SUR"]
     assert payload["edge_type_counts"]["POR"] == payload["edge_type_counts"]["RET"]
+
+
+def test_consolidation_freezes_existing_parameters_but_not_new_growth() -> None:
+    network = NativeReConKRKGraph(config=NativeSingleGraphConfig(include_symmetries=False))
+    board = chess.Board(MATE_ONE_FEN)
+    moves = tuple(sorted(board.legal_moves, key=lambda move: move.uci()))
+    first = moves[0]
+    triplet = network.apply_intrinsic_td(board, first, td_error=1.0, stage_diagnostic="R0")
+    node_ids = tuple(network.triplet_nodes[triplet])
+    before_nodes = {nid: float(network.graph.nodes[nid].meta["local_weight"]) for nid in node_ids}
+    before_edges = tuple(float(edge.w) for edge in network.triplet_trainable_edges[triplet])
+    frozen = network.freeze_existing_parameters(reason="R0_joint_mastery")
+    assert frozen["frozen_node_parameter_count"] > 0
+    assert frozen["frozen_edge_parameter_count"] > 0
+    network.apply_intrinsic_td(board, first, td_error=-1.0, stage_diagnostic="R1")
+    assert {nid: float(network.graph.nodes[nid].meta["local_weight"]) for nid in node_ids} == before_nodes
+    assert tuple(float(edge.w) for edge in network.triplet_trainable_edges[triplet]) == before_edges
+    second = moves[1]
+    new_triplet = network.apply_intrinsic_td(board, second, td_error=1.0, stage_diagnostic="R1")
+    new_edges = network.triplet_trainable_edges[new_triplet]
+    assert new_triplet != triplet
+    assert any(float(edge.w) > 0.0 for edge in new_edges)

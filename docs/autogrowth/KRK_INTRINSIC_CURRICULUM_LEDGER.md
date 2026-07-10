@@ -73,6 +73,9 @@ credit.
    safety, and move-efficiency gates across seeds.
 5. If R0/R1 passes, continue the same graph to R2 edge-killbox. Grow its nonlinear
    `AVAILABLE` topology from real positive/negative outcomes inside the ladder,
+The live implementation/result boundary is maintained in
+`docs/autogrowth/NATIVE_INTRINSIC_KRK_STATUS.md`.
+
    then repeat the causal gates at every outward rung.
 
 The complete run contract is
