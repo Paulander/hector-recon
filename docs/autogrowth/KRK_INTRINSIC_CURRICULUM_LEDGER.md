@@ -2,6 +2,22 @@
 
 Date: 2026-07-10
 
+## Central doctrine -- do not broaden early again
+
+The publishable target is one persistent ReCoN ecology starting with zero learned
+KRK content and mastering a high-resolution outward curriculum in order. Each
+mature rung must emit its own outcome-grounded successor value to train the next
+rung. Geometry selects experience only; no forced-move, mate-distance,
+recognizer, validator, or stage label may supply learner credit. A rung advances
+only after 100% disjoint validation, prior-rung regression, safety, and efficiency
+gates. This rule is repeated in root `AGENTS.md` because earlier work repeatedly
+lost the chain by moving to broad edge/fence distributions too soon.
+
+"Empty" means empty learned state, not absent embodiment. Generic board sensors,
+legal action enumeration/execution, observable terminal facts, time cost, and
+content-blind growth/plasticity are ReCoN's starting genome. Any KRK-specific
+rule, value, triplet, or prior artifact is forbidden at initialization.
+
 ## Already executed
 
 | Work | What was learned/evaluated | Limitation relevant now |
@@ -39,17 +55,28 @@ credit.
 
 ## Immediate next work package
 
-1. Use actual foundation-policy rollouts on adjacent edge/decoy strata to train
-   positive and negative `AVAILABLE` examples.
-2. Spawn/widen a content-blind nonlinear competence gate from generic board and
-   graph-response terminals. Compare it with matched random/yoked gates.
-3. Freeze the gate and require starts outside its confirmed basin.
-4. Collect trajectories that enter the confirmed basin after one to three White
-   decisions; the transition itself supplies intrinsic positive value.
-5. Train TG48 terminals with the intrinsic scalar, consolidate, and run parent,
-   no-bootstrap, M3, M4, M3+M4, and child-ablation arms.
-6. Only after a causal positive handoff exists should the curriculum move to the
-   next outward band.
+1. Build one runner that starts a TG26p-style native graph with root/genome only
+   and uses the generic intrinsic-credit kernel. Add tripwires for zero learned
+   content, persistent graph identity, graph-selected actions, and reward-channel
+   purity.
+2. Train R0 Mate-in-1 by letting ReCoN act and observing actual checkmate or
+   nonterminal/failure plus move cost. Do not call `_mate_moves` or
+   `_move_reward` in the training path. Require 100% disjoint validation and
+   regression before consolidation.
+3. Without replacing the graph, train R1 Mate-in-2. Its first action receives
+   positive bootstrap only when the resulting reply state is accepted by the
+   mature R0 competence and R0 emits consolidated value. Expose varied/all legal
+   replies as experience; this is local opponent robustness, not exhaustive
+   endgame retrograde search.
+4. Run no-bootstrap, child-value ablation, topology-frozen, and yoked-random
+   growth controls. Require 100% disjoint all-reply validation, R0 retention,
+   safety, and move-efficiency gates across seeds.
+5. If R0/R1 passes, continue the same graph to R2 edge-killbox. Grow its nonlinear
+   `AVAILABLE` topology from real positive/negative outcomes inside the ladder,
+   then repeat the causal gates at every outward rung.
+
+The complete run contract is
+`docs/autogrowth/NATIVE_FROM_SCRATCH_KRK_PLAN.md`.
 
 This is not exhaustive retrograde search. Positions come from bounded curriculum
 generators and played trajectories; no tablebase or exact move provider selects

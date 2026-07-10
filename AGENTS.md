@@ -37,6 +37,50 @@ repeat
 
 If a change does not move this loop forward, it is probably not branch-critical.
 
+## CENTRAL, NON-NEGOTIABLE KRK Curriculum Doctrine
+
+This is the core experimental strategy, not a convenience. It has been
+rediscovered after repeatedly broadening the curriculum too early. Treat a
+violation as an experimental-design defect; do not tune around it.
+
+- Start one persistent **empty learned graph**: no KRK rules, learned weights,
+  composites, action triplets, TG artifacts, or competence values. A literal
+  node-free graph is not the target; ReCoN keeps only its task-generic embodiment
+  (board sensors/features, legal-action interface, terminal world facts, clock,
+  and generic spawning/plasticity machinery).
+- Learn the ladder at high resolution, in order: Mate-in-1, Mate-in-2, edge
+  killbox, same-side tempo, farther approach, edge drive, safe fence
+  establishment, then broad KRK. Do not skip from the foundation to a broad
+  position distribution.
+- Do not advance because training rows were memorized. Advance only at 100% on
+  hash-frozen, disjoint validation plus prior-rung regression, with protected
+  safety and move-efficiency gates. Keep a final test untouched until the
+  configuration is frozen.
+- Mate-in-1 is grounded by an observed checkmate after ReCoN's own legal action.
+  Mate-in-2 is rewarded when its successor is recognized by the mature,
+  outcome-grounded Mate-in-1 child and that child emits consolidated value.
+  Continue recursively outward. The trainer must never replace this handoff
+  with forced-move labels, mate-distance labels, geometry reward, or a validator
+  verdict.
+- Curriculum geometry may schedule experience and evaluation slices only. Stage
+  names and solution labels never enter learner records. Executing chess rules
+  and exposing checkmate/stalemate/rook-loss facts is environment interaction,
+  not a move oracle.
+- Preserve the same graph snapshot between rungs. Alternate bounded structural
+  growth, topology-frozen fast-weight equilibration, heldout consolidation, and
+  causal promote/prune decisions. Replay mastered rungs before every outward
+  advance.
+- A result is not "from scratch, ReCoN-native" unless the artifact proves the
+  zero-learned-state start, persistent graph identity, graph-selected actions,
+  graph-owned child value/credit, actual topology growth, and absence of
+  teacher/provider leakage.
+
+The execution plan and exact evidence boundary are in
+`docs/autogrowth/NATIVE_FROM_SCRATCH_KRK_PLAN.md`. Existing TG46b and TG26p are
+precursors, not this proof: TG46b starts fresh but uses oracle-derived positive
+moves; TG26p uses a native graph but supplies trainer-side reward labels and
+evaluates on its curriculum positions.
+
 ## Candidate Node Direction
 
 Do not create a parallel candidate-node lifecycle system unless there is a concrete reason the existing one cannot be tightened. The repo already has first-class structural-growth machinery under:
@@ -111,6 +155,7 @@ Preferred checkpoints are metric checkpoints, not document checkpoints.
 
 ## Active Paths
 
+- Central curriculum plan: `docs/autogrowth/NATIVE_FROM_SCRATCH_KRK_PLAN.md`
 - Current plan: `docs/autogrowth/KRK_AUTOGROWTH_V0_PLAN.md`
 - Current brief: `docs/autogrowth/ACTIVE_BRIEF.md`
 - Active run summaries: `reports/autogrowth/`

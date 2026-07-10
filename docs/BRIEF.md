@@ -42,13 +42,27 @@ learn a nonlinear outcome-calibrated competence basin from broader real rollouts
 then construct starts outside that basin which can enter it within one to three
 White decisions.
 
+An implementation audit separates the existing foundation precursors from the
+desired end-to-end experiment. TG46b begins with empty learned terminal state but
+trains from oracle-derived mating/forced-first moves. TG26p grows and executes a
+native `FormalReConEngine` graph, but its trainer supplies per-move mate reward
+labels and its stage evaluation reuses curriculum positions. The intrinsic-credit
+kernel has not yet been joined to a fresh TG26p-style native graph. Therefore no
+past run establishes one persistent empty-learned-state graph learning
+Mate-in-1 -> Mate-in-2 from observed outcome and mature-child value alone.
+
 ## Ordered next decision
 
 The stopped v1 closure remains frozen exactly as preregistered; do not weaken or
 rerun it. By explicit project direction, KRK development continues as a distinct
-intrinsic-curriculum workstream without touching that FINAL pool. Next: grow and
-validate an outcome-calibrated nonlinear `AVAILABLE` subgraph, then rerun a
-high-resolution adjacent-rung curriculum with no-bootstrap and child-ablation
-controls. KPK remains the subsequent transfer domain.
+intrinsic-curriculum workstream without touching that FINAL pool. The immediate
+work package is now the native from-scratch R0/R1 certification in
+`docs/autogrowth/NATIVE_FROM_SCRATCH_KRK_PLAN.md`: join native graph growth and
+intrinsic credit, learn Mate-in-1 from observed terminal outcomes, consolidate,
+then learn Mate-in-2 from the mature Mate-in-1 child's emitted value. Only after
+that causal chain passes should the same graph move outward through the
+high-resolution ladder. Nonlinear `AVAILABLE` growth remains required, but it
+must arise inside this persistent ladder rather than as another inherited-parent
+patch. KPK remains the subsequent transfer domain.
 
 No-go: runtime tablebase/DTM or Stockfish provider, learner-visible stage/hand-skill features, direct move-provider overrides, hidden oracles, new TG chronology, or claims from a counterfactual path that fails no-op parity.
