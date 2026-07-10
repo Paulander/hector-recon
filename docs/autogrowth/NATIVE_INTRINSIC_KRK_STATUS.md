@@ -34,6 +34,7 @@ R1 (Mate-in-2) is not certified and must not advance to R2.
 | 24 epochs, 8 R0 replay/epoch | validation 0/4; regression 1/4 | 0/4; 1/4 | 0/4; 1/4 | 6/8 full; 8/8 controls |
 | 24 epochs, memoized mature-response replay | validation 0/4; regression 1/4 | 0/4; 0/4 | 0/4; 0/4 | 6/8 full; 8/8 controls |
 | 24 epochs, frozen R0, flat root, zero replay | validation 0/4; regression 0/4 | 0/4; 0/4 | not run (redundant) | 7/8 both |
+| 24 epochs, frozen R0, mature-child priority | validation 0/4; regression 0/4 | 0/4; 0/4 | not run (redundant) | 8/8 both |
 
 The intrinsic arm produced real mature-child handoffs and changed behavior, but
 did not improve heldout R1 conversion. Replay protected R0 completely in both
@@ -47,12 +48,17 @@ last retained case: both frozen arms scored 7/8. This separates parameter
 forgetting from routing interference. Newly grown R1 candidates can still
 compete on R0 states when every competence is flattened under one root.
 
+Mature-child priority restored both arms to 8/8 with zero replay. The child
+controls only after its own frozen subgraph selects and virtually verifies an
+available move; no stage label or solution move chooses the branch.
+
 Artifacts:
 
 - `r0_r1_virtual_frame_smoke_seed_20260710.json`
 - `r0_r1_virtual_replay24_seed_20260710.json`
 - `r0_r1_cached_replay24_seed_20260711.json`
 - `r0_r1_frozen24_seed_20260711.json`
+- `r0_r1_hierarchical24_v2_seed_20260711.json`
 
 All are under `reports/autogrowth/native_from_scratch/`.
 
@@ -101,11 +107,10 @@ is an experience-resolution test, not a new mechanism or broader curriculum.
 
 ## Next gates
 
-Run one same-seed 24-epoch frozen-R0 comparison with mature-child priority. It
-must restore R0 to 8/8 without replay; otherwise the child-control boundary is
-still incomplete. If retention passes, increase R1 experience resolution, not
-task breadth: enough epochs to revisit each first action across its legal
-replies, then require 4/4 validation and 4/4 regression. Only after a bounded
+The child-control boundary now passes. Run the same seed/pools for 120 R1 epochs
+so each legal first move receives several grounded exposures. This changes
+experience resolution only. Require 4/4 validation, 4/4 regression, 8/8 R0
+retention, and a positive full-versus-no-bootstrap effect. Only after a bounded
 configuration passes should pools and seeds be expanded.
 
 No result below joint 100% is a curriculum promotion.
