@@ -1,0 +1,243 @@
+{
+  "schema_version": "krk_preregistered_ecological_closure.v1",
+  "status": "frozen_before_fresh_pool_generation_and_experimental_execution",
+  "base_commit": "ebe7bb8",
+  "scientific_question": "Under repaired measurement and outcome-only ecological credit, do exact point, signature-coarsened, or content-blind widened composite cells causally improve the frozen KRK host, and is widening selective relative to a population- and firing-rate-matched random merge?",
+  "scope": {
+    "single_v1_krk_closure": true,
+    "phase2_is_frozen_regression_and_constructed_ceiling": true,
+    "does_not_rebuild_authored_skills": true,
+    "does_not_certify_fully_autonomous_hierarchy": true,
+    "krk_freezes_after_outcome": true,
+    "next_domain_not_run_here": "KPK"
+  },
+  "hypotheses": {
+    "H_point": "Exact point cells produce a positive paired held-out effect relative to the frozen host.",
+    "H_signature": "Removing exact percept-signature equality while retaining learned child conjunctions produces a positive paired held-out effect.",
+    "H_widened": "Content-blind k-of-n widening produces a positive paired held-out effect through binary eligibility gating.",
+    "H_selectivity": "Widening outperforms a population-, quorum-, and firing-rate-matched random merge.",
+    "H_L": "At least one fixed additive dose has positive paired utility even if binary gating does not."
+  },
+  "seeds": {
+    "pool_generation": 20273100,
+    "experiment": [20273101, 20273102, 20273103, 20273104, 20273105],
+    "flat_host_by_experiment_seed": {
+      "20273101": 20272911,
+      "20273102": 20272912,
+      "20273103": 20272913,
+      "20273104": 20272911,
+      "20273105": 20272912
+    },
+    "random_merge": "experiment_seed + 41000 + widened_cell_rank * 1000 + draw_index"
+  },
+  "pools": {
+    "generator": "uniform random legal K+R versus K boards, White to move, filtered to nonterminal fence-established true-middle rows with no immediate mate and no forced mate in two",
+    "sizes": {"train": 256, "validation": 256, "final_test": 256},
+    "row_id_ranges": {"train": [100000, 100255], "validation": [200000, 200255], "final_test": [300000, 300255]},
+    "stratum": "white-king/black-king Chebyshev distance",
+    "exact_quotas": {
+      "train": {"3": 52, "4": 51, "5": 51, "6": 51, "7": 51},
+      "validation": {"3": 51, "4": 52, "5": 51, "6": 51, "7": 51},
+      "final_test": {"3": 51, "4": 51, "5": 52, "6": 51, "7": 51}
+    },
+    "canonical_group": "minimum piece-square tuple over the eight D4 board symmetries; side to move and piece identities retained",
+    "disjointness": [
+      "no exact FEN overlap among splits",
+      "no canonical D4 orbit overlap among splits",
+      "no exact or orbit overlap with rows 600-727",
+      "no exact or orbit overlap with the five named prior row/start artifacts"
+    ],
+    "prior_artifacts_excluded": [
+      "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_a_rows.json",
+      "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_b_rows.json",
+      "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_c_fence_rung_starts.json",
+      "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_c_general_starts.json",
+      "reports/autogrowth/clean_slate_krk/phase2_9_overnight/stage_c_mate_lte2_starts.json"
+    ],
+    "max_generation_attempts": 1000000,
+    "manifest_hash": "sha256 of canonical compact JSON containing split, ordered row records, generator contract, and preregistration hash",
+    "final_seal": "final manifest is generated and hashed with the other splits, then its rows are not loaded by selection code"
+  },
+  "host_and_outcome": {
+    "white_host": "standing Phase-3 migrated Stage-B flat graph host reconstructed from sealed stage_d_B weights and the native foundation graph",
+    "black_policy_name": "deterministic_greedy_black",
+    "black_policy": "lexicographically maximize rook capture, distance from the white king, centrality, successor legal mobility, then UCI",
+    "universal_opponent_claim": false,
+    "maximum_plies": 128,
+    "draw_claiming": true,
+    "repetition_aware_white_host": true,
+    "terminal_credit": {"white_checkmate_win": 1.0, "draw_or_horizon": 0.0, "black_win_or_rook_loss_or_illegal": -1.0},
+    "credit_source": "actual game terminal result only",
+    "prohibited_credit_or_selection_sources": [
+      "fence/waypoint/rook-safety recognizer verdicts",
+      "Mate-in-1, Mate-in-2, enter_mate2, or authored child-skill confirmations",
+      "virtual-frame confirmation or surprise",
+      "stage labels",
+      "tablebase, DTM, Stockfish, exact first-move validators",
+      "direct move-provider overrides",
+      "final-test outcomes"
+    ]
+  },
+  "candidate_construction": {
+    "training_episode": "one frozen-host game per TRAIN row and experiment seed; every selected White action inherits only that game's terminal credit",
+    "child_width": 2,
+    "minimum_train_support": 4,
+    "maximum_cells_per_topology_per_seed": 32,
+    "nomination_score": "mean terminal credit minus seed-global mean terminal credit",
+    "nomination_order": "descending positive nomination score, descending support, stable sha256 cell ID",
+    "no_positive_nominee_rule": "materialize no learned cells for that topology; do not rescue with shaped credit"
+  },
+  "topology_arms": {
+    "exact_point": {
+      "source_match": "exact generic percept signature",
+      "children": "two learner-visible action keys observed together in nominated TRAIN actions",
+      "predicate": "2-of-2"
+    },
+    "signature_coarsened": {
+      "source_match": "wildcard across percept signatures",
+      "children": "same two-key outcome-nominated units, aggregated without signature",
+      "predicate": "2-of-2"
+    },
+    "widened": {
+      "source_match": "wildcard across percept signatures",
+      "construction": "stable greedy merge of nominated point prototypes sharing at least one child; no outcome is consulted after prototype nomination",
+      "maximum_n": 6,
+      "k": 2,
+      "predicate": "at least k of n"
+    },
+    "matched_random": {
+      "source_match": "wildcard across percept signatures",
+      "population": "one random cell per widened cell",
+      "n_and_k": "copied from its widened mate",
+      "children": "seeded draws without replacement from learner-visible keys in the same TRAIN marginal-frequency deciles",
+      "matching": "select the closest firing-rate draw from 64 draws on VALIDATION without consulting outcomes"
+    },
+    "frozen_host_baseline": {"learned_cells": 0},
+    "noop": {"learned_cells": 0, "required_result": "bit-for-bit row/action/outcome/trace parity with baseline"},
+    "constructed_ceiling": {
+      "evaluation_only": true,
+      "purpose": "prove FormalReCon predicate evaluation, live binary gate application, and a deterministic move flip on a sealed constructed row",
+      "not_used_for_learning_or_configuration": true
+    }
+  },
+  "routing": {
+    "G": {
+      "kind": "binary eligibility gate",
+      "levels": ["off", "on"],
+      "dose_ladder": false,
+      "eligible_states": ["PROBATION", "MATURE"]
+    },
+    "L": {
+      "kind": "additive routing weight",
+      "dose_multipliers": [1.0, 3.0, 9.0, 27.0],
+      "base_weight": 1.0,
+      "live_requested_and_observed_weight_required": true
+    },
+    "counterfactual_isolation": "every arm and dose restores one immutable post-training snapshot; stable IDs are reacquired from live runtime state after every restore"
+  },
+  "configuration_selection": {
+    "split": "validation",
+    "per_topology_candidates": "G on and L at x1/x3/x9/x27",
+    "lexicographic_rule": [
+      "measurement-valid before invalid",
+      "adequately detectable before under-detectable",
+      "larger aggregate favorable-minus-unfavorable discordants versus baseline",
+      "more wins",
+      "G before L on an exact tie",
+      "lower L dose on an exact tie",
+      "stable configuration ID"
+    ],
+    "random_matching_uses_outcomes": false,
+    "frozen_before_final_test": true
+  },
+  "measurement_gate": {
+    "noop_exact_parity": true,
+    "same_rows_order_seeds_opponent_evaluator_ties_ticks_and_host": true,
+    "common_snapshot_hash_required": true,
+    "live_cell_reacquisition_required": true,
+    "requested_equals_observed_intervention_required": true,
+    "predicate_evaluation_evidence_required": true,
+    "full_predeclared_analysis_population_required": true,
+    "constructed_ceiling_required": true
+  },
+  "detectability": {
+    "minimum_evaluated_firing_rows_per_cell_per_split": 8,
+    "adequate_topology": "at least one cell reaches minimum support in at least three of five seeds",
+    "reported": ["nominee count", "evaluated nominee count", "adequate cell fraction", "firing row fraction"],
+    "underpowered_classification": "neither positive nor null"
+  },
+  "statistics": {
+    "alpha": 0.05,
+    "paired_unit": "same source row and experiment seed",
+    "reported": ["favorable discordants", "unfavorable discordants", "ties", "paired Wilson balance interval", "exact one-sided sign-test p", "Holm-adjusted p", "conservative paired outcome-difference interval"],
+    "paired_balance_interval": "Wilson 95% interval for favorable/(favorable+unfavorable)",
+    "sign_test": "exact one-sided binomial test conditional on discordants",
+    "outcome_difference_interval": "Wilson95(favorable/N).lower - Wilson95(unfavorable/N).upper through Wilson95(favorable/N).upper - Wilson95(unfavorable/N).lower",
+    "noninferiority_margin": -0.0234375,
+    "primary_family": [
+      "point_selected_vs_baseline",
+      "signature_selected_vs_baseline",
+      "widened_selected_vs_baseline",
+      "random_selected_vs_baseline",
+      "widened_selected_vs_random_selected"
+    ],
+    "multiplicity": "Holm correction across the five primary comparisons independently on VALIDATION and, if unlocked, FINAL-TEST"
+  },
+  "validation_freeze_gate": {
+    "requirements": [
+      "measurement gate passes",
+      "at least one non-random topology is adequately detectable",
+      "for at least one non-random selected configuration favorable > unfavorable",
+      "paired Wilson balance lower bound > 0.5",
+      "Holm-adjusted one-sided sign-test p <= 0.05"
+    ],
+    "failure_action": "do not load or evaluate FINAL-TEST"
+  },
+  "final_causal_gate": {
+    "requirements": [
+      "measurement and validation freeze gates passed",
+      "FINAL-TEST touch count equals one",
+      "adequate final detectability",
+      "favorable > unfavorable",
+      "paired Wilson balance lower bound > 0.5",
+      "Holm-adjusted one-sided sign-test p <= 0.05",
+      "conservative paired outcome-difference lower bound >= -0.0234375"
+    ]
+  },
+  "selectivity_gate": {
+    "comparison": "widened selected versus matched-random selected",
+    "requirements": ["favorable > unfavorable", "paired Wilson balance lower bound > 0.5", "Holm-adjusted p <= 0.05"]
+  },
+  "stop_rules": [
+    "stop before experimentation if exact stratified orbit-disjoint pools cannot be generated",
+    "stop before causal evaluation if no-op parity fails",
+    "stop interpretation if the constructed ceiling fails",
+    "do not touch FINAL-TEST if the validation freeze gate fails",
+    "never tune from FINAL-TEST",
+    "do not add rescue arms or operators after results",
+    "do not run another v1 KRK closure",
+    "do not start KPK or hierarchy/parent-credit/virtual-frame refactors in this run"
+  ],
+  "interpretations": {
+    "widened_G_all_gates": "Under outcome-only ecological credit and repaired measurement, content-blind widening produced a selective causal benefit through binary gating in the current frozen KRK host.",
+    "adequate_all_flat": "The current v1 KRK ecology/representation/routing intervention produced no detectable causal benefit at the preregistered scale.",
+    "only_L": "Discovered/widened structure has additive causal utility under the tested host, but conditional non-linear routing was not established.",
+    "random_matches_widening": "The benefit is not selective to the widening operator or discovered content.",
+    "recognizer_only": "No outcome-clean causal claim.",
+    "measurement_failure": "The closure is invalid as a scientific experiment.",
+    "outcome_starvation_or_under_detectability": "Outcome-only credit did not produce an adequately detectable ecology at the preregistered scale; no positive or causal-null classification is made, and the v1 KRK ecological line nevertheless closes."
+  },
+  "row_artifact_schema": [
+    "split", "manifest_sha256", "row_id", "fen", "stratum", "orbit_id",
+    "experiment_seed", "flat_host_seed", "opponent_policy", "arm", "route", "dose",
+    "selected_actions", "success", "terminal_endpoint", "active_composite_ids",
+    "predicate_evaluated_ids", "selected_responsible_ids", "requested_intervention",
+    "observed_intervention", "trace_digest", "runner_config_sha256", "snapshot_sha256"
+  ],
+  "final_test_touch_contract": {
+    "initial_count": 0,
+    "maximum_count": 1,
+    "touch_definition": "deserializing FINAL-TEST row records into the evaluator",
+    "counter_persisted_before_and_after": true
+  }
+}
