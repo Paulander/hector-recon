@@ -2661,10 +2661,17 @@ class _GraphNativeCompositeRuntime:
         birth_segment: str,
         birth_row_id: int,
         source_signature: str,
+        source_match_mode: str = "exact",
+        confirm_k: int | None = None,
         birth_step: int | None = None,
         acceptance_probe: bool = False,
     ) -> dict[str, Any]:
         clean_children = tuple(dict.fromkeys(str(child) for child in children if not learner_visible_key_firewall_leaks([str(child)])))
+        clean_k = len(clean_children) if confirm_k is None else int(confirm_k)
+        if not clean_children or not 1 <= clean_k <= len(clean_children):
+            raise ValueError("confirm_k must be between one and the number of children")
+        if source_match_mode not in {"exact", "wildcard"}:
+            raise ValueError(f"unknown source_match_mode: {source_match_mode}")
         composite_id = _real_native_composite_id(clean_children, source_signature, trigger)
         if composite_id in self.population:
             return self.population[composite_id]
@@ -2686,6 +2693,8 @@ class _GraphNativeCompositeRuntime:
             "parent_id": parent_id,
             "children": list(clean_children),
             "source_signature": source_signature,
+            "source_match_mode": source_match_mode,
+            "confirm_k": clean_k,
             "birth_trigger": trigger,
             "birth_segment": birth_segment,
             "birth_row_id": int(birth_row_id),
@@ -2776,6 +2785,8 @@ class _GraphNativeCompositeRuntime:
                         "stem_cell_id": item["stem_cell_id"],
                         "stem_cell_state": StemCellState.TRIAL.name,
                         "children": list(item["children"]),
+                        "source_match_mode": str(item.get("source_match_mode", "exact")),
+                        "confirm_k": int(item.get("confirm_k", len(item["children"]))),
                         "formal_engine_eval_count": 0,
                         "tier": "trial",
                     },
@@ -2805,6 +2816,7 @@ class _GraphNativeCompositeRuntime:
                 str(item["composite_id"]): {
                     "children": list(item["children"]),
                     "state": item["state"],
+                    "confirm_k": int(item.get("confirm_k", len(item["children"]))),
                 }
             },
         }
@@ -2891,7 +2903,7 @@ class _GraphNativeCompositeRuntime:
                     continue
                 if str(item["composite_id"]) in disabled:
                     continue
-                if str(item.get("source_signature")) != signature:
+                if not _real_native_source_matches(item, signature):
                     continue
                 evaluation = self.evaluate_composite(item, board, move)
                 if evaluation["terminal_requested"]:
@@ -4964,7 +4976,9 @@ def _real_native_composite_predicate(composite_id: str):
             node.activation.value = 0.0
             return True, False
         active = set(_sealed_action_keys(board, move))
-        success = all(str(child) in active for child in payload["children"])
+        children = tuple(map(str, payload["children"]))
+        confirm_k = int(payload.get("confirm_k", len(children)))
+        success = sum(child in active for child in children) >= confirm_k
         node.meta["formal_engine_eval_count"] = int(node.meta.get("formal_engine_eval_count", 0)) + 1
         node.meta["last_candidate_move_uci"] = move.uci()
         node.meta["last_confirmed"] = bool(success)
@@ -4972,6 +4986,15 @@ def _real_native_composite_predicate(composite_id: str):
         return True, success
 
     return predicate
+
+
+def _real_native_source_matches(item: Mapping[str, Any], active_signature: str) -> bool:
+    mode = str(item.get("source_match_mode", "exact"))
+    if mode == "wildcard":
+        return True
+    if mode != "exact":
+        raise ValueError(f"unknown source_match_mode: {mode}")
+    return str(item.get("source_signature", "")) == str(active_signature)
 
 
 def _real_native_acceptance_spec() -> dict[str, Any]:
