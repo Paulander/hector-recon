@@ -1,0 +1,58 @@
+{
+  "available_after_named_prior_orbit_exclusion": {
+    "3": 43,
+    "4": 34,
+    "5": 39,
+    "6": 30,
+    "7": 25
+  },
+  "experimental_arms_executed": false,
+  "final_test_touch_count": 0,
+  "generator_seed": 20273100,
+  "preregistration_sha256": "a86dd936a0586009a371f4f9c342551c5ff1eaff240c4f30a07d3ade8a0aea8a",
+  "prior_exact_fen_exclusion_count": 2800,
+  "prior_orbit_exclusion_count": 1760,
+  "raw_eligible_orbits_by_stratum": {
+    "3": 172,
+    "4": 215,
+    "5": 228,
+    "6": 226,
+    "7": 209
+  },
+  "required_across_splits": {
+    "3": 154,
+    "4": 154,
+    "5": 154,
+    "6": 153,
+    "7": 153
+  },
+  "schema_version": "krk_closure_pool_capacity_failure.v1",
+  "shortages": {
+    "3": {
+      "available": 43,
+      "required": 154,
+      "shortfall": 111
+    },
+    "4": {
+      "available": 34,
+      "required": 154,
+      "shortfall": 120
+    },
+    "5": {
+      "available": 39,
+      "required": 154,
+      "shortfall": 115
+    },
+    "6": {
+      "available": 30,
+      "required": 153,
+      "shortfall": 123
+    },
+    "7": {
+      "available": 25,
+      "required": 153,
+      "shortfall": 128
+    }
+  },
+  "stop_rule": "fresh_exact_stratified_orbit_disjoint_pools_cannot_be_generated"
+}

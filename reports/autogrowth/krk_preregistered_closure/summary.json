@@ -1,0 +1,135 @@
+{
+  "arm_by_seed_table": [
+    {
+      "constructed_ceiling": "not_run",
+      "exact_point": "not_run",
+      "frozen_host_baseline": "not_run",
+      "matched_random": "not_run",
+      "noop": "not_run",
+      "seed": 20273101,
+      "signature_coarsened": "not_run",
+      "widened": "not_run"
+    },
+    {
+      "constructed_ceiling": "not_run",
+      "exact_point": "not_run",
+      "frozen_host_baseline": "not_run",
+      "matched_random": "not_run",
+      "noop": "not_run",
+      "seed": 20273102,
+      "signature_coarsened": "not_run",
+      "widened": "not_run"
+    },
+    {
+      "constructed_ceiling": "not_run",
+      "exact_point": "not_run",
+      "frozen_host_baseline": "not_run",
+      "matched_random": "not_run",
+      "noop": "not_run",
+      "seed": 20273103,
+      "signature_coarsened": "not_run",
+      "widened": "not_run"
+    },
+    {
+      "constructed_ceiling": "not_run",
+      "exact_point": "not_run",
+      "frozen_host_baseline": "not_run",
+      "matched_random": "not_run",
+      "noop": "not_run",
+      "seed": 20273104,
+      "signature_coarsened": "not_run",
+      "widened": "not_run"
+    },
+    {
+      "constructed_ceiling": "not_run",
+      "exact_point": "not_run",
+      "frozen_host_baseline": "not_run",
+      "matched_random": "not_run",
+      "noop": "not_run",
+      "seed": 20273105,
+      "signature_coarsened": "not_run",
+      "widened": "not_run"
+    }
+  ],
+  "coverage_gate": {
+    "status": "not_run"
+  },
+  "final_test": {
+    "status": "never_unlocked",
+    "touch_count": 0,
+    "touched": false
+  },
+  "heldout_causal_gate": {
+    "status": "not_run"
+  },
+  "interpretation": "The preregistered fresh-pool population is too small after the frozen orbit exclusions. This is an instrument/pool-capacity stop, not evidence for or against ecological composition.",
+  "krk_freeze": "This was the single authorized v1 KRK ecological closure. KRK is now frozen as a regression/transfer benchmark; no rescue closure is authorized.",
+  "measurement_gate": {
+    "status": "not_run"
+  },
+  "next_research_question": "KPK opposition and tempo under a fresh domain-specific preregistration.",
+  "pool_generation": {
+    "available_after_named_prior_orbit_exclusion": {
+      "3": 43,
+      "4": 34,
+      "5": 39,
+      "6": 30,
+      "7": 25
+    },
+    "experimental_arms_executed": false,
+    "final_test_touch_count": 0,
+    "generator_seed": 20273100,
+    "preregistration_sha256": "a86dd936a0586009a371f4f9c342551c5ff1eaff240c4f30a07d3ade8a0aea8a",
+    "prior_exact_fen_exclusion_count": 2800,
+    "prior_orbit_exclusion_count": 1760,
+    "raw_eligible_orbits_by_stratum": {
+      "3": 172,
+      "4": 215,
+      "5": 228,
+      "6": 226,
+      "7": 209
+    },
+    "required_across_splits": {
+      "3": 154,
+      "4": 154,
+      "5": 154,
+      "6": 153,
+      "7": 153
+    },
+    "schema_version": "krk_closure_pool_capacity_failure.v1",
+    "shortages": {
+      "3": {
+        "available": 43,
+        "required": 154,
+        "shortfall": 111
+      },
+      "4": {
+        "available": 34,
+        "required": 154,
+        "shortfall": 120
+      },
+      "5": {
+        "available": 39,
+        "required": 154,
+        "shortfall": 115
+      },
+      "6": {
+        "available": 30,
+        "required": 153,
+        "shortfall": 123
+      },
+      "7": {
+        "available": 25,
+        "required": 153,
+        "shortfall": 128
+      }
+    },
+    "stop_rule": "fresh_exact_stratified_orbit_disjoint_pools_cannot_be_generated"
+  },
+  "schema_version": "krk_preregistered_ecological_closure_result.v1",
+  "selectivity_gate": {
+    "status": "not_run"
+  },
+  "status": "stopped_before_experimentation",
+  "stop_rule": "fresh_exact_stratified_orbit_disjoint_pools_cannot_be_generated"
+}

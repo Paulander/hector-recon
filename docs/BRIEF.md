@@ -25,12 +25,14 @@ Canonical sha256: ae382d0463e35eff09e9515a715648b5d49b1e0891d127a660e036e378452e
 
 ## Current scientific state
 
-Causal usefulness of discovered composites is unknown. Exact point-cell sparsity is plausible, but Phase 3.22 did not cleanly quantify it because stale targets, vacuous G doses, incomplete counterfactual isolation, and reused development rows compromise the confirmation analysis.
+Causal usefulness of discovered KRK composites remains unknown. Exact point-cell sparsity is plausible, but Phase 3.22 did not cleanly quantify it because stale targets, vacuous G doses, incomplete counterfactual isolation, and reused development rows compromise the confirmation analysis.
 
 No causal classification counts unless full/no-op share evaluator, rows, seeds, ordering, tie-break, and immutable starting state; target evaluation is proven per row; row-level outcomes and runner provenance are persisted; paired uncertainty and multiplicity are reported; and final-test rows remain untouched until configuration freeze.
 
+The planted-composition certification passed. The one authorized v1 KRK closure was preregistered at commits `ae59486` and `3ecf76b`, then stopped at its first binding rule: the frozen fresh-pool law is infeasible. Exact enumeration found only 43/34/39/30/25 eligible D4 orbits at king-distance strata 3/4/5/6/7 after the five named prior-pool orbit exclusions, versus required totals 154/154/154/153/153. No TRAIN/VALIDATION/FINAL manifests were created, no arm ran, and FINAL-TEST touch count is zero. This is an instrument/pool-capacity stop, not evidence for or against point cells, widening, routing, or outcome-only learning.
+
 ## Ordered next decision
 
-Run the generic planted-composition certification first. Only a pass permits one preregistered KRK point-versus-widened closure; then freeze KRK as a regression/transfer benchmark and move to KPK. No broad KRK expansion precedes that gate.
+KRK is frozen as a regression/transfer benchmark. Do not repair the stopped closure by weakening its exclusions, shrinking its pools, changing strata, or adding a rescue arm after observing feasibility. The next research question is KPK opposition/tempo under a fresh domain-specific preregistration, using the generic planted-benchmark measurement pattern and permanent tripwires.
 
 No-go: runtime tablebase/DTM or Stockfish provider, learner-visible stage/hand-skill features, direct move-provider overrides, hidden oracles, new TG chronology, or claims from a counterfactual path that fails no-op parity.
