@@ -41,6 +41,16 @@ def main() -> int:
     parser.add_argument(
         "--r0-validation-interval", type=int, default=defaults.r0_validation_interval
     )
+    parser.add_argument(
+        "--r1-validation-interval", type=int, default=defaults.r1_validation_interval
+    )
+    parser.add_argument(
+        "--r1-snapshot-interval", type=int, default=defaults.r1_snapshot_interval
+    )
+    parser.add_argument(
+        "--r1-snapshot-dir", type=Path, default=Path(defaults.r1_snapshot_dir)
+    )
+    parser.add_argument("--no-resume-r1", action="store_true")
     parser.add_argument("--max-samples", type=int, default=defaults.max_samples)
     parser.add_argument("--r0-epochs", type=int, default=defaults.r0_epochs)
     parser.add_argument("--r1-epochs", type=int, default=defaults.r1_epochs)
@@ -83,6 +93,10 @@ def main() -> int:
         r0_epochs=args.r0_epochs,
         r1_epochs=args.r1_epochs,
         r0_validation_interval=args.r0_validation_interval,
+        r1_validation_interval=args.r1_validation_interval,
+        r1_snapshot_interval=args.r1_snapshot_interval,
+        r1_snapshot_dir=str(args.r1_snapshot_dir),
+        resume_r1_snapshots=not args.no_resume_r1,
         r0_replay_per_r1_epoch=args.r0_replay_per_r1_epoch,
         max_samples=args.max_samples,
         run_r1=not args.no_r1,

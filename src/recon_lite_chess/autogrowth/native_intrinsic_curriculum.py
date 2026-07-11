@@ -15,7 +15,9 @@ from dataclasses import asdict, dataclass, replace
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path
+import pickle
 import random
 from time import perf_counter
 from typing import Any, Iterable, Mapping, Sequence
@@ -137,6 +139,10 @@ class NativeIntrinsicCurriculumConfig:
     r1_epochs: int = 120
     r0_replay_per_r1_epoch: int = 8
     r0_validation_interval: int = 4
+    r1_validation_interval: int = 20
+    r1_snapshot_interval: int = 20
+    r1_snapshot_dir: str = "snapshots/autogrowth/native_intrinsic_r1"
+    resume_r1_snapshots: bool = True
     r0_mastery_threshold: float = 1.0
     r1_mastery_threshold: float = 1.0
     run_r1: bool = True
@@ -442,6 +448,7 @@ def run_native_intrinsic_curriculum(
             progress["completed_r1_arms"][arm_name] = _arm_progress_summary(
                 arms[arm_name]
             )
+            progress.pop("active_r1_arm", None)
             _write_json(cfg.progress_path, progress)
 
         full_rate = arms["full_intrinsic"]["regression"]["conversion_rate"]
@@ -523,6 +530,8 @@ def run_native_intrinsic_curriculum(
             "runtime_mature_child_priority_enabled": cfg.mature_child_priority,
             "runtime_child_priority_source": "mature_child_virtual_available_response",
             "r1_reply_schedule": "per_position_action_content_blind_round_robin",
+            "serialized_interval_snapshot_resume_implemented": True,
+            "snapshot_resume_requires_exact_fingerprint": True,
             "r0_replay_cache_semantics": (
                 "memoized_mature_graph_response_live_formal_reconfirmation_"
                 "and_world_reexecution"
@@ -1035,6 +1044,113 @@ def _train_r0(
     }
 
 
+class R1CheckpointInterrupt(RuntimeError):
+    """Test/diagnostic interruption raised only after an atomic R1 snapshot."""
+
+    def __init__(self, *, epoch: int, snapshot_path: Path) -> None:
+        super().__init__(f"R1 interrupted after epoch {epoch}; snapshot={snapshot_path}")
+        self.epoch = int(epoch)
+        self.snapshot_path = snapshot_path
+
+
+def _r1_snapshot_path(
+    config: NativeIntrinsicCurriculumConfig,
+    pools: _Pools,
+    arm_name: str,
+) -> Path:
+    pool_hash = str(pools.manifest()["combined_sha256"])[:16]
+    return Path(config.r1_snapshot_dir) / f"seed_{config.seed}_{pool_hash}_{arm_name}.pkl"
+
+
+def _r1_snapshot_fingerprint(
+    graph: NativeReConKRKGraph,
+    credit: IntrinsicCreditEngine,
+    r0_gate: OutcomeCalibratedPrototypeGate,
+    pools: _Pools,
+    *,
+    arm_name: str,
+    r0_child_triplet_ids: frozenset[str],
+    config: NativeIntrinsicCurriculumConfig,
+) -> str:
+    behavior_config = asdict(config)
+    for key in (
+        "output_path",
+        "progress_path",
+        "r1_snapshot_dir",
+        "resume_r1_snapshots",
+        "max_samples",
+    ):
+        behavior_config.pop(key, None)
+    payload = {
+        "schema": "native_intrinsic_r1_resume.v1",
+        "arm_name": arm_name,
+        "behavior_config": behavior_config,
+        "pool_manifest": pools.manifest(),
+        "r0_gate": r0_gate.to_dict(),
+        "r0_child_triplet_ids": sorted(r0_child_triplet_ids),
+        "base_state_sha256": hashlib.sha256(
+            pickle.dumps((graph, credit), protocol=5)
+        ).hexdigest(),
+    }
+    return _hash_json(payload)
+
+
+def _atomic_pickle(path: Path, payload: Mapping[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    with temporary.open("wb") as handle:
+        pickle.dump(dict(payload), handle, protocol=5)
+        handle.flush()
+        os.fsync(handle.fileno())
+    temporary.replace(path)
+
+
+def _load_r1_snapshot(path: Path, *, expected_fingerprint: str) -> dict[str, Any] | None:
+    if not path.exists():
+        return None
+    with path.open("rb") as handle:
+        payload = pickle.load(handle)
+    if payload.get("schema_version") != "native_intrinsic_r1_arm_snapshot.v1":
+        raise ValueError(f"unsupported R1 arm snapshot schema in {path}")
+    actual = str(payload.get("fingerprint", ""))
+    if actual != expected_fingerprint:
+        raise ValueError(
+            f"R1 snapshot fingerprint mismatch for {path}: {actual} != {expected_fingerprint}"
+        )
+    return payload
+
+
+def _replace_object_state(target: Any, restored: Any) -> None:
+    target.__dict__.clear()
+    target.__dict__.update(restored.__dict__)
+
+
+def _write_live_r1_progress(
+    config: NativeIntrinsicCurriculumConfig,
+    *,
+    arm_name: str,
+    epoch: int,
+    checkpoint: Mapping[str, Any],
+    snapshot_path: Path,
+    resumed: bool,
+) -> None:
+    path = Path(config.progress_path)
+    if path.exists():
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    else:
+        payload = {"schema_version": "krk_native_intrinsic_r0_r1_progress.v0"}
+    payload["active_r1_arm"] = {
+        "arm_name": arm_name,
+        "epoch": int(epoch),
+        "validation_conversion_rate": checkpoint.get("validation_conversion_rate"),
+        "r0_retention_accuracy": checkpoint.get("r0_retention_accuracy"),
+        "child_handoff_count": checkpoint.get("child_handoff_count", 0),
+        "snapshot_path": str(snapshot_path),
+        "resumed_from_snapshot": bool(resumed),
+    }
+    _write_json(path, payload)
+
+
 def _run_r1_arm(
     arm_name: str,
     graph: NativeReConKRKGraph,
@@ -1046,34 +1162,82 @@ def _run_r1_arm(
     r0_child_triplet_ids: frozenset[str],
     max_epochs: int,
     config: NativeIntrinsicCurriculumConfig,
+    stop_after_epoch: int | None = None,
 ) -> dict[str, Any]:
-    credit.register(R1_COMPETENCE_ID, mature=False, hierarchy_depth=0)
-    started = perf_counter()
-    episodes = child_handoffs = failures = formal_confirmation_failures = 0
-    virtual_frame_queries = 0
-    replay_episodes = replay_mates = replay_nonmates = 0
-    replay_confirmation_failures = replay_outcome_mismatches = 0
-    replay_seconds = 0.0
-    reply_orbits: set[tuple[str, str, str]] = set()
-    reply_exposure_counts: dict[tuple[str, str], int] = {}
-    child_dispatch_cache: dict[str, dict[str, Any]] = {}
-    child_dispatch_cache_hits = child_dispatch_cache_misses = 0
-    child_dispatch_cache_mismatches = 0
-    evaluation_child_triplet_ids = (
-        r0_child_triplet_ids
-        if config.mature_child_priority
+    epoch_budget = max(1, int(max_epochs))
+    if config.r1_validation_interval <= 0 or config.r1_snapshot_interval <= 0:
+        raise ValueError("R1 validation and snapshot intervals must be positive")
+    snapshot_path = _r1_snapshot_path(config, pools, arm_name)
+    fingerprint = _r1_snapshot_fingerprint(
+        graph,
+        credit,
+        r0_gate,
+        pools,
+        arm_name=arm_name,
+        r0_child_triplet_ids=r0_child_triplet_ids,
+        config=config,
+    )
+    restored = (
+        _load_r1_snapshot(snapshot_path, expected_fingerprint=fingerprint)
+        if config.resume_r1_snapshots
         else None
+    )
+    started = perf_counter()
+    resumed_from_snapshot = restored is not None
+    snapshot_writes = 0
+    duration_before_resume = 0.0
+    if restored is None:
+        credit.register(R1_COMPETENCE_ID, mature=False, hierarchy_depth=0)
+        start_epoch = 0
+        counters = {
+            "episodes": 0,
+            "child_handoffs": 0,
+            "failures": 0,
+            "formal_confirmation_failures": 0,
+            "virtual_frame_queries": 0,
+            "replay_episodes": 0,
+            "replay_mates": 0,
+            "replay_nonmates": 0,
+            "replay_confirmation_failures": 0,
+            "replay_outcome_mismatches": 0,
+            "replay_seconds": 0.0,
+            "child_dispatch_cache_hits": 0,
+            "child_dispatch_cache_misses": 0,
+            "child_dispatch_cache_mismatches": 0,
+        }
+        reply_orbits: set[tuple[str, str, str]] = set()
+        reply_exposure_counts: dict[tuple[str, str], int] = {}
+        child_dispatch_cache: dict[str, dict[str, Any]] = {}
+        checkpoints: list[dict[str, Any]] = []
+        stopped_epoch = epoch_budget
+        joint_mastery = False
+    else:
+        saved_budget = int(restored["epoch_budget"])
+        if saved_budget != epoch_budget:
+            raise ValueError(
+                f"R1 snapshot epoch budget mismatch: {saved_budget} != {epoch_budget}"
+            )
+        _replace_object_state(graph, restored["graph"])
+        _replace_object_state(credit, restored["credit"])
+        start_epoch = int(restored["next_epoch"])
+        counters = dict(restored["counters"])
+        reply_orbits = set(restored["reply_orbits"])
+        reply_exposure_counts = dict(restored["reply_exposure_counts"])
+        child_dispatch_cache = dict(restored["child_dispatch_cache"])
+        checkpoints = list(restored["checkpoints"])
+        stopped_epoch = int(restored["stopped_epoch"])
+        joint_mastery = bool(restored["joint_mastery"])
+        duration_before_resume = float(restored["duration_seconds"])
+        snapshot_writes = int(restored.get("snapshot_writes", 0))
+
+    evaluation_child_triplet_ids = (
+        r0_child_triplet_ids if config.mature_child_priority else None
     )
     evaluation_child_dispatch_cache = (
-        child_dispatch_cache
-        if config.freeze_r0_parameters_for_r1
-        else None
+        child_dispatch_cache if config.freeze_r0_parameters_for_r1 else None
     )
-    checkpoints: list[dict[str, Any]] = []
-    epoch_budget = max(1, int(max_epochs))
-    stopped_epoch = epoch_budget
-    joint_mastery = False
-    for epoch in range(epoch_budget):
+
+    for epoch in range(start_epoch, epoch_budget):
         for position_index, fen in enumerate(pools.r1_train):
             board = chess.Board(fen)
             move, triplet_id, confirmed = _scheduled_confirmed_action(
@@ -1082,7 +1246,7 @@ def _run_r1_arm(
                 schedule_index=epoch + position_index,
                 stage_diagnostic="R1_mate_in_2",
             )
-            formal_confirmation_failures += int(not confirmed)
+            counters["formal_confirmation_failures"] += int(not confirmed)
             after_first = board.copy(stack=False)
             after_first.push(move)
             terminal_kind: str | None = _terminal_kind(after_first)
@@ -1101,23 +1265,26 @@ def _run_r1_arm(
                     reply_orbits.add((fen, move.uci(), reply.uci()))
                     terminal_kind = _terminal_kind(successor)
                     if terminal_kind is None and arm_name == "full_intrinsic":
-                        available, _response, cache_hit, cache_mismatch = _r0_available_with_dispatch_cache(
-                            graph,
-                            r0_gate,
-                            successor,
-                            mode=config.r0_availability_mode,
-                            allowed_triplets=r0_child_triplet_ids,
-                            cache=child_dispatch_cache,
-                            enabled=config.freeze_r0_parameters_for_r1,
+                        available, _response, cache_hit, cache_mismatch = (
+                            _r0_available_with_dispatch_cache(
+                                graph,
+                                r0_gate,
+                                successor,
+                                mode=config.r0_availability_mode,
+                                allowed_triplets=r0_child_triplet_ids,
+                                cache=child_dispatch_cache,
+                                enabled=config.freeze_r0_parameters_for_r1,
+                            )
                         )
-                        child_dispatch_cache_hits += int(cache_hit)
-                        child_dispatch_cache_misses += int(not cache_hit)
-                        virtual_frame_queries += int(
+                        counters["child_dispatch_cache_hits"] += int(cache_hit)
+                        counters["child_dispatch_cache_misses"] += int(not cache_hit)
+                        counters["child_dispatch_cache_mismatches"] += int(cache_mismatch)
+                        counters["virtual_frame_queries"] += int(
                             config.r0_availability_mode == "virtual_frame_verified"
                         )
                         if available:
                             successor_ids = (R0_COMPETENCE_ID,)
-                            child_handoffs += 1
+                            counters["child_handoffs"] += 1
             credit.register(triplet_id, hierarchy_depth=1)
             credit.begin_episode()
             event = credit.transition(
@@ -1135,8 +1302,9 @@ def _run_r1_arm(
                 td_error=event.td_error,
                 stage_diagnostic="R1_mate_in_2",
             )
-            episodes += 1
-            failures += int(terminal_kind is not None)
+            counters["episodes"] += 1
+            counters["failures"] += int(terminal_kind is not None)
+
         replay = _replay_r0(
             graph,
             credit,
@@ -1145,13 +1313,24 @@ def _run_r1_arm(
             count=config.r0_replay_per_r1_epoch,
             memory=r0_replay_memory,
         )
-        replay_episodes += replay["episodes"]
-        replay_mates += replay["observed_mates"]
-        replay_nonmates += replay["observed_nonmates"]
-        replay_confirmation_failures += replay["formal_confirmation_failures"]
-        replay_outcome_mismatches += replay["cached_outcome_mismatches"]
-        replay_seconds += replay["duration_seconds"]
-        if epoch in {0, epoch_budget - 1} or (epoch + 1) % 20 == 0:
+        counters["replay_episodes"] += replay["episodes"]
+        counters["replay_mates"] += replay["observed_mates"]
+        counters["replay_nonmates"] += replay["observed_nonmates"]
+        counters["replay_confirmation_failures"] += replay["formal_confirmation_failures"]
+        counters["replay_outcome_mismatches"] += replay["cached_outcome_mismatches"]
+        counters["replay_seconds"] += replay["duration_seconds"]
+
+        epoch_number = epoch + 1
+        force_stop = stop_after_epoch is not None and epoch_number >= stop_after_epoch
+        should_observe = (
+            epoch == 0
+            or epoch_number == epoch_budget
+            or epoch_number % config.r1_validation_interval == 0
+            or epoch_number % config.r1_snapshot_interval == 0
+            or force_stop
+        )
+        latest_checkpoint: dict[str, Any] | None = None
+        if should_observe:
             metrics = _evaluate_r1(
                 graph,
                 pools.r1_validation,
@@ -1168,11 +1347,11 @@ def _run_r1_arm(
                 r0_child_triplet_ids=evaluation_child_triplet_ids,
                 child_dispatch_cache=evaluation_child_dispatch_cache,
             )
-            checkpoint = {
-                "epoch": epoch + 1,
+            latest_checkpoint = {
+                "epoch": epoch_number,
                 "validation_conversion_rate": metrics["conversion_rate"],
                 "validation_stratum_conversion": metrics["stratum_conversion"],
-                "child_handoff_count": child_handoffs,
+                "child_handoff_count": counters["child_handoffs"],
                 "r0_retention_accuracy": retention["accuracy"],
             }
             if (
@@ -1189,48 +1368,96 @@ def _run_r1_arm(
                     r0_child_triplet_ids=evaluation_child_triplet_ids,
                     child_dispatch_cache=evaluation_child_dispatch_cache,
                 )
-                checkpoint["regression_conversion_rate_at_mastery_probe"] = (
+                latest_checkpoint["regression_conversion_rate_at_mastery_probe"] = (
                     regression_probe["conversion_rate"]
                 )
-                checkpoint["regression_stratum_conversion_at_mastery_probe"] = (
+                latest_checkpoint["regression_stratum_conversion_at_mastery_probe"] = (
                     regression_probe["stratum_conversion"]
                 )
                 joint_mastery = bool(
-                    regression_probe["conversion_rate"]
-                    >= config.r1_mastery_threshold
+                    regression_probe["conversion_rate"] >= config.r1_mastery_threshold
                 )
-                checkpoint["joint_mastery"] = joint_mastery
+                latest_checkpoint["joint_mastery"] = joint_mastery
                 if joint_mastery:
-                    stopped_epoch = epoch + 1
-            checkpoints.append(checkpoint)
-            if joint_mastery:
-                break
+                    stopped_epoch = epoch_number
+            checkpoints.append(latest_checkpoint)
+
+        should_snapshot = (
+            epoch_number == epoch_budget
+            or epoch_number % config.r1_snapshot_interval == 0
+            or joint_mastery
+            or force_stop
+        )
+        if should_snapshot:
+            elapsed = duration_before_resume + (perf_counter() - started)
+            state = {
+                "schema_version": "native_intrinsic_r1_arm_snapshot.v1",
+                "fingerprint": fingerprint,
+                "arm_name": arm_name,
+                "epoch_budget": epoch_budget,
+                "next_epoch": epoch_number,
+                "graph": graph,
+                "credit": credit,
+                "counters": counters,
+                "reply_orbits": reply_orbits,
+                "reply_exposure_counts": reply_exposure_counts,
+                "child_dispatch_cache": child_dispatch_cache,
+                "checkpoints": checkpoints,
+                "stopped_epoch": stopped_epoch,
+                "joint_mastery": joint_mastery,
+                "duration_seconds": elapsed,
+                "snapshot_writes": snapshot_writes + 1,
+            }
+            _atomic_pickle(snapshot_path, state)
+            snapshot_writes += 1
+            if latest_checkpoint is None:
+                raise RuntimeError("R1 snapshot requires a current validation checkpoint")
+            _write_live_r1_progress(
+                config,
+                arm_name=arm_name,
+                epoch=epoch_number,
+                checkpoint=latest_checkpoint,
+                snapshot_path=snapshot_path,
+                resumed=resumed_from_snapshot,
+            )
+        if force_stop:
+            raise R1CheckpointInterrupt(
+                epoch=epoch_number,
+                snapshot_path=snapshot_path,
+            )
+        if joint_mastery:
+            break
+
+    duration_seconds = duration_before_resume + (perf_counter() - started)
     return {
         "training": {
-            "episodes": episodes,
+            "episodes": counters["episodes"],
             "epoch_budget": epoch_budget,
             "stopped_epoch": stopped_epoch,
             "joint_mastery": joint_mastery,
-            "duration_seconds": round(perf_counter() - started, 6),
-            "child_handoff_count": child_handoffs,
-            "virtual_frame_query_count": virtual_frame_queries,
-            "r0_replay_episode_count": replay_episodes,
-            "r0_replay_mate_count": replay_mates,
-            "r0_replay_nonmate_count": replay_nonmates,
-            "r0_replay_formal_confirmation_failure_count": replay_confirmation_failures,
-            "r0_replay_cached_outcome_mismatch_count": replay_outcome_mismatches,
-            "r0_replay_duration_seconds": round(replay_seconds, 6),
+            "duration_seconds": round(duration_seconds, 6),
+            "resumed_from_snapshot": resumed_from_snapshot,
+            "snapshot_path": str(snapshot_path),
+            "snapshot_write_count": snapshot_writes,
+            "child_handoff_count": counters["child_handoffs"],
+            "virtual_frame_query_count": counters["virtual_frame_queries"],
+            "r0_replay_episode_count": counters["replay_episodes"],
+            "r0_replay_mate_count": counters["replay_mates"],
+            "r0_replay_nonmate_count": counters["replay_nonmates"],
+            "r0_replay_formal_confirmation_failure_count": counters["replay_confirmation_failures"],
+            "r0_replay_cached_outcome_mismatch_count": counters["replay_outcome_mismatches"],
+            "r0_replay_duration_seconds": round(counters["replay_seconds"], 6),
             "r0_replay_mode": "memoized_mature_graph_response_live_confirmed",
             "r0_child_snapshot_triplet_count": len(r0_child_triplet_ids),
             "r0_child_dispatch_cache_entry_count": len(child_dispatch_cache),
-            "r0_child_dispatch_cache_hit_count": child_dispatch_cache_hits,
-            "r0_child_dispatch_cache_miss_count": child_dispatch_cache_misses,
-            "r0_child_dispatch_cache_live_mismatch_count": child_dispatch_cache_mismatches,
-            "observed_terminal_failure_count": failures,
+            "r0_child_dispatch_cache_hit_count": counters["child_dispatch_cache_hits"],
+            "r0_child_dispatch_cache_miss_count": counters["child_dispatch_cache_misses"],
+            "r0_child_dispatch_cache_live_mismatch_count": counters["child_dispatch_cache_mismatches"],
+            "observed_terminal_failure_count": counters["failures"],
             "unique_first_move_reply_exposures": len(reply_orbits),
             "distinct_first_move_actions_exposed": len(reply_exposure_counts),
             "reply_schedule": "per_position_action_content_blind_round_robin",
-            "formal_confirmation_failure_count": formal_confirmation_failures,
+            "formal_confirmation_failure_count": counters["formal_confirmation_failures"],
             "teacher_positive_move_sets_consumed": 0,
             "forced_first_move_labels_consumed": 0,
             "validation_checkpoints": checkpoints,
@@ -1261,7 +1488,6 @@ def _run_r1_arm(
         "graph": graph.learned_state_audit(),
         "credit": credit.snapshot(),
     }
-
 
 def _replay_r0(
     graph: NativeReConKRKGraph,
@@ -1963,8 +2189,10 @@ def _hash_json(payload: Any) -> str:
 def _write_json(path: str | Path, payload: Mapping[str, Any]) -> Path:
     output = Path(path)
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(
+    temporary = output.with_suffix(output.suffix + ".tmp")
+    temporary.write_text(
         json.dumps(payload, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
+    temporary.replace(output)
     return output

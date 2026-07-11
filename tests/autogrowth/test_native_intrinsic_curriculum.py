@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from collections import Counter
+import copy
+import pickle
 
 import chess
 import pytest
@@ -10,13 +12,17 @@ from recon_lite import LinkType
 from recon_lite_hector.learning import (
     IntrinsicCreditConfig,
     IntrinsicCreditEngine,
+    OutcomeCalibratedPrototypeGate,
     Responsibility,
 )
 from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
+    NativeIntrinsicCurriculumConfig,
     R0_BALANCED_STRATA,
     R0_COMPETENCE_ID,
     R1_BALANCED_STRATA,
     R1_RETIRED_DEVELOPMENT_FENS,
+    R1CheckpointInterrupt,
+    _Pools,
     _balanced_r0_quotas,
     _balanced_r1_quotas,
     _build_r0_replay_memory,
@@ -30,6 +36,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _r0_available_with_dispatch_cache,
     _r1_orbit_key,
     _replay_r0,
+    _run_r1_arm,
 )
 from recon_lite_chess.autogrowth.foundation_curriculum import (
     _forced_mate_in_two_first_moves,
@@ -74,6 +81,146 @@ def test_native_intrinsic_graph_starts_with_empty_learned_state() -> None:
         "m3_update_count": 0,
         "m4_event_count": 0,
     }
+
+
+def test_native_graph_pickle_roundtrip_restores_runtime_predicates() -> None:
+    graph = _graph()
+    board = chess.Board(MATE_ONE_FEN)
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        graph.ensure_triplet(board, move, stage="snapshot_test")
+
+    restored = pickle.loads(pickle.dumps(graph, protocol=5))
+
+    assert restored.learned_state_audit() == graph.learned_state_audit()
+    assert restored.audit_choice(board) == graph.audit_choice(board)
+    assert all(
+        node.predicate is not None
+        for node in restored.graph.nodes.values()
+        if node.ntype.name == "TERMINAL"
+    )
+
+
+def test_r1_interval_snapshot_resume_matches_uninterrupted(tmp_path) -> None:
+    base_graph = _graph()
+    base_credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
+    base_credit.register(R0_COMPETENCE_ID, mature=True)
+    gate = OutcomeCalibratedPrototypeGate(
+        feature_names=("probe",),
+        offsets=(0.0,),
+        scales=(1.0,),
+        prototypes=((0.0,), (1.0,)),
+        outcomes=(False, True),
+        neighbors=1,
+        threshold=0.5,
+        train_metrics={},
+        validation_metrics={},
+        mature=True,
+    )
+    pools = _Pools(
+        r0_train=(MATE_ONE_FEN,),
+        r0_validation=(MATE_ONE_FEN,),
+        r0_regression=(MATE_ONE_FEN,),
+        gate_train_decoys=(),
+        gate_validation_decoys=(),
+        gate_regression_decoys=(),
+        r1_train=(R1_RETIRED_DEVELOPMENT_FENS[0],),
+        r1_validation=(R1_RETIRED_DEVELOPMENT_FENS[1],),
+        r1_regression=(R1_RETIRED_DEVELOPMENT_FENS[2],),
+        r0_train_strata=("test",),
+        r0_validation_strata=("test",),
+        r0_regression_strata=("test",),
+        r0_excluded_fens=(),
+        r0_pool_mode="test",
+        r1_train_strata=("test",),
+        r1_validation_strata=("test",),
+        r1_regression_strata=("test",),
+        r1_pool_mode="test",
+    )
+    common = dict(
+        r0_replay_per_r1_epoch=0,
+        r1_validation_interval=1,
+        r1_snapshot_interval=1,
+        r1_mastery_threshold=2.0,
+        mature_child_priority=False,
+        max_samples=0,
+    )
+    uninterrupted_config = NativeIntrinsicCurriculumConfig(
+        progress_path=str(tmp_path / "uninterrupted_progress.json"),
+        r1_snapshot_dir=str(tmp_path / "uninterrupted"),
+        resume_r1_snapshots=False,
+        **common,
+    )
+    uninterrupted_graph = copy.deepcopy(base_graph)
+    uninterrupted_credit = copy.deepcopy(base_credit)
+    uninterrupted = _run_r1_arm(
+        "no_bootstrap",
+        uninterrupted_graph,
+        uninterrupted_credit,
+        gate,
+        pools,
+        r0_replay_memory=(),
+        r0_child_triplet_ids=frozenset(),
+        max_epochs=4,
+        config=uninterrupted_config,
+    )
+
+    resume_config = NativeIntrinsicCurriculumConfig(
+        progress_path=str(tmp_path / "resume_progress.json"),
+        r1_snapshot_dir=str(tmp_path / "resume"),
+        resume_r1_snapshots=True,
+        **common,
+    )
+    with pytest.raises(R1CheckpointInterrupt) as interrupted:
+        _run_r1_arm(
+            "no_bootstrap",
+            copy.deepcopy(base_graph),
+            copy.deepcopy(base_credit),
+            gate,
+            pools,
+            r0_replay_memory=(),
+            r0_child_triplet_ids=frozenset(),
+            max_epochs=4,
+            config=resume_config,
+            stop_after_epoch=2,
+        )
+    assert interrupted.value.epoch == 2
+    assert interrupted.value.snapshot_path.exists()
+
+    resumed_graph = copy.deepcopy(base_graph)
+    resumed_credit = copy.deepcopy(base_credit)
+    resumed = _run_r1_arm(
+        "no_bootstrap",
+        resumed_graph,
+        resumed_credit,
+        gate,
+        pools,
+        r0_replay_memory=(),
+        r0_child_triplet_ids=frozenset(),
+        max_epochs=4,
+        config=resume_config,
+    )
+
+    ignored_training_keys = {
+        "duration_seconds",
+        "resumed_from_snapshot",
+        "snapshot_path",
+        "snapshot_write_count",
+    }
+    assert {
+        key: value
+        for key, value in resumed["training"].items()
+        if key not in ignored_training_keys
+    } == {
+        key: value
+        for key, value in uninterrupted["training"].items()
+        if key not in ignored_training_keys
+    }
+    assert resumed["validation"] == uninterrupted["validation"]
+    assert resumed["regression"] == uninterrupted["regression"]
+    assert resumed["r0_retention"] == uninterrupted["r0_retention"]
+    assert resumed_graph.learned_state_audit() == uninterrupted_graph.learned_state_audit()
+    assert resumed_credit.snapshot() == uninterrupted_credit.snapshot()
+    assert resumed["training"]["resumed_from_snapshot"] is True
 
 
 def test_balanced_r1_quotas_cover_all_setup_and_orientation_strata() -> None:

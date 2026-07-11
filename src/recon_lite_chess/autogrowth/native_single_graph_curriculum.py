@@ -10,6 +10,7 @@ curriculum scheduling and reward labels.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+import copy
 import hashlib
 import json
 import math
@@ -165,6 +166,66 @@ class NativeReConKRKGraph:
             "shared_atom_retrieval_calls": 0,
             "shared_atom_retrieved_triplets": 0,
         }
+
+    def __getstate__(self) -> dict[str, Any]:
+        """Return an exact snapshot state without unpickleable predicate closures."""
+
+        state = dict(self.__dict__)
+        graph = copy.deepcopy(self.graph)
+        for node in graph.nodes.values():
+            node.predicate = None
+        state["graph"] = graph
+        state["snapshot_schema_version"] = "native_recon_krk_graph.v1"
+        return state
+
+    def __setstate__(self, state: dict[str, Any]) -> None:
+        schema = state.pop("snapshot_schema_version", None)
+        if schema != "native_recon_krk_graph.v1":
+            raise ValueError(f"unsupported native graph snapshot schema: {schema!r}")
+        self.__dict__.update(state)
+        self._restore_runtime_predicates()
+
+    def _restore_runtime_predicates(self) -> None:
+        """Rebuild generic runtime predicates solely from persisted node metadata."""
+
+        for node in self.graph.nodes.values():
+            if node.ntype != NodeType.TERMINAL:
+                continue
+            role = str(node.meta.get("role", ""))
+            action_uci = str(node.meta.get("action_uci", "0000"))
+            if node.meta.get("terminal_kind") == "actuator_affordance":
+                node.predicate = _action_predicate(action_uci)
+            elif node.meta.get("grouped_cache_terminal"):
+                pattern_role = {
+                    "before_feature": "before",
+                    "delta_feature": "delta",
+                    "after_feature": "after",
+                }.get(role, role)
+                node.predicate = _pattern_predicate(
+                    pattern_role,
+                    action_uci,
+                    tuple(str(key) for key in node.meta.get("pattern_keys", ())),
+                    self.config.key_mode,
+                    self.config.prototype_distance_threshold,
+                )
+            elif node.meta.get("shared_feature_atom"):
+                node.predicate = _shared_atom_predicate(
+                    role,
+                    str(node.meta["terminal_key"]),
+                    self.config.key_mode,
+                )
+            elif role in {"before_feature", "delta_feature", "after_feature"}:
+                node.predicate = _single_key_predicate(
+                    role,
+                    action_uci,
+                    str(node.meta["terminal_key"]),
+                    self.config.key_mode,
+                    self.config.prototype_distance_threshold,
+                )
+            elif node.predicate is None:
+                raise ValueError(
+                    f"cannot restore predicate for terminal {node.nid!r} role={role!r}"
+                )
 
     def choose(self, board: chess.Board, *, masked_triplets: set[str] | None = None) -> chess.Move | None:
         audit = self.audit_choice(board, masked_triplets=masked_triplets)
