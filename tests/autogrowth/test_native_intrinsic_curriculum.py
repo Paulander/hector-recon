@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import Counter
 import copy
+from pathlib import Path
 import pickle
 
 import chess
@@ -17,12 +18,14 @@ from recon_lite_hector.learning import (
 )
 from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     NativeIntrinsicCurriculumConfig,
+    R1MechanisticArm,
     R0_BALANCED_STRATA,
     R0_COMPETENCE_ID,
     R1_BALANCED_STRATA,
     R1_RETIRED_DEVELOPMENT_FENS,
     R1CheckpointInterrupt,
     _Pools,
+    _apply_child_value_control,
     _balanced_r0_quotas,
     _balanced_r1_quotas,
     _build_r0_replay_memory,
@@ -33,6 +36,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _execute_white_and_observe,
     _generate_balanced_r0_split,
     _generate_balanced_r1_split,
+    _mechanistic_r1_arms,
     _r0_available,
     _r0_available_with_dispatch_cache,
     _r1_orbit_key,
@@ -83,6 +87,64 @@ def test_native_intrinsic_graph_starts_with_empty_learned_state() -> None:
         "m3_update_count": 0,
         "m4_event_count": 0,
     }
+
+
+def test_mechanistic_factorial_names_every_causal_factor_and_disables_growth() -> None:
+    arms = _mechanistic_r1_arms(NativeIntrinsicCurriculumConfig())
+    by_name = {arm.name: arm for arm in arms}
+
+    assert set(by_name) == {
+        "no_bootstrap",
+        "learned_gate_learned_value",
+        "learned_gate_zero_value",
+        "shuffled_gate_learned_value",
+        "exact_verify_learned_value",
+        "exact_verify_zero_value",
+        "exact_verify_constant_value",
+        "real_rollout_learned_value",
+        "exact_verify_learned_value_no_hierarchy_score",
+    }
+    assert all(not arm.composition_enabled for arm in arms)
+    assert all(arm.mature_child_priority for arm in arms)
+    assert by_name["no_bootstrap"].bootstrap_enabled is False
+    assert by_name["exact_verify_zero_value"].child_value_mode == "zero"
+    assert (
+        by_name["exact_verify_learned_value_no_hierarchy_score"].hierarchy_edge_scoring
+        is False
+    )
+
+
+def test_child_value_controls_change_only_emitted_slow_value() -> None:
+    config = NativeIntrinsicCurriculumConfig(r1_placebo_child_value=0.375)
+    base = IntrinsicCreditEngine(IntrinsicCreditConfig())
+    base.register(
+        R0_COMPETENCE_ID,
+        mature=True,
+        initial_fast_value=0.61,
+        initial_slow_value=0.73,
+    )
+
+    observed = {}
+    for mode in ("learned", "zero", "constant"):
+        credit = copy.deepcopy(base)
+        audit = _apply_child_value_control(
+            credit,
+            R1MechanisticArm(
+                name=f"test_{mode}",
+                bootstrap_enabled=True,
+                availability_mode="prototype_gate",
+                child_value_mode=mode,
+            ),
+            config,
+        )
+        state = credit.states[R0_COMPETENCE_ID]
+        observed[mode] = state.slow_value
+        assert state.fast_value == pytest.approx(0.61)
+        assert audit["learned_value_before_control"] == pytest.approx(0.73)
+
+    assert observed == pytest.approx(
+        {"learned": 0.73, "zero": 0.0, "constant": 0.375}
+    )
 
 
 def test_native_graph_pickle_roundtrip_restores_runtime_predicates() -> None:
@@ -675,6 +737,7 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(tmp_path) -> None:
         "resumed_from_snapshot",
         "snapshot_path",
         "snapshot_write_count",
+        "history_snapshot_paths",
     }
     assert {
         key: value
@@ -691,6 +754,11 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(tmp_path) -> None:
     assert resumed_graph.learned_state_audit() == uninterrupted_graph.learned_state_audit()
     assert resumed_credit.snapshot() == uninterrupted_credit.snapshot()
     assert resumed["training"]["resumed_from_snapshot"] is True
+    assert len(resumed["training"]["history_snapshot_paths"]) == 4
+    assert all(
+        Path(path).exists()
+        for path in resumed["training"]["history_snapshot_paths"]
+    )
 
 
 def test_balanced_r1_quotas_cover_all_setup_and_orientation_strata() -> None:
@@ -992,6 +1060,35 @@ def test_virtual_frame_availability_uses_child_move_without_grounding() -> None:
         r0_child_triplet_ids=frozenset(graph.triplet_ids),
     )
     assert hierarchical == mating_move
+
+
+def test_real_child_rollout_availability_uses_observed_world_terminal() -> None:
+    graph = _graph()
+    board = chess.Board(MATE_ONE_FEN)
+    mating_move = next(
+        move
+        for move in board.legal_moves
+        if _execute_white_and_observe(board, move) == "mate"
+    )
+    graph.apply_intrinsic_td(
+        board,
+        mating_move,
+        td_error=1.0,
+        stage_diagnostic="R0_real_rollout_test",
+    )
+
+    available, response = _r0_available(
+        graph,
+        None,
+        board,
+        mode="real_child_rollout",
+    )
+
+    assert available is True
+    assert response["selected_move"] == mating_move.uci()
+    assert response["availability_source"] == "executed_mature_child_world_rollout"
+    assert response["observed_child_rollout_terminal"] == "mate"
+    assert response["child_rollout_is_real_environment_step"] is True
 
 
 def test_r0_replay_uses_graph_selected_action_and_real_outcome() -> None:

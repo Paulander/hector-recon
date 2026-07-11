@@ -51,14 +51,30 @@ def main() -> int:
         "--r1-snapshot-dir", type=Path, default=Path(defaults.r1_snapshot_dir)
     )
     parser.add_argument("--no-resume-r1", action="store_true")
+    parser.add_argument("--no-checkpoint-history", action="store_true")
     parser.add_argument("--max-samples", type=int, default=defaults.max_samples)
     parser.add_argument("--r0-epochs", type=int, default=defaults.r0_epochs)
     parser.add_argument("--r1-epochs", type=int, default=defaults.r1_epochs)
     parser.add_argument("--r0-replay-per-r1-epoch", type=int, default=defaults.r0_replay_per_r1_epoch)
     parser.add_argument(
         "--availability",
-        choices=("prototype_gate", "virtual_frame_verified"),
+        choices=(
+            "prototype_gate",
+            "virtual_frame_verified",
+            "real_child_rollout",
+        ),
         default=defaults.r0_availability_mode,
+    )
+    parser.add_argument(
+        "--mechanistic-factorial",
+        action="store_true",
+        help="Run the availability/value decomposition with composition off.",
+    )
+    parser.add_argument(
+        "--placebo-child-value", type=float, default=defaults.r1_placebo_child_value
+    )
+    parser.add_argument(
+        "--shuffle-seed", type=int, default=defaults.r1_shuffle_seed
     )
     parser.add_argument(
         "--child-cache-validation",
@@ -131,6 +147,10 @@ def main() -> int:
         r1_snapshot_interval=args.r1_snapshot_interval,
         r1_snapshot_dir=str(args.r1_snapshot_dir),
         resume_r1_snapshots=not args.no_resume_r1,
+        r1_keep_checkpoint_history=not args.no_checkpoint_history,
+        r1_mechanistic_factorial=args.mechanistic_factorial,
+        r1_placebo_child_value=args.placebo_child_value,
+        r1_shuffle_seed=args.shuffle_seed,
         r0_replay_per_r1_epoch=args.r0_replay_per_r1_epoch,
         max_samples=args.max_samples,
         run_r1=not args.no_r1,

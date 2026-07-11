@@ -13,12 +13,16 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, replace
 import copy
+from functools import lru_cache
 import hashlib
+import importlib.metadata
 import json
 import os
 from pathlib import Path
 import pickle
+import platform
 import random
+import subprocess
 from time import perf_counter
 from typing import Any, Iterable, Mapping, Sequence
 
@@ -145,6 +149,7 @@ class NativeIntrinsicCurriculumConfig:
     r1_snapshot_interval: int = 20
     r1_snapshot_dir: str = "snapshots/autogrowth/native_intrinsic_r1"
     resume_r1_snapshots: bool = True
+    r1_keep_checkpoint_history: bool = True
     r0_mastery_threshold: float = 1.0
     r1_mastery_threshold: float = 1.0
     run_r1: bool = True
@@ -152,6 +157,9 @@ class NativeIntrinsicCurriculumConfig:
     run_redundant_child_ablation: bool = False
     mature_child_priority: bool = True
     r0_availability_mode: str = "virtual_frame_verified"
+    r1_mechanistic_factorial: bool = False
+    r1_placebo_child_value: float = 0.5
+    r1_shuffle_seed: int = 20260722
     r0_child_cache_validation_mode: str = "live_formal"
     r1_composite_proposal_epochs: tuple[int, ...] = ()
     r1_composite_consolidation_epochs: tuple[int, ...] = ()
@@ -166,6 +174,140 @@ class NativeIntrinsicCurriculumConfig:
     min_grounding_evidence: int = 3
     max_ticks: int = 80
     max_samples: int = 12
+
+
+@dataclass(frozen=True)
+class R1MechanisticArm:
+    """One causally named R1 mechanism configuration.
+
+    Availability, emitted value, runtime routing, and structural growth are
+    explicit factors. This prevents the historical ``full_intrinsic`` bundle
+    from being interpreted as evidence for any one of its ingredients.
+    """
+
+    name: str
+    bootstrap_enabled: bool
+    availability_mode: str = "none"
+    child_value_mode: str = "learned"
+    mature_child_priority: bool = False
+    hierarchy_edge_scoring: bool = True
+    composition_enabled: bool = False
+
+    def __post_init__(self) -> None:
+        if self.availability_mode not in {
+            "none",
+            "prototype_gate",
+            "virtual_frame_verified",
+            "shuffled_prototype_gate",
+            "real_child_rollout",
+        }:
+            raise ValueError(f"unsupported R1 availability mode: {self.availability_mode}")
+        if self.child_value_mode not in {"learned", "zero", "constant"}:
+            raise ValueError(f"unsupported R1 child value mode: {self.child_value_mode}")
+        if not self.bootstrap_enabled and self.availability_mode != "none":
+            raise ValueError("disabled bootstrap requires availability_mode='none'")
+
+
+def _legacy_r1_arm(name: str, config: NativeIntrinsicCurriculumConfig) -> R1MechanisticArm:
+    bootstrap = name in {"full_intrinsic", "child_ablation"}
+    return R1MechanisticArm(
+        name=name,
+        bootstrap_enabled=bootstrap,
+        availability_mode=config.r0_availability_mode if bootstrap else "none",
+        child_value_mode="learned",
+        mature_child_priority=(
+            config.mature_child_priority and name != "child_ablation"
+        ),
+        hierarchy_edge_scoring=True,
+        composition_enabled=name == "full_intrinsic",
+    )
+
+
+def _mechanistic_r1_arms(config: NativeIntrinsicCurriculumConfig) -> tuple[R1MechanisticArm, ...]:
+    """Return the development factorial; composition is intentionally absent."""
+
+    return (
+        R1MechanisticArm(
+            name="no_bootstrap",
+            bootstrap_enabled=False,
+            mature_child_priority=True,
+        ),
+        R1MechanisticArm(
+            name="learned_gate_learned_value",
+            bootstrap_enabled=True,
+            availability_mode="prototype_gate",
+            child_value_mode="learned",
+            mature_child_priority=True,
+        ),
+        R1MechanisticArm(
+            name="learned_gate_zero_value",
+            bootstrap_enabled=True,
+            availability_mode="prototype_gate",
+            child_value_mode="zero",
+            mature_child_priority=True,
+        ),
+        R1MechanisticArm(
+            name="shuffled_gate_learned_value",
+            bootstrap_enabled=True,
+            availability_mode="shuffled_prototype_gate",
+            child_value_mode="learned",
+            mature_child_priority=True,
+        ),
+        R1MechanisticArm(
+            name="exact_verify_learned_value",
+            bootstrap_enabled=True,
+            availability_mode="virtual_frame_verified",
+            child_value_mode="learned",
+            mature_child_priority=True,
+        ),
+        R1MechanisticArm(
+            name="exact_verify_zero_value",
+            bootstrap_enabled=True,
+            availability_mode="virtual_frame_verified",
+            child_value_mode="zero",
+            mature_child_priority=True,
+        ),
+        R1MechanisticArm(
+            name="exact_verify_constant_value",
+            bootstrap_enabled=True,
+            availability_mode="virtual_frame_verified",
+            child_value_mode="constant",
+            mature_child_priority=True,
+        ),
+        R1MechanisticArm(
+            name="real_rollout_learned_value",
+            bootstrap_enabled=True,
+            availability_mode="real_child_rollout",
+            child_value_mode="learned",
+            mature_child_priority=True,
+        ),
+        R1MechanisticArm(
+            name="exact_verify_learned_value_no_hierarchy_score",
+            bootstrap_enabled=True,
+            availability_mode="virtual_frame_verified",
+            child_value_mode="learned",
+            mature_child_priority=True,
+            hierarchy_edge_scoring=False,
+        ),
+    )
+
+
+def _apply_child_value_control(
+    credit: IntrinsicCreditEngine,
+    arm: R1MechanisticArm,
+    config: NativeIntrinsicCurriculumConfig,
+) -> dict[str, Any]:
+    state = credit.states[R0_COMPETENCE_ID]
+    learned_value = float(state.slow_value)
+    if arm.child_value_mode == "zero":
+        state.slow_value = 0.0
+    elif arm.child_value_mode == "constant":
+        state.slow_value = float(config.r1_placebo_child_value)
+    return {
+        "mode": arm.child_value_mode,
+        "learned_value_before_control": learned_value,
+        "emitted_value_after_control": float(state.slow_value),
+    }
 
 
 @dataclass(frozen=True)
@@ -424,20 +566,24 @@ def run_native_intrinsic_curriculum(
     )
     if cfg.run_r1 and r0_pass and availability_ready:
         r0_graph = copy.deepcopy(graph)
-        r0_graph.config = replace(
-            r0_graph.config,
-            score_hierarchy_edge_weights=True,
-        )
         r0_credit = copy.deepcopy(credit)
-        arm_names = ("full_intrinsic", "no_bootstrap")
-        if cfg.run_redundant_child_ablation:
-            arm_names = (*arm_names, "child_ablation")
-        for arm_name in arm_names:
-            arm_epoch_budget = (
-                cfg.r1_epochs
-                if arm_name == "full_intrinsic"
-                else int(arms["full_intrinsic"]["training"]["stopped_epoch"])
-            )
+        if cfg.r1_mechanistic_factorial:
+            arm_specs = _mechanistic_r1_arms(cfg)
+            primary_arm_name = "exact_verify_learned_value"
+        else:
+            legacy_names = ["full_intrinsic", "no_bootstrap"]
+            if cfg.run_redundant_child_ablation:
+                legacy_names.append("child_ablation")
+            arm_specs = tuple(_legacy_r1_arm(name, cfg) for name in legacy_names)
+            primary_arm_name = "full_intrinsic"
+        for arm_spec in arm_specs:
+            arm_name = arm_spec.name
+            if cfg.r1_mechanistic_factorial or arm_name == primary_arm_name:
+                arm_epoch_budget = cfg.r1_epochs
+            else:
+                arm_epoch_budget = int(
+                    arms[primary_arm_name]["training"]["stopped_epoch"]
+                )
             arm_graph = copy.deepcopy(r0_graph)
             arm_credit = copy.deepcopy(r0_credit)
             arms[arm_name] = _run_r1_arm(
@@ -450,8 +596,9 @@ def run_native_intrinsic_curriculum(
                 r0_child_triplet_ids=r0_child_triplet_ids,
                 max_epochs=arm_epoch_budget,
                 config=cfg,
+                arm_spec=arm_spec,
             )
-            if arm_name == "full_intrinsic":
+            if arm_name == primary_arm_name:
                 selected_graph = arm_graph
                 selected_credit = arm_credit
             progress["completed_r1_arms"][arm_name] = _arm_progress_summary(
@@ -460,13 +607,13 @@ def run_native_intrinsic_curriculum(
             progress.pop("active_r1_arm", None)
             _write_json(cfg.progress_path, progress)
 
-        full_rate = arms["full_intrinsic"]["regression"]["conversion_rate"]
+        full_rate = arms[primary_arm_name]["regression"]["conversion_rate"]
         no_bootstrap_rate = arms["no_bootstrap"]["regression"]["conversion_rate"]
         full_pass = (
-            arms["full_intrinsic"]["validation"]["conversion_rate"]
+            arms[primary_arm_name]["validation"]["conversion_rate"]
             >= cfg.r1_mastery_threshold
             and full_rate >= cfg.r1_mastery_threshold
-            and arms["full_intrinsic"]["r0_retention"]["accuracy"]
+            and arms[primary_arm_name]["r0_retention"]["accuracy"]
             >= cfg.r0_mastery_threshold
         )
         if full_pass:
@@ -480,7 +627,7 @@ def run_native_intrinsic_curriculum(
             parameter_freeze = selected_graph.freeze_existing_parameters(
                 reason="R1_joint_mastery_consolidation",
             )
-            arms["full_intrinsic"]["consolidation"] = {
+            arms[primary_arm_name]["consolidation"] = {
                 "paired_intervention": asdict(intervention),
                 "value_consolidation_deltas": selected_credit.consolidate(
                     (R1_COMPETENCE_ID,)
@@ -490,20 +637,31 @@ def run_native_intrinsic_curriculum(
             }
 
     r1_executed = bool(arms)
+    primary_arm_name = (
+        "exact_verify_learned_value"
+        if cfg.r1_mechanistic_factorial
+        else "full_intrinsic"
+    )
     r1_pass = bool(
         r1_executed
-        and arms["full_intrinsic"]["validation"]["conversion_rate"]
+        and arms[primary_arm_name]["validation"]["conversion_rate"]
         >= cfg.r1_mastery_threshold
-        and arms["full_intrinsic"]["regression"]["conversion_rate"]
+        and arms[primary_arm_name]["regression"]["conversion_rate"]
         >= cfg.r1_mastery_threshold
-        and arms["full_intrinsic"]["r0_retention"]["accuracy"]
+        and arms[primary_arm_name]["r0_retention"]["accuracy"]
         >= cfg.r0_mastery_threshold
     )
-    causal_positive = bool(
+    development_directional_effect = bool(
         r1_executed
-        and arms["full_intrinsic"]["regression"]["conversion_rate"]
+        and arms[primary_arm_name]["validation"]["conversion_rate"]
+        > arms["no_bootstrap"]["validation"]["conversion_rate"]
+        and arms[primary_arm_name]["regression"]["conversion_rate"]
         > arms["no_bootstrap"]["regression"]["conversion_rate"]
     )
+    # A single development seed cannot establish a causal positive result.
+    # Preserve the old field for consumers, but require a future preregistered
+    # replicated analysis to set it true.
+    causal_positive = False
 
     payload = {
         "scientific_contract": {
@@ -529,6 +687,13 @@ def run_native_intrinsic_curriculum(
             ],
             "curriculum_solution_predicates_trainer_side_only": True,
             "r0_availability_mode": cfg.r0_availability_mode,
+            "mechanistic_factorial_enabled": cfg.r1_mechanistic_factorial,
+            "exact_virtual_verification_is_oracle_control_not_autonomy_evidence": True,
+            "prototype_gate_is_learned_but_host_side": True,
+            "real_child_rollout_uses_observed_environment_terminal": True,
+            "composition_disabled_in_mechanistic_factorial": (
+                cfg.r1_mechanistic_factorial
+            ),
             "virtual_frames_create_grounding": False,
             "r0_replay_cache_used_as_provider": False,
             "r0_parameters_frozen_for_r1": cfg.freeze_r0_parameters_for_r1,
@@ -542,16 +707,19 @@ def run_native_intrinsic_curriculum(
                 cfg.r0_child_cache_validation_mode == "frozen_policy_token"
             ),
             "runtime_child_priority_uses_stage_labels": False,
-            "runtime_mature_child_priority_enabled": cfg.mature_child_priority,
-            "runtime_child_priority_source": "mature_child_virtual_available_response",
+            "runtime_mature_child_priority_is_arm_specific": True,
+            "runtime_child_priority_source": "explicit_mechanistic_arm",
             "r1_reply_schedule": "per_position_action_content_blind_round_robin",
             "serialized_interval_snapshot_resume_implemented": True,
             "snapshot_resume_requires_exact_fingerprint": True,
+            "immutable_checkpoint_history_enabled": cfg.r1_keep_checkpoint_history,
+            "source_and_dependency_identity_fingerprinted": True,
             "r0_replay_cache_semantics": (
                 "memoized_mature_graph_response_live_formal_reconfirmation_"
                 "and_world_reexecution"
             ),
         },
+        "source_identity": _source_identity(),
         "pool_manifest": pools.manifest(),
         "progress_path": cfg.progress_path,
         "initial_graph_audit": initial_graph_audit,
@@ -573,12 +741,13 @@ def run_native_intrinsic_curriculum(
             "r0_pass": r0_pass,
             "r1_executed": r1_executed,
             "r1_pass": r1_pass,
+            "primary_upper_bound_arm": primary_arm_name,
+            "development_directional_effect_vs_no_bootstrap": development_directional_effect,
             "r1_causal_positive_vs_no_bootstrap": causal_positive,
-            "advance_to_r2": r1_pass and causal_positive,
+            "causal_claim_locked_pending_preregistered_seed_replication": True,
+            "advance_to_r2": False,
             "interpretation": (
-                "r0_r1_intrinsic_chain_passed_ready_for_r2"
-                if r1_pass and causal_positive
-                else "r1_failed_or_noncausal_do_not_advance"
+                "development_factorial_complete_no_r2_without_replication"
                 if r1_executed
                 else "r0_failed_or_gate_unavailable_do_not_advance"
             ),
@@ -1068,6 +1237,51 @@ class R1CheckpointInterrupt(RuntimeError):
         self.snapshot_path = snapshot_path
 
 
+def _package_version(*names: str) -> str:
+    for name in names:
+        try:
+            return importlib.metadata.version(name)
+        except importlib.metadata.PackageNotFoundError:
+            continue
+    return "not-installed-as-distribution"
+
+
+@lru_cache(maxsize=1)
+def _source_identity() -> dict[str, Any]:
+    """Behavior identity used by artifacts and resume fingerprints."""
+
+    repo_root = Path(__file__).resolve().parents[3]
+
+    def git(*args: str) -> str:
+        result = subprocess.run(
+            ("git", *args),
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        return result.stdout.strip() if result.returncode == 0 else "unavailable"
+
+    behavior_files = (
+        Path(__file__).resolve(),
+        Path(__file__).with_name("native_single_graph_curriculum.py").resolve(),
+        (repo_root / "src/recon_lite_hector/learning/intrinsic_credit.py").resolve(),
+    )
+    return {
+        "git_commit": git("rev-parse", "HEAD"),
+        "tracked_worktree_status_sha256": hashlib.sha256(
+            git("status", "--short", "--untracked-files=no").encode("utf-8")
+        ).hexdigest(),
+        "behavior_file_sha256": {
+            str(path.relative_to(repo_root)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in behavior_files
+        },
+        "python": platform.python_version(),
+        "python_chess": _package_version("python-chess", "chess"),
+    }
+
+
 def _r1_snapshot_path(
     config: NativeIntrinsicCurriculumConfig,
     pools: _Pools,
@@ -1077,6 +1291,20 @@ def _r1_snapshot_path(
     return Path(config.r1_snapshot_dir) / f"seed_{config.seed}_{pool_hash}_{arm_name}.pkl"
 
 
+def _r1_history_snapshot_path(
+    config: NativeIntrinsicCurriculumConfig,
+    pools: _Pools,
+    arm_name: str,
+    epoch: int,
+) -> Path:
+    pool_hash = str(pools.manifest()["combined_sha256"])[:16]
+    return (
+        Path(config.r1_snapshot_dir)
+        / "history"
+        / f"seed_{config.seed}_{pool_hash}_{arm_name}_epoch_{int(epoch):06d}.pkl"
+    )
+
+
 def _r1_snapshot_fingerprint(
     graph: NativeReConKRKGraph,
     credit: IntrinsicCreditEngine,
@@ -1084,6 +1312,7 @@ def _r1_snapshot_fingerprint(
     pools: _Pools,
     *,
     arm_name: str,
+    arm_spec: R1MechanisticArm,
     r0_child_triplet_ids: frozenset[str],
     config: NativeIntrinsicCurriculumConfig,
 ) -> str:
@@ -1099,10 +1328,12 @@ def _r1_snapshot_fingerprint(
     payload = {
         "schema": "native_intrinsic_r1_resume.v1",
         "arm_name": arm_name,
+        "arm_spec": asdict(arm_spec),
         "behavior_config": behavior_config,
         "pool_manifest": pools.manifest(),
         "r0_gate": r0_gate.to_dict(),
         "r0_child_triplet_ids": sorted(r0_child_triplet_ids),
+        "source_identity": _source_identity(),
         "base_state_sha256": hashlib.sha256(
             pickle.dumps((graph, credit), protocol=5)
         ).hexdigest(),
@@ -1166,6 +1397,65 @@ def _write_live_r1_progress(
     _write_json(path, payload)
 
 
+def _shuffled_gate_schedule(
+    graph: NativeReConKRKGraph,
+    gate: OutcomeCalibratedPrototypeGate,
+    pools: _Pools,
+    *,
+    r0_child_triplet_ids: frozenset[str],
+    epoch_budget: int,
+    seed: int,
+) -> tuple[tuple[bool, ...], dict[str, Any]]:
+    """Build an exactly rate-matched permutation over scheduled R1 queries."""
+
+    started = perf_counter()
+    reply_exposures: dict[tuple[str, str], int] = {}
+    original: list[bool] = []
+    for epoch in range(epoch_budget):
+        for position_index, fen in enumerate(pools.r1_train):
+            board = chess.Board(fen)
+            legal = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
+            move = legal[(epoch + position_index) % len(legal)]
+            after_first = board.copy(stack=False)
+            after_first.push(move)
+            if _terminal_kind(after_first) is not None:
+                continue
+            replies = tuple(sorted(after_first.legal_moves, key=lambda item: item.uci()))
+            if not replies:
+                continue
+            reply_key = (fen, move.uci())
+            reply_index = reply_exposures.get(reply_key, 0)
+            reply = replies[reply_index % len(replies)]
+            reply_exposures[reply_key] = reply_index + 1
+            successor = after_first.copy(stack=False)
+            successor.push(reply)
+            if _terminal_kind(successor) is not None:
+                continue
+            available, _response = _r0_available(
+                graph,
+                gate,
+                successor,
+                mode="prototype_gate",
+                allowed_triplets=r0_child_triplet_ids,
+            )
+            original.append(bool(available))
+
+    shuffled = list(original)
+    random.Random(int(seed)).shuffle(shuffled)
+    if len(shuffled) > 1 and shuffled == original and len(set(shuffled)) > 1:
+        shuffled = shuffled[1:] + shuffled[:1]
+    discordant = sum(left != right for left, right in zip(original, shuffled))
+    return tuple(shuffled), {
+        "query_count": len(original),
+        "positive_count": sum(original),
+        "positive_rate": 0.0 if not original else sum(original) / len(original),
+        "discordant_assignment_count": discordant,
+        "exact_rate_match": sum(original) == sum(shuffled),
+        "seed": int(seed),
+        "duration_seconds": round(perf_counter() - started, 6),
+    }
+
+
 def _run_r1_arm(
     arm_name: str,
     graph: NativeReConKRKGraph,
@@ -1178,7 +1468,16 @@ def _run_r1_arm(
     max_epochs: int,
     config: NativeIntrinsicCurriculumConfig,
     stop_after_epoch: int | None = None,
+    arm_spec: R1MechanisticArm | None = None,
 ) -> dict[str, Any]:
+    arm = arm_spec or _legacy_r1_arm(arm_name, config)
+    if arm.name != arm_name:
+        raise ValueError(f"arm name mismatch: {arm.name} != {arm_name}")
+    graph.config = replace(
+        graph.config,
+        score_hierarchy_edge_weights=arm.hierarchy_edge_scoring,
+    )
+    child_value_control = _apply_child_value_control(credit, arm, config)
     epoch_budget = max(1, int(max_epochs))
     if config.r1_validation_interval <= 0 or config.r1_snapshot_interval <= 0:
         raise ValueError("R1 validation and snapshot intervals must be positive")
@@ -1189,6 +1488,7 @@ def _run_r1_arm(
         r0_gate,
         pools,
         arm_name=arm_name,
+        arm_spec=arm,
         r0_child_triplet_ids=r0_child_triplet_ids,
         config=config,
     )
@@ -1220,6 +1520,10 @@ def _run_r1_arm(
             "child_dispatch_cache_misses": 0,
             "child_dispatch_cache_mismatches": 0,
             "child_dispatch_cache_certified_hits": 0,
+            "availability_queries": 0,
+            "availability_positives": 0,
+            "successor_value_sum": 0.0,
+            "real_child_rollouts": 0,
         }
         reply_orbits: set[tuple[str, str, str]] = set()
         reply_exposure_counts: dict[tuple[str, str], int] = {}
@@ -1227,6 +1531,7 @@ def _run_r1_arm(
         checkpoints: list[dict[str, Any]] = []
         composition_events: list[dict[str, Any]] = []
         composition_consolidation_events: list[dict[str, Any]] = []
+        history_snapshot_paths: list[str] = []
         stopped_epoch = epoch_budget
         joint_mastery = False
     else:
@@ -1247,17 +1552,36 @@ def _run_r1_arm(
         composition_consolidation_events = list(
             restored.get("composition_consolidation_events", [])
         )
+        history_snapshot_paths = list(restored.get("history_snapshot_paths", []))
         stopped_epoch = int(restored["stopped_epoch"])
         joint_mastery = bool(restored["joint_mastery"])
         duration_before_resume = float(restored["duration_seconds"])
         snapshot_writes = int(restored.get("snapshot_writes", 0))
 
     evaluation_child_triplet_ids = (
-        r0_child_triplet_ids if config.mature_child_priority else None
+        r0_child_triplet_ids if arm.mature_child_priority else None
     )
     evaluation_child_dispatch_cache = (
         child_dispatch_cache if config.freeze_r0_parameters_for_r1 else None
     )
+    shuffled_schedule: tuple[bool, ...] = ()
+    shuffled_schedule_audit: dict[str, Any] = {
+        "enabled": False,
+        "reason": "arm_does_not_shuffle_availability",
+    }
+    if arm.availability_mode == "shuffled_prototype_gate":
+        shuffled_schedule, shuffled_schedule_audit = _shuffled_gate_schedule(
+            graph,
+            r0_gate,
+            pools,
+            r0_child_triplet_ids=r0_child_triplet_ids,
+            epoch_budget=epoch_budget,
+            seed=config.r1_shuffle_seed,
+        )
+        shuffled_schedule_audit = {
+            "enabled": True,
+            **shuffled_schedule_audit,
+        }
 
     for epoch in range(start_epoch, epoch_budget):
         for position_index, fen in enumerate(pools.r1_train):
@@ -1286,13 +1610,13 @@ def _run_r1_arm(
                     successor.push(reply)
                     reply_orbits.add((fen, move.uci(), reply.uci()))
                     terminal_kind = _terminal_kind(successor)
-                    if terminal_kind is None and arm_name == "full_intrinsic":
+                    if terminal_kind is None and arm.bootstrap_enabled:
                         available, response, cache_hit, cache_mismatch = (
                             _r0_available_with_dispatch_cache(
                                 graph,
                                 r0_gate,
                                 successor,
-                                mode=config.r0_availability_mode,
+                                mode=arm.availability_mode,
                                 allowed_triplets=r0_child_triplet_ids,
                                 cache=child_dispatch_cache,
                                 enabled=config.freeze_r0_parameters_for_r1,
@@ -1306,7 +1630,21 @@ def _run_r1_arm(
                             response.get("cache_validation_mode") == "frozen_policy_token"
                         )
                         counters["virtual_frame_queries"] += int(
-                            config.r0_availability_mode == "virtual_frame_verified"
+                            arm.availability_mode == "virtual_frame_verified"
+                        )
+                        if arm.availability_mode == "shuffled_prototype_gate":
+                            schedule_index = counters["availability_queries"]
+                            if schedule_index >= len(shuffled_schedule):
+                                raise RuntimeError("shuffled availability schedule exhausted")
+                            available = shuffled_schedule[schedule_index]
+                            response["availability_before_shuffle"] = bool(
+                                r0_gate.confirms(response["features"])
+                            )
+                            response["availability_after_shuffle"] = bool(available)
+                        counters["availability_queries"] += 1
+                        counters["availability_positives"] += int(available)
+                        counters["real_child_rollouts"] += int(
+                            arm.availability_mode == "real_child_rollout"
                         )
                         if available:
                             successor_ids = (R0_COMPETENCE_ID,)
@@ -1322,6 +1660,7 @@ def _run_r1_arm(
                 successor_ids=successor_ids,
                 terminal_kind=terminal_kind,
             )
+            counters["successor_value_sum"] += float(event.successor_value)
             graph.apply_intrinsic_td(
                 board,
                 move,
@@ -1348,7 +1687,7 @@ def _run_r1_arm(
 
         epoch_number = epoch + 1
         if (
-            arm_name == "full_intrinsic"
+            arm.composition_enabled
             and epoch_number in set(config.r1_composite_proposal_epochs)
         ):
             r1_triplet_ids = {
@@ -1384,7 +1723,7 @@ def _run_r1_arm(
                 }
             )
         if (
-            arm_name == "full_intrinsic"
+            arm.composition_enabled
             and epoch_number in set(config.r1_composite_consolidation_epochs)
             and graph.composite_cells
         ):
@@ -1439,7 +1778,7 @@ def _run_r1_arm(
                 "r0_retention_accuracy": retention["accuracy"],
             }
             if (
-                arm_name == "full_intrinsic"
+                arm.bootstrap_enabled
                 and metrics["conversion_rate"] >= config.r1_mastery_threshold
                 and retention["accuracy"] >= config.r0_mastery_threshold
             ):
@@ -1475,10 +1814,21 @@ def _run_r1_arm(
         )
         if should_snapshot:
             elapsed = duration_before_resume + (perf_counter() - started)
+            history_path = _r1_history_snapshot_path(
+                config, pools, arm_name, epoch_number
+            )
+            next_history_paths = list(history_snapshot_paths)
+            if (
+                config.r1_keep_checkpoint_history
+                and str(history_path) not in next_history_paths
+            ):
+                next_history_paths.append(str(history_path))
             state = {
                 "schema_version": "native_intrinsic_r1_arm_snapshot.v1",
                 "fingerprint": fingerprint,
                 "arm_name": arm_name,
+                "arm_spec": asdict(arm),
+                "source_identity": _source_identity(),
                 "epoch_budget": epoch_budget,
                 "next_epoch": epoch_number,
                 "graph": graph,
@@ -1494,8 +1844,19 @@ def _run_r1_arm(
                 "joint_mastery": joint_mastery,
                 "duration_seconds": elapsed,
                 "snapshot_writes": snapshot_writes + 1,
+                "history_snapshot_paths": next_history_paths,
             }
             _atomic_pickle(snapshot_path, state)
+            if config.r1_keep_checkpoint_history:
+                if history_path.exists():
+                    existing = _load_r1_snapshot(
+                        history_path, expected_fingerprint=fingerprint
+                    )
+                    if int(existing["next_epoch"]) != epoch_number:
+                        raise RuntimeError("immutable history snapshot epoch mismatch")
+                else:
+                    _atomic_pickle(history_path, state)
+                history_snapshot_paths = next_history_paths
             snapshot_writes += 1
             if latest_checkpoint is None:
                 raise RuntimeError("R1 snapshot requires a current validation checkpoint")
@@ -1543,6 +1904,35 @@ def _run_r1_arm(
         r0_child_triplet_ids=evaluation_child_triplet_ids,
         child_dispatch_cache=evaluation_child_dispatch_cache,
     )
+    routing_ablation: dict[str, Any] = {}
+    for routing_name, routing_ids in (
+        ("child_priority_off", None),
+        ("child_priority_on", r0_child_triplet_ids),
+    ):
+        routing_validation = _evaluate_r1(
+            graph,
+            pools.r1_validation,
+            strata=pools.r1_validation_strata,
+            max_samples=0,
+            r0_child_triplet_ids=routing_ids,
+            child_dispatch_cache=(
+                child_dispatch_cache if routing_ids is not None else None
+            ),
+        )
+        routing_regression = _evaluate_r1(
+            graph,
+            pools.r1_regression,
+            strata=pools.r1_regression_strata,
+            max_samples=0,
+            r0_child_triplet_ids=routing_ids,
+            child_dispatch_cache=(
+                child_dispatch_cache if routing_ids is not None else None
+            ),
+        )
+        routing_ablation[routing_name] = {
+            "validation": routing_validation,
+            "regression": routing_regression,
+        }
     _restore_disabled_composites(graph, heldout_disabled_state)
     return {
         "training": {
@@ -1554,7 +1944,20 @@ def _run_r1_arm(
             "resumed_from_snapshot": resumed_from_snapshot,
             "snapshot_path": str(snapshot_path),
             "snapshot_write_count": snapshot_writes,
+            "history_snapshot_paths": history_snapshot_paths,
+            "mechanistic_arm": asdict(arm),
+            "child_value_control": child_value_control,
             "child_handoff_count": counters["child_handoffs"],
+            "availability_query_count": counters["availability_queries"],
+            "availability_positive_count": counters["availability_positives"],
+            "availability_positive_rate": (
+                0.0
+                if counters["availability_queries"] == 0
+                else counters["availability_positives"] / counters["availability_queries"]
+            ),
+            "shuffled_schedule": shuffled_schedule_audit,
+            "successor_value_sum": counters["successor_value_sum"],
+            "real_child_rollout_count": counters["real_child_rollouts"],
             "virtual_frame_query_count": counters["virtual_frame_queries"],
             "r0_replay_episode_count": counters["replay_episodes"],
             "r0_replay_mate_count": counters["replay_mates"],
@@ -1596,6 +1999,7 @@ def _run_r1_arm(
         },
         "validation": final_validation,
         "regression": final_regression,
+        "routing_ablation": routing_ablation,
         "r0_retention": final_r0_retention,
         "graph": graph.learned_state_audit(),
         "credit": credit.snapshot(),
@@ -1972,6 +2376,14 @@ def _evaluate_r0(
     }
 
 
+@lru_cache(maxsize=8192)
+def _diagnostic_forced_first_uci(fen: str) -> frozenset[str]:
+    """Cache laboratory-only Mate-in-2 labels across repeated arm evaluation."""
+
+    board = chess.Board(fen)
+    return frozenset(move.uci() for move in _forced_mate_in_two_first_moves(board))
+
+
 def _evaluate_r1(
     graph: NativeReConKRKGraph,
     fens: Sequence[str],
@@ -1983,7 +2395,7 @@ def _evaluate_r1(
     child_dispatch_cache: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     rows: list[dict[str, Any]] = []
-    converted = null = illegal = reply_total = reply_mated = 0
+    converted = parent_correct = null = illegal = reply_total = reply_mated = 0
     if strata is not None and len(strata) != len(fens):
         raise ValueError("R1 evaluation FEN and stratum sequences must align")
     stratum_conversion: dict[str, dict[str, int | float]] = {}
@@ -1996,6 +2408,11 @@ def _evaluate_r1(
             r0_child_triplet_ids=r0_child_triplet_ids,
             child_dispatch_cache=child_dispatch_cache,
         )
+        forced_first_uci = _diagnostic_forced_first_uci(fen)
+        first_is_parent_correct = bool(
+            first is not None and first.uci() in forced_first_uci
+        )
+        parent_correct += int(first_is_parent_correct)
         null += int(first is None)
         illegal += int(first is not None and first not in board.legal_moves)
         all_replies_mated = False
@@ -2053,6 +2470,7 @@ def _evaluate_r1(
                     "fen": fen,
                     "stratum": stratum,
                     "selected_first": None if first is None else first.uci(),
+                    "parent_first_move_correct": first_is_parent_correct,
                     "all_replies_mated": all_replies_mated,
                     "reply_checks": reply_rows,
                 }
@@ -2069,6 +2487,9 @@ def _evaluate_r1(
         "position_count": total,
         "conversion_count": converted,
         "conversion_rate": 0.0 if total == 0 else converted / total,
+        "parent_first_move_correct_count": parent_correct,
+        "parent_first_move_correct_rate": 0.0 if total == 0 else parent_correct / total,
+        "parent_correctness_label_role": "trainer_side_diagnostic_only",
         "reply_mate_rate": 0.0 if reply_total == 0 else reply_mated / reply_total,
         "reply_evaluation_count": reply_total,
         "null_selection_count": null,
@@ -2176,7 +2597,7 @@ def _r0_available(
     allowed_triplets: Iterable[str] | None = None,
 ) -> tuple[bool, dict[str, Any]]:
     normalized = str(mode).strip().lower()
-    if normalized == "prototype_gate":
+    if normalized in {"prototype_gate", "shuffled_prototype_gate"}:
         if gate is None:
             raise ValueError("prototype_gate mode requires a fitted gate")
         response = _policy_response(
@@ -2185,7 +2606,11 @@ def _r0_available(
             observe_outcome=False,
             allowed_triplets=allowed_triplets,
         )
-        response["availability_source"] = "outcome_calibrated_prototype_gate"
+        response["availability_source"] = (
+            "outcome_calibrated_prototype_gate"
+            if normalized == "prototype_gate"
+            else "prototype_gate_before_rate_matched_shuffle"
+        )
         return bool(gate.confirms(response["features"])), response
     if normalized == "virtual_frame_verified":
         response = _policy_response(
@@ -2197,8 +2622,25 @@ def _r0_available(
         response["availability_source"] = "mature_child_selected_virtual_frame"
         response["virtual_frame_terminal_grounding_granted"] = False
         return bool(response["observed_immediate_mate"]), response
+    if normalized == "real_child_rollout":
+        response = _policy_response(
+            graph,
+            board,
+            observe_outcome=False,
+            allowed_triplets=allowed_triplets,
+        )
+        selected_uci = response.get("selected_move")
+        terminal_kind = None
+        if selected_uci is not None:
+            move = chess.Move.from_uci(str(selected_uci))
+            terminal_kind = _execute_white_and_observe(board, move)
+        response["availability_source"] = "executed_mature_child_world_rollout"
+        response["observed_child_rollout_terminal"] = terminal_kind
+        response["child_rollout_is_real_environment_step"] = True
+        return terminal_kind == "mate", response
     raise ValueError(
-        "r0_availability_mode must be prototype_gate or virtual_frame_verified"
+        "r0_availability_mode must be prototype_gate, shuffled_prototype_gate, "
+        "virtual_frame_verified, or real_child_rollout"
     )
 
 
