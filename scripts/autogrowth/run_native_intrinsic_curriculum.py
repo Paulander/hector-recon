@@ -73,6 +73,13 @@ def main() -> int:
         help="Opt-in R1 structural epoch; repeat for multiple epochs.",
     )
     parser.add_argument(
+        "--composite-consolidation-epoch",
+        action="append",
+        type=int,
+        default=None,
+        help="Opt-in paired on/off consolidation epoch; repeat as needed.",
+    )
+    parser.add_argument(
         "--composite-max-candidates",
         type=int,
         default=defaults.r1_composite_max_candidates,
@@ -123,6 +130,9 @@ def main() -> int:
         r0_availability_mode=args.availability,
         r0_child_cache_validation_mode=args.child_cache_validation,
         r1_composite_proposal_epochs=tuple(args.composite_proposal_epoch or ()),
+        r1_composite_consolidation_epochs=tuple(
+            args.composite_consolidation_epoch or ()
+        ),
         r1_composite_max_candidates=args.composite_max_candidates,
     )
     result = run_native_intrinsic_curriculum(config=config)

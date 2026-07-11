@@ -29,6 +29,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _choose_with_child_priority,
     _classify_r0_stratum,
     _classify_r1_stratum,
+    _disable_nonmature_composites,
     _execute_white_and_observe,
     _generate_balanced_r0_split,
     _generate_balanced_r1_split,
@@ -36,6 +37,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _r0_available_with_dispatch_cache,
     _r1_orbit_key,
     _replay_r0,
+    _restore_disabled_composites,
     _run_r1_arm,
 )
 from recon_lite_chess.autogrowth.foundation_curriculum import (
@@ -351,6 +353,14 @@ def test_native_stem_composite_uses_graph_and_separates_correlation_from_causati
     )["selected_score"]
     assert graph.graph.nodes[composite_node_id].state.name in {"TRUE", "CONFIRMED"}
     assert graph._confirmed_composite_score(first_triplet)[0] > 0.0
+    heldout_state = _disable_nonmature_composites(graph, enabled=True)
+    masked_trial_score = graph.confirm_candidate(
+        board,
+        triplet_id=first_triplet,
+        move_uci=first_move.uci(),
+    )["selected_score"]
+    _restore_disabled_composites(graph, heldout_state)
+    assert masked_trial_score is not None and masked_trial_score < enabled_score
     graph.set_composite_enabled(composite_id, enabled=False)
     disabled_score = graph.confirm_candidate(
         board,
@@ -369,6 +379,11 @@ def test_native_stem_composite_uses_graph_and_separates_correlation_from_causati
         ) == "positive"
     assert cell.candidate_stats.credit_stats.positive_intervention == 5
     assert cell.candidate_stats.decision(xp=cell.xp) == "mature"
+    consolidation = graph.consolidate_composite_candidate(composite_id)
+    assert consolidation["decision"] == "mature"
+    assert consolidation["state"] == "MATURE"
+    assert composite_id not in graph.disabled_composite_ids
+    assert graph.graph.nodes[composite_node_id].meta["tier"] == "mature"
 
     restored = pickle.loads(pickle.dumps(graph, protocol=5))
     assert composite_id in restored.composite_cells
@@ -523,6 +538,7 @@ def test_r1_structural_epoch_materializes_trial_candidates_without_causal_maturi
         r1_snapshot_dir=str(tmp_path / "snapshots"),
         resume_r1_snapshots=False,
         r1_composite_proposal_epochs=(1,),
+        r1_composite_consolidation_epochs=(1,),
         r1_composite_max_candidates=1,
     )
 
@@ -540,11 +556,15 @@ def test_r1_structural_epoch_materializes_trial_candidates_without_causal_maturi
 
     assert result["training"]["composite_candidate_count"] == 1
     assert result["training"]["composite_mature_count"] == 0
-    assert result["training"]["composite_causal_intervention_count"] == 0
+    assert result["training"]["composite_causal_intervention_count"] == 1
     assert result["training"]["composition_events"][0]["new_candidate_count"] == 1
+    consolidation = result["training"]["composition_consolidation_events"][0]
+    assert consolidation["pool_role"] == "training_only_paired_intervention"
+    assert consolidation["candidate_results"][0]["paired_neutral_count"] == 1
+    assert consolidation["candidate_results"][0]["consolidation"]["decision"] == "trial"
     cell = next(iter(graph.composite_cells.values()))
     assert cell.state.name == "TRIAL"
-    assert cell.candidate_stats.credit_stats.total_interventions == 0
+    assert cell.candidate_stats.credit_stats.total_interventions == 1
 
 
 def test_r1_interval_snapshot_resume_matches_uninterrupted(tmp_path) -> None:

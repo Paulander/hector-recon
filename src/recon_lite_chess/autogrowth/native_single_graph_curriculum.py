@@ -886,6 +886,38 @@ class NativeReConKRKGraph:
             node.meta["intervention_valence"] = valence
         return valence
 
+    def consolidate_composite_candidate(self, composite_id: str) -> dict[str, Any]:
+        cell = self.composite_cells[composite_id]
+        decision = cell.candidate_stats.decision(xp=cell.xp)
+        if decision == "mature":
+            cell.state = StemCellState.MATURE
+            self.disabled_composite_ids.discard(composite_id)
+        elif decision in {"suppress", "demote"}:
+            cell.state = StemCellState.PRUNED
+            self.disabled_composite_ids.add(composite_id)
+        for triplet_id in self.composite_triplets[composite_id]:
+            node_id = self.composite_node_by_triplet[(composite_id, triplet_id)]
+            node = self.graph.nodes[node_id]
+            node.meta["stem_cell_state"] = cell.state.name
+            node.meta["tier"] = (
+                "mature"
+                if cell.state == StemCellState.MATURE
+                else "dead"
+                if cell.state == StemCellState.PRUNED
+                else "trial"
+            )
+            node.meta["candidate_local_stats"] = cell.candidate_stats.to_dict()
+            node.meta["candidate_decision"] = decision
+        self.m4_event_count += int(decision in {"mature", "suppress", "demote"})
+        return {
+            "composite_id": composite_id,
+            "decision": decision,
+            "state": cell.state.name,
+            "xp": cell.xp,
+            "candidate_local_stats": cell.candidate_stats.to_dict(),
+            "enabled": composite_id not in self.disabled_composite_ids,
+        }
+
     def mature_existing_graph(self) -> dict[str, Any]:
         matured_nodes = 0
         matured_edges = 0

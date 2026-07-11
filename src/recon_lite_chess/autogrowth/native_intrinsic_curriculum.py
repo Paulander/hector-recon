@@ -24,6 +24,8 @@ from typing import Any, Iterable, Mapping, Sequence
 
 import chess
 
+from recon_lite_hector.nodes.stem_cell import StemCellState
+
 from recon_lite_hector.learning import (
     CompetenceGateExample,
     IntrinsicCreditConfig,
@@ -152,9 +154,11 @@ class NativeIntrinsicCurriculumConfig:
     r0_availability_mode: str = "virtual_frame_verified"
     r0_child_cache_validation_mode: str = "live_formal"
     r1_composite_proposal_epochs: tuple[int, ...] = ()
+    r1_composite_consolidation_epochs: tuple[int, ...] = ()
     r1_composite_max_candidates: int = 8
     r1_composite_max_atoms_per_triplet: int = 64
     r1_composite_min_support: int = 2
+    r1_heldout_mature_composites_only: bool = True
     eta_m3: float = 0.08
     eta_fast: float = 0.20
     eta_slow: float = 1.0
@@ -1222,6 +1226,7 @@ def _run_r1_arm(
         child_dispatch_cache: dict[str, dict[str, Any]] = {}
         checkpoints: list[dict[str, Any]] = []
         composition_events: list[dict[str, Any]] = []
+        composition_consolidation_events: list[dict[str, Any]] = []
         stopped_epoch = epoch_budget
         joint_mastery = False
     else:
@@ -1239,6 +1244,9 @@ def _run_r1_arm(
         child_dispatch_cache = dict(restored["child_dispatch_cache"])
         checkpoints = list(restored["checkpoints"])
         composition_events = list(restored.get("composition_events", []))
+        composition_consolidation_events = list(
+            restored.get("composition_consolidation_events", [])
+        )
         stopped_epoch = int(restored["stopped_epoch"])
         joint_mastery = bool(restored["joint_mastery"])
         duration_before_resume = float(restored["duration_seconds"])
@@ -1375,6 +1383,24 @@ def _run_r1_arm(
                     "candidate_generation_signal": "native_root_edge_weight",
                 }
             )
+        if (
+            arm_name == "full_intrinsic"
+            and epoch_number in set(config.r1_composite_consolidation_epochs)
+            and graph.composite_cells
+        ):
+            composition_consolidation_events.append(
+                {
+                    "epoch": epoch_number,
+                    "pool_role": "training_only_paired_intervention",
+                    "candidate_results": _paired_composite_interventions(
+                        graph,
+                        pools,
+                        r0_child_triplet_ids=r0_child_triplet_ids,
+                        child_dispatch_cache=child_dispatch_cache,
+                        cycle=epoch_number,
+                    ),
+                }
+            )
         force_stop = stop_after_epoch is not None and epoch_number >= stop_after_epoch
         should_observe = (
             epoch == 0
@@ -1385,6 +1411,10 @@ def _run_r1_arm(
         )
         latest_checkpoint: dict[str, Any] | None = None
         if should_observe:
+            heldout_disabled_state = _disable_nonmature_composites(
+                graph,
+                enabled=config.r1_heldout_mature_composites_only,
+            )
             metrics = _evaluate_r1(
                 graph,
                 pools.r1_validation,
@@ -1434,6 +1464,7 @@ def _run_r1_arm(
                 latest_checkpoint["joint_mastery"] = joint_mastery
                 if joint_mastery:
                     stopped_epoch = epoch_number
+            _restore_disabled_composites(graph, heldout_disabled_state)
             checkpoints.append(latest_checkpoint)
 
         should_snapshot = (
@@ -1458,6 +1489,7 @@ def _run_r1_arm(
                 "child_dispatch_cache": child_dispatch_cache,
                 "checkpoints": checkpoints,
                 "composition_events": composition_events,
+                "composition_consolidation_events": composition_consolidation_events,
                 "stopped_epoch": stopped_epoch,
                 "joint_mastery": joint_mastery,
                 "duration_seconds": elapsed,
@@ -1484,6 +1516,34 @@ def _run_r1_arm(
             break
 
     duration_seconds = duration_before_resume + (perf_counter() - started)
+    heldout_disabled_state = _disable_nonmature_composites(
+        graph,
+        enabled=config.r1_heldout_mature_composites_only,
+    )
+    final_validation = _evaluate_r1(
+        graph,
+        pools.r1_validation,
+        strata=pools.r1_validation_strata,
+        max_samples=config.max_samples,
+        r0_child_triplet_ids=evaluation_child_triplet_ids,
+        child_dispatch_cache=evaluation_child_dispatch_cache,
+    )
+    final_regression = _evaluate_r1(
+        graph,
+        pools.r1_regression,
+        strata=pools.r1_regression_strata,
+        max_samples=config.max_samples,
+        r0_child_triplet_ids=evaluation_child_triplet_ids,
+        child_dispatch_cache=evaluation_child_dispatch_cache,
+    )
+    final_r0_retention = _evaluate_r0(
+        graph,
+        pools.r0_regression,
+        max_samples=config.max_samples,
+        r0_child_triplet_ids=evaluation_child_triplet_ids,
+        child_dispatch_cache=evaluation_child_dispatch_cache,
+    )
+    _restore_disabled_composites(graph, heldout_disabled_state)
     return {
         "training": {
             "episodes": counters["episodes"],
@@ -1520,6 +1580,10 @@ def _run_r1_arm(
             "validation_checkpoints": checkpoints,
             "composition_proposal_epochs": list(config.r1_composite_proposal_epochs),
             "composition_events": composition_events,
+            "composition_consolidation_epochs": list(
+                config.r1_composite_consolidation_epochs
+            ),
+            "composition_consolidation_events": composition_consolidation_events,
             "composite_candidate_count": len(graph.composite_cells),
             "composite_mature_count": sum(
                 cell.state.name == "MATURE" for cell in graph.composite_cells.values()
@@ -1528,33 +1592,107 @@ def _run_r1_arm(
                 cell.candidate_stats.credit_stats.total_interventions
                 for cell in graph.composite_cells.values()
             ),
+            "heldout_mature_composites_only": config.r1_heldout_mature_composites_only,
         },
-        "validation": _evaluate_r1(
-            graph,
-            pools.r1_validation,
-            strata=pools.r1_validation_strata,
-            max_samples=config.max_samples,
-            r0_child_triplet_ids=evaluation_child_triplet_ids,
-            child_dispatch_cache=evaluation_child_dispatch_cache,
-        ),
-        "regression": _evaluate_r1(
-            graph,
-            pools.r1_regression,
-            strata=pools.r1_regression_strata,
-            max_samples=config.max_samples,
-            r0_child_triplet_ids=evaluation_child_triplet_ids,
-            child_dispatch_cache=evaluation_child_dispatch_cache,
-        ),
-        "r0_retention": _evaluate_r0(
-            graph,
-            pools.r0_regression,
-            max_samples=config.max_samples,
-            r0_child_triplet_ids=evaluation_child_triplet_ids,
-            child_dispatch_cache=evaluation_child_dispatch_cache,
-        ),
+        "validation": final_validation,
+        "regression": final_regression,
+        "r0_retention": final_r0_retention,
         "graph": graph.learned_state_audit(),
         "credit": credit.snapshot(),
     }
+
+def _disable_nonmature_composites(
+    graph: NativeReConKRKGraph,
+    *,
+    enabled: bool,
+) -> set[str] | None:
+    if not enabled:
+        return None
+    original = set(graph.disabled_composite_ids)
+    graph.disabled_composite_ids.update(
+        composite_id
+        for composite_id, cell in graph.composite_cells.items()
+        if cell.state != StemCellState.MATURE
+    )
+    return original
+
+
+def _restore_disabled_composites(
+    graph: NativeReConKRKGraph,
+    state: set[str] | None,
+) -> None:
+    if state is None:
+        return
+    graph.disabled_composite_ids.clear()
+    graph.disabled_composite_ids.update(state)
+
+
+def _paired_composite_interventions(
+    graph: NativeReConKRKGraph,
+    pools: _Pools,
+    *,
+    r0_child_triplet_ids: frozenset[str],
+    child_dispatch_cache: dict[str, dict[str, Any]],
+    cycle: int,
+) -> list[dict[str, Any]]:
+    results: list[dict[str, Any]] = []
+    for composite_id in sorted(graph.composite_cells):
+        cell = graph.composite_cells[composite_id]
+        if cell.state != StemCellState.TRIAL:
+            continue
+        was_enabled = composite_id not in graph.disabled_composite_ids
+        graph.set_composite_enabled(composite_id, enabled=True)
+        enabled = _evaluate_r1(
+            graph,
+            pools.r1_train,
+            strata=pools.r1_train_strata,
+            max_samples=len(pools.r1_train),
+            r0_child_triplet_ids=r0_child_triplet_ids,
+            child_dispatch_cache=child_dispatch_cache,
+        )
+        graph.set_composite_enabled(composite_id, enabled=False)
+        disabled = _evaluate_r1(
+            graph,
+            pools.r1_train,
+            strata=pools.r1_train_strata,
+            max_samples=len(pools.r1_train),
+            r0_child_triplet_ids=r0_child_triplet_ids,
+            child_dispatch_cache=child_dispatch_cache,
+        )
+        graph.set_composite_enabled(composite_id, enabled=was_enabled)
+        help_count = hurt_count = neutral_count = 0
+        for enabled_row, disabled_row in zip(
+            enabled["samples"],
+            disabled["samples"],
+            strict=True,
+        ):
+            enabled_return = float(bool(enabled_row["all_replies_mated"]))
+            disabled_return = float(bool(disabled_row["all_replies_mated"]))
+            graph.record_composite_intervention(
+                composite_id,
+                enabled_return=enabled_return,
+                disabled_return=disabled_return,
+                cycle=cycle,
+            )
+            help_count += int(enabled_return > disabled_return)
+            hurt_count += int(enabled_return < disabled_return)
+            neutral_count += int(enabled_return == disabled_return)
+        consolidation = graph.consolidate_composite_candidate(composite_id)
+        results.append(
+            {
+                "composite_id": composite_id,
+                "enabled_conversion_rate": enabled["conversion_rate"],
+                "disabled_conversion_rate": disabled["conversion_rate"],
+                "paired_help_count": help_count,
+                "paired_hurt_count": hurt_count,
+                "paired_neutral_count": neutral_count,
+                "outcome_source": "real_chess_world_training_pool_conversion",
+                "recognizer_verdict_used_for_credit": False,
+                "consolidation": consolidation,
+            }
+        )
+    return results
+
 
 def _replay_r0(
     graph: NativeReConKRKGraph,
