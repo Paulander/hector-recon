@@ -131,3 +131,16 @@ This does not reverse the audit verdict. It identifies one generic developmental
 law under a small isolated task. End-to-end autonomy remains unshown until this
 law participates in the actual perception/action/credit loop and survives frozen
 generic integration and independent confirmation.
+
+The next frozen package connected that law to graph-backed anonymous action
+selection and terminal-only delayed credit. Its persistent-trace arm beat reset
+on 20/20 tasks, reached median 1.0 accuracy, and lost a median 0.540039 accuracy
+when mature composite edges were disabled, with zero graph/update mismatch or
+trial leakage. See
+`GENERIC_CORE_DELAYED_ACTION_POLICY_RESULT_20260712.md`.
+
+This is a genuine improvement in ownership: grown graph topology changes the
+action selected and the selected graph prediction is what receives delayed
+credit. It is still only a delayed contextual bandit. The intervening clock
+events have no state dynamics, so this is not evidence of multi-step planning,
+option discovery, imagination, self-curriculum, or autonomous KRK.
