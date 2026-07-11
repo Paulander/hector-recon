@@ -10,6 +10,11 @@ from .engine import ActivationMode, EngineConfig, ReConEngine
 from .formal_engine import EdgeMessage, FormalMessage, FormalReConEngine
 from .graph import Graph, LinkType, Node, NodeState, NodeType
 from .logger import RunLogger
+from .online_composition import (
+    CompositeCandidate,
+    OnlineCompositionConfig,
+    OnlinePairCompositionLearner,
+)
 from .robust_return import (
     ReturnEstimate,
     RobustReturnConfig,
@@ -30,6 +35,9 @@ __all__ = [
     "Node",
     "NodeState",
     "NodeType",
+    "CompositeCandidate",
+    "OnlineCompositionConfig",
+    "OnlinePairCompositionLearner",
     "ReConEngine",
     "ReturnEstimate",
     "RobustReturnConfig",
