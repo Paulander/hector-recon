@@ -84,6 +84,16 @@ def main() -> int:
         type=int,
         default=defaults.r1_composite_max_candidates,
     )
+    parser.add_argument(
+        "--composite-max-atoms-per-triplet",
+        type=int,
+        default=defaults.r1_composite_max_atoms_per_triplet,
+    )
+    parser.add_argument(
+        "--composite-min-support",
+        type=int,
+        default=defaults.r1_composite_min_support,
+    )
     parser.add_argument("--no-r1", action="store_true")
     parser.add_argument("--no-freeze-r0", action="store_true")
     parser.add_argument("--no-child-priority", action="store_true")
@@ -134,6 +144,8 @@ def main() -> int:
             args.composite_consolidation_epoch or ()
         ),
         r1_composite_max_candidates=args.composite_max_candidates,
+        r1_composite_max_atoms_per_triplet=args.composite_max_atoms_per_triplet,
+        r1_composite_min_support=args.composite_min_support,
     )
     result = run_native_intrinsic_curriculum(config=config)
     path = result.write_json()
