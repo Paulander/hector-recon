@@ -50,3 +50,6 @@ traces/
 snapshots/
 reports/evolution/
 signatures/
+
+# Full native KRK graph/event trace; commit the hash-linked compact summary instead.
+reports/autogrowth/native_from_scratch/r0_r1_balanced96_240_seed_20260719.json

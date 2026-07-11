@@ -7,6 +7,36 @@ This ledger is subordinate to the central doctrine in
 start, outcome-only grounding, mature-child value, and 100% disjoint gates before
 advancing outward.
 
+## Latest balanced correction -- authoritative current boundary
+
+The 2026-07-11 high-resolution correction supersedes the small-pool "next gate"
+described later in this file. It is documented in
+`NATIVE_INTRINSIC_KRK_RUN_BRIEF_20260711.md` and externally audited in
+`NATIVE_INTRINSIC_KRK_EXTERNAL_AUDIT_20260711.md`.
+
+- A first preregistered 48/16/16 balanced-R1 run failed before R1 because its
+  still-random R0 scored 6/8 validation and 8/8 regression. This repeated the
+  historical corner/orientation mistake.
+- The correction retired all 40 observed R0 positions and their D4 orbits, then
+  balanced R0 across four edges and four corners at 48/16/16. From empty learned
+  state it reached joint 16/16 validation and 16/16 regression at epoch 8.
+- The full intrinsic R1 arm reached 8/16 validation and 5/16 regression after
+  240 epochs; no-bootstrap remained 0/16 and 0/16. Both retained R0 at 16/16.
+  Mature-child bootstrap is therefore causally useful, but R1 is not certified.
+- Full R1 peaked at 9/16 validation at epochs 180-220 and ended at 8/16. Do not
+  respond by adding epochs. Add durable interval snapshots, consolidation/model
+  selection declared before runs, and outcome-driven self-grown composite
+  competition for quiet barrier/approach selectivity.
+- Eleven of 19 full-arm heldout failures were premature rook checks instead of
+  adjacent quiet setup moves. The remaining eight were wrong quiet offsets or
+  king-approach squares. Balanced exposure alone did not create the needed
+  conjunction.
+- Do not advance to R2. Do not rerun the same arm until parity-safe performance
+  work and resumable interval checkpoints make fresh multi-seed science viable.
+
+Compact artifact:
+`reports/autogrowth/native_from_scratch/r0_r1_balanced96_240_seed_20260719_compact.json`.
+
 ## Current single-seed gate boundary
 
 R0 (Mate-in-1) is the furthest rung to pass the current bounded single-seed
