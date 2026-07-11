@@ -1,0 +1,1554 @@
+{
+  "adjudication_authority": false,
+  "builder_is_runner": true,
+  "confirmation_claimed": false,
+  "delayed_fork": {
+    "delays": [
+      4,
+      5,
+      6
+    ],
+    "rows": [
+      {
+        "delay": 4,
+        "early_id": "cell_0_3",
+        "filler_ids": [
+          "cell_0_0",
+          "cell_0_1"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.25600000000000006,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260712
+      },
+      {
+        "delay": 5,
+        "early_id": "cell_1_4",
+        "filler_ids": [
+          "cell_1_3",
+          "cell_1_1",
+          "cell_1_0"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.20480000000000007,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260713
+      },
+      {
+        "delay": 4,
+        "early_id": "cell_2_2",
+        "filler_ids": [
+          "cell_2_3",
+          "cell_2_1"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.25600000000000006,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260714
+      },
+      {
+        "delay": 4,
+        "early_id": "cell_3_3",
+        "filler_ids": [
+          "cell_3_2",
+          "cell_3_0"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.25600000000000006,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260715
+      },
+      {
+        "delay": 5,
+        "early_id": "cell_4_3",
+        "filler_ids": [
+          "cell_4_2",
+          "cell_4_4",
+          "cell_4_0"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.20480000000000007,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260716
+      },
+      {
+        "delay": 5,
+        "early_id": "cell_5_3",
+        "filler_ids": [
+          "cell_5_0",
+          "cell_5_4",
+          "cell_5_1"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.20480000000000007,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260717
+      },
+      {
+        "delay": 5,
+        "early_id": "cell_6_4",
+        "filler_ids": [
+          "cell_6_2",
+          "cell_6_1",
+          "cell_6_3"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.20480000000000007,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260718
+      },
+      {
+        "delay": 5,
+        "early_id": "cell_7_3",
+        "filler_ids": [
+          "cell_7_1",
+          "cell_7_0",
+          "cell_7_2"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.20480000000000007,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260719
+      },
+      {
+        "delay": 4,
+        "early_id": "cell_8_0",
+        "filler_ids": [
+          "cell_8_3",
+          "cell_8_1"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.25600000000000006,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260720
+      },
+      {
+        "delay": 6,
+        "early_id": "cell_9_0",
+        "filler_ids": [
+          "cell_9_2",
+          "cell_9_5",
+          "cell_9_4",
+          "cell_9_3"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.16384000000000007,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260721
+      },
+      {
+        "delay": 6,
+        "early_id": "cell_10_1",
+        "filler_ids": [
+          "cell_10_4",
+          "cell_10_2",
+          "cell_10_5",
+          "cell_10_0"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.16384000000000007,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260722
+      },
+      {
+        "delay": 6,
+        "early_id": "cell_11_1",
+        "filler_ids": [
+          "cell_11_3",
+          "cell_11_4",
+          "cell_11_0",
+          "cell_11_5"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.16384000000000007,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260723
+      },
+      {
+        "delay": 5,
+        "early_id": "cell_12_3",
+        "filler_ids": [
+          "cell_12_1",
+          "cell_12_2",
+          "cell_12_0"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.20480000000000007,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260724
+      },
+      {
+        "delay": 6,
+        "early_id": "cell_13_5",
+        "filler_ids": [
+          "cell_13_3",
+          "cell_13_0",
+          "cell_13_1",
+          "cell_13_4"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.16384000000000007,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260725
+      },
+      {
+        "delay": 4,
+        "early_id": "cell_14_0",
+        "filler_ids": [
+          "cell_14_1",
+          "cell_14_2"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.25600000000000006,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260726
+      },
+      {
+        "delay": 5,
+        "early_id": "cell_15_3",
+        "filler_ids": [
+          "cell_15_2",
+          "cell_15_1",
+          "cell_15_4"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.20480000000000007,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260727
+      },
+      {
+        "delay": 4,
+        "early_id": "cell_16_2",
+        "filler_ids": [
+          "cell_16_0",
+          "cell_16_1"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.25600000000000006,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260728
+      },
+      {
+        "delay": 5,
+        "early_id": "cell_17_1",
+        "filler_ids": [
+          "cell_17_0",
+          "cell_17_2",
+          "cell_17_4"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.20480000000000007,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260729
+      },
+      {
+        "delay": 6,
+        "early_id": "cell_18_5",
+        "filler_ids": [
+          "cell_18_0",
+          "cell_18_3",
+          "cell_18_2",
+          "cell_18_1"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.16384000000000007,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260730
+      },
+      {
+        "delay": 4,
+        "early_id": "cell_19_1",
+        "filler_ids": [
+          "cell_19_0",
+          "cell_19_3"
+        ],
+        "per_step_reset_control": {
+          "early_fast_value": 0.0,
+          "terminal_td_error": 1.0
+        },
+        "persistent_episode": {
+          "early_fast_value": 0.25600000000000006,
+          "terminal_td_error": 1.0
+        },
+        "seed": 20260731
+      }
+    ],
+    "rows_sha256": "8bc431f360af80c23016428fc11411c0e710285920cc1e03c7cc57a25b4d8252"
+  },
+  "frozen_seed_range": [
+    20260712,
+    20260731
+  ],
+  "rare_refutation": {
+    "config": {
+      "capacity": 32,
+      "confidence_prior": 3.0,
+      "lower_quantile": 0.1,
+      "min_observations": 8,
+      "prior_return": 0.0,
+      "return_max": 1.0,
+      "return_min": -1.0
+    },
+    "rows": [
+      {
+        "confidence_before_refutation": 0.03125,
+        "consistent_estimate": {
+          "cell_id": "anonymous_0_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_0_a",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_0_a",
+        "mean_selected_id": "anonymous_0_b",
+        "presented_ids": [
+          "anonymous_0_b",
+          "anonymous_0_a"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_0_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_0_b",
+        "refutable_returns": [
+          1.0,
+          -1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "seed": 20260712
+      },
+      {
+        "confidence_before_refutation": 0.5,
+        "consistent_estimate": {
+          "cell_id": "anonymous_1_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_1_b",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_1_b",
+        "mean_selected_id": "anonymous_1_a",
+        "presented_ids": [
+          "anonymous_1_a",
+          "anonymous_1_b"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_1_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_1_a",
+        "refutable_returns": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          -1.0,
+          1.0
+        ],
+        "seed": 20260713
+      },
+      {
+        "confidence_before_refutation": 0.03125,
+        "consistent_estimate": {
+          "cell_id": "anonymous_2_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_2_a",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_2_a",
+        "mean_selected_id": "anonymous_2_b",
+        "presented_ids": [
+          "anonymous_2_b",
+          "anonymous_2_a"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_2_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_2_b",
+        "refutable_returns": [
+          1.0,
+          -1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "seed": 20260714
+      },
+      {
+        "confidence_before_refutation": 0.03125,
+        "consistent_estimate": {
+          "cell_id": "anonymous_3_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_3_a",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_3_a",
+        "mean_selected_id": "anonymous_3_b",
+        "presented_ids": [
+          "anonymous_3_b",
+          "anonymous_3_a"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_3_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_3_b",
+        "refutable_returns": [
+          1.0,
+          -1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "seed": 20260715
+      },
+      {
+        "confidence_before_refutation": 0.390625,
+        "consistent_estimate": {
+          "cell_id": "anonymous_4_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_4_b",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_4_b",
+        "mean_selected_id": "anonymous_4_a",
+        "presented_ids": [
+          "anonymous_4_a",
+          "anonymous_4_b"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_4_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_4_a",
+        "refutable_returns": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          -1.0,
+          1.0,
+          1.0
+        ],
+        "seed": 20260716
+      },
+      {
+        "confidence_before_refutation": 0.390625,
+        "consistent_estimate": {
+          "cell_id": "anonymous_5_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_5_b",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_5_b",
+        "mean_selected_id": "anonymous_5_a",
+        "presented_ids": [
+          "anonymous_5_a",
+          "anonymous_5_b"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_5_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_5_a",
+        "refutable_returns": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          -1.0,
+          1.0,
+          1.0
+        ],
+        "seed": 20260717
+      },
+      {
+        "confidence_before_refutation": 0.1875,
+        "consistent_estimate": {
+          "cell_id": "anonymous_6_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_6_b",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_6_b",
+        "mean_selected_id": "anonymous_6_a",
+        "presented_ids": [
+          "anonymous_6_a",
+          "anonymous_6_b"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_6_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_6_a",
+        "refutable_returns": [
+          1.0,
+          1.0,
+          1.0,
+          -1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "seed": 20260718
+      },
+      {
+        "confidence_before_refutation": 0.390625,
+        "consistent_estimate": {
+          "cell_id": "anonymous_7_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_7_b",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_7_b",
+        "mean_selected_id": "anonymous_7_a",
+        "presented_ids": [
+          "anonymous_7_a",
+          "anonymous_7_b"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_7_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_7_a",
+        "refutable_returns": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          -1.0,
+          1.0,
+          1.0
+        ],
+        "seed": 20260719
+      },
+      {
+        "confidence_before_refutation": 0.2857142857142857,
+        "consistent_estimate": {
+          "cell_id": "anonymous_8_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_8_a",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_8_a",
+        "mean_selected_id": "anonymous_8_b",
+        "presented_ids": [
+          "anonymous_8_b",
+          "anonymous_8_a"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_8_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_8_b",
+        "refutable_returns": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          -1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "seed": 20260720
+      },
+      {
+        "confidence_before_refutation": 0.2857142857142857,
+        "consistent_estimate": {
+          "cell_id": "anonymous_9_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_9_a",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_9_a",
+        "mean_selected_id": "anonymous_9_b",
+        "presented_ids": [
+          "anonymous_9_b",
+          "anonymous_9_a"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_9_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_9_b",
+        "refutable_returns": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          -1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "seed": 20260721
+      },
+      {
+        "confidence_before_refutation": 0.1875,
+        "consistent_estimate": {
+          "cell_id": "anonymous_10_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_10_b",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_10_b",
+        "mean_selected_id": "anonymous_10_a",
+        "presented_ids": [
+          "anonymous_10_a",
+          "anonymous_10_b"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_10_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_10_a",
+        "refutable_returns": [
+          1.0,
+          1.0,
+          1.0,
+          -1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "seed": 20260722
+      },
+      {
+        "confidence_before_refutation": 0.5,
+        "consistent_estimate": {
+          "cell_id": "anonymous_11_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_11_b",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_11_b",
+        "mean_selected_id": "anonymous_11_a",
+        "presented_ids": [
+          "anonymous_11_a",
+          "anonymous_11_b"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_11_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_11_a",
+        "refutable_returns": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          -1.0,
+          1.0
+        ],
+        "seed": 20260723
+      },
+      {
+        "confidence_before_refutation": 0.0,
+        "consistent_estimate": {
+          "cell_id": "anonymous_12_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_12_b",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_12_b",
+        "mean_selected_id": "anonymous_12_a",
+        "presented_ids": [
+          "anonymous_12_a",
+          "anonymous_12_b"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_12_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_12_a",
+        "refutable_returns": [
+          -1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "seed": 20260724
+      },
+      {
+        "confidence_before_refutation": 0.2857142857142857,
+        "consistent_estimate": {
+          "cell_id": "anonymous_13_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_13_b",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_13_b",
+        "mean_selected_id": "anonymous_13_a",
+        "presented_ids": [
+          "anonymous_13_a",
+          "anonymous_13_b"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_13_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_13_a",
+        "refutable_returns": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          -1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "seed": 20260725
+      },
+      {
+        "confidence_before_refutation": 0.1,
+        "consistent_estimate": {
+          "cell_id": "anonymous_14_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_14_a",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_14_a",
+        "mean_selected_id": "anonymous_14_b",
+        "presented_ids": [
+          "anonymous_14_b",
+          "anonymous_14_a"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_14_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_14_b",
+        "refutable_returns": [
+          1.0,
+          1.0,
+          -1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "seed": 20260726
+      },
+      {
+        "confidence_before_refutation": 0.0,
+        "consistent_estimate": {
+          "cell_id": "anonymous_15_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_15_b",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_15_b",
+        "mean_selected_id": "anonymous_15_a",
+        "presented_ids": [
+          "anonymous_15_a",
+          "anonymous_15_b"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_15_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_15_a",
+        "refutable_returns": [
+          -1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "seed": 20260727
+      },
+      {
+        "confidence_before_refutation": 0.6124999999999999,
+        "consistent_estimate": {
+          "cell_id": "anonymous_16_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_16_a",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_16_a",
+        "mean_selected_id": "anonymous_16_b",
+        "presented_ids": [
+          "anonymous_16_b",
+          "anonymous_16_a"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_16_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_16_b",
+        "refutable_returns": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          -1.0
+        ],
+        "seed": 20260728
+      },
+      {
+        "confidence_before_refutation": 0.6124999999999999,
+        "consistent_estimate": {
+          "cell_id": "anonymous_17_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_17_b",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_17_b",
+        "mean_selected_id": "anonymous_17_a",
+        "presented_ids": [
+          "anonymous_17_a",
+          "anonymous_17_b"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_17_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_17_a",
+        "refutable_returns": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          -1.0
+        ],
+        "seed": 20260729
+      },
+      {
+        "confidence_before_refutation": 0.5,
+        "consistent_estimate": {
+          "cell_id": "anonymous_18_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_18_a",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_18_a",
+        "mean_selected_id": "anonymous_18_b",
+        "presented_ids": [
+          "anonymous_18_b",
+          "anonymous_18_a"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_18_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_18_b",
+        "refutable_returns": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          -1.0,
+          1.0
+        ],
+        "seed": 20260730
+      },
+      {
+        "confidence_before_refutation": 0.2857142857142857,
+        "consistent_estimate": {
+          "cell_id": "anonymous_19_a",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": 0.4,
+          "lower_tail_gap": 0.0,
+          "maximum": 0.4,
+          "mean": 0.4,
+          "mean_score": 0.29090909090909095,
+          "minimum": 0.4,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": 0.29090909090909095
+        },
+        "consistent_id": "anonymous_19_a",
+        "consistent_returns": [
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4
+        ],
+        "lower_tail_selected_id": "anonymous_19_a",
+        "mean_selected_id": "anonymous_19_b",
+        "presented_ids": [
+          "anonymous_19_b",
+          "anonymous_19_a"
+        ],
+        "refutable_estimate": {
+          "cell_id": "anonymous_19_b",
+          "confidence": 0.7272727272727273,
+          "lower_quantile": -1.0,
+          "lower_tail_gap": 1.75,
+          "maximum": 1.0,
+          "mean": 0.75,
+          "mean_score": 0.5454545454545454,
+          "minimum": -1.0,
+          "observation_count": 8,
+          "retained_count": 8,
+          "robust_score": -0.7272727272727273
+        },
+        "refutable_id": "anonymous_19_b",
+        "refutable_returns": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          -1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "seed": 20260731
+      }
+    ],
+    "rows_sha256": "7183d453c32cb3a12331b9e4278759d90a811c3b147600113848de489cc268cf"
+  },
+  "schema_version": "recon_generic_core_falsification_raw.v1",
+  "source_commit": "a39ea5cf375afe2f0ac384d6008f1b7699f42bad",
+  "track": "generic_core_development"
+}
