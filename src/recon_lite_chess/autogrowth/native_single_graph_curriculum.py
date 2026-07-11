@@ -10,6 +10,7 @@ curriculum scheduling and reward labels.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from itertools import combinations
 import copy
 import hashlib
 import json
@@ -153,6 +154,7 @@ class NativeReConKRKGraph:
         self.composite_cells: dict[str, StemCellTerminal] = {}
         self.composite_member_ids: dict[str, tuple[str, ...]] = {}
         self.composite_triplets: dict[str, set[str]] = {}
+        self.composite_node_by_triplet: dict[tuple[str, str], str] = {}
         self.disabled_composite_ids: set[str] = set()
         self.m3_update_count = 0
         self.m4_event_count = 0
@@ -614,7 +616,7 @@ class NativeReConKRKGraph:
         *,
         stage: str,
     ) -> str:
-        """Create one native AND candidate from existing shared sensor atoms."""
+        """Create native per-parent AND circuits sharing one candidate lifecycle."""
 
         members = tuple(sorted(dict.fromkeys(map(str, member_atom_ids))))
         if len(members) < 2:
@@ -631,7 +633,6 @@ class NativeReConKRKGraph:
             cell.is_composition = True
             cell.children = list(members)
             cell.depth = 1
-            cell.trial_node_id = composite_id
             cell.trial_parent_id = ROOT_ID
             cell.metadata.update(
                 {
@@ -639,6 +640,23 @@ class NativeReConKRKGraph:
                     "candidate_generation_used_outcome_label": False,
                     "stage_label_learner_visible": False,
                 }
+            )
+            self.composite_cells[composite_id] = cell
+            self.composite_member_ids[composite_id] = members
+            self.composite_triplets[composite_id] = set()
+
+        for triplet_id in tuple(dict.fromkeys(map(str, triplet_ids))):
+            if triplet_id not in self.triplet_ids:
+                raise ValueError(f"unknown composite parent triplet: {triplet_id}")
+            if not set(members).issubset(self.triplet_nodes.get(triplet_id, set())):
+                raise ValueError(
+                    f"composite members did not coactivate in parent triplet: {triplet_id}"
+                )
+            key = (composite_id, triplet_id)
+            if key in self.composite_node_by_triplet:
+                continue
+            instance_id = (
+                f"{composite_id}_{hashlib.sha1(triplet_id.encode("utf-8")).hexdigest()[:12]}"
             )
             meta = _candidate_meta(
                 "SCRIPT",
@@ -654,44 +672,121 @@ class NativeReConKRKGraph:
                     "stem_cell_id": composite_id,
                     "composition_operator": "and",
                     "composition_member_ids": list(members),
-                    "candidate_local_stats": cell.candidate_stats.to_dict(),
+                    "candidate_local_stats": self.composite_cells[
+                        composite_id
+                    ].candidate_stats.to_dict(),
+                    "parent_triplet_id": triplet_id,
                 }
             )
-            self.graph.add_node(Node(composite_id, NodeType.SCRIPT, meta=meta))
+            self.graph.add_node(Node(instance_id, NodeType.SCRIPT, meta=meta))
             for member_id in members:
                 self._add_hierarchy_pair(
-                    composite_id,
+                    instance_id,
                     member_id,
                     trainable=False,
                     weight=0.0,
                 )
-            self.composite_cells[composite_id] = cell
-            self.composite_member_ids[composite_id] = members
-            self.composite_triplets[composite_id] = set()
-
-        for triplet_id in tuple(dict.fromkeys(map(str, triplet_ids))):
-            if triplet_id not in self.triplet_ids:
-                raise ValueError(f"unknown composite parent triplet: {triplet_id}")
-            if not set(members).issubset(self.triplet_nodes.get(triplet_id, set())):
-                raise ValueError(
-                    f"composite members did not coactivate in parent triplet: {triplet_id}"
-                )
-            if triplet_id in self.composite_triplets[composite_id]:
-                continue
             parent_id = _TripletNodeIds(triplet_id).action_script
             attachment_edges = self._add_hierarchy_pair(
                 parent_id,
-                composite_id,
+                instance_id,
                 trainable=True,
                 weight=0.0,
             )
-            self.triplet_nodes[triplet_id].add(composite_id)
+            self.triplet_nodes[triplet_id].add(instance_id)
             self.triplet_trainable_edges[triplet_id].extend(attachment_edges)
             self.composite_triplets[composite_id].add(triplet_id)
-        self.graph.nodes[composite_id].meta["reuse_count"] = len(
-            self.composite_triplets[composite_id]
-        )
+            self.composite_node_by_triplet[key] = instance_id
+        reuse_count = len(self.composite_triplets[composite_id])
+        for triplet_id in self.composite_triplets[composite_id]:
+            instance_id = self.composite_node_by_triplet[(composite_id, triplet_id)]
+            self.graph.nodes[instance_id].meta["reuse_count"] = reuse_count
         return composite_id
+
+    def rank_shared_composite_candidates(
+        self,
+        triplet_ids: Iterable[str],
+        *,
+        max_candidates: int = 8,
+        max_atoms_per_triplet: int = 18,
+        min_support: int = 2,
+    ) -> tuple[dict[str, Any], ...]:
+        """Rank selective coactivations using only native outcome-trained state."""
+
+        selected_triplets = tuple(
+            sorted(triplet_id for triplet_id in set(triplet_ids) if triplet_id in self.triplet_ids)
+        )
+        atom_support: dict[str, int] = {}
+        atom_signal: dict[str, float] = {}
+        pair_support: dict[tuple[str, str], int] = {}
+        pair_signal: dict[tuple[str, str], float] = {}
+        pair_parents: dict[tuple[str, str], list[str]] = {}
+        for triplet_id in selected_triplets:
+            root_edge = self.graph.get_edge(ROOT_ID, triplet_id, LinkType.SUB)
+            signal = 0.0 if root_edge is None else float(root_edge.w)
+            eligible = [
+                node_id
+                for node_id in self.triplet_nodes.get(triplet_id, set())
+                if self.graph.nodes[node_id].meta.get("shared_feature_atom")
+                and node_id not in self.pruned_terminal_ids
+            ]
+            eligible.sort(
+                key=lambda node_id: (
+                    int(self.graph.nodes[node_id].meta.get("reuse_count", 0)),
+                    abs(float(self.graph.nodes[node_id].meta.get("local_weight", 0.0))),
+                    node_id,
+                ),
+                reverse=True,
+            )
+            eligible = sorted(eligible[: max(2, int(max_atoms_per_triplet))])
+            for atom_id in eligible:
+                atom_support[atom_id] = atom_support.get(atom_id, 0) + 1
+                atom_signal[atom_id] = atom_signal.get(atom_id, 0.0) + signal
+            for pair in combinations(eligible, 2):
+                pair_support[pair] = pair_support.get(pair, 0) + 1
+                pair_signal[pair] = pair_signal.get(pair, 0.0) + signal
+                pair_parents.setdefault(pair, []).append(triplet_id)
+
+        rows: list[dict[str, Any]] = []
+        for pair, support in pair_support.items():
+            if support < max(1, int(min_support)):
+                continue
+            member_supports = (atom_support[pair[0]], atom_support[pair[1]])
+            if support >= min(member_supports):
+                continue
+            pair_mean = pair_signal[pair] / support
+            member_means = (
+                atom_signal[pair[0]] / member_supports[0],
+                atom_signal[pair[1]] / member_supports[1],
+            )
+            contrast = abs(pair_mean - member_means[0]) + abs(
+                pair_mean - member_means[1]
+            )
+            score = math.sqrt(support) * (abs(pair_mean) + contrast)
+            rows.append(
+                {
+                    "candidate_id": f"tg26s_stem_composite_{_hash_keys(pair)[:20]}",
+                    "member_atom_ids": list(pair),
+                    "support": support,
+                    "member_supports": list(member_supports),
+                    "pair_outcome_signal_mean": pair_mean,
+                    "member_outcome_signal_means": list(member_means),
+                    "selectivity_contrast": contrast,
+                    "proposal_score": score,
+                    "parent_triplet_ids": sorted(pair_parents[pair]),
+                    "candidate_generation_used_outcome_label": False,
+                    "candidate_generation_signal": "native_root_edge_weight",
+                }
+            )
+        rows.sort(
+            key=lambda row: (
+                float(row["proposal_score"]),
+                int(row["support"]),
+                str(row["candidate_id"]),
+            ),
+            reverse=True,
+        )
+        return tuple(rows[: max(0, int(max_candidates))])
 
     def set_composite_enabled(self, composite_id: str, *, enabled: bool) -> None:
         if composite_id not in self.composite_cells:
@@ -714,11 +809,13 @@ class NativeReConKRKGraph:
         cell.update_xp(delta)
         valence = "positive" if delta >= 0.05 else "negative" if delta <= -0.05 else "neutral"
         cell.candidate_stats.survival_stats.last_confirm_cycle = int(cycle)
-        node = self.graph.nodes[composite_id]
-        node.meta["candidate_local_stats"] = cell.candidate_stats.to_dict()
-        node.meta["intervention_enabled_return"] = float(enabled_return)
-        node.meta["intervention_disabled_return"] = float(disabled_return)
-        node.meta["intervention_valence"] = valence
+        for triplet_id in self.composite_triplets[composite_id]:
+            node_id = self.composite_node_by_triplet[(composite_id, triplet_id)]
+            node = self.graph.nodes[node_id]
+            node.meta["candidate_local_stats"] = cell.candidate_stats.to_dict()
+            node.meta["intervention_enabled_return"] = float(enabled_return)
+            node.meta["intervention_disabled_return"] = float(disabled_return)
+            node.meta["intervention_valence"] = valence
         return valence
 
     def mature_existing_graph(self) -> dict[str, Any]:
@@ -1102,7 +1199,8 @@ class NativeReConKRKGraph:
                 node_ids.append(node.nid)
         for node_id in dict.fromkeys(node_ids):
             node = self.graph.nodes[node_id]
-            cell = self.composite_cells.get(node_id)
+            stem_cell_id = node.meta.get("stem_cell_id")
+            cell = self.composite_cells.get(str(stem_cell_id)) if stem_cell_id else None
             if cell is not None:
                 cell.record_candidate_request(parent_id=triplet_id)
                 active = node.state in (NodeState.TRUE, NodeState.CONFIRMED)
@@ -1386,7 +1484,7 @@ class NativeReConKRKGraph:
             node = self.graph.nodes[node_id]
             if node.meta.get("role") != "composition_feature":
                 continue
-            if node_id in self.disabled_composite_ids:
+            if str(node.meta.get("stem_cell_id")) in self.disabled_composite_ids:
                 continue
             if node.state not in (NodeState.TRUE, NodeState.CONFIRMED):
                 continue

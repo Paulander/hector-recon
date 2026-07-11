@@ -308,18 +308,19 @@ def test_native_stem_composite_uses_graph_and_separates_correlation_from_causati
         stage="composite_test",
     )
     cell = graph.composite_cells[composite_id]
+    composite_node_id = graph.composite_node_by_triplet[(composite_id, first_triplet)]
     assert cell.state.name == "TRIAL"
     assert cell.is_composition is True
     assert tuple(cell.children) == tuple(sorted(members))
-    assert graph.graph.nodes[composite_id].meta["confirm_policy"] == "k_of_n"
-    assert graph.graph.nodes[composite_id].meta["confirm_k"] == 2
+    assert graph.graph.nodes[composite_node_id].meta["confirm_policy"] == "k_of_n"
+    assert graph.graph.nodes[composite_node_id].meta["confirm_k"] == 2
 
     graph.confirm_candidate(
         board,
         triplet_id=first_triplet,
         move_uci=first_move.uci(),
     )
-    assert graph.graph.nodes[composite_id].state.name in {"TRUE", "CONFIRMED"}
+    assert graph.graph.nodes[composite_node_id].state.name in {"TRUE", "CONFIRMED"}
     graph.apply_intrinsic_td(
         board,
         first_move,
@@ -336,7 +337,7 @@ def test_native_stem_composite_uses_graph_and_separates_correlation_from_causati
         triplet_id=first_triplet,
         move_uci=contrast_move.uci(),
     )
-    assert graph.graph.nodes[composite_id].state.name == "FAILED"
+    assert graph.graph.nodes[composite_node_id].state.name == "FAILED"
 
     graph.confirm_candidate(
         board,
@@ -348,7 +349,7 @@ def test_native_stem_composite_uses_graph_and_separates_correlation_from_causati
         triplet_id=first_triplet,
         move_uci=first_move.uci(),
     )["selected_score"]
-    assert graph.graph.nodes[composite_id].state.name in {"TRUE", "CONFIRMED"}
+    assert graph.graph.nodes[composite_node_id].state.name in {"TRUE", "CONFIRMED"}
     assert graph._confirmed_composite_score(first_triplet)[0] > 0.0
     graph.set_composite_enabled(composite_id, enabled=False)
     disabled_score = graph.confirm_candidate(
@@ -373,6 +374,56 @@ def test_native_stem_composite_uses_graph_and_separates_correlation_from_causati
     assert composite_id in restored.composite_cells
     assert restored.composite_member_ids[composite_id] == tuple(sorted(members))
     assert restored.to_dict()["composite_candidate_count"] == 1
+
+
+def test_native_composite_proposals_are_selective_bounded_and_deterministic() -> None:
+    graph = _graph()
+    observed_triplets = set()
+    for fen_index, fen in enumerate(R1_RETIRED_DEVELOPMENT_FENS[:4]):
+        board = chess.Board(fen)
+        for move_index, move in enumerate(
+            sorted(board.legal_moves, key=lambda item: item.uci())
+        ):
+            triplet_id = graph.apply_intrinsic_td(
+                board,
+                move,
+                td_error=1.0 if (fen_index + move_index) % 4 == 0 else -1.0,
+                stage_diagnostic="proposal_test",
+            )
+            observed_triplets.add(triplet_id)
+
+    first = graph.rank_shared_composite_candidates(
+        observed_triplets,
+        max_candidates=5,
+        max_atoms_per_triplet=256,
+        min_support=2,
+    )
+    second = graph.rank_shared_composite_candidates(
+        reversed(sorted(observed_triplets)),
+        max_candidates=5,
+        max_atoms_per_triplet=256,
+        min_support=2,
+    )
+
+    assert first
+    assert first == second
+    assert len(first) <= 5
+    assert all(
+        row["support"] < min(row["member_supports"])
+        and row["candidate_generation_used_outcome_label"] is False
+        and row["candidate_generation_signal"] == "native_root_edge_weight"
+        for row in first
+    )
+    selected = first[0]
+    composite_id = graph.materialize_shared_composite(
+        selected["member_atom_ids"],
+        selected["parent_triplet_ids"],
+        stage="proposal_test",
+    )
+    assert composite_id == selected["candidate_id"]
+    assert graph.composite_triplets[composite_id] == set(
+        selected["parent_triplet_ids"]
+    )
 
 
 def test_r1_interval_snapshot_resume_matches_uninterrupted(tmp_path) -> None:
