@@ -144,3 +144,15 @@ action selected and the selected graph prediction is what receives delayed
 credit. It is still only a delayed contextual bandit. The intervening clock
 events have no state dynamics, so this is not evidence of multi-step planning,
 option discovery, imagination, self-curriculum, or autonomous KRK.
+
+The subsequent robust graph-choice package failed and is closed. Both nominal
+mean and lower-tail arms chose the consistent action 20/20 because bounded
+return-memory compression deliberately enriched the lower tail and then reused
+that enriched buffer to calculate `mean_score`. The long-run mean control was
+therefore not a mean estimator. See
+`GENERIC_CORE_ROBUST_GRAPH_CHOICE_RESULT_20260712.md`.
+
+This exposes another audit-relevant miss: the original semantic test used eight
+observations, while the defect appears only after the 256-sample capacity is
+crossed repeatedly. No robust-choice or combined-environment claim is allowed
+from this package, and no automatic repair/rerun was made.
