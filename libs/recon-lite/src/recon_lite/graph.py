@@ -503,7 +503,7 @@ class Graph:
                 if aggregation == "and" and children:
                     # TRUE AND GATE: Uses min() - fires ONLY when ALL children active
                     child_activations = []
-                    for child_id in children:
+                    for child_id, _weight in children:
                         child = self.nodes.get(child_id)
                         if child:
                             child_activations.append(child.activation.value)
