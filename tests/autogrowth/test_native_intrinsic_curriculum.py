@@ -423,6 +423,9 @@ def test_native_composite_proposals_are_selective_bounded_and_deterministic() ->
     assert first
     assert first == second
     assert len(first) <= 5
+    assert len({row["activation_signature_sha256"] for row in first}) == len(first)
+    assert len({tuple(row["parent_triplet_ids"]) for row in first}) == len(first)
+    assert {row["proposal_valence"] for row in first} == {"positive", "negative"}
     assert all(
         row["support"] < min(row["member_supports"])
         and row["candidate_generation_used_outcome_label"] is False

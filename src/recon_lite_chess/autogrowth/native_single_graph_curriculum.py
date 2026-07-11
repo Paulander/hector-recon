@@ -770,10 +770,20 @@ class NativeReConKRKGraph:
                     "support": support,
                     "member_supports": list(member_supports),
                     "pair_outcome_signal_mean": pair_mean,
+                    "proposal_valence": (
+                        "positive"
+                        if pair_mean > 0.0
+                        else "negative"
+                        if pair_mean < 0.0
+                        else "neutral"
+                    ),
                     "member_outcome_signal_means": list(member_means),
                     "selectivity_contrast": contrast,
                     "proposal_score": score,
                     "parent_triplet_ids": sorted(pair_parents[pair]),
+                    "activation_signature_sha256": hashlib.sha256(
+                        "\n".join(sorted(pair_parents[pair])).encode("utf-8")
+                    ).hexdigest(),
                     "candidate_generation_used_outcome_label": False,
                     "candidate_generation_signal": "native_root_edge_weight",
                 }
@@ -786,7 +796,41 @@ class NativeReConKRKGraph:
             ),
             reverse=True,
         )
-        return tuple(rows[: max(0, int(max_candidates))])
+        limit = max(0, int(max_candidates))
+        selected: list[dict[str, Any]] = []
+        seen_activation_signatures: set[str] = set()
+
+        def add_distinct(candidates: Iterable[dict[str, Any]], count: int) -> None:
+            for row in candidates:
+                if count <= 0 or len(selected) >= limit:
+                    return
+                signature = str(row["activation_signature_sha256"])
+                if signature in seen_activation_signatures:
+                    continue
+                seen_activation_signatures.add(signature)
+                selected.append(row)
+                count -= 1
+
+        positive_target = (limit + 1) // 2
+        negative_target = limit // 2
+        add_distinct(
+            (row for row in rows if row["proposal_valence"] == "positive"),
+            positive_target,
+        )
+        add_distinct(
+            (row for row in rows if row["proposal_valence"] == "negative"),
+            negative_target,
+        )
+        add_distinct(rows, limit - len(selected))
+        selected.sort(
+            key=lambda row: (
+                float(row["proposal_score"]),
+                int(row["support"]),
+                str(row["candidate_id"]),
+            ),
+            reverse=True,
+        )
+        return tuple(selected)
 
     def matched_random_shared_composite_candidates(
         self,

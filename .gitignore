@@ -53,3 +53,9 @@ signatures/
 
 # Full native KRK graph/event trace; commit the hash-linked compact summary instead.
 reports/autogrowth/native_from_scratch/r0_r1_balanced96_240_seed_20260719.json
+
+# Full structural KRK smoke traces; commit compact summary/audit only.
+reports/autogrowth/native_from_scratch/r1_structural_smoke_seed_20260721.json
+reports/autogrowth/native_from_scratch/r1_structural_smoke_seed_20260721_progress.json
+reports/autogrowth/native_from_scratch/r1_structural_consolidation_smoke_seed_20260719.json
+reports/autogrowth/native_from_scratch/r1_structural_consolidation_smoke_seed_20260719_progress.json
