@@ -271,6 +271,110 @@ def test_frozen_policy_token_full_arm_matches_live_formal_with_cache_hits(
     assert token_credit.snapshot() == live_credit.snapshot()
 
 
+def test_native_stem_composite_uses_graph_and_separates_correlation_from_causation() -> None:
+    graph = _graph()
+    board = chess.Board(MATE_ONE_FEN)
+    rows = []
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        triplet_id = graph.ensure_triplet(board, move, stage="composite_test")
+        atoms = {
+            node_id
+            for node_id in graph.triplet_nodes[triplet_id]
+            if graph.graph.nodes[node_id].meta.get("shared_feature_atom")
+        }
+        rows.append((move, triplet_id, atoms))
+
+    selected = None
+    for first_move, first_triplet, first_atoms in rows:
+        for second_move, _second_triplet, second_atoms in rows:
+            common = sorted(first_atoms & second_atoms)
+            first_only = sorted(first_atoms - second_atoms)
+            if first_move != second_move and common and first_only:
+                selected = (
+                    first_move,
+                    first_triplet,
+                    second_move,
+                    (common[0], first_only[0]),
+                )
+                break
+        if selected is not None:
+            break
+    assert selected is not None
+    first_move, first_triplet, contrast_move, members = selected
+
+    composite_id = graph.materialize_shared_composite(
+        members,
+        (first_triplet,),
+        stage="composite_test",
+    )
+    cell = graph.composite_cells[composite_id]
+    assert cell.state.name == "TRIAL"
+    assert cell.is_composition is True
+    assert tuple(cell.children) == tuple(sorted(members))
+    assert graph.graph.nodes[composite_id].meta["confirm_policy"] == "k_of_n"
+    assert graph.graph.nodes[composite_id].meta["confirm_k"] == 2
+
+    graph.confirm_candidate(
+        board,
+        triplet_id=first_triplet,
+        move_uci=first_move.uci(),
+    )
+    assert graph.graph.nodes[composite_id].state.name in {"TRUE", "CONFIRMED"}
+    graph.apply_intrinsic_td(
+        board,
+        first_move,
+        td_error=1.0,
+        stage_diagnostic="composite_test",
+    )
+    assert cell.candidate_stats.relevance_stats.activation_count == 1
+    assert cell.candidate_stats.credit_stats.positive_correlation == 1
+    assert cell.candidate_stats.credit_stats.total_interventions == 0
+    assert cell.candidate_stats.decision(xp=cell.xp) == "trial"
+
+    graph.confirm_candidate(
+        board,
+        triplet_id=first_triplet,
+        move_uci=contrast_move.uci(),
+    )
+    assert graph.graph.nodes[composite_id].state.name == "FAILED"
+
+    graph.confirm_candidate(
+        board,
+        triplet_id=first_triplet,
+        move_uci=first_move.uci(),
+    )
+    enabled_score = graph.confirm_candidate(
+        board,
+        triplet_id=first_triplet,
+        move_uci=first_move.uci(),
+    )["selected_score"]
+    assert graph.graph.nodes[composite_id].state.name in {"TRUE", "CONFIRMED"}
+    assert graph._confirmed_composite_score(first_triplet)[0] > 0.0
+    graph.set_composite_enabled(composite_id, enabled=False)
+    disabled_score = graph.confirm_candidate(
+        board,
+        triplet_id=first_triplet,
+        move_uci=first_move.uci(),
+    )["selected_score"]
+    assert enabled_score is not None and disabled_score is not None
+    assert enabled_score > disabled_score
+
+    for cycle in range(5):
+        assert graph.record_composite_intervention(
+            composite_id,
+            enabled_return=1.0,
+            disabled_return=0.0,
+            cycle=cycle,
+        ) == "positive"
+    assert cell.candidate_stats.credit_stats.positive_intervention == 5
+    assert cell.candidate_stats.decision(xp=cell.xp) == "mature"
+
+    restored = pickle.loads(pickle.dumps(graph, protocol=5))
+    assert composite_id in restored.composite_cells
+    assert restored.composite_member_ids[composite_id] == tuple(sorted(members))
+    assert restored.to_dict()["composite_candidate_count"] == 1
+
+
 def test_r1_interval_snapshot_resume_matches_uninterrupted(tmp_path) -> None:
     base_graph = _graph()
     base_credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
