@@ -34,6 +34,39 @@ The curriculum was therefore run in meaningful pieces. What was missing was a
 persistent outward chain whose intermediate reward is emitted by the mature graph
 itself.
 
+## Historical coverage lesson -- do not reinvent this again
+
+The February Stage-0/Stage-1 sequence already found that aggregate Mate-in-1
+training under-covered corners. Commit `a8ea24a` added failure counts by king
+region and corner, a generator target for each of a1/a8/h1/h8, and an option to
+balance Stage-0 samples across those four corners. The same commit records
+Stage 0 and 1 at 100%, with the compiled topology growing from 549 nodes/1,622
+edges/60 actuators to 813 nodes/2,752 edges/81 actuators relative to `f69f858`.
+The exact successful command was not committed, so balanced-corner use is a
+strong historical inference, not a proven run parameter.
+
+That old result is curriculum/topology evidence, not purity evidence. It trained
+through `KRKTeacher.label_transitions`, seeded goal sensors, and a prototype
+goal bank. None of those teacher labels or goal-distance rewards may be copied
+into the native intrinsic learner. The transferable lesson is to expose rare
+geometric/tactical families deliberately, rebuild dependent child/parent
+experience, and permit useful topology to regrow instead of repeating epochs on
+an under-resolved pool.
+
+The later Phase 2.1c result (`31e85b4`) independently found that 15/15 fresh
+Mate-in-1 false negatives shared one corner-plus-knight-support signature. A
+manually materialized AND branch under the king-support OR then reached
+precision/recall 1.00/1.00 on multiple fresh sets. This certifies that clustered
+misses can require a composite conjunction, but it does not certify autonomous
+discovery because the branch was written into code.
+
+Central operational rule: classify stable misses by general, symmetry-aware
+motif; preregister balanced experience strata; retrain the persistent chain with
+outcome/child-value credit only; and gate every stratum separately. If balanced
+experience still plateaus, require ReCoN growth to discover the conjunction and
+compare it with matched random growth. Never patch the heldout move or hand-code
+the historical corner branch into the pure run.
+
 ## Required outward ladder
 
 Use one persistent graph and schedule positions only; stage names never enter the
@@ -53,7 +86,7 @@ replay, safety, move efficiency, and causal ablation gates pass. Curriculum
 generators may use geometry to schedule experience, but geometry cannot supply
 credit.
 
-## Immediate next work package
+## Original implementation contract
 
 1. Build one runner that starts a TG26p-style native graph with root/genome only
    and uses the generic intrinsic-credit kernel. Add tripwires for zero learned
@@ -73,10 +106,10 @@ credit.
    safety, and move-efficiency gates across seeds.
 5. If R0/R1 passes, continue the same graph to R2 edge-killbox. Grow its nonlinear
    `AVAILABLE` topology from real positive/negative outcomes inside the ladder,
-The live implementation/result boundary is maintained in
-`docs/autogrowth/NATIVE_INTRINSIC_KRK_STATUS.md`.
-
    then repeat the causal gates at every outward rung.
+
+The live implementation/result boundary and actual next experiment are maintained
+in `docs/autogrowth/NATIVE_INTRINSIC_KRK_STATUS.md`.
 
 The complete run contract is
 `docs/autogrowth/NATIVE_FROM_SCRATCH_KRK_PLAN.md`.
