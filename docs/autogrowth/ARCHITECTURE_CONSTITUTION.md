@@ -64,6 +64,10 @@ the learner may not see the schedule label or solution.
 - Parent first-move correctness and child completion are reported separately.
 - Repeated selection data are development data. Regression is one-touch only
   after configuration freeze; final test remains untouched.
+- An exposed failure is retired from confirmation but retained as learner
+  counterexample/replay experience. Excluding it and its symmetries from the
+  entire ecology may define a different engineering pool, but cannot demonstrate
+  that the learner adapted to the failure.
 - Checkpoints are immutable and fingerprint source code, commit, dependencies,
   behavior configuration, pools, and frozen source state.
 - One seed or row-level significance cannot establish a training-level causal

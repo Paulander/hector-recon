@@ -34,8 +34,11 @@ The identical trained graph is additionally evaluated with child priority off.
 5. exact virtual verification + learned value (prior upper bound);
 6. exact virtual verification + zero value (call/availability-matched);
 7. exact virtual verification + constant placebo value;
-8. executed real child rollout + learned value;
-9. exact verification + learned value with hierarchy-edge scoring disabled.
+8. exact verification + learned value with hierarchy-edge scoring disabled.
+
+The originally listed `real_child_rollout` arm was removed on 2026-07-12 after
+external audit showed that it executed the same copied-board terminal probe as
+virtual verification and therefore was a semantic duplicate, not a real episode.
 
 ## Primary measurements
 

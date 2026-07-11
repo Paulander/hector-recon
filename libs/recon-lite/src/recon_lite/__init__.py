@@ -10,6 +10,11 @@ from .engine import ActivationMode, EngineConfig, ReConEngine
 from .formal_engine import EdgeMessage, FormalMessage, FormalReConEngine
 from .graph import Graph, LinkType, Node, NodeState, NodeType
 from .logger import RunLogger
+from .robust_return import (
+    ReturnEstimate,
+    RobustReturnConfig,
+    RobustReturnMemory,
+)
 from .trace_db import LearningEvent
 
 __all__ = [
@@ -26,5 +31,8 @@ __all__ = [
     "NodeState",
     "NodeType",
     "ReConEngine",
+    "ReturnEstimate",
+    "RobustReturnConfig",
+    "RobustReturnMemory",
     "RunLogger",
 ]

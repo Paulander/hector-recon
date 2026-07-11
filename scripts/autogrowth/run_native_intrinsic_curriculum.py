@@ -58,11 +58,7 @@ def main() -> int:
     parser.add_argument("--r0-replay-per-r1-epoch", type=int, default=defaults.r0_replay_per_r1_epoch)
     parser.add_argument(
         "--availability",
-        choices=(
-            "prototype_gate",
-            "virtual_frame_verified",
-            "real_child_rollout",
-        ),
+        choices=("prototype_gate", "virtual_frame_verified"),
         default=defaults.r0_availability_mode,
     )
     parser.add_argument(

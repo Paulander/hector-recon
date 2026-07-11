@@ -568,6 +568,7 @@ class IntrinsicCreditEngine:
         terminal_kind: Optional[str] = None,
         terminal_value: Optional[float] = None,
         real_step: bool = True,
+        prediction_override: Optional[float] = None,
     ) -> CreditEvent:
         """Apply one real/imagined transition and return its local TD signal."""
 
@@ -591,7 +592,13 @@ class IntrinsicCreditEngine:
             immediate += self._terminal_value(terminal_kind)
 
         successor_value = 0.0 if signal is None else signal.value
-        predicted = decision.fast_value
+        predicted = (
+            decision.fast_value
+            if prediction_override is None
+            else float(prediction_override)
+        )
+        if not math.isfinite(predicted):
+            raise ValueError("prediction_override must be finite")
         td_error = self._clip(immediate + self.config.gamma * successor_value - predicted)
 
         updated: dict[str, float] = {}

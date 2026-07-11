@@ -304,3 +304,31 @@ def test_outcome_calibrated_prototype_gate_learns_nonlinear_xor_boundary() -> No
     assert gate.validation_metrics["false_positive"] == 0
     assert gate.confirms((0.02, 0.02)) is True
     assert gate.confirms((0.02, 0.98)) is False
+
+
+def test_transition_can_subtract_exact_external_graph_prediction() -> None:
+    engine = IntrinsicCreditEngine(_config())
+    engine.register("chosen_branch", initial_fast_value=0.75)
+
+    engine.begin_episode()
+    event = engine.transition(
+        "chosen_branch",
+        terminal_value=0.0,
+        prediction_override=-0.5,
+    )
+
+    assert event.predicted_value == -0.5
+    assert event.td_error > 0.0
+    assert event.updated_values["chosen_branch"] > 0.75
+
+
+def test_transition_rejects_nonfinite_prediction_override() -> None:
+    engine = IntrinsicCreditEngine(_config())
+    engine.register("chosen_branch")
+
+    with pytest.raises(ValueError, match="prediction_override must be finite"):
+        engine.transition(
+            "chosen_branch",
+            terminal_value=0.0,
+            prediction_override=float("nan"),
+        )

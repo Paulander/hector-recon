@@ -1,0 +1,32 @@
+{
+  "active_r1_arm": {
+    "arm_name": "learned_gate_learned_value",
+    "child_handoff_count": 0,
+    "epoch": 30,
+    "r0_retention_accuracy": 1.0,
+    "resumed_from_snapshot": false,
+    "snapshot_path": "snapshots/autogrowth/r0_r1_mechanistic_factorial_retired_r0_seed_20260719/seed_20260719_bc2ed58f99188954_learned_gate_learned_value.pkl",
+    "validation_conversion_rate": 0.0
+  },
+  "completed_r1_arms": {
+    "no_bootstrap": {
+      "child_handoff_count": 0,
+      "joint_mastery": false,
+      "r0_replay_episode_count": 0,
+      "r0_retention_accuracy": 1.0,
+      "regression_conversion_rate": 0.0,
+      "stopped_epoch": 40,
+      "training_episodes": 640,
+      "validation_conversion_rate": 0.0
+    }
+  },
+  "ecology_uuid": "3e496e209b96ae33fd410781",
+  "r0": {
+    "availability_mode": "virtual_frame_verified",
+    "pass": true,
+    "regression_accuracy": 1.0,
+    "stopped_epoch": 8,
+    "validation_accuracy": 1.0
+  },
+  "schema_version": "krk_native_intrinsic_r0_r1_progress.v0"
+}

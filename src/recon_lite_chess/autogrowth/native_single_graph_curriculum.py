@@ -284,6 +284,7 @@ class NativeReConKRKGraph:
         return {
             "selected_move": None if not candidates else candidates[0][1],
             "selected_triplet": None if not candidates else candidates[0][2],
+            "selected_score_raw": None if not candidates else float(candidates[0][0]),
             "selected_score": None if not candidates else round(float(candidates[0][0]), 6),
             "candidate_triplet_count": 1,
             "confirmed_candidate_count": len(candidates),
@@ -359,6 +360,7 @@ class NativeReConKRKGraph:
         return {
             "selected_move": candidates[0][1],
             "selected_triplet": candidates[0][2],
+            "selected_score_raw": float(candidates[0][0]),
             "selected_score": round(float(candidates[0][0]), 6),
             "candidate_triplet_count": len(candidate_triplets),
             "confirmed_candidate_count": len(candidates),
@@ -450,6 +452,7 @@ class NativeReConKRKGraph:
         return {
             "selected_move": candidates[0][1],
             "selected_triplet": candidates[0][2],
+            "selected_score_raw": float(candidates[0][0]),
             "selected_score": round(float(candidates[0][0]), 6),
             "candidate_triplet_count": len(candidate_pairs),
             "unique_candidate_triplet_count": len(unique_triplets),

@@ -68,6 +68,38 @@ def test_tg26o_native_runtime_learns_mate_one_smoke() -> None:
     assert network.to_dict()["runtime_choice_count"] > 0
 
 
+def test_observed_td_moves_the_exact_confirmed_policy_score() -> None:
+    network = NativeReConKRKGraph(
+        config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            train_repetitions=1,
+            max_ticks=80,
+        )
+    )
+    board = chess.Board(MATE_ONE_FEN)
+    move = sorted(board.legal_moves, key=lambda item: item.uci())[0]
+    triplet_id = network.ensure_triplet(board, move, stage="policy_credit_identity")
+
+    before = network.confirm_candidate(
+        board, triplet_id=triplet_id, move_uci=move.uci()
+    )
+    before_score = float(before["selected_score_raw"])
+    network.apply_intrinsic_td(
+        board,
+        move,
+        td_error=0.05,
+        stage_diagnostic="policy_credit_identity",
+    )
+    after = network.confirm_candidate(
+        board, triplet_id=triplet_id, move_uci=move.uci()
+    )
+    after_score = float(after["selected_score_raw"])
+
+    assert before["selected_score"] == round(before_score, 6)
+    assert after["selected_score"] == round(after_score, 6)
+    assert after_score > before_score
+
+
 def test_tg26p_indexed_scheduler_uses_native_choice_and_skips_irrelevant_triplets() -> None:
     indexed = NativeReConKRKGraph(config=NativeSingleGraphConfig(include_symmetries=False, train_repetitions=1, max_ticks=80, indexed_scheduler=True))
     board = chess.Board(MATE_ONE_FEN)

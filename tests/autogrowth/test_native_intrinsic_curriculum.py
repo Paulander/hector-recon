@@ -101,7 +101,6 @@ def test_mechanistic_factorial_names_every_causal_factor_and_disables_growth() -
         "exact_verify_learned_value",
         "exact_verify_zero_value",
         "exact_verify_constant_value",
-        "real_rollout_learned_value",
         "exact_verify_learned_value_no_hierarchy_score",
     }
     assert all(not arm.composition_enabled for arm in arms)
@@ -1060,35 +1059,6 @@ def test_virtual_frame_availability_uses_child_move_without_grounding() -> None:
         r0_child_triplet_ids=frozenset(graph.triplet_ids),
     )
     assert hierarchical == mating_move
-
-
-def test_real_child_rollout_availability_uses_observed_world_terminal() -> None:
-    graph = _graph()
-    board = chess.Board(MATE_ONE_FEN)
-    mating_move = next(
-        move
-        for move in board.legal_moves
-        if _execute_white_and_observe(board, move) == "mate"
-    )
-    graph.apply_intrinsic_td(
-        board,
-        mating_move,
-        td_error=1.0,
-        stage_diagnostic="R0_real_rollout_test",
-    )
-
-    available, response = _r0_available(
-        graph,
-        None,
-        board,
-        mode="real_child_rollout",
-    )
-
-    assert available is True
-    assert response["selected_move"] == mating_move.uci()
-    assert response["availability_source"] == "executed_mature_child_world_rollout"
-    assert response["observed_child_rollout_terminal"] == "mate"
-    assert response["child_rollout_is_real_environment_step"] is True
 
 
 def test_r0_replay_uses_graph_selected_action_and_real_outcome() -> None:

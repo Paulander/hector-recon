@@ -1,0 +1,62 @@
+{
+  "schema_version": "krk_native_mechanistic_factorial_paused.v1",
+  "status": "paused_after_external_autonomy_audit",
+  "source_commit": "06b4e8d",
+  "confirmation_claimed": false,
+  "causal_positive_claimed": false,
+  "advance_to_r2": false,
+  "pool_hash_prefix": "bc2ed58f99188954",
+  "foundation": {
+    "excluded_retired_failure_rows_from_entire_ecology": true,
+    "interpretation": "named engineering foundation; not learner adaptation to excluded failures",
+    "stopped_epoch": 8,
+    "validation": "16/16",
+    "regression": "16/16"
+  },
+  "completed_arms": {
+    "no_bootstrap": {
+      "episodes": 640,
+      "stopped_epoch": 40,
+      "child_handoffs": 0,
+      "validation": "0/16",
+      "regression": "0/16",
+      "r0_retention": "16/16",
+      "latest_snapshot_sha256": "6d29e2c7c799a53ee0ceb97d4dac2c1f65b81c0b4013d8f7910f1889e417eca9"
+    }
+  },
+  "partial_arms": {
+    "learned_gate_learned_value": {
+      "latest_immutable_epoch": 30,
+      "availability_queries": 466,
+      "availability_positives": 0,
+      "child_handoffs": 0,
+      "successor_value_sum": 0.0,
+      "validation": "0/16",
+      "r0_retention": "16/16",
+      "latest_snapshot_sha256": "5770826ca0349bba41729d378317a81c4c0514f63e34564fc2ce4e0485a4c472"
+    }
+  },
+  "failed_unexcluded_foundation": {
+    "artifact": "r0_r1_mechanistic_factorial_seed_20260719.json",
+    "artifact_sha256": "320e1de62b3cd8d9900a42b56d70053ef7d2e1e999b3f5d57140e7b727c9bdb4",
+    "stopped_epoch": 48,
+    "validation": "15/16",
+    "regression": "15/16",
+    "interpretation": "hard known cases remained unsolved; restoring exclusions changed the problem rather than teaching the learner"
+  },
+  "pause_reasons": [
+    "learned gate had zero coverage over 466 real scheduled successor queries",
+    "real_child_rollout was behaviorally identical to virtual verification",
+    "routing-on evaluation was duplicated",
+    "expected-reply training was mismatched to worst-reply evaluation",
+    "policy score and TD prediction were different quantities",
+    "outer laboratory still owned the developmental loop"
+  ],
+  "next_track": "generic_core_science",
+  "next_tests": [
+    "policy-score/TD-prediction identity",
+    "rare refutation lower-tail learning",
+    "delayed fork persistent eligibility",
+    "anonymous online XOR autogrowth"
+  ]
+}

@@ -199,7 +199,6 @@ class R1MechanisticArm:
             "prototype_gate",
             "virtual_frame_verified",
             "shuffled_prototype_gate",
-            "real_child_rollout",
         }:
             raise ValueError(f"unsupported R1 availability mode: {self.availability_mode}")
         if self.child_value_mode not in {"learned", "zero", "constant"}:
@@ -272,13 +271,6 @@ def _mechanistic_r1_arms(config: NativeIntrinsicCurriculumConfig) -> tuple[R1Mec
             bootstrap_enabled=True,
             availability_mode="virtual_frame_verified",
             child_value_mode="constant",
-            mature_child_priority=True,
-        ),
-        R1MechanisticArm(
-            name="real_rollout_learned_value",
-            bootstrap_enabled=True,
-            availability_mode="real_child_rollout",
-            child_value_mode="learned",
             mature_child_priority=True,
         ),
         R1MechanisticArm(
@@ -690,10 +682,11 @@ def run_native_intrinsic_curriculum(
             "mechanistic_factorial_enabled": cfg.r1_mechanistic_factorial,
             "exact_virtual_verification_is_oracle_control_not_autonomy_evidence": True,
             "prototype_gate_is_learned_but_host_side": True,
-            "real_child_rollout_uses_observed_environment_terminal": True,
             "composition_disabled_in_mechanistic_factorial": (
                 cfg.r1_mechanistic_factorial
             ),
+            "td_prediction_source": "exact_unrounded_confirmed_graph_action_score",
+            "policy_score_and_td_prediction_identical": True,
             "virtual_frames_create_grounding": False,
             "r0_replay_cache_used_as_provider": False,
             "r0_parameters_frozen_for_r1": cfg.freeze_r0_parameters_for_r1,
@@ -1160,7 +1153,7 @@ def _train_r0(
     for epoch in range(config.r0_epochs):
         for position_index, fen in enumerate(train_fens):
             board = chess.Board(fen)
-            move, triplet_id, confirmed = _scheduled_confirmed_action(
+            move, triplet_id, confirmed, graph_prediction = _scheduled_confirmed_action(
                 graph,
                 board,
                 schedule_index=epoch + position_index,
@@ -1177,6 +1170,7 @@ def _train_r0(
                     Responsibility(R0_COMPETENCE_ID, parent_distance=1),
                 ),
                 terminal_kind=terminal_kind,
+                prediction_override=graph_prediction,
             )
             graph.apply_intrinsic_td(
                 board,
@@ -1523,7 +1517,6 @@ def _run_r1_arm(
             "availability_queries": 0,
             "availability_positives": 0,
             "successor_value_sum": 0.0,
-            "real_child_rollouts": 0,
         }
         reply_orbits: set[tuple[str, str, str]] = set()
         reply_exposure_counts: dict[tuple[str, str], int] = {}
@@ -1586,7 +1579,7 @@ def _run_r1_arm(
     for epoch in range(start_epoch, epoch_budget):
         for position_index, fen in enumerate(pools.r1_train):
             board = chess.Board(fen)
-            move, triplet_id, confirmed = _scheduled_confirmed_action(
+            move, triplet_id, confirmed, graph_prediction = _scheduled_confirmed_action(
                 graph,
                 board,
                 schedule_index=epoch + position_index,
@@ -1643,9 +1636,6 @@ def _run_r1_arm(
                             response["availability_after_shuffle"] = bool(available)
                         counters["availability_queries"] += 1
                         counters["availability_positives"] += int(available)
-                        counters["real_child_rollouts"] += int(
-                            arm.availability_mode == "real_child_rollout"
-                        )
                         if available:
                             successor_ids = (R0_COMPETENCE_ID,)
                             counters["child_handoffs"] += 1
@@ -1659,6 +1649,7 @@ def _run_r1_arm(
                 ),
                 successor_ids=successor_ids,
                 terminal_kind=terminal_kind,
+                prediction_override=graph_prediction,
             )
             counters["successor_value_sum"] += float(event.successor_value)
             graph.apply_intrinsic_td(
@@ -1690,14 +1681,7 @@ def _run_r1_arm(
             arm.composition_enabled
             and epoch_number in set(config.r1_composite_proposal_epochs)
         ):
-            r1_triplet_ids = {
-                triplet_id
-                for triplet_id in graph.triplet_ids
-                if triplet_id not in r0_child_triplet_ids
-                and str(
-                    graph.graph.nodes[triplet_id].meta.get("stage_diagnostic", "")
-                ).startswith("R1_")
-            }
+            r1_triplet_ids = set(graph.triplet_ids).difference(r0_child_triplet_ids)
             proposals = graph.rank_shared_composite_candidates(
                 r1_triplet_ids,
                 max_candidates=config.r1_composite_max_candidates,
@@ -1904,35 +1888,46 @@ def _run_r1_arm(
         r0_child_triplet_ids=evaluation_child_triplet_ids,
         child_dispatch_cache=evaluation_child_dispatch_cache,
     )
-    routing_ablation: dict[str, Any] = {}
-    for routing_name, routing_ids in (
-        ("child_priority_off", None),
-        ("child_priority_on", r0_child_triplet_ids),
-    ):
-        routing_validation = _evaluate_r1(
+    current_routing_name = (
+        "child_priority_on"
+        if evaluation_child_triplet_ids is not None
+        else "child_priority_off"
+    )
+    routing_ablation: dict[str, Any] = {
+        current_routing_name: {
+            "validation": final_validation,
+            "regression": final_regression,
+            "reused_main_evaluation": True,
+        }
+    }
+    alternate_routing_name = (
+        "child_priority_off"
+        if evaluation_child_triplet_ids is not None
+        else "child_priority_on"
+    )
+    alternate_ids = (
+        None if evaluation_child_triplet_ids is not None else r0_child_triplet_ids
+    )
+    alternate_cache = child_dispatch_cache if alternate_ids is not None else None
+    routing_ablation[alternate_routing_name] = {
+        "validation": _evaluate_r1(
             graph,
             pools.r1_validation,
             strata=pools.r1_validation_strata,
             max_samples=0,
-            r0_child_triplet_ids=routing_ids,
-            child_dispatch_cache=(
-                child_dispatch_cache if routing_ids is not None else None
-            ),
-        )
-        routing_regression = _evaluate_r1(
+            r0_child_triplet_ids=alternate_ids,
+            child_dispatch_cache=alternate_cache,
+        ),
+        "regression": _evaluate_r1(
             graph,
             pools.r1_regression,
             strata=pools.r1_regression_strata,
             max_samples=0,
-            r0_child_triplet_ids=routing_ids,
-            child_dispatch_cache=(
-                child_dispatch_cache if routing_ids is not None else None
-            ),
-        )
-        routing_ablation[routing_name] = {
-            "validation": routing_validation,
-            "regression": routing_regression,
-        }
+            r0_child_triplet_ids=alternate_ids,
+            child_dispatch_cache=alternate_cache,
+        ),
+        "reused_main_evaluation": False,
+    }
     _restore_disabled_composites(graph, heldout_disabled_state)
     return {
         "training": {
@@ -1957,7 +1952,6 @@ def _run_r1_arm(
             ),
             "shuffled_schedule": shuffled_schedule_audit,
             "successor_value_sum": counters["successor_value_sum"],
-            "real_child_rollout_count": counters["real_child_rollouts"],
             "virtual_frame_query_count": counters["virtual_frame_queries"],
             "r0_replay_episode_count": counters["replay_episodes"],
             "r0_replay_mate_count": counters["replay_mates"],
@@ -2141,6 +2135,7 @@ def _replay_r0(
             else graph.audit_choice(board)
         )
         selected = audit.get("selected_move")
+        graph_prediction = float(audit.get("selected_score_raw") or 0.0)
         if selected is None:
             confirmation_failures += 1
             continue
@@ -2165,6 +2160,7 @@ def _replay_r0(
                 Responsibility(R0_COMPETENCE_ID, parent_distance=1),
             ),
             terminal_kind=terminal_kind,
+            prediction_override=graph_prediction,
         )
         graph.apply_intrinsic_td(
             board,
@@ -2253,7 +2249,7 @@ def _scheduled_confirmed_action(
     *,
     schedule_index: int,
     stage_diagnostic: str,
-) -> tuple[chess.Move, str, bool]:
+) -> tuple[chess.Move, str, bool, float]:
     legal = tuple(sorted(board.legal_moves, key=lambda item: item.uci()))
     if not legal:
         raise ValueError("training position has no legal action")
@@ -2265,7 +2261,8 @@ def _scheduled_confirmed_action(
         move_uci=move.uci(),
     )
     confirmed = audit.get("selected_move") == move.uci()
-    return move, triplet_id, bool(confirmed)
+    graph_prediction = float(audit.get("selected_score_raw") or 0.0)
+    return move, triplet_id, bool(confirmed), graph_prediction
 
 
 def _execute_white_and_observe(board: chess.Board, move: chess.Move) -> str | None:
@@ -2622,25 +2619,9 @@ def _r0_available(
         response["availability_source"] = "mature_child_selected_virtual_frame"
         response["virtual_frame_terminal_grounding_granted"] = False
         return bool(response["observed_immediate_mate"]), response
-    if normalized == "real_child_rollout":
-        response = _policy_response(
-            graph,
-            board,
-            observe_outcome=False,
-            allowed_triplets=allowed_triplets,
-        )
-        selected_uci = response.get("selected_move")
-        terminal_kind = None
-        if selected_uci is not None:
-            move = chess.Move.from_uci(str(selected_uci))
-            terminal_kind = _execute_white_and_observe(board, move)
-        response["availability_source"] = "executed_mature_child_world_rollout"
-        response["observed_child_rollout_terminal"] = terminal_kind
-        response["child_rollout_is_real_environment_step"] = True
-        return terminal_kind == "mate", response
     raise ValueError(
         "r0_availability_mode must be prototype_gate, shuffled_prototype_gate, "
-        "virtual_frame_verified, or real_child_rollout"
+        "or virtual_frame_verified"
     )
 
 

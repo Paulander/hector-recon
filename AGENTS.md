@@ -17,6 +17,35 @@ Historical report/control-plane work is archived under `archive/pre_autogrowth_2
 - Do not stop at "needs review" unless the next action is genuinely unsafe, destructive, or blocked by missing information.
 - Do not recreate the old report-gate loop. New reports should be minimal summaries of actual runs.
 
+## Epistemic Governance
+
+Truth and identifiability outrank visible progress.
+
+Before changing a scientific mechanism, state and freeze:
+
+- one hypothesis and its strongest null;
+- the learner-versus-laboratory information boundary;
+- exactly one changed scientific factor;
+- predicted outcomes by arm;
+- a kill criterion;
+- a compute/change budget;
+- a frozen transfer test.
+
+A negative result completes the work package. It does not authorize an automatic
+repair, new feature, pool exclusion, curriculum change, or next mechanism. The
+builder may not approve its own result. Viewed evaluation rows become
+development data permanently. Retiring them from confirmation does not remove
+them from the learning ecology; learner adaptation must replay the failure and
+confirmation must move to fresh sealed rows.
+
+Keep three tracks explicit and never transfer claims between them:
+
+1. **KRK engineering:** tune freely to solve KRK; make no autonomy claim.
+2. **Generic-core science:** freeze the learner and test developmental laws in
+   randomized non-chess environments.
+3. **Sealed confirmation/transfer:** fresh data, frozen code, independent
+   execution and adjudication.
+
 ## Active Research Loop
 
 The loop under test is:
