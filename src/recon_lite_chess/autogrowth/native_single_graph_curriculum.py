@@ -60,6 +60,7 @@ class NativeSingleGraphConfig:
     max_shared_atom_candidates_per_choice: int = 12
     prune_redundant_exact_terminals: bool = False
     score_action_pattern_atoms: bool = False
+    score_hierarchy_edge_weights: bool = False
     terminal_score_normalization: str = "mean"
     max_mate1_positions: int | None = None
     max_mate2_positions: int | None = None
@@ -1064,6 +1065,7 @@ class NativeReConKRKGraph:
 
     def _confirmed_terminal_score(self, triplet_id: str) -> tuple[float, int]:
         score = 0.0
+        ids = _TripletNodeIds(triplet_id)
         count = 0
         for node_id in self.triplet_nodes.get(triplet_id, set()):
             node = self.graph.nodes[node_id]
@@ -1081,6 +1083,23 @@ class NativeReConKRKGraph:
             if node.state not in (NodeState.TRUE, NodeState.CONFIRMED):
                 continue
             score += float(node.meta.get("local_weight", 0.0))
+            if self.config.score_hierarchy_edge_weights:
+                parent_id = {
+                    "before_feature": ids.before_script,
+                    "delta_feature": ids.action_script,
+                    "projection_feature": ids.action_script,
+                    "after_feature": ids.after_script,
+                }[str(node.meta["role"])]
+                hierarchy_edge = self.graph.get_edge(
+                    parent_id,
+                    node.nid,
+                    LinkType.SUB,
+                )
+                if (
+                    hierarchy_edge is not None
+                    and hierarchy_edge.meta.get("trainable")
+                ):
+                    score += float(hierarchy_edge.w)
             count += 1
         return score, count
 

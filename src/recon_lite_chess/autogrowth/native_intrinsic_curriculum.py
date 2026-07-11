@@ -11,7 +11,7 @@ the existing content-blind Python host operation and is reported as such.
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 import copy
 import hashlib
 import json
@@ -300,6 +300,10 @@ def run_native_intrinsic_curriculum(
     )
     if cfg.run_r1 and r0_pass and availability_ready:
         r0_graph = copy.deepcopy(graph)
+        r0_graph.config = replace(
+            r0_graph.config,
+            score_hierarchy_edge_weights=True,
+        )
         r0_credit = copy.deepcopy(credit)
         arm_names = ("full_intrinsic", "no_bootstrap")
         if cfg.run_redundant_child_ablation:
@@ -468,6 +472,7 @@ def _graph_config(cfg: NativeIntrinsicCurriculumConfig) -> NativeSingleGraphConf
         max_prototype_candidates_per_move=16,
         max_prototype_scan_triplets=512,
         score_action_pattern_atoms=True,
+        score_hierarchy_edge_weights=False,
         terminal_score_normalization="sqrt",
     )
 

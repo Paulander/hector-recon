@@ -1,0 +1,12 @@
+{
+  "completed_r1_arms": {},
+  "ecology_uuid": "229f59ec0a3e722f229bc7a1",
+  "r0": {
+    "availability_mode": "virtual_frame_verified",
+    "pass": false,
+    "regression_accuracy": 0.875,
+    "stopped_epoch": 48,
+    "validation_accuracy": 0.75
+  },
+  "schema_version": "krk_native_intrinsic_r0_r1_progress.v0"
+}

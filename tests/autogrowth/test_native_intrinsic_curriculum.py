@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import chess
+import pytest
+
+from recon_lite import LinkType
 
 from recon_lite_hector.learning import (
     IntrinsicCreditConfig,
@@ -37,6 +40,7 @@ def _graph() -> NativeReConKRKGraph:
             shared_projection_atoms=True,
             include_grouped_cache_terminals=False,
             score_action_pattern_atoms=True,
+            score_hierarchy_edge_weights=True,
         )
     )
 
@@ -150,6 +154,62 @@ def test_shared_triplet_is_evaluated_for_each_overlapping_current_move() -> None
 
     assert audit["candidate_triplet_count"] > audit["unique_candidate_triplet_count"]
     assert len({row["move"] for row in rows}) > 1
+    assert any(
+        row["move"] != mating_move.uci() and row["score"] > 0.0
+        for row in rows
+    )
+
+
+def test_hierarchy_score_uses_current_triplet_edge_for_shared_atom() -> None:
+    graph = _graph()
+    board = chess.Board(MATE_ONE_FEN)
+    first_move, second_move = list(board.legal_moves)[:2]
+    first_id = graph.ensure_triplet(board, first_move, stage="shared_parent_test")
+    second_id = graph.ensure_triplet(board, second_move, stage="shared_parent_test")
+    roles = {
+        "before_feature",
+        "delta_feature",
+        "after_feature",
+        "projection_feature",
+    }
+    shared_ids = [
+        node_id
+        for node_id in graph.triplet_nodes[first_id] & graph.triplet_nodes[second_id]
+        if graph.graph.nodes[node_id].meta.get("role") in roles
+    ]
+    assert shared_ids
+
+    def parent_id(triplet_id: str, role: str) -> str:
+        suffix = {
+            "before_feature": "before_script",
+            "delta_feature": "action_script",
+            "projection_feature": "action_script",
+            "after_feature": "after_script",
+        }[role]
+        return f"{triplet_id}_{suffix}"
+
+    for node_id in graph.triplet_nodes[second_id]:
+        node = graph.graph.nodes[node_id]
+        role = str(node.meta.get("role", ""))
+        node.meta["local_weight"] = 0.0
+        if role in roles:
+            edge = graph.graph.get_edge(parent_id(second_id, role), node_id, LinkType.SUB)
+            assert edge is not None
+            edge.w = 0.0
+    shared_id = shared_ids[0]
+    role = str(graph.graph.nodes[shared_id].meta["role"])
+    first_edge = graph.graph.get_edge(parent_id(first_id, role), shared_id, LinkType.SUB)
+    second_edge = graph.graph.get_edge(parent_id(second_id, role), shared_id, LinkType.SUB)
+    assert first_edge is not None and second_edge is not None
+    first_edge.w = 1.0
+    second_edge.w = -1.0
+
+    confirmation = graph.confirm_candidate(
+        board, triplet_id=second_id, move_uci=second_move.uci()
+    )
+    assert confirmation["selected_move"] == second_move.uci()
+    score, _ = graph._confirmed_terminal_score(second_id)
+    assert score == pytest.approx(-1.0)
 
 
 def test_virtual_frame_availability_uses_child_move_without_grounding() -> None:
