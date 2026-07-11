@@ -113,4 +113,21 @@ automatic rescue.
 
 ## Immediate implementation order
 
-1. Remove the fake rollout arm and duplicate evaluation.
+1. Removed the fake rollout arm and duplicate evaluation.
+2. Removed stage-label structural eligibility.
+3. Updated the exact graph action prediction rather than a disconnected triplet
+   value.
+4. Added and froze generic rare-refutation and delayed-credit component tests.
+5. Added the preregistered anonymous online-composition package and executed it
+   once after its implementation and runner were committed.
+
+The online-composition raw result met every frozen development gate: ranked beat
+matched random on 20/20 untouched evaluation sets, the median paired MSE
+advantage was 0.6776685605, mature hidden signal conjunctions appeared in 20/20
+ranked tasks, candidate budgets matched, and trial influence was zero. See
+`GENERIC_CORE_ONLINE_COMPOSITION_RESULT_20260712.md`.
+
+This does not reverse the audit verdict. It identifies one generic developmental
+law under a small isolated task. End-to-end autonomy remains unshown until this
+law participates in the actual perception/action/credit loop and survives frozen
+generic integration and independent confirmation.
