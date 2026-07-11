@@ -1,0 +1,626 @@
+{
+  "arms": {
+    "full_intrinsic_bootstrap": "Mature R0 child availability and learned intrinsic parent/edge credit are visible to R1 action selection.",
+    "no_bootstrap_control": "Identical graph, pools, update budget, and outcome credit, with mature-child bootstrap unavailable."
+  },
+  "execution_command": "uv run python scripts/autogrowth/run_native_intrinsic_curriculum.py --output reports/autogrowth/native_from_scratch/r1_highres_balanced240_seed_20260718.json --progress reports/autogrowth/native_from_scratch/r1_highres_balanced240_seed_20260718_progress.json --seed 20260718 --r0-train 24 --r0-validation 8 --r0-regression 8 --gate-train-decoys 8 --gate-validation-decoys 8 --gate-regression-decoys 8 --r1-train 48 --r1-validation 16 --r1-regression 16 --r1-pool-mode balanced_setup --r0-epochs 48 --r1-epochs 240 --r0-validation-interval 8 --r0-replay-per-r1-epoch 0 --max-samples 16 --availability virtual_frame_verified",
+  "fixed_config": {
+    "eta_fast": 0.2,
+    "eta_m3": 0.08,
+    "eta_slow": 1.0,
+    "freeze_r0_parameters_for_r1": true,
+    "mature_child_priority": true,
+    "max_generation_attempts": 500000,
+    "max_samples": 16,
+    "max_ticks": 80,
+    "min_grounding_evidence": 3,
+    "output_path": "reports/autogrowth/native_from_scratch/r1_highres_balanced240_seed_20260718.json",
+    "progress_path": "reports/autogrowth/native_from_scratch/r1_highres_balanced240_seed_20260718_progress.json",
+    "r0_availability_mode": "virtual_frame_verified",
+    "r0_epochs": 48,
+    "r0_gate_regression_decoy_count": 8,
+    "r0_gate_train_decoy_count": 8,
+    "r0_gate_validation_decoy_count": 8,
+    "r0_mastery_threshold": 1.0,
+    "r0_regression_count": 8,
+    "r0_replay_per_r1_epoch": 0,
+    "r0_train_count": 24,
+    "r0_validation_count": 8,
+    "r0_validation_interval": 8,
+    "r1_epochs": 240,
+    "r1_mastery_threshold": 1.0,
+    "r1_pool_mode": "balanced_setup",
+    "r1_regression_count": 16,
+    "r1_train_count": 48,
+    "r1_validation_count": 16,
+    "real_move_cost": 0.01,
+    "run_r1": true,
+    "run_redundant_child_ablation": false,
+    "seed": 20260718
+  },
+  "frozen_on": "2026-07-11",
+  "frozen_r1_pools": {
+    "regression": [
+      {
+        "fen": "3K4/k7/7R/8/8/8/8/8 w - - 0 1",
+        "stratum": "king_edge:left"
+      },
+      {
+        "fen": "8/8/8/6R1/8/2K5/8/1k6 w - - 0 1",
+        "stratum": "rook_barrier:bottom"
+      },
+      {
+        "fen": "k7/8/8/K7/8/8/4R3/8 w - - 0 1",
+        "stratum": "king_corner:a8"
+      },
+      {
+        "fen": "2R5/8/8/8/8/5K2/8/7k w - - 0 1",
+        "stratum": "king_corner:h1"
+      },
+      {
+        "fen": "8/8/8/4R3/8/3K4/8/3k4 w - - 0 1",
+        "stratum": "king_edge:bottom"
+      },
+      {
+        "fen": "3k4/8/2K5/8/8/8/2R5/8 w - - 0 1",
+        "stratum": "rook_barrier:top"
+      },
+      {
+        "fen": "R7/8/8/8/8/2K5/8/3k4 w - - 0 1",
+        "stratum": "rook_barrier:bottom"
+      },
+      {
+        "fen": "1k6/8/K7/8/8/4R3/8/8 w - - 0 1",
+        "stratum": "rook_barrier:top"
+      },
+      {
+        "fen": "8/7k/5K2/8/8/8/2R5/8 w - - 0 1",
+        "stratum": "rook_barrier:right"
+      },
+      {
+        "fen": "8/8/8/3R4/8/k7/2K5/8 w - - 0 1",
+        "stratum": "rook_barrier:left"
+      },
+      {
+        "fen": "8/8/8/8/8/2K5/4R3/k7 w - - 0 1",
+        "stratum": "king_corner:a1"
+      },
+      {
+        "fen": "2k5/8/3R4/K7/8/8/8/8 w - - 0 1",
+        "stratum": "king_edge:top"
+      },
+      {
+        "fen": "8/8/8/8/8/8/4K2k/5R2 w - - 0 1",
+        "stratum": "king_edge:right"
+      },
+      {
+        "fen": "5R2/k1K5/8/8/8/8/8/8 w - - 0 1",
+        "stratum": "rook_barrier:left"
+      },
+      {
+        "fen": "7k/8/8/6K1/8/1R6/8/8 w - - 0 1",
+        "stratum": "king_corner:h8"
+      },
+      {
+        "fen": "8/3R1K1k/8/8/8/8/8/8 w - - 0 1",
+        "stratum": "rook_barrier:right"
+      }
+    ],
+    "train": [
+      {
+        "fen": "2K5/k7/8/8/8/8/8/2R5 w - - 0 1",
+        "stratum": "rook_barrier:left"
+      },
+      {
+        "fen": "8/8/8/8/R7/4K3/8/5k2 w - - 0 1",
+        "stratum": "rook_barrier:bottom"
+      },
+      {
+        "fen": "8/8/8/8/4R1K1/8/8/7k w - - 0 1",
+        "stratum": "king_corner:h1"
+      },
+      {
+        "fen": "4k3/8/5K2/8/8/8/8/1R6 w - - 0 1",
+        "stratum": "rook_barrier:top"
+      },
+      {
+        "fen": "8/8/8/8/3R4/3K4/8/2k5 w - - 0 1",
+        "stratum": "rook_barrier:bottom"
+      },
+      {
+        "fen": "8/8/8/8/8/4R3/4K2k/8 w - - 0 1",
+        "stratum": "king_edge:right"
+      },
+      {
+        "fen": "3k4/8/5K2/8/2R5/8/8/8 w - - 0 1",
+        "stratum": "king_edge:top"
+      },
+      {
+        "fen": "2k5/8/8/2K5/8/8/1R6/8 w - - 0 1",
+        "stratum": "king_edge:top"
+      },
+      {
+        "fen": "8/8/R7/8/8/4K3/8/5k2 w - - 0 1",
+        "stratum": "rook_barrier:bottom"
+      },
+      {
+        "fen": "8/8/8/8/2RK4/8/8/3k4 w - - 0 1",
+        "stratum": "king_edge:bottom"
+      },
+      {
+        "fen": "2K5/k7/8/8/8/4R3/8/8 w - - 0 1",
+        "stratum": "rook_barrier:left"
+      },
+      {
+        "fen": "8/8/7k/5K2/3R4/8/8/8 w - - 0 1",
+        "stratum": "rook_barrier:right"
+      },
+      {
+        "fen": "3k4/8/4K3/8/8/8/8/1R6 w - - 0 1",
+        "stratum": "rook_barrier:top"
+      },
+      {
+        "fen": "8/8/1R6/7k/8/6K1/8/8 w - - 0 1",
+        "stratum": "king_edge:right"
+      },
+      {
+        "fen": "8/2K5/k7/8/8/8/6R1/8 w - - 0 1",
+        "stratum": "rook_barrier:left"
+      },
+      {
+        "fen": "8/1R6/8/8/8/7K/8/6k1 w - - 0 1",
+        "stratum": "rook_barrier:bottom"
+      },
+      {
+        "fen": "5R2/8/8/8/8/7k/5K2/8 w - - 0 1",
+        "stratum": "rook_barrier:right"
+      },
+      {
+        "fen": "8/8/7R/8/6K1/8/8/6k1 w - - 0 1",
+        "stratum": "king_edge:bottom"
+      },
+      {
+        "fen": "4R3/7k/8/4K3/8/8/8/8 w - - 0 1",
+        "stratum": "king_edge:right"
+      },
+      {
+        "fen": "k7/7R/2K5/8/8/8/8/8 w - - 0 1",
+        "stratum": "king_corner:a8"
+      },
+      {
+        "fen": "7k/4K3/8/8/2R5/8/8/8 w - - 0 1",
+        "stratum": "king_corner:h8"
+      },
+      {
+        "fen": "8/8/1K6/8/k7/3R4/8/8 w - - 0 1",
+        "stratum": "king_edge:left"
+      },
+      {
+        "fen": "1k6/8/2K5/8/8/2R5/8/8 w - - 0 1",
+        "stratum": "rook_barrier:top"
+      },
+      {
+        "fen": "5k2/8/3K4/8/8/6R1/8/8 w - - 0 1",
+        "stratum": "king_edge:top"
+      },
+      {
+        "fen": "8/8/8/8/8/k7/2K1R3/8 w - - 0 1",
+        "stratum": "rook_barrier:left"
+      },
+      {
+        "fen": "6R1/8/8/8/8/8/k7/2K5 w - - 0 1",
+        "stratum": "rook_barrier:left"
+      },
+      {
+        "fen": "5k2/8/2R3K1/8/8/8/8/8 w - - 0 1",
+        "stratum": "rook_barrier:top"
+      },
+      {
+        "fen": "8/8/7k/5K2/R7/8/8/8 w - - 0 1",
+        "stratum": "rook_barrier:right"
+      },
+      {
+        "fen": "7k/8/6K1/6R1/8/8/8/8 w - - 0 1",
+        "stratum": "king_corner:h8"
+      },
+      {
+        "fen": "8/8/8/8/3K1R2/8/8/4k3 w - - 0 1",
+        "stratum": "king_edge:bottom"
+      },
+      {
+        "fen": "8/8/8/k2K4/5R2/8/8/8 w - - 0 1",
+        "stratum": "king_edge:left"
+      },
+      {
+        "fen": "3k4/8/4K3/8/4R3/8/8/8 w - - 0 1",
+        "stratum": "rook_barrier:top"
+      },
+      {
+        "fen": "3k4/8/4K3/8/6R1/8/8/8 w - - 0 1",
+        "stratum": "rook_barrier:top"
+      },
+      {
+        "fen": "8/8/8/7k/5K2/8/8/2R5 w - - 0 1",
+        "stratum": "rook_barrier:right"
+      },
+      {
+        "fen": "8/8/8/8/R7/5K2/7k/8 w - - 0 1",
+        "stratum": "rook_barrier:right"
+      },
+      {
+        "fen": "8/8/8/8/1K6/5R2/8/k7 w - - 0 1",
+        "stratum": "king_corner:a1"
+      },
+      {
+        "fen": "8/8/8/8/R7/8/4K3/7k w - - 0 1",
+        "stratum": "king_corner:h1"
+      },
+      {
+        "fen": "8/8/8/8/3R4/7K/8/6k1 w - - 0 1",
+        "stratum": "rook_barrier:bottom"
+      },
+      {
+        "fen": "8/8/3R4/8/2K5/8/8/k7 w - - 0 1",
+        "stratum": "king_corner:a1"
+      },
+      {
+        "fen": "8/8/7R/8/8/3K4/8/k7 w - - 0 1",
+        "stratum": "king_corner:a1"
+      },
+      {
+        "fen": "8/7k/5K2/8/8/R7/8/8 w - - 0 1",
+        "stratum": "rook_barrier:right"
+      },
+      {
+        "fen": "8/8/k7/2K4R/8/8/8/8 w - - 0 1",
+        "stratum": "rook_barrier:left"
+      },
+      {
+        "fen": "6R1/8/8/8/8/6K1/8/5k2 w - - 0 1",
+        "stratum": "rook_barrier:bottom"
+      },
+      {
+        "fen": "8/R7/8/8/5K2/8/8/7k w - - 0 1",
+        "stratum": "king_corner:h1"
+      },
+      {
+        "fen": "8/8/8/8/8/4R3/k1K5/8 w - - 0 1",
+        "stratum": "king_edge:left"
+      },
+      {
+        "fen": "k7/8/3K4/8/8/1R6/8/8 w - - 0 1",
+        "stratum": "king_corner:a8"
+      },
+      {
+        "fen": "k7/8/1K6/8/8/8/8/1R6 w - - 0 1",
+        "stratum": "king_corner:a8"
+      },
+      {
+        "fen": "7k/8/8/R5K1/8/8/8/8 w - - 0 1",
+        "stratum": "king_corner:h8"
+      }
+    ],
+    "validation": [
+      {
+        "fen": "8/8/8/8/8/R4K2/8/7k w - - 0 1",
+        "stratum": "king_corner:h1"
+      },
+      {
+        "fen": "5K2/8/7k/1R6/8/8/8/8 w - - 0 1",
+        "stratum": "king_edge:right"
+      },
+      {
+        "fen": "8/8/8/8/2R5/2K5/8/1k6 w - - 0 1",
+        "stratum": "rook_barrier:bottom"
+      },
+      {
+        "fen": "5R2/8/8/8/8/4K3/8/3k4 w - - 0 1",
+        "stratum": "rook_barrier:bottom"
+      },
+      {
+        "fen": "2k5/8/1RK5/8/8/8/8/8 w - - 0 1",
+        "stratum": "king_edge:top"
+      },
+      {
+        "fen": "8/8/3R4/8/8/3K4/8/k7 w - - 0 1",
+        "stratum": "king_corner:a1"
+      },
+      {
+        "fen": "1k6/8/2K5/7R/8/8/8/8 w - - 0 1",
+        "stratum": "rook_barrier:top"
+      },
+      {
+        "fen": "5k2/8/4K3/3R4/8/8/8/8 w - - 0 1",
+        "stratum": "rook_barrier:top"
+      },
+      {
+        "fen": "3R4/k1K5/8/8/8/8/8/8 w - - 0 1",
+        "stratum": "rook_barrier:left"
+      },
+      {
+        "fen": "8/8/6R1/8/2K5/k7/8/8 w - - 0 1",
+        "stratum": "rook_barrier:left"
+      },
+      {
+        "fen": "8/8/6R1/k7/8/2K5/8/8 w - - 0 1",
+        "stratum": "king_edge:left"
+      },
+      {
+        "fen": "8/3R4/5K2/7k/8/8/8/8 w - - 0 1",
+        "stratum": "rook_barrier:right"
+      },
+      {
+        "fen": "8/8/8/7R/5K2/8/8/6k1 w - - 0 1",
+        "stratum": "king_edge:bottom"
+      },
+      {
+        "fen": "8/8/8/8/8/R4K2/7k/8 w - - 0 1",
+        "stratum": "rook_barrier:right"
+      },
+      {
+        "fen": "7k/8/4K3/8/6R1/8/8/8 w - - 0 1",
+        "stratum": "king_corner:h8"
+      },
+      {
+        "fen": "k2K4/8/8/8/8/8/8/6R1 w - - 0 1",
+        "stratum": "king_corner:a8"
+      }
+    ]
+  },
+  "gates": {
+    "causal_requirement": "full intrinsic-bootstrap regression conversion is strictly greater than no-bootstrap regression conversion",
+    "r0_regression_accuracy": 1.0,
+    "r0_retention_after_r1": 1.0,
+    "r0_validation_accuracy": 1.0,
+    "r1_each_registered_stratum_conversion_rate": 1.0,
+    "r1_regression_conversion_rate": 1.0,
+    "r1_validation_conversion_rate": 1.0,
+    "safety_requirement": "zero null or illegal selected moves"
+  },
+  "hypotheses": {
+    "H0": "The full arm remains below a gate or does not outperform the otherwise identical no-bootstrap control.",
+    "H1": "The full intrinsic-bootstrap arm reaches joint 100% conversion on the disjoint validation and regression pools and retains R0."
+  },
+  "interpretation_policy": {
+    "both_fail": "Balanced experience is insufficient; inspect representation, competition, or autonomous composition without changing this run.",
+    "both_pass": "R1 is learnable here, but the hierarchical-bootstrap claim is not isolated by this experiment.",
+    "full_fail_control_pass": "The bootstrap machinery is interfering and must not be rescued with a post-hoc narrative.",
+    "full_pass_control_fail": "Outcome-grounded mature-child composition is causally useful for this bounded R1 curriculum."
+  },
+  "parent_commit": "37fcba7",
+  "pool_manifest": {
+    "all_fens_disjoint": true,
+    "combined_sha256": "1c712438a2c7acb424fd38162a473c8fccd7eb129ff323c245a0d01545d6f8d9",
+    "final_test_created_or_touched": false,
+    "groups": {
+      "gate_regression_decoys": {
+        "count": 8,
+        "sha256": "efe46681d600c3be252f491e54f498429a2bbd83264c325df178070601ff8170"
+      },
+      "gate_train_decoys": {
+        "count": 8,
+        "sha256": "b986efee807323d110fe6bb9312a08d0e74403aa6813c0534ab54a00899e7dbc"
+      },
+      "gate_validation_decoys": {
+        "count": 8,
+        "sha256": "d6e1c8744dd0f67aae4deb84c871b005e2e5b35900a9e2dcd41cd80e328791eb"
+      },
+      "r0_regression": {
+        "count": 8,
+        "sha256": "4a3ef03b631322b4cac7aa57faabcf045d779db5a3a5c6c9bc44e1d4b1d5d323"
+      },
+      "r0_train": {
+        "count": 24,
+        "sha256": "fa99cd29e2e0d32006ce78a5520addbce2d6e2b159edb3f0b9edfc2e38768f0b"
+      },
+      "r0_validation": {
+        "count": 8,
+        "sha256": "5a1608985411d5cd58f291e82d15656c6add65025fb07ae021d9daf7d15b44ef"
+      },
+      "r1_regression": {
+        "count": 16,
+        "sha256": "13174582810b977059779aa639383cc9924297be0b92cda1ffb5ed9b7df7719f"
+      },
+      "r1_train": {
+        "count": 48,
+        "sha256": "c1bf97cb3e579f57294278b3438f1183141ef1ebd60d30aeccdc1bfd36b991b7"
+      },
+      "r1_validation": {
+        "count": 16,
+        "sha256": "107426baa3d4fcdd69f2895cd8ca1d933099adce9f58bfedf8a7f5f0632859c3"
+      }
+    },
+    "r1_pool_mode": "balanced_setup",
+    "r1_retired_development_orbit_overlap_count": 0,
+    "r1_strata": {
+      "r1_regression": {
+        "groups": {
+          "king_corner:a1": {
+            "count": 1,
+            "sha256": "b37fccbfd360b47b3791f52e779caf87e57672e96e836dd79191f12c03b9f5cd"
+          },
+          "king_corner:a8": {
+            "count": 1,
+            "sha256": "5508ec8ada16302c4958b2c8254adcbddeebaf00d19f78400bfdc0b498e98686"
+          },
+          "king_corner:h1": {
+            "count": 1,
+            "sha256": "254ba3a09805f33f809591134c6de611b42bc85c82caf7c4851e5c3c4a0a7180"
+          },
+          "king_corner:h8": {
+            "count": 1,
+            "sha256": "722e211de82f9682f8e1cdf2ef6cb78b0045e93cb527fb70562969a2c2cc8cb8"
+          },
+          "king_edge:bottom": {
+            "count": 1,
+            "sha256": "8430d0eadff2ae766197c39bb4f74587208afaeb1881058476414489b2d69f20"
+          },
+          "king_edge:left": {
+            "count": 1,
+            "sha256": "ffb5e342a7f96cfa855da773220bf98e1bc84e0ec42edee4819b6eabe3f35ee2"
+          },
+          "king_edge:right": {
+            "count": 1,
+            "sha256": "f5eeac37fdafff2edb3571aa8eeffcee75a098d500176bbe008fa0822c9068cb"
+          },
+          "king_edge:top": {
+            "count": 1,
+            "sha256": "d4c0b952a6556458df06bad39ec7b14f365611005fde6885ae10884914b8c16e"
+          },
+          "rook_barrier:bottom": {
+            "count": 2,
+            "sha256": "5becd53d426db7f88841688612ff76db0a1ad21ea47898a8ab14729807c33cbf"
+          },
+          "rook_barrier:left": {
+            "count": 2,
+            "sha256": "081261891f5cc600ba7159e15632f5c2101f6c60e4c8696d80bc5533d68dadc0"
+          },
+          "rook_barrier:right": {
+            "count": 2,
+            "sha256": "a0aa3f1a2c9ca6a144d7fe51bc888cbd3414d67db8d9be09dc6b5b967473d16a"
+          },
+          "rook_barrier:top": {
+            "count": 2,
+            "sha256": "305b2232b4c2de342f2b975448e8d45546c62a90ca8c173fd41b844f1191ddaa"
+          }
+        },
+        "labels_sha256": "415c04a08c57222bca5d8dd6fb5c2e5731710c50bf8eaf3f57e8a49a6bfd6ac1"
+      },
+      "r1_train": {
+        "groups": {
+          "king_corner:a1": {
+            "count": 3,
+            "sha256": "ec7fdf4a9f86befb2b7c2bda7c00ad3996e937ef918297a4094e2e1981c763e1"
+          },
+          "king_corner:a8": {
+            "count": 3,
+            "sha256": "ccdab19b09287015b3e88cca112dba8d6a2dfab6824368c18f57ee70d6dfda6f"
+          },
+          "king_corner:h1": {
+            "count": 3,
+            "sha256": "759af57ceeb7a412c32692347360a0a27a1f5775f6e80735d6442ee109841d9a"
+          },
+          "king_corner:h8": {
+            "count": 3,
+            "sha256": "88c050f70d7f435411500b9a3b207e83a54ebeca6fff05461b602244e67dfcc5"
+          },
+          "king_edge:bottom": {
+            "count": 3,
+            "sha256": "d903559855ae37770dc6c52882c61f627a4b92097f1b3b0260a421334899e6fe"
+          },
+          "king_edge:left": {
+            "count": 3,
+            "sha256": "67dbe760f808ba986b83693df622001606f472965968fafe9897c5f2b5d6a0e8"
+          },
+          "king_edge:right": {
+            "count": 3,
+            "sha256": "cb57ae5777ff9561b83cf841fb49bb8127216ba5e3c9c85cc3fa8da03a2f86c6"
+          },
+          "king_edge:top": {
+            "count": 3,
+            "sha256": "4928dcd21ca02ee140ed3dbac963b055dc93ff58a7309c0843f073c407d660f0"
+          },
+          "rook_barrier:bottom": {
+            "count": 6,
+            "sha256": "35305d18ff1caf0af73aec0e597a4dd2aed59cf9c3c77c3e2da6f27b7b2be341"
+          },
+          "rook_barrier:left": {
+            "count": 6,
+            "sha256": "d6b4a40fce06a276e09ec5ca41f2b10947fc1eee5d28a8c15040d138c53a4748"
+          },
+          "rook_barrier:right": {
+            "count": 6,
+            "sha256": "347edd4802070f405dbf7ce02e5dc8061942d1ef0f56b8ca60cf8fd7e763d2ca"
+          },
+          "rook_barrier:top": {
+            "count": 6,
+            "sha256": "9fd0873f22c716dab5927b30d6ea3ea74e08a9350cbe407271d85a991eef6e92"
+          }
+        },
+        "labels_sha256": "40a70349af44ec574352a9525f30e1d84ad0dcc1df59d7a29ee442eefd3d8f49"
+      },
+      "r1_validation": {
+        "groups": {
+          "king_corner:a1": {
+            "count": 1,
+            "sha256": "a7bb1857790204bd4b4501735b9ef1184e62ccdfe4f0688e13a017dcd52b813b"
+          },
+          "king_corner:a8": {
+            "count": 1,
+            "sha256": "5c31f15bffdf2f9bec4ba7e6996ad4359508aab25498867a83c8670e9591c139"
+          },
+          "king_corner:h1": {
+            "count": 1,
+            "sha256": "bd22a9edd104c50c0ef0862fc5e01bec1c24c9b2dd3fd09a65862f002997dfa0"
+          },
+          "king_corner:h8": {
+            "count": 1,
+            "sha256": "25875625dbd0e2ed0997eed7da795694242c6ad9bf780cdc37947d594e786a18"
+          },
+          "king_edge:bottom": {
+            "count": 1,
+            "sha256": "557b9e0bf18d1e7ab0895c667ed4ba9de034bb17c85054d877812d781432b7c2"
+          },
+          "king_edge:left": {
+            "count": 1,
+            "sha256": "1d75812f247f6401010967277c5b540454f9bc5622c93295bc34be73021c9561"
+          },
+          "king_edge:right": {
+            "count": 1,
+            "sha256": "027470b92a9364f07f1ede7d9d6e15b20d2b84c0c15766809f9381a393ea45c4"
+          },
+          "king_edge:top": {
+            "count": 1,
+            "sha256": "c23ab840f2f39a5d418ad2f1fd2c93c22a2af20a2409f30cabb5ab0cfb15029e"
+          },
+          "rook_barrier:bottom": {
+            "count": 2,
+            "sha256": "55e6f31cf527a9979bd2887cf0a78ee936bb3f2df74744fe17b037651b36fb48"
+          },
+          "rook_barrier:left": {
+            "count": 2,
+            "sha256": "7079581581064077933069f8c7461b7cba9d3f1920391d845762f1a819dbc72e"
+          },
+          "rook_barrier:right": {
+            "count": 2,
+            "sha256": "51c0acbbb770e5722219b6c0c9daed8ecc98b98ab892fd9a98956a0d77c7ec3b"
+          },
+          "rook_barrier:top": {
+            "count": 2,
+            "sha256": "8f9e1fba57add31a68ca7a9a6110cb0887d609fa46167c3016c50d2c4f705ac5"
+          }
+        },
+        "labels_sha256": "bc50155f00c734418345bc1408e1e3015df2544392479a3575a61994287bf357"
+      }
+    },
+    "r1_symmetry_orbits_disjoint": true,
+    "solution_predicates_used_for": "curriculum scheduling only"
+  },
+  "purity_boundary": {
+    "credit": "observed game outcome and internal mature-child value only",
+    "exact_chess_predicates": "used only before training for curriculum eligibility/stratification and after play for measurement; never supplied as learner features, action labels, shaping rewards, weights, or topology",
+    "final_test": "not created or touched in this experiment",
+    "learned_state_at_start": "empty except the receptor root"
+  },
+  "retired_development_fens": [
+    "8/8/1R6/8/8/1K6/8/1k6 w - - 0 1",
+    "R7/8/8/8/1K6/8/8/1k6 w - - 0 1",
+    "8/8/7R/8/8/4K3/8/5k2 w - - 0 1",
+    "8/3R4/8/8/8/2K5/8/k7 w - - 0 1",
+    "8/8/8/8/8/3R3K/8/6k1 w - - 0 1",
+    "8/8/5K2/7k/8/8/8/2R5 w - - 0 1",
+    "5K2/7k/8/8/8/8/R7/8 w - - 0 1",
+    "8/7k/5K2/8/8/8/R7/8 w - - 0 1",
+    "2R5/8/8/8/8/5K2/7k/8 w - - 0 1",
+    "8/8/8/8/4K3/7k/R7/8 w - - 0 1",
+    "8/5K2/7k/8/8/8/8/1R6 w - - 0 1",
+    "k7/8/2K5/7R/8/8/8/8 w - - 0 1",
+    "2k5/8/8/2K5/8/8/8/1R6 w - - 0 1",
+    "R7/8/8/8/8/2K5/8/1k6 w - - 0 1",
+    "8/8/8/8/3R4/4K3/8/7k w - - 0 1",
+    "k7/8/8/2K5/4R3/8/8/8 w - - 0 1"
+  ],
+  "schema_version": "krk_native_intrinsic_r1_preregistration.v0",
+  "scientific_question": "Can an empty learned-state ReCoN master Mate-in-2 by intrinsically handing control to its mature Mate-in-1 child when experience is balanced across the historically missed edge/corner orientations?",
+  "status": "frozen_before_execution"
+}

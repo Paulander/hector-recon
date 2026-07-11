@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections import Counter
+
 import chess
 import pytest
 
@@ -10,15 +12,23 @@ from recon_lite_hector.learning import (
     IntrinsicCreditEngine,
     Responsibility,
 )
-
 from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     R0_COMPETENCE_ID,
+    R1_BALANCED_STRATA,
+    R1_RETIRED_DEVELOPMENT_FENS,
+    _balanced_r1_quotas,
     _build_r0_replay_memory,
-    _execute_white_and_observe,
     _choose_with_child_priority,
-    _replay_r0,
+    _classify_r1_stratum,
+    _execute_white_and_observe,
+    _generate_balanced_r1_split,
     _r0_available,
     _r0_available_with_dispatch_cache,
+    _r1_orbit_key,
+    _replay_r0,
+)
+from recon_lite_chess.autogrowth.foundation_curriculum import (
+    _forced_mate_in_two_first_moves,
 )
 from recon_lite_chess.autogrowth.native_single_graph_curriculum import (
     NativeReConKRKGraph,
@@ -59,6 +69,61 @@ def test_native_intrinsic_graph_starts_with_empty_learned_state() -> None:
         "m3_update_count": 0,
         "m4_event_count": 0,
     }
+
+
+def test_balanced_r1_quotas_cover_all_setup_and_orientation_strata() -> None:
+    quotas = _balanced_r1_quotas(16)
+
+    assert tuple(quotas) == R1_BALANCED_STRATA
+    assert sum(quotas.values()) == 16
+    assert all(
+        quotas[f"rook_barrier:{side}"] == 2
+        for side in ("left", "right", "bottom", "top")
+    )
+    assert all(
+        quotas[f"king_edge:{side}"] == 1
+        for side in ("left", "right", "bottom", "top")
+    )
+    assert all(
+        quotas[f"king_corner:{corner}"] == 1
+        for corner in ("a1", "a8", "h1", "h8")
+    )
+    with pytest.raises(ValueError):
+        _balanced_r1_quotas(12)
+
+
+def test_balanced_r1_splits_are_stratified_and_orbit_disjoint() -> None:
+    used_fens: set[str] = set()
+    retired_orbits = {_r1_orbit_key(fen) for fen in R1_RETIRED_DEVELOPMENT_FENS}
+    used_orbits = set(retired_orbits)
+
+    train, train_labels = _generate_balanced_r1_split(
+        count=16,
+        seed=20260718,
+        used_fens=used_fens,
+        used_orbits=used_orbits,
+        max_attempts=300_000,
+    )
+    heldout, heldout_labels = _generate_balanced_r1_split(
+        count=16,
+        seed=20260719,
+        used_fens=used_fens,
+        used_orbits=used_orbits,
+        max_attempts=300_000,
+    )
+
+    assert Counter(train_labels) == Counter(_balanced_r1_quotas(16))
+    assert Counter(heldout_labels) == Counter(_balanced_r1_quotas(16))
+    assert set(train).isdisjoint(heldout)
+    generated_orbits = [_r1_orbit_key(fen) for fen in (*train, *heldout)]
+    assert len(generated_orbits) == len(set(generated_orbits))
+    assert not retired_orbits.intersection(generated_orbits)
+
+    for fen, label in zip((*train, *heldout), (*train_labels, *heldout_labels), strict=True):
+        board = chess.Board(fen)
+        forced = tuple(_forced_mate_in_two_first_moves(board))
+        assert forced
+        assert _classify_r1_stratum(board, forced) == label
 
 
 def test_observed_action_td_updates_only_executed_native_branch() -> None:

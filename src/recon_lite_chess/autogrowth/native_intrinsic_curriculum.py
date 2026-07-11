@@ -32,6 +32,7 @@ from recon_lite_hector.learning import (
 )
 
 from .foundation_curriculum import (
+    _forced_mate_in_two_first_moves,
     _generate_forced_mate_in_two_positions,
     _generate_mate_in_one_positions,
     _random_krk_board,
@@ -63,6 +64,39 @@ GATE_FEATURE_NAMES = (
     "distinct_top_triplet_count",
 )
 
+R1_BALANCED_STRATA = (
+    "rook_barrier:left",
+    "rook_barrier:right",
+    "rook_barrier:bottom",
+    "rook_barrier:top",
+    "king_edge:left",
+    "king_edge:right",
+    "king_edge:bottom",
+    "king_edge:top",
+    "king_corner:a1",
+    "king_corner:a8",
+    "king_corner:h1",
+    "king_corner:h8",
+)
+R1_RETIRED_DEVELOPMENT_FENS = (
+    "8/8/1R6/8/8/1K6/8/1k6 w - - 0 1",
+    "R7/8/8/8/1K6/8/8/1k6 w - - 0 1",
+    "8/8/7R/8/8/4K3/8/5k2 w - - 0 1",
+    "8/3R4/8/8/8/2K5/8/k7 w - - 0 1",
+    "8/8/8/8/8/3R3K/8/6k1 w - - 0 1",
+    "8/8/5K2/7k/8/8/8/2R5 w - - 0 1",
+    "5K2/7k/8/8/8/8/R7/8 w - - 0 1",
+    "8/7k/5K2/8/8/8/R7/8 w - - 0 1",
+    "2R5/8/8/8/8/5K2/7k/8 w - - 0 1",
+    "8/8/8/8/4K3/7k/R7/8 w - - 0 1",
+    "8/5K2/7k/8/8/8/8/1R6 w - - 0 1",
+    "k7/8/2K5/7R/8/8/8/8 w - - 0 1",
+    "2k5/8/8/2K5/8/8/8/1R6 w - - 0 1",
+    "R7/8/8/8/8/2K5/8/1k6 w - - 0 1",
+    "8/8/8/8/3R4/4K3/8/7k w - - 0 1",
+    "k7/8/8/2K5/4R3/8/8/8 w - - 0 1",
+)
+
 
 @dataclass(frozen=True)
 class NativeIntrinsicCurriculumConfig:
@@ -85,6 +119,7 @@ class NativeIntrinsicCurriculumConfig:
     r1_train_count: int = 24
     r1_validation_count: int = 12
     r1_regression_count: int = 12
+    r1_pool_mode: str = "random"
     r0_epochs: int = 72
     r1_epochs: int = 120
     r0_replay_per_r1_epoch: int = 8
@@ -139,6 +174,10 @@ class _Pools:
     r1_train: tuple[str, ...]
     r1_validation: tuple[str, ...]
     r1_regression: tuple[str, ...]
+    r1_train_strata: tuple[str, ...]
+    r1_validation_strata: tuple[str, ...]
+    r1_regression_strata: tuple[str, ...]
+    r1_pool_mode: str
 
     def manifest(self) -> dict[str, Any]:
         groups = {
@@ -153,6 +192,24 @@ class _Pools:
             "r1_regression": self.r1_regression,
         }
         all_fens = [fen for values in groups.values() for fen in values]
+        r1_groups = {
+            "r1_train": self.r1_train,
+            "r1_validation": self.r1_validation,
+            "r1_regression": self.r1_regression,
+        }
+        r1_strata = {
+            "r1_train": self.r1_train_strata,
+            "r1_validation": self.r1_validation_strata,
+            "r1_regression": self.r1_regression_strata,
+        }
+        r1_orbits = [
+            _r1_orbit_key(fen)
+            for values in r1_groups.values()
+            for fen in values
+        ]
+        retired_orbits = {
+            _r1_orbit_key(fen) for fen in R1_RETIRED_DEVELOPMENT_FENS
+        }
         return {
             "groups": {
                 name: {"count": len(values), "sha256": _hash_json(values)}
@@ -162,6 +219,15 @@ class _Pools:
             "combined_sha256": _hash_json(groups),
             "final_test_created_or_touched": False,
             "solution_predicates_used_for": "curriculum scheduling only",
+            "r1_pool_mode": self.r1_pool_mode,
+            "r1_symmetry_orbits_disjoint": len(r1_orbits) == len(set(r1_orbits)),
+            "r1_retired_development_orbit_overlap_count": sum(
+                orbit in retired_orbits for orbit in r1_orbits
+            ),
+            "r1_strata": {
+                name: _stratum_manifest(r1_groups[name], labels)
+                for name, labels in r1_strata.items()
+            },
         }
 
 
@@ -538,9 +604,43 @@ def _build_pools(cfg: NativeIntrinsicCurriculumConfig) -> _Pools:
         max_attempts=cfg.max_generation_attempts,
     )
     used.update(gate_regression_decoys)
-    r1_train = m2(cfg.r1_train_count, 6) if cfg.run_r1 else ()
-    r1_validation = m2(cfg.r1_validation_count, 7) if cfg.run_r1 else ()
-    r1_regression = m2(cfg.r1_regression_count, 8) if cfg.run_r1 else ()
+    if not cfg.run_r1:
+        r1_train = r1_validation = r1_regression = ()
+        r1_train_strata = r1_validation_strata = r1_regression_strata = ()
+    elif cfg.r1_pool_mode == "random":
+        r1_train = m2(cfg.r1_train_count, 6)
+        r1_validation = m2(cfg.r1_validation_count, 7)
+        r1_regression = m2(cfg.r1_regression_count, 8)
+        r1_train_strata = tuple("random" for _ in r1_train)
+        r1_validation_strata = tuple("random" for _ in r1_validation)
+        r1_regression_strata = tuple("random" for _ in r1_regression)
+    elif cfg.r1_pool_mode == "balanced_setup":
+        used_orbits = {
+            _r1_orbit_key(fen) for fen in R1_RETIRED_DEVELOPMENT_FENS
+        }
+        r1_train, r1_train_strata = _generate_balanced_r1_split(
+            count=cfg.r1_train_count,
+            seed=cfg.seed + 6,
+            used_fens=used,
+            used_orbits=used_orbits,
+            max_attempts=cfg.max_generation_attempts,
+        )
+        r1_validation, r1_validation_strata = _generate_balanced_r1_split(
+            count=cfg.r1_validation_count,
+            seed=cfg.seed + 7,
+            used_fens=used,
+            used_orbits=used_orbits,
+            max_attempts=cfg.max_generation_attempts,
+        )
+        r1_regression, r1_regression_strata = _generate_balanced_r1_split(
+            count=cfg.r1_regression_count,
+            seed=cfg.seed + 8,
+            used_fens=used,
+            used_orbits=used_orbits,
+            max_attempts=cfg.max_generation_attempts,
+        )
+    else:
+        raise ValueError("r1_pool_mode must be random or balanced_setup")
     return _Pools(
         r0_train=r0_train,
         r0_validation=r0_validation,
@@ -551,8 +651,166 @@ def _build_pools(cfg: NativeIntrinsicCurriculumConfig) -> _Pools:
         r1_train=r1_train,
         r1_validation=r1_validation,
         r1_regression=r1_regression,
+        r1_train_strata=r1_train_strata,
+        r1_validation_strata=r1_validation_strata,
+        r1_regression_strata=r1_regression_strata,
+        r1_pool_mode=cfg.r1_pool_mode,
     )
 
+
+def _balanced_r1_quotas(count: int) -> dict[str, int]:
+    if count <= 0 or count % 16 != 0:
+        raise ValueError("balanced_setup R1 split counts must be positive multiples of 16")
+    return {
+        **{f"rook_barrier:{side}": count // 8 for side in ("left", "right", "bottom", "top")},
+        **{f"king_edge:{side}": count // 16 for side in ("left", "right", "bottom", "top")},
+        **{f"king_corner:{corner}": count // 16 for corner in ("a1", "a8", "h1", "h8")},
+    }
+
+
+def _generate_balanced_r1_split(
+    *,
+    count: int,
+    seed: int,
+    used_fens: set[str],
+    used_orbits: set[str],
+    max_attempts: int,
+) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    quotas = _balanced_r1_quotas(count)
+    accepted = {label: 0 for label in quotas}
+    positions: list[str] = []
+    labels: list[str] = []
+    rng = random.Random(seed)
+    for _attempt in range(max_attempts):
+        if len(positions) >= count:
+            break
+        board = _random_krk_board(rng)
+        if not _valid_foundation_board(board):
+            continue
+        forced = tuple(_forced_mate_in_two_first_moves(board))
+        if not forced:
+            continue
+        label = _classify_r1_stratum(board, forced)
+        if label is None or accepted.get(label, 0) >= quotas.get(label, 0):
+            continue
+        fen = board.fen()
+        orbit = _r1_orbit_key(fen)
+        if fen in used_fens or orbit in used_orbits:
+            continue
+        used_fens.add(fen)
+        used_orbits.add(orbit)
+        positions.append(fen)
+        labels.append(label)
+        accepted[label] += 1
+    unmet = {
+        label: quotas[label] - accepted[label]
+        for label in quotas
+        if accepted[label] < quotas[label]
+    }
+    if unmet:
+        raise RuntimeError(
+            f"balanced R1 generation produced {len(positions)}/{count}; unmet={unmet}"
+        )
+    return tuple(positions), tuple(labels)
+
+
+def _classify_r1_stratum(
+    board: chess.Board,
+    forced_moves: Sequence[chess.Move],
+) -> str | None:
+    location_kind, location = _black_king_location(board)
+    king_moves = [
+        move
+        for move in forced_moves
+        if board.piece_at(move.from_square).piece_type == chess.KING
+    ]
+    if location_kind == "corner":
+        return f"king_corner:{location}" if king_moves else None
+    if location_kind != "edge":
+        return None
+    expected_rook_axis = "file" if location in {"left", "right"} else "rank"
+    for move in forced_moves:
+        piece = board.piece_at(move.from_square)
+        if piece is None or piece.piece_type != chess.ROOK:
+            continue
+        axis = (
+            "file"
+            if chess.square_file(move.from_square) == chess.square_file(move.to_square)
+            else "rank"
+        )
+        if axis == expected_rook_axis:
+            return f"rook_barrier:{location}"
+    return f"king_edge:{location}" if king_moves else None
+
+
+def _black_king_location(board: chess.Board) -> tuple[str, str]:
+    black_king = board.king(chess.BLACK)
+    if black_king is None:
+        return "missing", "missing"
+    file_idx = chess.square_file(black_king)
+    rank_idx = chess.square_rank(black_king)
+    if file_idx in (0, 7) and rank_idx in (0, 7):
+        return "corner", chess.square_name(black_king)
+    if file_idx == 0:
+        return "edge", "left"
+    if file_idx == 7:
+        return "edge", "right"
+    if rank_idx == 0:
+        return "edge", "bottom"
+    if rank_idx == 7:
+        return "edge", "top"
+    return "interior", "interior"
+
+
+def _r1_orbit_key(fen: str) -> str:
+    board = chess.Board(fen)
+    squares = (
+        board.king(chess.WHITE),
+        next(iter(board.pieces(chess.ROOK, chess.WHITE)), None),
+        board.king(chess.BLACK),
+    )
+    if any(square is None for square in squares):
+        raise ValueError("R1 orbit key requires white king, white rook, and black king")
+    variants: list[tuple[int, int, int]] = []
+    for transform_index in range(8):
+        transformed: list[int] = []
+        for square in squares:
+            file_idx = chess.square_file(square)
+            rank_idx = chess.square_rank(square)
+            coordinates = (
+                (file_idx, rank_idx),
+                (7 - file_idx, rank_idx),
+                (file_idx, 7 - rank_idx),
+                (7 - file_idx, 7 - rank_idx),
+                (rank_idx, file_idx),
+                (7 - rank_idx, file_idx),
+                (rank_idx, 7 - file_idx),
+                (7 - rank_idx, 7 - file_idx),
+            )
+            transformed.append(chess.square(*coordinates[transform_index]))
+        variants.append(tuple(transformed))
+    return ":".join(str(square) for square in min(variants))
+
+
+def _stratum_manifest(
+    fens: Sequence[str],
+    labels: Sequence[str],
+) -> dict[str, Any]:
+    if len(fens) != len(labels):
+        raise ValueError("R1 FEN and stratum sequences must align")
+    grouped: dict[str, list[str]] = {}
+    for fen, label in zip(fens, labels, strict=True):
+        grouped.setdefault(label, []).append(fen)
+    return {
+        "labels_sha256": _hash_json(labels),
+        "groups": {
+            label: {
+                "count": len(values),
+                "sha256": _hash_json(tuple(values)),
+            }
+            for label, values in sorted(grouped.items())
+        },
+    }
 
 def _train_r0(
     graph: NativeReConKRKGraph,
@@ -759,6 +1017,7 @@ def _run_r1_arm(
             metrics = _evaluate_r1(
                 graph,
                 pools.r1_validation,
+                strata=pools.r1_validation_strata,
                 max_samples=0,
                 stop_after_first_failure=True,
                 r0_child_triplet_ids=evaluation_child_triplet_ids,
@@ -774,6 +1033,7 @@ def _run_r1_arm(
             checkpoint = {
                 "epoch": epoch + 1,
                 "validation_conversion_rate": metrics["conversion_rate"],
+                "validation_stratum_conversion": metrics["stratum_conversion"],
                 "child_handoff_count": child_handoffs,
                 "r0_retention_accuracy": retention["accuracy"],
             }
@@ -785,6 +1045,7 @@ def _run_r1_arm(
                 regression_probe = _evaluate_r1(
                     graph,
                     pools.r1_regression,
+                    strata=pools.r1_regression_strata,
                     max_samples=0,
                     stop_after_first_failure=True,
                     r0_child_triplet_ids=evaluation_child_triplet_ids,
@@ -792,6 +1053,9 @@ def _run_r1_arm(
                 )
                 checkpoint["regression_conversion_rate_at_mastery_probe"] = (
                     regression_probe["conversion_rate"]
+                )
+                checkpoint["regression_stratum_conversion_at_mastery_probe"] = (
+                    regression_probe["stratum_conversion"]
                 )
                 joint_mastery = bool(
                     regression_probe["conversion_rate"]
@@ -836,6 +1100,7 @@ def _run_r1_arm(
         "validation": _evaluate_r1(
             graph,
             pools.r1_validation,
+            strata=pools.r1_validation_strata,
             max_samples=config.max_samples,
             r0_child_triplet_ids=evaluation_child_triplet_ids,
             child_dispatch_cache=evaluation_child_dispatch_cache,
@@ -843,6 +1108,7 @@ def _run_r1_arm(
         "regression": _evaluate_r1(
             graph,
             pools.r1_regression,
+            strata=pools.r1_regression_strata,
             max_samples=config.max_samples,
             r0_child_triplet_ids=evaluation_child_triplet_ids,
             child_dispatch_cache=evaluation_child_dispatch_cache,
@@ -1142,13 +1408,18 @@ def _evaluate_r1(
     fens: Sequence[str],
     *,
     max_samples: int,
+    strata: Sequence[str] | None = None,
     stop_after_first_failure: bool = False,
     r0_child_triplet_ids: frozenset[str] | None = None,
     child_dispatch_cache: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     rows: list[dict[str, Any]] = []
     converted = null = illegal = reply_total = reply_mated = 0
-    for fen in fens:
+    if strata is not None and len(strata) != len(fens):
+        raise ValueError("R1 evaluation FEN and stratum sequences must align")
+    stratum_conversion: dict[str, dict[str, int | float]] = {}
+    for position_index, fen in enumerate(fens):
+        stratum = "unstratified" if strata is None else str(strata[position_index])
         board = chess.Board(fen)
         first = _choose_with_child_priority(
             graph,
@@ -1195,16 +1466,36 @@ def _evaluate_r1(
                 if stop_after_first_failure and not ok:
                     break
         converted += int(all_replies_mated)
+        stratum_row = stratum_conversion.setdefault(
+            stratum,
+            {
+                "position_count": 0,
+                "conversion_count": 0,
+                "conversion_rate": 0.0,
+            },
+        )
+        stratum_row["position_count"] = int(stratum_row["position_count"]) + 1
+        stratum_row["conversion_count"] = (
+            int(stratum_row["conversion_count"]) + int(all_replies_mated)
+        )
         if len(rows) < max_samples:
             rows.append(
                 {
                     "fen": fen,
+                    "stratum": stratum,
                     "selected_first": None if first is None else first.uci(),
                     "all_replies_mated": all_replies_mated,
                     "reply_checks": reply_rows,
                 }
             )
     total = len(fens)
+    for values in stratum_conversion.values():
+        position_count = int(values["position_count"])
+        values["conversion_rate"] = (
+            0.0
+            if position_count == 0
+            else int(values["conversion_count"]) / position_count
+        )
     return {
         "position_count": total,
         "conversion_count": converted,
@@ -1213,8 +1504,11 @@ def _evaluate_r1(
         "reply_evaluation_count": reply_total,
         "null_selection_count": null,
         "illegal_move_count": illegal,
-        "reply_evaluation_mode": "early_exit_on_failure" if stop_after_first_failure else "exhaustive",
+        "reply_evaluation_mode": (
+            "early_exit_on_failure" if stop_after_first_failure else "exhaustive"
+        ),
         "mature_child_priority_enabled": bool(r0_child_triplet_ids),
+        "stratum_conversion": dict(sorted(stratum_conversion.items())),
         "samples": rows,
     }
 

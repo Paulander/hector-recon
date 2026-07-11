@@ -27,6 +27,15 @@ def main() -> int:
     parser.add_argument("--gate-regression-decoys", type=int, default=defaults.r0_gate_regression_decoy_count)
     parser.add_argument("--r1-validation", type=int, default=defaults.r1_validation_count)
     parser.add_argument("--r1-regression", type=int, default=defaults.r1_regression_count)
+    parser.add_argument(
+        "--r1-pool-mode",
+        choices=("random", "balanced_setup"),
+        default=defaults.r1_pool_mode,
+    )
+    parser.add_argument(
+        "--r0-validation-interval", type=int, default=defaults.r0_validation_interval
+    )
+    parser.add_argument("--max-samples", type=int, default=defaults.max_samples)
     parser.add_argument("--r0-epochs", type=int, default=defaults.r0_epochs)
     parser.add_argument("--r1-epochs", type=int, default=defaults.r1_epochs)
     parser.add_argument("--r0-replay-per-r1-epoch", type=int, default=defaults.r0_replay_per_r1_epoch)
@@ -45,6 +54,7 @@ def main() -> int:
         output_path=str(args.output),
         progress_path=str(args.progress),
         seed=args.seed,
+        r1_pool_mode=args.r1_pool_mode,
         r0_train_count=args.r0_train,
         r0_validation_count=args.r0_validation,
         r0_regression_count=args.r0_regression,
@@ -56,7 +66,9 @@ def main() -> int:
         r1_regression_count=args.r1_regression,
         r0_epochs=args.r0_epochs,
         r1_epochs=args.r1_epochs,
+        r0_validation_interval=args.r0_validation_interval,
         r0_replay_per_r1_epoch=args.r0_replay_per_r1_epoch,
+        max_samples=args.max_samples,
         run_r1=not args.no_r1,
         freeze_r0_parameters_for_r1=not args.no_freeze_r0,
         mature_child_priority=not args.no_child_priority,
