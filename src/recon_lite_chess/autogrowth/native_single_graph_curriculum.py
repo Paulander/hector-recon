@@ -788,6 +788,74 @@ class NativeReConKRKGraph:
         )
         return tuple(rows[: max(0, int(max_candidates))])
 
+    def matched_random_shared_composite_candidates(
+        self,
+        triplet_ids: Iterable[str],
+        reference_candidates: Iterable[Mapping[str, Any]],
+        *,
+        seed: int,
+        max_atoms_per_triplet: int = 18,
+        min_support: int = 2,
+    ) -> tuple[dict[str, Any], ...]:
+        """Choose identity-randomized controls matched on coactivation support."""
+
+        references = tuple(reference_candidates)
+        if not references:
+            return ()
+        universe = list(
+            self.rank_shared_composite_candidates(
+                triplet_ids,
+                max_candidates=100_000,
+                max_atoms_per_triplet=max_atoms_per_triplet,
+                min_support=min_support,
+            )
+        )
+        reference_ids = {str(row["candidate_id"]) for row in references}
+        available = [
+            row for row in universe if str(row["candidate_id"]) not in reference_ids
+        ]
+        selected: list[dict[str, Any]] = []
+        for reference in references:
+            if not available:
+                break
+            reference_member_support = sorted(map(int, reference["member_supports"]))
+
+            def match_key(row: Mapping[str, Any]) -> tuple[int, int, str]:
+                member_support = sorted(map(int, row["member_supports"]))
+                member_distance = sum(
+                    abs(left - right)
+                    for left, right in zip(
+                        reference_member_support,
+                        member_support,
+                        strict=True,
+                    )
+                )
+                tie = hashlib.sha256(
+                    f"{int(seed)}:{str(row['candidate_id'])}".encode("utf-8")
+                ).hexdigest()
+                return (
+                    abs(int(reference["support"]) - int(row["support"])),
+                    member_distance,
+                    tie,
+                )
+
+            chosen = min(available, key=match_key)
+            available.remove(chosen)
+            control = dict(chosen)
+            control.update(
+                {
+                    "control_kind": "support_matched_identity_random",
+                    "matched_reference_candidate_id": reference["candidate_id"],
+                    "joint_support_distance": abs(
+                        int(reference["support"]) - int(chosen["support"])
+                    ),
+                    "control_selection_used_outcome_signal": False,
+                    "control_tie_break": "seeded_candidate_identity_sha256",
+                }
+            )
+            selected.append(control)
+        return tuple(selected)
+
     def set_composite_enabled(self, composite_id: str, *, enabled: bool) -> None:
         if composite_id not in self.composite_cells:
             raise KeyError(composite_id)

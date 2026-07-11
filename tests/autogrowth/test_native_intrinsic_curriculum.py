@@ -414,6 +414,30 @@ def test_native_composite_proposals_are_selective_bounded_and_deterministic() ->
         and row["candidate_generation_signal"] == "native_root_edge_weight"
         for row in first
     )
+    controls = graph.matched_random_shared_composite_candidates(
+        observed_triplets,
+        first,
+        seed=20260721,
+        max_atoms_per_triplet=256,
+        min_support=2,
+    )
+    repeated_controls = graph.matched_random_shared_composite_candidates(
+        reversed(sorted(observed_triplets)),
+        first,
+        seed=20260721,
+        max_atoms_per_triplet=256,
+        min_support=2,
+    )
+    assert controls == repeated_controls
+    assert len(controls) == len(first)
+    assert {row["candidate_id"] for row in controls}.isdisjoint(
+        row["candidate_id"] for row in first
+    )
+    assert all(
+        row["control_selection_used_outcome_signal"] is False
+        and row["control_tie_break"] == "seeded_candidate_identity_sha256"
+        for row in controls
+    )
     selected = first[0]
     composite_id = graph.materialize_shared_composite(
         selected["member_atom_ids"],
