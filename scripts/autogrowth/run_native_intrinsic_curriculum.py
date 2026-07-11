@@ -65,6 +65,18 @@ def main() -> int:
         choices=("live_formal", "frozen_policy_token"),
         default=defaults.r0_child_cache_validation_mode,
     )
+    parser.add_argument(
+        "--composite-proposal-epoch",
+        action="append",
+        type=int,
+        default=None,
+        help="Opt-in R1 structural epoch; repeat for multiple epochs.",
+    )
+    parser.add_argument(
+        "--composite-max-candidates",
+        type=int,
+        default=defaults.r1_composite_max_candidates,
+    )
     parser.add_argument("--no-r1", action="store_true")
     parser.add_argument("--no-freeze-r0", action="store_true")
     parser.add_argument("--no-child-priority", action="store_true")
@@ -110,6 +122,8 @@ def main() -> int:
         run_redundant_child_ablation=args.include_redundant_child_ablation,
         r0_availability_mode=args.availability,
         r0_child_cache_validation_mode=args.child_cache_validation,
+        r1_composite_proposal_epochs=tuple(args.composite_proposal_epoch or ()),
+        r1_composite_max_candidates=args.composite_max_candidates,
     )
     result = run_native_intrinsic_curriculum(config=config)
     path = result.write_json()

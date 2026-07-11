@@ -426,6 +426,103 @@ def test_native_composite_proposals_are_selective_bounded_and_deterministic() ->
     )
 
 
+def test_r1_structural_epoch_materializes_trial_candidates_without_causal_maturity(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    def fake_rank(self, triplet_ids, **_kwargs):
+        triplet_id = sorted(triplet_ids)[0]
+        members = sorted(
+            node_id
+            for node_id in self.triplet_nodes[triplet_id]
+            if self.graph.nodes[node_id].meta.get("shared_feature_atom")
+        )[:2]
+        assert len(members) == 2
+        return (
+            {
+                "candidate_id": "structural_hook_test_candidate",
+                "member_atom_ids": members,
+                "parent_triplet_ids": [triplet_id],
+                "candidate_generation_used_outcome_label": False,
+                "candidate_generation_signal": "native_root_edge_weight",
+            },
+        )
+
+    monkeypatch.setattr(
+        NativeReConKRKGraph,
+        "rank_shared_composite_candidates",
+        fake_rank,
+    )
+    graph = _graph()
+    credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
+    credit.register(R0_COMPETENCE_ID, mature=True)
+    gate = OutcomeCalibratedPrototypeGate(
+        feature_names=("probe",),
+        offsets=(0.0,),
+        scales=(1.0,),
+        prototypes=((0.0,), (1.0,)),
+        outcomes=(False, True),
+        neighbors=1,
+        threshold=0.5,
+        train_metrics={},
+        validation_metrics={},
+        mature=True,
+    )
+    r1_fen = R1_RETIRED_DEVELOPMENT_FENS[0]
+    pools = _Pools(
+        r0_train=(MATE_ONE_FEN,),
+        r0_validation=(MATE_ONE_FEN,),
+        r0_regression=(MATE_ONE_FEN,),
+        gate_train_decoys=(),
+        gate_validation_decoys=(),
+        gate_regression_decoys=(),
+        r1_train=(r1_fen,),
+        r1_validation=(r1_fen,),
+        r1_regression=(r1_fen,),
+        r0_train_strata=("test",),
+        r0_validation_strata=("test",),
+        r0_regression_strata=("test",),
+        r0_excluded_fens=(),
+        r0_pool_mode="test",
+        r1_train_strata=("test",),
+        r1_validation_strata=("test",),
+        r1_regression_strata=("test",),
+        r1_pool_mode="test",
+    )
+    config = NativeIntrinsicCurriculumConfig(
+        r0_replay_per_r1_epoch=0,
+        r1_validation_interval=1,
+        r1_snapshot_interval=1,
+        r1_mastery_threshold=2.0,
+        max_samples=0,
+        progress_path=str(tmp_path / "progress.json"),
+        r1_snapshot_dir=str(tmp_path / "snapshots"),
+        resume_r1_snapshots=False,
+        r1_composite_proposal_epochs=(1,),
+        r1_composite_max_candidates=1,
+    )
+
+    result = _run_r1_arm(
+        "full_intrinsic",
+        graph,
+        credit,
+        gate,
+        pools,
+        r0_replay_memory=(),
+        r0_child_triplet_ids=frozenset(),
+        max_epochs=1,
+        config=config,
+    )
+
+    assert result["training"]["composite_candidate_count"] == 1
+    assert result["training"]["composite_mature_count"] == 0
+    assert result["training"]["composite_causal_intervention_count"] == 0
+    assert result["training"]["composition_events"][0]["new_candidate_count"] == 1
+    cell = next(iter(graph.composite_cells.values()))
+    assert cell.state.name == "TRIAL"
+    assert cell.candidate_stats.credit_stats.total_interventions == 0
+
+
 def test_r1_interval_snapshot_resume_matches_uninterrupted(tmp_path) -> None:
     base_graph = _graph()
     base_credit = IntrinsicCreditEngine(IntrinsicCreditConfig())

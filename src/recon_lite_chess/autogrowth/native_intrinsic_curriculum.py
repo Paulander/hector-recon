@@ -151,6 +151,10 @@ class NativeIntrinsicCurriculumConfig:
     mature_child_priority: bool = True
     r0_availability_mode: str = "virtual_frame_verified"
     r0_child_cache_validation_mode: str = "live_formal"
+    r1_composite_proposal_epochs: tuple[int, ...] = ()
+    r1_composite_max_candidates: int = 8
+    r1_composite_max_atoms_per_triplet: int = 64
+    r1_composite_min_support: int = 2
     eta_m3: float = 0.08
     eta_fast: float = 0.20
     eta_slow: float = 1.0
@@ -1217,6 +1221,7 @@ def _run_r1_arm(
         reply_exposure_counts: dict[tuple[str, str], int] = {}
         child_dispatch_cache: dict[str, dict[str, Any]] = {}
         checkpoints: list[dict[str, Any]] = []
+        composition_events: list[dict[str, Any]] = []
         stopped_epoch = epoch_budget
         joint_mastery = False
     else:
@@ -1233,6 +1238,7 @@ def _run_r1_arm(
         reply_exposure_counts = dict(restored["reply_exposure_counts"])
         child_dispatch_cache = dict(restored["child_dispatch_cache"])
         checkpoints = list(restored["checkpoints"])
+        composition_events = list(restored.get("composition_events", []))
         stopped_epoch = int(restored["stopped_epoch"])
         joint_mastery = bool(restored["joint_mastery"])
         duration_before_resume = float(restored["duration_seconds"])
@@ -1333,6 +1339,42 @@ def _run_r1_arm(
         counters["replay_seconds"] += replay["duration_seconds"]
 
         epoch_number = epoch + 1
+        if (
+            arm_name == "full_intrinsic"
+            and epoch_number in set(config.r1_composite_proposal_epochs)
+        ):
+            r1_triplet_ids = {
+                triplet_id
+                for triplet_id in graph.triplet_ids
+                if triplet_id not in r0_child_triplet_ids
+                and str(
+                    graph.graph.nodes[triplet_id].meta.get("stage_diagnostic", "")
+                ).startswith("R1_")
+            }
+            proposals = graph.rank_shared_composite_candidates(
+                r1_triplet_ids,
+                max_candidates=config.r1_composite_max_candidates,
+                max_atoms_per_triplet=config.r1_composite_max_atoms_per_triplet,
+                min_support=config.r1_composite_min_support,
+            )
+            before_candidates = set(graph.composite_cells)
+            for proposal in proposals:
+                graph.materialize_shared_composite(
+                    proposal["member_atom_ids"],
+                    proposal["parent_triplet_ids"],
+                    stage=f"R1_structural_epoch_{epoch_number}",
+                )
+            composition_events.append(
+                {
+                    "epoch": epoch_number,
+                    "proposal_count": len(proposals),
+                    "new_candidate_count": len(set(graph.composite_cells) - before_candidates),
+                    "candidate_ids": [row["candidate_id"] for row in proposals],
+                    "proposals": list(proposals),
+                    "candidate_generation_used_outcome_label": False,
+                    "candidate_generation_signal": "native_root_edge_weight",
+                }
+            )
         force_stop = stop_after_epoch is not None and epoch_number >= stop_after_epoch
         should_observe = (
             epoch == 0
@@ -1415,6 +1457,7 @@ def _run_r1_arm(
                 "reply_exposure_counts": reply_exposure_counts,
                 "child_dispatch_cache": child_dispatch_cache,
                 "checkpoints": checkpoints,
+                "composition_events": composition_events,
                 "stopped_epoch": stopped_epoch,
                 "joint_mastery": joint_mastery,
                 "duration_seconds": elapsed,
@@ -1475,6 +1518,16 @@ def _run_r1_arm(
             "teacher_positive_move_sets_consumed": 0,
             "forced_first_move_labels_consumed": 0,
             "validation_checkpoints": checkpoints,
+            "composition_proposal_epochs": list(config.r1_composite_proposal_epochs),
+            "composition_events": composition_events,
+            "composite_candidate_count": len(graph.composite_cells),
+            "composite_mature_count": sum(
+                cell.state.name == "MATURE" for cell in graph.composite_cells.values()
+            ),
+            "composite_causal_intervention_count": sum(
+                cell.candidate_stats.credit_stats.total_interventions
+                for cell in graph.composite_cells.values()
+            ),
         },
         "validation": _evaluate_r1(
             graph,
