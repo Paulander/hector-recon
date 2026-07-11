@@ -26,6 +26,10 @@ from .robust_return import (
     RobustReturnConfig,
     RobustReturnMemory,
 )
+from .robust_policy import (
+    GraphBackedRobustActionPolicy,
+    RobustActionPolicyConfig,
+)
 from .trace_db import LearningEvent
 
 __all__ = [
@@ -52,5 +56,7 @@ __all__ = [
     "ReturnEstimate",
     "RobustReturnConfig",
     "RobustReturnMemory",
+    "GraphBackedRobustActionPolicy",
+    "RobustActionPolicyConfig",
     "RunLogger",
 ]
