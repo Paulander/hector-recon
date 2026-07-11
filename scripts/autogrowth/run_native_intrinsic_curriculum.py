@@ -28,6 +28,12 @@ def main() -> int:
     parser.add_argument("--r1-validation", type=int, default=defaults.r1_validation_count)
     parser.add_argument("--r1-regression", type=int, default=defaults.r1_regression_count)
     parser.add_argument(
+        "--r0-pool-mode",
+        choices=("random", "balanced_location"),
+        default=defaults.r0_pool_mode,
+    )
+    parser.add_argument("--r0-excluded-pool", type=Path)
+    parser.add_argument(
         "--r1-pool-mode",
         choices=("random", "balanced_setup"),
         default=defaults.r1_pool_mode,
@@ -49,11 +55,21 @@ def main() -> int:
     parser.add_argument("--no-child-priority", action="store_true")
     parser.add_argument("--include-redundant-child-ablation", action="store_true")
     args = parser.parse_args()
+    r0_excluded_fens: tuple[str, ...] = ()
+    if args.r0_excluded_pool is not None:
+        import json
+
+        values = json.loads(args.r0_excluded_pool.read_text(encoding="utf-8"))
+        if not isinstance(values, list) or not all(isinstance(fen, str) for fen in values):
+            raise ValueError("--r0-excluded-pool must contain a JSON list of FENs")
+        r0_excluded_fens = tuple(values)
 
     config = NativeIntrinsicCurriculumConfig(
         output_path=str(args.output),
         progress_path=str(args.progress),
         seed=args.seed,
+        r0_pool_mode=args.r0_pool_mode,
+        r0_excluded_fens=r0_excluded_fens,
         r1_pool_mode=args.r1_pool_mode,
         r0_train_count=args.r0_train,
         r0_validation_count=args.r0_validation,

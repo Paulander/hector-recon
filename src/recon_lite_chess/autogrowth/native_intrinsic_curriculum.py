@@ -35,6 +35,7 @@ from .foundation_curriculum import (
     _forced_mate_in_two_first_moves,
     _generate_forced_mate_in_two_positions,
     _generate_mate_in_one_positions,
+    _mate_moves,
     _random_krk_board,
     _valid_foundation_board,
 )
@@ -78,6 +79,16 @@ R1_BALANCED_STRATA = (
     "king_corner:h1",
     "king_corner:h8",
 )
+R0_BALANCED_STRATA = (
+    "black_king_edge:left",
+    "black_king_edge:right",
+    "black_king_edge:bottom",
+    "black_king_edge:top",
+    "black_king_corner:a1",
+    "black_king_corner:a8",
+    "black_king_corner:h1",
+    "black_king_corner:h8",
+)
 R1_RETIRED_DEVELOPMENT_FENS = (
     "8/8/1R6/8/8/1K6/8/1k6 w - - 0 1",
     "R7/8/8/8/1K6/8/8/1k6 w - - 0 1",
@@ -119,6 +130,8 @@ class NativeIntrinsicCurriculumConfig:
     r1_train_count: int = 24
     r1_validation_count: int = 12
     r1_regression_count: int = 12
+    r0_pool_mode: str = "random"
+    r0_excluded_fens: tuple[str, ...] = ()
     r1_pool_mode: str = "random"
     r0_epochs: int = 72
     r1_epochs: int = 120
@@ -174,6 +187,11 @@ class _Pools:
     r1_train: tuple[str, ...]
     r1_validation: tuple[str, ...]
     r1_regression: tuple[str, ...]
+    r0_train_strata: tuple[str, ...]
+    r0_validation_strata: tuple[str, ...]
+    r0_regression_strata: tuple[str, ...]
+    r0_excluded_fens: tuple[str, ...]
+    r0_pool_mode: str
     r1_train_strata: tuple[str, ...]
     r1_validation_strata: tuple[str, ...]
     r1_regression_strata: tuple[str, ...]
@@ -192,6 +210,21 @@ class _Pools:
             "r1_regression": self.r1_regression,
         }
         all_fens = [fen for values in groups.values() for fen in values]
+        r0_groups = {
+            "r0_train": self.r0_train,
+            "r0_validation": self.r0_validation,
+            "r0_regression": self.r0_regression,
+        }
+        r0_strata = {
+            "r0_train": self.r0_train_strata,
+            "r0_validation": self.r0_validation_strata,
+            "r0_regression": self.r0_regression_strata,
+        }
+        r0_orbits = [
+            _r1_orbit_key(fen)
+            for values in r0_groups.values()
+            for fen in values
+        ]
         r1_groups = {
             "r1_train": self.r1_train,
             "r1_validation": self.r1_validation,
@@ -219,6 +252,16 @@ class _Pools:
             "combined_sha256": _hash_json(groups),
             "final_test_created_or_touched": False,
             "solution_predicates_used_for": "curriculum scheduling only",
+            "r0_excluded_development": {
+                "count": len(self.r0_excluded_fens),
+                "sha256": _hash_json(self.r0_excluded_fens),
+            },
+            "r0_pool_mode": self.r0_pool_mode,
+            "r0_symmetry_orbits_disjoint": len(r0_orbits) == len(set(r0_orbits)),
+            "r0_strata": {
+                name: _stratum_manifest(r0_groups[name], labels)
+                for name, labels in r0_strata.items()
+            },
             "r1_pool_mode": self.r1_pool_mode,
             "r1_symmetry_orbits_disjoint": len(r1_orbits) == len(set(r1_orbits)),
             "r1_retired_development_orbit_overlap_count": sum(
@@ -554,7 +597,7 @@ def _credit_config(cfg: NativeIntrinsicCurriculumConfig) -> IntrinsicCreditConfi
 
 
 def _build_pools(cfg: NativeIntrinsicCurriculumConfig) -> _Pools:
-    used: set[str] = set()
+    used: set[str] = set(cfg.r0_excluded_fens)
 
     def m1(count: int, offset: int) -> tuple[str, ...]:
         values = tuple(
@@ -580,9 +623,38 @@ def _build_pools(cfg: NativeIntrinsicCurriculumConfig) -> _Pools:
         used.update(values)
         return values
 
-    r0_train = m1(cfg.r0_train_count, 0)
-    r0_validation = m1(cfg.r0_validation_count, 1)
-    r0_regression = m1(cfg.r0_regression_count, 2)
+    if cfg.r0_pool_mode == "random":
+        r0_train = m1(cfg.r0_train_count, 0)
+        r0_validation = m1(cfg.r0_validation_count, 1)
+        r0_regression = m1(cfg.r0_regression_count, 2)
+        r0_train_strata = tuple("random" for _ in r0_train)
+        r0_validation_strata = tuple("random" for _ in r0_validation)
+        r0_regression_strata = tuple("random" for _ in r0_regression)
+    elif cfg.r0_pool_mode == "balanced_location":
+        used_orbits = {_r1_orbit_key(fen) for fen in cfg.r0_excluded_fens}
+        r0_train, r0_train_strata = _generate_balanced_r0_split(
+            count=cfg.r0_train_count,
+            seed=cfg.seed,
+            used_fens=used,
+            used_orbits=used_orbits,
+            max_attempts=cfg.max_generation_attempts,
+        )
+        r0_validation, r0_validation_strata = _generate_balanced_r0_split(
+            count=cfg.r0_validation_count,
+            seed=cfg.seed + 1,
+            used_fens=used,
+            used_orbits=used_orbits,
+            max_attempts=cfg.max_generation_attempts,
+        )
+        r0_regression, r0_regression_strata = _generate_balanced_r0_split(
+            count=cfg.r0_regression_count,
+            seed=cfg.seed + 2,
+            used_fens=used,
+            used_orbits=used_orbits,
+            max_attempts=cfg.max_generation_attempts,
+        )
+    else:
+        raise ValueError("r0_pool_mode must be random or balanced_location")
     gate_train_decoys = _generate_non_m1_positions(
         count=cfg.r0_gate_train_decoy_count,
         seed=cfg.seed + 3,
@@ -651,11 +723,77 @@ def _build_pools(cfg: NativeIntrinsicCurriculumConfig) -> _Pools:
         r1_train=r1_train,
         r1_validation=r1_validation,
         r1_regression=r1_regression,
+        r0_train_strata=r0_train_strata,
+        r0_validation_strata=r0_validation_strata,
+        r0_regression_strata=r0_regression_strata,
+        r0_excluded_fens=tuple(cfg.r0_excluded_fens),
+        r0_pool_mode=cfg.r0_pool_mode,
         r1_train_strata=r1_train_strata,
         r1_validation_strata=r1_validation_strata,
         r1_regression_strata=r1_regression_strata,
         r1_pool_mode=cfg.r1_pool_mode,
     )
+
+
+def _balanced_r0_quotas(count: int) -> dict[str, int]:
+    if count <= 0 or count % 8 != 0:
+        raise ValueError(
+            "balanced_location R0 split counts must be positive multiples of 8"
+        )
+    return {label: count // 8 for label in R0_BALANCED_STRATA}
+
+
+def _generate_balanced_r0_split(
+    *,
+    count: int,
+    seed: int,
+    used_fens: set[str],
+    used_orbits: set[str],
+    max_attempts: int,
+) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    quotas = _balanced_r0_quotas(count)
+    accepted = {label: 0 for label in quotas}
+    positions: list[str] = []
+    labels: list[str] = []
+    rng = random.Random(seed)
+    for _attempt in range(max_attempts):
+        if len(positions) >= count:
+            break
+        board = _random_krk_board(rng)
+        if not _valid_foundation_board(board):
+            continue
+        mates = _mate_moves(board)
+        if not 1 <= len(mates) <= 3:
+            continue
+        label = _classify_r0_stratum(board)
+        if label is None or accepted[label] >= quotas[label]:
+            continue
+        fen = board.fen()
+        orbit = _r1_orbit_key(fen)
+        if fen in used_fens or orbit in used_orbits:
+            continue
+        used_fens.add(fen)
+        used_orbits.add(orbit)
+        positions.append(fen)
+        labels.append(label)
+        accepted[label] += 1
+    unmet = {
+        label: quotas[label] - accepted[label]
+        for label in quotas
+        if accepted[label] < quotas[label]
+    }
+    if unmet:
+        raise RuntimeError(
+            f"balanced R0 generation produced {len(positions)}/{count}; unmet={unmet}"
+        )
+    return tuple(positions), tuple(labels)
+
+
+def _classify_r0_stratum(board: chess.Board) -> str | None:
+    location_kind, location = _black_king_location(board)
+    if location_kind not in {"edge", "corner"}:
+        return None
+    return f"black_king_{location_kind}:{location}"
 
 
 def _balanced_r1_quotas(count: int) -> dict[str, int]:

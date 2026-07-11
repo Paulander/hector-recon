@@ -13,14 +13,18 @@ from recon_lite_hector.learning import (
     Responsibility,
 )
 from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
+    R0_BALANCED_STRATA,
     R0_COMPETENCE_ID,
     R1_BALANCED_STRATA,
     R1_RETIRED_DEVELOPMENT_FENS,
+    _balanced_r0_quotas,
     _balanced_r1_quotas,
     _build_r0_replay_memory,
     _choose_with_child_priority,
+    _classify_r0_stratum,
     _classify_r1_stratum,
     _execute_white_and_observe,
+    _generate_balanced_r0_split,
     _generate_balanced_r1_split,
     _r0_available,
     _r0_available_with_dispatch_cache,
@@ -29,6 +33,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
 )
 from recon_lite_chess.autogrowth.foundation_curriculum import (
     _forced_mate_in_two_first_moves,
+    _mate_moves,
 )
 from recon_lite_chess.autogrowth.native_single_graph_curriculum import (
     NativeReConKRKGraph,
@@ -90,6 +95,39 @@ def test_balanced_r1_quotas_cover_all_setup_and_orientation_strata() -> None:
     )
     with pytest.raises(ValueError):
         _balanced_r1_quotas(12)
+
+
+def test_balanced_r0_splits_cover_all_locations_and_are_orbit_disjoint() -> None:
+    used_fens: set[str] = set()
+    used_orbits: set[str] = set()
+    train, train_labels = _generate_balanced_r0_split(
+        count=16,
+        seed=20260719,
+        used_fens=used_fens,
+        used_orbits=used_orbits,
+        max_attempts=300_000,
+    )
+    heldout, heldout_labels = _generate_balanced_r0_split(
+        count=8,
+        seed=20260720,
+        used_fens=used_fens,
+        used_orbits=used_orbits,
+        max_attempts=300_000,
+    )
+
+    assert tuple(_balanced_r0_quotas(8)) == R0_BALANCED_STRATA
+    assert Counter(train_labels) == Counter(_balanced_r0_quotas(16))
+    assert Counter(heldout_labels) == Counter(_balanced_r0_quotas(8))
+    generated_orbits = [_r1_orbit_key(fen) for fen in (*train, *heldout)]
+    assert len(generated_orbits) == len(set(generated_orbits))
+    for fen, label in zip(
+        (*train, *heldout), (*train_labels, *heldout_labels), strict=True
+    ):
+        board = chess.Board(fen)
+        assert _mate_moves(board)
+        assert _classify_r0_stratum(board) == label
+    with pytest.raises(ValueError):
+        _balanced_r0_quotas(12)
 
 
 def test_balanced_r1_splits_are_stratified_and_orbit_disjoint() -> None:
