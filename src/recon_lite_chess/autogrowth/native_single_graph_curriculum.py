@@ -148,6 +148,8 @@ class NativeReConKRKGraph:
         self.shared_atom_key_by_id: dict[str, tuple[str, str]] = {}
         self.pruned_terminal_ids: set[str] = set()
         self.pruned_triplet_ids: set[str] = set()
+        self.frozen_policy_triplet_ids: frozenset[str] = frozenset()
+        self.frozen_policy_token: str | None = None
         self.m3_update_count = 0
         self.m4_event_count = 0
         self.runtime_choice_count = 0
@@ -166,6 +168,15 @@ class NativeReConKRKGraph:
             "shared_atom_retrieval_calls": 0,
             "shared_atom_retrieved_triplets": 0,
         }
+
+    def __deepcopy__(self, memo: dict[int, Any]) -> "NativeReConKRKGraph":
+        """Clone once for experimental arms without invoking pickle sanitization."""
+
+        restored = self.__class__.__new__(self.__class__)
+        memo[id(self)] = restored
+        for key, value in self.__dict__.items():
+            setattr(restored, key, copy.deepcopy(value, memo))
+        return restored
 
     def __getstate__(self) -> dict[str, Any]:
         """Return an exact snapshot state without unpickleable predicate closures."""
@@ -638,10 +649,59 @@ class NativeReConKRKGraph:
                 frozen_edges += 1
             edge.meta["plasticity_frozen"] = True
             edge.meta["plasticity_freeze_reason"] = str(reason)
+        self.frozen_policy_triplet_ids = frozenset(self.triplet_ids)
+        self.frozen_policy_token = self._compute_frozen_policy_token(
+            self.frozen_policy_triplet_ids
+        )
         return {
             "frozen_node_parameter_count": frozen_nodes,
             "frozen_edge_parameter_count": frozen_edges,
+            "frozen_policy_triplet_count": len(self.frozen_policy_triplet_ids),
+            "frozen_policy_token": self.frozen_policy_token,
         }
+
+    def frozen_child_policy_token(
+        self,
+        allowed_triplets: Iterable[str],
+    ) -> str | None:
+        allowed = frozenset(allowed_triplets)
+        if allowed != self.frozen_policy_triplet_ids:
+            return None
+        return self.frozen_policy_token
+
+    def _compute_frozen_policy_token(self, triplet_ids: Iterable[str]) -> str:
+        selected = frozenset(triplet_ids)
+        node_ids = {ROOT_ID}
+        for triplet_id in selected:
+            node_ids.update(self.triplet_nodes.get(triplet_id, ()))
+        node_rows = [
+            (
+                node_id,
+                self.graph.nodes[node_id].ntype.name,
+                float(self.graph.nodes[node_id].meta.get("local_weight", 0.0)),
+                bool(self.graph.nodes[node_id].meta.get("plasticity_frozen", False)),
+            )
+            for node_id in sorted(node_ids)
+            if node_id in self.graph.nodes
+        ]
+        edge_rows = sorted(
+            (
+                edge.src,
+                edge.dst,
+                edge.ltype.name,
+                float(edge.w),
+                bool(edge.meta.get("trainable", False)),
+                bool(edge.meta.get("plasticity_frozen", False)),
+            )
+            for edge in self.graph.edges
+            if edge.src in node_ids and edge.dst in node_ids
+        )
+        encoded = json.dumps(
+            {"triplets": sorted(selected), "nodes": node_rows, "edges": edge_rows},
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("utf-8")
+        return hashlib.sha256(encoded).hexdigest()
 
     def apply_shared_atom_pruning(self, *, terminal_threshold: float = -0.20, triplet_threshold: float = -0.25) -> dict[str, Any]:
         pruned_shared_atoms = 0

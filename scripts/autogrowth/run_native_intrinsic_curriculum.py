@@ -60,6 +60,11 @@ def main() -> int:
         choices=("prototype_gate", "virtual_frame_verified"),
         default=defaults.r0_availability_mode,
     )
+    parser.add_argument(
+        "--child-cache-validation",
+        choices=("live_formal", "frozen_policy_token"),
+        default=defaults.r0_child_cache_validation_mode,
+    )
     parser.add_argument("--no-r1", action="store_true")
     parser.add_argument("--no-freeze-r0", action="store_true")
     parser.add_argument("--no-child-priority", action="store_true")
@@ -104,6 +109,7 @@ def main() -> int:
         mature_child_priority=not args.no_child_priority,
         run_redundant_child_ablation=args.include_redundant_child_ablation,
         r0_availability_mode=args.availability,
+        r0_child_cache_validation_mode=args.child_cache_validation,
     )
     result = run_native_intrinsic_curriculum(config=config)
     path = result.write_json()

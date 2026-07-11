@@ -150,6 +150,7 @@ class NativeIntrinsicCurriculumConfig:
     run_redundant_child_ablation: bool = False
     mature_child_priority: bool = True
     r0_availability_mode: str = "virtual_frame_verified"
+    r0_child_cache_validation_mode: str = "live_formal"
     eta_m3: float = 0.08
     eta_fast: float = 0.20
     eta_slow: float = 1.0
@@ -524,8 +525,14 @@ def run_native_intrinsic_curriculum(
             "r0_replay_cache_used_as_provider": False,
             "r0_parameters_frozen_for_r1": cfg.freeze_r0_parameters_for_r1,
             "r0_child_queries_scoped_to_frozen_snapshot": True,
-            "r0_child_dispatch_cache_used_as_provider": False,
-            "r0_child_dispatch_hits_live_formally_confirmed": True,
+            "r0_child_dispatch_cache_used_as_external_provider": False,
+            "r0_child_dispatch_cache_is_memoized_graph_response": True,
+            "r0_child_dispatch_hits_live_formally_confirmed": (
+                cfg.r0_child_cache_validation_mode == "live_formal"
+            ),
+            "r0_child_dispatch_hits_frozen_policy_certified": (
+                cfg.r0_child_cache_validation_mode == "frozen_policy_token"
+            ),
             "runtime_child_priority_uses_stage_labels": False,
             "runtime_mature_child_priority_enabled": cfg.mature_child_priority,
             "runtime_child_priority_source": "mature_child_virtual_available_response",
@@ -1204,6 +1211,7 @@ def _run_r1_arm(
             "child_dispatch_cache_hits": 0,
             "child_dispatch_cache_misses": 0,
             "child_dispatch_cache_mismatches": 0,
+            "child_dispatch_cache_certified_hits": 0,
         }
         reply_orbits: set[tuple[str, str, str]] = set()
         reply_exposure_counts: dict[tuple[str, str], int] = {}
@@ -1265,7 +1273,7 @@ def _run_r1_arm(
                     reply_orbits.add((fen, move.uci(), reply.uci()))
                     terminal_kind = _terminal_kind(successor)
                     if terminal_kind is None and arm_name == "full_intrinsic":
-                        available, _response, cache_hit, cache_mismatch = (
+                        available, response, cache_hit, cache_mismatch = (
                             _r0_available_with_dispatch_cache(
                                 graph,
                                 r0_gate,
@@ -1274,11 +1282,15 @@ def _run_r1_arm(
                                 allowed_triplets=r0_child_triplet_ids,
                                 cache=child_dispatch_cache,
                                 enabled=config.freeze_r0_parameters_for_r1,
+                                cache_validation_mode=config.r0_child_cache_validation_mode,
                             )
                         )
                         counters["child_dispatch_cache_hits"] += int(cache_hit)
                         counters["child_dispatch_cache_misses"] += int(not cache_hit)
                         counters["child_dispatch_cache_mismatches"] += int(cache_mismatch)
+                        counters["child_dispatch_cache_certified_hits"] += int(
+                            response.get("cache_validation_mode") == "frozen_policy_token"
+                        )
                         counters["virtual_frame_queries"] += int(
                             config.r0_availability_mode == "virtual_frame_verified"
                         )
@@ -1453,6 +1465,8 @@ def _run_r1_arm(
             "r0_child_dispatch_cache_hit_count": counters["child_dispatch_cache_hits"],
             "r0_child_dispatch_cache_miss_count": counters["child_dispatch_cache_misses"],
             "r0_child_dispatch_cache_live_mismatch_count": counters["child_dispatch_cache_mismatches"],
+            "r0_child_dispatch_cache_certified_hit_count": counters["child_dispatch_cache_certified_hits"],
+            "r0_child_cache_validation_mode": config.r0_child_cache_validation_mode,
             "observed_terminal_failure_count": counters["failures"],
             "unique_first_move_reply_exposures": len(reply_orbits),
             "distinct_first_move_actions_exposed": len(reply_exposure_counts),
@@ -2006,9 +2020,15 @@ def _r0_available_with_dispatch_cache(
     allowed_triplets: frozenset[str],
     cache: dict[str, dict[str, Any]],
     enabled: bool,
+    cache_validation_mode: str = "live_formal",
 ) -> tuple[bool, dict[str, Any], bool, bool]:
-    """Memoize a frozen child response but live-confirm and re-execute cache hits."""
+    """Memoize a frozen child response with formal or policy-token validation."""
 
+    validation_mode = str(cache_validation_mode).strip().lower()
+    if validation_mode not in {"live_formal", "frozen_policy_token"}:
+        raise ValueError(
+            "r0_child_cache_validation_mode must be live_formal or frozen_policy_token"
+        )
     if not enabled or str(mode).strip().lower() != "virtual_frame_verified":
         available, response = _r0_available(
             graph,
@@ -2022,21 +2042,44 @@ def _r0_available_with_dispatch_cache(
     cache_key = board.fen()
     entry = cache.get(cache_key)
     if entry is not None:
-        confirmation = graph.confirm_candidate(
-            board,
-            triplet_id=str(entry["triplet_id"]),
-            move_uci=str(entry["move_uci"]),
-        )
-        selected_uci = confirmation.get("selected_move")
+        selected_uci: str | None = None
+        selected_triplet: str | None = None
+        source = "live_confirmed_frozen_child_dispatch_memory"
+        used_validation_mode = "live_formal"
+        if validation_mode == "frozen_policy_token":
+            expected_token = entry.get("frozen_policy_token")
+            current_token = graph.frozen_child_policy_token(allowed_triplets)
+            cached_move = str(entry["move_uci"])
+            cached_triplet = str(entry["triplet_id"])
+            move = chess.Move.from_uci(cached_move)
+            if (
+                expected_token is not None
+                and current_token == expected_token
+                and cached_triplet in allowed_triplets
+                and move in board.legal_moves
+            ):
+                selected_uci = cached_move
+                selected_triplet = cached_triplet
+                source = "frozen_policy_token_certified_child_dispatch_memory"
+                used_validation_mode = "frozen_policy_token"
+        if selected_uci is None:
+            confirmation = graph.confirm_candidate(
+                board,
+                triplet_id=str(entry["triplet_id"]),
+                move_uci=str(entry["move_uci"]),
+            )
+            selected_uci = confirmation.get("selected_move")
+            selected_triplet = confirmation.get("selected_triplet")
         observed_mate = False
         if selected_uci is not None:
             move = chess.Move.from_uci(str(selected_uci))
             observed_mate = _execute_white_and_observe(board, move) == "mate"
         response = {
             "selected_move": selected_uci,
-            "selected_triplet": confirmation.get("selected_triplet"),
+            "selected_triplet": selected_triplet,
             "observed_immediate_mate": observed_mate,
-            "availability_source": "live_confirmed_frozen_child_dispatch_memory",
+            "availability_source": source,
+            "cache_validation_mode": used_validation_mode,
             "virtual_frame_terminal_grounding_granted": False,
         }
         available = bool(observed_mate)
@@ -2056,9 +2099,10 @@ def _r0_available_with_dispatch_cache(
             "move_uci": str(selected_move),
             "triplet_id": str(selected_triplet),
             "available": bool(available),
+            "frozen_policy_token": graph.frozen_child_policy_token(allowed_triplets),
         }
+    response["cache_validation_mode"] = "live_formal"
     return available, response, False, False
-
 
 def _policy_response(
     graph: NativeReConKRKGraph,

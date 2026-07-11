@@ -100,6 +100,177 @@ def test_native_graph_pickle_roundtrip_restores_runtime_predicates() -> None:
     )
 
 
+def test_frozen_policy_token_cache_matches_live_formal_confirmation() -> None:
+    graph = _graph()
+    board = chess.Board(MATE_ONE_FEN)
+    for _ in range(4):
+        for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+            terminal = _execute_white_and_observe(board, move)
+            graph.apply_intrinsic_td(
+                board,
+                move,
+                td_error=1.0 if terminal == "mate" else -1.0,
+                stage_diagnostic="cache_token_test",
+            )
+    graph.mature_existing_graph()
+    graph.freeze_existing_parameters(reason="cache_token_test")
+    allowed = frozenset(graph.triplet_ids)
+
+    token_cache: dict[str, dict] = {}
+    miss = _r0_available_with_dispatch_cache(
+        graph,
+        None,
+        board,
+        mode="virtual_frame_verified",
+        allowed_triplets=allowed,
+        cache=token_cache,
+        enabled=True,
+        cache_validation_mode="frozen_policy_token",
+    )
+    token_hit = _r0_available_with_dispatch_cache(
+        graph,
+        None,
+        board,
+        mode="virtual_frame_verified",
+        allowed_triplets=allowed,
+        cache=token_cache,
+        enabled=True,
+        cache_validation_mode="frozen_policy_token",
+    )
+    live_hit = _r0_available_with_dispatch_cache(
+        graph,
+        None,
+        board,
+        mode="virtual_frame_verified",
+        allowed_triplets=allowed,
+        cache=token_cache,
+        enabled=True,
+        cache_validation_mode="live_formal",
+    )
+
+    assert miss[0] is True and miss[2] is False
+    assert token_hit[0] == live_hit[0] == miss[0]
+    assert token_hit[1]["selected_move"] == live_hit[1]["selected_move"]
+    assert token_hit[1]["selected_triplet"] == live_hit[1]["selected_triplet"]
+    assert token_hit[1]["cache_validation_mode"] == "frozen_policy_token"
+    assert live_hit[1]["cache_validation_mode"] == "live_formal"
+    assert token_hit[2] is True and live_hit[2] is True
+    assert token_hit[3] is False and live_hit[3] is False
+    assert graph.frozen_child_policy_token(allowed) == token_cache[board.fen()][
+        "frozen_policy_token"
+    ]
+    assert graph.frozen_child_policy_token(frozenset()) is None
+
+
+def test_frozen_policy_token_full_arm_matches_live_formal_with_cache_hits(
+    tmp_path,
+) -> None:
+    base_graph = _graph()
+    r1_fen = R1_RETIRED_DEVELOPMENT_FENS[0]
+    r1_board = chess.Board(r1_fen)
+    forced_first = tuple(_forced_mate_in_two_first_moves(r1_board))
+    assert forced_first
+
+    # Build a small, real Mate-in-1 child from every successor of one forced
+    # Mate-in-2 move. This is test setup only; R1 training still receives no
+    # forced-move labels and selects actions through the native graph.
+    after_first = r1_board.copy(stack=False)
+    after_first.push(forced_first[0])
+    for reply in tuple(after_first.legal_moves):
+        successor = after_first.copy(stack=False)
+        successor.push(reply)
+        for _ in range(4):
+            for move in sorted(successor.legal_moves, key=lambda item: item.uci()):
+                terminal = _execute_white_and_observe(successor, move)
+                base_graph.apply_intrinsic_td(
+                    successor,
+                    move,
+                    td_error=1.0 if terminal == "mate" else -1.0,
+                    stage_diagnostic="cache_arm_test_r0",
+                )
+    base_graph.mature_existing_graph()
+    base_graph.freeze_existing_parameters(reason="cache_arm_test")
+    child_triplets = frozenset(base_graph.triplet_ids)
+
+    base_credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
+    base_credit.register(R0_COMPETENCE_ID, mature=True)
+    gate = OutcomeCalibratedPrototypeGate(
+        feature_names=("probe",),
+        offsets=(0.0,),
+        scales=(1.0,),
+        prototypes=((0.0,), (1.0,)),
+        outcomes=(False, True),
+        neighbors=1,
+        threshold=0.5,
+        train_metrics={},
+        validation_metrics={},
+        mature=True,
+    )
+    pools = _Pools(
+        r0_train=(MATE_ONE_FEN,),
+        r0_validation=(MATE_ONE_FEN,),
+        r0_regression=(MATE_ONE_FEN,),
+        gate_train_decoys=(),
+        gate_validation_decoys=(),
+        gate_regression_decoys=(),
+        r1_train=(r1_fen,),
+        r1_validation=(r1_fen,),
+        r1_regression=(r1_fen,),
+        r0_train_strata=("test",),
+        r0_validation_strata=("test",),
+        r0_regression_strata=("test",),
+        r0_excluded_fens=(),
+        r0_pool_mode="test",
+        r1_train_strata=("test",),
+        r1_validation_strata=("test",),
+        r1_regression_strata=("test",),
+        r1_pool_mode="test",
+    )
+
+    def run_arm(mode: str):
+        graph = copy.deepcopy(base_graph)
+        credit = copy.deepcopy(base_credit)
+        config = NativeIntrinsicCurriculumConfig(
+            r0_replay_per_r1_epoch=0,
+            r1_validation_interval=30,
+            r1_snapshot_interval=30,
+            r1_mastery_threshold=2.0,
+            max_samples=0,
+            progress_path=str(tmp_path / f"{mode}_progress.json"),
+            r1_snapshot_dir=str(tmp_path / mode),
+            resume_r1_snapshots=False,
+            r0_child_cache_validation_mode=mode,
+        )
+        result = _run_r1_arm(
+            "full_intrinsic",
+            graph,
+            credit,
+            gate,
+            pools,
+            r0_replay_memory=(),
+            r0_child_triplet_ids=child_triplets,
+            max_epochs=30,
+            config=config,
+        )
+        return graph, credit, result
+
+    live_graph, live_credit, live = run_arm("live_formal")
+    token_graph, token_credit, token = run_arm("frozen_policy_token")
+
+    assert live["training"]["r0_child_dispatch_cache_hit_count"] > 0
+    assert token["training"]["r0_child_dispatch_cache_certified_hit_count"] == live[
+        "training"
+    ]["r0_child_dispatch_cache_hit_count"]
+    assert token["training"]["child_handoff_count"] == live["training"][
+        "child_handoff_count"
+    ]
+    assert token["validation"] == live["validation"]
+    assert token["regression"] == live["regression"]
+    assert token["r0_retention"] == live["r0_retention"]
+    assert token_graph.learned_state_audit() == live_graph.learned_state_audit()
+    assert token_credit.snapshot() == live_credit.snapshot()
+
+
 def test_r1_interval_snapshot_resume_matches_uninterrupted(tmp_path) -> None:
     base_graph = _graph()
     base_credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
