@@ -243,3 +243,124 @@ def test_consolidated_channel_can_still_propose_new_trial() -> None:
     assert len(learner.candidates) == 2
     assert learner.candidates[1].state == "trial"
     assert learner.shared_update_events_after_maturity == 0
+
+
+def test_adaptive_consolidation_requires_active_mature_evidence() -> None:
+    learner = OnlinePairCompositionLearner(
+        proposal_mode="residual_ranked",
+        random_seed=1,
+        config=OnlineCompositionConfig(
+            proposal_interval=100,
+            shared_learning_schedule="mature_activation_decay",
+            adaptive_consolidation_activations=2,
+        ),
+    )
+    learner.observe(("x",), 1.0)
+    assert learner.mature_evidence_activation_count == 0
+    assert learner.current_shared_learning_scale == 1.0
+
+    learner.candidates.append(
+        CompositeCandidate(
+            members=("a", "b"),
+            born_observation=0,
+            proposal_score=1.0,
+            support_at_proposal=16,
+            state="mature",
+        )
+    )
+    learner.observe(("x",), 1.0)
+    assert learner.mature_evidence_activation_count == 0
+    assert learner.current_shared_learning_scale == 1.0
+
+
+def test_adaptive_consolidation_counts_once_and_reaches_floor() -> None:
+    learner = OnlinePairCompositionLearner(
+        proposal_mode="residual_ranked",
+        random_seed=1,
+        config=OnlineCompositionConfig(
+            learning_rate=0.2,
+            proposal_interval=100,
+            shared_learning_schedule="mature_activation_decay",
+            adaptive_shared_learning_floor=0.1,
+            adaptive_consolidation_activations=2,
+        ),
+    )
+    learner.candidates.extend([
+        CompositeCandidate(
+            members=("a", "b"),
+            born_observation=0,
+            proposal_score=1.0,
+            support_at_proposal=16,
+            state="mature",
+        ),
+        CompositeCandidate(
+            members=("a", "c"),
+            born_observation=0,
+            proposal_score=1.0,
+            support_at_proposal=16,
+            state="mature",
+        ),
+    ])
+    learner.observe(("a", "b", "c"), 1.0)
+    assert learner.mature_evidence_activation_count == 1
+    assert learner.current_shared_learning_scale == pytest.approx(0.55)
+    assert learner.bias == pytest.approx(0.2 / 4 * 0.55)
+
+    learner.observe(("a", "b", "c"), 1.0)
+    assert learner.mature_evidence_activation_count == 2
+    assert learner.current_shared_learning_scale == pytest.approx(0.1)
+    learner.observe(("a", "b", "c"), 1.0)
+    assert learner.mature_evidence_activation_count == 3
+    assert learner.current_shared_learning_scale == pytest.approx(0.1)
+    snapshot = learner.snapshot()
+    assert snapshot["minimum_shared_learning_scale"] == pytest.approx(0.1)
+    assert snapshot[
+        "shared_learning_scale_observations_after_maturity"
+    ] == 3
+    assert snapshot[
+        "mean_shared_learning_scale_after_maturity"
+    ] == pytest.approx(0.25)
+
+
+def test_adaptive_consolidation_leaves_candidate_updates_full_strength() -> None:
+    learner = OnlinePairCompositionLearner(
+        proposal_mode="residual_ranked",
+        random_seed=1,
+        config=OnlineCompositionConfig(
+            learning_rate=0.2,
+            proposal_interval=100,
+            shared_learning_schedule="mature_activation_decay",
+            adaptive_shared_learning_floor=0.1,
+            adaptive_consolidation_activations=1,
+        ),
+    )
+    mature = CompositeCandidate(
+        members=("a", "b"),
+        born_observation=0,
+        proposal_score=1.0,
+        support_at_proposal=16,
+        state="mature",
+    )
+    trial = CompositeCandidate(
+        members=("a", "c"),
+        born_observation=0,
+        proposal_score=1.0,
+        support_at_proposal=16,
+    )
+    learner.candidates.extend((mature, trial))
+    learner.observe(("a", "b", "c"), 1.0)
+
+    assert learner.current_shared_learning_scale == pytest.approx(0.1)
+    assert learner.bias == pytest.approx(0.2 / 4 * 0.1)
+    assert mature.shadow_weight == pytest.approx(0.2)
+    assert trial.shadow_weight == pytest.approx(0.2)
+    assert learner.candidate_weight_updates_after_maturity == 2
+
+
+def test_adaptive_consolidation_config_validation() -> None:
+    with pytest.raises(ValueError, match="shared_learning_schedule"):
+        OnlineCompositionConfig(shared_learning_schedule="unknown")
+    with pytest.raises(ValueError, match="adaptive_shared_learning_floor"):
+        OnlineCompositionConfig(adaptive_shared_learning_floor=-0.1)
+    with pytest.raises(ValueError, match="adaptive_consolidation_activations"):
+        OnlineCompositionConfig(adaptive_consolidation_activations=0)

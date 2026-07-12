@@ -9,6 +9,7 @@ from typing import Iterable, Literal
 
 CandidateState = Literal["trial", "mature", "pruned"]
 ProposalMode = Literal["residual_ranked", "matched_random"]
+SharedLearningSchedule = Literal["fixed", "mature_activation_decay"]
 
 
 @dataclass(frozen=True)
@@ -24,6 +25,9 @@ class OnlineCompositionConfig:
     resource_cost: float = 0.002
     trial_max_age: int = 512
     shared_learning_after_maturity_scale: float = 1.0
+    shared_learning_schedule: SharedLearningSchedule = "fixed"
+    adaptive_shared_learning_floor: float = 0.10
+    adaptive_consolidation_activations: int = 1024
     prediction_min: float = -1.0
     prediction_max: float = 1.0
 
@@ -50,6 +54,18 @@ class OnlineCompositionConfig:
         if not 0.0 <= self.shared_learning_after_maturity_scale <= 1.0:
             raise ValueError(
                 "shared_learning_after_maturity_scale must be in [0, 1]"
+            )
+        if self.shared_learning_schedule not in {
+            "fixed", "mature_activation_decay",
+        }:
+            raise ValueError("unsupported shared_learning_schedule")
+        if not 0.0 <= self.adaptive_shared_learning_floor <= 1.0:
+            raise ValueError(
+                "adaptive_shared_learning_floor must be in [0, 1]"
+            )
+        if self.adaptive_consolidation_activations < 1:
+            raise ValueError(
+                "adaptive_consolidation_activations must be positive"
             )
         if self.prediction_min >= self.prediction_max:
             raise ValueError("prediction_min must be smaller than prediction_max")
@@ -103,6 +119,11 @@ class OnlinePairCompositionLearner:
         self.shared_update_events_before_maturity = 0
         self.shared_update_events_after_maturity = 0
         self.candidate_weight_updates_after_maturity = 0
+        self.mature_evidence_activation_count = 0
+        self.current_shared_learning_scale = 1.0
+        self.minimum_shared_learning_scale = 1.0
+        self.shared_learning_scale_sum_after_maturity = 0.0
+        self.shared_learning_scale_observations_after_maturity = 0
 
     def predict(self, active_atom_ids: Iterable[str]) -> float:
         atoms = self._normalize_atoms(active_atom_ids)
@@ -157,11 +178,28 @@ class OnlinePairCompositionLearner:
         )
         if has_mature_candidate and self.first_maturity_observation is None:
             self.first_maturity_observation = self.observation_count
-        shared_scale = (
-            self.config.shared_learning_after_maturity_scale
-            if has_mature_candidate
-            else 1.0
+        active_mature_candidate = any(
+            candidate.state == "mature"
+            and set(candidate.members) <= active
+            for candidate in self.candidates
         )
+        if (
+            self.config.shared_learning_schedule
+            == "mature_activation_decay"
+            and active_mature_candidate
+        ):
+            self.mature_evidence_activation_count += 1
+        shared_scale = self._shared_learning_scale(
+            has_mature_candidate=has_mature_candidate
+        )
+        self.current_shared_learning_scale = shared_scale
+        if has_mature_candidate:
+            self.minimum_shared_learning_scale = min(
+                self.minimum_shared_learning_scale,
+                shared_scale,
+            )
+            self.shared_learning_scale_sum_after_maturity += shared_scale
+            self.shared_learning_scale_observations_after_maturity += 1
         update = self.config.learning_rate * residual / max(1, len(atoms) + 1)
         update *= shared_scale
         if update != 0.0:
@@ -230,6 +268,24 @@ class OnlinePairCompositionLearner:
             "candidate_weight_updates_after_maturity": (
                 self.candidate_weight_updates_after_maturity
             ),
+            "mature_evidence_activation_count": (
+                self.mature_evidence_activation_count
+            ),
+            "current_shared_learning_scale": (
+                self.current_shared_learning_scale
+            ),
+            "minimum_shared_learning_scale": (
+                self.minimum_shared_learning_scale
+            ),
+            "mean_shared_learning_scale_after_maturity": (
+                self.shared_learning_scale_sum_after_maturity
+                / self.shared_learning_scale_observations_after_maturity
+                if self.shared_learning_scale_observations_after_maturity
+                else 1.0
+            ),
+            "shared_learning_scale_observations_after_maturity": (
+                self.shared_learning_scale_observations_after_maturity
+            ),
             "total_proposal_limit": self._total_proposal_limit(),
             "trial_prediction_influence_count": self.trial_prediction_influence_count,
             "candidates": [asdict(candidate) for candidate in self.candidates],
@@ -276,6 +332,19 @@ class OnlinePairCompositionLearner:
 
     def _clip(self, value: float) -> float:
         return min(self.config.prediction_max, max(self.config.prediction_min, value))
+
+    def _shared_learning_scale(self, *, has_mature_candidate: bool) -> float:
+        if not has_mature_candidate:
+            return 1.0
+        if self.config.shared_learning_schedule == "fixed":
+            return self.config.shared_learning_after_maturity_scale
+        progress = min(
+            1.0,
+            self.mature_evidence_activation_count
+            / self.config.adaptive_consolidation_activations,
+        )
+        floor = self.config.adaptive_shared_learning_floor
+        return 1.0 - (1.0 - floor) * progress
 
     def _live_candidate_count(self) -> int:
         return sum(
