@@ -116,3 +116,51 @@ def test_nonfinite_target_is_rejected() -> None:
     )
     with pytest.raises(ValueError):
         learner.observe(("a",), float("nan"))
+
+
+def test_pruned_candidate_releases_live_slot_with_bounded_lifetime() -> None:
+    config = OnlineCompositionConfig(
+        proposal_interval=1,
+        min_pair_support=1,
+        max_candidates=1,
+        max_total_proposals=3,
+    )
+    learner = OnlinePairCompositionLearner(
+        proposal_mode="residual_ranked", random_seed=1, config=config
+    )
+    learner.observe(("a", "b"), 1.0)
+    assert len(learner.candidates) == 1
+    learner.candidates[0].state = "pruned"
+
+    learner.observe(("a", "c"), 1.0)
+    assert len(learner.candidates) == 2
+    learner.candidates[1].state = "mature"
+    learner.observe(("b", "c"), 1.0)
+    assert len(learner.candidates) == 2
+
+    learner.candidates[1].state = "pruned"
+    learner.observe(("b", "c"), 1.0)
+    assert len(learner.candidates) == 3
+    learner.candidates[2].state = "pruned"
+    learner.observe(("d", "e"), 1.0)
+    assert len(learner.candidates) == 3
+    snapshot = learner.snapshot()
+    assert snapshot["live_candidate_count"] == 0
+    assert snapshot["candidate_state_counts"]["pruned"] == 3
+    assert snapshot["total_proposal_limit"] == 3
+
+
+def test_legacy_default_remains_lifetime_candidate_cap() -> None:
+    config = OnlineCompositionConfig(
+        proposal_interval=1,
+        min_pair_support=1,
+        max_candidates=1,
+    )
+    learner = OnlinePairCompositionLearner(
+        proposal_mode="residual_ranked", random_seed=1, config=config
+    )
+    learner.observe(("a", "b"), 1.0)
+    learner.candidates[0].state = "pruned"
+    learner.observe(("a", "c"), 1.0)
+    assert len(learner.candidates) == 1
+    assert learner.snapshot()["total_proposal_limit"] == 1

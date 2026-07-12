@@ -17,6 +17,7 @@ class OnlineCompositionConfig:
     proposal_interval: int = 128
     min_pair_support: int = 16
     max_candidates: int = 4
+    max_total_proposals: int | None = None
     burn_in_activations: int = 8
     confirmation_activations: int = 32
     causal_margin: float = 0.01
@@ -36,6 +37,13 @@ class OnlineCompositionConfig:
                 raise ValueError(f"{name} must be positive")
         if self.burn_in_activations < 0:
             raise ValueError("burn_in_activations cannot be negative")
+        if (
+            self.max_total_proposals is not None
+            and self.max_total_proposals < self.max_candidates
+        ):
+            raise ValueError(
+                "max_total_proposals cannot be smaller than max_candidates"
+            )
         if self.causal_margin < 0.0 or self.resource_cost < 0.0:
             raise ValueError("costs cannot be negative")
         if self.prediction_min >= self.prediction_max:
@@ -85,6 +93,7 @@ class OnlinePairCompositionLearner:
         self._proposed_pairs: set[tuple[str, str]] = set()
         self.global_residual_sum = 0.0
         self.trial_prediction_influence_count = 0
+        self.max_observed_live_candidate_count = 0
 
     def predict(self, active_atom_ids: Iterable[str]) -> float:
         atoms = self._normalize_atoms(active_atom_ids)
@@ -151,9 +160,14 @@ class OnlinePairCompositionLearner:
                 candidate.decision_observation = self.observation_count
         if (
             self.observation_count % self.config.proposal_interval == 0
-            and len(self.candidates) < self.config.max_candidates
+            and self._live_candidate_count() < self.config.max_candidates
+            and len(self.candidates) < self._total_proposal_limit()
         ):
             self._propose()
+            self.max_observed_live_candidate_count = max(
+                self.max_observed_live_candidate_count,
+                self._live_candidate_count(),
+            )
         return prediction
 
     def snapshot(self) -> dict[str, object]:
@@ -165,6 +179,17 @@ class OnlinePairCompositionLearner:
             "bias": self.bias,
             "primitive_weights": dict(sorted(self.primitive_weights.items())),
             "candidate_count": len(self.candidates),
+            "candidate_state_counts": {
+                state: sum(
+                    candidate.state == state for candidate in self.candidates
+                )
+                for state in ("trial", "mature", "pruned")
+            },
+            "live_candidate_count": self._live_candidate_count(),
+            "max_observed_live_candidate_count": (
+                self.max_observed_live_candidate_count
+            ),
+            "total_proposal_limit": self._total_proposal_limit(),
             "trial_prediction_influence_count": self.trial_prediction_influence_count,
             "candidates": [asdict(candidate) for candidate in self.candidates],
         }
@@ -210,6 +235,20 @@ class OnlinePairCompositionLearner:
 
     def _clip(self, value: float) -> float:
         return min(self.config.prediction_max, max(self.config.prediction_min, value))
+
+    def _live_candidate_count(self) -> int:
+        return sum(
+            candidate.state in {"trial", "mature"}
+            for candidate in self.candidates
+        )
+
+    def _total_proposal_limit(self) -> int:
+        configured = self.config.max_total_proposals
+        return (
+            self.config.max_candidates
+            if configured is None
+            else configured
+        )
 
     @staticmethod
     def _normalize_atoms(active_atom_ids: Iterable[str]) -> tuple[str, ...]:
