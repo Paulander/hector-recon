@@ -63,3 +63,22 @@ def test_exploration_uses_constant_rng_call_budget() -> None:
         tail_policy.choose(explore=True)
 
     assert mean_policy.rng_call_count == tail_policy.rng_call_count == 30
+
+
+def test_long_horizon_graph_choice_uses_uncontaminated_mean() -> None:
+    mean_policy = _policy("mean")
+    tail_policy = _policy("lower_tail")
+    pattern = (1.0,) * 7 + (-1.0,)
+    for policy in (mean_policy, tail_policy):
+        for index in range(4096):
+            policy.observe("anonymous_a", pattern[index % len(pattern)])
+            policy.observe("anonymous_b", 0.4)
+
+    assert mean_policy.memory.estimate("anonymous_a").mean == pytest.approx(
+        0.75, abs=1e-12
+    )
+    assert len(mean_policy.memory.states["anonymous_a"].returns) == 256
+    assert mean_policy.greedy_action() == "anonymous_a"
+    assert tail_policy.greedy_action() == "anonymous_b"
+    assert mean_policy.graph_prediction_mismatch_count == 0
+    assert tail_policy.graph_prediction_mismatch_count == 0

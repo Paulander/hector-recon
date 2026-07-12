@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 import random
 
 import pytest
@@ -69,8 +70,9 @@ def test_robust_return_snapshot_contains_only_ids_and_scalar_returns() -> None:
     memory.observe("cell_7", -0.5)
 
     snapshot = memory.snapshot()
-    assert snapshot["schema_version"] == "recon_robust_return.v1"
+    assert snapshot["schema_version"] == "recon_robust_return.v2"
     assert snapshot["states"]["cell_7"]["returns"] == [0.25, -0.5]
+    assert snapshot["states"]["cell_7"]["exact_return_sum"] == -0.25
     assert "stage" not in repr(snapshot).lower()
     assert "correct" not in repr(snapshot).lower()
 
@@ -80,3 +82,50 @@ def test_robust_return_rejects_nonfinite_observations(value: float) -> None:
     memory = RobustReturnMemory()
     with pytest.raises(ValueError, match="observed return must be finite"):
         memory.observe("cell", value)
+
+
+@pytest.mark.parametrize("count", [256, 1024, 4096])
+def test_exact_streaming_mean_survives_tail_compression(count: int) -> None:
+    memory = RobustReturnMemory(
+        RobustReturnConfig(
+            capacity=256,
+            lower_quantile=0.10,
+            min_observations=8,
+            confidence_prior=3.0,
+        )
+    )
+    pattern = (1.0,) * 7 + (-1.0,)
+    for index in range(count):
+        memory.observe("refutable", pattern[index % len(pattern)])
+        memory.observe("constant", 0.4)
+
+    refutable = memory.estimate("refutable")
+    constant = memory.estimate("constant")
+    assert refutable.observation_count == count
+    assert refutable.retained_count <= 256
+    assert refutable.mean == pytest.approx(0.75, abs=1e-12)
+    assert refutable.lower_quantile == -1.0
+    assert constant.mean == pytest.approx(0.4, abs=1e-12)
+    assert memory.select(
+        ("refutable", "constant"), objective="mean"
+    ) == "refutable"
+    assert memory.select(
+        ("refutable", "constant"), objective="lower_tail"
+    ) == "constant"
+
+
+def test_exact_streaming_mean_matches_fsum_on_mixed_long_stream() -> None:
+    values = [((index % 17) - 8) / 8 for index in range(4096)]
+    memory = RobustReturnMemory(
+        RobustReturnConfig(capacity=256, lower_quantile=0.10)
+    )
+    for value in values:
+        memory.observe("mixed", value)
+
+    state = memory.states["mixed"]
+    estimate = memory.estimate("mixed")
+    assert estimate.mean == pytest.approx(
+        math.fsum(values) / len(values), abs=1e-15
+    )
+    assert state.return_sum == pytest.approx(math.fsum(values), abs=1e-12)
+    assert len(state.returns) == 256

@@ -55,6 +55,8 @@ class ReturnDistributionState:
     cell_id: str
     returns: list[float] = field(default_factory=list)
     observation_count: int = 0
+    return_sum: float = 0.0
+    return_sum_compensation: float = 0.0
 
 
 class RobustReturnMemory:
@@ -73,6 +75,7 @@ class RobustReturnMemory:
             str(cell_id), ReturnDistributionState(cell_id=str(cell_id))
         )
         state.observation_count += 1
+        self._add_to_exact_sum(state, value)
         state.returns.append(value)
         if len(state.returns) > self.config.capacity:
             self._compress(state)
@@ -99,7 +102,7 @@ class RobustReturnMemory:
                 robust_score=prior,
             )
         ordered = sorted(values)
-        mean = sum(ordered) / len(ordered)
+        mean = state.return_sum / observation_count
         rank = max(0, math.ceil(self.config.lower_quantile * len(ordered)) - 1)
         lower = ordered[rank]
         confidence = observation_count / (
@@ -148,11 +151,13 @@ class RobustReturnMemory:
 
     def snapshot(self) -> dict[str, object]:
         return {
-            "schema_version": "recon_robust_return.v1",
+            "schema_version": "recon_robust_return.v2",
             "config": asdict(self.config),
             "states": {
                 cell_id: {
                     "observation_count": state.observation_count,
+                    "exact_return_sum": state.return_sum,
+                    "return_sum_compensation": state.return_sum_compensation,
                     "returns": list(state.returns),
                     "estimate": asdict(self.estimate(cell_id)),
                 }
@@ -174,3 +179,16 @@ class RobustReturnMemory:
         stride = len(remainder) / slots
         coverage = [remainder[min(len(remainder) - 1, int(index * stride))] for index in range(slots)]
         state.returns = tail + coverage
+
+    @staticmethod
+    def _add_to_exact_sum(
+        state: ReturnDistributionState, value: float
+    ) -> None:
+        """Kahan-compensated streaming sum, independent of sketch compression."""
+
+        adjusted = value - state.return_sum_compensation
+        updated = state.return_sum + adjusted
+        state.return_sum_compensation = (
+            updated - state.return_sum
+        ) - adjusted
+        state.return_sum = updated
