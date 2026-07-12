@@ -23,6 +23,7 @@ class OnlineCompositionConfig:
     causal_margin: float = 0.01
     resource_cost: float = 0.002
     trial_max_age: int = 512
+    shared_learning_after_maturity_scale: float = 1.0
     prediction_min: float = -1.0
     prediction_max: float = 1.0
 
@@ -46,6 +47,10 @@ class OnlineCompositionConfig:
             )
         if self.causal_margin < 0.0 or self.resource_cost < 0.0:
             raise ValueError("costs cannot be negative")
+        if not 0.0 <= self.shared_learning_after_maturity_scale <= 1.0:
+            raise ValueError(
+                "shared_learning_after_maturity_scale must be in [0, 1]"
+            )
         if self.prediction_min >= self.prediction_max:
             raise ValueError("prediction_min must be smaller than prediction_max")
 
@@ -94,6 +99,10 @@ class OnlinePairCompositionLearner:
         self.global_residual_sum = 0.0
         self.trial_prediction_influence_count = 0
         self.max_observed_live_candidate_count = 0
+        self.first_maturity_observation: int | None = None
+        self.shared_update_events_before_maturity = 0
+        self.shared_update_events_after_maturity = 0
+        self.candidate_weight_updates_after_maturity = 0
 
     def predict(self, active_atom_ids: Iterable[str]) -> float:
         atoms = self._normalize_atoms(active_atom_ids)
@@ -122,6 +131,9 @@ class OnlinePairCompositionLearner:
                 evidence.support += 1
                 evidence.residual_sum += residual
 
+        mature_before_update = any(
+            candidate.state == "mature" for candidate in self.candidates
+        )
         for candidate in self.candidates:
             if candidate.state != "trial" or not set(candidate.members) <= active:
                 continue
@@ -135,10 +147,28 @@ class OnlinePairCompositionLearner:
                 candidate.shadow_weight
                 + self.config.learning_rate * (outcome - shadow_prediction)
             )
+            if mature_before_update:
+                self.candidate_weight_updates_after_maturity += 1
             if candidate.confirmation_count >= self.config.confirmation_activations:
                 self._decide(candidate)
 
+        has_mature_candidate = any(
+            candidate.state == "mature" for candidate in self.candidates
+        )
+        if has_mature_candidate and self.first_maturity_observation is None:
+            self.first_maturity_observation = self.observation_count
+        shared_scale = (
+            self.config.shared_learning_after_maturity_scale
+            if has_mature_candidate
+            else 1.0
+        )
         update = self.config.learning_rate * residual / max(1, len(atoms) + 1)
+        update *= shared_scale
+        if update != 0.0:
+            if has_mature_candidate:
+                self.shared_update_events_after_maturity += 1
+            else:
+                self.shared_update_events_before_maturity += 1
         self.bias = self._clip(self.bias + update)
         for atom in atoms:
             self.primitive_weights[atom] = self._clip(
@@ -149,6 +179,7 @@ class OnlinePairCompositionLearner:
                 candidate.shadow_weight = self._clip(
                     candidate.shadow_weight + self.config.learning_rate * residual
                 )
+                self.candidate_weight_updates_after_maturity += 1
 
         for candidate in self.candidates:
             if (
@@ -188,6 +219,16 @@ class OnlinePairCompositionLearner:
             "live_candidate_count": self._live_candidate_count(),
             "max_observed_live_candidate_count": (
                 self.max_observed_live_candidate_count
+            ),
+            "first_maturity_observation": self.first_maturity_observation,
+            "shared_update_events_before_maturity": (
+                self.shared_update_events_before_maturity
+            ),
+            "shared_update_events_after_maturity": (
+                self.shared_update_events_after_maturity
+            ),
+            "candidate_weight_updates_after_maturity": (
+                self.candidate_weight_updates_after_maturity
             ),
             "total_proposal_limit": self._total_proposal_limit(),
             "trial_prediction_influence_count": self.trial_prediction_influence_count,

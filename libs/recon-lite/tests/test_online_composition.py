@@ -164,3 +164,82 @@ def test_legacy_default_remains_lifetime_candidate_cap() -> None:
     learner.observe(("a", "c"), 1.0)
     assert len(learner.candidates) == 1
     assert learner.snapshot()["total_proposal_limit"] == 1
+
+
+def test_consolidation_freezes_shared_but_not_mature_candidate_weight() -> None:
+    learner = OnlinePairCompositionLearner(
+        proposal_mode="residual_ranked",
+        random_seed=1,
+        config=OnlineCompositionConfig(
+            proposal_interval=100,
+            shared_learning_after_maturity_scale=0.0,
+        ),
+    )
+    mature = CompositeCandidate(
+        members=("a", "b"),
+        born_observation=0,
+        proposal_score=1.0,
+        support_at_proposal=16,
+        state="mature",
+        shadow_weight=0.25,
+    )
+    learner.candidates.append(mature)
+    learner.primitive_weights = {"a": 0.1, "b": -0.1}
+    bias_before = learner.bias
+    primitive_before = dict(learner.primitive_weights)
+    candidate_before = mature.shadow_weight
+    learner.observe(("a", "b"), 1.0)
+
+    assert learner.bias == bias_before
+    assert learner.primitive_weights == primitive_before
+    assert mature.shadow_weight != candidate_before
+    assert learner.first_maturity_observation == 1
+    assert learner.shared_update_events_after_maturity == 0
+    assert learner.candidate_weight_updates_after_maturity > 0
+
+
+def test_default_keeps_shared_weights_plastic_after_maturity() -> None:
+    learner = OnlinePairCompositionLearner(
+        proposal_mode="residual_ranked",
+        random_seed=1,
+        config=OnlineCompositionConfig(proposal_interval=100),
+    )
+    learner.candidates.append(
+        CompositeCandidate(
+            members=("a", "b"),
+            born_observation=0,
+            proposal_score=1.0,
+            support_at_proposal=16,
+            state="mature",
+        )
+    )
+    learner.observe(("a", "b"), 1.0)
+    assert learner.bias != 0.0
+    assert learner.shared_update_events_after_maturity == 1
+
+
+def test_consolidated_channel_can_still_propose_new_trial() -> None:
+    learner = OnlinePairCompositionLearner(
+        proposal_mode="residual_ranked",
+        random_seed=1,
+        config=OnlineCompositionConfig(
+            proposal_interval=1,
+            min_pair_support=1,
+            max_candidates=2,
+            max_total_proposals=3,
+            shared_learning_after_maturity_scale=0.0,
+        ),
+    )
+    learner.candidates.append(
+        CompositeCandidate(
+            members=("x", "y"),
+            born_observation=0,
+            proposal_score=1.0,
+            support_at_proposal=16,
+            state="mature",
+        )
+    )
+    learner.observe(("a", "b"), 1.0)
+    assert len(learner.candidates) == 2
+    assert learner.candidates[1].state == "trial"
+    assert learner.shared_update_events_after_maturity == 0
