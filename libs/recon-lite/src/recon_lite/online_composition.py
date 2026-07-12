@@ -111,6 +111,12 @@ class CompositeCandidate:
     paired_improvement: float | None = None
     net_improvement: float | None = None
     decision_observation: int | None = None
+    rent_review_count: int = 0
+    rent_adequate_review_count: int = 0
+    last_rent: float | None = None
+    last_margin_utility: float | None = None
+    negative_review_streak: int = 0
+    uncertainty_review_streak: int = 0
 
 
 class OnlinePairCompositionLearner:
@@ -126,6 +132,7 @@ class OnlinePairCompositionLearner:
             raise ValueError("unsupported proposal_mode")
         self.config = config or OnlineCompositionConfig()
         self.proposal_mode = proposal_mode
+        self.external_lifecycle = False
         self._rng = random.Random(random_seed)
         self.observation_count = 0
         self.bias = 0.0
@@ -236,7 +243,7 @@ class OnlinePairCompositionLearner:
             "responsibility_conserving",
             "responsibility_shuffled",
         }
-        if not allocation_mode:
+        if not allocation_mode and not self.external_lifecycle:
             for _, candidate in active_trials:
                 if (
                     candidate.confirmation_count
@@ -294,6 +301,8 @@ class OnlinePairCompositionLearner:
             )
         for candidate in self.candidates:
             if (
+                not self.external_lifecycle
+                and
                 candidate.state == "trial"
                 and self.observation_count - candidate.born_observation
                 >= self.config.trial_max_age
@@ -301,6 +310,8 @@ class OnlinePairCompositionLearner:
                 candidate.state = "pruned"
                 candidate.decision_observation = self.observation_count
         if (
+            not self.external_lifecycle
+            and
             self.observation_count % self.config.proposal_interval == 0
             and self._live_candidate_count() < self.config.max_candidates
             and len(self.candidates) < self._total_proposal_limit()
@@ -317,6 +328,7 @@ class OnlinePairCompositionLearner:
             "schema_version": "recon_online_pair_composition.v1",
             "config": asdict(self.config),
             "proposal_mode": self.proposal_mode,
+            "external_lifecycle": self.external_lifecycle,
             "observation_count": self.observation_count,
             "bias": self.bias,
             "primitive_weights": dict(sorted(self.primitive_weights.items())),
@@ -381,34 +393,94 @@ class OnlinePairCompositionLearner:
             "candidates": [asdict(candidate) for candidate in self.candidates],
         }
 
-    def _propose(self) -> None:
+    def proposal_options(self) -> tuple[tuple[tuple[str, str], float], ...]:
+        """Return content-blind eligible pair scores without mutating state."""
         eligible = sorted(
             pair for pair, evidence in self.pair_evidence.items()
             if evidence.support >= self.config.min_pair_support
             and pair not in self._proposed_pairs
         )
-        if not eligible:
-            return
-        global_mean = self.global_residual_sum / self.observation_count
+        return tuple((pair, self._proposal_score(pair)) for pair in eligible)
 
-        def score(pair: tuple[str, str]) -> float:
-            evidence = self.pair_evidence[pair]
-            pair_mean = evidence.residual_sum / evidence.support
-            return abs(pair_mean - global_mean) * math.sqrt(evidence.support)
-
-        pair = (
-            max(eligible, key=lambda item: (score(item), item))
-            if self.proposal_mode == "residual_ranked"
-            else self._rng.choice(eligible)
-        )
-        evidence = self.pair_evidence[pair]
-        self._proposed_pairs.add(pair)
+    def propose_pair(self, pair: tuple[str, str]) -> int:
+        """Create one explicitly selected trial candidate."""
+        normalized = tuple(sorted(set(map(str, pair))))
+        if len(normalized) != 2:
+            raise ValueError("a pair proposal requires two distinct members")
+        options = dict(self.proposal_options())
+        if normalized not in options:
+            raise ValueError("pair is not currently eligible for proposal")
+        if len(self.candidates) >= self._total_proposal_limit():
+            raise RuntimeError("candidate lifetime proposal limit reached")
+        evidence = self.pair_evidence[normalized]
+        self._proposed_pairs.add(normalized)
         self.candidates.append(CompositeCandidate(
-            members=pair,
+            members=normalized,
             born_observation=self.observation_count,
-            proposal_score=score(pair),
+            proposal_score=options[normalized],
             support_at_proposal=evidence.support,
         ))
+        self.max_observed_live_candidate_count = max(
+            self.max_observed_live_candidate_count,
+            self._live_candidate_count(),
+        )
+        return len(self.candidates) - 1
+
+    def transition_candidate(self, index: int, state: CandidateState) -> None:
+        """Apply an externally adjudicated lifecycle transition."""
+        if state not in {"trial", "mature", "pruned"}:
+            raise ValueError("unsupported candidate state")
+        candidate = self.candidates[index]
+        if candidate.state == "pruned" and state != "pruned":
+            raise ValueError("pruned candidates cannot be revived")
+        candidate.state = state
+        candidate.decision_observation = self.observation_count
+
+    def candidate_prediction_pair(
+        self,
+        active_atom_ids: Iterable[str],
+        candidate_index: int,
+    ) -> tuple[float, float]:
+        """Return predictions with and without one active candidate."""
+        atoms = self._normalize_atoms(active_atom_ids)
+        candidate = self.candidates[candidate_index]
+        active = set(atoms)
+        raw_without = self.bias + sum(
+            self.primitive_weights.get(atom, 0.0) for atom in atoms
+        )
+        for index, other in enumerate(self.candidates):
+            if (
+                index != candidate_index
+                and other.state == "mature"
+                and set(other.members) <= active
+            ):
+                raw_without += other.shadow_weight
+        without = self._clip(raw_without)
+        with_candidate = self._clip(
+            raw_without + candidate.shadow_weight
+            if set(candidate.members) <= active
+            else raw_without
+        )
+        return with_candidate, without
+
+    def _proposal_score(self, pair: tuple[str, str]) -> float:
+        if self.observation_count == 0:
+            return 0.0
+        global_mean = self.global_residual_sum / self.observation_count
+        evidence = self.pair_evidence[pair]
+        pair_mean = evidence.residual_sum / evidence.support
+        return abs(pair_mean - global_mean) * math.sqrt(evidence.support)
+
+    def _propose(self) -> None:
+        options = self.proposal_options()
+        if not options:
+            return
+        pair = (
+            max(options, key=lambda item: (item[1], item[0]))[0]
+            if self.proposal_mode == "residual_ranked"
+            else self._rng.choice(options)[0]
+        )
+        self.propose_pair(pair)
 
     def _decide(self, candidate: CompositeCandidate) -> None:
         disabled = candidate.disabled_error_sum / candidate.confirmation_count

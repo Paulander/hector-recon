@@ -7,6 +7,13 @@ import math
 import random
 from typing import Iterable
 
+from .causal_rent import (
+    CandidateRentStats,
+    CausalRentConfig,
+    ExperienceReservoirConfig,
+    LifetimeDecisionRecord,
+    LifetimeDecisionReservoir,
+)
 from .graph import Graph, LinkType, Node, NodeType
 from .online_composition import (
     OnlineCompositionConfig,
@@ -35,6 +42,8 @@ class DecisionTrace:
     component_importance: tuple[tuple[str, float], ...] = ()
     raw_component_contributions: tuple[tuple[str, float], ...] = ()
     component_states: tuple[tuple[str, str], ...] = ()
+    legal_action_ids: tuple[str, ...] = ()
+    decision_scores: tuple[tuple[str, float], ...] = ()
     elapsed_steps: int = 0
 
 
@@ -203,6 +212,11 @@ class GraphBackedCompositionChannel:
             "trial_root_edge_count": self.trial_root_edge_count,
         }
 
+    def sync_external_lifecycle(self) -> None:
+        """Reflect externally reviewed candidate state in the real graph."""
+        self._sync_topology()
+        self._sync_weights()
+
     def _ensure_primitive(self, atom_id: str) -> None:
         if atom_id in self.primitive_node_ids:
             return
@@ -289,6 +303,7 @@ class EpisodicCompositionPolicy:
         random_seed: int,
         config: EpisodicCompositionConfig | None = None,
         composition_config: OnlineCompositionConfig | None = None,
+        reservoir_config: ExperienceReservoirConfig | None = None,
     ) -> None:
         actions = tuple(sorted(set(map(str, action_ids))))
         if len(actions) < 2:
@@ -311,6 +326,25 @@ class EpisodicCompositionPolicy:
         self.selection_update_mismatch_count = 0
         self.terminal_trace_lengths: list[int] = []
         self.rng_call_count = 0
+        self.experience_reservoir = (
+            LifetimeDecisionReservoir(
+                capacity=reservoir_config.capacity,
+                random_seed=random_seed + 20_000_003,
+            )
+            if reservoir_config is not None
+            else None
+        )
+        self._topology_rng = random.Random(random_seed + 30_000_007)
+        self.causal_rent_config: CausalRentConfig | None = None
+        self.causal_rent_start_terminal_count: int | None = None
+        self.causal_rent_events: list[dict[str, object]] = []
+        self.causal_rent_review_count = 0
+        self.causal_rent_proposal_opportunity_count = 0
+        self.causal_rent_proposal_count = 0
+        self.causal_rent_topology_rng_call_count = 0
+        self.causal_rent_challenger_block_count = 0
+        self.causal_rent_safety_ceiling_bind_count = 0
+        self.maximum_global_live_candidate_count = self._global_live_count()
 
     def begin_episode(self) -> None:
         self.episode_trace.clear()
@@ -363,6 +397,8 @@ class EpisodicCompositionPolicy:
                     "raw_component_contributions"
                 ],
                 component_states=responsibility["component_states"],
+                legal_action_ids=legal_actions,
+                decision_scores=tuple(sorted(scores.items())),
             )
         )
         self.selection_count[action_id] += 1
@@ -414,6 +450,17 @@ class EpisodicCompositionPolicy:
         credited = 0
         for decision in self.episode_trace:
             target = value * (self.config.discount ** decision.elapsed_steps)
+            if self.experience_reservoir is not None:
+                self.experience_reservoir.add(LifetimeDecisionRecord(
+                    sequence=self.experience_reservoir.seen_count,
+                    action_id=decision.action_id,
+                    active_atom_ids=decision.active_atom_ids,
+                    legal_action_ids=decision.legal_action_ids,
+                    decision_scores=decision.decision_scores,
+                    target=target,
+                    discount=self.config.discount,
+                    elapsed_steps=decision.elapsed_steps,
+                ))
             current_prediction = self.channels[decision.action_id].predict(
                 decision.active_atom_ids
             )
@@ -435,6 +482,7 @@ class EpisodicCompositionPolicy:
             credited += 1
         self.credited_decision_count += credited
         self.episode_trace.clear()
+        self._causal_rent_tick()
         return credited
 
     def snapshot(self) -> dict[str, object]:
@@ -449,10 +497,392 @@ class EpisodicCompositionPolicy:
             "rng_call_count": self.rng_call_count,
             "selection_update_mismatch_count": self.selection_update_mismatch_count,
             "terminal_trace_lengths": list(self.terminal_trace_lengths),
+            "experience_reservoir": (
+                self.experience_reservoir.snapshot()
+                if self.experience_reservoir is not None
+                else None
+            ),
+            "causal_rent": self._causal_rent_snapshot(),
             "channels": {
                 action_id: channel.snapshot()
                 for action_id, channel in self.channels.items()
             },
+        }
+
+    def enable_causal_rent(self, config: CausalRentConfig) -> None:
+        """Enable role-blind global lifecycle review from this checkpoint."""
+        if self.experience_reservoir is None:
+            raise RuntimeError("causal rent requires a lifetime reservoir")
+        if self.causal_rent_config is not None:
+            raise RuntimeError("causal rent is already enabled")
+        trials = self._trial_candidates()
+        if len(trials) > config.temporary_challenger_allowance:
+            raise RuntimeError(
+                "checkpoint has too many live trials for challenger allowance"
+            )
+        if self._mature_count() > config.global_capacity:
+            raise RuntimeError("checkpoint exceeds global mature capacity")
+        self.causal_rent_config = config
+        self.causal_rent_start_terminal_count = self.terminal_count
+        for channel in self.channels.values():
+            channel.learner.external_lifecycle = True
+        self.maximum_global_live_candidate_count = max(
+            self.maximum_global_live_candidate_count,
+            self._global_live_count(),
+        )
+        self._record_rent_event("enabled")
+
+    def candidate_rent_stats(
+        self, action_id: str, candidate_index: int
+    ) -> CandidateRentStats:
+        """Evaluate one candidate on the anonymous lifetime reservoir."""
+        if self.experience_reservoir is None:
+            raise RuntimeError("candidate rent requires a lifetime reservoir")
+        if action_id not in self.channels:
+            raise KeyError(action_id)
+        learner = self.channels[action_id].learner
+        candidate = learner.candidates[candidate_index]
+        predictive_benefits = []
+        margin_utilities = []
+        for record in self.experience_reservoir.records:
+            if (
+                record.action_id != action_id
+                or len(record.legal_action_ids) < 2
+                or not set(candidate.members) <= set(record.active_atom_ids)
+            ):
+                continue
+            with_candidate, without_candidate = (
+                learner.candidate_prediction_pair(
+                    record.active_atom_ids, candidate_index
+                )
+            )
+            other_scores = [
+                self.channels[other_action].learner.predict(
+                    record.active_atom_ids
+                )
+                for other_action in record.legal_action_ids
+                if other_action != action_id
+            ]
+            if not other_scores:
+                continue
+            best_other = max(other_scores)
+            predictive_benefits.append(
+                (record.target - without_candidate) ** 2
+                - (record.target - with_candidate) ** 2
+            )
+            margin_utilities.append(
+                record.target
+                * (
+                    (with_candidate - best_other)
+                    - (without_candidate - best_other)
+                )
+            )
+        support = len(predictive_benefits)
+        rent_config = self.causal_rent_config or CausalRentConfig()
+        if support < rent_config.min_eligible_support:
+            return CandidateRentStats(support, None, None, None)
+        benefit = sum(predictive_benefits) / support
+        return CandidateRentStats(
+            support=support,
+            predictive_benefit=benefit,
+            rent=benefit - rent_config.resource_cost,
+            margin_utility=sum(margin_utilities) / support,
+        )
+
+    def review_causal_rent(self) -> None:
+        """Run one explicit review block over all live anonymous candidates."""
+        config = self.causal_rent_config
+        if config is None:
+            raise RuntimeError("causal rent is not enabled")
+        self.causal_rent_review_count += 1
+        live = [
+            (action_id, index, candidate)
+            for action_id, channel in self.channels.items()
+            for index, candidate in enumerate(channel.learner.candidates)
+            if candidate.state in {"trial", "mature"}
+        ]
+        stats_by_id = {}
+        for action_id, index, candidate in live:
+            stats = self.candidate_rent_stats(action_id, index)
+            stats_by_id[(action_id, index)] = stats
+            candidate.rent_review_count += 1
+            candidate.last_rent = stats.rent
+            candidate.last_margin_utility = stats.margin_utility
+            if stats.rent is not None:
+                candidate.rent_adequate_review_count += 1
+            self._record_rent_event(
+                "review",
+                action_id=action_id,
+                candidate_index=index,
+                support=stats.support,
+                rent=stats.rent,
+                margin_utility=stats.margin_utility,
+            )
+
+        for action_id, index, candidate in live:
+            if candidate.state != "mature":
+                continue
+            stats = stats_by_id[(action_id, index)]
+            if stats.rent is None:
+                continue
+            negative = (
+                stats.rent < -config.retirement_margin
+                or stats.margin_utility is not None
+                and stats.margin_utility < 0.0
+            )
+            candidate.negative_review_streak = (
+                candidate.negative_review_streak + 1 if negative else 0
+            )
+            if (
+                candidate.negative_review_streak
+                >= config.consecutive_negative_reviews
+            ):
+                self._transition_candidate(
+                    action_id, index, "pruned", "retired"
+                )
+
+        for action_id, index, candidate in live:
+            if candidate.state != "trial":
+                continue
+            stats = stats_by_id[(action_id, index)]
+            if stats.rent is None:
+                candidate.uncertainty_review_streak += 1
+                if (
+                    candidate.uncertainty_review_streak
+                    >= config.max_uncertain_reviews
+                ):
+                    self._transition_candidate(
+                        action_id, index, "pruned", "unsupported_pruned"
+                    )
+                continue
+            promotes = (
+                stats.rent > config.promotion_margin
+                and stats.margin_utility is not None
+                and stats.margin_utility > 0.0
+            )
+            if promotes:
+                self._promote_or_replace(
+                    action_id, index, stats, stats_by_id
+                )
+                continue
+            clearly_negative = (
+                stats.rent < -config.promotion_margin
+                or stats.margin_utility is not None
+                and stats.margin_utility < 0.0
+            )
+            if clearly_negative:
+                self._transition_candidate(
+                    action_id, index, "pruned", "challenger_rejected"
+                )
+                continue
+            candidate.uncertainty_review_streak += 1
+            if (
+                candidate.uncertainty_review_streak
+                >= config.max_uncertain_reviews
+            ):
+                self._transition_candidate(
+                    action_id, index, "pruned", "uncertain_pruned"
+                )
+
+        self._sync_all_channels()
+        self._assert_rent_bounds()
+
+    def _promote_or_replace(
+        self,
+        action_id: str,
+        candidate_index: int,
+        challenger_stats: CandidateRentStats,
+        stats_by_id: dict[tuple[str, int], CandidateRentStats],
+    ) -> None:
+        config = self.causal_rent_config
+        assert config is not None and challenger_stats.rent is not None
+        if self._mature_count() < config.global_capacity:
+            self._transition_candidate(
+                action_id, candidate_index, "mature", "promoted"
+            )
+            return
+        eligible_incumbents = []
+        for other_action, channel in self.channels.items():
+            for other_index, other in enumerate(channel.learner.candidates):
+                if other.state != "mature":
+                    continue
+                stats = stats_by_id.get((other_action, other_index))
+                if stats is not None and stats.rent is not None:
+                    eligible_incumbents.append(
+                        (stats.rent, other_action, other_index)
+                    )
+        if not eligible_incumbents:
+            self._transition_candidate(
+                action_id, candidate_index, "pruned", "capacity_rejected"
+            )
+            return
+        incumbent_rent, incumbent_action, incumbent_index = min(
+            eligible_incumbents
+        )
+        if (
+            challenger_stats.rent
+            <= incumbent_rent + config.replacement_margin
+        ):
+            self._transition_candidate(
+                action_id, candidate_index, "pruned", "capacity_rejected"
+            )
+            return
+        self._transition_candidate(
+            incumbent_action, incumbent_index, "pruned", "replaced"
+        )
+        self._transition_candidate(
+            action_id, candidate_index, "mature", "promoted_replacement"
+        )
+
+    def _causal_rent_tick(self) -> None:
+        config = self.causal_rent_config
+        if config is None:
+            return
+        assert self.causal_rent_start_terminal_count is not None
+        elapsed = self.terminal_count - self.causal_rent_start_terminal_count
+        if elapsed <= 0:
+            return
+        if elapsed % config.review_interval_episodes == 0:
+            self.review_causal_rent()
+        if elapsed % config.proposal_interval_episodes == 0:
+            self._causal_rent_proposal_opportunity()
+
+    def _causal_rent_proposal_opportunity(self) -> None:
+        config = self.causal_rent_config
+        assert config is not None
+        self.causal_rent_proposal_opportunity_count += 1
+        if self._trial_candidates():
+            self.causal_rent_challenger_block_count += 1
+            self._record_rent_event("proposal_blocked_by_challenger")
+            return
+        if self._global_live_count() >= config.safety_ceiling:
+            self.causal_rent_safety_ceiling_bind_count += 1
+            self._record_rent_event("safety_ceiling_bind")
+            return
+        options = []
+        for action_id, channel in self.channels.items():
+            learner = channel.learner
+            if len(learner.candidates) >= learner._total_proposal_limit():
+                continue
+            options.extend(
+                (score, action_id, pair)
+                for pair, score in learner.proposal_options()
+            )
+        if not options:
+            self._record_rent_event("no_eligible_proposal")
+            return
+        options.sort(key=lambda item: (item[0], item[1], item[2]))
+        if config.proposal_mode == "residual_ranked":
+            score, action_id, pair = options[-1]
+        else:
+            choice = self._topology_rng.randrange(len(options))
+            self.causal_rent_topology_rng_call_count += 1
+            score, action_id, pair = options[choice]
+        learner = self.channels[action_id].learner
+        candidate_index = learner.propose_pair(pair)
+        self.channels[action_id].sync_external_lifecycle()
+        self.causal_rent_proposal_count += 1
+        self.maximum_global_live_candidate_count = max(
+            self.maximum_global_live_candidate_count,
+            self._global_live_count(),
+        )
+        self._record_rent_event(
+            "proposed",
+            action_id=action_id,
+            candidate_index=candidate_index,
+            proposal_score=score,
+        )
+        self._assert_rent_bounds()
+
+    def _transition_candidate(
+        self,
+        action_id: str,
+        candidate_index: int,
+        state: str,
+        event: str,
+    ) -> None:
+        channel = self.channels[action_id]
+        channel.learner.transition_candidate(candidate_index, state)
+        channel.sync_external_lifecycle()
+        self._record_rent_event(
+            event,
+            action_id=action_id,
+            candidate_index=candidate_index,
+        )
+
+    def _sync_all_channels(self) -> None:
+        for channel in self.channels.values():
+            channel.sync_external_lifecycle()
+
+    def _record_rent_event(self, event: str, **fields: object) -> None:
+        self.causal_rent_events.append({
+            "event": event,
+            "terminal_count": self.terminal_count,
+            "global_live_count": self._global_live_count(),
+            "global_mature_count": self._mature_count(),
+            **fields,
+        })
+
+    def _global_live_count(self) -> int:
+        return sum(
+            candidate.state in {"trial", "mature"}
+            for channel in self.channels.values()
+            for candidate in channel.learner.candidates
+        )
+
+    def _mature_count(self) -> int:
+        return sum(
+            candidate.state == "mature"
+            for channel in self.channels.values()
+            for candidate in channel.learner.candidates
+        )
+
+    def _trial_candidates(self) -> list[tuple[str, int]]:
+        return [
+            (action_id, index)
+            for action_id, channel in self.channels.items()
+            for index, candidate in enumerate(channel.learner.candidates)
+            if candidate.state == "trial"
+        ]
+
+    def _assert_rent_bounds(self) -> None:
+        config = self.causal_rent_config
+        assert config is not None
+        if self._mature_count() > config.global_capacity:
+            raise RuntimeError("causal-rent mature capacity exceeded")
+        if self._global_live_count() > config.safety_ceiling:
+            raise RuntimeError("causal-rent safety ceiling exceeded")
+        if len(self._trial_candidates()) > config.temporary_challenger_allowance:
+            raise RuntimeError("causal-rent challenger allowance exceeded")
+
+    def _causal_rent_snapshot(self) -> dict[str, object] | None:
+        config = self.causal_rent_config
+        if config is None:
+            return None
+        return {
+            "schema_version": "recon_role_blind_causal_rent.v1",
+            "config": asdict(config),
+            "start_terminal_count": self.causal_rent_start_terminal_count,
+            "review_count": self.causal_rent_review_count,
+            "proposal_opportunity_count": (
+                self.causal_rent_proposal_opportunity_count
+            ),
+            "proposal_count": self.causal_rent_proposal_count,
+            "topology_rng_call_count": (
+                self.causal_rent_topology_rng_call_count
+            ),
+            "challenger_block_count": (
+                self.causal_rent_challenger_block_count
+            ),
+            "safety_ceiling_bind_count": (
+                self.causal_rent_safety_ceiling_bind_count
+            ),
+            "global_live_count": self._global_live_count(),
+            "global_mature_count": self._mature_count(),
+            "maximum_global_live_candidate_count": (
+                self.maximum_global_live_candidate_count
+            ),
+            "events": list(self.causal_rent_events),
         }
 
     def _legal_actions(

@@ -6,6 +6,13 @@ hierarchical planning and execution tasks.
 """
 
 from .__version__ import __version__
+from .causal_rent import (
+    CandidateRentStats,
+    CausalRentConfig,
+    ExperienceReservoirConfig,
+    LifetimeDecisionRecord,
+    LifetimeDecisionReservoir,
+)
 from .engine import ActivationMode, EngineConfig, ReConEngine
 from .episodic_composition import (
     DecisionTrace,
@@ -35,16 +42,21 @@ from .trace_db import LearningEvent
 __all__ = [
     "__version__",
     "ActivationMode",
+    "CandidateRentStats",
+    "CausalRentConfig",
     "EdgeMessage",
     "EngineConfig",
     "DecisionTrace",
     "EpisodicCompositionConfig",
     "EpisodicCompositionPolicy",
+    "ExperienceReservoirConfig",
     "FormalMessage",
     "FormalReConEngine",
     "Graph",
     "GraphBackedCompositionChannel",
     "LearningEvent",
+    "LifetimeDecisionRecord",
+    "LifetimeDecisionReservoir",
     "LinkType",
     "Node",
     "NodeState",

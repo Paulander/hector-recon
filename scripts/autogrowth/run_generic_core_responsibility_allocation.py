@@ -60,7 +60,15 @@ def _write_json(path: Path, value: object) -> None:
 def _complete_policy_state(policy: EpisodicCompositionPolicy) -> dict[str, object]:
     state = policy.snapshot()
     state["policy_rng_state"] = policy._rng.getstate()
+    state["topology_rng_state"] = policy._topology_rng.getstate()
     state["episode_trace"] = [asdict(item) for item in policy.episode_trace]
+    if policy.experience_reservoir is not None:
+        state["reservoir_rng_state"] = (
+            policy.experience_reservoir._rng.getstate()
+        )
+        state["reservoir_records"] = [
+            asdict(item) for item in policy.experience_reservoir.records
+        ]
     complete_channels = {}
     for action_id, channel in policy.channels.items():
         learner = channel.learner
