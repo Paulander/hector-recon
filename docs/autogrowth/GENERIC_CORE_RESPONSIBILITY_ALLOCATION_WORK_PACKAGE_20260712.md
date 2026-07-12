@@ -122,10 +122,13 @@ The signed requested updates therefore sum to
 the existing [-1, 1] parameter bounds.
 
 In the shuffled arm, sort component IDs, permute the same multiset of importance
-values, then apply the same equations. The real and shuffled arms make the same
-number of allocator-RNG calls; the real arm generates and discards the matched
-permutation. Record conservation error, requested/actual L1, allocation share
-by component class, missing/stale responsibility, and clipping.
+values, then apply the same equations. On an identical decision trace, real and
+shuffled allocation each make exactly `eligible_count - 1` allocator-RNG calls;
+the real arm generates and discards the matched permutation. Autonomous arms
+may later visit different components, so aggregate RNG/opportunity totals are
+recorded but not required to remain equal after policy divergence. Record
+conservation error, requested/actual L1, allocation share by component class,
+missing/stale responsibility, and clipping.
 
 Lifecycle evidence and causal promote/prune gates remain unchanged. Allocation
 changes only where the already-computed residual is written.
@@ -176,8 +179,9 @@ If all 20 phase-0 tasks pass mastery, development support requires every gate:
 6. allocation median all-composite effect at least 0.10 separately in both
    regimes;
 7. responsibility and shuffled arms both use the conserved path; maximum
-   requested-budget error at most 1e-12; matched allocator-RNG calls and equal
-   component/update opportunities;
+   requested-budget error at most 1e-12; every update uses exactly one fewer
+   allocator-RNG call than eligible components, with identical-trace parity
+   proved by the frozen control test;
 8. stored decision-time responsibility is present on every credited decision,
    with zero stale/missing-component update;
 9. proposal/live bounds, graph parity, trial isolation, and equal episode,
