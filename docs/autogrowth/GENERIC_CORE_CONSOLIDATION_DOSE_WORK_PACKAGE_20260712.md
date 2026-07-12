@@ -85,8 +85,9 @@ Every eligible non-control dose must satisfy all of:
    0.15;
 7. at least one matured channel and post-maturity candidate updates on every
    task;
-8. shared updates after maturity are present for positive scales and their
-   measured total is monotone nondecreasing with dose on every paired task;
+8. shared update events after maturity are nonzero in every positive-scale arm;
+   the configured multiplier semantics remain covered by the frozen lifecycle
+   tests (event counts are not treated as update magnitudes);
 9. proposal/live bounds, graph parity, trial isolation, experience, action, and
    RNG equality pass on 20/20 tasks.
 
