@@ -510,11 +510,12 @@ class OnlinePairCompositionLearner:
                 self.shared_update_events_after_maturity += 1
             else:
                 self.shared_update_events_before_maturity += 1
-        self._apply_component_update(
-            self.BIAS_COMPONENT_ID, update, residual=residual
-        )
-        for atom in atoms:
-            self._apply_component_update(atom, update, residual=residual)
+        if self.config.residual_update_mode != "shared_frozen":
+            self._apply_component_update(
+                self.BIAS_COMPONENT_ID, update, residual=residual
+            )
+            for atom in atoms:
+                self._apply_component_update(atom, update, residual=residual)
         for index, candidate in enumerate(self.candidates):
             if candidate.state == "mature" and set(candidate.members) <= active:
                 actual = self._apply_component_update(
