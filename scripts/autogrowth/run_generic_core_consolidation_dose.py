@@ -19,7 +19,7 @@ DEFAULT_OUTPUT = Path(
     "reports/autogrowth/generic_core/"
     "consolidation_dose_key_door_20260712.json"
 )
-SEEDS = tuple(range(20261301, 20261321))
+SEEDS = tuple(range(20261401, 20261421))
 SCALES = (0.10, 0.25, 0.50, 1.00)
 KEY_DOOR_RUNNER = Path(__file__).with_name(
     "run_generic_core_multistate_key_door.py"
@@ -76,6 +76,28 @@ def _task_manifest(task: dict[str, object]) -> dict[str, object]:
         "evaluation_regime_1_sha256",
     )
     return {key: task[key] for key in keys}
+
+
+def _arms_have_identical_budget(
+    row: dict[str, object],
+    arm_names: tuple[str, ...],
+) -> bool:
+    if not arm_names:
+        return False
+    reference = row["arms"][arm_names[0]]
+    fields = (
+        "training_episode_count",
+        "evaluation_episode_count",
+        "selection_count",
+        "rng_call_count",
+    )
+    return all(
+        all(
+            row["arms"][arm][field] == reference[field]
+            for field in fields
+        )
+        for arm in arm_names[1:]
+    )
 
 
 def _median(rows: list[dict[str, object]], arm: str, metric: str, regime: int) -> float:
@@ -252,15 +274,7 @@ def main() -> int:
         for channel in row["arms"][arm]["channels"].values()
     )
     identical_budget_tasks = sum(
-        len({
-            (
-                row["arms"][arm]["training_episode_count"],
-                row["arms"][arm]["evaluation_episode_count"],
-                row["arms"][arm]["selection_count"],
-                row["arms"][arm]["rng_call_count"],
-            )
-            for arm in arm_names
-        }) == 1
+        _arms_have_identical_budget(row, arm_names)
         for row in task_rows
     )
     invariants = {
@@ -314,6 +328,10 @@ def main() -> int:
         "frozen_contract": (
             "docs/autogrowth/"
             "GENERIC_CORE_CONSOLIDATION_DOSE_WORK_PACKAGE_20260712.md"
+        ),
+        "repair_contract": (
+            "docs/autogrowth/"
+            "GENERIC_CORE_CONSOLIDATION_DOSE_REPAIR_WORK_PACKAGE_20260712.md"
         ),
         "predecessor_artifact": (
             "reports/autogrowth/generic_core/"
