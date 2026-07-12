@@ -302,3 +302,12 @@ The old `M` labels in this file are subcheckpoints inside one larger milestone: 
 ## Reporting Rule
 
 One run should produce one machine-readable result artifact and, when useful, one short markdown summary. If a report does not summarize a run or decision that changes the next experiment, do not write it.
+- The generic-core role-blind causal-rent package is closed negative at fresh
+  seeds 20261901--20261920. Fixed-8 ranked replicated at `m=2` (median old/new
+  0.995/1.0, 16/20 coexistence) and beat random 20/20. Rent-ranked nomination
+  was real—it beat shuffled 20/20 both closed-loop and under common experience,
+  compressed `m=0` topology from median 12 to 7 at 1.0/1.0, and all 60
+  invariant cells passed—but it failed high demand at median old/new
+  0.814/0.634 and occupancy 10. The occupancy gradient was 7 -> 11 -> 10,
+  monotonic in only 8/20 seeds. Do not tune this package or advance it to KRK;
+  see `docs/autogrowth/GENERIC_CORE_ROLE_BLIND_CAUSAL_RENT_RESULT_20260712.md`.
