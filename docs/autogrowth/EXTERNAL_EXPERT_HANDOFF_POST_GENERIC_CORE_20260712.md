@@ -168,6 +168,13 @@ This strengthens the temporal-credit result while exposing renewable topology
 and local consolidation/replay as the next blockers. It does not authorize KRK
 transfer.
 
+The PI-authorized renewable-topology package then formed regime-1 cue
+composites on 20/20 fresh tasks under a verified four-live/64-total budget.
+New-regime success remained 1.0 and topology ablation increased, but median
+old-regime success remained 0.0. Structural renewal works and is insufficient;
+shared-weight consolidation is now the isolated blocker. See
+`GENERIC_CORE_RENEWABLE_TOPOLOGY_RESULT_20260712.md`.
+
 Only after frozen generic integration and independent reproduction should the
 release return to fresh KRK pools. At that point use the central high-resolution
 outward curriculum as experience scheduling, while keeping stage labels,

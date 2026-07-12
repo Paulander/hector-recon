@@ -175,3 +175,9 @@ exhausted in regime 0 and shared weights inverted the old mapping. See
 Thus actual multi-state responsibility is supported as a narrow development
 result; continual retention is falsified for the current topology/plasticity
 law.
+
+The authorized renewable-topology package formed new-regime composites on
+20/20 fresh tasks within its bounded resource contract, but old-regime median
+success remained 0.0. This isolates shared fast-weight interference/local
+consolidation—not structural birth—as the next blocker. See
+`GENERIC_CORE_RENEWABLE_TOPOLOGY_RESULT_20260712.md`.
