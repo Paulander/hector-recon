@@ -181,3 +181,9 @@ The authorized renewable-topology package formed new-regime composites on
 success remained 0.0. This isolates shared fast-weight interference/local
 consolidation—not structural birth—as the next blocker. See
 `GENERIC_CORE_RENEWABLE_TOPOLOGY_RESULT_20260712.md`.
+
+Hard learner-local consolidation was then tested as one factor. It improved old
+retention on 20/20 tasks but substantially harmed new-regime learning; both
+coexistence gates failed. This isolates the consolidation rate/timing question
+without supporting a binary-freeze solution. See
+`GENERIC_CORE_LOCAL_CONSOLIDATION_RESULT_20260712.md`.

@@ -175,6 +175,13 @@ old-regime success remained 0.0. Structural renewal works and is insufficient;
 shared-weight consolidation is now the isolated blocker. See
 `GENERIC_CORE_RENEWABLE_TOPOLOGY_RESULT_20260712.md`.
 
+The PI-authorized hard-consolidation package then improved old-regime median
+joint success from 0.0 to 0.8037 on fresh tasks, but reduced new-regime median
+from 1.0 to 0.6455. First maturity occurred at median observation 484, well
+before phase-0 completion. Consolidation is causally important, but immediate
+scale 0.0 is too early/strong. See
+`GENERIC_CORE_LOCAL_CONSOLIDATION_RESULT_20260712.md`.
+
 Only after frozen generic integration and independent reproduction should the
 release return to fresh KRK pools. At that point use the central high-resolution
 outward curriculum as experience scheduling, while keeping stage labels,
