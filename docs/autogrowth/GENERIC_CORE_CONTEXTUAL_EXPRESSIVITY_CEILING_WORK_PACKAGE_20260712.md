@@ -55,6 +55,11 @@ mature pairs are not added. Their weights learn only from terminal outcome under
 the unchanged legacy candidate update. No sign, target action, inversion,
 reward, or solution label is supplied.
 
+Sparse arms retain the normal four-live cap. Exhaustive door channels may hold
+at most eight live candidates (four exhaustive pairs plus checkpoint structure),
+while every channel retains the 64-total lifetime bound. Key-action channels
+remain at four live candidates.
+
 Higher-gain arms change both parameter and output bounds to [-4, 4], as one
 predeclared diagnostic gain factor. Targets remain terminal +/-1. Shared weights
 remain numerically frozen even though their values lie within the wider bounds.
