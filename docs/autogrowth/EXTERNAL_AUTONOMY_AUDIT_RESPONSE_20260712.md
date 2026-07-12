@@ -165,3 +165,13 @@ both directions, with zero graph/estimate mismatch. See
 
 This supports robust one-state graph choice as a development result. It does not
 retroactively validate the failed artifact or establish multi-state autonomy.
+
+The authorized multi-state key-door package then learned its early key decision
+perfectly from terminal-only credit and reached 1.0 new-regime joint success,
+but old-regime door success collapsed to exactly 0.0. Candidate slots were
+exhausted in regime 0 and shared weights inverted the old mapping. See
+`GENERIC_CORE_MULTISTATE_KEY_DOOR_RESULT_20260712.md`.
+
+Thus actual multi-state responsibility is supported as a narrow development
+result; continual retention is falsified for the current topology/plasticity
+law.

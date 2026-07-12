@@ -156,6 +156,18 @@ key-door environment with identity permutation and a mid-run dynamics change.
 Require multiple observations and choices, grown-topology ablation, exception
 retention, and transfer without hyperparameter changes.
 
+The first key-door package isolated multi-state responsibility rather than
+mixing a new robust/contextual combination formula. It falsified retention:
+persistent key accuracy was 1.0 in both regimes and new-regime joint success was
+1.0, but old-regime door accuracy and joint success were exactly 0.0. All door
+candidate slots were born by observation 512 in regime 0; no regime-1 cue
+composite could be born. See
+`GENERIC_CORE_MULTISTATE_KEY_DOOR_RESULT_20260712.md`.
+
+This strengthens the temporal-credit result while exposing renewable topology
+and local consolidation/replay as the next blockers. It does not authorize KRK
+transfer.
+
 Only after frozen generic integration and independent reproduction should the
 release return to fresh KRK pools. At that point use the central high-resolution
 outward curriculum as experience scheduling, while keeping stage labels,
