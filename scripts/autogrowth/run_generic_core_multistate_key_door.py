@@ -51,7 +51,13 @@ def _git_commit(repo_root: Path) -> str:
     return result.stdout.strip() if result.returncode == 0 else "unavailable"
 
 
-def _make_task(seed: int) -> dict[str, object]:
+def _make_task(
+    seed: int,
+    *,
+    development_evaluation_count: int = 0,
+) -> dict[str, object]:
+    if development_evaluation_count < 0:
+        raise ValueError("development_evaluation_count cannot be negative")
     rng = random.Random(seed)
     terminal_ids = [f"anonymous_terminal_{index:02d}" for index in range(18)]
     rng.shuffle(terminal_ids)
@@ -118,6 +124,9 @@ def _make_task(seed: int) -> dict[str, object]:
     train_regime_1 = make_rows(1, TRAIN_PER_REGIME)
     evaluation_regime_0 = make_rows(0, EVALUATION_PER_REGIME)
     evaluation_regime_1 = make_rows(1, EVALUATION_PER_REGIME)
+    development_evaluation_regime_0 = make_rows(
+        0, development_evaluation_count
+    )
     return {
         "seed": seed,
         "key_literals": key_literals,
@@ -136,10 +145,16 @@ def _make_task(seed: int) -> dict[str, object]:
         "train_regime_1": train_regime_1,
         "evaluation_regime_0": evaluation_regime_0,
         "evaluation_regime_1": evaluation_regime_1,
+        "development_evaluation_regime_0": (
+            development_evaluation_regime_0
+        ),
         "train_regime_0_sha256": _hash_json(train_regime_0),
         "train_regime_1_sha256": _hash_json(train_regime_1),
         "evaluation_regime_0_sha256": _hash_json(evaluation_regime_0),
         "evaluation_regime_1_sha256": _hash_json(evaluation_regime_1),
+        "development_evaluation_regime_0_sha256": _hash_json(
+            development_evaluation_regime_0
+        ),
     }
 
 

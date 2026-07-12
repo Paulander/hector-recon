@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 
 from recon_lite import (
+    CompositeCandidate,
     EpisodicCompositionConfig,
     EpisodicCompositionPolicy,
     GraphBackedCompositionChannel,
@@ -38,6 +39,65 @@ def test_graph_score_is_the_prediction_updated_by_learning() -> None:
     assert channel.predict(("atom_a", "atom_b")) == pytest.approx(
         channel.learner.predict(("atom_a", "atom_b"))
     )
+
+
+def test_decision_trace_carries_pre_outcome_graph_responsibility() -> None:
+    policy = EpisodicCompositionPolicy(
+        ("left", "right"),
+        random_seed=4,
+        config=EpisodicCompositionConfig(exploration_rate=0.0),
+        composition_config=OnlineCompositionConfig(proposal_interval=100),
+    )
+    selected = policy.choose(("a", "b"))
+    trace = policy.episode_trace[0]
+
+    assert set(trace.active_graph_nodes) == {"bias_terminal", "a", "b"}
+    assert dict(trace.component_importance) == {
+        "a": 0.0,
+        "b": 0.0,
+        "bias_terminal": 0.0,
+    }
+    assert dict(trace.raw_component_contributions) == {
+        "a": 0.0,
+        "b": 0.0,
+        "bias_terminal": 0.0,
+    }
+    policy.observe_terminal(1.0)
+    assert any(
+        value > 0.0
+        for value in policy.channels[
+            selected
+        ].learner.component_importance.values()
+    )
+
+
+def test_candidate_ablation_and_raw_score_decomposition() -> None:
+    channel = GraphBackedCompositionChannel(
+        random_seed=2,
+        composition_config=OnlineCompositionConfig(proposal_interval=100),
+    )
+    channel.learner.bias = 0.1
+    channel.learner.primitive_weights = {"a": 0.2, "b": 0.3}
+    channel.learner.candidates.append(
+        CompositeCandidate(
+            members=("a", "b"),
+            born_observation=0,
+            proposal_score=1.0,
+            support_at_proposal=16,
+            state="mature",
+            shadow_weight=0.4,
+        )
+    )
+    channel._sync_topology()
+    channel._sync_weights()
+
+    assert channel.predict(("a", "b")) == pytest.approx(1.0)
+    assert channel.predict(
+        ("a", "b"), disabled_candidate_indices=frozenset({0})
+    ) == pytest.approx(0.6)
+    decomposition = channel.score_decomposition(("a", "b"))
+    assert decomposition["raw_score"] == pytest.approx(1.0)
+    assert decomposition["contributions"]["composite_0"] == pytest.approx(0.4)
 
 
 def test_trial_script_cannot_reach_action_score_root() -> None:

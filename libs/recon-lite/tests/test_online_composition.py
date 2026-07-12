@@ -364,3 +364,135 @@ def test_adaptive_consolidation_config_validation() -> None:
         OnlineCompositionConfig(adaptive_shared_learning_floor=-0.1)
     with pytest.raises(ValueError, match="adaptive_consolidation_activations"):
         OnlineCompositionConfig(adaptive_consolidation_activations=0)
+
+
+def test_responsibility_allocation_conserves_one_residual_budget() -> None:
+    learner = OnlinePairCompositionLearner(
+        proposal_mode="residual_ranked",
+        random_seed=3,
+        config=OnlineCompositionConfig(
+            learning_rate=0.2,
+            proposal_interval=100,
+            residual_update_mode="responsibility_conserving",
+            allocation_importance_epsilon=0.01,
+        ),
+    )
+    mature = CompositeCandidate(
+        members=("a", "b"),
+        born_observation=0,
+        proposal_score=1.0,
+        support_at_proposal=16,
+        state="mature",
+    )
+    learner.candidates.append(mature)
+    component_ids = ("bias_terminal", "a", "b", "composite_0")
+    importance = {
+        "bias_terminal": 1.0,
+        "a": 2.0,
+        "b": 3.0,
+        "composite_0": 0.0,
+    }
+    learner.observe(
+        ("a", "b"),
+        1.0,
+        decision_component_ids=component_ids,
+        decision_component_importance=importance,
+    )
+
+    assert learner.allocation_update_count == 1
+    assert learner.allocation_component_opportunity_count == 4
+    assert learner.allocation_requested_l1_sum == pytest.approx(0.2)
+    assert learner.allocation_max_budget_error <= 1e-12
+    assert learner.allocation_missing_responsibility_count == 0
+    assert learner.allocation_stale_component_count == 0
+    assert mature.shadow_weight > learner.bias
+    assert learner.component_importance["composite_0"] > 0.0
+
+
+def test_shuffled_allocation_matches_budget_and_rng_not_mapping() -> None:
+    common = dict(
+        learning_rate=0.2,
+        proposal_interval=100,
+        allocation_importance_epsilon=0.01,
+    )
+    real = OnlinePairCompositionLearner(
+        proposal_mode="residual_ranked",
+        random_seed=17,
+        config=OnlineCompositionConfig(
+            **common,
+            residual_update_mode="responsibility_conserving",
+        ),
+    )
+    shuffled = OnlinePairCompositionLearner(
+        proposal_mode="residual_ranked",
+        random_seed=17,
+        config=OnlineCompositionConfig(
+            **common,
+            residual_update_mode="responsibility_shuffled",
+        ),
+    )
+    ids = ("bias_terminal", "a", "b", "c")
+    importance = {
+        "bias_terminal": 0.0,
+        "a": 1.0,
+        "b": 10.0,
+        "c": 100.0,
+    }
+    for learner in (real, shuffled):
+        learner.observe(
+            ("a", "b", "c"),
+            1.0,
+            decision_component_ids=ids,
+            decision_component_importance=importance,
+        )
+
+    assert real.allocation_requested_l1_sum == pytest.approx(
+        shuffled.allocation_requested_l1_sum
+    )
+    assert real.allocation_component_opportunity_count == (
+        shuffled.allocation_component_opportunity_count
+    )
+    assert real.allocation_rng_call_count == shuffled.allocation_rng_call_count
+    assert real.allocation_max_budget_error <= 1e-12
+    assert shuffled.allocation_max_budget_error <= 1e-12
+    assert real.primitive_weights != shuffled.primitive_weights
+
+
+def test_shared_frozen_updates_candidates_only() -> None:
+    learner = OnlinePairCompositionLearner(
+        proposal_mode="residual_ranked",
+        random_seed=1,
+        config=OnlineCompositionConfig(
+            learning_rate=0.2,
+            proposal_interval=100,
+            residual_update_mode="shared_frozen",
+        ),
+    )
+    mature = CompositeCandidate(
+        members=("a", "b"),
+        born_observation=0,
+        proposal_score=1.0,
+        support_at_proposal=16,
+        state="mature",
+    )
+    trial = CompositeCandidate(
+        members=("a", "c"),
+        born_observation=0,
+        proposal_score=1.0,
+        support_at_proposal=16,
+    )
+    learner.candidates.extend((mature, trial))
+    learner.primitive_weights = {"a": 0.1, "b": -0.1, "c": 0.05}
+    before_shared = (learner.bias, dict(learner.primitive_weights))
+    learner.observe(("a", "b", "c"), 1.0)
+
+    assert (learner.bias, learner.primitive_weights) == before_shared
+    assert mature.shadow_weight != 0.0
+    assert trial.shadow_weight != 0.0
+
+
+def test_residual_update_config_validation() -> None:
+    with pytest.raises(ValueError, match="residual_update_mode"):
+        OnlineCompositionConfig(residual_update_mode="unknown")
+    with pytest.raises(ValueError, match="allocation_importance_epsilon"):
+        OnlineCompositionConfig(allocation_importance_epsilon=0.0)

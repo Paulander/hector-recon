@@ -32,6 +32,9 @@ class DecisionTrace:
     active_atom_ids: tuple[str, ...]
     graph_prediction: float
     active_graph_nodes: tuple[str, ...]
+    component_importance: tuple[tuple[str, float], ...] = ()
+    raw_component_contributions: tuple[tuple[str, float], ...] = ()
+    component_states: tuple[tuple[str, str], ...] = ()
     elapsed_steps: int = 0
 
 
@@ -68,6 +71,7 @@ class GraphBackedCompositionChannel:
         active_atom_ids: Iterable[str],
         *,
         include_mature_composites: bool = True,
+        disabled_candidate_indices: frozenset[int] = frozenset(),
     ) -> float:
         atoms = self._normalize(active_atom_ids)
         for atom in atoms:
@@ -77,9 +81,15 @@ class GraphBackedCompositionChannel:
         for child_id, weight in self.graph.get_sub_children(self.ROOT_ID):
             if not include_mature_composites and child_id.startswith("composite_"):
                 continue
+            if (
+                child_id.startswith("composite_")
+                and int(child_id.removeprefix("composite_"))
+                in disabled_candidate_indices
+            ):
+                continue
             raw += weight * self.graph.nodes[child_id].activation.value
         prediction = self._clip(raw)
-        if include_mature_composites:
+        if include_mature_composites and not disabled_candidate_indices:
             self.graph_prediction_count += 1
             if not math.isclose(
                 prediction,
@@ -90,10 +100,22 @@ class GraphBackedCompositionChannel:
                 self.graph_prediction_mismatch_count += 1
         return prediction
 
-    def observe(self, active_atom_ids: Iterable[str], target: float) -> float:
+    def observe(
+        self,
+        active_atom_ids: Iterable[str],
+        target: float,
+        *,
+        decision_component_ids: Iterable[str] | None = None,
+        decision_component_importance: dict[str, float] | None = None,
+    ) -> float:
         atoms = self._normalize(active_atom_ids)
         graph_prediction = self.predict(atoms)
-        learner_prediction = self.learner.observe(atoms, target)
+        learner_prediction = self.learner.observe(
+            atoms,
+            target,
+            decision_component_ids=decision_component_ids,
+            decision_component_importance=decision_component_importance,
+        )
         if not math.isclose(
             graph_prediction, learner_prediction, rel_tol=0.0, abs_tol=1e-12
         ):
@@ -114,6 +136,58 @@ class GraphBackedCompositionChannel:
                 if node_id != self.ROOT_ID and node.activation.value > 0.5
             )
         )
+
+    def decision_responsibility(
+        self, active_atom_ids: Iterable[str]
+    ) -> dict[str, tuple[tuple[str, object], ...]]:
+        atoms = self._normalize(active_atom_ids)
+        active_nodes = self.active_responsibility(atoms)
+        importance = self.learner.active_component_importance(atoms)
+        contributions = self.learner.component_contributions(atoms)
+        states = self.learner.component_states(atoms)
+        return {
+            "active_graph_nodes": tuple(
+                (node_id, True) for node_id in active_nodes
+            ),
+            "component_importance": tuple(
+                (node_id, importance[node_id])
+                for node_id in active_nodes
+            ),
+            "raw_component_contributions": tuple(
+                (node_id, contributions[node_id])
+                for node_id in active_nodes
+            ),
+            "component_states": tuple(
+                (node_id, states[node_id])
+                for node_id in active_nodes
+            ),
+        }
+
+    def score_decomposition(
+        self, active_atom_ids: Iterable[str]
+    ) -> dict[str, object]:
+        atoms = self._normalize(active_atom_ids)
+        contributions = self.learner.component_contributions(atoms)
+        states = self.learner.component_states(atoms)
+        behavioral = {
+            component_id: value
+            for component_id, value in contributions.items()
+            if states[component_id] != "trial"
+        }
+        raw = sum(behavioral.values())
+        clipped = self._clip(raw)
+        return {
+            "raw_score": raw,
+            "clipped_score": clipped,
+            "output_clipped": raw != clipped,
+            "contributions": dict(sorted(behavioral.items())),
+            "shadow_trial_contributions": dict(sorted(
+                (component_id, value)
+                for component_id, value in contributions.items()
+                if states[component_id] == "trial"
+            )),
+            "component_states": dict(sorted(states.items())),
+        }
 
     def snapshot(self) -> dict[str, object]:
         state_counts = {"trial": 0, "mature": 0, "pruned": 0}
@@ -271,13 +345,24 @@ class EpisodicCompositionPolicy:
             if explore and explore_draw < self.config.exploration_rate
             else greedy_action
         )
-        responsibility = self.channels[action_id].active_responsibility(atoms)
+        responsibility = self.channels[action_id].decision_responsibility(atoms)
+        active_graph_nodes = tuple(
+            node_id
+            for node_id, _ in responsibility["active_graph_nodes"]
+        )
         self.episode_trace.append(
             DecisionTrace(
                 action_id=action_id,
                 active_atom_ids=atoms,
                 graph_prediction=scores[action_id],
-                active_graph_nodes=responsibility,
+                active_graph_nodes=active_graph_nodes,
+                component_importance=responsibility[
+                    "component_importance"
+                ],
+                raw_component_contributions=responsibility[
+                    "raw_component_contributions"
+                ],
+                component_states=responsibility["component_states"],
             )
         )
         self.selection_count[action_id] += 1
@@ -289,12 +374,23 @@ class EpisodicCompositionPolicy:
         *,
         include_mature_composites: bool = True,
         legal_action_ids: Iterable[str] | None = None,
+        disabled_candidates_by_action: (
+            dict[str, frozenset[int]] | None
+        ) = None,
     ) -> str:
         atoms = tuple(sorted(set(map(str, active_atom_ids))))
         legal_actions = self._legal_actions(legal_action_ids)
         scores = {
             action_id: channel.predict(
-                atoms, include_mature_composites=include_mature_composites
+                atoms,
+                include_mature_composites=include_mature_composites,
+                disabled_candidate_indices=(
+                    disabled_candidates_by_action.get(
+                        action_id, frozenset()
+                    )
+                    if disabled_candidates_by_action
+                    else frozenset()
+                ),
             )
             for action_id, channel in self.channels.items()
             if action_id in legal_actions
@@ -329,7 +425,12 @@ class EpisodicCompositionPolicy:
             ):
                 self.selection_update_mismatch_count += 1
             self.channels[decision.action_id].observe(
-                decision.active_atom_ids, target
+                decision.active_atom_ids,
+                target,
+                decision_component_ids=decision.active_graph_nodes,
+                decision_component_importance=dict(
+                    decision.component_importance
+                ),
             )
             credited += 1
         self.credited_decision_count += credited
