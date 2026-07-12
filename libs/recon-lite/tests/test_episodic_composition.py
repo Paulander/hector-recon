@@ -129,3 +129,50 @@ def test_greedy_composite_ablation_does_not_mutate_policy() -> None:
         ("atom_a", "atom_b"), include_mature_composites=False
     ) in policy.action_ids
     assert channel.learner.snapshot() == before
+
+
+def test_environment_legal_actions_are_the_only_scored_choices() -> None:
+    policy = EpisodicCompositionPolicy(
+        ("key_a", "key_b", "door_a", "door_b"),
+        random_seed=5,
+    )
+    policy.channels["door_a"].learner.bias = 1.0
+    policy.channels["door_a"]._sync_weights()
+
+    chosen = policy.choose(
+        ("anonymous_state",),
+        legal_action_ids=("key_a", "key_b"),
+    )
+    assert chosen in {"key_a", "key_b"}
+    assert policy.rng_call_count == 3
+    assert policy.greedy_action(
+        ("anonymous_state",),
+        legal_action_ids=("door_a", "door_b"),
+    ) in {"door_a", "door_b"}
+
+
+def test_two_decision_episode_credits_both_retained_traces() -> None:
+    persistent = EpisodicCompositionPolicy(
+        ("key_a", "key_b", "door_a", "door_b"),
+        random_seed=7,
+    )
+    reset = EpisodicCompositionPolicy(
+        ("key_a", "key_b", "door_a", "door_b"),
+        random_seed=7,
+    )
+    for policy, clear in ((persistent, False), (reset, True)):
+        policy.begin_episode()
+        policy.choose(("key_context",), legal_action_ids=("key_a", "key_b"))
+        policy.real_step(clear_trace=clear)
+        policy.choose(
+            ("carried_key", "door_context"),
+            legal_action_ids=("door_a", "door_b"),
+        )
+        credited = policy.observe_terminal(1.0)
+        assert credited == (1 if clear else 2)
+
+    assert persistent.terminal_trace_lengths == [2]
+    assert reset.terminal_trace_lengths == [1]
+    assert persistent.rng_call_count == reset.rng_call_count == 6
+    assert persistent.selection_update_mismatch_count == 0
+    assert reset.selection_update_mismatch_count == 0

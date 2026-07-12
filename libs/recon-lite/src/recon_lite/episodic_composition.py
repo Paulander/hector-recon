@@ -236,24 +236,32 @@ class EpisodicCompositionPolicy:
         self.credited_decision_count = 0
         self.selection_update_mismatch_count = 0
         self.terminal_trace_lengths: list[int] = []
+        self.rng_call_count = 0
 
     def begin_episode(self) -> None:
         self.episode_trace.clear()
 
     def choose(
-        self, active_atom_ids: Iterable[str], *, explore: bool = True
+        self,
+        active_atom_ids: Iterable[str],
+        *,
+        explore: bool = True,
+        legal_action_ids: Iterable[str] | None = None,
     ) -> str:
         atoms = tuple(sorted(set(map(str, active_atom_ids))))
+        legal_actions = self._legal_actions(legal_action_ids)
         scores = {
             action_id: channel.predict(atoms)
             for action_id, channel in self.channels.items()
+            if action_id in legal_actions
         }
         explore_draw = self._rng.random()
-        random_action = self.action_ids[self._rng.randrange(len(self.action_ids))]
+        random_action = legal_actions[self._rng.randrange(len(legal_actions))]
         tie_draw = self._rng.random()
+        self.rng_call_count += 3
         best_score = max(scores.values())
         best_actions = [
-            action_id for action_id in self.action_ids
+            action_id for action_id in legal_actions
             if math.isclose(scores[action_id], best_score, rel_tol=0.0, abs_tol=1e-12)
         ]
         tie_index = min(len(best_actions) - 1, int(tie_draw * len(best_actions)))
@@ -280,15 +288,18 @@ class EpisodicCompositionPolicy:
         active_atom_ids: Iterable[str],
         *,
         include_mature_composites: bool = True,
+        legal_action_ids: Iterable[str] | None = None,
     ) -> str:
         atoms = tuple(sorted(set(map(str, active_atom_ids))))
+        legal_actions = self._legal_actions(legal_action_ids)
         scores = {
             action_id: channel.predict(
                 atoms, include_mature_composites=include_mature_composites
             )
             for action_id, channel in self.channels.items()
+            if action_id in legal_actions
         }
-        return max(self.action_ids, key=lambda action_id: (scores[action_id], action_id))
+        return max(legal_actions, key=lambda action_id: (scores[action_id], action_id))
 
     def real_step(self, *, clear_trace: bool = False) -> None:
         for decision in self.episode_trace:
@@ -334,6 +345,7 @@ class EpisodicCompositionPolicy:
             "terminal_return_sum": self.terminal_return_sum,
             "terminal_count": self.terminal_count,
             "credited_decision_count": self.credited_decision_count,
+            "rng_call_count": self.rng_call_count,
             "selection_update_mismatch_count": self.selection_update_mismatch_count,
             "terminal_trace_lengths": list(self.terminal_trace_lengths),
             "channels": {
@@ -341,3 +353,16 @@ class EpisodicCompositionPolicy:
                 for action_id, channel in self.channels.items()
             },
         }
+
+    def _legal_actions(
+        self, legal_action_ids: Iterable[str] | None
+    ) -> tuple[str, ...]:
+        if legal_action_ids is None:
+            return self.action_ids
+        legal = tuple(sorted(set(map(str, legal_action_ids))))
+        if not legal:
+            raise ValueError("at least one legal action is required")
+        unknown = set(legal) - set(self.action_ids)
+        if unknown:
+            raise KeyError(f"unknown legal actions: {sorted(unknown)}")
+        return legal
