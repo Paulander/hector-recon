@@ -156,3 +156,12 @@ This exposes another audit-relevant miss: the original semantic test used eight
 observations, while the defect appears only after the 256-sample capacity is
 crossed repeatedly. No robust-choice or combined-environment claim is allowed
 from this package, and no automatic repair/rerun was made.
+
+After explicit PI authorization, a separate estimator-repair package preserved
+exact streaming sum/count independently from the bounded lower-tail sketch. Its
+fresh-seed run restored the intended live graph divergence on 20/20 tasks in
+both directions, with zero graph/estimate mismatch. See
+`GENERIC_CORE_ROBUST_ESTIMATOR_REPAIR_RESULT_20260712.md`.
+
+This supports robust one-state graph choice as a development result. It does not
+retroactively validate the failed artifact or establish multi-state autonomy.

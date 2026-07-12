@@ -21,7 +21,8 @@ This work produced two narrow but real improvements:
 It did not establish end-to-end autonomous ReCoN, general cognition, or KRK
 closure. The next robust-choice package failed because its nominal mean control
 was not an empirical mean after bounded-memory compression. Work stopped there
-without repair or rerun.
+without repair or rerun. The PI subsequently authorized a separate estimator
+repair package; its fresh-seed comparison passed every frozen gate.
 
 ## Evidence ledger
 
@@ -31,6 +32,7 @@ without repair or rerun.
 | Anonymous online composition | `f9ccd04` | ranked beats random 20/20; signal pair 20/20; median MSE advantage 0.677669 | positive builder-run generic growth development result |
 | Delayed graph action policy | `9646ded` | persistent beats reset 20/20; median accuracy 1.0; median composite ablation drop 0.540039 | positive builder-run graph-mediated delayed contextual-action result |
 | Robust graph choice | `7063921` | lower-tail consistent 20/20, but mean also consistent 20/20 | instrument failure; no comparative robust-choice claim |
+| Authorized estimator repair | `1711306` | mean refutable 20/20; lower-tail consistent 20/20; exact mean and graph parity gates pass | positive builder-run robust live-choice development result |
 
 All raw artifacts record source/config/row/implementation hashes and explicitly
 set `confirmation_claimed=false`, `builder_is_runner=true`, and
@@ -132,10 +134,10 @@ long-run mean behavior.
 - Therefore KRK remains open. The branch has not shown a self-contained learner
   progressing from an empty graph through the full outward curriculum.
 
-## PI decision required
+## PI decision and completed repair
 
-The package kill rule blocks automatic repair. The recommended next
-authorization, if the PI agrees, is one new estimator work package—not a rerun:
+The package kill rule blocked automatic repair. The PI authorized one new
+estimator work package—not a rerun:
 
 1. exact streaming mean from total sum/count;
 2. separate bounded lower-tail sketch;
@@ -144,7 +146,11 @@ authorization, if the PI agrees, is one new estimator work package—not a rerun
 5. matched constant, Bernoulli, rare-refutation, and distribution-shift streams;
 6. fresh preregistration, source commit, seeds, and independent adjudication.
 
-If that passes, integrate robust value with the already-positive
+That package passed on fresh seeds. Exact running sum/count is now separate from
+the bounded conservative exception sketch. The failed predecessor remains
+unchanged and its verdict remains instrument failure.
+
+The PI also authorized the conditional next step: integrate robust value with the already-positive
 graph-composition/delayed-credit policy in a genuine multi-state randomized
 key-door environment with identity permutation and a mid-run dynamics change.
 Require multiple observations and choices, grown-topology ablation, exception
