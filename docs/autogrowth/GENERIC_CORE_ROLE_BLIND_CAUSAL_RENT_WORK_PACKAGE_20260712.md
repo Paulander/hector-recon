@@ -3,6 +3,18 @@
 Date: 2026-07-12. Track: generic-core development. Status: PI-authorized and
 frozen before implementation or fresh execution.
 
+Amendment, 2026-07-12, before runner implementation or fresh execution: the
+retired 20261801--20261820 artifact showed that the ordinary phase-0 endpoint
+contains 3--7 unfinished shadow trials per task. These trials have no deployed
+root edge, but carrying them forward would violate the one-challenger contract
+and selecting among them would introduce an unregistered allocation rule.
+Immediately after phase-0 training, prune every still-TRIAL candidate
+role-blindly, without an additional episode, weight update, correctness query or
+semantic test. Hash and clone only this quiescent mature/pruned checkpoint in
+all arms. Record pre/post trial counts and prove greedy predictions are
+byte-identical across quiescence. This common behavior-neutral boundary is not
+a causal-rent decision and changes no gate below.
+
 ## Basis and question
 
 The contextual ceiling proved that bounded additive pairs can preserve the old
