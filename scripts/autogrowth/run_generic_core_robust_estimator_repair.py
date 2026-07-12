@@ -18,10 +18,6 @@ from recon_lite import (
     RobustActionPolicyConfig,
     RobustReturnConfig,
 )
-from scripts.autogrowth.run_generic_core_robust_graph_choice import (
-    _response_stream,
-    _return_for,
-)
 
 
 DEFAULT_OUTPUT = Path(
@@ -31,6 +27,30 @@ DEFAULT_OUTPUT = Path(
 SEEDS = tuple(range(20260901, 20260921))
 TRAIN_EPISODES = 2048
 EVALUATION_EPISODES = 512
+
+
+def _response_stream(rng: random.Random, size: int) -> tuple[float, ...]:
+    """Frozen seven-positive/one-refutation shuffled block environment."""
+
+    responses = []
+    for _ in range(size // 8):
+        block = [1.0] * 7 + [-1.0]
+        rng.shuffle(block)
+        responses.extend(block)
+    if len(responses) < size:
+        block = [1.0] * 7 + [-1.0]
+        rng.shuffle(block)
+        responses.extend(block[: size - len(responses)])
+    return tuple(responses)
+
+
+def _return_for(
+    action_id: str,
+    *,
+    refutable_action_id: str,
+    refutable_response: float,
+) -> float:
+    return refutable_response if action_id == refutable_action_id else 0.4
 
 
 def _hash_json(value: object) -> str:
@@ -200,6 +220,13 @@ def main() -> int:
         "confirmation_claimed": False,
         "builder_is_runner": True,
         "adjudication_authority": False,
+        "pre_data_runner_failure": {
+            "source_commit": "aaf700f",
+            "error": "ModuleNotFoundError: No module named 'scripts'",
+            "task_rows_generated": 0,
+            "artifact_written": False,
+            "repair": "embedded the already-frozen environment helpers",
+        },
         "source_commit": _git_commit(repo_root),
         "frozen_contract": (
             "docs/autogrowth/"
