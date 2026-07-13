@@ -61,34 +61,41 @@ composition, but final high-level routing is not yet pure-in-graph; Python still
 performs part of the weighted arbitration.
 
 The generic-core workstream then isolated a local topology-metabolism bottleneck.
-The closed challenger-throughput experiment found all target structures, and all
-adequately supported targets matured, but one needed action-conditioned target
-per task died with too little evidence. A support-directed exploration mechanism
-was preregistered to let an active trial request an already scheduled exploration
-action using only its anonymous legs and local evidence deficit. Its first fresh
-execution on seeds 20262101--20262120 stopped before that mechanism was enabled:
-19/20 shared phase-0 checkpoints passed, while seed 20262109 scored 0.8203125 on
-the key decision against the frozen 0.85 admission threshold. This is a clean
-curriculum-readiness abort, not evidence for or against support-directed
-exploration. See `docs/autogrowth/GENERIC_CORE_SUPPORT_DIRECTED_EXPLORATION_RESULT_20260713.md`.
+The first fixed-seed support-directed run stopped at phase-0 admission and remains
+an instrument abort. A separately preregistered capped admission run then froze
+the first twenty independently mastered checkpoints before phase 1. All four
+target structures were found in every task, but activation-deficit request
+priority failed: only 1/20 directed tasks adequately supported and matured all
+four targets, 19/80 targets died unsupported, directed exceeded shuffled support
+in only 7/20 with median difference 0, and it exceeded shuffled behavior in
+0/20. Safety, identity and matched exploration all passed. The key mechanistic
+finding is a local-currency mismatch: requests monitor raw activation count while
+maturation uses matching records retained in a bounded Algorithm-R reservoir.
+Most request opportunities also had only one requester, so maximum-deficit and
+shuffled responsibility rarely differed. See
+`docs/autogrowth/GENERIC_CORE_SUPPORT_DIRECTED_EXPLORATION_ADMITTED_RESULT_20260713.md`.
 
 ## Ordered next decision
 
-Do not rerun, replace or relax the touched 20262101--20262120 package. A new
-preregistration must first separate child-skill readiness from the bridge test.
-The preferred design uses entirely new seeds and an upstream sequential admission
-rule: report every phase-0 attempt, admit until 20 checkpoint hashes satisfy the
-unchanged 0.85 mastery/quiescence rule, cap total attempts in advance, and freeze
-all admitted checkpoints and phase-1 manifests before any phase-1 arm runs. A
-larger common phase-0 budget on entirely new seeds is a legitimate but different
-alternative. Proceeding with 19 tasks or changing the threshold post hoc is not.
+Do not rerun or tune the completed activation-deficit package. It is a negative
+completion at the frozen dose. Before another fresh pool, obtain external review
+of the raw artifact and the documented protocol deviation that final cumulative
+terminal return was not copied into the arm summary, although event-level returns
+and every frozen gate remain available.
 
-After that generic causal question is resolved, transfer the supported mechanism
-back to the persistent native KRK R1 ladder under a separate frozen contract. R2
-remains closed until R1 reaches its full promotion gate. If local evidence
-requests are supported, the next justified abstraction is spawned internal
-terminals for under-supported hypotheses, mature-child availability and
-prediction surprise, exposed as ordinary composition legs rather than a global
-overseer.
+The most targeted next candidate is a generic internal `EVIDENCE_DEFICIT` state
+whose value equals exact anonymous rent-adjudication support, including reservoir
+insertions and evictions. Test that support currency against the current raw
+activation proxy with lifecycle grace, exploration timing, topology and rent
+frozen. Do not combine it with longer review grace. If exact support still cannot
+reach threshold before two reviews, review grace becomes a separate later factor.
+Any renewed maximum-deficit priority claim also requires enough simultaneous
+requesters to make priority distinguishable from shuffled responsibility.
+
+No KRK transfer is authorized from the negative result. R2 remains closed until
+R1 reaches its promotion gate. Internal terminals for mature-child availability
+and prediction surprise remain long-term candidates, but the immediate lesson is
+that an internal terminal must expose the exact local evidence currency used by
+the graph decision rather than a convenient global or activation heuristic.
 
 No-go: runtime tablebase/DTM or Stockfish provider, learner-visible stage/hand-skill features, direct move-provider overrides, hidden oracles, new TG chronology, or claims from a counterfactual path that fails no-op parity.
