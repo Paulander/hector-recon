@@ -23,6 +23,18 @@ from .episodic_composition import (
     GraphBackedCompositionChannel,
 )
 from .formal_engine import EdgeMessage, FormalMessage, FormalReConEngine
+from .frame_context import (
+    ChildResponse,
+    DreamStateLeakError,
+    FrameContext,
+    FrameEffectFirewall,
+    FrameKind,
+    VirtualFrameEvaluation,
+    VirtualFrameExecutor,
+    VirtualFrameSideEffectError,
+    child_response_terminal,
+    prediction_surprise_terminal,
+)
 from .graph import Graph, LinkType, Node, NodeState, NodeType
 from .logger import RunLogger
 from .online_composition import (
@@ -54,6 +66,9 @@ __all__ = [
     "ExperienceReservoirConfig",
     "FormalMessage",
     "FormalReConEngine",
+    "FrameContext",
+    "FrameEffectFirewall",
+    "FrameKind",
     "Graph",
     "GraphBackedCompositionChannel",
     "LearningEvent",
@@ -74,5 +89,12 @@ __all__ = [
     "GraphBackedRobustActionPolicy",
     "RobustActionPolicyConfig",
     "RunLogger",
+    "ChildResponse",
+    "DreamStateLeakError",
+    "VirtualFrameEvaluation",
+    "VirtualFrameExecutor",
+    "VirtualFrameSideEffectError",
+    "child_response_terminal",
+    "prediction_surprise_terminal",
     "record_supports_candidate",
 ]

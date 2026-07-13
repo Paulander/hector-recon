@@ -320,12 +320,15 @@ One run should produce one machine-readable result artifact and, when useful, on
   actuator bus may consume graph emissions but cannot inspect candidate fields,
   and exact retained Algorithm-R support cannot create reward or maturity. See
   `docs/autogrowth/GENERIC_CORE_GRAPH_INTERNAL_EXACT_EVIDENCE_WORK_PACKAGE_20260713.md`.
-- Internal terminals and virtual frames are now explicitly orthogonal
-  architectural layers. After the exact-support package closes, the next canary
-  is side-effect-free frame-local `CHILD_RESPONSE` plus
-  `PREDICTION_SURPRISE`, with observed outcome or mature grounded-child value as
-  the only credit source. This canary remains outside the immediate experiment
-  and cannot authorize KRK transfer. See
+- Internal terminals and virtual frames are explicitly orthogonal
+  architectural layers. The deterministic side-effect-free frame-local
+  `CHILD_RESPONSE` / `PREDICTION_SURPRISE` canary now passes all ten controls:
+  mature-child response is causally relevant under shuffle, only one real leg
+  actuates, disconnected/no-frame controls are inert, and persistent graph,
+  learning, reward, reservoir, lifecycle, and maturity state cannot leak from a
+  dream. This is a planted engineering pass, not learned KRK behavior or transfer
+  authorization. See
+  `docs/autogrowth/VIRTUAL_FRAME_CHILD_RESPONSE_CANARY_20260713.md` and
   `docs/autogrowth/INTERNAL_PROPRIOCEPTION_ARCHITECTURE_DECISION_20260713.md`.
 - The graph-internal exact-evidence package is implemented and ready for fresh
   admission after commit/push. The planted priority canary is fully identifiable;

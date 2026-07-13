@@ -1,0 +1,189 @@
+{
+  "all_checks_pass": true,
+  "architecture_boundary": "graph-native terminals; host-executed generic final actuator bus",
+  "baseline": {
+    "disconnected_activation": null,
+    "evaluations": {
+      "advance": {
+        "child_activation": 0.81,
+        "child_response": {
+          "child_id": "grounded_mature_child",
+          "confirmed": true,
+          "expected_value": 0.9,
+          "grounded": true,
+          "grounding_source": "observed_outcome_history",
+          "selection_strength": 0.81,
+          "uncertainty": 0.1
+        },
+        "effect_attempts": [],
+        "external_activation": 1.0,
+        "root_state": "CONFIRMED"
+      },
+      "stall": {
+        "child_activation": 0.18000000000000002,
+        "child_response": {
+          "child_id": "grounded_mature_child",
+          "confirmed": true,
+          "expected_value": 0.2,
+          "grounded": true,
+          "grounding_source": "observed_outcome_history",
+          "selection_strength": 0.18000000000000002,
+          "uncertainty": 0.1
+        },
+        "effect_attempts": [],
+        "external_activation": 1.0,
+        "root_state": "CONFIRMED"
+      }
+    },
+    "persistent_graph_unchanged": true,
+    "persistent_learning_state_unchanged": true,
+    "prediction_surprise": 0.10000000000000003,
+    "raw_prediction_surprise": 0.20000000000000007,
+    "real_actuator_calls": [
+      "advance"
+    ],
+    "real_successor_state": 1,
+    "scores": {
+      "advance": 0.81,
+      "stall": 0.18000000000000002
+    },
+    "selected_action": "advance"
+  },
+  "checks": {
+    "disconnected_terminal_cannot_route": true,
+    "dream_self_credit_is_blocked": true,
+    "grounded_child_routes_parent_leg": true,
+    "hidden_dream_leak_fails_and_rolls_back": true,
+    "no_virtual_frame_blocks_dream_query": true,
+    "only_selected_leg_actuates_real_environment": true,
+    "persistent_graph_unchanged": true,
+    "persistent_learning_state_unchanged": true,
+    "prediction_surprise_observed_on_real_successor": true,
+    "shuffled_child_response_changes_leg": true
+  },
+  "claim_scope": "deterministic engineering canary; no fresh data or KRK behavioral claim",
+  "content_sha256": "23bad0398d536c4a7152c2c477e12048954874f9d1da5b3b6b11f98eb01d6776",
+  "controls": {
+    "disconnected_internal_terminal": {
+      "disconnected_activation": 0.0,
+      "evaluations": {
+        "advance": {
+          "child_activation": 0.81,
+          "child_response": {
+            "child_id": "grounded_mature_child",
+            "confirmed": true,
+            "expected_value": 0.9,
+            "grounded": true,
+            "grounding_source": "observed_outcome_history",
+            "selection_strength": 0.81,
+            "uncertainty": 0.1
+          },
+          "disconnected_activation": 0.0,
+          "effect_attempts": [],
+          "external_activation": 1.0,
+          "root_state": "CONFIRMED"
+        },
+        "stall": {
+          "child_activation": 0.18000000000000002,
+          "child_response": {
+            "child_id": "grounded_mature_child",
+            "confirmed": true,
+            "expected_value": 0.2,
+            "grounded": true,
+            "grounding_source": "observed_outcome_history",
+            "selection_strength": 0.18000000000000002,
+            "uncertainty": 0.1
+          },
+          "disconnected_activation": 0.0,
+          "effect_attempts": [],
+          "external_activation": 1.0,
+          "root_state": "CONFIRMED"
+        }
+      },
+      "persistent_graph_unchanged": true,
+      "persistent_learning_state_unchanged": true,
+      "prediction_surprise": 0.10000000000000003,
+      "raw_prediction_surprise": 0.20000000000000007,
+      "real_actuator_calls": [
+        "advance"
+      ],
+      "real_successor_state": 1,
+      "scores": {
+        "advance": 0.81,
+        "stall": 0.18000000000000002
+      },
+      "selected_action": "advance"
+    },
+    "dream_state_leakage": {
+      "blocked": true,
+      "reason": "virtual evaluation mutated persistent protected state; mutation was rolled back",
+      "rolled_back": true
+    },
+    "no_virtual_frame": {
+      "blocked": true,
+      "reason": "VirtualFrameExecutor requires a virtual FrameContext"
+    },
+    "self_credit_attempt": {
+      "blocked": true,
+      "effect_attempts": [
+        {
+          "args": [
+            "'child'",
+            "True"
+          ],
+          "kwargs": {},
+          "operation": "set_maturity"
+        }
+      ]
+    },
+    "shuffled_child_response": {
+      "disconnected_activation": null,
+      "evaluations": {
+        "advance": {
+          "child_activation": 0.18000000000000002,
+          "child_response": {
+            "child_id": "grounded_mature_child",
+            "confirmed": true,
+            "expected_value": 0.2,
+            "grounded": true,
+            "grounding_source": "observed_outcome_history",
+            "selection_strength": 0.18000000000000002,
+            "uncertainty": 0.1
+          },
+          "effect_attempts": [],
+          "external_activation": 1.0,
+          "root_state": "CONFIRMED"
+        },
+        "stall": {
+          "child_activation": 0.81,
+          "child_response": {
+            "child_id": "grounded_mature_child",
+            "confirmed": true,
+            "expected_value": 0.9,
+            "grounded": true,
+            "grounding_source": "observed_outcome_history",
+            "selection_strength": 0.81,
+            "uncertainty": 0.1
+          },
+          "effect_attempts": [],
+          "external_activation": 1.0,
+          "root_state": "CONFIRMED"
+        }
+      },
+      "persistent_graph_unchanged": true,
+      "persistent_learning_state_unchanged": true,
+      "prediction_surprise": 0.4,
+      "raw_prediction_surprise": 0.8,
+      "real_actuator_calls": [
+        "stall"
+      ],
+      "real_successor_state": 0,
+      "scores": {
+        "advance": 0.18000000000000002,
+        "stall": 0.81
+      },
+      "selected_action": "stall"
+    }
+  },
+  "schema_version": "recon_virtual_frame_child_response_canary.v1"
+}

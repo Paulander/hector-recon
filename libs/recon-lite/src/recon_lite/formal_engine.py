@@ -11,6 +11,7 @@ from enum import Enum
 from typing import Any, Callable, Dict, Iterable, List, Optional
 
 from .graph import Graph, LinkType, Node, NodeState, NodeType
+from .frame_context import FrameContext
 
 
 class FormalMessage(Enum):
@@ -375,7 +376,9 @@ class FormalReConEngine:
         overlay: Dict[str, Any] = {}
         for node_id in reversed(lineage):
             frame = virtual_frames.get(node_id)
-            if isinstance(frame, dict):
+            if isinstance(frame, FrameContext):
+                overlay.update(frame.to_env_overlay())
+            elif isinstance(frame, dict):
                 overlay.update(frame)
 
         if not overlay:
