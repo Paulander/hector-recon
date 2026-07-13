@@ -51,18 +51,44 @@ kernel has not yet been joined to a fresh TG26p-style native graph. Therefore no
 past run establishes one persistent empty-learned-state graph learning
 Mate-in-1 -> Mate-in-2 from observed outcome and mature-child value alone.
 
+The native from-scratch ladder has since joined these pieces in one persistent
+graph. R0 learned Mate-in-1 from empty learned state and reached 16/16 validation
+and 16/16 regression. With that topology frozen as an outcome-grounded child,
+its emitted value causally improved R1 Mate-in-2 to 8/16 validation and 5/16
+regression versus 0/16 and 0/16 without the child-value bridge. R1 did not pass
+its 100% gate, so R2 was correctly not opened. The graph contains real SUB/SUR
+composition, but final high-level routing is not yet pure-in-graph; Python still
+performs part of the weighted arbitration.
+
+The generic-core workstream then isolated a local topology-metabolism bottleneck.
+The closed challenger-throughput experiment found all target structures, and all
+adequately supported targets matured, but one needed action-conditioned target
+per task died with too little evidence. A support-directed exploration mechanism
+was preregistered to let an active trial request an already scheduled exploration
+action using only its anonymous legs and local evidence deficit. Its first fresh
+execution on seeds 20262101--20262120 stopped before that mechanism was enabled:
+19/20 shared phase-0 checkpoints passed, while seed 20262109 scored 0.8203125 on
+the key decision against the frozen 0.85 admission threshold. This is a clean
+curriculum-readiness abort, not evidence for or against support-directed
+exploration. See `docs/autogrowth/GENERIC_CORE_SUPPORT_DIRECTED_EXPLORATION_RESULT_20260713.md`.
+
 ## Ordered next decision
 
-The stopped v1 closure remains frozen exactly as preregistered; do not weaken or
-rerun it. By explicit project direction, KRK development continues as a distinct
-intrinsic-curriculum workstream without touching that FINAL pool. The immediate
-work package is now the native from-scratch R0/R1 certification in
-`docs/autogrowth/NATIVE_FROM_SCRATCH_KRK_PLAN.md`: join native graph growth and
-intrinsic credit, learn Mate-in-1 from observed terminal outcomes, consolidate,
-then learn Mate-in-2 from the mature Mate-in-1 child's emitted value. Only after
-that causal chain passes should the same graph move outward through the
-high-resolution ladder. Nonlinear `AVAILABLE` growth remains required, but it
-must arise inside this persistent ladder rather than as another inherited-parent
-patch. KPK remains the subsequent transfer domain.
+Do not rerun, replace or relax the touched 20262101--20262120 package. A new
+preregistration must first separate child-skill readiness from the bridge test.
+The preferred design uses entirely new seeds and an upstream sequential admission
+rule: report every phase-0 attempt, admit until 20 checkpoint hashes satisfy the
+unchanged 0.85 mastery/quiescence rule, cap total attempts in advance, and freeze
+all admitted checkpoints and phase-1 manifests before any phase-1 arm runs. A
+larger common phase-0 budget on entirely new seeds is a legitimate but different
+alternative. Proceeding with 19 tasks or changing the threshold post hoc is not.
+
+After that generic causal question is resolved, transfer the supported mechanism
+back to the persistent native KRK R1 ladder under a separate frozen contract. R2
+remains closed until R1 reaches its full promotion gate. If local evidence
+requests are supported, the next justified abstraction is spawned internal
+terminals for under-supported hypotheses, mature-child availability and
+prediction surprise, exposed as ordinary composition legs rather than a global
+overseer.
 
 No-go: runtime tablebase/DTM or Stockfish provider, learner-visible stage/hand-skill features, direct move-provider overrides, hidden oracles, new TG chronology, or claims from a counterfactual path that fails no-op parity.
