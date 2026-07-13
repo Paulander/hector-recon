@@ -90,7 +90,8 @@ activation proxy with lifecycle grace, exploration timing, topology and rent
 frozen. Do not combine it with longer review grace. If exact support still cannot
 reach threshold before two reviews, review grace becomes a separate later factor.
 Any renewed maximum-deficit priority claim also requires enough simultaneous
-requesters to make priority distinguishable from shuffled responsibility.
+requesters to make priority distinguishable from shuffled responsibility. The implementation audit and required invariants are in
+`docs/autogrowth/GENERIC_CORE_EXACT_EVIDENCE_DEFICIT_DESIGN_NOTE_20260713.md`.
 
 No KRK transfer is authorized from the negative result. R2 remains closed until
 R1 reaches its promotion gate. Internal terminals for mature-child availability

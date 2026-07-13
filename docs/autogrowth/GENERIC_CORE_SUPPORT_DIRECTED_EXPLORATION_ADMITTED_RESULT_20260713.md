@@ -78,9 +78,10 @@ threshold and stopped further requests even though maximum review support was
 still below 32. Other candidates were pruned after two reviews before even the
 activation proxy reached its target.
 
-Final activation counts in the artifact may continue changing after pruning and
-must not be read as support at death. The frozen review-event sequences above are
-the authoritative lifecycle evidence.
+Final activation counts stop when the candidate is pruned, but they count raw
+trial activations rather than retained reservoir evidence and must not be read as
+rent support at death. The frozen review-event sequences above are the
+authoritative adjudication evidence.
 
 This identifies two separable bottlenecks:
 
