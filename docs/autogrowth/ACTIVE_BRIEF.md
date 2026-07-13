@@ -327,3 +327,10 @@ One run should produce one machine-readable result artifact and, when useful, on
   the only credit source. This canary remains outside the immediate experiment
   and cannot authorize KRK transfer. See
   `docs/autogrowth/INTERNAL_PROPRIOCEPTION_ARCHITECTURE_DECISION_20260713.md`.
+- The graph-internal exact-evidence package is implemented and ready for fresh
+  admission after commit/push. The planted priority canary is fully identifiable;
+  a full-dose retired-seed five-arm smoke passed every integrity invariant; and
+  the repository suite passed 828 tests in 2,186.97 seconds. The first smoke
+  exposed and fixed pre-enablement counter subtraction from phase-0 candidates.
+  No frozen 202623xx seed has been touched. See
+  `docs/autogrowth/GRAPH_INTERNAL_EXACT_EVIDENCE_IMPLEMENTATION_NOTE_20260713.md`.

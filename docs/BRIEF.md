@@ -96,6 +96,13 @@ unequal requests. The contract is
 the architectural boundary is
 `docs/autogrowth/INTERNAL_PROPRIOCEPTION_ARCHITECTURE_DECISION_20260713.md`.
 
+Implementation is complete and pre-fresh validation passed: the anonymous priority
+canary is identifiable, a full-dose retired-seed five-arm smoke passed every
+integrity invariant, and the full repository suite passed 828 tests in 2,186.97
+seconds. The smoke exposed and fixed a phase-0 counter-initialization bug before
+any fresh seed was touched. See
+`docs/autogrowth/GRAPH_INTERNAL_EXACT_EVIDENCE_IMPLEMENTATION_NOTE_20260713.md`.
+
 No KRK transfer is authorized from the negative result. R2 remains closed until
 R1 reaches its promotion gate. Mature-child response and prediction surprise are
 now the explicitly ordered next architectural layer, not vague distant

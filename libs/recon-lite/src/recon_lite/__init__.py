@@ -12,6 +12,8 @@ from .causal_rent import (
     ExperienceReservoirConfig,
     LifetimeDecisionRecord,
     LifetimeDecisionReservoir,
+    LifetimeReservoirMutation,
+    record_supports_candidate,
 )
 from .engine import ActivationMode, EngineConfig, ReConEngine
 from .episodic_composition import (
@@ -57,6 +59,7 @@ __all__ = [
     "LearningEvent",
     "LifetimeDecisionRecord",
     "LifetimeDecisionReservoir",
+    "LifetimeReservoirMutation",
     "LinkType",
     "Node",
     "NodeState",
@@ -71,4 +74,5 @@ __all__ = [
     "GraphBackedRobustActionPolicy",
     "RobustActionPolicyConfig",
     "RunLogger",
+    "record_supports_candidate",
 ]

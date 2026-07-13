@@ -119,6 +119,7 @@ class CompositeCandidate:
     uncertainty_review_streak: int = 0
     exploration_request_count: int = 0
     exploration_probe_benefit_count: int = 0
+    rent_evidence_support: int = 0
 
 
 class OnlinePairCompositionLearner:

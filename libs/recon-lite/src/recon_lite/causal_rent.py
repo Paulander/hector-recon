@@ -11,7 +11,11 @@ from typing import Literal
 
 RentProposalMode = Literal["residual_ranked", "rank_shuffled"]
 ExplorationRequestMode = Literal[
-    "ordinary_random", "support_directed", "support_shuffled"
+    "ordinary_random",
+    "support_directed",
+    "support_shuffled",
+    "exact_support_directed",
+    "exact_support_shuffled",
 ]
 
 
@@ -66,7 +70,11 @@ class CausalRentConfig:
         }:
             raise ValueError("unsupported causal-rent proposal mode")
         if self.exploration_request_mode not in {
-            "ordinary_random", "support_directed", "support_shuffled",
+            "ordinary_random",
+            "support_directed",
+            "support_shuffled",
+            "exact_support_directed",
+            "exact_support_shuffled",
         }:
             raise ValueError(
                 "unsupported causal-rent exploration request mode"
@@ -87,6 +95,30 @@ class LifetimeDecisionRecord:
     target: float
     discount: float
     elapsed_steps: int
+
+
+@dataclass(frozen=True)
+class LifetimeReservoirMutation:
+    """Unambiguous result of one Algorithm-R insertion attempt."""
+
+    attempted_record: LifetimeDecisionRecord
+    retained: bool
+    inserted_record: LifetimeDecisionRecord | None
+    evicted_record: LifetimeDecisionRecord | None
+    retained_index: int | None
+
+
+def record_supports_candidate(
+    record: LifetimeDecisionRecord,
+    action_id: str,
+    immutable_members: tuple[str, ...],
+) -> bool:
+    """Return exact anonymous support eligibility used by causal-rent review."""
+    return (
+        record.action_id == action_id
+        and len(record.legal_action_ids) >= 2
+        and set(immutable_members) <= set(record.active_atom_ids)
+    )
 
 
 @dataclass(frozen=True)
@@ -111,18 +143,42 @@ class LifetimeDecisionReservoir:
         self.replacement_count = 0
         self.rng_call_count = 0
 
-    def add(self, record: LifetimeDecisionRecord) -> None:
+    def add(
+        self, record: LifetimeDecisionRecord
+    ) -> LifetimeReservoirMutation:
         if record.sequence != self.seen_count:
             raise ValueError("reservoir sequence must be monotonic")
         self.seen_count += 1
         if len(self.records) < self.config.capacity:
+            retained_index = len(self.records)
             self.records.append(record)
-            return
+            return LifetimeReservoirMutation(
+                attempted_record=record,
+                retained=True,
+                inserted_record=record,
+                evicted_record=None,
+                retained_index=retained_index,
+            )
         index = self._rng.randrange(self.seen_count)
         self.rng_call_count += 1
-        if index < self.config.capacity:
-            self.records[index] = record
-            self.replacement_count += 1
+        if index >= self.config.capacity:
+            return LifetimeReservoirMutation(
+                attempted_record=record,
+                retained=False,
+                inserted_record=None,
+                evicted_record=None,
+                retained_index=None,
+            )
+        evicted = self.records[index]
+        self.records[index] = record
+        self.replacement_count += 1
+        return LifetimeReservoirMutation(
+            attempted_record=record,
+            retained=True,
+            inserted_record=record,
+            evicted_record=evicted,
+            retained_index=index,
+        )
 
     def snapshot(self) -> dict[str, object]:
         serialized = [asdict(record) for record in self.records]
