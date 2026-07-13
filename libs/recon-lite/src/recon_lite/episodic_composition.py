@@ -326,6 +326,7 @@ class EpisodicCompositionPolicy:
         self.selection_update_mismatch_count = 0
         self.terminal_trace_lengths: list[int] = []
         self.rng_call_count = 0
+        self.decision_count = 0
         self.experience_reservoir = (
             LifetimeDecisionReservoir(
                 capacity=reservoir_config.capacity,
@@ -337,6 +338,8 @@ class EpisodicCompositionPolicy:
         self._topology_rng = random.Random(random_seed + 30_000_007)
         self.causal_rent_config: CausalRentConfig | None = None
         self.causal_rent_start_terminal_count: int | None = None
+        self.causal_rent_start_decision_count: int | None = None
+        self.causal_rent_start_exploration_event_count: int | None = None
         self.causal_rent_events: list[dict[str, object]] = []
         self.causal_rent_review_count = 0
         self.causal_rent_proposal_opportunity_count = 0
@@ -345,6 +348,16 @@ class EpisodicCompositionPolicy:
         self.causal_rent_challenger_block_count = 0
         self.causal_rent_safety_ceiling_bind_count = 0
         self.maximum_global_live_candidate_count = self._global_live_count()
+        self._support_exploration_rng = random.Random(
+            random_seed + 40_000_009
+        )
+        self.exploration_event_count = 0
+        self.exploration_event_decision_indices: list[int] = []
+        self.support_exploration_rng_call_count = 0
+        self.support_request_opportunity_count = 0
+        self.support_probe_action_count = 0
+        self.support_exploration_fallback_count = 0
+        self.support_exploration_events: list[dict[str, object]] = []
 
     def begin_episode(self) -> None:
         self.episode_trace.clear()
@@ -374,11 +387,26 @@ class EpisodicCompositionPolicy:
         ]
         tie_index = min(len(best_actions) - 1, int(tie_draw * len(best_actions)))
         greedy_action = best_actions[tie_index]
-        action_id = (
-            random_action
-            if explore and explore_draw < self.config.exploration_rate
-            else greedy_action
+        self.decision_count += 1
+        exploration_event = bool(
+            explore and explore_draw < self.config.exploration_rate
         )
+        if exploration_event:
+            self.exploration_event_count += 1
+            self.exploration_event_decision_indices.append(
+                self.decision_count
+            )
+        action_id = random_action if exploration_event else greedy_action
+        rent_config = self.causal_rent_config
+        if (
+            exploration_event
+            and rent_config is not None
+            and rent_config.exploration_request_mode
+            != "ordinary_random"
+        ):
+            action_id = self._support_requested_exploration_action(
+                atoms, legal_actions, random_action
+            )
         responsibility = self.channels[action_id].decision_responsibility(atoms)
         active_graph_nodes = tuple(
             node_id
@@ -402,6 +430,102 @@ class EpisodicCompositionPolicy:
             )
         )
         self.selection_count[action_id] += 1
+        return action_id
+
+    def _support_requested_exploration_action(
+        self,
+        atoms: tuple[str, ...],
+        legal_actions: tuple[str, ...],
+        ordinary_random_action: str,
+    ) -> str:
+        config = self.causal_rent_config
+        assert config is not None
+        mode = config.exploration_request_mode
+        if mode not in {"support_directed", "support_shuffled"}:
+            raise RuntimeError("support exploration called in ordinary mode")
+
+        draw = self._support_exploration_rng.random()
+        self.support_exploration_rng_call_count += 1
+        active = set(atoms)
+        requests: list[tuple[int, str, int]] = []
+        for action_id in legal_actions:
+            learner = self.channels[action_id].learner
+            for candidate_index, candidate in enumerate(learner.candidates):
+                deficit = max(
+                    0,
+                    config.min_eligible_support
+                    - candidate.activation_count,
+                )
+                if (
+                    candidate.state == "trial"
+                    and deficit > 0
+                    and set(candidate.members) <= active
+                ):
+                    requests.append((
+                        deficit, action_id, candidate_index
+                    ))
+                    candidate.exploration_request_count += 1
+        requests.sort(key=lambda item: (item[1], item[2]))
+
+        if not requests:
+            self.support_exploration_fallback_count += 1
+            self.support_exploration_events.append({
+                "decision_index": self.decision_count,
+                "terminal_count": self.terminal_count,
+                "mode": mode,
+                "cumulative_terminal_return": self.terminal_return_sum,
+                "active_request_count": 0,
+                "selected_requester": None,
+                "selected_action_id": ordinary_random_action,
+                "ordinary_random_action_id": ordinary_random_action,
+                "beneficiary_candidate_ids": (),
+                "fallback": True,
+            })
+            return ordinary_random_action
+
+        self.support_request_opportunity_count += 1
+        request_pool = requests
+        if mode == "support_directed":
+            maximum_deficit = max(item[0] for item in requests)
+            request_pool = [
+                item for item in requests
+                if item[0] == maximum_deficit
+            ]
+        selected_index = min(
+            len(request_pool) - 1,
+            int(draw * len(request_pool)),
+        )
+        deficit, action_id, candidate_index = request_pool[selected_index]
+        beneficiaries = []
+        for _, request_action, request_index in requests:
+            if request_action != action_id:
+                continue
+            beneficiary = self.channels[
+                request_action
+            ].learner.candidates[request_index]
+            beneficiary.exploration_probe_benefit_count += 1
+            beneficiaries.append(
+                f"{request_action}:composite_{request_index}"
+            )
+        self.support_probe_action_count += 1
+        self.support_exploration_events.append({
+            "decision_index": self.decision_count,
+            "terminal_count": self.terminal_count,
+            "mode": mode,
+            "cumulative_terminal_return": self.terminal_return_sum,
+            "active_request_count": len(requests),
+            "selected_requester": (
+                f"{action_id}:composite_{candidate_index}"
+            ),
+            "selected_request_support": (
+                config.min_eligible_support - deficit
+            ),
+            "selected_request_deficit": deficit,
+            "selected_action_id": action_id,
+            "ordinary_random_action_id": ordinary_random_action,
+            "beneficiary_candidate_ids": tuple(sorted(beneficiaries)),
+            "fallback": False,
+        })
         return action_id
 
     def greedy_action(
@@ -495,6 +619,39 @@ class EpisodicCompositionPolicy:
             "terminal_count": self.terminal_count,
             "credited_decision_count": self.credited_decision_count,
             "rng_call_count": self.rng_call_count,
+            "exploration": {
+                "decision_count": self.decision_count,
+                "event_count": self.exploration_event_count,
+                "event_decision_indices": list(
+                    self.exploration_event_decision_indices
+                ),
+                "support_rng_call_count": (
+                    self.support_exploration_rng_call_count
+                ),
+                "request_opportunity_count": self.support_request_opportunity_count,
+                "probe_action_count": self.support_probe_action_count,
+                "fallback_count": self.support_exploration_fallback_count,
+                "events": list(self.support_exploration_events),
+                "rent_enabled_decision_count": (
+                    self.decision_count - self.causal_rent_start_decision_count
+                    if self.causal_rent_start_decision_count is not None
+                    else None
+                ),
+                "rent_enabled_event_count": (
+                    self.exploration_event_count
+                    - self.causal_rent_start_exploration_event_count
+                    if self.causal_rent_start_exploration_event_count is not None
+                    else None
+                ),
+                "rent_enabled_event_decision_indices": (
+                    [
+                        index for index in self.exploration_event_decision_indices
+                        if index > self.causal_rent_start_decision_count
+                    ]
+                    if self.causal_rent_start_decision_count is not None
+                    else None
+                ),
+            },
             "selection_update_mismatch_count": self.selection_update_mismatch_count,
             "terminal_trace_lengths": list(self.terminal_trace_lengths),
             "experience_reservoir": (
@@ -524,6 +681,10 @@ class EpisodicCompositionPolicy:
             raise RuntimeError("checkpoint exceeds global mature capacity")
         self.causal_rent_config = config
         self.causal_rent_start_terminal_count = self.terminal_count
+        self.causal_rent_start_decision_count = self.decision_count
+        self.causal_rent_start_exploration_event_count = (
+            self.exploration_event_count
+        )
         for channel in self.channels.values():
             channel.learner.external_lifecycle = True
         self.maximum_global_live_candidate_count = max(
@@ -544,6 +705,9 @@ class EpisodicCompositionPolicy:
         candidate = learner.candidates[candidate_index]
         predictive_benefits = []
         margin_utilities = []
+        margins_with = []
+        margins_without = []
+        margin_sign_flips = []
         for record in self.experience_reservoir.records:
             if (
                 record.action_id != action_id
@@ -566,6 +730,11 @@ class EpisodicCompositionPolicy:
             if not other_scores:
                 continue
             best_other = max(other_scores)
+            margin_with = with_candidate - best_other
+            margin_without = without_candidate - best_other
+            margins_with.append(margin_with)
+            margins_without.append(margin_without)
+            margin_sign_flips.append((margin_with > 0.0) != (margin_without > 0.0))
             predictive_benefits.append(
                 (record.target - without_candidate) ** 2
                 - (record.target - with_candidate) ** 2
@@ -578,15 +747,31 @@ class EpisodicCompositionPolicy:
                 )
             )
         support = len(predictive_benefits)
+        mean_margin_with = (
+            sum(margins_with) / support if support else None
+        )
+        mean_margin_without = (
+            sum(margins_without) / support if support else None
+        )
+        margin_sign_flip_rate = (
+            sum(margin_sign_flips) / support if support else None
+        )
         rent_config = self.causal_rent_config or CausalRentConfig()
         if support < rent_config.min_eligible_support:
-            return CandidateRentStats(support, None, None, None)
+            return CandidateRentStats(
+                support, None, None, None,
+                mean_margin_with, mean_margin_without,
+                margin_sign_flip_rate,
+            )
         benefit = sum(predictive_benefits) / support
         return CandidateRentStats(
             support=support,
             predictive_benefit=benefit,
             rent=benefit - rent_config.resource_cost,
             margin_utility=sum(margin_utilities) / support,
+            mean_margin_with=mean_margin_with,
+            mean_margin_without=mean_margin_without,
+            margin_sign_flip_rate=margin_sign_flip_rate,
         )
 
     def review_causal_rent(self) -> None:
@@ -617,6 +802,9 @@ class EpisodicCompositionPolicy:
                 support=stats.support,
                 rent=stats.rent,
                 margin_utility=stats.margin_utility,
+                mean_margin_with=stats.mean_margin_with,
+                mean_margin_without=stats.mean_margin_without,
+                margin_sign_flip_rate=stats.margin_sign_flip_rate,
             )
 
         for action_id, index, candidate in live:

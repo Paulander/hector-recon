@@ -7,6 +7,7 @@ import pytest
 from recon_lite import (
     CausalRentConfig,
     CompositeCandidate,
+    EpisodicCompositionConfig,
     EpisodicCompositionPolicy,
     ExperienceReservoirConfig,
     LifetimeDecisionRecord,
@@ -89,6 +90,9 @@ def test_positive_action_margin_rent_promotes_shadow_candidate() -> None:
     assert stats.predictive_benefit == pytest.approx(0.75)
     assert stats.rent == pytest.approx(0.748)
     assert stats.margin_utility == pytest.approx(0.5)
+    assert stats.mean_margin_with == pytest.approx(0.5)
+    assert stats.mean_margin_without == pytest.approx(0.0)
+    assert stats.margin_sign_flip_rate == pytest.approx(1.0)
 
     policy.review_causal_rent()
     candidate = policy.channels["action_a"].learner.candidates[0]
@@ -217,6 +221,114 @@ def test_challenger_batch_is_adjudicated_by_descending_frozen_rent() -> None:
         candidate.state == "mature"
         for candidate in channel.learner.candidates
     )
+
+
+def _support_request_policy(
+    mode: str,
+) -> EpisodicCompositionPolicy:
+    policy = EpisodicCompositionPolicy(
+        ("action_a", "action_b"),
+        random_seed=73,
+        config=EpisodicCompositionConfig(exploration_rate=1.0),
+        composition_config=OnlineCompositionConfig(
+            max_candidates=8,
+            max_total_proposals=64,
+            residual_update_mode="shared_frozen",
+        ),
+        reservoir_config=ExperienceReservoirConfig(capacity=64),
+    )
+    for action_id, activation_count in (
+        ("action_a", 2),
+        ("action_b", 20),
+    ):
+        channel = policy.channels[action_id]
+        channel.learner.candidates.append(CompositeCandidate(
+            members=("atom_x", "atom_y"),
+            born_observation=0,
+            proposal_score=1.0,
+            support_at_proposal=16,
+            state="trial",
+            shadow_weight=0.0,
+            activation_count=activation_count,
+        ))
+        channel.sync_external_lifecycle()
+    policy.enable_causal_rent(CausalRentConfig(
+        temporary_challenger_allowance=2,
+        exploration_request_mode=mode,
+    ))
+    return policy
+
+
+def test_support_directed_exploration_uses_largest_local_deficit() -> None:
+    policy = _support_request_policy("support_directed")
+
+    selected = policy.choose(("atom_x", "atom_y"))
+
+    assert selected == "action_a"
+    assert policy.exploration_event_count == 1
+    assert policy.support_exploration_rng_call_count == 1
+    assert policy.support_request_opportunity_count == 1
+    assert policy.support_probe_action_count == 1
+    event = policy.support_exploration_events[0]
+    assert event["selected_requester"] == "action_a:composite_0"
+    assert event["selected_request_support"] == 2
+    assert event["selected_request_deficit"] == 30
+    assert event["fallback"] is False
+    action_a = policy.channels["action_a"].learner.candidates[0]
+    action_b = policy.channels["action_b"].learner.candidates[0]
+    assert action_a.exploration_request_count == 1
+    assert action_b.exploration_request_count == 1
+    assert action_a.exploration_probe_benefit_count == 1
+    assert action_b.exploration_probe_benefit_count == 0
+    assert policy.channels["action_a"].trial_root_edge_count == 0
+
+
+def test_directed_and_shuffled_share_exploration_timing_and_rng_budget() -> None:
+    directed = _support_request_policy("support_directed")
+    shuffled = _support_request_policy("support_shuffled")
+
+    directed_actions = [
+        directed.choose(("atom_x", "atom_y"))
+        for _ in range(12)
+    ]
+    shuffled_actions = [
+        shuffled.choose(("atom_x", "atom_y"))
+        for _ in range(12)
+    ]
+
+    assert directed.exploration_event_decision_indices == (
+        shuffled.exploration_event_decision_indices
+    )
+    assert directed.exploration_event_count == 12
+    assert shuffled.exploration_event_count == 12
+    assert directed.support_exploration_rng_call_count == 12
+    assert shuffled.support_exploration_rng_call_count == 12
+    directed_exploration = directed.snapshot()["exploration"]
+    shuffled_exploration = shuffled.snapshot()["exploration"]
+    assert directed_exploration["rent_enabled_event_count"] == 12
+    assert shuffled_exploration["rent_enabled_event_count"] == 12
+    assert directed_exploration["rent_enabled_event_decision_indices"] == (
+        shuffled_exploration["rent_enabled_event_decision_indices"]
+    )
+    assert all(
+        "cumulative_terminal_return" in event
+        for event in directed.support_exploration_events
+    )
+    assert set(directed_actions) == {"action_a"}
+    assert set(shuffled_actions) == {"action_a", "action_b"}
+
+
+def test_support_requests_cannot_influence_exploitative_choice() -> None:
+    policy = _support_request_policy("support_directed")
+
+    selected = policy.choose(("atom_x", "atom_y"), explore=False)
+
+    assert selected in {"action_a", "action_b"}
+    assert policy.exploration_event_count == 0
+    assert policy.support_exploration_rng_call_count == 0
+    assert policy.support_request_opportunity_count == 0
+    assert policy.support_probe_action_count == 0
+    assert policy.support_exploration_events == []
 
 
 def test_policy_records_decision_scores_without_laboratory_labels() -> None:

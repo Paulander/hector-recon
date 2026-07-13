@@ -10,6 +10,9 @@ import random
 from typing import Literal
 
 RentProposalMode = Literal["residual_ranked", "rank_shuffled"]
+ExplorationRequestMode = Literal[
+    "ordinary_random", "support_directed", "support_shuffled"
+]
 
 
 @dataclass(frozen=True)
@@ -35,6 +38,7 @@ class CausalRentConfig:
     consecutive_negative_reviews: int = 2
     max_uncertain_reviews: int = 2
     proposal_mode: RentProposalMode = "residual_ranked"
+    exploration_request_mode: ExplorationRequestMode = "ordinary_random"
 
     def __post_init__(self) -> None:
         for name in (
@@ -61,6 +65,12 @@ class CausalRentConfig:
             "residual_ranked", "rank_shuffled",
         }:
             raise ValueError("unsupported causal-rent proposal mode")
+        if self.exploration_request_mode not in {
+            "ordinary_random", "support_directed", "support_shuffled",
+        }:
+            raise ValueError(
+                "unsupported causal-rent exploration request mode"
+            )
 
     @property
     def safety_ceiling(self) -> int:
@@ -85,6 +95,9 @@ class CandidateRentStats:
     predictive_benefit: float | None
     rent: float | None
     margin_utility: float | None
+    mean_margin_with: float | None
+    mean_margin_without: float | None
+    margin_sign_flip_rate: float | None
 
 
 class LifetimeDecisionReservoir:
