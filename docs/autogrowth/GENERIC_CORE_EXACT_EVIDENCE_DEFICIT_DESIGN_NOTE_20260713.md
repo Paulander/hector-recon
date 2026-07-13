@@ -1,7 +1,8 @@
 # Generic-Core Exact Evidence-Deficit Internal State: Design Note
 
-Date: 2026-07-13. Status: design/audit only; not a frozen work package and not
-authorization for another fresh run.
+Date: 2026-07-13. Status: superseded in part by the accepted architectural
+decision and frozen graph-internal work package. Retained as provenance for the
+completed negative result.
 
 ## Motivation from the completed experiment
 
@@ -64,9 +65,10 @@ must equal the local counter; the counter does not grant rent or maturity.
 
 ## Internal-terminal interpretation
 
-The minimal causal test can use the exact counter directly as the request deficit:
-`max(0, min_eligible_support - rent_evidence_support)`. If supported, materialize
-it as a first-class generic internal terminal associated with the candidate:
+The original note proposed using the exact counter directly before optionally
+materializing it. External review correctly rejected that boundary. The first
+causal test must materialize a first-class generic internal terminal associated
+with the candidate, with the exact counter as its measurement backend:
 
 - it fires only while the candidate is live and exact support is below threshold;
 - its legs identify the owning candidate/action channel and the candidate’s

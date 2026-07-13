@@ -311,3 +311,19 @@ One run should produce one machine-readable result artifact and, when useful, on
   0.814/0.634 and occupancy 10. The occupancy gradient was 7 -> 11 -> 10,
   monotonic in only 8/20 seeds. Do not tune this package or advance it to KRK;
   see `docs/autogrowth/GENERIC_CORE_ROLE_BLIND_CAUSAL_RENT_RESULT_20260712.md`.
+- The admitted graph-backed activation-deficit package is closed as a valid
+  negative: every target was discovered, but activation count was the wrong
+  evidence currency and maximum-deficit priority was mostly unidentifiable. The
+  next frozen generic-core package materializes a real candidate-local
+  `EVIDENCE_DEFICIT` TERMINAL plus request SCRIPT in both proxy and exact arms;
+  only the terminal measurement backend differs. Only trials request, the host
+  actuator bus may consume graph emissions but cannot inspect candidate fields,
+  and exact retained Algorithm-R support cannot create reward or maturity. See
+  `docs/autogrowth/GENERIC_CORE_GRAPH_INTERNAL_EXACT_EVIDENCE_WORK_PACKAGE_20260713.md`.
+- Internal terminals and virtual frames are now explicitly orthogonal
+  architectural layers. After the exact-support package closes, the next canary
+  is side-effect-free frame-local `CHILD_RESPONSE` plus
+  `PREDICTION_SURPRISE`, with observed outcome or mature grounded-child value as
+  the only credit source. This canary remains outside the immediate experiment
+  and cannot authorize KRK transfer. See
+  `docs/autogrowth/INTERNAL_PROPRIOCEPTION_ARCHITECTURE_DECISION_20260713.md`.

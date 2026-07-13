@@ -34,6 +34,24 @@ protocol. Laboratory information must never change runtime routing, reward,
 structural eligibility, plasticity, or action selection except in an explicitly
 named oracle/control arm.
 
+## Internal proprioception and virtual frames
+
+Internal terminals are first-class generic embodiment. Their measurement
+backends may be implemented by the host, as board sensors are, but learner
+decisions must consume their values through ordinary graph topology rather than
+hidden host reads. Persistent/internal-real terminals such as
+`EVIDENCE_DEFICIT` are distinct from frame-local terminals such as future
+`CHILD_RESPONSE` and `PREDICTION_SURPRISE`.
+
+Virtual frames and internal terminals are orthogonal: a frame selects the real
+or hypothetical state in which external and internal terminals are evaluated.
+Dream execution must be side-effect-free with respect to persistent weights,
+lifecycle, reservoir, maturity, reward, and real actuators. Internal
+measurements may route requests but cannot create correctness, reward, rent,
+maturity, consolidation, or grounding. A dream can never confirm or credit
+itself; only observed outcomes or consolidated value from an outcome-grounded
+mature child may supply learning credit.
+
 ## Named non-autonomous controls
 
 - `virtual_frame_verified` directly executes the selected hypothetical child

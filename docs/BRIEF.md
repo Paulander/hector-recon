@@ -83,20 +83,26 @@ of the raw artifact and the documented protocol deviation that final cumulative
 terminal return was not copied into the arm summary, although event-level returns
 and every frozen gate remain available.
 
-The most targeted next candidate is a generic internal `EVIDENCE_DEFICIT` state
-whose value equals exact anonymous rent-adjudication support, including reservoir
-insertions and evictions. Test that support currency against the current raw
-activation proxy with lifecycle grace, exploration timing, topology and rent
-frozen. Do not combine it with longer review grace. If exact support still cannot
-reach threshold before two reviews, review grace becomes a separate later factor.
-Any renewed maximum-deficit priority claim also requires enough simultaneous
-requesters to make priority distinguishable from shuffled responsibility. The implementation audit and required invariants are in
-`docs/autogrowth/GENERIC_CORE_EXACT_EVIDENCE_DEFICIT_DESIGN_NOTE_20260713.md`.
+The next frozen package makes generic internal proprioception the architectural
+boundary, not an optional diagnostic. Every trial owns a graph-native
+`EVIDENCE_DEFICIT` terminal and request SCRIPT; proxy and exact arms share
+identical topology and differ only in whether the backend measures raw activation
+or exact retained Algorithm-R support. A content-blind host actuator bus may act
+on emitted requests but may not reread candidate fields. Lifecycle grace,
+exploration timing, topology, rent and learning remain frozen. Maximum-deficit
+priority is a separate conditional claim and requires identifiable simultaneous
+unequal requests. The contract is
+`docs/autogrowth/GENERIC_CORE_GRAPH_INTERNAL_EXACT_EVIDENCE_WORK_PACKAGE_20260713.md`;
+the architectural boundary is
+`docs/autogrowth/INTERNAL_PROPRIOCEPTION_ARCHITECTURE_DECISION_20260713.md`.
 
 No KRK transfer is authorized from the negative result. R2 remains closed until
-R1 reaches its promotion gate. Internal terminals for mature-child availability
-and prediction surprise remain long-term candidates, but the immediate lesson is
-that an internal terminal must expose the exact local evidence currency used by
-the graph decision rather than a convenient global or activation heuristic.
+R1 reaches its promotion gate. Mature-child response and prediction surprise are
+now the explicitly ordered next architectural layer, not vague distant
+candidates: after the evidence package closes, a side-effect-free virtual-frame
+canary must evaluate frame-local `CHILD_RESPONSE` and `PREDICTION_SURPRISE`
+terminals. They remain outside the immediate experiment and cannot self-create
+credit; only observed outcomes or value from an outcome-grounded mature child can
+ground learning.
 
 No-go: runtime tablebase/DTM or Stockfish provider, learner-visible stage/hand-skill features, direct move-provider overrides, hidden oracles, new TG chronology, or claims from a counterfactual path that fails no-op parity.
