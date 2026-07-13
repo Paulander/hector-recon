@@ -99,6 +99,31 @@ zero effects for batch-4 ranked. Extra throughput exposed some additional
 useful candidates, but most additional topology was absent, redundant or too
 weakly trained to control the changed decisions.
 
+## External-audit qualification
+
+An independent reconstruction sharpened the mechanism after package closure.
+Across the 20 hardest tasks, all four relevant cue-by-regime-by-action
+candidates were proposed (80/80). Every target candidate that reached adequate
+rent support matured (60/60). The systematically missing fourth candidate was
+pruned as unsupported in 20/20 tasks, with median reservoir support 8.5 against
+the required 32. Thus the strongest supported next bottleneck is selected-action
+evidence starvation, not a demonstrated failure of individual rent.
+
+Three nonfatal protocol deviations are recorded transparently:
+
+1. At episode 4,096, review runs before proposal. Every high-dose hardest cell
+   therefore opens one final challenger with no later exposure; median tested
+   proposals are 24 rather than the reported 25 total proposals.
+2. Batch-4 blocked a median seven of 32 proposal opportunities. It substantially
+   relaxed the proposal bottleneck but did not literally remove it.
+3. The preregistration requested old and new checkpoint trajectories. The
+   artifact contains old trajectories and final old/new endpoints, but no new
+   checkpoint trajectory.
+
+These qualifications do not alter any gate verdict or the negative completion.
+They supersede the broader proposed next fork below: candidate-directed
+exploration should be tested before equilibration or cooperative rent.
+
 ## Interpretation and closure
 
 The hypothesis that one-challenger throughput was the sufficient missing
