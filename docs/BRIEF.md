@@ -77,39 +77,37 @@ shuffled responsibility rarely differed. See
 
 ## Ordered next decision
 
-Do not rerun or tune the completed activation-deficit package. It is a negative
-completion at the frozen dose. Before another fresh pool, obtain external review
-of the raw artifact and the documented protocol deviation that final cumulative
-terminal return was not copied into the arm summary, although event-level returns
-and every frozen gate remain available.
+The graph-internal exact-evidence package is closed negative on fresh admitted
+seeds 20262301--20262320. Measurement integrity passed in all 20 cells/100 arms,
+and every target structure was found. Exact directed improved paired per-task
+minimum support over activation in 14/20 tasks, but the median gain was only 2;
+all four targets reached support 32 and matured with positive rent in only 2/20,
+and 18/80 targets died unsupported. Exact behavior mastered old plus new in 3/20.
+Fixed-reference stability passed at 18/20. Priority remains `not_identified`:
+only 393/49,638 exact-arm opportunities had unequal request strengths, although
+the deterministic planted canary proved the allocator itself distinguishable.
+See
+`docs/autogrowth/GENERIC_CORE_GRAPH_INTERNAL_EXACT_EVIDENCE_RESULT_20260713.md`.
 
-The next frozen package makes generic internal proprioception the architectural
-boundary, not an optional diagnostic. Every trial owns a graph-native
-`EVIDENCE_DEFICIT` terminal and request SCRIPT; proxy and exact arms share
-identical topology and differ only in whether the backend measures raw activation
-or exact retained Algorithm-R support. A content-blind host actuator bus may act
-on emitted requests but may not reread candidate fields. Lifecycle grace,
-exploration timing, topology, rent and learning remain frozen. Maximum-deficit
-priority is a separate conditional claim and requires identifiable simultaneous
-unequal requests. The contract is
-`docs/autogrowth/GENERIC_CORE_GRAPH_INTERNAL_EXACT_EVIDENCE_WORK_PACKAGE_20260713.md`;
-the architectural boundary is
-`docs/autogrowth/INTERNAL_PROPRIOCEPTION_ARCHITECTURE_DECISION_20260713.md`.
+The internal-terminal architecture is established, not optional: candidate-local
+`EVIDENCE_DEFICIT` is measured exactly under live Algorithm-R insertion/eviction,
+feeds a graph-native request SCRIPT, never reaches the exploitative root, and is
+consumed by a content-blind host actuator bus. This architectural success does
+not imply evidence, maturation, behavior, or transfer success.
 
-Implementation is complete and pre-fresh validation passed: the anonymous priority
-canary is identifiable, a full-dose retired-seed five-arm smoke passed every
-integrity invariant, and the full repository suite passed 828 tests in 2,186.97
-seconds. The smoke exposed and fixed a phase-0 counter-initialization bug before
-any fresh seed was touched. See
-`docs/autogrowth/GRAPH_INTERNAL_EXACT_EVIDENCE_IMPLEMENTATION_NOTE_20260713.md`.
+The preregistered interpretation binds. Close exact-currency requests at this
+dose. The next possible scientific factor is support-conditioned lifecycle grace,
+not more throughput, reward shaping, consolidation, action competition, or
+virtual frames. Unsupported exact targets reached median support 7.5 then 12.5
+at their two reviews and died at 5--22, so one ad hoc extra review is not an
+adequate inference. The candidate local rule and unresolved design choices are in
+`docs/autogrowth/SUPPORT_CONDITIONED_LIFECYCLE_GRACE_DESIGN_NOTE_20260713.md`.
+Do not implement or touch another fresh pool until external review freezes that
+factor, its cap, arms, gates, and unused seeds.
 
-No KRK transfer is authorized from the negative result. R2 remains closed until
-R1 reaches its promotion gate. Mature-child response and prediction surprise are
-now the explicitly ordered next architectural layer, not vague distant
-candidates: after the evidence package closes, a side-effect-free virtual-frame
-canary must evaluate frame-local `CHILD_RESPONSE` and `PREDICTION_SURPRISE`
-terminals. They remain outside the immediate experiment and cannot self-create
-credit; only observed outcomes or value from an outcome-grounded mature child can
-ground learning.
+No KRK transfer is authorized. Native R1 and R2 remain unchanged/closed.
+Frame-local `CHILD_RESPONSE` and `PREDICTION_SURPRISE` remain the ordered
+architectural bridge to strategic handover, but they are queued behind closure of
+the current evidence-survival bottleneck and cannot self-create credit.
 
 No-go: runtime tablebase/DTM or Stockfish provider, learner-visible stage/hand-skill features, direct move-provider overrides, hidden oracles, new TG chronology, or claims from a counterfactual path that fails no-op parity.

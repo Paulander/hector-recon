@@ -334,3 +334,13 @@ One run should produce one machine-readable result artifact and, when useful, on
   exposed and fixed pre-enablement counter subtraction from phase-0 candidates.
   No frozen 202623xx seed has been touched. See
   `docs/autogrowth/GRAPH_INTERNAL_EXACT_EVIDENCE_IMPLEMENTATION_NOTE_20260713.md`.
+- The canonical graph-internal exact-evidence package is closed negative on
+  admitted fresh seeds 20262301--20262320. All 20/20 integrity cells passed and
+  all 80 targets were discovered. Exact beat activation minimum support in 14/20
+  but median gain was only +2; all four targets reached support 32 and matured
+  with positive rent in 2/20, 18/80 died unsupported, and old+new behavior passed
+  3/20. Fixed stability passed 18/20. Priority is `not_identified` at 393 unequal
+  opportunities out of 49,638 despite the planted canary passing. Exact requests
+  are closed at this dose; external review must freeze any support-conditioned
+  lifecycle-grace package before implementation or fresh data. See
+  `docs/autogrowth/GENERIC_CORE_GRAPH_INTERNAL_EXACT_EVIDENCE_RESULT_20260713.md`.
