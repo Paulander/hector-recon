@@ -150,6 +150,75 @@ def test_global_capacity_allows_only_one_temporary_challenger() -> None:
     assert policy.causal_rent_challenger_block_count == 1
 
 
+def test_global_capacity_allows_a_bounded_temporary_challenger_batch() -> None:
+    policy = _policy(candidate_state="mature", weight=0.25)
+    for action_offset, channel in enumerate(policy.channels.values()):
+        learner = channel.learner
+        learner.observation_count = 64
+        learner.global_residual_sum = 32.0
+        for pair_index in range(4):
+            pair = (
+                f"batch_{action_offset}_{pair_index}_x",
+                f"batch_{action_offset}_{pair_index}_y",
+            )
+            learner.pair_evidence[pair] = PairEvidence(
+                support=16,
+                residual_sum=20.0 + pair_index + action_offset,
+            )
+    policy.enable_causal_rent(CausalRentConfig(
+        global_capacity=1,
+        temporary_challenger_allowance=4,
+        min_eligible_support=8,
+    ))
+
+    for _ in range(4):
+        policy._causal_rent_proposal_opportunity()
+
+    assert policy._global_live_count() == 5
+    assert len(policy._trial_candidates()) == 4
+    assert policy.maximum_global_live_candidate_count == 5
+    assert policy.causal_rent_safety_ceiling_bind_count == 0
+
+    policy._causal_rent_proposal_opportunity()
+    assert policy._global_live_count() == 5
+    assert policy.causal_rent_challenger_block_count == 1
+
+
+def test_challenger_batch_is_adjudicated_by_descending_frozen_rent() -> None:
+    policy = _policy(candidate_state="trial", weight=0.2)
+    channel = policy.channels["action_a"]
+    channel.learner.candidates.append(CompositeCandidate(
+        members=("atom_x", "atom_y"),
+        born_observation=1,
+        proposal_score=0.5,
+        support_at_proposal=16,
+        state="trial",
+        shadow_weight=0.5,
+    ))
+    channel.sync_external_lifecycle()
+    assert policy.experience_reservoir is not None
+    for sequence in range(8):
+        policy.experience_reservoir.add(_record(sequence, target=1.0))
+    policy.enable_causal_rent(CausalRentConfig(
+        global_capacity=2,
+        temporary_challenger_allowance=2,
+        min_eligible_support=8,
+    ))
+
+    policy.review_causal_rent()
+
+    promotions = [
+        event["candidate_index"]
+        for event in policy.causal_rent_events
+        if event["event"] == "promoted"
+    ]
+    assert promotions == [1, 0]
+    assert all(
+        candidate.state == "mature"
+        for candidate in channel.learner.candidates
+    )
+
+
 def test_policy_records_decision_scores_without_laboratory_labels() -> None:
     policy = EpisodicCompositionPolicy(
         ("left", "right"),

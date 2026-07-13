@@ -641,7 +641,22 @@ class EpisodicCompositionPolicy:
                     action_id, index, "pruned", "retired"
                 )
 
-        for action_id, index, candidate in live:
+        trials = [
+            (action_id, index, candidate)
+            for action_id, index, candidate in live
+            if candidate.state == "trial"
+        ]
+        trials.sort(key=lambda item: (
+            stats_by_id[(item[0], item[1])].rent is None,
+            -(
+                stats_by_id[(item[0], item[1])].rent
+                if stats_by_id[(item[0], item[1])].rent is not None
+                else 0.0
+            ),
+            item[0],
+            item[1],
+        ))
+        for action_id, index, candidate in trials:
             if candidate.state != "trial":
                 continue
             stats = stats_by_id[(action_id, index)]
@@ -751,9 +766,16 @@ class EpisodicCompositionPolicy:
         config = self.causal_rent_config
         assert config is not None
         self.causal_rent_proposal_opportunity_count += 1
-        if self._trial_candidates():
+        trial_count = len(self._trial_candidates())
+        if trial_count >= config.temporary_challenger_allowance:
             self.causal_rent_challenger_block_count += 1
-            self._record_rent_event("proposal_blocked_by_challenger")
+            self._record_rent_event(
+                "proposal_blocked_by_challenger",
+                temporary_challenger_count=trial_count,
+                temporary_challenger_allowance=(
+                    config.temporary_challenger_allowance
+                ),
+            )
             return
         if self._global_live_count() >= config.safety_ceiling:
             self.causal_rent_safety_ceiling_bind_count += 1
