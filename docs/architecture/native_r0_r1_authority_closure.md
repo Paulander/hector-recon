@@ -2,6 +2,8 @@
 
 Status: engineering/development package only. All positions are previously used or retired. This document does not make a fresh KRK claim.
 
+Implementation result: authority gates passed, but the package closed negative at `actual_child_availability`; see `../autogrowth/NATIVE_R0_R1_AUTHORITY_HANDOVER_DEVELOPMENT_RESULT_20260716.md`.
+
 ## Binding organism boundary
 
 Inference consists of a serialized learned `NativeReConKRKGraph`, its generic outcome-grounding/value state, the generic ReCoN genome/embodiment (including anonymous CHOICE), and a chess environment adapter. No curriculum runner, trainer object, mate-distance label, forced-move provider, tablebase, or host score selector is serialized or required.

@@ -7,6 +7,26 @@ This ledger is subordinate to the central doctrine in
 start, outcome-only grounding, mature-child value, and 100% disjoint gates before
 advancing outward.
 
+## 2026-07-16 native authority closure -- current engineering boundary
+
+A retired-data development package extracted the balanced R0 graph into a
+trainer-free serialized organism and removed the old Python weighted selector,
+provider fallback, and `_choose_with_child_priority` from the experimental
+inference path. FormalReConEngine plus one anonymous generic CHOICE primitive
+emitted exactly one actuator in every decision. All host-authority tripwires,
+dream-isolation controls, empty-to-grown R1 trial birth, and 32/32 R0 retention
+passed.
+
+The actual-child handover did not improve R1. Formal R0 confirmation was
+nonselective outside the R0 manifold: all 65 successor queries across all 19
+candidate first moves confirmed on the retired evaluation row. Full,
+disconnected, and shuffled arms chose identical actions and converted 0/1. The
+single binding boundary is now `actual_child_availability`, not graph choice,
+all-reply composition, spawning, or retention. R0 needs a graph-native local
+competence/abstention boundary learned from real outcomes; host gating and dream
+move verification remain forbidden. See
+`NATIVE_R0_R1_AUTHORITY_HANDOVER_DEVELOPMENT_RESULT_20260716.md`.
+
 ## Latest balanced correction -- authoritative current boundary
 
 The 2026-07-11 high-resolution correction supersedes the small-pool "next gate"

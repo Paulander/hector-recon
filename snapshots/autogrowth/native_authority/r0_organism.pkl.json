@@ -1,0 +1,25 @@
+{
+  "byte_count": 2404379,
+  "frozen_policy_token": "c365775bf0103fb8f64697f60807bb0919ec97294e20ad441f79c6495b843ed7",
+  "frozen_triplet_count": 48,
+  "organism_parts": [
+    "serialized_learned_graph",
+    "generic_choice_genome",
+    "generic_credit_and_grounding_state"
+  ],
+  "provenance": {
+    "can_emit": true,
+    "causal_confirmations": 1,
+    "child_id": "native_intrinsic_r0_mate_in_1",
+    "consolidated_value": 0.008902138618091514,
+    "grounded": true,
+    "grounding_level": 0,
+    "grounding_source": "observed_terminal_outcomes:7;paired_causal_confirmations:1",
+    "mature": true,
+    "terminal_evidence": 7,
+    "uncertainty": 0.30000000000000004
+  },
+  "schema_version": "native_r0_authority_organism.v1",
+  "sha256": "bb58b7d64bd3ab5b696713a7253555e051bd0e9fdef4637db7c27e7517495eaf",
+  "trainer_object_serialized": false
+}

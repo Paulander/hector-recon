@@ -171,6 +171,7 @@ def test_virtual_executor_rejects_real_frame() -> None:
         "update_weight",
         "update_lifecycle",
         "update_reservoir",
+        "update_topology",
         "set_maturity",
     ),
 )

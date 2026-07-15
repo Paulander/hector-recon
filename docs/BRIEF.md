@@ -107,11 +107,23 @@ The internal-terminal architecture remains established: exact persistent-real
 measurements and defer/request SCRIPTs are graph material, disconnected from
 exploitative roots, while the final generic bus is host-executed. Virtual-frame
 handover canary v2 separately proves deep-isolated, side-effect-free planted
-`CHILD_RESPONSE` routing and prediction residual measurement. Neither
-architectural pass is autonomous learned KRK behavior.
+`CHILD_RESPONSE` routing and prediction residual measurement.
+
+The retired native authority-closure package now replaces the planted child with
+the actual serialized, mature, outcome-grounded R0 graph. Formal graph choice,
+exactly-one actuation, zero host fallback, selector/provider tripwires, dream
+isolation, empty-to-grown R1 trial topology, and 32/32 R0 retention all passed.
+Behavior did not: on the retired R1 row, all 65 reply-local child queries across
+all 19 first-action legs confirmed. Full, disconnected, and shuffled arms chose
+the same actions and each converted 0/1. The single binding boundary is
+`actual_child_availability`: formal R0 response is not a selective learned
+competence/abstention boundary outside the R0 manifold. Focused validation and
+the full 881-test repository suite passed. See
+`docs/autogrowth/NATIVE_R0_R1_AUTHORITY_HANDOVER_DEVELOPMENT_RESULT_20260716.md`.
 
 No KRK transfer is authorized. Native R1 and R2 remain unchanged/closed. Do not
-run a new fresh package until its single scientific factor, cohort, controls,
-and gates receive a new external freeze.
+run a new fresh package until a graph-native, outcome-learned child
+competence-availability factor, cohort, controls, and gates receive a new
+external freeze. Do not restore host gating or dream verification.
 
 No-go: runtime tablebase/DTM or Stockfish provider, learner-visible stage/hand-skill features, direct move-provider overrides, hidden oracles, new TG chronology, or claims from a counterfactual path that fails no-op parity.

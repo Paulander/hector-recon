@@ -1,0 +1,935 @@
+{
+  "actual_child_availability_nonselective": true,
+  "advance": "preserve_failure_binding_boundary:actual_child_availability",
+  "arms": {
+    "actual_child": {
+      "arm": "actual_child",
+      "authority": {
+        "actuator_multiplicity_failures": 0,
+        "graph_owned_action_fraction": 1.0,
+        "host_fallback_count": 0,
+        "persistent_dream_mutation_count": 0,
+        "planted_response_count": 0
+      },
+      "child_provenance": {
+        "can_emit": true,
+        "causal_confirmations": 1,
+        "child_id": "native_intrinsic_r0_mate_in_1",
+        "consolidated_value": 0.008902138618091514,
+        "grounded": true,
+        "grounding_level": 0,
+        "grounding_source": "observed_terminal_outcomes:7;paired_causal_confirmations:1",
+        "mature": true,
+        "terminal_evidence": 7,
+        "uncertainty": 0.30000000000000004
+      },
+      "evaluation": {
+        "conversion_count": 0,
+        "conversion_rate": 0.0,
+        "position_count": 1,
+        "rows": [
+          {
+            "actions_with_required_replies": 19,
+            "actual_child_confirmed_slot_count": 65,
+            "actuator_multiplicity": 1,
+            "all_reply_confirmed_action_count": 19,
+            "child_all_reply_availability_fraction": 1.0,
+            "converted": false,
+            "fen": "3K4/k7/7R/8/8/8/8/8 w - - 0 1",
+            "host_fallback_count": 0,
+            "reply_rows": [
+              {
+                "child_actuator": "e6a6",
+                "mated": false,
+                "observed_terminal": null,
+                "reply": "a7a8"
+              },
+              {
+                "child_actuator": "e6e7",
+                "mated": false,
+                "observed_terminal": null,
+                "reply": "a7b7"
+              },
+              {
+                "child_actuator": "e6b6",
+                "mated": false,
+                "observed_terminal": null,
+                "reply": "a7b8"
+              }
+            ],
+            "selected_first": "h6e6"
+          }
+        ]
+      },
+      "r0_retention": {
+        "accuracy": 1.0,
+        "position_count": 32,
+        "retained_count": 32,
+        "rows": [
+          {
+            "actuator": "e4a4",
+            "fen": "k7/2K5/8/8/4R3/8/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "h2h8",
+            "fen": "3k4/8/3K4/8/8/8/7R/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b7b1",
+            "fen": "8/1R6/8/8/8/5K2/8/5k2 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c7h7",
+            "fen": "8/2R5/8/8/5K1k/8/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "h4a4",
+            "fen": "8/8/8/8/7R/8/8/k1K5 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "e6e1",
+            "fen": "8/8/4R3/8/8/K7/8/k7 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b6b1",
+            "fen": "8/8/1R6/8/8/6K1/8/6k1 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c1c8",
+            "fen": "k7/8/K7/8/8/8/8/2R5 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c3a3",
+            "fen": "8/8/8/k1K5/8/2R5/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b6h6",
+            "fen": "8/8/1R6/8/5K1k/8/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "d4h4",
+            "fen": "8/8/8/8/3R4/8/8/5K1k w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c7h7",
+            "fen": "8/2R5/8/8/8/8/5K2/7k w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "e8a8",
+            "fen": "4R3/8/8/8/8/8/k1K5/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "e4h4",
+            "fen": "5K1k/8/8/8/4R3/8/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "d3h3",
+            "fen": "5K1k/8/8/8/8/3R4/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "h3h8",
+            "fen": "2k5/8/2K5/8/8/7R/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "g3h3",
+            "fen": "7k/5K2/8/8/8/6R1/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b3b8",
+            "fen": "7k/8/7K/8/8/1R6/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "g8h8",
+            "fen": "6R1/8/8/5K1k/8/8/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b5h5",
+            "fen": "8/8/8/1R6/8/8/5K1k/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b5a5",
+            "fen": "8/8/8/1R6/8/8/8/k1K5 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "a8a1",
+            "fen": "R7/8/8/8/8/6K1/8/7k w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "d2d8",
+            "fen": "k7/8/K7/8/8/8/3R4/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c2c8",
+            "fen": "5k2/8/5K2/8/8/8/2R5/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b1b8",
+            "fen": "5k2/8/5K2/8/8/8/8/1R6 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c2c1",
+            "fen": "8/8/8/8/8/1K6/2R5/k7 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "d3d1",
+            "fen": "8/8/8/8/8/3R2K1/8/7k w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "g6g1",
+            "fen": "8/8/6R1/8/8/4K3/8/4k3 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c3a3",
+            "fen": "k7/2K5/8/8/8/2R5/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "e5a5",
+            "fen": "8/8/8/4R3/8/k1K5/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "h8h1",
+            "fen": "7R/8/8/8/8/3K4/8/3k4 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c1a1",
+            "fen": "8/8/8/8/k1K5/8/8/2R5 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          }
+        ]
+      },
+      "topology": {
+        "final_r1_triplet_count": 1,
+        "initial_r1_triplet_count": 0,
+        "r1_triplet_ids": [
+          "tg26o_triplet_ccf819f96cb99e90"
+        ],
+        "stem_cell_transitions": [
+          "ABSENT->TRIAL"
+        ]
+      },
+      "training": {
+        "episode_count": 1,
+        "epochs": 1,
+        "rows": [
+          {
+            "actual_black_reply": "h1g1",
+            "epoch": 1,
+            "fen": "8/8/8/8/8/R4K2/8/7k w - - 0 1",
+            "observed_child_confirmed": true,
+            "observed_terminal": null,
+            "prediction_residual": 0.0,
+            "r1_triplet_born": true,
+            "selected_first": "a3d3",
+            "stem_cell_transition": "ABSENT->TRIAL",
+            "td_error": -0.007596422573115292,
+            "triplet_id": "tg26o_triplet_ccf819f96cb99e90"
+          }
+        ]
+      }
+    },
+    "disconnected": {
+      "arm": "disconnected",
+      "authority": {
+        "actuator_multiplicity_failures": 0,
+        "graph_owned_action_fraction": 1.0,
+        "host_fallback_count": 0,
+        "persistent_dream_mutation_count": 0,
+        "planted_response_count": 0
+      },
+      "child_provenance": {
+        "can_emit": true,
+        "causal_confirmations": 1,
+        "child_id": "native_intrinsic_r0_mate_in_1",
+        "consolidated_value": 0.008902138618091514,
+        "grounded": true,
+        "grounding_level": 0,
+        "grounding_source": "observed_terminal_outcomes:7;paired_causal_confirmations:1",
+        "mature": true,
+        "terminal_evidence": 7,
+        "uncertainty": 0.30000000000000004
+      },
+      "evaluation": {
+        "conversion_count": 0,
+        "conversion_rate": 0.0,
+        "position_count": 1,
+        "rows": [
+          {
+            "actions_with_required_replies": 19,
+            "actual_child_confirmed_slot_count": 65,
+            "actuator_multiplicity": 1,
+            "all_reply_confirmed_action_count": 19,
+            "child_all_reply_availability_fraction": 1.0,
+            "converted": false,
+            "fen": "3K4/k7/7R/8/8/8/8/8 w - - 0 1",
+            "host_fallback_count": 0,
+            "reply_rows": [
+              {
+                "child_actuator": "e6a6",
+                "mated": false,
+                "observed_terminal": null,
+                "reply": "a7a8"
+              },
+              {
+                "child_actuator": "e6e7",
+                "mated": false,
+                "observed_terminal": null,
+                "reply": "a7b7"
+              },
+              {
+                "child_actuator": "e6b6",
+                "mated": false,
+                "observed_terminal": null,
+                "reply": "a7b8"
+              }
+            ],
+            "selected_first": "h6e6"
+          }
+        ]
+      },
+      "r0_retention": {
+        "accuracy": 1.0,
+        "position_count": 32,
+        "retained_count": 32,
+        "rows": [
+          {
+            "actuator": "e4a4",
+            "fen": "k7/2K5/8/8/4R3/8/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "h2h8",
+            "fen": "3k4/8/3K4/8/8/8/7R/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b7b1",
+            "fen": "8/1R6/8/8/8/5K2/8/5k2 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c7h7",
+            "fen": "8/2R5/8/8/5K1k/8/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "h4a4",
+            "fen": "8/8/8/8/7R/8/8/k1K5 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "e6e1",
+            "fen": "8/8/4R3/8/8/K7/8/k7 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b6b1",
+            "fen": "8/8/1R6/8/8/6K1/8/6k1 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c1c8",
+            "fen": "k7/8/K7/8/8/8/8/2R5 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c3a3",
+            "fen": "8/8/8/k1K5/8/2R5/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b6h6",
+            "fen": "8/8/1R6/8/5K1k/8/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "d4h4",
+            "fen": "8/8/8/8/3R4/8/8/5K1k w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c7h7",
+            "fen": "8/2R5/8/8/8/8/5K2/7k w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "e8a8",
+            "fen": "4R3/8/8/8/8/8/k1K5/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "e4h4",
+            "fen": "5K1k/8/8/8/4R3/8/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "d3h3",
+            "fen": "5K1k/8/8/8/8/3R4/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "h3h8",
+            "fen": "2k5/8/2K5/8/8/7R/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "g3h3",
+            "fen": "7k/5K2/8/8/8/6R1/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b3b8",
+            "fen": "7k/8/7K/8/8/1R6/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "g8h8",
+            "fen": "6R1/8/8/5K1k/8/8/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b5h5",
+            "fen": "8/8/8/1R6/8/8/5K1k/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b5a5",
+            "fen": "8/8/8/1R6/8/8/8/k1K5 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "a8a1",
+            "fen": "R7/8/8/8/8/6K1/8/7k w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "d2d8",
+            "fen": "k7/8/K7/8/8/8/3R4/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c2c8",
+            "fen": "5k2/8/5K2/8/8/8/2R5/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b1b8",
+            "fen": "5k2/8/5K2/8/8/8/8/1R6 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c2c1",
+            "fen": "8/8/8/8/8/1K6/2R5/k7 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "d3d1",
+            "fen": "8/8/8/8/8/3R2K1/8/7k w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "g6g1",
+            "fen": "8/8/6R1/8/8/4K3/8/4k3 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c3a3",
+            "fen": "k7/2K5/8/8/8/2R5/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "e5a5",
+            "fen": "8/8/8/4R3/8/k1K5/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "h8h1",
+            "fen": "7R/8/8/8/8/3K4/8/3k4 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c1a1",
+            "fen": "8/8/8/8/k1K5/8/8/2R5 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          }
+        ]
+      },
+      "topology": {
+        "final_r1_triplet_count": 1,
+        "initial_r1_triplet_count": 0,
+        "r1_triplet_ids": [
+          "tg26o_triplet_ccf819f96cb99e90"
+        ],
+        "stem_cell_transitions": [
+          "ABSENT->TRIAL"
+        ]
+      },
+      "training": {
+        "episode_count": 1,
+        "epochs": 1,
+        "rows": [
+          {
+            "actual_black_reply": "h1g1",
+            "epoch": 1,
+            "fen": "8/8/8/8/8/R4K2/8/7k w - - 0 1",
+            "observed_child_confirmed": true,
+            "observed_terminal": null,
+            "prediction_residual": 0.0,
+            "r1_triplet_born": true,
+            "selected_first": "a3d3",
+            "stem_cell_transition": "ABSENT->TRIAL",
+            "td_error": -0.0013649255404512319,
+            "triplet_id": "tg26o_triplet_ccf819f96cb99e90"
+          }
+        ]
+      }
+    },
+    "shuffled": {
+      "arm": "shuffled",
+      "authority": {
+        "actuator_multiplicity_failures": 0,
+        "graph_owned_action_fraction": 1.0,
+        "host_fallback_count": 0,
+        "persistent_dream_mutation_count": 0,
+        "planted_response_count": 0
+      },
+      "child_provenance": {
+        "can_emit": true,
+        "causal_confirmations": 1,
+        "child_id": "native_intrinsic_r0_mate_in_1",
+        "consolidated_value": 0.008902138618091514,
+        "grounded": true,
+        "grounding_level": 0,
+        "grounding_source": "observed_terminal_outcomes:7;paired_causal_confirmations:1",
+        "mature": true,
+        "terminal_evidence": 7,
+        "uncertainty": 0.30000000000000004
+      },
+      "evaluation": {
+        "conversion_count": 0,
+        "conversion_rate": 0.0,
+        "position_count": 1,
+        "rows": [
+          {
+            "actions_with_required_replies": 19,
+            "actual_child_confirmed_slot_count": 65,
+            "actuator_multiplicity": 1,
+            "all_reply_confirmed_action_count": 19,
+            "child_all_reply_availability_fraction": 1.0,
+            "converted": false,
+            "fen": "3K4/k7/7R/8/8/8/8/8 w - - 0 1",
+            "host_fallback_count": 0,
+            "reply_rows": [
+              {
+                "child_actuator": "e6a6",
+                "mated": false,
+                "observed_terminal": null,
+                "reply": "a7a8"
+              },
+              {
+                "child_actuator": "e6e7",
+                "mated": false,
+                "observed_terminal": null,
+                "reply": "a7b7"
+              },
+              {
+                "child_actuator": "e6b6",
+                "mated": false,
+                "observed_terminal": null,
+                "reply": "a7b8"
+              }
+            ],
+            "selected_first": "h6e6"
+          }
+        ]
+      },
+      "r0_retention": {
+        "accuracy": 1.0,
+        "position_count": 32,
+        "retained_count": 32,
+        "rows": [
+          {
+            "actuator": "e4a4",
+            "fen": "k7/2K5/8/8/4R3/8/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "h2h8",
+            "fen": "3k4/8/3K4/8/8/8/7R/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b7b1",
+            "fen": "8/1R6/8/8/8/5K2/8/5k2 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c7h7",
+            "fen": "8/2R5/8/8/5K1k/8/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "h4a4",
+            "fen": "8/8/8/8/7R/8/8/k1K5 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "e6e1",
+            "fen": "8/8/4R3/8/8/K7/8/k7 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b6b1",
+            "fen": "8/8/1R6/8/8/6K1/8/6k1 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c1c8",
+            "fen": "k7/8/K7/8/8/8/8/2R5 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c3a3",
+            "fen": "8/8/8/k1K5/8/2R5/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b6h6",
+            "fen": "8/8/1R6/8/5K1k/8/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "d4h4",
+            "fen": "8/8/8/8/3R4/8/8/5K1k w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c7h7",
+            "fen": "8/2R5/8/8/8/8/5K2/7k w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "e8a8",
+            "fen": "4R3/8/8/8/8/8/k1K5/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "e4h4",
+            "fen": "5K1k/8/8/8/4R3/8/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "d3h3",
+            "fen": "5K1k/8/8/8/8/3R4/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "h3h8",
+            "fen": "2k5/8/2K5/8/8/7R/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "g3h3",
+            "fen": "7k/5K2/8/8/8/6R1/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b3b8",
+            "fen": "7k/8/7K/8/8/1R6/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "g8h8",
+            "fen": "6R1/8/8/5K1k/8/8/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b5h5",
+            "fen": "8/8/8/1R6/8/8/5K1k/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b5a5",
+            "fen": "8/8/8/1R6/8/8/8/k1K5 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "a8a1",
+            "fen": "R7/8/8/8/8/6K1/8/7k w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "d2d8",
+            "fen": "k7/8/K7/8/8/8/3R4/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c2c8",
+            "fen": "5k2/8/5K2/8/8/8/2R5/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "b1b8",
+            "fen": "5k2/8/5K2/8/8/8/8/1R6 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c2c1",
+            "fen": "8/8/8/8/8/1K6/2R5/k7 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "d3d1",
+            "fen": "8/8/8/8/8/3R2K1/8/7k w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "g6g1",
+            "fen": "8/8/6R1/8/8/4K3/8/4k3 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c3a3",
+            "fen": "k7/2K5/8/8/8/2R5/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "e5a5",
+            "fen": "8/8/8/4R3/8/k1K5/8/8 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "h8h1",
+            "fen": "7R/8/8/8/8/3K4/8/3k4 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          },
+          {
+            "actuator": "c1a1",
+            "fen": "8/8/8/8/k1K5/8/8/2R5 w - - 0 1",
+            "observed_terminal": "mate",
+            "retained": true
+          }
+        ]
+      },
+      "topology": {
+        "final_r1_triplet_count": 1,
+        "initial_r1_triplet_count": 0,
+        "r1_triplet_ids": [
+          "tg26o_triplet_ccf819f96cb99e90"
+        ],
+        "stem_cell_transitions": [
+          "ABSENT->TRIAL"
+        ]
+      },
+      "training": {
+        "episode_count": 1,
+        "epochs": 1,
+        "rows": [
+          {
+            "actual_black_reply": "h1g1",
+            "epoch": 1,
+            "fen": "8/8/8/8/8/R4K2/8/7k w - - 0 1",
+            "observed_child_confirmed": true,
+            "observed_terminal": null,
+            "prediction_residual": 0.0,
+            "r1_triplet_born": true,
+            "selected_first": "a3d3",
+            "stem_cell_transition": "ABSENT->TRIAL",
+            "td_error": -0.007596422573115292,
+            "triplet_id": "tg26o_triplet_ccf819f96cb99e90"
+          }
+        ]
+      }
+    }
+  },
+  "authority_tripwires": {
+    "child_priority": 0,
+    "provider_fallback": 0,
+    "weighted_selector": 0
+  },
+  "binding_boundary": "actual_child_availability",
+  "confirmation_claim": false,
+  "development_gate": {
+    "empty_to_grown_r1_topology": true,
+    "exact_r0_retention": true,
+    "exactly_one_actuator": true,
+    "full_directionally_better_than_both_controls": false,
+    "graph_owned_real_actions_100_percent": true,
+    "nonzero_child_caused_action_changes": false,
+    "zero_host_fallback": true,
+    "zero_persistent_dream_leakage": true,
+    "zero_planted_or_oracle_child_responses": true
+  },
+  "development_only": true,
+  "dream_firewall_canary": {
+    "board_isolated": true,
+    "clone_mutations_exercised": [
+      "weight",
+      "lifecycle",
+      "topology",
+      "maturity",
+      "board"
+    ],
+    "persistent_mutation_count": 0,
+    "rejected_operations": [
+      "update_weight",
+      "update_lifecycle",
+      "update_reservoir",
+      "set_maturity",
+      "reward",
+      "update_topology",
+      "actuate"
+    ]
+  },
+  "duration_seconds": 1157.8956394580018,
+  "fresh_data_touched": false,
+  "organism_artifact": "snapshots/autogrowth/native_authority/r0_organism.pkl",
+  "paired_action_discordance": {
+    "disconnected": 0,
+    "shuffled": 0
+  },
+  "passed": false,
+  "rows": {
+    "all_rows_previously_touched": true,
+    "evaluation_count": 1,
+    "evaluation_sha256": "ffb5e342a7f96cfa855da773220bf98e1bc84e0ec42edee4819b6eabe3f35ee2",
+    "r0_retention_count": 32,
+    "source_pool_manifest_sha256": "49a680bc4c91f91dc0c5f1d8b7f68c62e7dae8c75209d6e2470339d8f7935f12",
+    "train_count": 1,
+    "train_sha256": "bd22a9edd104c50c0ef0862fc5e01bec1c24c9b2dd3fd09a65862f002997dfa0"
+  },
+  "schema_version": "native_r0_r1_authority_development.v1",
+  "source_artifact": "reports/autogrowth/native_from_scratch/r0_r1_balanced96_240_seed_20260719_compact.json",
+  "validation": {
+    "focused_tests": "22 authority/frame tests plus exact retired manifest test",
+    "full_repository_failures": 0,
+    "full_repository_runtime_seconds": 2032.37,
+    "full_repository_tests_passed": 881,
+    "ruff_status": "unavailable: executable permission denied and module not installed"
+  }
+}

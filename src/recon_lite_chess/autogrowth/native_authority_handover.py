@@ -325,19 +325,17 @@ class HandoverDecision:
 class NativeHandoverGenome:
     """Materialize anonymous all-replies and exactly-one action topology."""
 
-    def decide(
+    def query_child_slots(
         self,
         board: chess.Board,
         child: NativeR0Organism,
-        *,
-        arm: str,
-        shuffle_seed: int = 0,
-    ) -> HandoverDecision:
-        if arm not in {"actual_child", "disconnected", "shuffled"}:
-            raise ValueError(f"unsupported handover arm: {arm}")
+    ) -> tuple[
+        dict[str, tuple[ChildQuery, ...]],
+        dict[tuple[str, int], FrameContext],
+    ]:
+        """Measure actual child emissions; make no choice and expose no scores."""
+
         legal = tuple(sorted(board.legal_moves, key=lambda move: move.uci()))
-        if not legal:
-            raise RuntimeError("cannot decide without legal actions")
         slots: dict[str, tuple[ChildQuery, ...]] = {}
         successor_frames: dict[tuple[str, int], FrameContext] = {}
         session = child.dream_session()
@@ -346,7 +344,9 @@ class NativeHandoverGenome:
                 after = board.copy(stack=False)
                 after.push(move)
                 queries: list[ChildQuery] = []
-                for reply_index, reply in enumerate(sorted(after.legal_moves, key=lambda item: item.uci())):
+                for reply_index, reply in enumerate(
+                    sorted(after.legal_moves, key=lambda item: item.uci())
+                ):
                     successor = after.copy(stack=False)
                     successor.push(reply)
                     frame = FrameContext(
@@ -360,6 +360,42 @@ class NativeHandoverGenome:
                 slots[move.uci()] = tuple(queries)
         finally:
             session.close()
+        return slots, successor_frames
+
+    def decide(
+        self,
+        board: chess.Board,
+        child: NativeR0Organism,
+        *,
+        arm: str,
+        shuffle_seed: int = 0,
+    ) -> HandoverDecision:
+        slots, frames = self.query_child_slots(board, child)
+        return self.decide_from_measured_slots(
+            board,
+            slots,
+            frames,
+            arm=arm,
+            shuffle_seed=shuffle_seed,
+        )
+
+    def decide_from_measured_slots(
+        self,
+        board: chess.Board,
+        measured_slots: Mapping[str, tuple[ChildQuery, ...]],
+        successor_frames: Mapping[tuple[str, int], FrameContext],
+        *,
+        arm: str,
+        shuffle_seed: int = 0,
+    ) -> HandoverDecision:
+        """Route exact child emissions through paired graph controls."""
+
+        if arm not in {"actual_child", "disconnected", "shuffled"}:
+            raise ValueError(f"unsupported handover arm: {arm}")
+        legal = tuple(sorted(board.legal_moves, key=lambda move: move.uci()))
+        if not legal:
+            raise RuntimeError("cannot decide without legal actions")
+        slots = {key: tuple(value) for key, value in measured_slots.items()}
         if arm == "shuffled":
             slots = _shuffle_response_slots(slots, seed=shuffle_seed)
         graph, env = _materialize_parent_choice(
@@ -373,12 +409,15 @@ class NativeHandoverGenome:
         engine.run(
             max_ticks=64,
             env=env,
-            until=lambda item: item.g.nodes["handover_choice_root"].state in {NodeState.CONFIRMED, NodeState.FAILED},
+            until=lambda item: item.g.nodes["handover_choice_root"].state
+            in {NodeState.CONFIRMED, NodeState.FAILED},
         )
         emitted = engine.emitted_actuator_identities("handover_choice_root")
         actuator = engine.emit_exactly_one_actuator("handover_choice_root")
         move_uci = actuator[len(ACTUATOR_PREFIX):]
-        selected_id = str(graph.nodes["handover_choice_root"].meta["choice_selected_child"])
+        selected_id = str(
+            graph.nodes["handover_choice_root"].meta["choice_selected_child"]
+        )
         option = graph.nodes[selected_id]
         actuation = GraphActuation(
             actuator_identity=actuator,
