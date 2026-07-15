@@ -23,6 +23,11 @@ from .episodic_composition import (
     GraphBackedCompositionChannel,
 )
 from .formal_engine import EdgeMessage, FormalMessage, FormalReConEngine
+from .choice_genome import (
+    AnonymousChoiceEmission,
+    AnonymousChoiceGenome,
+    AnonymousChoiceOption,
+)
 from .frame_context import (
     ChildResponse,
     DreamStateLeakError,
@@ -57,6 +62,9 @@ from .trace_db import LearningEvent
 __all__ = [
     "__version__",
     "ActivationMode",
+    "AnonymousChoiceEmission",
+    "AnonymousChoiceGenome",
+    "AnonymousChoiceOption",
     "CandidateRentStats",
     "CausalRentConfig",
     "EdgeMessage",

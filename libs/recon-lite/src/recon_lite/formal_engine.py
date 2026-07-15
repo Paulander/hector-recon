@@ -79,6 +79,11 @@ class FormalReConEngine:
             raise KeyError(f"Unknown node id: {nid}")
         self._external_requests.add(nid)
         node = self.g.nodes[nid]
+        # Actuator emissions are one-decision runtime state. Clearing them at
+        # request time prevents a restored or reused graph from exposing a
+        # stale choice to its environment adapter.
+        node.meta.pop("emitted_actuator_identity", None)
+        node.meta.pop("choice_selected_child", None)
         if node.state == NodeState.INACTIVE:
             node.state = NodeState.REQUESTED
             node.tick_entered = self.tick
@@ -179,6 +184,36 @@ class FormalReConEngine:
             "graph": self.g.to_snapshot(),
             "frames": list(self.trace),
         }
+
+    def emitted_actuator_identities(self, root_id: str) -> tuple[str, ...]:
+        """Return actuator identities emitted by one formally confirmed root.
+
+        The environment may execute this identity, but it must not reconstruct
+        a winner from candidate scores. The anonymous ``choice`` genome
+        primitive is the sole producer of this field.
+        """
+
+        root = self.g.nodes[root_id]
+        if root.state != NodeState.CONFIRMED:
+            return ()
+        emitted = root.meta.get("emitted_actuator_identity")
+        if emitted is None:
+            return ()
+        if isinstance(emitted, str):
+            return (emitted,)
+        if isinstance(emitted, (tuple, list)):
+            return tuple(str(value) for value in emitted)
+        raise TypeError("emitted_actuator_identity must be a string or sequence")
+
+    def emit_exactly_one_actuator(self, root_id: str) -> str:
+        """Return the graph emission or fail hard on zero/multiple authority."""
+
+        emitted = self.emitted_actuator_identities(root_id)
+        if len(emitted) != 1:
+            raise RuntimeError(
+                f"formal graph emitted {len(emitted)} actuators for {root_id!r}"
+            )
+        return emitted[0]
 
     def _emit_messages(self, active_nodes: Optional[set[str]] = None) -> List[EdgeMessage]:
         messages: List[EdgeMessage] = []
@@ -317,6 +352,9 @@ class FormalReConEngine:
         if node.state == NodeState.ACTIVE:
             return NodeState.WAITING
         if node.state == NodeState.WAITING:
+            choice_state = self._next_choice_script_state(node)
+            if choice_state is not None:
+                return choice_state
             quorum_state = self._next_quorum_script_state(node)
             if quorum_state is not None:
                 return quorum_state
@@ -388,6 +426,79 @@ class FormalReConEngine:
         scoped_env["__graph__"] = self.g
         scoped_env["__root_env__"] = env
         return scoped_env
+
+    def _next_choice_script_state(self, node: Node) -> Optional[NodeState]:
+        """Anonymous exactly-one arbitration over settled graph options.
+
+        Each child owns an activation and actuator identity. The primitive
+        waits for every option and declared strength source, selects one
+        confirmed option, and emits one identity. It sees no domain semantics.
+        """
+
+        if str(node.meta.get("confirm_policy", "")).lower() != "choice":
+            return None
+        children = self.g.children(node.nid)
+        if not children:
+            return NodeState.FAILED
+        terminal_states = {NodeState.TRUE, NodeState.CONFIRMED, NodeState.FAILED}
+        strength_nodes: set[str] = set()
+        for child_id in children:
+            child = self.g.nodes[child_id]
+            strength_nodes.update(map(str, child.meta.get("choice_strength_node_ids", ())))
+        if any(
+            child_id not in self.g.nodes
+            or self.g.nodes[child_id].state not in terminal_states
+            for child_id in (*children, *sorted(strength_nodes))
+        ):
+            return NodeState.WAITING
+
+        confirmed = [
+            self.g.nodes[child_id]
+            for child_id in children
+            if self.g.nodes[child_id].state in {NodeState.TRUE, NodeState.CONFIRMED}
+        ]
+        if not confirmed:
+            return NodeState.FAILED
+
+        def strength(option: Node) -> float:
+            ids = tuple(map(str, option.meta.get("choice_strength_node_ids", ())))
+            require_all = bool(option.meta.get("choice_strength_require_all", False))
+            if not ids:
+                return float(option.activation.value)
+            sources = [self.g.nodes[source_id] for source_id in ids]
+            if require_all and any(
+                source.state not in {NodeState.TRUE, NodeState.CONFIRMED}
+                for source in sources
+            ):
+                return 0.0
+            values = [float(source.activation.value) for source in sources]
+            aggregation = str(
+                option.meta.get("choice_strength_aggregation", "minimum")
+            ).lower()
+            if aggregation == "minimum":
+                return min(values, default=0.0)
+            if aggregation == "mean":
+                return sum(values) / max(1, len(values))
+            if aggregation == "sum":
+                return sum(values)
+            raise ValueError(f"unsupported anonymous choice aggregation: {aggregation}")
+
+        ranked = sorted(
+            ((strength(option), option.nid, option) for option in confirmed),
+            key=lambda row: (row[0], row[1]),
+            reverse=True,
+        )
+        selected_strength, selected_id, selected = ranked[0]
+        actuator_identity = selected.meta.get("actuator_identity")
+        if not isinstance(actuator_identity, str) or not actuator_identity:
+            return NodeState.FAILED
+        for _value, _child_id, option in ranked:
+            option.meta["choice_selected"] = option.nid == selected_id
+        selected.activation.value = selected_strength
+        node.activation.value = selected_strength
+        node.meta["choice_selected_child"] = selected_id
+        node.meta["emitted_actuator_identity"] = actuator_identity
+        return NodeState.TRUE
 
     def _next_quorum_script_state(self, node: Node) -> Optional[NodeState]:
         policy = str(node.meta.get("confirm_policy", "or")).lower()
