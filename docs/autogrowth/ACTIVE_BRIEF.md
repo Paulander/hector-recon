@@ -345,6 +345,15 @@ One run should produce one machine-readable result artifact and, when useful, on
   difference is now `PREDICTION_RESIDUAL`, while the old surprise name is only a
   compatibility alias. All 11 artifact checks and 102 focused/core tests pass.
   See `docs/autogrowth/VIRTUAL_FRAME_CHILD_RESPONSE_CANARY_V2_20260715.md`.
+- The support-conditioned lifecycle-grace package is frozen before
+  implementation/fresh data. It compares exact two-review, exact fixed-six, and
+  graph-emitted conditioned-six lifetimes while preserving exploration, support
+  32, proposal/capacity, reward, rent, learning, and RNG factors. Fixed-six and
+  conditioned-six use identical four-terminal defer-pruning topology; the fixed
+  arm supplies unconditional progress/request measurements. Candidate seeds
+  20262401--20262440 were verified unused by exact text, compressed-artifact, and
+  Git-history search; the first twenty admissions are frozen. See
+  `docs/autogrowth/GENERIC_CORE_SUPPORT_CONDITIONED_LIFECYCLE_GRACE_WORK_PACKAGE_20260715.md`.
 - The canonical graph-internal exact-evidence package is closed negative on
   admitted fresh seeds 20262301--20262320. All 20/20 integrity cells passed and
   all 80 targets were discovered. Exact beat activation minimum support in 14/20
