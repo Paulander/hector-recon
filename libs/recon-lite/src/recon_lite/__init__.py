@@ -33,6 +33,7 @@ from .frame_context import (
     VirtualFrameExecutor,
     VirtualFrameSideEffectError,
     child_response_terminal,
+    prediction_residual_terminal,
     prediction_surprise_terminal,
 )
 from .graph import Graph, LinkType, Node, NodeState, NodeType
@@ -95,6 +96,7 @@ __all__ = [
     "VirtualFrameExecutor",
     "VirtualFrameSideEffectError",
     "child_response_terminal",
+    "prediction_residual_terminal",
     "prediction_surprise_terminal",
     "record_supports_candidate",
 ]

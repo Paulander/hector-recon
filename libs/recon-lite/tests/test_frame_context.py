@@ -16,6 +16,7 @@ from recon_lite import (
     NodeType,
     VirtualFrameExecutor,
     child_response_terminal,
+    prediction_residual_terminal,
     prediction_surprise_terminal,
 )
 
@@ -70,6 +71,38 @@ def test_frame_context_is_typed_immutable_and_existing_overlay_accepts_it() -> N
     assert graph.nodes["sensor"].activation.value == pytest.approx(0.75)
     with pytest.raises(TypeError):
         frame.values["external_value"] = 0.0  # type: ignore[index]
+
+
+def test_virtual_executor_deep_isolates_nested_frame_values() -> None:
+    source = {"nested": {"items": ["source"]}}
+    frame = FrameContext(
+        "nested-dream",
+        FrameKind.VIRTUAL,
+        source,
+        hypothetical_action="inspect",
+    )
+    graph = Graph()
+    graph.add_node(Node("root", NodeType.SCRIPT))
+    observations: list[tuple[bool, list[str]]] = []
+
+    def mutate_runtime(_node: Node, env: dict[str, object]) -> tuple[bool, bool]:
+        runtime = env["nested"]
+        runtime_frame = env["__frame_context__"]
+        assert isinstance(runtime, dict)
+        assert isinstance(runtime_frame, FrameContext)
+        same_runtime_object = runtime is runtime_frame.values["nested"]
+        runtime["items"].append("terminal")
+        observations.append((same_runtime_object, list(runtime["items"])))
+        return True, True
+
+    graph.add_node(Node("mutator", NodeType.TERMINAL, predicate=mutate_runtime))
+    graph.add_hierarchy_pair("root", "mutator")
+    result = VirtualFrameExecutor().evaluate(graph, "root", frame)
+
+    assert result.root_state == NodeState.CONFIRMED
+    assert observations == [(True, ["source", "terminal"])]
+    assert source == {"nested": {"items": ["source"]}}
+    assert frame.values["nested"] == {"items": ["source"]}
 
 
 def test_virtual_executor_evaluates_external_and_internal_terminals_without_mutation() -> None:
@@ -210,14 +243,14 @@ def test_child_response_requires_grounding_and_cannot_certify_itself() -> None:
     assert result.activations["child"] == 0.0
 
 
-def test_prediction_surprise_is_real_frame_local_and_read_only() -> None:
+def test_prediction_residual_is_real_frame_local_and_read_only() -> None:
     graph = Graph()
     graph.add_node(Node("root", NodeType.SCRIPT))
     graph.add_node(Node(
         "surprise",
         NodeType.TERMINAL,
-        predicate=prediction_surprise_terminal,
-        meta={"role": "PREDICTION_SURPRISE"},
+        predicate=prediction_residual_terminal,
+        meta={"role": "PREDICTION_RESIDUAL"},
     ))
     graph.add_hierarchy_pair("root", "surprise")
     real = FrameContext(
@@ -231,4 +264,19 @@ def test_prediction_surprise_is_real_frame_local_and_read_only() -> None:
     _run_real(graph, "root", real)
     assert graph.nodes["root"].state == NodeState.CONFIRMED
     assert graph.nodes["surprise"].activation.value == pytest.approx(0.1)
-    assert graph.nodes["surprise"].meta["raw_prediction_surprise"] == pytest.approx(0.2)
+    assert graph.nodes["surprise"].meta["raw_prediction_residual"] == pytest.approx(0.2)
+
+
+def test_prediction_surprise_name_is_only_a_residual_compatibility_alias() -> None:
+    node = Node("legacy", NodeType.TERMINAL)
+    env = FrameContext(
+        "real",
+        FrameKind.REAL,
+        {
+            "imagined_child_response": _grounded(0.9),
+            "observed_child_response": _grounded(0.7),
+        },
+    ).to_env_overlay()
+    assert prediction_surprise_terminal(node, env) == (True, True)
+    assert node.meta["raw_prediction_residual"] == pytest.approx(0.2)
+    assert node.meta["raw_prediction_surprise"] == pytest.approx(0.2)

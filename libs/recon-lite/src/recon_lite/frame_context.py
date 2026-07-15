@@ -18,7 +18,7 @@ class FrameKind(str, Enum):
 
 @dataclass(frozen=True)
 class FrameContext:
-    """Immutable identity and terminal-visible values for one evaluation frame."""
+    """Immutable identity and snapshotted values for one evaluation frame."""
     frame_id: str
     kind: FrameKind
     values: Mapping[str, Any] = field(default_factory=dict)
@@ -29,7 +29,11 @@ class FrameContext:
         if not self.frame_id:
             raise ValueError("frame_id must be non-empty")
         object.__setattr__(self, "kind", FrameKind(self.kind))
-        object.__setattr__(self, "values", MappingProxyType(dict(self.values)))
+        object.__setattr__(
+            self,
+            "values",
+            MappingProxyType(deepcopy(dict(self.values))),
+        )
         if self.kind is FrameKind.REAL and self.hypothetical_action is not None:
             raise ValueError("real frames cannot carry a hypothetical action")
 
@@ -38,8 +42,22 @@ class FrameContext:
         return self.kind is FrameKind.VIRTUAL
 
     def to_env_overlay(self) -> dict[str, Any]:
-        overlay = dict(self.values)
-        overlay["__frame_context__"] = self
+        """Create one deep-isolated runtime snapshot for terminal evaluation.
+
+        Direct environment values and ``__frame_context__.values`` refer to the
+        same isolated objects within the evaluation. Neither path exposes the
+        values retained by this source context or the caller's original values.
+        """
+
+        runtime = FrameContext(
+            frame_id=self.frame_id,
+            kind=self.kind,
+            values=self.values,
+            parent_frame_id=self.parent_frame_id,
+            hypothetical_action=self.hypothetical_action,
+        )
+        overlay = dict(runtime.values)
+        overlay["__frame_context__"] = runtime
         return overlay
 
 
@@ -153,13 +171,20 @@ def child_response_terminal(node: Node, env: Mapping[str, Any]) -> tuple[bool, b
     return True, success
 
 
-def prediction_surprise_terminal(node: Node, env: Mapping[str, Any]) -> tuple[bool, bool]:
-    """Compare imagined child value with an observed real-frame response."""
+def prediction_residual_terminal(
+    node: Node,
+    env: Mapping[str, Any],
+) -> tuple[bool, bool]:
+    """Measure raw imagined-versus-observed error on a real frame.
+
+    This diagnostic is deliberately not actionable surprise. Confidence,
+    calibration, and effective experience must gate any later attention signal.
+    """
     frame = env.get("__frame_context__")
     imagined = env.get(str(node.meta.get("imagined_key", "imagined_child_response")))
     observed = env.get(str(node.meta.get("observed_key", "observed_child_response")))
     if not isinstance(frame, FrameContext) or frame.kind is not FrameKind.REAL:
-        node.meta["last_failure"] = "prediction_surprise_requires_real_frame"
+        node.meta["last_failure"] = "prediction_residual_requires_real_frame"
         node.activation.value = 0.0
         return True, False
     if not isinstance(imagined, ChildResponse) or not isinstance(observed, ChildResponse):
@@ -172,12 +197,30 @@ def prediction_surprise_terminal(node: Node, env: Mapping[str, Any]) -> tuple[bo
         return True, False
     raw = abs(imagined.expected_value - observed.expected_value)
     node.activation.value = min(1.0, raw / 2.0)
-    node.meta.update({"last_frame_id": frame.frame_id, "raw_prediction_surprise": raw})
+    node.meta.update({"last_frame_id": frame.frame_id, "raw_prediction_residual": raw})
     return True, True
 
 
+def prediction_surprise_terminal(
+    node: Node,
+    env: Mapping[str, Any],
+) -> tuple[bool, bool]:
+    """Backward-compatible alias for the raw prediction-residual terminal."""
+
+    done, success = prediction_residual_terminal(node, env)
+    if "raw_prediction_residual" in node.meta:
+        node.meta["raw_prediction_surprise"] = node.meta[
+            "raw_prediction_residual"
+        ]
+    return done, success
+
+
 class VirtualFrameExecutor:
-    """Evaluate a cloned graph under a virtual frame and effect firewall."""
+    """Evaluate a cloned graph with value isolation and capability protection.
+
+    This boundary protects declared state and supplied capabilities. It is not,
+    and does not claim to be, a universal sandbox for arbitrary Python closures.
+    """
     def evaluate(
         self,
         graph: Graph,

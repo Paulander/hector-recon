@@ -337,6 +337,14 @@ One run should produce one machine-readable result artifact and, when useful, on
   exposed and fixed pre-enablement counter subtraction from phase-0 candidates.
   No frozen 202623xx seed has been touched. See
   `docs/autogrowth/GRAPH_INTERNAL_EXACT_EVIDENCE_IMPLEMENTATION_NOTE_20260713.md`.
+- Virtual-frame handover canary v2 hardens the earlier engineering pass.
+  `FrameContext` now deep-isolates nested runtime values, including a real
+  `chess.Board`, through both direct environment access and
+  `__frame_context__`; the firewall is explicitly capability protection plus
+  declared-state isolation, not a universal Python sandbox. Raw prediction
+  difference is now `PREDICTION_RESIDUAL`, while the old surprise name is only a
+  compatibility alias. All 11 artifact checks and 102 focused/core tests pass.
+  See `docs/autogrowth/VIRTUAL_FRAME_CHILD_RESPONSE_CANARY_V2_20260715.md`.
 - The canonical graph-internal exact-evidence package is closed negative on
   admitted fresh seeds 20262301--20262320. All 20/20 integrity cells passed and
   all 80 targets were discovered. Exact beat activation minimum support in 14/20

@@ -26,7 +26,7 @@ from recon_lite import (
     NodeType,
     VirtualFrameExecutor,
     child_response_terminal,
-    prediction_surprise_terminal,
+    prediction_residual_terminal,
 )
 
 ACTIONS = ("advance", "stall")
@@ -147,12 +147,12 @@ def select_and_actuate(*, shuffled: bool = False, disconnected: bool = False) ->
     surprise_graph = Graph()
     surprise_graph.add_node(Node("surprise_root", NodeType.SCRIPT))
     surprise_graph.add_node(Node(
-        "prediction_surprise",
+        "prediction_residual",
         NodeType.TERMINAL,
-        predicate=prediction_surprise_terminal,
-        meta={"role": "PREDICTION_SURPRISE"},
+        predicate=prediction_residual_terminal,
+        meta={"role": "PREDICTION_RESIDUAL"},
     ))
-    surprise_graph.add_hierarchy_pair("surprise_root", "prediction_surprise")
+    surprise_graph.add_hierarchy_pair("surprise_root", "prediction_residual")
     real_frame = FrameContext(
         "real-successor",
         FrameKind.REAL,
@@ -174,13 +174,51 @@ def select_and_actuate(*, shuffled: bool = False, disconnected: bool = False) ->
         "evaluations": evaluations,
         "real_actuator_calls": list(real_world["actuator_calls"]),
         "real_successor_state": real_world["state"],
-        "prediction_surprise": surprise_graph.nodes["prediction_surprise"].activation.value,
-        "raw_prediction_surprise": surprise_graph.nodes["prediction_surprise"].meta["raw_prediction_surprise"],
+        "prediction_residual": surprise_graph.nodes["prediction_residual"].activation.value,
+        "raw_prediction_residual": surprise_graph.nodes["prediction_residual"].meta["raw_prediction_residual"],
         "persistent_graph_unchanged": graph.to_snapshot() == graph_before,
         "persistent_learning_state_unchanged": protected == protected_before,
         "disconnected_activation": (
             evaluations["advance"].get("disconnected_activation", 0.0)
             if disconnected else None
+        ),
+    }
+
+
+def nested_frame_isolation_control() -> dict[str, Any]:
+    source = {"nested": {"items": ["source"]}}
+    frame = FrameContext(
+        "nested-frame",
+        FrameKind.VIRTUAL,
+        source,
+        hypothetical_action="inspect",
+    )
+    graph = Graph()
+    graph.add_node(Node("root", NodeType.SCRIPT))
+    observations: list[dict[str, Any]] = []
+
+    def mutate_runtime(_node: Node, env: dict[str, Any]) -> tuple[bool, bool]:
+        runtime = env["nested"]
+        runtime_frame = env["__frame_context__"]
+        observations.append({
+            "direct_and_context_share_runtime_snapshot": (
+                runtime is runtime_frame.values["nested"]
+            ),
+            "runtime_is_source_object": runtime is source["nested"],
+        })
+        runtime["items"].append("terminal")
+        observations[-1]["runtime_items_after_mutation"] = list(runtime["items"])
+        return True, True
+
+    graph.add_node(Node("mutator", NodeType.TERMINAL, predicate=mutate_runtime))
+    graph.add_hierarchy_pair("root", "mutator")
+    result = VirtualFrameExecutor().evaluate(graph, "root", frame)
+    return {
+        "confirmed": result.root_state == NodeState.CONFIRMED,
+        "observations": observations,
+        "caller_source_unchanged": source == {"nested": {"items": ["source"]}},
+        "source_context_unchanged": (
+            frame.values["nested"] == {"items": ["source"]}
         ),
     }
 
@@ -241,6 +279,7 @@ def run_canary() -> dict[str, Any]:
     baseline = select_and_actuate()
     shuffled = select_and_actuate(shuffled=True)
     disconnected = select_and_actuate(disconnected=True)
+    frame_isolation = nested_frame_isolation_control()
     no_frame = no_frame_control()
     leakage = dream_leak_control()
     self_credit = self_credit_control()
@@ -248,10 +287,20 @@ def run_canary() -> dict[str, Any]:
         "grounded_child_routes_parent_leg": baseline["selected_action"] == "advance",
         "shuffled_child_response_changes_leg": shuffled["selected_action"] == "stall",
         "only_selected_leg_actuates_real_environment": baseline["real_actuator_calls"] == ["advance"],
-        "prediction_surprise_observed_on_real_successor": baseline["raw_prediction_surprise"] > 0,
+        "prediction_residual_observed_on_real_successor": baseline["raw_prediction_residual"] > 0,
         "disconnected_terminal_cannot_route": (
             disconnected["selected_action"] == "advance"
             and disconnected["disconnected_activation"] == 0.0
+        ),
+        "deep_isolated_runtime_frame_values": (
+            frame_isolation["confirmed"]
+            and frame_isolation["caller_source_unchanged"]
+            and frame_isolation["source_context_unchanged"]
+            and frame_isolation["observations"] == [{
+                "direct_and_context_share_runtime_snapshot": True,
+                "runtime_is_source_object": False,
+                "runtime_items_after_mutation": ["source", "terminal"],
+            }]
         ),
         "no_virtual_frame_blocks_dream_query": no_frame["blocked"],
         "persistent_graph_unchanged": baseline["persistent_graph_unchanged"],
@@ -260,13 +309,14 @@ def run_canary() -> dict[str, Any]:
         "dream_self_credit_is_blocked": self_credit["blocked"],
     }
     payload = {
-        "schema_version": "recon_virtual_frame_child_response_canary.v1",
+        "schema_version": "recon_virtual_frame_child_response_canary.v2",
         "claim_scope": "deterministic engineering canary; no fresh data or KRK behavioral claim",
-        "architecture_boundary": "graph-native terminals; host-executed generic final actuator bus",
+        "architecture_boundary": "graph-native terminals; deep-isolated frame runtime; capability firewall; host-executed generic final actuator bus; not a universal Python sandbox",
         "baseline": baseline,
         "controls": {
             "shuffled_child_response": shuffled,
             "disconnected_internal_terminal": disconnected,
+            "deep_frame_isolation": frame_isolation,
             "no_virtual_frame": no_frame,
             "dream_state_leakage": leakage,
             "self_credit_attempt": self_credit,
@@ -284,7 +334,7 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("reports/autogrowth/virtual_frame_child_response_canary_20260713.json"),
+        default=Path("reports/autogrowth/virtual_frame_child_response_canary_v2_20260715.json"),
     )
     args = parser.parse_args()
     payload = run_canary()
