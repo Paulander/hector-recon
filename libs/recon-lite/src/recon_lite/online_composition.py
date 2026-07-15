@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 import math
 import random
 from typing import Iterable, Literal
@@ -120,6 +120,15 @@ class CompositeCandidate:
     exploration_request_count: int = 0
     exploration_probe_benefit_count: int = 0
     rent_evidence_support: int = 0
+    rent_birth_terminal_count: int | None = None
+    rent_birth_review_count: int | None = None
+    rent_birth_support: int = 0
+    rent_evidence_support_high_water: int = 0
+    rent_interval_support_high_water: int = 0
+    rent_review_support_high_waters: list[int] = field(default_factory=list)
+    rent_request_count_at_last_review: int = 0
+    grace_extension_count: int = 0
+    rent_right_censored: bool = False
 
 
 class OnlinePairCompositionLearner:

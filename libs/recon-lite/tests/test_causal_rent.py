@@ -186,6 +186,15 @@ def test_global_capacity_allows_a_bounded_temporary_challenger_batch() -> None:
     policy._causal_rent_proposal_opportunity()
     assert policy._global_live_count() == 5
     assert policy.causal_rent_challenger_block_count == 1
+    assert policy.causal_rent_displaced_proposal_opportunity_count == 1
+    assert policy.causal_rent_displaced_eligible_proposal_count > 0
+    blocked = policy.causal_rent_events[-1]
+    assert blocked["event"] == "proposal_blocked_by_challenger"
+    assert blocked["proposal_opportunity_displaced"] is True
+    assert blocked["eligible_proposal_count"] > 0
+    assert blocked["global_trial_count"] == 4
+    assert blocked["global_live_count"] == 5
+    assert blocked["global_mature_count"] == 1
 
 
 def test_challenger_batch_is_adjudicated_by_descending_frozen_rent() -> None:

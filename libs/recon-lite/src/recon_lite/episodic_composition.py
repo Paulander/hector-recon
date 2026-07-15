@@ -56,6 +56,13 @@ class GraphBackedCompositionChannel:
     BIAS_ID = "bias_terminal"
     EVIDENCE_DEFICIT_PREFIX = "evidence_deficit_"
     EVIDENCE_REQUEST_PREFIX = "evidence_request_"
+    GRACE_TERMINAL_PREFIXES = {
+        "evidence_deficit": "grace_evidence_deficit_",
+        "evidence_progress": "grace_evidence_progress_",
+        "request_active": "grace_request_active_",
+        "grace_budget_remaining": "grace_budget_remaining_",
+    }
+    DEFER_PRUNING_REQUEST_PREFIX = "defer_pruning_request_"
 
     def __init__(
         self,
@@ -76,6 +83,9 @@ class GraphBackedCompositionChannel:
         self.candidate_node_ids: dict[int, str] = {}
         self.evidence_deficit_node_ids: dict[int, str] = {}
         self.evidence_request_node_ids: dict[int, str] = {}
+        self.lifecycle_grace_mode = "two_review"
+        self.grace_terminal_node_ids: dict[int, dict[str, str]] = {}
+        self.defer_pruning_request_node_ids: dict[int, str] = {}
         self.graph_prediction_count = 0
         self.graph_prediction_mismatch_count = 0
         self.trial_root_edge_count = 0
@@ -222,7 +232,27 @@ class GraphBackedCompositionChannel:
             "evidence_request_node_ids": dict(
                 sorted(self.evidence_request_node_ids.items())
             ),
+            "lifecycle_grace_mode": self.lifecycle_grace_mode,
+            "grace_terminal_node_ids": {
+                index: dict(sorted(node_ids.items()))
+                for index, node_ids in sorted(
+                    self.grace_terminal_node_ids.items()
+                )
+            },
+            "defer_pruning_request_node_ids": dict(
+                sorted(self.defer_pruning_request_node_ids.items())
+            ),
         }
+
+    def configure_lifecycle_grace(self, mode: str) -> None:
+        if mode not in {
+            "two_review",
+            "fixed_six",
+            "support_conditioned_six",
+        }:
+            raise ValueError("unsupported lifecycle grace mode")
+        self.lifecycle_grace_mode = mode
+        self._sync_topology()
 
     def sync_external_lifecycle(self) -> None:
         """Reflect externally reviewed candidate state in the real graph."""
@@ -333,6 +363,11 @@ class GraphBackedCompositionChannel:
             or atom_id.startswith("composite_")
             or atom_id.startswith(self.EVIDENCE_DEFICIT_PREFIX)
             or atom_id.startswith(self.EVIDENCE_REQUEST_PREFIX)
+            or atom_id.startswith(self.DEFER_PRUNING_REQUEST_PREFIX)
+            or any(
+                atom_id.startswith(prefix)
+                for prefix in self.GRACE_TERMINAL_PREFIXES.values()
+            )
         ):
             raise ValueError("atom ID collides with reserved graph namespace")
         self.graph.add_node(Node(atom_id, NodeType.TERMINAL))
@@ -345,6 +380,7 @@ class GraphBackedCompositionChannel:
             node_id = self.candidate_node_ids.get(index)
             if candidate.state == "pruned":
                 self._remove_evidence_request_topology(index)
+                self._remove_lifecycle_grace_topology(index)
                 if node_id is not None:
                     self.graph.remove_node(node_id)
                     del self.candidate_node_ids[index]
@@ -371,8 +407,13 @@ class GraphBackedCompositionChannel:
             self.graph.nodes[node_id].meta["candidate_state"] = candidate.state
             if candidate.state == "trial":
                 self._ensure_evidence_request_topology(index)
+                if self.lifecycle_grace_mode == "two_review":
+                    self._remove_lifecycle_grace_topology(index)
+                else:
+                    self._ensure_lifecycle_grace_topology(index)
             else:
                 self._remove_evidence_request_topology(index)
+                self._remove_lifecycle_grace_topology(index)
                 if self.graph.parent_of(node_id) is None:
                     self.graph.add_hierarchy_pair(self.ROOT_ID, node_id)
 
@@ -413,6 +454,201 @@ class GraphBackedCompositionChannel:
             self.graph.add_hierarchy_pair(request_id, member)
         self.evidence_deficit_node_ids[candidate_index] = terminal_id
         self.evidence_request_node_ids[candidate_index] = request_id
+
+    def _ensure_lifecycle_grace_topology(self, candidate_index: int) -> None:
+        if candidate_index in self.defer_pruning_request_node_ids:
+            return
+        candidate_node_id = self.candidate_node_ids[candidate_index]
+        terminal_ids = {
+            name: f"{prefix}{candidate_index}"
+            for name, prefix in self.GRACE_TERMINAL_PREFIXES.items()
+        }
+        request_id = (
+            f"{self.DEFER_PRUNING_REQUEST_PREFIX}{candidate_index}"
+        )
+        for name, terminal_id in terminal_ids.items():
+            self.graph.add_node(Node(
+                terminal_id,
+                NodeType.TERMINAL,
+                meta={
+                    "internal_terminal": name.upper(),
+                    "frame_scope": "persistent_internal_real",
+                    "candidate_index": candidate_index,
+                    "candidate_node_id": candidate_node_id,
+                },
+            ))
+        self.graph.add_node(Node(
+            request_id,
+            NodeType.SCRIPT,
+            meta={
+                "aggregation": "and",
+                "request_kind": "defer_pruning",
+                "candidate_index": candidate_index,
+                "candidate_node_id": candidate_node_id,
+            },
+        ))
+        for terminal_id in terminal_ids.values():
+            self.graph.add_hierarchy_pair(request_id, terminal_id)
+        self.grace_terminal_node_ids[candidate_index] = terminal_ids
+        self.defer_pruning_request_node_ids[candidate_index] = request_id
+
+    def _remove_lifecycle_grace_topology(
+        self, candidate_index: int
+    ) -> None:
+        request_id = self.defer_pruning_request_node_ids.pop(
+            candidate_index, None
+        )
+        terminal_ids = self.grace_terminal_node_ids.pop(
+            candidate_index, {}
+        )
+        if request_id is not None:
+            self.graph.remove_node(request_id)
+        for terminal_id in terminal_ids.values():
+            self.graph.remove_node(terminal_id)
+
+    def emit_defer_pruning_request(
+        self,
+        candidate_index: int,
+        *,
+        min_eligible_support: int,
+        max_trial_reviews: int,
+    ) -> tuple[dict[str, object] | None, dict[str, object]]:
+        """Measure candidate-local grace state and return graph emission only."""
+        if self.lifecycle_grace_mode == "two_review":
+            raise RuntimeError("two-review mode has no grace topology")
+        self._sync_topology()
+        candidate = self.learner.candidates[candidate_index]
+        if candidate.state != "trial":
+            raise RuntimeError("only trials can emit defer-pruning requests")
+        terminal_ids = self.grace_terminal_node_ids[candidate_index]
+        request_id = self.defer_pruning_request_node_ids[candidate_index]
+        deficit = max(
+            0, min_eligible_support - candidate.rent_evidence_support
+        )
+        history = candidate.rent_review_support_high_waters
+        comparison_high_water = (
+            history[-2]
+            if candidate.rent_review_count >= 2 and len(history) >= 2
+            else candidate.rent_birth_support
+        )
+        measured_progress = bool(
+            candidate.rent_review_count == 1
+            or candidate.rent_interval_support_high_water
+            > comparison_high_water
+        )
+        measured_request_active = bool(
+            candidate.exploration_request_count
+            > candidate.rent_request_count_at_last_review
+        )
+        budget_remaining = max(
+            0, max_trial_reviews - candidate.rent_review_count
+        )
+        fixed = self.lifecycle_grace_mode == "fixed_six"
+        measurements = {
+            "evidence_deficit": (
+                deficit / min_eligible_support
+                if min_eligible_support else 0.0
+            ),
+            "evidence_progress": 1.0 if fixed or measured_progress else 0.0,
+            "request_active": (
+                1.0 if fixed or measured_request_active else 0.0
+            ),
+            "grace_budget_remaining": (
+                budget_remaining / max_trial_reviews
+                if max_trial_reviews else 0.0
+            ),
+        }
+        request = self.graph.nodes[request_id]
+        request.activation.reset(0.0)
+        for name, terminal_id in terminal_ids.items():
+            terminal = self.graph.nodes[terminal_id]
+            terminal.activation.reset(measurements[name])
+            terminal.meta.update({
+                "measurement": measurements[name],
+                "measurement_backend": (
+                    "fixed_active"
+                    if fixed and name in {
+                        "evidence_progress", "request_active"
+                    }
+                    else "candidate_local"
+                ),
+            })
+        self.graph.propagate_activation(eta=1.0)
+        emitted = request.activation.value > 0.0
+        inactive = [
+            name for name, value in measurements.items() if value <= 0.0
+        ]
+        if "grace_budget_remaining" in inactive:
+            reason = (
+                "fixed_grace_budget_exhausted"
+                if fixed else "conditioned_grace_budget_exhausted"
+            )
+        elif "evidence_progress" in inactive:
+            reason = "conditioned_grace_no_progress"
+        elif "request_active" in inactive:
+            reason = "conditioned_grace_request_inactive"
+        elif "evidence_deficit" in inactive:
+            reason = "grace_not_needed"
+        else:
+            reason = None
+        audit = {
+            "mode": self.lifecycle_grace_mode,
+            "candidate_index": candidate_index,
+            "candidate_node_id": self.candidate_node_ids[candidate_index],
+            "request_node_id": request_id,
+            "terminal_node_ids": dict(sorted(terminal_ids.items())),
+            "terminal_measurements": dict(sorted(measurements.items())),
+            "terminal_backends": {
+                name: self.graph.nodes[terminal_id].meta[
+                    "measurement_backend"
+                ]
+                for name, terminal_id in sorted(terminal_ids.items())
+            },
+            "request_activation": request.activation.value,
+            "emitted": emitted,
+            "non_emission_reason": reason,
+            "support": candidate.rent_evidence_support,
+            "interval_support_high_water": (
+                candidate.rent_interval_support_high_water
+            ),
+            "comparison_support_high_water": comparison_high_water,
+            "measured_progress": measured_progress,
+            "measured_request_active": measured_request_active,
+            "request_count_at_interval_start": (
+                candidate.rent_request_count_at_last_review
+            ),
+            "request_count_at_interval_end": (
+                candidate.exploration_request_count
+            ),
+            "review_count": candidate.rent_review_count,
+            "budget_remaining": budget_remaining,
+        }
+        emission = None
+        if emitted:
+            emission = {
+                "candidate_index": candidate_index,
+                "candidate_node_id": self.candidate_node_ids[candidate_index],
+                "request_node_id": request_id,
+                "request_activation": request.activation.value,
+            }
+        return emission, audit
+
+    def lifecycle_grace_topology_signature(self) -> dict[str, object]:
+        node_ids = tuple(sorted((
+            *self.defer_pruning_request_node_ids.values(),
+            *(
+                terminal_id
+                for terminal_ids in self.grace_terminal_node_ids.values()
+                for terminal_id in terminal_ids.values()
+            ),
+        )))
+        node_set = set(node_ids)
+        edges = tuple(sorted(
+            (edge.src, edge.dst, edge.ltype.value)
+            for edge in self.graph.edges
+            if edge.src in node_set or edge.dst in node_set
+        ))
+        return {"node_ids": node_ids, "edges": edges}
 
     def _remove_evidence_request_topology(self, candidate_index: int) -> None:
         request_id = self.evidence_request_node_ids.pop(candidate_index, None)
@@ -517,6 +753,13 @@ class EpisodicCompositionPolicy:
         self.causal_rent_challenger_block_count = 0
         self.causal_rent_safety_ceiling_bind_count = 0
         self.maximum_global_live_candidate_count = self._global_live_count()
+        self.causal_rent_occupancy_observation_count = 0
+        self.causal_rent_live_trial_occupancy_sum = 0
+        self.causal_rent_live_global_occupancy_sum = 0
+        self.causal_rent_displaced_proposal_opportunity_count = 0
+        self.causal_rent_displaced_eligible_proposal_count = 0
+        self.causal_rent_right_censored_count = 0
+        self.causal_rent_phase_finalized = False
         self._support_exploration_rng = random.Random(
             random_seed + 40_000_009
         )
@@ -922,6 +1165,13 @@ class EpisodicCompositionPolicy:
             )
         if self._mature_count() > config.global_capacity:
             raise RuntimeError("checkpoint exceeds global mature capacity")
+        if (
+            config.lifecycle_grace_mode != "two_review"
+            and config.exploration_request_mode != "exact_support_directed"
+        ):
+            raise ValueError(
+                "lifecycle grace requires exact directed evidence requests"
+            )
         self.causal_rent_config = config
         self.causal_rent_start_terminal_count = self.terminal_count
         self.causal_rent_start_decision_count = self.decision_count
@@ -929,6 +1179,9 @@ class EpisodicCompositionPolicy:
             self.exploration_event_count
         )
         for action_id, channel in self.channels.items():
+            channel.configure_lifecycle_grace(
+                config.lifecycle_grace_mode
+            )
             channel.learner.external_lifecycle = True
             for candidate_index, candidate in enumerate(
                 channel.learner.candidates
@@ -1035,11 +1288,13 @@ class EpisodicCompositionPolicy:
         )
 
     def review_causal_rent(self) -> None:
-        """Run one explicit review block over all live anonymous candidates."""
+        """Run one explicit review over live anonymous candidates."""
         self.assert_rent_evidence_support_parity()
         config = self.causal_rent_config
         if config is None:
             raise RuntimeError("causal rent is not enabled")
+        if self.causal_rent_phase_finalized:
+            raise RuntimeError("causal-rent phase is already finalized")
         self.causal_rent_review_count += 1
         live = [
             (action_id, index, candidate)
@@ -1047,7 +1302,11 @@ class EpisodicCompositionPolicy:
             for index, candidate in enumerate(channel.learner.candidates)
             if candidate.state in {"trial", "mature"}
         ]
-        stats_by_id = {}
+        stats_by_id: dict[tuple[str, int], CandidateRentStats] = {}
+        grace_emissions: dict[
+            tuple[str, int], dict[str, object] | None
+        ] = {}
+        grace_audits: dict[tuple[str, int], dict[str, object]] = {}
         for action_id, index, candidate in live:
             stats = self.candidate_rent_stats(action_id, index)
             stats_by_id[(action_id, index)] = stats
@@ -1056,17 +1315,82 @@ class EpisodicCompositionPolicy:
             candidate.last_margin_utility = stats.margin_utility
             if stats.rent is not None:
                 candidate.rent_adequate_review_count += 1
+            candidate.rent_evidence_support_high_water = max(
+                candidate.rent_evidence_support_high_water, stats.support
+            )
+            candidate.rent_interval_support_high_water = max(
+                candidate.rent_interval_support_high_water, stats.support
+            )
+            interval_high_water = (
+                candidate.rent_interval_support_high_water
+            )
+            if (
+                candidate.state == "trial"
+                and config.lifecycle_grace_mode != "two_review"
+            ):
+                emission, grace_audit = self.channels[
+                    action_id
+                ].emit_defer_pruning_request(
+                    index,
+                    min_eligible_support=config.min_eligible_support,
+                    max_trial_reviews=config.grace_max_trial_reviews,
+                )
+                grace_emissions[(action_id, index)] = emission
+                grace_audits[(action_id, index)] = grace_audit
+            else:
+                grace_audit = {
+                    "mode": config.lifecycle_grace_mode,
+                    "emitted": False,
+                    "non_emission_reason": (
+                        "two_review_lifecycle"
+                        if candidate.state == "trial"
+                        else "not_trial"
+                    ),
+                }
+                grace_audits[(action_id, index)] = grace_audit
             self._record_rent_event(
                 "review",
                 action_id=action_id,
                 candidate_index=index,
+                candidate_state=candidate.state,
+                candidate_birth_observation=candidate.born_observation,
+                candidate_birth_terminal_count=(
+                    candidate.rent_birth_terminal_count
+                ),
+                candidate_birth_review_count=(
+                    candidate.rent_birth_review_count
+                ),
+                candidate_birth_support=candidate.rent_birth_support,
+                candidate_review_count=candidate.rent_review_count,
                 support=stats.support,
+                support_high_water=(
+                    candidate.rent_evidence_support_high_water
+                ),
+                interval_support_high_water=interval_high_water,
+                review_support_high_water_history=list(
+                    candidate.rent_review_support_high_waters
+                ),
+                request_count_at_interval_start=(
+                    candidate.rent_request_count_at_last_review
+                ),
+                request_count_at_interval_end=(
+                    candidate.exploration_request_count
+                ),
+                grace_extension_count=candidate.grace_extension_count,
+                grace_audit=grace_audit,
                 rent=stats.rent,
                 margin_utility=stats.margin_utility,
                 mean_margin_with=stats.mean_margin_with,
                 mean_margin_without=stats.mean_margin_without,
                 margin_sign_flip_rate=stats.margin_sign_flip_rate,
             )
+            candidate.rent_review_support_high_waters.append(
+                interval_high_water
+            )
+            candidate.rent_request_count_at_last_review = (
+                candidate.exploration_request_count
+            )
+            candidate.rent_interval_support_high_water = stats.support
 
         for action_id, index, candidate in live:
             if candidate.state != "mature":
@@ -1111,13 +1435,39 @@ class EpisodicCompositionPolicy:
             stats = stats_by_id[(action_id, index)]
             if stats.rent is None:
                 candidate.uncertainty_review_streak += 1
-                if (
-                    candidate.uncertainty_review_streak
-                    >= config.max_uncertain_reviews
-                ):
-                    self._transition_candidate(
-                        action_id, index, "pruned", "unsupported_pruned"
+                if config.lifecycle_grace_mode == "two_review":
+                    if (
+                        candidate.uncertainty_review_streak
+                        >= config.max_uncertain_reviews
+                    ):
+                        self._transition_candidate(
+                            action_id,
+                            index,
+                            "pruned",
+                            "unsupported_pruned",
+                        )
+                    continue
+                emission = grace_emissions[(action_id, index)]
+                grace_audit = grace_audits[(action_id, index)]
+                if emission is not None:
+                    candidate.grace_extension_count += 1
+                    self._record_rent_event(
+                        "unsupported_deferred",
+                        action_id=action_id,
+                        candidate_index=index,
+                        candidate_review_count=candidate.rent_review_count,
+                        support=stats.support,
+                        grace_extension_count=(
+                            candidate.grace_extension_count
+                        ),
+                        defer_request=emission,
+                        grace_audit=grace_audit,
                     )
+                    continue
+                reason = str(grace_audit["non_emission_reason"])
+                self._transition_candidate(
+                    action_id, index, "pruned", reason
+                )
                 continue
             promotes = (
                 stats.rent > config.promotion_margin
@@ -1207,30 +1557,21 @@ class EpisodicCompositionPolicy:
         elapsed = self.terminal_count - self.causal_rent_start_terminal_count
         if elapsed <= 0:
             return
+        self.causal_rent_occupancy_observation_count += 1
+        self.causal_rent_live_trial_occupancy_sum += len(
+            self._trial_candidates()
+        )
+        self.causal_rent_live_global_occupancy_sum += (
+            self._global_live_count()
+        )
         if elapsed % config.review_interval_episodes == 0:
             self.review_causal_rent()
         if elapsed % config.proposal_interval_episodes == 0:
             self._causal_rent_proposal_opportunity()
 
-    def _causal_rent_proposal_opportunity(self) -> None:
-        config = self.causal_rent_config
-        assert config is not None
-        self.causal_rent_proposal_opportunity_count += 1
-        trial_count = len(self._trial_candidates())
-        if trial_count >= config.temporary_challenger_allowance:
-            self.causal_rent_challenger_block_count += 1
-            self._record_rent_event(
-                "proposal_blocked_by_challenger",
-                temporary_challenger_count=trial_count,
-                temporary_challenger_allowance=(
-                    config.temporary_challenger_allowance
-                ),
-            )
-            return
-        if self._global_live_count() >= config.safety_ceiling:
-            self.causal_rent_safety_ceiling_bind_count += 1
-            self._record_rent_event("safety_ceiling_bind")
-            return
+    def _eligible_causal_rent_proposal_options(
+        self,
+    ) -> list[tuple[float, str, tuple[str, str]]]:
         options = []
         for action_id, channel in self.channels.items():
             learner = channel.learner
@@ -1240,10 +1581,43 @@ class EpisodicCompositionPolicy:
                 (score, action_id, pair)
                 for pair, score in learner.proposal_options()
             )
+        options.sort(key=lambda item: (item[0], item[1], item[2]))
+        return options
+
+    def _causal_rent_proposal_opportunity(self) -> None:
+        config = self.causal_rent_config
+        assert config is not None
+        self.causal_rent_proposal_opportunity_count += 1
+        options = self._eligible_causal_rent_proposal_options()
+        trial_count = len(self._trial_candidates())
+        if trial_count >= config.temporary_challenger_allowance:
+            self.causal_rent_challenger_block_count += 1
+            displaced = bool(options)
+            if displaced:
+                self.causal_rent_displaced_proposal_opportunity_count += 1
+                self.causal_rent_displaced_eligible_proposal_count += len(
+                    options
+                )
+            self._record_rent_event(
+                "proposal_blocked_by_challenger",
+                temporary_challenger_count=trial_count,
+                temporary_challenger_allowance=(
+                    config.temporary_challenger_allowance
+                ),
+                eligible_proposal_count=len(options),
+                proposal_opportunity_displaced=displaced,
+            )
+            return
+        if self._global_live_count() >= config.safety_ceiling:
+            self.causal_rent_safety_ceiling_bind_count += 1
+            self._record_rent_event(
+                "safety_ceiling_bind",
+                eligible_proposal_count=len(options),
+            )
+            return
         if not options:
             self._record_rent_event("no_eligible_proposal")
             return
-        options.sort(key=lambda item: (item[0], item[1], item[2]))
         if config.proposal_mode == "residual_ranked":
             score, action_id, pair = options[-1]
         else:
@@ -1262,11 +1636,18 @@ class EpisodicCompositionPolicy:
             self.maximum_global_live_candidate_count,
             self._global_live_count(),
         )
+        candidate = learner.candidates[candidate_index]
         self._record_rent_event(
             "proposed",
             action_id=action_id,
             candidate_index=candidate_index,
             proposal_score=score,
+            candidate_birth_observation=candidate.born_observation,
+            candidate_birth_terminal_count=(
+                candidate.rent_birth_terminal_count
+            ),
+            candidate_birth_review_count=candidate.rent_birth_review_count,
+            candidate_birth_support=candidate.rent_birth_support,
         )
         self._assert_rent_bounds()
 
@@ -1280,6 +1661,22 @@ class EpisodicCompositionPolicy:
             record_supports_candidate(record, action_id, candidate.members)
             for record in self.experience_reservoir.records
         )
+        if candidate.rent_birth_terminal_count is None:
+            candidate.rent_birth_terminal_count = self.terminal_count
+            candidate.rent_birth_review_count = self.causal_rent_review_count
+            candidate.rent_birth_support = candidate.rent_evidence_support
+            candidate.rent_evidence_support_high_water = (
+                candidate.rent_evidence_support
+            )
+            candidate.rent_interval_support_high_water = (
+                candidate.rent_evidence_support
+            )
+            candidate.rent_review_support_high_waters = [
+                candidate.rent_evidence_support
+            ]
+            candidate.rent_request_count_at_last_review = (
+                candidate.exploration_request_count
+            )
 
     def _apply_reservoir_mutation(
         self, mutation: LifetimeReservoirMutation
@@ -1317,6 +1714,14 @@ class EpisodicCompositionPolicy:
                     raise RuntimeError(
                         "candidate rent evidence support became negative"
                     )
+                candidate.rent_evidence_support_high_water = max(
+                    candidate.rent_evidence_support_high_water,
+                    candidate.rent_evidence_support,
+                )
+                candidate.rent_interval_support_high_water = max(
+                    candidate.rent_interval_support_high_water,
+                    candidate.rent_evidence_support,
+                )
 
     def assert_rent_evidence_support_parity(self) -> None:
         """Hard-fail if any live candidate counter differs from a fresh scan."""
@@ -1350,13 +1755,62 @@ class EpisodicCompositionPolicy:
         event: str,
     ) -> None:
         channel = self.channels[action_id]
+        candidate = channel.learner.candidates[candidate_index]
         channel.learner.transition_candidate(candidate_index, state)
         channel.sync_external_lifecycle()
         self._record_rent_event(
             event,
             action_id=action_id,
             candidate_index=candidate_index,
+            candidate_review_count=candidate.rent_review_count,
+            support=candidate.rent_evidence_support,
+            support_high_water=candidate.rent_evidence_support_high_water,
+            interval_support_high_water=(
+                candidate.rent_interval_support_high_water
+            ),
+            grace_extension_count=candidate.grace_extension_count,
+            pruning_reason=event if state == "pruned" else None,
         )
+
+    def finalize_causal_rent_phase(self) -> None:
+        """Record end-of-phase right censoring without changing behavior."""
+        config = self.causal_rent_config
+        if config is None:
+            raise RuntimeError("causal rent is not enabled")
+        if self.causal_rent_phase_finalized:
+            raise RuntimeError("causal-rent phase is already finalized")
+        self.assert_rent_evidence_support_parity()
+        applicable_cap = (
+            config.max_uncertain_reviews
+            if config.lifecycle_grace_mode == "two_review"
+            else config.grace_max_trial_reviews
+        )
+        for action_id, channel in self.channels.items():
+            for index, candidate in enumerate(channel.learner.candidates):
+                if candidate.state != "trial":
+                    continue
+                if candidate.rent_review_count >= applicable_cap:
+                    raise RuntimeError(
+                        "live trial reached lifecycle cap without adjudication"
+                    )
+                candidate.rent_right_censored = True
+                self.causal_rent_right_censored_count += 1
+                self._record_rent_event(
+                    "right_censored",
+                    action_id=action_id,
+                    candidate_index=index,
+                    candidate_review_count=candidate.rent_review_count,
+                    applicable_review_cap=applicable_cap,
+                    support=candidate.rent_evidence_support,
+                    support_high_water=(
+                        candidate.rent_evidence_support_high_water
+                    ),
+                    interval_support_high_water=(
+                        candidate.rent_interval_support_high_water
+                    ),
+                    grace_extension_count=candidate.grace_extension_count,
+                )
+        self.causal_rent_phase_finalized = True
 
     def _sync_all_channels(self) -> None:
         for channel in self.channels.values():
@@ -1367,6 +1821,7 @@ class EpisodicCompositionPolicy:
             "event": event,
             "terminal_count": self.terminal_count,
             "global_live_count": self._global_live_count(),
+            "global_trial_count": len(self._trial_candidates()),
             "global_mature_count": self._mature_count(),
             **fields,
         })
@@ -1408,7 +1863,7 @@ class EpisodicCompositionPolicy:
         if config is None:
             return None
         return {
-            "schema_version": "recon_role_blind_causal_rent.v1",
+            "schema_version": "recon_role_blind_causal_rent.v2",
             "config": asdict(config),
             "start_terminal_count": self.causal_rent_start_terminal_count,
             "final_terminal_return_sum": self.terminal_return_sum,
@@ -1431,6 +1886,29 @@ class EpisodicCompositionPolicy:
             "maximum_global_live_candidate_count": (
                 self.maximum_global_live_candidate_count
             ),
+            "occupancy_observation_count": (
+                self.causal_rent_occupancy_observation_count
+            ),
+            "mean_live_trial_occupancy": (
+                self.causal_rent_live_trial_occupancy_sum
+                / self.causal_rent_occupancy_observation_count
+                if self.causal_rent_occupancy_observation_count
+                else 0.0
+            ),
+            "mean_live_global_occupancy": (
+                self.causal_rent_live_global_occupancy_sum
+                / self.causal_rent_occupancy_observation_count
+                if self.causal_rent_occupancy_observation_count
+                else 0.0
+            ),
+            "displaced_proposal_opportunity_count": (
+                self.causal_rent_displaced_proposal_opportunity_count
+            ),
+            "displaced_eligible_proposal_count": (
+                self.causal_rent_displaced_eligible_proposal_count
+            ),
+            "right_censored_count": self.causal_rent_right_censored_count,
+            "phase_finalized": self.causal_rent_phase_finalized,
             "events": list(self.causal_rent_events),
         }
 

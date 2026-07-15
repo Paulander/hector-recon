@@ -10,6 +10,11 @@ import random
 from typing import Literal
 
 RentProposalMode = Literal["residual_ranked", "rank_shuffled"]
+LifecycleGraceMode = Literal[
+    "two_review",
+    "fixed_six",
+    "support_conditioned_six",
+]
 ExplorationRequestMode = Literal[
     "ordinary_random",
     "support_directed",
@@ -43,6 +48,9 @@ class CausalRentConfig:
     max_uncertain_reviews: int = 2
     proposal_mode: RentProposalMode = "residual_ranked"
     exploration_request_mode: ExplorationRequestMode = "ordinary_random"
+    lifecycle_grace_mode: LifecycleGraceMode = "two_review"
+    grace_max_trial_reviews: int = 6
+    grace_progress_window_reviews: int = 2
 
     def __post_init__(self) -> None:
         for name in (
@@ -53,6 +61,8 @@ class CausalRentConfig:
             "min_eligible_support",
             "consecutive_negative_reviews",
             "max_uncertain_reviews",
+            "grace_max_trial_reviews",
+            "grace_progress_window_reviews",
         ):
             if getattr(self, name) < 1:
                 raise ValueError(f"{name} must be positive")
@@ -69,6 +79,16 @@ class CausalRentConfig:
             "residual_ranked", "rank_shuffled",
         }:
             raise ValueError("unsupported causal-rent proposal mode")
+        if self.lifecycle_grace_mode not in {
+            "two_review",
+            "fixed_six",
+            "support_conditioned_six",
+        }:
+            raise ValueError("unsupported lifecycle grace mode")
+        if self.grace_max_trial_reviews != 6:
+            raise ValueError("lifecycle grace review cap is frozen at six")
+        if self.grace_progress_window_reviews != 2:
+            raise ValueError("lifecycle grace progress window is frozen at two")
         if self.exploration_request_mode not in {
             "ordinary_random",
             "support_directed",
