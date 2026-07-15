@@ -132,6 +132,8 @@ class FrameEffectFirewall:
         self._reject("update_lifecycle", *args, **kwargs)
     def update_reservoir(self, *args: Any, **kwargs: Any) -> None:
         self._reject("update_reservoir", *args, **kwargs)
+    def update_topology(self, *args: Any, **kwargs: Any) -> None:
+        self._reject("update_topology", *args, **kwargs)
     def set_maturity(self, *args: Any, **kwargs: Any) -> None:
         self._reject("set_maturity", *args, **kwargs)
 

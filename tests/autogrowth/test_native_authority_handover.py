@@ -13,6 +13,7 @@ from recon_lite_chess.autogrowth.native_authority_handover import (
     NativeHandoverGenome,
     NativeR0Organism,
     native_authority_tripwires,
+    run_dream_firewall_canary,
 )
 from recon_lite_chess.autogrowth.native_intrinsic_curriculum import R0_COMPETENCE_ID
 from recon_lite_chess.autogrowth.native_single_graph_curriculum import (
@@ -99,7 +100,13 @@ def test_actual_child_query_is_deep_isolated_and_does_not_verify_dream_outcome()
 
 
 class _PlantedTestChild:
-    def request_child(self, frame: FrameContext) -> ChildQuery:
+    def dream_session(self):
+        return self
+
+    def close(self) -> None:
+        pass
+
+    def request(self, frame: FrameContext) -> ChildQuery:
         preferred = frame.hypothetical_action == "f2f8"
         response = ChildResponse(
             child_id="test_child",
@@ -130,3 +137,78 @@ def test_experimental_path_survives_fail_hard_legacy_authority_tripwires() -> No
         actuation = organism.emit_action(chess.Board(MATE_ONE))
     assert actuation is not None
     assert counts == {"weighted_selector": 0, "provider_fallback": 0, "child_priority": 0}
+
+
+def test_dream_firewall_rejects_persistent_capabilities_and_isolates_board() -> None:
+    organism = _tiny_organism()
+    board = chess.Board(MATE_ONE)
+    result = run_dream_firewall_canary(organism, board)
+    assert result.rejected_operations == (
+        "update_weight", "update_lifecycle", "update_reservoir",
+        "set_maturity", "reward", "update_topology", "actuate",
+    )
+    assert result.persistent_mutation_count == 0
+    assert result.board_isolated is True
+    assert set(result.clone_mutations_exercised) == {"weight", "lifecycle", "topology", "maturity", "board"}
+
+
+def test_shuffled_control_preserves_child_response_multiset() -> None:
+    board = chess.Board(MATE_ONE)
+    genome = NativeHandoverGenome()
+    full = genome.decide(board, _PlantedTestChild(), arm="actual_child")
+    shuffled = genome.decide(board, _PlantedTestChild(), arm="shuffled", shuffle_seed=7)
+    def multiset(decision):
+        return sorted(
+            tuple(sorted(query.response.to_dict().items()))
+            for queries in decision.response_slots.values()
+            for query in queries
+        )
+    assert multiset(full) == multiset(shuffled)
+    assert full.graph_node_count == shuffled.graph_node_count
+    assert full.graph_edge_count == shuffled.graph_edge_count
+
+
+class _AllReplyTestChild:
+    def dream_session(self):
+        return self
+
+    def close(self) -> None:
+        pass
+
+    def __init__(self, preferred_action: str, failing_action: str | None = None) -> None:
+        self.preferred_action = preferred_action
+        self.failing_action = failing_action
+        self.failed_once = False
+
+    def request(self, frame: FrameContext) -> ChildQuery:
+        confirmed = True
+        if frame.hypothetical_action == self.failing_action and not self.failed_once:
+            confirmed = False
+            self.failed_once = True
+        value = 0.9 if frame.hypothetical_action == self.preferred_action else 0.4
+        response = ChildResponse(
+            child_id="test_child",
+            confirmed=confirmed,
+            expected_value=value if confirmed else 0.0,
+            uncertainty=0.1,
+            grounded=confirmed,
+            grounding_source="test_only" if confirmed else None,
+        )
+        return ChildQuery(response, None, frame.frame_id, 0, ())
+
+
+def test_one_reply_failure_blocks_the_all_replies_parent_leg() -> None:
+    board = chess.Board("8/8/8/8/4K3/8/6R1/7k w - - 0 1")
+    candidates = []
+    for move in sorted(board.legal_moves, key=lambda item: item.uci()):
+        after = board.copy(stack=False)
+        after.push(move)
+        if after.legal_moves.count() >= 2:
+            candidates.append(move.uci())
+    assert candidates
+    target = candidates[-1]
+    genome = NativeHandoverGenome()
+    all_confirm = genome.decide(board, _AllReplyTestChild(target), arm="actual_child")
+    one_fails = genome.decide(board, _AllReplyTestChild(target, target), arm="actual_child")
+    assert all_confirm.actuation.move_uci == target
+    assert one_fails.actuation.move_uci != target

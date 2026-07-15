@@ -129,12 +129,82 @@ class GraphActuation:
 
 
 @dataclass(frozen=True)
+class DreamFirewallCanary:
+    rejected_operations: tuple[str, ...]
+    persistent_mutation_count: int
+    board_isolated: bool
+    clone_mutations_exercised: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class ChildQuery:
     response: ChildResponse
     actuation: GraphActuation | None
     frame_id: str
     persistent_mutation_count: int
     effect_attempts: tuple[Mapping[str, Any], ...]
+
+
+class NativeR0DreamSession:
+    """One isolated graph clone reused across frame-local child requests."""
+
+    def __init__(self, organism: "NativeR0Organism") -> None:
+        self.organism = organism
+        self.persistent_digest = _pickle_digest(organism.graph)
+        self.virtual_graph = copy.deepcopy(organism.graph)
+        self.virtual_credit = copy.deepcopy(organism.credit)
+        self.closed = False
+
+    def request(self, frame: FrameContext) -> ChildQuery:
+        if self.closed:
+            raise RuntimeError("dream session is closed")
+        if frame.kind is not FrameKind.VIRTUAL:
+            raise ValueError("R0 child requests require a virtual frame")
+        runtime = frame.to_env_overlay()
+        firewall = FrameEffectFirewall()
+        runtime["__frame_effects__"] = firewall
+        board = runtime.get("board")
+        if not isinstance(board, chess.Board):
+            raise TypeError("virtual R0 frame requires a chess.Board")
+        virtual = NativeR0Organism(
+            graph=self.virtual_graph,
+            credit=self.virtual_credit,
+            provenance=self.organism.provenance,
+            frozen_triplet_ids=self.organism.frozen_triplet_ids,
+            source_manifest=self.organism.source_manifest,
+            retrieval_budget_per_actuator=self.organism.retrieval_budget_per_actuator,
+        )
+        actuation = virtual.emit_action(board)
+        mutation_count = int(_pickle_digest(self.organism.graph) != self.persistent_digest)
+        if mutation_count:
+            raise RuntimeError("virtual R0 request mutated the persistent organism")
+        confirmed = actuation is not None
+        response = ChildResponse(
+            child_id=self.organism.provenance.child_id,
+            confirmed=confirmed,
+            expected_value=(self.organism.provenance.consolidated_value if confirmed else 0.0),
+            uncertainty=self.organism.provenance.uncertainty,
+            grounded=bool(
+                confirmed
+                and self.organism.provenance.grounded
+                and self.organism.provenance.can_emit
+            ),
+            grounding_source=(
+                self.organism.provenance.grounding_source if confirmed else None
+            ),
+        )
+        return ChildQuery(
+            response=response,
+            actuation=actuation,
+            frame_id=frame.frame_id,
+            persistent_mutation_count=mutation_count,
+            effect_attempts=tuple(dict(row) for row in firewall.attempts),
+        )
+
+    def close(self) -> None:
+        if _pickle_digest(self.organism.graph) != self.persistent_digest:
+            raise RuntimeError("dream session leaked into the persistent organism")
+        self.closed = True
 
 
 @dataclass
@@ -146,6 +216,7 @@ class NativeR0Organism:
     provenance: FrozenCompetenceProvenance
     frozen_triplet_ids: frozenset[str]
     source_manifest: Mapping[str, Any]
+    retrieval_budget_per_actuator: int = 16
     schema_version: str = SCHEMA_VERSION
 
     def __post_init__(self) -> None:
@@ -155,6 +226,8 @@ class NativeR0Organism:
             raise ValueError("R0 organism must be mature, grounded, and causally confirmed")
         if not self.frozen_triplet_ids:
             raise ValueError("R0 organism requires a non-empty frozen learned graph")
+        if self.retrieval_budget_per_actuator < 1:
+            raise ValueError("retrieval_budget_per_actuator must be positive")
 
     def emit_action(self, board: chess.Board) -> GraphActuation | None:
         """Ask formal graph branches and the anonymous genome for one actuator."""
@@ -163,6 +236,7 @@ class NativeR0Organism:
             self.graph,
             board,
             allowed_triplets=self.frozen_triplet_ids,
+            per_actuator_budget=self.retrieval_budget_per_actuator,
         )
         if not options:
             return None
@@ -184,44 +258,14 @@ class NativeR0Organism:
     def request_child(self, frame: FrameContext) -> ChildQuery:
         """Formally request the actual frozen R0 graph in an isolated dream."""
 
-        if frame.kind is not FrameKind.VIRTUAL:
-            raise ValueError("R0 child requests require a virtual frame")
-        before = _pickle_digest(self.graph)
-        virtual_graph = copy.deepcopy(self.graph)
-        runtime = frame.to_env_overlay()
-        firewall = FrameEffectFirewall()
-        runtime["__frame_effects__"] = firewall
-        board = runtime.get("board")
-        if not isinstance(board, chess.Board):
-            raise TypeError("virtual R0 frame requires a chess.Board")
-        virtual = NativeR0Organism(
-            graph=virtual_graph,
-            credit=copy.deepcopy(self.credit),
-            provenance=self.provenance,
-            frozen_triplet_ids=self.frozen_triplet_ids,
-            source_manifest=self.source_manifest,
-        )
-        actuation = virtual.emit_action(board)
-        after = _pickle_digest(self.graph)
-        mutation_count = int(before != after)
-        if mutation_count:
-            raise RuntimeError("virtual R0 request mutated the persistent organism")
-        confirmed = actuation is not None
-        response = ChildResponse(
-            child_id=self.provenance.child_id,
-            confirmed=confirmed,
-            expected_value=(self.provenance.consolidated_value if confirmed else 0.0),
-            uncertainty=self.provenance.uncertainty,
-            grounded=bool(confirmed and self.provenance.grounded and self.provenance.can_emit),
-            grounding_source=(self.provenance.grounding_source if confirmed else None),
-        )
-        return ChildQuery(
-            response=response,
-            actuation=actuation,
-            frame_id=frame.frame_id,
-            persistent_mutation_count=mutation_count,
-            effect_attempts=tuple(dict(row) for row in firewall.attempts),
-        )
+        session = NativeR0DreamSession(self)
+        try:
+            return session.request(frame)
+        finally:
+            session.close()
+
+    def dream_session(self) -> NativeR0DreamSession:
+        return NativeR0DreamSession(self)
 
     def save(self, path: str | Path) -> Mapping[str, Any]:
         output = Path(path)
@@ -262,6 +306,8 @@ class NativeR0Organism:
             raise TypeError("artifact is not a NativeR0Organism")
         if restored.schema_version != SCHEMA_VERSION:
             raise ValueError("R0 organism schema mismatch")
+        if not hasattr(restored, "retrieval_budget_per_actuator"):
+            restored.retrieval_budget_per_actuator = 16
         return restored
 
 
@@ -294,22 +340,26 @@ class NativeHandoverGenome:
             raise RuntimeError("cannot decide without legal actions")
         slots: dict[str, tuple[ChildQuery, ...]] = {}
         successor_frames: dict[tuple[str, int], FrameContext] = {}
-        for move in legal:
-            after = board.copy(stack=False)
-            after.push(move)
-            queries: list[ChildQuery] = []
-            for reply_index, reply in enumerate(sorted(after.legal_moves, key=lambda item: item.uci())):
-                successor = after.copy(stack=False)
-                successor.push(reply)
-                frame = FrameContext(
-                    frame_id=f"dream:{move.uci()}:{reply.uci()}",
-                    kind=FrameKind.VIRTUAL,
-                    values={"board": successor},
-                    hypothetical_action=move.uci(),
-                )
-                successor_frames[(move.uci(), reply_index)] = frame
-                queries.append(child.request_child(frame))
-            slots[move.uci()] = tuple(queries)
+        session = child.dream_session()
+        try:
+            for move in legal:
+                after = board.copy(stack=False)
+                after.push(move)
+                queries: list[ChildQuery] = []
+                for reply_index, reply in enumerate(sorted(after.legal_moves, key=lambda item: item.uci())):
+                    successor = after.copy(stack=False)
+                    successor.push(reply)
+                    frame = FrameContext(
+                        frame_id=f"dream:{move.uci()}:{reply.uci()}",
+                        kind=FrameKind.VIRTUAL,
+                        values={"board": successor},
+                        hypothetical_action=move.uci(),
+                    )
+                    successor_frames[(move.uci(), reply_index)] = frame
+                    queries.append(session.request(frame))
+                slots[move.uci()] = tuple(queries)
+        finally:
+            session.close()
         if arm == "shuffled":
             slots = _shuffle_response_slots(slots, seed=shuffle_seed)
         graph, env = _materialize_parent_choice(
@@ -349,6 +399,66 @@ class NativeHandoverGenome:
         )
 
 
+def run_dream_firewall_canary(
+    organism: NativeR0Organism,
+    board: chess.Board,
+) -> DreamFirewallCanary:
+    """Exercise capability rejection and explicit clone isolation."""
+
+    graph_before = _pickle_digest(organism.graph)
+    credit_before = _pickle_digest(organism.credit)
+    board_before = board.fen()
+    frame = FrameContext(
+        frame_id="dream-firewall-canary",
+        kind=FrameKind.VIRTUAL,
+        values={"board": board},
+        hypothetical_action="anonymous-canary",
+    )
+    runtime = frame.to_env_overlay()
+    runtime_board = runtime["board"]
+    assert isinstance(runtime_board, chess.Board)
+    virtual_graph = copy.deepcopy(organism.graph)
+    virtual_credit = copy.deepcopy(organism.credit)
+    firewall = FrameEffectFirewall()
+    operations = (
+        ("weight", firewall.update_weight),
+        ("lifecycle", firewall.update_lifecycle),
+        ("reservoir", firewall.update_reservoir),
+        ("maturity", firewall.set_maturity),
+        ("reward", firewall.reward),
+        ("topology", firewall.update_topology),
+        ("actuation", firewall.actuate),
+    )
+    for name, operation in operations:
+        try:
+            operation(name)
+        except Exception:
+            pass
+    clone_mutations: list[str] = []
+    if virtual_graph.graph.edges:
+        virtual_graph.graph.edges[0].w = 999.0
+        clone_mutations.append("weight")
+    virtual_graph.graph.nodes[ROOT_ID].meta["dream_lifecycle"] = "mutated"
+    clone_mutations.append("lifecycle")
+    virtual_graph.graph.add_node(Node("dream_only_topology", NodeType.TERMINAL))
+    clone_mutations.append("topology")
+    virtual_credit.states[organism.provenance.child_id].mature = False
+    clone_mutations.append("maturity")
+    moves = list(runtime_board.legal_moves)
+    if moves:
+        runtime_board.push(moves[0])
+        clone_mutations.append("board")
+    persistent = int(_pickle_digest(organism.graph) != graph_before)
+    persistent += int(_pickle_digest(organism.credit) != credit_before)
+    persistent += int(board.fen() != board_before)
+    return DreamFirewallCanary(
+        rejected_operations=tuple(str(row["operation"]) for row in firewall.attempts),
+        persistent_mutation_count=persistent,
+        board_isolated=board.fen() == board_before,
+        clone_mutations_exercised=tuple(clone_mutations),
+    )
+
+
 def measure_prediction_residual(imagined: ChildResponse, observed: ChildResponse) -> float:
     """Record raw residual on a real frame; never create credit or maturity."""
 
@@ -379,6 +489,7 @@ def _formal_native_options(
     board: chess.Board,
     *,
     allowed_triplets: Iterable[str],
+    per_actuator_budget: int,
 ) -> tuple[tuple[AnonymousChoiceOption, ...], int]:
     """Formally confirm graph branches without the legacy Python selector."""
 
@@ -389,7 +500,8 @@ def _formal_native_options(
     if policy.config.shared_feature_atoms:
         for move_uci, move in legal.items():
             keys = _triplet_keys(board, move, key_mode=policy.config.key_mode)
-            for rank, triplet_id in enumerate(policy._triplets_from_active_shared_atoms(keys)):
+            retrieved = policy._triplets_from_active_shared_atoms(keys)
+            for rank, triplet_id in enumerate(retrieved[: max(1, int(per_actuator_budget))]):
                 pair = (triplet_id, move_uci)
                 if triplet_id in allowed and pair not in seen:
                     seen.add(pair)
