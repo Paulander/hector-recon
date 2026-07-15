@@ -77,37 +77,41 @@ shuffled responsibility rarely differed. See
 
 ## Ordered next decision
 
-The graph-internal exact-evidence package is closed negative on fresh admitted
-seeds 20262301--20262320. Measurement integrity passed in all 20 cells/100 arms,
-and every target structure was found. Exact directed improved paired per-task
-minimum support over activation in 14/20 tasks, but the median gain was only 2;
-all four targets reached support 32 and matured with positive rent in only 2/20,
-and 18/80 targets died unsupported. Exact behavior mastered old plus new in 3/20.
-Fixed-reference stability passed at 18/20. Priority remains `not_identified`:
-only 393/49,638 exact-arm opportunities had unequal request strengths, although
-the deterministic planted canary proved the allocator itself distinguishable.
-See
-`docs/autogrowth/GENERIC_CORE_GRAPH_INTERNAL_EXACT_EVIDENCE_RESULT_20260713.md`.
+The support-conditioned lifecycle-grace package is closed on fresh admitted
+seeds 20262401--20262420. Measurement/integrity passed in all 20 cells. More
+life causally helped: conditioned-six exceeded the two-review paired minimum
+support in 18/20 tasks with median +12.5; all-four support/maturation rose from
+1/20 and 1/20 to 9/20 and 8/20. Unsupported target deaths fell from 19/80 to
+2/80.
 
-The internal-terminal architecture is established, not optional: candidate-local
-`EVIDENCE_DEFICIT` is measured exactly under live Algorithm-R insertion/eviction,
-feeds a graph-native request SCRIPT, never reaches the exploitative root, and is
-consumed by a content-blind host actuator bus. This architectural success does
-not imply evidence, maturation, behavior, or transfer success.
+The stronger self-regulation claim failed its fixed-six control. Fixed-six and
+conditioned-six both reached all-four support in 9/20 and all-four positive-rent
+maturation in 8/20, with identical median weakest support 29 and median new-task
+success 0.692. Conditioned reduced median live-trial occupancy by only 1.46%,
+and challenger blocks plus displaced proposals were lower in just 4/20 tasks.
+Behavior passed old plus new in only 4/20. Fixed-reference stability passed at
+16/20; priority remains descriptively `not_identified`. See
+`docs/autogrowth/GENERIC_CORE_SUPPORT_CONDITIONED_LIFECYCLE_GRACE_RESULT_20260715.md`.
 
-The preregistered interpretation binds. Close exact-currency requests at this
-dose. The next possible scientific factor is support-conditioned lifecycle grace,
-not more throughput, reward shaping, consolidation, action competition, or
-virtual frames. Unsupported exact targets reached median support 7.5 then 12.5
-at their two reviews and died at 5--22, so one ad hoc extra review is not an
-adequate inference. The candidate local rule and unresolved design choices are in
-`docs/autogrowth/SUPPORT_CONDITIONED_LIFECYCLE_GRACE_DESIGN_NOTE_20260713.md`.
-Do not implement or touch another fresh pool until external review freezes that
-factor, its cap, arms, gates, and unused seeds.
+The preregistered interpretation binds: the two-review lifecycle was too short,
+but the graph-local progress/request conjunction did not allocate a six-review
+budget better than blind fixed grace. Close lifecycle grace at this cap. Nine of
+the eleven conditioned all-four-support failures contained a late-born
+right-censored target and two contained conditioned lifecycle deaths. That tail
+explains the incomplete sets but does not authorize a post-hoc horizon,
+throughput, cap, or progress-window increase. External audit must select and
+freeze any next isolated factor after artifact-only diagnosis of birth timing,
+challenger blocking, and proposal displacement.
 
-No KRK transfer is authorized. Native R1 and R2 remain unchanged/closed.
-Frame-local `CHILD_RESPONSE` and `PREDICTION_SURPRISE` remain the ordered
-architectural bridge to strategic handover, but they are queued behind closure of
-the current evidence-survival bottleneck and cannot self-create credit.
+The internal-terminal architecture remains established: exact persistent-real
+measurements and defer/request SCRIPTs are graph material, disconnected from
+exploitative roots, while the final generic bus is host-executed. Virtual-frame
+handover canary v2 separately proves deep-isolated, side-effect-free planted
+`CHILD_RESPONSE` routing and prediction residual measurement. Neither
+architectural pass is autonomous learned KRK behavior.
+
+No KRK transfer is authorized. Native R1 and R2 remain unchanged/closed. Do not
+run a new fresh package until its single scientific factor, cohort, controls,
+and gates receive a new external freeze.
 
 No-go: runtime tablebase/DTM or Stockfish provider, learner-visible stage/hand-skill features, direct move-provider overrides, hidden oracles, new TG chronology, or claims from a counterfactual path that fails no-op parity.

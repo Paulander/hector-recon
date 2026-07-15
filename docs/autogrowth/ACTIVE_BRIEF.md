@@ -364,3 +364,16 @@ One run should produce one machine-readable result artifact and, when useful, on
   are closed at this dose; external review must freeze any support-conditioned
   lifecycle-grace package before implementation or fresh data. See
   `docs/autogrowth/GENERIC_CORE_GRAPH_INTERNAL_EXACT_EVIDENCE_RESULT_20260713.md`.
+
+- The canonical support-conditioned lifecycle-grace package is closed on fresh
+  admitted seeds 20262401--20262420. All 20 integrity cells passed. Longer life
+  helped over two reviews in 18/20 paired tasks with median minimum-support gain
+  +12.5, and all-four positive-rent maturation rose from 1/20 to 8/20. However,
+  fixed-six and conditioned-six tied at 9/20 all-four support, 8/20 maturation,
+  weakest-support median 29, and median new behavior 0.692. Conditioned occupancy
+  was only 1.46% lower and blocks/displacements were lower in 4/20, so
+  self-regulation failed; only more life is supported. Nine conditioned target
+  failures were right-censored and two were lifecycle deaths. Close grace at
+  this cap; do not extend horizon/throughput or transfer to native KRK without a
+  newly frozen factor. See
+  `docs/autogrowth/GENERIC_CORE_SUPPORT_CONDITIONED_LIFECYCLE_GRACE_RESULT_20260715.md`.
