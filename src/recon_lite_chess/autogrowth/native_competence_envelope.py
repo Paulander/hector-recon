@@ -11,7 +11,14 @@ from typing import Any, Iterable, Mapping, Sequence
 
 import chess
 
-from recon_lite import FormalReConEngine, Graph, Node, NodeState, NodeType
+from recon_lite import (
+    ChildResponse,
+    FormalReConEngine,
+    Graph,
+    Node,
+    NodeState,
+    NodeType,
+)
 from recon_lite_hector.nodes import StemCellState, StemCellTerminal
 
 from .native_authority_handover import (
@@ -20,7 +27,6 @@ from .native_authority_handover import (
     NativeR0DreamSession,
     NativeR0Organism,
 )
-from .native_child_availability import response_with_availability
 from .native_single_graph_curriculum import _triplet_keys
 
 
@@ -155,6 +161,30 @@ class EnvelopeClassification:
         if self.state == AvailabilityState.REFUTED:
             return 0.0
         return 0.5
+
+    def to_manifest(self) -> dict[str, Any]:
+        return {
+            "state": self.state.value,
+            "probability": self.probability,
+            "uncertainty": self.uncertainty,
+            "available_cell_ids": list(self.available_cell_ids),
+            "refuted_cell_ids": list(self.refuted_cell_ids),
+            "formal_available": self.formal_available,
+            "formal_refuted": self.formal_refuted,
+            "policy_response": self.policy_response,
+        }
+
+
+@dataclass
+class NativeCompetenceSessionAudit:
+    """Ephemeral observation sink; never part of serialized organism state."""
+
+    session_open_count: int = 0
+    request_count: int = 0
+    session_close_count: int = 0
+    open_events: list[dict[str, Any]] = field(default_factory=list)
+    request_events: list[dict[str, Any]] = field(default_factory=list)
+    close_events: list[dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -869,14 +899,52 @@ class NativeR0CompetenceOrganism:
 
     def apply_to_query(
         self,
-        board: chess.Board,
         query: ChildQuery,
+        classification: EnvelopeClassification,
+        *,
+        active_signal_ids: Iterable[str],
     ) -> ChildQuery:
-        classification = self.classify_board(board, query.actuation)
-        return response_with_availability(
-            self.r0,
-            query,
-            available=classification.state == AvailabilityState.AVAILABLE,
+        """Adapt an envelope-owned classification; never accept a host Boolean."""
+
+        if not isinstance(classification, EnvelopeClassification):
+            raise TypeError("competence adapter requires EnvelopeClassification")
+        available = classification.state == AvailabilityState.AVAILABLE
+        policy_response = bool(
+            query.actuation is not None or query.response.policy_response
+        )
+        grounded = bool(
+            self.r0.provenance.grounded and self.r0.provenance.can_emit
+        )
+        response = ChildResponse(
+            child_id=self.r0.provenance.child_id,
+            confirmed=available,
+            policy_response=policy_response,
+            available=available,
+            expected_value=(
+                self.r0.provenance.consolidated_value if available else 0.0
+            ),
+            uncertainty=classification.uncertainty,
+            grounded=grounded,
+            grounding_source=(
+                self.r0.provenance.grounding_source if grounded else None
+            ),
+        )
+        provenance = {
+            "classification": classification.to_manifest(),
+            "envelope_schema_version": self.envelope.schema_version,
+            "child_id": self.r0.provenance.child_id,
+            "child_mature": self.r0.provenance.mature,
+            "child_grounded": self.r0.provenance.grounded,
+            "child_grounding_source": self.r0.provenance.grounding_source,
+        }
+        return ChildQuery(
+            response=response,
+            actuation=query.actuation,
+            frame_id=query.frame_id,
+            persistent_mutation_count=query.persistent_mutation_count,
+            effect_attempts=query.effect_attempts,
+            active_competence_signal_ids=tuple(sorted(map(str, active_signal_ids))),
+            availability_provenance=provenance,
         )
 
     def persistent_state_audit(self) -> Mapping[str, str]:
@@ -902,8 +970,12 @@ class NativeR0CompetenceOrganism:
             ).hexdigest(),
         }
 
-    def dream_session(self) -> "NativeCompetenceDreamSession":
-        return NativeCompetenceDreamSession(self)
+    def dream_session(
+        self,
+        *,
+        audit: NativeCompetenceSessionAudit | None = None,
+    ) -> "NativeCompetenceDreamSession":
+        return NativeCompetenceDreamSession(self, audit=audit)
 
     def dumps(self) -> bytes:
         return pickle.dumps(self, protocol=pickle.HIGHEST_PROTOCOL)
@@ -919,13 +991,32 @@ class NativeR0CompetenceOrganism:
 class NativeCompetenceDreamSession:
     """Read-only virtual child requests with graph-native local availability."""
 
-    def __init__(self, organism: NativeR0CompetenceOrganism) -> None:
+    def __init__(
+        self,
+        organism: NativeR0CompetenceOrganism,
+        *,
+        audit: NativeCompetenceSessionAudit | None = None,
+    ) -> None:
         self.organism = organism
         self.r0_session: NativeR0DreamSession = organism.r0.dream_session()
+        self.audit = audit
         self.envelope_digest = organism.persistent_state_audit()[
             "exact_state_sha256"
         ]
         self.closed = False
+        if self.audit is not None:
+            self.audit.session_open_count += 1
+            self.audit.open_events.append({
+                "child_id": organism.r0.provenance.child_id,
+                "child_mature": organism.r0.provenance.mature,
+                "child_grounded": organism.r0.provenance.grounded,
+                "child_grounding_source": organism.r0.provenance.grounding_source,
+                "mature_envelope_cell_ids": sorted(
+                    cell.cell_id
+                    for cell in organism.envelope.cells.values()
+                    if cell.is_mature
+                ),
+            })
 
     def request(self, frame: Any) -> ChildQuery:
         if self.closed:
@@ -934,7 +1025,44 @@ class NativeCompetenceDreamSession:
         board = frame.to_env_overlay().get("board")
         if not isinstance(board, chess.Board):
             raise TypeError("competence frame requires a chess.Board")
-        result = self.organism.apply_to_query(board, query)
+        signals = extract_active_competence_signals(
+            self.organism.r0, board, query.actuation
+        )
+        classification = self.organism.envelope.classify(
+            signals,
+            policy_response=query.actuation is not None,
+        )
+        result = self.organism.apply_to_query(
+            query,
+            classification,
+            active_signal_ids=signals,
+        )
+        if self.audit is not None:
+            self.audit.request_count += 1
+            actuation = None
+            if result.actuation is not None:
+                actuation = {
+                    "actuator_identity": result.actuation.actuator_identity,
+                    "move_uci": result.actuation.move_uci,
+                    "option_identity": result.actuation.option_identity,
+                    "activation": result.actuation.activation,
+                    "candidate_count": result.actuation.candidate_count,
+                    "formal_ticks": result.actuation.formal_ticks,
+                    "graph_owned": result.actuation.graph_owned,
+                    "host_fallback": result.actuation.host_fallback,
+                }
+            self.audit.request_events.append({
+                "frame_id": frame.frame_id,
+                "actuation": actuation,
+                "active_competence_signal_ids": list(
+                    result.active_competence_signal_ids
+                ),
+                "classification": classification.to_manifest(),
+                "consumed_available": result.response.available,
+                "availability_provenance": dict(
+                    result.availability_provenance or {}
+                ),
+            })
         if (
             self.organism.persistent_state_audit()["exact_state_sha256"]
             != self.envelope_digest
@@ -950,6 +1078,12 @@ class NativeCompetenceDreamSession:
         ):
             raise RuntimeError("competence dream session leaked")
         self.closed = True
+        if self.audit is not None:
+            self.audit.session_close_count += 1
+            self.audit.close_events.append({
+                "request_count_at_close": self.audit.request_count,
+                "persistent_state_identical": True,
+            })
 
 
 def evidence_key(
@@ -992,6 +1126,32 @@ def extract_active_competence_signals(
         ):
             signals.add(composite_id)
     return tuple(sorted(signals))
+
+
+def flatten_consumed_availability_mask(
+    slots: Mapping[str, Sequence[ChildQuery]],
+) -> tuple[dict[str, Any], ...]:
+    """Return the exact response mask consumed by fail-closed handover."""
+
+    rows: list[dict[str, Any]] = []
+    for action_identity in sorted(slots):
+        for reply_index, query in enumerate(slots[action_identity]):
+            rows.append({
+                "action_identity": action_identity,
+                "reply_index": reply_index,
+                "frame_id": query.frame_id,
+                "available": bool(query.response.available),
+                "policy_response": bool(query.response.policy_response),
+                "active_competence_signal_ids": list(
+                    query.active_competence_signal_ids
+                ),
+                "availability_provenance": (
+                    None
+                    if query.availability_provenance is None
+                    else dict(query.availability_provenance)
+                ),
+            })
+    return tuple(rows)
 
 
 def wilson_lower_bound(successes: int, support: int, z: float) -> float:

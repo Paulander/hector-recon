@@ -120,7 +120,7 @@ def _synthetic_slots(board:chess.Board,available_action:str):
         slots[action.uci()]=tuple(rows)
     return slots,frames
 
-def test_synthetic_mature_envelope_causally_changes_native_handover() -> None:
+def test_laboratory_injected_synthetic_slots_change_handover_upper_bound() -> None:
     board=chess.Board(SYNTHETIC_PARENT)
     empty_slots,frames=_synthetic_slots(board,"")
     fallback=FailClosedNativeHandoverGenome().decide_from_available_slots(

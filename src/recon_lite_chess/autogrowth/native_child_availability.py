@@ -256,6 +256,8 @@ def formally_confirm_completion(
 def response_with_availability(
     organism: NativeR0Organism, query: ChildQuery, *, available: bool
 ) -> ChildQuery:
+    """Laboratory-only Boolean availability injection for named controls."""
+
     policy_response = bool(query.actuation is not None or query.response.policy_response)
     grounded = bool(organism.provenance.grounded and organism.provenance.can_emit)
     response = ChildResponse(
@@ -270,6 +272,11 @@ def response_with_availability(
         response=response, actuation=query.actuation, frame_id=query.frame_id,
         persistent_mutation_count=query.persistent_mutation_count,
         effect_attempts=query.effect_attempts,
+        active_competence_signal_ids=query.active_competence_signal_ids,
+        availability_provenance={
+            "authority": "laboratory_boolean_injection",
+            "injected_available": bool(available),
+        },
     )
 
 

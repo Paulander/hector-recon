@@ -76,16 +76,20 @@ The connected learned path is covered by a fail-hard contract preventing calls
 to experiment-level response_with_availability. Laboratory injection and
 shuffle helpers remain restricted to explicitly named control paths.
 
-The causal synthetic check also passed:
+Authority addendum correction: the following causal synthetic check was a
+laboratory-injected mask upper bound, not an end-to-end mature-envelope test.
+The mature cell created by the test did not classify the ChildQuery values
+consumed by handover.
 
 - the mature connected envelope selected target e4d3;
 - disconnection fell back to g2b2;
 - the shuffled envelope selected its preserved-multiset target e4d4, not e4d3;
 - no competence growth occurred.
 
-Thus a mature competence envelope can causally control the native handover via
-the actual wrapper/dream-session path. This does not show that such an envelope
-can yet be learned.
+Thus fail-closed handover responds causally to an injected availability mask.
+It did not establish mature-envelope authority through the actual
+wrapper/dream-session path. See NATIVE_MATURE_ENVELOPE_AUTHORITY_ADDENDUM.md for
+the replacement contract.
 
 ## Validation and binding interpretation
 
@@ -95,7 +99,8 @@ in 2413.11 seconds (40 minutes 13 seconds).
 
 Every canary gate passed: evidence uniqueness and class balance, zero fabricated
 reward, real and virtual persistent identity, frame-order invariance, direct
-wrapper authority, causal synthetic envelope, and zero competence growth.
+wrapper authority, the causal laboratory mask upper bound, and zero competence
+growth.
 
 This closes the engineering boundary only. It makes no competence-learning,
 native R1, curriculum, or fresh-data claim. Stop for external review; do not

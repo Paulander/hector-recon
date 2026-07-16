@@ -156,9 +156,10 @@ byte-identical throughout. Counts persisted before gates were 40 successes and
 
 A serialized NativeR0CompetenceOrganism now passes directly into
 NativeHandoverGenome.query_child_slots; the connected path cannot call the
-experiment-level availability injector. A small synthetic mature envelope
-causally changed native handover, while disconnected and shuffled controls did
-not reproduce its target action. This closes frame purity and inference
+experiment-level availability injector. The earlier synthetic check showed that
+an injected availability mask changed handover while disconnected and shuffled
+controls did not reproduce its target action; it was a laboratory upper bound,
+not an end-to-end envelope test. This closes frame purity and inference
 authority, not competence learning. Commit 1501a18 and its 46/18 canonical
 abort remain preserved; no competence growth, R1 update, validation, regression,
 retired-successor, final, or fresh access occurred. See

@@ -144,6 +144,8 @@ class ChildQuery:
     frame_id: str
     persistent_mutation_count: int
     effect_attempts: tuple[Mapping[str, Any], ...]
+    active_competence_signal_ids: tuple[str, ...] = ()
+    availability_provenance: Mapping[str, Any] | None = None
 
 
 class NativeR0DreamSession:
@@ -441,6 +443,8 @@ class NativeHandoverGenome:
         self,
         board: chess.Board,
         child: NativeR0Organism,
+        *,
+        session_audit: Any | None = None,
     ) -> tuple[
         dict[str, tuple[ChildQuery, ...]],
         dict[tuple[str, int], FrameContext],
@@ -450,7 +454,11 @@ class NativeHandoverGenome:
         legal = tuple(sorted(board.legal_moves, key=lambda move: move.uci()))
         slots: dict[str, tuple[ChildQuery, ...]] = {}
         successor_frames: dict[tuple[str, int], FrameContext] = {}
-        session = child.dream_session()
+        session = (
+            child.dream_session()
+            if session_audit is None
+            else child.dream_session(audit=session_audit)
+        )
         try:
             for move in legal:
                 after = board.copy(stack=False)

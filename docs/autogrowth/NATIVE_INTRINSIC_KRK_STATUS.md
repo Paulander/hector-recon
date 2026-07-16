@@ -57,8 +57,9 @@ cross-frame contamination.
 Counts written before gates were 40 successes and 24 response-present failures:
 40/8 on R0-train and 0/16 on train decoys. A serialized competence organism was
 passed directly into native child-slot generation, with no experiment-level
-availability injection. A synthetic mature envelope causally selected its
-native handover target; disconnected and shuffled controls failed that target.
+availability injection. The earlier laboratory-injected availability mask
+causally selected its handover target; it did not establish end-to-end mature
+envelope authority. Disconnected and shuffled controls failed that target.
 Competence growth and R1 updates were both zero. Preserve commit 1501a18 and
 its canonical abort; this closes inference purity/authority only and does not
 authorize envelope growth or downstream data. See
