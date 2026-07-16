@@ -227,3 +227,13 @@ two heldout misses. Require 100% on both fresh validation and regression, 100%
 R0 retention, and a positive causal effect before certifying R1 or opening R2.
 
 No result below joint 100% is a curriculum promotion.
+\n## 2026-07-16 competence-envelope admission abort\
+\
+The touched-data graph-native competence package stopped before learning at its\
+frozen evidence-admission gate. The real stream was nondegenerate: 46/48 R0-train\
+contexts completed and all 16 train decoys failed, for 46 successes and 18\
+response-present failures. The external work package required both classes and\
+at least 12 failures, but the preregistration mistakenly added a 48/48 R0-train\
+condition. Preserve this as an instrument abort; validation, regression, the 65\
+retired successors, topology growth, and competence learning were untouched. See\
+NATIVE_R0_COMPETENCE_ENVELOPE_TOUCHED_RESULT_20260716.md.

@@ -144,3 +144,11 @@ competence-availability factor, cohort, controls, and gates receive a new
 external freeze. Do not restore host gating or dream verification.
 
 No-go: runtime tablebase/DTM or Stockfish provider, learner-visible stage/hand-skill features, direct move-provider overrides, hidden oracles, new TG chronology, or claims from a counterfactual path that fails no-op parity.
+\nThe first touched-data competence-envelope package closed before learning at\
+\x60evidence_admission\x60. Frozen R0 completed 46/48 historical R0-train contexts\
+and failed all 16 train decoys, so the actual stream met the external both-class\
+and at-least-12-failure rule. The preregistration had mistakenly added 48/48\
+R0-train retention, conflating a scheduling pool name with current competence.\
+No validation, regression, retired successor, topology-growth, or learning claim\
+was opened. A corrected admission requires a new external authorization; see\
+\x60docs/autogrowth/NATIVE_R0_COMPETENCE_ENVELOPE_TOUCHED_RESULT_20260716.md\x60.
