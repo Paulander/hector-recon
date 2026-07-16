@@ -307,9 +307,11 @@ rounds, lifecycle reviews, and resource caps. Actual proposal attempts remain gr
    `d086d768512e1d3c92e66afbc1a25f53b3a51524902084ab278884dcb4b9237f`.
 
 The retired intervention also includes an explicit `d8c8 <-> d8c7` availability
-swap; both have one reply. A second reply-count-matched action-vector shuffle
+swap; both have one reply. A second reply-count-stratified action-vector derangement
+uses a seeded cyclic rotation within each shuffled reply-count stratum; every
+stratum of size greater than one has no fixed points. It/
 uses seed `2026071605` and frozen mapping hash
-`6c19af93a66e217208918339fecc015bd9c2282f09e8864077814023997c8691`.
+`0c06d83276bd71c10343e005806905b70836c58043251d73f8e710c9f703e3a7`.
 These are laboratory controls and never enter organism inference or learning.
 
 ### Real observation sequence and mutation firewall
