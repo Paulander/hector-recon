@@ -196,7 +196,7 @@ Frozen decisions:
 - trials with support below 4 prune at the final review;
 - mature cells are immutable for this package;
 - positive and refuted capacity: 32 each;
-- trial capacity: 192; total proposal-attempt cap: 192;
+- trial capacity: 192; total request-opportunity and proposal-attempt caps: 192;
 - duplicate or over-capacity proposals are recorded and receive no retry.
 
 At inference, AVAILABLE is the OR of confirming mature positive contexts, unless
@@ -235,8 +235,8 @@ tape without adding grounding:
 3. round 2 proposes a recursive mature context plus one active base member when
    one exists, otherwise a three-member base conjunction.
 
-There is exactly one proposal attempt per event per round: 64 attempts per round,
-192 total. After each round, every candidate is rescanned against the immutable
+There is exactly one graph request opportunity per event per round: 64 opportunities per round,
+192 total. Only a formally confirmed AVAILABILITY_ERROR request consumes a proposal attempt. After each round, every candidate is rescanned against the immutable
 unique-evidence ledger and receives one lifecycle review. The final review prunes
 all nonmature trials. Selection seed is `2026071606`. Composition is recursive,
 content-blind, and never enumerates or injects a known separator. If Python must
@@ -290,8 +290,8 @@ least 12 response-present failures. A mismatch or degenerate stream stops at
 
 ### Frozen controls and permutations
 
-All arms receive identical contexts, real executions, event counts, structural
-rounds, lifecycle reviews, and resource caps.
+All arms receive identical contexts, real executions, event timing, request opportunities, structural
+rounds, lifecycle reviews, and resource caps. Actual proposal attempts remain graph-requested and are reported per arm.
 
 1. Connected learned envelope.
 2. Outcome-shuffled learning, seed `2026071602`; permutation hash
