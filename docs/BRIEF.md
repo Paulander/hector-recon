@@ -144,6 +144,25 @@ competence-availability factor, cohort, controls, and gates receive a new
 external freeze. Do not restore host gating or dream verification.
 
 No-go: runtime tablebase/DTM or Stockfish provider, learner-visible stage/hand-skill features, direct move-provider overrides, hidden oracles, new TG chronology, or claims from a counterfactual path that fails no-op parity.
+
+The engineering-only native frame-purity and competence-authority package has
+now passed on the already-touched 64-event admission tape. The corrected
+frame-local runtime produced identical actions and child responses for all 64
+frames under natural, repeated, and permuted evaluation, with zero cross-frame
+contamination. Topology, weights, credit, lifecycle, the exact state (including
+transients and scheduler telemetry), and normalized serialized state were
+byte-identical throughout. Counts persisted before gates were 40 successes and
+24 response-present failures: R0-train 40/8 and train-decoy 0/16.
+
+A serialized NativeR0CompetenceOrganism now passes directly into
+NativeHandoverGenome.query_child_slots; the connected path cannot call the
+experiment-level availability injector. A small synthetic mature envelope
+causally changed native handover, while disconnected and shuffled controls did
+not reproduce its target action. This closes frame purity and inference
+authority, not competence learning. Commit 1501a18 and its 46/18 canonical
+abort remain preserved; no competence growth, R1 update, validation, regression,
+retired-successor, final, or fresh access occurred. See
+docs/autogrowth/NATIVE_FRAME_PURITY_AND_COMPETENCE_AUTHORITY_CLOSURE_RESULT_20260716.md.
 \nThe first touched-data competence-envelope package closed before learning at\
 \x60evidence_admission\x60. Frozen R0 completed 46/48 historical R0-train contexts\
 and failed all 16 train decoys, so the actual stream met the external both-class\

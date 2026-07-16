@@ -45,6 +45,25 @@ or fresh run is authorized. See
 `NATIVE_R0_CHILD_AVAILABILITY_DIAGNOSTIC_RESULT_20260716.md` and
 `NATIVE_R0_LEARNED_COMPETENCE_ENVELOPE_DESIGN_20260716.md`.
 
+## 2026-07-16 frame purity and competence authority closure
+
+The engineering-only closure passed without reopening competence learning. R0
+inference now evaluates a normalized frame-local runtime copy, while persistent
+topology, weights, credit, lifecycle, exact state, and serialized state remain
+unchanged. Natural, repeated, and permuted evaluation produced identical actions
+and child responses on all 64 already-touched admission events, with zero
+cross-frame contamination.
+
+Counts written before gates were 40 successes and 24 response-present failures:
+40/8 on R0-train and 0/16 on train decoys. A serialized competence organism was
+passed directly into native child-slot generation, with no experiment-level
+availability injection. A synthetic mature envelope causally selected its
+native handover target; disconnected and shuffled controls failed that target.
+Competence growth and R1 updates were both zero. Preserve commit 1501a18 and
+its canonical abort; this closes inference purity/authority only and does not
+authorize envelope growth or downstream data. See
+NATIVE_FRAME_PURITY_AND_COMPETENCE_AUTHORITY_CLOSURE_RESULT_20260716.md.
+
 ## Latest balanced correction -- authoritative current boundary
 
 The 2026-07-11 high-resolution correction supersedes the small-pool "next gate"
