@@ -75,6 +75,16 @@ touched frames under natural, repeated, and permuted order. This closes planted
 end-to-end authority only; competence nomination and maturation from the touched
 tape remain unproven. See NATIVE_MATURE_ENVELOPE_AUTHORITY_ADDENDUM.md.
 
+The subsequent preregistered V2 training-only package stopped before learning.
+Its real path met the exact 40/24 outcome replay, 64/64 policy response, unique
+evidence, zero fabricated reward, tripwire, and persistent-identity gates, but
+failed complete parity with the addendum's virtual-wrapper GraphActuation and
+active-signal rows. The aggregate abort artifact omitted per-frame mismatch
+details, so the differing internal field is not localizable without a separately
+authorized diagnostic. Connected and shuffled learning, lifecycle, and pattern
+enumeration never ran. Treat this solely as an admission/instrument abort. See
+NATIVE_R0_COMPETENCE_ENVELOPE_V2_TRAINING_ONLY_RESULT_20260716.md.
+
 ## Latest balanced correction -- authoritative current boundary
 
 The 2026-07-11 high-resolution correction supersedes the small-pool "next gate"

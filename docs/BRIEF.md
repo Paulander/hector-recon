@@ -176,6 +176,18 @@ signal inputs were identical across natural, repeated, and permuted evaluation
 of all 64 touched frames. This proves planted end-to-end authority, not learned
 competence. See
 docs/autogrowth/NATIVE_MATURE_ENVELOPE_AUTHORITY_ADDENDUM.md.
+
+The conditionally authorized touched-training-only competence-envelope V2 then
+closed before learning at its complete-path parity gate. The real observation
+path reproduced exactly 40 successes, 24 failures, 64 policy responses, 64
+unique evidence keys, zero fabricated reward, and exact persistent R0 identity.
+However, at least one complete GraphActuation field or active competence-signal
+identity differed from the immutable addendum virtual-wrapper row. The abort
+artifact contains aggregate gates but no per-frame mismatch rows, so the exact
+field is not localizable without a newly authorized diagnostic. Neither learning
+arm, lifecycle, nor post-run pure-pattern enumeration opened. This is an
+instrument abort, not competence or representation evidence. See
+docs/autogrowth/NATIVE_R0_COMPETENCE_ENVELOPE_V2_TRAINING_ONLY_RESULT_20260716.md.
 \nThe first touched-data competence-envelope package closed before learning at\
 \x60evidence_admission\x60. Frozen R0 completed 46/48 historical R0-train contexts\
 and failed all 16 train decoys, so the actual stream met the external both-class\

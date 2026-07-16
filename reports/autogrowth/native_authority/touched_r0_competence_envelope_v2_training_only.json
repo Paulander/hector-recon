@@ -1,0 +1,46 @@
+{
+  "admission": {
+    "counts_before_gates": {
+      "failure": 24,
+      "policy_response": 64,
+      "response_present_failure": 24,
+      "success": 40,
+      "total": 64
+    },
+    "gates": {
+      "count_64": true,
+      "exact_24_failures": true,
+      "exact_40_successes": true,
+      "exact_persistent_identity": true,
+      "policy_responses_64": true,
+      "purity_corrected_path_parity": false,
+      "unique_evidence_64": true,
+      "zero_fabricated_reward": true
+    },
+    "passed": false
+  },
+  "authority_tripwires": {
+    "child_priority": 0,
+    "provider_fallback": 0,
+    "weighted_selector": 0
+  },
+  "binding_boundary": "evidence_admission",
+  "duration_seconds": 417.14036667800974,
+  "fresh_data_touched": false,
+  "global_evidence_rate": 0.625,
+  "historical_pool_names_are_provenance_only": true,
+  "next_action": "preserve_admission_failure",
+  "passed": false,
+  "preregistered_training_only": true,
+  "r1_touched": false,
+  "regression_touched": false,
+  "retired_successors_touched": false,
+  "schema_version": "touched_r0_competence_envelope_v2_training_only.v1",
+  "source_addendum_artifact": {
+    "path": "reports/autogrowth/native_authority/native_mature_envelope_authority_addendum.json",
+    "sha256": "4edca9472129a855fe7ec539f655da141b59e0b9d5136668ed5294095f4b3c46"
+  },
+  "source_addendum_commit": "84e423f",
+  "stage": "closed_before_learning",
+  "validation_touched": false
+}
