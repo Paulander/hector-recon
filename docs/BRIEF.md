@@ -121,6 +121,23 @@ competence/abstention boundary outside the R0 manifold. Focused validation and
 the full 881-test repository suite passed. See
 `docs/autogrowth/NATIVE_R0_R1_AUTHORITY_HANDOVER_DEVELOPMENT_RESULT_20260716.md`.
 
+A follow-up retired-only diagnostic corrected the contract: POLICY_RESPONSE,
+AVAILABLE, VALUE, and GROUNDING are separate; exploit options fail closed as
+`AND(legal actuator, ALL_REPLIES_AVAILABLE)`; and zero exploit options route to
+a separate graph exploration SCRIPT. Perfect R0 policy-success availability
+selected `d8c8` and converted, while any-response selected `h6e6` and failed;
+shuffled and disconnected controls also failed. Policy success was 1/65 on the
+retired successors, 32/32 on retained R0, and 0/48 on touched decoys. The one
+coverage gap had an available mating action but R0 selected a noncompleting move.
+This proves perfect local policy-success information is sufficient for handover,
+not that AVAILABLE has been learned. Spawning and credit remain untested because
+learned R1 topology was not connected. See
+`docs/autogrowth/NATIVE_R0_CHILD_AVAILABILITY_DIAGNOSTIC_RESULT_20260716.md`.
+
+The diagnostic authorizes only the frozen graph-native learned-competence-envelope
+design. It does not authorize implementation, training, threshold tuning on the
+retired R1 row, or fresh data. The old prototype gate remains laboratory-only.
+
 No KRK transfer is authorized. Native R1 and R2 remain unchanged/closed. Do not
 run a new fresh package until a graph-native, outcome-learned child
 competence-availability factor, cohort, controls, and gates receive a new

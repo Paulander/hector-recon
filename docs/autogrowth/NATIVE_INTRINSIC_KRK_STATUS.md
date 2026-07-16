@@ -27,6 +27,24 @@ competence/abstention boundary learned from real outcomes; host gating and dream
 move verification remain forbidden. See
 `NATIVE_R0_R1_AUTHORITY_HANDOVER_DEVELOPMENT_RESULT_20260716.md`.
 
+## 2026-07-16 child-availability diagnostic
+
+The corrected fail-closed contract passed on the same retired row. Perfect local
+R0 policy-success availability selected `d8c8` and converted; any-response
+selected `h6e6` and failed; shuffled and disconnected controls failed through
+the separate graph exploration route. One unavailable reply eliminated its
+option, zero qualified options emitted zero exploit actuators, host fallback and
+dream mutation were zero, and retained R0 policy success stayed 32/32.
+
+Selectivity was policy success 1/65 versus any-action success 2/65 on retired
+successors, 32/32 for both on retained R0, and 0/48 for both on touched decoys.
+This establishes sufficiency of perfect policy-success information, not an
+autonomously learned competence envelope. Learned R1 topology was not connected,
+so spawning and credit remain untested. No implementation, competence training,
+or fresh run is authorized. See
+`NATIVE_R0_CHILD_AVAILABILITY_DIAGNOSTIC_RESULT_20260716.md` and
+`NATIVE_R0_LEARNED_COMPETENCE_ENVELOPE_DESIGN_20260716.md`.
+
 ## Latest balanced correction -- authoritative current boundary
 
 The 2026-07-11 high-resolution correction supersedes the small-pool "next gate"
