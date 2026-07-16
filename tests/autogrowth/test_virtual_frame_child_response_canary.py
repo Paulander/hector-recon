@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts/autogrowth/run_virtual_frame_child_response_canary.py"
-ARTIFACT = ROOT / "reports/autogrowth/virtual_frame_child_response_canary_v2_20260715.json"
+ARTIFACT = ROOT / "reports/autogrowth/virtual_frame_child_response_canary_v3_20260716.json"
 
 
 def _module():

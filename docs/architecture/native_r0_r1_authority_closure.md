@@ -4,6 +4,22 @@ Status: engineering/development package only. All positions are previously used 
 
 Implementation result: authority gates passed, but the package closed negative at `actual_child_availability`; see `../autogrowth/NATIVE_R0_R1_AUTHORITY_HANDOVER_DEVELOPMENT_RESULT_20260716.md`.
 
+The follow-up retired diagnostic corrected that boundary without rewriting this
+negative result. It established four separate child facts:
+
+- `POLICY_RESPONSE`: the child emitted an action;
+- `AVAILABLE`: real outcome-grounded evidence predicts that the requested child
+  policy completes in this context;
+- `VALUE`: expected return conditional on `AVAILABLE`;
+- `GROUNDING`: provenance from real outcomes, not present applicability.
+
+The corrected exploit option is formally
+`AND(legal actuator, ALL_REPLIES_AVAILABLE)`. One unavailable reply fails the
+option. If every option fails, the exploit root emits zero actuators and a
+separate anonymous graph-owned exploration SCRIPT acts; Python supplies no
+fallback or zero-strength winner. See
+`../autogrowth/NATIVE_R0_CHILD_AVAILABILITY_DIAGNOSTIC_RESULT_20260716.md`.
+
 ## Binding organism boundary
 
 Inference consists of a serialized learned `NativeReConKRKGraph`, its generic outcome-grounding/value state, the generic ReCoN genome/embodiment (including anonymous CHOICE), and a chess environment adapter. No curriculum runner, trainer object, mate-distance label, forced-move provider, tablebase, or host score selector is serialized or required.
@@ -35,6 +51,6 @@ Anonymous CHOICE is the single new generic primitive. It has no chess, KRK, stag
 
 ## Actual-child handover
 
-For each R1 action leg the environment produces a deep-isolated successor for every legal Black reply. The actual frozen R0 graph is formally requested on each White-to-move frame. CHILD_RESPONSE contains only formal confirmation, serialized consolidated value, R0 maturity, observed-outcome grounding provenance, and R0-owned uncertainty. The parent all-replies SCRIPT is a generic quantifier. It never checks mate, forced mate, target identity, or correctness.
+For each R1 action leg the environment produces a deep-isolated successor for every legal Black reply. The frozen R0 graph is formally requested on each White-to-move frame. The original negative package treated raw policy confirmation as availability; all 65 requests therefore qualified and the signal was nonselective.
 
-PREDICTION_RESIDUAL is diagnostic only. It is not surprise, attention, reward, maturity, or grounding, and cannot certify a dream.
+The corrected contract requires reply-local AVAILABLE, distinct from POLICY_RESPONSE, VALUE, and GROUNDING. In the real-observation path, PREDICTION_RESIDUAL is diagnostic only. It is not surprise, attention, reward, maturity, or grounding, and cannot certify a dream. It is measured only after the parent action and actual reply occur in a real frame, the R0 graph formally emits its own action, that exact action executes, and R0's declared completion terminal confirms or fails. A failure is local competence failure, not automatically a chess loss or fabricated reward.

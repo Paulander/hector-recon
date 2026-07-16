@@ -63,13 +63,19 @@ class FrameContext:
 
 @dataclass(frozen=True)
 class ChildResponse:
-    """Frame-local response emitted by an already outcome-grounded mature child."""
+    """Frame-local child contract with applicability separate from provenance.
+
+    ``confirmed`` remains the wire-compatible alias for ``available``. It does
+    not mean merely that the child policy emitted an action.
+    """
     child_id: str
     confirmed: bool
     expected_value: float
     uncertainty: float
     grounded: bool
     grounding_source: str | None = None
+    policy_response: bool | None = None
+    available: bool | None = None
 
     def __post_init__(self) -> None:
         if not self.child_id:
@@ -80,16 +86,25 @@ class ChildResponse:
             raise ValueError("uncertainty must be finite and in [0, 1]")
         if self.grounded and not self.grounding_source:
             raise ValueError("grounded child responses require grounding_source")
+        policy_response = bool(self.confirmed) if self.policy_response is None else bool(self.policy_response)
+        available = bool(self.confirmed) if self.available is None else bool(self.available)
+        if available and not policy_response:
+            raise ValueError("AVAILABLE requires POLICY_RESPONSE")
+        object.__setattr__(self, "policy_response", policy_response)
+        object.__setattr__(self, "available", available)
+        object.__setattr__(self, "confirmed", available)
 
     @property
     def selection_strength(self) -> float:
-        if not self.grounded or not self.confirmed:
+        if not self.grounded or not self.available:
             return 0.0
         return max(0.0, self.expected_value) * (1.0 - self.uncertainty)
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "child_id": self.child_id,
+            "policy_response": self.policy_response,
+            "available": self.available,
             "confirmed": self.confirmed,
             "expected_value": self.expected_value,
             "uncertainty": self.uncertainty,
@@ -167,9 +182,9 @@ def child_response_terminal(node: Node, env: Mapping[str, Any]) -> tuple[bool, b
         "last_frame_kind": frame.kind.value,
         "last_child_response": response.to_dict(),
     })
-    success = bool(response.grounded and response.confirmed)
+    success = bool(response.grounded and response.available)
     if not success:
-        node.meta["last_failure"] = "child_not_grounded_and_confirmed"
+        node.meta["last_failure"] = "child_not_grounded_and_available"
     return True, success
 
 

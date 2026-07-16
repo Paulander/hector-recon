@@ -309,7 +309,7 @@ def run_canary() -> dict[str, Any]:
         "dream_self_credit_is_blocked": self_credit["blocked"],
     }
     payload = {
-        "schema_version": "recon_virtual_frame_child_response_canary.v2",
+        "schema_version": "recon_virtual_frame_child_response_canary.v3",
         "claim_scope": "deterministic engineering canary; no fresh data or KRK behavioral claim",
         "architecture_boundary": "graph-native terminals; deep-isolated frame runtime; capability firewall; host-executed generic final actuator bus; not a universal Python sandbox",
         "baseline": baseline,
@@ -334,7 +334,7 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("reports/autogrowth/virtual_frame_child_response_canary_v2_20260715.json"),
+        default=Path("reports/autogrowth/virtual_frame_child_response_canary_v3_20260716.json"),
     )
     args = parser.parse_args()
     payload = run_canary()

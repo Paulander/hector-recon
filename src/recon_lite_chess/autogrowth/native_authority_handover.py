@@ -94,6 +94,7 @@ class FrozenCompetenceProvenance:
     causal_confirmations: int
     grounding_level: int | None
     grounding_source: str
+    completion_terminal_kind: str = "mate"
 
     @classmethod
     def from_credit(cls, credit: IntrinsicCreditEngine, child_id: str) -> "FrozenCompetenceProvenance":
@@ -178,19 +179,25 @@ class NativeR0DreamSession:
         mutation_count = int(_pickle_digest(self.organism.graph) != self.persistent_digest)
         if mutation_count:
             raise RuntimeError("virtual R0 request mutated the persistent organism")
-        confirmed = actuation is not None
+        policy_response = actuation is not None
+        grounded = bool(
+            self.organism.provenance.grounded
+            and self.organism.provenance.can_emit
+        )
         response = ChildResponse(
             child_id=self.organism.provenance.child_id,
-            confirmed=confirmed,
-            expected_value=(self.organism.provenance.consolidated_value if confirmed else 0.0),
-            uncertainty=self.organism.provenance.uncertainty,
-            grounded=bool(
-                confirmed
-                and self.organism.provenance.grounded
-                and self.organism.provenance.can_emit
+            confirmed=policy_response,
+            policy_response=policy_response,
+            available=policy_response,
+            expected_value=(
+                self.organism.provenance.consolidated_value
+                if policy_response
+                else 0.0
             ),
+            uncertainty=self.organism.provenance.uncertainty,
+            grounded=grounded,
             grounding_source=(
-                self.organism.provenance.grounding_source if confirmed else None
+                self.organism.provenance.grounding_source if grounded else None
             ),
         )
         return ChildQuery(
