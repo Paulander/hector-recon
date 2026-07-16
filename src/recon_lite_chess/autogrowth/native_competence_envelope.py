@@ -879,6 +879,29 @@ class NativeR0CompetenceOrganism:
             available=classification.state == AvailabilityState.AVAILABLE,
         )
 
+    def persistent_state_audit(self) -> Mapping[str, str]:
+        r0_audit = dict(self.r0.persistent_state_audit())
+        envelope_exact = hashlib.sha256(
+            pickle.dumps(
+                copy.deepcopy(self.envelope),
+                protocol=pickle.HIGHEST_PROTOCOL,
+            )
+        ).hexdigest()
+        combined = hashlib.sha256(
+            pickle.dumps(
+                (r0_audit, envelope_exact, self.schema_version),
+                protocol=pickle.HIGHEST_PROTOCOL,
+            )
+        ).hexdigest()
+        return {
+            **{f"r0_{key}": value for key, value in r0_audit.items()},
+            "envelope_exact_state_sha256": envelope_exact,
+            "exact_state_sha256": combined,
+            "serialized_state_sha256": hashlib.sha256(
+                self.dumps()
+            ).hexdigest(),
+        }
+
     def dream_session(self) -> "NativeCompetenceDreamSession":
         return NativeCompetenceDreamSession(self)
 
@@ -899,7 +922,9 @@ class NativeCompetenceDreamSession:
     def __init__(self, organism: NativeR0CompetenceOrganism) -> None:
         self.organism = organism
         self.r0_session: NativeR0DreamSession = organism.r0.dream_session()
-        self.envelope_digest = hashlib.sha256(organism.dumps()).hexdigest()
+        self.envelope_digest = organism.persistent_state_audit()[
+            "exact_state_sha256"
+        ]
         self.closed = False
 
     def request(self, frame: Any) -> ChildQuery:
@@ -910,13 +935,19 @@ class NativeCompetenceDreamSession:
         if not isinstance(board, chess.Board):
             raise TypeError("competence frame requires a chess.Board")
         result = self.organism.apply_to_query(board, query)
-        if hashlib.sha256(self.organism.dumps()).hexdigest() != self.envelope_digest:
+        if (
+            self.organism.persistent_state_audit()["exact_state_sha256"]
+            != self.envelope_digest
+        ):
             raise RuntimeError("virtual competence request mutated organism")
         return result
 
     def close(self) -> None:
         self.r0_session.close()
-        if hashlib.sha256(self.organism.dumps()).hexdigest() != self.envelope_digest:
+        if (
+            self.organism.persistent_state_audit()["exact_state_sha256"]
+            != self.envelope_digest
+        ):
             raise RuntimeError("competence dream session leaked")
         self.closed = True
 

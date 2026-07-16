@@ -151,7 +151,9 @@ class NativeR0DreamSession:
 
     def __init__(self, organism: "NativeR0Organism") -> None:
         self.organism = organism
-        self.persistent_digest = _pickle_digest(organism.graph)
+        self.persistent_digest = organism.persistent_state_audit()[
+            "exact_state_sha256"
+        ]
         self.virtual_graph = copy.deepcopy(organism.graph)
         self.virtual_credit = copy.deepcopy(organism.credit)
         self.closed = False
@@ -176,7 +178,10 @@ class NativeR0DreamSession:
             retrieval_budget_per_actuator=self.organism.retrieval_budget_per_actuator,
         )
         actuation = virtual.emit_action(board)
-        mutation_count = int(_pickle_digest(self.organism.graph) != self.persistent_digest)
+        mutation_count = int(
+            self.organism.persistent_state_audit()["exact_state_sha256"]
+            != self.persistent_digest
+        )
         if mutation_count:
             raise RuntimeError("virtual R0 request mutated the persistent organism")
         policy_response = actuation is not None
@@ -209,7 +214,10 @@ class NativeR0DreamSession:
         )
 
     def close(self) -> None:
-        if _pickle_digest(self.organism.graph) != self.persistent_digest:
+        if (
+            self.organism.persistent_state_audit()["exact_state_sha256"]
+            != self.persistent_digest
+        ):
             raise RuntimeError("dream session leaked into the persistent organism")
         self.closed = True
 
@@ -236,11 +244,108 @@ class NativeR0Organism:
         if self.retrieval_budget_per_actuator < 1:
             raise ValueError("retrieval_budget_per_actuator must be positive")
 
-    def emit_action(self, board: chess.Board) -> GraphActuation | None:
-        """Ask formal graph branches and the anonymous genome for one actuator."""
+    def __getstate__(self) -> dict[str, Any]:
+        """Serialize learned state with canonical transient runtime values."""
 
+        state = dict(self.__dict__)
+        graph = copy.deepcopy(self.graph)
+        graph.normalize_inference_runtime()
+        state["graph"] = graph
+        return state
+
+    def __setstate__(self, state: dict[str, Any]) -> None:
+        self.__dict__.update(state)
+        if not hasattr(self, "retrieval_budget_per_actuator"):
+            self.retrieval_budget_per_actuator = 16
+        self.graph.normalize_inference_runtime()
+
+    def persistent_state_audit(self) -> Mapping[str, str]:
+        """Hash every persistent component, including unnormalized runtime fields."""
+
+        exact_graph = copy.deepcopy(self.graph)
+        for node in exact_graph.graph.nodes.values():
+            node.predicate = None
+        exact_payload = {
+            "graph_dict": exact_graph.__dict__,
+            "credit": copy.deepcopy(self.credit),
+            "provenance": self.provenance,
+            "frozen_triplet_ids": self.frozen_triplet_ids,
+            "source_manifest": dict(self.source_manifest),
+            "retrieval_budget": self.retrieval_budget_per_actuator,
+            "schema_version": self.schema_version,
+        }
+        topology = {
+            "nodes": sorted(
+                (nid, node.ntype.name)
+                for nid, node in self.graph.graph.nodes.items()
+            ),
+            "edges": sorted(
+                (edge.src, edge.dst, edge.ltype.name)
+                for edge in self.graph.graph.edges
+            ),
+            "triplet_ids": sorted(self.graph.triplet_ids),
+            "triplet_nodes": {
+                key: sorted(value)
+                for key, value in sorted(self.graph.triplet_nodes.items())
+            },
+            "composite_members": {
+                key: list(value)
+                for key, value in sorted(
+                    self.graph.composite_member_ids.items()
+                )
+            },
+        }
+        weights = {
+            "edges": sorted(
+                (
+                    edge.src,
+                    edge.dst,
+                    edge.ltype.name,
+                    float(edge.w),
+                )
+                for edge in self.graph.graph.edges
+            ),
+            "node_local_weights": sorted(
+                (
+                    nid,
+                    float(node.meta.get("local_weight", 0.0)),
+                )
+                for nid, node in self.graph.graph.nodes.items()
+            ),
+        }
+        lifecycle = {
+            "composite_cells": {
+                key: cell.to_dict()
+                for key, cell in sorted(self.graph.composite_cells.items())
+            },
+            "pruned_terminal_ids": sorted(self.graph.pruned_terminal_ids),
+            "pruned_triplet_ids": sorted(self.graph.pruned_triplet_ids),
+            "disabled_composite_ids": sorted(
+                self.graph.disabled_composite_ids
+            ),
+            "provenance": asdict(self.provenance),
+        }
+        def digest(value: Any) -> str:
+            return hashlib.sha256(
+                pickle.dumps(value, protocol=pickle.HIGHEST_PROTOCOL)
+            ).hexdigest()
+        return {
+            "topology_sha256": digest(topology),
+            "weights_sha256": digest(weights),
+            "credit_sha256": digest(self.credit),
+            "lifecycle_sha256": digest(lifecycle),
+            "exact_state_sha256": digest(exact_payload),
+            "serialized_state_sha256": hashlib.sha256(
+                pickle.dumps(self, protocol=pickle.HIGHEST_PROTOCOL)
+            ).hexdigest(),
+        }
+
+    def emit_action(self, board: chess.Board) -> GraphActuation | None:
+        """Ask a frame-local formal graph for one persistent-state-pure action."""
+
+        runtime_policy = self.graph.frame_runtime_copy()
         options, ticks = _formal_native_options(
-            self.graph,
+            runtime_policy,
             board,
             allowed_triplets=self.frozen_triplet_ids,
             per_actuator_budget=self.retrieval_budget_per_actuator,

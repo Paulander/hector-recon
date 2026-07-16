@@ -214,7 +214,9 @@ def _retired(organism,connected,shuffled,random_control,obs,prior,cfg):
     shuffled_classes=[shuffled.classify(x["evidence"].active_signal_ids,policy_response=True) for x in obs]
     random_classes=None if random_control is None else [random_control.classify(x["evidence"].active_signal_ids,policy_response=True) for x in obs]
     success=[x["completion"] for x in obs]; flags=[c.state==AvailabilityState.AVAILABLE for c in classes]
-    parent=chess.Board(prior["retired_r1_fen"]); raw,frames=NativeHandoverGenome().query_child_slots(parent,organism)
+    parent=chess.Board(prior["retired_r1_fen"])
+    wrapper=NativeR0CompetenceOrganism(organism,connected)
+    raw,frames=NativeHandoverGenome().query_child_slots(parent,wrapper)
     keys=[(a,i) for a in sorted(raw) for i in range(len(raw[a]))]
     if len(keys)!=65: raise RuntimeError("retired slot count changed")
     perm=_permutation(65,cfg.output_seed)
@@ -224,16 +226,18 @@ def _retired(organism,connected,shuffled,random_control,obs,prior,cfg):
     if _hash_json(mapping)!=EXPECTED["reply_derangement"]: raise RuntimeError("derangement changed")
     deranged=_flatten_vectors(keys,{a:vectors[src] for a,src in mapping.items()})
     arms={
-      "connected":_handover(organism,parent,raw,frames,flags),
-      "learned_output_shuffle":_handover(organism,parent,raw,frames,[flags[perm[i]] for i in range(65)]),
-      "outcome_shuffled_learning":_handover(organism,parent,raw,frames,[c.state==AvailabilityState.AVAILABLE for c in shuffled_classes]),
-      "disconnected":_handover(organism,parent,raw,frames,[False]*65,disconnected=True),
-      "global_evidence":_handover(organism,parent,raw,frames,[True]*65),
-      "any_policy_response":_handover(organism,parent,raw,frames,[True]*65),
-      "forced_d8_swap":_handover(organism,parent,raw,frames,_flatten_vectors(keys,swapped)),
-      "reply_count_derangement":_handover(organism,parent,raw,frames,deranged),
+      "connected":_connected_premeasured_handover(
+          organism,parent,raw,frames
+      ),
+      "learned_output_shuffle":_laboratory_control_handover_with_injected_availability(organism,parent,raw,frames,[flags[perm[i]] for i in range(65)]),
+      "outcome_shuffled_learning":_laboratory_control_handover_with_injected_availability(organism,parent,raw,frames,[c.state==AvailabilityState.AVAILABLE for c in shuffled_classes]),
+      "disconnected":_laboratory_control_handover_with_injected_availability(organism,parent,raw,frames,[False]*65,disconnected=True),
+      "global_evidence":_laboratory_control_handover_with_injected_availability(organism,parent,raw,frames,[True]*65),
+      "any_policy_response":_laboratory_control_handover_with_injected_availability(organism,parent,raw,frames,[True]*65),
+      "forced_d8_swap":_laboratory_control_handover_with_injected_availability(organism,parent,raw,frames,_flatten_vectors(keys,swapped)),
+      "reply_count_derangement":_laboratory_control_handover_with_injected_availability(organism,parent,raw,frames,deranged),
     }
-    if random_classes is not None: arms["random_composite"]=_handover(organism,parent,raw,frames,[c.state==AvailabilityState.AVAILABLE for c in random_classes])
+    if random_classes is not None: arms["random_composite"]=_laboratory_control_handover_with_injected_availability(organism,parent,raw,frames,[c.state==AvailabilityState.AVAILABLE for c in random_classes])
     controls=all(not row["converted"] for name,row in arms.items() if name!="connected")
     exact=sum(flags)==1 and flags==success
     gates={"exact_policy_mask":exact,"no_failure_available":all(not f for f,y in zip(flags,success,strict=True) if not y),"selects_d8c8":arms["connected"]["selected_parent_action"]=="d8c8" and arms["connected"]["selection_route"]=="exploit","connected_converts":arms["connected"]["converted"],"controls_do_not_convert":controls,"zero_host_fallback":all(r["host_fallback_count"]==0 for r in arms.values())}
@@ -242,7 +246,45 @@ def _retired(organism,connected,shuffled,random_control,obs,prior,cfg):
         rows.append(_artifact_observation(x)|{"state":c.state.value,"probability":c.probability,"uncertainty":c.uncertainty,"available_cell_ids":list(c.available_cell_ids),"refuted_cell_ids":list(c.refuted_cell_ids)})
     return {"rows":rows,"policy_success_count":sum(success),"available_count":sum(flags),"mapping":mapping,"arms":arms,"gates":gates,"controls_identified":controls,"zero_host_fallback":gates["zero_host_fallback"],"zero_dream_updates":all(q.persistent_mutation_count==0 for qs in raw.values() for q in qs),"passed":all(gates.values())}
 
-def _handover(organism,parent,raw,frames,flags,disconnected=False):
+def _connected_wrapper_handover(organism,wrapper,parent):
+    """Connected authority path: wrapper responses flow directly into handover."""
+
+    raw,frames=NativeHandoverGenome().query_child_slots(parent,wrapper)
+    return _connected_premeasured_handover(organism,parent,raw,frames)
+
+def _connected_premeasured_handover(organism,parent,slots,frames):
+    decision=FailClosedNativeHandoverGenome().decide_from_available_slots(
+        parent,slots,frames
+    )
+    after=parent.copy(stack=False)
+    after.push(chess.Move.from_uci(decision.actuation.move_uci))
+    replies=[]
+    for reply in sorted(after.legal_moves,key=lambda m:m.uci()):
+        successor=after.copy(stack=False); successor.push(reply)
+        observed=observe_real_child(organism,successor)
+        replies.append({
+            "reply":reply.uci(),
+            "r0_action":None if observed.actuation is None else observed.actuation.move_uci,
+            "completion":observed.completion_confirmed,
+            "terminal":observed.observed_terminal,
+            "fabricated_reward":observed.fabricated_terminal_reward,
+        })
+    return {
+        "selected_parent_action":decision.actuation.move_uci,
+        "selection_route":"exploit" if decision.selection_mode=="exploit" else "graph_owned_fallback",
+        "exploit_actuator":None if decision.exploit_actuation is None else decision.exploit_actuation.move_uci,
+        "fallback_actuator":None if decision.exploration_actuation is None else decision.exploration_actuation.move_uci,
+        "host_fallback_count":decision.host_fallback_count,
+        "actuator_multiplicity":decision.actuator_multiplicity,
+        "converted":bool(replies and all(r["completion"] for r in replies)),
+        "replies":replies,
+        "response_authority":"NativeR0CompetenceOrganism.dream_session",
+        "laboratory_response_injection":False,
+    }
+
+def _laboratory_control_handover_with_injected_availability(
+    organism,parent,raw,frames,flags,disconnected=False
+):
     slots={}; cursor=0
     for action in sorted(raw):
         rows=[]

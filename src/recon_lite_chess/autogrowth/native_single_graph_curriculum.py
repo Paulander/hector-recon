@@ -184,6 +184,34 @@ class NativeReConKRKGraph:
             setattr(restored, key, copy.deepcopy(value, memo))
         return restored
 
+    def normalize_inference_runtime(self) -> None:
+        """Canonicalize frame-local state without touching learned evidence."""
+
+        for node in self.graph.nodes.values():
+            node.state = NodeState.INACTIVE
+            node.tick_entered = -1
+            node.activation.reset(0.0)
+            for key in (
+                "emitted_actuator_identity",
+                "choice_selected_child",
+                "choice_selected",
+            ):
+                node.meta.pop(key, None)
+        self.runtime_choice_count = 0
+        self.triplet_pattern_key_cache = {}
+        for key, value in tuple(self.scheduler_stats.items()):
+            if key == "indexed_scheduler_used":
+                self.scheduler_stats[key] = bool(self.config.indexed_scheduler)
+            elif isinstance(value, (int, float)):
+                self.scheduler_stats[key] = 0
+
+    def frame_runtime_copy(self) -> "NativeReConKRKGraph":
+        """Return a deep-isolated policy runtime for exactly one frame."""
+
+        runtime = copy.deepcopy(self)
+        runtime.normalize_inference_runtime()
+        return runtime
+
     def __getstate__(self) -> dict[str, Any]:
         """Return an exact snapshot state without unpickleable predicate closures."""
 
