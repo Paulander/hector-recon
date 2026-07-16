@@ -40,3 +40,29 @@ persistent organism state must remain unchanged.
 If focused tests and this one planted canary pass, a separate preregistered
 touched-training-only competence-envelope V2 may open. Otherwise stop and
 preserve the addendum failure.
+
+## Result
+
+The frozen addendum passed. Focused validation was 32/32 in 568.59 seconds.
+The planted canary completed in 1869.35 seconds. Its artifact is:
+
+reports/autogrowth/native_authority/native_mature_envelope_authority_addendum.json
+
+Artifact SHA-256:
+4edca9472129a855fe7ec539f655da141b59e0b9d5136668ed5294095f4b3c46
+
+Natural, repeated, and permuted evaluation of all 64 touched frames produced
+the same complete actuation-and-signal hash:
+80373ba0a1493d81659b5583fb7c5ad9b8ecd5e95b5c1438682e8dffa6109cd0.
+Cross-frame differences and persistent mutations were zero.
+
+The connected mature-wrapper session opened once, issued 23 requests, and
+closed once. Both laboratory Boolean-injection tripwires recorded zero calls.
+The exact 23-bit availability mask consumed by handover equalled direct
+envelope classification and provenance. The restored two-atom cell matured at
+support 4 and caused exploitative selection of e4d3. Empty and disconnected
+envelopes both selected the graph-owned exploration action g2b2.
+
+This establishes planted end-to-end mature-envelope authority. It does not show
+that the competence learner can nominate or mature the needed envelope from the
+touched tape. The conditional touched-training-only V2 is now authorized.

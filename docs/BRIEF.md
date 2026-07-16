@@ -164,6 +164,18 @@ authority, not competence learning. Commit 1501a18 and its 46/18 canonical
 abort remain preserved; no competence growth, R1 update, validation, regression,
 retired-successor, final, or fresh access occurred. See
 docs/autogrowth/NATIVE_FRAME_PURITY_AND_COMPETENCE_AUTHORITY_CLOSURE_RESULT_20260716.md.
+
+The corrective mature-envelope authority addendum subsequently passed. A cell
+with a real two-atom R0 signal membership matured through the frozen four-example
+rule, survived wrapper serialization, and classified the exact ChildQuery slots
+consumed by fail-closed handover. One observed session opened, issued 23 requests,
+and closed; Boolean-injection tripwire calls were zero. The consumed mask equalled
+direct classification and caused connected selection of e4d3, while empty and
+disconnected envelopes selected g2b2. Complete GraphActuation and competence-
+signal inputs were identical across natural, repeated, and permuted evaluation
+of all 64 touched frames. This proves planted end-to-end authority, not learned
+competence. See
+docs/autogrowth/NATIVE_MATURE_ENVELOPE_AUTHORITY_ADDENDUM.md.
 \nThe first touched-data competence-envelope package closed before learning at\
 \x60evidence_admission\x60. Frozen R0 completed 46/48 historical R0-train contexts\
 and failed all 16 train decoys, so the actual stream met the external both-class\

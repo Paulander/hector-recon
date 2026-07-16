@@ -65,6 +65,16 @@ its canonical abort; this closes inference purity/authority only and does not
 authorize envelope growth or downstream data. See
 NATIVE_FRAME_PURITY_AND_COMPETENCE_AUTHORITY_CLOSURE_RESULT_20260716.md.
 
+The corrective planted mature-envelope addendum passed. A serialized/restored
+wrapper containing a genuinely mature two-atom cell emitted all 23 child slots
+through its own dream session. The exact consumed availability mask matched
+direct envelope classification; no Boolean injection occurred. Connected
+handover selected e4d3, while empty and disconnected controls selected g2b2.
+Complete actuation and active-signal identities were invariant over all 64
+touched frames under natural, repeated, and permuted order. This closes planted
+end-to-end authority only; competence nomination and maturation from the touched
+tape remain unproven. See NATIVE_MATURE_ENVELOPE_AUTHORITY_ADDENDUM.md.
+
 ## Latest balanced correction -- authoritative current boundary
 
 The 2026-07-11 high-resolution correction supersedes the small-pool "next gate"
