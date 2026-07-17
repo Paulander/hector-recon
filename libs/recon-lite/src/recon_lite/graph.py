@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum, auto
+import math
 from typing import Dict, List, Tuple, Optional, Callable, Any
 
 from .core.activations import ActivationState
@@ -459,15 +460,20 @@ class Graph:
         Returns:
             Weighted sum of child activations
         """
-        z = 0.0
-        
-        # Get children via SUB links (this node's sub-nodes)
+        contributions: list[tuple[str, float]] = []
+
+        # Canonicalize this policy-critical reduction independently of edge
+        # insertion order. ``fsum`` also avoids ordinary left-fold drift.
         for child_nid, weight in self.get_sub_children(nid):
             child = self.nodes.get(child_nid)
             if child:
-                z += weight * child.activation.value
-        
-        return z
+                contributions.append(
+                    (str(child_nid), float(weight) * float(child.activation.value))
+                )
+
+        return math.fsum(
+            value for _identity, value in sorted(contributions)
+        )
     
     def propagate_activation(self, eta: float = 0.1) -> Dict[str, float]:
         """

@@ -8,6 +8,7 @@ semantics from the Bach/Herger ReCoN state-machine description.
 
 from dataclasses import dataclass
 from enum import Enum
+import math
 from typing import Any, Callable, Dict, Iterable, List, Optional
 
 from .graph import Graph, LinkType, Node, NodeState, NodeType
@@ -461,7 +462,9 @@ class FormalReConEngine:
             return NodeState.FAILED
 
         def strength(option: Node) -> float:
-            ids = tuple(map(str, option.meta.get("choice_strength_node_ids", ())))
+            ids = tuple(sorted(map(
+                str, option.meta.get("choice_strength_node_ids", ())
+            )))
             require_all = bool(option.meta.get("choice_strength_require_all", False))
             if not ids:
                 return float(option.activation.value)
@@ -478,9 +481,9 @@ class FormalReConEngine:
             if aggregation == "minimum":
                 return min(values, default=0.0)
             if aggregation == "mean":
-                return sum(values) / max(1, len(values))
+                return math.fsum(values) / max(1, len(values))
             if aggregation == "sum":
-                return sum(values)
+                return math.fsum(values)
             raise ValueError(f"unsupported anonymous choice aggregation: {aggregation}")
 
         ranked = sorted(

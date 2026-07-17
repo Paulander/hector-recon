@@ -1603,18 +1603,21 @@ class NativeReConKRKGraph:
                 raise ValueError(
                     "terminal_score_normalization must be mean, sqrt, or sum"
                 )
-            score = (
-                self.config.terminal_score_scale * (terminal_score + composite_score)
-                + self.config.triplet_credit_scale * triplet_weight
+            combined_terminal_score = math.fsum(
+                (terminal_score, composite_score)
             )
+            score = math.fsum((
+                self.config.terminal_score_scale * combined_terminal_score,
+                self.config.triplet_credit_scale * triplet_weight,
+            ))
             candidates.append((score, move_uci, triplet_id))
         return candidates
 
     def _confirmed_terminal_score(self, triplet_id: str) -> tuple[float, int]:
-        score = 0.0
         ids = _TripletNodeIds(triplet_id)
         count = 0
-        for node_id in self.triplet_nodes.get(triplet_id, set()):
+        contributions: list[tuple[str, float]] = []
+        for node_id in sorted(self.triplet_nodes.get(triplet_id, set())):
             node = self.graph.nodes[node_id]
             if node.nid in self.pruned_terminal_ids:
                 continue
@@ -1629,7 +1632,10 @@ class NativeReConKRKGraph:
                 continue
             if node.state not in (NodeState.TRUE, NodeState.CONFIRMED):
                 continue
-            score += float(node.meta.get("local_weight", 0.0))
+            contributions.append((
+                f"{node_id}:local_weight",
+                float(node.meta.get("local_weight", 0.0)),
+            ))
             if self.config.score_hierarchy_edge_weights:
                 parent_id = {
                     "before_feature": ids.before_script,
@@ -1646,16 +1652,21 @@ class NativeReConKRKGraph:
                     hierarchy_edge is not None
                     and hierarchy_edge.meta.get("trainable")
                 ):
-                    score += float(hierarchy_edge.w)
+                    contributions.append((
+                        f"{parent_id}->{node.nid}:sub_weight",
+                        float(hierarchy_edge.w),
+                    ))
             count += 1
-        return score, count
+        return math.fsum(
+            value for _identity, value in sorted(contributions)
+        ), count
 
 
     def _confirmed_composite_score(self, triplet_id: str) -> tuple[float, int]:
-        score = 0.0
         count = 0
         parent_id = _TripletNodeIds(triplet_id).action_script
-        for node_id in self.triplet_nodes.get(triplet_id, set()):
+        contributions: list[tuple[str, float]] = []
+        for node_id in sorted(self.triplet_nodes.get(triplet_id, set())):
             node = self.graph.nodes[node_id]
             if node.meta.get("role") != "composition_feature":
                 continue
@@ -1663,13 +1674,21 @@ class NativeReConKRKGraph:
                 continue
             if node.state not in (NodeState.TRUE, NodeState.CONFIRMED):
                 continue
-            score += float(node.meta.get("local_weight", 0.0))
+            contributions.append((
+                f"{node_id}:local_weight",
+                float(node.meta.get("local_weight", 0.0)),
+            ))
             if self.config.score_hierarchy_edge_weights:
                 edge = self.graph.get_edge(parent_id, node_id, LinkType.SUB)
                 if edge is not None and edge.meta.get("trainable"):
-                    score += float(edge.w)
+                    contributions.append((
+                        f"{parent_id}->{node_id}:sub_weight",
+                        float(edge.w),
+                    ))
             count += 1
-        return score, count
+        return math.fsum(
+            value for _identity, value in sorted(contributions)
+        ), count
 
 
 @dataclass(frozen=True)

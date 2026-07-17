@@ -711,10 +711,13 @@ def _formal_native_options(
             composite_score /= math.sqrt(max(1, composite_count))
         elif normalization != "sum":
             raise ValueError("unsupported terminal score normalization")
-        strength = (
-            policy.config.terminal_score_scale * (terminal_score + composite_score)
-            + policy.config.triplet_credit_scale * triplet_weight
+        combined_terminal_score = math.fsum(
+            (terminal_score, composite_score)
         )
+        strength = math.fsum((
+            policy.config.terminal_score_scale * combined_terminal_score,
+            policy.config.triplet_credit_scale * triplet_weight,
+        ))
         options.append(AnonymousChoiceOption(
             identity=f"{triplet_id}:{move_uci}",
             actuator_identity=f"{ACTUATOR_PREFIX}{move_uci}",
