@@ -225,6 +225,27 @@ reconstructs generic frame inputs from board/move/graph maps rather than actual
 terminal-trace provenance, so fully self-contained native authority remains a
 separate closure. See
 `docs/autogrowth/NATIVE_R0_COMPETENCE_ENVELOPE_V3_TRAINING_ONLY_RESULT_20260717.md`.
+
+The preregistered V3B seed-robustness adjudication now supersedes V3's broad
+nomination interpretation while preserving V3 and its canonical artifact.
+Runner/preregistration commit `28cb2c4` was pushed before cryptographic seed
+derivation, and the complete 32-seed manifest was pushed separately at
+`52ce849` before any arm ran. On the exact persisted V3 64-row tape, with the
+learner, lifecycle, capacities, thresholds, request order, and outcome-shuffle
+control unchanged, connected real outcomes engaged in 31/32 seeds and shuffled
+outcomes in 0/32. Paired counts were 31 connected-only, zero shuffled-only, zero
+both, and one neither. Both preregistered mechanism-discrimination and
+reliability gates passed; all 64 organisms and actual before/after audit-state
+digests were retained with exact restoration parity.
+
+The corrected interpretation is that canonical V3's zero-maturity result was
+valid for its seed but was not a general content-blind nomination failure. The
+existing frozen genome is capable and seed-robust at learning selective
+competence cells on this touched training tape. This does not establish
+held-out selectivity, native R1 transfer, or a need for residual-responsibility;
+no such mechanism was implemented. Validation, regression, retired successors,
+R1, and fresh data remain untouched. See
+`docs/autogrowth/NATIVE_R0_COMPETENCE_ENVELOPE_V3B_SEED_ROBUSTNESS_RESULT_20260717.md`.
 \nThe first touched-data competence-envelope package closed before learning at\
 \x60evidence_admission\x60. Frozen R0 completed 46/48 historical R0-train contexts\
 and failed all 16 train decoys, so the actual stream met the external both-class\
