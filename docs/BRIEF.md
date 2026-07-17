@@ -204,6 +204,27 @@ deterministic inference instrumentation only; it does not reopen or reinterpret
 V2 and is not competence-learning evidence. V3 was not run because its frozen
 specification was absent. See
 `docs/autogrowth/DETERMINISTIC_NATIVE_ACTIVATION_CLOSURE_RESULT_20260717.md`.
+
+The deterministic touched-training-only competence-envelope V3 then passed
+admission and completed both frozen three-round arms. Direct versus newly
+generated serialized-wrapper parity was exact on all 64 frames, outcomes were
+40/24, evidence identities and persistent state were exact, and authority
+tripwires were zero. Connected and outcome-shuffled each admitted 177 cells but
+matured none; every cell was pruned and both classified all 64 rows UNKNOWN.
+
+The bounded exhaustive diagnostic tested 288,100 singleton/pair/triple
+combinations. Of 272,826 support-qualified patterns, 24,766 were pure: zero
+singletons, 225 pairs, and 24,541 triples. Every pure pattern was positive, but
+the frozen genome attempted, admitted, and matured exactly zero of them. Its few
+proposed pure cells had only support 1--2, below the frozen support-4 threshold.
+The preregistered verdict is therefore `nomination_or_responsibility_failure`,
+not representation insufficiency, admission/capacity failure, or lifecycle
+failure. The next isolated learning factor is residual-responsibility internal
+terminals, not more grace or proposal throughput. Signal extraction still
+reconstructs generic frame inputs from board/move/graph maps rather than actual
+terminal-trace provenance, so fully self-contained native authority remains a
+separate closure. See
+`docs/autogrowth/NATIVE_R0_COMPETENCE_ENVELOPE_V3_TRAINING_ONLY_RESULT_20260717.md`.
 \nThe first touched-data competence-envelope package closed before learning at\
 \x60evidence_admission\x60. Frozen R0 completed 46/48 historical R0-train contexts\
 and failed all 16 train decoys, so the actual stream met the external both-class\
