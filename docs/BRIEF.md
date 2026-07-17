@@ -188,6 +188,22 @@ field is not localizable without a newly authorized diagnostic. Neither learning
 arm, lifecycle, nor post-run pure-pattern enumeration opened. This is an
 instrument abort, not competence or representation evidence. See
 docs/autogrowth/NATIVE_R0_COMPETENCE_ENVELOPE_V2_TRAINING_ONLY_RESULT_20260716.md.
+
+The subsequently authorized deterministic-activation closure localized and
+repaired that instrument defect without changing the V2 abort. Independent
+process comparisons had found 57--59/64 differences, exclusively in
+`GraphActuation.activation` and below approximately 4e-16; every discrete field
+and competence signal was exact. Policy-critical unordered reductions now sort
+contribution identities and use `math.fsum`. On the canonical touched 64-frame
+closure, complete direct-versus-serialized-wrapper actuation and signal parity
+was bit-exact with zero mismatch rows, 64/64 discrete actions/options remained
+unchanged, outcomes remained exactly 40/24, all evidence identities matched,
+and persistent state was exact. The bounded planted authority regression also
+remained causal (`e4d3` connected versus `g2b2` empty/disconnected). This closes
+deterministic inference instrumentation only; it does not reopen or reinterpret
+V2 and is not competence-learning evidence. V3 was not run because its frozen
+specification was absent. See
+`docs/autogrowth/DETERMINISTIC_NATIVE_ACTIVATION_CLOSURE_RESULT_20260717.md`.
 \nThe first touched-data competence-envelope package closed before learning at\
 \x60evidence_admission\x60. Frozen R0 completed 46/48 historical R0-train contexts\
 and failed all 16 train decoys, so the actual stream met the external both-class\
