@@ -286,6 +286,33 @@ unspecified scripts retain legacy behavior. A descriptive recalculation predicts
 those values require repaired-engine replay and the grown organisms require
 from-scratch corrected replication. See
 `docs/autogrowth/FORMAL_OR_INSTRUMENT_CORRECTION_20260718.md`.
+
+The bounded formal-OR correction and corrected replication have now closed.
+The repair-replay reproduced every preregistered descriptive value exactly:
+connected 313 TP/39 FP, 31/32 any-TP, 6/32 safe-narrow, 0/32 strict, and
+outcome-shuffled 0 TP/0 FP. Across 2,048 queries, formal invariants, complete
+real/virtual actuation and signal parity, persistent-state identity, and all
+authority/mutation firewalls passed. The original V3B/V3C artifacts remain
+preserved as records of the faulty implementation.
+
+From-scratch corrected V3B growth then passed both original gates on all 32
+paired seeds: connected engagement was 31/32, shuffled engagement 0/32, and the
+paired margin 31. Conditional viewed-validation development again produced
+313 TP/39 FP, with only 6/32 safe-narrow and no strict organism; both transfer
+verdicts failed and regression stayed closed. The 39 false positives were
+concentrated on five of sixteen decoy rows.
+
+The read-only representation ceiling found 80 training-pure validation-safe
+pairs and 10,622 triples, with best zero-FP validation coverage 12/16 and 14/16.
+More importantly, the connected cohort had actually attempted, admitted, and
+matured 3 such pairs and 18 such triples. Safe useful abstractions therefore
+exist and are sometimes found, but coexist with broader mature cells that later
+contradictory real outcomes cannot yet falsify, refine, demote, or outcompete.
+The ordered next isolated mechanism is continual mature-cell correction or
+competition, not more grace, capacity, proposal throughput, or an automatic
+residual-responsibility conclusion. No such mechanism, terminal-trace closure,
+fresh data, regression, R1, or retired-65 access occurred. See
+`docs/autogrowth/NATIVE_R0_COMPETENCE_ENVELOPE_FORMAL_OR_CORRECTED_REPLICATION_RESULT_20260718.md`.
 \nThe first touched-data competence-envelope package closed before learning at\
 \x60evidence_admission\x60. Frozen R0 completed 46/48 historical R0-train contexts\
 and failed all 16 train decoys, so the actual stream met the external both-class\
