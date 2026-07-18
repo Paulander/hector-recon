@@ -273,6 +273,19 @@ nomination, a selected organism, an ensemble, fresh data, R1, or an in-package
 threshold repair. The existing reconstructed-signal versus terminal-trace
 provenance debt remains explicit and unmodified. See
 `docs/autogrowth/NATIVE_R0_COMPETENCE_ENVELOPE_V3C_HELDOUT_RESULT_20260718.md`.
+
+Append-only correction: the V3C 178-TP/21-FP interpretation is invalid for the
+documented intended semantics of explicit `confirm_policy="or"`.
+`FormalReConEngine` omitted `or` from its explicit settled-state aggregation
+path, allowing a fast nonmatching child to fail an OR parent before a slower
+matching child confirmed. The preserved V3B/V3C bytes remain canonical records
+of the faulty implementation, not estimates of intended OR coverage. The
+bounded repair applies one-of-N aggregation only to explicitly declared OR;
+unspecified scripts retain legacy behavior. A descriptive recalculation predicts
+313 TP/39 FP, 31/32 any-TP, 6/32 safe-narrow, 0 strict, and shuffled 0/0, but
+those values require repaired-engine replay and the grown organisms require
+from-scratch corrected replication. See
+`docs/autogrowth/FORMAL_OR_INSTRUMENT_CORRECTION_20260718.md`.
 \nThe first touched-data competence-envelope package closed before learning at\
 \x60evidence_admission\x60. Frozen R0 completed 46/48 historical R0-train contexts\
 and failed all 16 train decoys, so the actual stream met the external both-class\

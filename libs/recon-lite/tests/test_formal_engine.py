@@ -85,6 +85,136 @@ def test_formal_k_of_n_waits_for_slow_success_after_fast_failure():
     assert graph.nodes["root"].state == NodeState.CONFIRMED
 
 
+@pytest.mark.parametrize(
+    "child_order",
+    [
+        ("fast_failure", "slow_success"),
+        ("slow_success", "fast_failure"),
+    ],
+)
+def test_explicit_or_waits_for_slower_success_after_fast_failure(child_order):
+    graph = Graph()
+    graph.add_node(Node("root", NodeType.SCRIPT, meta={"confirm_policy": "or"}))
+    calls = {"slow": 0}
+
+    def slow_success(_node, _env):
+        calls["slow"] += 1
+        if calls["slow"] == 1:
+            return False, False
+        return True, True
+
+    children = {
+        "fast_failure": Node(
+            "fast_failure",
+            NodeType.TERMINAL,
+            predicate=lambda _node, _env: (True, False),
+        ),
+        "slow_success": Node(
+            "slow_success",
+            NodeType.TERMINAL,
+            predicate=slow_success,
+        ),
+    }
+    for child_id in child_order:
+        graph.add_node(children[child_id])
+        graph.add_hierarchy_pair("root", child_id)
+
+    engine = FormalReConEngine(graph)
+    engine.request("root")
+    engine.run(
+        max_ticks=16,
+        until=lambda formal: formal.g.nodes["root"].state
+        in {NodeState.CONFIRMED, NodeState.FAILED},
+    )
+
+    assert graph.nodes["fast_failure"].state == NodeState.FAILED
+    assert graph.nodes["slow_success"].state == NodeState.CONFIRMED
+    assert graph.nodes["root"].state == NodeState.CONFIRMED
+
+
+def test_explicit_or_confirms_with_one_success_while_other_child_is_pending():
+    graph = Graph()
+    graph.add_node(Node("root", NodeType.SCRIPT, meta={"confirm_policy": "or"}))
+    graph.add_node(success_terminal("success"))
+    graph.add_node(Node(
+        "pending",
+        NodeType.TERMINAL,
+        predicate=lambda _node, _env: (False, False),
+    ))
+    graph.add_hierarchy_pair("root", "success")
+    graph.add_hierarchy_pair("root", "pending")
+
+    engine = FormalReConEngine(graph)
+    engine.request("root")
+    engine.run(
+        max_ticks=16,
+        until=lambda formal: formal.g.nodes["root"].state == NodeState.CONFIRMED,
+    )
+
+    assert graph.nodes["success"].state == NodeState.CONFIRMED
+    assert graph.nodes["pending"].state == NodeState.WAITING
+    assert graph.nodes["root"].state == NodeState.CONFIRMED
+
+
+def test_explicit_or_fails_only_after_all_children_fail():
+    graph = Graph()
+    graph.add_node(Node("root", NodeType.SCRIPT, meta={"confirm_policy": "or"}))
+    for child_id in ("left", "right"):
+        graph.add_node(Node(
+            child_id,
+            NodeType.TERMINAL,
+            predicate=lambda _node, _env: (True, False),
+        ))
+        graph.add_hierarchy_pair("root", child_id)
+
+    engine = FormalReConEngine(graph)
+    engine.request("root")
+    engine.run(
+        max_ticks=16,
+        until=lambda formal: formal.g.nodes["root"].state == NodeState.FAILED,
+    )
+
+    assert graph.nodes["left"].state == NodeState.FAILED
+    assert graph.nodes["right"].state == NodeState.FAILED
+    assert graph.nodes["root"].state == NodeState.FAILED
+
+
+def test_unspecified_script_preserves_legacy_message_race_behavior():
+    graph = Graph()
+    graph.add_node(Node("root", NodeType.SCRIPT))
+    calls = {"slow": 0}
+
+    def slow_success(_node, _env):
+        calls["slow"] += 1
+        if calls["slow"] == 1:
+            return False, False
+        return True, True
+
+    graph.add_node(Node(
+        "fast_failure",
+        NodeType.TERMINAL,
+        predicate=lambda _node, _env: (True, False),
+    ))
+    graph.add_node(Node(
+        "slow_success",
+        NodeType.TERMINAL,
+        predicate=slow_success,
+    ))
+    graph.add_hierarchy_pair("root", "fast_failure")
+    graph.add_hierarchy_pair("root", "slow_success")
+
+    engine = FormalReConEngine(graph)
+    engine.request("root")
+    engine.run(
+        max_ticks=16,
+        until=lambda formal: formal.g.nodes["root"].state
+        in {NodeState.CONFIRMED, NodeState.FAILED},
+    )
+
+    assert graph.nodes["slow_success"].state == NodeState.CONFIRMED
+    assert graph.nodes["root"].state == NodeState.FAILED
+
+
 def test_subset_scheduler_updates_only_active_real_edges():
     graph = Graph()
     graph.add_node(Node("root", NodeType.SCRIPT))

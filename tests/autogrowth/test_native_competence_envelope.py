@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import pickle
 
+import pytest
+
 from recon_lite_hector.nodes import StemCellState, StemCellTerminal
 
 from recon_lite_chess.autogrowth.native_competence_envelope import (
@@ -109,6 +111,112 @@ def test_refuted_is_separate_and_conflict_fails_to_unknown() -> None:
     assert conflict.state == AvailabilityState.UNKNOWN
     assert conflict.formal_available is True
     assert conflict.formal_refuted is True
+
+
+@pytest.mark.parametrize(
+    ("polarity", "matching_signal", "expected_state"),
+    [
+        (AvailabilityState.AVAILABLE, "atom:a", AvailabilityState.AVAILABLE),
+        (AvailabilityState.AVAILABLE, "atom:b", AvailabilityState.AVAILABLE),
+        (AvailabilityState.REFUTED, "atom:a", AvailabilityState.REFUTED),
+        (AvailabilityState.REFUTED, "atom:b", AvailabilityState.REFUTED),
+    ],
+)
+def test_two_mature_cells_use_one_of_n_semantics(
+    polarity: AvailabilityState,
+    matching_signal: str,
+    expected_state: AvailabilityState,
+) -> None:
+    envelope = GraphNativeCompetenceEnvelope()
+    first = _cell(
+        "competence_context_0000",
+        ("atom:a",),
+        state=StemCellState.MATURE,
+        polarity=polarity,
+    )
+    second = _cell(
+        "competence_context_0001",
+        ("atom:b",),
+        state=StemCellState.MATURE,
+        polarity=polarity,
+    )
+    for cell in (first, second):
+        cell.success_lower_bound = 0.7
+        cell.failure_lower_bound = 0.7
+        cell.uncertainty = 0.3
+    envelope.cells = {first.cell_id: first, second.cell_id: second}
+    envelope.rebuild_graph()
+
+    result = envelope.classify((matching_signal,), policy_response=True)
+
+    assert result.state == expected_state
+    expected_id = first.cell_id if matching_signal == "atom:a" else second.cell_id
+    if polarity == AvailabilityState.AVAILABLE:
+        assert result.available_cell_ids == (expected_id,)
+        assert result.refuted_cell_ids == ()
+    else:
+        assert result.available_cell_ids == ()
+        assert result.refuted_cell_ids == (expected_id,)
+
+
+def test_available_and_refuted_conflict_is_unknown_with_independent_formal_flags() -> None:
+    envelope = GraphNativeCompetenceEnvelope()
+    available = _cell(
+        "competence_context_0000",
+        ("atom:a",),
+        state=StemCellState.MATURE,
+        polarity=AvailabilityState.AVAILABLE,
+    )
+    refuted = _cell(
+        "competence_context_0001",
+        ("atom:b",),
+        state=StemCellState.MATURE,
+        polarity=AvailabilityState.REFUTED,
+    )
+    available.success_lower_bound = 0.7
+    refuted.failure_lower_bound = 0.7
+    envelope.cells = {available.cell_id: available, refuted.cell_id: refuted}
+    envelope.rebuild_graph()
+
+    result = envelope.classify(("atom:a", "atom:b"), policy_response=True)
+
+    assert result.state == AvailabilityState.UNKNOWN
+    assert result.available_cell_ids == (available.cell_id,)
+    assert result.refuted_cell_ids == (refuted.cell_id,)
+    assert result.formal_available is True
+    assert result.formal_refuted is True
+
+
+@pytest.mark.parametrize("policy_response", [False, True])
+def test_formal_classification_flags_track_matching_cells_independently_of_conflict(
+    policy_response: bool,
+) -> None:
+    envelope = GraphNativeCompetenceEnvelope()
+    available = _cell(
+        "competence_context_0000",
+        ("atom:a",),
+        state=StemCellState.MATURE,
+        polarity=AvailabilityState.AVAILABLE,
+    )
+    refuted = _cell(
+        "competence_context_0001",
+        ("atom:b",),
+        state=StemCellState.MATURE,
+        polarity=AvailabilityState.REFUTED,
+    )
+    available.success_lower_bound = 0.7
+    refuted.failure_lower_bound = 0.7
+    envelope.cells = {available.cell_id: available, refuted.cell_id: refuted}
+    envelope.rebuild_graph()
+
+    for signals in (("atom:a",), ("atom:b",), ("atom:a", "atom:b"), ()):
+        result = envelope.classify(signals, policy_response=policy_response)
+        assert result.formal_available == (
+            policy_response and bool(result.available_cell_ids)
+        )
+        assert result.formal_refuted == (
+            policy_response and bool(result.refuted_cell_ids)
+        )
 
 
 def test_availability_error_is_graph_native_and_distinct_from_value() -> None:

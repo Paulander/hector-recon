@@ -504,8 +504,13 @@ class FormalReConEngine:
         return NodeState.TRUE
 
     def _next_quorum_script_state(self, node: Node) -> Optional[NodeState]:
-        policy = str(node.meta.get("confirm_policy", "or")).lower()
-        if policy not in {"and", "xor", "k_of_n", "quorum"}:
+        declared_policy = node.meta.get("confirm_policy")
+        if declared_policy is None:
+            # Unspecified scripts retain the legacy message-race behavior.
+            # Only an explicit policy opts into settled child-state aggregation.
+            return None
+        policy = str(declared_policy).lower()
+        if policy not in {"and", "or", "xor", "k_of_n", "quorum"}:
             return None
 
         children = self.g.children(node.nid)
@@ -513,6 +518,8 @@ class FormalReConEngine:
             return None
         if policy == "and":
             threshold = len(children)
+        elif policy == "or":
+            threshold = 1
         else:
             threshold = int(node.meta.get("confirm_k", node.meta.get("quorum_k", 1)))
         threshold = max(1, min(threshold, len(children)))
