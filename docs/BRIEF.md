@@ -246,6 +246,33 @@ held-out selectivity, native R1 transfer, or a need for residual-responsibility;
 no such mechanism was implemented. Validation, regression, retired successors,
 R1, and fresh data remain untouched. See
 `docs/autogrowth/NATIVE_R0_COMPETENCE_ENVELOPE_V3B_SEED_ROBUSTNESS_RESULT_20260717.md`.
+
+The preregistered inference-only V3C held-out cohort has now closed after
+validation without opening conditional regression. Its runner, synthetic-only
+tests, metrics, and gates were pushed first at `838068e`. All 32 connected and
+32 outcome-shuffled V3B envelopes were retained, including ordinal 13's empty
+connected envelope, and were paired only with the exact frozen R0 organism.
+Validation admission passed: all 32 rows produced graph-owned R0 policy
+responses and the historical positive/decoy halves yielded exactly 16 actual
+completions and 16 noncompletions. Across 2,048 wrapper queries, complete
+GraphActuation and active-signal identities matched the real reference
+bit-exactly; persistent state was exact and all mutation, effect, reward,
+fallback, selector, and child-priority tripwires were zero.
+
+The scientific verdict was negative. Connected envelopes emitted 178 true
+positives but also 21 false positives across 512 negative decisions. Although
+27/32 connected organisms produced at least one held-out true positive, only
+15/32 were individually safe-narrow, none met TP >=14 with zero false positives,
+and the safe paired margin was 15 rather than 20. Shuffled envelopes emitted no
+AVAILABLE decisions (0 TP, 0 FP). Both strict generalization and safe-narrow
+transfer therefore failed, so regression remained unopened. The binding
+boundary is selectivity/representation: real-outcome learning produced
+transferable activity, but training-pure conjunctions overgeneralized to some
+actual noncompletions. This result does not authorize more lifecycle, capacity,
+nomination, a selected organism, an ensemble, fresh data, R1, or an in-package
+threshold repair. The existing reconstructed-signal versus terminal-trace
+provenance debt remains explicit and unmodified. See
+`docs/autogrowth/NATIVE_R0_COMPETENCE_ENVELOPE_V3C_HELDOUT_RESULT_20260718.md`.
 \nThe first touched-data competence-envelope package closed before learning at\
 \x60evidence_admission\x60. Frozen R0 completed 46/48 historical R0-train contexts\
 and failed all 16 train decoys, so the actual stream met the external both-class\
