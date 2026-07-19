@@ -5,6 +5,7 @@ import copy
 from dataclasses import dataclass, field
 from enum import Enum
 import hashlib
+import json
 import math
 import pickle
 from typing import Any, Iterable, Mapping, Sequence
@@ -39,6 +40,8 @@ SHADOW_ROOT_ID = "competence_shadow_root"
 GROWTH_REQUEST_ROOT_ID = "competence_growth_request_root"
 AVAILABILITY_ERROR_ID = "internal:availability_error"
 CORRECTION_ROOT_ID = "competence_mature_correction_root"
+SPECIALIZATION_REQUEST_ROOT_ID = "competence_specialization_request_root"
+SPECIALIZATION_ELIGIBILITY_ROOT_ID = "competence_specialization_eligibility_root"
 SCHEMA_VERSION = "native_r0_competence_envelope.v1"
 
 
@@ -46,6 +49,12 @@ class AvailabilityState(str, Enum):
     AVAILABLE = "available"
     REFUTED = "refuted"
     UNKNOWN = "unknown"
+
+
+class SpecializationMode(str, Enum):
+    DISCONNECTED = "disconnected"
+    LOCAL_CONTRAST = "local_contrast"
+    COUNTEREXAMPLE_BLIND = "counterexample_blind"
 
 
 @dataclass(frozen=True)
@@ -112,12 +121,20 @@ class CompetenceContextCell:
     prune_reason: str | None = None
     revoked_evidence_key: str | None = None
     revocation_count: int = 0
+    lineage_parent_id: str | None = None
+    specialization_depth: int = 0
+    specialization_request_ordinal: int | None = None
+    specialization_proposal_ordinal: int | None = None
     provenance: str = "unique_real_r0_completion"
 
     def __setstate__(self, state: Mapping[str, Any]) -> None:
         self.__dict__.update(state)
         self.__dict__.setdefault("revoked_evidence_key", None)
         self.__dict__.setdefault("revocation_count", 0)
+        self.__dict__.setdefault("lineage_parent_id", None)
+        self.__dict__.setdefault("specialization_depth", 0)
+        self.__dict__.setdefault("specialization_request_ordinal", None)
+        self.__dict__.setdefault("specialization_proposal_ordinal", None)
 
     @property
     def state(self) -> StemCellState:
@@ -237,6 +254,18 @@ class MatureCorrectionAudit:
     query_rows: list[dict[str, Any]] = field(default_factory=list)
 
 
+@dataclass
+class SpecializationAudit:
+    request_opportunities: int = 0
+    graph_request_emissions: int = 0
+    proposal_attempts: int = 0
+    admitted_proposals: int = 0
+    empty_eligibility_rejections: int = 0
+    duplicate_rejections: int = 0
+    capacity_rejections: int = 0
+    request_rows: list[dict[str, Any]] = field(default_factory=list)
+
+
 @dataclass(frozen=True)
 class MatureCorrectionEmission:
     evidence_key: str
@@ -248,6 +277,18 @@ class MatureCorrectionEmission:
     lifecycle_connected: bool
     root_state: str
     leg_states: tuple[tuple[str, str], ...]
+    specialization_mode: str = SpecializationMode.DISCONNECTED.value
+    specialization_request_parent_ids: tuple[str, ...] = ()
+    specialization_child_ids: tuple[str, ...] = ()
+    specialization_eligible_terminal_ids: tuple[tuple[str, tuple[str, ...]], ...] = ()
+
+
+@dataclass(frozen=True)
+class _GraphSpecializationRequest:
+    context_member: str
+    eligible_base_ids: tuple[str, ...]
+    request_ordinal: int
+
 
 
 class CompetenceContextGrowthGenome:
@@ -300,6 +341,25 @@ class CompetenceContextGrowthGenome:
             genome_seed=self.seed,
         )
 
+    def propose_specialization(
+        self, request: _GraphSpecializationRequest
+    ) -> GrowthProposal | None:
+        """Choose one anonymous base terminal from a graph-owned request."""
+
+        if not isinstance(request, _GraphSpecializationRequest):
+            raise TypeError("specialization requires a graph-owned request")
+        selected = self._take(
+            request.eligible_base_ids, 1, 2, request.request_ordinal
+        )
+        if len(selected) != 1:
+            return None
+        return GrowthProposal(
+            members=(request.context_member, selected[0]),
+            round_index=2,
+            request_ordinal=request.request_ordinal,
+            genome_seed=self.seed,
+        )
+
     def _take(
         self,
         identities: Sequence[str],
@@ -337,15 +397,23 @@ class GraphNativeCompetenceEnvelope:
     correction_audit: MatureCorrectionAudit = field(
         default_factory=MatureCorrectionAudit
     )
+    specialization_audit: SpecializationAudit = field(
+        default_factory=SpecializationAudit
+    )
     schema_version: str = SCHEMA_VERSION
     graph: Graph = field(init=False)
     _member_specs: set[tuple[str, ...]] = field(default_factory=set, init=False)
     _next_cell_index: int = 0
     _review_count: int = 0
+    _specialization_request_ordinal: int = 0
+    _specialization_proposal_ordinal: int = 0
 
     def __setstate__(self, state: Mapping[str, Any]) -> None:
         self.__dict__.update(state)
         self.__dict__.setdefault("correction_audit", MatureCorrectionAudit())
+        self.__dict__.setdefault("specialization_audit", SpecializationAudit())
+        self.__dict__.setdefault("_specialization_request_ordinal", 0)
+        self.__dict__.setdefault("_specialization_proposal_ordinal", 0)
 
     def __post_init__(self) -> None:
         if self.schema_version != SCHEMA_VERSION:
@@ -376,11 +444,14 @@ class GraphNativeCompetenceEnvelope:
         record: CompetenceEvidenceRecord,
         *,
         lifecycle_connected: bool,
+        specialization_mode: SpecializationMode = SpecializationMode.DISCONNECTED,
+        specialization_genome: CompetenceContextGrowthGenome | None = None,
     ) -> MatureCorrectionEmission:
         """Ground one unique real outcome and consume graph-emitted corrections."""
 
         if not isinstance(frame, FrameContext) or frame.kind is not FrameKind.REAL:
             raise ValueError("competence correction requires a REAL FrameContext")
+        mode = SpecializationMode(specialization_mode)
         inserted = self.add_unique_evidence(record)
         if not inserted:
             self.correction_audit.duplicate_observations += 1
@@ -394,6 +465,7 @@ class GraphNativeCompetenceEnvelope:
                 lifecycle_connected=bool(lifecycle_connected),
                 root_state="NOT_REQUESTED_DUPLICATE",
                 leg_states=(),
+                specialization_mode=mode.value,
             )
         self.correction_audit.unique_real_observations += 1
         matching = tuple(sorted(
@@ -403,7 +475,7 @@ class GraphNativeCompetenceEnvelope:
         ))
         for cell_id in matching:
             self._refresh_cell_evidence(self.cells[cell_id])
-        query = self._emit_mature_correction(record)
+        query = self._emit_mature_correction(record, specialization_mode=mode)
         contradictory = query["confirmed_cell_ids"]
         supporting = tuple(sorted(
             cell_id for cell_id in matching
@@ -421,6 +493,53 @@ class GraphNativeCompetenceEnvelope:
                 cell.revoked_evidence_key = record.evidence_key
                 cell.revocation_count += 1
                 transitioned.append(cell_id)
+        request_parents: list[str] = []
+        child_ids: list[str] = []
+        if lifecycle_connected and mode is not SpecializationMode.DISCONNECTED:
+            graph_requests = set(query["specialization_request_parent_ids"])
+            eligible_by_parent = dict(query["eligible_terminal_ids_by_parent"])
+            genome = specialization_genome or CompetenceContextGrowthGenome(
+                self.config.selection_seed
+            )
+            for parent_id in transitioned:
+                parent = self.cells[parent_id]
+                if parent.specialization_depth != 0:
+                    continue
+                if parent.specialization_request_ordinal is not None:
+                    continue
+                if parent_id not in graph_requests:
+                    raise RuntimeError(
+                        "transitioned parent lacked graph specialization request"
+                    )
+                request_ordinal = self._specialization_request_ordinal
+                self._specialization_request_ordinal += 1
+                parent.specialization_request_ordinal = request_ordinal
+                request_parents.append(parent_id)
+                self.specialization_audit.request_opportunities += 1
+                self.specialization_audit.graph_request_emissions += 1
+                self.specialization_audit.proposal_attempts += 1
+                proposal_ordinal = self._specialization_proposal_ordinal
+                self._specialization_proposal_ordinal += 1
+                eligible = tuple(eligible_by_parent.get(parent_id, ()))
+                proposal = genome.propose_specialization(
+                    _GraphSpecializationRequest(
+                        context_member=f"context:{parent_id}",
+                        eligible_base_ids=eligible,
+                        request_ordinal=request_ordinal,
+                    )
+                )
+                child = self._materialize_specialization(
+                    parent=parent,
+                    proposal=proposal,
+                    proposal_ordinal=proposal_ordinal,
+                    mode=mode,
+                    eligible_terminal_ids=eligible,
+                    evidence_key=record.evidence_key,
+                )
+                if child is not None:
+                    child_ids.append(child.cell_id)
+            if child_ids:
+                self._review_lifecycle(final=False)
         self.correction_audit.contradiction_hits += len(contradictory)
         self.correction_audit.mature_to_probation_transitions += len(transitioned)
         row = {
@@ -434,7 +553,7 @@ class GraphNativeCompetenceEnvelope:
             "leg_states": [list(item) for item in query["leg_states"]],
         }
         self.correction_audit.query_rows.append(row)
-        if transitioned:
+        if transitioned or child_ids:
             self.rebuild_graph()
         return MatureCorrectionEmission(
             evidence_key=record.evidence_key,
@@ -446,12 +565,26 @@ class GraphNativeCompetenceEnvelope:
             lifecycle_connected=bool(lifecycle_connected),
             root_state=query["root_state"],
             leg_states=query["leg_states"],
+            specialization_mode=mode.value,
+            specialization_request_parent_ids=tuple(request_parents),
+            specialization_child_ids=tuple(child_ids),
+            specialization_eligible_terminal_ids=tuple(
+                (parent_id, tuple(query["eligible_terminal_ids_by_parent"].get(parent_id, ())))
+                for parent_id in request_parents
+            ),
         )
 
     def _emit_mature_correction(
-        self, record: CompetenceEvidenceRecord
+        self,
+        record: CompetenceEvidenceRecord,
+        *,
+        specialization_mode: SpecializationMode,
     ) -> dict[str, Any]:
         runtime = copy.deepcopy(self.graph)
+        candidate_pairs = self._attach_specialization_candidate_terminals(runtime)
+        eligible_pairs = self._eligible_specialization_pairs(
+            record, mode=specialization_mode
+        )
         legs = tuple(sorted(
             (
                 node_id,
@@ -462,16 +595,37 @@ class GraphNativeCompetenceEnvelope:
         ))
         engine = FormalReConEngine(runtime, record_trace=False)
         engine.request(CORRECTION_ROOT_ID)
+        specialization_connected = (
+            specialization_mode is not SpecializationMode.DISCONNECTED
+        )
+        if specialization_connected:
+            engine.request(SPECIALIZATION_REQUEST_ROOT_ID)
+            engine.request(SPECIALIZATION_ELIGIBILITY_ROOT_ID)
         engine.run(
             max_ticks=192,
             env={
                 "active_signal_ids": frozenset(record.active_signal_ids),
                 "observed_completion": bool(record.observed_completion),
+                "eligible_specialization_pairs": frozenset(eligible_pairs),
             },
             until=lambda item: all(
                 item.g.nodes[node_id].state
                 in {NodeState.CONFIRMED, NodeState.FAILED}
                 for node_id, _cell_id in legs
+            ) and (
+                not specialization_connected
+                or (
+                    item.g.nodes[SPECIALIZATION_REQUEST_ROOT_ID].state
+                    in {NodeState.CONFIRMED, NodeState.FAILED}
+                    and item.g.nodes[SPECIALIZATION_ELIGIBILITY_ROOT_ID].state
+                    in {NodeState.CONFIRMED, NodeState.FAILED}
+                    and all(
+                        item.g.nodes[node_id].state
+                        in {NodeState.CONFIRMED, NodeState.FAILED}
+                        for _parent_id, _base_id, node_id in candidate_pairs
+                    )
+
+                )
             ),
         )
         leg_states = tuple(
@@ -482,11 +636,226 @@ class GraphNativeCompetenceEnvelope:
             cell_id for node_id, cell_id in legs
             if runtime.nodes[node_id].state == NodeState.CONFIRMED
         ))
+        request_parents = tuple(sorted(
+            str(node.meta["cell_id"])
+            for node in runtime.nodes.values()
+            if node.meta.get("role") == "specialization_request_leg"
+            and node.state == NodeState.CONFIRMED
+        ))
+        eligible_by_parent = {
+            parent_id: tuple(sorted(
+                base_id for candidate_parent, base_id, node_id in candidate_pairs
+                if candidate_parent == parent_id
+                and runtime.nodes[node_id].state == NodeState.CONFIRMED
+            ))
+            for parent_id in request_parents
+        }
         return {
             "confirmed_cell_ids": confirmed,
             "root_state": runtime.nodes[CORRECTION_ROOT_ID].state.name,
             "leg_states": leg_states,
+            "specialization_request_parent_ids": request_parents,
+            "eligible_terminal_ids_by_parent": eligible_by_parent,
         }
+
+    def _eligible_specialization_pairs(
+        self,
+        record: CompetenceEvidenceRecord,
+        *,
+        mode: SpecializationMode,
+    ) -> set[tuple[str, str]]:
+        if mode is SpecializationMode.DISCONNECTED:
+            return set()
+        pairs: set[tuple[str, str]] = set()
+        for parent in self.cells.values():
+            if (
+                not parent.is_mature
+                or parent.polarity not in {
+                    AvailabilityState.AVAILABLE,
+                    AvailabilityState.REFUTED,
+                }
+                or parent.specialization_depth != 0
+                or parent.specialization_request_ordinal is not None
+            ):
+                continue
+            for base_id in self._supporting_base_vocabulary(parent):
+                if (
+                    mode is SpecializationMode.LOCAL_CONTRAST
+                    and base_id in record.active_signal_ids
+                ):
+                    continue
+                pairs.add((parent.cell_id, base_id))
+        return pairs
+
+    def _supporting_base_vocabulary(
+        self, parent: CompetenceContextCell
+    ) -> tuple[str, ...]:
+        counts: dict[str, int] = {}
+        for evidence in self.evidence.values():
+            if not self._cell_pattern_matches(parent, evidence, set()):
+                continue
+            supports = (
+                evidence.observed_completion
+                if parent.polarity == AvailabilityState.AVAILABLE
+                else not evidence.observed_completion
+            )
+            if not supports:
+                continue
+            for identity in set(evidence.active_signal_ids):
+                if self._specialization_member_forbidden(identity):
+                    continue
+                counts[identity] = counts.get(identity, 0) + 1
+        implied = self._implied_base_members(parent, set())
+        return tuple(sorted(
+            identity for identity, count in counts.items()
+            if count >= self.config.min_maturity_support
+            and identity not in implied
+        ))
+
+    @staticmethod
+    def _specialization_member_forbidden(identity: str) -> bool:
+        lowered = str(identity).lower()
+        forbidden = (
+            "policy_response", "completion", "outcome", "experiment",
+            "row", "identity", "fen", "mate", "checkmate", "stalemate",
+            "rook_loss", "correct_move", "tablebase", "stockfish",
+        )
+        return any(token in lowered for token in forbidden)
+
+    def _implied_base_members(
+        self, cell: CompetenceContextCell, visiting: set[str]
+    ) -> set[str]:
+        if cell.cell_id in visiting:
+            raise RuntimeError("cyclic competence context")
+        nested_visiting = set(visiting)
+        nested_visiting.add(cell.cell_id)
+        implied: set[str] = set()
+        for member in cell.members:
+            if member.startswith("context:"):
+                parent = self.cells.get(member.split(":", 1)[1])
+                if parent is not None:
+                    implied.update(self._implied_base_members(parent, nested_visiting))
+            else:
+                implied.add(member)
+        return implied
+
+    def _attach_specialization_candidate_terminals(
+        self, runtime: Graph
+    ) -> tuple[tuple[str, str, str], ...]:
+        attached: list[tuple[str, str, str]] = []
+        for parent in sorted(self.cells.values(), key=lambda item: item.cell_id):
+            if (
+                not parent.is_mature
+                or parent.specialization_depth != 0
+                or parent.specialization_request_ordinal is not None
+            ):
+                continue
+            for base_id in self._supporting_base_vocabulary(parent):
+                token = hashlib.sha256(
+                    f"{parent.cell_id}|{base_id}".encode("utf-8")
+                ).hexdigest()[:16]
+                node_id = f"specialization_eligible:{token}"
+                runtime.add_node(Node(
+                    node_id,
+                    NodeType.TERMINAL,
+                    predicate=_specialization_eligibility_terminal,
+                    meta={
+                        "terminal_kind": "SPECIALIZATION_ELIGIBILITY",
+                        "role": "specialization_eligible_terminal",
+                        "parent_cell_id": parent.cell_id,
+                        "base_identity": base_id,
+                    },
+                ))
+                runtime.add_hierarchy_pair(
+                    SPECIALIZATION_ELIGIBILITY_ROOT_ID, node_id
+                )
+                attached.append((parent.cell_id, base_id, node_id))
+        return tuple(attached)
+
+    def _materialize_specialization(
+        self,
+        *,
+        parent: CompetenceContextCell,
+        proposal: GrowthProposal | None,
+        proposal_ordinal: int,
+        mode: SpecializationMode,
+        eligible_terminal_ids: Sequence[str],
+        evidence_key: str,
+    ) -> CompetenceContextCell | None:
+        row: dict[str, Any] = {
+            "evidence_key": evidence_key,
+            "parent_cell_id": parent.cell_id,
+            "parent_polarity": parent.polarity.value,
+            "mode": mode.value,
+            "request_ordinal": parent.specialization_request_ordinal,
+            "proposal_ordinal": proposal_ordinal,
+            "eligible_count": len(eligible_terminal_ids),
+            "admitted": False,
+            "reason": None,
+        }
+        if proposal is None:
+            self.specialization_audit.empty_eligibility_rejections += 1
+            row["reason"] = "empty_eligibility"
+            self.specialization_audit.request_rows.append(row)
+            return None
+        members = tuple(proposal.members)
+        row["members"] = list(members)
+        expected_context = f"context:{parent.cell_id}"
+        if (
+            len(members) != 2
+            or members[0] != expected_context
+            or members[1] not in set(eligible_terminal_ids)
+        ):
+            raise RuntimeError("specialization genome emitted an ineligible child")
+        if members in self._member_specs:
+            self.specialization_audit.duplicate_rejections += 1
+            row["reason"] = "duplicate"
+            self.specialization_audit.request_rows.append(row)
+            return None
+        live = sum(
+            cell.state != StemCellState.PRUNED for cell in self.cells.values()
+        )
+        if live >= self.config.trial_capacity:
+            self.specialization_audit.capacity_rejections += 1
+            row["reason"] = "trial_capacity"
+            self.specialization_audit.request_rows.append(row)
+            return None
+        cell_id = f"competence_context_{self._next_cell_index:04d}"
+        self._next_cell_index += 1
+        stem = StemCellTerminal(cell_id)
+        stem.state = StemCellState.TRIAL
+        stem.trial_node_id = cell_id
+        stem.trial_parent_id = SHADOW_ROOT_ID
+        stem.depth = parent.stem_cell.depth + 1
+        stem.children = list(members)
+        stem.is_composition = True
+        stem.metadata.update({
+            "origin": "contradiction_triggered_one_level_specialization",
+            "member_identities": list(members),
+            "lineage_parent_id": parent.cell_id,
+            "specialization_depth": 1,
+            "specialization_request_ordinal": parent.specialization_request_ordinal,
+            "specialization_proposal_ordinal": proposal_ordinal,
+            "shadow_only": True,
+        })
+        cell = CompetenceContextCell(
+            cell_id=cell_id,
+            members=members,
+            born_round=2,
+            born_request_ordinal=int(parent.specialization_request_ordinal),
+            stem_cell=stem,
+            polarity=parent.polarity,
+            lineage_parent_id=parent.cell_id,
+            specialization_depth=1,
+            specialization_request_ordinal=parent.specialization_request_ordinal,
+            specialization_proposal_ordinal=proposal_ordinal,
+        )
+        self.cells[cell_id] = cell
+        self._member_specs.add(members)
+        self.specialization_audit.admitted_proposals += 1
+        row.update({"admitted": True, "cell_id": cell_id})
+        self.specialization_audit.request_rows.append(row)
+        return cell
 
     def _refresh_cell_evidence(self, cell: CompetenceContextCell) -> None:
         matched = tuple(
@@ -783,11 +1152,19 @@ class GraphNativeCompetenceEnvelope:
             stats.credit_stats.negative_correlation = failures
             stats.recompute_survival()
             positive = (
+                cell.lineage_parent_id is None
+                or cell.polarity == AvailabilityState.AVAILABLE
+            ) and (
+
                 len(matched) >= self.config.min_maturity_support
                 and failures == 0
                 and success_lower >= self.config.lower_bound_threshold
             )
             refuted = (
+                cell.lineage_parent_id is None
+                or cell.polarity == AvailabilityState.REFUTED
+            ) and (
+
                 len(matched) >= self.config.min_maturity_support
                 and successes == 0
                 and failure_lower >= self.config.lower_bound_threshold
@@ -838,7 +1215,13 @@ class GraphNativeCompetenceEnvelope:
             if member.startswith("context:"):
                 parent_id = member.split(":", 1)[1]
                 parent = self.cells.get(parent_id)
-                if parent is None or not parent.is_mature:
+                if parent is None:
+                    return False
+                parent_usable = parent.is_mature or (
+                    cell.lineage_parent_id == parent_id
+                    and parent.state == StemCellState.PROBATION
+                )
+                if not parent_usable:
                     return False
                 if not self._cell_matches(parent, record, next_visiting):
                     return False
@@ -940,6 +1323,20 @@ class GraphNativeCompetenceEnvelope:
             meta={"confirm_policy": "or", "role": "mature_correction"},
         ))
 
+        graph.add_node(Node(
+            SPECIALIZATION_REQUEST_ROOT_ID,
+            NodeType.SCRIPT,
+            meta={"confirm_policy": "or", "role": "specialization_request"},
+        ))
+        graph.add_node(Node(
+            SPECIALIZATION_ELIGIBILITY_ROOT_ID,
+            NodeType.SCRIPT,
+            meta={"confirm_policy": "or", "role": "specialization_eligibility"},
+        ))
+        self._add_false_child(
+            graph, SPECIALIZATION_ELIGIBILITY_ROOT_ID, "dynamic_default"
+        )
+
         positive = [
             cell for cell in self.cells.values()
             if cell.is_mature and cell.polarity == AvailabilityState.AVAILABLE
@@ -993,6 +1390,8 @@ class GraphNativeCompetenceEnvelope:
                 )
         else:
             self._add_false_child(graph, SHADOW_ROOT_ID, "no_trials")
+        specialization_request_count = 0
+
         if correction_cells:
             for index, cell in enumerate(correction_cells):
                 leg_id = f"correction_{index}:{cell.cell_id}"
@@ -1028,10 +1427,62 @@ class GraphNativeCompetenceEnvelope:
                     },
                 ))
                 graph.add_hierarchy_pair(leg_id, error_id)
+                if (
+                    cell.is_mature
+                    and cell.specialization_depth == 0
+                    and cell.specialization_request_ordinal is None
+                ):
+                    request_index = specialization_request_count
+                    specialization_request_count += 1
+                    request_leg_id = (
+                        f"specialization_request_{request_index}:{cell.cell_id}"
+                    )
+                    graph.add_node(Node(
+                        request_leg_id,
+                        NodeType.SCRIPT,
+                        meta={
+                            "confirm_policy": "and",
+                            "role": "specialization_request_leg",
+                            "cell_id": cell.cell_id,
+                            "polarity": cell.polarity.value,
+                        },
+                    ))
+                    graph.add_hierarchy_pair(
+                        SPECIALIZATION_REQUEST_ROOT_ID, request_leg_id
+                    )
+                    self._add_cell_subtree(
+                        graph,
+                        request_leg_id,
+                        cell,
+                        prefix=f"specialization_request_{request_index}:context",
+                        top_role="specialization_request_context",
+                        visiting=set(),
+                        require_mature_nested=False,
+                    )
+                    request_error_id = (
+                        f"specialization_request_{request_index}:prediction_error"
+                    )
+                    graph.add_node(Node(
+                        request_error_id,
+                        NodeType.TERMINAL,
+                        predicate=_cell_prediction_error_terminal,
+                        meta={
+                            "terminal_kind": "CELL_LOCAL_PREDICTION_ERROR",
+                            "cell_id": cell.cell_id,
+                            "polarity": cell.polarity.value,
+                        },
+                    ))
+                    graph.add_hierarchy_pair(request_leg_id, request_error_id)
+
         else:
             self._add_false_child(
                 graph, CORRECTION_ROOT_ID, "no_correctable_cells"
             )
+        if specialization_request_count == 0:
+            self._add_false_child(
+                graph, SPECIALIZATION_REQUEST_ROOT_ID, "no_requestable_parents"
+            )
+
         self.graph = graph
 
     def _add_cell_subtree(
@@ -1076,6 +1527,10 @@ class GraphNativeCompetenceEnvelope:
                     and (
                         nested.is_mature
                         or (
+                            cell.lineage_parent_id == nested_id
+                            and nested.state == StemCellState.PROBATION
+                        )
+                        or (
                             not require_mature_nested
                             and nested.state == StemCellState.PROBATION
                         )
@@ -1119,6 +1574,128 @@ class GraphNativeCompetenceEnvelope:
             meta={"terminal_kind": "EMPTY_CONTEXT"},
         ))
         graph.add_hierarchy_pair(parent_id, node_id)
+
+    def continuation_manifest_v2(self) -> dict[str, Any]:
+        """Exhaustive deterministic state for exact scientific continuation."""
+
+        cells = []
+        for cell in sorted(self.cells.values(), key=lambda item: item.cell_id):
+            cells.append({
+                **cell.to_manifest(),
+                "lineage_parent_id": cell.lineage_parent_id,
+                "specialization_depth": cell.specialization_depth,
+                "specialization_request_ordinal": (
+                    cell.specialization_request_ordinal
+                ),
+                "specialization_proposal_ordinal": (
+                    cell.specialization_proposal_ordinal
+                ),
+            })
+        evidence = [
+            {
+                "evidence_key": record.evidence_key,
+                "active_signal_ids": list(record.active_signal_ids),
+                "policy_response": record.policy_response,
+                "observed_completion": record.observed_completion,
+                "actuator_identity": record.actuator_identity,
+                "completion_terminal_identity": (
+                    record.completion_terminal_identity
+                ),
+            }
+            for record in sorted(
+                self.evidence.values(), key=lambda item: item.evidence_key
+            )
+        ]
+        return {
+            "schema_version": "continuation_manifest.v2",
+            "organism_schema_version": self.schema_version,
+            "config": {
+                key: getattr(self.config, key)
+                for key in self.config.__dataclass_fields__
+            },
+            "evidence_records": evidence,
+            "cells": cells,
+            "member_specs": [
+                list(item) for item in sorted(self._member_specs)
+            ],
+            "continuation_counters": {
+                "next_cell_index": self._next_cell_index,
+                "review_count": self._review_count,
+                "specialization_request_ordinal": (
+                    self._specialization_request_ordinal
+                ),
+                "specialization_proposal_ordinal": (
+                    self._specialization_proposal_ordinal
+                ),
+            },
+            "growth_audit": {
+                "request_opportunities": self.audit.request_opportunities,
+                "graph_request_emissions": self.audit.graph_request_emissions,
+                "proposal_attempts": self.audit.proposal_attempts,
+                "admitted_proposals": self.audit.admitted_proposals,
+                "duplicate_rejections": self.audit.duplicate_rejections,
+                "capacity_rejections": self.audit.capacity_rejections,
+                "insufficient_member_rejections": (
+                    self.audit.insufficient_member_rejections
+                ),
+                "proposal_rows": copy.deepcopy(self.audit.proposal_rows),
+                "lifecycle_reviews": copy.deepcopy(
+                    self.audit.lifecycle_reviews
+                ),
+            },
+            "correction_audit": {
+                "unique_real_observations": (
+                    self.correction_audit.unique_real_observations
+                ),
+                "duplicate_observations": (
+                    self.correction_audit.duplicate_observations
+                ),
+                "contradiction_hits": self.correction_audit.contradiction_hits,
+                "mature_to_probation_transitions": (
+                    self.correction_audit.mature_to_probation_transitions
+                ),
+                "query_rows": copy.deepcopy(
+                    self.correction_audit.query_rows
+                ),
+            },
+            "specialization_audit": {
+                "request_opportunities": (
+                    self.specialization_audit.request_opportunities
+                ),
+                "graph_request_emissions": (
+                    self.specialization_audit.graph_request_emissions
+                ),
+                "proposal_attempts": (
+                    self.specialization_audit.proposal_attempts
+                ),
+                "admitted_proposals": (
+                    self.specialization_audit.admitted_proposals
+                ),
+                "empty_eligibility_rejections": (
+                    self.specialization_audit.empty_eligibility_rejections
+                ),
+                "duplicate_rejections": (
+                    self.specialization_audit.duplicate_rejections
+                ),
+                "capacity_rejections": (
+                    self.specialization_audit.capacity_rejections
+                ),
+                "request_rows": copy.deepcopy(
+                    self.specialization_audit.request_rows
+                ),
+            },
+            "graph_snapshot": self.graph.to_snapshot(),
+        }
+
+    def continuation_digest_v2(self) -> str:
+        payload = json.dumps(
+            self.continuation_manifest_v2(),
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode("utf-8")
+        return hashlib.sha256(payload).hexdigest()
+
 
     def to_manifest(self) -> dict[str, Any]:
         return {
@@ -1492,6 +2069,19 @@ def _availability_error_terminal(
     node.meta["last_availability_error"] = error
     node.meta["growth_request_emitted"] = not math.isclose(error, 0.0)
     return True, not math.isclose(error, 0.0)
+
+
+def _specialization_eligibility_terminal(
+    node: Node, env: Mapping[str, Any]
+) -> tuple[bool, bool]:
+    pair = (
+        str(node.meta["parent_cell_id"]),
+        str(node.meta["base_identity"]),
+    )
+    success = pair in env.get("eligible_specialization_pairs", ())
+    node.activation.value = 1.0 if success else 0.0
+    return True, success
+
 
 
 def _cell_prediction_error_terminal(
