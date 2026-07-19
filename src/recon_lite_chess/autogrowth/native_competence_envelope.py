@@ -14,6 +14,8 @@ import chess
 from recon_lite import (
     ChildResponse,
     FormalReConEngine,
+    FrameContext,
+    FrameKind,
     Graph,
     Node,
     NodeState,
@@ -36,6 +38,7 @@ REFUTED_ROOT_ID = "competence_refuted_root"
 SHADOW_ROOT_ID = "competence_shadow_root"
 GROWTH_REQUEST_ROOT_ID = "competence_growth_request_root"
 AVAILABILITY_ERROR_ID = "internal:availability_error"
+CORRECTION_ROOT_ID = "competence_mature_correction_root"
 SCHEMA_VERSION = "native_r0_competence_envelope.v1"
 
 
@@ -107,7 +110,14 @@ class CompetenceContextCell:
     uncertainty: float = 1.0
     maturity_review: int | None = None
     prune_reason: str | None = None
+    revoked_evidence_key: str | None = None
+    revocation_count: int = 0
     provenance: str = "unique_real_r0_completion"
+
+    def __setstate__(self, state: Mapping[str, Any]) -> None:
+        self.__dict__.update(state)
+        self.__dict__.setdefault("revoked_evidence_key", None)
+        self.__dict__.setdefault("revocation_count", 0)
 
     @property
     def state(self) -> StemCellState:
@@ -139,6 +149,8 @@ class CompetenceContextCell:
             "uncertainty": self.uncertainty,
             "maturity_review": self.maturity_review,
             "prune_reason": self.prune_reason,
+            "revoked_evidence_key": self.revoked_evidence_key,
+            "revocation_count": self.revocation_count,
             "provenance": self.provenance,
         }
 
@@ -214,6 +226,28 @@ class GrowthAudit:
     insufficient_member_rejections: int = 0
     proposal_rows: list[dict[str, Any]] = field(default_factory=list)
     lifecycle_reviews: list[dict[str, Any]] = field(default_factory=list)
+
+
+@dataclass
+class MatureCorrectionAudit:
+    unique_real_observations: int = 0
+    duplicate_observations: int = 0
+    contradiction_hits: int = 0
+    mature_to_probation_transitions: int = 0
+    query_rows: list[dict[str, Any]] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class MatureCorrectionEmission:
+    evidence_key: str
+    evidence_inserted: bool
+    matching_cell_ids: tuple[str, ...]
+    supporting_cell_ids: tuple[str, ...]
+    contradiction_cell_ids: tuple[str, ...]
+    transitioned_cell_ids: tuple[str, ...]
+    lifecycle_connected: bool
+    root_state: str
+    leg_states: tuple[tuple[str, str], ...]
 
 
 class CompetenceContextGrowthGenome:
@@ -300,11 +334,18 @@ class GraphNativeCompetenceEnvelope:
     cells: dict[str, CompetenceContextCell] = field(default_factory=dict)
     evidence: dict[str, CompetenceEvidenceRecord] = field(default_factory=dict)
     audit: GrowthAudit = field(default_factory=GrowthAudit)
+    correction_audit: MatureCorrectionAudit = field(
+        default_factory=MatureCorrectionAudit
+    )
     schema_version: str = SCHEMA_VERSION
     graph: Graph = field(init=False)
     _member_specs: set[tuple[str, ...]] = field(default_factory=set, init=False)
     _next_cell_index: int = 0
     _review_count: int = 0
+
+    def __setstate__(self, state: Mapping[str, Any]) -> None:
+        self.__dict__.update(state)
+        self.__dict__.setdefault("correction_audit", MatureCorrectionAudit())
 
     def __post_init__(self) -> None:
         if self.schema_version != SCHEMA_VERSION:
@@ -328,6 +369,153 @@ class GraphNativeCompetenceEnvelope:
             return False
         self.evidence[record.evidence_key] = record
         return True
+
+    def observe_real_outcome(
+        self,
+        frame: FrameContext,
+        record: CompetenceEvidenceRecord,
+        *,
+        lifecycle_connected: bool,
+    ) -> MatureCorrectionEmission:
+        """Ground one unique real outcome and consume graph-emitted corrections."""
+
+        if not isinstance(frame, FrameContext) or frame.kind is not FrameKind.REAL:
+            raise ValueError("competence correction requires a REAL FrameContext")
+        inserted = self.add_unique_evidence(record)
+        if not inserted:
+            self.correction_audit.duplicate_observations += 1
+            return MatureCorrectionEmission(
+                evidence_key=record.evidence_key,
+                evidence_inserted=False,
+                matching_cell_ids=(),
+                supporting_cell_ids=(),
+                contradiction_cell_ids=(),
+                transitioned_cell_ids=(),
+                lifecycle_connected=bool(lifecycle_connected),
+                root_state="NOT_REQUESTED_DUPLICATE",
+                leg_states=(),
+            )
+        self.correction_audit.unique_real_observations += 1
+        matching = tuple(sorted(
+            cell.cell_id
+            for cell in self.cells.values()
+            if self._cell_pattern_matches(cell, record, set())
+        ))
+        for cell_id in matching:
+            self._refresh_cell_evidence(self.cells[cell_id])
+        query = self._emit_mature_correction(record)
+        contradictory = query["confirmed_cell_ids"]
+        supporting = tuple(sorted(
+            cell_id for cell_id in matching
+            if cell_id not in set(contradictory)
+        ))
+        transitioned: list[str] = []
+        if lifecycle_connected:
+            for cell_id in contradictory:
+                cell = self.cells[cell_id]
+                if cell.state != StemCellState.MATURE:
+                    continue
+                cell.stem_cell.state = StemCellState.PROBATION
+                cell.stem_cell.metadata["maturity_revoked"] = True
+                cell.stem_cell.metadata["revoked_evidence_key"] = record.evidence_key
+                cell.revoked_evidence_key = record.evidence_key
+                cell.revocation_count += 1
+                transitioned.append(cell_id)
+        self.correction_audit.contradiction_hits += len(contradictory)
+        self.correction_audit.mature_to_probation_transitions += len(transitioned)
+        row = {
+            "evidence_key": record.evidence_key,
+            "matching_cell_ids": list(matching),
+            "supporting_cell_ids": list(supporting),
+            "contradiction_cell_ids": list(contradictory),
+            "transitioned_cell_ids": list(transitioned),
+            "lifecycle_connected": bool(lifecycle_connected),
+            "root_state": query["root_state"],
+            "leg_states": [list(item) for item in query["leg_states"]],
+        }
+        self.correction_audit.query_rows.append(row)
+        if transitioned:
+            self.rebuild_graph()
+        return MatureCorrectionEmission(
+            evidence_key=record.evidence_key,
+            evidence_inserted=True,
+            matching_cell_ids=matching,
+            supporting_cell_ids=supporting,
+            contradiction_cell_ids=contradictory,
+            transitioned_cell_ids=tuple(transitioned),
+            lifecycle_connected=bool(lifecycle_connected),
+            root_state=query["root_state"],
+            leg_states=query["leg_states"],
+        )
+
+    def _emit_mature_correction(
+        self, record: CompetenceEvidenceRecord
+    ) -> dict[str, Any]:
+        runtime = copy.deepcopy(self.graph)
+        legs = tuple(sorted(
+            (
+                node_id,
+                str(node.meta["cell_id"]),
+            )
+            for node_id, node in runtime.nodes.items()
+            if node.meta.get("role") == "mature_correction_leg"
+        ))
+        engine = FormalReConEngine(runtime, record_trace=False)
+        engine.request(CORRECTION_ROOT_ID)
+        engine.run(
+            max_ticks=192,
+            env={
+                "active_signal_ids": frozenset(record.active_signal_ids),
+                "observed_completion": bool(record.observed_completion),
+            },
+            until=lambda item: all(
+                item.g.nodes[node_id].state
+                in {NodeState.CONFIRMED, NodeState.FAILED}
+                for node_id, _cell_id in legs
+            ),
+        )
+        leg_states = tuple(
+            (cell_id, runtime.nodes[node_id].state.name)
+            for node_id, cell_id in legs
+        )
+        confirmed = tuple(sorted(
+            cell_id for node_id, cell_id in legs
+            if runtime.nodes[node_id].state == NodeState.CONFIRMED
+        ))
+        return {
+            "confirmed_cell_ids": confirmed,
+            "root_state": runtime.nodes[CORRECTION_ROOT_ID].state.name,
+            "leg_states": leg_states,
+        }
+
+    def _refresh_cell_evidence(self, cell: CompetenceContextCell) -> None:
+        matched = tuple(
+            record for record in self.evidence.values()
+            if self._cell_pattern_matches(cell, record, set())
+        )
+        successes = sum(record.observed_completion for record in matched)
+        failures = len(matched) - successes
+        cell.evidence_keys = tuple(sorted(record.evidence_key for record in matched))
+        cell.successes = int(successes)
+        cell.failures = int(failures)
+        cell.support = len(matched)
+        cell.success_lower_bound = wilson_lower_bound(
+            successes, len(matched), self.config.wilson_z
+        )
+        cell.failure_lower_bound = wilson_lower_bound(
+            failures, len(matched), self.config.wilson_z
+        )
+        cell.conservative_success_estimate = cell.success_lower_bound
+        cell.uncertainty = 1.0 - max(
+            cell.success_lower_bound, cell.failure_lower_bound
+        )
+        stats = cell.stem_cell.candidate_stats
+        stats.relevance_stats.request_exposures = len(self.evidence)
+        stats.relevance_stats.activation_count = len(matched)
+        stats.relevance_stats.confirm_count = successes
+        stats.credit_stats.positive_correlation = successes
+        stats.credit_stats.negative_correlation = failures
+        stats.recompute_survival()
 
     def classify(
         self,
@@ -658,6 +846,30 @@ class GraphNativeCompetenceEnvelope:
                 return False
         return True
 
+    def _cell_pattern_matches(
+        self,
+        cell: CompetenceContextCell,
+        record: CompetenceEvidenceRecord,
+        visiting: set[str],
+    ) -> bool:
+        """Match retained pattern identity without requiring current authority."""
+
+        if cell.cell_id in visiting:
+            raise RuntimeError("cyclic competence context")
+        next_visiting = set(visiting)
+        next_visiting.add(cell.cell_id)
+        active = set(record.active_signal_ids)
+        for member in cell.members:
+            if member.startswith("context:"):
+                parent = self.cells.get(member.split(":", 1)[1])
+                if parent is None or parent.state == StemCellState.PRUNED:
+                    return False
+                if not self._cell_pattern_matches(parent, record, next_visiting):
+                    return False
+            elif member not in active:
+                return False
+        return True
+
     def rebuild_graph(self) -> None:
         graph = Graph()
         graph.add_node(Node(
@@ -722,6 +934,11 @@ class GraphNativeCompetenceEnvelope:
             },
         ))
         graph.add_hierarchy_pair(GROWTH_REQUEST_ROOT_ID, AVAILABILITY_ERROR_ID)
+        graph.add_node(Node(
+            CORRECTION_ROOT_ID,
+            NodeType.SCRIPT,
+            meta={"confirm_policy": "or", "role": "mature_correction"},
+        ))
 
         positive = [
             cell for cell in self.cells.values()
@@ -732,6 +949,14 @@ class GraphNativeCompetenceEnvelope:
             if cell.is_mature and cell.polarity == AvailabilityState.REFUTED
         ]
         trials = [cell for cell in self.cells.values() if cell.is_trial]
+        correction_cells = [
+            cell for cell in self.cells.values()
+            if cell.state in {StemCellState.MATURE, StemCellState.PROBATION}
+            and cell.polarity in {
+                AvailabilityState.AVAILABLE,
+                AvailabilityState.REFUTED,
+            }
+        ]
         if positive:
             for index, cell in enumerate(positive):
                 self._add_cell_subtree(
@@ -768,6 +993,45 @@ class GraphNativeCompetenceEnvelope:
                 )
         else:
             self._add_false_child(graph, SHADOW_ROOT_ID, "no_trials")
+        if correction_cells:
+            for index, cell in enumerate(correction_cells):
+                leg_id = f"correction_{index}:{cell.cell_id}"
+                graph.add_node(Node(
+                    leg_id,
+                    NodeType.SCRIPT,
+                    meta={
+                        "confirm_policy": "and",
+                        "role": "mature_correction_leg",
+                        "cell_id": cell.cell_id,
+                        "polarity": cell.polarity.value,
+                    },
+                ))
+                graph.add_hierarchy_pair(CORRECTION_ROOT_ID, leg_id)
+                self._add_cell_subtree(
+                    graph,
+                    leg_id,
+                    cell,
+                    prefix=f"correction_{index}:context",
+                    top_role="correction_context_root",
+                    visiting=set(),
+                    require_mature_nested=False,
+                )
+                error_id = f"correction_{index}:prediction_error"
+                graph.add_node(Node(
+                    error_id,
+                    NodeType.TERMINAL,
+                    predicate=_cell_prediction_error_terminal,
+                    meta={
+                        "terminal_kind": "CELL_LOCAL_PREDICTION_ERROR",
+                        "cell_id": cell.cell_id,
+                        "polarity": cell.polarity.value,
+                    },
+                ))
+                graph.add_hierarchy_pair(leg_id, error_id)
+        else:
+            self._add_false_child(
+                graph, CORRECTION_ROOT_ID, "no_correctable_cells"
+            )
         self.graph = graph
 
     def _add_cell_subtree(
@@ -779,6 +1043,7 @@ class GraphNativeCompetenceEnvelope:
         prefix: str,
         top_role: str,
         visiting: set[str],
+        require_mature_nested: bool = True,
     ) -> str:
         if cell.cell_id in visiting:
             raise RuntimeError("cyclic competence context topology")
@@ -806,7 +1071,17 @@ class GraphNativeCompetenceEnvelope:
             if member.startswith("context:"):
                 nested_id = member.split(":", 1)[1]
                 nested = self.cells.get(nested_id)
-                if nested is None or not nested.is_mature:
+                nested_allowed = bool(
+                    nested is not None
+                    and (
+                        nested.is_mature
+                        or (
+                            not require_mature_nested
+                            and nested.state == StemCellState.PROBATION
+                        )
+                    )
+                )
+                if not nested_allowed:
                     self._add_false_child(
                         graph, node_id, f"{prefix}_missing_{member_index}"
                     )
@@ -818,6 +1093,7 @@ class GraphNativeCompetenceEnvelope:
                         prefix=f"{prefix}:nested_{member_index}",
                         top_role="nested_context",
                         visiting=next_visiting,
+                        require_mature_nested=require_mature_nested,
                     )
             else:
                 terminal_id = f"{prefix}:member_{member_index}"
@@ -871,6 +1147,19 @@ class GraphNativeCompetenceEnvelope:
                 ),
                 "proposal_rows": list(self.audit.proposal_rows),
                 "lifecycle_reviews": list(self.audit.lifecycle_reviews),
+            },
+            "correction_audit": {
+                "unique_real_observations": (
+                    self.correction_audit.unique_real_observations
+                ),
+                "duplicate_observations": (
+                    self.correction_audit.duplicate_observations
+                ),
+                "contradiction_hits": self.correction_audit.contradiction_hits,
+                "mature_to_probation_transitions": (
+                    self.correction_audit.mature_to_probation_transitions
+                ),
+                "query_rows": list(self.correction_audit.query_rows),
             },
             "graph_snapshot": self.graph.to_snapshot(),
         }
@@ -1203,3 +1492,15 @@ def _availability_error_terminal(
     node.meta["last_availability_error"] = error
     node.meta["growth_request_emitted"] = not math.isclose(error, 0.0)
     return True, not math.isclose(error, 0.0)
+
+
+def _cell_prediction_error_terminal(
+    node: Node, env: Mapping[str, Any]
+) -> tuple[bool, bool]:
+    polarity = AvailabilityState(str(node.meta["polarity"]))
+    observed = bool(env.get("observed_completion", False))
+    predicted = polarity == AvailabilityState.AVAILABLE
+    contradiction = observed != predicted
+    node.activation.value = 1.0 if contradiction else 0.0
+    node.meta["last_prediction_error"] = int(contradiction)
+    return True, contradiction

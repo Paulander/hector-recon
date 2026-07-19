@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import hashlib
+import inspect
 import pickle
 
 import pytest
 
+from recon_lite import FrameContext, FrameKind
 from recon_lite_hector.nodes import StemCellState, StemCellTerminal
 
 from recon_lite_chess.autogrowth.native_competence_envelope import (
@@ -297,3 +300,170 @@ def test_fixed_growth_is_self_materialized_and_serializable_without_fen() -> Non
     assert b" w - " not in payload
     restored = pickle.loads(payload)
     assert restored.to_manifest() == envelope.to_manifest()
+
+
+def _real_frame(label: str = "synthetic") -> FrameContext:
+    return FrameContext(frame_id=label, kind=FrameKind.REAL, values={})
+
+
+def _mature_envelope(
+    *cells: tuple[str, tuple[str, ...], AvailabilityState]
+) -> GraphNativeCompetenceEnvelope:
+    envelope = GraphNativeCompetenceEnvelope()
+    for cell_id, members, polarity in cells:
+        cell = _cell(
+            cell_id,
+            members,
+            state=StemCellState.MATURE,
+            polarity=polarity,
+        )
+        cell.support = 4
+        cell.successes = 4 if polarity == AvailabilityState.AVAILABLE else 0
+        cell.failures = 4 if polarity == AvailabilityState.REFUTED else 0
+        cell.success_lower_bound = 0.6 if polarity == AvailabilityState.AVAILABLE else 0.0
+        cell.failure_lower_bound = 0.6 if polarity == AvailabilityState.REFUTED else 0.0
+        envelope.cells[cell_id] = cell
+    envelope.rebuild_graph()
+    return envelope
+
+
+def test_graph_local_failure_revokes_only_active_available_cell() -> None:
+    envelope = _mature_envelope(
+        ("broad", ("atom:a",), AvailabilityState.AVAILABLE),
+        ("sibling", ("atom:a", "atom:b"), AvailabilityState.AVAILABLE),
+        ("inactive", ("atom:c",), AvailabilityState.AVAILABLE),
+    )
+    assert envelope.classify(("atom:a",), policy_response=True).available_cell_ids == (
+        "broad",
+    )
+
+    emission = envelope.observe_real_outcome(
+        _real_frame(), _record("real-failure", ("atom:a",), False),
+        lifecycle_connected=True,
+    )
+
+    assert emission.contradiction_cell_ids == ("broad",)
+    assert emission.transitioned_cell_ids == ("broad",)
+    assert envelope.cells["broad"].state == StemCellState.PROBATION
+    assert envelope.cells["broad"].failures == 1
+    assert envelope.cells["sibling"].state == StemCellState.MATURE
+    assert envelope.cells["inactive"].state == StemCellState.MATURE
+    assert envelope.classify(("atom:a",), policy_response=True).state == (
+        AvailabilityState.UNKNOWN
+    )
+
+
+def test_supporting_outcome_preserves_mature_siblings_and_two_or_cells_revoke() -> None:
+    envelope = _mature_envelope(
+        ("first", ("atom:a",), AvailabilityState.AVAILABLE),
+        ("second", ("atom:b",), AvailabilityState.AVAILABLE),
+    )
+    support = envelope.observe_real_outcome(
+        _real_frame("support"),
+        _record("support", ("atom:a", "atom:b"), True),
+        lifecycle_connected=True,
+    )
+    assert support.supporting_cell_ids == ("first", "second")
+    assert support.contradiction_cell_ids == ()
+    assert all(cell.state == StemCellState.MATURE for cell in envelope.cells.values())
+
+    failure = envelope.observe_real_outcome(
+        _real_frame("failure"),
+        _record("failure", ("atom:a", "atom:b"), False),
+        lifecycle_connected=True,
+    )
+    assert failure.contradiction_cell_ids == ("first", "second")
+    assert failure.transitioned_cell_ids == ("first", "second")
+    assert all(cell.state == StemCellState.PROBATION for cell in envelope.cells.values())
+
+
+def test_refuted_polarity_is_revoked_symmetrically() -> None:
+    envelope = _mature_envelope(
+        ("refuted", ("atom:a",), AvailabilityState.REFUTED),
+    )
+    assert envelope.classify(("atom:a",), policy_response=True).state == (
+        AvailabilityState.REFUTED
+    )
+    emission = envelope.observe_real_outcome(
+        _real_frame(), _record("completion", ("atom:a",), True),
+        lifecycle_connected=True,
+    )
+    assert emission.contradiction_cell_ids == ("refuted",)
+    assert envelope.cells["refuted"].state == StemCellState.PROBATION
+    assert envelope.classify(("atom:a",), policy_response=True).state == (
+        AvailabilityState.UNKNOWN
+    )
+
+
+def test_duplicate_evidence_is_idempotent_and_disconnected_correction_is_telemetry_only() -> None:
+    envelope = _mature_envelope(
+        ("broad", ("atom:a",), AvailabilityState.AVAILABLE),
+    )
+    record = _record("unique-failure", ("atom:a",), False)
+    first = envelope.observe_real_outcome(
+        _real_frame(), record, lifecycle_connected=False
+    )
+    first_state = pickle.dumps(envelope, protocol=pickle.HIGHEST_PROTOCOL)
+    duplicate = envelope.observe_real_outcome(
+        _real_frame(), record, lifecycle_connected=True
+    )
+    assert first.contradiction_cell_ids == ("broad",)
+    assert first.transitioned_cell_ids == ()
+    assert envelope.cells["broad"].state == StemCellState.MATURE
+    assert duplicate.evidence_inserted is False
+    assert duplicate.contradiction_cell_ids == ()
+    assert envelope.cells["broad"].support == 1
+    assert envelope.correction_audit.contradiction_hits == 1
+    assert envelope.correction_audit.duplicate_observations == 1
+    assert first_state != pickle.dumps(envelope, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+def test_probation_and_evidence_survive_serialization() -> None:
+    envelope = _mature_envelope(
+        ("broad", ("atom:a",), AvailabilityState.AVAILABLE),
+    )
+    envelope.observe_real_outcome(
+        _real_frame(), _record("failure", ("atom:a",), False),
+        lifecycle_connected=True,
+    )
+    restored = pickle.loads(
+        pickle.dumps(envelope, protocol=pickle.HIGHEST_PROTOCOL)
+    )
+    assert restored.to_manifest() == envelope.to_manifest()
+    assert restored.cells["broad"].state == StemCellState.PROBATION
+    assert restored.cells["broad"].evidence_keys == ("failure",)
+
+
+def test_virtual_correction_is_rejected_without_persistent_mutation() -> None:
+    envelope = _mature_envelope(
+        ("broad", ("atom:a",), AvailabilityState.AVAILABLE),
+    )
+    before = hashlib.sha256(
+        pickle.dumps(envelope, protocol=pickle.HIGHEST_PROTOCOL)
+    ).hexdigest()
+    with pytest.raises(ValueError, match="REAL FrameContext"):
+        envelope.observe_real_outcome(
+            FrameContext("dream", FrameKind.VIRTUAL, values={}),
+            _record("dream-failure", ("atom:a",), False),
+            lifecycle_connected=True,
+        )
+    after = hashlib.sha256(
+        pickle.dumps(envelope, protocol=pickle.HIGHEST_PROTOCOL)
+    ).hexdigest()
+    assert after == before
+
+
+def test_connected_correction_api_cannot_accept_responsible_cell_identity() -> None:
+    signature = inspect.signature(GraphNativeCompetenceEnvelope.observe_real_outcome)
+    assert "cell_id" not in signature.parameters
+    assert "responsible_cell_id" not in signature.parameters
+    envelope = _mature_envelope(
+        ("broad", ("atom:a",), AvailabilityState.AVAILABLE),
+    )
+    with pytest.raises(TypeError):
+        envelope.observe_real_outcome(
+            _real_frame(),
+            _record("failure", ("atom:a",), False),
+            lifecycle_connected=True,
+            responsible_cell_id="broad",  # type: ignore[call-arg]
+        )
