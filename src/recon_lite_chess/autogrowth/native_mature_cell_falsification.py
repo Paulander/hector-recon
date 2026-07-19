@@ -60,6 +60,21 @@ CONTROL_MANIFEST = (
     "reports/autogrowth/native_authority/"
     "native_mature_cell_falsification_control_manifest.json"
 )
+INSTRUMENT_REPAIR_ADDENDUM = (
+    "docs/autogrowth/NATIVE_MATURE_CELL_FALSIFICATION_INSTRUMENT_REPAIR.md"
+)
+INSTRUMENT_REPAIR_MANIFEST = (
+    "reports/autogrowth/native_authority/"
+    "native_mature_cell_falsification_instrument_repair_manifest.json"
+)
+INSTRUMENT_ABORT_RESULT = (
+    "reports/autogrowth/native_authority/"
+    "native_mature_cell_falsification_instrument_abort.json"
+)
+INSTRUMENT_ABORT_ORGANISMS = (
+    "reports/autogrowth/native_authority/"
+    "native_mature_cell_falsification_instrument_abort_organisms"
+)
 RESULT_PATH = (
     "reports/autogrowth/native_authority/"
     "native_mature_cell_falsification.json"
@@ -139,6 +154,40 @@ def generate_control_manifest(
                     "tests/autogrowth/test_native_mature_cell_falsification.py"
                 )
             ),
+        },
+    }
+    payload["manifest_payload_sha256"] = _hash_json(payload)
+    return _write_json(output, payload)
+
+
+def generate_instrument_repair_manifest(
+    repair_commit: str,
+    *,
+    output: str = INSTRUMENT_REPAIR_MANIFEST,
+) -> dict[str, Any]:
+    """Freeze the sole instrumentation repair before repeating the package."""
+    if _git_head() != repair_commit:
+        raise RuntimeError("repair manifest must be generated from exact repair HEAD")
+    control = _load_json(CONTROL_MANIFEST)
+    if control.get("manifest_payload_sha256") != "4ba4253d9986cd0681cf7c184b2fd8095c91da1ee0d4f130b4d6724b2d529bc7":
+        raise RuntimeError("frozen control manifest changed")
+    payload = {
+        "schema_version": "native_mature_cell_falsification_instrument_repair.v1",
+        "repair_commit": repair_commit,
+        "repair_scope": "restore-parity instrument only",
+        "scientific_factors_changed": False,
+        "old_contract": "raw repickle byte equality",
+        "new_contract": "complete canonical manifest equality (existing V3B contract)",
+        "control_manifest_sha256": _file_sha256(CONTROL_MANIFEST),
+        "control_manifest_payload_sha256": control["manifest_payload_sha256"],
+        "abort_result_sha256": _file_sha256(INSTRUMENT_ABORT_RESULT),
+        "abort_organism_index": _directory_index(INSTRUMENT_ABORT_ORGANISMS),
+        "repair_files": {
+            "src/recon_lite_chess/autogrowth/native_mature_cell_falsification.py": _file_sha256(__file__),
+            "tests/autogrowth/test_native_mature_cell_falsification.py": _file_sha256(
+                "tests/autogrowth/test_native_mature_cell_falsification.py"
+            ),
+            INSTRUMENT_REPAIR_ADDENDUM: _file_sha256(INSTRUMENT_REPAIR_ADDENDUM),
         },
     }
     payload["manifest_payload_sha256"] = _hash_json(payload)
@@ -693,11 +742,33 @@ def _verify_run_sources(
     source: Mapping[str, Any], manifest: Mapping[str, Any]
 ) -> dict[str, Any]:
     _verify_source_result(source)
+    repair = _load_json(INSTRUMENT_REPAIR_MANIFEST)
+    repair_payload = dict(repair)
+    repair_digest = repair_payload.pop("manifest_payload_sha256")
+    if _hash_json(repair_payload) != repair_digest:
+        raise RuntimeError("instrument repair manifest payload hash mismatch")
+    if repair.get("scientific_factors_changed") is not False:
+        raise RuntimeError("instrument repair altered a scientific factor")
+    if repair.get("control_manifest_sha256") != _file_sha256(CONTROL_MANIFEST):
+        raise RuntimeError("instrument repair control-manifest hash mismatch")
+    if repair.get("abort_result_sha256") != _file_sha256(INSTRUMENT_ABORT_RESULT):
+        raise RuntimeError("preserved instrument-abort result changed")
+    if repair.get("abort_organism_index") != _directory_index(INSTRUMENT_ABORT_ORGANISMS):
+        raise RuntimeError("preserved instrument-abort organisms changed")
+    repair_files = {
+        str(path): str(digest)
+        for path, digest in repair.get("repair_files", {}).items()
+    }
     expected = {
         SOURCE_RESULT: SOURCE_RESULT_SHA256,
         SOURCE_V3C: SOURCE_V3C_SHA256,
         SOURCE_R0: SOURCE_R0_SHA256,
-        **{str(path): str(digest) for path, digest in manifest["source_freeze"].items()},
+        **{
+            str(path): str(digest)
+            for path, digest in manifest["source_freeze"].items()
+            if str(path) not in repair_files
+        },
+        **repair_files,
     }
     mismatches = {
         path: {"expected": digest, "observed": _file_sha256(path)}
@@ -717,6 +788,13 @@ def _verify_run_sources(
             "path": CONTROL_MANIFEST,
             "sha256": _file_sha256(CONTROL_MANIFEST),
             "payload_sha256": digest,
+        },
+        "instrument_repair_manifest": {
+            "path": INSTRUMENT_REPAIR_MANIFEST,
+            "sha256": _file_sha256(INSTRUMENT_REPAIR_MANIFEST),
+            "payload_sha256": repair_digest,
+            "repair_commit": repair["repair_commit"],
+            "scientific_factors_changed": False,
         },
         "files": {path: {"sha256": digest} for path, digest in sorted(expected.items())},
     }
@@ -756,6 +834,24 @@ def _hash_json(value: Any) -> str:
     return hashlib.sha256(
         json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
+
+
+def _directory_index(directory: str | Path) -> dict[str, Any]:
+    root = Path(directory)
+    rows = [
+        {
+            "path": str(path.relative_to(root)),
+            "sha256": _file_sha256(path),
+            "bytes": path.stat().st_size,
+        }
+        for path in sorted(item for item in root.rglob("*") if item.is_file())
+    ]
+    return {
+        "file_count": len(rows),
+        "total_bytes": sum(int(row["bytes"]) for row in rows),
+        "rows": rows,
+        "index_sha256": _hash_json(rows),
+    }
 
 
 def _serialize_restore_audit(
