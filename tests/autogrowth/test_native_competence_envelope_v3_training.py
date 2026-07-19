@@ -23,6 +23,11 @@ from recon_lite_chess.autogrowth.native_competence_envelope_v3_training import (
 )
 
 
+MATURE_FALSIFICATION_LEARNER_SHA256 = (
+    "a247623308f157cd15df5c56ce5fec2a6758bf8b53ae5d58ee4c3a7937f4641e"
+)
+
+
 def _actuation(activation: float = 0.25) -> dict[str, object]:
     return {
         "actuator_identity": "chess_move:a1a2",
@@ -46,9 +51,16 @@ def _real_row(activation: float = 0.25) -> dict[str, object]:
     }
 
 
-def test_v3_hash_locks_the_unchanged_v2_runner_and_learner() -> None:
+def test_v3_preserves_frozen_hash_and_locks_additive_maturity_extension() -> None:
     assert _file_sha256(V2_MODULE) == V2_MODULE_SHA256
-    assert _file_sha256(LEARNER_MODULE) == LEARNER_MODULE_SHA256
+    # Keep the historical constant unchanged so rerunning V3 with the later
+    # revocable-maturity learner still fails closed.
+    assert LEARNER_MODULE_SHA256 == (
+        "65dda4f09bc1181a6fe3780c27b56da4fc888a377ae3cfffe3c728e9d11d2a7b"
+    )
+    # The additive learner state is independently frozen by the mature-cell
+    # preregistration/control manifest; V3 itself was not rerun.
+    assert _file_sha256(LEARNER_MODULE) == MATURE_FALSIFICATION_LEARNER_SHA256
 
 
 def test_admission_persists_exact_frame_field_and_float_bits() -> None:

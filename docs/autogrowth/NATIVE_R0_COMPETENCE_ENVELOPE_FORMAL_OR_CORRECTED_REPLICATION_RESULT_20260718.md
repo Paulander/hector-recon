@@ -174,3 +174,12 @@ Do not infer that residual-responsibility is necessary from this package. Do
 not open fresh data or R1 until the mature-cell correction mechanism itself has
 an authority-closed, touched-data-only causal canary and an externally frozen
 scientific package.
+
+## Append-only schema clarification (2026-07-19)
+
+The canonical machine artifact remains byte-for-byte unchanged. Its legacy
+top-level `passed` field represented completion of its integrity/admission
+contract, not scientific success: the viewed-validation transfer verdicts
+failed, as this document records. Subsequent packages report separate
+top-level `integrity_passed`, `mechanism_passed`, and `scientific_passed`
+fields.

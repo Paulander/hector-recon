@@ -313,6 +313,27 @@ competition, not more grace, capacity, proposal throughput, or an automatic
 residual-responsibility conclusion. No such mechanism, terminal-trace closure,
 fresh data, regression, R1, or retired-65 access occurred. See
 `docs/autogrowth/NATIVE_R0_COMPETENCE_ENVELOPE_FORMAL_OR_CORRECTED_REPLICATION_RESULT_20260718.md`.
+
+The preregistered native mature-cell falsification package is now closed on the
+already-viewed validation tape. Its baseline reproduced 313 TP/39 FP and 6/32
+safe-narrow organisms exactly. Graph-local cell-context AND polarity-error legs
+then emitted 47 contradictions and revoked 37 responsible mature cells through
+the existing PROBATION lifecycle. Local responsibility finished at 119 TP/0 FP,
+17/32 safe-narrow, and 1/32 strict while preserving all 21 validation-safe
+mature specifications. Immutable maturity stayed at 313/39 and 6/32.
+
+Integrity and the revocation mechanism passed, but scientific superiority did
+not: the frozen shuffled-responsibility arm used the same 37 transitions and 47
+hits and retained 147 TP/10 FP with 11/32 safe-narrow. Local responsibility was
+safer and produced more safe-narrow organisms, but retained fewer true
+positives. This supports revocable maturity as a real graph-owned safety
+mechanism, not the tested responsibility rule as superior to equal anonymous
+removal. The first attempt's raw-pickle-byte restore gate is preserved as an
+instrument abort; a separately frozen repair adopted the existing complete
+manifest-parity contract and all 96 restored arms then passed. No fresh,
+regression, R1, retired-65, refinement, topology-growth, or terminal-trace work
+occurred. Stop before a new factor; see
+`docs/autogrowth/NATIVE_MATURE_CELL_FALSIFICATION_RESULT_20260719.md`.
 \nThe first touched-data competence-envelope package closed before learning at\
 \x60evidence_admission\x60. Frozen R0 completed 46/48 historical R0-train contexts\
 and failed all 16 train decoys, so the actual stream met the external both-class\

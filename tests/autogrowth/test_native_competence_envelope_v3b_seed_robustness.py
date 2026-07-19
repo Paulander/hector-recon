@@ -33,6 +33,11 @@ from recon_lite_chess.autogrowth.native_competence_envelope_v3b_seed_robustness 
 )
 
 
+MATURE_FALSIFICATION_LEARNER_SHA256 = (
+    "a247623308f157cd15df5c56ce5fec2a6758bf8b53ae5d58ee4c3a7937f4641e"
+)
+
+
 def _records() -> tuple[CompetenceEvidenceRecord, ...]:
     return tuple(
         CompetenceEvidenceRecord(
@@ -89,11 +94,16 @@ def _paired_row(connected: bool, shuffled: bool) -> dict[str, object]:
     }
 
 
-def test_v3b_locks_v3_artifact_rows_and_learner() -> None:
+def test_v3b_locks_artifact_rows_and_declares_additive_learner_extension() -> None:
     source = _load_json(SOURCE_V3_ARTIFACT)
     assert _file_sha256(SOURCE_V3_ARTIFACT) == SOURCE_V3_SHA256
     assert _hash_json(source["training_rows"]) == SOURCE_ROWS_SHA256
-    assert _file_sha256(LEARNER_MODULE) == LEARNER_SHA256
+    # Keep V3B's historical runtime lock unchanged; its old cohort cannot be
+    # rerun under the later revocable-maturity extension.
+    assert LEARNER_SHA256 == (
+        "65dda4f09bc1181a6fe3780c27b56da4fc888a377ae3cfffe3c728e9d11d2a7b"
+    )
+    assert _file_sha256(LEARNER_MODULE) == MATURE_FALSIFICATION_LEARNER_SHA256
 
 
 def test_seed_derivation_is_deterministic_unique_and_excludes_audited_range(
