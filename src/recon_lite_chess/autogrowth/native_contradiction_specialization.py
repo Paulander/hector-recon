@@ -36,7 +36,7 @@ PREREGISTRATION = (
 )
 MANIFEST_PATH = (
     "reports/autogrowth/native_authority/"
-    "native_contradiction_specialization_manifest.json"
+    "native_contradiction_specialization_manifest_v2.json"
 )
 RESULT_PATH = (
     "reports/autogrowth/native_authority/"
@@ -309,7 +309,7 @@ def _verify_manifest() -> Mapping[str, Any]:
 def _worker(args: Mapping[str, Any]) -> dict[str, Any]:
     entry = args["entry"]
     references = args["references"]
-    source = _load_envelope(entry)
+    source = _artifact_envelope(entry["source_artifact"])
     source.rebuild_graph()
     source_cells = _preservation_index(source)
     arms = {}
