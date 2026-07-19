@@ -36,7 +36,7 @@ PREREGISTRATION = (
 )
 MANIFEST_PATH = (
     "reports/autogrowth/native_authority/"
-    "native_contradiction_specialization_manifest_v2.json"
+    "native_contradiction_specialization_manifest_v3.json"
 )
 RESULT_PATH = (
     "reports/autogrowth/native_authority/"
@@ -324,7 +324,7 @@ def _worker(args: Mapping[str, Any]) -> dict[str, Any]:
             )
             emission = envelope.observe_real_outcome(
                 FrameContext(
-                    f"specialization:{entry[ordinal]}:{arm_name}:{reference[row_index]}",
+                    f"specialization:{entry.get("ordinal")}:{arm_name}:{reference.get("row_index")}",
                     FrameKind.REAL,
                     values={"board": chess.Board(str(reference["fen"]))},
                 ),
@@ -356,7 +356,7 @@ def _worker(args: Mapping[str, Any]) -> dict[str, Any]:
             pickle.dumps(restored, protocol=pickle.HIGHEST_PROTOCOL), mtime=0
         )
         artifact_path = Path(args["organism_directory"]) / (
-            f"{int(entry[ordinal]):02d}_{int(entry[genome_seed])}_{arm_name}.pkl.gz"
+            f"{int(entry.get("ordinal")):02d}_{int(entry.get("genome_seed"))}_{arm_name}.pkl.gz"
         )
         artifact_path.parent.mkdir(parents=True, exist_ok=True)
         artifact_path.write_bytes(compressed)
