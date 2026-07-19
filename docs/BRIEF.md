@@ -342,3 +342,24 @@ R0-train retention, conflating a scheduling pool name with current competence.\
 No validation, regression, retired successor, topology-growth, or learning claim\
 was opened. A corrected admission requires a new external authorization; see\
 \x60docs/autogrowth/NATIVE_R0_COMPETENCE_ENVELOPE_TOUCHED_RESULT_20260716.md\x60.
+
+The preregistered contradiction-triggered one-level specialization package is
+now closed on the already-viewed development tape. Engineering preflight added
+an append-only exhaustive `continuation_manifest.v2` while leaving historical
+`complete_canonical_manifest.v1` behavior and the mature-falsification verdict
+unchanged. Synthetic AVAILABLE/REFUTED canaries and exact continuation tests
+passed. The aggregate-only one-level ceiling was capable (313 TP/0 FP, 31/32
+safe-narrow), so the frozen three-arm cohort proceeded.
+
+Local graph-owned contrast specialization passed every integrity and scientific
+gate: 220 TP/0 FP, 30/32 safe-narrow, and 3/32 strict, versus exact demotion-only
+119/0, 17/32, 1/32 and dose-matched contradiction-blind 169/0, 22/32, 3/32.
+Both specialization arms had exactly 37 requests, attempts, and admissions; the
+local arm matured 34 ordinary-evidence children in 24 organisms versus 12 in 10
+for blind. All 96 V2 continuation restores, graph responsibility, direct
+authority, one-level lineage, paired-row, and per-cell recursive-fingerprint
+gates passed. This supports graph-triggered local counterexample contrast as a
+safe coverage-recovery mechanism on viewed data. It is not fresh/regression,
+retired-65, R1, terminal-trace-native, or end-to-end KRK evidence. The package
+is closed with no automatic next factor; see
+`docs/autogrowth/NATIVE_CONTRADICTION_TRIGGERED_SPECIALIZATION_RESULT_20260719.md`.
