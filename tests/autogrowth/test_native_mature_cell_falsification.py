@@ -13,6 +13,7 @@ from recon_lite_chess.autogrowth.native_mature_cell_falsification import (
     _apply_shuffled_control,
     _cohort_metrics,
     _data_firewall,
+    _serialize_restore_audit,
 )
 
 
@@ -78,3 +79,20 @@ def test_cohort_metrics_preserves_empty_and_safe_organisms() -> None:
 
 def test_package_firewall_excludes_every_forbidden_extension() -> None:
     assert not any(_data_firewall().values())
+
+
+def test_restore_parity_uses_complete_canonical_manifest() -> None:
+    envelope = _envelope()
+    envelope.observe_real_outcome(
+        FrameContext("real", FrameKind.REAL, values={}),
+        _failure(),
+        lifecycle_connected=True,
+    )
+    serialized, restored, audit = _serialize_restore_audit(envelope)
+    assert serialized
+    assert audit["contract"] == "complete_canonical_manifest.v1"
+    assert audit["manifest_identical"] is True
+    assert audit["source_manifest_sha256"] == audit["restored_manifest_sha256"]
+    assert restored.to_manifest() == envelope.to_manifest()
+    assert restored.cells["first"].state == StemCellState.PROBATION
+    assert restored.cells["first"].evidence_keys == ("unique",)

@@ -333,10 +333,7 @@ def _adapt_organism_worker(args: Mapping[str, Any]) -> dict[str, Any]:
                 "root_state": emission.root_state,
                 "state_sha256": _pickle_sha256(envelope),
             })
-        serialized = pickle.dumps(envelope, protocol=pickle.HIGHEST_PROTOCOL)
-        restored = pickle.loads(serialized)
-        if not isinstance(restored, GraphNativeCompetenceEnvelope):
-            raise TypeError("restored adapted organism has wrong type")
+        serialized, restored, restore_audit = _serialize_restore_audit(envelope)
         post_rows = [_classify_reference(restored, row) for row in references]
         compressed = gzip.compress(
             pickle.dumps(restored, protocol=pickle.HIGHEST_PROTOCOL), mtime=0
@@ -374,10 +371,8 @@ def _adapt_organism_worker(args: Mapping[str, Any]) -> dict[str, Any]:
             "post_rows": post_rows,
             "source_mature_cell_count": len(source_mature_ids),
             "final_cells": final_cells,
-            "serialized_restore_identical": (
-                pickle.dumps(restored, protocol=pickle.HIGHEST_PROTOCOL)
-                == serialized
-            ),
+            "serialized_restore_identical": restore_audit["manifest_identical"],
+            "serialization_restore_audit": restore_audit,
             "artifact": {
                 "path": str(artifact_path),
                 "compressed_sha256": hashlib.sha256(compressed).hexdigest(),
@@ -761,6 +756,31 @@ def _hash_json(value: Any) -> str:
     return hashlib.sha256(
         json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
+
+
+def _serialize_restore_audit(
+    envelope: GraphNativeCompetenceEnvelope,
+) -> tuple[bytes, GraphNativeCompetenceEnvelope, dict[str, Any]]:
+    """Apply the repository's canonical envelope restore-parity contract.
+
+    Pickle bytes are an artifact hash, not a canonical state encoding: an
+    equivalent object can be repickled with different memo/alias ordering.
+    V3B therefore defines exact restore parity as equality of the complete
+    canonical manifest (cells, evidence, audits, and graph snapshot).
+    """
+    serialized = pickle.dumps(envelope, protocol=pickle.HIGHEST_PROTOCOL)
+    restored = pickle.loads(serialized)
+    if not isinstance(restored, GraphNativeCompetenceEnvelope):
+        raise TypeError("restored adapted organism has wrong type")
+    source_manifest_sha256 = _hash_json(envelope.to_manifest())
+    restored_manifest_sha256 = _hash_json(restored.to_manifest())
+    return serialized, restored, {
+        "contract": "complete_canonical_manifest.v1",
+        "manifest_identical": restored.to_manifest() == envelope.to_manifest(),
+        "source_manifest_sha256": source_manifest_sha256,
+        "restored_manifest_sha256": restored_manifest_sha256,
+        "serialized_artifact_sha256": hashlib.sha256(serialized).hexdigest(),
+    }
 
 
 def _load_json(path: str | Path) -> Mapping[str, Any]:
