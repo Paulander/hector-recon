@@ -1,0 +1,616 @@
+{
+  "arms": [
+    {
+      "name": "local_contrast_specialization",
+      "specialization_mode": "local_contrast"
+    },
+    {
+      "name": "demotion_only",
+      "specialization_mode": "disconnected"
+    },
+    {
+      "name": "counterexample_blind_specialization",
+      "specialization_mode": "counterexample_blind"
+    }
+  ],
+  "closed_mature_result_stage": "closed_after_adjudication",
+  "envelope_source_sha256": "49e31648a1a2c188d6a56ce1b9e2b3c002b0f65b0b24a9f0d741e56393cbd4fd",
+  "frozen_rules": {
+    "capacity_and_genome_unchanged": true,
+    "child_arity": 2,
+    "minimum_support": 4,
+    "one_opportunity_per_first_parent_revocation": true,
+    "specialization_depth": 1,
+    "tape_order": "closed_validation_reference_order",
+    "wilson_lower_bound": 0.55,
+    "zero_opposite_outcome": true
+  },
+  "manifest_payload_sha256": "da2ce2ef3a1a28906b86e1abf4cfc734473035a22cbff4459318e46508ca3784",
+  "mature_falsification_result_sha256": "0ec334ec53de184b56de90e0e7dca7708480cf6bfe64816f6fddec7786055bba",
+  "organisms": [
+    {
+      "genome_seed": 927199493097905893,
+      "ordinal": 0,
+      "source_artifact": {
+        "cell_count": 154,
+        "compressed_bytes": 50945,
+        "compressed_sha256": "872a4303a473a8334011d110a3b0e03036437c1a75f8185a256f8e2e857c8eca",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/00_927199493097905893_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "97c728ded6bec73e4dd6faea5358c4eb7cd97536c57605f1f95a24c1a97faf48",
+        "source_manifest_sha256": "97c728ded6bec73e4dd6faea5358c4eb7cd97536c57605f1f95a24c1a97faf48",
+        "uncompressed_bytes": 549013,
+        "uncompressed_sha256": "0f26bd13eb5c4540f1bbe20599711b7e6975ef0a7c99d9ebca6117363fddb8df"
+      }
+    },
+    {
+      "genome_seed": 7875574914420937836,
+      "ordinal": 1,
+      "source_artifact": {
+        "cell_count": 183,
+        "compressed_bytes": 59055,
+        "compressed_sha256": "2dab5c58532f38f6b07acb73129a564255cca1ed95cbdfe48a5f8d6bf794c12b",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/01_7875574914420937836_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "59c8c05da642f40ae8572dea98d6457cb392dedfa0f222fbdd4de5292e2d0836",
+        "source_manifest_sha256": "59c8c05da642f40ae8572dea98d6457cb392dedfa0f222fbdd4de5292e2d0836",
+        "uncompressed_bytes": 584551,
+        "uncompressed_sha256": "b6fe6f1e60a5afaa247a6afa95f814b82f074686b7cfb1107a82a01f086e088a"
+      }
+    },
+    {
+      "genome_seed": 1974929574559045908,
+      "ordinal": 2,
+      "source_artifact": {
+        "cell_count": 154,
+        "compressed_bytes": 50469,
+        "compressed_sha256": "45b68fceb2488ecdb60881168f78dd13ab503197971bb8060135c244ced9e658",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/02_1974929574559045908_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "e2c9df477f392ce327e1aee66773cf3a050da64f3a0124b72e5e7649903792b2",
+        "source_manifest_sha256": "e2c9df477f392ce327e1aee66773cf3a050da64f3a0124b72e5e7649903792b2",
+        "uncompressed_bytes": 537394,
+        "uncompressed_sha256": "9ef77d8cdd3c8155b10b3b4e3d8eaa9d89477b90b2a0b9266a4b136e55d09740"
+      }
+    },
+    {
+      "genome_seed": 6735948432738346283,
+      "ordinal": 3,
+      "source_artifact": {
+        "cell_count": 139,
+        "compressed_bytes": 48577,
+        "compressed_sha256": "499555dce53db839c7392b4210ec1ef0385f215fc78daee7e742ea2bc9b9e46e",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/03_6735948432738346283_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "1555c92f8cff11b88574b9275b494e6ed89ae91d95556165f1f0e4a3d921c7cd",
+        "source_manifest_sha256": "1555c92f8cff11b88574b9275b494e6ed89ae91d95556165f1f0e4a3d921c7cd",
+        "uncompressed_bytes": 517350,
+        "uncompressed_sha256": "b610fe7a0eef51dd83c9ed44201fe26c24336894c3007f9ec86573d75d3b491f"
+      }
+    },
+    {
+      "genome_seed": 1094181430148235827,
+      "ordinal": 4,
+      "source_artifact": {
+        "cell_count": 174,
+        "compressed_bytes": 55397,
+        "compressed_sha256": "362fd825da6fb261ea18f1e1116ff552bfed916dfe4a0a880806161256f70035",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/04_1094181430148235827_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "46df3ac6612c6c5a285da2f45a1f7109ca4ef89eded43777e95dbb2783d69506",
+        "source_manifest_sha256": "46df3ac6612c6c5a285da2f45a1f7109ca4ef89eded43777e95dbb2783d69506",
+        "uncompressed_bytes": 569991,
+        "uncompressed_sha256": "ec19f09e373177e342828e4756b674a91b4e61b18e754caf10c35e2c7600fe3a"
+      }
+    },
+    {
+      "genome_seed": 1523103105503719333,
+      "ordinal": 5,
+      "source_artifact": {
+        "cell_count": 144,
+        "compressed_bytes": 49392,
+        "compressed_sha256": "b1605477f639383281dafe3c71f992b7ddaff595ccf531bc0764a50c2ab725c2",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/05_1523103105503719333_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "18900fb84cd44cb38e83487c58377fb9279b83ccc387bf4973dbddb8f195bddd",
+        "source_manifest_sha256": "18900fb84cd44cb38e83487c58377fb9279b83ccc387bf4973dbddb8f195bddd",
+        "uncompressed_bytes": 529731,
+        "uncompressed_sha256": "f0422f2ec8ddac1bb71f799fb83bd598c9cdfbf78f99982994c46baca3c860ce"
+      }
+    },
+    {
+      "genome_seed": 6961799722694922878,
+      "ordinal": 6,
+      "source_artifact": {
+        "cell_count": 143,
+        "compressed_bytes": 49523,
+        "compressed_sha256": "b2b2a87508056b3ca0ec4aebcc24163409a6ba3ec96e841392a593701901d449",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/06_6961799722694922878_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "6dae8ce59f81a16f28cc2b05da2b9addb5f654147c18a9946d35a5d85359746a",
+        "source_manifest_sha256": "6dae8ce59f81a16f28cc2b05da2b9addb5f654147c18a9946d35a5d85359746a",
+        "uncompressed_bytes": 526882,
+        "uncompressed_sha256": "6a8848085681f2c7e85c1508bac0fd639e0a1a64e78c5326396688545ae6cbdb"
+      }
+    },
+    {
+      "genome_seed": 5254390254314047380,
+      "ordinal": 7,
+      "source_artifact": {
+        "cell_count": 178,
+        "compressed_bytes": 56922,
+        "compressed_sha256": "1da8ca1027b0ac99073f346886a4c52da56eb77d436842b9541d1c7fd22a9088",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/07_5254390254314047380_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "feb0666adabca8c8ae5dda0faca465ce1f4b1a8e34760613fc101f495e56d7c1",
+        "source_manifest_sha256": "feb0666adabca8c8ae5dda0faca465ce1f4b1a8e34760613fc101f495e56d7c1",
+        "uncompressed_bytes": 575133,
+        "uncompressed_sha256": "5d0111fa769b6c684b3ddd53babe13abb56ce4bbd91845b1ffedf45fc1941413"
+      }
+    },
+    {
+      "genome_seed": 5874697172715592764,
+      "ordinal": 8,
+      "source_artifact": {
+        "cell_count": 147,
+        "compressed_bytes": 50445,
+        "compressed_sha256": "0dfd798620b7ab864999f96f26ed0beb1f32b938150ed0c070c62bc67820aec0",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/08_5874697172715592764_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "9ad5538b745546395e261ce1c3daeafb6291ae11cfca452f37de9085a33db7c2",
+        "source_manifest_sha256": "9ad5538b745546395e261ce1c3daeafb6291ae11cfca452f37de9085a33db7c2",
+        "uncompressed_bytes": 533066,
+        "uncompressed_sha256": "7cda23ff21554d9261cd161fdbc500e40ac1f48468d7240cb6f79ddfa3935b99"
+      }
+    },
+    {
+      "genome_seed": 1004659260894101088,
+      "ordinal": 9,
+      "source_artifact": {
+        "cell_count": 155,
+        "compressed_bytes": 51474,
+        "compressed_sha256": "d9404952865150fde4b1ceb24d6c84b83ebcf3decb9b585c79f21981dfad007d",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/09_1004659260894101088_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "81398dd09153e460580eca27152bd6480bf7bbcfd84b1371ce7b6f9a783ccf0b",
+        "source_manifest_sha256": "81398dd09153e460580eca27152bd6480bf7bbcfd84b1371ce7b6f9a783ccf0b",
+        "uncompressed_bytes": 540551,
+        "uncompressed_sha256": "0f5123cc3474e2ef5454250e414ee28b271620bcbda728ebd6ba1fc17f63dbe3"
+      }
+    },
+    {
+      "genome_seed": 6415440476624295190,
+      "ordinal": 10,
+      "source_artifact": {
+        "cell_count": 179,
+        "compressed_bytes": 55257,
+        "compressed_sha256": "d5e3aef87784c866427dacc5d5b63993368a2446752ee6edf9eaef80f4c45cb2",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/10_6415440476624295190_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "183506c92986237c1ded38026b44d22755b6ec5052c1aba7d00c4b205956f684",
+        "source_manifest_sha256": "183506c92986237c1ded38026b44d22755b6ec5052c1aba7d00c4b205956f684",
+        "uncompressed_bytes": 579992,
+        "uncompressed_sha256": "f1088d0ee31fae1220821c3b33e0b27ddbdcfa1f28fde900f51e7c69cf30c607"
+      }
+    },
+    {
+      "genome_seed": 4957944611819815972,
+      "ordinal": 11,
+      "source_artifact": {
+        "cell_count": 141,
+        "compressed_bytes": 48218,
+        "compressed_sha256": "618970cb116926c44b3f3f19272468093a11ebbc1503b09f4f64e47d378b6049",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/11_4957944611819815972_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "9c34d98eb8ed457cb0e192e1588bafcf4c426bde9b7e80ef9d7b04bc6edec210",
+        "source_manifest_sha256": "9c34d98eb8ed457cb0e192e1588bafcf4c426bde9b7e80ef9d7b04bc6edec210",
+        "uncompressed_bytes": 520742,
+        "uncompressed_sha256": "7e44558a466eab0bc942c85136944020b9394c1d9ea909f8c6e4dfe11879edc7"
+      }
+    },
+    {
+      "genome_seed": 2003738307592690383,
+      "ordinal": 12,
+      "source_artifact": {
+        "cell_count": 179,
+        "compressed_bytes": 59092,
+        "compressed_sha256": "da99df29be52fd875b19ef2bbf612b5b1fab593bd08e900838f42482e5ad2529",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/12_2003738307592690383_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "609db53c9dd7987631dcdab548bdefea370383d0aa7a416e0687044f72e64b03",
+        "source_manifest_sha256": "609db53c9dd7987631dcdab548bdefea370383d0aa7a416e0687044f72e64b03",
+        "uncompressed_bytes": 575072,
+        "uncompressed_sha256": "94b1847acb6384fce19d285ccbe95422a9e78c3faac1abdef8f30d235cfc7e5a"
+      }
+    },
+    {
+      "genome_seed": 4017493945575328316,
+      "ordinal": 13,
+      "source_artifact": {
+        "cell_count": 176,
+        "compressed_bytes": 54047,
+        "compressed_sha256": "eea615efbc2358fcf88a7580d067d06212096bdc4fb97c16b66dbf2ef6b0a92b",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/13_4017493945575328316_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "2bef0819acc1de238e374e384a40f4bb7f90b4f49b643a4089a936914f9de6b3",
+        "source_manifest_sha256": "2bef0819acc1de238e374e384a40f4bb7f90b4f49b643a4089a936914f9de6b3",
+        "uncompressed_bytes": 568784,
+        "uncompressed_sha256": "27088223a23636ce721484fff2c5c4484bbed0e5a083285010c2efd1cbecde37"
+      }
+    },
+    {
+      "genome_seed": 2506098576450229954,
+      "ordinal": 14,
+      "source_artifact": {
+        "cell_count": 179,
+        "compressed_bytes": 56714,
+        "compressed_sha256": "e369fa8f4347eec9608a2d7a7ff3f69cb0da40a5ff8fb86dd7683a841195f9d0",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/14_2506098576450229954_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "eec853bfb796f63d4fded8758006c0968177a014bc86236694ddd90170ae05ea",
+        "source_manifest_sha256": "eec853bfb796f63d4fded8758006c0968177a014bc86236694ddd90170ae05ea",
+        "uncompressed_bytes": 578202,
+        "uncompressed_sha256": "d8630a08fd40eb75bafa8381239c95139066ef35e671d70ebaa18a4f443ea6c5"
+      }
+    },
+    {
+      "genome_seed": 6983509750099092169,
+      "ordinal": 15,
+      "source_artifact": {
+        "cell_count": 172,
+        "compressed_bytes": 56389,
+        "compressed_sha256": "0dbeef6963269b1a5dad21a1fc26d77aab3669b71c3730d47ab145fad298941c",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/15_6983509750099092169_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "c33befa6d40e6917c9647ee7775c97a146d6c331cc95e73e588f56031a0abe1c",
+        "source_manifest_sha256": "c33befa6d40e6917c9647ee7775c97a146d6c331cc95e73e588f56031a0abe1c",
+        "uncompressed_bytes": 561364,
+        "uncompressed_sha256": "842687eeeeb19dfeef484bc362bcbb019b3bf90ce1e9201d222f52497210c472"
+      }
+    },
+    {
+      "genome_seed": 7895798915537598175,
+      "ordinal": 16,
+      "source_artifact": {
+        "cell_count": 178,
+        "compressed_bytes": 57630,
+        "compressed_sha256": "96f15fabbf7b88875cef1c8e207894c9a6c9cb0f107b4ebda01e3401237ce3a6",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/16_7895798915537598175_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "13f7a2b1778b2e4f56c165868d4028164c4a916e53f75d581b0b9e6d3a7414ea",
+        "source_manifest_sha256": "13f7a2b1778b2e4f56c165868d4028164c4a916e53f75d581b0b9e6d3a7414ea",
+        "uncompressed_bytes": 574813,
+        "uncompressed_sha256": "d42c2b3d9a0f52ea26cd3efee2ccb29aee04f9112828961b086375e5c6512b29"
+      }
+    },
+    {
+      "genome_seed": 1629540674185117561,
+      "ordinal": 17,
+      "source_artifact": {
+        "cell_count": 175,
+        "compressed_bytes": 53955,
+        "compressed_sha256": "5c5a12b787102a2ac5a33142f8ad34eb8d5a2ec538c67ed0bd7027a27a040410",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/17_1629540674185117561_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "cca3923202d5155b2fec7d030911c366932d96bc5aad91dc4494d0a6021409b6",
+        "source_manifest_sha256": "cca3923202d5155b2fec7d030911c366932d96bc5aad91dc4494d0a6021409b6",
+        "uncompressed_bytes": 569027,
+        "uncompressed_sha256": "5dd44679dd65e3de57ff505941fc85db71d317b1a9b00a408060f70e9d1eb45a"
+      }
+    },
+    {
+      "genome_seed": 2761668078300994753,
+      "ordinal": 18,
+      "source_artifact": {
+        "cell_count": 178,
+        "compressed_bytes": 58517,
+        "compressed_sha256": "090b371b1770bb7c59fc20a6c04f73872897f69e0979fb526991695601fb4d77",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/18_2761668078300994753_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "b88de227bc219bd75b8e6413c6c1beb1c775cf3e52fa72b912c144d413ca1d1f",
+        "source_manifest_sha256": "b88de227bc219bd75b8e6413c6c1beb1c775cf3e52fa72b912c144d413ca1d1f",
+        "uncompressed_bytes": 571834,
+        "uncompressed_sha256": "70876019958456b7a73f7c3b87b0aa615ff3449133d091dce15cf969a9f41775"
+      }
+    },
+    {
+      "genome_seed": 2289698924204306000,
+      "ordinal": 19,
+      "source_artifact": {
+        "cell_count": 173,
+        "compressed_bytes": 56248,
+        "compressed_sha256": "f9f5c3c4f5cbed20a7fcc3f0430a7d3c0f09773b948c784094b3bb1ea1f57fbc",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/19_2289698924204306000_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "660b291798d8051172f2f3fdae81afd051da6ad1f7817d9381c1ca25c0660d10",
+        "source_manifest_sha256": "660b291798d8051172f2f3fdae81afd051da6ad1f7817d9381c1ca25c0660d10",
+        "uncompressed_bytes": 560766,
+        "uncompressed_sha256": "d63a028e1d0256130c052ece849b13659204f4ccd5a7446b87b8d0de3c38e0a6"
+      }
+    },
+    {
+      "genome_seed": 8650619848478758134,
+      "ordinal": 20,
+      "source_artifact": {
+        "cell_count": 173,
+        "compressed_bytes": 55206,
+        "compressed_sha256": "678c7308eb3c3a534fd2ac35f0a83ffd27cdaa56eb94b9a846d69ac277ae4fbe",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/20_8650619848478758134_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "d27776dc279544d0fb3cf0d42b7a0fe5c8e5245b853f148910e939f3f7235ddb",
+        "source_manifest_sha256": "d27776dc279544d0fb3cf0d42b7a0fe5c8e5245b853f148910e939f3f7235ddb",
+        "uncompressed_bytes": 565240,
+        "uncompressed_sha256": "87a4e1eb2276a2a9664bc92d690912d2f41dd605e554282df3160a668d0cdbd8"
+      }
+    },
+    {
+      "genome_seed": 2101284628198995045,
+      "ordinal": 21,
+      "source_artifact": {
+        "cell_count": 173,
+        "compressed_bytes": 55710,
+        "compressed_sha256": "ae249d7f75feed61bc8acdae94b9eedad37f0a7e02081ba19ce5136fa5abba85",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/21_2101284628198995045_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "864c051f22c88a360d4594153f7f9eb3b4a11b80fc0c5835999df55ab308fab8",
+        "source_manifest_sha256": "864c051f22c88a360d4594153f7f9eb3b4a11b80fc0c5835999df55ab308fab8",
+        "uncompressed_bytes": 569418,
+        "uncompressed_sha256": "bcf702273876e1a8de2cb7359d3f5ae7ec201b9ddded1a73ee29bf796ee3d339"
+      }
+    },
+    {
+      "genome_seed": 3606729374366637727,
+      "ordinal": 22,
+      "source_artifact": {
+        "cell_count": 178,
+        "compressed_bytes": 55964,
+        "compressed_sha256": "a9cd64fa7056eceed0deeaac2eea7872fba43d5710fab12796a711bb943fdb67",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/22_3606729374366637727_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "2ceae5d84d999f9762a169a5fc31012ef04d5ecf6d2172267cd303dbe5351167",
+        "source_manifest_sha256": "2ceae5d84d999f9762a169a5fc31012ef04d5ecf6d2172267cd303dbe5351167",
+        "uncompressed_bytes": 573736,
+        "uncompressed_sha256": "67fb808293fc061532be9122d1d7d6c8914ea8854c5711558d2d33a9220145f7"
+      }
+    },
+    {
+      "genome_seed": 4474446459228528557,
+      "ordinal": 23,
+      "source_artifact": {
+        "cell_count": 176,
+        "compressed_bytes": 56084,
+        "compressed_sha256": "5bea6351ee4a660065694118dce853700b8e63972dfb5c6255e556e2bcabc21a",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/23_4474446459228528557_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "c575cc9433d127fa46a676468f4012d3dea655039a44a79a1f332afd5978f076",
+        "source_manifest_sha256": "c575cc9433d127fa46a676468f4012d3dea655039a44a79a1f332afd5978f076",
+        "uncompressed_bytes": 578647,
+        "uncompressed_sha256": "fec971a393f7455337eddcfb7b63f35f3a3539d8b9b74334fcf2e982db218d46"
+      }
+    },
+    {
+      "genome_seed": 7720216432636937491,
+      "ordinal": 24,
+      "source_artifact": {
+        "cell_count": 143,
+        "compressed_bytes": 48496,
+        "compressed_sha256": "0de53671245c1c719ccf88d48a9855e0713b0b4bf2e15878b144fe9bff8b7cc2",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/24_7720216432636937491_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "441cc74d11f99ecde4d6f2f10edaac8e55dbd414547dcb3dbc9708531cde47be",
+        "source_manifest_sha256": "441cc74d11f99ecde4d6f2f10edaac8e55dbd414547dcb3dbc9708531cde47be",
+        "uncompressed_bytes": 527842,
+        "uncompressed_sha256": "5e184e341d53a5a7f9791857a81bd394ff6ae27bec204af8ce8d3daed0b825e0"
+      }
+    },
+    {
+      "genome_seed": 5519493338716887034,
+      "ordinal": 25,
+      "source_artifact": {
+        "cell_count": 174,
+        "compressed_bytes": 54565,
+        "compressed_sha256": "06838a4d720843c245a51d1b4895833b73a906bf2cdcbb803c79fdd32403d5de",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/25_5519493338716887034_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "15cf28615af73c857c3351e582ed37ad147bbed41a3e6a6f3bc5b0aed474de05",
+        "source_manifest_sha256": "15cf28615af73c857c3351e582ed37ad147bbed41a3e6a6f3bc5b0aed474de05",
+        "uncompressed_bytes": 573646,
+        "uncompressed_sha256": "f9f3041daf06b1dd6d0e7220aedce5fcfecf7b7e1493cf78bf6cf9a98538b80b"
+      }
+    },
+    {
+      "genome_seed": 2953283954541045717,
+      "ordinal": 26,
+      "source_artifact": {
+        "cell_count": 176,
+        "compressed_bytes": 55181,
+        "compressed_sha256": "516e0a1c8d52dd04a5e01bc50ea96eef3a01aedbe851d66cf5b3efd1d05ea16f",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/26_2953283954541045717_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "e4ac3c4fbca6b3f9f92bdb638b5dfc1fe963762982e72fa548e8687c874e5263",
+        "source_manifest_sha256": "e4ac3c4fbca6b3f9f92bdb638b5dfc1fe963762982e72fa548e8687c874e5263",
+        "uncompressed_bytes": 572381,
+        "uncompressed_sha256": "efab952da0ebd0dbe45d10cbae5a67cceae7e0b42a9b41d491c130124bccc7dc"
+      }
+    },
+    {
+      "genome_seed": 8363098574554218718,
+      "ordinal": 27,
+      "source_artifact": {
+        "cell_count": 175,
+        "compressed_bytes": 56019,
+        "compressed_sha256": "cb1a7acee72f7c25e279105cc3cc68e7e234ed22499540b5969c1f13142e0ae7",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/27_8363098574554218718_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "6f46893ba9c57e6833d468141134528302d327b0dcc9ef1379f9b216b6c6ea7a",
+        "source_manifest_sha256": "6f46893ba9c57e6833d468141134528302d327b0dcc9ef1379f9b216b6c6ea7a",
+        "uncompressed_bytes": 570433,
+        "uncompressed_sha256": "70771deb10815f2476ba688c2cd6542041abe1e6b9fd734ff4ba887faafcbabc"
+      }
+    },
+    {
+      "genome_seed": 4264281309017678228,
+      "ordinal": 28,
+      "source_artifact": {
+        "cell_count": 179,
+        "compressed_bytes": 57676,
+        "compressed_sha256": "9d3f093c0ca314008b9804b68c93c3bfd77651e6e783fae66ae952094e599391",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/28_4264281309017678228_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "f50930958d0d7d8ee4d7be595041ac6c8fe535811bee6fa5ac4f25088ec60457",
+        "source_manifest_sha256": "f50930958d0d7d8ee4d7be595041ac6c8fe535811bee6fa5ac4f25088ec60457",
+        "uncompressed_bytes": 589576,
+        "uncompressed_sha256": "e4671d380db956c1c9662700ca6382d3b8d2763cefb7ed455f891fbf4a91f482"
+      }
+    },
+    {
+      "genome_seed": 6793022510918070742,
+      "ordinal": 29,
+      "source_artifact": {
+        "cell_count": 176,
+        "compressed_bytes": 56282,
+        "compressed_sha256": "da08bf8b0dc6301da86de949d8b2ef0a570e698dfcad3a9f6ed6f035a0fdd638",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/29_6793022510918070742_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "3cbf8513f001c91ed74147310ac2b2493995a51000b5e165222bb791e2904eb3",
+        "source_manifest_sha256": "3cbf8513f001c91ed74147310ac2b2493995a51000b5e165222bb791e2904eb3",
+        "uncompressed_bytes": 572051,
+        "uncompressed_sha256": "79e5cebd8e98b5ba897e07ef469bdce075f4024cfea7d40495ce5eba7f1c8b9d"
+      }
+    },
+    {
+      "genome_seed": 3499714702144404872,
+      "ordinal": 30,
+      "source_artifact": {
+        "cell_count": 174,
+        "compressed_bytes": 58245,
+        "compressed_sha256": "4a3b80e0608ac03cd766e2054792fc5a78b4ebda2b044064e153a2eb1154e1c8",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/30_3499714702144404872_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "a18831c0f7e2066d4de85684947b9364a1cc93f6152ffefe5255fa67f3336675",
+        "source_manifest_sha256": "a18831c0f7e2066d4de85684947b9364a1cc93f6152ffefe5255fa67f3336675",
+        "uncompressed_bytes": 569944,
+        "uncompressed_sha256": "9cc5c57a9210c4e1c4a7741ed342040bc5c50e10df03d07303df6697a507c1ff"
+      }
+    },
+    {
+      "genome_seed": 941193230514391201,
+      "ordinal": 31,
+      "source_artifact": {
+        "cell_count": 158,
+        "compressed_bytes": 52655,
+        "compressed_sha256": "ae72b2538883ad2d3a6cb32c6f28461ddb6e77bdbc4ab180f68db0f3b65987bc",
+        "empty_envelope": false,
+        "format": "gzip_pickle_graph_native_competence_envelope",
+        "path": "reports/autogrowth/native_authority/native_competence_envelope_v3b_formal_or_corrected_organisms/31_941193230514391201_connected.pkl.gz",
+        "persisted": true,
+        "restore_parity": true,
+        "restored_manifest_sha256": "67019c7e79c425d7dad63201d32dde2c63181214aa25ddc800948a89fa9f20e4",
+        "source_manifest_sha256": "67019c7e79c425d7dad63201d32dde2c63181214aa25ddc800948a89fa9f20e4",
+        "uncompressed_bytes": 547901,
+        "uncompressed_sha256": "e840a2b558a1e1f2b0a7d1da105b3525d71fa1c1647508a9e5d56a48898e5042"
+      }
+    }
+  ],
+  "preregistration_commit": "3a302c7ae29641f648271aad52235d148f3cfcd1",
+  "preregistration_sha256": "02f9c9e6836cf4c95c7a91d8a4991f1707af36d7b397bf57afad013c18f6ce17",
+  "reference_rows_sha256": "bcdba6ba93bd1c8fc951cfe3cce0c41b28eb15c8ac599b06554423018dfd490c",
+  "runner_sha256": "48fcfe0c785f84d9c887ee58da3bfa85170ee51af8bd2b2f652010266f65703e",
+  "schema_version": "native_contradiction_specialization_manifest.v1",
+  "source_organism_count": 32,
+  "source_result_expected_sha256": "9325e5d076e328f85fe6b8dbb495d5f26ae3f503156e38463912972fa766b1a3",
+  "source_result_sha256": "9325e5d076e328f85fe6b8dbb495d5f26ae3f503156e38463912972fa766b1a3"
+}
