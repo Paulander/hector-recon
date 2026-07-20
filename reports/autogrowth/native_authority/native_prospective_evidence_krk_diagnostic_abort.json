@@ -1,0 +1,53 @@
+{
+  "abort_observed_at": "2026-07-21T00:11:08+02:00",
+  "artifact_state": {
+    "canonical_krk_result_written": false,
+    "partial_organism_results_persisted": false,
+    "partial_results_selected_or_interpreted": false
+  },
+  "binding_stop_reason": "instrument_abort_shuffled_graph_local_revocation_authority_mismatch",
+  "canonical_status": "instrument_abort",
+  "command": "TMPDIR=/tmp uv run python -m recon_lite_chess.autogrowth.native_prospective_evidence_package krk --workers 4",
+  "data_boundaries": {
+    "fresh_accessed": false,
+    "r1_accessed": false,
+    "retired_65_accessed": false,
+    "source_rows": "already-viewed historical-regression artifact only",
+    "unopened_pool_accessed": false
+  },
+  "elapsed_before_abort_seconds_approx": 960,
+  "exception": {
+    "authority_call": "NativeProspectiveCompetenceOrganism._sync_graph_authority",
+    "message": "prospective contradiction lacked graph-local revocation",
+    "source_file": "src/recon_lite_chess/autogrowth/native_prospective_evidence_authority.py",
+    "source_line_at_freeze": 842,
+    "type": "RuntimeError",
+    "worker_call": "shuffled.observe_grounded_shuffled",
+    "worker_function": "_evaluate_krk_organism"
+  },
+  "freeze_commit": "86807584cac31dd8ab574f0356d3ef88c2100339",
+  "freeze_manifest_sha256": "9ce74fff2c33d3e0807830133f44bb92a958f6a75da7009466cea33d80e3a424",
+  "gates": {
+    "instrument_integrity": "FAIL",
+    "krk_scientific_gates": "NOT_ADJUDICATED",
+    "synthetic_discriminator": "PASS"
+  },
+  "localization": {
+    "arm": "prospective_outcome_shuffled",
+    "authority_outcome_source": "signed frozen next-receipt outcome",
+    "classification": "control-path authority mismatch",
+    "graph_local_falsification_input": "target receipt record with actual outcome",
+    "mismatch": "authority revoked under shuffled outcome but graph correction evaluated actual outcome and did not confirm that revocation"
+  },
+  "next_package_only_note": "If separately authorized, the shuffled organism\u2014not the runner\u2014must derive the graph-local correction record from the signed outcome-source receipt so lifecycle and graph falsification consume the same frozen control outcome. The frozen package must not be rerun in place.",
+  "package": "NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY",
+  "preregistration_commit": "a4a219d",
+  "repair_or_rerun_performed": false,
+  "schema_version": "native_prospective_evidence_krk_diagnostic_abort.v1",
+  "scientific_result_adjudicated": false,
+  "source_commit": "0df59c1c78ce2ecbcb15b906eb86de2c889811d8",
+  "started_from_commit": "3f8a14f",
+  "synthetic_artifact_sha256": "49a0e243b3454c5d57c2e315bea3061c9e42a1c707681dc4bfd40e62db626a10",
+  "synthetic_passed": true,
+  "workers": 4
+}

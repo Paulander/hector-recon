@@ -410,3 +410,24 @@ without tuning, retraining, organism selection, R1, or a new factor. See
 
 Post-closure validation for the trace-native historical regression package:
 the full repository suite passed 979 tests in 3,473.68 seconds (57m53s).
+
+
+The preregistered native prospective-evidence-authority package is closed at an
+instrument abort. Its generic discriminator passed: legacy same-ledger review
+immediately matured 60/60 prefix-perfect candidates (59 spurious), whereas
+prospective authority matured zero immediately, later matured the planted
+persistent conjunction, and retained zero spurious mature cells; the shuffled
+control did not mature the planted conjunction.
+
+The already-viewed KRK diagnostic then stopped before artifact creation. In the
+outcome-shuffled arm, prospective lifecycle authority revoked under the signed
+shuffled outcome while the existing graph-local falsification path still
+consumed the target record's real outcome, so the fail-hard revocation parity
+contract raised. No complete organism result or scientific gate was adjudicated,
+and the run was not repaired or repeated. The full repository suite passed
+984 tests in 3,724.73 seconds (1:02:04). This is a control-path authority
+mismatch, not prospective-evidence starvation or a KRK result. Fresh data, R1,
+retired-65, and unopened pools remain untouched. Any correction must be a new
+frozen package in which the organism derives both lifecycle and graph correction
+from the same signed control receipt; see
+`docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY_RESULT_20260721.md`.
