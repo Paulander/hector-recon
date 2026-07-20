@@ -388,3 +388,25 @@ No behavior gate, field, or tolerance was weakened. This is authority and
 continuation engineering, not new KRK evidence. Regression, retired-65, fresh
 data, and R1 remain unopened. See
 `docs/autogrowth/NATIVE_TERMINAL_TRACE_AUTHORITY_CLOSURE_RESULT_20260720.md`.
+
+The separately frozen trace-native historical regression package has now closed
+after its single inference-only opening. All 96 serialized organisms completed
+with exact GraphActuation and ordered terminal-signal parity, complete dream
+sessions, exact before/after persistent state, and zero authority or mutation
+violations. Regression is now viewed development data; fresh data, retired-65,
+and R1 remained untouched.
+
+The scientific verdict was negative: `specialized_contexts_overgeneralize`.
+Local contrast produced 184 TP and 28 FP, 11/32 safe-narrow organisms, and 58
+deployable TP, versus demotion-only 103/16, 5/32, and 22, and counterexample-
+blind 141/21, 7/32, and 36. Local specialization exceeded both controls in
+paired deployable coverage after Holm correction and generated 81 mature
+depth-one advantage events, so the learned refinement transferred causally.
+However, any local FP failed the primary safety gate, and safe-narrow coverage
+was below 24/32. The 28 errors were concentrated on five decoy rows, including
+16 on one row. This closes the package as a selectivity/generalization failure,
+without tuning, retraining, organism selection, R1, or a new factor. See
+`docs/autogrowth/NATIVE_TERMINAL_TRACE_HISTORICAL_REGRESSION_RESULT_20260720.md`.
+
+Post-closure validation for the trace-native historical regression package:
+the full repository suite passed 979 tests in 3,473.68 seconds (57m53s).
