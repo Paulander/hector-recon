@@ -1,0 +1,4311 @@
+{
+  "behavior_preserving_engineering_only": true,
+  "blind_child_counts": {
+    "mature": 12,
+    "probation": 0
+  },
+  "checksum_gates": {
+    "all_32_organisms": true,
+    "all_96_artifacts_restore_v3_exact": true,
+    "all_semantic_equivalence_checks": true,
+    "blind_children_12_mature": true,
+    "exact_37_blind_requests_attempts_admissions": true,
+    "exact_37_local_requests_attempts_admissions": true,
+    "exact_cohort_metrics": true,
+    "local_children_34_mature_3_probation": true
+  },
+  "cohort_metrics": {
+    "counterexample_blind_specialization": {
+      "safe_narrow": 22,
+      "strict": 3,
+      "total_fp": 0,
+      "total_tp": 169
+    },
+    "demotion_only": {
+      "safe_narrow": 17,
+      "strict": 1,
+      "total_fp": 0,
+      "total_tp": 119
+    },
+    "local_contrast_specialization": {
+      "safe_narrow": 30,
+      "strict": 3,
+      "total_fp": 0,
+      "total_tp": 220
+    }
+  },
+  "data_firewall": {
+    "fresh_accessed": false,
+    "r1_accessed": false,
+    "regression_accessed": false,
+    "retired_65_accessed": false,
+    "training_64_touched": true,
+    "viewed_development_32_touched": true
+  },
+  "duration_seconds": 4652.798456278018,
+  "local_child_counts": {
+    "mature": 34,
+    "probation": 3
+  },
+  "organisms": [
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "7ad5950c547a3d073a4f8b1904055671d29a7c20681e188d3e0973fd196e7d42",
+            "continuation_v3_sha256": "30daa94edf06185bc7097fa979b75d8c00c68347fcf6a7657762946f933fc983",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/00_927199493097905893_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "583e6f98d2b98feca913ba37e0bc687d87687f47d0b24647d1ac43be996cc6d9"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "461821f6993b3f701c6b273ce71db087d5ff56762e7e7ecef706bd34e9e45117",
+          "final_manifest_expected_sha256": "461821f6993b3f701c6b273ce71db087d5ff56762e7e7ecef706bd34e9e45117",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 2,
+            "positive_coverage": 0.875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": true,
+            "tp": 14
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "28a693c466b5e8c1d4dd23b5496cc9730d469ed1c29b2bf080ec02cfe710c7c6",
+            "continuation_v3_sha256": "620b5721258199716435e25f68bee7948afd89a8bd34b356a7ea4ef1bf0cc395",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/00_927199493097905893_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "794c77fb2a3243ea0bbaf9249f1bf70e18e4171a9c4aca9346ed08d86cce74d8"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "db46a5db4677e28fc4d49711c887b671048a3b0860aff78741608dbe97e9640b",
+          "final_manifest_expected_sha256": "db46a5db4677e28fc4d49711c887b671048a3b0860aff78741608dbe97e9640b",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 2,
+            "positive_coverage": 0.875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": true,
+            "tp": 14
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "da1425bb347aa0177b0843e79b1efecb6d67b4677b59fd65c23f2c491d901d36",
+            "continuation_v3_sha256": "ee2268a4c68e561f9cc4e73489555dc9015bbce345ac2a7738a8e2216b892418",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/00_927199493097905893_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "ae54d149256142702cc67a6bab8141228ce85b81c258033c8039dc29755fcc94"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "9dfc19b0ce5b13952cd576225447a8a903a7528196747ea1fa78b510e14fbab0",
+          "final_manifest_expected_sha256": "9dfc19b0ce5b13952cd576225447a8a903a7528196747ea1fa78b510e14fbab0",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 2,
+            "positive_coverage": 0.875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": true,
+            "tp": 14
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 927199493097905893,
+      "ordinal": 0,
+      "source_manifest_actual_sha256": "dc908fe28c01e58a66f8ffe18b7f76513cf39d39daa09d52934431f48a9f543c",
+      "source_manifest_expected_sha256": "dc908fe28c01e58a66f8ffe18b7f76513cf39d39daa09d52934431f48a9f543c",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "0e6a75801a5a9965035dff4207ba7130ca8276be2a80116582038301216f76bc",
+            "continuation_v3_sha256": "aa1ccfaee7f3e6ffe0363bd398af83607a5d4f7167bad2c2ccaedb34f5da3b9e",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/01_7875574914420937836_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "07cd13c7a244770a21d00041e7d4d990fd07fed6701f54ca633bec02e6980c3b"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "5d7cf6d68af3b656defb85c5b4bbced5d42a6451313e3c9ffba80978bb68e8cc",
+          "final_manifest_expected_sha256": "5d7cf6d68af3b656defb85c5b4bbced5d42a6451313e3c9ffba80978bb68e8cc",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "9b25be378f4762ae8b76af9c02c3963a1f54c526d78d74c8935a6cd88405263f",
+            "continuation_v3_sha256": "33d7d746ef3631f1d860a0c6a7729a10bd706d9cbf3812251a2b389e035ca723",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/01_7875574914420937836_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "3921485435da56b31b57471c931d406845809414552b597e7ac0b9c217834c11"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "aee290e98bc029493125947238a7986ae8c32d6893dce4ce7aa900a65e76d7c8",
+          "final_manifest_expected_sha256": "aee290e98bc029493125947238a7986ae8c32d6893dce4ce7aa900a65e76d7c8",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "bad2112371c74d033363def707dc368cb7cab5bd45cd30f3444047286c821259",
+            "continuation_v3_sha256": "d1eccfb92bae0f5b6395e19ffa5e4618e88960903e662e5db8c2d3aae97a7b98",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/01_7875574914420937836_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "96e0b2dec86b67351c9da4abef5df08559bd7f41f9cd5eafd128d2c4ccea95bf"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 1
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "e2992a2e3884deb526bcdb7318aff63312d1ae0178c7c36947173ae3466f3f5f",
+          "final_manifest_expected_sha256": "e2992a2e3884deb526bcdb7318aff63312d1ae0178c7c36947173ae3466f3f5f",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 7875574914420937836,
+      "ordinal": 1,
+      "source_manifest_actual_sha256": "ce5ce28d4f3ab0eb8f6c6408ae1fcf20c45041cdb475d80ceec4bb69ed4302fb",
+      "source_manifest_expected_sha256": "ce5ce28d4f3ab0eb8f6c6408ae1fcf20c45041cdb475d80ceec4bb69ed4302fb",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "78092c34b0e06a906962143c069cbf671b81ccd53ec7ef0773b5cae39abb7fae",
+            "continuation_v3_sha256": "f9f380e13355a3f3f0f474b88e2dfdd4d8335454480f71281f8b4e61a5f87dc9",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/02_1974929574559045908_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "90d40be77435deef0bde354e390ab7fc1b19063ff9a7c73bf3496deba6114cf4"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "06d350022c6b0a707baf780b5ae2a4ffa8dc35a616c8662dab77c3b54115f863",
+          "final_manifest_expected_sha256": "06d350022c6b0a707baf780b5ae2a4ffa8dc35a616c8662dab77c3b54115f863",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "ed1c7b2c1e63cbf486bc23b88b5922cf85a7ff9f43bdec3e641d03a2f17648a9",
+            "continuation_v3_sha256": "1e53989769bece2e8ad7c48363f661b923ef6ee4f04279a7fd70f9a25c2b7e4f",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/02_1974929574559045908_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "a65c647114eae1043a403842560a74cd91bf714211188567ec62dbd2840c0487"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "b1b6b5b0727a3ce91da65650f37061e69f00d81c69c79c216b98ae7af37b3cab",
+          "final_manifest_expected_sha256": "b1b6b5b0727a3ce91da65650f37061e69f00d81c69c79c216b98ae7af37b3cab",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "1c519fb44aa0f73805b10ad844f566da4094bacb06348ee9fe407042df010539",
+            "continuation_v3_sha256": "d661b46d60491372d79e6ec74383bfecadcc41c58e31038844e2c44311714717",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/02_1974929574559045908_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "1488b83d17c4a3159a4c882ffedc6e80d21dba9fd29e17d0569edddc1fd076bf"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "c0a03586a805961ff083b688523ee7c724cb18507edf2dfb11371229d31d689a",
+          "final_manifest_expected_sha256": "c0a03586a805961ff083b688523ee7c724cb18507edf2dfb11371229d31d689a",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 14,
+            "positive_coverage": 0.125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 2
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 1974929574559045908,
+      "ordinal": 2,
+      "source_manifest_actual_sha256": "8c6c0818c1a442686ff2a3cda9f3813dc20e5f8141f989740143730c84fd7b03",
+      "source_manifest_expected_sha256": "8c6c0818c1a442686ff2a3cda9f3813dc20e5f8141f989740143730c84fd7b03",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "ad3bd234581fff4ae6e0bef23e3af86ae6c80eeb18b7c5fbd8a70b40c28a46f6",
+            "continuation_v3_sha256": "6f580cd34f972c3f89a366fa750541374210a5f97ec5cea1a4900bbcba050007",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/03_6735948432738346283_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "231006a6e3bf104c1e7f08a41d37cd03b4087f0dadc456cf1707d34db71bb041"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "2cf154167589fbc6fc84d21152fcca0c81f093f9a35f17bf409e25d305c62dcb",
+          "final_manifest_expected_sha256": "2cf154167589fbc6fc84d21152fcca0c81f093f9a35f17bf409e25d305c62dcb",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "16082945716095b2621987199b7b07c3e5dd01de25c658a17764d91e5c2e4069",
+            "continuation_v3_sha256": "b72b1ee32943e33d2baf4dd931da55ee67d846b455ac595c14d8f24f6e923f8d",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/03_6735948432738346283_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "8b6575be8f6e0181d0cbaf2a23cd041885ebcce95bb503cce9bb0d34d63f73c1"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "fab62528b3fe9cda67e3c59d3d6f4c7aded48693184bccbbc165e823fc503d15",
+          "final_manifest_expected_sha256": "fab62528b3fe9cda67e3c59d3d6f4c7aded48693184bccbbc165e823fc503d15",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "2efc13de3766b98a6547b23a7e8fd5ce08c3e4dc4b24a2cca59cdf26b325435a",
+            "continuation_v3_sha256": "d5c7d1759ac1ff33dda16900ed6a797af881ceb3837453a153579e834af10b18",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/03_6735948432738346283_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "d40a5057c9e6927211f20caa72a8aff1609aa3271b63f002be479d0e6bfbd036"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "df358e56f51615bef83635e957396ad427254af39971a80a293b9b4d7c90cdfa",
+          "final_manifest_expected_sha256": "df358e56f51615bef83635e957396ad427254af39971a80a293b9b4d7c90cdfa",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 14,
+            "positive_coverage": 0.125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 2
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 6735948432738346283,
+      "ordinal": 3,
+      "source_manifest_actual_sha256": "2898c83a17269d0e2a42b5de8bb9000c1c0a2f9a904084667117a4a7dee792e4",
+      "source_manifest_expected_sha256": "2898c83a17269d0e2a42b5de8bb9000c1c0a2f9a904084667117a4a7dee792e4",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "76ba5a0de1ab408fab103d5a9ea9b942151aa220f48416ef5d7f2b5b65c3e554",
+            "continuation_v3_sha256": "7cc8bbc38e5ea79d6c2f26c223928b56ccd30aba6bd5c67ca9cec5a2f4b6ce5f",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/04_1094181430148235827_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "7d97d04c49a75d798eced86892188a6332dfaa1d1d717150793dace541d97538"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "138b24f2404af1ee69601683afad66e4d1f76d6d17bd5251182e34d64921e9f6",
+          "final_manifest_expected_sha256": "138b24f2404af1ee69601683afad66e4d1f76d6d17bd5251182e34d64921e9f6",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 14,
+            "positive_coverage": 0.125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 2
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "89dac09040c90cce38f277520fb98da71e68cce228cbbd087da9fa08e784c2f1",
+            "continuation_v3_sha256": "961c9eb4d7432dbf9f50db8a0df71158e3b3d51c3115c19d1bacf32d9e059ae9",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/04_1094181430148235827_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "cdfb4f3cd7af0e2cd6573d7ee6a29afdaef293b858d58be89f05bb0f4a320ae9"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "1336ee090f288169d642d6ac8e537b11708154f58b63318264f22f824bf036cf",
+          "final_manifest_expected_sha256": "1336ee090f288169d642d6ac8e537b11708154f58b63318264f22f824bf036cf",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "3a1edca1979afdc44ee4841652dd3ab6b41ef427be13191682c26c12f350405f",
+            "continuation_v3_sha256": "3177dfb093f604e1e4ff00dec032013d8112fa327ff3ea0d7fc0b89faca27bf5",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/04_1094181430148235827_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "0376c276133b434b474cd440da37cbc7f17c6fbdc2eff8bf63d8330b55cc3c07"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "934e40f54bb032a7fd2533bf078ea736963126cc1cb43ab04bf7709d47a5e11c",
+          "final_manifest_expected_sha256": "934e40f54bb032a7fd2533bf078ea736963126cc1cb43ab04bf7709d47a5e11c",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 14,
+            "positive_coverage": 0.125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 2
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 1094181430148235827,
+      "ordinal": 4,
+      "source_manifest_actual_sha256": "6f9ab4a83f5e7b341a4379c1d0bb9c3767b0a2b06aaebc0ef4b69687037d518a",
+      "source_manifest_expected_sha256": "6f9ab4a83f5e7b341a4379c1d0bb9c3767b0a2b06aaebc0ef4b69687037d518a",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "e061eddfd1681e4018a5f531bd58aa3faafd43220b87ced4c3592f53e8f15d00",
+            "continuation_v3_sha256": "07514d1f4a111571b52325d83a76d2531045360ef0a794687ddf278f24823b8d",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/05_1523103105503719333_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "e980b89da4602c4f5eecdf5efc0dc314dcd80070b76ed0c4e6c0071fc18be281"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "85627ddea80a155c12692376d999cf08d7031d4a9509fae4e8d217473db7fdd6",
+          "final_manifest_expected_sha256": "85627ddea80a155c12692376d999cf08d7031d4a9509fae4e8d217473db7fdd6",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "efe744f902ba14786013b691591be93cd8aa18c868e9fae01ff99c54f04d61a1",
+            "continuation_v3_sha256": "f35d1b7cf9d31e0095b92e71091fb30c95094e3227882867c7246cbfb62c937a",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/05_1523103105503719333_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "ea708259dc482d01937bebf7a9d94141caea5f671a4de699cc72e20e86ffc1a1"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "46c2d5840417a5c222fb5297d93ba6ed7bfc141410406ae7e3cf34aba2d1feae",
+          "final_manifest_expected_sha256": "46c2d5840417a5c222fb5297d93ba6ed7bfc141410406ae7e3cf34aba2d1feae",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "09f34b9007a9f4ba2c1c293a3e5fde208c4ccdb6185cf13b563124259809cdbe",
+            "continuation_v3_sha256": "839cab3d63a64a5c51a685a73c44ef9ceea64a6e0d35321d4d388a971694a833",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/05_1523103105503719333_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "05dae9dd2421d1990d7c9d1eafbe396b46cc152649e838bffe746aba360e6065"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "7a2906ec9def40e443f29d205a613a9f794552e72828ad6a57533ea3ff0362a8",
+          "final_manifest_expected_sha256": "7a2906ec9def40e443f29d205a613a9f794552e72828ad6a57533ea3ff0362a8",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 1523103105503719333,
+      "ordinal": 5,
+      "source_manifest_actual_sha256": "6d5daece7e570882704bd842fab77c2331c41635a50563488f677bb57ef3910a",
+      "source_manifest_expected_sha256": "6d5daece7e570882704bd842fab77c2331c41635a50563488f677bb57ef3910a",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "cb0e301a8da358c38591de4570ec9b0f2e966fd7d2310e4c1ca1a615cad35efc",
+            "continuation_v3_sha256": "0c4aaa94f4ea5937f16025a57987793ca5b42c39183958a36b6f54aecb8030d0",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/06_6961799722694922878_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "c881678621da39f047784d4896da19a76b2cf132d0063b4da4a6d5dc20d0a612"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "ad97df1ee17bc95a5beb5b658b81bcb977ce92d556d695d894a736d86213f614",
+          "final_manifest_expected_sha256": "ad97df1ee17bc95a5beb5b658b81bcb977ce92d556d695d894a736d86213f614",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 13,
+            "positive_coverage": 0.1875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 3
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "0a6c879f7cd2d09be79f85f8f5e23be2fd90e087f4edf603bdfa5c187893c3dd",
+            "continuation_v3_sha256": "d6ad277149ce4ad431df395e64148f8347bf05663d859002d689e77e6796e16b",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/06_6961799722694922878_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "19cbf7f84b6c953af792c3b42109a9ce40bda7d4532d8a59a7575e5ec0c323fe"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "830e9b87545fd03d66cdde8798eb45dcaf3a49e14e3653bb7ad032a24f49d53c",
+          "final_manifest_expected_sha256": "830e9b87545fd03d66cdde8798eb45dcaf3a49e14e3653bb7ad032a24f49d53c",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 13,
+            "positive_coverage": 0.1875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 3
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "6e23609dff3cacfe455775fca317ee354a584d8bbfac9e39c2e63aa37f0fd369",
+            "continuation_v3_sha256": "65736a2ef9beb30f05e7b63c48238c2e471699d520e65071601b8c7e157ac039",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/06_6961799722694922878_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "21efc42433cea5b7a76c692d1a5477bc853dd3977cd52f3f548857ff1007bc03"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "ac7cd26d91db88b8063d23fd2025cb794060db305d6d813d9005225d8bc9e7c6",
+          "final_manifest_expected_sha256": "ac7cd26d91db88b8063d23fd2025cb794060db305d6d813d9005225d8bc9e7c6",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 11,
+            "positive_coverage": 0.3125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 5
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 6961799722694922878,
+      "ordinal": 6,
+      "source_manifest_actual_sha256": "6e1ee9dac3c9f46e533e9537727eb0fdb901d5b36747299b9605b66153b8177e",
+      "source_manifest_expected_sha256": "6e1ee9dac3c9f46e533e9537727eb0fdb901d5b36747299b9605b66153b8177e",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "8e1baac84e27955fc4499180c26d54ba91363084e9dc702a06a1352e0cb292aa",
+            "continuation_v3_sha256": "921ab1d3b7576258ac3a9629ec7f97baa9229240e2d4acd5e3d69abe74cff922",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/07_5254390254314047380_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "ac082547cf4bc98217df5ddb8511a942adf72da5ba81ed7e1676f6d214524f2c"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "ecbb23b7469441885e41dd02554a5bfa6d9031fc045c195a35bdce4c28c10a4d",
+          "final_manifest_expected_sha256": "ecbb23b7469441885e41dd02554a5bfa6d9031fc045c195a35bdce4c28c10a4d",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "f35c92eadfd51a0ce55ba7bf2eb2566ba9f68f534b7f64ee3b2be331661fc760",
+            "continuation_v3_sha256": "13f7b05dbfd83f8fc9892099e31dab1dd6e25a379441b21e3b1a6d61dee2155e",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/07_5254390254314047380_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "7f8605ad59623f2211d8419c2aaec87eecc1743da27c85a92f619a1d38765d49"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "d0f633e32086a62258cfc738a58651e7b930b35262cc1422c9b6d587acdd8fbc",
+          "final_manifest_expected_sha256": "d0f633e32086a62258cfc738a58651e7b930b35262cc1422c9b6d587acdd8fbc",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "4272e0fd9cfc18a2c2455a4bbf7cc72722bd985d850e3078f7d5a70d439d7bf6",
+            "continuation_v3_sha256": "0b0e7e739c70236684ada2cb11637d0d5e952d87e643fb65b7145fdb132aa357",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/07_5254390254314047380_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "1f2a1f3bc8db572723535f7d68e8e8494cb5615fb7bfe6420884e3dca326afb2"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "09c66c01284a9839d14bbb516da39f392ca16cae3e62c734249f7136fe3b5db0",
+          "final_manifest_expected_sha256": "09c66c01284a9839d14bbb516da39f392ca16cae3e62c734249f7136fe3b5db0",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 14,
+            "positive_coverage": 0.125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 2
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 5254390254314047380,
+      "ordinal": 7,
+      "source_manifest_actual_sha256": "efd7c6a801066068d8e528f491afe914f460e50ff96b8037f8cdca1bc3846556",
+      "source_manifest_expected_sha256": "efd7c6a801066068d8e528f491afe914f460e50ff96b8037f8cdca1bc3846556",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "7d56b896c83718f2fccd289f3426b33519576fae6c669d6fb76d12f09116066c",
+            "continuation_v3_sha256": "a00b7702cd6572c4c4131c96c042f99370bae46682217ef35b6cfa93da9e491e",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/08_5874697172715592764_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "8315024f9c4ae3e4f13e7dfd6603f6b5b1944e353a0640b6d238478aa93cd119"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "72b2d3ff32974c3ce21c04a33e5c6ff27279ae8966060516492e7fe57a34486f",
+          "final_manifest_expected_sha256": "72b2d3ff32974c3ce21c04a33e5c6ff27279ae8966060516492e7fe57a34486f",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "0df719d47be7c78fe2853c1addb20ae6daccd8ca174efaf32e5b107cfed01c91",
+            "continuation_v3_sha256": "3122cb59dcccf97dee698ebbc2398b768c68c9a133f9e97b02e5ab38272d8f16",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/08_5874697172715592764_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "2f8e060cf44bbd38c753259487266d01052123a82bdd5faa8ce8b7ea236cf9f4"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "2f428ec0bfaf736c24f544cf712aef35f931bfacbec3dc4f558ba1126850d078",
+          "final_manifest_expected_sha256": "2f428ec0bfaf736c24f544cf712aef35f931bfacbec3dc4f558ba1126850d078",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "daac385cfff4915ad8ac696db4426391fcfb6044c82250c3e56f3e77de8c6477",
+            "continuation_v3_sha256": "6f58e53ca744fb8726177abda4c7f73d3f7368b967eb59ad63c2667fd68fc300",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/08_5874697172715592764_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "5692de7744c4c6a454334b4cab98df15a8cbab01632b0cfab2a8402e6b3d4293"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "fd92d1f74941dadf5c65a3c40b77c816ad101f2550be20f41968eebd3f3f68a5",
+          "final_manifest_expected_sha256": "fd92d1f74941dadf5c65a3c40b77c816ad101f2550be20f41968eebd3f3f68a5",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 5,
+            "positive_coverage": 0.6875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 11
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 5874697172715592764,
+      "ordinal": 8,
+      "source_manifest_actual_sha256": "7df82955cf3db803b1ed6b00760ffc64ee9c88c57f005ca2a4ffdb074884677b",
+      "source_manifest_expected_sha256": "7df82955cf3db803b1ed6b00760ffc64ee9c88c57f005ca2a4ffdb074884677b",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "2442fe8328348120fd33b52b1ac7ab1e8c46d2a5787f906bb1ec9321e55b3075",
+            "continuation_v3_sha256": "f8c9fac9ed354b8c9cc0c010f77978ab859a2381007304e83f111d8399961c6a",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/09_1004659260894101088_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "ec106ace2fe73f6c255bb2a787389d84a11715f09662312a69c0a597d4d45d54"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "cc76cc7fd4e6d25ec10d787d1d3c372f93873420b867dcd64f634c6d5ef49bf6",
+          "final_manifest_expected_sha256": "cc76cc7fd4e6d25ec10d787d1d3c372f93873420b867dcd64f634c6d5ef49bf6",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 2,
+            "attempts": 2,
+            "requests": 2
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "9b7a7c00d4363111d14bc157e59932f7fe9be2078aabfe705ba39be8af8fe2ef",
+            "continuation_v3_sha256": "febc0b197b0141ceeda2a428029ccb017e8e99d45033923f832359315f313c84",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/09_1004659260894101088_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "ac8e47a714e66e2dcfbae0c493824dfe59afa3bae362fb7058fd6d5a1c13c6dc"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "ff4499a1bdab892478c40316089612beaab3ca0f7b222098168985c35ab030c6",
+          "final_manifest_expected_sha256": "ff4499a1bdab892478c40316089612beaab3ca0f7b222098168985c35ab030c6",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "029885fbf6268a3fe0dec44a0679f6fa888148c23f2d602c7d05a0e95e33327d",
+            "continuation_v3_sha256": "10ab96e412c04831c176ab87459283690ecc346a647e23c956be79b659418fd0",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/09_1004659260894101088_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "b46c6ea951584ba0f4ddacc986adc4eb474450c288a4bb4cc6653635d17b98c8"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 1
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "4b71cd4a8c30321323a71909037ba4d04de66047530fb1e7ecb2c2a82adba6cc",
+          "final_manifest_expected_sha256": "4b71cd4a8c30321323a71909037ba4d04de66047530fb1e7ecb2c2a82adba6cc",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 14,
+            "positive_coverage": 0.125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 2
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 2,
+            "attempts": 2,
+            "requests": 2
+          }
+        }
+      },
+      "genome_seed": 1004659260894101088,
+      "ordinal": 9,
+      "source_manifest_actual_sha256": "d02a147792b5691502dd274b82cededf93439a1e25a6de87677f0763f9f49c4b",
+      "source_manifest_expected_sha256": "d02a147792b5691502dd274b82cededf93439a1e25a6de87677f0763f9f49c4b",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "3c3fb8737c4bdfadd6d75a287cb07e277fc2aa87fa4df4b2f1e385bd9ebb98de",
+            "continuation_v3_sha256": "e920ff41d4e4f5aeb2f079affa307f391276631b3a783e0e26529ff155600bc6",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/10_6415440476624295190_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "0026adbd82560a4d6370a100938338dc18babca86cafaf4d6e2e98a6c18d1f5d"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "45584aa7b6281be004ce19143144a450dae0263d6e2f9a017b52c49435d67a87",
+          "final_manifest_expected_sha256": "45584aa7b6281be004ce19143144a450dae0263d6e2f9a017b52c49435d67a87",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "ff6798bf769db262fefbd2f3d9c7aa123328810a86ba63d7a17a9dba12c2cf1c",
+            "continuation_v3_sha256": "56899a248e6d02acec3abdfe48f4b7d9251b37a441739d6a7b283535d922e2bf",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/10_6415440476624295190_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "9afca4b7f88e7907e2b208f6cb30373c9dba77da3499c1891c1aeea0e8408ba2"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "af62fd9ef64ee1269fa7289dba7b75d16f8980d1f9c31141f08d9c1a2a1e3de7",
+          "final_manifest_expected_sha256": "af62fd9ef64ee1269fa7289dba7b75d16f8980d1f9c31141f08d9c1a2a1e3de7",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "c7b2b95249a0ca23434b58d518c7ea9485da5863a502804495622462454e0a0a",
+            "continuation_v3_sha256": "3f46c238c3a75ddac5a446ed8f96f6f57a98973e66b8020ac9f4e84a01e597b8",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/10_6415440476624295190_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "a2bbac23df65cc6d7f74dc278bee9a608e82971184cef42fb5965ccafeaeee64"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "abbb22557179ab927fee784f389c80429da3430e87aa4d284bc142a9990311f2",
+          "final_manifest_expected_sha256": "abbb22557179ab927fee784f389c80429da3430e87aa4d284bc142a9990311f2",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 6415440476624295190,
+      "ordinal": 10,
+      "source_manifest_actual_sha256": "a2cb673a9711d7d9e64966e77f4c6c088aaa04ab5a9e51b46c08c8c199dd9ec1",
+      "source_manifest_expected_sha256": "a2cb673a9711d7d9e64966e77f4c6c088aaa04ab5a9e51b46c08c8c199dd9ec1",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "8f22075423f980cbb76343bb13a9b2e36f769c966db077c188036e190c135ab3",
+            "continuation_v3_sha256": "099d404a47fc8feadd0f1dfe81b90d93f56555609d129f27fdfcbf14c5eed404",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/11_4957944611819815972_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "90de1c011405693c00cf90b42af2cf547ecf5fd9f4b53cf70b5004c1c37ac77b"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "b2ab829bad52eefbb5c91965637d399524aea1a5770a1ee59ba7ef17bb3dd44a",
+          "final_manifest_expected_sha256": "b2ab829bad52eefbb5c91965637d399524aea1a5770a1ee59ba7ef17bb3dd44a",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "a6fd717a0634594a33870320ea77a549352c631d74b4f5b17bfe92411418d3b3",
+            "continuation_v3_sha256": "04345c5fb21caa3d9835f3df54eceaef0d2e7ab938739d563f0db04e59961a5f",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/11_4957944611819815972_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "0c4caa32d2ae42fd185eb171ac7fdfec25935862b319649dc1d9e256db89c175"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "3e9100e4ca44122a74a5e79f19aa42316f9710445c1e5cc45013e7eaf50e896b",
+          "final_manifest_expected_sha256": "3e9100e4ca44122a74a5e79f19aa42316f9710445c1e5cc45013e7eaf50e896b",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "3149360b0981965cb886c0c7870ac02e726b986c5d3bd4bfa9f398bff5789abb",
+            "continuation_v3_sha256": "ef8d1e15d9d0f80c6a59f78ce4f7d1b15af80ccdb28405f87c09ab9ed5968155",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/11_4957944611819815972_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "eda3cb79402131045fd98de2a03164e8cef143c3ef1521974fedaa13ba4b48e6"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "7edf00099e5cba25d07c0667dc20cb972784e6ad332af19f7de203610925c82f",
+          "final_manifest_expected_sha256": "7edf00099e5cba25d07c0667dc20cb972784e6ad332af19f7de203610925c82f",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 13,
+            "positive_coverage": 0.1875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 3
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 4957944611819815972,
+      "ordinal": 11,
+      "source_manifest_actual_sha256": "c91f2977a13432fd0a9ba70c4a2747706d699258cccb0ff6ea0d674a1ecd47eb",
+      "source_manifest_expected_sha256": "c91f2977a13432fd0a9ba70c4a2747706d699258cccb0ff6ea0d674a1ecd47eb",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "170612a361544bf7370be2add8f13251ea67fff2f6c6b28115d13600fedba589",
+            "continuation_v3_sha256": "34c1ba03dd7ec3b6d89b28a4395e6ea78b1b43eb0929282d3458b8d16e290ac5",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/12_2003738307592690383_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "9a1e79f47072e57840dd1022e5d8d794e825a2bc193609a1fe1c18c897c8b19b"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "0446380a4c9eb19a4b762c06cae5b58d583382064048def39238645a2e55e828",
+          "final_manifest_expected_sha256": "0446380a4c9eb19a4b762c06cae5b58d583382064048def39238645a2e55e828",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "bf244d8aece4533e99f64e740912b0e262ea40ea08a0cc699c434b760a9399cc",
+            "continuation_v3_sha256": "d71543b9982b1dc048f923f9a3ad3528f71ac207e2cee0e99515696dd4bdfb36",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/12_2003738307592690383_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "ba620ea237b580e05d73c0ad61c37bacf2b52a4c0353e46d2f3431ed64931143"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "6d7d799ea3b87bfdbbba7b990d1ac69d49768ccded694cc2033624fdd6d8e4c4",
+          "final_manifest_expected_sha256": "6d7d799ea3b87bfdbbba7b990d1ac69d49768ccded694cc2033624fdd6d8e4c4",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "8c699b74b0a81d77c9697ebf0daf9237d25029efca4bb5dd8d291684b946c90a",
+            "continuation_v3_sha256": "8cb3fcd3af8d76e01c58200a30caae74d038e0ef8c9f66bd56ac39e4c280a694",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/12_2003738307592690383_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "d401bf7817227bc93e14b024f84b6dd762998e432800cde56c8b9bbbb55bacbe"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "b028182d5c722320093a678faecd4b5cad07de7d0ceffe2a0d656264aca19bfd",
+          "final_manifest_expected_sha256": "b028182d5c722320093a678faecd4b5cad07de7d0ceffe2a0d656264aca19bfd",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 2003738307592690383,
+      "ordinal": 12,
+      "source_manifest_actual_sha256": "5f97d027ff00bf5507cfd0c8ae6d0038e020f15b63f68e8a6c7ae3a03b1b6369",
+      "source_manifest_expected_sha256": "5f97d027ff00bf5507cfd0c8ae6d0038e020f15b63f68e8a6c7ae3a03b1b6369",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "69329a4cdc26605b584f5f8fe69b41b72db73f8f23b1a2947677bce005563fe4",
+            "continuation_v3_sha256": "a486ae7dbf3755bfcba955b15ccc26d9a59a8d699de526d3063424d2e3d2ea14",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/13_4017493945575328316_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "baf826af9799d3190cfdafbafe7beb9aa39c096bcc35563cff40bedd654bf678"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "6520041e5966e578fb34b34e7f32dc7f7bcff22180003bbbd0b63f4233f90ffd",
+          "final_manifest_expected_sha256": "6520041e5966e578fb34b34e7f32dc7f7bcff22180003bbbd0b63f4233f90ffd",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "61f066efc9e8313a4fd849e19de66aa2a07ef6990330cc92e4a0271680b09e67",
+            "continuation_v3_sha256": "c454cb30168e6909d2acb471e64ec22b5e5f4a1618ff1b7ba949c6073145b011",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/13_4017493945575328316_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "77227df2e5560e7611ed22c7b7b0e739794f924fbadc1f1488b0a41c295c6ddc"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "58686ce0698d9872ad44af41e6773f9f3edde23f24b4fdcd546f57bead131698",
+          "final_manifest_expected_sha256": "58686ce0698d9872ad44af41e6773f9f3edde23f24b4fdcd546f57bead131698",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "868cad59dadabcf7f721311db52c07b762ec21289dbfda8896d89937c8f683a7",
+            "continuation_v3_sha256": "6918119a473f1bf095aaa5ca6b2c2136fbe104cfbca17f60004e95ffb06102d3",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/13_4017493945575328316_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "240c9c49051d1cf0cf81e5355e39d0c2ddd0476821d149d979a76fb37394c847"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "6520041e5966e578fb34b34e7f32dc7f7bcff22180003bbbd0b63f4233f90ffd",
+          "final_manifest_expected_sha256": "6520041e5966e578fb34b34e7f32dc7f7bcff22180003bbbd0b63f4233f90ffd",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        }
+      },
+      "genome_seed": 4017493945575328316,
+      "ordinal": 13,
+      "source_manifest_actual_sha256": "b35e50b714339f9830ab6a67fdc6c6b65c537c5afc6e41acb9022d2feccb81df",
+      "source_manifest_expected_sha256": "b35e50b714339f9830ab6a67fdc6c6b65c537c5afc6e41acb9022d2feccb81df",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "9cd8c96e986e9ae0858ab78e3573d1b4e1f6acfbed1ff6e2352edf37909cdf25",
+            "continuation_v3_sha256": "2ac292084cab91f0fcdef9adc2fb7a1c749e598d5e273dd875f5a4a918927447",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/14_2506098576450229954_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "8ff58f97b4a63fbfc1abc894738b1e1b44b82e56664e9d76b1fdfddfac478354"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "fd2434c99b1a47167339bbc2aecb499bb2683a7cb1bcc3276eedb1e05e3f2cb1",
+          "final_manifest_expected_sha256": "fd2434c99b1a47167339bbc2aecb499bb2683a7cb1bcc3276eedb1e05e3f2cb1",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 12,
+            "positive_coverage": 0.25,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 4
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "e0b36dd9da33a8972e5f1a651033e8e09312498b9d07a0a6711881ea2db3a703",
+            "continuation_v3_sha256": "a9bc16d22bb16c2cfbc2e012c8e406229c60937b27d2d41a970686b1c543caa9",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/14_2506098576450229954_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "f96168c75c957da20037e2d5be6e93356c4287430d6187248f1ac1b756b3126a"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "de2a39b637224a229f9e59716aa8c4fef7f426e4b611f07d3ae5a874e4fe6156",
+          "final_manifest_expected_sha256": "de2a39b637224a229f9e59716aa8c4fef7f426e4b611f07d3ae5a874e4fe6156",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 12,
+            "positive_coverage": 0.25,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 4
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "5bdfe30764b8c595da3378a7dda64e9df8dc4cadc3cc0c1db7c476dbe72e349a",
+            "continuation_v3_sha256": "00486b9f4df58756c34329efb36a02f526ea438231a3ce34091790e77eb86a05",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/14_2506098576450229954_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "8f16b4c50532a20031a043573420bd0ecbb3415e5e59efb801549794cfe5d584"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "fd2434c99b1a47167339bbc2aecb499bb2683a7cb1bcc3276eedb1e05e3f2cb1",
+          "final_manifest_expected_sha256": "fd2434c99b1a47167339bbc2aecb499bb2683a7cb1bcc3276eedb1e05e3f2cb1",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 12,
+            "positive_coverage": 0.25,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 4
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        }
+      },
+      "genome_seed": 2506098576450229954,
+      "ordinal": 14,
+      "source_manifest_actual_sha256": "d1a089a90e0b0061691810c75ca25dfa3113dd615abc75c3de12270c96396492",
+      "source_manifest_expected_sha256": "d1a089a90e0b0061691810c75ca25dfa3113dd615abc75c3de12270c96396492",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "89c41a345ee698a4f988d8896fc021903d4fbb4c5c31502ee5f1dd8e6ee644de",
+            "continuation_v3_sha256": "ed75d2e06feb4f177caf833e61481427a5205f18bb7d59e1b051b1c69a13dfc1",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/15_6983509750099092169_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "25014a9a165a3ec48204213a7126f3c97bcced3ae648669a37f5675f7ea45d39"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "6058f2d7e53f8c4cd739239dc6388c4de40e8ffd50be319dd7470f0679d38980",
+          "final_manifest_expected_sha256": "6058f2d7e53f8c4cd739239dc6388c4de40e8ffd50be319dd7470f0679d38980",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 15,
+            "positive_coverage": 0.0625,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 1
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 2,
+            "attempts": 2,
+            "requests": 2
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "5298f1cfbdd0aa263a07216c246ea5207afe5035e2617262b2703a2289e7f38c",
+            "continuation_v3_sha256": "fb86e2f9a56d7ee984004100ece2fac86653ce9f42b43302694df53f603a3e8c",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/15_6983509750099092169_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "c132f1d69bde1d16d25680a9998b56df3d09da5118e567d16bbf0b16a4b7356a"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "a42811338d6be3bdcb08fa0816ab2f177063fa264dc274e14714ff1e3fabb507",
+          "final_manifest_expected_sha256": "a42811338d6be3bdcb08fa0816ab2f177063fa264dc274e14714ff1e3fabb507",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "9e356649adcf721341f2866ffd47d3a0a67bcc1f4b1d08a6da1fced86db80fe8",
+            "continuation_v3_sha256": "ca9c7471f894990260114cba7844c2cfba22f2d95e81496007fd0a8ec76a2dce",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/15_6983509750099092169_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "e044a02bf682d6349cbc6d9764a8c6eb836a6b016427014e7a9e5134b4c42cf9"
+          },
+          "children": {
+            "mature": 2,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "f985b48f4294436bc0372321d6f2ed222471c9b30a5586737e474b96d5803da5",
+          "final_manifest_expected_sha256": "f985b48f4294436bc0372321d6f2ed222471c9b30a5586737e474b96d5803da5",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 13,
+            "positive_coverage": 0.1875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 3
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 2,
+            "attempts": 2,
+            "requests": 2
+          }
+        }
+      },
+      "genome_seed": 6983509750099092169,
+      "ordinal": 15,
+      "source_manifest_actual_sha256": "f11c3fcd86f421d6b8a3a30f5673b38e8cd22f30bfe12a1525926fba6821bfaa",
+      "source_manifest_expected_sha256": "f11c3fcd86f421d6b8a3a30f5673b38e8cd22f30bfe12a1525926fba6821bfaa",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "3eefcd9d514aac917753cca75fd6fa4c1cb10dfb905cbdc6ae60f0b3ad91e37a",
+            "continuation_v3_sha256": "eff2ae08f515cd44664b99ba01b363280fab0e9977645c7c33ef4b5e0af24b64",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/16_7895798915537598175_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "52445cb6419ea030b8fa043f637b7c23328c1562829d0becc7edfdcfa5d773ec"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "845d79cd9d95f29d10ec34b46b0a29a5a71c0b25e84e988aa6c056c39ae98783",
+          "final_manifest_expected_sha256": "845d79cd9d95f29d10ec34b46b0a29a5a71c0b25e84e988aa6c056c39ae98783",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "b075a58fe043c1a04da3bbb1519f284bda8a711c8faf59229d70e9bd0351f46d",
+            "continuation_v3_sha256": "24f07cf919d1ebcb41aae3bb3f9cd960d073dbe5905e690b221fe78fdcc5639c",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/16_7895798915537598175_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "7c5936d1c3ce21d02d0f981e020bd0122434198ccf0f15b5b79313dc3ec2b258"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "7dd0027bd334547ed5989df4bd5320ea3e7f590826c318a1fc4f61e2c59400b5",
+          "final_manifest_expected_sha256": "7dd0027bd334547ed5989df4bd5320ea3e7f590826c318a1fc4f61e2c59400b5",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "3674b4b72fc21a91084acdb2908107a5b1790cc498383bd4ef1c0bb33a2fbf5c",
+            "continuation_v3_sha256": "94462292579e9d993a17b373a593b803afdeaca44feae618b459746fb7e4e6e5",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/16_7895798915537598175_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "ad0e0fc7e4f60c2ced9d1e3554a0405212e6f33405fcd1263bdf41fb67ed4815"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "00a20a3be29e0145d289447b6720ae9a22aa9fb3be4bb22c3e7eedf20e6a6cbe",
+          "final_manifest_expected_sha256": "00a20a3be29e0145d289447b6720ae9a22aa9fb3be4bb22c3e7eedf20e6a6cbe",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 7895798915537598175,
+      "ordinal": 16,
+      "source_manifest_actual_sha256": "e38df9ea0d6ff26e5aea79cdf92bcf61dc7f42484c3acf959df563a45e0e00bb",
+      "source_manifest_expected_sha256": "e38df9ea0d6ff26e5aea79cdf92bcf61dc7f42484c3acf959df563a45e0e00bb",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "aff61a000059d5f1f4b990c7348ba99d991c92d8e0abe568abb8e05b1045e340",
+            "continuation_v3_sha256": "c6cf6e9fb45a9324e7fcd9e236423f5904deccdc48aa6a7456fdeeb5a19069f5",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/17_1629540674185117561_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "c7eb8c11bb7fb19c93f0b2a36c4e2746f441fffddc5fdfab0bf909858ba8a517"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "d126a9eadf59e415d5e3615ae1cd8affc16ac22b0c89771077c8fef3e6e7e8cb",
+          "final_manifest_expected_sha256": "d126a9eadf59e415d5e3615ae1cd8affc16ac22b0c89771077c8fef3e6e7e8cb",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 15,
+            "positive_coverage": 0.0625,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 1
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "23eb26180f30800032d74a3c967146b6113f6154c90098bd97a56bd820c39c4f",
+            "continuation_v3_sha256": "0e786a0f6e314bc863847b0841998b35ca4e50e81fb5596acc1782dfacac4bf1",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/17_1629540674185117561_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "28e93bd06cc54a1d1f861e03d00234a6731095858c3306bd23f653de7eddf776"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "c1f21d62ae8ddb73a7910530486af2ed4138b744f218b6d2981a1ef986b099a2",
+          "final_manifest_expected_sha256": "c1f21d62ae8ddb73a7910530486af2ed4138b744f218b6d2981a1ef986b099a2",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 15,
+            "positive_coverage": 0.0625,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 1
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "248aa2ba368357808e41a077ca717d1114a688a2cf75e9962b0704dd00f0411d",
+            "continuation_v3_sha256": "910504e5fcc848c1847b3bad90d20590bca8265b1cc5b9843b9ef63213596f98",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/17_1629540674185117561_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "9673e419883d732c19cf7a69b2610f0292fa5fe98984def877a37dd21bbc51cf"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "d99d8428e050a30eab551669a3408ba8c2d453ffc2caadb07debc745a6ab1678",
+          "final_manifest_expected_sha256": "d99d8428e050a30eab551669a3408ba8c2d453ffc2caadb07debc745a6ab1678",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 14,
+            "positive_coverage": 0.125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 2
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 1629540674185117561,
+      "ordinal": 17,
+      "source_manifest_actual_sha256": "369f6b3f940e213f40412cb7040678dd537bd27d18f195edbcc4b4e98c1b581b",
+      "source_manifest_expected_sha256": "369f6b3f940e213f40412cb7040678dd537bd27d18f195edbcc4b4e98c1b581b",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "22e56157bba926bda9e647c3046ccb7ecba7bd1892dab0fb5a38475e81396db3",
+            "continuation_v3_sha256": "295ee4512ccaed8df222a9b1d415c55820a69d422e3798184afabcc0141c4ebe",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/18_2761668078300994753_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "61ebb8599b0a8caf85eda60b68270d6bb12187f82adcfc3292f5f3c704086370"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "8b7c445f4891a20ebd6e1d4f7a87e12c6345d36adf805f8253286b3fdb5c4c06",
+          "final_manifest_expected_sha256": "8b7c445f4891a20ebd6e1d4f7a87e12c6345d36adf805f8253286b3fdb5c4c06",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "5d9ae68a23bf9e90abb80f5df1f06dbb2b78891a9a42672e18f1ddf8c13c9d56",
+            "continuation_v3_sha256": "14d12bd4ceb2f550e509ee256599b5358214b3a4c9d936907573058f65cd4562",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/18_2761668078300994753_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "cc47f2ceda2aca88f9803953179b0f3cc844bd76e1543dfc3e80c010a2936b17"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "feb8ac05b9e3b38c40d3ba2f94198007d26c06a756976b11561b97c161b55ccc",
+          "final_manifest_expected_sha256": "feb8ac05b9e3b38c40d3ba2f94198007d26c06a756976b11561b97c161b55ccc",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "b9ec169504e823fb23efd0949526a9b72f44609852197bde6b16ba1aaf288961",
+            "continuation_v3_sha256": "8a71aa8007c0f90d607ad73c81ce890ea5daa89392f41db9fd529c8ecdb58ced",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/18_2761668078300994753_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "e7b285dd7be2de2ebe0a15f59733083927ce99de9686b898a85f8d0757d6591f"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "8b7c445f4891a20ebd6e1d4f7a87e12c6345d36adf805f8253286b3fdb5c4c06",
+          "final_manifest_expected_sha256": "8b7c445f4891a20ebd6e1d4f7a87e12c6345d36adf805f8253286b3fdb5c4c06",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        }
+      },
+      "genome_seed": 2761668078300994753,
+      "ordinal": 18,
+      "source_manifest_actual_sha256": "14ea0ff0c2b2e51d609a9291b19d177f0cd6d44a2ef5e2e1882772957dcbe56c",
+      "source_manifest_expected_sha256": "14ea0ff0c2b2e51d609a9291b19d177f0cd6d44a2ef5e2e1882772957dcbe56c",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "82031522fa92e9f048d233fcc784d3019759fce4a86df58db931dd1b77f85fbb",
+            "continuation_v3_sha256": "ccdd8c9df9535396c0b8da0ff54c6b1a01e3bbc62e08d71d996e5847f96a7c1c",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/19_2289698924204306000_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "1f4359bd202f723b15803fbeca0fd523c73ee314a69cf92d1eb1635ce4b39ed8"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "d0e246b65151407763f6f3d35bf38ecd2fe2a05f80e01fafbd23d434b054b58a",
+          "final_manifest_expected_sha256": "d0e246b65151407763f6f3d35bf38ecd2fe2a05f80e01fafbd23d434b054b58a",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 7,
+            "positive_coverage": 0.5625,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 9
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "7d2530c8b7aa771c9481856392f957e12c6d07979906cbdfb2e55a7bfdafc5d3",
+            "continuation_v3_sha256": "007d5756cd4b286073b69a4f8d7e39353894cf106b256e7dc0e746ad3cc21886",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/19_2289698924204306000_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "efbaeb76ee42ff96351814d1ba8f068f77a7aa9df3e86f7b81c11925502d9692"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "6caa7a4aa83fb30b36c0cbbec78bb16d66b4dfd90cfd04d559d74d8e2b7fcba8",
+          "final_manifest_expected_sha256": "6caa7a4aa83fb30b36c0cbbec78bb16d66b4dfd90cfd04d559d74d8e2b7fcba8",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 7,
+            "positive_coverage": 0.5625,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 9
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "f3646925b678c8fed525577676dba24abf20c60b3fd55415dc3d1a18fba592d8",
+            "continuation_v3_sha256": "3b35c5e46d25cff9e235a07873a453a7850108832ecde2fe7bd959c6bc6358dd",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/19_2289698924204306000_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "09966511481424c37266f5694c79941bb73d2cb1f29b1742e00f72a6bbd3e24e"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "d0e246b65151407763f6f3d35bf38ecd2fe2a05f80e01fafbd23d434b054b58a",
+          "final_manifest_expected_sha256": "d0e246b65151407763f6f3d35bf38ecd2fe2a05f80e01fafbd23d434b054b58a",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 7,
+            "positive_coverage": 0.5625,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 9
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        }
+      },
+      "genome_seed": 2289698924204306000,
+      "ordinal": 19,
+      "source_manifest_actual_sha256": "0a9f607cd5d92b3ae7ec8f3e98f0b8199dd0878908b772fc113be92a7822f64a",
+      "source_manifest_expected_sha256": "0a9f607cd5d92b3ae7ec8f3e98f0b8199dd0878908b772fc113be92a7822f64a",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "17e27a2a753e40cdbb8dad1bb2f4aace98fc7b393a9ef98f5929a6f94e66cd1c",
+            "continuation_v3_sha256": "287fdad2f1802f2bed5ee45d058bfd9e43dbcace70fb750766eef5f5a05a98e7",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/20_8650619848478758134_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "9a81cbad4106b53b052457623e7dac73c2bab68e2683c4ec07d3af80973abdb3"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "dd8f5f16d7c6119781907d1e748343be430c1a12c93539e8436d7f09633da02e",
+          "final_manifest_expected_sha256": "dd8f5f16d7c6119781907d1e748343be430c1a12c93539e8436d7f09633da02e",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 3,
+            "positive_coverage": 0.8125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 13
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "7059823a1781b5fb56cc228e8ceaf270e76d23209dbff8bdfbd4e0909a4e55b6",
+            "continuation_v3_sha256": "f9adc0ec17bab383e120467e6bb84e44372ed6eb642ed555efe619bac4c05669",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/20_8650619848478758134_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "87aa36048731cace4f95212c190218033bcad64412d9db87c77b4f9872ca0b66"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "ee843b21f9c85cdeb137d7ba6ccc2d13f4bb09c0dfd7a40ed85a3ad1891263e6",
+          "final_manifest_expected_sha256": "ee843b21f9c85cdeb137d7ba6ccc2d13f4bb09c0dfd7a40ed85a3ad1891263e6",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 13,
+            "positive_coverage": 0.1875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 3
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "021f97446a33d825b6e61b5309903d3f039467a191808e107d93ab353f4258e7",
+            "continuation_v3_sha256": "3abb9b5bd1d4a99fdc2eb045fde535c0cce05ce1862e704af7489d6fba699320",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/20_8650619848478758134_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "96a9c47d64a47990c8397c31a85fd5fa5cf41b8664fd0c3e91c45106a8164df0"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "b316e94535813e26a9ee6f559e81214f75e5720d9070d10f5e2702a37a7f4fd9",
+          "final_manifest_expected_sha256": "b316e94535813e26a9ee6f559e81214f75e5720d9070d10f5e2702a37a7f4fd9",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 3,
+            "positive_coverage": 0.8125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 13
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 8650619848478758134,
+      "ordinal": 20,
+      "source_manifest_actual_sha256": "f979caf94190d0acd5749b14f20163d0ade617d31436d9ec2696a9e4bbc05bb0",
+      "source_manifest_expected_sha256": "f979caf94190d0acd5749b14f20163d0ade617d31436d9ec2696a9e4bbc05bb0",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "1a1199a60aca6818d4bd411d8b88ea23cd2df9fd21bbd5ae1b0d9f8973f2851c",
+            "continuation_v3_sha256": "6aa2e6233bb0464cb7b47cac07c95710834f430545f7e643a8f6554e843676ae",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/21_2101284628198995045_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "666a0309b2f2ceca33b1ff718a95da486c48cf176beb5fb699d4b55f10a742ac"
+          },
+          "children": {
+            "mature": 2,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "6bb8d9e4f9566462c9faea8fb562b507fc697d87f6558ab0f99ff01b26cf12e0",
+          "final_manifest_expected_sha256": "6bb8d9e4f9566462c9faea8fb562b507fc697d87f6558ab0f99ff01b26cf12e0",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 2,
+            "positive_coverage": 0.875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": true,
+            "tp": 14
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 3,
+            "attempts": 3,
+            "requests": 3
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "02da36920b27222b2cfd2a689415c10f43b50aac615680986b40f290876daa2a",
+            "continuation_v3_sha256": "83c0fa9c1c5fcb336f3830cac908ba3ae19ee27e75f9de1405733d6a68a3a046",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/21_2101284628198995045_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "7c3cd73f1e30f7eb4fd9851c91a37224f2ac6c9c775ca225b379d7e049f02d27"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "04ece4d718016d2bff1b69c76feee4fb1d87f6c4fb082bc868b8cf1a5a15d733",
+          "final_manifest_expected_sha256": "04ece4d718016d2bff1b69c76feee4fb1d87f6c4fb082bc868b8cf1a5a15d733",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "87480574baae3c0228b1ef059d4540dd8867082a79d838bcea40ffb888206698",
+            "continuation_v3_sha256": "d96698bbda18f3d150a55adc32c1c00da5fb9855a4e8e6bec0d37ce7d9f03d03",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/21_2101284628198995045_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "a044979dd1f309e379c75ac46a92fc99fbef1a82ff80c8f6e3123a938d24933a"
+          },
+          "children": {
+            "mature": 3,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "c658c6cb0fda67bcc2142fcbcc7498e3c104912c5ca2e9a882f90faf5a52ca06",
+          "final_manifest_expected_sha256": "c658c6cb0fda67bcc2142fcbcc7498e3c104912c5ca2e9a882f90faf5a52ca06",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 2,
+            "positive_coverage": 0.875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": true,
+            "tp": 14
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 3,
+            "attempts": 3,
+            "requests": 3
+          }
+        }
+      },
+      "genome_seed": 2101284628198995045,
+      "ordinal": 21,
+      "source_manifest_actual_sha256": "666dfa086b53d7aa3755337e4d54e644598fc31fe1ca6f7a9cde82e1e193722f",
+      "source_manifest_expected_sha256": "666dfa086b53d7aa3755337e4d54e644598fc31fe1ca6f7a9cde82e1e193722f",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "f55141d844554d7a68e8d1531ebf0836bae11474c44a14b9c34cafefc6e993c0",
+            "continuation_v3_sha256": "7c17b6e0ebcea694be46dd8d0df3aad12c1951091a10a9b3a5e928fa41d9a803",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/22_3606729374366637727_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "cece0fb2be552d7eef8c715cae48e03628e9a18b1b1280711b20cff754da2da8"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "039123e2fc74863478fb6da24bc9a58e7591140522f27770946a7572562c0ae3",
+          "final_manifest_expected_sha256": "039123e2fc74863478fb6da24bc9a58e7591140522f27770946a7572562c0ae3",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 14,
+            "positive_coverage": 0.125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 2
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "d39e2e03d88099a091706a29d4823f3f06842b0f9d797976511986d95e3ed9b4",
+            "continuation_v3_sha256": "e91f8811a6532b02e247cb6f6285881c0f7080baaa52b3806a2c5defbf5e7f3b",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/22_3606729374366637727_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "fb97475124ef3bf8caae176ba8f982757dda2bef2da21f07d4bd532330e136c1"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "6248da7d56d509afb927dc92048403139426a3eafac51097f7654be00b341c58",
+          "final_manifest_expected_sha256": "6248da7d56d509afb927dc92048403139426a3eafac51097f7654be00b341c58",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 14,
+            "positive_coverage": 0.125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 2
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "ed209e58341afc964e2b5fc9162e03d51795b106222f0e17bc3665e0994ab889",
+            "continuation_v3_sha256": "e32660cc95312093a75ba068688372db35e7d53c08536575acff9919dfce1219",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/22_3606729374366637727_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "99b18a01f6ded427bc52c5ca3fcfee61bc0abc004d9710ae1856b351f246707b"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "039123e2fc74863478fb6da24bc9a58e7591140522f27770946a7572562c0ae3",
+          "final_manifest_expected_sha256": "039123e2fc74863478fb6da24bc9a58e7591140522f27770946a7572562c0ae3",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 14,
+            "positive_coverage": 0.125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 2
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        }
+      },
+      "genome_seed": 3606729374366637727,
+      "ordinal": 22,
+      "source_manifest_actual_sha256": "f55017dc8ae039ec88811be3d20266c51c574ac66cdee7e102ff6e65fbd40ef9",
+      "source_manifest_expected_sha256": "f55017dc8ae039ec88811be3d20266c51c574ac66cdee7e102ff6e65fbd40ef9",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "a7363c0e263fcdc4f55b99ae3c0a97b38033fa33e6f63b0dda89b8238e397e91",
+            "continuation_v3_sha256": "72adc2f5c67fc829d7a35d38a9b6662aaffee9628ee6986209b98ec77588a1e2",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/23_4474446459228528557_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "37290a10942c34acb5ae7712d9b130be1e004e2db26f3a6634768f7e6fcb5101"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "a356413cb5396e4e6fefd0cc7d49079c888371d8ca10dfc741617d288000d87f",
+          "final_manifest_expected_sha256": "a356413cb5396e4e6fefd0cc7d49079c888371d8ca10dfc741617d288000d87f",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 2,
+            "positive_coverage": 0.875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": true,
+            "tp": 14
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 5,
+            "attempts": 5,
+            "requests": 5
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "682d7b30a17075c45d58f9ba4ce8e3880cdf5eda47992ff64aed08902749c544",
+            "continuation_v3_sha256": "096ac2777a83b3a6344861637c040ec17077b267788584a561fc02120b529cb7",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/23_4474446459228528557_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "a41797d3cd370993bb6f42881c6a7f0fcd54d5018750d00d3ce127cfa2a9d5c6"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "b99b684c146a76578a431296e87e45be6d64dc7c75915ad7a59ed3470b6ce22e",
+          "final_manifest_expected_sha256": "b99b684c146a76578a431296e87e45be6d64dc7c75915ad7a59ed3470b6ce22e",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 15,
+            "positive_coverage": 0.0625,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 1
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "6629fbb7d1e2a568307303cb1fe8a4ad57a36060c72ee26adebcddfc529ad452",
+            "continuation_v3_sha256": "75d16b2612b4bd5ff3b2737958525c9b56c33455d87c11919bf63378d9dd0b4c",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/23_4474446459228528557_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "d0ea588616636b33a35f087ebfaf4f4f0aed7419d23595218839a768c63c7b22"
+          },
+          "children": {
+            "mature": 4,
+            "probation": 1
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "a6d619229e7285d75121ed70d8121d74efd57abcf7b28e7fac934100b1c8a52b",
+          "final_manifest_expected_sha256": "a6d619229e7285d75121ed70d8121d74efd57abcf7b28e7fac934100b1c8a52b",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 2,
+            "positive_coverage": 0.875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": true,
+            "tp": 14
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 5,
+            "attempts": 5,
+            "requests": 5
+          }
+        }
+      },
+      "genome_seed": 4474446459228528557,
+      "ordinal": 23,
+      "source_manifest_actual_sha256": "75d82fffde23743b086d40e69f928b0dcf567a41546b2cae0fa98401b8f860c0",
+      "source_manifest_expected_sha256": "75d82fffde23743b086d40e69f928b0dcf567a41546b2cae0fa98401b8f860c0",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "3c72ddbc70d8d1b83b74c695beb25ce60649dbddd22168f27107c9dafb1b20f2",
+            "continuation_v3_sha256": "7280327ca0cae67ce5ab46531306f8c57464a2428e3bd2399811854fba2b5e6a",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/24_7720216432636937491_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "01ce2a71e06ddc69ca0387c428af6ce568f685e83521f56af522f639902ec369"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "cce2ade0670c92c5ca520aa5c6703d991b57c80502ae9db46891dcc12a9bfb0f",
+          "final_manifest_expected_sha256": "cce2ade0670c92c5ca520aa5c6703d991b57c80502ae9db46891dcc12a9bfb0f",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "2a507dd36a8105582ee0bb7453af064eef7fbcc864b7bf0b699fb0216b9105f9",
+            "continuation_v3_sha256": "b9fb6db0d102d5e977aee1e49968b8c8c99bbce6d7b30f50de353ba71b56bbb5",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/24_7720216432636937491_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "af3b5f536c8a27bcf689a4576d1b4943d0b3b730502e4ce4e8176ab4838d06dc"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "7ba18dad8ab600a3bfa446a94169f9c5900db3dbe7330bbfb42a9b40eaa23b9e",
+          "final_manifest_expected_sha256": "7ba18dad8ab600a3bfa446a94169f9c5900db3dbe7330bbfb42a9b40eaa23b9e",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "e40a7c190da9faec45855dca402f3cd000fd74309d6a18aaec5bf874b9253848",
+            "continuation_v3_sha256": "5c6946329d1dbe7e3b7a635a664c53bfaaec0785d38dfb89ef2324167b269b11",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/24_7720216432636937491_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "14a2529d822839ac0c065500aab5a623bee2a077afa16df38105b54c3235f762"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "da844878483c774bdf1f03c8dbe33c7cf7351d6c0774ef003c90eafb2d09ac87",
+          "final_manifest_expected_sha256": "da844878483c774bdf1f03c8dbe33c7cf7351d6c0774ef003c90eafb2d09ac87",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 7720216432636937491,
+      "ordinal": 24,
+      "source_manifest_actual_sha256": "7af2e8f4e181b26f6fa20d88221b9041562c022b94405386b2e126f455c8cec4",
+      "source_manifest_expected_sha256": "7af2e8f4e181b26f6fa20d88221b9041562c022b94405386b2e126f455c8cec4",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "704da6b6835ed5a1b438d97e994991e410db9c342882c465432bd324ed4684a6",
+            "continuation_v3_sha256": "9e09d085740489cf8060ee62b624a2588188f5b7945cb6665638bdbd2c8a3e46",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/25_5519493338716887034_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "2808bc890d0ffea4e4d2d25f90d4f3a5053dd9ef38ae1e85d0ed34076f29e4b9"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "f2a4089bd6566cb9e71d8165b5f0bcf5c161efc2d7b4111abdd28259cca22cda",
+          "final_manifest_expected_sha256": "f2a4089bd6566cb9e71d8165b5f0bcf5c161efc2d7b4111abdd28259cca22cda",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 12,
+            "positive_coverage": 0.25,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 4
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "bb7411a32ef78a5b3129a921d71999c064306d79a455affdeffd41f800d7b407",
+            "continuation_v3_sha256": "5c0b869a01b73785ea46120e13784d83ec56dd2d25c39f324b4d1cca8154ab22",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/25_5519493338716887034_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "64b67c15209fa165b4aae7247a3047c6249fb465b40ca1e9a1954255b5ee010e"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "61299f4e0c3173b28b4100d66ba86d56b952b15bd6edbc07dc249fc9eff9349d",
+          "final_manifest_expected_sha256": "61299f4e0c3173b28b4100d66ba86d56b952b15bd6edbc07dc249fc9eff9349d",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 12,
+            "positive_coverage": 0.25,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 4
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "78400306353013bf8e138753dd15eaaab7a2eee9fbb59eb5d100ca342b0bfef6",
+            "continuation_v3_sha256": "6c5946802718914a54938fcd5b0e60300bed2d75d3fb91203dae1ff00ee85c28",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/25_5519493338716887034_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "98a8313ce5812af6c98cb221069e0b91a32ec0339a6968559d411f3c8da7c21e"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "297db6c2ef0a52cccec7781be7f171abd62ec34a810a79c06acc786ae9a50f08",
+          "final_manifest_expected_sha256": "297db6c2ef0a52cccec7781be7f171abd62ec34a810a79c06acc786ae9a50f08",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 12,
+            "positive_coverage": 0.25,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 4
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 5519493338716887034,
+      "ordinal": 25,
+      "source_manifest_actual_sha256": "16ae02d5ac1eae0e08169eea0af953fa715db44171c9b9a35e324e1dbebaefc8",
+      "source_manifest_expected_sha256": "16ae02d5ac1eae0e08169eea0af953fa715db44171c9b9a35e324e1dbebaefc8",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "afe1c141593e134bc16c3b8e84b651f9fe6deefb76c1fed206abf90e159af24e",
+            "continuation_v3_sha256": "a49051fcf9f892495f6db1e68d017027443cb49788a8a4699f617b7949059fd7",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/26_2953283954541045717_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "22a7dc71ddb267618c0112ef4444134e2f8acb151fc173366381bc2e2c18554b"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "e66c515db5d2ea0c70dce05a73882dbabbdafb657a87405ce81ad1e52847b0f5",
+          "final_manifest_expected_sha256": "e66c515db5d2ea0c70dce05a73882dbabbdafb657a87405ce81ad1e52847b0f5",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 2,
+            "attempts": 2,
+            "requests": 2
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "206f222772bddce261df6de245ecbdd41549e7831a40295cb27507470efa68b2",
+            "continuation_v3_sha256": "0490389920cf689e409d6914bd072933d9070077ae74e400d79361d47fde15fb",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/26_2953283954541045717_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "b0210a92aafb344913d0a10b53b465016b8637dae5709f9a3e34591edffc535e"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "b5abdf49a27050231733b1b08afb25c87307b7d2ab49ead06ad760d8d273e2f1",
+          "final_manifest_expected_sha256": "b5abdf49a27050231733b1b08afb25c87307b7d2ab49ead06ad760d8d273e2f1",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "809460fb60e7432c35f9e1b03817a05e8080109f987d7c034d2c931eab48b9ce",
+            "continuation_v3_sha256": "92ed3cf2f1794fb828ec390d2a4975e548d44e51f4eff3536b68e6be997d712e",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/26_2953283954541045717_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "129382b1db9c856d06d29777228a32c8309b9e263818d023b6927fe7e84676e9"
+          },
+          "children": {
+            "mature": 2,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "703871ccd27f2228e7e6b4c0d6c59a4b473138bd568a77adecfeca5bfe1c6954",
+          "final_manifest_expected_sha256": "703871ccd27f2228e7e6b4c0d6c59a4b473138bd568a77adecfeca5bfe1c6954",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 12,
+            "positive_coverage": 0.25,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 4
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 2,
+            "attempts": 2,
+            "requests": 2
+          }
+        }
+      },
+      "genome_seed": 2953283954541045717,
+      "ordinal": 26,
+      "source_manifest_actual_sha256": "217db8028eb4273ce957f7407d35c009d6f8a99adfa4053fcfd7811f6f1169be",
+      "source_manifest_expected_sha256": "217db8028eb4273ce957f7407d35c009d6f8a99adfa4053fcfd7811f6f1169be",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "496b05443565c3888288ffdb5d38d5f6a868ac03b18452f03131f123f29583e4",
+            "continuation_v3_sha256": "23b205ad9d01f50967d349ed645b5d30516afec75292547403768d2fcd00a0fb",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/27_8363098574554218718_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "d9198331bd4139fb204d4a68de45c19fabe502d707bb385c29def877bb565223"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "79d5bcfc9a2d507a6be49e69ee8294a21ffefe73e7bf8290bf783abf7f75a45f",
+          "final_manifest_expected_sha256": "79d5bcfc9a2d507a6be49e69ee8294a21ffefe73e7bf8290bf783abf7f75a45f",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 3,
+            "positive_coverage": 0.8125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 13
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "eb9814ae843a7575bef7bbb28dc27b720b7aed422eadc817967423450e4a94c5",
+            "continuation_v3_sha256": "e13c33810a8d43faf5df093ae929c3f1eed422c29869c6de206725d29d9afaba",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/27_8363098574554218718_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "d73bd55e6b32c4526f40d910ae1f7be1647940a5f3367b525f527a541b53680a"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "3e1c71af0012e02b952925120421d6bd32ee91143868d147845be7ce80a26404",
+          "final_manifest_expected_sha256": "3e1c71af0012e02b952925120421d6bd32ee91143868d147845be7ce80a26404",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 3,
+            "positive_coverage": 0.8125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 13
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "8eef2a078ad43155c97dde9180348be91c82168eaca2f252b6b1e864183ec4f9",
+            "continuation_v3_sha256": "d40f29f040c2dc95ea4b3bf0ffb6d59c4d8c09a95fb198ebbc7b77b62cfb0c60",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/27_8363098574554218718_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "24be796dccc397762a89431b41e0e890b5089a7cc6aef9b197561a247cf988cb"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "79d5bcfc9a2d507a6be49e69ee8294a21ffefe73e7bf8290bf783abf7f75a45f",
+          "final_manifest_expected_sha256": "79d5bcfc9a2d507a6be49e69ee8294a21ffefe73e7bf8290bf783abf7f75a45f",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 3,
+            "positive_coverage": 0.8125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 13
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        }
+      },
+      "genome_seed": 8363098574554218718,
+      "ordinal": 27,
+      "source_manifest_actual_sha256": "6dfebabf1b7b04e50a9fdc1f1b826dfb0d4d74e78b1d5e337c5cc908c85c8e27",
+      "source_manifest_expected_sha256": "6dfebabf1b7b04e50a9fdc1f1b826dfb0d4d74e78b1d5e337c5cc908c85c8e27",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "a4cbf836fc4076510d02310b788e85a8a882f867f367942bfd2f5ca037a9db6f",
+            "continuation_v3_sha256": "473fb1743dd0029fd1e2d326568dc3c1be19df7ddf176f0501ba8857254e5de0",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/28_4264281309017678228_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "c38c123b9e5b5682e42b8f12b214d807b3425a9bdbbbef2a64ad52e7dc80f017"
+          },
+          "children": {
+            "mature": 2,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "2fa076623d937b06aed5fdb0c7c5293aa30fe83d7f09097802d57ee7c0cc7ef7",
+          "final_manifest_expected_sha256": "2fa076623d937b06aed5fdb0c7c5293aa30fe83d7f09097802d57ee7c0cc7ef7",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 11,
+            "positive_coverage": 0.3125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 5
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 3,
+            "attempts": 3,
+            "requests": 3
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "ce4b314428fa2fe72c33bb04569d8faeb89d1da43e2d182542bbda77007955ba",
+            "continuation_v3_sha256": "7e4dfd8838ea786066f6d7ba064df2db76c023a6e24b28ecad3cec3a0f18f052",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/28_4264281309017678228_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "96164ae4537c694999547d17e39bfd3810677454be568f8f1f994a8ccc7c75ca"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "2d90f1b0c9d3bfbd85a9de24c790d3f4315b1667ea0a30117c676e2683e365a7",
+          "final_manifest_expected_sha256": "2d90f1b0c9d3bfbd85a9de24c790d3f4315b1667ea0a30117c676e2683e365a7",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "f42486387e2fe056c14efa31f858caec47eb0bc18a8506a1cd648b670cc87fc0",
+            "continuation_v3_sha256": "5b946a8342068c3b57f7a1d96d83a8fe2362d2c36c16630d9d1bc3bc7058a8b4",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/28_4264281309017678228_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "9ec800bb646589ba1704fb0b8ea2870713a2726d919f0db260c1343b5497e283"
+          },
+          "children": {
+            "mature": 3,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "09ccabb45ad15cd6b41792f232f56af7c624dce3984b474eaeddb7806e870039",
+          "final_manifest_expected_sha256": "09ccabb45ad15cd6b41792f232f56af7c624dce3984b474eaeddb7806e870039",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 4,
+            "positive_coverage": 0.75,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 12
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 3,
+            "attempts": 3,
+            "requests": 3
+          }
+        }
+      },
+      "genome_seed": 4264281309017678228,
+      "ordinal": 28,
+      "source_manifest_actual_sha256": "9ec513e8c796ccb4e2c29c7cd2a2ed2f5c482eb67e792a04aa91489f7284807e",
+      "source_manifest_expected_sha256": "9ec513e8c796ccb4e2c29c7cd2a2ed2f5c482eb67e792a04aa91489f7284807e",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "64ada6184b35b20cb46698616eabf4ad6434f4d72d97e3c71e8f1f8c1ca29c27",
+            "continuation_v3_sha256": "545a42888a753d686aa6f2e689c2888f572bae32bbdbfd6e700e1b1432810860",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/29_6793022510918070742_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "e5e694d3ff5409ff949cf5ade02bc2380833e3487e19f034a2b6ec131b8f5b14"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "103a2103236ca491000f56bbe88feb61b13bc0ef9a24e55a91125c1a864248d5",
+          "final_manifest_expected_sha256": "103a2103236ca491000f56bbe88feb61b13bc0ef9a24e55a91125c1a864248d5",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 12,
+            "positive_coverage": 0.25,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 4
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 2,
+            "attempts": 2,
+            "requests": 2
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "e96e28cfc32ceaae6ead86f8fc8cfeeda6333403266e90005eb472cb465cbb31",
+            "continuation_v3_sha256": "782d9e7767d5d10ce6e8013ec14b3c2b9d6c7bc14e8b4c7d7403f024640288f2",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/29_6793022510918070742_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "434680f9cb0144e15ad8b9edd1940834b583a89436b27d5b0db0525d2827fb4e"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "d8b64af3c284f7a35d591a08758c59a3d86052dfac78d5bc01ca83707b05b6ff",
+          "final_manifest_expected_sha256": "d8b64af3c284f7a35d591a08758c59a3d86052dfac78d5bc01ca83707b05b6ff",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 14,
+            "positive_coverage": 0.125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 2
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "ff60407ee59e5ce153740f7935b18896a6b031de493de044ba6e84e1e9b6ea06",
+            "continuation_v3_sha256": "d9b1509454adac7cbd7aa4cf7535ce2f4abdf9a2b85a01fcbc32d08a12a3414a",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/29_6793022510918070742_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "9fc7fd321490c1ea56138ab186a10ab6776bd22914501bffa29a9a49714bfa93"
+          },
+          "children": {
+            "mature": 2,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "b33094d50b3f41ab179dae930012f375e6dec356309402d22b3bab38f815fbdc",
+          "final_manifest_expected_sha256": "b33094d50b3f41ab179dae930012f375e6dec356309402d22b3bab38f815fbdc",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 11,
+            "positive_coverage": 0.3125,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 5
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 2,
+            "attempts": 2,
+            "requests": 2
+          }
+        }
+      },
+      "genome_seed": 6793022510918070742,
+      "ordinal": 29,
+      "source_manifest_actual_sha256": "3c68f51685d0a5508f6923ac393ee2842d4f45aafa8601ee6c2237b2fc0ab18b",
+      "source_manifest_expected_sha256": "3c68f51685d0a5508f6923ac393ee2842d4f45aafa8601ee6c2237b2fc0ab18b",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "96a81044568ce8f0a05a68ad6728096ae1427ae01b9f620854b00ff29595f68a",
+            "continuation_v3_sha256": "6d508b87cfff96a0c25e6c79932f1f81aa064a3b375f998e3ec8b461998702bd",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/30_3499714702144404872_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "8511820db78b8cae79903c5ff3df9013f097641d552c86a008e6d412405919b8"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "af83b9bbd8201a6054072a4b017ec24521e9378ae73bc9b249efe3313e10271b",
+          "final_manifest_expected_sha256": "af83b9bbd8201a6054072a4b017ec24521e9378ae73bc9b249efe3313e10271b",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 13,
+            "positive_coverage": 0.1875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 3
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "ec7e53b382e4997ff756a1e1dcc6fa0f4cfbb04f6a7031dae9173c912b5731c3",
+            "continuation_v3_sha256": "a94ec745e8e99ebb0a81b8b1b60bfff24b82a51e689fe70fdf2a916a9268962d",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/30_3499714702144404872_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "b5451365ca7ee8e2016305e80ff98490c24084f3a68818112cd8ba3d3884014e"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "5677c56ed0827f08f7bef22bc5a530f7ac3e85a8251d645f85ce384d830ad6df",
+          "final_manifest_expected_sha256": "5677c56ed0827f08f7bef22bc5a530f7ac3e85a8251d645f85ce384d830ad6df",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 13,
+            "positive_coverage": 0.1875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 3
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "2788b7159544294c9cb040793cf1a8fc8ac07f1557eaa867c93254595eeb5fdb",
+            "continuation_v3_sha256": "26254bc8f76bf56f9fe50820b4db178ee68184896d498dce1540987de7a023c8",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/30_3499714702144404872_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "77e35cf8e0fc4e17ab76aafd9dda440edb98a355321d73b2c7322caaaed1345e"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "af83b9bbd8201a6054072a4b017ec24521e9378ae73bc9b249efe3313e10271b",
+          "final_manifest_expected_sha256": "af83b9bbd8201a6054072a4b017ec24521e9378ae73bc9b249efe3313e10271b",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 13,
+            "positive_coverage": 0.1875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 3
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        }
+      },
+      "genome_seed": 3499714702144404872,
+      "ordinal": 30,
+      "source_manifest_actual_sha256": "b7df680071fbfd2d0a886d8b3422dface54353cad8420e0403eb3aaaf34263f5",
+      "source_manifest_expected_sha256": "b7df680071fbfd2d0a886d8b3422dface54353cad8420e0403eb3aaaf34263f5",
+      "source_reconstruction_exact": true
+    },
+    {
+      "arms": {
+        "counterexample_blind_specialization": {
+          "artifact": {
+            "compressed_sha256": "c3246b69b315f30a5c9f629f4f4ef2e27c88a1b919a954697597b12f0bf91bf0",
+            "continuation_v3_sha256": "61c43fb96477a475e3920ea3469d56dd0d3c8b335ce1bc4901d4c159e7ffa863",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/31_941193230514391201_counterexample_blind_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "0836fca09cca0d33f3b908cff8a697b222283f7ae2b3826c09fa6cac51bd7bd6"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "605c9bad1ebde2a5fb3f691d3a1cd664faad33341b8b20162486df5256d5de86",
+          "final_manifest_expected_sha256": "605c9bad1ebde2a5fb3f691d3a1cd664faad33341b8b20162486df5256d5de86",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 13,
+            "positive_coverage": 0.1875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 3
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        },
+        "demotion_only": {
+          "artifact": {
+            "compressed_sha256": "590c8f87480a4dd8fddbf44e9e13140d6a2665d42732a8b83e184ad5923f0f53",
+            "continuation_v3_sha256": "9dffbbe8093cdaa59cf66189b3c40d2e0d93f9d8317b41baa24fc262f48f375e",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/31_941193230514391201_demotion_only.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "59323e739843259b533c8af55e31afd45887b69eb49155e9c71d564f4598404f"
+          },
+          "children": {
+            "mature": 0,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "3e0a979ef3a5da16152ecf002cc1a416b16e992c681a228abe61038bc01defb8",
+          "final_manifest_expected_sha256": "3e0a979ef3a5da16152ecf002cc1a416b16e992c681a228abe61038bc01defb8",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 16,
+            "positive_coverage": 0.0,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": false,
+            "selective_precision": null,
+            "strict_pass": false,
+            "tp": 0
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 0,
+            "attempts": 0,
+            "requests": 0
+          }
+        },
+        "local_contrast_specialization": {
+          "artifact": {
+            "compressed_sha256": "ccea95b2dfcf4357ff5ee65122adc66b83f6750ea18b52baefc4ca26a7aedac6",
+            "continuation_v3_sha256": "75ac3d1e4150af90d1a769f006a5d38cb2af9d6ac76b321e054e6af38fc56ea3",
+            "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/31_941193230514391201_local_contrast_specialization.pkl.gz",
+            "restore_v3_exact": true,
+            "uncompressed_sha256": "2d0ab5b349955a49873bddc842bf70e600437da6372eaa9d8db2b39482923efb"
+          },
+          "children": {
+            "mature": 1,
+            "probation": 0
+          },
+          "children_exact": true,
+          "correction_audit_exact": true,
+          "direct_serialized_virtual_exact": true,
+          "final_continuation_semantic_exact": true,
+          "final_manifest_actual_sha256": "80bca53c53677cfdd06d0f8814991219834b31cb45f169fcf2a8cc6c6388bb4f",
+          "final_manifest_expected_sha256": "80bca53c53677cfdd06d0f8814991219834b31cb45f169fcf2a8cc6c6388bb4f",
+          "metrics_exact": true,
+          "persistent_state_exact": true,
+          "post_metrics": {
+            "fp": 0,
+            "positive_abstention": 13,
+            "positive_coverage": 0.1875,
+            "refuted_negative": 0,
+            "refuted_positive": 0,
+            "safe_abstention": 16,
+            "safe_narrow_pass": true,
+            "selective_precision": 1.0,
+            "strict_pass": false,
+            "tp": 3
+          },
+          "post_rows_exact": true,
+          "prequential_exact": true,
+          "specialization_audit_exact": true,
+          "specialization_counts": {
+            "admissions": 1,
+            "attempts": 1,
+            "requests": 1
+          }
+        }
+      },
+      "genome_seed": 941193230514391201,
+      "ordinal": 31,
+      "source_manifest_actual_sha256": "f4820b640cd31ef8d238ef35cf34006a0150cb5f2ab1caeb15f4fec4db6a2250",
+      "source_manifest_expected_sha256": "f4820b640cd31ef8d238ef35cf34006a0150cb5f2ab1caeb15f4fec4db6a2250",
+      "source_reconstruction_exact": true
+    }
+  ],
+  "passed": true,
+  "regression_accessed": false,
+  "schema_version": "native_terminal_trace_authority_closure.v1",
+  "specialization_counts": {
+    "counterexample_blind_specialization": {
+      "admissions": 37,
+      "attempts": 37,
+      "requests": 37
+    },
+    "demotion_only": {
+      "admissions": 0,
+      "attempts": 0,
+      "requests": 0
+    },
+    "local_contrast_specialization": {
+      "admissions": 37,
+      "attempts": 37,
+      "requests": 37
+    }
+  },
+  "stage": "closed_passed",
+  "stop_reason": "stage1_behavior_preserving_authority_closure_passed",
+  "trace_admission": {
+    "development_receipts": 32,
+    "development_source_integrity": {
+      "negative_16": true,
+      "passed": true,
+      "positive_16": true,
+      "rows_32": true,
+      "source": "already_viewed_canonical_reference_rows"
+    },
+    "mismatch_rows": [],
+    "passed": true,
+    "training_receipts": 64
+  }
+}

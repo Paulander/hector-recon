@@ -27,6 +27,8 @@ from recon_lite_hector.nodes import StemCellState, StemCellTerminal
 from .native_authority_handover import (
     ChildQuery,
     GraphActuation,
+    GraphSignalTrace,
+    GraphTerminalSignal,
     NativeR0DreamSession,
     NativeR0Organism,
 )
@@ -91,14 +93,22 @@ class CompetenceEvidenceRecord:
     observed_completion: bool
     actuator_identity: str
     completion_terminal_identity: str
+    signal_provenance: tuple[GraphTerminalSignal, ...] = ()
 
     def __post_init__(self) -> None:
         if not self.evidence_key:
             raise ValueError("evidence_key is required")
         if not self.actuator_identity:
             raise ValueError("actuator_identity is required")
-        if any("fen" in item.lower() for item in self.active_signal_ids):
-            raise ValueError("FEN identity is forbidden in competence signals")
+        identities = tuple(item.identity for item in self.signal_provenance)
+        if identities and identities != self.active_signal_ids:
+            raise ValueError("typed provenance must exactly cover ordered signals")
+
+    def __setstate__(self, state: Mapping[str, Any]) -> None:
+        for key, value in state.items():
+            object.__setattr__(self, key, value)
+        if "signal_provenance" not in state:
+            object.__setattr__(self, "signal_provenance", ())
 
 
 @dataclass
@@ -289,6 +299,31 @@ class _GraphSpecializationRequest:
     eligible_base_ids: tuple[str, ...]
     request_ordinal: int
 
+
+@dataclass(frozen=True)
+class _SpecializationParentState:
+    cell_id: str
+    is_mature: bool
+    polarity: str | None
+    specialization_depth: int
+    specialization_request_ordinal: int | None
+    evidence_keys: tuple[str, ...]
+    implied_base_members: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class _SpecializationInternalSnapshot:
+    evidence_ledger: tuple[CompetenceEvidenceRecord, ...]
+    current_grounded_record: CompetenceEvidenceRecord
+    specialization_mode: SpecializationMode
+    parent_states: tuple[_SpecializationParentState, ...]
+    minimum_maturity_support: int
+
+    def parent(self, cell_id: str) -> _SpecializationParentState | None:
+        return next(
+            (item for item in self.parent_states if item.cell_id == cell_id),
+            None,
+        )
 
 
 class CompetenceContextGrowthGenome:
@@ -581,15 +616,8 @@ class GraphNativeCompetenceEnvelope:
         specialization_mode: SpecializationMode,
     ) -> dict[str, Any]:
         runtime = copy.deepcopy(self.graph)
-        candidate_pairs = self._attach_specialization_candidate_terminals(runtime)
-        eligible_pairs = self._eligible_specialization_pairs(
-            record, mode=specialization_mode
-        )
         legs = tuple(sorted(
-            (
-                node_id,
-                str(node.meta["cell_id"]),
-            )
+            (node_id, str(node.meta["cell_id"]))
             for node_id, node in runtime.nodes.items()
             if node.meta.get("role") == "mature_correction_leg"
         ))
@@ -600,32 +628,21 @@ class GraphNativeCompetenceEnvelope:
         )
         if specialization_connected:
             engine.request(SPECIALIZATION_REQUEST_ROOT_ID)
-            engine.request(SPECIALIZATION_ELIGIBILITY_ROOT_ID)
+        base_env = {
+            "active_signal_ids": frozenset(record.active_signal_ids),
+            "observed_completion": bool(record.observed_completion),
+        }
         engine.run(
             max_ticks=192,
-            env={
-                "active_signal_ids": frozenset(record.active_signal_ids),
-                "observed_completion": bool(record.observed_completion),
-                "eligible_specialization_pairs": frozenset(eligible_pairs),
-            },
+            env=base_env,
             until=lambda item: all(
                 item.g.nodes[node_id].state
                 in {NodeState.CONFIRMED, NodeState.FAILED}
                 for node_id, _cell_id in legs
             ) and (
                 not specialization_connected
-                or (
-                    item.g.nodes[SPECIALIZATION_REQUEST_ROOT_ID].state
-                    in {NodeState.CONFIRMED, NodeState.FAILED}
-                    and item.g.nodes[SPECIALIZATION_ELIGIBILITY_ROOT_ID].state
-                    in {NodeState.CONFIRMED, NodeState.FAILED}
-                    and all(
-                        item.g.nodes[node_id].state
-                        in {NodeState.CONFIRMED, NodeState.FAILED}
-                        for _parent_id, _base_id, node_id in candidate_pairs
-                    )
-
-                )
+                or item.g.nodes[SPECIALIZATION_REQUEST_ROOT_ID].state
+                in {NodeState.CONFIRMED, NodeState.FAILED}
             ),
         )
         leg_states = tuple(
@@ -642,9 +659,37 @@ class GraphNativeCompetenceEnvelope:
             if node.meta.get("role") == "specialization_request_leg"
             and node.state == NodeState.CONFIRMED
         ))
+        candidate_pairs: tuple[tuple[str, str, str], ...] = ()
+        if specialization_connected and request_parents:
+            candidate_pairs = self._attach_specialization_candidate_terminals(
+                runtime, allowed_parent_ids=frozenset(request_parents)
+            )
+            engine.request(SPECIALIZATION_ELIGIBILITY_ROOT_ID)
+            internal_env = {
+                **base_env,
+                "specialization_internal_snapshot": (
+                    self._specialization_internal_snapshot(
+                        record, specialization_mode
+                    )
+                ),
+            }
+            engine.run(
+                max_ticks=192,
+                env=internal_env,
+                until=lambda item: (
+                    item.g.nodes[SPECIALIZATION_ELIGIBILITY_ROOT_ID].state
+                    in {NodeState.CONFIRMED, NodeState.FAILED}
+                    and all(
+                        item.g.nodes[node_id].state
+                        in {NodeState.CONFIRMED, NodeState.FAILED}
+                        for _parent_id, _base_id, node_id in candidate_pairs
+                    )
+                ),
+            )
         eligible_by_parent = {
             parent_id: tuple(sorted(
-                base_id for candidate_parent, base_id, node_id in candidate_pairs
+                base_id
+                for candidate_parent, base_id, node_id in candidate_pairs
                 if candidate_parent == parent_id
                 and runtime.nodes[node_id].state == NodeState.CONFIRMED
             ))
@@ -658,34 +703,40 @@ class GraphNativeCompetenceEnvelope:
             "eligible_terminal_ids_by_parent": eligible_by_parent,
         }
 
-    def _eligible_specialization_pairs(
+    def _specialization_internal_snapshot(
         self,
         record: CompetenceEvidenceRecord,
-        *,
         mode: SpecializationMode,
-    ) -> set[tuple[str, str]]:
-        if mode is SpecializationMode.DISCONNECTED:
-            return set()
-        pairs: set[tuple[str, str]] = set()
-        for parent in self.cells.values():
-            if (
-                not parent.is_mature
-                or parent.polarity not in {
-                    AvailabilityState.AVAILABLE,
-                    AvailabilityState.REFUTED,
-                }
-                or parent.specialization_depth != 0
-                or parent.specialization_request_ordinal is not None
-            ):
-                continue
-            for base_id in self._supporting_base_vocabulary(parent):
-                if (
-                    mode is SpecializationMode.LOCAL_CONTRAST
-                    and base_id in record.active_signal_ids
-                ):
-                    continue
-                pairs.add((parent.cell_id, base_id))
-        return pairs
+    ) -> _SpecializationInternalSnapshot:
+        return _SpecializationInternalSnapshot(
+            evidence_ledger=tuple(
+                self.evidence[key] for key in sorted(self.evidence)
+            ),
+            current_grounded_record=record,
+            specialization_mode=mode,
+            parent_states=tuple(
+                _SpecializationParentState(
+                    cell_id=parent.cell_id,
+                    is_mature=parent.is_mature,
+                    polarity=(
+                        None if parent.polarity is None
+                        else parent.polarity.value
+                    ),
+                    specialization_depth=parent.specialization_depth,
+                    specialization_request_ordinal=(
+                        parent.specialization_request_ordinal
+                    ),
+                    evidence_keys=tuple(parent.evidence_keys),
+                    implied_base_members=tuple(sorted(
+                        self._implied_base_members(parent, set())
+                    )),
+                )
+                for parent in sorted(
+                    self.cells.values(), key=lambda item: item.cell_id
+                )
+            ),
+            minimum_maturity_support=self.config.min_maturity_support,
+        )
 
     def _supporting_base_vocabulary(
         self, parent: CompetenceContextCell
@@ -702,7 +753,7 @@ class GraphNativeCompetenceEnvelope:
             if not supports:
                 continue
             for identity in set(evidence.active_signal_ids):
-                if self._specialization_member_forbidden(identity):
+                if not self._specialization_member_role_allowed(evidence, identity):
                     continue
                 counts[identity] = counts.get(identity, 0) + 1
         implied = self._implied_base_members(parent, set())
@@ -712,15 +763,21 @@ class GraphNativeCompetenceEnvelope:
             and identity not in implied
         ))
 
+
+
     @staticmethod
-    def _specialization_member_forbidden(identity: str) -> bool:
-        lowered = str(identity).lower()
-        forbidden = (
-            "policy_response", "completion", "outcome", "experiment",
-            "row", "identity", "fen", "mate", "checkmate", "stalemate",
-            "rook_loss", "correct_move", "tablebase", "stockfish",
-        )
-        return any(token in lowered for token in forbidden)
+    def _specialization_member_role_allowed(
+        record: CompetenceEvidenceRecord, identity: str
+    ) -> bool:
+        if identity == POLICY_RESPONSE_SIGNAL_ID:
+            return False
+        roles = {
+            signal.role for signal in record.signal_provenance
+            if signal.identity == identity
+        }
+        if not roles:
+            return not record.signal_provenance
+        return bool(roles.intersection({"BASE_TERMINAL", "MATURE_COMPOSITE"}))
 
     def _implied_base_members(
         self, cell: CompetenceContextCell, visiting: set[str]
@@ -740,17 +797,27 @@ class GraphNativeCompetenceEnvelope:
         return implied
 
     def _attach_specialization_candidate_terminals(
-        self, runtime: Graph
+        self, runtime: Graph, *, allowed_parent_ids: frozenset[str]
     ) -> tuple[tuple[str, str, str], ...]:
         attached: list[tuple[str, str, str]] = []
         for parent in sorted(self.cells.values(), key=lambda item: item.cell_id):
+            if parent.cell_id not in allowed_parent_ids:
+                continue
             if (
                 not parent.is_mature
                 or parent.specialization_depth != 0
                 or parent.specialization_request_ordinal is not None
             ):
                 continue
-            for base_id in self._supporting_base_vocabulary(parent):
+            retained_keys = frozenset(parent.evidence_keys)
+            graph_emitted_candidates = tuple(sorted({
+                identity
+                for record in self.evidence.values()
+                if record.evidence_key in retained_keys
+                for identity in record.active_signal_ids
+                if self._specialization_member_role_allowed(record, identity)
+            }))
+            for base_id in graph_emitted_candidates:
                 token = hashlib.sha256(
                     f"{parent.cell_id}|{base_id}".encode("utf-8")
                 ).hexdigest()[:16]
@@ -1757,10 +1824,16 @@ class NativeR0CompetenceOrganism:
         board: chess.Board,
         actuation: GraphActuation | None,
     ) -> EnvelopeClassification:
-        signals = extract_active_competence_signals(self.r0, board, actuation)
+        frame = FrameContext(
+            "competence-classify:" + hashlib.sha256(board.fen().encode("utf-8")).hexdigest(),
+            FrameKind.REAL, values={"board": board},
+        )
+        emitted, trace = self.r0.emit_action_with_trace(frame)
+        if emitted != actuation:
+            raise RuntimeError("supplied actuation differs from graph-owned trace")
+        signals = () if trace is None else trace.ordered_signal_identities
         return self.envelope.classify(
-            signals,
-            policy_response=actuation is not None,
+            signals, policy_response=trace is not None
         )
 
     def apply_to_query(
@@ -1811,6 +1884,7 @@ class NativeR0CompetenceOrganism:
             effect_attempts=query.effect_attempts,
             active_competence_signal_ids=tuple(sorted(map(str, active_signal_ids))),
             availability_provenance=provenance,
+            graph_signal_trace=query.graph_signal_trace,
         )
 
     def persistent_state_audit(self) -> Mapping[str, str]:
@@ -1888,11 +1962,11 @@ class NativeCompetenceDreamSession:
         if self.closed:
             raise RuntimeError("competence dream session is closed")
         query = self.r0_session.request(frame)
-        board = frame.to_env_overlay().get("board")
-        if not isinstance(board, chess.Board):
-            raise TypeError("competence frame requires a chess.Board")
-        signals = extract_active_competence_signals(
-            self.organism.r0, board, query.actuation
+        if query.actuation is not None and query.graph_signal_trace is None:
+            raise RuntimeError("graph actuation arrived without selected-option trace")
+        signals = (
+            () if query.graph_signal_trace is None
+            else query.graph_signal_trace.ordered_signal_identities
         )
         classification = self.organism.envelope.classify(
             signals,
@@ -2074,12 +2148,59 @@ def _availability_error_terminal(
 def _specialization_eligibility_terminal(
     node: Node, env: Mapping[str, Any]
 ) -> tuple[bool, bool]:
-    pair = (
-        str(node.meta["parent_cell_id"]),
-        str(node.meta["base_identity"]),
-    )
-    success = pair in env.get("eligible_specialization_pairs", ())
+    parent_id = str(node.meta["parent_cell_id"])
+    base_identity = str(node.meta["base_identity"])
+    snapshot = env.get("specialization_internal_snapshot")
+    if not isinstance(snapshot, _SpecializationInternalSnapshot):
+        success = False
+    else:
+        record = snapshot.current_grounded_record
+        parent = snapshot.parent(parent_id)
+        ledger = snapshot.evidence_ledger
+        mode = snapshot.specialization_mode
+        if parent is None:
+            success = False
+            node.activation.value = 0.0
+            return True, False
+        allowed = GraphNativeCompetenceEnvelope._specialization_member_role_allowed(
+            record, base_identity
+        ) or any(
+            GraphNativeCompetenceEnvelope._specialization_member_role_allowed(
+                item, base_identity
+            )
+            for item in ledger
+            if isinstance(item, CompetenceEvidenceRecord)
+        )
+        retained_keys = frozenset(parent.evidence_keys)
+        polarity = parent.polarity
+        supporting_count = sum(
+            1
+            for item in ledger
+            if isinstance(item, CompetenceEvidenceRecord)
+            and item.evidence_key in retained_keys
+            and base_identity in item.active_signal_ids
+            and (
+                item.observed_completion
+                if polarity == AvailabilityState.AVAILABLE.value
+                else not item.observed_completion
+            )
+        )
+        absent_from_contradiction = (
+            mode is SpecializationMode.COUNTEREXAMPLE_BLIND
+            or base_identity not in record.active_signal_ids
+        )
+        success = bool(
+            mode is not SpecializationMode.DISCONNECTED
+            and parent.is_mature
+            and parent.specialization_depth == 0
+            and parent.specialization_request_ordinal is None
+            and allowed
+            and base_identity not in parent.implied_base_members
+            and supporting_count >= snapshot.minimum_maturity_support
+            and absent_from_contradiction
+        )
     node.activation.value = 1.0 if success else 0.0
+    node.meta["eligibility_computed_internally"] = True
     return True, success
 
 

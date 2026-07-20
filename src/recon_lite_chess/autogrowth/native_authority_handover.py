@@ -130,6 +130,65 @@ class GraphActuation:
 
 
 @dataclass(frozen=True)
+class GraphTerminalSignal:
+    identity: str
+    role: str
+    source_node_identity: str
+    terminal_kind: str
+    provenance: str
+    stem_cell_identity: str | None = None
+
+
+@dataclass(frozen=True)
+class GraphSignalTrace:
+    frame_id: str
+    frame_kind: str
+    source_organism_identity: str
+    source_state_identity: str
+    option_identity: str
+    actuation: GraphActuation
+    confirmed_base_terminal_node_ids: tuple[str, ...]
+    confirmed_mature_composite_ids: tuple[str, ...]
+    terminal_signals: tuple[GraphTerminalSignal, ...]
+
+    @property
+    def ordered_signal_identities(self) -> tuple[str, ...]:
+        return tuple(signal.identity for signal in self.terminal_signals)
+
+    def canonical_manifest(self) -> dict[str, Any]:
+        return {
+            "frame_id": self.frame_id,
+            "frame_kind": self.frame_kind,
+            "source_organism_identity": self.source_organism_identity,
+            "source_state_identity": self.source_state_identity,
+            "option_identity": self.option_identity,
+            "actuation": asdict(self.actuation),
+            "confirmed_base_terminal_node_ids": list(
+                self.confirmed_base_terminal_node_ids
+            ),
+            "confirmed_mature_composite_ids": list(
+                self.confirmed_mature_composite_ids
+            ),
+            "terminal_signals": [asdict(item) for item in self.terminal_signals],
+        }
+
+    def digest(self) -> str:
+        return hashlib.sha256(
+            json.dumps(
+                self.canonical_manifest(), sort_keys=True, separators=(",", ":")
+            ).encode("utf-8")
+        ).hexdigest()
+
+
+@dataclass(frozen=True)
+class _OptionSignalCapture:
+    option_identity: str
+    base_terminal_node_ids: tuple[str, ...]
+    mature_composite_ids: tuple[str, ...]
+    terminal_signals: tuple[GraphTerminalSignal, ...]
+
+
+@dataclass(frozen=True)
 class DreamFirewallCanary:
     rejected_operations: tuple[str, ...]
     persistent_mutation_count: int
@@ -146,6 +205,8 @@ class ChildQuery:
     effect_attempts: tuple[Mapping[str, Any], ...]
     active_competence_signal_ids: tuple[str, ...] = ()
     availability_provenance: Mapping[str, Any] | None = None
+    graph_signal_trace: GraphSignalTrace | None = None
+
 
 
 class NativeR0DreamSession:
@@ -179,7 +240,7 @@ class NativeR0DreamSession:
             source_manifest=self.organism.source_manifest,
             retrieval_budget_per_actuator=self.organism.retrieval_budget_per_actuator,
         )
-        actuation = virtual.emit_action(board)
+        actuation, signal_trace = virtual.emit_action_with_trace(frame)
         mutation_count = int(
             self.organism.persistent_state_audit()["exact_state_sha256"]
             != self.persistent_digest
@@ -213,6 +274,7 @@ class NativeR0DreamSession:
             frame_id=frame.frame_id,
             persistent_mutation_count=mutation_count,
             effect_attempts=tuple(dict(row) for row in firewall.attempts),
+            graph_signal_trace=signal_trace,
         )
 
     def close(self) -> None:
@@ -245,6 +307,7 @@ class NativeR0Organism:
             raise ValueError("R0 organism requires a non-empty frozen learned graph")
         if self.retrieval_budget_per_actuator < 1:
             raise ValueError("retrieval_budget_per_actuator must be positive")
+        self.trace_state_identity()
 
     def __getstate__(self) -> dict[str, Any]:
         """Serialize learned state with canonical transient runtime values."""
@@ -260,6 +323,8 @@ class NativeR0Organism:
         if not hasattr(self, "retrieval_budget_per_actuator"):
             self.retrieval_budget_per_actuator = 16
         self.graph.normalize_inference_runtime()
+        if not hasattr(self, "_trace_state_identity_cache"):
+            self.trace_state_identity()
 
     def persistent_state_audit(self) -> Mapping[str, str]:
         """Hash every persistent component, including unnormalized runtime fields."""
@@ -341,26 +406,64 @@ class NativeR0Organism:
                 pickle.dumps(self, protocol=pickle.HIGHEST_PROTOCOL)
             ).hexdigest(),
         }
+    def trace_state_identity(self) -> str:
+        cached = getattr(self, "_trace_state_identity_cache", None)
+        if cached is not None:
+            return str(cached)
+        audit = self.persistent_state_audit()
+        payload = {key: audit[key] for key in (
+            "topology_sha256", "weights_sha256", "credit_sha256",
+            "lifecycle_sha256",
+        )}
+        identity = hashlib.sha256(
+            json.dumps(payload, sort_keys=True, separators=(",", ":")).encode(
+                "utf-8"
+            )
+        ).hexdigest()
+        self._trace_state_identity_cache = identity
+        return identity
 
-    def emit_action(self, board: chess.Board) -> GraphActuation | None:
-        """Ask a frame-local formal graph for one persistent-state-pure action."""
+    def source_organism_identity(self) -> str:
+        payload = {
+            "schema_version": self.schema_version,
+            "child_id": self.provenance.child_id,
+            "frozen_policy_token": self.graph.frozen_policy_token,
+            "frozen_triplet_ids": sorted(self.frozen_triplet_ids),
+        }
+        return hashlib.sha256(
+            json.dumps(payload, sort_keys=True, separators=(",", ":")).encode(
+                "utf-8"
+            )
+        ).hexdigest()
 
+    def emit_action_with_trace(
+        self, frame: FrameContext
+    ) -> tuple[GraphActuation | None, GraphSignalTrace | None]:
+        """Emit exactly one action and its immutable selected-option trace."""
+
+        if not isinstance(frame, FrameContext):
+            raise TypeError("trace-native R0 execution requires FrameContext")
+        runtime = frame.to_env_overlay()
+        board = runtime.get("board")
+        if not isinstance(board, chess.Board):
+            raise TypeError("trace-native R0 frame requires a chess.Board")
+        source_state_identity = self.trace_state_identity()
         runtime_policy = self.graph.frame_runtime_copy()
-        options, ticks = _formal_native_options(
+        options, ticks, captures = _formal_native_options(
             runtime_policy,
             board,
             allowed_triplets=self.frozen_triplet_ids,
             per_actuator_budget=self.retrieval_budget_per_actuator,
         )
         if not options:
-            return None
+            return None, None
         emission = AnonymousChoiceGenome().emit(options)
         if not emission.actuator_identity.startswith(ACTUATOR_PREFIX):
             raise RuntimeError("formal graph emitted a non-chess actuator identity")
         move_uci = emission.actuator_identity[len(ACTUATOR_PREFIX):]
         if move_uci not in {move.uci() for move in board.legal_moves}:
             raise RuntimeError("formal graph emitted an illegal actuator identity")
-        return GraphActuation(
+        actuation = GraphActuation(
             actuator_identity=emission.actuator_identity,
             move_uci=move_uci,
             option_identity=emission.option_identity,
@@ -368,6 +471,45 @@ class NativeR0Organism:
             candidate_count=len(options),
             formal_ticks=ticks + emission.formal_ticks,
         )
+        capture = captures.get(emission.option_identity)
+        if capture is None:
+            raise RuntimeError("selected graph option has no frame-local trace")
+        policy_signal = GraphTerminalSignal(
+            identity="internal:policy_response",
+            role="POLICY_RESPONSE",
+            source_node_identity=emission.option_identity,
+            terminal_kind="graph_choice_actuator",
+            provenance="selected_graph_option_emitted_actuator",
+        )
+        trace = GraphSignalTrace(
+            frame_id=frame.frame_id,
+            frame_kind=frame.kind.name,
+            source_organism_identity=self.source_organism_identity(),
+            source_state_identity=source_state_identity,
+            option_identity=emission.option_identity,
+            actuation=actuation,
+            confirmed_base_terminal_node_ids=capture.base_terminal_node_ids,
+            confirmed_mature_composite_ids=capture.mature_composite_ids,
+            terminal_signals=tuple(sorted(
+                (*capture.terminal_signals, policy_signal),
+                key=lambda item: item.identity,
+            )),
+        )
+        return actuation, trace
+
+    def emit_action(self, board: chess.Board) -> GraphActuation | None:
+        """Historical action-only facade; production competence uses traces."""
+
+        frame = FrameContext(
+            frame_id="legacy-action:" + hashlib.sha256(
+                board.fen().encode("utf-8")
+            ).hexdigest(),
+            kind=FrameKind.REAL,
+            values={"board": board},
+        )
+        actuation, _trace = self.emit_action_with_trace(frame)
+        return actuation
+
 
     def request_child(self, frame: FrameContext) -> ChildQuery:
         """Formally request the actual frozen R0 graph in an isolated dream."""
@@ -649,7 +791,7 @@ def _formal_native_options(
     *,
     allowed_triplets: Iterable[str],
     per_actuator_budget: int,
-) -> tuple[tuple[AnonymousChoiceOption, ...], int]:
+) -> tuple[tuple[AnonymousChoiceOption, ...], int, dict[str, _OptionSignalCapture]]:
     """Formally confirm graph branches without the legacy Python selector."""
 
     legal = {move.uci(): move for move in board.legal_moves}
@@ -671,6 +813,8 @@ def _formal_native_options(
                 pairs.append((triplet_id, move_uci, 0))
     options: list[AnonymousChoiceOption] = []
     total_ticks = 0
+    captures: dict[str, _OptionSignalCapture] = {}
+
     for triplet_id, move_uci, _rank in pairs:
         ids = _TripletNodeIds(triplet_id)
         active_nodes = policy._active_nodes_for_triplets({triplet_id})
@@ -718,13 +862,73 @@ def _formal_native_options(
             policy.config.terminal_score_scale * combined_terminal_score,
             policy.config.triplet_credit_scale * triplet_weight,
         ))
+        option_identity = f"{triplet_id}:{move_uci}"
+        base_ids = tuple(sorted(
+            node_id for node_id in policy.triplet_nodes.get(triplet_id, set())
+            if node_id in policy.graph.nodes
+            and policy.graph.nodes[node_id].ntype == NodeType.TERMINAL
+            and policy.graph.nodes[node_id].meta.get("shared_feature_atom")
+            and node_id not in policy.pruned_terminal_ids
+            and policy.graph.nodes[node_id].state
+            in {NodeState.TRUE, NodeState.CONFIRMED}
+        ))
+        mature_composites: list[tuple[str, str]] = []
+        for composite_id, cell in sorted(policy.composite_cells.items()):
+            instance_id = policy.composite_node_by_triplet.get(
+                (composite_id, triplet_id)
+            )
+            if (
+                cell.state.name == "MATURE"
+                and composite_id not in policy.disabled_composite_ids
+                and instance_id is not None
+                and policy.graph.nodes[instance_id].state
+                in {NodeState.TRUE, NodeState.CONFIRMED}
+            ):
+                mature_composites.append((composite_id, instance_id))
+        base_signals = tuple(
+            GraphTerminalSignal(
+                identity=node_id,
+                role="BASE_TERMINAL",
+                source_node_identity=node_id,
+                terminal_kind=str(
+                    policy.graph.nodes[node_id].meta.get(
+                        "terminal_kind", "shared_feature_atom"
+                    )
+                ),
+                provenance="selected_option_confirmed_terminal",
+            )
+            for node_id in base_ids
+        )
+        composite_signals = tuple(
+            GraphTerminalSignal(
+                identity=composite_id,
+                role="MATURE_COMPOSITE",
+                source_node_identity=instance_id,
+                terminal_kind="stem_cell_composite",
+                provenance="selected_option_confirmed_mature_composite",
+                stem_cell_identity=composite_id,
+            )
+            for composite_id, instance_id in mature_composites
+        )
+        captures[option_identity] = _OptionSignalCapture(
+            option_identity=option_identity,
+            base_terminal_node_ids=base_ids,
+            mature_composite_ids=tuple(
+                item[0] for item in mature_composites
+            ),
+            terminal_signals=tuple(sorted(
+                (*base_signals, *composite_signals),
+                key=lambda item: item.identity,
+            )),
+        )
+
         options.append(AnonymousChoiceOption(
-            identity=f"{triplet_id}:{move_uci}",
+            identity=option_identity,
             actuator_identity=f"{ACTUATOR_PREFIX}{move_uci}",
             activation=float(strength),
             confirmed=True,
         ))
-    return tuple(options), total_ticks
+    return tuple(options), total_ticks, captures
 
 
 def _always_legal_actuator(node: Node, env: Mapping[str, Any]) -> tuple[bool, bool]:

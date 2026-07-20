@@ -363,3 +363,28 @@ safe coverage-recovery mechanism on viewed data. It is not fresh/regression,
 retired-65, R1, terminal-trace-native, or end-to-end KRK evidence. The package
 is closed with no automatic next factor; see
 `docs/autogrowth/NATIVE_CONTRADICTION_TRIGGERED_SPECIALIZATION_RESULT_20260719.md`.
+
+
+The behavior-preserving native terminal-trace and learning-authority closure has
+now passed on the touched 64-event training tape and already-viewed 32-row
+development tape. Production competence inference and learning consume only the
+graph-selected option's immutable typed trace and environment-minted grounded
+outcome receipts. Lifecycle wiring, specialization mode, genome identity, and
+eligibility law are organism-owned; the runner cannot inject signals, outcome
+Booleans, evidence records, parents, members, or eligible sets.
+
+All 32 source organisms and all three frozen arms reproduced every applicable
+action, signal, classification, correction, proposal, lifecycle, lineage, and
+direct/serialized/VIRTUAL output exactly. All 96 V3 organism artifacts restore
+exactly with zero inference mutation. Frozen results remain local 220 TP/0 FP
+and 30/32 safe-narrow, demotion 119/0 and 17/32, blind 169/0 and 22/32, with
+37 requests/attempts/admissions in each specialization arm and the exact
+34-MATURE/3-PROBATION local and 12-MATURE blind child totals.
+
+A preliminary run localized raw-pickle-layout instability in the V3 cell-state
+checksum. It was stopped, the checksum was replaced by complete canonical
+recursive field encoding, and the full package was rerun from the beginning.
+No behavior gate, field, or tolerance was weakened. This is authority and
+continuation engineering, not new KRK evidence. Regression, retired-65, fresh
+data, and R1 remain unopened. See
+`docs/autogrowth/NATIVE_TERMINAL_TRACE_AUTHORITY_CLOSURE_RESULT_20260720.md`.

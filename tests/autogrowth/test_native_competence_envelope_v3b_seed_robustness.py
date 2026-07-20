@@ -33,8 +33,8 @@ from recon_lite_chess.autogrowth.native_competence_envelope_v3b_seed_robustness 
 )
 
 
-CONTRADICTION_SPECIALIZATION_LEARNER_SHA256 = (
-    "49e31648a1a2c188d6a56ce1b9e2b3c002b0f65b0b24a9f0d741e56393cbd4fd"
+TERMINAL_TRACE_AUTHORITY_LEARNER_SHA256 = (
+    "5079bd8600ef5795cc59639f63faf2256a8d0ddf71d101e43b85f75d3ca25458"
 )
 
 
@@ -103,7 +103,7 @@ def test_v3b_locks_artifact_rows_and_declares_additive_specialization_extension(
     assert LEARNER_SHA256 == (
         "65dda4f09bc1181a6fe3780c27b56da4fc888a377ae3cfffe3c728e9d11d2a7b"
     )
-    assert _file_sha256(LEARNER_MODULE) == CONTRADICTION_SPECIALIZATION_LEARNER_SHA256
+    assert _file_sha256(LEARNER_MODULE) == TERMINAL_TRACE_AUTHORITY_LEARNER_SHA256
 
 
 def test_seed_derivation_is_deterministic_unique_and_excludes_audited_range(
