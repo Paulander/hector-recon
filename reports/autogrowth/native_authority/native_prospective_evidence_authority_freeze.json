@@ -1,0 +1,653 @@
+{
+  "allowed_data": [
+    "generic_synthetic_stream",
+    "already_viewed_historical_regression_artifact",
+    "frozen_local_contrast_source_organisms"
+  ],
+  "development_only": true,
+  "forbidden_data": [
+    "fresh",
+    "R1",
+    "retired_65",
+    "unopened_regression"
+  ],
+  "gates": {
+    "krk": [
+      "zero_pre_frontier_certification",
+      "zero_same_event_proposal_certification",
+      "zero_virtual_certification",
+      "zero_maturity_below_four",
+      "all_final_mature_lawful",
+      "all_mature_contradictions_graph_revoked",
+      "connected_nonzero_mature_competence",
+      "connected_exceeds_shuffled_paired_coverage",
+      "serialization_and_authority"
+    ],
+    "synthetic": [
+      "legacy_admits_spurious",
+      "prospective_zero_immediate_maturity",
+      "zero_pre_frontier_certification",
+      "zero_proposal_event_certification",
+      "planted_matures_prospectively",
+      "spurious_authority_closed",
+      "prospective_exceeds_shuffled",
+      "serialization_exact",
+      "no_virtual_certification",
+      "all_mature_lawful"
+    ]
+  },
+  "krk": {
+    "arms": [
+      "prospective",
+      "legacy_same_ledger",
+      "prospective_outcome_shuffled"
+    ],
+    "organisms": [
+      {
+        "depth_one_count": 1,
+        "genome_seed": 927199493097905893,
+        "mature_depth_one_count": 1,
+        "ordinal": 0,
+        "pattern_count": 155,
+        "pattern_digest": "5c0b2e0659715528a73d966be14e69098d93544cf5c9cf5f4376092dbdba771c",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "da1425bb347aa0177b0843e79b1efecb6d67b4677b59fd65c23f2c491d901d36",
+          "continuation_v3_sha256": "ee2268a4c68e561f9cc4e73489555dc9015bbce345ac2a7738a8e2216b892418",
+          "genome_seed": 927199493097905893,
+          "ordinal": 0,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/00_927199493097905893_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "ae54d149256142702cc67a6bab8141228ce85b81c258033c8039dc29755fcc94"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 7875574914420937836,
+        "mature_depth_one_count": 0,
+        "ordinal": 1,
+        "pattern_count": 184,
+        "pattern_digest": "11a489cb84d620ead163dbf9bdb4737c0835d0d8d2e6c61b59b11a2d19a1a401",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "bad2112371c74d033363def707dc368cb7cab5bd45cd30f3444047286c821259",
+          "continuation_v3_sha256": "d1eccfb92bae0f5b6395e19ffa5e4618e88960903e662e5db8c2d3aae97a7b98",
+          "genome_seed": 7875574914420937836,
+          "ordinal": 1,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/01_7875574914420937836_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "96e0b2dec86b67351c9da4abef5df08559bd7f41f9cd5eafd128d2c4ccea95bf"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 1974929574559045908,
+        "mature_depth_one_count": 1,
+        "ordinal": 2,
+        "pattern_count": 155,
+        "pattern_digest": "80d9be5d26dc1aa44954f3c15f16d36b48a884aef2c6434d49a7ba6268d00e12",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "1c519fb44aa0f73805b10ad844f566da4094bacb06348ee9fe407042df010539",
+          "continuation_v3_sha256": "d661b46d60491372d79e6ec74383bfecadcc41c58e31038844e2c44311714717",
+          "genome_seed": 1974929574559045908,
+          "ordinal": 2,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/02_1974929574559045908_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "1488b83d17c4a3159a4c882ffedc6e80d21dba9fd29e17d0569edddc1fd076bf"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 6735948432738346283,
+        "mature_depth_one_count": 1,
+        "ordinal": 3,
+        "pattern_count": 140,
+        "pattern_digest": "ef0431ed361bff43beadd4995018772d5470bf7520113da1fae51f3bc980c60f",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "2efc13de3766b98a6547b23a7e8fd5ce08c3e4dc4b24a2cca59cdf26b325435a",
+          "continuation_v3_sha256": "d5c7d1759ac1ff33dda16900ed6a797af881ceb3837453a153579e834af10b18",
+          "genome_seed": 6735948432738346283,
+          "ordinal": 3,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/03_6735948432738346283_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "d40a5057c9e6927211f20caa72a8aff1609aa3271b63f002be479d0e6bfbd036"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 1094181430148235827,
+        "mature_depth_one_count": 1,
+        "ordinal": 4,
+        "pattern_count": 175,
+        "pattern_digest": "afe233f66de00348942e3f3d34b0e1ae597709ca097805c1ea50890021f3dd29",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "3a1edca1979afdc44ee4841652dd3ab6b41ef427be13191682c26c12f350405f",
+          "continuation_v3_sha256": "3177dfb093f604e1e4ff00dec032013d8112fa327ff3ea0d7fc0b89faca27bf5",
+          "genome_seed": 1094181430148235827,
+          "ordinal": 4,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/04_1094181430148235827_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "0376c276133b434b474cd440da37cbc7f17c6fbdc2eff8bf63d8330b55cc3c07"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 1523103105503719333,
+        "mature_depth_one_count": 1,
+        "ordinal": 5,
+        "pattern_count": 145,
+        "pattern_digest": "282cc817ad9d6723e7d07b51cb10ce8ee8fb2ddc77a14b5df1e8003a7238f45c",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "09f34b9007a9f4ba2c1c293a3e5fde208c4ccdb6185cf13b563124259809cdbe",
+          "continuation_v3_sha256": "839cab3d63a64a5c51a685a73c44ef9ceea64a6e0d35321d4d388a971694a833",
+          "genome_seed": 1523103105503719333,
+          "ordinal": 5,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/05_1523103105503719333_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "05dae9dd2421d1990d7c9d1eafbe396b46cc152649e838bffe746aba360e6065"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 6961799722694922878,
+        "mature_depth_one_count": 1,
+        "ordinal": 6,
+        "pattern_count": 144,
+        "pattern_digest": "54f6424d06fe9380967b04d2883d941003f3db03604f6c86c804549043accce5",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "6e23609dff3cacfe455775fca317ee354a584d8bbfac9e39c2e63aa37f0fd369",
+          "continuation_v3_sha256": "65736a2ef9beb30f05e7b63c48238c2e471699d520e65071601b8c7e157ac039",
+          "genome_seed": 6961799722694922878,
+          "ordinal": 6,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/06_6961799722694922878_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "21efc42433cea5b7a76c692d1a5477bc853dd3977cd52f3f548857ff1007bc03"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 5254390254314047380,
+        "mature_depth_one_count": 1,
+        "ordinal": 7,
+        "pattern_count": 179,
+        "pattern_digest": "0f3da4f92e8dcb27b222b6cf3264aed438e09876bd1995a63e38309f91c4ed57",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "4272e0fd9cfc18a2c2455a4bbf7cc72722bd985d850e3078f7d5a70d439d7bf6",
+          "continuation_v3_sha256": "0b0e7e739c70236684ada2cb11637d0d5e952d87e643fb65b7145fdb132aa357",
+          "genome_seed": 5254390254314047380,
+          "ordinal": 7,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/07_5254390254314047380_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "1f2a1f3bc8db572723535f7d68e8e8494cb5615fb7bfe6420884e3dca326afb2"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 5874697172715592764,
+        "mature_depth_one_count": 1,
+        "ordinal": 8,
+        "pattern_count": 148,
+        "pattern_digest": "823f89cddd0bd84c2ad5fc158e2a3379a1ec69d5c2b3b193ec838864eb57e721",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "daac385cfff4915ad8ac696db4426391fcfb6044c82250c3e56f3e77de8c6477",
+          "continuation_v3_sha256": "6f58e53ca744fb8726177abda4c7f73d3f7368b967eb59ad63c2667fd68fc300",
+          "genome_seed": 5874697172715592764,
+          "ordinal": 8,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/08_5874697172715592764_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "5692de7744c4c6a454334b4cab98df15a8cbab01632b0cfab2a8402e6b3d4293"
+        }
+      },
+      {
+        "depth_one_count": 2,
+        "genome_seed": 1004659260894101088,
+        "mature_depth_one_count": 1,
+        "ordinal": 9,
+        "pattern_count": 157,
+        "pattern_digest": "501e14ce4704862567588fce5b6432bda98c3c1731bd2ef592a9038b6b97b49f",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "029885fbf6268a3fe0dec44a0679f6fa888148c23f2d602c7d05a0e95e33327d",
+          "continuation_v3_sha256": "10ab96e412c04831c176ab87459283690ecc346a647e23c956be79b659418fd0",
+          "genome_seed": 1004659260894101088,
+          "ordinal": 9,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/09_1004659260894101088_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "b46c6ea951584ba0f4ddacc986adc4eb474450c288a4bb4cc6653635d17b98c8"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 6415440476624295190,
+        "mature_depth_one_count": 1,
+        "ordinal": 10,
+        "pattern_count": 180,
+        "pattern_digest": "13b5837b1d47b6e9cfbc78a033801ac355663df5dfc1725170e9abb9bed8625e",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "c7b2b95249a0ca23434b58d518c7ea9485da5863a502804495622462454e0a0a",
+          "continuation_v3_sha256": "3f46c238c3a75ddac5a446ed8f96f6f57a98973e66b8020ac9f4e84a01e597b8",
+          "genome_seed": 6415440476624295190,
+          "ordinal": 10,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/10_6415440476624295190_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "a2bbac23df65cc6d7f74dc278bee9a608e82971184cef42fb5965ccafeaeee64"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 4957944611819815972,
+        "mature_depth_one_count": 1,
+        "ordinal": 11,
+        "pattern_count": 142,
+        "pattern_digest": "55bbe9b977a4e4a11a293f0e4432944ffb155cf398f45b6c8ad09ddc16b560da",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "3149360b0981965cb886c0c7870ac02e726b986c5d3bd4bfa9f398bff5789abb",
+          "continuation_v3_sha256": "ef8d1e15d9d0f80c6a59f78ce4f7d1b15af80ccdb28405f87c09ab9ed5968155",
+          "genome_seed": 4957944611819815972,
+          "ordinal": 11,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/11_4957944611819815972_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "eda3cb79402131045fd98de2a03164e8cef143c3ef1521974fedaa13ba4b48e6"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 2003738307592690383,
+        "mature_depth_one_count": 1,
+        "ordinal": 12,
+        "pattern_count": 180,
+        "pattern_digest": "1788d6875ca9afa0386d6a6d523a044d8f9737a3a9db8744199581e8d2e1e0d2",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "8c699b74b0a81d77c9697ebf0daf9237d25029efca4bb5dd8d291684b946c90a",
+          "continuation_v3_sha256": "8cb3fcd3af8d76e01c58200a30caae74d038e0ef8c9f66bd56ac39e4c280a694",
+          "genome_seed": 2003738307592690383,
+          "ordinal": 12,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/12_2003738307592690383_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "d401bf7817227bc93e14b024f84b6dd762998e432800cde56c8b9bbbb55bacbe"
+        }
+      },
+      {
+        "depth_one_count": 0,
+        "genome_seed": 4017493945575328316,
+        "mature_depth_one_count": 0,
+        "ordinal": 13,
+        "pattern_count": 176,
+        "pattern_digest": "892607157dddd6008d0549898ec5cf51f778035b70634703a0d782c24dac4f38",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "868cad59dadabcf7f721311db52c07b762ec21289dbfda8896d89937c8f683a7",
+          "continuation_v3_sha256": "6918119a473f1bf095aaa5ca6b2c2136fbe104cfbca17f60004e95ffb06102d3",
+          "genome_seed": 4017493945575328316,
+          "ordinal": 13,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/13_4017493945575328316_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "240c9c49051d1cf0cf81e5355e39d0c2ddd0476821d149d979a76fb37394c847"
+        }
+      },
+      {
+        "depth_one_count": 0,
+        "genome_seed": 2506098576450229954,
+        "mature_depth_one_count": 0,
+        "ordinal": 14,
+        "pattern_count": 179,
+        "pattern_digest": "f47c667986827f33c9ba7d48bc357343e1816dc77abe8a7d8c4ebe92fb099a35",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "5bdfe30764b8c595da3378a7dda64e9df8dc4cadc3cc0c1db7c476dbe72e349a",
+          "continuation_v3_sha256": "00486b9f4df58756c34329efb36a02f526ea438231a3ce34091790e77eb86a05",
+          "genome_seed": 2506098576450229954,
+          "ordinal": 14,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/14_2506098576450229954_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "8f16b4c50532a20031a043573420bd0ecbb3415e5e59efb801549794cfe5d584"
+        }
+      },
+      {
+        "depth_one_count": 2,
+        "genome_seed": 6983509750099092169,
+        "mature_depth_one_count": 2,
+        "ordinal": 15,
+        "pattern_count": 174,
+        "pattern_digest": "5e00535dc1e70fd19740e8512f349094f4729fa3c1fa0b3c9b7db3e1b21aa10b",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "9e356649adcf721341f2866ffd47d3a0a67bcc1f4b1d08a6da1fced86db80fe8",
+          "continuation_v3_sha256": "ca9c7471f894990260114cba7844c2cfba22f2d95e81496007fd0a8ec76a2dce",
+          "genome_seed": 6983509750099092169,
+          "ordinal": 15,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/15_6983509750099092169_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "e044a02bf682d6349cbc6d9764a8c6eb836a6b016427014e7a9e5134b4c42cf9"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 7895798915537598175,
+        "mature_depth_one_count": 1,
+        "ordinal": 16,
+        "pattern_count": 179,
+        "pattern_digest": "ce63af6648d0c0dec7c8db1e1dfaa44f2dd382c30977518dffbdc118732a58f9",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "3674b4b72fc21a91084acdb2908107a5b1790cc498383bd4ef1c0bb33a2fbf5c",
+          "continuation_v3_sha256": "94462292579e9d993a17b373a593b803afdeaca44feae618b459746fb7e4e6e5",
+          "genome_seed": 7895798915537598175,
+          "ordinal": 16,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/16_7895798915537598175_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "ad0e0fc7e4f60c2ced9d1e3554a0405212e6f33405fcd1263bdf41fb67ed4815"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 1629540674185117561,
+        "mature_depth_one_count": 1,
+        "ordinal": 17,
+        "pattern_count": 176,
+        "pattern_digest": "4555bb5aef0e6616eaad4b19bd15818627f54a591571b32b51320f9c5924ebe9",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "248aa2ba368357808e41a077ca717d1114a688a2cf75e9962b0704dd00f0411d",
+          "continuation_v3_sha256": "910504e5fcc848c1847b3bad90d20590bca8265b1cc5b9843b9ef63213596f98",
+          "genome_seed": 1629540674185117561,
+          "ordinal": 17,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/17_1629540674185117561_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "9673e419883d732c19cf7a69b2610f0292fa5fe98984def877a37dd21bbc51cf"
+        }
+      },
+      {
+        "depth_one_count": 0,
+        "genome_seed": 2761668078300994753,
+        "mature_depth_one_count": 0,
+        "ordinal": 18,
+        "pattern_count": 178,
+        "pattern_digest": "33babeed77047b6e0463ce97fb5bfd128e4ed575785b71a7e4e6ea96e6c23679",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "b9ec169504e823fb23efd0949526a9b72f44609852197bde6b16ba1aaf288961",
+          "continuation_v3_sha256": "8a71aa8007c0f90d607ad73c81ce890ea5daa89392f41db9fd529c8ecdb58ced",
+          "genome_seed": 2761668078300994753,
+          "ordinal": 18,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/18_2761668078300994753_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "e7b285dd7be2de2ebe0a15f59733083927ce99de9686b898a85f8d0757d6591f"
+        }
+      },
+      {
+        "depth_one_count": 0,
+        "genome_seed": 2289698924204306000,
+        "mature_depth_one_count": 0,
+        "ordinal": 19,
+        "pattern_count": 173,
+        "pattern_digest": "7e6f5a5744d65f08fcef7a0436cb924113ab8e6dc953d23d9e636c7972579dc7",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "f3646925b678c8fed525577676dba24abf20c60b3fd55415dc3d1a18fba592d8",
+          "continuation_v3_sha256": "3b35c5e46d25cff9e235a07873a453a7850108832ecde2fe7bd959c6bc6358dd",
+          "genome_seed": 2289698924204306000,
+          "ordinal": 19,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/19_2289698924204306000_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "09966511481424c37266f5694c79941bb73d2cb1f29b1742e00f72a6bbd3e24e"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 8650619848478758134,
+        "mature_depth_one_count": 1,
+        "ordinal": 20,
+        "pattern_count": 174,
+        "pattern_digest": "003120e8908933fb77eab39cd5a20e18b6d3f58b4758d0c2f4ee52eafbeb9ed1",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "021f97446a33d825b6e61b5309903d3f039467a191808e107d93ab353f4258e7",
+          "continuation_v3_sha256": "3abb9b5bd1d4a99fdc2eb045fde535c0cce05ce1862e704af7489d6fba699320",
+          "genome_seed": 8650619848478758134,
+          "ordinal": 20,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/20_8650619848478758134_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "96a9c47d64a47990c8397c31a85fd5fa5cf41b8664fd0c3e91c45106a8164df0"
+        }
+      },
+      {
+        "depth_one_count": 3,
+        "genome_seed": 2101284628198995045,
+        "mature_depth_one_count": 3,
+        "ordinal": 21,
+        "pattern_count": 176,
+        "pattern_digest": "26bfcb5a876e1aa01faebbb4ffaa55aa5d7d49a442e0e53b5826006b8e921bd3",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "87480574baae3c0228b1ef059d4540dd8867082a79d838bcea40ffb888206698",
+          "continuation_v3_sha256": "d96698bbda18f3d150a55adc32c1c00da5fb9855a4e8e6bec0d37ce7d9f03d03",
+          "genome_seed": 2101284628198995045,
+          "ordinal": 21,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/21_2101284628198995045_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "a044979dd1f309e379c75ac46a92fc99fbef1a82ff80c8f6e3123a938d24933a"
+        }
+      },
+      {
+        "depth_one_count": 0,
+        "genome_seed": 3606729374366637727,
+        "mature_depth_one_count": 0,
+        "ordinal": 22,
+        "pattern_count": 178,
+        "pattern_digest": "1b2c120768d3fb78f0f47ed59f7e151e9494bab4427905ace6066b475462007f",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "ed209e58341afc964e2b5fc9162e03d51795b106222f0e17bc3665e0994ab889",
+          "continuation_v3_sha256": "e32660cc95312093a75ba068688372db35e7d53c08536575acff9919dfce1219",
+          "genome_seed": 3606729374366637727,
+          "ordinal": 22,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/22_3606729374366637727_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "99b18a01f6ded427bc52c5ca3fcfee61bc0abc004d9710ae1856b351f246707b"
+        }
+      },
+      {
+        "depth_one_count": 5,
+        "genome_seed": 4474446459228528557,
+        "mature_depth_one_count": 4,
+        "ordinal": 23,
+        "pattern_count": 181,
+        "pattern_digest": "35a592c05a97e799af48aff372080b2af04280c5eea49192782ee2557cc372fb",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "6629fbb7d1e2a568307303cb1fe8a4ad57a36060c72ee26adebcddfc529ad452",
+          "continuation_v3_sha256": "75d16b2612b4bd5ff3b2737958525c9b56c33455d87c11919bf63378d9dd0b4c",
+          "genome_seed": 4474446459228528557,
+          "ordinal": 23,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/23_4474446459228528557_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "d0ea588616636b33a35f087ebfaf4f4f0aed7419d23595218839a768c63c7b22"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 7720216432636937491,
+        "mature_depth_one_count": 1,
+        "ordinal": 24,
+        "pattern_count": 144,
+        "pattern_digest": "b8c2bf1a2c1d8da112264385895708eeab0633194d444bccf2f946ee7a327962",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "e40a7c190da9faec45855dca402f3cd000fd74309d6a18aaec5bf874b9253848",
+          "continuation_v3_sha256": "5c6946329d1dbe7e3b7a635a664c53bfaaec0785d38dfb89ef2324167b269b11",
+          "genome_seed": 7720216432636937491,
+          "ordinal": 24,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/24_7720216432636937491_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "14a2529d822839ac0c065500aab5a623bee2a077afa16df38105b54c3235f762"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 5519493338716887034,
+        "mature_depth_one_count": 1,
+        "ordinal": 25,
+        "pattern_count": 175,
+        "pattern_digest": "a76e8752e3329e183715fd57b7b9fff596f7a9e65a5cd9c3791e4f219c72ac7b",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "78400306353013bf8e138753dd15eaaab7a2eee9fbb59eb5d100ca342b0bfef6",
+          "continuation_v3_sha256": "6c5946802718914a54938fcd5b0e60300bed2d75d3fb91203dae1ff00ee85c28",
+          "genome_seed": 5519493338716887034,
+          "ordinal": 25,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/25_5519493338716887034_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "98a8313ce5812af6c98cb221069e0b91a32ec0339a6968559d411f3c8da7c21e"
+        }
+      },
+      {
+        "depth_one_count": 2,
+        "genome_seed": 2953283954541045717,
+        "mature_depth_one_count": 2,
+        "ordinal": 26,
+        "pattern_count": 178,
+        "pattern_digest": "d8ae0df5912581bdb4d67a64204e3400070180d4ddbf4bfceb07bf2e5f185c6e",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "809460fb60e7432c35f9e1b03817a05e8080109f987d7c034d2c931eab48b9ce",
+          "continuation_v3_sha256": "92ed3cf2f1794fb828ec390d2a4975e548d44e51f4eff3536b68e6be997d712e",
+          "genome_seed": 2953283954541045717,
+          "ordinal": 26,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/26_2953283954541045717_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "129382b1db9c856d06d29777228a32c8309b9e263818d023b6927fe7e84676e9"
+        }
+      },
+      {
+        "depth_one_count": 0,
+        "genome_seed": 8363098574554218718,
+        "mature_depth_one_count": 0,
+        "ordinal": 27,
+        "pattern_count": 175,
+        "pattern_digest": "39abd486f1cb1d0671ce5fb892e7c192bd5ff7fc83b1a28d6b9429df2a05568d",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "8eef2a078ad43155c97dde9180348be91c82168eaca2f252b6b1e864183ec4f9",
+          "continuation_v3_sha256": "d40f29f040c2dc95ea4b3bf0ffb6d59c4d8c09a95fb198ebbc7b77b62cfb0c60",
+          "genome_seed": 8363098574554218718,
+          "ordinal": 27,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/27_8363098574554218718_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "24be796dccc397762a89431b41e0e890b5089a7cc6aef9b197561a247cf988cb"
+        }
+      },
+      {
+        "depth_one_count": 3,
+        "genome_seed": 4264281309017678228,
+        "mature_depth_one_count": 3,
+        "ordinal": 28,
+        "pattern_count": 182,
+        "pattern_digest": "a1eb439a87c4b99d9e643beb8c02f662e7faeb68311990f643c560f43e820279",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "f42486387e2fe056c14efa31f858caec47eb0bc18a8506a1cd648b670cc87fc0",
+          "continuation_v3_sha256": "5b946a8342068c3b57f7a1d96d83a8fe2362d2c36c16630d9d1bc3bc7058a8b4",
+          "genome_seed": 4264281309017678228,
+          "ordinal": 28,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/28_4264281309017678228_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "9ec800bb646589ba1704fb0b8ea2870713a2726d919f0db260c1343b5497e283"
+        }
+      },
+      {
+        "depth_one_count": 2,
+        "genome_seed": 6793022510918070742,
+        "mature_depth_one_count": 2,
+        "ordinal": 29,
+        "pattern_count": 178,
+        "pattern_digest": "c97e68af9c328123e9d79d92858507ee32a53a0b7058cb4f8be0370118a86d4d",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "ff60407ee59e5ce153740f7935b18896a6b031de493de044ba6e84e1e9b6ea06",
+          "continuation_v3_sha256": "d9b1509454adac7cbd7aa4cf7535ce2f4abdf9a2b85a01fcbc32d08a12a3414a",
+          "genome_seed": 6793022510918070742,
+          "ordinal": 29,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/29_6793022510918070742_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "9fc7fd321490c1ea56138ab186a10ab6776bd22914501bffa29a9a49714bfa93"
+        }
+      },
+      {
+        "depth_one_count": 0,
+        "genome_seed": 3499714702144404872,
+        "mature_depth_one_count": 0,
+        "ordinal": 30,
+        "pattern_count": 174,
+        "pattern_digest": "681753f5e5d13b83db2b40593f73f481a86433f1798c1fe40b74aa848daacbfb",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "2788b7159544294c9cb040793cf1a8fc8ac07f1557eaa867c93254595eeb5fdb",
+          "continuation_v3_sha256": "26254bc8f76bf56f9fe50820b4db178ee68184896d498dce1540987de7a023c8",
+          "genome_seed": 3499714702144404872,
+          "ordinal": 30,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/30_3499714702144404872_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "77e35cf8e0fc4e17ab76aafd9dda440edb98a355321d73b2c7322caaaed1345e"
+        }
+      },
+      {
+        "depth_one_count": 1,
+        "genome_seed": 941193230514391201,
+        "mature_depth_one_count": 1,
+        "ordinal": 31,
+        "pattern_count": 159,
+        "pattern_digest": "cbcc57fa885efb812f528d52652c284435a51b06afcf3578efe80f7405aae5f8",
+        "source_artifact": {
+          "arm": "local_contrast_specialization",
+          "compressed_sha256": "ccea95b2dfcf4357ff5ee65122adc66b83f6750ea18b52baefc4ca26a7aedac6",
+          "continuation_v3_sha256": "75ac3d1e4150af90d1a769f006a5d38cb2af9d6ac76b321e054e6af38fc56ea3",
+          "genome_seed": 941193230514391201,
+          "ordinal": 31,
+          "path": "reports/autogrowth/native_authority/native_terminal_trace_authority_closure_organisms/31_941193230514391201_local_contrast_specialization.pkl.gz",
+          "restore_v3_exact": true,
+          "uncompressed_sha256": "2d0ab5b349955a49873bddc842bf70e600437da6372eaa9d8db2b39482923efb"
+        }
+      }
+    ],
+    "reference_rows_digest": "79b190ff57a62d3a35e9367d221bb62347902a2467b79ecb40b75a94b9fdd3e5",
+    "regression_row_order_commitment": "24899b4a004cf68d5e4a4105ea479496d26fea884d447a105e339cf783bffee4"
+  },
+  "schema_version": "native_prospective_evidence_authority_freeze.v1",
+  "source_commit": "0df59c1c78ce2ecbcb15b906eb86de2c889811d8",
+  "source_hashes": {
+    "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_prospective_evidence_package.py": "7396ca132898448c825111d3e4a33b7c8848f9dcd92c3600f9a3c9371ed8a7c9",
+    "docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY_PREREGISTRATION_20260720.md": "831b24e2ffc7ff97332abb7463f9f47806ca7ad6495b0828d7fd3d20d2cb344d",
+    "reports/autogrowth/native_authority/native_terminal_trace_historical_regression.json.gz": "eb60826db7269b1fb69cd2abe21d137bb1853503cd8177e69aeb36050a77ecf4",
+    "src/recon_lite_chess/autogrowth/native_prospective_evidence_authority.py": "d6ce5d33f0dc28346292dcef31a887d731b789a4a909d11b873a5e24d531a494",
+    "tests/autogrowth/test_native_prospective_evidence_authority.py": "3eee69117cc1f11c210c4e57e686478981dd2ceb1c8789635f476dd9bc714117"
+  },
+  "stop_rule": "close after synthetic and already-viewed retrospective diagnostic; no rescue, fresh data, R1, retired-65, tuning, or new mechanism",
+  "synthetic": {
+    "candidate_count": 60,
+    "candidate_digest": "acf50ded5e52bdc694b7202606318a458ef96cefed7b73af1c4bffdb93787e2c",
+    "config": {
+      "candidate_capacity": 192,
+      "generator_seed": 2026072101,
+      "minimum_discovery_support": 4,
+      "prefix_negative": 16,
+      "prefix_positive": 16,
+      "shuffle_shift": 1,
+      "spurious_dimensions": 6,
+      "suffix_events": 24
+    },
+    "prefix_count": 32,
+    "stream_digest": "5295b2bfdcb665f4b3f4eca9dcc2905a5d9e55ec71f085ee4749b5284025dea6",
+    "suffix_count": 24
+  }
+}
