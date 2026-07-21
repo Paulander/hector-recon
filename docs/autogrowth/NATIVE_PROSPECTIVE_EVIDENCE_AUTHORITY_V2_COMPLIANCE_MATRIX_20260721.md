@@ -148,3 +148,89 @@ stream generation occurred.
 The next permitted action after external review is to close the nomination
 birth-metadata interface. Until that is designed and reviewed, V2 remains an
 engineering mechanism, not an executable scientific package.
+
+
+## Pre-execution integration addendum - binding before code
+
+This addendum supersedes any weaker implementation detail above. It authorizes
+one mechanism-definition repair only and still forbids preregistration,
+scientific runners, stream generation, KRK exposure/outcome consumption,
+unopened validation/regression, fresh data, R1 and retired-65.
+
+| integration contract | required implementation | exact focused test |
+|---|---|---|
+| Ledger-derived authority | Persist an immutable hypothesis digest. Reconstruct support/contradiction IDs and counts, Wilson values, transitions, certification and revocation only from accepted grounded receipts plus pre-outcome commitments plus graph emissions. Mutable cached fields have no authority. | `test_ledger_reconstruction_rejects_mutated_authority_caches`; `test_hypothesis_digest_and_frontier_mutation_fail_atomically`; `test_restore_reconstructs_then_consumes_and_rejects_replay` |
+| Native structural parity | Define MATURE, PROBATION, TRIAL, PRUNED and SPECIALIZED exactly as `CompetenceContextCell.is_mature` and the native recursive matcher do. Cover both polarities, nested context, arms and restore. | `test_native_state_semantics_and_nested_matching_parity`; `test_available_refuted_arm_and_restore_parity` |
+| Discovery epoch | Serialize one organism-owned epoch boundary. Only cells predating it can receive historical escrow. Post-epoch cells require native escrow at atomic birth. Candidate nomination closes once; certification requires closure; later birth/sync fails. | `test_discovery_epoch_distinguishes_historical_and_post_epoch_cells`; `test_nomination_closure_blocks_birth_sync_and_first_certification` |
+| Ordinary atomic escrow | Before insertion, freeze polarity from the grounded discovery receipt plus graph availability-error/request, direct triggering receipt, actual classification/genome reads, transitive context ancestors, complete visible-prefix exclusion set and internal frontier. | `test_ordinary_materialization_creates_atomic_native_escrow`; `test_ordinary_nested_context_without_lineage_includes_ancestor_reads`; `test_birth_polarity_cannot_switch` |
+| Specialization atomic escrow | Before insertion, inherit parent polarity and record grounded contradiction, actual eligibility traversal, parent support with transitive ancestry, child direct matches and complete visible-prefix exclusion. | `test_specialization_materialization_creates_atomic_native_escrow`; `test_specialization_omitted_ancestor_or_eligibility_read_fails` |
+| Tombstone escrow | Pruning cannot erase or rewrite a cell's immutable birth escrow or hypothesis digest. | `test_pruned_post_epoch_cell_retains_birth_escrow` |
+| Provenance validation | Reject missing, extra, duplicate, category-inconsistent, unknown, post-birth or polarity-inconsistent reads. The genome/runner cannot supply polarity, read sets, frontier, historical status or target IDs. | `test_nomination_escrow_rejects_noncanonical_provenance`; production-signature inspection in the same test |
+| Strict REAL transaction | Preserve receipt-before-prediction, one pending event, issuer/signature/receipt ID, exact typed trace/source/action/predecessor/successor/terminal, replay/remint, and VIRTUAL separation across restore. | `test_real_transaction_adversarial_matrix`; `test_restore_reconstructs_then_consumes_and_rejects_replay` |
+| Bound outcome-blind exposure | Accept only canonical graph-produced pre-outcome commitments/probes. Bind canonical terminal, trace actuation, source manifest, deterministic successor, frozen candidate/topology digests and exact non-outcome schema. | `test_exposure_rejects_fake_terminal_source_topology_and_extra_fields`; `test_exposure_rejects_action_trace_successor_and_outcome_fields` |
+| Physical exposure identity | Terminal aliases cannot multiply one physical interaction. Invented organism/state clones fail. Raw cohort manifests remain source/candidate bound. | `test_physical_exposure_deduplicates_terminal_aliases`; `test_raw_cohort_rejects_invented_source_clone` |
+| Prefix-only candidate freeze | The organism nominates once through its native graph/genome path, closes nomination, and exposes one frozen candidate/polarity/escrow manifest for later arm cloning. No suffix growth is connected. | `test_prefix_nomination_freezes_one_cloneable_candidate_manifest`; `test_suffix_growth_api_is_absent_or_fail_closed` |
+| V1 adversarial preservation | Restore any causal/integrity check lost in the prior rewrite, including bad signature, dual pending, cross-frame pairing and functional post-restore consumption. | covered by the REAL transaction and restore tests above |
+
+### Immutable hypothesis identity
+
+The hypothesis digest must cover:
+
+- exact members/pattern and fixed polarity;
+- lineage parent, specialization depth and native structural state;
+- initialization origin: historical or prospective;
+- exact categorized nomination operation reads;
+- complete transitive ancestor provenance;
+- complete discovery-exclusion receipt set;
+- organism-derived birth frontier.
+
+The digest is checked at initialization, REAL opening, consumption, dump and
+restore. Changing the hypothesis, escrow, exclusion set or frontier is an
+atomic integrity failure.
+
+### Derived-state law
+
+`ProspectiveAuthorityState` may persist caches for inspection, but none may
+be trusted. Before every authority-bearing operation the organism independently
+replays its accepted V2 ledger in ordinal order. Each receipt must be grounded,
+previously committed while outcome-blind, post-frontier, graph-matched to the
+same frozen cell and accompanied by the persisted graph lifecycle emission.
+The replay derives support/contradiction membership, counts, Wilson values,
+transition sequence, current certification and revocation. Persisted caches
+must equal that derivation exactly or the operation fails before mutation.
+
+### Native state law
+
+No local reinterpretation may broaden native authority. Maturity is whatever
+the authoritative `CompetenceContextCell.is_mature` property returns.
+PROBATION may be usable only through the same lineage-specific nested rule as
+the native matcher. TRIAL and PRUNED are not authoritative. SPECIALIZED must
+not be treated as mature unless the native property does so. The historical
+TRIAL policy remains fail-hard rather than being silently reclassified.
+
+### Organism-owned epoch and atomic materialization
+
+`from_organism` opens and serializes the prospective discovery epoch using
+organism state, not runner cell flags. Existing eligible cells are historical.
+Thereafter, ordinary and specialization materializers must construct and
+validate a `NominationEscrow` before inserting the cell. Closing nomination
+freezes the candidate manifest irreversibly. The first certification event
+requires closure. This package permits exactly one prefix nomination phase and
+does not connect certification suffix receipts to further growth.
+
+### Exposure schema law
+
+Exposure input is a canonical graph-produced pre-outcome object, not caller
+terminal text. The accepted raw schema is exact and outcome-free. It binds the
+source manifest identity, source state, frozen candidate-manifest digest,
+authority-topology digest, predecessor, trace, trace actuation, recomputed
+successor, canonical completion terminal and matched frozen cell. Unknown
+fields, outcome fields, invented identities, topology changes and action
+disagreement fail. Interaction identity uses the canonical terminal and cannot
+be multiplied by aliases.
+
+### Stop rule
+
+After implementation: run focused adversarial tests once, run the full
+repository suite once, update the audit, commit and push, then stop for external
+review. Do not create a runner or scientific artifact in this package.
