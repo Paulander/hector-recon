@@ -1,9 +1,4 @@
-"""Strict prospective evidence authority V2.
-
-Engineering-only authority escrow.  It leaves the wrapped competence graph's
-structural StemCell state unchanged and adds an organism-owned, graph-consumed
-prospective authority transaction.
-"""
+"""Graph-native prospective competence-evidence authority V2."""
 from __future__ import annotations
 
 import copy
@@ -12,34 +7,43 @@ from enum import Enum
 import hashlib
 import hmac
 import json
-import math
 import pickle
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
 import chess
 
 from recon_lite import FormalReConEngine, FrameContext, FrameKind, Graph, Node, NodeState, NodeType
+from recon_lite_hector.nodes import StemCellState
 
 from .native_authority_handover import GraphActuation, GraphSignalTrace
 from .native_competence_envelope import (
-    AvailabilityState,
-    CompetenceContextCell,
-    CompetenceEvidenceRecord,
-    EnvelopeClassification,
+    AvailabilityState, CompetenceContextCell, EnvelopeClassification,
     wilson_lower_bound,
 )
 from .native_trace_competence_authority import TraceNativeCompetenceOrganism
 
-SCHEMA_VERSION = "native_prospective_evidence_authority_v2.v1"
+
+SCHEMA_VERSION = "native_prospective_evidence_authority_v2.v2"
 IMPLEMENTATION_IDENTITY = "native_prospective_two_phase_authority.v2"
-AUTHORITY_AVAILABLE_ROOT = "v2_authority_available_root"
-AUTHORITY_REFUTED_ROOT = "v2_authority_refuted_root"
-ACTIVATION_COMMITMENT_ROOT = "v2_activation_commitment_root"
-LIFECYCLE_ROOT = "v2_lifecycle_root"
+EXPECTED_RECEIPT_ISSUER = "native_v2_environment_terminal"
+OUTCOME_TERMINAL_IDENTITY = "native_r0_real_completion_terminal"
+AUTHORITY_ROLES = (
+    "commitment", "available", "refuted", "support", "contradiction",
+    "maturity", "revocation",
+)
+ROLE_ROOTS = {role: f"v2_authority_{role}_root" for role in AUTHORITY_ROLES}
+NOMINATION_READ_CATEGORIES = (
+    "direct", "parent_support", "eligibility", "contradiction_trigger",
+)
+WILSON_Z = 1.6448536269514722
+MIN_SUPPORT = 4
+LOWER_BOUND = 0.55
 
 
 def _json(value: Any) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    return json.dumps(
+        value, sort_keys=True, separators=(",", ":"), allow_nan=False
+    ).encode("utf-8")
 
 
 def _sha(value: Any) -> str:
@@ -47,16 +51,21 @@ def _sha(value: Any) -> str:
 
 
 class ProspectiveV2IntegrityError(RuntimeError):
-    """Fail-hard causal or authority contract violation."""
+    """Fail-hard causal, structural, or authority contract violation."""
 
 
 class ProspectiveProvenanceUnavailable(ProspectiveV2IntegrityError):
-    """Authoritative organism state cannot supply complete discovery provenance."""
+    """Exact discovery provenance is unavailable."""
 
 
 class V2Mode(str, Enum):
     PROSPECTIVE = "prospective"
     LEGACY = "legacy_same_ledger"
+
+
+class ProvenanceKind(str, Enum):
+    HISTORICAL_ACCEPTED_LEDGER = "historical_complete_accepted_ledger"
+    EXACT_NOMINATION_READ_SET = "exact_nomination_read_set"
 
 
 @dataclass(frozen=True)
@@ -70,30 +79,100 @@ class FrozenHypothesis:
     discovery_receipt_digest: str
     birth_frontier: int
     structural_state: str
+    provenance_kind: ProvenanceKind = ProvenanceKind.EXACT_NOMINATION_READ_SET
+    nomination_read_sets: tuple[tuple[str, tuple[str, ...]], ...] = ()
 
     def __post_init__(self) -> None:
         if self.polarity is None:
             raise ProspectiveV2IntegrityError(
-                "polarity=None at candidate birth is forbidden"
+                "polarity=None at live candidate birth is forbidden"
             )
         object.__setattr__(self, "polarity", AvailabilityState(self.polarity))
+        object.__setattr__(
+            self, "provenance_kind", ProvenanceKind(self.provenance_kind)
+        )
         if not self.members:
             raise ProspectiveV2IntegrityError("empty pattern at candidate birth")
-        if not self.discovery_receipt_ids:
+        canonical = tuple(sorted(set(self.discovery_receipt_ids)))
+        if not canonical:
             raise ProspectiveProvenanceUnavailable(
                 "prospective_provenance_unavailable: empty discovery set"
             )
-        canonical = tuple(sorted(set(self.discovery_receipt_ids)))
         if canonical != self.discovery_receipt_ids:
-            raise ProspectiveV2IntegrityError("discovery receipt IDs are not canonical")
-        expected = _sha(list(canonical))
-        if self.discovery_receipt_digest != expected:
+            raise ProspectiveV2IntegrityError(
+                "discovery receipt IDs are not canonical"
+            )
+        if self.discovery_receipt_digest != _sha(list(canonical)):
             raise ProspectiveV2IntegrityError("discovery receipt digest mismatch")
+        categories = tuple(
+            (str(name), tuple(sorted(set(receipt_ids))))
+            for name, receipt_ids in self.nomination_read_sets
+        )
+        if categories != self.nomination_read_sets:
+            raise ProspectiveV2IntegrityError(
+                "nomination read sets are not canonical"
+            )
+        if self.provenance_kind is ProvenanceKind.HISTORICAL_ACCEPTED_LEDGER:
+            if categories:
+                raise ProspectiveV2IntegrityError(
+                    "historical escrow cannot claim exact nomination reads"
+                )
+        else:
+            if tuple(name for name, _ids in categories) != NOMINATION_READ_CATEGORIES:
+                raise ProspectiveProvenanceUnavailable(
+                    "prospective_provenance_unavailable: incomplete nomination read set"
+                )
+            union = tuple(sorted({
+                receipt_id
+                for _name, receipt_ids in categories
+                for receipt_id in receipt_ids
+            }))
+            if union != canonical:
+                raise ProspectiveV2IntegrityError(
+                    "nomination read-set union differs from discovery ledger"
+                )
 
     def manifest(self) -> dict[str, Any]:
-        value = asdict(self)
-        value["polarity"] = self.polarity.value
-        return value
+        return {
+            "cell_id": self.cell_id,
+            "members": list(self.members),
+            "polarity": self.polarity.value,
+            "lineage_parent_id": self.lineage_parent_id,
+            "specialization_depth": self.specialization_depth,
+            "discovery_receipt_ids": list(self.discovery_receipt_ids),
+            "discovery_receipt_digest": self.discovery_receipt_digest,
+            "birth_frontier": self.birth_frontier,
+            "structural_state": self.structural_state,
+            "provenance_kind": self.provenance_kind.value,
+            "nomination_read_sets": {
+                name: list(receipt_ids)
+                for name, receipt_ids in self.nomination_read_sets
+            },
+        }
+
+
+@dataclass(frozen=True)
+class CellStructuralInvariant:
+    cell_id: str
+    members: tuple[str, ...]
+    polarity: AvailabilityState
+    lineage_parent_id: str | None
+    specialization_depth: int
+    structural_state: str
+    authority_node_ids: tuple[str, ...]
+    authority_topology_identity: str
+
+    def manifest(self) -> dict[str, Any]:
+        return {
+            "cell_id": self.cell_id,
+            "members": list(self.members),
+            "polarity": self.polarity.value,
+            "lineage_parent_id": self.lineage_parent_id,
+            "specialization_depth": self.specialization_depth,
+            "structural_state": self.structural_state,
+            "authority_node_ids": list(self.authority_node_ids),
+            "authority_topology_identity": self.authority_topology_identity,
+        }
 
 
 @dataclass
@@ -139,6 +218,7 @@ class PendingRealEvent:
     pre_outcome_classification: EnvelopeClassification
     matching_cell_ids: tuple[str, ...]
     matching_cell_digest: str
+    structure_invariant_digest: str
     pending_token: str
     outcome_terminal_identity: str
     state: str = "OPEN"
@@ -153,9 +233,11 @@ class PendingRealEvent:
             "source_state_identity": self.source_state_identity,
             "predecessor_fen": self.predecessor_fen,
             "actuation": asdict(self.actuation),
-            "pre_outcome_classification": self.pre_outcome_classification.to_manifest(),
+            "pre_outcome_classification":
+                self.pre_outcome_classification.to_manifest(),
             "matching_cell_ids": list(self.matching_cell_ids),
             "matching_cell_digest": self.matching_cell_digest,
+            "structure_invariant_digest": self.structure_invariant_digest,
             "pending_token": self.pending_token,
             "outcome_terminal_identity": self.outcome_terminal_identity,
             "state": self.state,
@@ -219,88 +301,244 @@ class V2CertificationEmission:
 
 
 @dataclass(frozen=True)
-class _AuthorityGraphSnapshot:
-    matching_ids: frozenset[str]
-    certified_available_ids: frozenset[str]
-    certified_refuted_ids: frozenset[str]
-    maturity_ids: frozenset[str] = frozenset()
-    revocation_ids: frozenset[str] = frozenset()
+class AuthorityMeasurementSnapshot:
+    trace: GraphSignalTrace
+    grounded_receipt: V2GroundedReceipt | None = None
 
 
-def _membership_terminal(node: Node, env: Mapping[str, Any]) -> tuple[bool, bool]:
+@dataclass(frozen=True)
+class ExposureProbe:
+    predecessor_fen: str
+    trace: GraphSignalTrace
+    outcome_terminal_identity: str = OUTCOME_TERMINAL_IDENTITY
+
+
+def _cell_node_ids(cell_id: str) -> tuple[str, ...]:
+    return tuple(f"v2:{role}:{cell_id}" for role in AUTHORITY_ROLES)
+
+
+def _cell_topology_identity(cell_id: str) -> str:
+    return _sha({
+        "cell_id": cell_id,
+        "nodes": list(_cell_node_ids(cell_id)),
+        "edges": [
+            [ROLE_ROOTS[role], f"v2:{role}:{cell_id}", "SUB_SUR"]
+            for role in AUTHORITY_ROLES
+        ],
+    })
+
+
+def _authority_topology_manifest(
+    states: Mapping[str, ProspectiveAuthorityState],
+) -> dict[str, Any]:
+    return {
+        "roles": list(AUTHORITY_ROLES),
+        "roots": dict(sorted(ROLE_ROOTS.items())),
+        "cells": {
+            cell_id: {
+                "node_ids": list(_cell_node_ids(cell_id)),
+                "topology_identity": _cell_topology_identity(cell_id),
+            }
+            for cell_id in sorted(states)
+        },
+    }
+
+
+def _structural_pattern_matches(
+    cell_id: str,
+    states: Mapping[str, ProspectiveAuthorityState],
+    active_signal_ids: Sequence[str],
+    visiting: frozenset[str] = frozenset(),
+) -> bool:
+    if cell_id in visiting:
+        raise ProspectiveV2IntegrityError("cyclic competence context")
+    state = states.get(cell_id)
+    if state is None:
+        return False
+    hypothesis = state.hypothesis
+    active = set(active_signal_ids)
+    next_visiting = visiting | {cell_id}
+    for member in hypothesis.members:
+        if member.startswith("context:"):
+            parent_id = member.split(":", 1)[1]
+            parent = states.get(parent_id)
+            if parent is None:
+                return False
+            parent_state = parent.hypothesis.structural_state
+            parent_usable = parent_state in {
+                StemCellState.MATURE.name,
+                StemCellState.SPECIALIZED.name,
+            } or (
+                hypothesis.lineage_parent_id == parent_id
+                and parent_state == StemCellState.PROBATION.name
+            )
+            if not parent_usable or not _structural_pattern_matches(
+                parent_id, states, active_signal_ids, next_visiting
+            ):
+                return False
+        elif member not in active:
+            return False
+    return True
+
+
+def _receipt_supports(
+    state: ProspectiveAuthorityState, receipt: V2GroundedReceipt
+) -> bool:
+    return receipt.observed_outcome == (
+        state.hypothesis.polarity is AvailabilityState.AVAILABLE
+    )
+
+
+def _authority_terminal(
+    node: Node, env: Mapping[str, Any]
+) -> tuple[bool, bool]:
     snapshot = env.get("authority_snapshot")
-    if not isinstance(snapshot, _AuthorityGraphSnapshot):
+    states = env.get("authority_states")
+    if (
+        not isinstance(snapshot, AuthorityMeasurementSnapshot)
+        or not isinstance(states, Mapping)
+    ):
         return True, False
     role = str(node.meta["authority_role"])
     cell_id = str(node.meta["cell_id"])
+    state = states.get(cell_id)
+    if not isinstance(state, ProspectiveAuthorityState):
+        return True, False
+    matched = _structural_pattern_matches(
+        cell_id, states, snapshot.trace.ordered_signal_identities
+    )
+    receipt = snapshot.grounded_receipt
+    post_frontier = (
+        receipt is not None
+        and bool(receipt.receipt_id)
+        and receipt.ordinal > state.hypothesis.birth_frontier
+    )
+    supports = bool(
+        post_frontier and receipt is not None
+        and _receipt_supports(state, receipt)
+    )
+    contradicts = bool(post_frontier and not supports)
+    projected_support = state.support + int(post_frontier)
+    projected_successes = state.successes + int(supports)
+    projected_contradictions = state.contradictions + int(contradicts)
+    projected_success_lower = wilson_lower_bound(
+        projected_successes, projected_support, WILSON_Z
+    )
     values = {
-        "commitment": snapshot.matching_ids,
-        "available": snapshot.certified_available_ids,
-        "refuted": snapshot.certified_refuted_ids,
-        "maturity": snapshot.maturity_ids,
-        "revocation": snapshot.revocation_ids,
-    }[role]
-    node.activation.value = 1.0 if cell_id in values else 0.0
-    return True, cell_id in values
-
-
-def _graph_emissions(
-    *,
-    states: Mapping[str, ProspectiveAuthorityState],
-    snapshot: _AuthorityGraphSnapshot,
-    roles: Sequence[str],
-) -> dict[str, tuple[str, ...]]:
-    graph = Graph()
-    roots = {
-        "commitment": ACTIVATION_COMMITMENT_ROOT,
-        "available": AUTHORITY_AVAILABLE_ROOT,
-        "refuted": AUTHORITY_REFUTED_ROOT,
-        "maturity": LIFECYCLE_ROOT + ":maturity",
-        "revocation": LIFECYCLE_ROOT + ":revocation",
+        "commitment": matched,
+        "available": (
+            matched and state.prospectively_certified
+            and state.hypothesis.polarity is AvailabilityState.AVAILABLE
+        ),
+        "refuted": (
+            matched and state.prospectively_certified
+            and state.hypothesis.polarity is AvailabilityState.REFUTED
+        ),
+        "support": matched and supports,
+        "contradiction": matched and contradicts,
+        "maturity": (
+            matched and supports and not state.prospectively_certified
+            and projected_successes >= MIN_SUPPORT
+            and projected_contradictions == 0
+            and projected_success_lower >= LOWER_BOUND
+        ),
+        "revocation": (
+            matched and contradicts and state.prospectively_certified
+        ),
     }
-    for role in roles:
+    confirmed = bool(values[role])
+    node.activation.value = 1.0 if confirmed else 0.0
+    return True, confirmed
+
+
+def _build_authority_graph(
+    states: Mapping[str, ProspectiveAuthorityState],
+) -> Graph:
+    """Build the canonical organism-owned authority graph."""
+    graph = Graph()
+    for role in AUTHORITY_ROLES:
         graph.add_node(Node(
-            roots[role], NodeType.SCRIPT,
-            meta={"confirm_policy": "or", "role": f"v2_{role}_root"},
+            ROLE_ROOTS[role], NodeType.SCRIPT,
+            meta={"confirm_policy": "or", "authority_role": role},
         ))
         for cell_id in sorted(states):
             node_id = f"v2:{role}:{cell_id}"
             graph.add_node(Node(
-                node_id, NodeType.TERMINAL, predicate=_membership_terminal,
+                node_id, NodeType.TERMINAL, predicate=_authority_terminal,
                 meta={
                     "terminal_kind": f"PROSPECTIVE_{role.upper()}",
                     "authority_role": role,
                     "cell_id": cell_id,
+                    "frozen_hypothesis":
+                        states[cell_id].hypothesis.manifest(),
                 },
             ))
-            graph.add_hierarchy_pair(roots[role], node_id)
+            graph.add_hierarchy_pair(ROLE_ROOTS[role], node_id)
+    return graph
+def _run_authority_graph(
+    states: Mapping[str, ProspectiveAuthorityState],
+    snapshot: AuthorityMeasurementSnapshot,
+) -> dict[str, tuple[str, ...]]:
+    if not states:
+        return {role: () for role in AUTHORITY_ROLES}
+    graph = _build_authority_graph(states)
     engine = FormalReConEngine(graph, record_trace=False)
-    for role in roles:
-        engine.request(roots[role])
-    engine.run(max_ticks=max(32, len(states) * len(roles) * 4), env={"authority_snapshot": snapshot})
+    for role in AUTHORITY_ROLES:
+        engine.request(ROLE_ROOTS[role])
+    engine.run(
+        max_ticks=max(32, len(states) * len(AUTHORITY_ROLES) * 4),
+        env={"authority_snapshot": snapshot, "authority_states": states},
+    )
     return {
         role: tuple(sorted(
             cell_id for cell_id in states
-            if graph.nodes[f"v2:{role}:{cell_id}"].state == NodeState.CONFIRMED
+            if graph.nodes[f"v2:{role}:{cell_id}"].state
+            == NodeState.CONFIRMED
         ))
-        for role in roles
+        for role in AUTHORITY_ROLES
+    }
+
+
+def _interaction_manifest(
+    *,
+    source_organism_identity: str,
+    source_state_identity: str,
+    predecessor_fen: str,
+    trace_manifest: Mapping[str, Any],
+    actuation_manifest: Mapping[str, Any],
+    successor_fen: str,
+    outcome_terminal_identity: str,
+) -> dict[str, Any]:
+    return {
+        "source_organism_identity": source_organism_identity,
+        "source_state_identity": source_state_identity,
+        "predecessor": predecessor_fen,
+        "exact_trace": trace_manifest,
+        "selected_actuation": actuation_manifest,
+        "successor": successor_fen,
+        "outcome_terminal_identity": outcome_terminal_identity,
     }
 
 
 def _interaction_fingerprint(
-    *, source_organism_identity: str, source_state_identity: str,
-    predecessor_fen: str, trace: GraphSignalTrace, actuation: GraphActuation,
-    successor_fen: str, outcome_terminal_identity: str,
+    *,
+    source_organism_identity: str,
+    source_state_identity: str,
+    predecessor_fen: str,
+    trace: GraphSignalTrace,
+    actuation: GraphActuation,
+    successor_fen: str,
+    outcome_terminal_identity: str,
 ) -> str:
-    return _sha({
-        "source_organism_identity": source_organism_identity,
-        "source_state_identity": source_state_identity,
-        "predecessor": predecessor_fen,
-        "exact_trace": trace.canonical_manifest(),
-        "selected_actuation": asdict(actuation),
-        "successor": successor_fen,
-        "outcome_terminal_identity": outcome_terminal_identity,
-    })
+    return _sha(_interaction_manifest(
+        source_organism_identity=source_organism_identity,
+        source_state_identity=source_state_identity,
+        predecessor_fen=predecessor_fen,
+        trace_manifest=trace.canonical_manifest(),
+        actuation_manifest=asdict(actuation),
+        successor_fen=successor_fen,
+        outcome_terminal_identity=outcome_terminal_identity,
+    ))
 
 
 @dataclass
@@ -308,6 +546,9 @@ class NativeProspectiveAuthorityV2:
     base: TraceNativeCompetenceOrganism
     mode: V2Mode
     states: dict[str, ProspectiveAuthorityState]
+    structural_invariants: dict[str, CellStructuralInvariant]
+    authority_topology: dict[str, Any]
+    historical_tombstones: dict[str, dict[str, Any]]
     next_expected_ordinal: int
     pending_event: PendingRealEvent | None = None
     consumed_receipts: dict[str, V2GroundedReceipt] = field(default_factory=dict)
@@ -315,207 +556,261 @@ class NativeProspectiveAuthorityV2:
     interaction_fingerprints: dict[str, str] = field(default_factory=dict)
     emissions: dict[str, V2CertificationEmission] = field(default_factory=dict)
     event_transactions: dict[str, dict[str, Any]] = field(default_factory=dict)
+    nomination_events: tuple[dict[str, Any], ...] = ()
     schema_version: str = SCHEMA_VERSION
-    _receipt_secret: bytes = field(default=b"native-prospective-v2-environment-terminal")
+    _receipt_secret: bytes = field(
+        default=b"native-prospective-v2-environment-terminal"
+    )
 
     @classmethod
     def from_organism(
-        cls, source: TraceNativeCompetenceOrganism, *, mode: V2Mode,
+        cls,
+        source: TraceNativeCompetenceOrganism,
+        *,
+        mode: V2Mode,
         frontier: int | None = None,
     ) -> "NativeProspectiveAuthorityV2":
         if frontier is not None:
-            raise ProspectiveV2IntegrityError("runner-supplied frontier is forbidden")
+            raise ProspectiveV2IntegrityError(
+                "runner-supplied frontier is forbidden"
+            )
         mode = V2Mode(mode)
         base = copy.deepcopy(source)
+        ledger_ids = tuple(sorted(base.receipts))
+        if not ledger_ids:
+            raise ProspectiveProvenanceUnavailable(
+                "prospective_provenance_unavailable: empty historical accepted ledger"
+            )
+        frontier_value = max(
+            base.receipts[item].event_ordinal for item in ledger_ids
+        )
         states: dict[str, ProspectiveAuthorityState] = {}
-        memo: dict[str, frozenset[str]] = {}
-        for cell in sorted(base.envelope.cells.values(), key=lambda item: item.cell_id):
-            frozen = cls._hypothesis_from_cell(base, cell, memo)
+        tombstones: dict[str, dict[str, Any]] = {}
+        historical_states = {
+            StemCellState.MATURE,
+            StemCellState.SPECIALIZED,
+            StemCellState.PROBATION,
+        }
+        mature_states = {
+            StemCellState.MATURE,
+            StemCellState.SPECIALIZED,
+        }
+        for cell in sorted(
+            base.envelope.cells.values(), key=lambda item: item.cell_id
+        ):
+            if cell.state == StemCellState.PRUNED:
+                tombstones[cell.cell_id] = cell.to_manifest()
+                continue
+            if cell.state not in historical_states:
+                raise ProspectiveProvenanceUnavailable(
+                    "prospective_provenance_unavailable: live historical candidate "
+                    f"{cell.cell_id} lacks prospective birth escrow"
+                )
+            if cell.polarity is None:
+                raise ProspectiveV2IntegrityError(
+                    "polarity=None on live historical hypothesis"
+                )
+            frozen = FrozenHypothesis(
+                cell_id=cell.cell_id,
+                members=tuple(cell.members),
+                polarity=cell.polarity,
+                lineage_parent_id=cell.lineage_parent_id,
+                specialization_depth=cell.specialization_depth,
+                discovery_receipt_ids=ledger_ids,
+                discovery_receipt_digest=_sha(list(ledger_ids)),
+                birth_frontier=frontier_value,
+                structural_state=cell.state.name,
+                provenance_kind=ProvenanceKind.HISTORICAL_ACCEPTED_LEDGER,
+            )
             states[cell.cell_id] = ProspectiveAuthorityState(
                 hypothesis=frozen,
-                prospectively_certified=(mode is V2Mode.LEGACY and cell.is_mature),
+                prospectively_certified=(
+                    mode is V2Mode.LEGACY and cell.state in mature_states
+                ),
             )
-        return cls(
-            base=base, mode=mode, states=states,
+        topology = _authority_topology_manifest(states)
+        invariants = {
+            cell_id: cls._invariant_from_cell(base.envelope.cells[cell_id])
+            for cell_id in states
+        }
+        item = cls(
+            base=base,
+            mode=mode,
+            states=states,
+            structural_invariants=invariants,
+            authority_topology=topology,
+            historical_tombstones=tombstones,
             next_expected_ordinal=base._next_event_ordinal,
         )
+        item._verify_invariants()
+        return item
 
-    @classmethod
-    def _hypothesis_from_cell(
-        cls,
-        organism: TraceNativeCompetenceOrganism,
+    @staticmethod
+    def _invariant_from_cell(
         cell: CompetenceContextCell,
-        memo: dict[str, frozenset[str]],
-    ) -> FrozenHypothesis:
+    ) -> CellStructuralInvariant:
         if cell.polarity is None:
             raise ProspectiveV2IntegrityError(
-                "polarity=None at candidate birth is forbidden"
+                "polarity=None at live candidate birth is forbidden"
             )
-        discovery = cls._complete_provenance(organism, cell, memo, set())
-        ordinals = []
-        for receipt_id in discovery:
-            receipt = organism.receipts.get(receipt_id)
-            if receipt is None:
-                raise ProspectiveProvenanceUnavailable(
-                    "prospective_provenance_unavailable: " + receipt_id
-                )
-            ordinals.append(receipt.event_ordinal)
-        return FrozenHypothesis(
+        return CellStructuralInvariant(
             cell_id=cell.cell_id,
             members=tuple(cell.members),
-            polarity=cell.polarity,
+            polarity=AvailabilityState(cell.polarity),
             lineage_parent_id=cell.lineage_parent_id,
             specialization_depth=cell.specialization_depth,
-            discovery_receipt_ids=tuple(sorted(discovery)),
-            discovery_receipt_digest=_sha(sorted(discovery)),
-            birth_frontier=max(ordinals),
             structural_state=cell.state.name,
+            authority_node_ids=_cell_node_ids(cell.cell_id),
+            authority_topology_identity=_cell_topology_identity(cell.cell_id),
         )
-
-    @classmethod
-    def _complete_provenance(
-        cls, organism: TraceNativeCompetenceOrganism,
-        cell: CompetenceContextCell,
-        memo: dict[str, frozenset[str]], visiting: set[str],
-    ) -> frozenset[str]:
-        if cell.cell_id in memo:
-            return memo[cell.cell_id]
-        if cell.cell_id in visiting:
-            raise ProspectiveProvenanceUnavailable(
-                "prospective_provenance_unavailable: cyclic lineage"
-            )
-        visiting = {*visiting, cell.cell_id}
-        found = set(map(str, cell.evidence_keys))
-        if cell.lineage_parent_id is not None:
-            parent = organism.envelope.cells.get(cell.lineage_parent_id)
-            if parent is None:
-                raise ProspectiveProvenanceUnavailable(
-                    "prospective_provenance_unavailable: missing parent"
-                )
-            found.update(cls._complete_provenance(organism, parent, memo, visiting))
-            admitted = [
-                row for row in organism.envelope.specialization_audit.request_rows
-                if row.get("admitted") and row.get("cell_id") == cell.cell_id
-            ]
-            if len(admitted) != 1 or not admitted[0].get("evidence_key"):
-                raise ProspectiveProvenanceUnavailable(
-                    "prospective_provenance_unavailable: missing contradiction trigger"
-                )
-            found.add(str(admitted[0]["evidence_key"]))
-        if not found:
-            raise ProspectiveProvenanceUnavailable(
-                "prospective_provenance_unavailable: empty consulted set"
-            )
-        unknown = sorted(found.difference(organism.receipts))
-        if unknown:
-            raise ProspectiveProvenanceUnavailable(
-                "prospective_provenance_unavailable: " + ",".join(unknown)
-            )
-        memo[cell.cell_id] = frozenset(found)
-        return memo[cell.cell_id]
 
     def _structural_manifest(self) -> dict[str, Any]:
         return {
-            cell_id: {
-                "state": cell.state.name,
-                "members": list(cell.members),
-                "lineage_parent_id": cell.lineage_parent_id,
-                "specialization_depth": cell.specialization_depth,
-            }
-            for cell_id, cell in sorted(self.base.envelope.cells.items())
+            cell_id: invariant.manifest()
+            for cell_id, invariant in sorted(self.structural_invariants.items())
         }
 
-    def _matching_ids(self, trace: GraphSignalTrace) -> tuple[str, ...]:
-        record = CompetenceEvidenceRecord(
-            evidence_key="pre-outcome-commitment",
-            active_signal_ids=trace.ordered_signal_identities,
-            policy_response=True,
-            observed_completion=False,
-            actuator_identity=trace.actuation.actuator_identity,
-            completion_terminal_identity="pending",
-            signal_provenance=trace.terminal_signals,
-        )
-        matching = frozenset(
-            cell_id for cell_id, state in self.states.items()
-            if self.base.envelope._cell_matches(
-                self.base.envelope.cells[cell_id], record, set()
-            )
-        )
-        certified_available = frozenset(
-            cell_id for cell_id in matching
-            if self.states[cell_id].prospectively_certified
-            and self.states[cell_id].hypothesis.polarity is AvailabilityState.AVAILABLE
-        )
-        certified_refuted = frozenset(
-            cell_id for cell_id in matching
-            if self.states[cell_id].prospectively_certified
-            and self.states[cell_id].hypothesis.polarity is AvailabilityState.REFUTED
-        )
-        emitted = _graph_emissions(
-            states=self.states,
-            snapshot=_AuthorityGraphSnapshot(
-                matching, certified_available, certified_refuted
-            ),
-            roles=("commitment", "available", "refuted"),
-        )
-        if set(emitted["commitment"]) != set(matching):
-            raise ProspectiveV2IntegrityError("activation graph emission mismatch")
-        return emitted["commitment"]
+    def _structure_invariant_digest(self) -> str:
+        return _sha({
+            "live": self._structural_manifest(),
+            "authority_topology": self.authority_topology,
+            "tombstones": self.historical_tombstones,
+        })
 
-    def _classification(
-        self, trace: GraphSignalTrace, matching_ids: Sequence[str]
+    def _verify_invariants(
+        self, *, allow_unregistered: bool = False
+    ) -> None:
+        if self.schema_version != SCHEMA_VERSION:
+            raise ProspectiveV2IntegrityError("unsupported V2 schema")
+        registered = set(self.states)
+        if set(self.structural_invariants) != registered:
+            raise ProspectiveV2IntegrityError(
+                "live invariant/state identity mismatch"
+            )
+        for cell_id in sorted(registered):
+            cell = self.base.envelope.cells.get(cell_id)
+            if cell is None:
+                raise ProspectiveV2IntegrityError(
+                    "live competence cell disappeared"
+                )
+            current = self._invariant_from_cell(cell)
+            if current != self.structural_invariants[cell_id]:
+                raise ProspectiveV2IntegrityError(
+                    f"live structural invariant mutation: {cell_id}"
+                )
+            hypothesis = self.states[cell_id].hypothesis
+            if (
+                hypothesis.members != current.members
+                or hypothesis.polarity != current.polarity
+                or hypothesis.lineage_parent_id != current.lineage_parent_id
+                or hypothesis.specialization_depth
+                != current.specialization_depth
+                or hypothesis.structural_state != current.structural_state
+            ):
+                raise ProspectiveV2IntegrityError(
+                    f"frozen hypothesis/invariant mismatch: {cell_id}"
+                )
+        current_tombstones = {
+            cell_id: cell.to_manifest()
+            for cell_id, cell in sorted(self.base.envelope.cells.items())
+            if cell_id in self.historical_tombstones
+        }
+        if current_tombstones != self.historical_tombstones:
+            raise ProspectiveV2IntegrityError(
+                "historical tombstone mutation"
+            )
+        unknown = set(self.base.envelope.cells).difference(
+            registered, self.historical_tombstones
+        )
+        if unknown and not allow_unregistered:
+            raise ProspectiveV2IntegrityError(
+                "unregistered live or tombstone candidate: "
+                + ",".join(sorted(unknown))
+            )
+        if self.authority_topology != _authority_topology_manifest(self.states):
+            raise ProspectiveV2IntegrityError(
+                "authority topology identity mismatch"
+            )
+
+    def _graph_measure(
+        self,
+        trace: GraphSignalTrace,
+        receipt: V2GroundedReceipt | None = None,
+    ) -> dict[str, tuple[str, ...]]:
+        return _run_authority_graph(
+            self.states, AuthorityMeasurementSnapshot(trace, receipt)
+        )
+
+    @staticmethod
+    def _classification_from_emissions(
+        states: Mapping[str, ProspectiveAuthorityState],
+        emissions: Mapping[str, tuple[str, ...]],
     ) -> EnvelopeClassification:
-        matching = frozenset(matching_ids)
-        available = frozenset(
-            cell_id for cell_id in matching
-            if self.states[cell_id].prospectively_certified
-            and self.states[cell_id].hypothesis.polarity is AvailabilityState.AVAILABLE
-        )
-        refuted = frozenset(
-            cell_id for cell_id in matching
-            if self.states[cell_id].prospectively_certified
-            and self.states[cell_id].hypothesis.polarity is AvailabilityState.REFUTED
-        )
-        emitted = _graph_emissions(
-            states=self.states,
-            snapshot=_AuthorityGraphSnapshot(matching, available, refuted),
-            roles=("available", "refuted"),
-        )
-        aids, rids = emitted["available"], emitted["refuted"]
-        if aids and not rids:
-            state, probability = AvailabilityState.AVAILABLE, max(
-                self.states[i].success_lower_bound or 0.5 for i in aids
+        available = tuple(emissions["available"])
+        refuted = tuple(emissions["refuted"])
+        if available and not refuted:
+            state = AvailabilityState.AVAILABLE
+            probability = max(
+                states[item].success_lower_bound or 0.5
+                for item in available
             )
-        elif rids and not aids:
-            state, probability = AvailabilityState.REFUTED, 0.0
+        elif refuted and not available:
+            state = AvailabilityState.REFUTED
+            probability = 0.0
         else:
-            state, probability = AvailabilityState.UNKNOWN, 0.5
+            state = AvailabilityState.UNKNOWN
+            probability = 0.5
         return EnvelopeClassification(
-            state, float(probability), 1.0 if state is AvailabilityState.UNKNOWN else 1.0 - float(probability),
-            aids, rids, bool(aids), bool(rids), True,
+            state=state,
+            probability=float(probability),
+            uncertainty=(
+                1.0 if state is AvailabilityState.UNKNOWN
+                else 1.0 - float(probability)
+            ),
+            available_cell_ids=available,
+            refuted_cell_ids=refuted,
+            formal_available=bool(available),
+            formal_refuted=bool(refuted),
+            policy_response=True,
         )
 
-    def open_real_event(self, frame: FrameContext) -> tuple[PendingRealEvent, GraphSignalTrace]:
+    def open_real_event(
+        self, frame: FrameContext
+    ) -> tuple[PendingRealEvent, GraphSignalTrace]:
+        self._verify_invariants()
         before = self.continuation_digest()
         if frame.kind is not FrameKind.REAL:
-            raise ProspectiveV2IntegrityError("VIRTUAL cannot open certification event")
+            raise ProspectiveV2IntegrityError(
+                "VIRTUAL cannot open certification event"
+            )
         if self.pending_event is not None:
-            raise ProspectiveV2IntegrityError("exactly one pending event is permitted")
+            raise ProspectiveV2IntegrityError(
+                "exactly one pending event is permitted"
+            )
         board = frame.values.get("board")
         if not isinstance(board, chess.Board):
             raise TypeError("REAL event requires chess.Board")
         actuation, trace = self.base.r0.emit_action_with_trace(frame)
         if actuation is None or trace is None:
-            raise ProspectiveV2IntegrityError("graph emitted no REAL actuation")
-        matching = self._matching_ids(trace)
-        classification = self._classification(trace, matching)
-        typed_digest = _sha([asdict(item) for item in trace.terminal_signals])
+            raise ProspectiveV2IntegrityError(
+                "graph emitted no REAL actuation"
+            )
+        graph = self._graph_measure(trace)
+        matching = graph["commitment"]
+        classification = self._classification_from_emissions(
+            self.states, graph
+        )
+        typed_digest = _sha([
+            asdict(item) for item in trace.terminal_signals
+        ])
+        structure_digest = self._structure_invariant_digest()
         token = _sha({
             "implementation": IMPLEMENTATION_IDENTITY,
             "ordinal": self.next_expected_ordinal,
             "frame_id": frame.frame_id,
             "trace": trace.digest(),
             "matching": list(matching),
+            "structure_invariant_digest": structure_digest,
         })
         pending = PendingRealEvent(
             ordinal=self.next_expected_ordinal,
@@ -529,19 +824,26 @@ class NativeProspectiveAuthorityV2:
             pre_outcome_classification=classification,
             matching_cell_ids=matching,
             matching_cell_digest=_sha(list(matching)),
+            structure_invariant_digest=structure_digest,
             pending_token=token,
-            outcome_terminal_identity="native_r0_real_completion_terminal",
+            outcome_terminal_identity=OUTCOME_TERMINAL_IDENTITY,
         )
         if self.continuation_digest() != before:
-            raise ProspectiveV2IntegrityError("prediction mutated persistent state")
+            raise ProspectiveV2IntegrityError(
+                "prediction mutated persistent state"
+            )
         self.pending_event = pending
         self.event_transactions[token] = pending.manifest()
         return pending, trace
 
     def mint_environment_receipt(
-        self, *, pending_token: str, trace: GraphSignalTrace,
-        predecessor: chess.Board, successor: chess.Board,
-        terminal_identity: str = "native_r0_real_completion_terminal",
+        self,
+        *,
+        pending_token: str,
+        trace: GraphSignalTrace,
+        predecessor: chess.Board,
+        successor: chess.Board,
+        terminal_identity: str = OUTCOME_TERMINAL_IDENTITY,
     ) -> V2GroundedReceipt:
         pending = self.pending_event
         if pending is None or pending.pending_token != pending_token:
@@ -549,15 +851,23 @@ class NativeProspectiveAuthorityV2:
         if terminal_identity != pending.outcome_terminal_identity:
             raise ProspectiveV2IntegrityError("outcome terminal mismatch")
         if trace.frame_kind != FrameKind.REAL.name:
-            raise ProspectiveV2IntegrityError("VIRTUAL trace cannot mint REAL receipt")
+            raise ProspectiveV2IntegrityError(
+                "VIRTUAL trace cannot mint REAL receipt"
+            )
         fingerprint = _interaction_fingerprint(
             source_organism_identity=trace.source_organism_identity,
             source_state_identity=trace.source_state_identity,
-            predecessor_fen=predecessor.fen(), trace=trace,
-            actuation=trace.actuation, successor_fen=successor.fen(),
+            predecessor_fen=predecessor.fen(),
+            trace=trace,
+            actuation=trace.actuation,
+            successor_fen=successor.fen(),
             outcome_terminal_identity=terminal_identity,
         )
-        receipt_id = _sha({"fingerprint": fingerprint, "ordinal": pending.ordinal, "token": pending_token})
+        receipt_id = _sha({
+            "fingerprint": fingerprint,
+            "ordinal": pending.ordinal,
+            "token": pending_token,
+        })
         unsigned = {
             "receipt_id": receipt_id,
             "ordinal": pending.ordinal,
@@ -572,68 +882,155 @@ class NativeProspectiveAuthorityV2:
             "outcome_terminal_identity": terminal_identity,
             "observed_outcome": successor.is_checkmate(),
             "interaction_fingerprint": fingerprint,
-            "issuer_identity": "native_v2_environment_terminal",
+            "issuer_identity": EXPECTED_RECEIPT_ISSUER,
         }
-        signature = hmac.new(self._receipt_secret, _json(unsigned), hashlib.sha256).hexdigest()
+        signature = hmac.new(
+            self._receipt_secret, _json(unsigned), hashlib.sha256
+        ).hexdigest()
         return V2GroundedReceipt(
-            receipt_id, pending.ordinal, pending_token, FrameKind.REAL.name,
-            trace.source_organism_identity, trace.source_state_identity,
-            predecessor.fen(), trace, trace.actuation, successor.fen(), terminal_identity,
-            successor.is_checkmate(), fingerprint,
-            "native_v2_environment_terminal", signature,
+            receipt_id=receipt_id,
+            ordinal=pending.ordinal,
+            pending_token=pending_token,
+            frame_kind=FrameKind.REAL.name,
+            source_organism_identity=trace.source_organism_identity,
+            source_state_identity=trace.source_state_identity,
+            predecessor_fen=predecessor.fen(),
+            trace=trace,
+            selected_actuation=trace.actuation,
+            successor_fen=successor.fen(),
+            outcome_terminal_identity=terminal_identity,
+            observed_outcome=successor.is_checkmate(),
+            interaction_fingerprint=fingerprint,
+            issuer_identity=EXPECTED_RECEIPT_ISSUER,
+            signature=signature,
         )
 
     def _validate_receipt(self, receipt: V2GroundedReceipt) -> None:
-        expected_sig = hmac.new(
-            self._receipt_secret, _json(receipt.unsigned_manifest()), hashlib.sha256
+        if receipt.issuer_identity != EXPECTED_RECEIPT_ISSUER:
+            raise ProspectiveV2IntegrityError(
+                "unexpected receipt issuer"
+            )
+        expected_signature = hmac.new(
+            self._receipt_secret,
+            _json(receipt.unsigned_manifest()),
+            hashlib.sha256,
         ).hexdigest()
-        if not hmac.compare_digest(expected_sig, receipt.signature):
-            raise ProspectiveV2IntegrityError("receipt signature mismatch")
-        if receipt.frame_kind != FrameKind.REAL.name or receipt.trace.frame_kind != FrameKind.REAL.name:
-            raise ProspectiveV2IntegrityError("VIRTUAL-to-REAL receipt pairing")
+        if not hmac.compare_digest(expected_signature, receipt.signature):
+            raise ProspectiveV2IntegrityError(
+                "receipt signature mismatch"
+            )
+        if (
+            receipt.frame_kind != FrameKind.REAL.name
+            or receipt.trace.frame_kind != FrameKind.REAL.name
+        ):
+            raise ProspectiveV2IntegrityError(
+                "VIRTUAL-to-REAL receipt pairing"
+            )
         pending = self.pending_event
         if pending is None:
-            raise ProspectiveV2IntegrityError("receipt before prediction")
-        if receipt.ordinal != self.next_expected_ordinal or receipt.ordinal != pending.ordinal:
-            raise ProspectiveV2IntegrityError("out-of-order ordinal or ordinal gap")
-        if receipt.pending_token != pending.pending_token or receipt.pending_token in self.consumed_tokens:
-            raise ProspectiveV2IntegrityError("wrong or consumed pending token")
+            raise ProspectiveV2IntegrityError(
+                "receipt before prediction"
+            )
+        if (
+            receipt.ordinal != self.next_expected_ordinal
+            or receipt.ordinal != pending.ordinal
+        ):
+            raise ProspectiveV2IntegrityError(
+                "out-of-order ordinal or ordinal gap"
+            )
+        if (
+            receipt.pending_token != pending.pending_token
+            or receipt.pending_token in self.consumed_tokens
+        ):
+            raise ProspectiveV2IntegrityError(
+                "wrong or consumed pending token"
+            )
         if receipt.trace.digest() != pending.trace_digest:
             raise ProspectiveV2IntegrityError("trace mismatch")
+        typed_digest = _sha([
+            asdict(item) for item in receipt.trace.terminal_signals
+        ])
+        if typed_digest != pending.typed_signal_digest:
+            raise ProspectiveV2IntegrityError(
+                "typed-signal digest mismatch"
+            )
         if receipt.selected_actuation != pending.actuation:
             raise ProspectiveV2IntegrityError("actuation mismatch")
         if receipt.trace.actuation != receipt.selected_actuation:
-            raise ProspectiveV2IntegrityError("trace/actuation mismatch")
+            raise ProspectiveV2IntegrityError(
+                "trace/actuation mismatch"
+            )
         if receipt.predecessor_fen != pending.predecessor_fen:
             raise ProspectiveV2IntegrityError("predecessor mismatch")
-        if receipt.source_organism_identity != pending.source_organism_identity or receipt.source_state_identity != pending.source_state_identity:
+        if (
+            receipt.source_organism_identity
+            != pending.source_organism_identity
+            or receipt.source_state_identity
+            != pending.source_state_identity
+        ):
             raise ProspectiveV2IntegrityError("source identity mismatch")
-        if receipt.outcome_terminal_identity != pending.outcome_terminal_identity:
-            raise ProspectiveV2IntegrityError("outcome terminal mismatch")
+        if (
+            receipt.outcome_terminal_identity
+            != pending.outcome_terminal_identity
+        ):
+            raise ProspectiveV2IntegrityError(
+                "outcome terminal mismatch"
+            )
         board = chess.Board(receipt.predecessor_fen)
         successor = board.copy(stack=False)
-        successor.push(chess.Move.from_uci(pending.actuation.move_uci))
+        successor.push(chess.Move.from_uci(
+            pending.actuation.move_uci
+        ))
         if successor.fen() != receipt.successor_fen:
             raise ProspectiveV2IntegrityError("successor mismatch")
         if successor.is_checkmate() != receipt.observed_outcome:
-            raise ProspectiveV2IntegrityError("outcome terminal mismatch")
-        expected_fp = _interaction_fingerprint(
+            raise ProspectiveV2IntegrityError(
+                "outcome terminal mismatch"
+            )
+        expected_fingerprint = _interaction_fingerprint(
             source_organism_identity=receipt.source_organism_identity,
             source_state_identity=receipt.source_state_identity,
-            predecessor_fen=receipt.predecessor_fen, trace=receipt.trace,
-            actuation=receipt.selected_actuation, successor_fen=receipt.successor_fen,
-            outcome_terminal_identity=receipt.outcome_terminal_identity,
+            predecessor_fen=receipt.predecessor_fen,
+            trace=receipt.trace,
+            actuation=receipt.selected_actuation,
+            successor_fen=receipt.successor_fen,
+            outcome_terminal_identity=
+                receipt.outcome_terminal_identity,
         )
-        if expected_fp != receipt.interaction_fingerprint:
-            raise ProspectiveV2IntegrityError("interaction fingerprint mismatch")
+        if expected_fingerprint != receipt.interaction_fingerprint:
+            raise ProspectiveV2IntegrityError(
+                "interaction fingerprint mismatch"
+            )
+        expected_receipt_id = _sha({
+            "fingerprint": expected_fingerprint,
+            "ordinal": receipt.ordinal,
+            "token": receipt.pending_token,
+        })
+        if expected_receipt_id != receipt.receipt_id:
+            raise ProspectiveV2IntegrityError("receipt ID mismatch")
 
-    def consume(self, receipt: V2GroundedReceipt) -> V2CertificationEmission:
+    def consume(
+        self, receipt: V2GroundedReceipt
+    ) -> V2CertificationEmission:
+        self._verify_invariants()
+        if (
+            self.pending_event is not None
+            and self.pending_event.structure_invariant_digest
+            != self._structure_invariant_digest()
+        ):
+            raise ProspectiveV2IntegrityError(
+                "live structure changed between open and consume"
+            )
         existing = self.consumed_receipts.get(receipt.receipt_id)
         if existing is not None:
             if existing != receipt:
-                raise ProspectiveV2IntegrityError("receipt ID collision")
+                raise ProspectiveV2IntegrityError(
+                    "receipt ID collision"
+                )
             return self.emissions[receipt.receipt_id]
-        known_id = self.interaction_fingerprints.get(receipt.interaction_fingerprint)
+        known_id = self.interaction_fingerprints.get(
+            receipt.interaction_fingerprint
+        )
         if known_id is not None:
             raise ProspectiveV2IntegrityError(
                 "reminted interaction fingerprint under new receipt identity"
@@ -641,85 +1038,82 @@ class NativeProspectiveAuthorityV2:
         self._validate_receipt(receipt)
         pending = self.pending_event
         assert pending is not None
-        structural_before = self._structural_manifest()
-        projected_mature: set[str] = set()
-        projected_revoke: set[str] = set()
-        supporting: list[str] = []
-        contradictions: list[str] = []
-        projected: dict[str, tuple[int, int, int, float, float]] = {}
+        graph = self._graph_measure(receipt.trace, receipt)
+        if graph["commitment"] != pending.matching_cell_ids:
+            raise ProspectiveV2IntegrityError(
+                "consumption commitment differs from pre-outcome commitment"
+            )
+        supporting = graph["support"]
+        contradictions = graph["contradiction"]
+        if set(supporting).intersection(contradictions):
+            raise ProspectiveV2IntegrityError(
+                "support/contradiction overlap"
+            )
+        if (
+            set(supporting).union(contradictions)
+            != set(pending.matching_cell_ids)
+        ):
+            raise ProspectiveV2IntegrityError(
+                "lifecycle accounting omitted commitment"
+            )
         for cell_id in pending.matching_cell_ids:
             state = self.states[cell_id]
-            if receipt.ordinal <= state.hypothesis.birth_frontier:
-                continue
-            supports = receipt.observed_outcome == (
-                state.hypothesis.polarity is AvailabilityState.AVAILABLE
+            state.support += 1
+            state.certification_receipt_ids = (
+                *state.certification_receipt_ids,
+                receipt.receipt_id,
             )
-            successes = state.successes + int(supports)
-            contradiction_count = state.contradictions + int(not supports)
-            support = state.support + 1
-            success_lower = wilson_lower_bound(successes, support, 1.6448536269514722)
-            contradiction_lower = wilson_lower_bound(contradiction_count, support, 1.6448536269514722)
-            projected[cell_id] = (
-                successes, contradiction_count, support, success_lower,
-                contradiction_lower,
-            )
-            if supports:
-                supporting.append(cell_id)
-                if not state.prospectively_certified and successes >= 4 and contradiction_count == 0 and success_lower >= 0.55:
-                    projected_mature.add(cell_id)
-            else:
-                contradictions.append(cell_id)
-                if state.prospectively_certified:
-                    projected_revoke.add(cell_id)
-        graph = _graph_emissions(
-            states=self.states,
-            snapshot=_AuthorityGraphSnapshot(
-                frozenset(pending.matching_cell_ids), frozenset(), frozenset(),
-                frozenset(projected_mature), frozenset(projected_revoke),
-            ),
-            roles=("maturity", "revocation"),
-        )
-        if set(graph["maturity"]) != projected_mature or set(graph["revocation"]) != projected_revoke:
-            raise ProspectiveV2IntegrityError("graph lifecycle emission mismatch")
-        for cell_id in projected:
-            if (
-                self.states[cell_id].hypothesis.polarity
-                != self.base.envelope.cells[cell_id].polarity
-            ):
-                raise ProspectiveV2IntegrityError(
-                    "polarity mutation during certification"
-                )
-        for cell_id, values in projected.items():
-            state = self.states[cell_id]
-            state.successes, state.contradictions, state.support, state.success_lower_bound, state.contradiction_lower_bound = values
-            state.certification_receipt_ids = (*state.certification_receipt_ids, receipt.receipt_id)
             if cell_id in supporting:
-                state.support_receipt_ids = (*state.support_receipt_ids, receipt.receipt_id)
+                state.successes += 1
+                state.support_receipt_ids = (
+                    *state.support_receipt_ids,
+                    receipt.receipt_id,
+                )
             else:
-                state.contradiction_receipt_ids = (*state.contradiction_receipt_ids, receipt.receipt_id)
+                state.contradictions += 1
+                state.contradiction_receipt_ids = (
+                    *state.contradiction_receipt_ids,
+                    receipt.receipt_id,
+                )
+            state.success_lower_bound = wilson_lower_bound(
+                state.successes, state.support, WILSON_Z
+            )
+            state.contradiction_lower_bound = wilson_lower_bound(
+                state.contradictions, state.support, WILSON_Z
+            )
             transition = None
             if cell_id in graph["maturity"]:
                 state.prospectively_certified = True
                 transition = "GRAPH_PROSPECTIVE_MATURITY"
-            elif cell_id in graph["revocation"]:
+            if cell_id in graph["revocation"]:
                 state.prospectively_certified = False
                 transition = "GRAPH_LOCAL_REVOCATION"
-            if transition:
-                state.transition_rows = (*state.transition_rows, {
-                    "transition": transition,
-                    "receipt_id": receipt.receipt_id,
-                    "ordinal": receipt.ordinal,
-                    "pending_token": receipt.pending_token,
-                })
+            if transition is not None:
+                state.transition_rows = (
+                    *state.transition_rows,
+                    {
+                        "transition": transition,
+                        "receipt_id": receipt.receipt_id,
+                        "ordinal": receipt.ordinal,
+                        "pending_token": receipt.pending_token,
+                    },
+                )
         emission = V2CertificationEmission(
-            receipt.receipt_id, pending.matching_cell_ids,
-            tuple(sorted(supporting)), tuple(sorted(contradictions)),
-            graph["maturity"], graph["revocation"],
-            graph["maturity"], graph["revocation"], True,
+            receipt_id=receipt.receipt_id,
+            matching_cell_ids=pending.matching_cell_ids,
+            supporting_cell_ids=supporting,
+            contradiction_cell_ids=contradictions,
+            matured_cell_ids=graph["maturity"],
+            revoked_cell_ids=graph["revocation"],
+            graph_maturity_ids=graph["maturity"],
+            graph_revocation_ids=graph["revocation"],
+            nomination_allowed_after_lifecycle=True,
         )
         self.consumed_receipts[receipt.receipt_id] = receipt
         self.consumed_tokens.add(receipt.pending_token)
-        self.interaction_fingerprints[receipt.interaction_fingerprint] = receipt.receipt_id
+        self.interaction_fingerprints[
+            receipt.interaction_fingerprint
+        ] = receipt.receipt_id
         self.emissions[receipt.receipt_id] = emission
         self.next_expected_ordinal += 1
         self.event_transactions[receipt.pending_token] = {
@@ -728,147 +1122,534 @@ class NativeProspectiveAuthorityV2:
             "consumed_receipt_id": receipt.receipt_id,
         }
         self.pending_event = None
-        if self._structural_manifest() != structural_before:
-            raise ProspectiveV2IntegrityError("prospective authority altered structural state")
+        self._verify_invariants()
         return emission
 
+    def _nomination_read_sets(
+        self, cell: CompetenceContextCell
+    ) -> tuple[tuple[str, tuple[str, ...]], ...]:
+        raw = cell.stem_cell.metadata.get(
+            "prospective_nomination_read_set"
+        )
+        if not isinstance(raw, Mapping):
+            raise ProspectiveProvenanceUnavailable(
+                "prospective_provenance_unavailable: growth interface did not "
+                "expose exact nomination read set"
+            )
+        extra = set(map(str, raw)).difference(
+            NOMINATION_READ_CATEGORIES
+        )
+        if extra:
+            raise ProspectiveV2IntegrityError(
+                "unknown nomination read categories: "
+                + ",".join(sorted(extra))
+            )
+        categories = tuple(
+            (
+                name,
+                tuple(sorted(set(map(str, raw.get(name, ()))))),
+            )
+            for name in NOMINATION_READ_CATEGORIES
+        )
+        if not categories[0][1]:
+            raise ProspectiveProvenanceUnavailable(
+                "prospective_provenance_unavailable: empty direct nomination reads"
+            )
+        if cell.lineage_parent_id is not None:
+            required = {
+                "parent_support",
+                "eligibility",
+                "contradiction_trigger",
+            }
+            missing = sorted(
+                name for name, ids in categories
+                if name in required and not ids
+            )
+            if missing:
+                raise ProspectiveProvenanceUnavailable(
+                    "prospective_provenance_unavailable: incomplete specialization "
+                    + ",".join(missing)
+                )
+        all_ids = {
+            receipt_id
+            for _name, receipt_ids in categories
+            for receipt_id in receipt_ids
+        }
+        unknown = sorted(all_ids.difference(self.base.receipts))
+        if unknown:
+            raise ProspectiveProvenanceUnavailable(
+                "prospective_provenance_unavailable: "
+                + ",".join(unknown)
+            )
+        return categories
+
     def sync_organism_nominations(self) -> tuple[str, ...]:
-        """Attach authority escrow only to cells already born inside the organism."""
+        """Attach exact birth escrow to cells born by the wrapped genome."""
         if self.pending_event is not None:
             raise ProspectiveV2IntegrityError(
                 "candidate born during event before authority lifecycle completed"
             )
-        new_ids = tuple(sorted(set(self.base.envelope.cells).difference(self.states)))
-        memo: dict[str, frozenset[str]] = {}
-        frozen = [
-            self._hypothesis_from_cell(
-                self.base, self.base.envelope.cells[cell_id], memo
+        self._verify_invariants(allow_unregistered=True)
+        new_ids = tuple(sorted(
+            set(self.base.envelope.cells).difference(
+                self.states, self.historical_tombstones
             )
-            for cell_id in new_ids
-        ]
-        for hypothesis in frozen:
-            self.states[hypothesis.cell_id] = ProspectiveAuthorityState(
+        ))
+        additions: list[
+            tuple[CompetenceContextCell, FrozenHypothesis]
+        ] = []
+        tombstone_additions: dict[str, dict[str, Any]] = {}
+        for cell_id in new_ids:
+            cell = self.base.envelope.cells[cell_id]
+            if cell.state == StemCellState.PRUNED:
+                tombstone_additions[cell_id] = cell.to_manifest()
+                continue
+            if cell.polarity is None:
+                raise ProspectiveV2IntegrityError(
+                    "polarity=None at live candidate birth is forbidden"
+                )
+            categories = self._nomination_read_sets(cell)
+            discovery = tuple(sorted({
+                receipt_id
+                for _name, receipt_ids in categories
+                for receipt_id in receipt_ids
+            }))
+            ordinals = [
+                self.base.receipts[item].event_ordinal
+                for item in discovery
+            ]
+            hypothesis = FrozenHypothesis(
+                cell_id=cell.cell_id,
+                members=tuple(cell.members),
+                polarity=cell.polarity,
+                lineage_parent_id=cell.lineage_parent_id,
+                specialization_depth=cell.specialization_depth,
+                discovery_receipt_ids=discovery,
+                discovery_receipt_digest=_sha(list(discovery)),
+                birth_frontier=max(ordinals),
+                structural_state=cell.state.name,
+                provenance_kind=
+                    ProvenanceKind.EXACT_NOMINATION_READ_SET,
+                nomination_read_sets=categories,
+            )
+            additions.append((cell, hypothesis))
+        for cell, hypothesis in additions:
+            self.states[cell.cell_id] = ProspectiveAuthorityState(
                 hypothesis=hypothesis,
                 prospectively_certified=False,
             )
-        return new_ids
+            self.structural_invariants[
+                cell.cell_id
+            ] = self._invariant_from_cell(cell)
+        self.historical_tombstones.update(tombstone_additions)
+        self.authority_topology = _authority_topology_manifest(
+            self.states
+        )
+        if additions or tombstone_additions:
+            self.nomination_events = (
+                *self.nomination_events,
+                {
+                    "event":
+                        "GRAPH_OWNED_NOMINATION_INVARIANT_EXTENSION",
+                    "cell_ids": [
+                        cell.cell_id for cell, _hypothesis in additions
+                    ],
+                    "tombstone_ids": sorted(tombstone_additions),
+                    "authority_topology_digest":
+                        _sha(self.authority_topology),
+                    "structure_invariant_digest":
+                        self._structure_invariant_digest(),
+                },
+            )
+        self._verify_invariants()
+        return tuple(
+            cell.cell_id for cell, _hypothesis in additions
+        )
 
-    def retrospective_certify(self, *_args: Any, **_kwargs: Any) -> None:
+    def retrospective_certify(
+        self, *_args: Any, **_kwargs: Any
+    ) -> None:
         raise ProspectiveV2IntegrityError(
             "retrospective ledger scan cannot grant prospective authority"
         )
 
-    def match_after_outcome(self, *_args: Any, **_kwargs: Any) -> None:
-        raise ProspectiveV2IntegrityError("post-outcome matching is forbidden")
+    def match_after_outcome(
+        self, *_args: Any, **_kwargs: Any
+    ) -> None:
+        raise ProspectiveV2IntegrityError(
+            "post-outcome matching is forbidden"
+        )
 
-    def consume_with_authority_outcome(self, *_args: Any, **_kwargs: Any) -> None:
-        raise ProspectiveV2IntegrityError("authority-layer outcome relabeling is forbidden")
+    def consume_with_authority_outcome(
+        self, *_args: Any, **_kwargs: Any
+    ) -> None:
+        raise ProspectiveV2IntegrityError(
+            "authority-layer outcome relabeling is forbidden"
+        )
 
-    def nominate_suffix(self, *_args: Any, **_kwargs: Any) -> None:
-        raise ProspectiveV2IntegrityError("suffix nomination is forbidden")
+    def nominate_suffix(
+        self, *_args: Any, **_kwargs: Any
+    ) -> None:
+        raise ProspectiveV2IntegrityError(
+            "suffix nomination is forbidden"
+        )
 
-    def assert_candidate_parity(self, other: "NativeProspectiveAuthorityV2") -> None:
-        left = _sha({key: value.hypothesis.manifest() for key, value in sorted(self.states.items())})
-        right = _sha({key: value.hypothesis.manifest() for key, value in sorted(other.states.items())})
+    def assert_candidate_parity(
+        self, other: "NativeProspectiveAuthorityV2"
+    ) -> None:
+        left = _sha({
+            key: value.hypothesis.manifest()
+            for key, value in sorted(self.states.items())
+        })
+        right = _sha({
+            key: value.hypothesis.manifest()
+            for key, value in sorted(other.states.items())
+        })
         if left != right:
-            raise ProspectiveV2IntegrityError("candidate-manifest disparity")
+            raise ProspectiveV2IntegrityError(
+                "candidate-manifest disparity"
+            )
 
     def open_virtual(self, frame: FrameContext) -> dict[str, Any]:
+        self._verify_invariants()
         before = self.continuation_digest()
         if frame.kind is not FrameKind.VIRTUAL:
-            raise ProspectiveV2IntegrityError("virtual capability requires VIRTUAL frame")
+            raise ProspectiveV2IntegrityError(
+                "virtual capability requires VIRTUAL frame"
+            )
         session = self.base.dream_session()
         result = session.request(frame)
         session.close()
         if self.continuation_digest() != before:
-            raise ProspectiveV2IntegrityError("VIRTUAL evaluation mutated state")
-        return {"query": result, "certification_commitment": None}
+            raise ProspectiveV2IntegrityError(
+                "VIRTUAL evaluation mutated state"
+            )
+        return {
+            "query": result,
+            "certification_commitment": None,
+        }
 
     def continuation_manifest(self) -> dict[str, Any]:
         return {
             "schema_version": self.schema_version,
             "mode": self.mode.value,
             "base_v3": self.base.continuation_manifest_v3(),
-            "states": {key: value.manifest() for key, value in sorted(self.states.items())},
+            "states": {
+                key: value.manifest()
+                for key, value in sorted(self.states.items())
+            },
+            "structural_invariants": self._structural_manifest(),
+            "authority_topology":
+                copy.deepcopy(self.authority_topology),
+            "historical_tombstones": copy.deepcopy(
+                dict(sorted(self.historical_tombstones.items()))
+            ),
             "next_expected_ordinal": self.next_expected_ordinal,
-            "pending_event": None if self.pending_event is None else self.pending_event.manifest(),
-            "consumed_receipts": {key: value.manifest() for key, value in sorted(self.consumed_receipts.items())},
+            "pending_event": (
+                None if self.pending_event is None
+                else self.pending_event.manifest()
+            ),
+            "consumed_receipts": {
+                key: value.manifest()
+                for key, value in sorted(
+                    self.consumed_receipts.items()
+                )
+            },
             "consumed_tokens": sorted(self.consumed_tokens),
-            "interaction_fingerprints": dict(sorted(self.interaction_fingerprints.items())),
-            "emissions": {key: value.manifest() for key, value in sorted(self.emissions.items())},
-            "event_transactions": copy.deepcopy(dict(sorted(self.event_transactions.items()))),
-            "structural_manifest": self._structural_manifest(),
+            "interaction_fingerprints": dict(sorted(
+                self.interaction_fingerprints.items()
+            )),
+            "emissions": {
+                key: value.manifest()
+                for key, value in sorted(self.emissions.items())
+            },
+            "event_transactions": copy.deepcopy(dict(sorted(
+                self.event_transactions.items()
+            ))),
+            "nomination_events": list(self.nomination_events),
         }
 
     def continuation_digest(self) -> str:
         return _sha(self.continuation_manifest())
 
     def dumps(self) -> bytes:
-        return pickle.dumps(copy.deepcopy(self), protocol=pickle.HIGHEST_PROTOCOL)
+        self._verify_invariants()
+        return pickle.dumps(
+            copy.deepcopy(self), protocol=pickle.HIGHEST_PROTOCOL
+        )
 
     @classmethod
-    def loads(cls, payload: bytes) -> "NativeProspectiveAuthorityV2":
+    def loads(
+        cls, payload: bytes
+    ) -> "NativeProspectiveAuthorityV2":
         item = pickle.loads(payload)
         if not isinstance(item, cls):
             raise TypeError("wrong V2 organism type")
         before = item.continuation_manifest()
         item.base._canonical_rebuild()
+        item._verify_invariants()
         if item.continuation_manifest() != before:
-            raise ProspectiveV2IntegrityError("serialization restore changed state")
+            raise ProspectiveV2IntegrityError(
+                "serialization restore changed state"
+            )
         return item
 
 
 @dataclass
 class OutcomeBlindExposureScanner:
-    """Read-only exposure admission; accepts traces and frozen states, no outcomes."""
+    """Read-only raw exposure manifest; no outcome qualification."""
 
     @staticmethod
     def scan(
         organism: NativeProspectiveAuthorityV2,
-        traces: Sequence[GraphSignalTrace],
+        probes: Sequence[ExposureProbe],
     ) -> dict[str, Any]:
+        organism._verify_invariants()
         before = organism.continuation_digest()
-        opportunities: dict[str, set[str]] = {cell_id: set() for cell_id in organism.states}
-        for offset, trace in enumerate(traces):
+        raw_by_id: dict[str, dict[str, Any]] = {}
+        for probe in probes:
+            if not isinstance(probe, ExposureProbe):
+                raise TypeError(
+                    "exposure scan requires ExposureProbe"
+                )
+            trace = probe.trace
             if trace.frame_kind != FrameKind.REAL.name:
-                continue
-            prospective_ordinal = organism.next_expected_ordinal + offset
-            matching = organism._matching_ids(trace)
-            for cell_id in matching:
+                raise ProspectiveV2IntegrityError(
+                    "exposure requires REAL trace"
+                )
+            if (
+                trace.source_organism_identity
+                != organism.base.r0.source_organism_identity()
+                or trace.source_state_identity
+                != organism.base.r0.trace_state_identity()
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "exposure source-organism identity mismatch"
+                )
+            board = chess.Board(probe.predecessor_fen)
+            successor = board.copy(stack=False)
+            successor.push(chess.Move.from_uci(
+                trace.actuation.move_uci
+            ))
+            graph = organism._graph_measure(trace)
+            fingerprint = _interaction_fingerprint(
+                source_organism_identity=
+                    trace.source_organism_identity,
+                source_state_identity=
+                    trace.source_state_identity,
+                predecessor_fen=probe.predecessor_fen,
+                trace=trace,
+                actuation=trace.actuation,
+                successor_fen=successor.fen(),
+                outcome_terminal_identity=
+                    probe.outcome_terminal_identity,
+            )
+            for cell_id in graph["commitment"]:
                 state = organism.states[cell_id]
-                if prospective_ordinal > state.hypothesis.birth_frontier:
-                    opportunities[cell_id].add(_sha({
-                        "ordinal": prospective_ordinal,
-                        "trace": trace.digest(),
-                        "cell_id": cell_id,
-                    }))
+                if (
+                    organism.next_expected_ordinal
+                    <= state.hypothesis.birth_frontier
+                ):
+                    continue
+                opportunity_id = _sha({
+                    "interaction_fingerprint": fingerprint,
+                    "matched_frozen_cell": cell_id,
+                })
+                raw_by_id[opportunity_id] = {
+                    "opportunity_id": opportunity_id,
+                    "cell_id": cell_id,
+                    "interaction_fingerprint": fingerprint,
+                    "source_organism_identity":
+                        trace.source_organism_identity,
+                    "source_state_identity":
+                        trace.source_state_identity,
+                    "predecessor_fen": probe.predecessor_fen,
+                    "trace": trace.canonical_manifest(),
+                    "selected_actuation": asdict(
+                        trace.actuation
+                    ),
+                    "successor_fen": successor.fen(),
+                    "outcome_terminal_identity":
+                        probe.outcome_terminal_identity,
+                }
+        raw = sorted(
+            raw_by_id.values(),
+            key=lambda row: row["opportunity_id"],
+        )
+        per_cell: dict[str, list[str]] = {
+            cell_id: [] for cell_id in organism.states
+        }
+        for row in raw:
+            per_cell[row["cell_id"]].append(
+                row["opportunity_id"]
+            )
         result = {
+            "schema_version": "native_v2_exposure_manifest.v2",
+            "organism_identity":
+                organism.base.r0.source_organism_identity(),
+            "source_state_identity":
+                organism.base.r0.trace_state_identity(),
+            "raw_opportunities": raw,
+            "raw_manifest_digest": _sha(raw),
             "cells": {
                 cell_id: {
-                    "distinct_opportunities": len(sorted(values)),
-                    "opportunity_ids": sorted(values),
+                    "distinct_opportunities":
+                        len(opportunity_ids),
+                    "opportunity_ids":
+                        sorted(opportunity_ids),
                 }
-                for cell_id, values in sorted(opportunities.items())
+                for cell_id, opportunity_ids
+                in sorted(per_cell.items())
             },
-            "qualifies": any(len(values) >= 4 for values in opportunities.values()),
             "outcome_fields_read": 0,
         }
         if organism.continuation_digest() != before:
-            raise ProspectiveV2IntegrityError("exposure scan mutated organism")
+            raise ProspectiveV2IntegrityError(
+                "exposure scan mutated organism"
+            )
         return result
 
     @staticmethod
-    def adjudicate_cohort(scans: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    def _validate_raw_scan(
+        scan: Mapping[str, Any]
+    ) -> bool:
+        if "qualifies" in scan:
+            raise ProspectiveV2IntegrityError(
+                "caller-supplied exposure qualification is forbidden"
+            )
+        raw = scan.get("raw_opportunities")
+        if not isinstance(raw, list):
+            raise ProspectiveV2IntegrityError(
+                "missing raw exposure manifest"
+            )
+        if _sha(raw) != scan.get("raw_manifest_digest"):
+            raise ProspectiveV2IntegrityError(
+                "raw exposure manifest digest mismatch"
+            )
+        organism_identity = str(
+            scan.get("organism_identity", "")
+        )
+        source_state_identity = str(
+            scan.get("source_state_identity", "")
+        )
+        if not organism_identity or not source_state_identity:
+            raise ProspectiveV2IntegrityError(
+                "missing exposure source identity"
+            )
+        seen: set[str] = set()
+        per_cell: dict[str, set[str]] = {}
+        for row in raw:
+            if (
+                row.get("source_organism_identity")
+                != organism_identity
+                or row.get("source_state_identity")
+                != source_state_identity
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "mixed-organism raw exposure manifest"
+                )
+            trace = row.get("trace")
+            actuation = row.get("selected_actuation")
+            if (
+                not isinstance(trace, Mapping)
+                or not isinstance(actuation, Mapping)
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "malformed raw exposure row"
+                )
+            if trace.get("frame_kind") != FrameKind.REAL.name:
+                raise ProspectiveV2IntegrityError(
+                    "raw exposure contains VIRTUAL trace"
+                )
+            expected_fingerprint = _sha(_interaction_manifest(
+                source_organism_identity=organism_identity,
+                source_state_identity=source_state_identity,
+                predecessor_fen=str(row["predecessor_fen"]),
+                trace_manifest=trace,
+                actuation_manifest=actuation,
+                successor_fen=str(row["successor_fen"]),
+                outcome_terminal_identity=str(
+                    row["outcome_terminal_identity"]
+                ),
+            ))
+            if (
+                expected_fingerprint
+                != row.get("interaction_fingerprint")
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "raw interaction fingerprint mismatch"
+                )
+            expected_opportunity = _sha({
+                "interaction_fingerprint":
+                    expected_fingerprint,
+                "matched_frozen_cell": str(row["cell_id"]),
+            })
+            if expected_opportunity != row.get("opportunity_id"):
+                raise ProspectiveV2IntegrityError(
+                    "raw opportunity identity mismatch"
+                )
+            if expected_opportunity in seen:
+                raise ProspectiveV2IntegrityError(
+                    "duplicate raw opportunity was not collapsed"
+                )
+            seen.add(expected_opportunity)
+            per_cell.setdefault(
+                str(row["cell_id"]), set()
+            ).add(expected_opportunity)
+        supplied_cells = scan.get("cells")
+        recomputed_cells = {
+            cell_id: {
+                "distinct_opportunities": len(ids),
+                "opportunity_ids": sorted(ids),
+            }
+            for cell_id, ids in sorted(per_cell.items())
+        }
+        supplied_nonempty = {
+            str(cell_id): value
+            for cell_id, value in dict(
+                supplied_cells or {}
+            ).items()
+            if int(value.get(
+                "distinct_opportunities", 0
+            )) > 0
+        }
+        if supplied_nonempty != recomputed_cells:
+            raise ProspectiveV2IntegrityError(
+                "cell exposure summary differs from raw opportunities"
+            )
+        return any(
+            len(ids) >= MIN_SUPPORT
+            for ids in per_cell.values()
+        )
+
+    @staticmethod
+    def adjudicate_cohort(
+        scans: Sequence[Mapping[str, Any]]
+    ) -> dict[str, Any]:
         if len(scans) != 32:
             raise ProspectiveV2IntegrityError(
                 "exposure admission requires exactly 32 organisms"
             )
-        qualifying = sum(bool(scan.get("qualifies")) for scan in scans)
-        admitted = qualifying >= 24
+        identities = [
+            str(scan.get("organism_identity", ""))
+            for scan in scans
+        ]
+        if len(set(identities)) != 32:
+            raise ProspectiveV2IntegrityError(
+                "exposure cohort requires 32 distinct organisms"
+            )
+        qualifications = [
+            OutcomeBlindExposureScanner._validate_raw_scan(scan)
+            for scan in scans
+        ]
+        qualifying = sum(qualifications)
         return {
             "organism_count": 32,
             "qualifying_organisms": qualifying,
             "required_qualifying_organisms": 24,
-            "admitted": admitted,
-            "stop_reason": None if admitted else "prospective_evidence_starvation",
+            "admitted": qualifying >= 24,
+            "stop_reason": (
+                None if qualifying >= 24
+                else "prospective_evidence_starvation"
+            ),
         }

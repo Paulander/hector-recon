@@ -1,54 +1,148 @@
-# Native prospective evidence authority V2 — pre-execution implementation audit
+# Native prospective evidence authority V2 - pre-execution implementation audit
 
-Status: engineering review package only. Compliance matrix commit: `9362475`. No V2 preregistration/freeze, canonical synthetic stream, KRK exposure scan, KRK outcome, fresh data, R1, or retired-65 access occurred.
+Status: bounded engineering repair after external review. V1 remains immutable
+at `726e74a`. The compliance matrix was frozen at `9362475`. The initial
+implementation and audit at `2553ffd` remain in Git history, but the authority
+claims made there are superseded by this document.
+
+No V2 preregistration, runner, stream, KRK exposure scan, KRK outcome
+consumption, fresh data, R1, retired-65 or unopened validation/regression pool
+was created or accessed.
+
+## Retraction and external-review disposition
+
+The `2553ffd` audit called activation and lifecycle decisions graph-owned even
+though Python had already calculated matching, `projected_mature` and
+`projected_revoke` ID sets for membership terminals to echo. That description
+was too strong and is withdrawn.
+
+| blocking review finding | repaired disposition |
+|---|---|
+| historical PRUNED `polarity=None` cells failed initialization | PRUNED tombstones are preserved separately and excluded from live authority |
+| historical escrow claimed reconstructed nomination provenance | all accepted historical receipts are conservatively marked pre-escrow; provenance explicitly says historical complete ledger |
+| new birth had no exact nomination-read contract | exact categorized birth metadata is mandatory; absent metadata fails hard |
+| Python selected matching/maturity/revocation IDs | graph terminals directly measure frozen patterns, receipts, counters, Wilson state and authority |
+| lifecycle disconnection was not causal | pytest disconnects the terminal predicate; counters update but authority cannot transition |
+| live structure lacked a binding invariant | canonical cell and topology invariants are checked at init/open/consume/restore |
+| exposure identity used ordinal and accepted caller qualification | ordinal-free raw manifests are deduplicated and cohort qualification is recomputed |
+| issuer, receipt ID and typed-signal checks were incomplete | all are explicit gates before accounting |
 
 ## Requirement-to-code map
 
-| compliance requirement | implementation | adversarial evidence |
-|---|---|---|
-| frozen pattern + discovery-only immutable polarity | `native_prospective_evidence_authority_v2.py:63-91`, `:344-374` | `test_native_prospective_evidence_authority_v2.py:161` |
-| complete transitive parent/eligibility/contradiction provenance and exact frontier | `:344-424` | `:137`, `:161` |
-| uniform historical escrow; structure separate from authority | `:322-342`, `:428-463`, `:465-496` | `:137`, `:248`, `:278` |
-| one-shot REAL prediction/activation commitment | `:498-539` | `:189`, `:211` |
-| environment-grounded native receipt with exact interaction fingerprint | `:168-213`, `:541-584` | `:211`, `:233` |
-| contiguous ordinal/token/trace/action/successor/terminal validation | `:586-628` | `:211-245` |
-| only precommitted cells update; four/zero/Wilson graph maturity; graph revocation | `:630-733` | `:233`, `:278` |
-| duplicate idempotence, remint abort, OPEN/CONSUMED persistence | `:630-733`, `:787-820` | `:248-275` |
-| organism-owned post-lifecycle nomination attachment | `:735-754` | `:189-208`, `:248-275` |
-| retrospective/post-outcome/relabel/suffix host paths fail closed | `:756-768` | `:189-208`, `:315` |
-| exact candidate/polarity parity | `:770-774` | `:137-159`, `:315` |
-| VIRTUAL isolation and cross-frame refusal | `:776-785`, `:586-595` | `:293-312` |
-| outcome-blind inert exposure scan and 24/32 gate | `:822-end` | `:315-end` |
+Line anchors refer to the repaired source before the final documentation commit.
 
-Line anchors refer to the committed-candidate source as currently staged and must be regenerated if review changes code.
+| requirement | implementation | adversarial evidence |
+|---|---|---|
+| historical/full-ledger versus exact-new provenance | source lines 72, 566, 1128 and 1186 | tests lines 254, 327, 853 |
+| tombstone/live distinction | source 566-645 | exact historical artifact test 254; new-live birth test 327 |
+| frozen live structure and topology | source 155, 680-739 | member/lineage/state failures 423; serialization 626 |
+| recursive pattern and PROBATION-parent semantics | source 347-390 | nested child test 291 |
+| graph terminal measurement | source 392-451 | maturity test 500; revocation/REFUTED test 544 |
+| canonical graph and emissions | source 454-500 | lifecycle controls; no production disconnection argument |
+| one-shot REAL commitment | source 777-907 | transaction and structural test 423 |
+| receipt issuer/ID/typed/source/action/successor validation | source 908-1011 | receipt mutation matrix 423 |
+| graph lifecycle plus generic materialization | source 1012-1127 | lifecycle tests 500 and 544 |
+| exact nomination read-set attachment | source 1128-1265 | ordinary/specialized/missing metadata test 327 |
+| VIRTUAL and serialization isolation | source 1313-1398 | test 626 |
+| raw stable exposure and cohort recomputation | source 1399-1655 | tests 736 and 806 |
 
 ## Causal authority table
 
-| operation | owner | Python role | authority status |
+| operation | owner | Python implementation role | resulting authority |
 |---|---|---|---|
-| R0 action prediction | frozen native R0 graph | wrapper opens REAL frame and receives exact `GraphActuation`/trace | graph-owned |
-| cell pattern measurement | organism-owned existing recursive matcher | terminal backend computes structural match from typed trace | generic measurement, no runner labels |
-| activation commitment | `FormalReConEngine` commitment terminals | organism persists graph-emitted IDs before outcome | graph-owned emission |
-| AVAILABLE/REFUTED inference | authority-gated graph terminals | organism constructs read-only authority snapshot | graph-owned emission; both roots require authority |
-| environment transition/outcome | chess adapter/environment terminal | copies board, executes exact graph action, measures checkmate, signs receipt | permitted environment authority |
-| maturity/revocation | `FormalReConEngine` lifecycle terminals | organism computes frozen Wilson measurement and materializes emitted authority transition | graph-owned decision; Python measurement backend |
-| hypothesis pattern/polarity/frontier | organism nomination audit + signed receipt ledger | organism recursively derives and freezes; caller supplies none | organism-owned |
-| topology materialization | existing organism/genome, followed by zero-argument sync | wrapper detects cells already born inside organism | no host candidate selection |
-| serialization/replay guard | organism transaction ledger | canonical hashing/HMAC | organism-owned |
-| exposure admission | read-only organism scanner + fixed cohort adjudicator | iterates trace commitments without outcome access | measurement only; no learning/authority |
+| R0 action | frozen native R0 graph | opens frame and receives exact actuation/trace | graph-owned |
+| pattern activation | per-cell commitment terminal | predicate reads frozen structure and typed signals | graph measured; no matching-ID input |
+| AVAILABLE/REFUTED | per-cell authority terminals and formal roots | materializes classification from emitted roots | graph gated |
+| support/contradiction | grounded-receipt terminals | validates receipt, then increments only emitted cells | graph measured |
+| maturity | per-cell maturity terminal | predicate computes projected count and Wilson law; Python sets bit only for emission | graph decided |
+| revocation | per-cell revocation terminal | predicate reads contradiction/current authority; Python clears bit only for emission | graph decided |
+| nomination pattern/polarity | wrapped genome plus required birth metadata | sync validates metadata and records invariant | organism-owned, integration-blocked |
+| environment transition/outcome | chess adapter and signed completion terminal | executes graph action and measures checkmate | environment-owned |
+| serialization/replay | organism transaction ledger | canonical manifest, HMAC and validation | organism-owned |
+| exposure | commitment graph plus scanner | canonicalizes raw interactions and recomputes fixed gate | measurement only |
 
-## Host-authority assessment
+The production graph builder/runner has no disconnection parameter. Production
+`consume` accepts only one grounded receipt. Tests disconnect by monkeypatching
+a terminal predicate inside pytest; there is no organism API for injected
+matching, maturity, revocation or qualification IDs.
 
-No production V2 method accepts a maturity Boolean, correctness label, authority outcome, frontier, polarity, pattern, candidate list, target identity, or cell ID for nomination. Python remains the implementation language for terminal measurement, cryptographic/canonical bookkeeping, environment board transition, and graph-emitted mutation materialization. Those roles are generic and inside the organism/environment boundary; they do not choose competence authority.
+## Historical compatibility result
 
-`sync_organism_nominations()` is deliberately zero-argument: it can only attach escrow to cells already materialized in the wrapped organism. It fails before inspection while a REAL event is open. The actual future growth genome is not invoked by this engineering package; therefore this package makes no topology-growth claim.
+The sole authorized read-only compatibility test loads the exact already-viewed
+ordinal-0 local-contrast artifact and checks its committed compressed,
+uncompressed and continuation-V3 digests.
 
-## Deliberately unexecuted/future runner work
+Observed immutable facts:
 
-The canonical synthetic discovery-prefix candidate freeze, truthfully shuffled synthetic environment, and two-arm viewed-KRK runner are not created or run here. The enforcement primitives needed by them are present: candidate manifest parity, immutable discovery/polarity/frontier, suffix/relabel fail-closed APIs, native two-phase receipts, outcome-blind exposure scan, and exact 24/32 adjudication. Their concrete streams, seeds, manifests, hashes, admission checks, reporting aggregation, and stop artifacts must be preregistered after external code review.
+- 155 total historical cells;
+- 152 PRUNED tombstones, all with `polarity=None`;
+- 3 live MATURE/PROBATION hypotheses;
+- 96 accepted historical receipts;
+- each live escrow uses exactly those 96 receipts as conservative historical
+  discovery evidence;
+- the internally derived frontier is the maximum accepted ordinal;
+- serialization/restore is exact;
+- the source organism digest is unchanged.
 
-Accordingly this is not yet a V2 scientific package and makes no prospective-certification, KRK, generalization, superiority, or historical-cause claim. Same-tape final reclassification is not implemented as a gate. The historical 81 rows remain described only as co-supported by at least one mature depth-one child.
+This is compatibility evidence only. It is not a KRK exposure or outcome run.
 
-## Validation
+## Graph lifecycle causal result
 
-Final focused adversarial suite: 9 passed in 602.65 seconds (0:10:02), including the exact pure 24-of-32 admission adjudicator. Full repository suite: 993 passed in 4,438.99 seconds (1:13:58). No V2 stream, freeze, exposure tape, or outcome run was opened by either validation command.
+On the touched fixture, four distinct post-frontier grounded supports cause the
+connected graph maturity leg to emit authority. With the maturity terminal
+disconnected, the same cells reach support count four while authority remains
+false. There is no Python maturity-ID argument.
+
+After connected maturity, one grounded contradiction makes the connected
+revocation terminal clear authority. With the revocation terminal disconnected,
+the contradiction is accounted but authority remains set. A separate
+fixed-polarity REFUTED cell matures from four real noncompletion receipts and
+emits REFUTED on its next matching trace.
+
+These are engineering causal tests, not a scientific V2 result.
+
+## Structure, receipt and exposure integrity
+
+Members, lineage parent and StemCell structural state are each mutated after a
+REAL event opens. Every mutation fails before receipt accounting or authority
+change. Open and consumed states serialize exactly.
+
+Receipt controls reject wrong issuer, a re-signed but invalid receipt ID, wrong
+source, ordinal gap, wrong token, changed trace, typed-signal mismatch, wrong
+successor and wrong terminal. Exact replay is idempotent; a new receipt identity
+for the same interaction fails as reminting.
+
+The scanner reads no outcome field. Four copies of one exact interaction
+collapse to one opportunity per matched cell; four genuinely distinct traces
+produce four. VIRTUAL and mixed-organism traces fail. Scanner and receipt
+fingerprints agree for the same pending REAL interaction.
+
+Cohort adjudication rejects caller `qualifies`, bad raw digests, mixed source
+identities and malformed opportunity identities. It derives the 24/32 decision
+only from verified raw per-cell opportunity IDs.
+
+## Remaining architectural blocker
+
+The existing historical growth code does not record
+`prospective_nomination_read_set` at the actual birth event. The wrapper can
+enforce and consume an exact read set, and tests demonstrate ordinary and
+specialization semantics, but no claim is made that the current growth runtime
+already supplies it.
+
+Runner construction and scientific preregistration remain blocked. The next
+review should decide where the genome records direct, parent-support,
+eligibility and contradiction-trigger receipt IDs atomically with nomination.
+They must not be reconstructed afterward.
+
+## Validation and stop
+
+Focused repaired suite before final API tightening: 10 passed in 1,023.71
+seconds (0:17:03). Focused maturity/revocation rerun after removing the
+production disconnection argument: 2 passed, 8 deselected in 530.29 seconds
+(0:08:50).
+
+Full repository suite: 994 passed in 4,910.68 seconds (1:21:50). No
+scientific runner or data path was exercised by these commands.
+
+This package stops after documentation, commit and push. It does not proceed
+to a V2 runner, freeze, stream, exposure scan or outcome consumption.
