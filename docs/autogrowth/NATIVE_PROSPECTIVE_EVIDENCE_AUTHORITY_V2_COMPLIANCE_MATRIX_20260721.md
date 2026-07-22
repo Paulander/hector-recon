@@ -232,3 +232,50 @@ be multiplied by aliases.
 After implementation: run focused adversarial tests once, run the full
 repository suite once, update the audit, commit and push, then stop for external
 review. Do not create a runner or scientific artifact in this package.
+
+
+## Final execution-readiness repair - binding before code
+
+This addendum supersedes only implementation details that conflict with it. It
+authorizes no scientific runner, stream, tape, canonical cohort registry,
+preregistration, unopened confirmation data, R1, or retired-65 access.
+
+| readiness contract | required implementation | exact focused test |
+|---|---|---|
+| Signed-receipt evidence identity | Validate every grounded receipt, reconstruct the native evidence record, and require exact active-signal, typed-provenance, outcome, actuator, completion-terminal, and policy-response parity before any epoch state is trusted. | `test_receipt_evidence_record_parity_rejects_each_mutated_field_atomically` |
+| Complete escrow and two frontiers | Bind and semantically revalidate the complete native escrow operation, fixed polarity, trigger, categorized reads, graph request states, considered/selected contexts, transitive ancestors, exclusion set, exact nomination-read frontier, and conservative certification frontier. | `test_complete_escrow_frontiers_and_semantic_revalidation` |
+| Atomic specialization | Run receipt validation, insertion, parent transition, eligibility, escrow, child registration, and wrapper sync under one copy-on-write transaction; injected failure at any boundary leaves the canonical continuation unchanged. | `test_specialization_transaction_rolls_back_every_failure_boundary` |
+| Experimental seal and identical arms | Freeze schema/implementation, mode, source, epoch, close event, candidates, escrows, and topology in one initialization identity; clone prospective and legacy arms from one closed native nomination without regrowth. | `test_experimental_identity_and_candidate_identical_arms_are_immutable` |
+| Executed graph identity | Hash the canonical graph snapshot actually evaluated, including roots, nodes, edges, confirmation policies, terminal roles/predicate identities, and lifecycle constants. | `test_topology_digest_tracks_executed_graph_semantics` |
+| Laboratory cohort authority | Keep tape/cohort identity outside the learner; re-load exact frozen organisms through a laboratory registry and reject fabricated, post-outcome, open-transaction, unclosed, duplicate, and noncanonical commitments. | `test_registry_bound_exposure_rejects_fabrication_and_admits_24_of_32` |
+| Version/native parity | Bump incompatible schemas, reject prior payloads explicitly, preserve AVAILABLE/REFUTED state and identity parity, keep confidence telemetry non-authoritative, fail on historical live TRIAL, and admit tombstone-only historical sources. | `test_v3_schema_native_parity_telemetry_and_tombstone_only_admission` |
+| Behavior preservation | On one already-viewed engineering tape, compare ordinary native growth with and without escrow instrumentation and require exact proposal/cell order, members, state, mature polarity, lifecycle, nesting, and classification parity. | `test_prospective_escrow_instrumentation_preserves_viewed_tape_behavior` |
+
+### Architecture boundary
+
+Run IDs, cohort registries, tape identities/order, package hashes,
+preregistration gates and artifact adjudication are laboratory state. They may
+not become learner terminals, action features, nomination inputs, or permanent
+dependencies of ordinary ReCoN operation. Integrity digests and the current
+HMAC are tamper-evident checks, not proof against a caller that can execute the
+repository code.
+
+Prefix-only global nomination closure is an experimental isolation device. The
+target continuously growing organism will use per-candidate birth transactions:
+commit existing activations, execute, ground the outcome, update existing
+cells, then nominate new cells. It will not require a permanent global or
+human-authored learning phase.
+
+`nomination_read_frontier` is the maximum ordinal among exact categorized and
+transitive reads. `certification_frontier` is the maximum ordinal in the full
+visible-prefix discovery exclusion set. Prospective authority uses only the
+larger certification frontier.
+
+### Validation and stop
+
+Run the eight readiness tests, the adjacent native/V1 suites, one behavior-
+preservation engineering control on already-viewed material, and one full
+repository suite. No fresh or unopened confirmation data may be accessed.
+Update the audit and `BRIEF`, commit and push if clean, then stop for external
+review. The next reviewed package—not this one—may construct the candidate-
+identical synthetic discriminator through the actual V2 core.
