@@ -146,3 +146,72 @@ scientific runner or data path was exercised by these commands.
 
 This package stops after documentation, commit and push. It does not proceed
 to a V2 runner, freeze, stream, exposure scan or outcome consumption.
+
+## 2026-07-21 integration closure addendum
+
+This addendum supersedes the remaining-blocker section above. Work began from
+exact clean commit `644a213`; the binding implementation matrix was updated,
+committed as `ec1d0d8`, and pushed before code changed. No preregistration,
+scientific runner, synthetic/KRK outcome stream, unopened pool, R1, fresh data,
+validation/regression data, or retired-65 data was opened. Prior artifacts and
+negative results remain untouched.
+
+### Closed mechanism boundaries
+
+- `ProspectiveAuthorityState` is now a checked cache. Every authority-bearing
+  operation replays the accepted V2 receipt ledger, pre-outcome commitments,
+  and graph lifecycle emissions and requires exact support, contradiction,
+  Wilson, transition, certification, revocation, token, fingerprint, emission,
+  ordinal and transaction parity.
+- Every hypothesis has a canonical immutable digest covering structure, fixed
+  polarity, lineage/depth/native state, initialization origin, categorized
+  operation reads, transitive ancestors, conservative exclusion and the
+  organism-derived frontier.
+- The serialized native organism owns the discovery epoch. Prefix discovery
+  receipts expand the historical exclusion ledger. Before freeze, only the
+  native legal `MATURE -> PROBATION` revocation can alter an already-open live
+  structural state. Candidate sync, prefix nomination and closure validate on
+  a deep copy and adopt only after success.
+- Ordinary and specialization materializers create and validate immutable
+  `NominationEscrow` before cell insertion. Pruned post-epoch births preserve
+  the same escrow in their tombstones. Prefix closure freezes the exact
+  candidate identity manifest and blocks all later births/sync.
+- Native maturity parity is exact: MATURE is authoritative; lineage-specific
+  PROBATION follows the native recursive matcher; TRIAL is rejected as an
+  unsupported historical contract; PRUNED is a tombstone; SPECIALIZED is not
+  silently treated as mature.
+- Exposure is now an organism-issued, HMAC-bound, exact-schema pre-outcome
+  commitment. The scanner verifies canonical terminal, trace/action, source
+  manifest/state, deterministic successor, frozen candidate/topology, matching
+  cells and ordinal-free physical interaction identity. It cannot qualify a
+  caller-authored probe or multiply one interaction through terminal aliases.
+
+### Causal authority after integration
+
+| operation | authority owner | host role |
+|---|---|---|
+| observation and completion | chess environment adapter | execute the graph action and mint the one grounded terminal receipt |
+| action and typed signal trace | frozen native R0 graph | open the REAL or isolated VIRTUAL frame |
+| ordinary/specialized proposal | native graph request plus generic genome | materialize the emitted mutation only |
+| polarity and nomination evidence | atomically created native `NominationEscrow` | no runner-supplied polarity, frontier, read set, historical flag or target ID |
+| candidate freeze | serialized organism discovery epoch | transactional sync/serialization |
+| support, contradiction, maturity, revocation | prospective authority graph replayed from grounded receipts | persist checked caches and execute graph emissions |
+| outcome-blind exposure | organism-issued canonical commitment | deduplicate and report; no outcome access or qualification input |
+
+The earlier statement that native materialization lacked exact nomination
+provenance is therefore closed for this engineering path. This does not make a
+scientific V2 claim: no competence learner was run, no gate was evaluated, and
+no KRK generalization or R1 handover evidence was produced. Live suffix growth
+remains deliberately absent.
+
+### Validation
+
+- exact frozen historical artifact compatibility: passed; committed source
+  continuation digest unchanged;
+- adjacent native envelope, trace-authority, contradiction-specialization and
+  preserved V1 authority suites: **42 passed in 665.45 s**;
+- final V2 adversarial module: **16 passed in 1,376.36 s (22m56s)**;
+- full repository suite: `1000 passed in 4,913.32 s (1:21:53)`.
+
+Stop remains external review after clean commit and push. Scientific package
+construction and execution are not authorized by this addendum.

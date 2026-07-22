@@ -431,3 +431,25 @@ retired-65, and unopened pools remain untouched. Any correction must be a new
 frozen package in which the organism derives both lifecycle and graph correction
 from the same signed control receipt; see
 `docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY_RESULT_20260721.md`.
+
+A bounded pre-execution V2 integration repair now closes the mechanism-definition
+gaps exposed after that abort, without repairing or rerunning the aborted
+scientific package. Prospective authority is independently replayed from signed
+receipts and pre-outcome graph commitments; mutable certification/counter/Wilson
+fields are checked caches only. The serialized organism owns one prefix-only
+discovery epoch, and ordinary plus specialization materializers create exact
+immutable categorized nomination escrow before insertion. Historical discovery
+rows and every visible prefix row are conservatively excluded from later
+certification. Native MATURE/PROBATION/TRIAL/PRUNED/SPECIALIZED behavior is
+followed exactly. Nomination sync/closure are transactional, pruned births retain
+escrow, and outcome-blind exposure accepts only organism-issued source/candidate/
+topology/action-bound commitments. The exact frozen historical organism digest
+remains unchanged.
+
+This is engineering closure only. No preregistration, runner, synthetic/KRK
+outcome stream, validation/regression/fresh pool, retired-65 row, R1 evaluation,
+or scientific gate was opened. Focused adjacent native suites passed 42/42; the
+final V2 module and repository-wide totals are recorded in
+`docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY_V2_PREEXECUTION_AUDIT_20260721.md`.
+External review remains the next decision; scientific V2 execution is not
+authorized by this repair.

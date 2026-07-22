@@ -45,6 +45,9 @@ CORRECTION_ROOT_ID = "competence_mature_correction_root"
 SPECIALIZATION_REQUEST_ROOT_ID = "competence_specialization_request_root"
 SPECIALIZATION_ELIGIBILITY_ROOT_ID = "competence_specialization_eligibility_root"
 SCHEMA_VERSION = "native_r0_competence_envelope.v1"
+NOMINATION_READ_CATEGORIES = (
+    "direct", "parent_support", "eligibility", "contradiction_trigger",
+)
 
 
 class AvailabilityState(str, Enum):
@@ -57,6 +60,150 @@ class SpecializationMode(str, Enum):
     DISCONNECTED = "disconnected"
     LOCAL_CONTRAST = "local_contrast"
     COUNTEREXAMPLE_BLIND = "counterexample_blind"
+
+
+def _nomination_sha(value: Any) -> str:
+    payload = json.dumps(
+        value, sort_keys=True, separators=(",", ":"), allow_nan=False
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+@dataclass(frozen=True)
+class NominationEscrow:
+    """Immutable evidence actually read before a prospective cell was born."""
+
+    operation: str
+    fixed_polarity: AvailabilityState
+    categorized_reads: tuple[tuple[str, tuple[str, ...]], ...]
+    transitive_ancestor_receipt_ids: tuple[str, ...]
+    discovery_exclusion_receipt_ids: tuple[str, ...]
+    birth_frontier: int
+    triggering_receipt_id: str
+    graph_request_root_state: str
+    graph_request_terminal_state: str
+    escrow_digest: str = ""
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self, "fixed_polarity", AvailabilityState(self.fixed_polarity)
+        )
+        if self.operation not in {"ordinary", "specialization"}:
+            raise ValueError("unknown nomination operation")
+        names = tuple(name for name, _ids in self.categorized_reads)
+        if names != NOMINATION_READ_CATEGORIES:
+            raise ValueError("incomplete nomination read categories")
+        for _name, ids in self.categorized_reads:
+            if tuple(sorted(ids)) != ids or len(set(ids)) != len(ids):
+                raise ValueError("noncanonical nomination read category")
+        for ids in (
+            self.transitive_ancestor_receipt_ids,
+            self.discovery_exclusion_receipt_ids,
+        ):
+            if tuple(sorted(ids)) != ids or len(set(ids)) != len(ids):
+                raise ValueError("noncanonical nomination provenance")
+        if not dict(self.categorized_reads)["direct"]:
+            raise ValueError("nomination direct reads are empty")
+        if self.triggering_receipt_id not in self.discovery_exclusion_receipt_ids:
+            raise ValueError("triggering receipt missing from discovery exclusion")
+        expected = _nomination_sha(self._unsigned_manifest())
+        if self.escrow_digest and self.escrow_digest != expected:
+            raise ValueError("nomination escrow digest mismatch")
+        object.__setattr__(self, "escrow_digest", expected)
+
+    @property
+    def discovery_receipt_ids(self) -> tuple[str, ...]:
+        return tuple(sorted({
+            receipt_id
+            for _name, receipt_ids in self.categorized_reads
+            for receipt_id in receipt_ids
+        } | set(self.transitive_ancestor_receipt_ids)))
+
+    def _unsigned_manifest(self) -> dict[str, Any]:
+        return {
+            "operation": self.operation,
+            "fixed_polarity": self.fixed_polarity.value,
+            "categorized_reads": {
+                name: list(receipt_ids)
+                for name, receipt_ids in self.categorized_reads
+            },
+            "transitive_ancestor_receipt_ids": list(
+                self.transitive_ancestor_receipt_ids
+            ),
+            "discovery_exclusion_receipt_ids": list(
+                self.discovery_exclusion_receipt_ids
+            ),
+            "birth_frontier": self.birth_frontier,
+            "triggering_receipt_id": self.triggering_receipt_id,
+            "graph_request_root_state": self.graph_request_root_state,
+            "graph_request_terminal_state": self.graph_request_terminal_state,
+        }
+
+    def manifest(self) -> dict[str, Any]:
+        return {**self._unsigned_manifest(), "escrow_digest": self.escrow_digest}
+
+
+@dataclass
+class ProspectiveDiscoveryEpoch:
+    """Serialized organism boundary between historical and prospective cells."""
+
+    epoch_id: str
+    opened_cell_ids: tuple[str, ...]
+    opened_receipt_ids: tuple[str, ...]
+    opening_frontier: int
+    receipt_ordinals: tuple[tuple[str, int], ...]
+    receipt_outcomes: tuple[tuple[str, bool], ...]
+    post_epoch_cell_ids: tuple[str, ...] = ()
+    nomination_closed: bool = False
+    frozen_candidate_manifest: tuple[tuple[str, str], ...] = ()
+    frozen_candidate_manifest_digest: str | None = None
+
+    def validate(self) -> None:
+        for values in (
+            self.opened_cell_ids, self.opened_receipt_ids,
+            self.post_epoch_cell_ids,
+        ):
+            if tuple(sorted(values)) != values or len(set(values)) != len(values):
+                raise RuntimeError("noncanonical prospective discovery epoch")
+        if tuple(sorted(self.receipt_ordinals)) != self.receipt_ordinals:
+            raise RuntimeError("noncanonical epoch receipt ordinals")
+        if tuple(sorted(self.receipt_outcomes)) != self.receipt_outcomes:
+            raise RuntimeError("noncanonical epoch receipt outcomes")
+        if set(dict(self.receipt_ordinals)) != set(dict(self.receipt_outcomes)):
+            raise RuntimeError("epoch receipt ledger mismatch")
+        expected_id = _nomination_sha({
+            "opened_cell_ids": list(self.opened_cell_ids),
+            "opened_receipt_ids": list(self.opened_receipt_ids),
+            "opening_frontier": self.opening_frontier,
+        })
+        if self.epoch_id != expected_id:
+            raise RuntimeError("prospective discovery epoch identity mismatch")
+        if self.nomination_closed:
+            expected = _nomination_sha([
+                list(item) for item in self.frozen_candidate_manifest
+            ])
+            if self.frozen_candidate_manifest_digest != expected:
+                raise RuntimeError("frozen candidate manifest digest mismatch")
+        elif self.frozen_candidate_manifest or self.frozen_candidate_manifest_digest:
+            raise RuntimeError("open epoch carries a frozen candidate manifest")
+
+    def manifest(self) -> dict[str, Any]:
+        self.validate()
+        return {
+            "epoch_id": self.epoch_id,
+            "opened_cell_ids": list(self.opened_cell_ids),
+            "opened_receipt_ids": list(self.opened_receipt_ids),
+            "opening_frontier": self.opening_frontier,
+            "receipt_ordinals": [list(item) for item in self.receipt_ordinals],
+            "receipt_outcomes": [list(item) for item in self.receipt_outcomes],
+            "post_epoch_cell_ids": list(self.post_epoch_cell_ids),
+            "nomination_closed": self.nomination_closed,
+            "frozen_candidate_manifest": [
+                list(item) for item in self.frozen_candidate_manifest
+            ],
+            "frozen_candidate_manifest_digest":
+                self.frozen_candidate_manifest_digest,
+        }
 
 
 @dataclass(frozen=True)
@@ -136,6 +283,7 @@ class CompetenceContextCell:
     specialization_request_ordinal: int | None = None
     specialization_proposal_ordinal: int | None = None
     provenance: str = "unique_real_r0_completion"
+    nomination_escrow: NominationEscrow | None = None
 
     def __setstate__(self, state: Mapping[str, Any]) -> None:
         self.__dict__.update(state)
@@ -159,7 +307,7 @@ class CompetenceContextCell:
         return self.stem_cell.state == StemCellState.TRIAL
 
     def to_manifest(self) -> dict[str, Any]:
-        return {
+        result = {
             "cell_id": self.cell_id,
             "members": list(self.members),
             "born_round": self.born_round,
@@ -180,6 +328,9 @@ class CompetenceContextCell:
             "revocation_count": self.revocation_count,
             "provenance": self.provenance,
         }
+        if self.nomination_escrow is not None:
+            result["nomination_escrow"] = self.nomination_escrow.manifest()
+        return result
 
 
 @dataclass(frozen=True)
@@ -442,6 +593,7 @@ class GraphNativeCompetenceEnvelope:
     _review_count: int = 0
     _specialization_request_ordinal: int = 0
     _specialization_proposal_ordinal: int = 0
+    nomination_epoch: ProspectiveDiscoveryEpoch | None = None
 
     def __setstate__(self, state: Mapping[str, Any]) -> None:
         self.__dict__.update(state)
@@ -449,6 +601,7 @@ class GraphNativeCompetenceEnvelope:
         self.__dict__.setdefault("specialization_audit", SpecializationAudit())
         self.__dict__.setdefault("_specialization_request_ordinal", 0)
         self.__dict__.setdefault("_specialization_proposal_ordinal", 0)
+        self.__dict__.setdefault("nomination_epoch", None)
 
     def __post_init__(self) -> None:
         if self.schema_version != SCHEMA_VERSION:
@@ -463,6 +616,270 @@ class GraphNativeCompetenceEnvelope:
             default=self._next_cell_index,
         )
         self.rebuild_graph()
+
+    def _open_nomination_epoch(
+        self,
+        *,
+        receipt_ordinals: Mapping[str, int],
+        receipt_outcomes: Mapping[str, bool],
+    ) -> ProspectiveDiscoveryEpoch:
+        if self.nomination_epoch is not None:
+            self.nomination_epoch.validate()
+            return self.nomination_epoch
+        opened_cells = tuple(sorted(self.cells))
+        opened_receipts = tuple(sorted(receipt_ordinals))
+        frontier = max(receipt_ordinals.values(), default=-1)
+        epoch = ProspectiveDiscoveryEpoch(
+            epoch_id=_nomination_sha({
+                "opened_cell_ids": list(opened_cells),
+                "opened_receipt_ids": list(opened_receipts),
+                "opening_frontier": frontier,
+            }),
+            opened_cell_ids=opened_cells,
+            opened_receipt_ids=opened_receipts,
+            opening_frontier=frontier,
+            receipt_ordinals=tuple(sorted(
+                (str(key), int(value))
+                for key, value in receipt_ordinals.items()
+            )),
+            receipt_outcomes=tuple(sorted(
+                (str(key), bool(value))
+                for key, value in receipt_outcomes.items()
+            )),
+        )
+        epoch.validate()
+        self.nomination_epoch = epoch
+        return epoch
+
+    def _register_epoch_receipt(
+        self, *, receipt_id: str, ordinal: int, observed_outcome: bool
+    ) -> None:
+        epoch = self.nomination_epoch
+        if epoch is None:
+            return
+        epoch.validate()
+        if epoch.nomination_closed:
+            raise RuntimeError("nomination epoch is closed")
+        ordinals = dict(epoch.receipt_ordinals)
+        outcomes = dict(epoch.receipt_outcomes)
+        if receipt_id in ordinals:
+            if (
+                ordinals[receipt_id] != ordinal
+                or outcomes[receipt_id] is not bool(observed_outcome)
+            ):
+                raise RuntimeError("epoch receipt identity collision")
+            return
+        if ordinal in ordinals.values():
+            raise RuntimeError("epoch receipt ordinal collision")
+        ordinals[receipt_id] = int(ordinal)
+        outcomes[receipt_id] = bool(observed_outcome)
+        epoch.receipt_ordinals = tuple(sorted(ordinals.items()))
+        epoch.receipt_outcomes = tuple(sorted(outcomes.items()))
+        epoch.validate()
+
+    def _transitive_ancestor_provenance(
+        self, cell_ids: Sequence[str], visiting: frozenset[str] = frozenset()
+    ) -> tuple[str, ...]:
+        result: set[str] = set()
+        for cell_id in sorted(set(cell_ids)):
+            if cell_id in visiting:
+                raise RuntimeError("cyclic competence context")
+            cell = self.cells.get(cell_id)
+            if cell is None:
+                raise RuntimeError("unknown nomination context parent")
+            epoch = self.nomination_epoch
+            if epoch is not None and cell_id in epoch.opened_cell_ids:
+                result.update(epoch.opened_receipt_ids)
+            elif cell.nomination_escrow is not None:
+                result.update(cell.nomination_escrow.discovery_receipt_ids)
+                result.update(
+                    cell.nomination_escrow.transitive_ancestor_receipt_ids
+                )
+            else:
+                result.update(cell.evidence_keys)
+            parents = tuple(
+                member.split(":", 1)[1]
+                for member in cell.members
+                if member.startswith("context:")
+            )
+            result.update(self._transitive_ancestor_provenance(
+                parents, visiting | {cell_id}
+            ))
+        return tuple(sorted(result))
+
+    def _supporting_receipts(
+        self, cell_ids: Sequence[str]
+    ) -> tuple[str, ...]:
+        support: set[str] = set()
+        for cell_id in sorted(set(cell_ids)):
+            cell = self.cells.get(cell_id)
+            if cell is None or cell.polarity is None:
+                raise RuntimeError("unknown or polarity-free context parent")
+            for receipt_id in cell.evidence_keys:
+                record = self.evidence.get(receipt_id)
+                if record is None:
+                    raise RuntimeError("context parent names unknown evidence")
+                expected = cell.polarity is AvailabilityState.AVAILABLE
+                if record.observed_completion is expected:
+                    support.add(receipt_id)
+        return tuple(sorted(support))
+
+    def _validate_escrow(self, escrow: NominationEscrow) -> None:
+        epoch = self.nomination_epoch
+        if epoch is None:
+            raise RuntimeError("prospective birth lacks organism discovery epoch")
+        epoch.validate()
+        if _nomination_sha(escrow._unsigned_manifest()) != escrow.escrow_digest:
+            raise RuntimeError("nomination escrow digest mismatch")
+        if epoch.nomination_closed:
+            raise RuntimeError("nomination epoch is closed")
+        ordinals = dict(epoch.receipt_ordinals)
+        outcomes = dict(epoch.receipt_outcomes)
+        visible = tuple(sorted(self.evidence))
+        if escrow.discovery_exclusion_receipt_ids != visible:
+            raise RuntimeError("incomplete discovery exclusion set")
+        if set(visible) != set(ordinals) or set(visible) != set(outcomes):
+            raise RuntimeError("epoch and envelope evidence ledgers differ")
+        if escrow.birth_frontier != max(
+            (ordinals[item] for item in visible), default=-1
+        ):
+            raise RuntimeError("organism-derived birth frontier mismatch")
+        all_reads = {
+            item
+            for _name, receipt_ids in escrow.categorized_reads
+            for item in receipt_ids
+        } | set(escrow.transitive_ancestor_receipt_ids)
+        if not all_reads.issubset(ordinals):
+            raise RuntimeError("nomination escrow contains unknown receipt")
+        if any(ordinals[item] > escrow.birth_frontier for item in all_reads):
+            raise RuntimeError("nomination escrow contains post-birth receipt")
+        categories = dict(escrow.categorized_reads)
+        trigger_outcome = outcomes[escrow.triggering_receipt_id]
+        expected = escrow.fixed_polarity is AvailabilityState.AVAILABLE
+        if escrow.operation == "ordinary":
+            if categories["direct"] != (escrow.triggering_receipt_id,):
+                raise RuntimeError("ordinary direct read differs from trigger")
+            if categories["eligibility"] or categories["contradiction_trigger"]:
+                raise RuntimeError("ordinary nomination has category-inconsistent reads")
+            if trigger_outcome is not expected:
+                raise RuntimeError("ordinary nomination polarity mismatch")
+        else:
+            if categories["contradiction_trigger"] != (
+                escrow.triggering_receipt_id,
+            ):
+                raise RuntimeError("specialization contradiction trigger mismatch")
+            if not categories["eligibility"] or not categories["parent_support"]:
+                raise RuntimeError("specialization nomination omitted required reads")
+            if trigger_outcome is expected:
+                raise RuntimeError("specialization trigger is not contradictory")
+
+    def _ordinary_nomination_escrow(
+        self,
+        *,
+        record: CompetenceEvidenceRecord,
+        emission: GrowthRequestEmission,
+        active_context_ids: Sequence[str],
+        members: Sequence[str],
+    ) -> NominationEscrow | None:
+        if self.nomination_epoch is None:
+            return None
+        if not emission.emitted or emission.root_state != NodeState.CONFIRMED.name:
+            raise RuntimeError("ordinary birth lacks graph availability-error request")
+        selected_context_ids = tuple(
+            member.split(":", 1)[1]
+            for member in members
+            if member.startswith("context:")
+        )
+        ancestor_ids = self._transitive_ancestor_provenance(
+            selected_context_ids
+        )
+        parent_support = self._supporting_receipts(active_context_ids)
+        epoch = self.nomination_epoch
+        assert epoch is not None
+        escrow = NominationEscrow(
+            operation="ordinary",
+            fixed_polarity=(
+                AvailabilityState.AVAILABLE
+                if record.observed_completion
+                else AvailabilityState.REFUTED
+            ),
+            categorized_reads=(
+                ("direct", (record.evidence_key,)),
+                ("parent_support", parent_support),
+                ("eligibility", ()),
+                ("contradiction_trigger", ()),
+            ),
+            transitive_ancestor_receipt_ids=ancestor_ids,
+            discovery_exclusion_receipt_ids=tuple(sorted(self.evidence)),
+            birth_frontier=max(dict(epoch.receipt_ordinals).values(), default=-1),
+            triggering_receipt_id=record.evidence_key,
+            graph_request_root_state=emission.root_state,
+            graph_request_terminal_state=emission.terminal_state,
+        )
+        self._validate_escrow(escrow)
+        return escrow
+
+    def _register_prospective_cell(
+        self, cell: CompetenceContextCell
+    ) -> None:
+        epoch = self.nomination_epoch
+        if epoch is None:
+            return
+        epoch.validate()
+        if epoch.nomination_closed:
+            raise RuntimeError("nomination epoch is closed")
+        if cell.nomination_escrow is None:
+            raise RuntimeError("post-epoch cell lacks native nomination escrow")
+        self._validate_escrow(cell.nomination_escrow)
+        if cell.cell_id in epoch.opened_cell_ids:
+            raise RuntimeError("prospective cell reuses historical identity")
+        ids = set(epoch.post_epoch_cell_ids)
+        if cell.cell_id in ids:
+            raise RuntimeError("duplicate prospective cell identity")
+        epoch.post_epoch_cell_ids = tuple(sorted(ids | {cell.cell_id}))
+        epoch.validate()
+
+    @staticmethod
+    def _candidate_epoch_identity(cell: CompetenceContextCell) -> str:
+        if cell.nomination_escrow is None:
+            raise RuntimeError("post-epoch cell lacks native nomination escrow")
+        return _nomination_sha({
+            "cell_id": cell.cell_id,
+            "members": list(cell.members),
+            "polarity": (
+                None if cell.polarity is None else cell.polarity.value
+            ),
+            "lineage_parent_id": cell.lineage_parent_id,
+            "specialization_depth": cell.specialization_depth,
+            "structural_state": cell.state.name,
+            "nomination_escrow": cell.nomination_escrow.manifest(),
+        })
+
+    def _close_nomination_epoch(self) -> tuple[tuple[str, str], ...]:
+        epoch = self.nomination_epoch
+        if epoch is None:
+            raise RuntimeError("prospective discovery epoch was not opened")
+        epoch.validate()
+        current_post = tuple(sorted(
+            set(self.cells).difference(epoch.opened_cell_ids)
+        ))
+        if current_post != epoch.post_epoch_cell_ids:
+            raise RuntimeError("unregistered post-epoch candidate")
+        manifest = tuple(
+            (cell_id, self._candidate_epoch_identity(self.cells[cell_id]))
+            for cell_id in current_post
+        )
+        if epoch.nomination_closed:
+            if manifest != epoch.frozen_candidate_manifest:
+                raise RuntimeError("candidate manifest changed after closure")
+            return manifest
+        epoch.frozen_candidate_manifest = manifest
+        epoch.frozen_candidate_manifest_digest = _nomination_sha([
+            list(item) for item in manifest
+        ])
+        epoch.nomination_closed = True
+        epoch.validate()
+        return manifest
 
     def add_unique_evidence(self, record: CompetenceEvidenceRecord) -> bool:
         existing = self.evidence.get(record.evidence_key)
@@ -487,6 +904,12 @@ class GraphNativeCompetenceEnvelope:
         if not isinstance(frame, FrameContext) or frame.kind is not FrameKind.REAL:
             raise ValueError("competence correction requires a REAL FrameContext")
         mode = SpecializationMode(specialization_mode)
+        if (
+            self.nomination_epoch is not None
+            and self.nomination_epoch.nomination_closed
+            and mode is not SpecializationMode.DISCONNECTED
+        ):
+            raise RuntimeError("nomination epoch is closed")
         inserted = self.add_unique_evidence(record)
         if not inserted:
             self.correction_audit.duplicate_observations += 1
@@ -532,6 +955,7 @@ class GraphNativeCompetenceEnvelope:
         child_ids: list[str] = []
         if lifecycle_connected and mode is not SpecializationMode.DISCONNECTED:
             graph_requests = set(query["specialization_request_parent_ids"])
+            eligibility_reads_by_parent = dict(query["eligibility_receipt_ids_by_parent"])
             eligible_by_parent = dict(query["eligible_terminal_ids_by_parent"])
             genome = specialization_genome or CompetenceContextGrowthGenome(
                 self.config.selection_seed
@@ -569,7 +993,8 @@ class GraphNativeCompetenceEnvelope:
                     proposal_ordinal=proposal_ordinal,
                     mode=mode,
                     eligible_terminal_ids=eligible,
-                    evidence_key=record.evidence_key,
+                    eligibility_receipt_ids=eligibility_reads_by_parent.get(parent_id, ()),
+                    record=record,
                 )
                 if child is not None:
                     child_ids.append(child.cell_id)
@@ -695,12 +1120,24 @@ class GraphNativeCompetenceEnvelope:
             ))
             for parent_id in request_parents
         }
+        eligibility_reads_by_parent = {
+            parent_id: (
+                tuple(sorted(self.evidence))
+                if any(
+                    candidate_parent == parent_id
+                    for candidate_parent, _base, _node in candidate_pairs
+                )
+                else ()
+            )
+            for parent_id in request_parents
+        }
         return {
             "confirmed_cell_ids": confirmed,
             "root_state": runtime.nodes[CORRECTION_ROOT_ID].state.name,
             "leg_states": leg_states,
             "specialization_request_parent_ids": request_parents,
             "eligible_terminal_ids_by_parent": eligible_by_parent,
+            "eligibility_receipt_ids_by_parent": eligibility_reads_by_parent,
         }
 
     def _specialization_internal_snapshot(
@@ -847,10 +1284,13 @@ class GraphNativeCompetenceEnvelope:
         proposal_ordinal: int,
         mode: SpecializationMode,
         eligible_terminal_ids: Sequence[str],
-        evidence_key: str,
+        eligibility_receipt_ids: Sequence[str],
+        record: CompetenceEvidenceRecord,
     ) -> CompetenceContextCell | None:
+        if parent.polarity is None:
+            raise RuntimeError("specialization parent lacks frozen polarity")
         row: dict[str, Any] = {
-            "evidence_key": evidence_key,
+            "evidence_key": record.evidence_key,
             "parent_cell_id": parent.cell_id,
             "parent_polarity": parent.polarity.value,
             "mode": mode.value,
@@ -887,8 +1327,42 @@ class GraphNativeCompetenceEnvelope:
             row["reason"] = "trial_capacity"
             self.specialization_audit.request_rows.append(row)
             return None
+
+        escrow = None
+        if self.nomination_epoch is not None:
+            ancestor_ids = self._transitive_ancestor_provenance(
+                (parent.cell_id,)
+            )
+            parent_support = self._supporting_receipts((parent.cell_id,))
+            base_identity = members[1]
+            direct = tuple(sorted(
+                item.evidence_key
+                for item in self.evidence.values()
+                if self._cell_pattern_matches(parent, item, set())
+                and base_identity in item.active_signal_ids
+            ))
+            epoch = self.nomination_epoch
+            escrow = NominationEscrow(
+                operation="specialization",
+                fixed_polarity=parent.polarity,
+                categorized_reads=(
+                    ("direct", direct),
+                    ("parent_support", parent_support),
+                    ("eligibility", tuple(sorted(eligibility_receipt_ids))),
+                    ("contradiction_trigger", (record.evidence_key,)),
+                ),
+                transitive_ancestor_receipt_ids=ancestor_ids,
+                discovery_exclusion_receipt_ids=tuple(sorted(self.evidence)),
+                birth_frontier=max(
+                    dict(epoch.receipt_ordinals).values(), default=-1
+                ),
+                triggering_receipt_id=record.evidence_key,
+                graph_request_root_state=NodeState.CONFIRMED.name,
+                graph_request_terminal_state=NodeState.CONFIRMED.name,
+            )
+            self._validate_escrow(escrow)
+
         cell_id = f"competence_context_{self._next_cell_index:04d}"
-        self._next_cell_index += 1
         stem = StemCellTerminal(cell_id)
         stem.state = StemCellState.TRIAL
         stem.trial_node_id = cell_id
@@ -916,7 +1390,10 @@ class GraphNativeCompetenceEnvelope:
             specialization_depth=1,
             specialization_request_ordinal=parent.specialization_request_ordinal,
             specialization_proposal_ordinal=proposal_ordinal,
+            nomination_escrow=escrow,
         )
+        self._register_prospective_cell(cell)
+        self._next_cell_index += 1
         self.cells[cell_id] = cell
         self._member_specs.add(members)
         self.specialization_audit.admitted_proposals += 1
@@ -1060,6 +1537,11 @@ class GraphNativeCompetenceEnvelope:
         *,
         genome: CompetenceContextGrowthGenome | None = None,
     ) -> GrowthAudit:
+        if (
+            self.nomination_epoch is not None
+            and self.nomination_epoch.nomination_closed
+        ):
+            raise RuntimeError("nomination epoch is closed")
         growth_genome = genome or CompetenceContextGrowthGenome(
             self.config.selection_seed
         )
@@ -1097,7 +1579,12 @@ class GraphNativeCompetenceEnvelope:
                 if proposal is None:
                     self.audit.insufficient_member_rejections += 1
                     continue
-                self._materialize_proposal(proposal, emission)
+                self._materialize_proposal(
+                    proposal,
+                    emission,
+                    record=record,
+                    active_context_ids=active_contexts,
+                )
             self._review_lifecycle(
                 final=round_index == self.config.structural_rounds - 1
             )
@@ -1108,6 +1595,9 @@ class GraphNativeCompetenceEnvelope:
         self,
         proposal: GrowthProposal,
         emission: GrowthRequestEmission,
+        *,
+        record: CompetenceEvidenceRecord,
+        active_context_ids: Sequence[str],
     ) -> CompetenceContextCell | None:
         members = tuple(proposal.members)
         row = {
@@ -1133,8 +1623,14 @@ class GraphNativeCompetenceEnvelope:
             row["reason"] = "trial_capacity"
             self.audit.proposal_rows.append(row)
             return None
+
+        escrow = self._ordinary_nomination_escrow(
+            record=record,
+            emission=emission,
+            active_context_ids=active_context_ids,
+            members=members,
+        )
         cell_id = f"competence_context_{self._next_cell_index:04d}"
-        self._next_cell_index += 1
         stem = StemCellTerminal(cell_id)
         stem.state = StemCellState.TRIAL
         stem.trial_node_id = cell_id
@@ -1160,7 +1656,11 @@ class GraphNativeCompetenceEnvelope:
             born_round=proposal.round_index,
             born_request_ordinal=proposal.request_ordinal,
             stem_cell=stem,
+            polarity=None if escrow is None else escrow.fixed_polarity,
+            nomination_escrow=escrow,
         )
+        self._register_prospective_cell(cell)
+        self._next_cell_index += 1
         self.cells[cell_id] = cell
         self._member_specs.add(members)
         self.audit.admitted_proposals += 1
@@ -1218,20 +1718,34 @@ class GraphNativeCompetenceEnvelope:
             stats.credit_stats.positive_correlation = successes
             stats.credit_stats.negative_correlation = failures
             stats.recompute_survival()
-            positive = (
-                cell.lineage_parent_id is None
-                or cell.polarity == AvailabilityState.AVAILABLE
-            ) and (
-
+            fixed_polarity = (
+                None if cell.nomination_escrow is None
+                else cell.nomination_escrow.fixed_polarity
+            )
+            if fixed_polarity is not None and cell.polarity is not fixed_polarity:
+                raise RuntimeError("prospective cell polarity changed after birth")
+            positive_allowed = (
+                fixed_polarity is AvailabilityState.AVAILABLE
+                if fixed_polarity is not None
+                else (
+                    cell.lineage_parent_id is None
+                    or cell.polarity == AvailabilityState.AVAILABLE
+                )
+            )
+            refuted_allowed = (
+                fixed_polarity is AvailabilityState.REFUTED
+                if fixed_polarity is not None
+                else (
+                    cell.lineage_parent_id is None
+                    or cell.polarity == AvailabilityState.REFUTED
+                )
+            )
+            positive = positive_allowed and (
                 len(matched) >= self.config.min_maturity_support
                 and failures == 0
                 and success_lower >= self.config.lower_bound_threshold
             )
-            refuted = (
-                cell.lineage_parent_id is None
-                or cell.polarity == AvailabilityState.REFUTED
-            ) and (
-
+            refuted = refuted_allowed and (
                 len(matched) >= self.config.min_maturity_support
                 and successes == 0
                 and failure_lower >= self.config.lower_bound_threshold
@@ -1673,7 +2187,7 @@ class GraphNativeCompetenceEnvelope:
                 self.evidence.values(), key=lambda item: item.evidence_key
             )
         ]
-        return {
+        result = {
             "schema_version": "continuation_manifest.v2",
             "organism_schema_version": self.schema_version,
             "config": {
@@ -1753,6 +2267,9 @@ class GraphNativeCompetenceEnvelope:
             },
             "graph_snapshot": self.graph.to_snapshot(),
         }
+        if self.nomination_epoch is not None:
+            result["nomination_epoch"] = self.nomination_epoch.manifest()
+        return result
 
     def continuation_digest_v2(self) -> str:
         payload = json.dumps(

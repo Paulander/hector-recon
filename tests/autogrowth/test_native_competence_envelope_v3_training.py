@@ -27,6 +27,10 @@ TERMINAL_TRACE_AUTHORITY_LEARNER_SHA256 = (
     "5079bd8600ef5795cc59639f63faf2256a8d0ddf71d101e43b85f75d3ca25458"
 )
 
+PROSPECTIVE_V2_INTEGRATION_LEARNER_SHA256 = (
+    "5e1882f7bd8bc494f38031fa85c31f2e09eca2496487fbef9a1430cc0a80a754"
+)
+
 
 def _actuation(activation: float = 0.25) -> dict[str, object]:
     return {
@@ -58,9 +62,12 @@ def test_v3_preserves_frozen_hash_and_locks_additive_terminal_trace_authority_ex
     assert LEARNER_MODULE_SHA256 == (
         "65dda4f09bc1181a6fe3780c27b56da4fc888a377ae3cfffe3c728e9d11d2a7b"
     )
-    # The current additive learner state is independently frozen by the terminal-trace authority closure
-    # manifest; V3 itself was not rerun.
-    assert _file_sha256(LEARNER_MODULE) == TERMINAL_TRACE_AUTHORITY_LEARNER_SHA256
+    # Preserve the terminal-trace extension hash as history; freeze the later
+    # prospective-V2 integration independently. V3 itself was not rerun.
+    assert TERMINAL_TRACE_AUTHORITY_LEARNER_SHA256 == (
+        "5079bd8600ef5795cc59639f63faf2256a8d0ddf71d101e43b85f75d3ca25458"
+    )
+    assert _file_sha256(LEARNER_MODULE) == PROSPECTIVE_V2_INTEGRATION_LEARNER_SHA256
 
 
 def test_admission_persists_exact_frame_field_and_float_bits() -> None:

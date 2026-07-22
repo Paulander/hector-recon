@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import copy
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from enum import Enum
 import hashlib
 import hmac
@@ -18,7 +18,7 @@ from recon_lite_hector.nodes import StemCellState
 from .native_authority_handover import GraphActuation, GraphSignalTrace
 from .native_competence_envelope import (
     AvailabilityState, CompetenceContextCell, EnvelopeClassification,
-    wilson_lower_bound,
+    NominationEscrow, wilson_lower_bound,
 )
 from .native_trace_competence_authority import TraceNativeCompetenceOrganism
 
@@ -27,6 +27,8 @@ SCHEMA_VERSION = "native_prospective_evidence_authority_v2.v2"
 IMPLEMENTATION_IDENTITY = "native_prospective_two_phase_authority.v2"
 EXPECTED_RECEIPT_ISSUER = "native_v2_environment_terminal"
 OUTCOME_TERMINAL_IDENTITY = "native_r0_real_completion_terminal"
+EXPOSURE_SCHEMA_VERSION = "native_v2_bound_exposure.v3"
+_EXPOSURE_BINDING_SECRET = b"native-v2-bound-exposure-capability.v1"
 AUTHORITY_ROLES = (
     "commitment", "available", "refuted", "support", "contradiction",
     "maturity", "revocation",
@@ -68,6 +70,11 @@ class ProvenanceKind(str, Enum):
     EXACT_NOMINATION_READ_SET = "exact_nomination_read_set"
 
 
+class InitializationOrigin(str, Enum):
+    HISTORICAL = "historical"
+    PROSPECTIVE = "prospective"
+
+
 @dataclass(frozen=True)
 class FrozenHypothesis:
     cell_id: str
@@ -81,6 +88,10 @@ class FrozenHypothesis:
     structural_state: str
     provenance_kind: ProvenanceKind = ProvenanceKind.EXACT_NOMINATION_READ_SET
     nomination_read_sets: tuple[tuple[str, tuple[str, ...]], ...] = ()
+    transitive_ancestor_receipt_ids: tuple[str, ...] = ()
+    discovery_exclusion_receipt_ids: tuple[str, ...] = ()
+    initialization_origin: InitializationOrigin = InitializationOrigin.PROSPECTIVE
+    hypothesis_digest: str = ""
 
     def __post_init__(self) -> None:
         if self.polarity is None:
@@ -90,6 +101,11 @@ class FrozenHypothesis:
         object.__setattr__(self, "polarity", AvailabilityState(self.polarity))
         object.__setattr__(
             self, "provenance_kind", ProvenanceKind(self.provenance_kind)
+        )
+        object.__setattr__(
+            self,
+            "initialization_origin",
+            InitializationOrigin(self.initialization_origin),
         )
         if not self.members:
             raise ProspectiveV2IntegrityError("empty pattern at candidate birth")
@@ -112,12 +128,34 @@ class FrozenHypothesis:
             raise ProspectiveV2IntegrityError(
                 "nomination read sets are not canonical"
             )
+        ancestors = tuple(sorted(set(self.transitive_ancestor_receipt_ids)))
+        exclusion = tuple(sorted(set(self.discovery_exclusion_receipt_ids)))
+        if ancestors != self.transitive_ancestor_receipt_ids:
+            raise ProspectiveV2IntegrityError(
+                "transitive ancestor provenance is not canonical"
+            )
+        if exclusion != self.discovery_exclusion_receipt_ids:
+            raise ProspectiveV2IntegrityError(
+                "discovery exclusion set is not canonical"
+            )
         if self.provenance_kind is ProvenanceKind.HISTORICAL_ACCEPTED_LEDGER:
-            if categories:
+            if (
+                categories
+                or ancestors
+                or self.initialization_origin is not InitializationOrigin.HISTORICAL
+            ):
                 raise ProspectiveV2IntegrityError(
                     "historical escrow cannot claim exact nomination reads"
                 )
+            if exclusion != canonical:
+                raise ProspectiveV2IntegrityError(
+                    "historical exclusion differs from accepted ledger"
+                )
         else:
+            if self.initialization_origin is not InitializationOrigin.PROSPECTIVE:
+                raise ProspectiveV2IntegrityError(
+                    "prospective escrow has historical origin"
+                )
             if tuple(name for name, _ids in categories) != NOMINATION_READ_CATEGORIES:
                 raise ProspectiveProvenanceUnavailable(
                     "prospective_provenance_unavailable: incomplete nomination read set"
@@ -126,13 +164,21 @@ class FrozenHypothesis:
                 receipt_id
                 for _name, receipt_ids in categories
                 for receipt_id in receipt_ids
-            }))
+            } | set(ancestors)))
             if union != canonical:
                 raise ProspectiveV2IntegrityError(
                     "nomination read-set union differs from discovery ledger"
                 )
+            if not set(canonical).issubset(exclusion):
+                raise ProspectiveV2IntegrityError(
+                    "discovery reads missing from exclusion set"
+                )
+        expected_digest = _sha(self.identity_manifest())
+        if self.hypothesis_digest and self.hypothesis_digest != expected_digest:
+            raise ProspectiveV2IntegrityError("immutable hypothesis digest mismatch")
+        object.__setattr__(self, "hypothesis_digest", expected_digest)
 
-    def manifest(self) -> dict[str, Any]:
+    def identity_manifest(self) -> dict[str, Any]:
         return {
             "cell_id": self.cell_id,
             "members": list(self.members),
@@ -148,6 +194,19 @@ class FrozenHypothesis:
                 name: list(receipt_ids)
                 for name, receipt_ids in self.nomination_read_sets
             },
+            "transitive_ancestor_receipt_ids": list(
+                self.transitive_ancestor_receipt_ids
+            ),
+            "discovery_exclusion_receipt_ids": list(
+                self.discovery_exclusion_receipt_ids
+            ),
+            "initialization_origin": self.initialization_origin.value,
+        }
+
+    def manifest(self) -> dict[str, Any]:
+        return {
+            **self.identity_manifest(),
+            "hypothesis_digest": self.hypothesis_digest,
         }
 
 
@@ -307,10 +366,48 @@ class AuthorityMeasurementSnapshot:
 
 
 @dataclass(frozen=True)
-class ExposureProbe:
+class CanonicalExposureCommitment:
+    schema_version: str
+    source_organism_identity: str
+    source_state_identity: str
+    source_manifest_digest: str
+    candidate_manifest_digest: str
+    authority_topology_digest: str
     predecessor_fen: str
     trace: GraphSignalTrace
-    outcome_terminal_identity: str = OUTCOME_TERMINAL_IDENTITY
+    selected_actuation: GraphActuation
+    successor_fen: str
+    matching_cell_ids: tuple[str, ...]
+    matching_cell_digest: str
+    outcome_terminal_identity: str
+    interaction_fingerprint: str
+    source_binding_identity: str
+    binding_signature: str
+
+    def unsigned_manifest(self) -> dict[str, Any]:
+        return {
+            "schema_version": self.schema_version,
+            "source_organism_identity": self.source_organism_identity,
+            "source_state_identity": self.source_state_identity,
+            "source_manifest_digest": self.source_manifest_digest,
+            "candidate_manifest_digest": self.candidate_manifest_digest,
+            "authority_topology_digest": self.authority_topology_digest,
+            "predecessor_fen": self.predecessor_fen,
+            "trace": self.trace.canonical_manifest(),
+            "selected_actuation": asdict(self.selected_actuation),
+            "successor_fen": self.successor_fen,
+            "matching_cell_ids": list(self.matching_cell_ids),
+            "matching_cell_digest": self.matching_cell_digest,
+            "outcome_terminal_identity": self.outcome_terminal_identity,
+            "interaction_fingerprint": self.interaction_fingerprint,
+            "source_binding_identity": self.source_binding_identity,
+        }
+
+    def manifest(self) -> dict[str, Any]:
+        return {
+            **self.unsigned_manifest(),
+            "binding_signature": self.binding_signature,
+        }
 
 
 def _cell_node_ids(cell_id: str) -> tuple[str, ...]:
@@ -365,10 +462,9 @@ def _structural_pattern_matches(
             if parent is None:
                 return False
             parent_state = parent.hypothesis.structural_state
-            parent_usable = parent_state in {
-                StemCellState.MATURE.name,
-                StemCellState.SPECIALIZED.name,
-            } or (
+            parent_usable = (
+                parent_state == StemCellState.MATURE.name
+            ) or (
                 hypothesis.lineage_parent_id == parent_id
                 and parent_state == StemCellState.PROBATION.name
             )
@@ -412,6 +508,7 @@ def _authority_terminal(
         receipt is not None
         and bool(receipt.receipt_id)
         and receipt.ordinal > state.hypothesis.birth_frontier
+        and receipt.receipt_id not in state.hypothesis.discovery_exclusion_receipt_ids
     )
     supports = bool(
         post_frontier and receipt is not None
@@ -576,14 +673,13 @@ class NativeProspectiveAuthorityV2:
             )
         mode = V2Mode(mode)
         base = copy.deepcopy(source)
-        ledger_ids = tuple(sorted(base.receipts))
-        if not ledger_ids:
+        epoch = base.open_prospective_discovery_epoch()
+        base.validate_prospective_discovery_epoch()
+        historical_ledger_ids = epoch.opened_receipt_ids
+        if epoch.opened_cell_ids and not historical_ledger_ids:
             raise ProspectiveProvenanceUnavailable(
                 "prospective_provenance_unavailable: empty historical accepted ledger"
             )
-        frontier_value = max(
-            base.receipts[item].event_ordinal for item in ledger_ids
-        )
         states: dict[str, ProspectiveAuthorityState] = {}
         tombstones: dict[str, dict[str, Any]] = {}
         historical_states = {
@@ -591,41 +687,87 @@ class NativeProspectiveAuthorityV2:
             StemCellState.SPECIALIZED,
             StemCellState.PROBATION,
         }
-        mature_states = {
-            StemCellState.MATURE,
-            StemCellState.SPECIALIZED,
-        }
+        opened_cells = set(epoch.opened_cell_ids)
         for cell in sorted(
             base.envelope.cells.values(), key=lambda item: item.cell_id
         ):
+            historical = cell.cell_id in opened_cells
             if cell.state == StemCellState.PRUNED:
+                if not historical and cell.nomination_escrow is None:
+                    raise ProspectiveProvenanceUnavailable(
+                        "post-epoch pruned cell lacks native nomination escrow"
+                    )
                 tombstones[cell.cell_id] = cell.to_manifest()
                 continue
-            if cell.state not in historical_states:
+            if historical and cell.state not in historical_states:
                 raise ProspectiveProvenanceUnavailable(
                     "prospective_provenance_unavailable: live historical candidate "
                     f"{cell.cell_id} lacks prospective birth escrow"
                 )
             if cell.polarity is None:
                 raise ProspectiveV2IntegrityError(
-                    "polarity=None on live historical hypothesis"
+                    "polarity=None on live hypothesis"
                 )
-            frozen = FrozenHypothesis(
-                cell_id=cell.cell_id,
-                members=tuple(cell.members),
-                polarity=cell.polarity,
-                lineage_parent_id=cell.lineage_parent_id,
-                specialization_depth=cell.specialization_depth,
-                discovery_receipt_ids=ledger_ids,
-                discovery_receipt_digest=_sha(list(ledger_ids)),
-                birth_frontier=frontier_value,
-                structural_state=cell.state.name,
-                provenance_kind=ProvenanceKind.HISTORICAL_ACCEPTED_LEDGER,
-            )
+            if historical:
+                frozen = FrozenHypothesis(
+                    cell_id=cell.cell_id,
+                    members=tuple(cell.members),
+                    polarity=cell.polarity,
+                    lineage_parent_id=cell.lineage_parent_id,
+                    specialization_depth=cell.specialization_depth,
+                    discovery_receipt_ids=historical_ledger_ids,
+                    discovery_receipt_digest=_sha(list(historical_ledger_ids)),
+                    birth_frontier=epoch.opening_frontier,
+                    structural_state=cell.state.name,
+                    provenance_kind=ProvenanceKind.HISTORICAL_ACCEPTED_LEDGER,
+                    discovery_exclusion_receipt_ids=historical_ledger_ids,
+                    initialization_origin=InitializationOrigin.HISTORICAL,
+                )
+            else:
+                escrow = cell.nomination_escrow
+                if not isinstance(escrow, NominationEscrow):
+                    raise ProspectiveProvenanceUnavailable(
+                        "post-epoch cell lacks native nomination escrow"
+                    )
+                if escrow.fixed_polarity is not cell.polarity:
+                    raise ProspectiveV2IntegrityError(
+                        "native escrow polarity differs from cell"
+                    )
+                known = set(base.receipts)
+                mentioned = (
+                    set(escrow.discovery_receipt_ids)
+                    | set(escrow.discovery_exclusion_receipt_ids)
+                )
+                if not mentioned.issubset(known):
+                    raise ProspectiveV2IntegrityError(
+                        "native nomination escrow contains unknown receipt"
+                    )
+                frozen = FrozenHypothesis(
+                    cell_id=cell.cell_id,
+                    members=tuple(cell.members),
+                    polarity=cell.polarity,
+                    lineage_parent_id=cell.lineage_parent_id,
+                    specialization_depth=cell.specialization_depth,
+                    discovery_receipt_ids=escrow.discovery_receipt_ids,
+                    discovery_receipt_digest=_sha(
+                        list(escrow.discovery_receipt_ids)
+                    ),
+                    birth_frontier=escrow.birth_frontier,
+                    structural_state=cell.state.name,
+                    provenance_kind=ProvenanceKind.EXACT_NOMINATION_READ_SET,
+                    nomination_read_sets=escrow.categorized_reads,
+                    transitive_ancestor_receipt_ids=(
+                        escrow.transitive_ancestor_receipt_ids
+                    ),
+                    discovery_exclusion_receipt_ids=(
+                        escrow.discovery_exclusion_receipt_ids
+                    ),
+                    initialization_origin=InitializationOrigin.PROSPECTIVE,
+                )
             states[cell.cell_id] = ProspectiveAuthorityState(
                 hypothesis=frozen,
                 prospectively_certified=(
-                    mode is V2Mode.LEGACY and cell.state in mature_states
+                    mode is V2Mode.LEGACY and cell.is_mature
                 ),
             )
         topology = _authority_topology_manifest(states)
@@ -682,6 +824,9 @@ class NativeProspectiveAuthorityV2:
     ) -> None:
         if self.schema_version != SCHEMA_VERSION:
             raise ProspectiveV2IntegrityError("unsupported V2 schema")
+        self.base.validate_prospective_discovery_epoch()
+        epoch = self.base.envelope.nomination_epoch
+        assert epoch is not None
         registered = set(self.states)
         if set(self.structural_invariants) != registered:
             raise ProspectiveV2IntegrityError(
@@ -699,6 +844,10 @@ class NativeProspectiveAuthorityV2:
                     f"live structural invariant mutation: {cell_id}"
                 )
             hypothesis = self.states[cell_id].hypothesis
+            if hypothesis.hypothesis_digest != _sha(hypothesis.identity_manifest()):
+                raise ProspectiveV2IntegrityError(
+                    f"immutable hypothesis digest mismatch: {cell_id}"
+                )
             if (
                 hypothesis.members != current.members
                 or hypothesis.polarity != current.polarity
@@ -710,6 +859,32 @@ class NativeProspectiveAuthorityV2:
                 raise ProspectiveV2IntegrityError(
                     f"frozen hypothesis/invariant mismatch: {cell_id}"
                 )
+            historical = cell_id in epoch.opened_cell_ids
+            if historical != (
+                hypothesis.initialization_origin
+                is InitializationOrigin.HISTORICAL
+            ):
+                raise ProspectiveV2IntegrityError(
+                    f"epoch/hypothesis origin mismatch: {cell_id}"
+                )
+            if not historical:
+                escrow = cell.nomination_escrow
+                if not isinstance(escrow, NominationEscrow):
+                    raise ProspectiveV2IntegrityError(
+                        f"post-epoch cell lacks escrow: {cell_id}"
+                    )
+                if (
+                    hypothesis.nomination_read_sets != escrow.categorized_reads
+                    or hypothesis.transitive_ancestor_receipt_ids
+                    != escrow.transitive_ancestor_receipt_ids
+                    or hypothesis.discovery_exclusion_receipt_ids
+                    != escrow.discovery_exclusion_receipt_ids
+                    or hypothesis.birth_frontier != escrow.birth_frontier
+                    or hypothesis.polarity is not escrow.fixed_polarity
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        f"native escrow/hypothesis mismatch: {cell_id}"
+                    )
         current_tombstones = {
             cell_id: cell.to_manifest()
             for cell_id, cell in sorted(self.base.envelope.cells.items())
@@ -722,6 +897,10 @@ class NativeProspectiveAuthorityV2:
         unknown = set(self.base.envelope.cells).difference(
             registered, self.historical_tombstones
         )
+        if unknown and epoch.nomination_closed:
+            raise ProspectiveV2IntegrityError(
+                "candidate born or synced after nomination closure"
+            )
         if unknown and not allow_unregistered:
             raise ProspectiveV2IntegrityError(
                 "unregistered live or tombstone candidate: "
@@ -731,6 +910,252 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "authority topology identity mismatch"
             )
+
+        self._verify_ledger_derived_state()
+
+    def _validate_replayed_receipt(
+        self, receipt: V2GroundedReceipt, transaction: Mapping[str, Any]
+    ) -> None:
+        if receipt.issuer_identity != EXPECTED_RECEIPT_ISSUER:
+            raise ProspectiveV2IntegrityError("unexpected receipt issuer")
+        expected_signature = hmac.new(
+            self._receipt_secret,
+            _json(receipt.unsigned_manifest()),
+            hashlib.sha256,
+        ).hexdigest()
+        if not hmac.compare_digest(expected_signature, receipt.signature):
+            raise ProspectiveV2IntegrityError("receipt signature mismatch")
+        if (
+            receipt.frame_kind != FrameKind.REAL.name
+            or receipt.trace.frame_kind != FrameKind.REAL.name
+        ):
+            raise ProspectiveV2IntegrityError("VIRTUAL-to-REAL receipt pairing")
+        if (
+            receipt.source_organism_identity
+            != self.base.r0.source_organism_identity()
+            or receipt.source_state_identity
+            != self.base.r0.trace_state_identity()
+        ):
+            raise ProspectiveV2IntegrityError("source identity mismatch")
+        if receipt.selected_actuation != receipt.trace.actuation:
+            raise ProspectiveV2IntegrityError("trace/actuation mismatch")
+        if receipt.outcome_terminal_identity != OUTCOME_TERMINAL_IDENTITY:
+            raise ProspectiveV2IntegrityError("outcome terminal mismatch")
+        board = chess.Board(receipt.predecessor_fen)
+        successor = board.copy(stack=False)
+        successor.push(chess.Move.from_uci(receipt.selected_actuation.move_uci))
+        if successor.fen() != receipt.successor_fen:
+            raise ProspectiveV2IntegrityError("successor mismatch")
+        if successor.is_checkmate() != receipt.observed_outcome:
+            raise ProspectiveV2IntegrityError("outcome terminal mismatch")
+        fingerprint = _interaction_fingerprint(
+            source_organism_identity=receipt.source_organism_identity,
+            source_state_identity=receipt.source_state_identity,
+            predecessor_fen=receipt.predecessor_fen,
+            trace=receipt.trace,
+            actuation=receipt.selected_actuation,
+            successor_fen=receipt.successor_fen,
+            outcome_terminal_identity=receipt.outcome_terminal_identity,
+        )
+        if fingerprint != receipt.interaction_fingerprint:
+            raise ProspectiveV2IntegrityError("interaction fingerprint mismatch")
+        receipt_id = _sha({
+            "fingerprint": fingerprint,
+            "ordinal": receipt.ordinal,
+            "token": receipt.pending_token,
+        })
+        if receipt_id != receipt.receipt_id:
+            raise ProspectiveV2IntegrityError("receipt ID mismatch")
+        expected_transaction = {
+            "ordinal": receipt.ordinal,
+            "trace_digest": receipt.trace.digest(),
+            "typed_signal_digest": _sha([
+                asdict(item) for item in receipt.trace.terminal_signals
+            ]),
+            "source_organism_identity": receipt.source_organism_identity,
+            "source_state_identity": receipt.source_state_identity,
+            "predecessor_fen": receipt.predecessor_fen,
+            "actuation": asdict(receipt.selected_actuation),
+            "pending_token": receipt.pending_token,
+            "outcome_terminal_identity": receipt.outcome_terminal_identity,
+        }
+        for key, value in expected_transaction.items():
+            if transaction.get(key) != value:
+                raise ProspectiveV2IntegrityError(
+                    f"accepted ledger transaction mismatch: {key}"
+                )
+        if (
+            transaction.get("state") != "CONSUMED"
+            or transaction.get("consumed_receipt_id") != receipt.receipt_id
+        ):
+            raise ProspectiveV2IntegrityError(
+                "accepted receipt lacks consumed pre-outcome transaction"
+            )
+
+    def _verify_ledger_derived_state(self) -> None:
+        epoch = self.base.envelope.nomination_epoch
+        if epoch is None:
+            raise ProspectiveV2IntegrityError(
+                "prospective discovery epoch is absent"
+            )
+        derived = {
+            cell_id: ProspectiveAuthorityState(
+                hypothesis=state.hypothesis,
+                prospectively_certified=(
+                    self.mode is V2Mode.LEGACY
+                    and state.hypothesis.structural_state
+                    == StemCellState.MATURE.name
+                ),
+            )
+            for cell_id, state in self.states.items()
+        }
+        ordered = sorted(
+            self.consumed_receipts.values(),
+            key=lambda item: (item.ordinal, item.receipt_id),
+        )
+        expected_start = max(dict(epoch.receipt_ordinals).values(), default=-1) + 1
+        expected_tokens: set[str] = set()
+        expected_fingerprints: dict[str, str] = {}
+        expected_emissions: dict[str, V2CertificationEmission] = {}
+        for offset, receipt in enumerate(ordered):
+            if receipt.ordinal != expected_start + offset:
+                raise ProspectiveV2IntegrityError(
+                    "accepted receipt ledger has ordinal gap"
+                )
+            if self.consumed_receipts.get(receipt.receipt_id) != receipt:
+                raise ProspectiveV2IntegrityError(
+                    "accepted receipt key differs from receipt identity"
+                )
+            if receipt.pending_token in expected_tokens:
+                raise ProspectiveV2IntegrityError("duplicate consumed token")
+            if receipt.interaction_fingerprint in expected_fingerprints:
+                raise ProspectiveV2IntegrityError(
+                    "duplicate accepted interaction fingerprint"
+                )
+            transaction = self.event_transactions.get(receipt.pending_token)
+            if not isinstance(transaction, Mapping):
+                raise ProspectiveV2IntegrityError(
+                    "accepted receipt lacks pre-outcome transaction"
+                )
+            self._validate_replayed_receipt(receipt, transaction)
+            pre_graph = _run_authority_graph(
+                derived, AuthorityMeasurementSnapshot(receipt.trace, None)
+            )
+            matching = pre_graph["commitment"]
+            if list(matching) != transaction.get("matching_cell_ids"):
+                raise ProspectiveV2IntegrityError(
+                    "replayed commitment differs from pre-outcome commitment"
+                )
+            if _sha(list(matching)) != transaction.get("matching_cell_digest"):
+                raise ProspectiveV2IntegrityError(
+                    "replayed commitment digest mismatch"
+                )
+            classification = self._classification_from_emissions(
+                derived, pre_graph
+            ).to_manifest()
+            if classification != transaction.get("pre_outcome_classification"):
+                raise ProspectiveV2IntegrityError(
+                    "replayed pre-outcome classification mismatch"
+                )
+            if transaction.get("structure_invariant_digest") != (
+                self._structure_invariant_digest()
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "replayed structure invariant mismatch"
+                )
+            graph = _run_authority_graph(
+                derived, AuthorityMeasurementSnapshot(receipt.trace, receipt)
+            )
+            supporting = graph["support"]
+            contradictions = graph["contradiction"]
+            if set(supporting).union(contradictions) != set(matching):
+                raise ProspectiveV2IntegrityError(
+                    "replayed lifecycle omitted commitment"
+                )
+            for cell_id in matching:
+                state = derived[cell_id]
+                state.support += 1
+                state.certification_receipt_ids = (
+                    *state.certification_receipt_ids, receipt.receipt_id
+                )
+                if cell_id in supporting:
+                    state.successes += 1
+                    state.support_receipt_ids = (
+                        *state.support_receipt_ids, receipt.receipt_id
+                    )
+                else:
+                    state.contradictions += 1
+                    state.contradiction_receipt_ids = (
+                        *state.contradiction_receipt_ids, receipt.receipt_id
+                    )
+                state.success_lower_bound = wilson_lower_bound(
+                    state.successes, state.support, WILSON_Z
+                )
+                state.contradiction_lower_bound = wilson_lower_bound(
+                    state.contradictions, state.support, WILSON_Z
+                )
+                transition = None
+                if cell_id in graph["maturity"]:
+                    state.prospectively_certified = True
+                    transition = "GRAPH_PROSPECTIVE_MATURITY"
+                if cell_id in graph["revocation"]:
+                    state.prospectively_certified = False
+                    transition = "GRAPH_LOCAL_REVOCATION"
+                if transition is not None:
+                    state.transition_rows = (
+                        *state.transition_rows,
+                        {
+                            "transition": transition,
+                            "receipt_id": receipt.receipt_id,
+                            "ordinal": receipt.ordinal,
+                            "pending_token": receipt.pending_token,
+                        },
+                    )
+            expected_emissions[receipt.receipt_id] = V2CertificationEmission(
+                receipt_id=receipt.receipt_id,
+                matching_cell_ids=matching,
+                supporting_cell_ids=supporting,
+                contradiction_cell_ids=contradictions,
+                matured_cell_ids=graph["maturity"],
+                revoked_cell_ids=graph["revocation"],
+                graph_maturity_ids=graph["maturity"],
+                graph_revocation_ids=graph["revocation"],
+                nomination_allowed_after_lifecycle=False,
+            )
+            expected_tokens.add(receipt.pending_token)
+            expected_fingerprints[
+                receipt.interaction_fingerprint
+            ] = receipt.receipt_id
+        if derived != self.states:
+            raise ProspectiveV2IntegrityError(
+                "mutable authority cache differs from grounded ledger replay"
+            )
+        if self.emissions != expected_emissions:
+            raise ProspectiveV2IntegrityError(
+                "persisted graph emission differs from grounded ledger replay"
+            )
+        if self.consumed_tokens != expected_tokens:
+            raise ProspectiveV2IntegrityError("consumed-token ledger mismatch")
+        if self.interaction_fingerprints != expected_fingerprints:
+            raise ProspectiveV2IntegrityError(
+                "interaction-fingerprint ledger mismatch"
+            )
+        expected_next = expected_start + len(ordered)
+        if self.next_expected_ordinal != expected_next:
+            raise ProspectiveV2IntegrityError("next ordinal differs from ledger")
+        transaction_tokens = set(expected_tokens)
+        if self.pending_event is not None:
+            pending = self.pending_event
+            if pending.ordinal != expected_next or pending.state != "OPEN":
+                raise ProspectiveV2IntegrityError("invalid pending transaction")
+            if self.event_transactions.get(pending.pending_token) != pending.manifest():
+                raise ProspectiveV2IntegrityError(
+                    "pending transaction manifest mismatch"
+                )
+            transaction_tokens.add(pending.pending_token)
+        if set(self.event_transactions) != transaction_tokens:
+            raise ProspectiveV2IntegrityError("event transaction ledger mismatch")
+
 
     def _graph_measure(
         self,
@@ -778,6 +1203,11 @@ class NativeProspectiveAuthorityV2:
         self, frame: FrameContext
     ) -> tuple[PendingRealEvent, GraphSignalTrace]:
         self._verify_invariants()
+        epoch = self.base.envelope.nomination_epoch
+        if epoch is None or not epoch.nomination_closed:
+            raise ProspectiveV2IntegrityError(
+                "first certification event requires closed nomination"
+            )
         before = self.continuation_digest()
         if frame.kind is not FrameKind.REAL:
             raise ProspectiveV2IntegrityError(
@@ -1107,7 +1537,7 @@ class NativeProspectiveAuthorityV2:
             revoked_cell_ids=graph["revocation"],
             graph_maturity_ids=graph["maturity"],
             graph_revocation_ids=graph["revocation"],
-            nomination_allowed_after_lifecycle=True,
+            nomination_allowed_after_lifecycle=False,
         )
         self.consumed_receipts[receipt.receipt_id] = receipt
         self.consumed_tokens.add(receipt.pending_token)
@@ -1125,146 +1555,314 @@ class NativeProspectiveAuthorityV2:
         self._verify_invariants()
         return emission
 
-    def _nomination_read_sets(
+    def _frozen_prospective_hypothesis(
         self, cell: CompetenceContextCell
-    ) -> tuple[tuple[str, tuple[str, ...]], ...]:
-        raw = cell.stem_cell.metadata.get(
-            "prospective_nomination_read_set"
-        )
-        if not isinstance(raw, Mapping):
+    ) -> FrozenHypothesis:
+        escrow = cell.nomination_escrow
+        if not isinstance(escrow, NominationEscrow):
             raise ProspectiveProvenanceUnavailable(
-                "prospective_provenance_unavailable: growth interface did not "
-                "expose exact nomination read set"
+                "post-epoch cell lacks native nomination escrow"
             )
-        extra = set(map(str, raw)).difference(
-            NOMINATION_READ_CATEGORIES
-        )
-        if extra:
+        try:
+            self.base.envelope._validate_escrow(escrow)
+        except RuntimeError as exc:
+            raise ProspectiveV2IntegrityError(str(exc)) from exc
+        if cell.polarity is None or escrow.fixed_polarity is not cell.polarity:
             raise ProspectiveV2IntegrityError(
-                "unknown nomination read categories: "
-                + ",".join(sorted(extra))
+                "native nomination polarity differs from cell"
             )
-        categories = tuple(
-            (
-                name,
-                tuple(sorted(set(map(str, raw.get(name, ()))))),
-            )
-            for name in NOMINATION_READ_CATEGORIES
+        mentioned = (
+            set(escrow.discovery_receipt_ids)
+            | set(escrow.discovery_exclusion_receipt_ids)
         )
-        if not categories[0][1]:
-            raise ProspectiveProvenanceUnavailable(
-                "prospective_provenance_unavailable: empty direct nomination reads"
+        if not mentioned.issubset(self.base.receipts):
+            raise ProspectiveV2IntegrityError(
+                "native nomination escrow contains unknown receipt"
             )
-        if cell.lineage_parent_id is not None:
-            required = {
-                "parent_support",
-                "eligibility",
-                "contradiction_trigger",
-            }
-            missing = sorted(
-                name for name, ids in categories
-                if name in required and not ids
-            )
-            if missing:
-                raise ProspectiveProvenanceUnavailable(
-                    "prospective_provenance_unavailable: incomplete specialization "
-                    + ",".join(missing)
-                )
-        all_ids = {
-            receipt_id
-            for _name, receipt_ids in categories
-            for receipt_id in receipt_ids
+        ordinals = {
+            key: value.event_ordinal
+            for key, value in self.base.receipts.items()
         }
-        unknown = sorted(all_ids.difference(self.base.receipts))
-        if unknown:
-            raise ProspectiveProvenanceUnavailable(
-                "prospective_provenance_unavailable: "
-                + ",".join(unknown)
-            )
-        return categories
-
-    def sync_organism_nominations(self) -> tuple[str, ...]:
-        """Attach exact birth escrow to cells born by the wrapped genome."""
-        if self.pending_event is not None:
+        if any(
+            ordinals[item] > escrow.birth_frontier
+            for item in mentioned
+        ):
             raise ProspectiveV2IntegrityError(
-                "candidate born during event before authority lifecycle completed"
+                "native nomination escrow contains post-birth receipt"
             )
-        self._verify_invariants(allow_unregistered=True)
-        new_ids = tuple(sorted(
-            set(self.base.envelope.cells).difference(
-                self.states, self.historical_tombstones
-            )
-        ))
-        additions: list[
-            tuple[CompetenceContextCell, FrozenHypothesis]
-        ] = []
-        tombstone_additions: dict[str, dict[str, Any]] = {}
-        for cell_id in new_ids:
-            cell = self.base.envelope.cells[cell_id]
-            if cell.state == StemCellState.PRUNED:
-                tombstone_additions[cell_id] = cell.to_manifest()
-                continue
-            if cell.polarity is None:
+        outcomes = {
+            key: value.observed_terminal_result
+            for key, value in self.base.receipts.items()
+        }
+        categories = dict(escrow.categorized_reads)
+        expected = escrow.fixed_polarity is AvailabilityState.AVAILABLE
+        if escrow.operation == "ordinary":
+            if outcomes[escrow.triggering_receipt_id] is not expected:
                 raise ProspectiveV2IntegrityError(
-                    "polarity=None at live candidate birth is forbidden"
+                    "ordinary nomination polarity-inconsistent provenance"
                 )
-            categories = self._nomination_read_sets(cell)
-            discovery = tuple(sorted({
+        else:
+            if outcomes[escrow.triggering_receipt_id] is expected:
+                raise ProspectiveV2IntegrityError(
+                    "specialization contradiction polarity mismatch"
+                )
+            if any(outcomes[item] is not expected for item in categories["parent_support"]):
+                raise ProspectiveV2IntegrityError(
+                    "specialization parent support polarity mismatch"
+                )
+        context_ids = tuple(
+            member.split(":", 1)[1]
+            for member in cell.members
+            if member.startswith("context:")
+        )
+        if escrow.operation == "specialization":
+            if categories["eligibility"] != escrow.discovery_exclusion_receipt_ids:
+                raise ProspectiveV2IntegrityError(
+                    "specialization eligibility traversal is incomplete"
+                )
+            expected_parent_support = tuple(sorted(
+                set(self.base.envelope._supporting_receipts(context_ids))
+                & set(escrow.discovery_exclusion_receipt_ids)
+            ))
+            if categories["parent_support"] != expected_parent_support:
+                raise ProspectiveV2IntegrityError(
+                    "specialization parent support read set mismatch"
+                )
+            expected_direct = tuple(sorted(
                 receipt_id
-                for _name, receipt_ids in categories
-                for receipt_id in receipt_ids
-            }))
-            ordinals = [
-                self.base.receipts[item].event_ordinal
-                for item in discovery
-            ]
+                for receipt_id in escrow.discovery_exclusion_receipt_ids
+                if self.base.envelope._cell_pattern_matches(
+                    cell, self.base.envelope.evidence[receipt_id], set()
+                )
+            ))
+            if categories["direct"] != expected_direct:
+                raise ProspectiveV2IntegrityError(
+                    "specialization direct read set mismatch"
+                )
+        required_ancestors = (
+            self.base.envelope._transitive_ancestor_provenance(context_ids)
+        )
+        if required_ancestors != escrow.transitive_ancestor_receipt_ids:
+            raise ProspectiveV2IntegrityError(
+                "nomination escrow omitted or added ancestor provenance"
+            )
+        return FrozenHypothesis(
+            cell_id=cell.cell_id,
+            members=tuple(cell.members),
+            polarity=cell.polarity,
+            lineage_parent_id=cell.lineage_parent_id,
+            specialization_depth=cell.specialization_depth,
+            discovery_receipt_ids=escrow.discovery_receipt_ids,
+            discovery_receipt_digest=_sha(list(escrow.discovery_receipt_ids)),
+            birth_frontier=escrow.birth_frontier,
+            structural_state=cell.state.name,
+            provenance_kind=ProvenanceKind.EXACT_NOMINATION_READ_SET,
+            nomination_read_sets=escrow.categorized_reads,
+            transitive_ancestor_receipt_ids=(
+                escrow.transitive_ancestor_receipt_ids
+            ),
+            discovery_exclusion_receipt_ids=(
+                escrow.discovery_exclusion_receipt_ids
+            ),
+            initialization_origin=InitializationOrigin.PROSPECTIVE,
+        )
+    def _sync_open_discovery_baseline(self) -> None:
+        """Refresh only organism-derived state before nomination is frozen."""
+        epoch = self.base.envelope.nomination_epoch
+        if epoch is None or epoch.nomination_closed:
+            return
+        if self.pending_event is not None or self.consumed_receipts:
+            raise ProspectiveV2IntegrityError(
+                "discovery baseline cannot change after certification"
+            )
+        ledger_ids = tuple(sorted(dict(epoch.receipt_ordinals)))
+        frontier = max(dict(epoch.receipt_ordinals).values(), default=-1)
+        allowed = {
+            (StemCellState.MATURE.name, StemCellState.MATURE.name),
+            (StemCellState.MATURE.name, StemCellState.PROBATION.name),
+            (StemCellState.PROBATION.name, StemCellState.PROBATION.name),
+            (StemCellState.SPECIALIZED.name, StemCellState.SPECIALIZED.name),
+        }
+        for cell_id in sorted(set(epoch.opened_cell_ids) & set(self.states)):
+            cell = self.base.envelope.cells[cell_id]
+            current = self._invariant_from_cell(cell)
+            prior = self.structural_invariants[cell_id]
+            if replace(current, structural_state=prior.structural_state) != prior:
+                raise ProspectiveV2IntegrityError(
+                    f"non-lifecycle structural mutation during discovery: {cell_id}"
+                )
+            if (prior.structural_state, current.structural_state) not in allowed:
+                raise ProspectiveV2IntegrityError(
+                    f"invalid native lifecycle transition during discovery: {cell_id}"
+                )
+            previous = self.states[cell_id]
             hypothesis = FrozenHypothesis(
                 cell_id=cell.cell_id,
                 members=tuple(cell.members),
                 polarity=cell.polarity,
                 lineage_parent_id=cell.lineage_parent_id,
                 specialization_depth=cell.specialization_depth,
-                discovery_receipt_ids=discovery,
-                discovery_receipt_digest=_sha(list(discovery)),
-                birth_frontier=max(ordinals),
-                structural_state=cell.state.name,
-                provenance_kind=
-                    ProvenanceKind.EXACT_NOMINATION_READ_SET,
-                nomination_read_sets=categories,
+                discovery_receipt_ids=ledger_ids,
+                discovery_receipt_digest=_sha(list(ledger_ids)),
+                birth_frontier=frontier,
+                structural_state=current.structural_state,
+                provenance_kind=ProvenanceKind.HISTORICAL_ACCEPTED_LEDGER,
+                discovery_exclusion_receipt_ids=ledger_ids,
+                initialization_origin=InitializationOrigin.HISTORICAL,
             )
-            additions.append((cell, hypothesis))
+            self.states[cell_id] = ProspectiveAuthorityState(
+                hypothesis=hypothesis,
+                prospectively_certified=(
+                    self.mode is V2Mode.LEGACY and cell.is_mature
+                ),
+                certification_receipt_ids=previous.certification_receipt_ids,
+                support_receipt_ids=previous.support_receipt_ids,
+                contradiction_receipt_ids=previous.contradiction_receipt_ids,
+                successes=previous.successes,
+                contradictions=previous.contradictions,
+                support=previous.support,
+                success_lower_bound=previous.success_lower_bound,
+                contradiction_lower_bound=previous.contradiction_lower_bound,
+                transition_rows=previous.transition_rows,
+            )
+            self.structural_invariants[cell_id] = current
+        for cell_id in sorted(
+            set(epoch.opened_cell_ids) & set(self.historical_tombstones)
+        ):
+            self.historical_tombstones[cell_id] = (
+                self.base.envelope.cells[cell_id].to_manifest()
+            )
+
+
+
+    def _sync_organism_nominations_in_place(self) -> tuple[str, ...]:
+        """Register native escrows created atomically by the wrapped genome."""
+        epoch = self.base.envelope.nomination_epoch
+        if epoch is None:
+            raise ProspectiveV2IntegrityError(
+                "prospective discovery epoch is absent"
+            )
+        if epoch.nomination_closed:
+            raise ProspectiveV2IntegrityError("nomination epoch is closed")
+        if self.pending_event is not None or self.consumed_receipts:
+            raise ProspectiveV2IntegrityError(
+                "suffix nomination after certification is forbidden"
+            )
+        self._sync_open_discovery_baseline()
+        self.next_expected_ordinal = max(
+            dict(epoch.receipt_ordinals).values(), default=-1
+        ) + 1
+        self._verify_invariants(allow_unregistered=True)
+        new_ids = tuple(sorted(
+            set(self.base.envelope.cells).difference(
+                self.states, self.historical_tombstones
+            )
+        ))
+        if not set(new_ids).issubset(epoch.post_epoch_cell_ids):
+            raise ProspectiveV2IntegrityError(
+                "cell birth was not registered by organism epoch"
+            )
+        additions: list[tuple[CompetenceContextCell, FrozenHypothesis]] = []
+        tombstone_additions: dict[str, dict[str, Any]] = {}
+        for cell_id in new_ids:
+            cell = self.base.envelope.cells[cell_id]
+            if cell.nomination_escrow is None:
+                raise ProspectiveProvenanceUnavailable(
+                    "post-epoch cell lacks native nomination escrow"
+                )
+            if cell.state == StemCellState.PRUNED:
+                self._frozen_prospective_hypothesis(cell)
+                tombstone_additions[cell_id] = cell.to_manifest()
+                continue
+            additions.append((
+                cell, self._frozen_prospective_hypothesis(cell)
+            ))
         for cell, hypothesis in additions:
             self.states[cell.cell_id] = ProspectiveAuthorityState(
                 hypothesis=hypothesis,
-                prospectively_certified=False,
+                prospectively_certified=(
+                    self.mode is V2Mode.LEGACY and cell.is_mature
+                ),
             )
-            self.structural_invariants[
-                cell.cell_id
-            ] = self._invariant_from_cell(cell)
+            self.structural_invariants[cell.cell_id] = (
+                self._invariant_from_cell(cell)
+            )
         self.historical_tombstones.update(tombstone_additions)
-        self.authority_topology = _authority_topology_manifest(
-            self.states
-        )
+        self.authority_topology = _authority_topology_manifest(self.states)
         if additions or tombstone_additions:
             self.nomination_events = (
                 *self.nomination_events,
                 {
-                    "event":
-                        "GRAPH_OWNED_NOMINATION_INVARIANT_EXTENSION",
+                    "event": "NATIVE_ATOMIC_NOMINATION_SYNC",
                     "cell_ids": [
                         cell.cell_id for cell, _hypothesis in additions
                     ],
                     "tombstone_ids": sorted(tombstone_additions),
-                    "authority_topology_digest":
-                        _sha(self.authority_topology),
-                    "structure_invariant_digest":
-                        self._structure_invariant_digest(),
+                    "epoch_id": epoch.epoch_id,
+                    "authority_topology_digest": _sha(self.authority_topology),
+                    "structure_invariant_digest": (
+                        self._structure_invariant_digest()
+                    ),
                 },
             )
         self._verify_invariants()
-        return tuple(
-            cell.cell_id for cell, _hypothesis in additions
+        return tuple(cell.cell_id for cell, _hypothesis in additions)
+
+    def sync_organism_nominations(self) -> tuple[str, ...]:
+        """Atomically import native births into prospective authority."""
+        candidate = copy.deepcopy(self)
+        result = candidate._sync_organism_nominations_in_place()
+        self.__dict__.clear()
+        self.__dict__.update(candidate.__dict__)
+        return result
+
+
+    def nominate_prefix_from_grounded_receipts(
+        self, receipts: Sequence[Any]
+    ) -> tuple[str, ...]:
+        candidate = copy.deepcopy(self)
+        epoch = candidate.base.envelope.nomination_epoch
+        if epoch is None or epoch.nomination_closed:
+            raise ProspectiveV2IntegrityError("nomination epoch is closed")
+        if candidate.pending_event is not None or candidate.consumed_receipts:
+            raise ProspectiveV2IntegrityError(
+                "suffix nomination after certification is forbidden"
+            )
+        candidate.base.grow_from_grounded_receipts(receipts)
+        result = candidate._sync_organism_nominations_in_place()
+        self.__dict__.clear()
+        self.__dict__.update(candidate.__dict__)
+        return result
+
+    def close_nomination(self) -> tuple[tuple[str, str], ...]:
+        candidate = copy.deepcopy(self)
+        epoch = candidate.base.envelope.nomination_epoch
+        if epoch is None:
+            raise ProspectiveV2IntegrityError(
+                "prospective discovery epoch is absent"
+            )
+        if epoch.nomination_closed:
+            candidate._verify_invariants()
+            return epoch.frozen_candidate_manifest
+        candidate._sync_organism_nominations_in_place()
+        manifest = candidate.base.close_prospective_nomination()
+        epoch = candidate.base.envelope.nomination_epoch
+        assert epoch is not None
+        candidate.nomination_events = (
+            *candidate.nomination_events,
+            {
+                "event": "NATIVE_NOMINATION_CLOSED",
+                "epoch_id": epoch.epoch_id,
+                "candidate_manifest_digest": (
+                    epoch.frozen_candidate_manifest_digest
+                ),
+                "candidate_count": len(manifest),
+            },
         )
+        candidate._verify_invariants()
+        self.__dict__.clear()
+        self.__dict__.update(candidate.__dict__)
+        return manifest
 
     def retrospective_certify(
         self, *_args: Any, **_kwargs: Any
@@ -1309,6 +1907,110 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "candidate-manifest disparity"
             )
+
+    def _candidate_manifest_digest(self) -> str:
+        epoch = self.base.envelope.nomination_epoch
+        if epoch is None or not epoch.nomination_closed:
+            raise ProspectiveV2IntegrityError(
+                "exposure requires frozen nomination"
+            )
+        return _sha({
+            "hypotheses": {
+                key: value.hypothesis.manifest()
+                for key, value in sorted(self.states.items())
+            },
+            "tombstones": self.historical_tombstones,
+            "epoch_candidate_manifest_digest": (
+                epoch.frozen_candidate_manifest_digest
+            ),
+        })
+
+    def probe_real_exposure(
+        self, frame: FrameContext
+    ) -> CanonicalExposureCommitment:
+        self._verify_invariants()
+        epoch = self.base.envelope.nomination_epoch
+        if epoch is None or not epoch.nomination_closed:
+            raise ProspectiveV2IntegrityError(
+                "exposure requires frozen nomination"
+            )
+        if frame.kind is not FrameKind.REAL:
+            raise ProspectiveV2IntegrityError(
+                "exposure requires REAL frame"
+            )
+        board = frame.values.get("board")
+        if not isinstance(board, chess.Board):
+            raise TypeError("REAL exposure requires chess.Board")
+        before = self.continuation_digest()
+        actuation, trace = self.base.r0.emit_action_with_trace(frame)
+        if actuation is None or trace is None:
+            raise ProspectiveV2IntegrityError(
+                "graph emitted no REAL exposure actuation"
+            )
+        if trace.actuation != actuation:
+            raise ProspectiveV2IntegrityError(
+                "exposure trace/action mismatch"
+            )
+        successor = board.copy(stack=False)
+        successor.push(chess.Move.from_uci(actuation.move_uci))
+        matching = self._graph_measure(trace)["commitment"]
+        source_manifest_digest = _sha({
+            "source_manifest": self.base.r0.source_manifest,
+            "persistent_state": self.base.r0.persistent_state_audit(),
+        })
+        candidate_manifest_digest = self._candidate_manifest_digest()
+        topology_digest = _sha(self.authority_topology)
+        fingerprint = _interaction_fingerprint(
+            source_organism_identity=trace.source_organism_identity,
+            source_state_identity=trace.source_state_identity,
+            predecessor_fen=board.fen(),
+            trace=trace,
+            actuation=actuation,
+            successor_fen=successor.fen(),
+            outcome_terminal_identity=OUTCOME_TERMINAL_IDENTITY,
+        )
+        source_binding_identity = _sha({
+            "source_organism_identity": trace.source_organism_identity,
+            "source_state_identity": trace.source_state_identity,
+            "source_manifest_digest": source_manifest_digest,
+            "candidate_manifest_digest": candidate_manifest_digest,
+            "authority_topology_digest": topology_digest,
+        })
+        unsigned = CanonicalExposureCommitment(
+            schema_version=EXPOSURE_SCHEMA_VERSION,
+            source_organism_identity=trace.source_organism_identity,
+            source_state_identity=trace.source_state_identity,
+            source_manifest_digest=source_manifest_digest,
+            candidate_manifest_digest=candidate_manifest_digest,
+            authority_topology_digest=topology_digest,
+            predecessor_fen=board.fen(),
+            trace=trace,
+            selected_actuation=actuation,
+            successor_fen=successor.fen(),
+            matching_cell_ids=matching,
+            matching_cell_digest=_sha(list(matching)),
+            outcome_terminal_identity=OUTCOME_TERMINAL_IDENTITY,
+            interaction_fingerprint=fingerprint,
+            source_binding_identity=source_binding_identity,
+            binding_signature="",
+        )
+        signature = hmac.new(
+            _EXPOSURE_BINDING_SECRET,
+            _json(unsigned.unsigned_manifest()),
+            hashlib.sha256,
+        ).hexdigest()
+        result = CanonicalExposureCommitment(
+            **{
+                **unsigned.__dict__,
+                "binding_signature": signature,
+            }
+        )
+        if self.continuation_digest() != before:
+            raise ProspectiveV2IntegrityError(
+                "exposure probe mutated organism"
+            )
+        return result
+
 
     def open_virtual(self, frame: FrameContext) -> dict[str, Any]:
         self._verify_invariants()
@@ -1397,111 +2099,228 @@ class NativeProspectiveAuthorityV2:
 
 @dataclass
 class OutcomeBlindExposureScanner:
-    """Read-only raw exposure manifest; no outcome qualification."""
+    """Read-only scanner for organism-issued, outcome-free commitments."""
+
+    TOP_LEVEL_KEYS = frozenset({
+        "schema_version", "source_binding_identity",
+        "source_organism_identity", "source_state_identity",
+        "source_manifest_digest", "candidate_manifest_digest",
+        "authority_topology_digest", "candidate_cell_ids",
+        "raw_opportunities", "raw_manifest_digest", "cells",
+        "outcome_fields_read", "source_binding_signature",
+    })
+    COMMITMENT_KEYS = frozenset({
+        "schema_version", "source_organism_identity",
+        "source_state_identity", "source_manifest_digest",
+        "candidate_manifest_digest", "authority_topology_digest",
+        "predecessor_fen", "trace", "selected_actuation",
+        "successor_fen", "matching_cell_ids", "matching_cell_digest",
+        "outcome_terminal_identity", "interaction_fingerprint",
+        "source_binding_identity", "binding_signature",
+    })
+    ROW_KEYS = COMMITMENT_KEYS | {"cell_id", "opportunity_id"}
 
     @staticmethod
-    def scan(
+    def _binding_signature(unsigned: Mapping[str, Any]) -> str:
+        return hmac.new(
+            _EXPOSURE_BINDING_SECRET,
+            _json(unsigned),
+            hashlib.sha256,
+        ).hexdigest()
+
+    @classmethod
+    def _validate_commitment(
+        cls,
         organism: NativeProspectiveAuthorityV2,
-        probes: Sequence[ExposureProbe],
+        commitment: CanonicalExposureCommitment,
+    ) -> None:
+        if not isinstance(commitment, CanonicalExposureCommitment):
+            raise TypeError(
+                "exposure scan requires graph-produced commitment"
+            )
+        if commitment.schema_version != EXPOSURE_SCHEMA_VERSION:
+            raise ProspectiveV2IntegrityError(
+                "noncanonical exposure schema"
+            )
+        if commitment.outcome_terminal_identity != OUTCOME_TERMINAL_IDENTITY:
+            raise ProspectiveV2IntegrityError(
+                "noncanonical exposure terminal"
+            )
+        unsigned = commitment.unsigned_manifest()
+        if not hmac.compare_digest(
+            cls._binding_signature(unsigned),
+            commitment.binding_signature,
+        ):
+            raise ProspectiveV2IntegrityError(
+                "exposure source binding signature mismatch"
+            )
+        trace = commitment.trace
+        if trace.frame_kind != FrameKind.REAL.name:
+            raise ProspectiveV2IntegrityError(
+                "exposure requires REAL trace"
+            )
+        if commitment.selected_actuation != trace.actuation:
+            raise ProspectiveV2IntegrityError(
+                "exposure trace/action mismatch"
+            )
+        if (
+            commitment.source_organism_identity
+            != organism.base.r0.source_organism_identity()
+            or commitment.source_state_identity
+            != organism.base.r0.trace_state_identity()
+            or trace.source_organism_identity
+            != commitment.source_organism_identity
+            or trace.source_state_identity
+            != commitment.source_state_identity
+        ):
+            raise ProspectiveV2IntegrityError(
+                "exposure source-organism identity mismatch"
+            )
+        source_manifest_digest = _sha({
+            "source_manifest": organism.base.r0.source_manifest,
+            "persistent_state": organism.base.r0.persistent_state_audit(),
+        })
+        if commitment.source_manifest_digest != source_manifest_digest:
+            raise ProspectiveV2IntegrityError(
+                "exposure source manifest mismatch"
+            )
+        if (
+            commitment.candidate_manifest_digest
+            != organism._candidate_manifest_digest()
+            or commitment.authority_topology_digest
+            != _sha(organism.authority_topology)
+        ):
+            raise ProspectiveV2IntegrityError(
+                "exposure candidate or topology mismatch"
+            )
+        board = chess.Board(commitment.predecessor_fen)
+        successor = board.copy(stack=False)
+        successor.push(chess.Move.from_uci(
+            commitment.selected_actuation.move_uci
+        ))
+        if successor.fen() != commitment.successor_fen:
+            raise ProspectiveV2IntegrityError(
+                "exposure successor mismatch"
+            )
+        matching = organism._graph_measure(trace)["commitment"]
+        if (
+            matching != commitment.matching_cell_ids
+            or _sha(list(matching)) != commitment.matching_cell_digest
+        ):
+            raise ProspectiveV2IntegrityError(
+                "exposure graph commitment mismatch"
+            )
+        fingerprint = _interaction_fingerprint(
+            source_organism_identity=commitment.source_organism_identity,
+            source_state_identity=commitment.source_state_identity,
+            predecessor_fen=commitment.predecessor_fen,
+            trace=trace,
+            actuation=commitment.selected_actuation,
+            successor_fen=commitment.successor_fen,
+            outcome_terminal_identity=OUTCOME_TERMINAL_IDENTITY,
+        )
+        if fingerprint != commitment.interaction_fingerprint:
+            raise ProspectiveV2IntegrityError(
+                "exposure interaction fingerprint mismatch"
+            )
+        binding = _sha({
+            "source_organism_identity": commitment.source_organism_identity,
+            "source_state_identity": commitment.source_state_identity,
+            "source_manifest_digest": commitment.source_manifest_digest,
+            "candidate_manifest_digest": (
+                commitment.candidate_manifest_digest
+            ),
+            "authority_topology_digest": (
+                commitment.authority_topology_digest
+            ),
+        })
+        if binding != commitment.source_binding_identity:
+            raise ProspectiveV2IntegrityError(
+                "exposure source binding identity mismatch"
+            )
+
+    @classmethod
+    def scan(
+        cls,
+        organism: NativeProspectiveAuthorityV2,
+        commitments: Sequence[CanonicalExposureCommitment],
     ) -> dict[str, Any]:
         organism._verify_invariants()
         before = organism.continuation_digest()
         raw_by_id: dict[str, dict[str, Any]] = {}
-        for probe in probes:
-            if not isinstance(probe, ExposureProbe):
-                raise TypeError(
-                    "exposure scan requires ExposureProbe"
-                )
-            trace = probe.trace
-            if trace.frame_kind != FrameKind.REAL.name:
-                raise ProspectiveV2IntegrityError(
-                    "exposure requires REAL trace"
-                )
-            if (
-                trace.source_organism_identity
-                != organism.base.r0.source_organism_identity()
-                or trace.source_state_identity
-                != organism.base.r0.trace_state_identity()
-            ):
-                raise ProspectiveV2IntegrityError(
-                    "exposure source-organism identity mismatch"
-                )
-            board = chess.Board(probe.predecessor_fen)
-            successor = board.copy(stack=False)
-            successor.push(chess.Move.from_uci(
-                trace.actuation.move_uci
-            ))
-            graph = organism._graph_measure(trace)
-            fingerprint = _interaction_fingerprint(
-                source_organism_identity=
-                    trace.source_organism_identity,
-                source_state_identity=
-                    trace.source_state_identity,
-                predecessor_fen=probe.predecessor_fen,
-                trace=trace,
-                actuation=trace.actuation,
-                successor_fen=successor.fen(),
-                outcome_terminal_identity=
-                    probe.outcome_terminal_identity,
-            )
-            for cell_id in graph["commitment"]:
-                state = organism.states[cell_id]
-                if (
-                    organism.next_expected_ordinal
-                    <= state.hypothesis.birth_frontier
-                ):
+        for commitment in commitments:
+            cls._validate_commitment(organism, commitment)
+            for cell_id in commitment.matching_cell_ids:
+                state = organism.states.get(cell_id)
+                if state is None:
+                    raise ProspectiveV2IntegrityError(
+                        "exposure names unknown frozen candidate"
+                    )
+                if organism.next_expected_ordinal <= state.hypothesis.birth_frontier:
                     continue
                 opportunity_id = _sha({
-                    "interaction_fingerprint": fingerprint,
+                    "interaction_fingerprint": (
+                        commitment.interaction_fingerprint
+                    ),
                     "matched_frozen_cell": cell_id,
                 })
                 raw_by_id[opportunity_id] = {
-                    "opportunity_id": opportunity_id,
+                    **commitment.manifest(),
                     "cell_id": cell_id,
-                    "interaction_fingerprint": fingerprint,
-                    "source_organism_identity":
-                        trace.source_organism_identity,
-                    "source_state_identity":
-                        trace.source_state_identity,
-                    "predecessor_fen": probe.predecessor_fen,
-                    "trace": trace.canonical_manifest(),
-                    "selected_actuation": asdict(
-                        trace.actuation
-                    ),
-                    "successor_fen": successor.fen(),
-                    "outcome_terminal_identity":
-                        probe.outcome_terminal_identity,
+                    "opportunity_id": opportunity_id,
                 }
         raw = sorted(
-            raw_by_id.values(),
-            key=lambda row: row["opportunity_id"],
+            raw_by_id.values(), key=lambda row: row["opportunity_id"]
         )
-        per_cell: dict[str, list[str]] = {
-            cell_id: [] for cell_id in organism.states
-        }
+        cells = {cell_id: [] for cell_id in organism.states}
         for row in raw:
-            per_cell[row["cell_id"]].append(
-                row["opportunity_id"]
-            )
-        result = {
-            "schema_version": "native_v2_exposure_manifest.v2",
-            "organism_identity":
-                organism.base.r0.source_organism_identity(),
-            "source_state_identity":
-                organism.base.r0.trace_state_identity(),
+            cells[row["cell_id"]].append(row["opportunity_id"])
+        source = commitments[0] if commitments else None
+        if source is None:
+            source_binding_identity = _sha({
+                "source_organism_identity": (
+                    organism.base.r0.source_organism_identity()
+                ),
+                "source_state_identity": organism.base.r0.trace_state_identity(),
+                "source_manifest_digest": _sha({
+                    "source_manifest": organism.base.r0.source_manifest,
+                    "persistent_state": organism.base.r0.persistent_state_audit(),
+                }),
+                "candidate_manifest_digest": organism._candidate_manifest_digest(),
+                "authority_topology_digest": _sha(organism.authority_topology),
+            })
+            source_manifest_digest = _sha({
+                "source_manifest": organism.base.r0.source_manifest,
+                "persistent_state": organism.base.r0.persistent_state_audit(),
+            })
+        else:
+            source_binding_identity = source.source_binding_identity
+            source_manifest_digest = source.source_manifest_digest
+        body = {
+            "schema_version": EXPOSURE_SCHEMA_VERSION,
+            "source_binding_identity": source_binding_identity,
+            "source_organism_identity": (
+                organism.base.r0.source_organism_identity()
+            ),
+            "source_state_identity": organism.base.r0.trace_state_identity(),
+            "source_manifest_digest": source_manifest_digest,
+            "candidate_manifest_digest": organism._candidate_manifest_digest(),
+            "authority_topology_digest": _sha(organism.authority_topology),
+            "candidate_cell_ids": sorted(organism.states),
             "raw_opportunities": raw,
             "raw_manifest_digest": _sha(raw),
             "cells": {
                 cell_id: {
-                    "distinct_opportunities":
-                        len(opportunity_ids),
-                    "opportunity_ids":
-                        sorted(opportunity_ids),
+                    "distinct_opportunities": len(ids),
+                    "opportunity_ids": sorted(ids),
                 }
-                for cell_id, opportunity_ids
-                in sorted(per_cell.items())
+                for cell_id, ids in sorted(cells.items())
             },
             "outcome_fields_read": 0,
+        }
+        result = {
+            **body,
+            "source_binding_signature": cls._binding_signature(body),
         }
         if organism.continuation_digest() != before:
             raise ProspectiveV2IntegrityError(
@@ -1509,139 +2328,182 @@ class OutcomeBlindExposureScanner:
             )
         return result
 
-    @staticmethod
-    def _validate_raw_scan(
-        scan: Mapping[str, Any]
-    ) -> bool:
-        if "qualifies" in scan:
+    @classmethod
+    def _validate_raw_scan(cls, scan: Mapping[str, Any]) -> bool:
+        if set(scan) != cls.TOP_LEVEL_KEYS:
             raise ProspectiveV2IntegrityError(
-                "caller-supplied exposure qualification is forbidden"
+                "noncanonical or outcome-bearing exposure fields"
             )
-        raw = scan.get("raw_opportunities")
-        if not isinstance(raw, list):
+        if scan.get("schema_version") != EXPOSURE_SCHEMA_VERSION:
             raise ProspectiveV2IntegrityError(
-                "missing raw exposure manifest"
+                "noncanonical exposure schema"
             )
-        if _sha(raw) != scan.get("raw_manifest_digest"):
+        if scan.get("outcome_fields_read") != 0:
+            raise ProspectiveV2IntegrityError(
+                "outcome-bearing exposure input"
+            )
+        body = {
+            key: scan[key]
+            for key in cls.TOP_LEVEL_KEYS
+            if key != "source_binding_signature"
+        }
+        if not hmac.compare_digest(
+            cls._binding_signature(body),
+            str(scan["source_binding_signature"]),
+        ):
+            raise ProspectiveV2IntegrityError(
+                "raw scan source binding signature mismatch"
+            )
+        raw = scan["raw_opportunities"]
+        if not isinstance(raw, list) or _sha(raw) != scan["raw_manifest_digest"]:
             raise ProspectiveV2IntegrityError(
                 "raw exposure manifest digest mismatch"
             )
-        organism_identity = str(
-            scan.get("organism_identity", "")
-        )
-        source_state_identity = str(
-            scan.get("source_state_identity", "")
-        )
-        if not organism_identity or not source_state_identity:
+        binding = _sha({
+            "source_organism_identity": scan["source_organism_identity"],
+            "source_state_identity": scan["source_state_identity"],
+            "source_manifest_digest": scan["source_manifest_digest"],
+            "candidate_manifest_digest": scan["candidate_manifest_digest"],
+            "authority_topology_digest": scan["authority_topology_digest"],
+        })
+        if binding != scan["source_binding_identity"]:
             raise ProspectiveV2IntegrityError(
-                "missing exposure source identity"
+                "raw scan source binding identity mismatch"
+            )
+        candidate_ids = tuple(scan["candidate_cell_ids"])
+        if tuple(sorted(set(candidate_ids))) != candidate_ids:
+            raise ProspectiveV2IntegrityError(
+                "noncanonical candidate identity manifest"
             )
         seen: set[str] = set()
-        per_cell: dict[str, set[str]] = {}
+        per_cell = {cell_id: set() for cell_id in candidate_ids}
         for row in raw:
+            if not isinstance(row, Mapping) or set(row) != cls.ROW_KEYS:
+                raise ProspectiveV2IntegrityError(
+                    "noncanonical or outcome-bearing exposure row"
+                )
             if (
-                row.get("source_organism_identity")
-                != organism_identity
-                or row.get("source_state_identity")
-                != source_state_identity
+                row["schema_version"] != EXPOSURE_SCHEMA_VERSION
+                or row["outcome_terminal_identity"]
+                != OUTCOME_TERMINAL_IDENTITY
+                or row["source_binding_identity"]
+                != scan["source_binding_identity"]
             ):
                 raise ProspectiveV2IntegrityError(
-                    "mixed-organism raw exposure manifest"
+                    "raw exposure authority binding mismatch"
                 )
-            trace = row.get("trace")
-            actuation = row.get("selected_actuation")
+            for key in (
+                "source_organism_identity", "source_state_identity",
+                "source_manifest_digest", "candidate_manifest_digest",
+                "authority_topology_digest",
+            ):
+                if row[key] != scan[key]:
+                    raise ProspectiveV2IntegrityError(
+                        "mixed-organism raw exposure manifest"
+                    )
+            unsigned = {
+                key: row[key]
+                for key in cls.COMMITMENT_KEYS
+                if key != "binding_signature"
+            }
+            if not hmac.compare_digest(
+                cls._binding_signature(unsigned),
+                str(row["binding_signature"]),
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "raw commitment binding signature mismatch"
+                )
+            trace = row["trace"]
+            actuation = row["selected_actuation"]
             if (
                 not isinstance(trace, Mapping)
                 or not isinstance(actuation, Mapping)
+                or trace.get("frame_kind") != FrameKind.REAL.name
+                or trace.get("actuation") != actuation
             ):
                 raise ProspectiveV2IntegrityError(
-                    "malformed raw exposure row"
+                    "raw exposure trace/action mismatch"
                 )
-            if trace.get("frame_kind") != FrameKind.REAL.name:
+            if (
+                trace.get("source_organism_identity")
+                != scan["source_organism_identity"]
+                or trace.get("source_state_identity")
+                != scan["source_state_identity"]
+            ):
                 raise ProspectiveV2IntegrityError(
-                    "raw exposure contains VIRTUAL trace"
+                    "raw exposure trace source mismatch"
                 )
-            expected_fingerprint = _sha(_interaction_manifest(
-                source_organism_identity=organism_identity,
-                source_state_identity=source_state_identity,
+            board = chess.Board(str(row["predecessor_fen"]))
+            successor = board.copy(stack=False)
+            successor.push(chess.Move.from_uci(str(actuation["move_uci"])))
+            if successor.fen() != row["successor_fen"]:
+                raise ProspectiveV2IntegrityError(
+                    "raw exposure successor mismatch"
+                )
+            matching = tuple(row["matching_cell_ids"])
+            if (
+                tuple(sorted(set(matching))) != matching
+                or _sha(list(matching)) != row["matching_cell_digest"]
+                or row["cell_id"] not in matching
+                or row["cell_id"] not in per_cell
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "raw exposure candidate commitment mismatch"
+                )
+            fingerprint = _sha(_interaction_manifest(
+                source_organism_identity=str(
+                    scan["source_organism_identity"]
+                ),
+                source_state_identity=str(scan["source_state_identity"]),
                 predecessor_fen=str(row["predecessor_fen"]),
                 trace_manifest=trace,
                 actuation_manifest=actuation,
                 successor_fen=str(row["successor_fen"]),
-                outcome_terminal_identity=str(
-                    row["outcome_terminal_identity"]
-                ),
+                outcome_terminal_identity=OUTCOME_TERMINAL_IDENTITY,
             ))
-            if (
-                expected_fingerprint
-                != row.get("interaction_fingerprint")
-            ):
+            if fingerprint != row["interaction_fingerprint"]:
                 raise ProspectiveV2IntegrityError(
                     "raw interaction fingerprint mismatch"
                 )
-            expected_opportunity = _sha({
-                "interaction_fingerprint":
-                    expected_fingerprint,
-                "matched_frozen_cell": str(row["cell_id"]),
+            opportunity = _sha({
+                "interaction_fingerprint": fingerprint,
+                "matched_frozen_cell": row["cell_id"],
             })
-            if expected_opportunity != row.get("opportunity_id"):
+            if opportunity != row["opportunity_id"] or opportunity in seen:
                 raise ProspectiveV2IntegrityError(
-                    "raw opportunity identity mismatch"
+                    "duplicate or altered raw opportunity"
                 )
-            if expected_opportunity in seen:
-                raise ProspectiveV2IntegrityError(
-                    "duplicate raw opportunity was not collapsed"
-                )
-            seen.add(expected_opportunity)
-            per_cell.setdefault(
-                str(row["cell_id"]), set()
-            ).add(expected_opportunity)
-        supplied_cells = scan.get("cells")
-        recomputed_cells = {
+            seen.add(opportunity)
+            per_cell[row["cell_id"]].add(opportunity)
+        expected_cells = {
             cell_id: {
                 "distinct_opportunities": len(ids),
                 "opportunity_ids": sorted(ids),
             }
             for cell_id, ids in sorted(per_cell.items())
         }
-        supplied_nonempty = {
-            str(cell_id): value
-            for cell_id, value in dict(
-                supplied_cells or {}
-            ).items()
-            if int(value.get(
-                "distinct_opportunities", 0
-            )) > 0
-        }
-        if supplied_nonempty != recomputed_cells:
+        if scan["cells"] != expected_cells:
             raise ProspectiveV2IntegrityError(
                 "cell exposure summary differs from raw opportunities"
             )
-        return any(
-            len(ids) >= MIN_SUPPORT
-            for ids in per_cell.values()
-        )
+        return any(len(ids) >= MIN_SUPPORT for ids in per_cell.values())
 
-    @staticmethod
+    @classmethod
     def adjudicate_cohort(
-        scans: Sequence[Mapping[str, Any]]
+        cls, scans: Sequence[Mapping[str, Any]]
     ) -> dict[str, Any]:
         if len(scans) != 32:
             raise ProspectiveV2IntegrityError(
                 "exposure admission requires exactly 32 organisms"
             )
+        qualifications = [cls._validate_raw_scan(scan) for scan in scans]
         identities = [
-            str(scan.get("organism_identity", ""))
-            for scan in scans
+            str(scan["source_binding_identity"]) for scan in scans
         ]
         if len(set(identities)) != 32:
             raise ProspectiveV2IntegrityError(
-                "exposure cohort requires 32 distinct organisms"
+                "exposure cohort requires 32 distinct bound organisms"
             )
-        qualifications = [
-            OutcomeBlindExposureScanner._validate_raw_scan(scan)
-            for scan in scans
-        ]
         qualifying = sum(qualifications)
         return {
             "organism_count": 32,

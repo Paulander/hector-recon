@@ -28,7 +28,7 @@ from recon_lite_chess.autogrowth import (
     native_prospective_evidence_authority_v2 as authority_module,
 )
 from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import (
-    ExposureProbe,
+    CanonicalExposureCommitment,
     FrozenHypothesis,
     NativeProspectiveAuthorityV2,
     OutcomeBlindExposureScanner,
@@ -213,6 +213,9 @@ def native_fixture():
 
 
 def _open_mint(organism, fen, *, frame_id="v2-real"):
+    epoch = organism.base.envelope.nomination_epoch
+    if epoch is not None and not epoch.nomination_closed:
+        organism.close_nomination()
     board = chess.Board(fen)
     pending, trace = organism.open_real_event(FrameContext(
         frame_id, FrameKind.REAL, values={"board": board}
@@ -324,102 +327,6 @@ def test_historical_escrow_parity_and_probation_parent_matching(native_fixture):
     assert "v2_child" in pending.matching_cell_ids
 
 
-def test_tombstones_and_exact_new_nomination_read_sets(native_fixture):
-    source = copy.deepcopy(native_fixture["source"])
-    tombstone = _clone_cell(
-        source.envelope.cells["v2_parent"],
-        "historical_tombstone",
-        StemCellState.PRUNED,
-        None,
-    )
-    source.envelope.cells[tombstone.cell_id] = tombstone
-    source.envelope.rebuild_graph()
-    wrapper = NativeProspectiveAuthorityV2.from_organism(
-        source, mode=V2Mode.PROSPECTIVE
-    )
-    assert "historical_tombstone" in wrapper.historical_tombstones
-    assert "historical_tombstone" not in wrapper.states
-
-    missing = _clone_cell(
-        wrapper.base.envelope.cells["v2_parent"],
-        "live_missing_escrow",
-        StemCellState.TRIAL,
-        AvailabilityState.AVAILABLE,
-    )
-    wrapper.base.envelope.cells[missing.cell_id] = missing
-    _atomic_abort(
-        wrapper,
-        "growth interface did not expose exact nomination read set",
-        wrapper.sync_organism_nominations,
-    )
-    del wrapper.base.envelope.cells[missing.cell_id]
-
-    no_polarity = _clone_cell(
-        wrapper.base.envelope.cells["v2_parent"],
-        "live_no_polarity",
-        StemCellState.TRIAL,
-        None,
-    )
-    wrapper.base.envelope.cells[no_polarity.cell_id] = no_polarity
-    _atomic_abort(
-        wrapper,
-        "polarity=None",
-        wrapper.sync_organism_nominations,
-    )
-    del wrapper.base.envelope.cells[no_polarity.cell_id]
-
-    ids = native_fixture["discovery_ids"]
-    ordinary = _clone_cell(
-        wrapper.base.envelope.cells["v2_parent"],
-        "new_ordinary",
-        StemCellState.TRIAL,
-        AvailabilityState.AVAILABLE,
-    )
-    ordinary.stem_cell.metadata["prospective_nomination_read_set"] = {
-        "direct": ids[:2],
-        "parent_support": (),
-        "eligibility": (),
-        "contradiction_trigger": (),
-    }
-    wrapper.base.envelope.cells[ordinary.cell_id] = ordinary
-    assert wrapper.sync_organism_nominations() == ("new_ordinary",)
-    hypothesis = wrapper.states["new_ordinary"].hypothesis
-    assert hypothesis.provenance_kind is ProvenanceKind.EXACT_NOMINATION_READ_SET
-    assert hypothesis.discovery_receipt_ids == tuple(sorted(ids[:2]))
-    assert dict(hypothesis.nomination_read_sets)["direct"] == tuple(
-        sorted(ids[:2])
-    )
-    assert wrapper.nomination_events[-1]["cell_ids"] == ["new_ordinary"]
-
-    specialized = _clone_cell(
-        wrapper.base.envelope.cells["v2_child"],
-        "new_specialized",
-        StemCellState.PROBATION,
-        AvailabilityState.AVAILABLE,
-    )
-    specialized.members = (
-        "context:new_ordinary",
-        "internal:policy_response",
-    )
-    specialized.lineage_parent_id = "new_ordinary"
-    specialized.specialization_depth = 1
-    specialized.stem_cell.metadata["prospective_nomination_read_set"] = {
-        "direct": ids[:1],
-        "parent_support": ids[1:2],
-        "eligibility": ids[2:3],
-        "contradiction_trigger": ids[3:4],
-    }
-    wrapper.base.envelope.cells[specialized.cell_id] = specialized
-    assert wrapper.sync_organism_nominations() == ("new_specialized",)
-    read_sets = dict(
-        wrapper.states["new_specialized"].hypothesis.nomination_read_sets
-    )
-    assert all(read_sets[name] for name in (
-        "direct", "parent_support", "eligibility",
-        "contradiction_trigger",
-    ))
-
-
 def test_complete_receipt_validation_and_atomic_structure_guard(native_fixture):
     source = native_fixture["source"]
     fen = native_fixture["positive"][0]
@@ -430,8 +337,11 @@ def test_complete_receipt_validation_and_atomic_structure_guard(native_fixture):
         ("receipt ID mismatch", lambda r: replace(
             r, receipt_id="wrong-receipt-id"
         )),
-        ("source identity mismatch", lambda r: replace(
+        ("source identity mismatch|trace mismatch", lambda r: replace(
             r, source_organism_identity="wrong-organism"
+        )),
+        ("source identity mismatch|trace mismatch", lambda r: replace(
+            r, trace=replace(r.trace, source_state_identity="wrong-state")
         )),
         ("out-of-order ordinal", lambda r: replace(
             r, ordinal=r.ordinal + 1
@@ -442,8 +352,19 @@ def test_complete_receipt_validation_and_atomic_structure_guard(native_fixture):
         ("trace mismatch", lambda r: replace(
             r, trace=replace(r.trace, frame_id="altered")
         )),
-        ("successor mismatch", lambda r: replace(
+        ("trace/actuation mismatch|actuation mismatch", lambda r: replace(
+            r, selected_actuation=replace(
+                r.selected_actuation, option_identity="wrong-option"
+            )
+        )),
+        ("successor mismatch|predecessor mismatch", lambda r: replace(
             r, successor_fen=chess.Board().fen()
+        )),
+        ("successor mismatch|predecessor mismatch", lambda r: replace(
+            r, predecessor_fen=r.predecessor_fen.rsplit(" ", 1)[0] + " 99"
+        )),
+        ("VIRTUAL-to-REAL", lambda r: replace(
+            r, frame_kind=FrameKind.VIRTUAL.name
         )),
         ("outcome terminal mismatch", lambda r: replace(
             r, outcome_terminal_identity="wrong-terminal"
@@ -472,7 +393,7 @@ def test_complete_receipt_validation_and_atomic_structure_guard(native_fixture):
         organism.pending_event, typed_signal_digest="wrong"
     )
     _atomic_abort(
-        organism, "typed-signal digest mismatch",
+        organism, "pending transaction manifest mismatch",
         lambda: organism.consume(receipt),
     )
 
@@ -677,177 +598,398 @@ def test_serialization_duplicate_remint_and_virtual_isolation(native_fixture):
     )
 
 
-def _probe(organism, fen, frame_id):
-    board = chess.Board(fen)
-    _actuation, trace = organism.base.r0.emit_action_with_trace(
-        FrameContext(frame_id, FrameKind.REAL, values={"board": board})
-    )
-    assert trace is not None
-    return ExposureProbe(board.fen(), trace)
-
-
-def _remap_scan(scan, ordinal, qualify):
-    result = copy.deepcopy(scan)
-    organism_identity = f"cohort-organism-{ordinal}"
-    state_identity = f"cohort-state-{ordinal}"
-    rows = result["raw_opportunities"]
-    if not qualify:
-        rows = rows[:1]
-    for row in rows:
-        row["source_organism_identity"] = organism_identity
-        row["source_state_identity"] = state_identity
-        row["trace"]["source_organism_identity"] = organism_identity
-        row["trace"]["source_state_identity"] = state_identity
-        fingerprint = _sha(_interaction_manifest(
-            source_organism_identity=organism_identity,
-            source_state_identity=state_identity,
-            predecessor_fen=row["predecessor_fen"],
-            trace_manifest=row["trace"],
-            actuation_manifest=row["selected_actuation"],
-            successor_fen=row["successor_fen"],
-            outcome_terminal_identity=row["outcome_terminal_identity"],
-        ))
-        row["interaction_fingerprint"] = fingerprint
-        row["opportunity_id"] = _sha({
-            "interaction_fingerprint": fingerprint,
-            "matched_frozen_cell": row["cell_id"],
-        })
-    result["organism_identity"] = organism_identity
-    result["source_state_identity"] = state_identity
-    result["raw_opportunities"] = sorted(
-        rows, key=lambda row: row["opportunity_id"]
-    )
-    result["raw_manifest_digest"] = _sha(result["raw_opportunities"])
-    per_cell = {}
-    for row in result["raw_opportunities"]:
-        per_cell.setdefault(row["cell_id"], []).append(
-            row["opportunity_id"]
+def _ground_receipts(organism, fens, prefix):
+    terminal = organism.base.completion_terminal()
+    receipts = []
+    for index, fen in enumerate(fens):
+        board = chess.Board(fen)
+        frame = FrameContext(
+            f"{prefix}:{index}", FrameKind.REAL, values={"board": board}
         )
-    result["cells"] = {
-        cell_id: {
-            "distinct_opportunities": len(ids),
-            "opportunity_ids": sorted(ids),
-        }
-        for cell_id, ids in sorted(per_cell.items())
-    }
-    return result
+        actuation, trace = organism.base.r0.emit_action_with_trace(frame)
+        assert actuation is not None and trace is not None
+        successor = board.copy(stack=False)
+        successor.push(chess.Move.from_uci(actuation.move_uci))
+        receipts.append(terminal.mint(trace, board, successor))
+    return tuple(receipts)
 
 
-def test_exposure_distinctness_integrity_and_remint_alignment(native_fixture):
+def test_discovery_epoch_atomic_native_escrow_and_closure(native_fixture):
     organism = NativeProspectiveAuthorityV2.from_organism(
         native_fixture["source"], mode=V2Mode.PROSPECTIVE
     )
-    identical = _probe(
-        organism, native_fixture["positive"][0], "same-exposure"
+    epoch = organism.base.envelope.nomination_epoch
+    assert epoch is not None and not epoch.nomination_closed
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="requires closed nomination"
+    ):
+        board = chess.Board(native_fixture["negative"][0])
+        organism.open_real_event(FrameContext(
+            "before-close", FrameKind.REAL, values={"board": board}
+        ))
+    receipts = _ground_receipts(
+        organism, native_fixture["negative"][:4], "native-prefix"
     )
-    collapsed = OutcomeBlindExposureScanner.scan(
-        organism, [identical] * 4
-    )
-    assert max(
-        row["distinct_opportunities"]
-        for row in collapsed["cells"].values()
-    ) == 1
-    assert len(collapsed["raw_opportunities"]) == len(
-        organism.states
-    )
-
-    distinct = [
-        _probe(organism, fen, f"distinct-exposure:{index}")
-        for index, fen in enumerate(native_fixture["positive"][:4])
+    added = organism.nominate_prefix_from_grounded_receipts(receipts)
+    epoch = organism.base.envelope.nomination_epoch
+    assert epoch is not None
+    assert epoch.post_epoch_cell_ids
+    assert set(added).issubset(epoch.post_epoch_cell_ids)
+    prospective_cells = [
+        organism.base.envelope.cells[cell_id]
+        for cell_id in epoch.post_epoch_cell_ids
     ]
-    expanded = OutcomeBlindExposureScanner.scan(
-        organism, distinct
+    assert all(cell.nomination_escrow is not None for cell in prospective_cells)
+    assert all(
+        cell.polarity is cell.nomination_escrow.fixed_polarity
+        for cell in prospective_cells
     )
-    assert max(
-        row["distinct_opportunities"]
-        for row in expanded["cells"].values()
-    ) == 4
+    assert all(
+        cell.nomination_escrow.discovery_exclusion_receipt_ids
+        == tuple(sorted(organism.base.receipts))
+        for cell in prospective_cells
+    )
+    nested = [
+        cell for cell in prospective_cells
+        if any(member.startswith("context:") for member in cell.members)
+    ]
+    assert nested
+    assert all(cell.lineage_parent_id is None for cell in nested)
+    assert all(
+        cell.nomination_escrow.transitive_ancestor_receipt_ids
+        for cell in nested
+    )
+    polarity_mutation = copy.deepcopy(organism)
+    polarity_cell = polarity_mutation.base.envelope.cells[
+        added[0]
+    ]
+    polarity_cell.polarity = (
+        AvailabilityState.REFUTED
+        if polarity_cell.polarity is AvailabilityState.AVAILABLE
+        else AvailabilityState.AVAILABLE
+    )
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="structural.*mutation|polarity"
+    ):
+        polarity_mutation.sync_organism_nominations()
 
-    virtual = replace(
-        identical.trace, frame_kind=FrameKind.VIRTUAL.name
+    ancestor_mutation = copy.deepcopy(organism)
+    nested_cell = next(
+        cell for cell in ancestor_mutation.base.envelope.cells.values()
+        if cell.cell_id in epoch.post_epoch_cell_ids
+        and any(member.startswith("context:") for member in cell.members)
     )
-    _atomic_abort(
-        organism,
-        "exposure requires REAL",
-        lambda: OutcomeBlindExposureScanner.scan(
-            organism,
-            [ExposureProbe(identical.predecessor_fen, virtual)],
+    object.__setattr__(
+        nested_cell.nomination_escrow,
+        "transitive_ancestor_receipt_ids",
+        (),
+    )
+    with pytest.raises(
+        (ProspectiveV2IntegrityError, RuntimeError),
+        match="escrow|ancestor|provenance|digest|tombstone",
+    ):
+        ancestor_mutation.sync_organism_nominations()
+
+
+    frozen = organism.close_nomination()
+    epoch = organism.base.envelope.nomination_epoch
+    assert epoch is not None
+    assert frozen == epoch.frozen_candidate_manifest
+    before = organism.continuation_digest()
+    with pytest.raises(ProspectiveV2IntegrityError, match="closed"):
+        organism.sync_organism_nominations()
+    assert organism.continuation_digest() == before
+    with pytest.raises(RuntimeError, match="closed"):
+        organism.base.envelope.grow(())
+    assert organism.continuation_digest() == before
+
+
+def test_pruned_post_epoch_cell_retains_birth_escrow(native_fixture):
+    organism = NativeProspectiveAuthorityV2.from_organism(
+        native_fixture["source"], mode=V2Mode.PROSPECTIVE
+    )
+    receipts = _ground_receipts(
+        organism, native_fixture["negative"][:4], "pruned-prefix"
+    )
+    organism.base.grow_from_grounded_receipts(receipts)
+    epoch = organism.base.envelope.nomination_epoch
+    assert epoch is not None and epoch.post_epoch_cell_ids
+    cell_id = epoch.post_epoch_cell_ids[0]
+    cell = organism.base.envelope.cells[cell_id]
+    escrow_manifest = cell.nomination_escrow.manifest()
+    cell.stem_cell.state = StemCellState.PRUNED
+    cell.prune_reason = "test_lifecycle_prune"
+    organism.sync_organism_nominations()
+    assert organism.historical_tombstones[cell_id][
+        "nomination_escrow"
+    ] == escrow_manifest
+    organism.close_nomination()
+    restored = NativeProspectiveAuthorityV2.loads(organism.dumps())
+    assert restored.historical_tombstones[cell_id][
+        "nomination_escrow"
+    ] == escrow_manifest
+
+
+def test_specialization_materialization_has_exact_native_escrow(native_fixture):
+    source = copy.deepcopy(native_fixture["source"])
+    source.learning_config = replace(
+        source.learning_config,
+        lifecycle_connected=True,
+        specialization_mode=SpecializationMode.LOCAL_CONTRAST,
+    )
+    organism = NativeProspectiveAuthorityV2.from_organism(
+        source, mode=V2Mode.PROSPECTIVE
+    )
+    receipt = _ground_receipts(
+        organism, native_fixture["negative"][:1], "specialize-prefix"
+    )[0]
+    emission = organism.base.observe_grounded(receipt)
+    assert emission.specialization_child_ids
+    organism.sync_organism_nominations()
+    for cell_id in emission.specialization_child_ids:
+        cell = organism.base.envelope.cells[cell_id]
+        escrow = cell.nomination_escrow
+        assert escrow is not None and escrow.operation == "specialization"
+        categories = dict(escrow.categorized_reads)
+        assert categories["contradiction_trigger"] == (receipt.event_id,)
+        assert categories["eligibility"] == (
+            escrow.discovery_exclusion_receipt_ids
+        )
+        assert categories["parent_support"]
+        assert escrow.transitive_ancestor_receipt_ids
+        hypothesis = organism.states[cell_id].hypothesis
+        assert hypothesis.nomination_read_sets == escrow.categorized_reads
+        assert hypothesis.hypothesis_digest
+    omitted = copy.deepcopy(organism)
+    omitted_cell = omitted.base.envelope.cells[
+        emission.specialization_child_ids[0]
+    ]
+    escrow = omitted_cell.nomination_escrow
+    object.__setattr__(
+        escrow,
+        "categorized_reads",
+        tuple(
+            (name, () if name == "eligibility" else receipt_ids)
+            for name, receipt_ids in escrow.categorized_reads
         ),
     )
-    mixed = replace(
-        identical.trace,
-        source_organism_identity="another-organism",
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="eligibility|digest|escrow"
+    ):
+        omitted.sync_organism_nominations()
+
+
+
+def test_ledger_reconstruction_rejects_mutated_authority_caches(native_fixture):
+    baseline = NativeProspectiveAuthorityV2.from_organism(
+        native_fixture["source"], mode=V2Mode.PROSPECTIVE
     )
-    _atomic_abort(
-        organism,
-        "source-organism identity mismatch",
-        lambda: OutcomeBlindExposureScanner.scan(
-            organism,
-            [ExposureProbe(identical.predecessor_fen, mixed)],
+    _run_rows(baseline, native_fixture["positive"][:1], "cache-baseline")
+    cell_id = next(iter(baseline.states))
+    mutations = (
+        lambda state: setattr(
+            state, "prospectively_certified",
+            not state.prospectively_certified,
+        ),
+        lambda state: setattr(state, "support", state.support + 1),
+        lambda state: setattr(state, "successes", state.successes + 1),
+        lambda state: setattr(
+            state, "success_lower_bound", state.success_lower_bound + 0.01
+        ),
+        lambda state: setattr(
+            state, "support_receipt_ids", (*state.support_receipt_ids, "fake")
+        ),
+        lambda state: setattr(
+            state, "transition_rows",
+            (*state.transition_rows, {"transition": "fabricated"}),
         ),
     )
+    for mutate in mutations:
+        organism = copy.deepcopy(baseline)
+        mutate(organism.states[cell_id])
+        _atomic_abort(
+            organism, "grounded ledger replay", organism.dumps
+        )
 
+
+def test_hypothesis_digest_and_frontier_mutation_fail_atomically(native_fixture):
+    for field_name, value in (
+        ("birth_frontier", 999999),
+        ("discovery_exclusion_receipt_ids", ("fabricated",)),
+        ("hypothesis_digest", "fabricated"),
+    ):
+        organism = NativeProspectiveAuthorityV2.from_organism(
+            native_fixture["source"], mode=V2Mode.PROSPECTIVE
+        )
+        organism.close_nomination()
+        hypothesis = next(iter(organism.states.values())).hypothesis
+        object.__setattr__(hypothesis, field_name, value)
+        _atomic_abort(
+            organism, "hypothesis|digest|exclusion", organism.dumps
+        )
+
+
+def test_native_specialized_is_not_mature_for_nested_authority(native_fixture):
+    source = copy.deepcopy(native_fixture["source"])
+    source.envelope.cells["v2_parent"].stem_cell.state = (
+        StemCellState.SPECIALIZED
+    )
+    source.envelope.rebuild_graph()
+    organism = NativeProspectiveAuthorityV2.from_organism(
+        source, mode=V2Mode.LEGACY
+    )
+    organism.close_nomination()
+    assert not organism.states["v2_parent"].prospectively_certified
+    board = chess.Board(native_fixture["positive"][0])
+    pending, _trace = organism.open_real_event(FrameContext(
+        "specialized-parent", FrameKind.REAL, values={"board": board}
+    ))
+    assert "v2_parent" in pending.matching_cell_ids
+    assert "v2_child" not in pending.matching_cell_ids
+
+
+    trial_source = copy.deepcopy(native_fixture["source"])
+    trial_source.envelope.cells["v2_parent"].stem_cell.state = (
+        StemCellState.TRIAL
+    )
+    trial_source.envelope.rebuild_graph()
+    with pytest.raises(
+        ProspectiveProvenanceUnavailable, match="live historical candidate"
+    ):
+        NativeProspectiveAuthorityV2.from_organism(
+            trial_source, mode=V2Mode.PROSPECTIVE
+        )
+
+
+def test_real_transaction_order_signature_and_dual_pending(native_fixture):
+    organism = NativeProspectiveAuthorityV2.from_organism(
+        native_fixture["source"], mode=V2Mode.PROSPECTIVE
+    )
+    organism.close_nomination()
+    donor = NativeProspectiveAuthorityV2.from_organism(
+        native_fixture["source"], mode=V2Mode.PROSPECTIVE
+    )
+    donor.close_nomination()
+    _p, _t, unpaired = _open_mint(
+        donor, native_fixture["positive"][0], frame_id="unpaired"
+    )
+    with pytest.raises(ProspectiveV2IntegrityError, match="before prediction"):
+        organism.consume(unpaired)
     pending, trace, receipt = _open_mint(
-        organism,
-        native_fixture["positive"][1],
-        frame_id="remint-alignment",
+        organism, native_fixture["positive"][0], frame_id="dual-pending"
     )
-    alignment = OutcomeBlindExposureScanner.scan(
-        organism,
-        [ExposureProbe(pending.predecessor_fen, trace)],
+    board = chess.Board(native_fixture["positive"][1])
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="one pending event"
+    ):
+        organism.open_real_event(FrameContext(
+            "dual-pending:second", FrameKind.REAL, values={"board": board}
+        ))
+    bad_signature = replace(receipt, signature="fabricated")
+    _atomic_abort(
+        organism, "signature mismatch",
+        lambda: organism.consume(bad_signature),
     )
-    assert alignment["raw_opportunities"]
-    assert {
-        row["interaction_fingerprint"]
-        for row in alignment["raw_opportunities"]
-    } == {receipt.interaction_fingerprint}
+    restored = NativeProspectiveAuthorityV2.loads(organism.dumps())
+    emission = restored.consume(receipt)
+    before = restored.continuation_digest()
+    assert restored.consume(receipt) == emission
+    assert restored.continuation_digest() == before
+    assert pending.pending_token in restored.consumed_tokens
+    assert trace.frame_kind == FrameKind.REAL.name
 
 
-def test_raw_manifest_cohort_recomputes_qualification(native_fixture):
+def _commitment(organism, fen, frame_id):
+    epoch = organism.base.envelope.nomination_epoch
+    if epoch is not None and not epoch.nomination_closed:
+        organism.close_nomination()
+    return organism.probe_real_exposure(FrameContext(
+        frame_id, FrameKind.REAL, values={"board": chess.Board(fen)}
+    ))
+
+
+def _resign_commitment(commitment):
+    return replace(
+        commitment,
+        binding_signature=hmac.new(
+            authority_module._EXPOSURE_BINDING_SECRET,
+            _canonical(commitment.unsigned_manifest()),
+            hashlib.sha256,
+        ).hexdigest(),
+    )
+
+
+def test_bound_exposure_rejects_aliases_mutations_and_outcomes(native_fixture):
     organism = NativeProspectiveAuthorityV2.from_organism(
         native_fixture["source"], mode=V2Mode.PROSPECTIVE
     )
-    probes = [
-        _probe(organism, fen, f"cohort-exposure:{index}")
-        for index, fen in enumerate(native_fixture["positive"][:4])
-    ]
-    scan = OutcomeBlindExposureScanner.scan(organism, probes)
-    cohort = [
-        _remap_scan(scan, index, index < 24)
-        for index in range(32)
-    ]
-    admitted = OutcomeBlindExposureScanner.adjudicate_cohort(cohort)
-    assert admitted["admitted"]
-    assert admitted["qualifying_organisms"] == 24
-
-    fake = copy.deepcopy(cohort)
-    fake[0]["qualifies"] = True
-    with pytest.raises(
-        ProspectiveV2IntegrityError,
-        match="caller-supplied exposure qualification",
-    ):
-        OutcomeBlindExposureScanner.adjudicate_cohort(fake)
-
-    bad_digest = copy.deepcopy(cohort)
-    bad_digest[0]["raw_manifest_digest"] = "fabricated"
-    with pytest.raises(
-        ProspectiveV2IntegrityError,
-        match="raw exposure manifest digest mismatch",
-    ):
-        OutcomeBlindExposureScanner.adjudicate_cohort(bad_digest)
-
-    mixed = copy.deepcopy(cohort)
-    mixed[0]["raw_opportunities"][0][
-        "source_organism_identity"
-    ] = "wrong"
-    mixed[0]["raw_manifest_digest"] = _sha(
-        mixed[0]["raw_opportunities"]
+    commitment = _commitment(
+        organism, native_fixture["positive"][0], "bound-exposure"
     )
+    assert isinstance(commitment, CanonicalExposureCommitment)
+    scan = OutcomeBlindExposureScanner.scan(
+        organism, [commitment, commitment, commitment, commitment]
+    )
+    assert max(
+        row["distinct_opportunities"] for row in scan["cells"].values()
+    ) == 1
+    mutations = (
+        _resign_commitment(replace(
+            commitment, outcome_terminal_identity="fake-terminal"
+        )),
+        _resign_commitment(replace(
+            commitment, source_organism_identity="invented"
+        )),
+        _resign_commitment(replace(
+            commitment, successor_fen=chess.Board().fen()
+        )),
+        _resign_commitment(replace(
+            commitment, authority_topology_digest="invented"
+        )),
+        _resign_commitment(replace(
+            commitment, selected_actuation=replace(
+                commitment.selected_actuation, option_identity="invented"
+            )
+        )),
+    )
+    for altered in mutations:
+        _atomic_abort(
+            organism, "exposure|binding|terminal|successor|topology|trace",
+            lambda altered=altered: OutcomeBlindExposureScanner.scan(
+                organism, [altered]
+            ),
+        )
+    extra = copy.deepcopy(scan)
+    extra["observed_outcome"] = True
     with pytest.raises(
-        ProspectiveV2IntegrityError,
-        match="mixed-organism raw exposure manifest",
+        ProspectiveV2IntegrityError, match="outcome-bearing"
     ):
-        OutcomeBlindExposureScanner.adjudicate_cohort(mixed)
+        OutcomeBlindExposureScanner._validate_raw_scan(extra)
+    invented = copy.deepcopy(scan)
+    invented["source_organism_identity"] = "invented"
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="binding signature"
+    ):
+        OutcomeBlindExposureScanner._validate_raw_scan(invented)
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="distinct bound organisms"
+    ):
+        OutcomeBlindExposureScanner.adjudicate_cohort([scan] * 32)
+
+
+def test_exposure_receipt_interaction_alignment(native_fixture):
+    organism = NativeProspectiveAuthorityV2.from_organism(
+        native_fixture["source"], mode=V2Mode.PROSPECTIVE
+    )
+    organism.close_nomination()
+    fen = native_fixture["positive"][0]
+    frame_id = "exposure-receipt-alignment"
+    commitment = _commitment(organism, fen, frame_id)
+    _pending, _trace, receipt = _open_mint(
+        organism, fen, frame_id=frame_id
+    )
+    assert commitment.interaction_fingerprint == receipt.interaction_fingerprint
+
 
 
 def test_frozen_hypothesis_rejects_nonexact_provenance():

@@ -35,6 +35,7 @@ from .native_competence_envelope import (
     GraphNativeCompetenceEnvelope,
     MatureCorrectionEmission,
     NativeCompetenceSessionAudit,
+    ProspectiveDiscoveryEpoch,
     SpecializationMode,
 )
 
@@ -214,6 +215,66 @@ class TraceNativeCompetenceOrganism:
     def _canonical_rebuild(self) -> None:
         self.envelope.rebuild_graph()
 
+    def validate_prospective_discovery_epoch(self) -> None:
+        epoch = self.envelope.nomination_epoch
+        if epoch is None:
+            return
+        epoch.validate()
+        ordinals = {
+            key: value.event_ordinal
+            for key, value in self.receipts.items()
+        }
+        outcomes = {
+            key: value.observed_terminal_result
+            for key, value in self.receipts.items()
+        }
+        if dict(epoch.receipt_ordinals) != ordinals:
+            raise RuntimeError("epoch receipt ordinals differ from organism ledger")
+        if set(self.envelope.evidence) != set(self.receipts):
+            raise RuntimeError("epoch evidence differs from organism receipt ledger")
+        if dict(epoch.receipt_outcomes) != outcomes:
+            raise RuntimeError("epoch receipt outcomes differ from organism ledger")
+        current_post = tuple(sorted(
+            set(self.envelope.cells).difference(epoch.opened_cell_ids)
+        ))
+        if current_post != epoch.post_epoch_cell_ids:
+            raise RuntimeError("epoch post-birth identity ledger mismatch")
+        if epoch.nomination_closed:
+            self.envelope._close_nomination_epoch()
+        for cell_id in current_post:
+            if self.envelope.cells[cell_id].nomination_escrow is None:
+                raise RuntimeError("post-epoch cell lacks native nomination escrow")
+
+    def open_prospective_discovery_epoch(
+        self,
+    ) -> ProspectiveDiscoveryEpoch:
+        for receipt in sorted(
+            self.receipts.values(), key=lambda item: item.event_ordinal
+        ):
+            self.envelope.add_unique_evidence(
+                self._record_from_receipt(receipt)
+            )
+        epoch = self.envelope._open_nomination_epoch(
+            receipt_ordinals={
+                key: value.event_ordinal
+                for key, value in self.receipts.items()
+            },
+            receipt_outcomes={
+                key: value.observed_terminal_result
+                for key, value in self.receipts.items()
+            },
+        )
+        self.validate_prospective_discovery_epoch()
+        return epoch
+
+    def close_prospective_nomination(
+        self,
+    ) -> tuple[tuple[str, str], ...]:
+        self.validate_prospective_discovery_epoch()
+        manifest = self.envelope._close_nomination_epoch()
+        self.validate_prospective_discovery_epoch()
+        return manifest
+
     def completion_terminal(self) -> "NativeChessCompletionTerminal":
         return NativeChessCompletionTerminal(self)
 
@@ -320,6 +381,14 @@ class TraceNativeCompetenceOrganism:
         ), None)
         if ordinal_owner is not None:
             raise RuntimeError("event-ordinal collision with distinct event ID")
+        epoch = self.envelope.nomination_epoch
+        if epoch is not None and epoch.nomination_closed:
+            raise RuntimeError("nomination epoch is closed")
+        self.envelope._register_epoch_receipt(
+            receipt_id=receipt.event_id,
+            ordinal=receipt.event_ordinal,
+            observed_outcome=receipt.observed_terminal_result,
+        )
         self.receipts[receipt.event_id] = receipt
         self._next_event_ordinal = max(
             self._next_event_ordinal, receipt.event_ordinal + 1
@@ -370,6 +439,7 @@ class TraceNativeCompetenceOrganism:
         return emission
 
     def continuation_manifest_v3(self) -> dict[str, Any]:
+        self.validate_prospective_discovery_epoch()
         canonical_envelope = copy.deepcopy(self.envelope)
         canonical_envelope.rebuild_graph()
         cell_state_hashes = {
@@ -430,6 +500,7 @@ class TraceNativeCompetenceOrganism:
         return _sha256_json(self.continuation_manifest_v3())
 
     def dumps(self) -> bytes:
+        self.validate_prospective_discovery_epoch()
         canonical = copy.deepcopy(self)
         canonical._canonical_rebuild()
         return pickle.dumps(canonical, protocol=pickle.HIGHEST_PROTOCOL)
@@ -440,6 +511,7 @@ class TraceNativeCompetenceOrganism:
         if not isinstance(item, cls):
             raise TypeError("serialized trace-native organism has wrong type")
         item._canonical_rebuild()
+        item.validate_prospective_discovery_epoch()
         return item
 
 
