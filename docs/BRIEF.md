@@ -473,3 +473,22 @@ already-viewed retired train and validation-named development material. External
 review must adjudicate the fixed-polarity versus behavior-preservation boundary
 before V2 readiness or scientific execution resumes; see
 `docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY_V2_EXECUTION_READINESS_ABORT_20260722.md`.
+
+
+The 2026-07-22 external adjudication corrects the causal interpretation of the
+preserved `de790fd` V2 readiness abort. That comparison was not
+state-identical: ordinary growth used four evidence records, while prospective
+wrapping silently hydrated eight historical receipts and used twelve. It was an
+incoherent-fixture instrument abort, not evidence that fixed nomination
+polarity changes growth.
+
+Prospective wrapping now fails closed on any receipt/evidence identity, exact
+record, or cell-reference mismatch and opens its epoch copy-on-write without
+legacy hydration. The corrected 8+4 matched-ledger behavior gate passed in
+329.67 seconds, including exact proposal rows, graph activation/error values,
+lifecycle/statistics, topology, classifications and actions. The frozen
+historical organism contains 96 receipts and 96 exact evidence records; its
+96+4 parity smoke passed in 152.78 seconds. Only escrow/provenance metadata and
+fixed polarity on final non-authoritative PRUNED tombstones differ. Fixed
+polarity remains required, and the gated readiness repair is authorized to
+continue.

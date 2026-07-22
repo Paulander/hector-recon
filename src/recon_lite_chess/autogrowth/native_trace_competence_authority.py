@@ -215,6 +215,45 @@ class TraceNativeCompetenceOrganism:
     def _canonical_rebuild(self) -> None:
         self.envelope.rebuild_graph()
 
+    def validate_canonical_evidence_ledger(self) -> None:
+        """Require receipts and competence evidence to be one exact ledger.
+
+        Prospective wrapping is an authority boundary, not a legacy migration
+        path. In particular, opening an epoch must never manufacture missing
+        evidence from historical receipts.
+        """
+
+        receipt_ids = set(self.receipts)
+        evidence_ids = set(self.envelope.evidence)
+        if receipt_ids != evidence_ids:
+            raise RuntimeError(
+                "noncanonical receipt/evidence ledger: identity mismatch"
+            )
+        for receipt_id in sorted(receipt_ids):
+            receipt = self.receipts[receipt_id]
+            expected = self._record_from_receipt(receipt)
+            if self.envelope.evidence[receipt_id] != expected:
+                raise RuntimeError(
+                    "noncanonical receipt/evidence ledger: record mismatch "
+                    f"for {receipt_id}"
+                )
+        for cell in self.envelope.cells.values():
+            referenced = set(cell.evidence_keys)
+            escrow = cell.nomination_escrow
+            if escrow is not None:
+                referenced.update(escrow.discovery_receipt_ids)
+                referenced.update(escrow.discovery_exclusion_receipt_ids)
+                referenced.update(escrow.transitive_ancestor_receipt_ids)
+                referenced.add(escrow.triggering_receipt_id)
+                for _category, receipt_ids in escrow.categorized_reads:
+                    referenced.update(receipt_ids)
+            unknown = referenced.difference(receipt_ids)
+            if unknown:
+                raise RuntimeError(
+                    "noncanonical receipt/evidence ledger: cell references "
+                    f"unknown evidence {sorted(unknown)}"
+                )
+
     def validate_prospective_discovery_epoch(self) -> None:
         epoch = self.envelope.nomination_epoch
         if epoch is None:
@@ -248,24 +287,23 @@ class TraceNativeCompetenceOrganism:
     def open_prospective_discovery_epoch(
         self,
     ) -> ProspectiveDiscoveryEpoch:
-        for receipt in sorted(
-            self.receipts.values(), key=lambda item: item.event_ordinal
-        ):
-            self.envelope.add_unique_evidence(
-                self._record_from_receipt(receipt)
-            )
-        epoch = self.envelope._open_nomination_epoch(
+        self.validate_canonical_evidence_ledger()
+        candidate = copy.deepcopy(self)
+        candidate.envelope._open_nomination_epoch(
             receipt_ordinals={
                 key: value.event_ordinal
-                for key, value in self.receipts.items()
+                for key, value in candidate.receipts.items()
             },
             receipt_outcomes={
                 key: value.observed_terminal_result
-                for key, value in self.receipts.items()
+                for key, value in candidate.receipts.items()
             },
         )
-        self.validate_prospective_discovery_epoch()
-        return epoch
+        candidate.validate_prospective_discovery_epoch()
+        self.__dict__.clear()
+        self.__dict__.update(candidate.__dict__)
+        assert self.envelope.nomination_epoch is not None
+        return self.envelope.nomination_epoch
 
     def close_prospective_nomination(
         self,

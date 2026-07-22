@@ -94,8 +94,9 @@ def _accept_rows(source, fens, desired_outcome, count, prefix):
         if successor.is_checkmate() is not desired_outcome:
             continue
         receipt = terminal.mint(trace, board, successor)
-        _record, inserted = source._accept_receipt(receipt)
+        record, inserted = source._accept_receipt(receipt)
         assert inserted
+        assert source.envelope.add_unique_evidence(record)
         accepted.append((receipt, trace, fen))
         if len(accepted) == count:
             break
@@ -1024,58 +1025,200 @@ def test_frozen_hypothesis_rejects_nonexact_provenance():
         )
 
 
-def test_trigger_fixed_polarity_behavior_gate_aborts_on_context_divergence(
+def _cell_behavior_manifest(cell):
+    manifest = cell.to_manifest()
+    manifest.update({
+        "lineage_parent_id": cell.lineage_parent_id,
+        "specialization_depth": cell.specialization_depth,
+        "specialization_request_ordinal": (
+            cell.specialization_request_ordinal
+        ),
+        "specialization_proposal_ordinal": (
+            cell.specialization_proposal_ordinal
+        ),
+    })
+    manifest.pop("nomination_escrow", None)
+    if cell.state is StemCellState.PRUNED:
+        # A final tombstone has no authority. Fixed birth polarity may remain
+        # as provenance metadata without affecting native behavior.
+        manifest["polarity"] = None
+    return manifest
+
+
+def _normalized_growth_audit(envelope):
+    audit = asdict(envelope.audit)
+    final_pruned_ids = {
+        cell_id for cell_id, cell in envelope.cells.items()
+        if cell.state is StemCellState.PRUNED
+    }
+    for review in audit["lifecycle_reviews"]:
+        for cell in review["cells"]:
+            cell.pop("nomination_escrow", None)
+            if cell["cell_id"] in final_pruned_ids:
+                cell["polarity"] = None
+    return audit
+
+
+def _learner_behavior_manifest(organism, evaluation_fens):
+    classifications = []
+    actions = []
+    for index, fen in enumerate(evaluation_fens):
+        frame = FrameContext(
+            f"matched-ledger-evaluation:{index}",
+            FrameKind.REAL,
+            values={"board": chess.Board(fen)},
+        )
+        actuation, trace = organism.r0.emit_action_with_trace(frame)
+        assert actuation is not None and trace is not None
+        actions.append({
+            "actuation": asdict(actuation),
+            "trace": trace.canonical_manifest(),
+        })
+        classifications.append(
+            organism.classify_trace(trace).to_manifest()
+        )
+    return {
+        "receipts": copy.deepcopy(organism.receipts),
+        "evidence": copy.deepcopy(organism.envelope.evidence),
+        "cells": {
+            cell_id: _cell_behavior_manifest(cell)
+            for cell_id, cell in sorted(organism.envelope.cells.items())
+        },
+        "growth_audit": _normalized_growth_audit(organism.envelope),
+        "correction_audit": asdict(organism.envelope.correction_audit),
+        "specialization_audit": asdict(
+            organism.envelope.specialization_audit
+        ),
+        "member_specs": sorted(organism.envelope._member_specs),
+        "next_cell_index": organism.envelope._next_cell_index,
+        "review_count": organism.envelope._review_count,
+        "specialization_request_ordinal": (
+            organism.envelope._specialization_request_ordinal
+        ),
+        "specialization_proposal_ordinal": (
+            organism.envelope._specialization_proposal_ordinal
+        ),
+        "graph_snapshot": organism.envelope.graph.to_snapshot(),
+        "actions": actions,
+        "classifications": classifications,
+    }
+
+
+def _assert_matched_ledger_growth_parity(
+    source, receipts, *, evaluation_fens
+):
+    source.validate_canonical_evidence_ledger()
+    for receipt_id, receipt in source.receipts.items():
+        assert source.envelope.evidence[receipt_id] == (
+            source._record_from_receipt(receipt)
+        )
+
+    native_source = copy.deepcopy(source)
+    instrumented_source = copy.deepcopy(source)
+    assert (
+        native_source.continuation_manifest_v3()
+        == instrumented_source.continuation_manifest_v3()
+    )
+
+    native_source.grow_from_grounded_receipts(receipts)
+    wrapper = NativeProspectiveAuthorityV2.from_organism(
+        instrumented_source, mode=V2Mode.PROSPECTIVE
+    )
+    wrapper.nominate_prefix_from_grounded_receipts(receipts)
+    instrumented = wrapper.base
+
+    native_manifest = _learner_behavior_manifest(
+        native_source, evaluation_fens
+    )
+    instrumented_manifest = _learner_behavior_manifest(
+        instrumented, evaluation_fens
+    )
+    assert native_manifest == instrumented_manifest
+    return native_source, instrumented
+
+
+def test_noncanonical_receipt_evidence_ledger_rejected_atomically(
     native_fixture,
 ):
-    """Preserve the binding readiness abort; do not tune this divergence away."""
+    incoherent = copy.deepcopy(native_fixture["source"])
+    assert len(incoherent.receipts) == 8
+    incoherent.envelope.evidence.clear()
+    incoherent.envelope.rebuild_graph()
+    before = incoherent.continuation_digest_v3()
 
+    with pytest.raises(
+        RuntimeError,
+        match="noncanonical receipt/evidence ledger: identity mismatch",
+    ):
+        NativeProspectiveAuthorityV2.from_organism(
+            incoherent, mode=V2Mode.PROSPECTIVE
+        )
+    assert incoherent.continuation_digest_v3() == before
+    assert incoherent.envelope.nomination_epoch is None
+    assert not incoherent.envelope.evidence
+
+    altered = copy.deepcopy(native_fixture["source"])
+    evidence_id = next(iter(sorted(altered.envelope.evidence)))
+    altered.envelope.evidence[evidence_id] = replace(
+        altered.envelope.evidence[evidence_id],
+        policy_response=False,
+    )
+    before = altered.continuation_digest_v3()
+    with pytest.raises(
+        RuntimeError,
+        match="noncanonical receipt/evidence ledger: record mismatch",
+    ):
+        altered.open_prospective_discovery_epoch()
+    assert altered.continuation_digest_v3() == before
+    assert altered.envelope.nomination_epoch is None
+
+
+def test_coherent_matched_ledger_native_growth_parity(native_fixture):
     donor = NativeProspectiveAuthorityV2.from_organism(
         native_fixture["source"], mode=V2Mode.PROSPECTIVE
     )
     receipts = _ground_receipts(
-        donor, native_fixture["negative"][:4], "behavior-readiness-abort"
+        donor, native_fixture["negative"][:4], "matched-ledger-parity"
     )
-    baseline = copy.deepcopy(native_fixture["source"])
-    baseline.grow_from_grounded_receipts(receipts)
-
-    instrumented = NativeProspectiveAuthorityV2.from_organism(
-        native_fixture["source"], mode=V2Mode.PROSPECTIVE
+    native, instrumented = _assert_matched_ledger_growth_parity(
+        native_fixture["source"],
+        receipts,
+        evaluation_fens=(
+            *native_fixture["positive"][:2],
+            *native_fixture["negative"][:2],
+        ),
     )
-    instrumented.nominate_prefix_from_grounded_receipts(receipts)
-    observed = instrumented.base
-
-    behavior_keys = (
-        "round_index", "request_ordinal", "members", "genome_seed",
-        "graph_request_state", "admitted", "reason", "cell_id",
-    )
-    baseline_rows = [
-        {key: row.get(key) for key in behavior_keys}
-        for row in baseline.envelope.audit.proposal_rows
-    ]
-    instrumented_rows = [
-        {key: row.get(key) for key in behavior_keys}
-        for row in observed.envelope.audit.proposal_rows
-    ]
-    differences = tuple(
-        (index, left, right)
-        for index, (left, right) in enumerate(
-            zip(baseline_rows, instrumented_rows)
-        )
-        if left != right
-    )
-    assert differences
-    index, native_row, escrow_row = differences[0]
-    assert index == 8
-    assert native_row["round_index"] == escrow_row["round_index"] == 2
-    assert native_row["request_ordinal"] == escrow_row["request_ordinal"] == 0
-    assert native_row["members"] == [
-        "context:competence_context_0001",
-        "tg26s_shared_atom_b45e62de533291522a6d",
-    ]
-    assert escrow_row["members"] == [
+    assert len(native.envelope.audit.proposal_rows) == 12
+    assert native.envelope.audit.proposal_rows[8]["members"] == [
         "context:v2_child",
         "tg26s_shared_atom_b45e62de533291522a6d",
     ]
-    assert native_row["cell_id"] == escrow_row["cell_id"] == (
-        "competence_context_0007"
+    assert (
+        native.envelope.audit.proposal_rows
+        == instrumented.envelope.audit.proposal_rows
     )
+
+
+def test_frozen_96_receipt_matched_ledger_parity_smoke():
+    freeze = json.loads(FREEZE.read_text(encoding="utf-8"))
+    entry = freeze["krk"]["organisms"][0]["source_artifact"]
+    source = TraceNativeCompetenceOrganism.loads(
+        gzip.decompress(Path(entry["path"]).read_bytes())
+    )
+    assert len(source.receipts) == len(source.envelope.evidence) == 96
+    source.validate_canonical_evidence_ledger()
+
+    build = load_retired_r0_build(NativeAuthorityLabConfig())
+    donor = NativeProspectiveAuthorityV2.from_organism(
+        source, mode=V2Mode.PROSPECTIVE
+    )
+    engineering_fens = tuple(build.pools.gate_validation_decoys[:4])
+    receipts = _ground_receipts(
+        donor, engineering_fens, "frozen-96-matched-ledger"
+    )
+    native, instrumented = _assert_matched_ledger_growth_parity(
+        source,
+        receipts,
+        evaluation_fens=engineering_fens,
+    )
+    assert len(native.receipts) == len(instrumented.receipts) == 100

@@ -302,3 +302,21 @@ scientific runner was constructed. No fresh or unopened confirmation data were
 accessed; the diagnostic reconstructs already-viewed retired train and
 validation-named development material. See
 `docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY_V2_EXECUTION_READINESS_ABORT_20260722.md`.
+
+
+## 2026-07-22 causal-instrument correction
+
+External adjudication found that the preserved `de790fd` behavior
+comparison used unequal evidence ledgers (4 native records versus 12 wrapper
+records). That result remains an instrument abort, but its fixed-polarity causal
+interpretation is withdrawn.
+
+The source boundary now requires exact receipt/evidence identity and record
+equality before prospective wrapping, validates all cell evidence references,
+and opens the epoch copy-on-write without legacy hydration. The incoherent
+8-receipt/0-evidence fixture aborts atomically. Corrected matched-ledger parity
+passes for both the 8+4 engineering fixture and the exact frozen 96+4 historical
+smoke. All learner-visible behavior is exact; only escrow/provenance metadata
+and fixed polarity attached solely to final PRUNED tombstones may differ. Phase
+A is therefore closed and the remaining readiness rows below are again
+authorized for implementation.

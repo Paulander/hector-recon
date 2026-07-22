@@ -236,3 +236,21 @@ No canonical runner, stream, fresh/unopened confirmation data, R1, or retired-65
 access occurred. External adjudication is required before readiness work or a
 scientific discriminator resumes. See
 `docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY_V2_EXECUTION_READINESS_ABORT_20260722.md`.
+
+
+## 2026-07-22 matched-ledger adjudication
+
+The `de790fd` abort was causally confounded. Its ordinary arm reviewed
+four records, while prospective wrapping silently imported eight historical
+receipts and reviewed twelve. The original abort text is preserved, but it is
+not evidence against fixed-at-nomination polarity.
+
+Prospective wrapping now rejects noncanonical receipt/evidence ledgers before
+mutation and performs no implicit migration. The exact frozen historical
+organism passes with 96 receipts and 96 exact derived evidence records.
+Corrected state-identical growth produced exact proposals, graph
+activation/error values, lifecycle/statistics, topology, classifications and
+actions in both the 8+4 fixture and the frozen 96+4 smoke. The only permitted
+differences were escrow/provenance metadata and polarity retained solely on
+final non-authoritative PRUNED tombstones. Phase A passed; execution-readiness
+repair may continue without weakening fixed polarity.

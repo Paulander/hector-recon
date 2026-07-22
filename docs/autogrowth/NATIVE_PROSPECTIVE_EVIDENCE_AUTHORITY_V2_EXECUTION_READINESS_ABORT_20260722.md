@@ -91,3 +91,36 @@ Integrity hashes, HMACs, and manifests remain tamper-evident mechanisms, not
 proof against a caller able to execute repository code. Prefix-only global
 closure remains an experimental isolation device, not final online ReCoN
 doctrine.
+
+
+## 2026-07-22 external adjudication addendum
+
+The abort above remains preserved as an instrument-abort record, but its causal
+attribution is withdrawn. Its fixture was not state-identical: it held eight
+accepted receipts and zero envelope evidence records. Ordinary growth reviewed
+only the four added negative records, while prospective wrapping silently
+hydrated the eight historical receipts before reviewing those same four
+negatives. The compared evidence ledgers were therefore 4 versus 12.
+
+Prospective epoch opening now fails closed unless receipt IDs exactly equal
+evidence IDs, every evidence record exactly equals the record derived from its
+receipt (including ordered active signals, typed provenance, outcome, actuator,
+completion terminal and policy response), and every cell evidence reference
+belongs to that ledger. Opening is copy-on-write and never hydrates missing
+evidence. The old 8/0 fixture is rejected without changing its continuation
+digest.
+
+On a coherent matched ledger, all 12 proposal rows match and both arms choose
+`context:v2_child` at proposal row 8. Exact graph request/error values,
+members, IDs, support, success/failure counts, lifecycle, maturation, pruning,
+nesting, classifications, topology and graph actions match. Differences are
+confined to escrow/provenance metadata and fixed polarity on final
+non-authoritative PRUNED tombstones. The corrected 8+4 parity gate passed in
+329.67 seconds. The exact frozen historical source was also verified at 96
+receipts / 96 exact evidence records; its matched-ledger 96+4 parity smoke
+passed in 152.78 seconds.
+
+Therefore `de790fd` does **not** establish that fixed-at-nomination
+polarity changes native growth. Fixed polarity remains part of the frozen V2
+hypothesis, and the readiness package may proceed from the corrected canonical-
+ledger boundary.
