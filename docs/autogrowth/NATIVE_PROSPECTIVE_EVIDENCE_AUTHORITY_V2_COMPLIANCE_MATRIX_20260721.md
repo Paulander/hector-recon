@@ -320,3 +320,19 @@ smoke. All learner-visible behavior is exact; only escrow/provenance metadata
 and fixed polarity attached solely to final PRUNED tombstones may differ. Phase
 A is therefore closed and the remaining readiness rows below are again
 authorized for implementation.
+
+
+## 2026-07-22 execution-readiness closure
+
+The matched-ledger correction and all remaining readiness contracts are closed
+passing. Complete two-frontier escrows, copy-on-write specialization, a sealed
+candidate-identical arm constructor, digests of the graph actually executed,
+and the outside-the-learner cohort registry are now implemented. The frozen
+32-organism engineering canary admitted exactly 24/32 using 128 graph-produced
+commitments; all adversarial authority controls failed closed. The final full
+repository suite passed 1010 tests in 12734.63 seconds.
+
+This is engineering readiness only. No scientific runner, competence outcome
+stream, fresh or unopened data, R1, KRK outcome, or retired-65 successor was
+accessed. The complete result and before/after authority table are in
+`docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY_V2_EXECUTION_READINESS_CLOSURE_20260722.md`.

@@ -82,6 +82,10 @@ class NominationEscrow:
     triggering_receipt_id: str
     graph_request_root_state: str
     graph_request_terminal_state: str
+    considered_context_ids: tuple[str, ...]
+    selected_context_ids: tuple[str, ...]
+    nomination_read_frontier: int
+    certification_frontier: int
     escrow_digest: str = ""
 
     def __post_init__(self) -> None:
@@ -106,6 +110,22 @@ class NominationEscrow:
             raise ValueError("nomination direct reads are empty")
         if self.triggering_receipt_id not in self.discovery_exclusion_receipt_ids:
             raise ValueError("triggering receipt missing from discovery exclusion")
+        for context_ids in (
+            self.considered_context_ids, self.selected_context_ids,
+        ):
+            if (
+                tuple(sorted(context_ids)) != context_ids
+                or len(set(context_ids)) != len(context_ids)
+            ):
+                raise ValueError("noncanonical nomination context identity")
+        if not set(self.selected_context_ids).issubset(
+            self.considered_context_ids
+        ):
+            raise ValueError("selected context was not considered")
+        if self.nomination_read_frontier > self.certification_frontier:
+            raise ValueError("nomination frontier exceeds certification frontier")
+        if self.birth_frontier != self.certification_frontier:
+            raise ValueError("birth frontier differs from certification frontier")
         expected = _nomination_sha(self._unsigned_manifest())
         if self.escrow_digest and self.escrow_digest != expected:
             raise ValueError("nomination escrow digest mismatch")
@@ -137,6 +157,10 @@ class NominationEscrow:
             "triggering_receipt_id": self.triggering_receipt_id,
             "graph_request_root_state": self.graph_request_root_state,
             "graph_request_terminal_state": self.graph_request_terminal_state,
+            "considered_context_ids": list(self.considered_context_ids),
+            "selected_context_ids": list(self.selected_context_ids),
+            "nomination_read_frontier": self.nomination_read_frontier,
+            "certification_frontier": self.certification_frontier,
         }
 
     def manifest(self) -> dict[str, Any]:
@@ -617,6 +641,11 @@ class GraphNativeCompetenceEnvelope:
         )
         self.rebuild_graph()
 
+    def _transaction_checkpoint(self, _boundary: str) -> None:
+        """No-op production hook used only for rollback fault injection."""
+
+        return None
+
     def _open_nomination_epoch(
         self,
         *,
@@ -740,10 +769,14 @@ class GraphNativeCompetenceEnvelope:
             raise RuntimeError("incomplete discovery exclusion set")
         if set(visible) != set(ordinals) or set(visible) != set(outcomes):
             raise RuntimeError("epoch and envelope evidence ledgers differ")
-        if escrow.birth_frontier != max(
+        certification_frontier = max(
             (ordinals[item] for item in visible), default=-1
+        )
+        if (
+            escrow.birth_frontier != certification_frontier
+            or escrow.certification_frontier != certification_frontier
         ):
-            raise RuntimeError("organism-derived birth frontier mismatch")
+            raise RuntimeError("organism-derived certification frontier mismatch")
         all_reads = {
             item
             for _name, receipt_ids in escrow.categorized_reads
@@ -751,8 +784,21 @@ class GraphNativeCompetenceEnvelope:
         } | set(escrow.transitive_ancestor_receipt_ids)
         if not all_reads.issubset(ordinals):
             raise RuntimeError("nomination escrow contains unknown receipt")
-        if any(ordinals[item] > escrow.birth_frontier for item in all_reads):
+        if any(
+            ordinals[item] > escrow.certification_frontier
+            for item in all_reads
+        ):
             raise RuntimeError("nomination escrow contains post-birth receipt")
+        nomination_frontier = max(
+            (ordinals[item] for item in all_reads), default=-1
+        )
+        if escrow.nomination_read_frontier != nomination_frontier:
+            raise RuntimeError("organism-derived nomination frontier mismatch")
+        if (
+            escrow.graph_request_root_state != NodeState.CONFIRMED.name
+            or escrow.graph_request_terminal_state != NodeState.CONFIRMED.name
+        ):
+            raise RuntimeError("nomination graph request did not confirm")
         categories = dict(escrow.categorized_reads)
         trigger_outcome = outcomes[escrow.triggering_receipt_id]
         expected = escrow.fixed_polarity is AvailabilityState.AVAILABLE
@@ -796,6 +842,11 @@ class GraphNativeCompetenceEnvelope:
         parent_support = self._supporting_receipts(active_context_ids)
         epoch = self.nomination_epoch
         assert epoch is not None
+        read_ids = set((record.evidence_key,)) | set(parent_support) | set(
+            ancestor_ids
+        )
+        ordinals = dict(epoch.receipt_ordinals)
+        certification_frontier = max(ordinals.values(), default=-1)
         escrow = NominationEscrow(
             operation="ordinary",
             fixed_polarity=(
@@ -811,10 +862,16 @@ class GraphNativeCompetenceEnvelope:
             ),
             transitive_ancestor_receipt_ids=ancestor_ids,
             discovery_exclusion_receipt_ids=tuple(sorted(self.evidence)),
-            birth_frontier=max(dict(epoch.receipt_ordinals).values(), default=-1),
+            birth_frontier=certification_frontier,
             triggering_receipt_id=record.evidence_key,
             graph_request_root_state=emission.root_state,
             graph_request_terminal_state=emission.terminal_state,
+            considered_context_ids=tuple(sorted(active_context_ids)),
+            selected_context_ids=tuple(sorted(selected_context_ids)),
+            nomination_read_frontier=max(
+                (ordinals[item] for item in read_ids), default=-1
+            ),
+            certification_frontier=certification_frontier,
         )
         self._validate_escrow(escrow)
         return escrow
@@ -911,6 +968,7 @@ class GraphNativeCompetenceEnvelope:
         ):
             raise RuntimeError("nomination epoch is closed")
         inserted = self.add_unique_evidence(record)
+        self._transaction_checkpoint("evidence_insertion")
         if not inserted:
             self.correction_audit.duplicate_observations += 1
             return MatureCorrectionEmission(
@@ -934,6 +992,7 @@ class GraphNativeCompetenceEnvelope:
         for cell_id in matching:
             self._refresh_cell_evidence(self.cells[cell_id])
         query = self._emit_mature_correction(record, specialization_mode=mode)
+        self._transaction_checkpoint("eligibility")
         contradictory = query["confirmed_cell_ids"]
         supporting = tuple(sorted(
             cell_id for cell_id in matching
@@ -951,6 +1010,7 @@ class GraphNativeCompetenceEnvelope:
                 cell.revoked_evidence_key = record.evidence_key
                 cell.revocation_count += 1
                 transitioned.append(cell_id)
+        self._transaction_checkpoint("parent_transition")
         request_parents: list[str] = []
         child_ids: list[str] = []
         if lifecycle_connected and mode is not SpecializationMode.DISCONNECTED:
@@ -1015,6 +1075,7 @@ class GraphNativeCompetenceEnvelope:
         self.correction_audit.query_rows.append(row)
         if transitioned or child_ids:
             self.rebuild_graph()
+        self._transaction_checkpoint("counter_update")
         return MatureCorrectionEmission(
             evidence_key=record.evidence_key,
             evidence_inserted=True,
@@ -1342,6 +1403,15 @@ class GraphNativeCompetenceEnvelope:
                 and base_identity in item.active_signal_ids
             ))
             epoch = self.nomination_epoch
+            ordinals = dict(epoch.receipt_ordinals)
+            certification_frontier = max(ordinals.values(), default=-1)
+            read_ids = (
+                set(direct)
+                | set(parent_support)
+                | set(eligibility_receipt_ids)
+                | {record.evidence_key}
+                | set(ancestor_ids)
+            )
             escrow = NominationEscrow(
                 operation="specialization",
                 fixed_polarity=parent.polarity,
@@ -1353,14 +1423,19 @@ class GraphNativeCompetenceEnvelope:
                 ),
                 transitive_ancestor_receipt_ids=ancestor_ids,
                 discovery_exclusion_receipt_ids=tuple(sorted(self.evidence)),
-                birth_frontier=max(
-                    dict(epoch.receipt_ordinals).values(), default=-1
-                ),
+                birth_frontier=certification_frontier,
                 triggering_receipt_id=record.evidence_key,
                 graph_request_root_state=NodeState.CONFIRMED.name,
                 graph_request_terminal_state=NodeState.CONFIRMED.name,
+                considered_context_ids=(parent.cell_id,),
+                selected_context_ids=(parent.cell_id,),
+                nomination_read_frontier=max(
+                    (ordinals[item] for item in read_ids), default=-1
+                ),
+                certification_frontier=certification_frontier,
             )
             self._validate_escrow(escrow)
+            self._transaction_checkpoint("escrow_construction")
 
         cell_id = f"competence_context_{self._next_cell_index:04d}"
         stem = StemCellTerminal(cell_id)
@@ -1396,6 +1471,7 @@ class GraphNativeCompetenceEnvelope:
         self._next_cell_index += 1
         self.cells[cell_id] = cell
         self._member_specs.add(members)
+        self._transaction_checkpoint("child_registration")
         self.specialization_audit.admitted_proposals += 1
         row.update({"admitted": True, "cell_id": cell_id})
         self.specialization_audit.request_rows.append(row)
@@ -1663,6 +1739,7 @@ class GraphNativeCompetenceEnvelope:
         self._next_cell_index += 1
         self.cells[cell_id] = cell
         self._member_specs.add(members)
+        self._transaction_checkpoint("child_registration")
         self.audit.admitted_proposals += 1
         row.update({"admitted": True, "cell_id": cell_id})
         self.audit.proposal_rows.append(row)

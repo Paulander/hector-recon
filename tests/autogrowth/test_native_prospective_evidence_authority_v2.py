@@ -6,7 +6,9 @@ import gzip
 import hashlib
 import hmac
 import inspect
+import itertools
 import json
+import pickle
 from pathlib import Path
 
 import chess
@@ -22,6 +24,7 @@ from recon_lite_chess.autogrowth.native_competence_envelope import (
     AvailabilityState,
     CompetenceContextCell,
     CompetenceEnvelopeConfig,
+    GraphNativeCompetenceEnvelope,
     SpecializationMode,
 )
 from recon_lite_chess.autogrowth import (
@@ -30,6 +33,7 @@ from recon_lite_chess.autogrowth import (
 from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import (
     CanonicalExposureCommitment,
     FrozenHypothesis,
+    InitializationOrigin,
     NativeProspectiveAuthorityV2,
     OutcomeBlindExposureScanner,
     ProspectiveProvenanceUnavailable,
@@ -42,6 +46,10 @@ from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import
 from recon_lite_chess.autogrowth.native_trace_competence_authority import (
     TraceNativeCompetenceOrganism,
     TraceNativeLearningConfig,
+)
+from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2_lab import (
+    RegisteredV2ExposureRow,
+    V2LaboratoryRegistry,
 )
 
 
@@ -486,10 +494,6 @@ def test_graph_revocation_refuted_authority_and_disconnect(
         for state in connected.states.values()
     )
 
-    disconnected = NativeProspectiveAuthorityV2.from_organism(
-        source, mode=V2Mode.PROSPECTIVE
-    )
-    _run_rows(disconnected, positives, "revocation-control-maturity")
     original_terminal = authority_module._authority_terminal
 
     def without_revocation(node, env):
@@ -500,6 +504,10 @@ def test_graph_revocation_refuted_authority_and_disconnect(
     monkeypatch.setattr(
         authority_module, "_authority_terminal", without_revocation
     )
+    disconnected = NativeProspectiveAuthorityV2.from_organism(
+        source, mode=V2Mode.PROSPECTIVE
+    )
+    _run_rows(disconnected, positives, "revocation-control-maturity")
     _pending, _trace, contradiction = _open_mint(
         disconnected, negative, frame_id="revocation-disconnected"
     )
@@ -855,7 +863,8 @@ def test_native_specialized_is_not_mature_for_nested_authority(native_fixture):
     )
     trial_source.envelope.rebuild_graph()
     with pytest.raises(
-        ProspectiveProvenanceUnavailable, match="live historical candidate"
+        ProspectiveProvenanceUnavailable,
+        match="unsupported historical live TRIAL",
     ):
         NativeProspectiveAuthorityV2.from_organism(
             trial_source, mode=V2Mode.PROSPECTIVE
@@ -996,32 +1005,50 @@ def test_exposure_receipt_interaction_alignment(native_fixture):
 def test_frozen_hypothesis_rejects_nonexact_provenance():
     with pytest.raises(ProspectiveV2IntegrityError, match="polarity=None"):
         FrozenHypothesis(
-            "bad",
-            ("x",),
-            None,
-            None,
-            0,
-            ("r",),
-            _sha(["r"]),
-            0,
-            "TRIAL",
+            cell_id="bad",
+            members=("x",),
+            polarity=None,
+            lineage_parent_id=None,
+            specialization_depth=0,
+            discovery_receipt_ids=("r",),
+            discovery_receipt_digest=_sha(["r"]),
+            birth_frontier=0,
+            structural_state="TRIAL",
+            nomination_operation="ordinary",
+            triggering_receipt_id="r",
+            graph_request_root_state="CONFIRMED",
+            graph_request_terminal_state="CONFIRMED",
+            considered_context_ids=(),
+            selected_context_ids=(),
+            nomination_read_frontier=0,
+            certification_frontier=0,
+            nomination_escrow_digest="escrow",
         )
     with pytest.raises(
         ProspectiveProvenanceUnavailable,
         match="incomplete nomination read set",
     ):
         FrozenHypothesis(
-            "bad-reads",
-            ("x",),
-            AvailabilityState.AVAILABLE,
-            None,
-            0,
-            ("r",),
-            _sha(["r"]),
-            0,
-            "TRIAL",
-            ProvenanceKind.EXACT_NOMINATION_READ_SET,
-            (),
+            cell_id="bad-reads",
+            members=("x",),
+            polarity=AvailabilityState.AVAILABLE,
+            lineage_parent_id=None,
+            specialization_depth=0,
+            discovery_receipt_ids=("r",),
+            discovery_receipt_digest=_sha(["r"]),
+            birth_frontier=0,
+            structural_state="TRIAL",
+            nomination_operation="ordinary",
+            triggering_receipt_id="r",
+            graph_request_root_state="CONFIRMED",
+            graph_request_terminal_state="CONFIRMED",
+            considered_context_ids=(),
+            selected_context_ids=(),
+            nomination_read_frontier=0,
+            certification_frontier=0,
+            nomination_escrow_digest="escrow",
+            provenance_kind=ProvenanceKind.EXACT_NOMINATION_READ_SET,
+            nomination_read_sets=(),
         )
 
 
@@ -1173,7 +1200,7 @@ def test_noncanonical_receipt_evidence_ledger_rejected_atomically(
     assert altered.envelope.nomination_epoch is None
 
 
-def test_coherent_matched_ledger_native_growth_parity(native_fixture):
+def test_prospective_escrow_instrumentation_preserves_viewed_tape_behavior(native_fixture):
     donor = NativeProspectiveAuthorityV2.from_organism(
         native_fixture["source"], mode=V2Mode.PROSPECTIVE
     )
@@ -1222,3 +1249,731 @@ def test_frozen_96_receipt_matched_ledger_parity_smoke():
         evaluation_fens=engineering_fens,
     )
     assert len(native.receipts) == len(instrumented.receipts) == 100
+
+def test_receipt_evidence_record_parity_rejects_each_mutated_field_atomically(
+    native_fixture,
+):
+    source = native_fixture["source"]
+    evidence_id = next(iter(sorted(source.envelope.evidence)))
+    mutations = {
+        "active_signal_ids": lambda record: replace(
+            record,
+            active_signal_ids=tuple(reversed(record.active_signal_ids)),
+            signal_provenance=tuple(reversed(record.signal_provenance)),
+        ),
+        "typed_provenance": lambda record: replace(
+            record, signal_provenance=()
+        ),
+        "outcome": lambda record: replace(
+            record, observed_completion=not record.observed_completion
+        ),
+        "actuator": lambda record: replace(
+            record, actuator_identity="fabricated-actuator"
+        ),
+        "completion_terminal": lambda record: replace(
+            record, completion_terminal_identity="fabricated-terminal"
+        ),
+        "policy_response": lambda record: replace(
+            record, policy_response=not record.policy_response
+        ),
+    }
+    for name, mutate in mutations.items():
+        altered = copy.deepcopy(source)
+        altered.envelope.evidence[evidence_id] = mutate(
+            altered.envelope.evidence[evidence_id]
+        )
+        before = altered.continuation_digest_v3()
+        with pytest.raises(
+            RuntimeError,
+            match="noncanonical receipt/evidence ledger: record mismatch",
+        ):
+            NativeProspectiveAuthorityV2.from_organism(
+                altered, mode=V2Mode.PROSPECTIVE
+            )
+        assert altered.continuation_digest_v3() == before, name
+        assert altered.envelope.nomination_epoch is None, name
+
+
+def test_complete_escrow_frontiers_and_semantic_revalidation(
+    native_fixture,
+):
+    organism = NativeProspectiveAuthorityV2.from_organism(
+        native_fixture["source"], mode=V2Mode.PROSPECTIVE
+    )
+    receipts = _ground_receipts(
+        organism, native_fixture["negative"][:4], "complete-escrow"
+    )
+    organism.nominate_prefix_from_grounded_receipts(receipts)
+    ordinals = {
+        key: value.event_ordinal
+        for key, value in organism.base.receipts.items()
+    }
+    prospective_ids = organism.base.envelope.nomination_epoch.post_epoch_cell_ids
+    assert prospective_ids
+    for cell_id in prospective_ids:
+        cell = organism.base.envelope.cells[cell_id]
+        escrow = cell.nomination_escrow
+        assert escrow is not None
+        reads = set(escrow.discovery_receipt_ids)
+        assert escrow.nomination_read_frontier == max(
+            (ordinals[item] for item in reads), default=-1
+        )
+        assert escrow.certification_frontier == max(
+            ordinals[item]
+            for item in escrow.discovery_exclusion_receipt_ids
+        )
+        assert escrow.birth_frontier == escrow.certification_frontier
+        selected = tuple(sorted(
+            member.split(":", 1)[1]
+            for member in cell.members
+            if member.startswith("context:")
+        ))
+        assert escrow.selected_context_ids == selected
+        assert set(selected).issubset(escrow.considered_context_ids)
+        hypothesis = organism.states.get(cell_id)
+        if hypothesis is not None:
+            frozen = hypothesis.hypothesis
+            assert frozen.nomination_escrow_digest == escrow.escrow_digest
+            assert (
+                frozen.nomination_read_frontier
+                == escrow.nomination_read_frontier
+            )
+            assert (
+                frozen.certification_frontier
+                == escrow.certification_frontier
+            )
+
+    organism.sync_organism_nominations()
+    cell_id = next(iter(organism.states))
+    if (
+        organism.states[cell_id].hypothesis.initialization_origin
+        is InitializationOrigin.HISTORICAL
+    ):
+        cell_id = next(
+            item for item in organism.states
+            if organism.states[item].hypothesis.initialization_origin
+            is InitializationOrigin.PROSPECTIVE
+        )
+    for field_name, value in (
+        ("nomination_read_frontier", -999),
+        ("certification_frontier", 999999),
+        ("considered_context_ids", ("fabricated-context",)),
+        ("selected_context_ids", ("fabricated-context",)),
+        ("graph_request_terminal_state", "FAILED"),
+    ):
+        altered = copy.deepcopy(organism)
+        escrow = altered.base.envelope.cells[cell_id].nomination_escrow
+        object.__setattr__(escrow, field_name, value)
+        before = altered.continuation_digest()
+        with pytest.raises(
+            (ProspectiveV2IntegrityError, RuntimeError, ValueError),
+            match="frontier|context|graph request|escrow|digest|identity",
+        ):
+            altered.sync_organism_nominations()
+        assert altered.continuation_digest() == before
+
+
+def test_specialization_transaction_rolls_back_every_failure_boundary(
+    native_fixture, monkeypatch,
+):
+    source = copy.deepcopy(native_fixture["source"])
+    source.learning_config = replace(
+        source.learning_config,
+        lifecycle_connected=True,
+        specialization_mode=SpecializationMode.LOCAL_CONTRAST,
+    )
+    organism = NativeProspectiveAuthorityV2.from_organism(
+        source, mode=V2Mode.PROSPECTIVE
+    )
+    receipt = _ground_receipts(
+        organism, native_fixture["negative"][:1], "atomic-specialization"
+    )[0]
+    boundaries = (
+        "receipt_acceptance",
+        "evidence_insertion",
+        "eligibility",
+        "parent_transition",
+        "escrow_construction",
+        "child_registration",
+        "counter_update",
+        "wrapper_sync",
+    )
+    original = GraphNativeCompetenceEnvelope._transaction_checkpoint
+    for boundary in boundaries:
+        before = organism.continuation_digest()
+
+        def fail_at(self, observed, *, expected=boundary):
+            original(self, observed)
+            if observed == expected:
+                raise RuntimeError(f"injected transaction failure: {expected}")
+
+        with monkeypatch.context() as scoped:
+            scoped.setattr(
+                GraphNativeCompetenceEnvelope,
+                "_transaction_checkpoint",
+                fail_at,
+            )
+            with pytest.raises(
+                RuntimeError, match=f"injected transaction failure: {boundary}"
+            ):
+                organism.observe_grounded_and_sync(receipt)
+        assert organism.continuation_digest() == before
+
+    emission, added = organism.observe_grounded_and_sync(receipt)
+    assert emission.specialization_child_ids
+    assert set(emission.specialization_child_ids).issubset(added)
+    assert organism.base.envelope.evidence[receipt.event_id] == (
+        organism.base._record_from_receipt(receipt)
+    )
+
+
+def test_experimental_identity_and_candidate_identical_arms_are_immutable(
+    native_fixture,
+):
+    organism = NativeProspectiveAuthorityV2.from_organism(
+        native_fixture["source"], mode=V2Mode.PROSPECTIVE
+    )
+    receipts = _ground_receipts(
+        organism, native_fixture["negative"][:4], "identity-seal"
+    )
+    organism.nominate_prefix_from_grounded_receipts(receipts)
+    organism.close_nomination()
+    assert organism.experimental_identity is not None
+
+    prospective, legacy = organism.clone_candidate_identical_arms()
+    prospective.assert_candidate_parity(legacy)
+    assert prospective.mode is V2Mode.PROSPECTIVE
+    assert legacy.mode is V2Mode.LEGACY
+    assert (
+        prospective.experimental_identity["candidate_population_identity"]
+        == legacy.experimental_identity["candidate_population_identity"]
+    )
+    assert (
+        prospective.experimental_identity["identity_digest"]
+        != legacy.experimental_identity["identity_digest"]
+    )
+    assert {
+        key: value.hypothesis.polarity
+        for key, value in prospective.states.items()
+    } == {
+        key: value.hypothesis.polarity
+        for key, value in legacy.states.items()
+    }
+    assert tuple(inspect.signature(
+        organism.clone_candidate_identical_arms
+    ).parameters) == ()
+
+    mutations = (
+        lambda item: item.experimental_identity.__setitem__(
+            "identity_digest", "fabricated"
+        ),
+        lambda item: item.authority_topology.__setitem__(
+            "fabricated", True
+        ),
+        lambda item: object.__setattr__(
+            item.states[next(iter(item.states))].hypothesis,
+            "hypothesis_digest",
+            "fabricated",
+        ),
+    )
+    for mutate in mutations:
+        altered = copy.deepcopy(prospective)
+        mutate(altered)
+        with pytest.raises(
+            ProspectiveV2IntegrityError,
+            match="identity|topology|hypothesis|digest",
+        ):
+            altered.dumps()
+
+
+def test_topology_digest_tracks_executed_graph_semantics(
+    native_fixture, monkeypatch,
+):
+    organism = NativeProspectiveAuthorityV2.from_organism(
+        native_fixture["source"], mode=V2Mode.PROSPECTIVE
+    )
+    organism.close_nomination()
+    topology = organism.authority_topology
+    assert topology["graph_snapshot"] == authority_module._build_authority_graph(
+        organism.states
+    ).to_snapshot()
+    assert set(topology["root_confirmation_policies"]) == set(
+        authority_module.AUTHORITY_ROLES
+    )
+    assert all(
+        value.endswith(":_authority_terminal")
+        for node_id, value in topology["predicate_identities"].items()
+        if node_id.startswith("v2:")
+    )
+    assert topology["lifecycle_constants"] == {
+        "minimum_support": authority_module.MIN_SUPPORT,
+        "lower_bound": authority_module.LOWER_BOUND,
+        "wilson_z": authority_module.WILSON_Z,
+        "native_maturity_property": (
+            "CompetenceContextCell.is_mature:MATURE_only"
+        ),
+    }
+
+    def altered_terminal(node, env):
+        return True, False
+
+    with monkeypatch.context() as scoped:
+        scoped.setattr(
+            authority_module, "_authority_terminal", altered_terminal
+        )
+        with pytest.raises(
+            ProspectiveV2IntegrityError,
+            match="authority topology identity mismatch",
+        ):
+            organism.dumps()
+
+
+def test_v3_schema_native_parity_telemetry_and_tombstone_only_admission(
+    native_fixture,
+):
+    available = NativeProspectiveAuthorityV2.from_organism(
+        native_fixture["source"], mode=V2Mode.LEGACY
+    )
+    available.close_nomination()
+    positive = chess.Board(native_fixture["positive"][0])
+    _actuation, positive_trace = available.base.r0.emit_action_with_trace(
+        FrameContext("v3-available", FrameKind.REAL, values={"board": positive})
+    )
+    assert positive_trace is not None
+    available_emissions = available._graph_measure(positive_trace)
+    available_classification = available._classification_from_emissions(
+        available.states, available_emissions
+    )
+    assert available_classification.state is AvailabilityState.AVAILABLE
+    telemetry_only_states = copy.deepcopy(available.states)
+    for state in telemetry_only_states.values():
+        state.success_lower_bound = 0.123456789
+    telemetry_classification = available._classification_from_emissions(
+        telemetry_only_states, available_emissions
+    )
+    assert telemetry_classification.state is available_classification.state
+    assert (
+        telemetry_classification.available_cell_ids
+        == available_classification.available_cell_ids
+    )
+    assert (
+        telemetry_classification.formal_available
+        == available_classification.formal_available
+    )
+    assert (
+        telemetry_classification.probability
+        != available_classification.probability
+    )
+
+    live_hypothesis = next(iter(available.states.values())).hypothesis
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="UNKNOWN is not a live fixed hypothesis polarity",
+    ):
+        replace(live_hypothesis, polarity=AvailabilityState.UNKNOWN)
+
+    trial_source = copy.deepcopy(native_fixture["source"])
+    trial_cell = next(iter(trial_source.envelope.cells.values()))
+    trial_cell.stem_cell.state = StemCellState.TRIAL
+    trial_source.envelope.rebuild_graph()
+    with pytest.raises(
+        ProspectiveProvenanceUnavailable,
+        match="unsupported historical live TRIAL",
+    ):
+        NativeProspectiveAuthorityV2.from_organism(
+            trial_source, mode=V2Mode.PROSPECTIVE
+        )
+
+    refuted_source = copy.deepcopy(native_fixture["source"])
+    for cell in refuted_source.envelope.cells.values():
+        cell.polarity = AvailabilityState.REFUTED
+    refuted_source.envelope.rebuild_graph()
+    refuted = NativeProspectiveAuthorityV2.from_organism(
+        refuted_source, mode=V2Mode.LEGACY
+    )
+    refuted.close_nomination()
+    negative = chess.Board(native_fixture["negative"][0])
+    _actuation, negative_trace = refuted.base.r0.emit_action_with_trace(
+        FrameContext("v3-refuted", FrameKind.REAL, values={"board": negative})
+    )
+    assert negative_trace is not None
+    assert refuted._classification_from_emissions(
+        refuted.states, refuted._graph_measure(negative_trace)
+    ).state is AvailabilityState.REFUTED
+
+    old = copy.deepcopy(available)
+    old.schema_version = "native_prospective_evidence_authority_v2.v2"
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="unsupported V2 schema"
+    ):
+        NativeProspectiveAuthorityV2.loads(
+            pickle.dumps(old, protocol=pickle.HIGHEST_PROTOCOL)
+        )
+
+    tombstone_source = copy.deepcopy(native_fixture["source"])
+    for cell in tombstone_source.envelope.cells.values():
+        cell.stem_cell.state = StemCellState.PRUNED
+        cell.polarity = None
+        cell.prune_reason = "historical-tombstone"
+    tombstone_source.envelope.rebuild_graph()
+    tombstones = NativeProspectiveAuthorityV2.from_organism(
+        tombstone_source, mode=V2Mode.PROSPECTIVE
+    )
+    assert not tombstones.states
+    assert len(tombstones.historical_tombstones) == 2
+    tombstones.close_nomination()
+    restored = NativeProspectiveAuthorityV2.loads(tombstones.dumps())
+    assert restored.continuation_manifest() == tombstones.continuation_manifest()
+
+def test_registry_bound_exposure_rejects_fabrication_and_admits_24_of_32():
+    freeze = json.loads(FREEZE.read_text(encoding="utf-8"))
+    entries = freeze["krk"]["organisms"]
+    assert len(entries) == 32
+
+    wrappers = {}
+    payloads = {}
+    rows_by_organism = {}
+    qualifying_fens = {}
+    for entry in entries:
+        ordinal = int(entry["ordinal"])
+        artifact = entry["source_artifact"]
+        compressed = Path(artifact["path"]).read_bytes()
+        assert hashlib.sha256(compressed).hexdigest() == (
+            artifact["compressed_sha256"]
+        )
+        raw = gzip.decompress(compressed)
+        assert hashlib.sha256(raw).hexdigest() == (
+            artifact["uncompressed_sha256"]
+        )
+        source = TraceNativeCompetenceOrganism.loads(raw)
+        source.validate_canonical_evidence_ledger()
+        wrapper = NativeProspectiveAuthorityV2.from_organism(
+            source, mode=V2Mode.PROSPECTIVE
+        )
+        wrapper.close_nomination()
+        organism_id = f"organism-{ordinal:02d}"
+        wrappers[organism_id] = wrapper
+        payloads[organism_id] = wrapper.dumps()
+
+        unique_rows = []
+        seen_fens = set()
+        for receipt in sorted(
+            source.receipts.values(),
+            key=lambda item: item.event_ordinal,
+        ):
+            if receipt.predecessor_fen in seen_fens:
+                continue
+            seen_fens.add(receipt.predecessor_fen)
+            unique_rows.append((
+                receipt.predecessor_fen,
+                frozenset(
+                    cell_id
+                    for cell_id in sorted(wrapper.states)
+                    if authority_module._structural_pattern_matches(
+                        cell_id,
+                        wrapper.states,
+                        receipt.decision_trace.ordered_signal_identities,
+                    )
+                ),
+            ))
+        assert len(unique_rows) >= 4, organism_id
+        rows_by_organism[organism_id] = tuple(unique_rows)
+
+        for cell_id in sorted(wrapper.states):
+            matching_fens = tuple(
+                fen for fen, matching in unique_rows
+                if cell_id in matching
+            )
+            if len(matching_fens) >= 4:
+                qualifying_fens[organism_id] = matching_fens[:4]
+                break
+
+    def nonqualifying_selection(rows):
+        representatives = {}
+        for fen, matching in rows:
+            representatives.setdefault(matching, fen)
+        distinct = tuple(
+            (fen, matching)
+            for matching, fen in representatives.items()
+        )
+        for width in range(1, min(4, len(distinct)) + 1):
+            for combination in itertools.combinations(distinct, width):
+                common = set(combination[0][1])
+                for _fen, matching in combination[1:]:
+                    common.intersection_update(matching)
+                if common:
+                    continue
+                selected = [fen for fen, _matching in combination]
+                selected.extend(
+                    fen for fen, _matching in rows
+                    if fen not in selected
+                )
+                return tuple(selected[:4])
+        return None
+
+    nonqualifying_fens = {
+        organism_id: selected
+        for organism_id, rows in rows_by_organism.items()
+        if (selected := nonqualifying_selection(rows)) is not None
+    }
+    all_ids = set(wrappers)
+    required_nonqualifiers = all_ids.difference(qualifying_fens)
+    assert len(qualifying_fens) >= 24
+    assert len(required_nonqualifiers) <= 8
+    assert required_nonqualifiers.issubset(nonqualifying_fens)
+    optional_nonqualifiers = sorted(
+        set(nonqualifying_fens).difference(required_nonqualifiers)
+    )
+    nonqualifier_ids = required_nonqualifiers | set(
+        optional_nonqualifiers[:8 - len(required_nonqualifiers)]
+    )
+    qualifier_ids = all_ids.difference(nonqualifier_ids)
+    assert len(qualifier_ids) == 24
+    assert len(nonqualifier_ids) == 8
+    assert qualifier_ids.issubset(qualifying_fens)
+
+    selected_fens = {
+        organism_id: (
+            qualifying_fens[organism_id]
+            if organism_id in qualifier_ids
+            else nonqualifying_fens[organism_id]
+        )
+        for organism_id in sorted(wrappers)
+    }
+
+    row_order = tuple(f"engineering-row-{index}" for index in range(4))
+    exposure_rows = {
+        organism_id: tuple(
+            RegisteredV2ExposureRow(
+                row_id=row_order[index],
+                frame_id=f"registry-canary:{organism_id}:{index}",
+                predecessor_fen=fen,
+            )
+            for index, fen in enumerate(selected_fens[organism_id])
+        )
+        for organism_id in sorted(wrappers)
+    }
+    package_hashes = {
+        "v2_source": hashlib.sha256(Path(
+            "src/recon_lite_chess/autogrowth/"
+            "native_prospective_evidence_authority_v2.py"
+        ).read_bytes()).hexdigest(),
+        "lab_source": hashlib.sha256(Path(
+            "src/recon_lite_chess/autogrowth/"
+            "native_prospective_evidence_authority_v2_lab.py"
+        ).read_bytes()).hexdigest(),
+    }
+    registry = V2LaboratoryRegistry.freeze(
+        payloads,
+        exposure_rows=exposure_rows,
+        row_order=row_order,
+        run_identity="v2-readiness-registry-canary.v1",
+        package_hashes=package_hashes,
+    )
+    assert len(registry.organisms) == 32
+    assert len(registry.exposure_rows) == 32
+
+    scans = []
+    commitments_by_organism = {}
+    for organism_id in sorted(wrappers):
+        wrapper = wrappers[organism_id]
+        commitments = tuple(
+            wrapper.probe_real_exposure(FrameContext(
+                row.frame_id,
+                FrameKind.REAL,
+                values={"board": chess.Board(row.predecessor_fen)},
+            ))
+            for row in exposure_rows[organism_id]
+        )
+        assert len({
+            item.interaction_fingerprint for item in commitments
+        }) == 4
+        common = set(commitments[0].matching_cell_ids)
+        for item in commitments[1:]:
+            common.intersection_update(item.matching_cell_ids)
+        assert bool(common) is (organism_id in qualifier_ids)
+        commitments_by_organism[organism_id] = commitments
+        row = registry.scan(
+            organism_id,
+            payloads[organism_id],
+            commitments,
+            tape_identity=registry.tape_identity,
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
+        scans.append(row["scan"])
+
+    adjudication = OutcomeBlindExposureScanner.adjudicate_cohort(scans)
+    assert adjudication["qualifying_organisms"] == 24
+    assert adjudication["admitted"]
+
+    first_id = sorted(wrappers)[0]
+    first_wrapper = wrappers[first_id]
+    first_payload = payloads[first_id]
+    first_commitments = commitments_by_organism[first_id]
+    first_rows = exposure_rows[first_id]
+
+    duplicate_rows = {
+        duplicate_id: tuple(
+            RegisteredV2ExposureRow(
+                row_id=row.row_id,
+                frame_id=f"{duplicate_id}:{index}",
+                predecessor_fen=row.predecessor_fen,
+            )
+            for index, row in enumerate(first_rows)
+        )
+        for duplicate_id in ("duplicate-a", "duplicate-b")
+    }
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="duplicate serialized organism"
+    ):
+        V2LaboratoryRegistry.freeze(
+            {"duplicate-a": first_payload, "duplicate-b": first_payload},
+            exposure_rows=duplicate_rows,
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="tape/order/run/package mismatch"
+    ):
+        registry.scan(
+            first_id,
+            first_payload,
+            first_commitments,
+            tape_identity="wrong-tape",
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="frozen tape"
+    ):
+        registry.scan(
+            first_id,
+            first_payload,
+            tuple(reversed(first_commitments)),
+            tape_identity=registry.tape_identity,
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="frozen tape|duplicate"
+    ):
+        registry.scan(
+            first_id,
+            first_payload,
+            (*first_commitments[:-1], first_commitments[-2]),
+            tape_identity=registry.tape_identity,
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
+    fabricated = _resign_commitment(replace(
+        first_commitments[0],
+        source_binding_identity="re-signed-fabrication",
+    ))
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="differs from exact organism|binding",
+    ):
+        registry.scan(
+            first_id,
+            first_payload,
+            (fabricated, *first_commitments[1:]),
+            tape_identity=registry.tape_identity,
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="noncanonical or post-outcome row",
+    ):
+        registry.scan(
+            first_id,
+            first_payload,
+            (
+                {"observed_outcome": True},
+                *first_commitments[1:],
+            ),
+            tape_identity=registry.tape_identity,
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
+
+    open_wrapper = NativeProspectiveAuthorityV2.from_organism(
+        TraceNativeCompetenceOrganism.loads(gzip.decompress(
+            Path(entries[0]["source_artifact"]["path"]).read_bytes()
+        )),
+        mode=V2Mode.PROSPECTIVE,
+    )
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="nomination is not closed"
+    ):
+        V2LaboratoryRegistry.freeze(
+            {"open": open_wrapper.dumps()},
+            exposure_rows={"open": tuple(
+                RegisteredV2ExposureRow(
+                    row_id=row.row_id,
+                    frame_id=f"open:{index}",
+                    predecessor_fen=row.predecessor_fen,
+                )
+                for index, row in enumerate(first_rows)
+            )},
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
+
+    pending_wrapper = copy.deepcopy(first_wrapper)
+    pending_wrapper.open_real_event(FrameContext(
+        "pending-registry-event",
+        FrameKind.REAL,
+        values={"board": chess.Board(first_rows[0].predecessor_fen)},
+    ))
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="not pre-outcome and transaction-closed",
+    ):
+        V2LaboratoryRegistry.freeze(
+            {"pending": pending_wrapper.dumps()},
+            exposure_rows={"pending": tuple(
+                RegisteredV2ExposureRow(
+                    row_id=row.row_id,
+                    frame_id=f"pending:{index}",
+                    predecessor_fen=row.predecessor_fen,
+                )
+                for index, row in enumerate(first_rows)
+            )},
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
+
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="noncanonical nested exposure schema",
+    ):
+        V2LaboratoryRegistry.freeze(
+            {"bad": first_payload},
+            exposure_rows={"bad": ({"row_id": row_order[0]},)},
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
+
+    learner_manifest = json.dumps(
+        first_wrapper.continuation_manifest(), sort_keys=True
+    )
+    for forbidden in (
+        registry.registry_id,
+        registry.tape_identity,
+        registry.run_identity,
+        *row_order,
+        *package_hashes.values(),
+    ):
+        assert forbidden not in learner_manifest

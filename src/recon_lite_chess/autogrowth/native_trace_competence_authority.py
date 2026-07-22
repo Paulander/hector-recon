@@ -245,8 +245,10 @@ class TraceNativeCompetenceOrganism:
                 referenced.update(escrow.discovery_exclusion_receipt_ids)
                 referenced.update(escrow.transitive_ancestor_receipt_ids)
                 referenced.add(escrow.triggering_receipt_id)
-                for _category, receipt_ids in escrow.categorized_reads:
-                    referenced.update(receipt_ids)
+                for _category, category_receipt_ids in (
+                    escrow.categorized_reads
+                ):
+                    referenced.update(category_receipt_ids)
             unknown = referenced.difference(receipt_ids)
             if unknown:
                 raise RuntimeError(
@@ -453,6 +455,7 @@ class TraceNativeCompetenceOrganism:
         self, receipt: GroundedOutcomeReceipt
     ) -> MatureCorrectionEmission:
         record, inserted = self._accept_receipt(receipt)
+        self.envelope._transaction_checkpoint("receipt_acceptance")
         if not inserted:
             prior = self.observation_emissions.get(receipt.event_id)
             if prior is None:

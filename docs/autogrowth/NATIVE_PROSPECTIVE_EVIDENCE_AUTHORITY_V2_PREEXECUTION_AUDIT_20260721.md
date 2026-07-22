@@ -254,3 +254,24 @@ actions in both the 8+4 fixture and the frozen 96+4 smoke. The only permitted
 differences were escrow/provenance metadata and polarity retained solely on
 final non-authoritative PRUNED tombstones. Phase A passed; execution-readiness
 repair may continue without weakening fixed polarity.
+
+
+## 2026-07-22 execution-readiness closure
+
+External correction of the unequal 4-versus-12 ledgers was decisive: after
+requiring exact receipt/evidence identity, the coherent 8+4 fixture and frozen
+96+4 smoke preserve native growth and behavior exactly. Fixed polarity is
+therefore not implicated by the preserved historical abort.
+
+The authorized Phase-B engineering repair is now closed. Nomination authority
+uses complete escrows with separate read and certification frontiers;
+specialization is transactional; both arms clone the same sealed candidates
+and polarity; topology identity comes from the graph actually evaluated; and a
+laboratory-owned registry binds exact serialized organisms to exact tapes
+without placing cohort metadata in learner state. The 32-organism canary passed
+exactly 24/32 and the full repository suite passed 1010 tests.
+
+This closes execution readiness, not the scientific discriminator. Stop for
+external review; do not infer competence learning, KRK progress, R1 handover,
+or fresh generalization. See
+`docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY_V2_EXECUTION_READINESS_CLOSURE_20260722.md`.

@@ -42,6 +42,11 @@ PROSPECTIVE_V2_INTEGRATION_LEARNER_SHA256 = (
 )
 
 
+PROSPECTIVE_V2_READINESS_ESCROW_LEARNER_SHA256 = (
+    "0452da3fbe15138696280728547c03d0ad5a09d7b88fdbd0b75e60c0eac3e1ca"
+)
+
+
 def _records() -> tuple[CompetenceEvidenceRecord, ...]:
     return tuple(
         CompetenceEvidenceRecord(
@@ -110,7 +115,13 @@ def test_v3b_locks_artifact_rows_and_declares_additive_specialization_extension(
     assert TERMINAL_TRACE_AUTHORITY_LEARNER_SHA256 == (
         "5079bd8600ef5795cc59639f63faf2256a8d0ddf71d101e43b85f75d3ca25458"
     )
-    assert _file_sha256(LEARNER_MODULE) == PROSPECTIVE_V2_INTEGRATION_LEARNER_SHA256
+    assert PROSPECTIVE_V2_INTEGRATION_LEARNER_SHA256 == (
+        "5e1882f7bd8bc494f38031fa85c31f2e09eca2496487fbef9a1430cc0a80a754"
+    )
+    assert (
+        _file_sha256(LEARNER_MODULE)
+        == PROSPECTIVE_V2_READINESS_ESCROW_LEARNER_SHA256
+    )
 
 
 def test_seed_derivation_is_deterministic_unique_and_excludes_audited_range(

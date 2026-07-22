@@ -377,3 +377,27 @@ One run should produce one machine-readable result artifact and, when useful, on
   this cap; do not extend horizon/throughput or transfer to native KRK without a
   newly frozen factor. See
   `docs/autogrowth/GENERIC_CORE_SUPPORT_CONDITIONED_LIFECYCLE_GRACE_RESULT_20260715.md`.
+
+
+## 2026-07-22 Native prospective evidence V2 execution-readiness closure
+
+- The preserved `de790fd` abort compared unequal evidence ledgers (4 versus
+  12) and is not causal evidence against fixed-at-nomination polarity. The
+  source contract now requires exact receipt/evidence equality and performs no
+  silent hydration.
+- Corrected 8+4 and frozen 96+4 matched-ledger controls preserve proposals,
+  graph activations/errors, lifecycle, topology, classifications and actions
+  exactly; only escrow/provenance and final non-authoritative PRUNED-tombstone
+  polarity may differ.
+- Phase-B engineering readiness is closed: complete two-frontier escrow,
+  transactional specialization, sealed candidate-identical arms, identity of
+  the topology actually executed, an outside-the-learner exact cohort/tape
+  registry, version/native parity, and no laboratory metadata in learner state.
+- The frozen 32-organism canary admitted exactly 24/32 across 128 graph-produced
+  commitments and all authority controls failed closed. The full repository
+  suite passed 1010 tests in 3h32m14s.
+- This is not a scientific V2 result. No runner, outcome stream, fresh or
+  unopened data, KRK outcome, R1, or retired-65 successor was touched. Stop for
+  external review before freezing any scientific discriminator.
+- Authoritative closure:
+  `docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY_V2_EXECUTION_READINESS_CLOSURE_20260722.md`.

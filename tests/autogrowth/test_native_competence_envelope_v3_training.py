@@ -32,6 +32,11 @@ PROSPECTIVE_V2_INTEGRATION_LEARNER_SHA256 = (
 )
 
 
+PROSPECTIVE_V2_READINESS_ESCROW_LEARNER_SHA256 = (
+    "0452da3fbe15138696280728547c03d0ad5a09d7b88fdbd0b75e60c0eac3e1ca"
+)
+
+
 def _actuation(activation: float = 0.25) -> dict[str, object]:
     return {
         "actuator_identity": "chess_move:a1a2",
@@ -67,7 +72,13 @@ def test_v3_preserves_frozen_hash_and_locks_additive_terminal_trace_authority_ex
     assert TERMINAL_TRACE_AUTHORITY_LEARNER_SHA256 == (
         "5079bd8600ef5795cc59639f63faf2256a8d0ddf71d101e43b85f75d3ca25458"
     )
-    assert _file_sha256(LEARNER_MODULE) == PROSPECTIVE_V2_INTEGRATION_LEARNER_SHA256
+    assert PROSPECTIVE_V2_INTEGRATION_LEARNER_SHA256 == (
+        "5e1882f7bd8bc494f38031fa85c31f2e09eca2496487fbef9a1430cc0a80a754"
+    )
+    assert (
+        _file_sha256(LEARNER_MODULE)
+        == PROSPECTIVE_V2_READINESS_ESCROW_LEARNER_SHA256
+    )
 
 
 def test_admission_persists_exact_frame_field_and_float_bits() -> None:
