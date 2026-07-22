@@ -446,10 +446,30 @@ escrow, and outcome-blind exposure accepts only organism-issued source/candidate
 topology/action-bound commitments. The exact frozen historical organism digest
 remains unchanged.
 
-This is engineering closure only. No preregistration, runner, synthetic/KRK
-outcome stream, validation/regression/fresh pool, retired-65 row, R1 evaluation,
-or scientific gate was opened. Focused adjacent native suites passed 42/42; the
+This is engineering closure only. No preregistration, runner, synthetic/KRK outcome stream, fresh or unopened
+confirmation pool, retired-65 row, R1 evaluation, or scientific gate was
+opened. Engineering tests reconstruct already-viewed retired train and
+validation-named development material. Focused adjacent native suites passed 42/42; the
 final V2 module and repository-wide totals are recorded in
 `docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY_V2_PREEXECUTION_AUDIT_20260721.md`.
 External review remains the next decision; scientific V2 execution is not
 authorized by this repair.
+
+
+The final V2 execution-readiness package stopped at its binding behavior-
+preservation control. On the same four already-viewed grounded receipts,
+ordinary native growth and the existing trigger-fixed escrow instrumentation
+produced different round-2 context choices: the native path selected
+`context:competence_context_0001`, while the escrow path selected
+`context:v2_child`; the base atom and materialized cell ID were otherwise the
+same. This is a learner-behavior change, not instrumentation metadata.
+
+The mismatch reproduces on the restored reviewed `cbf8b51` mechanism, so it was
+not caused by the discarded readiness implementation draft. The exact abort
+regression passed in 277.73 seconds (4m37s). Per the frozen stop rule, no registry
+canary, adjacent/full suite, scientific runner, canonical tape, fresh/unopened
+confirmation data, R1, or retired-65 access followed. The fixture reconstructs
+already-viewed retired train and validation-named development material. External
+review must adjudicate the fixed-polarity versus behavior-preservation boundary
+before V2 readiness or scientific execution resumes; see
+`docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY_V2_EXECUTION_READINESS_ABORT_20260722.md`.

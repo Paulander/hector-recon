@@ -153,8 +153,10 @@ This addendum supersedes the remaining-blocker section above. Work began from
 exact clean commit `644a213`; the binding implementation matrix was updated,
 committed as `ec1d0d8`, and pushed before code changed. No preregistration,
 scientific runner, synthetic/KRK outcome stream, unopened pool, R1, fresh data,
-validation/regression data, or retired-65 data was opened. Prior artifacts and
-negative results remain untouched.
+or retired-65 data was opened. The engineering tests reconstruct already-viewed
+retired train and validation-named development material; no fresh or unopened
+confirmation data were accessed. Prior artifacts and negative results remain
+untouched.
 
 ### Closed mechanism boundaries
 
@@ -215,3 +217,22 @@ remains deliberately absent.
 
 Stop remains external review after clean commit and push. Scientific package
 construction and execution are not authorized by this addendum.
+
+
+## 2026-07-22 execution-readiness abort
+
+The final readiness package stopped at its binding behavior-preservation
+control. On an identical four-receipt already-viewed engineering tape, native
+growth selected `context:competence_context_0001` while trigger-fixed escrow
+instrumentation selected `context:v2_child` at structural round 2/request 0.
+The same base atom and materialized cell ID were retained, so this is a context-
+choice divergence rather than metadata.
+
+The exact regression passed on the restored reviewed baseline: 1 passed and 16
+deselected in 277.73 seconds (4m37s). This passing diagnostic preserves the
+abort; it is not a parity pass. The implementation draft was discarded, and
+registry, adjacent-suite and full-suite stages were not run after the stop.
+No canonical runner, stream, fresh/unopened confirmation data, R1, or retired-65
+access occurred. External adjudication is required before readiness work or a
+scientific discriminator resumes. See
+`docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY_V2_EXECUTION_READINESS_ABORT_20260722.md`.

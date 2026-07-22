@@ -1022,3 +1022,60 @@ def test_frozen_hypothesis_rejects_nonexact_provenance():
             ProvenanceKind.EXACT_NOMINATION_READ_SET,
             (),
         )
+
+
+def test_trigger_fixed_polarity_behavior_gate_aborts_on_context_divergence(
+    native_fixture,
+):
+    """Preserve the binding readiness abort; do not tune this divergence away."""
+
+    donor = NativeProspectiveAuthorityV2.from_organism(
+        native_fixture["source"], mode=V2Mode.PROSPECTIVE
+    )
+    receipts = _ground_receipts(
+        donor, native_fixture["negative"][:4], "behavior-readiness-abort"
+    )
+    baseline = copy.deepcopy(native_fixture["source"])
+    baseline.grow_from_grounded_receipts(receipts)
+
+    instrumented = NativeProspectiveAuthorityV2.from_organism(
+        native_fixture["source"], mode=V2Mode.PROSPECTIVE
+    )
+    instrumented.nominate_prefix_from_grounded_receipts(receipts)
+    observed = instrumented.base
+
+    behavior_keys = (
+        "round_index", "request_ordinal", "members", "genome_seed",
+        "graph_request_state", "admitted", "reason", "cell_id",
+    )
+    baseline_rows = [
+        {key: row.get(key) for key in behavior_keys}
+        for row in baseline.envelope.audit.proposal_rows
+    ]
+    instrumented_rows = [
+        {key: row.get(key) for key in behavior_keys}
+        for row in observed.envelope.audit.proposal_rows
+    ]
+    differences = tuple(
+        (index, left, right)
+        for index, (left, right) in enumerate(
+            zip(baseline_rows, instrumented_rows)
+        )
+        if left != right
+    )
+    assert differences
+    index, native_row, escrow_row = differences[0]
+    assert index == 8
+    assert native_row["round_index"] == escrow_row["round_index"] == 2
+    assert native_row["request_ordinal"] == escrow_row["request_ordinal"] == 0
+    assert native_row["members"] == [
+        "context:competence_context_0001",
+        "tg26s_shared_atom_b45e62de533291522a6d",
+    ]
+    assert escrow_row["members"] == [
+        "context:v2_child",
+        "tg26s_shared_atom_b45e62de533291522a6d",
+    ]
+    assert native_row["cell_id"] == escrow_row["cell_id"] == (
+        "competence_context_0007"
+    )
