@@ -40,7 +40,6 @@ from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import
     ProspectiveV2IntegrityError,
     ProvenanceKind,
     V2Mode,
-    _interaction_manifest,
     _sha,
 )
 from recon_lite_chess.autogrowth.native_trace_competence_authority import (
@@ -50,6 +49,7 @@ from recon_lite_chess.autogrowth.native_trace_competence_authority import (
 from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2_lab import (
     RegisteredV2ExposureRow,
     V2LaboratoryRegistry,
+    policy_critical_package_hashes,
 )
 
 
@@ -281,6 +281,10 @@ def test_exact_historical_organism_compatibility_read_only():
     assert len(source.envelope.cells) == 155
     assert len(wrapper.historical_tombstones) == 152
     assert len(wrapper.states) == 3
+    assert wrapper.discovery_prefix_physical_fingerprints
+    assert wrapper.discovery_prefix_physical_fingerprint_digest == _sha(
+        list(wrapper.discovery_prefix_physical_fingerprints)
+    )
     assert all(
         row["polarity"] is None and row["stem_cell"]["state"] == "PRUNED"
         for row in wrapper.historical_tombstones.values()
@@ -568,6 +572,14 @@ def test_serialization_duplicate_remint_and_virtual_isolation(native_fixture):
         open_restored.continuation_manifest()
         == organism.continuation_manifest()
     )
+    assert (
+        open_restored.discovery_prefix_physical_fingerprints
+        == organism.discovery_prefix_physical_fingerprints
+    )
+    assert (
+        open_restored.discovery_prefix_physical_fingerprint_digest
+        == organism.discovery_prefix_physical_fingerprint_digest
+    )
     emission = organism.consume(receipt)
     consumed_restored = NativeProspectiveAuthorityV2.loads(
         organism.dumps()
@@ -575,6 +587,10 @@ def test_serialization_duplicate_remint_and_virtual_isolation(native_fixture):
     assert (
         consumed_restored.continuation_manifest()
         == organism.continuation_manifest()
+    )
+    assert (
+        consumed_restored.prospective_physical_fingerprints
+        == organism.prospective_physical_fingerprints
     )
     before = organism.continuation_digest()
     assert organism.consume(receipt) == emission
@@ -587,7 +603,7 @@ def test_serialization_duplicate_remint_and_virtual_isolation(native_fixture):
     ))
     _atomic_abort(
         organism,
-        "reminted interaction fingerprint",
+        "reminted physical interaction",
         lambda: organism.consume(reminted),
     )
 
@@ -945,6 +961,10 @@ def test_bound_exposure_rejects_aliases_mutations_and_outcomes(native_fixture):
     ) == 1
     mutations = (
         _resign_commitment(replace(
+            commitment,
+            schema_version="native_v2_bound_exposure.v4",
+        )),
+        _resign_commitment(replace(
             commitment, outcome_terminal_identity="fake-terminal"
         )),
         _resign_commitment(replace(
@@ -981,10 +1001,10 @@ def test_bound_exposure_rejects_aliases_mutations_and_outcomes(native_fixture):
         ProspectiveV2IntegrityError, match="binding signature"
     ):
         OutcomeBlindExposureScanner._validate_raw_scan(invented)
-    with pytest.raises(
-        ProspectiveV2IntegrityError, match="distinct bound organisms"
-    ):
-        OutcomeBlindExposureScanner.adjudicate_cohort([scan] * 32)
+    assert not hasattr(OutcomeBlindExposureScanner, "adjudicate_cohort")
+    assert not hasattr(
+        OutcomeBlindExposureScanner, "_adjudicate_raw_cohort"
+    )
 
 
 def test_exposure_receipt_interaction_alignment(native_fixture):
@@ -1000,6 +1020,96 @@ def test_exposure_receipt_interaction_alignment(native_fixture):
     )
     assert commitment.interaction_fingerprint == receipt.interaction_fingerprint
 
+
+
+def test_physical_identity_excludes_frame_and_collapses_aliases(native_fixture):
+    organism = NativeProspectiveAuthorityV2.from_organism(
+        native_fixture["source"], mode=V2Mode.PROSPECTIVE
+    )
+    organism.close_nomination()
+    fen = native_fixture["positive"][0]
+    first = _commitment(organism, fen, "physical-frame-a")
+    second = _commitment(organism, fen, "physical-frame-b")
+    assert first.trace.digest() != second.trace.digest()
+    assert first.interaction_fingerprint == second.interaction_fingerprint
+    assert first.selected_actuation == second.selected_actuation
+    assert first.successor_fen == second.successor_fen
+    scan = OutcomeBlindExposureScanner.scan(
+        organism, [first, second, first, second]
+    )
+    assert max(
+        item["distinct_opportunities"] for item in scan["cells"].values()
+    ) == 1
+
+
+def test_physical_replay_rejected_atomically_across_frame_and_ordinal(
+    native_fixture,
+):
+    organism = NativeProspectiveAuthorityV2.from_organism(
+        native_fixture["source"], mode=V2Mode.PROSPECTIVE
+    )
+    organism.close_nomination()
+    fen = native_fixture["positive"][0]
+    _first_pending, first_trace, first = _open_mint(
+        organism, fen, frame_id="physical-consume-a"
+    )
+    organism.consume(first)
+    _second_pending, second_trace, second = _open_mint(
+        organism, fen, frame_id="physical-consume-b"
+    )
+    assert first_trace.digest() != second_trace.digest()
+    assert first.interaction_fingerprint == second.interaction_fingerprint
+    before = organism.dumps()
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="reminted physical interaction"
+    ):
+        organism.consume(second)
+    assert organism.dumps() == before
+
+
+def test_discovery_prefix_replay_and_exact_pending_pairing(native_fixture):
+    source = native_fixture["source"]
+    discovery = min(
+        source.receipts.values(),
+        key=lambda item: (item.event_ordinal, item.event_id),
+    )
+    organism = NativeProspectiveAuthorityV2.from_organism(
+        source, mode=V2Mode.PROSPECTIVE
+    )
+    organism.close_nomination()
+    assert len(organism.discovery_prefix_physical_fingerprints) == len({
+        item.context_fingerprint for item in source.receipts.values()
+    })
+    _pending, trace, replay = _open_mint(
+        organism,
+        discovery.predecessor_fen,
+        frame_id="discovery-prefix-remint",
+    )
+    assert (
+        replay.interaction_fingerprint
+        in organism.discovery_prefix_physical_fingerprints
+    )
+    before = organism.dumps()
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="discovery-evidence replay"
+    ):
+        organism.consume(replay)
+    assert organism.dumps() == before
+
+    clean = NativeProspectiveAuthorityV2.from_organism(
+        source, mode=V2Mode.PROSPECTIVE
+    )
+    clean.close_nomination()
+    _pending, trace, receipt = _open_mint(
+        clean, native_fixture["positive"][0], frame_id="pending-exact-a"
+    )
+    altered_trace = replace(trace, frame_id="pending-exact-b")
+    altered = _resign(clean, replace(receipt, trace=altered_trace))
+    assert altered.interaction_fingerprint == receipt.interaction_fingerprint
+    before = clean.dumps()
+    with pytest.raises(ProspectiveV2IntegrityError, match="trace mismatch"):
+        clean.consume(altered)
+    assert clean.dumps() == before
 
 
 def test_frozen_hypothesis_rejects_nonexact_provenance():
@@ -1602,7 +1712,7 @@ def test_v3_schema_native_parity_telemetry_and_tombstone_only_admission(
     ).state is AvailabilityState.REFUTED
 
     old = copy.deepcopy(available)
-    old.schema_version = "native_prospective_evidence_authority_v2.v2"
+    old.schema_version = "native_prospective_evidence_authority_v2.v3"
     with pytest.raises(
         ProspectiveV2IntegrityError, match="unsupported V2 schema"
     ):
@@ -1753,16 +1863,21 @@ def test_registry_bound_exposure_rejects_fabrication_and_admits_24_of_32():
         )
         for organism_id in sorted(wrappers)
     }
-    package_hashes = {
-        "v2_source": hashlib.sha256(Path(
-            "src/recon_lite_chess/autogrowth/"
-            "native_prospective_evidence_authority_v2.py"
-        ).read_bytes()).hexdigest(),
-        "lab_source": hashlib.sha256(Path(
-            "src/recon_lite_chess/autogrowth/"
-            "native_prospective_evidence_authority_v2_lab.py"
-        ).read_bytes()).hexdigest(),
-    }
+    package_hashes = policy_critical_package_hashes()
+    assert len(package_hashes) >= 13
+    incomplete_hashes = dict(package_hashes)
+    incomplete_hashes.pop("recon_formal_engine")
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="omits or alters policy-critical source",
+    ):
+        V2LaboratoryRegistry.freeze(
+            payloads,
+            exposure_rows=exposure_rows,
+            row_order=row_order,
+            run_identity="v2-readiness-registry-canary.v1",
+            package_hashes=incomplete_hashes,
+        )
     registry = V2LaboratoryRegistry.freeze(
         payloads,
         exposure_rows=exposure_rows,
@@ -1773,7 +1888,7 @@ def test_registry_bound_exposure_rejects_fabrication_and_admits_24_of_32():
     assert len(registry.organisms) == 32
     assert len(registry.exposure_rows) == 32
 
-    scans = []
+    scan_results = []
     commitments_by_organism = {}
     for organism_id in sorted(wrappers):
         wrapper = wrappers[organism_id]
@@ -1802,17 +1917,124 @@ def test_registry_bound_exposure_rejects_fabrication_and_admits_24_of_32():
             run_identity=registry.run_identity,
             package_hashes=package_hashes,
         )
-        scans.append(row["scan"])
+        scan_results.append(row)
 
-    adjudication = OutcomeBlindExposureScanner.adjudicate_cohort(scans)
+    adjudication = registry.adjudicate_cohort(
+        scan_results,
+        tape_identity=registry.tape_identity,
+        row_order=row_order,
+        run_identity=registry.run_identity,
+        package_hashes=package_hashes,
+    )
     assert adjudication["qualifying_organisms"] == 24
     assert adjudication["admitted"]
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="one result per organism"
+    ):
+        registry.adjudicate_cohort(
+            scan_results[:-1],
+            tape_identity=registry.tape_identity,
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="duplicate|missing or foreign|swapped",
+    ):
+        registry.adjudicate_cohort(
+            (*scan_results[:-1], scan_results[0]),
+            tape_identity=registry.tape_identity,
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
+    swapped = list(scan_results)
+    swapped[0] = {
+        **scan_results[0],
+        "organism_id": scan_results[1]["organism_id"],
+    }
+    swapped[1] = {
+        **scan_results[1],
+        "organism_id": scan_results[0]["organism_id"],
+    }
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="swapped"
+    ):
+        registry.adjudicate_cohort(
+            swapped,
+            tape_identity=registry.tape_identity,
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
+    foreign = list(scan_results)
+    foreign[0] = {**foreign[0], "registry_id": "foreign-registry"}
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="foreign registry"
+    ):
+        registry.adjudicate_cohort(
+            foreign,
+            tape_identity=registry.tape_identity,
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="raw-only"
+    ):
+        registry.adjudicate_cohort(
+            [item["scan"] for item in scan_results],
+            tape_identity=registry.tape_identity,
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
 
     first_id = sorted(wrappers)[0]
     first_wrapper = wrappers[first_id]
     first_payload = payloads[first_id]
     first_commitments = commitments_by_organism[first_id]
     first_rows = exposure_rows[first_id]
+
+    old_registry = replace(
+        registry, schema_version="native_v2_laboratory_registry.v1"
+    )
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="tape/order/run/package mismatch",
+    ):
+        old_registry.scan(
+            first_id,
+            first_payload,
+            first_commitments,
+            tape_identity=old_registry.tape_identity,
+            row_order=row_order,
+            run_identity=old_registry.run_identity,
+            package_hashes=package_hashes,
+        )
+
+    repeated_physical_rows = tuple(
+        RegisteredV2ExposureRow(
+            row_id=row_order[index],
+            frame_id=f"repeated-physical:{index}",
+            predecessor_fen=first_rows[0].predecessor_fen,
+        )
+        for index in range(4)
+    )
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="repeats one physical interaction",
+    ):
+        V2LaboratoryRegistry.freeze(
+            {"repeated-physical": first_payload},
+            exposure_rows={
+                "repeated-physical": repeated_physical_rows
+            },
+            row_order=row_order,
+            run_identity=registry.run_identity,
+            package_hashes=package_hashes,
+        )
 
     duplicate_rows = {
         duplicate_id: tuple(

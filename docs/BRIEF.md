@@ -492,3 +492,31 @@ historical organism contains 96 receipts and 96 exact evidence records; its
 fixed polarity on final non-authoritative PRUNED tombstones differ. Fixed
 polarity remains required, and the gated readiness repair is authorized to
 continue.
+
+
+The final `857c5d8` V2 execution-readiness closure is now recorded. On matched
+8+4 and 96+4 evidence ledgers, prospective wrapping preserves native proposal,
+activation/error, lifecycle/statistics, topology, classification and action
+behavior; candidate-identical cloning, transactional rollback and VIRTUAL
+isolation also pass. Its repository suite passed 1,010 tests in 12,734.63
+seconds (3h32m14s). This supersedes the earlier unequal-ledger abort
+interpretation without changing the frozen scientific mechanism.
+
+A bounded V2.1 physical-evidence identity repair then closed three pre-science
+authority gaps. Physical deduplication now uses a REAL-frame canonical
+projection that is invariant to caller-controlled frame IDs while exact
+transaction pairing still uses the complete trace digest. The organism derives
+and identity-binds its discovery-prefix fingerprints from validated signed
+receipts and rejects prefix or prospective replay atomically. The frozen
+laboratory registry now owns complete cohort-result association and
+adjudication, and its package manifest requires 13 policy-critical source
+hashes. Old V2, exposure and laboratory schemas fail closed.
+
+This remains engineering closure only: no scientific runner, outcome stream,
+fresh or retired-65 data, R1, or scientific gate was opened. Adversarial tests
+cover frame aliases, remint attempts, prefix replay, distinct-opportunity
+admission, exact pending pairing, serialization, and missing/duplicate/swapped/
+foreign/raw cohort results. The exact adjacent suite passed 54 tests in 638.07
+seconds; the full repository suite passed 1,013 tests in 13,032.96 seconds
+(3h37m12s). See
+`docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY_V2_1_PHYSICAL_IDENTITY_CLOSURE_20260723.md`.

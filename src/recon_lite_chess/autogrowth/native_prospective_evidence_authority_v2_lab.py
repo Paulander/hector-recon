@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import hashlib
+from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 import chess
@@ -14,8 +15,105 @@ from .native_prospective_evidence_authority_v2 import (
     NativeProspectiveAuthorityV2,
     OutcomeBlindExposureScanner,
     ProspectiveV2IntegrityError,
+    _canonical_source_manifest_digest,
     _sha,
 )
+
+
+LAB_REGISTRY_SCHEMA_VERSION = "native_v2_laboratory_registry.v2"
+LAB_SCAN_WRAPPER_SCHEMA_VERSION = "native_v2_registry_scan_wrapper.v2"
+POLICY_CRITICAL_SOURCE_PATHS = {
+    "v2_authority": (
+        "src/recon_lite_chess/autogrowth/"
+        "native_prospective_evidence_authority_v2.py"
+    ),
+    "v2_laboratory_registry": (
+        "src/recon_lite_chess/autogrowth/"
+        "native_prospective_evidence_authority_v2_lab.py"
+    ),
+    "native_trace_competence_authority": (
+        "src/recon_lite_chess/autogrowth/"
+        "native_trace_competence_authority.py"
+    ),
+    "native_competence_envelope": (
+        "src/recon_lite_chess/autogrowth/native_competence_envelope.py"
+    ),
+    "native_authority_handover": (
+        "src/recon_lite_chess/autogrowth/native_authority_handover.py"
+    ),
+    "native_single_graph_curriculum": (
+        "src/recon_lite_chess/autogrowth/native_single_graph_curriculum.py"
+    ),
+    "recon_formal_engine": (
+        "libs/recon-lite/src/recon_lite/formal_engine.py"
+    ),
+    "recon_frame_context": (
+        "libs/recon-lite/src/recon_lite/frame_context.py"
+    ),
+    "recon_graph": "libs/recon-lite/src/recon_lite/graph.py",
+    "recon_choice_genome": (
+        "libs/recon-lite/src/recon_lite/choice_genome.py"
+    ),
+    "hector_stem_cell": "src/recon_lite_hector/nodes/stem_cell.py",
+    "hector_m5_structure": (
+        "src/recon_lite_hector/learning/m5_structure.py"
+    ),
+    "hector_pack_template": (
+        "src/recon_lite_hector/nodes/pack_template.py"
+    ),
+}
+
+
+def policy_critical_package_hashes(
+    repository_root: Path | None = None,
+) -> dict[str, str]:
+    root = (
+        Path(__file__).resolve().parents[3]
+        if repository_root is None else Path(repository_root).resolve()
+    )
+    result = {}
+    for identity, relative_path in sorted(
+        POLICY_CRITICAL_SOURCE_PATHS.items()
+    ):
+        source_path = root / relative_path
+        if not source_path.is_file():
+            raise ProspectiveV2IntegrityError(
+                f"policy-critical source is absent: {relative_path}"
+            )
+        result[identity] = hashlib.sha256(source_path.read_bytes()).hexdigest()
+    return result
+
+
+def _validated_package_hashes(
+    supplied: Mapping[str, str],
+) -> tuple[tuple[str, str], ...]:
+    expected = policy_critical_package_hashes()
+    for identity, digest in expected.items():
+        if supplied.get(identity) != digest:
+            raise ProspectiveV2IntegrityError(
+                "laboratory package omits or alters policy-critical source: "
+                + identity
+            )
+    return tuple(sorted(
+        (str(identity), str(digest))
+        for identity, digest in supplied.items()
+    ))
+
+
+def _source_binding_identity(
+    organism: NativeProspectiveAuthorityV2,
+) -> str:
+    return _sha({
+        "source_organism_identity": (
+            organism.base.r0.source_organism_identity()
+        ),
+        "source_state_identity": organism.base.r0.trace_state_identity(),
+        "source_manifest_digest": _canonical_source_manifest_digest(
+            organism.base.r0
+        ),
+        "candidate_manifest_digest": organism._candidate_manifest_digest(),
+        "authority_topology_digest": _sha(organism.authority_topology),
+    })
 
 
 @dataclass(frozen=True)
@@ -25,6 +123,7 @@ class RegisteredV2Organism:
     continuation_digest: str
     experimental_identity_digest: str
     candidate_population_identity: str
+    source_binding_identity: str
 
     def manifest(self) -> dict[str, str]:
         return {
@@ -37,6 +136,7 @@ class RegisteredV2Organism:
             "candidate_population_identity": (
                 self.candidate_population_identity
             ),
+            "source_binding_identity": self.source_binding_identity,
         }
 
 
@@ -76,6 +176,7 @@ class RegisteredV2ExposureRow:
 class V2LaboratoryRegistry:
     """External registry; none of its fields may enter learner state."""
 
+    schema_version: str
     registry_id: str
     tape_identity: str
     row_order: tuple[str, ...]
@@ -102,6 +203,7 @@ class V2LaboratoryRegistry:
             raise ProspectiveV2IntegrityError(
                 "registry requires frozen organisms"
             )
+        canonical_package_hashes = _validated_package_hashes(package_hashes)
         rows = tuple(map(str, row_order))
         if len(rows) != len(set(rows)):
             raise ProspectiveV2IntegrityError(
@@ -125,6 +227,15 @@ class V2LaboratoryRegistry:
             if tuple(item.row_id for item in exact_rows) != rows:
                 raise ProspectiveV2IntegrityError(
                     "registry exposure rows differ from frozen row order"
+                )
+            physical_predecessors = [
+                item.predecessor_fen for item in exact_rows
+            ]
+            if len(set(physical_predecessors)) != len(
+                physical_predecessors
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "registry tape repeats one physical interaction"
                 )
             for item in exact_rows:
                 if item.frame_id in frame_ids:
@@ -164,6 +275,7 @@ class V2LaboratoryRegistry:
                 candidate_population_identity=(
                     identity["candidate_population_identity"]
                 ),
+                source_binding_identity=_source_binding_identity(organism),
             ))
 
         tape_manifest = {
@@ -175,23 +287,22 @@ class V2LaboratoryRegistry:
         }
         tape_identity = _sha(tape_manifest)
         unsigned = {
+            "schema_version": LAB_REGISTRY_SCHEMA_VERSION,
             "tape_identity": tape_identity,
             "tape_manifest": tape_manifest,
             "run_identity": str(run_identity),
             "package_hashes": [
-                list(item) for item in sorted(package_hashes.items())
+                list(item) for item in canonical_package_hashes
             ],
             "organisms": [item.manifest() for item in entries],
         }
         return cls(
+            schema_version=LAB_REGISTRY_SCHEMA_VERSION,
             registry_id=_sha(unsigned),
             tape_identity=tape_identity,
             row_order=rows,
             run_identity=str(run_identity),
-            package_hashes=tuple(sorted(
-                (str(key), str(value))
-                for key, value in package_hashes.items()
-            )),
+            package_hashes=canonical_package_hashes,
             organisms=tuple(entries),
             exposure_rows=tuple(frozen_exposure_rows),
         )
@@ -259,10 +370,12 @@ class V2LaboratoryRegistry:
         package_hashes: Mapping[str, str],
     ) -> dict[str, Any]:
         if (
-            tape_identity != self.tape_identity
+            self.schema_version != LAB_REGISTRY_SCHEMA_VERSION
+            or tape_identity != self.tape_identity
             or tuple(row_order) != self.row_order
             or run_identity != self.run_identity
-            or tuple(sorted(package_hashes.items())) != self.package_hashes
+            or _validated_package_hashes(package_hashes)
+            != self.package_hashes
         ):
             raise ProspectiveV2IntegrityError(
                 "laboratory registry tape/order/run/package mismatch"
@@ -334,11 +447,138 @@ class V2LaboratoryRegistry:
                 "registry exposure mutated frozen organism"
             )
         return {
+            "schema_version": LAB_SCAN_WRAPPER_SCHEMA_VERSION,
             "registry_id": self.registry_id,
             "organism_id": organism_id,
             "tape_identity": self.tape_identity,
             "row_order": list(self.row_order),
             "run_identity": self.run_identity,
             "package_hashes": [list(item) for item in self.package_hashes],
+            "payload_sha256": entry.payload_sha256,
+            "continuation_digest": entry.continuation_digest,
+            "experimental_identity_digest": (
+                entry.experimental_identity_digest
+            ),
+            "candidate_population_identity": (
+                entry.candidate_population_identity
+            ),
+            "source_binding_identity": entry.source_binding_identity,
+            "scan_digest": _sha(scan),
             "scan": scan,
+        }
+
+    def adjudicate_cohort(
+        self,
+        results: Sequence[Mapping[str, Any]],
+        *,
+        tape_identity: str,
+        row_order: Sequence[str],
+        run_identity: str,
+        package_hashes: Mapping[str, str],
+    ) -> dict[str, Any]:
+        """Associate every raw scan with its frozen registry entry first."""
+
+        if (
+            self.schema_version != LAB_REGISTRY_SCHEMA_VERSION
+            or tape_identity != self.tape_identity
+            or tuple(row_order) != self.row_order
+            or run_identity != self.run_identity
+            or _validated_package_hashes(package_hashes)
+            != self.package_hashes
+        ):
+            raise ProspectiveV2IntegrityError(
+                "laboratory adjudication authority mismatch"
+            )
+        required_keys = {
+            "schema_version", "registry_id", "organism_id",
+            "tape_identity", "row_order", "run_identity",
+            "package_hashes", "payload_sha256", "continuation_digest",
+            "experimental_identity_digest",
+            "candidate_population_identity", "source_binding_identity",
+            "scan_digest", "scan",
+        }
+        if len(results) != len(self.organisms):
+            raise ProspectiveV2IntegrityError(
+                "registry adjudication requires one result per organism"
+            )
+        scans_by_id = {}
+        for result in results:
+            if not isinstance(result, Mapping) or set(result) != required_keys:
+                raise ProspectiveV2IntegrityError(
+                    "registry adjudication rejects raw-only scan result"
+                )
+            if (
+                result["schema_version"]
+                != LAB_SCAN_WRAPPER_SCHEMA_VERSION
+                or result["registry_id"] != self.registry_id
+                or result["tape_identity"] != self.tape_identity
+                or tuple(result["row_order"]) != self.row_order
+                or result["run_identity"] != self.run_identity
+                or tuple(
+                    tuple(item) for item in result["package_hashes"]
+                ) != self.package_hashes
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "foreign registry scan result"
+                )
+            organism_id = str(result["organism_id"])
+            if organism_id in scans_by_id:
+                raise ProspectiveV2IntegrityError(
+                    "duplicate registry scan result"
+                )
+            entry = self._entry(organism_id)
+            for key in (
+                "payload_sha256", "continuation_digest",
+                "experimental_identity_digest",
+                "candidate_population_identity",
+                "source_binding_identity",
+            ):
+                if result[key] != getattr(entry, key):
+                    raise ProspectiveV2IntegrityError(
+                        "swapped registry scan result"
+                    )
+            scan = result["scan"]
+            if (
+                not isinstance(scan, Mapping)
+                or _sha(scan) != result["scan_digest"]
+                or scan.get("source_binding_identity")
+                != entry.source_binding_identity
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "altered or swapped registry scan payload"
+                )
+            scans_by_id[organism_id] = scan
+        expected_ids = {item.organism_id for item in self.organisms}
+        if set(scans_by_id) != expected_ids:
+            raise ProspectiveV2IntegrityError(
+                "registry adjudication has missing or foreign organism"
+            )
+        if len(self.organisms) != 32:
+            raise ProspectiveV2IntegrityError(
+                "exposure admission requires exactly 32 organisms"
+            )
+        ordered_scans = [
+            scans_by_id[item.organism_id] for item in self.organisms
+        ]
+        qualifications = [
+            OutcomeBlindExposureScanner._validate_raw_scan(scan)
+            for scan in ordered_scans
+        ]
+        identities = [
+            str(scan["source_binding_identity"]) for scan in ordered_scans
+        ]
+        if len(set(identities)) != 32:
+            raise ProspectiveV2IntegrityError(
+                "exposure cohort requires 32 distinct bound organisms"
+            )
+        qualifying = sum(qualifications)
+        return {
+            "organism_count": 32,
+            "qualifying_organisms": qualifying,
+            "required_qualifying_organisms": 24,
+            "admitted": qualifying >= 24,
+            "stop_reason": (
+                None if qualifying >= 24
+                else "prospective_evidence_starvation"
+            ),
         }

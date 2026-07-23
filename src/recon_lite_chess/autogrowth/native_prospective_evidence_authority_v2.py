@@ -23,11 +23,12 @@ from .native_competence_envelope import (
 from .native_trace_competence_authority import TraceNativeCompetenceOrganism
 
 
-SCHEMA_VERSION = "native_prospective_evidence_authority_v2.v3"
-IMPLEMENTATION_IDENTITY = "native_prospective_two_phase_authority.v3"
+SCHEMA_VERSION = "native_prospective_evidence_authority_v2.v4"
+IMPLEMENTATION_IDENTITY = "native_prospective_two_phase_authority.v4"
 EXPECTED_RECEIPT_ISSUER = "native_v2_environment_terminal"
 OUTCOME_TERMINAL_IDENTITY = "native_r0_real_completion_terminal"
-EXPOSURE_SCHEMA_VERSION = "native_v2_bound_exposure.v4"
+EXPOSURE_SCHEMA_VERSION = "native_v2_bound_exposure.v5"
+PHYSICAL_TRACE_PROJECTION_SCHEMA = "native_v2_physical_trace_projection.v1"
 _EXPOSURE_BINDING_SECRET = b"native-v2-bound-exposure-capability.v1"
 AUTHORITY_ROLES = (
     "commitment", "available", "refuted", "support", "contradiction",
@@ -351,6 +352,7 @@ class PendingRealEvent:
     structure_invariant_digest: str
     pending_token: str
     outcome_terminal_identity: str
+    environment_outcome_terminal_identity: str
     state: str = "OPEN"
 
     def manifest(self) -> dict[str, Any]:
@@ -370,6 +372,9 @@ class PendingRealEvent:
             "structure_invariant_digest": self.structure_invariant_digest,
             "pending_token": self.pending_token,
             "outcome_terminal_identity": self.outcome_terminal_identity,
+            "environment_outcome_terminal_identity": (
+                self.environment_outcome_terminal_identity
+            ),
             "state": self.state,
         }
 
@@ -387,6 +392,7 @@ class V2GroundedReceipt:
     selected_actuation: GraphActuation
     successor_fen: str
     outcome_terminal_identity: str
+    environment_outcome_terminal_identity: str
     observed_outcome: bool
     interaction_fingerprint: str
     issuer_identity: str
@@ -405,6 +411,9 @@ class V2GroundedReceipt:
             "selected_actuation": asdict(self.selected_actuation),
             "successor_fen": self.successor_fen,
             "outcome_terminal_identity": self.outcome_terminal_identity,
+            "environment_outcome_terminal_identity": (
+                self.environment_outcome_terminal_identity
+            ),
             "observed_outcome": self.observed_outcome,
             "interaction_fingerprint": self.interaction_fingerprint,
             "issuer_identity": self.issuer_identity,
@@ -451,6 +460,7 @@ class CanonicalExposureCommitment:
     matching_cell_ids: tuple[str, ...]
     matching_cell_digest: str
     outcome_terminal_identity: str
+    environment_outcome_terminal_identity: str
     interaction_fingerprint: str
     source_binding_identity: str
     binding_signature: str
@@ -470,6 +480,9 @@ class CanonicalExposureCommitment:
             "matching_cell_ids": list(self.matching_cell_ids),
             "matching_cell_digest": self.matching_cell_digest,
             "outcome_terminal_identity": self.outcome_terminal_identity,
+            "environment_outcome_terminal_identity": (
+                self.environment_outcome_terminal_identity
+            ),
             "interaction_fingerprint": self.interaction_fingerprint,
             "source_binding_identity": self.source_binding_identity,
         }
@@ -704,6 +717,74 @@ def _canonical_source_manifest_digest(r0: Any) -> str:
     })
 
 
+def _physical_trace_projection(
+    trace_manifest: Mapping[str, Any],
+    actuation_manifest: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Project an exact graph trace onto physical evidence identity.
+
+    Frame labels and transaction identities are deliberately absent. Exact
+    open-event pairing continues to use GraphSignalTrace.digest().
+    """
+
+    required_trace_keys = {
+        "frame_id", "frame_kind", "source_organism_identity",
+        "source_state_identity", "option_identity", "actuation",
+        "confirmed_base_terminal_node_ids",
+        "confirmed_mature_composite_ids", "terminal_signals",
+    }
+    required_signal_keys = {
+        "identity", "role", "source_node_identity", "terminal_kind",
+        "provenance", "stem_cell_identity",
+    }
+    required_actuation_keys = {
+        "actuator_identity", "move_uci", "option_identity", "activation",
+        "candidate_count", "formal_ticks", "graph_owned", "host_fallback",
+    }
+    signals = trace_manifest.get("terminal_signals")
+    if (
+        set(trace_manifest) != required_trace_keys
+        or set(actuation_manifest) != required_actuation_keys
+        or trace_manifest.get("frame_kind") != FrameKind.REAL.name
+        or trace_manifest.get("actuation") != actuation_manifest
+        or trace_manifest.get("option_identity")
+        != actuation_manifest.get("option_identity")
+        or not isinstance(signals, list)
+    ):
+        raise ProspectiveV2IntegrityError(
+            "noncanonical physical trace projection"
+        )
+    typed_signals = []
+    for signal in signals:
+        if not isinstance(signal, Mapping) or set(signal) != required_signal_keys:
+            raise ProspectiveV2IntegrityError(
+                "noncanonical typed terminal signal"
+            )
+        typed_signals.append({
+            key: signal[key] for key in (
+                "identity", "role", "source_node_identity", "terminal_kind",
+                "provenance", "stem_cell_identity",
+            )
+        })
+    return {
+        "schema_version": PHYSICAL_TRACE_PROJECTION_SCHEMA,
+        "frame_kind": FrameKind.REAL.name,
+        "source_organism_identity": trace_manifest.get(
+            "source_organism_identity"
+        ),
+        "source_state_identity": trace_manifest.get("source_state_identity"),
+        "option_identity": trace_manifest.get("option_identity"),
+        "confirmed_base_terminal_node_ids": list(
+            trace_manifest.get("confirmed_base_terminal_node_ids", ())
+        ),
+        "confirmed_mature_composite_ids": list(
+            trace_manifest.get("confirmed_mature_composite_ids", ())
+        ),
+        "typed_terminal_signals": typed_signals,
+        "selected_graph_actuation": copy.deepcopy(dict(actuation_manifest)),
+    }
+
+
 def _interaction_manifest(
     *,
     source_organism_identity: str,
@@ -712,16 +793,31 @@ def _interaction_manifest(
     trace_manifest: Mapping[str, Any],
     actuation_manifest: Mapping[str, Any],
     successor_fen: str,
-    outcome_terminal_identity: str,
+    environment_outcome_terminal_identity: str,
 ) -> dict[str, Any]:
+    physical_trace = _physical_trace_projection(
+        trace_manifest, actuation_manifest
+    )
+    if (
+        physical_trace["source_organism_identity"]
+        != source_organism_identity
+        or physical_trace["source_state_identity"]
+        != source_state_identity
+    ):
+        raise ProspectiveV2IntegrityError(
+            "physical trace source identity mismatch"
+        )
     return {
+        "projection_schema": PHYSICAL_TRACE_PROJECTION_SCHEMA,
         "source_organism_identity": source_organism_identity,
         "source_state_identity": source_state_identity,
         "predecessor": predecessor_fen,
-        "exact_trace": trace_manifest,
-        "selected_actuation": actuation_manifest,
+        "physical_trace": physical_trace,
+        "selected_actuation": copy.deepcopy(dict(actuation_manifest)),
         "successor": successor_fen,
-        "outcome_terminal_identity": outcome_terminal_identity,
+        "environment_outcome_terminal_identity": (
+            environment_outcome_terminal_identity
+        ),
     }
 
 
@@ -733,7 +829,7 @@ def _interaction_fingerprint(
     trace: GraphSignalTrace,
     actuation: GraphActuation,
     successor_fen: str,
-    outcome_terminal_identity: str,
+    environment_outcome_terminal_identity: str,
 ) -> str:
     return _sha(_interaction_manifest(
         source_organism_identity=source_organism_identity,
@@ -742,8 +838,37 @@ def _interaction_fingerprint(
         trace_manifest=trace.canonical_manifest(),
         actuation_manifest=asdict(actuation),
         successor_fen=successor_fen,
-        outcome_terminal_identity=outcome_terminal_identity,
+        environment_outcome_terminal_identity=(
+            environment_outcome_terminal_identity
+        ),
     ))
+
+
+def _validated_prefix_physical_fingerprints(
+    source: TraceNativeCompetenceOrganism,
+) -> tuple[str, ...]:
+    """Derive replay identity only from validated signed native receipts."""
+
+    source.validate_canonical_evidence_ledger()
+    fingerprints = []
+    for receipt in sorted(
+        source.receipts.values(),
+        key=lambda item: (item.event_ordinal, item.event_id),
+    ):
+        source._validate_receipt(receipt)
+        trace = receipt.decision_trace
+        fingerprints.append(_interaction_fingerprint(
+            source_organism_identity=trace.source_organism_identity,
+            source_state_identity=trace.source_state_identity,
+            predecessor_fen=receipt.predecessor_fen,
+            trace=trace,
+            actuation=trace.actuation,
+            successor_fen=receipt.successor_fen,
+            environment_outcome_terminal_identity=(
+                receipt.completion_terminal_identity
+            ),
+        ))
+    return tuple(sorted(set(fingerprints)))
 
 
 @dataclass
@@ -755,10 +880,14 @@ class NativeProspectiveAuthorityV2:
     authority_topology: dict[str, Any]
     historical_tombstones: dict[str, dict[str, Any]]
     next_expected_ordinal: int
+    discovery_prefix_physical_fingerprints: tuple[str, ...]
+    discovery_prefix_physical_fingerprint_digest: str
     pending_event: PendingRealEvent | None = None
     consumed_receipts: dict[str, V2GroundedReceipt] = field(default_factory=dict)
     consumed_tokens: set[str] = field(default_factory=set)
-    interaction_fingerprints: dict[str, str] = field(default_factory=dict)
+    prospective_physical_fingerprints: dict[str, str] = field(
+        default_factory=dict
+    )
     emissions: dict[str, V2CertificationEmission] = field(default_factory=dict)
     event_transactions: dict[str, dict[str, Any]] = field(default_factory=dict)
     nomination_events: tuple[dict[str, Any], ...] = ()
@@ -909,6 +1038,7 @@ class NativeProspectiveAuthorityV2:
             cell_id: cls._invariant_from_cell(base.envelope.cells[cell_id])
             for cell_id in states
         }
+        prefix_fingerprints = _validated_prefix_physical_fingerprints(base)
         item = cls(
             base=base,
             mode=mode,
@@ -917,6 +1047,10 @@ class NativeProspectiveAuthorityV2:
             authority_topology=topology,
             historical_tombstones=tombstones,
             next_expected_ordinal=base._next_event_ordinal,
+            discovery_prefix_physical_fingerprints=prefix_fingerprints,
+            discovery_prefix_physical_fingerprint_digest=_sha(
+                list(prefix_fingerprints)
+            ),
         )
         item._verify_invariants()
         return item
@@ -1003,6 +1137,15 @@ class NativeProspectiveAuthorityV2:
             },
             "candidate_population_identity": _sha(candidate_population),
             "candidate_population": candidate_population,
+            "physical_evidence_identity": {
+                "projection_schema": PHYSICAL_TRACE_PROJECTION_SCHEMA,
+                "discovery_prefix_physical_fingerprints": list(
+                    self.discovery_prefix_physical_fingerprints
+                ),
+                "discovery_prefix_physical_fingerprint_digest": (
+                    self.discovery_prefix_physical_fingerprint_digest
+                ),
+            },
             "arm_initialization": {
                 cell_id: {
                     "prospectively_certified": (
@@ -1036,6 +1179,18 @@ class NativeProspectiveAuthorityV2:
         self.base.validate_prospective_discovery_epoch()
         epoch = self.base.envelope.nomination_epoch
         assert epoch is not None
+        expected_prefix_fingerprints = (
+            _validated_prefix_physical_fingerprints(self.base)
+        )
+        if (
+            self.discovery_prefix_physical_fingerprints
+            != expected_prefix_fingerprints
+            or self.discovery_prefix_physical_fingerprint_digest
+            != _sha(list(expected_prefix_fingerprints))
+        ):
+            raise ProspectiveV2IntegrityError(
+                "discovery-prefix physical-fingerprint identity mismatch"
+            )
         registered = set(self.states)
         if set(self.structural_invariants) != registered:
             raise ProspectiveV2IntegrityError(
@@ -1185,6 +1340,13 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError("successor mismatch")
         if successor.is_checkmate() != receipt.observed_outcome:
             raise ProspectiveV2IntegrityError("outcome terminal mismatch")
+        if (
+            receipt.environment_outcome_terminal_identity
+            != self.base.learning_config.completion_terminal_identity
+        ):
+            raise ProspectiveV2IntegrityError(
+                "environment outcome terminal mismatch"
+            )
         fingerprint = _interaction_fingerprint(
             source_organism_identity=receipt.source_organism_identity,
             source_state_identity=receipt.source_state_identity,
@@ -1192,7 +1354,9 @@ class NativeProspectiveAuthorityV2:
             trace=receipt.trace,
             actuation=receipt.selected_actuation,
             successor_fen=receipt.successor_fen,
-            outcome_terminal_identity=receipt.outcome_terminal_identity,
+            environment_outcome_terminal_identity=(
+                receipt.environment_outcome_terminal_identity
+            ),
         )
         if fingerprint != receipt.interaction_fingerprint:
             raise ProspectiveV2IntegrityError("interaction fingerprint mismatch")
@@ -1215,6 +1379,9 @@ class NativeProspectiveAuthorityV2:
             "actuation": asdict(receipt.selected_actuation),
             "pending_token": receipt.pending_token,
             "outcome_terminal_identity": receipt.outcome_terminal_identity,
+            "environment_outcome_terminal_identity": (
+                receipt.environment_outcome_terminal_identity
+            ),
         }
         for key, value in expected_transaction.items():
             if transaction.get(key) != value:
@@ -1265,9 +1432,16 @@ class NativeProspectiveAuthorityV2:
                 )
             if receipt.pending_token in expected_tokens:
                 raise ProspectiveV2IntegrityError("duplicate consumed token")
+            if (
+                receipt.interaction_fingerprint
+                in self.discovery_prefix_physical_fingerprints
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "discovery-evidence replay in certification ledger"
+                )
             if receipt.interaction_fingerprint in expected_fingerprints:
                 raise ProspectiveV2IntegrityError(
-                    "duplicate accepted interaction fingerprint"
+                    "duplicate accepted physical interaction fingerprint"
                 )
             transaction = self.event_transactions.get(receipt.pending_token)
             if not isinstance(transaction, Mapping):
@@ -1373,9 +1547,9 @@ class NativeProspectiveAuthorityV2:
             )
         if self.consumed_tokens != expected_tokens:
             raise ProspectiveV2IntegrityError("consumed-token ledger mismatch")
-        if self.interaction_fingerprints != expected_fingerprints:
+        if self.prospective_physical_fingerprints != expected_fingerprints:
             raise ProspectiveV2IntegrityError(
-                "interaction-fingerprint ledger mismatch"
+                "prospective physical-fingerprint ledger mismatch"
             )
         expected_next = expected_start + len(ordered)
         if self.next_expected_ordinal != expected_next:
@@ -1479,6 +1653,9 @@ class NativeProspectiveAuthorityV2:
             "matching": list(matching),
             "structure_invariant_digest": structure_digest,
         })
+        environment_terminal_identity = (
+            self.base.learning_config.completion_terminal_identity
+        )
         pending = PendingRealEvent(
             ordinal=self.next_expected_ordinal,
             frame_id=frame.frame_id,
@@ -1494,6 +1671,9 @@ class NativeProspectiveAuthorityV2:
             structure_invariant_digest=structure_digest,
             pending_token=token,
             outcome_terminal_identity=OUTCOME_TERMINAL_IDENTITY,
+            environment_outcome_terminal_identity=(
+                environment_terminal_identity
+            ),
         )
         if self.continuation_digest() != before:
             raise ProspectiveV2IntegrityError(
@@ -1528,7 +1708,9 @@ class NativeProspectiveAuthorityV2:
             trace=trace,
             actuation=trace.actuation,
             successor_fen=successor.fen(),
-            outcome_terminal_identity=terminal_identity,
+            environment_outcome_terminal_identity=(
+                pending.environment_outcome_terminal_identity
+            ),
         )
         receipt_id = _sha({
             "fingerprint": fingerprint,
@@ -1547,6 +1729,9 @@ class NativeProspectiveAuthorityV2:
             "selected_actuation": asdict(trace.actuation),
             "successor_fen": successor.fen(),
             "outcome_terminal_identity": terminal_identity,
+            "environment_outcome_terminal_identity": (
+                pending.environment_outcome_terminal_identity
+            ),
             "observed_outcome": successor.is_checkmate(),
             "interaction_fingerprint": fingerprint,
             "issuer_identity": EXPECTED_RECEIPT_ISSUER,
@@ -1566,6 +1751,9 @@ class NativeProspectiveAuthorityV2:
             selected_actuation=trace.actuation,
             successor_fen=successor.fen(),
             outcome_terminal_identity=terminal_identity,
+            environment_outcome_terminal_identity=(
+                pending.environment_outcome_terminal_identity
+            ),
             observed_outcome=successor.is_checkmate(),
             interaction_fingerprint=fingerprint,
             issuer_identity=EXPECTED_RECEIPT_ISSUER,
@@ -1643,6 +1831,15 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "outcome terminal mismatch"
             )
+        if (
+            receipt.environment_outcome_terminal_identity
+            != pending.environment_outcome_terminal_identity
+            or receipt.environment_outcome_terminal_identity
+            != self.base.learning_config.completion_terminal_identity
+        ):
+            raise ProspectiveV2IntegrityError(
+                "environment outcome terminal mismatch"
+            )
         board = chess.Board(receipt.predecessor_fen)
         successor = board.copy(stack=False)
         successor.push(chess.Move.from_uci(
@@ -1661,8 +1858,9 @@ class NativeProspectiveAuthorityV2:
             trace=receipt.trace,
             actuation=receipt.selected_actuation,
             successor_fen=receipt.successor_fen,
-            outcome_terminal_identity=
-                receipt.outcome_terminal_identity,
+            environment_outcome_terminal_identity=(
+                receipt.environment_outcome_terminal_identity
+            ),
         )
         if expected_fingerprint != receipt.interaction_fingerprint:
             raise ProspectiveV2IntegrityError(
@@ -1695,12 +1893,19 @@ class NativeProspectiveAuthorityV2:
                     "receipt ID collision"
                 )
             return self.emissions[receipt.receipt_id]
-        known_id = self.interaction_fingerprints.get(
+        if (
+            receipt.interaction_fingerprint
+            in self.discovery_prefix_physical_fingerprints
+        ):
+            raise ProspectiveV2IntegrityError(
+                "discovery-evidence replay under certification identity"
+            )
+        known_id = self.prospective_physical_fingerprints.get(
             receipt.interaction_fingerprint
         )
         if known_id is not None:
             raise ProspectiveV2IntegrityError(
-                "reminted interaction fingerprint under new receipt identity"
+                "reminted physical interaction under new receipt identity"
             )
         self._validate_receipt(receipt)
         pending = self.pending_event
@@ -1778,7 +1983,7 @@ class NativeProspectiveAuthorityV2:
         )
         self.consumed_receipts[receipt.receipt_id] = receipt
         self.consumed_tokens.add(receipt.pending_token)
-        self.interaction_fingerprints[
+        self.prospective_physical_fingerprints[
             receipt.interaction_fingerprint
         ] = receipt.receipt_id
         self.emissions[receipt.receipt_id] = emission
@@ -1950,6 +2155,13 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "discovery baseline cannot change after certification"
             )
+        prefix_fingerprints = _validated_prefix_physical_fingerprints(
+            self.base
+        )
+        self.discovery_prefix_physical_fingerprints = prefix_fingerprints
+        self.discovery_prefix_physical_fingerprint_digest = _sha(
+            list(prefix_fingerprints)
+        )
         ledger_ids = tuple(sorted(dict(epoch.receipt_ordinals)))
         frontier = max(dict(epoch.receipt_ordinals).values(), default=-1)
         allowed = {
@@ -2327,6 +2539,9 @@ class NativeProspectiveAuthorityV2:
         source_manifest_digest = _canonical_source_manifest_digest(self.base.r0)
         candidate_manifest_digest = self._candidate_manifest_digest()
         topology_digest = _sha(self.authority_topology)
+        environment_terminal_identity = (
+            self.base.learning_config.completion_terminal_identity
+        )
         fingerprint = _interaction_fingerprint(
             source_organism_identity=trace.source_organism_identity,
             source_state_identity=trace.source_state_identity,
@@ -2334,7 +2549,9 @@ class NativeProspectiveAuthorityV2:
             trace=trace,
             actuation=actuation,
             successor_fen=successor.fen(),
-            outcome_terminal_identity=OUTCOME_TERMINAL_IDENTITY,
+            environment_outcome_terminal_identity=(
+                environment_terminal_identity
+            ),
         )
         source_binding_identity = _sha({
             "source_organism_identity": trace.source_organism_identity,
@@ -2357,6 +2574,9 @@ class NativeProspectiveAuthorityV2:
             matching_cell_ids=matching,
             matching_cell_digest=_sha(list(matching)),
             outcome_terminal_identity=OUTCOME_TERMINAL_IDENTITY,
+            environment_outcome_terminal_identity=(
+                environment_terminal_identity
+            ),
             interaction_fingerprint=fingerprint,
             source_binding_identity=source_binding_identity,
             binding_signature="",
@@ -2414,6 +2634,15 @@ class NativeProspectiveAuthorityV2:
                 dict(sorted(self.historical_tombstones.items()))
             ),
             "next_expected_ordinal": self.next_expected_ordinal,
+            "physical_trace_projection_schema": (
+                PHYSICAL_TRACE_PROJECTION_SCHEMA
+            ),
+            "discovery_prefix_physical_fingerprints": list(
+                self.discovery_prefix_physical_fingerprints
+            ),
+            "discovery_prefix_physical_fingerprint_digest": (
+                self.discovery_prefix_physical_fingerprint_digest
+            ),
             "pending_event": (
                 None if self.pending_event is None
                 else self.pending_event.manifest()
@@ -2425,8 +2654,8 @@ class NativeProspectiveAuthorityV2:
                 )
             },
             "consumed_tokens": sorted(self.consumed_tokens),
-            "interaction_fingerprints": dict(sorted(
-                self.interaction_fingerprints.items()
+            "prospective_physical_fingerprints": dict(sorted(
+                self.prospective_physical_fingerprints.items()
             )),
             "emissions": {
                 key: value.manifest()
@@ -2457,6 +2686,8 @@ class NativeProspectiveAuthorityV2:
         item = pickle.loads(payload)
         if not isinstance(item, cls):
             raise TypeError("wrong V2 organism type")
+        if getattr(item, "schema_version", None) != SCHEMA_VERSION:
+            raise ProspectiveV2IntegrityError("unsupported V2 schema")
         before = item.continuation_manifest()
         item.base._canonical_rebuild()
         item._verify_invariants()
@@ -2485,7 +2716,8 @@ class OutcomeBlindExposureScanner:
         "candidate_manifest_digest", "authority_topology_digest",
         "predecessor_fen", "trace", "selected_actuation",
         "successor_fen", "matching_cell_ids", "matching_cell_digest",
-        "outcome_terminal_identity", "interaction_fingerprint",
+        "outcome_terminal_identity",
+        "environment_outcome_terminal_identity", "interaction_fingerprint",
         "source_binding_identity", "binding_signature",
     })
     ROW_KEYS = COMMITMENT_KEYS | {"cell_id", "opportunity_id"}
@@ -2515,6 +2747,13 @@ class OutcomeBlindExposureScanner:
         if commitment.outcome_terminal_identity != OUTCOME_TERMINAL_IDENTITY:
             raise ProspectiveV2IntegrityError(
                 "noncanonical exposure terminal"
+            )
+        if (
+            commitment.environment_outcome_terminal_identity
+            != organism.base.learning_config.completion_terminal_identity
+        ):
+            raise ProspectiveV2IntegrityError(
+                "noncanonical environment outcome terminal"
             )
         unsigned = commitment.unsigned_manifest()
         if not hmac.compare_digest(
@@ -2584,7 +2823,9 @@ class OutcomeBlindExposureScanner:
             trace=trace,
             actuation=commitment.selected_actuation,
             successor_fen=commitment.successor_fen,
-            outcome_terminal_identity=OUTCOME_TERMINAL_IDENTITY,
+            environment_outcome_terminal_identity=(
+                commitment.environment_outcome_terminal_identity
+            ),
         )
         if fingerprint != commitment.interaction_fingerprint:
             raise ProspectiveV2IntegrityError(
@@ -2747,6 +2988,7 @@ class OutcomeBlindExposureScanner:
                 row["schema_version"] != EXPOSURE_SCHEMA_VERSION
                 or row["outcome_terminal_identity"]
                 != OUTCOME_TERMINAL_IDENTITY
+                or not row["environment_outcome_terminal_identity"]
                 or row["source_binding_identity"]
                 != scan["source_binding_identity"]
             ):
@@ -2820,7 +3062,9 @@ class OutcomeBlindExposureScanner:
                 trace_manifest=trace,
                 actuation_manifest=actuation,
                 successor_fen=str(row["successor_fen"]),
-                outcome_terminal_identity=OUTCOME_TERMINAL_IDENTITY,
+                environment_outcome_terminal_identity=str(
+                    row["environment_outcome_terminal_identity"]
+                ),
             ))
             if fingerprint != row["interaction_fingerprint"]:
                 raise ProspectiveV2IntegrityError(
@@ -2848,31 +3092,3 @@ class OutcomeBlindExposureScanner:
                 "cell exposure summary differs from raw opportunities"
             )
         return any(len(ids) >= MIN_SUPPORT for ids in per_cell.values())
-
-    @classmethod
-    def adjudicate_cohort(
-        cls, scans: Sequence[Mapping[str, Any]]
-    ) -> dict[str, Any]:
-        if len(scans) != 32:
-            raise ProspectiveV2IntegrityError(
-                "exposure admission requires exactly 32 organisms"
-            )
-        qualifications = [cls._validate_raw_scan(scan) for scan in scans]
-        identities = [
-            str(scan["source_binding_identity"]) for scan in scans
-        ]
-        if len(set(identities)) != 32:
-            raise ProspectiveV2IntegrityError(
-                "exposure cohort requires 32 distinct bound organisms"
-            )
-        qualifying = sum(qualifications)
-        return {
-            "organism_count": 32,
-            "qualifying_organisms": qualifying,
-            "required_qualifying_organisms": 24,
-            "admitted": qualifying >= 24,
-            "stop_reason": (
-                None if qualifying >= 24
-                else "prospective_evidence_starvation"
-            ),
-        }
