@@ -1,0 +1,92 @@
+{
+  "schema_version": "native_v2_science_integrity_abort.v1",
+  "experiment_id": "native_v2_prospective_scientific_discriminator.v1",
+  "recorded_utc": "2026-07-24T18:27:58Z",
+  "verdict": "instrument_abort",
+  "stop_reason": "preoutcome_arm_bytes_changed_before_suffix",
+  "failure": {
+    "exception_type": "ScientificIntegrityError",
+    "message": "preoutcome arm bytes changed before suffix:0:B",
+    "seed_ordinal": 0,
+    "arm": "B",
+    "source_file": "src/recon_lite_chess/autogrowth/native_prospective_evidence_v2_science.py",
+    "source_line": 1903,
+    "expected_sha256_persisted": true,
+    "observed_sha256_persisted": false,
+    "field_level_difference_persisted": false
+  },
+  "outcome_access": {
+    "suffix_outcomes_opened": true,
+    "scope": {
+      "seed_ordinal": 0,
+      "completed_arm": "A",
+      "events_consumed_in_memory": 16,
+      "arm_B_opened": false,
+      "arm_C_opened": false,
+      "later_seeds_opened": false
+    },
+    "basis": "Frozen control flow verifies A bytes, executes and completes _execute_suffix_arm(A), then verifies B bytes. The B verification raised before _execute_suffix_arm(B).",
+    "persisted_seed_payload": false,
+    "persisted_event_rows": false,
+    "recoverable_primary_endpoints": false
+  },
+  "scientific_adjudication": {
+    "available": false,
+    "engagement_adjudicated": false,
+    "primary_contrasts_adjudicated": false,
+    "causal_claim": "none",
+    "rerun_permitted": false
+  },
+  "preoutcome_gate": {
+    "commit": "2a5ec3fe768dd4cae3d0087b093cb7bb490f41f9",
+    "artifact": "reports/autogrowth/native_authority/v2_scientific_discriminator/preoutcome_exposure_admission.json",
+    "sha256": "087403387a7e3c10b7a7deb34f81de8a770d02db318e95760cc7f035de8dd2b5",
+    "digest": "d9bee547813c0c744984cf6b8dcc5166cdcc2a1e49d34a76c720bf9440a61390",
+    "all_32_retained": true,
+    "row_parity_passed": true,
+    "row_parity_failure_count": 0,
+    "registry_adjudication": {
+      "A": true,
+      "B": true,
+      "C": true
+    },
+    "targeted_exposure_qualifying_count": 29,
+    "targeted_exposure_required": 24,
+    "targeted_exposure_admitted": true,
+    "suffix_outcomes_opened_at_gate_freeze": false
+  },
+  "protected_boundary": {
+    "baseline_commit": "cd0c739f69558030c3bc81daf292af068c6f54d6",
+    "v2_1_package_manifest": "c0116b15982511d446dee7a926c4d31e3066e59e3cc3faf9bb161b4c24b50a58",
+    "v2_authority_sha256": "25945864fd998caf22ae12cbcb9bcb4779447337c0079f705640c63d2356f029",
+    "v2_registry_sha256": "f3aee5cccf761af1cb6a5de94b886d5e758c0a07cb0f6d77b8898f662ca73b58",
+    "protected_sources_changed": false
+  },
+  "canonical_runtime": {
+    "worker_count": 1,
+    "seed_order": "ordinal",
+    "arm_order": [
+      "A",
+      "B",
+      "C"
+    ],
+    "environment": {
+      "PYTHONHASHSEED": "0",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "TZ": "UTC",
+      "LC_ALL": "C.UTF-8",
+      "LANG": "C.UTF-8"
+    },
+    "canonical_result_created": false
+  },
+  "closure": {
+    "repair_in_package": false,
+    "rerun_in_package": false,
+    "threshold_or_ecology_change": false,
+    "additional_pool_access": false,
+    "required_next_authority": "external review and a separately frozen engineering reclosure"
+  }
+}

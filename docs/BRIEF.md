@@ -520,3 +520,24 @@ foreign/raw cohort results. The exact adjacent suite passed 54 tests in 638.07
 seconds; the full repository suite passed 1,013 tests in 13,032.96 seconds
 (3h37m12s). See
 `docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_AUTHORITY_V2_1_PHYSICAL_IDENTITY_CLOSURE_20260723.md`.
+
+
+The preregistered V2 prospective-evidence scientific discriminator is closed
+as an instrument abort, not a scientific result. Native discovery retained all
+32 fixed seeds; planted targets existed in 32/32 and eligible deterministic
+spurious targets in 29/32. The outcome-blind registry gate passed exactly:
+A/B/C classifier-visible row parity had zero failures, all registries admitted,
+and 29/32 seeds had both targets with eight distinct physical opportunities
+(required 24/32). That gate is frozen at `2a5ec3f`, artifact SHA-256
+`087403387a7e3c10b7a7deb34f81de8a770d02db318e95760cc7f035de8dd2b5`.
+
+The canonical serial suffix then failed hard on seed 0 arm B because its
+reconstructed bytes differed from the pre-outcome hash. Frozen control flow had
+already consumed all 16 seed-0/A suffix events in memory before checking B; no
+complete seed payload, endpoints, or canonical result was persisted. No B/C or
+later-seed outcome opened. The package is not rerun or repaired, and no
+engagement, paired contrast, p-value, or causal claim exists. Future work
+requires a separately frozen engineering closure that verifies every arm before
+the first outcome and persists expected/observed field-level mismatch evidence.
+See
+`docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_V2_SCIENCE_INTEGRITY_ABORT_20260724.md`.
