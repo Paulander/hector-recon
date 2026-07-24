@@ -1,0 +1,1919 @@
+{
+  "all_32_retained": true,
+  "ecology_manifest_sha256": "343aeecb3ff6060b79bd9b970b854e8af73afafc239a41a0c86e54a1713bb4cf",
+  "experiment_id": "native_v2_prospective_scientific_discriminator.v1",
+  "nomination": {
+    "both_present": 29,
+    "planted_present": 32,
+    "spurious_present": 29
+  },
+  "outer_manifest_sha256": "1650a1e053fa0e2ef326b667a65d1266ed2f1f37e5d82434706f4fa2c298c2eb",
+  "prefix_manifest_digest": "04df7584da18d55dae5908869754365c660cdd1628ebd7d39f8a36c1f3b7fbc6",
+  "results": [
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0014",
+        "competence_context_0015",
+        "competence_context_0016",
+        "competence_context_0018",
+        "competence_context_0019",
+        "competence_context_0020",
+        "competence_context_0022",
+        "competence_context_0023",
+        "competence_context_0024",
+        "competence_context_0025"
+      ],
+      "artifact": {
+        "byte_count": 249327,
+        "compressed_sha256": "4e94c7b489437a3dadd6fa699421010321b2724417b8b4bdc1db28f865f5be70",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_00.pkl.gz",
+        "uncompressed_sha256": "9ed804ed1d4d1c11fbaa735683598b2dcde959ba35f30cb626f48ed294b52ba8"
+      },
+      "continuation_digest": "4c71e60943a90a706592f6c22ffec48bb858894e74223c6678ecf2430a078925",
+      "experimental_identity_digest": "588f280bae8649103003ca577c9d83bddb079ddab7fc0561e7b463f7348afa4a",
+      "genome_seed": 9032853793709537509,
+      "ordinal": 0,
+      "population_snapshot_digest": "e3befebca462a918a9a5c1e4bd7c704e06e01a3a41d86ffa662501c86ebdd1be",
+      "targets": {
+        "candidate_population_count": 19,
+        "candidate_population_digest": "755a8573de30bbb39d1480a53bb24a5032e5a5ed55ae1f14fb3bfbaf8973c758",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0022",
+          "eligible": true,
+          "hypothesis_digest": "1529279cd4282ba47906884c611fc318bf9474a793a4847afcdda64b46b55f6e",
+          "members": [
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0020",
+          "eligible": true,
+          "hypothesis_digest": "11c814238151d0ea4f80abb5a7a1fa84322c7a41845fa6f64156001e0d8bd7a7",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "9ed804ed1d4d1c11fbaa735683598b2dcde959ba35f30cb626f48ed294b52ba8"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0014",
+        "competence_context_0015",
+        "competence_context_0016",
+        "competence_context_0017",
+        "competence_context_0018",
+        "competence_context_0021",
+        "competence_context_0022",
+        "competence_context_0023",
+        "competence_context_0024"
+      ],
+      "artifact": {
+        "byte_count": 248036,
+        "compressed_sha256": "fe5ddf62871a78a25c83c4854476c3218bed1ea3d8185a6fc003969dbd3b8a40",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_01.pkl.gz",
+        "uncompressed_sha256": "eec4adb190c7ccd1b9a639da070ddeb05a162d16a8732edc3e350f39f9621f5f"
+      },
+      "continuation_digest": "06e8cb5394ea89d71ac798eef1b788659740251881f0506621358ca02207e75a",
+      "experimental_identity_digest": "b5c9fc4c4f95b288c2a31a86ae22bebd916f565b737046d2e46f0ea2614d2d7a",
+      "genome_seed": 3459551724318359566,
+      "ordinal": 1,
+      "population_snapshot_digest": "87b6ab54cbde9d7035cf48852e86ce367dcefc33fbbf8aeac3c6f74169268937",
+      "targets": {
+        "candidate_population_count": 18,
+        "candidate_population_digest": "668e428201b53fdc27ae952278e43f3480ead2663d3be1a0ccb703d96c5691ba",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0014",
+          "eligible": true,
+          "hypothesis_digest": "339ea02552c0a45d581171d94df0994a1af89db27972746e82e85a5ed4b106a4",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0018",
+          "eligible": true,
+          "hypothesis_digest": "3f4d2958cb1a7d38fa457445f95aee93649d188943cd8e21a27c92364b8b8d4f",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "eec4adb190c7ccd1b9a639da070ddeb05a162d16a8732edc3e350f39f9621f5f"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0015",
+        "competence_context_0016",
+        "competence_context_0017",
+        "competence_context_0019",
+        "competence_context_0020",
+        "competence_context_0022",
+        "competence_context_0024",
+        "competence_context_0025",
+        "competence_context_0027",
+        "competence_context_0028",
+        "competence_context_0029"
+      ],
+      "artifact": {
+        "byte_count": 249947,
+        "compressed_sha256": "052f2d3a4da6ba254ee0a321c0a2ae4a971971df22856b90ff24cb0047b0318f",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_02.pkl.gz",
+        "uncompressed_sha256": "642f7417114faa2decfec1c570c8a37d6ea78e43929e0efe1cfa8c41fc5e659a"
+      },
+      "continuation_digest": "6b4078fd31e3206f731c8e1f01f6f8474e7ec904ab5d62767b1f479905d6ca7b",
+      "experimental_identity_digest": "90c9a5b4fbf743a3d27b8b6eaf2866d5304baeb7a9816b097d599b659fb25071",
+      "genome_seed": 1631075240610939967,
+      "ordinal": 2,
+      "population_snapshot_digest": "1a7a29c9a58fbf28222825acd0350fd0e978761ba148171f530530debf443321",
+      "targets": {
+        "candidate_population_count": 19,
+        "candidate_population_digest": "e122ed243c3292dc07061e48610c7c5b2f1754cb50220836340bde235da3bbae",
+        "eligible_spurious_count": 1,
+        "planted": {
+          "cell_id": "competence_context_0022",
+          "eligible": true,
+          "hypothesis_digest": "a28123d01f2c23f4f1aa9c6e813c9765a60a2847b397f85148476382cca97325",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0019",
+          "eligible": true,
+          "hypothesis_digest": "41993a291045e40b9e4b4f16057bebeed85cbf80ee85af855b1c15b81584ea8a",
+          "members": [
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "642f7417114faa2decfec1c570c8a37d6ea78e43929e0efe1cfa8c41fc5e659a"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0015",
+        "competence_context_0017",
+        "competence_context_0021",
+        "competence_context_0022",
+        "competence_context_0023",
+        "competence_context_0025",
+        "competence_context_0026",
+        "competence_context_0027"
+      ],
+      "artifact": {
+        "byte_count": 246749,
+        "compressed_sha256": "675752d6bea1a9ddb39c1d28f34ed5bba7b8f3e2b718f8757de5712c8d5b7e46",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_03.pkl.gz",
+        "uncompressed_sha256": "d2319738a283c188ec65d916e2b34a7adef70ac3e2d0f1ef7c682ccac0a90854"
+      },
+      "continuation_digest": "52520d6f7accdc2998bdbd3613e7d272c1ebdb372b046b33d7a7128a09d88f97",
+      "experimental_identity_digest": "085df8ce4adda29ae72cdec05a408b3349dacde7a6fe451943240c7e89fc4e80",
+      "genome_seed": 317635137975631934,
+      "ordinal": 3,
+      "population_snapshot_digest": "eff918914c7260930c63d0da7ef194a81562d44cf496d740aaea685f13ac2f79",
+      "targets": {
+        "candidate_population_count": 17,
+        "candidate_population_digest": "ba8f8a0d57d3e310963b111d10384cc4450229def8baeeb216a6ed65d68d5c5f",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0017",
+          "eligible": true,
+          "hypothesis_digest": "2dca3de383c36fa8a58442c7972252c136b30f0b022f6ce1e2afeaa2a71fa1b0",
+          "members": [
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0021",
+          "eligible": true,
+          "hypothesis_digest": "1f88768aee9ad343e34cf7f450a9122250eab8d037fecd8c1e311c4e183b71b1",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "d2319738a283c188ec65d916e2b34a7adef70ac3e2d0f1ef7c682ccac0a90854"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0014",
+        "competence_context_0021",
+        "competence_context_0022",
+        "competence_context_0024",
+        "competence_context_0025",
+        "competence_context_0026"
+      ],
+      "artifact": {
+        "byte_count": 243704,
+        "compressed_sha256": "cd7c25c71357e82f22e89578910d17a91a7893bd4255e26f4ac9319e85bd5176",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_04.pkl.gz",
+        "uncompressed_sha256": "7b856df55d477b7da01206eff73bc96ff99209016ddba1d780ce2831e06ed1e8"
+      },
+      "continuation_digest": "4a0b2854dddd546daa9b9b2a841c5d2bcb2fabff9d887d88618122a12b734bf9",
+      "experimental_identity_digest": "150366233b97cabf37ced92f9d1d2339a7377826b0d8cfcc10579f8bce9743dc",
+      "genome_seed": 6378165900882751548,
+      "ordinal": 4,
+      "population_snapshot_digest": "a01663a9d952de3d67eb679b14100bf5369101467425f26e88bd1f219afbbc43",
+      "targets": {
+        "candidate_population_count": 15,
+        "candidate_population_digest": "4ee51c8d69daf9e71a9d2de161e61166db9ec3f4416850baa48b3fe51fa272f0",
+        "eligible_spurious_count": 1,
+        "planted": {
+          "cell_id": "competence_context_0025",
+          "eligible": true,
+          "hypothesis_digest": "9eca8bff983692fc8046f05fe31a408cb19a2b8f87fe9edb0550b6cacf7867de",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0022",
+          "eligible": true,
+          "hypothesis_digest": "08cadf375f7591b3c17b2a2284ca9a1cc01c17c20b3f82bdcdc195b0616fe145",
+          "members": [
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "7b856df55d477b7da01206eff73bc96ff99209016ddba1d780ce2831e06ed1e8"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0014",
+        "competence_context_0015",
+        "competence_context_0017",
+        "competence_context_0020",
+        "competence_context_0022",
+        "competence_context_0023",
+        "competence_context_0024",
+        "competence_context_0025",
+        "competence_context_0028",
+        "competence_context_0030"
+      ],
+      "artifact": {
+        "byte_count": 250297,
+        "compressed_sha256": "8fc1ccd63b268f19c430ee923c9a727fe6d4f5255ebde83b379bfa6d6abca769",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_05.pkl.gz",
+        "uncompressed_sha256": "c9f9f7cd6a8663f222f0b5a4f4bc430e4598b1af0215ac1fa67fa8e53922dd89"
+      },
+      "continuation_digest": "8e222b2b8a9dd7070fca54cd534fe49b69d9c95a9379f5bb0c36ece35f56ade3",
+      "experimental_identity_digest": "534b0fd20f4e6604ddf433940f0ff53e86a8ed8bb84d838d31053c8e7a0245ed",
+      "genome_seed": 5070990742962383844,
+      "ordinal": 5,
+      "population_snapshot_digest": "61e898de475f782f080771c21d3a7925e799c49e46fe23bc7506e61b6214ddba",
+      "targets": {
+        "candidate_population_count": 19,
+        "candidate_population_digest": "98448744c943514b7404b124a2f9432a74aa657176218714abd305afc34bd258",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0030",
+          "eligible": true,
+          "hypothesis_digest": "8207980937e6e09b629313f7efd361d0987b0873702fe934152612216bc411c9",
+          "members": [
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0015",
+          "eligible": true,
+          "hypothesis_digest": "2694e917e7eefa17722849cf5fb77ee4247a09a4b388fc94a9b4f88918d8f8f8",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "c9f9f7cd6a8663f222f0b5a4f4bc430e4598b1af0215ac1fa67fa8e53922dd89"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0017",
+        "competence_context_0018",
+        "competence_context_0019",
+        "competence_context_0021",
+        "competence_context_0022",
+        "competence_context_0024",
+        "competence_context_0025",
+        "competence_context_0026",
+        "competence_context_0027",
+        "competence_context_0028"
+      ],
+      "artifact": {
+        "byte_count": 248661,
+        "compressed_sha256": "94054475e4a70f38698746ab613beeb73013482c238391de4eba96d91fea808f",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_06.pkl.gz",
+        "uncompressed_sha256": "23976f2f41bec7919d9fa95cc23761eb7fb5ceed56a5cb32a79ba68bb250308b"
+      },
+      "continuation_digest": "f1585ed22f4f6d942e9f53c3e29bf38d44795dd26c3c1e8e697cb59aa612adab",
+      "experimental_identity_digest": "be8740278338be89790f3ed218a1820fb4b1ae30268e038deedf8df910bfab84",
+      "genome_seed": 5500619545701882113,
+      "ordinal": 6,
+      "population_snapshot_digest": "81b6b87465ff859f0b9d19e6b955eb9a5057ba0bcd38efbae803fee34d35e456",
+      "targets": {
+        "candidate_population_count": 18,
+        "candidate_population_digest": "576ac96f42265c26372043233b1a82a4b51b864542c9559225aba7d480bede63",
+        "eligible_spurious_count": 1,
+        "planted": {
+          "cell_id": "competence_context_0026",
+          "eligible": true,
+          "hypothesis_digest": "5570380913881e6aa7de61b9c6edb8869042a6cac4d036e2ca859834999e6a5c",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0027",
+          "eligible": true,
+          "hypothesis_digest": "3d32ccd1ee5e5a4b8bc2237e33e78eeb6894cd53e6fc8bac403d7abbfe25b1f3",
+          "members": [
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "23976f2f41bec7919d9fa95cc23761eb7fb5ceed56a5cb32a79ba68bb250308b"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0014",
+        "competence_context_0015",
+        "competence_context_0017",
+        "competence_context_0019",
+        "competence_context_0020",
+        "competence_context_0021",
+        "competence_context_0024",
+        "competence_context_0025",
+        "competence_context_0027"
+      ],
+      "artifact": {
+        "byte_count": 246966,
+        "compressed_sha256": "7ee95bc400e39ff5cb08e8f71d275786fb192afd4257d6f18eac0ad0b1253128",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_07.pkl.gz",
+        "uncompressed_sha256": "4ae1e6393c0d6ffce841d9545c19ef8779fa12a07464598648853d5a2b99db89"
+      },
+      "continuation_digest": "078527c861f363e2a2f3b1da122d2299d5b9e0781c90eaaf98a080987698923e",
+      "experimental_identity_digest": "68ac799cf0e1a76844e966c840d45423d89472a1d5c7016866591a7dc45c61af",
+      "genome_seed": 1786837600065852557,
+      "ordinal": 7,
+      "population_snapshot_digest": "e1f8a1a14aa7999918b1f121de433f25255fe6fb5454e2d35d5da566266c87d2",
+      "targets": {
+        "candidate_population_count": 17,
+        "candidate_population_digest": "2da05677e9070bd8eb5737b0d6aa2e1f1459d9555e1f9185696e6733b5a86f59",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0024",
+          "eligible": true,
+          "hypothesis_digest": "1fd449ffa9dedeb1b8199173dee57f7c8767a9cc839b39c028351d819844b99c",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0021",
+          "eligible": true,
+          "hypothesis_digest": "34a09a8041467381b02d293da796870d96d7ded8dd4f653265bb69d2ee875d97",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "4ae1e6393c0d6ffce841d9545c19ef8779fa12a07464598648853d5a2b99db89"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0015",
+        "competence_context_0016",
+        "competence_context_0018",
+        "competence_context_0021",
+        "competence_context_0022",
+        "competence_context_0024",
+        "competence_context_0025",
+        "competence_context_0026"
+      ],
+      "artifact": {
+        "byte_count": 244885,
+        "compressed_sha256": "5a236b091484931787227d1a1d73730e3def89138f47d7d7fd02b3966a2c294f",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_08.pkl.gz",
+        "uncompressed_sha256": "8f5ad83ba000aa594cc1d241c964a8c3680f17b6e5c78f0962e8cf688feaf9bd"
+      },
+      "continuation_digest": "5498b5163dbba071ce5c0405aa4d3403aa00c3b4240fde0adcfc1ac4ec046a85",
+      "experimental_identity_digest": "70d8ad9c495b4a4abdbb67cf5f638d14ed01f7f1e304c3f8735917b6a087101e",
+      "genome_seed": 8170869466795851399,
+      "ordinal": 8,
+      "population_snapshot_digest": "225179642081dbe460715aea43ac200c09e9724f65e659666fae8823c1e938d5",
+      "targets": {
+        "candidate_population_count": 16,
+        "candidate_population_digest": "218d767311cd6e2c86b726f44970f35aed10676e3995fcccb55e8b4a40674a36",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0021",
+          "eligible": true,
+          "hypothesis_digest": "7a22e00555ca0216f1ae2ee36180b644c1d8d446110f96b10278c415cb7d9bc1",
+          "members": [
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0026",
+          "eligible": true,
+          "hypothesis_digest": "783314d422cbca1b371fcffc61aa2e9cdfd7092e3b677e9af781bea30336ccba",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "8f5ad83ba000aa594cc1d241c964a8c3680f17b6e5c78f0962e8cf688feaf9bd"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0014",
+        "competence_context_0016",
+        "competence_context_0017",
+        "competence_context_0019",
+        "competence_context_0020",
+        "competence_context_0022",
+        "competence_context_0024",
+        "competence_context_0026"
+      ],
+      "artifact": {
+        "byte_count": 245103,
+        "compressed_sha256": "1e4f0652e134fade35ec86994e01acef7d555711976f937fbbc29ddb483c88d2",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_09.pkl.gz",
+        "uncompressed_sha256": "432e050c6232cb34883d85471ceeab92fc38cfb384871e49d6e07af90733c744"
+      },
+      "continuation_digest": "3ed3db2baef98b6ef92d0c8a466eb7b9956f6abe4b5cd44a0784e9893bcdd50b",
+      "experimental_identity_digest": "1a093670de62c2ae390906353732f11ea699c4fea24c7232de00825a7466f6a0",
+      "genome_seed": 1276728776302703737,
+      "ordinal": 9,
+      "population_snapshot_digest": "45117035e66d7c4775f74fea18fe7b1ddbcb31488441efd68f340ddfd671e81d",
+      "targets": {
+        "candidate_population_count": 16,
+        "candidate_population_digest": "a05230ba318e42f88980cc1c9a3bc5ce2cda454e4c40e7e2377abfc3e4ea7d03",
+        "eligible_spurious_count": 1,
+        "planted": {
+          "cell_id": "competence_context_0017",
+          "eligible": true,
+          "hypothesis_digest": "046ceda0fb488c571d009fb4aea44e39f48cf8ffde7ca71d3d4ae32161581c43",
+          "members": [
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0016",
+          "eligible": true,
+          "hypothesis_digest": "d1adf8a79c5c42294205d3464292e0703198ba34822c4cd416f7d2cca6739f5b",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "432e050c6232cb34883d85471ceeab92fc38cfb384871e49d6e07af90733c744"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0014",
+        "competence_context_0015",
+        "competence_context_0018",
+        "competence_context_0020",
+        "competence_context_0022",
+        "competence_context_0024",
+        "competence_context_0025",
+        "competence_context_0026",
+        "competence_context_0027",
+        "competence_context_0028",
+        "competence_context_0029",
+        "competence_context_0030"
+      ],
+      "artifact": {
+        "byte_count": 253665,
+        "compressed_sha256": "4376e36f279e6030f004d5dad48b8b0d8a9a59f0ae771a39ed9795a15b61296b",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_10.pkl.gz",
+        "uncompressed_sha256": "2756a14023972f62479f8bcccac51b458b13b9be55d86cb6753cc7d606bc5205"
+      },
+      "continuation_digest": "aedd58266d50a470129b3d96275e28030c25470692667210308aeb831d7c3ce9",
+      "experimental_identity_digest": "4ef33402664a80a72f71bcf93e9906908f4943df813de20dd8a9ef787a9d3d31",
+      "genome_seed": 7956472669094699878,
+      "ordinal": 10,
+      "population_snapshot_digest": "dbfaaef632b712675fa96c5e69ef7a54c9507e938e5f3f0196373ef530844764",
+      "targets": {
+        "candidate_population_count": 21,
+        "candidate_population_digest": "2925d20783ef38aeae4bddf09d7670496b1ec94574e6980f0d637fbfefc4b962",
+        "eligible_spurious_count": 1,
+        "planted": {
+          "cell_id": "competence_context_0013",
+          "eligible": true,
+          "hypothesis_digest": "3a73825f075e6a07097a8f01774abcb4182939937a6e40cc81faeb5d8da5fc16",
+          "members": [
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0024",
+          "eligible": true,
+          "hypothesis_digest": "16668b2def355b5187d724c00cdc3c4b651fca110aacf8594149c98f2f34e8b2",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "2756a14023972f62479f8bcccac51b458b13b9be55d86cb6753cc7d606bc5205"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0014",
+        "competence_context_0015",
+        "competence_context_0017",
+        "competence_context_0018",
+        "competence_context_0019",
+        "competence_context_0021",
+        "competence_context_0022",
+        "competence_context_0023",
+        "competence_context_0024",
+        "competence_context_0029"
+      ],
+      "artifact": {
+        "byte_count": 248638,
+        "compressed_sha256": "42da56cae5c8134c2823757746f2da3512b3ec65ba1376e27b14d92c1f893553",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_11.pkl.gz",
+        "uncompressed_sha256": "f752a2432670c594bf019dbf15995e89ef56e61ddc204aa400fa313b4e6fb35b"
+      },
+      "continuation_digest": "1150b3c11c5e6525a9217064e7d362ac35b3b83db55232e5c93f9167c2685562",
+      "experimental_identity_digest": "69817dbed4b8efe7bf9365a65a5d38735260ab148e68dabb29172a15663068fd",
+      "genome_seed": 7768579519970438220,
+      "ordinal": 11,
+      "population_snapshot_digest": "0733046983c9d2929c28be78eb7297657573adbfc9f039aabca0bf0462d4161c",
+      "targets": {
+        "candidate_population_count": 18,
+        "candidate_population_digest": "35cc202f6262f6666fc85c9ab31ba1b4d7ac2e0dd5a70ecbcd306d4d4fa3d2a9",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0018",
+          "eligible": true,
+          "hypothesis_digest": "5a7583e4d60d2aa11fe55f12ea595cf47d36219a8e63378b07c2fe563284a084",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0014",
+          "eligible": true,
+          "hypothesis_digest": "04091da19d586db3b32d14edf4751c6e9c93a34f598ac72d8509fdb7461fea62",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "f752a2432670c594bf019dbf15995e89ef56e61ddc204aa400fa313b4e6fb35b"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0014",
+        "competence_context_0016",
+        "competence_context_0017",
+        "competence_context_0018",
+        "competence_context_0019",
+        "competence_context_0023",
+        "competence_context_0024",
+        "competence_context_0025",
+        "competence_context_0027",
+        "competence_context_0028"
+      ],
+      "artifact": {
+        "byte_count": 248635,
+        "compressed_sha256": "73cd3a65dc1e5bbe5453bd7d4c27369f14dcd9fd038ca67db40e1d36464e491f",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_12.pkl.gz",
+        "uncompressed_sha256": "f167ed00f35382abb7131224e272402906e4b192441dbbdd02479ca013bfaee3"
+      },
+      "continuation_digest": "570b7182d55ca7b66013428ad8ecbc5956dcef84a28a5e0288b2c41dcf0bd299",
+      "experimental_identity_digest": "02ec1f7de5dc267e262f67b3b8be4ee736163dbe0736cdfb7386dbc8c7d69deb",
+      "genome_seed": 4681626808854161129,
+      "ordinal": 12,
+      "population_snapshot_digest": "0a616c8077eae6001217fe762ddfc0c6d3673ebce00e9c7a3018fa4fc0c1afcd",
+      "targets": {
+        "candidate_population_count": 18,
+        "candidate_population_digest": "f906b0389f7c0481b8c244c1650d01db819ae10d40f01608abb9e1dc6503b945",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0012",
+          "eligible": true,
+          "hypothesis_digest": "724b76086852d50a3923753770416be6492b0656cf383d60b95d0c757c182b24",
+          "members": [
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0013",
+          "eligible": true,
+          "hypothesis_digest": "0b48c3adef4895fe746ace020968570d4fe842494a940c121afea80860306c3a",
+          "members": [
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "f167ed00f35382abb7131224e272402906e4b192441dbbdd02479ca013bfaee3"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0014",
+        "competence_context_0015",
+        "competence_context_0016",
+        "competence_context_0018",
+        "competence_context_0020",
+        "competence_context_0022",
+        "competence_context_0023",
+        "competence_context_0025",
+        "competence_context_0026"
+      ],
+      "artifact": {
+        "byte_count": 247937,
+        "compressed_sha256": "d7cb31dc912116d57e095a048ebbf3b0f5fe3867edb8a556afe33e6b6df568d4",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_13.pkl.gz",
+        "uncompressed_sha256": "cf5ec2063ddff448fc86f46d431f2af6e020a508dcb34ef3a6e145d14ea8b371"
+      },
+      "continuation_digest": "a3284ea6d6d6a623b3227a42679bd691fcf06792a797c3eb98138cd36bbb3b35",
+      "experimental_identity_digest": "081f1ee93f50e27a8087940e40042b420b9f858e49b68eabb640f61243cfa7c0",
+      "genome_seed": 6514572016640874280,
+      "ordinal": 13,
+      "population_snapshot_digest": "0e9e6f5bb82304283be026d4cac6a825f2518f7eca2eb87624179b2710d043db",
+      "targets": {
+        "candidate_population_count": 18,
+        "candidate_population_digest": "4bb905adb4e410aa63ca1b419a6da47c9b7306a2e9f1cff1bc306e48810f50bf",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0026",
+          "eligible": true,
+          "hypothesis_digest": "66e6e91d2550b65087bd21ecc9f81e75b980cae74ce05cf5941aab1b9af516ac",
+          "members": [
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0023",
+          "eligible": true,
+          "hypothesis_digest": "656879817e90630d433118133911c4bd29d84f48cb41001df2894cfb7f59d69c",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "cf5ec2063ddff448fc86f46d431f2af6e020a508dcb34ef3a6e145d14ea8b371"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0014",
+        "competence_context_0015",
+        "competence_context_0016",
+        "competence_context_0017",
+        "competence_context_0018",
+        "competence_context_0019",
+        "competence_context_0021",
+        "competence_context_0022",
+        "competence_context_0025",
+        "competence_context_0026"
+      ],
+      "artifact": {
+        "byte_count": 248158,
+        "compressed_sha256": "192cf39db8ff8a235de5201d009080dc1755b576a0d009e024bb15fd9eba5e53",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_14.pkl.gz",
+        "uncompressed_sha256": "81c823daba5219559f7a12300158fde008e541d097bdfcdb1abb40b7daea66c1"
+      },
+      "continuation_digest": "34da8e1198f5c5936c4131716594709bc4d6fd725d5851d2840c2257fd81ab31",
+      "experimental_identity_digest": "b1fed759cd9505f01d9cb9663caed836a08740ad833f55b09284432c31c55470",
+      "genome_seed": 7727643050817286804,
+      "ordinal": 14,
+      "population_snapshot_digest": "7b039053dbdf32baba6e2669476c1f2b6242b265369db8081231b31d2a321522",
+      "targets": {
+        "candidate_population_count": 18,
+        "candidate_population_digest": "45ee3239abfc4dcb4ce326396d514274dab893e84f415fb6ef72f0b6195af86d",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0017",
+          "eligible": true,
+          "hypothesis_digest": "a27e3c4199e9c1340a3ef2d7ddd16cb3b0f5c72f063c26582a3641df424e5896",
+          "members": [
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0014",
+          "eligible": true,
+          "hypothesis_digest": "36635d8a368a35772bc43b990ee4012a74046aa2df54d49437fc3dd8eb6fa1a8",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "81c823daba5219559f7a12300158fde008e541d097bdfcdb1abb40b7daea66c1"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0015",
+        "competence_context_0016",
+        "competence_context_0017",
+        "competence_context_0018",
+        "competence_context_0019",
+        "competence_context_0021",
+        "competence_context_0023",
+        "competence_context_0026"
+      ],
+      "artifact": {
+        "byte_count": 244932,
+        "compressed_sha256": "8b93952215cd9c10f82af069867a113536c4172fd303bed9e4fdaa6e95fe8669",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_15.pkl.gz",
+        "uncompressed_sha256": "e20dd3e6d9f27211dcc5da9e839b2979fe18d0d893c9b8eea3afc1c24d4205ba"
+      },
+      "continuation_digest": "5e9e0bd3f60f886640febeeb48e5b5ca5bee17a5bfa63e29a655264a2d43c6ba",
+      "experimental_identity_digest": "22d8733b9d318519c7340ac833279904f884606109a902fd64776a7d5f7607ea",
+      "genome_seed": 7064300796594109522,
+      "ordinal": 15,
+      "population_snapshot_digest": "7f8f9e1cd393ac28e33350e18e0a6a31788f836bd5db240ba8fb91c051b96bae",
+      "targets": {
+        "candidate_population_count": 16,
+        "candidate_population_digest": "8395169e05510facbbdc61622a696c621d98b2c025d2dccd84ab9a1eb6471459",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0021",
+          "eligible": true,
+          "hypothesis_digest": "c097aa36a62cbd1fd57a5d88dc94ace401e0837e954d3d6f2ad2b950dfb5a65d",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0018",
+          "eligible": true,
+          "hypothesis_digest": "813bfbfe5b76fb51a605d7ce480a1e1e6cb9504472119842f0714a148edcb2fa",
+          "members": [
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "e20dd3e6d9f27211dcc5da9e839b2979fe18d0d893c9b8eea3afc1c24d4205ba"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0014",
+        "competence_context_0015",
+        "competence_context_0017",
+        "competence_context_0018",
+        "competence_context_0020",
+        "competence_context_0024"
+      ],
+      "artifact": {
+        "byte_count": 242844,
+        "compressed_sha256": "3b82834bb384a51a5db8bd0309cda34f14a0dcbc404150b7603832ca2374c5c9",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_16.pkl.gz",
+        "uncompressed_sha256": "b9cc7c16e343b2b40960242644e5682d28c8478213ea53f6bc5e78b52aa587cf"
+      },
+      "continuation_digest": "a3161e05c56a935e83504af1335617c89a96771501fe7a45273f815eb9f72e69",
+      "experimental_identity_digest": "bf5b569c6d0932414544311ce3a118f3226ad980d852d1eef06fdf880a901fab",
+      "genome_seed": 8449906060054645739,
+      "ordinal": 16,
+      "population_snapshot_digest": "ee53cc95bf51e0140e7c7a0673f7b687360008be7753c411a934a588ee565349",
+      "targets": {
+        "candidate_population_count": 15,
+        "candidate_population_digest": "a36a34988a7259baf33ca805fe49f778d3dd82ba1cef82a44ac868056a2f9a0c",
+        "eligible_spurious_count": 0,
+        "planted": {
+          "cell_id": "competence_context_0013",
+          "eligible": true,
+          "hypothesis_digest": "98c6ecaa542e5bbc30808dae366dc3f1bad552438fd8861bad572e1b7e60b5fa",
+          "members": [
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": null,
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "b9cc7c16e343b2b40960242644e5682d28c8478213ea53f6bc5e78b52aa587cf"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0015",
+        "competence_context_0016",
+        "competence_context_0017",
+        "competence_context_0019",
+        "competence_context_0022",
+        "competence_context_0024",
+        "competence_context_0026",
+        "competence_context_0027",
+        "competence_context_0028"
+      ],
+      "artifact": {
+        "byte_count": 248153,
+        "compressed_sha256": "078e3d1658c4c156b0526b51c69bd0722571e39b3f04c92054ed67e174a1b181",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_17.pkl.gz",
+        "uncompressed_sha256": "cdd687aa8b293d814ef299a8b79036e2d9363ae90bd99f8144dc9a53d78586b1"
+      },
+      "continuation_digest": "b491743fbaa144708f0a19fe7e1e0ce27f3cf795e8634275da87582ea73d29c1",
+      "experimental_identity_digest": "4ff4aa9099815574cc16f5093563606af29f6da973dd6898fbe83e7092c18e0d",
+      "genome_seed": 6204621687755070514,
+      "ordinal": 17,
+      "population_snapshot_digest": "cbd927888acefae3f08a9df1742541ae5fe26579155b30dae32791ed38775166",
+      "targets": {
+        "candidate_population_count": 18,
+        "candidate_population_digest": "8fe629f4449065095e8cd54b6ae61d975845f8e0a273e7911407536285cd31a3",
+        "eligible_spurious_count": 0,
+        "planted": {
+          "cell_id": "competence_context_0016",
+          "eligible": true,
+          "hypothesis_digest": "96c49019343f60014545bbc5a981b15dbe26c2696593968c05914f855992b1d1",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": null,
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "cdd687aa8b293d814ef299a8b79036e2d9363ae90bd99f8144dc9a53d78586b1"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0014",
+        "competence_context_0018",
+        "competence_context_0021",
+        "competence_context_0022",
+        "competence_context_0023",
+        "competence_context_0024",
+        "competence_context_0026",
+        "competence_context_0027"
+      ],
+      "artifact": {
+        "byte_count": 246339,
+        "compressed_sha256": "6ddc75114dfe41513d8543def03b38578d42b4d750849d6ca06a8901c727871f",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_18.pkl.gz",
+        "uncompressed_sha256": "8c7e06e35f9e1a54fabddccbfdd70d97a5289c6db1667f203e1ce91e5d9e4cef"
+      },
+      "continuation_digest": "e3d25c1497d9ef15f9d5016d2ab612fe4ea2e1d87b68b551ab934ec8e528ae14",
+      "experimental_identity_digest": "ce47977c5c232e1767971c00fb9b6501707da06a12ba27decab4263414f97994",
+      "genome_seed": 885978307492832579,
+      "ordinal": 18,
+      "population_snapshot_digest": "8801cea5a45d1a5b4a91513771014e5b56d8d627594c56669d50769a55238a23",
+      "targets": {
+        "candidate_population_count": 17,
+        "candidate_population_digest": "51bf50d6ef4596204aac19b27d23b8e7103ee94f931271c0e0623aaf14bcac51",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0013",
+          "eligible": true,
+          "hypothesis_digest": "cd07b84776e4c12dc0823373945dbb65723fe58c9ce4905b6fa5095dabced582",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0026",
+          "eligible": true,
+          "hypothesis_digest": "5ac291349ffbbb899bddb5e1a0c8a1f22125acf6bef34ce9b6617280ec78e50b",
+          "members": [
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "8c7e06e35f9e1a54fabddccbfdd70d97a5289c6db1667f203e1ce91e5d9e4cef"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0014",
+        "competence_context_0015",
+        "competence_context_0016",
+        "competence_context_0019",
+        "competence_context_0020",
+        "competence_context_0021",
+        "competence_context_0023"
+      ],
+      "artifact": {
+        "byte_count": 243510,
+        "compressed_sha256": "c733e7065eef0318c6ac16734cbc7ff4b628d477423382955a859edea2eb6e65",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_19.pkl.gz",
+        "uncompressed_sha256": "31b77acd98c941140698b43bfc3ae48f5f900c93519c8f79f6705466c00c7ab9"
+      },
+      "continuation_digest": "1151a0d44191330f9910e7a6b8b81e0e1702c623c4e61c23ce8a89138510403c",
+      "experimental_identity_digest": "8ecb5e28b80da168ef8802b7a04447ddadbad52dafc7b275655c8383ddef9037",
+      "genome_seed": 4978924546964621873,
+      "ordinal": 19,
+      "population_snapshot_digest": "f473559ebfd4fe21ba8f7507168acf2773c3655c45e999d6f1c9fe626c6f5812",
+      "targets": {
+        "candidate_population_count": 15,
+        "candidate_population_digest": "72ab04eaf35c83880ff74df309d43eeb5c07de8544b179e277b221dee0f46e7b",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0020",
+          "eligible": true,
+          "hypothesis_digest": "20bae4267db71fb958013951e7de7b02a8078abebea048b6692602dcfd286823",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0021",
+          "eligible": true,
+          "hypothesis_digest": "3a6a30a98313b46ebeb24da67833b4278326aa2dcdfad78474b399010de98f63",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "31b77acd98c941140698b43bfc3ae48f5f900c93519c8f79f6705466c00c7ab9"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0015",
+        "competence_context_0017",
+        "competence_context_0018",
+        "competence_context_0019",
+        "competence_context_0020",
+        "competence_context_0022",
+        "competence_context_0023",
+        "competence_context_0024",
+        "competence_context_0028",
+        "competence_context_0029",
+        "competence_context_0030",
+        "competence_context_0031"
+      ],
+      "artifact": {
+        "byte_count": 252040,
+        "compressed_sha256": "18da60502a92edeb0b2e6f326332617aefe5e7e1b595d660752ca6fc232be013",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_20.pkl.gz",
+        "uncompressed_sha256": "0e460e96a4d3f6777103091d489955aabb9c89e761239de350b8d516089632c6"
+      },
+      "continuation_digest": "88511bacf90accabfd53ae712ea2e469da6e5a61c008ebd1c024c63493133185",
+      "experimental_identity_digest": "86230966021a91712a66b64ff30f97bf358dd3c9aa0852da69821fb85188057c",
+      "genome_seed": 5910375655260632862,
+      "ordinal": 20,
+      "population_snapshot_digest": "feb65f9c7bf5c1e94c5e21a3078195cc7e179fa8f82311d2ccf58774e742c4a1",
+      "targets": {
+        "candidate_population_count": 20,
+        "candidate_population_digest": "7ca5546c8e2da8c30e3df90141099573a44ab5f51bc0c6a2602d5759454a7a6e",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0030",
+          "eligible": true,
+          "hypothesis_digest": "65ab98bf35e94aa61de7b8f6ba51eb38e0864ff7af26532a5a28c99f6f18e65b",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0024",
+          "eligible": true,
+          "hypothesis_digest": "211cf8c0992b62afde970ff31de2c7fbf9a2f7692abbca226711c2622fbc1c8c",
+          "members": [
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "0e460e96a4d3f6777103091d489955aabb9c89e761239de350b8d516089632c6"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0015",
+        "competence_context_0018",
+        "competence_context_0019",
+        "competence_context_0020",
+        "competence_context_0021",
+        "competence_context_0022",
+        "competence_context_0023",
+        "competence_context_0024",
+        "competence_context_0026",
+        "competence_context_0028",
+        "competence_context_0029"
+      ],
+      "artifact": {
+        "byte_count": 250373,
+        "compressed_sha256": "d1147064162bf5e246c13c81a3b97c13e9564a2336198f5ad5ab18627ec97d23",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_21.pkl.gz",
+        "uncompressed_sha256": "034e76b542e337d2faef2ce3490a424f3d621d9712ebfca3dd7bd7b476acc391"
+      },
+      "continuation_digest": "7f59447ec5de8635454a6d34a69d934e75e88fd6f3c5c855d17c0c79cd6d55d4",
+      "experimental_identity_digest": "d162a33ea92df5ef9490d13394094c787c9272ac8daebb18b899b2152abd9928",
+      "genome_seed": 7727285396035216730,
+      "ordinal": 21,
+      "population_snapshot_digest": "68fdd8dd7505a9134462aeec2dbf26755b09838e36bcb0c5114187331ea645d3",
+      "targets": {
+        "candidate_population_count": 19,
+        "candidate_population_digest": "cfdf0adb9a2ce949a57acbedf21edbf0481cfbcc1c5da53c019d963d1c019352",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0015",
+          "eligible": true,
+          "hypothesis_digest": "13a2d5fe5c492b16cec799a3f65a76af664aea71777f7b79e03339e94c6c186f",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0028",
+          "eligible": true,
+          "hypothesis_digest": "5f607eae43501b8036f286fc88e7f9b1a70b7e6f2ae48f5fd4b289ae46ef5d88",
+          "members": [
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "034e76b542e337d2faef2ce3490a424f3d621d9712ebfca3dd7bd7b476acc391"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0014",
+        "competence_context_0017",
+        "competence_context_0021",
+        "competence_context_0024",
+        "competence_context_0025"
+      ],
+      "artifact": {
+        "byte_count": 241905,
+        "compressed_sha256": "376561ac0503a5ae5fd623982341d532bf069353eb874ec2efaac128277ba493",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_22.pkl.gz",
+        "uncompressed_sha256": "5184af97edd8397bd06fad9a9e3eb188aa89196f684d0a0802ef08a30f7b5399"
+      },
+      "continuation_digest": "3e61ac05c62f714ac4771314d09ce93b8253a5cdc2935b88336fcdbb7ecaaba8",
+      "experimental_identity_digest": "1ec6e97d78c2f36dcb73fd913635a1401ca4afea52febe15e6a025edfd559d5c",
+      "genome_seed": 3076783315335008151,
+      "ordinal": 22,
+      "population_snapshot_digest": "642f07c2c5b8f07864b7459ed1d7d8745b59fd2573c4e1d8643e7ed9919e3a6f",
+      "targets": {
+        "candidate_population_count": 14,
+        "candidate_population_digest": "2b90ba89462489efe8935aacd2d058e3cb1f21030ebb4d32d4b9e2c601a779c4",
+        "eligible_spurious_count": 0,
+        "planted": {
+          "cell_id": "competence_context_0012",
+          "eligible": true,
+          "hypothesis_digest": "7a4126a6d309fa0b691e53fce571194be7456444ab39b63f125f289ab6e1188e",
+          "members": [
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": null,
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "5184af97edd8397bd06fad9a9e3eb188aa89196f684d0a0802ef08a30f7b5399"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0013",
+        "competence_context_0016",
+        "competence_context_0018",
+        "competence_context_0020",
+        "competence_context_0021",
+        "competence_context_0022",
+        "competence_context_0023",
+        "competence_context_0024",
+        "competence_context_0026",
+        "competence_context_0027",
+        "competence_context_0029"
+      ],
+      "artifact": {
+        "byte_count": 248792,
+        "compressed_sha256": "8e09da36773a498cdffaf36a3f07f0d1b36661684d024a29f004f2af131d8709",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_23.pkl.gz",
+        "uncompressed_sha256": "3c55278d334f8f75057c1819e8fe42ca919af80038a1edb086ae80bae18d8653"
+      },
+      "continuation_digest": "4b1b710ab131f9baa356c6f82afe757f26c88a9cb824c31a2a32d1037daf98e4",
+      "experimental_identity_digest": "ae730de43814662c5c1475b6bd8420b8c8a12e43d38254d444c5ea4fb2638b43",
+      "genome_seed": 2245384211996052800,
+      "ordinal": 23,
+      "population_snapshot_digest": "0396b48cfc76d6535541647f75adb7ff434742e380bb50077e8a7b48e1360c3a",
+      "targets": {
+        "candidate_population_count": 18,
+        "candidate_population_digest": "fba19844cc2b41b55d66ea0cd8e628b485b1577e6051fb0009ee06242b50fe9f",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0024",
+          "eligible": true,
+          "hypothesis_digest": "6e1e0013466508f87996eb34eb14ee7f336817ee816ce93e22c1524f7a25cece",
+          "members": [
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0018",
+          "eligible": true,
+          "hypothesis_digest": "5caad113aae8058c2f3e4681fc09768da58f3aa83e718f46c70368ac83fa2259",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "3c55278d334f8f75057c1819e8fe42ca919af80038a1edb086ae80bae18d8653"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0014",
+        "competence_context_0015",
+        "competence_context_0016",
+        "competence_context_0020",
+        "competence_context_0022",
+        "competence_context_0023",
+        "competence_context_0025",
+        "competence_context_0026",
+        "competence_context_0027"
+      ],
+      "artifact": {
+        "byte_count": 246717,
+        "compressed_sha256": "8a7516f5d2d8ba1088903492e13af0331c08eedf4526d1fedc7af6df9dffd182",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_24.pkl.gz",
+        "uncompressed_sha256": "40eba68b55f458517e720244ac68dbc23157637ec4924110c009db4d770f7952"
+      },
+      "continuation_digest": "42ac64eb8986ba2f8c76b19b1d17ccb3c1bb4ee61f000075745be4995073c24b",
+      "experimental_identity_digest": "b3076961a70c75b35b4260a5b4f51a73b28d06edfea80707174b267182fdebe6",
+      "genome_seed": 7818432420324355078,
+      "ordinal": 24,
+      "population_snapshot_digest": "af946b9b92796e8f328b29cee6885081c01e84efec9b2b6861727ffc09207f84",
+      "targets": {
+        "candidate_population_count": 17,
+        "candidate_population_digest": "5da6106a7ceaef07d7d5270affbada3303f69d6dec3c5a96f6508e4ba9927ef6",
+        "eligible_spurious_count": 1,
+        "planted": {
+          "cell_id": "competence_context_0011",
+          "eligible": true,
+          "hypothesis_digest": "149c02f65ed85f74ea25ac05a5cdb751a4d6e9854199f76e48afa2ab360870a5",
+          "members": [
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0015",
+          "eligible": true,
+          "hypothesis_digest": "aeccca064956e91100f37e766b132c663f0ef038f270e62a146337d67a53526a",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "40eba68b55f458517e720244ac68dbc23157637ec4924110c009db4d770f7952"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0013",
+        "competence_context_0015",
+        "competence_context_0017",
+        "competence_context_0019",
+        "competence_context_0020",
+        "competence_context_0022",
+        "competence_context_0023",
+        "competence_context_0024",
+        "competence_context_0025",
+        "competence_context_0027"
+      ],
+      "artifact": {
+        "byte_count": 246933,
+        "compressed_sha256": "b80081fb0306b1339fbe2aeb4a043176844f1ba437bd0ffabcc274da3bfbcf7a",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_25.pkl.gz",
+        "uncompressed_sha256": "31ca106194733f0eae06600fcedec9144df709d6aaa0046696b9135bf3f6b74f"
+      },
+      "continuation_digest": "94aa2503bb6ace857f4c9042364b97a1ffc109444cf7b272cd5852e1f64f18eb",
+      "experimental_identity_digest": "faa2367225f5edb92eb68542791ced1442a8d139a4f45141d4ca24967b9ad981",
+      "genome_seed": 3778775629061563576,
+      "ordinal": 25,
+      "population_snapshot_digest": "b0a08cd41079c568d8a194f5ba9a5a7712ec6ca6b895f0081cf41d247a1ac072",
+      "targets": {
+        "candidate_population_count": 17,
+        "candidate_population_digest": "eacfec6ec10015eb7cb2b98a5a97c671247e89911de1664feb5aea19ea4037b4",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0027",
+          "eligible": true,
+          "hypothesis_digest": "42921d32d246b5ed3a399d6a7e7d8a38b8f2f94847427bd2a34da742278518d5",
+          "members": [
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0020",
+          "eligible": true,
+          "hypothesis_digest": "ec65c4e36dcea87e362ba0d9125edbe7b2063865c78198d931e85ff975277699",
+          "members": [
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "31ca106194733f0eae06600fcedec9144df709d6aaa0046696b9135bf3f6b74f"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0015",
+        "competence_context_0016",
+        "competence_context_0017",
+        "competence_context_0018",
+        "competence_context_0021",
+        "competence_context_0024",
+        "competence_context_0025",
+        "competence_context_0027"
+      ],
+      "artifact": {
+        "byte_count": 247058,
+        "compressed_sha256": "83d89cdb3ffe2dd8f5795988b7653030b924ddc9615eea5ac236e90c15d51999",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_26.pkl.gz",
+        "uncompressed_sha256": "5bab975ee797d2d017f93577454fc14d62cfc5f83cbf20866d21464281139998"
+      },
+      "continuation_digest": "8ee84f473094052f2807a570af0f447567bff2390b5b389b2b040646aaa7bdfc",
+      "experimental_identity_digest": "26883811b2bee3ba5ea2fdf036d5c773536da0cfdebcb1d5d402c2e0a753eece",
+      "genome_seed": 4797395187446353494,
+      "ordinal": 26,
+      "population_snapshot_digest": "26b5a7d16b0ee6f1273610afc5ade0ccf047aa1aefcecc5e558b0e059c49ce5b",
+      "targets": {
+        "candidate_population_count": 17,
+        "candidate_population_digest": "ffdb36965953c39fa1d94c06ca9847fa042f3af691ab8c4eac76067f9875a46b",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0017",
+          "eligible": true,
+          "hypothesis_digest": "06de303cbd2195f69913363c5f4f7e02c489c997db8b5278899d666e645efd5f",
+          "members": [
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0025",
+          "eligible": true,
+          "hypothesis_digest": "8ba80732bae417b81e2e2c8d3edbc9457c7c7b98c1feb660ef66b56fed822a99",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "5bab975ee797d2d017f93577454fc14d62cfc5f83cbf20866d21464281139998"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0014",
+        "competence_context_0016",
+        "competence_context_0017",
+        "competence_context_0018",
+        "competence_context_0021",
+        "competence_context_0024",
+        "competence_context_0025"
+      ],
+      "artifact": {
+        "byte_count": 241762,
+        "compressed_sha256": "dc2998748e687c1b00fd4fac6245aafd6736b073cf9ecae2598156f0f66f50a5",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_27.pkl.gz",
+        "uncompressed_sha256": "27ed1897fadf221072b55f2728a0638de62458219b5181578b784476e051ca5b"
+      },
+      "continuation_digest": "f6046ed0436d08aa385cbb5658c8e205830107bc3fe2b5d653da563a9567bab6",
+      "experimental_identity_digest": "2792e8d53470e2cfff9aa92a720cbc28b8b3c232699ddf334d5e32346d8fe172",
+      "genome_seed": 2954258822803671405,
+      "ordinal": 27,
+      "population_snapshot_digest": "707ca2c253075f275b924837f28b839ac6be2ecb5fe872675bebf117c06c736c",
+      "targets": {
+        "candidate_population_count": 14,
+        "candidate_population_digest": "a67894e6d7e17a0de9464b90147b0a4e03d964a540444fdafaf7056ad2d6411f",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0011",
+          "eligible": true,
+          "hypothesis_digest": "e41007d34a115dd1ba810842ee439d609da0b7e9e18496779f83a1f3e069e8aa",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0021",
+          "eligible": true,
+          "hypothesis_digest": "847992a2243c75a94ed52a0f539c9dc2956eab8e7415c1446dce016bed543092",
+          "members": [
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "27ed1897fadf221072b55f2728a0638de62458219b5181578b784476e051ca5b"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0018",
+        "competence_context_0019",
+        "competence_context_0020",
+        "competence_context_0021",
+        "competence_context_0023",
+        "competence_context_0024",
+        "competence_context_0025",
+        "competence_context_0027"
+      ],
+      "artifact": {
+        "byte_count": 246403,
+        "compressed_sha256": "93a413e849f3234beb94c0031c23fa8e081b5aca763ab1e9407154d7467f000e",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_28.pkl.gz",
+        "uncompressed_sha256": "735f6e3ef28fd97d355f94525de353f50d58e14f8a84bc3c15bb5ba2e56b1585"
+      },
+      "continuation_digest": "88049896c0de2d0ea35a32a133fe1cb080aacd1df03a7803c53bf457176012db",
+      "experimental_identity_digest": "ca44a038291c8bd7e9edf6b016f86df6a62cc3904354fb635820ea790d7e6970",
+      "genome_seed": 2512563423276244778,
+      "ordinal": 28,
+      "population_snapshot_digest": "1fd2685a28bf3ee9ba4cd6e5eaef84ba1cc5bdf19426c06c7b334adcd3233693",
+      "targets": {
+        "candidate_population_count": 17,
+        "candidate_population_digest": "c4cc4c5dc5ed72490249999d1a9d94e480772dd8854eac8251f4f2ce13c47c0b",
+        "eligible_spurious_count": 1,
+        "planted": {
+          "cell_id": "competence_context_0025",
+          "eligible": true,
+          "hypothesis_digest": "96f2c42775a17a420245846ac890cc195febc1c8a312b43c8aa0c4bbec7711da",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0019",
+          "eligible": true,
+          "hypothesis_digest": "06c6edaf454ed2f40f83253a6fa2a15f0cf01c596edc3e717806c62fa18d801b",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "735f6e3ef28fd97d355f94525de353f50d58e14f8a84bc3c15bb5ba2e56b1585"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0014",
+        "competence_context_0015",
+        "competence_context_0019",
+        "competence_context_0021",
+        "competence_context_0022",
+        "competence_context_0023",
+        "competence_context_0025"
+      ],
+      "artifact": {
+        "byte_count": 244416,
+        "compressed_sha256": "2b778a21272c455ddcb5caa4412805dfe777533728d6fd183b0fff86037915b5",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_29.pkl.gz",
+        "uncompressed_sha256": "48eb77425266247297b9cdeb723ffac74fabae86e597c9447a44472fa9a3dfe0"
+      },
+      "continuation_digest": "f3175210ef74deb95d44c7fd0bcb7d6cdf84fda0b21f7b85861e040fc17776dd",
+      "experimental_identity_digest": "24781c6d456307a049c4b723e07c47ac2cefea4daa81055a36d92832e00dd9d4",
+      "genome_seed": 7260111523917828291,
+      "ordinal": 29,
+      "population_snapshot_digest": "197d6bf6690a5adb0e933787402aa21a32a719b34555dacc283ae7fc7788a374",
+      "targets": {
+        "candidate_population_count": 16,
+        "candidate_population_digest": "fc076bed8b944774863b581b5fd956c0d8788457278c9aed809c6054dc7b68d3",
+        "eligible_spurious_count": 1,
+        "planted": {
+          "cell_id": "competence_context_0014",
+          "eligible": true,
+          "hypothesis_digest": "be3c3d0909fc71fb0b85e0649fb18abaacf77ac9ac9e003fedad61f534397529",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0023",
+          "eligible": true,
+          "hypothesis_digest": "04075632403babb35d7141122fd7eca432ba8cfb923596146d0fea5219aad793",
+          "members": [
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "48eb77425266247297b9cdeb723ffac74fabae86e597c9447a44472fa9a3dfe0"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0014",
+        "competence_context_0017",
+        "competence_context_0018",
+        "competence_context_0019",
+        "competence_context_0021",
+        "competence_context_0022",
+        "competence_context_0023",
+        "competence_context_0024",
+        "competence_context_0025"
+      ],
+      "artifact": {
+        "byte_count": 248023,
+        "compressed_sha256": "d638f4c7643f08a988633db3091ec0386ac1078d755262816995f1d8690cf1cd",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_30.pkl.gz",
+        "uncompressed_sha256": "b0f18d9db001a63fb04aa003bd67117ca1aa7e3a1451e89d2f438cffedd4c8dc"
+      },
+      "continuation_digest": "b38932bc765dd0d34d79ba75366237793de0a76dc0c01bacf7e07627d9a6f35c",
+      "experimental_identity_digest": "cbea514f11c40656cb8cedd1e1a3b4bea17e4f3cd01e0d21e269651b07148771",
+      "genome_seed": 2790326599199243776,
+      "ordinal": 30,
+      "population_snapshot_digest": "8f3fe62aea43743c8c238a82dbaecef5dde97cae7e19e92b7cc599138e43cec7",
+      "targets": {
+        "candidate_population_count": 18,
+        "candidate_population_digest": "a4702f24c34fe03c99599d155e00c5e354132239c85563e572dd13c982c9646c",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0018",
+          "eligible": true,
+          "hypothesis_digest": "6a9ffd5770460e0562c2304c64e54ef1f50e51982ce912987a0820a5b5a6e200",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0014",
+          "eligible": true,
+          "hypothesis_digest": "5959d0b2934a25194b5e7b7acc00e7dc0ace2c1d0140a161d43e1dd94bfb3a12",
+          "members": [
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "b0f18d9db001a63fb04aa003bd67117ca1aa7e3a1451e89d2f438cffedd4c8dc"
+    },
+    {
+      "added_cell_ids": [
+        "competence_context_0005",
+        "competence_context_0006",
+        "competence_context_0007",
+        "competence_context_0008",
+        "competence_context_0009",
+        "competence_context_0010",
+        "competence_context_0011",
+        "competence_context_0012",
+        "competence_context_0013",
+        "competence_context_0014",
+        "competence_context_0015",
+        "competence_context_0016",
+        "competence_context_0018",
+        "competence_context_0019",
+        "competence_context_0020",
+        "competence_context_0023",
+        "competence_context_0027",
+        "competence_context_0028"
+      ],
+      "artifact": {
+        "byte_count": 248777,
+        "compressed_sha256": "db55c31816d0487c23d4db29f219a49c1edbf9757fee375f833c4985d702837c",
+        "path": "reports/autogrowth/native_authority/v2_scientific_discriminator/prefix_organisms/seed_31.pkl.gz",
+        "uncompressed_sha256": "7bf37cf1fccc65dc1fa737d9cf0ff3d86b357cb85f21f2f704435d057c9ce31c"
+      },
+      "continuation_digest": "41946c2aa031969fc03acedbb2d4c641ef7a2e16cc979d7b68f9af6db6b1962c",
+      "experimental_identity_digest": "61fb4a18f08fa06e533cde1ac4c299310594afdec19ee81641aa06245d702847",
+      "genome_seed": 3711942573981121891,
+      "ordinal": 31,
+      "population_snapshot_digest": "129eef0e60ef7b24cc639c4aaa1d86b26af5bc1d125a2daa8e03047769c17dae",
+      "targets": {
+        "candidate_population_count": 18,
+        "candidate_population_digest": "b53549e473d21ce2119392334ceef4c53e7a8d6e67da5d7f52374b597cec1f67",
+        "eligible_spurious_count": 2,
+        "planted": {
+          "cell_id": "competence_context_0028",
+          "eligible": true,
+          "hypothesis_digest": "6ece2d0fbd0fd9a60b5f33c10e40537257d143c523ad4456635b4d476f418710",
+          "members": [
+            "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+            "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+          ],
+          "pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6"
+        },
+        "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+        "selected_spurious": {
+          "cell_id": "competence_context_0020",
+          "eligible": true,
+          "hypothesis_digest": "62a3f60f2c39f15cecd19dd243b1944f13d39dbc65ac07d9e21b70e796165918",
+          "members": [
+            "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+            "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9"
+          ],
+          "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+        },
+        "selection_used_suffix": false
+      },
+      "uncompressed_sha256": "7bf37cf1fccc65dc1fa737d9cf0ff3d86b357cb85f21f2f704435d057c9ce31c"
+    }
+  ],
+  "schema_version": "native_v2_science_prefix_candidates.v1",
+  "seed_manifest_sha256": "ee5ef6dacd1ba796caf738c105aa75ebd3d85af0e715a518c8b015cbf29a7382",
+  "source_runtime_digest": "4df5fd6bb064add6bf3e7ccab9a7dd168cb7c8e751678597e67b62da201282a6"
+}
