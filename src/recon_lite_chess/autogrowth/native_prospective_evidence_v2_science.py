@@ -700,8 +700,14 @@ def _module_identity(name: str) -> dict[str, Any]:
     except ValueError:
         pass
     else:
-        result["repository_owned"] = True
-        result["repository_relative_path"] = str(relative)
+        relative_text = str(relative)
+        source_owned = (
+            relative_text.startswith("src/")
+            or relative_text.startswith("libs/recon-lite/src/")
+        )
+        if source_owned:
+            result["repository_owned"] = True
+            result["repository_relative_path"] = relative_text
     return result
 
 

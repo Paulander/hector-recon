@@ -16,6 +16,7 @@ from recon_lite_chess.autogrowth.native_prospective_evidence_v2_science import (
     PROTECTED_HASHES,
     _arm_input,
     _classification_visible_projection,
+    _module_identity,
     _rows,
     build_ecology_r0,
     candidate_identical_arms,
@@ -227,3 +228,15 @@ def test_registry_scan_is_source_bound_and_raw_adjudication_fails_closed(ecology
             run_identity=registry.run_identity,
             package_hashes=package_hashes,
         )
+
+
+
+def test_module_identity_distinguishes_external_venv_from_repository_source():
+    external = _module_identity("chess")
+    internal = _module_identity(
+        "recon_lite_chess.autogrowth.native_prospective_evidence_v2_science"
+    )
+    assert external["repository_owned"] is False
+    assert ".venv" in external["resolved_path"]
+    assert internal["repository_owned"] is True
+    assert internal["repository_relative_path"].startswith("src/")
