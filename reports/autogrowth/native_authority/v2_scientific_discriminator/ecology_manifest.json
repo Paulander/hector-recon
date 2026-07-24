@@ -1,0 +1,1446 @@
+{
+  "completion_terminal_identity": "mate",
+  "ecology_digest": "76d9fde8d20717698b86e5278697ea9694d4884f2ff3760c605e90ece2b3d14e",
+  "experiment_id": "native_v2_prospective_scientific_discriminator.v1",
+  "laboratory_private_atom_map": {
+    "n0": "opaque_terminal:5de45fa97d1500afb36175ad5655cf8b9ab27d614772c7172be50ffd29fcd8b1",
+    "n1": "opaque_terminal:ccf62be6c0e412b09d2943662b8f6fe9d5abad945c22737a946713e8e96b2586",
+    "n2": "opaque_terminal:3c0d5671623cd7c3cdd310c6654d0f7d51cbc1c7cbf1a64e158af4832d82459c",
+    "n3": "opaque_terminal:68d6ac53c273b39672a9a05efcd326a7a50722ae0a6295c7a192abc95098db4c",
+    "n4": "opaque_terminal:cb9107decc115058a847db2f2c348ef0297f8727ac06edf4952d05fc7160272d",
+    "n5": "opaque_terminal:13a888909869de8eed5ca534d0283d354ea0339c2be2e9320b6643797c638c0d",
+    "n6": "opaque_terminal:180fe09c1250ee94192383d53fe2cfc4c64ef2ccdd796b1921c5c3dad543b63b",
+    "n7": "opaque_terminal:cf8a03854122ccc97ddee9c95e7bb991a9085c564a6794ca36beb35d84a6e355",
+    "p0": "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94",
+    "p1": "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+    "s0": "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+    "s1": "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+  },
+  "learner_visible_labels": false,
+  "opaque_terminal_identities": [
+    "opaque_terminal:13a888909869de8eed5ca534d0283d354ea0339c2be2e9320b6643797c638c0d",
+    "opaque_terminal:180fe09c1250ee94192383d53fe2cfc4c64ef2ccdd796b1921c5c3dad543b63b",
+    "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+    "opaque_terminal:3c0d5671623cd7c3cdd310c6654d0f7d51cbc1c7cbf1a64e158af4832d82459c",
+    "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+    "opaque_terminal:5de45fa97d1500afb36175ad5655cf8b9ab27d614772c7172be50ffd29fcd8b1",
+    "opaque_terminal:68d6ac53c273b39672a9a05efcd326a7a50722ae0a6295c7a192abc95098db4c",
+    "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+    "opaque_terminal:cb9107decc115058a847db2f2c348ef0297f8727ac06edf4952d05fc7160272d",
+    "opaque_terminal:ccf62be6c0e412b09d2943662b8f6fe9d5abad945c22737a946713e8e96b2586",
+    "opaque_terminal:cf8a03854122ccc97ddee9c95e7bb991a9085c564a6794ca36beb35d84a6e355",
+    "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+  ],
+  "outcome_marginals": {
+    "prefix_a": {
+      "false": 32,
+      "true": 32
+    },
+    "suffix_a": {
+      "false": 8,
+      "true": 8
+    },
+    "suffix_c": {
+      "false": 8,
+      "true": 8
+    }
+  },
+  "planted_members": [
+    "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+    "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+  ],
+  "planted_pattern_digest": "1da441909502a2faa238bf7e6a99f1f23541f6f6e8192a9907a6758040bb08f6",
+  "prefix_row_order": [
+    "prefix-positive-00",
+    "prefix-positive-01",
+    "prefix-positive-02",
+    "prefix-positive-03",
+    "prefix-positive-04",
+    "prefix-positive-05",
+    "prefix-positive-06",
+    "prefix-positive-07",
+    "prefix-positive-08",
+    "prefix-positive-09",
+    "prefix-positive-10",
+    "prefix-positive-11",
+    "prefix-positive-12",
+    "prefix-positive-13",
+    "prefix-positive-14",
+    "prefix-positive-15",
+    "prefix-positive-16",
+    "prefix-positive-17",
+    "prefix-positive-18",
+    "prefix-positive-19",
+    "prefix-positive-20",
+    "prefix-positive-21",
+    "prefix-positive-22",
+    "prefix-positive-23",
+    "prefix-positive-24",
+    "prefix-positive-25",
+    "prefix-positive-26",
+    "prefix-positive-27",
+    "prefix-positive-28",
+    "prefix-positive-29",
+    "prefix-positive-30",
+    "prefix-positive-31",
+    "prefix-negative-0-00",
+    "prefix-negative-0-01",
+    "prefix-negative-0-02",
+    "prefix-negative-0-03",
+    "prefix-negative-0-04",
+    "prefix-negative-0-05",
+    "prefix-negative-0-06",
+    "prefix-negative-0-07",
+    "prefix-negative-1-00",
+    "prefix-negative-1-01",
+    "prefix-negative-1-02",
+    "prefix-negative-1-03",
+    "prefix-negative-1-04",
+    "prefix-negative-1-05",
+    "prefix-negative-1-06",
+    "prefix-negative-1-07",
+    "prefix-negative-2-00",
+    "prefix-negative-2-01",
+    "prefix-negative-2-02",
+    "prefix-negative-2-03",
+    "prefix-negative-2-04",
+    "prefix-negative-2-05",
+    "prefix-negative-2-06",
+    "prefix-negative-2-07",
+    "prefix-negative-3-00",
+    "prefix-negative-3-01",
+    "prefix-negative-3-02",
+    "prefix-negative-3-03",
+    "prefix-negative-3-04",
+    "prefix-negative-3-05",
+    "prefix-negative-3-06",
+    "prefix-negative-3-07"
+  ],
+  "rows": [
+    {
+      "a_fen": "2k5/8/2K5/8/8/8/8/R7 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/8/RK1k4 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-000",
+      "move_uci": "a1a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-00",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "3k4/8/3K4/8/8/8/8/R7 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/8/RK2k3 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-001",
+      "move_uci": "a1a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-01",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "4k3/8/4K3/8/8/8/8/R7 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/8/RK3k2 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-002",
+      "move_uci": "a1a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-02",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "5k2/8/5K2/8/8/8/8/R7 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/8/RK4k1 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-003",
+      "move_uci": "a1a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-03",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "6k1/8/6K1/8/8/8/8/R7 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/8/RK5k w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-004",
+      "move_uci": "a1a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-04",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "7k/8/6K1/8/8/8/8/R7 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/3k4/RK6 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-005",
+      "move_uci": "a1a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-05",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/8/8/8/5K1k/8/R7 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/K1k5/R7 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-006",
+      "move_uci": "a1h1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-06",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/8/8/5K1k/8/8/R7 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/K2k4/R7 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-007",
+      "move_uci": "a1h1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-07",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/8/5K1k/8/8/8/R7 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/K3k3/R7 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-008",
+      "move_uci": "a1h1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-08",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/5K1k/8/8/8/8/R7 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/K4k2/R7 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-009",
+      "move_uci": "a1h1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-09",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/5K1k/8/8/8/8/8/R7 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/K5k1/R7 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-010",
+      "move_uci": "a1h1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-10",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "7k/5K2/8/8/8/8/8/R7 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/K6k/R7 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-011",
+      "move_uci": "a1h1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-11",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/8/8/8/2K5/R7/2k5 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/R7/1K1k4 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-012",
+      "move_uci": "a2a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-12",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/8/8/8/3K4/R7/3k4 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/R7/1K2k3 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-013",
+      "move_uci": "a2a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-13",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/8/8/8/4K3/R7/4k3 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/R7/1K3k2 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-014",
+      "move_uci": "a2a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-14",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/8/8/8/5K2/R7/5k2 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/R7/1K4k1 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-015",
+      "move_uci": "a2a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-15",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/8/8/8/6K1/R7/6k1 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/R7/1K5k w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-016",
+      "move_uci": "a2a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-16",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/8/8/8/6K1/R7/7k w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/1k6/R7/1K6 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-017",
+      "move_uci": "a2a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-17",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "2k5/8/2K5/8/8/8/R7/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/R7/K1k5 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-018",
+      "move_uci": "a2a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-18",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "3k4/8/3K4/8/8/8/R7/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/R7/K2k4 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-019",
+      "move_uci": "a2a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-19",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "4k3/8/4K3/8/8/8/R7/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/R7/K3k3 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-020",
+      "move_uci": "a2a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-20",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "5k2/8/5K2/8/8/8/R7/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/R7/K4k2 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-021",
+      "move_uci": "a2a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-21",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "6k1/8/6K1/8/8/8/R7/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/R7/K5k1 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-022",
+      "move_uci": "a2a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-22",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "7k/8/6K1/8/8/8/R7/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/8/R7/K6k w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-023",
+      "move_uci": "a2a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-23",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/8/8/5K1k/8/R7/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/1k6/R7/K7 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-024",
+      "move_uci": "a2h2",
+      "phase": "prefix",
+      "row_id": "prefix-positive-24",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/8/5K1k/8/8/R7/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/2k5/R7/K7 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-025",
+      "move_uci": "a2h2",
+      "phase": "prefix",
+      "row_id": "prefix-positive-25",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/5K1k/8/8/8/R7/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/3k4/R7/K7 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-026",
+      "move_uci": "a2h2",
+      "phase": "prefix",
+      "row_id": "prefix-positive-26",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/5K1k/8/8/8/8/R7/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/4k3/R7/K7 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-027",
+      "move_uci": "a2h2",
+      "phase": "prefix",
+      "row_id": "prefix-positive-27",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "7k/5K2/8/8/8/8/R7/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/5k2/R7/K7 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-028",
+      "move_uci": "a2h2",
+      "phase": "prefix",
+      "row_id": "prefix-positive-28",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "5K1k/8/8/8/8/8/R7/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/6k1/R7/K7 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-029",
+      "move_uci": "a2h2",
+      "phase": "prefix",
+      "row_id": "prefix-positive-29",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R1K5/8/2k5 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/R7/8/1K1k4 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-030",
+      "move_uci": "a3a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-30",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R2K4/8/3k4 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/R7/8/1K2k3 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-031",
+      "move_uci": "a3a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-31",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/8/1K3k2 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:5de45fa97d1500afb36175ad5655cf8b9ab27d614772c7172be50ffd29fcd8b1",
+        "opaque_terminal:ccf62be6c0e412b09d2943662b8f6fe9d5abad945c22737a946713e8e96b2586",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/R3K3/8/4k3 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-032",
+      "move_uci": "a3a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-00",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/8/1K4k1 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:5de45fa97d1500afb36175ad5655cf8b9ab27d614772c7172be50ffd29fcd8b1",
+        "opaque_terminal:ccf62be6c0e412b09d2943662b8f6fe9d5abad945c22737a946713e8e96b2586",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/R4K2/8/5k2 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-033",
+      "move_uci": "a3a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-01",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/8/1K5k w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:5de45fa97d1500afb36175ad5655cf8b9ab27d614772c7172be50ffd29fcd8b1",
+        "opaque_terminal:ccf62be6c0e412b09d2943662b8f6fe9d5abad945c22737a946713e8e96b2586",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/R5K1/8/6k1 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-034",
+      "move_uci": "a3a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-02",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/3k4/1K6 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:5de45fa97d1500afb36175ad5655cf8b9ab27d614772c7172be50ffd29fcd8b1",
+        "opaque_terminal:ccf62be6c0e412b09d2943662b8f6fe9d5abad945c22737a946713e8e96b2586",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/8/8/R5K1/8/7k w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-035",
+      "move_uci": "a3a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-03",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/8/K1k5 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:5de45fa97d1500afb36175ad5655cf8b9ab27d614772c7172be50ffd29fcd8b1",
+        "opaque_terminal:ccf62be6c0e412b09d2943662b8f6fe9d5abad945c22737a946713e8e96b2586",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "2k5/8/2K5/8/8/R7/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-036",
+      "move_uci": "a3a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-04",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/8/K2k4 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:5de45fa97d1500afb36175ad5655cf8b9ab27d614772c7172be50ffd29fcd8b1",
+        "opaque_terminal:ccf62be6c0e412b09d2943662b8f6fe9d5abad945c22737a946713e8e96b2586",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "3k4/8/3K4/8/8/R7/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-037",
+      "move_uci": "a3a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-05",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/8/K3k3 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:5de45fa97d1500afb36175ad5655cf8b9ab27d614772c7172be50ffd29fcd8b1",
+        "opaque_terminal:ccf62be6c0e412b09d2943662b8f6fe9d5abad945c22737a946713e8e96b2586",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "4k3/8/4K3/8/8/R7/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-038",
+      "move_uci": "a3a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-06",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/8/K4k2 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:5de45fa97d1500afb36175ad5655cf8b9ab27d614772c7172be50ffd29fcd8b1",
+        "opaque_terminal:ccf62be6c0e412b09d2943662b8f6fe9d5abad945c22737a946713e8e96b2586",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "5k2/8/5K2/8/8/R7/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-039",
+      "move_uci": "a3a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-07",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/8/K5k1 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3c0d5671623cd7c3cdd310c6654d0f7d51cbc1c7cbf1a64e158af4832d82459c",
+        "opaque_terminal:68d6ac53c273b39672a9a05efcd326a7a50722ae0a6295c7a192abc95098db4c",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+      ],
+      "c_fen": "6k1/8/6K1/8/8/R7/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-040",
+      "move_uci": "a3a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-00",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/8/K6k w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3c0d5671623cd7c3cdd310c6654d0f7d51cbc1c7cbf1a64e158af4832d82459c",
+        "opaque_terminal:68d6ac53c273b39672a9a05efcd326a7a50722ae0a6295c7a192abc95098db4c",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+      ],
+      "c_fen": "7k/8/6K1/8/8/R7/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-041",
+      "move_uci": "a3a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-01",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/2k5/K7 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3c0d5671623cd7c3cdd310c6654d0f7d51cbc1c7cbf1a64e158af4832d82459c",
+        "opaque_terminal:68d6ac53c273b39672a9a05efcd326a7a50722ae0a6295c7a192abc95098db4c",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+      ],
+      "c_fen": "8/8/8/8/8/R7/8/5K1k w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-042",
+      "move_uci": "a3h3",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-02",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/3k4/K7 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3c0d5671623cd7c3cdd310c6654d0f7d51cbc1c7cbf1a64e158af4832d82459c",
+        "opaque_terminal:68d6ac53c273b39672a9a05efcd326a7a50722ae0a6295c7a192abc95098db4c",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+      ],
+      "c_fen": "8/8/8/8/8/R7/5K2/7k w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-043",
+      "move_uci": "a3h3",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-03",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/4k3/K7 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3c0d5671623cd7c3cdd310c6654d0f7d51cbc1c7cbf1a64e158af4832d82459c",
+        "opaque_terminal:68d6ac53c273b39672a9a05efcd326a7a50722ae0a6295c7a192abc95098db4c",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+      ],
+      "c_fen": "8/8/8/5K1k/8/R7/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-044",
+      "move_uci": "a3h3",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-04",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/5k2/K7 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3c0d5671623cd7c3cdd310c6654d0f7d51cbc1c7cbf1a64e158af4832d82459c",
+        "opaque_terminal:68d6ac53c273b39672a9a05efcd326a7a50722ae0a6295c7a192abc95098db4c",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+      ],
+      "c_fen": "8/8/5K1k/8/8/R7/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-045",
+      "move_uci": "a3h3",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-05",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/6k1/K7 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3c0d5671623cd7c3cdd310c6654d0f7d51cbc1c7cbf1a64e158af4832d82459c",
+        "opaque_terminal:68d6ac53c273b39672a9a05efcd326a7a50722ae0a6295c7a192abc95098db4c",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+      ],
+      "c_fen": "8/5K1k/8/8/8/R7/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-046",
+      "move_uci": "a3h3",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-06",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "a_fen": "8/8/8/8/8/R7/7k/K7 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3c0d5671623cd7c3cdd310c6654d0f7d51cbc1c7cbf1a64e158af4832d82459c",
+        "opaque_terminal:68d6ac53c273b39672a9a05efcd326a7a50722ae0a6295c7a192abc95098db4c",
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b"
+      ],
+      "c_fen": "7k/5K2/8/8/8/R7/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-047",
+      "move_uci": "a3h3",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-07",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/8/1K1k4 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:13a888909869de8eed5ca534d0283d354ea0339c2be2e9320b6643797c638c0d",
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:cb9107decc115058a847db2f2c348ef0297f8727ac06edf4952d05fc7160272d"
+      ],
+      "c_fen": "8/8/8/8/R7/2K5/8/2k5 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-048",
+      "move_uci": "a4a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-00",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/8/1K2k3 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:13a888909869de8eed5ca534d0283d354ea0339c2be2e9320b6643797c638c0d",
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:cb9107decc115058a847db2f2c348ef0297f8727ac06edf4952d05fc7160272d"
+      ],
+      "c_fen": "8/8/8/8/R7/3K4/8/3k4 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-049",
+      "move_uci": "a4a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-01",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/8/1K3k2 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:13a888909869de8eed5ca534d0283d354ea0339c2be2e9320b6643797c638c0d",
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:cb9107decc115058a847db2f2c348ef0297f8727ac06edf4952d05fc7160272d"
+      ],
+      "c_fen": "8/8/8/8/R7/4K3/8/4k3 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-050",
+      "move_uci": "a4a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-02",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/8/1K4k1 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:13a888909869de8eed5ca534d0283d354ea0339c2be2e9320b6643797c638c0d",
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:cb9107decc115058a847db2f2c348ef0297f8727ac06edf4952d05fc7160272d"
+      ],
+      "c_fen": "8/8/8/8/R7/5K2/8/5k2 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-051",
+      "move_uci": "a4a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-03",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/8/1K5k w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:13a888909869de8eed5ca534d0283d354ea0339c2be2e9320b6643797c638c0d",
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:cb9107decc115058a847db2f2c348ef0297f8727ac06edf4952d05fc7160272d"
+      ],
+      "c_fen": "8/8/8/8/R7/6K1/8/6k1 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-052",
+      "move_uci": "a4a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-04",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/3k4/1K6 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:13a888909869de8eed5ca534d0283d354ea0339c2be2e9320b6643797c638c0d",
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:cb9107decc115058a847db2f2c348ef0297f8727ac06edf4952d05fc7160272d"
+      ],
+      "c_fen": "8/8/8/8/R7/6K1/8/7k w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-053",
+      "move_uci": "a4a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-05",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/8/K1k5 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:13a888909869de8eed5ca534d0283d354ea0339c2be2e9320b6643797c638c0d",
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:cb9107decc115058a847db2f2c348ef0297f8727ac06edf4952d05fc7160272d"
+      ],
+      "c_fen": "2k5/8/2K5/8/R7/8/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-054",
+      "move_uci": "a4a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-06",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/8/K2k4 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:13a888909869de8eed5ca534d0283d354ea0339c2be2e9320b6643797c638c0d",
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:cb9107decc115058a847db2f2c348ef0297f8727ac06edf4952d05fc7160272d"
+      ],
+      "c_fen": "3k4/8/3K4/8/R7/8/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-055",
+      "move_uci": "a4a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-07",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/8/K3k3 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:180fe09c1250ee94192383d53fe2cfc4c64ef2ccdd796b1921c5c3dad543b63b",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:cf8a03854122ccc97ddee9c95e7bb991a9085c564a6794ca36beb35d84a6e355"
+      ],
+      "c_fen": "4k3/8/4K3/8/R7/8/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-056",
+      "move_uci": "a4a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-00",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/8/K4k2 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:180fe09c1250ee94192383d53fe2cfc4c64ef2ccdd796b1921c5c3dad543b63b",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:cf8a03854122ccc97ddee9c95e7bb991a9085c564a6794ca36beb35d84a6e355"
+      ],
+      "c_fen": "5k2/8/5K2/8/R7/8/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-057",
+      "move_uci": "a4a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-01",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/8/K5k1 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:180fe09c1250ee94192383d53fe2cfc4c64ef2ccdd796b1921c5c3dad543b63b",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:cf8a03854122ccc97ddee9c95e7bb991a9085c564a6794ca36beb35d84a6e355"
+      ],
+      "c_fen": "6k1/8/6K1/8/R7/8/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-058",
+      "move_uci": "a4a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-02",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/8/K6k w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:180fe09c1250ee94192383d53fe2cfc4c64ef2ccdd796b1921c5c3dad543b63b",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:cf8a03854122ccc97ddee9c95e7bb991a9085c564a6794ca36beb35d84a6e355"
+      ],
+      "c_fen": "7k/8/6K1/8/R7/8/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-059",
+      "move_uci": "a4a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-03",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/2k5/K7 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:180fe09c1250ee94192383d53fe2cfc4c64ef2ccdd796b1921c5c3dad543b63b",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:cf8a03854122ccc97ddee9c95e7bb991a9085c564a6794ca36beb35d84a6e355"
+      ],
+      "c_fen": "8/8/8/8/R7/8/8/5K1k w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-060",
+      "move_uci": "a4h4",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-04",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/3k4/K7 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:180fe09c1250ee94192383d53fe2cfc4c64ef2ccdd796b1921c5c3dad543b63b",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:cf8a03854122ccc97ddee9c95e7bb991a9085c564a6794ca36beb35d84a6e355"
+      ],
+      "c_fen": "8/8/8/8/R7/8/5K2/7k w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-061",
+      "move_uci": "a4h4",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-05",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/4k3/K7 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:180fe09c1250ee94192383d53fe2cfc4c64ef2ccdd796b1921c5c3dad543b63b",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:cf8a03854122ccc97ddee9c95e7bb991a9085c564a6794ca36beb35d84a6e355"
+      ],
+      "c_fen": "8/8/8/8/R7/8/5K1k/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-062",
+      "move_uci": "a4h4",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-06",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/5k2/K7 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:180fe09c1250ee94192383d53fe2cfc4c64ef2ccdd796b1921c5c3dad543b63b",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc",
+        "opaque_terminal:cf8a03854122ccc97ddee9c95e7bb991a9085c564a6794ca36beb35d84a6e355"
+      ],
+      "c_fen": "8/8/5K1k/8/R7/8/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-063",
+      "move_uci": "a4h4",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-07",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/6k1/K7 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "c_fen": "8/5K1k/8/8/R7/8/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-064",
+      "move_uci": "a4h4",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-00",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_fen": "8/8/8/8/R7/8/7k/K7 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "c_fen": "7k/5K2/8/8/R7/8/8/8 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-065",
+      "move_uci": "a4h4",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-01",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_fen": "8/8/8/R7/8/8/8/1K1k4 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "c_fen": "8/8/8/R7/8/2K5/8/2k5 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-066",
+      "move_uci": "a5a1",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-02",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_fen": "8/8/8/R7/8/8/8/1K2k3 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "c_fen": "8/8/8/R7/8/3K4/8/3k4 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-067",
+      "move_uci": "a5a1",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-03",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_fen": "8/8/8/R7/8/8/8/1K3k2 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "c_fen": "8/8/8/R7/8/4K3/8/4k3 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-068",
+      "move_uci": "a5a1",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-04",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_fen": "8/8/8/R7/8/8/8/1K4k1 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "c_fen": "8/8/8/R7/8/5K2/8/5k2 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-069",
+      "move_uci": "a5a1",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-05",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_fen": "8/8/8/R7/8/8/8/1K5k w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "c_fen": "8/8/8/R7/8/6K1/8/6k1 w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-070",
+      "move_uci": "a5a1",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-06",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_fen": "8/8/8/R7/8/8/3k4/1K6 w - - 0 1",
+      "a_outcome": false,
+      "active_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "c_fen": "8/8/8/R7/8/6K1/8/7k w - - 0 1",
+      "c_outcome": true,
+      "latent_pair_id": "latent-pair-071",
+      "move_uci": "a5a1",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-07",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_fen": "2k5/8/2K5/R7/8/8/8/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/R7/8/8/8/K1k5 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-072",
+      "move_uci": "a5a8",
+      "phase": "suffix",
+      "row_id": "suffix-planted-00",
+      "visible_family": "suffix_planted"
+    },
+    {
+      "a_fen": "3k4/8/3K4/R7/8/8/8/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/R7/8/8/8/K2k4 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-073",
+      "move_uci": "a5a8",
+      "phase": "suffix",
+      "row_id": "suffix-planted-01",
+      "visible_family": "suffix_planted"
+    },
+    {
+      "a_fen": "4k3/8/4K3/R7/8/8/8/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/R7/8/8/8/K3k3 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-074",
+      "move_uci": "a5a8",
+      "phase": "suffix",
+      "row_id": "suffix-planted-02",
+      "visible_family": "suffix_planted"
+    },
+    {
+      "a_fen": "5k2/8/5K2/R7/8/8/8/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/R7/8/8/8/K4k2 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-075",
+      "move_uci": "a5a8",
+      "phase": "suffix",
+      "row_id": "suffix-planted-03",
+      "visible_family": "suffix_planted"
+    },
+    {
+      "a_fen": "6k1/8/6K1/R7/8/8/8/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/R7/8/8/8/K5k1 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-076",
+      "move_uci": "a5a8",
+      "phase": "suffix",
+      "row_id": "suffix-planted-04",
+      "visible_family": "suffix_planted"
+    },
+    {
+      "a_fen": "7k/8/6K1/R7/8/8/8/8 w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/R7/8/8/8/K6k w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-077",
+      "move_uci": "a5a8",
+      "phase": "suffix",
+      "row_id": "suffix-planted-05",
+      "visible_family": "suffix_planted"
+    },
+    {
+      "a_fen": "8/8/8/R7/8/8/8/5K1k w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/R7/8/8/2k5/K7 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-078",
+      "move_uci": "a5h5",
+      "phase": "suffix",
+      "row_id": "suffix-planted-06",
+      "visible_family": "suffix_planted"
+    },
+    {
+      "a_fen": "8/8/8/R7/8/8/5K2/7k w - - 0 1",
+      "a_outcome": true,
+      "active_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "c_fen": "8/8/8/R7/8/8/3k4/K7 w - - 0 1",
+      "c_outcome": false,
+      "latent_pair_id": "latent-pair-079",
+      "move_uci": "a5h5",
+      "phase": "suffix",
+      "row_id": "suffix-planted-07",
+      "visible_family": "suffix_planted"
+    }
+  ],
+  "schema_version": "native_v2_science_ecology.v1",
+  "spurious_family": [
+    {
+      "members": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "pattern_digest": "ec402f701fd2c6fbfd2925e1cc35e86361c0e07fef3450eaa6bf6e48f3e2ae9a"
+    }
+  ],
+  "spurious_selection_rule": "eligible_predeclared_family_then_lexicographically_smallest_sha256_canonical_hypothesis_manifest_then_cell_id",
+  "suffix_row_order": [
+    "suffix-spurious-00",
+    "suffix-spurious-01",
+    "suffix-spurious-02",
+    "suffix-spurious-03",
+    "suffix-spurious-04",
+    "suffix-spurious-05",
+    "suffix-spurious-06",
+    "suffix-spurious-07",
+    "suffix-planted-00",
+    "suffix-planted-01",
+    "suffix-planted-02",
+    "suffix-planted-03",
+    "suffix-planted-04",
+    "suffix-planted-05",
+    "suffix-planted-06",
+    "suffix-planted-07"
+  ]
+}

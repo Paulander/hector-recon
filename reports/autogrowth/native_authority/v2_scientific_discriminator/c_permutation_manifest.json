@@ -1,0 +1,330 @@
+{
+  "experiment_id": "native_v2_prospective_scientific_discriminator.v1",
+  "label_shuffle": false,
+  "outcome_marginals_preserved": true,
+  "permutation_digest": "833a22247f775d12df64d5a1112be343198a3ca6288bae76a282889c3b77f9e8",
+  "rows": [
+    {
+      "a_transition": {
+        "move_uci": "a4h4",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/8/R7/8/6k1/K7 w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a4h4",
+        "outcome": true,
+        "predecessor_fen": "8/5K1k/8/8/R7/8/8/8 w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-064",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-00",
+      "visible_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_transition": {
+        "move_uci": "a4h4",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/8/R7/8/7k/K7 w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a4h4",
+        "outcome": true,
+        "predecessor_fen": "7k/5K2/8/8/R7/8/8/8 w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-065",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-01",
+      "visible_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_transition": {
+        "move_uci": "a5a1",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/R7/8/8/8/1K1k4 w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a5a1",
+        "outcome": true,
+        "predecessor_fen": "8/8/8/R7/8/2K5/8/2k5 w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-066",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-02",
+      "visible_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_transition": {
+        "move_uci": "a5a1",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/R7/8/8/8/1K2k3 w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a5a1",
+        "outcome": true,
+        "predecessor_fen": "8/8/8/R7/8/3K4/8/3k4 w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-067",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-03",
+      "visible_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_transition": {
+        "move_uci": "a5a1",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/R7/8/8/8/1K3k2 w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a5a1",
+        "outcome": true,
+        "predecessor_fen": "8/8/8/R7/8/4K3/8/4k3 w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-068",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-04",
+      "visible_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_transition": {
+        "move_uci": "a5a1",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/R7/8/8/8/1K4k1 w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a5a1",
+        "outcome": true,
+        "predecessor_fen": "8/8/8/R7/8/5K2/8/5k2 w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-069",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-05",
+      "visible_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_transition": {
+        "move_uci": "a5a1",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/R7/8/8/8/1K5k w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a5a1",
+        "outcome": true,
+        "predecessor_fen": "8/8/8/R7/8/6K1/8/6k1 w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-070",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-06",
+      "visible_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_transition": {
+        "move_uci": "a5a1",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/R7/8/8/3k4/1K6 w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a5a1",
+        "outcome": true,
+        "predecessor_fen": "8/8/8/R7/8/6K1/8/7k w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-071",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-07",
+      "visible_atom_ids": [
+        "opaque_terminal:3bb2670894f0f4f83197df8eaf6a602cbe79796d0eba0fbe1512b109c7c497b9",
+        "opaque_terminal:4a49798af1b8d83e939968bf78d3907066b534a901862e19cdc0bc50df5bf9dc"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "a_transition": {
+        "move_uci": "a5a8",
+        "outcome": true,
+        "predecessor_fen": "2k5/8/2K5/R7/8/8/8/8 w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a5a8",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/R7/8/8/8/K1k5 w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-072",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-00",
+      "visible_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "visible_family": "suffix_planted"
+    },
+    {
+      "a_transition": {
+        "move_uci": "a5a8",
+        "outcome": true,
+        "predecessor_fen": "3k4/8/3K4/R7/8/8/8/8 w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a5a8",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/R7/8/8/8/K2k4 w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-073",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-01",
+      "visible_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "visible_family": "suffix_planted"
+    },
+    {
+      "a_transition": {
+        "move_uci": "a5a8",
+        "outcome": true,
+        "predecessor_fen": "4k3/8/4K3/R7/8/8/8/8 w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a5a8",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/R7/8/8/8/K3k3 w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-074",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-02",
+      "visible_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "visible_family": "suffix_planted"
+    },
+    {
+      "a_transition": {
+        "move_uci": "a5a8",
+        "outcome": true,
+        "predecessor_fen": "5k2/8/5K2/R7/8/8/8/8 w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a5a8",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/R7/8/8/8/K4k2 w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-075",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-03",
+      "visible_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "visible_family": "suffix_planted"
+    },
+    {
+      "a_transition": {
+        "move_uci": "a5a8",
+        "outcome": true,
+        "predecessor_fen": "6k1/8/6K1/R7/8/8/8/8 w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a5a8",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/R7/8/8/8/K5k1 w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-076",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-04",
+      "visible_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "visible_family": "suffix_planted"
+    },
+    {
+      "a_transition": {
+        "move_uci": "a5a8",
+        "outcome": true,
+        "predecessor_fen": "7k/8/6K1/R7/8/8/8/8 w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a5a8",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/R7/8/8/8/K6k w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-077",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-05",
+      "visible_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "visible_family": "suffix_planted"
+    },
+    {
+      "a_transition": {
+        "move_uci": "a5h5",
+        "outcome": true,
+        "predecessor_fen": "8/8/8/R7/8/8/8/5K1k w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a5h5",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/R7/8/8/2k5/K7 w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-078",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-06",
+      "visible_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "visible_family": "suffix_planted"
+    },
+    {
+      "a_transition": {
+        "move_uci": "a5h5",
+        "outcome": true,
+        "predecessor_fen": "8/8/8/R7/8/8/5K2/7k w - - 0 1"
+      },
+      "c_transition": {
+        "move_uci": "a5h5",
+        "outcome": false,
+        "predecessor_fen": "8/8/8/R7/8/8/3k4/K7 w - - 0 1"
+      },
+      "latent_pair_id": "latent-pair-079",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-07",
+      "visible_atom_ids": [
+        "opaque_terminal:6f1e2649cd651550904259becbb667400fa6347b3d51217f0bfc880eda6b1b3b",
+        "opaque_terminal:dcb0764a3477d611283274fe4127d75305dccf6df5a5fdb32ba962318a5bce94"
+      ],
+      "visible_family": "suffix_planted"
+    }
+  ],
+  "schema_version": "native_v2_science_c_permutation.v1",
+  "truthful_transitions": true
+}
