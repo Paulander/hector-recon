@@ -46,6 +46,18 @@ Keep three tracks explicit and never transfer claims between them:
 3. **Sealed confirmation/transfer:** fresh data, frozen code, independent
    execution and adjudication.
 
+### Serialized organism identity
+
+Raw pickle or compressed-pickle hashes establish transport integrity only for
+the exact persisted blob. They are never semantic organism equality: equivalent
+objects can serialize to different bytes because of construction and pickle
+memo history. Semantic organism identity is the complete canonical continuation
+manifest and its digest, together with explicit experiment/source/candidate/
+polarity/topology/authority identities. A restored object is not required to
+re-pickle byte-identically. Scientific harnesses must persist arms once, restore
+those exact snapshots, and globally verify every arm's transport and semantic
+identity before the first outcome is opened.
+
 ## Active Research Loop
 
 The loop under test is:
