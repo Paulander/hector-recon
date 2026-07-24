@@ -33,6 +33,11 @@ from recon_lite_chess.autogrowth.native_v2_atomic_snapshot_harness import (
     persist_arm_snapshots_once,
     sha256_bytes,
     synthetic_arm_factory,
+    _validate_arm_semantics,
+    v2_semantic_identity,
+)
+from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import (
+    V2Mode,
 )
 
 
@@ -451,6 +456,37 @@ def test_snapshot_factory_called_once_per_seed(tmp_path: Path) -> None:
         experiment_id="once", source_manifest_digest="source",
     )
     assert calls == [0, 1, 2]
+
+
+def test_native_legacy_mode_uses_protected_enum_value() -> None:
+    class MinimalNativeWrapper:
+        mode = V2Mode.LEGACY
+        states = {}
+        authority_topology = {}
+        experimental_identity = {
+            "identity_digest": "experiment",
+            "source": {
+                "organism_identity": "organism",
+                "state_identity": "state",
+                "base_continuation_digest": "base",
+            },
+            "candidate_population_identity": "population",
+            "candidate_population": {"executed_authority_topology": {}},
+        }
+
+        @staticmethod
+        def continuation_manifest():
+            return {"mode": V2Mode.LEGACY.value}
+
+    identity = v2_semantic_identity(MinimalNativeWrapper())
+    assert identity["mode"] == "legacy_same_ledger"
+    prospective = copy.deepcopy(identity)
+    prospective["mode"] = "prospective"
+    prospective["authority_manifest"] = {}
+    prospective["authority_identity"] = canonical_digest({})
+    _validate_arm_semantics(
+        0, {"A": prospective, "B": identity, "C": copy.deepcopy(prospective)}
+    )
 
 
 def test_journal_rejects_skipped_seed(tmp_path: Path) -> None:

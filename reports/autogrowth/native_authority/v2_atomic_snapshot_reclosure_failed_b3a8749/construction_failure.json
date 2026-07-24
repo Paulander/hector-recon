@@ -1,0 +1,14 @@
+{
+  "attempt_commit": "b3a8749",
+  "classification": "outer_harness_contract_mismatch",
+  "detail": "seed 0 arm B mode mismatch",
+  "failed_before_global_preflight": true,
+  "old_suffix_used": false,
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "protected_v2_1_changed": false,
+  "root_cause": "The outer validator used legacy while protected V2Mode.LEGACY serializes as legacy_same_ledger.",
+  "schema_version": "native_v2_atomic_snapshot_construction_failure.v1"
+}

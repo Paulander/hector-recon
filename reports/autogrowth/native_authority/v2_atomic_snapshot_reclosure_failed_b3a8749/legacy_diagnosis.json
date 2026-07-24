@@ -1,0 +1,54 @@
+{
+  "all_semantic_equal": true,
+  "any_raw_different": true,
+  "arms": {
+    "A": {
+      "frozen_continuation_digest": "4c71e60943a90a706592f6c22ffec48bb858894e74223c6678ecf2430a078925",
+      "frozen_raw_sha256": "aadc95831b68d86216bcb64c9fd6f4b6d339988d53ddd1ac35cd2d896376f31d",
+      "raw_equal": false,
+      "reconstructed_continuation_digest": "4c71e60943a90a706592f6c22ffec48bb858894e74223c6678ecf2430a078925",
+      "reconstructed_raw_sha256": "bc85ccc749eeb9a914bd7ed0c878c86661554f4d8e4a34ac6f7a57a55ffcb0e4",
+      "semantic_equal": true,
+      "semantic_identity_digest": "9f3dd24e2a000a243e79e6ee5caa1b8946e09e197c74550ad16f94eeddcb467f"
+    },
+    "B": {
+      "frozen_continuation_digest": "6001387cadf6ead22263cb78ba8948001a00328253446a81e1b678e58b6601ff",
+      "frozen_raw_sha256": "79eedded469073315b5c3beb4562e96fb5b92e81f5b8b127b9b468d069dec32b",
+      "raw_equal": false,
+      "reconstructed_continuation_digest": "6001387cadf6ead22263cb78ba8948001a00328253446a81e1b678e58b6601ff",
+      "reconstructed_raw_sha256": "e58c6283f1ea83eac0bd4dc51d3310cf6e5facfe81547b50f1ece4aac8c73714",
+      "semantic_equal": true,
+      "semantic_identity_digest": "0b3875e3482e990108d0e0d7e75c96f0f12988f09dad8379f21e3831560a8281"
+    },
+    "C": {
+      "frozen_continuation_digest": "4c71e60943a90a706592f6c22ffec48bb858894e74223c6678ecf2430a078925",
+      "frozen_raw_sha256": "88f561bf928cf5eedb4c3a2fb978427c411abfe852001a9b24e937cb6eb800b4",
+      "raw_equal": false,
+      "reconstructed_continuation_digest": "4c71e60943a90a706592f6c22ffec48bb858894e74223c6678ecf2430a078925",
+      "reconstructed_raw_sha256": "2ffce4c029ee7d5c8dd6abbddf193c3411880c9a073dc34dc255dafab104a52f",
+      "semantic_equal": true,
+      "semantic_identity_digest": "9f3dd24e2a000a243e79e6ee5caa1b8946e09e197c74550ad16f94eeddcb467f"
+    }
+  },
+  "construction": {
+    "canonical_suffix": "one candidate_identical_arms call retaining A/B/C",
+    "preoutcome": "three separate candidate_identical_arms calls"
+  },
+  "diagnosis_digest": "a500946b4cc818eb8ae36483a84a8d6da3e3733926b34120548be59eb55e7441",
+  "nonalias": {
+    "base": true,
+    "envelope": true,
+    "r0": true,
+    "states": true,
+    "wrapper": true
+  },
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "schema_version": "native_v2_atomic_snapshot_legacy_diagnosis.v1",
+  "seed_ordinal": 0,
+  "source_prefix_sha256": "9f40168592ad3dc72ff33041e20c1384704aab5a630624a42ae96d95c13c6069",
+  "source_preoutcome_sha256": "087403387a7e3c10b7a7deb34f81de8a770d02db318e95760cc7f035de8dd2b5",
+  "verdict": "raw_pickle_is_transport_only;canonical_continuation_is_semantic"
+}

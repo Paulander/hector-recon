@@ -357,8 +357,13 @@ def _validate_arm_semantics(
     if set(identities) != set(ARMS):
         raise AtomicSnapshotIntegrityError(f"seed {seed} arm coverage mismatch")
     for arm in ARMS:
-        expected_mode = "legacy" if arm == "B" else "prospective"
         identity = identities[arm]
+        if arm != "B":
+            expected_mode = V2Mode.PROSPECTIVE.value
+        elif identity.get("codec") == "native_v2_authority":
+            expected_mode = V2Mode.LEGACY.value
+        else:
+            expected_mode = "legacy"
         if identity.get("mode") != expected_mode:
             raise AtomicSnapshotIntegrityError(
                 f"seed {seed} arm {arm} mode mismatch"
