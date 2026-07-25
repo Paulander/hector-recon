@@ -1,0 +1,95 @@
+{
+  "index": 3,
+  "kind": "COMMITTED",
+  "payload": {
+    "final_state": {
+      "A": {
+        "arm": "A",
+        "authority": false,
+        "candidate_population_identity": "synthetic-candidates",
+        "experiment_identity": "synthetic-atomic-canary",
+        "history": [
+          {
+            "outcome": true,
+            "row_id": "synthetic-row-0"
+          },
+          {
+            "outcome": false,
+            "row_id": "synthetic-row-1"
+          }
+        ],
+        "layout": {},
+        "mode": "prospective",
+        "pending": null,
+        "polarity": "POSITIVE",
+        "source_organism_identity": "synthetic-source",
+        "source_state_identity": "synthetic-state",
+        "topology_identity": "synthetic-topology",
+        "value": 0
+      },
+      "B": {
+        "arm": "B",
+        "authority": true,
+        "candidate_population_identity": "synthetic-candidates",
+        "experiment_identity": "synthetic-atomic-canary",
+        "history": [
+          {
+            "outcome": true,
+            "row_id": "synthetic-row-0"
+          },
+          {
+            "outcome": false,
+            "row_id": "synthetic-row-1"
+          }
+        ],
+        "layout": {},
+        "mode": "legacy",
+        "pending": null,
+        "polarity": "POSITIVE",
+        "source_organism_identity": "synthetic-source",
+        "source_state_identity": "synthetic-state",
+        "topology_identity": "synthetic-topology",
+        "value": 0
+      },
+      "C": {
+        "arm": "C",
+        "authority": false,
+        "candidate_population_identity": "synthetic-candidates",
+        "experiment_identity": "synthetic-atomic-canary",
+        "history": [
+          {
+            "outcome": true,
+            "row_id": "synthetic-row-0"
+          },
+          {
+            "outcome": false,
+            "row_id": "synthetic-row-1"
+          }
+        ],
+        "layout": {},
+        "mode": "prospective",
+        "pending": null,
+        "polarity": "POSITIVE",
+        "source_organism_identity": "synthetic-source",
+        "source_state_identity": "synthetic-state",
+        "topology_identity": "synthetic-topology",
+        "value": 0
+      }
+    },
+    "outcome_access": {
+      "count": 6,
+      "event_ids": [
+        "synthetic-row-0:A",
+        "synthetic-row-0:B",
+        "synthetic-row-0:C",
+        "synthetic-row-1:A",
+        "synthetic-row-1:B",
+        "synthetic-row-1:C"
+      ]
+    }
+  },
+  "previous_hash": "5d2d3425cf9ab7611cd309a8fdb28b99f091f97a2ebbe659a255efb08e48e491",
+  "record_hash": "9fa721aa7e6b43d3ef7e6f0ea4eba96f7778b7fe7d968b8bf601cdbdd4dd4a78",
+  "schema_version": "native_v2_atomic_journal.v1",
+  "seed_ordinal": 0
+}

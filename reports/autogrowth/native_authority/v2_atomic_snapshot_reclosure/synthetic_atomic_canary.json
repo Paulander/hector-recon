@@ -1,0 +1,56 @@
+{
+  "arms": [
+    "A",
+    "B",
+    "C"
+  ],
+  "engineering_only": true,
+  "execution": {
+    "final_state_digest": "aebd9053ab7012f106ea249a639de3067d5b1f6e287d878496dfc370ae832d3d",
+    "initial_state_digest": "03009886ad1e02a2d13cfc761b15ef10cb719cfa1697f0dd900559313e0498a6",
+    "journal_next_seed": 1,
+    "outcome_access": {
+      "count": 6,
+      "event_ids": [
+        "synthetic-row-0:A",
+        "synthetic-row-0:B",
+        "synthetic-row-0:C",
+        "synthetic-row-1:A",
+        "synthetic-row-1:B",
+        "synthetic-row-1:C"
+      ]
+    },
+    "row_count": 2,
+    "seed_ordinal": 0
+  },
+  "final_state_digest": "aebd9053ab7012f106ea249a639de3067d5b1f6e287d878496dfc370ae832d3d",
+  "initial_state_digest": "03009886ad1e02a2d13cfc761b15ef10cb719cfa1697f0dd900559313e0498a6",
+  "journal_chain_digest": "c14b1079d7d15e8a6c02943943feb235262d33705a2b988177fd9aa14b85aa57",
+  "journal_record_kinds": [
+    "PREPARED",
+    "TRI_ARM_ROW_COMMITTED",
+    "TRI_ARM_ROW_COMMITTED",
+    "COMMITTED"
+  ],
+  "old_suffix_used": false,
+  "outcome_access": {
+    "count": 6,
+    "event_ids": [
+      "synthetic-row-0:A",
+      "synthetic-row-0:B",
+      "synthetic-row-0:C",
+      "synthetic-row-1:A",
+      "synthetic-row-1:B",
+      "synthetic-row-1:C"
+    ]
+  },
+  "restart_next_seed": 1,
+  "result_digest": "60284f700e1dd34ddb55a22ad38364c76d4e1f10dc24e3f0a73690ff2a9bcd8f",
+  "rows": 2,
+  "schema_version": "native_v2_synthetic_atomic_canary.v1",
+  "values": {
+    "A": 0,
+    "B": 0,
+    "C": 0
+  }
+}

@@ -541,3 +541,27 @@ requires a separately frozen engineering closure that verifies every arm before
 the first outcome and persists expected/observed field-level mismatch evidence.
 See
 `docs/autogrowth/NATIVE_PROSPECTIVE_EVIDENCE_V2_SCIENCE_INTEGRITY_ABORT_20260724.md`.
+
+
+The bounded V2 atomic-snapshot engineering reclosure now passes. Outcome-free
+diagnosis showed that separate versus joint arm construction changed raw pickle
+transport bytes while every canonical continuation digest remained exact and
+A/B mutable state was nonaliased. Raw serialization hash is therefore transport
+identity only; semantic identity is the complete canonical continuation plus
+explicit experiment/source/candidate/polarity/topology/authority identities.
+
+From pushed commit `96e0568`, all 32 preserved prefix organisms were constructed
+once into 96 persisted A/B/C snapshots. The global preflight restored and
+verified all 96 before issuing its receipt, with exactly zero preserved-cohort
+outcome calls. A separate two-row synthetic canary passed the row-major tri-arm
+barrier and durable PREPARED/row/COMMITTED restart law. The first outer-harness
+attempt stopped safely at a mode-label mismatch before preflight and with zero
+outcomes; its artifact is preserved and the native enum-value correction is
+covered by the final 42-test focused suite.
+
+Protected V2.1 hashes remain exact. The critical subset passed 5 tests, the
+adjacent suite passed 54, and the existing 1,013-test certificate is inherited.
+This is instrument readiness, not a scientific or KRK result. The consumed
+suffix remains closed; any scientific successor requires a newly preregistered,
+physically disjoint full ecology/tape and new experiment/seed namespace. See
+`docs/autogrowth/NATIVE_V2_ATOMIC_SNAPSHOT_RECLOSURE_RESULT_20260725.md`.

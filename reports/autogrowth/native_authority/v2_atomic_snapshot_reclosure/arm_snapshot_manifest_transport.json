@@ -1,0 +1,12 @@
+{
+  "artifact": "arm_snapshot_manifest.json.gz",
+  "compression": "gzip -n -9 after successful global preflight",
+  "compressed_sha256": "f0ee54a32210d38a78f98588f42baffeb67324335273148e856f053fb6a9d557",
+  "compressed_size": 41734169,
+  "internal_manifest_digest": "a39dddc5ec1aa0231a47518c7c971b43235e64cd99b40d0b21bfd65e638c325d",
+  "preflight_receipt_digest": "8a3d7a8a8a551435dec8a5769012b2d8c32cd57e54c90bf826a0a9d1c05f0b56",
+  "schema_version": "native_v2_arm_snapshot_manifest_transport.v1",
+  "uncompressed_path": "arm_snapshot_manifest.json",
+  "uncompressed_sha256": "c1471f2f2ff29fc46807199dbc5db2642a385861b61a925b9a46606d669076d8",
+  "uncompressed_size": 526862477
+}

@@ -1,0 +1,61 @@
+{
+  "index": 0,
+  "kind": "PREPARED",
+  "payload": {
+    "initial_state": {
+      "A": {
+        "arm": "A",
+        "authority": false,
+        "candidate_population_identity": "synthetic-candidates",
+        "experiment_identity": "synthetic-atomic-canary",
+        "history": [],
+        "layout": {},
+        "mode": "prospective",
+        "pending": null,
+        "polarity": "POSITIVE",
+        "source_organism_identity": "synthetic-source",
+        "source_state_identity": "synthetic-state",
+        "topology_identity": "synthetic-topology",
+        "value": 0
+      },
+      "B": {
+        "arm": "B",
+        "authority": true,
+        "candidate_population_identity": "synthetic-candidates",
+        "experiment_identity": "synthetic-atomic-canary",
+        "history": [],
+        "layout": {},
+        "mode": "legacy",
+        "pending": null,
+        "polarity": "POSITIVE",
+        "source_organism_identity": "synthetic-source",
+        "source_state_identity": "synthetic-state",
+        "topology_identity": "synthetic-topology",
+        "value": 0
+      },
+      "C": {
+        "arm": "C",
+        "authority": false,
+        "candidate_population_identity": "synthetic-candidates",
+        "experiment_identity": "synthetic-atomic-canary",
+        "history": [],
+        "layout": {},
+        "mode": "prospective",
+        "pending": null,
+        "polarity": "POSITIVE",
+        "source_organism_identity": "synthetic-source",
+        "source_state_identity": "synthetic-state",
+        "topology_identity": "synthetic-topology",
+        "value": 0
+      }
+    },
+    "outcome_access": {
+      "count": 0,
+      "event_ids": []
+    }
+  },
+  "previous_hash": "GENESIS",
+  "record_hash": "e3fc2518dfd9eb6b6d2aa240210d7679dca6dd471cb0ab73c2e586552e83d317",
+  "schema_version": "native_v2_atomic_journal.v1",
+  "seed_ordinal": 0
+}

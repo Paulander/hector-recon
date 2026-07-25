@@ -1,0 +1,81 @@
+{
+  "index": 1,
+  "kind": "TRI_ARM_ROW_COMMITTED",
+  "payload": {
+    "outcome_access": {
+      "count": 3,
+      "event_ids": [
+        "synthetic-row-0:A",
+        "synthetic-row-0:B",
+        "synthetic-row-0:C"
+      ]
+    },
+    "row_id": "synthetic-row-0",
+    "staged_state": {
+      "A": {
+        "arm": "A",
+        "authority": false,
+        "candidate_population_identity": "synthetic-candidates",
+        "experiment_identity": "synthetic-atomic-canary",
+        "history": [
+          {
+            "outcome": true,
+            "row_id": "synthetic-row-0"
+          }
+        ],
+        "layout": {},
+        "mode": "prospective",
+        "pending": null,
+        "polarity": "POSITIVE",
+        "source_organism_identity": "synthetic-source",
+        "source_state_identity": "synthetic-state",
+        "topology_identity": "synthetic-topology",
+        "value": 1
+      },
+      "B": {
+        "arm": "B",
+        "authority": true,
+        "candidate_population_identity": "synthetic-candidates",
+        "experiment_identity": "synthetic-atomic-canary",
+        "history": [
+          {
+            "outcome": true,
+            "row_id": "synthetic-row-0"
+          }
+        ],
+        "layout": {},
+        "mode": "legacy",
+        "pending": null,
+        "polarity": "POSITIVE",
+        "source_organism_identity": "synthetic-source",
+        "source_state_identity": "synthetic-state",
+        "topology_identity": "synthetic-topology",
+        "value": 1
+      },
+      "C": {
+        "arm": "C",
+        "authority": false,
+        "candidate_population_identity": "synthetic-candidates",
+        "experiment_identity": "synthetic-atomic-canary",
+        "history": [
+          {
+            "outcome": true,
+            "row_id": "synthetic-row-0"
+          }
+        ],
+        "layout": {},
+        "mode": "prospective",
+        "pending": null,
+        "polarity": "POSITIVE",
+        "source_organism_identity": "synthetic-source",
+        "source_state_identity": "synthetic-state",
+        "topology_identity": "synthetic-topology",
+        "value": 1
+      }
+    }
+  },
+  "previous_hash": "e3fc2518dfd9eb6b6d2aa240210d7679dca6dd471cb0ab73c2e586552e83d317",
+  "record_hash": "d2ee60e771d7eea085c67db6de9575bda673069a7af86e0d4234b11ec8cea7da",
+  "schema_version": "native_v2_atomic_journal.v1",
+  "seed_ordinal": 0
+}
