@@ -579,8 +579,12 @@ byte from COMMITTED records without replay. The focused package passed 10/10
 tests.
 
 This is still pre-execution engineering, not a causal result or KRK evidence.
-No canonical fresh discovery, canonical fresh grounded receipt, suffix outcome,
-KRK pool, retired-65 row, R1 row or held-out row has opened. After the exact
-source commit is pushed, seeds and the physically disjoint ecology/manifests may
-be derived from that commit; the package then stops for external audit. See
+The exact source freeze is pushed at `8c268b2`; its outer predata manifest is
+frozen with canonical digest
+`70612bfe5bc558b3f02d1962c5850fc8d265f5b58d393afc7052a8d3e2ace765`.
+It contains 32 commit-derived seeds and a physically disjoint 160-transition
+ecology with zero predecessor, transition, or V2.1-fingerprint overlap. No
+canonical fresh discovery, canonical fresh grounded receipt, suffix outcome,
+KRK pool, retired-65 row, R1 row or held-out row has opened. The package is
+stopped for external implementation audit. See
 `docs/autogrowth/NATIVE_V2_FRESH_DISCRIMINATOR_SOURCE_FREEZE_20260726.md`.

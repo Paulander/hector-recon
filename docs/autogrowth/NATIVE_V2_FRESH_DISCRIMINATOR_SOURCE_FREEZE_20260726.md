@@ -82,7 +82,46 @@ suite was rerun.
 
 No canonical fresh discovery request, fresh grounded receipt, canonical A/B/C
 snapshot, suffix outcome, KRK pool, retired-65 row, R1 row, or held-out row was
-opened. The next step is to push this exact source freeze, derive the 32 seeds
-from its commit hash, generate the deterministic physical/ecology/environment/
-source manifests, commit them, reverify source identity, and stop for external
+opened.
+
+## Frozen predata package
+
+The exact source freeze was pushed as
+`8c268b2411240a16295a5e70bd8063e39e56e6e0`. The design-freeze command then
+derived all 32 unique genome seeds from that commit and wrote the deterministic
+physical/ecology/environment/source manifests without invoking discovery,
+snapshot persistence, exposure, or science.
+
+The outer manifest records:
+
+- transport SHA-256
+  `e922fbea08e6f0f0cfb456c19609fa149e5a61c0e4c840eb450af9d78d05556d`;
+- canonical manifest digest
+  `70612bfe5bc558b3f02d1962c5850fc8d265f5b58d393afc7052a8d3e2ace765`;
+- source-runtime digest
+  `1dae9caa164e7006f80001ce6df397210033383319fd7591d1a2850c862c3ee4`;
+- 160 distinct predecessor positions, 160 distinct transition digests, and 160
+  distinct V2.1 physical fingerprints;
+- zero predecessor, transition, or physical-fingerprint overlap with the
+  denylist;
+- `fresh_discovery_prefix_executed: false`; and
+- `fresh_grounded_receipts_minted: 0`.
+
+The individual design-file transport hashes are:
+
+- seed manifest:
+  `6b472b10ea1840dcb5d055b2e522119ae781a4b07d00868d95e0fbacb52a191a`;
+- physical denylist:
+  `230fd0bf09f68009f26e244d225fafc6e967a9a8e22f947647f9ee3e75f5dbc1`;
+- ecology manifest:
+  `3ac38e4d88483b25db5835da2901c2f604d0800c0435054c7492ad8a3024ff74`;
+- C-permutation manifest:
+  `c58be58650b1785c40ddb04edee0070da97f0ea487e2daeea4931c9061f91bf9`;
+- environment manifest:
+  `320fb750c0bdaeee214dc5ac5b43bf16af1b944c7a357dc7b6ea71f4ae993ea3`;
+- source-runtime manifest:
+  `3808a54aaf0dcc521fdda373cc4b4495805a83cfb003e2afcd196f5a1a6686d9`.
+
+All predeclared discovery, snapshot, exposure, journal, carrier, and canonical
+result paths remain absent. The package is stopped here for external
 implementation audit.
