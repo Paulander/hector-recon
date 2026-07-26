@@ -614,3 +614,28 @@ inherited because its protected sources are unchanged. No new discovery,
 exposure, outcome, historical regression, R1, retired-65, or held-out pool was
 opened. See
 docs/autogrowth/NATIVE_V2_FRESH_DISCRIMINATOR_REVIEW_REPAIR_V2_SOURCE_FREEZE_20260726.md.
+
+
+The authorized V2 fresh discriminator review-repair V2 run is closed at an
+instrument abort before exposure and before any environment outcome read.
+Discovery retained all 32 fixed seeds: the exact planted target existed in
+32/32, the frozen selected spurious target in 30/32, and both in 30/32. Exact
+A/B/C construction persisted 96/96 organisms. The global preflight then
+restored and semantically verified all 96 and issued a complete receipt with
+zero outcome reads.
+
+The immediately following prefix-to-snapshot reconstruction failed hard at
+seed 0 with `snapshot candidate contract mismatch:0`. Per the frozen rule it
+was not repaired, repeated, or advanced. Exposure/parity, engagement, C
+contradiction dose, graph clearing, paired effects, statistics and pooled
+totals are therefore not evaluated; the frozen exposure-starvation label was
+never reached. No exposure artifact, execution manifest, science journal,
+carrier, canonical result, KRK R1, retired-65, historical-regression or other
+learning-package access followed.
+
+The 1.13 GB exact raw snapshot manifest remains locally preserved; its
+deterministic 65.77 MB gzip transport, all 96 snapshot files, complete preflight
+receipt and exact hash/size binding are committed for audit. This is a
+prefix/candidate identity instrument failure, not evidence for or against the
+scientific hypothesis. See
+`docs/autogrowth/NATIVE_V2_FRESH_DISCRIMINATOR_REVIEW_REPAIR_V2_INSTRUMENT_ABORT_20260726.md`.
