@@ -588,3 +588,29 @@ canonical fresh discovery, canonical fresh grounded receipt, suffix outcome,
 KRK pool, retired-65 row, R1 row or held-out row has opened. The package is
 stopped for external implementation audit. See
 `docs/autogrowth/NATIVE_V2_FRESH_DISCRIMINATOR_SOURCE_FREEZE_20260726.md`.
+
+
+The bounded V2 fresh-discriminator review-repair V2 package is now frozen before
+new learner interaction. Two independent review findings are closed in the
+outer driver: the complete C-break/graph-clearing engagement conjunction is
+binding, committed endpoints are rebuilt from exact row records and final
+graphs, all-96 admission is reconstructed immediately before results, restart
+uses only fully committed seeds, and starting plus resulting board positions
+are both excluded. The protected V2.1 learner, registry, and snapshot runner
+remain byte-identical.
+
+The superseded bd2ceb7 ecology had 28 resulting-board overlaps despite zero
+starting-board, transition, or stable-ID overlap. The replacement has 160
+unique starts, 160 unique results, and zero overlap in all four categories. The
+source freeze is 29329b5906dbe41640fb9b94b7df5d4f971be693; the separate manifest
+freeze is a6685becdcfc485e0169b58b239f9e78cca82c51; outer manifest SHA-256 is
+de8ff271ba49451e372814aa843956b85f22d557f52ecb7cad1b1d2a0cb2db60 and its
+canonical digest is 93228166bdb2bee000511882b1ec05d72e46df58563e7adc57fc32ab15565b95.
+
+Focused tests passed 31/31, the selected adjacent suite passed 71/71, and the
+retired actual-graph canary passed its 96-snapshot, 17 failure-stage, exact-48-
+read, and no-replay checks. The prior 1,013-test full-suite certificate is
+inherited because its protected sources are unchanged. No new discovery,
+exposure, outcome, historical regression, R1, retired-65, or held-out pool was
+opened. See
+docs/autogrowth/NATIVE_V2_FRESH_DISCRIMINATOR_REVIEW_REPAIR_V2_SOURCE_FREEZE_20260726.md.
