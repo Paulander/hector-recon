@@ -1,0 +1,171 @@
+{
+  "derivation_text": "experiment_id|canonical|source_freeze_commit|ordinal",
+  "experiment_id": "native_v2_fresh_discriminator_review_repair_v2.v1",
+  "retain_all": true,
+  "rows": [
+    {
+      "derivation_sha256": "7f5de49818dad6179cb7901e171d254fb6193b62381216134d4df7dd50b0c2ff",
+      "genome_seed": 9177742957554095639,
+      "ordinal": 0
+    },
+    {
+      "derivation_sha256": "ab06883417c7b20896ac9208086538df9431fb3a3f38bba0cac7b3b7aa114bfc",
+      "genome_seed": 3100315150809805320,
+      "ordinal": 1
+    },
+    {
+      "derivation_sha256": "e41985ec75e569e864c0bcc0ac0b892ed47448ff075f0b0db0029418987679a2",
+      "genome_seed": 7212943528847305192,
+      "ordinal": 2
+    },
+    {
+      "derivation_sha256": "77c8543cdccce6914c9f5385faebfc9b9da4c12840f4f260d44ad06ae7ff4fbe",
+      "genome_seed": 8631241306234742417,
+      "ordinal": 3
+    },
+    {
+      "derivation_sha256": "9346c5c0442562ac330f5a721302aaea981ee306795541370c01453a98c38480",
+      "genome_seed": 1389014964658070188,
+      "ordinal": 4
+    },
+    {
+      "derivation_sha256": "5afeb5ccb912728e1fbe6468c1e705e44fe0ed38b11d2e63cb33756d7457c332",
+      "genome_seed": 6556877998380970638,
+      "ordinal": 5
+    },
+    {
+      "derivation_sha256": "6f22bba4c23c5a5b606f1e1ffe11ffb5c307eb76ab5153495d3103360cb69e36",
+      "genome_seed": 8008169403725929051,
+      "ordinal": 6
+    },
+    {
+      "derivation_sha256": "e5cb208a754179da194067950de1c80118ddfae2299e972bfdce536606fdc7b3",
+      "genome_seed": 7334992197147785690,
+      "ordinal": 7
+    },
+    {
+      "derivation_sha256": "912df18c7de8c794b3bc3188c3627c2dfb35e37dd1ecc414c8647201fb691dd2",
+      "genome_seed": 1237911058306877332,
+      "ordinal": 8
+    },
+    {
+      "derivation_sha256": "25d457ab2bca4fd6fc836e378882a926665d0665cfacb731f051988d37d00a0a",
+      "genome_seed": 2725900067151695830,
+      "ordinal": 9
+    },
+    {
+      "derivation_sha256": "b36e26d9c6c489eb55ae0e95f008c034ca2332b3fbfb4f76d16c7b62c6250c91",
+      "genome_seed": 3705942260157024747,
+      "ordinal": 10
+    },
+    {
+      "derivation_sha256": "cc5995ebb1c3cf38dfc79aca3f8b4ae62e4a6a29ae78e8401eb53a426696f1aa",
+      "genome_seed": 5501593259342024504,
+      "ordinal": 11
+    },
+    {
+      "derivation_sha256": "9476f3a0ea01e8833511092e6ef6320f434888164160f62f209e20439ee2ee31",
+      "genome_seed": 1474633800456726659,
+      "ordinal": 12
+    },
+    {
+      "derivation_sha256": "de7dcac114b081beba3061e1ecb8231a08922d25831fed160eb54803a1fdf31c",
+      "genome_seed": 6808821142278668734,
+      "ordinal": 13
+    },
+    {
+      "derivation_sha256": "7ed8d5d6031c98d5b4ad299b8b3c4c678d3305e11b630be9e811005f02129ac8",
+      "genome_seed": 9140290558900345045,
+      "ordinal": 14
+    },
+    {
+      "derivation_sha256": "20f383561eddf55ef2cbd98b34b73a3f802b46f0e037a02df1701a7286ea9446",
+      "genome_seed": 2374385834462672222,
+      "ordinal": 15
+    },
+    {
+      "derivation_sha256": "f68b8ede1d4aa44f1031c2c2ac235e45d2bbcc05ac94bff5a3aa67f3ffd77b1a",
+      "genome_seed": 8542078202863592527,
+      "ordinal": 16
+    },
+    {
+      "derivation_sha256": "d16860320c46205ff5799bf7020f943a720200d96e23b1bd76292ce51111a93d",
+      "genome_seed": 5866044282720624735,
+      "ordinal": 17
+    },
+    {
+      "derivation_sha256": "9cc7557a078bba68c11ed1a17c91c4d029bc98dfacf024b17bbb1fe7ba2a935f",
+      "genome_seed": 2073720136028371560,
+      "ordinal": 18
+    },
+    {
+      "derivation_sha256": "5e3f37ce4e5804d466ec6484c1a370d300717fb35dd1fb6051982819aa93b704",
+      "genome_seed": 6791208122315179220,
+      "ordinal": 19
+    },
+    {
+      "derivation_sha256": "c53a17bd1a5df06b4375dc03d71520c92eeff3bbf37fc324c192e45bf24f78b5",
+      "genome_seed": 4988325638224867435,
+      "ordinal": 20
+    },
+    {
+      "derivation_sha256": "6c20d6778ea635d90a6b42b4d852d22bb66ad699fe8f827b6fdb944a5790822c",
+      "genome_seed": 7791463164333667801,
+      "ordinal": 21
+    },
+    {
+      "derivation_sha256": "e0a413f95507808fc1aef9e69bc69b092ef4f6655ce3607e02723ce6d2c1c4b8",
+      "genome_seed": 6963712885415968911,
+      "ordinal": 22
+    },
+    {
+      "derivation_sha256": "3b83da40607270d8dbad88ed9cec1fcf20e686e389882846c9cec9dba55b2aa8",
+      "genome_seed": 4288511240217719000,
+      "ordinal": 23
+    },
+    {
+      "derivation_sha256": "2c7ecb1154620767f3861aa0bd9c8798d2b101215f28087c1e7975ca17ac1772",
+      "genome_seed": 3206223260024964967,
+      "ordinal": 24
+    },
+    {
+      "derivation_sha256": "33e6ab68ef1b6d595788da18f9600595461debcc298799fe47f4f4e0ea16eee1",
+      "genome_seed": 3739865007754276185,
+      "ordinal": 25
+    },
+    {
+      "derivation_sha256": "bf0b59a28fa92859e2d708a07d7bb1960612c04f35d4eab728da05f8a595e3d1",
+      "genome_seed": 4542823203863079001,
+      "ordinal": 26
+    },
+    {
+      "derivation_sha256": "359b9fa8352e4359423b8104736375bc42f2fb4a88bcc88f7aa3ef1e06191386",
+      "genome_seed": 3862856650195878745,
+      "ordinal": 27
+    },
+    {
+      "derivation_sha256": "0542fd2ba3d623624b6c5e2d875fca00c5c5d2632a46820874e9f27f7cb7841c",
+      "genome_seed": 379143682526684002,
+      "ordinal": 28
+    },
+    {
+      "derivation_sha256": "7671eab6019efc1a200515398588e3fb2966a0a33f99dba9cc0b33e270735d16",
+      "genome_seed": 8534860836275944474,
+      "ordinal": 29
+    },
+    {
+      "derivation_sha256": "beffdff7f3bf06fb1d43b7afee736b7f961213f3af5cbcacd03e64978c5986b8",
+      "genome_seed": 4539593205452048123,
+      "ordinal": 30
+    },
+    {
+      "derivation_sha256": "90ecdd96dd1f13b54c7cdbd2824168c9347964d7ab920a695c12270b8b7b011a",
+      "genome_seed": 1219593239135196085,
+      "ordinal": 31
+    }
+  ],
+  "schema_version": "native_v2_review_repair_v2_seed_manifest.v1",
+  "seed_count": 32,
+  "seed_manifest_digest": "2f5e9a183858502f25a22246bdcdd24089cc6da478728fa20f4b273f17f4c772",
+  "source_freeze_commit": "29329b5906dbe41640fb9b94b7df5d4f971be693"
+}

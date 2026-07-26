@@ -1,0 +1,475 @@
+{
+  "experiment_id": "native_v2_fresh_discriminator_review_repair_v2.v1",
+  "label_shuffle": false,
+  "outcome_marginals_preserved": true,
+  "permutation_digest": "5417b9c8de7397426daa4e6136fb85d3820d1b12e4e67759da8d7b84ed0f4329",
+  "row_count": 16,
+  "rows": [
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g1g8",
+        "outcome": false,
+        "physical_transition_digest": "7cc5f316b4faecccf924741250b0bcec1b0a4b96244dcc35f125c15d553445c3",
+        "predecessor_fen": "8/8/8/8/8/8/3k4/K5R1 w - - 0 1",
+        "successor_fen": "6R1/8/8/8/8/8/3k4/K7 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-00:AB"
+      },
+      "A_transition_id": "transition:suffix-spurious-00:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g1g8",
+        "outcome": true,
+        "physical_transition_digest": "f84e2887901aaf6048dd3cebc459d8cdedb26d5d702350c4da94f94144c43cc5",
+        "predecessor_fen": "k7/8/1K6/8/8/8/8/6R1 w - - 0 1",
+        "successor_fen": "k5R1/8/1K6/8/8/8/8/8 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-00:C"
+      },
+      "C_transition_id": "transition:suffix-spurious-00:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-00",
+      "visible_atom_ids": [
+        "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+        "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g1g8",
+        "outcome": false,
+        "physical_transition_digest": "14bea4b9710bc743e0a4f0ab659d9e12f105af062ba8f44094d85a23a26c7414",
+        "predecessor_fen": "8/8/8/8/8/8/4k3/K5R1 w - - 0 1",
+        "successor_fen": "6R1/8/8/8/8/8/4k3/K7 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-01:AB"
+      },
+      "A_transition_id": "transition:suffix-spurious-01:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g1g8",
+        "outcome": true,
+        "physical_transition_digest": "9c15ff0e01cae5e42f9fea5eff0532d1d3d291b44897dd39c4f07471714264f6",
+        "predecessor_fen": "1k6/8/1K6/8/8/8/8/6R1 w - - 0 1",
+        "successor_fen": "1k4R1/8/1K6/8/8/8/8/8 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-01:C"
+      },
+      "C_transition_id": "transition:suffix-spurious-01:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-01",
+      "visible_atom_ids": [
+        "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+        "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g1g8",
+        "outcome": false,
+        "physical_transition_digest": "7a121f9008b4179aa6d270de2a4b7d5af2e230dc8c69f1d3321d512c3ca1f4b2",
+        "predecessor_fen": "8/8/8/8/8/8/5k2/K5R1 w - - 0 1",
+        "successor_fen": "6R1/8/8/8/8/8/5k2/K7 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-02:AB"
+      },
+      "A_transition_id": "transition:suffix-spurious-02:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g1g8",
+        "outcome": true,
+        "physical_transition_digest": "6c9d23caf550f0e86769c4e15d597579c678236a9539eb1833f97aec7618f46e",
+        "predecessor_fen": "2k5/8/2K5/8/8/8/8/6R1 w - - 0 1",
+        "successor_fen": "2k3R1/8/2K5/8/8/8/8/8 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-02:C"
+      },
+      "C_transition_id": "transition:suffix-spurious-02:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-02",
+      "visible_atom_ids": [
+        "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+        "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g1g8",
+        "outcome": false,
+        "physical_transition_digest": "52df80333d8671cbc5649fa4d473db90039a2976e3da71924ed4ba3f9cb01c40",
+        "predecessor_fen": "8/8/8/8/8/8/7k/K5R1 w - - 0 1",
+        "successor_fen": "6R1/8/8/8/8/8/7k/K7 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-03:AB"
+      },
+      "A_transition_id": "transition:suffix-spurious-03:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g1g8",
+        "outcome": true,
+        "physical_transition_digest": "4a5b08b9111feba7920ddc959958316849e7079afbe7d40a64477206fbdc662f",
+        "predecessor_fen": "3k4/8/3K4/8/8/8/8/6R1 w - - 0 1",
+        "successor_fen": "3k2R1/8/3K4/8/8/8/8/8 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-03:C"
+      },
+      "C_transition_id": "transition:suffix-spurious-03:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-03",
+      "visible_atom_ids": [
+        "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+        "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g1g8",
+        "outcome": false,
+        "physical_transition_digest": "527c83bcd7589359a3cf69e7f1361d0dc48173a9ce83c459ed4037f24b1d8298",
+        "predecessor_fen": "8/8/8/8/8/k7/8/K5R1 w - - 0 1",
+        "successor_fen": "6R1/8/8/8/8/k7/8/K7 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-04:AB"
+      },
+      "A_transition_id": "transition:suffix-spurious-04:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g1g8",
+        "outcome": true,
+        "physical_transition_digest": "585864b6baa738fa8d61a7f92d3f7d75968a3ed88d7e1213849a2e7626009e51",
+        "predecessor_fen": "4k3/8/4K3/8/8/8/8/6R1 w - - 0 1",
+        "successor_fen": "4k1R1/8/4K3/8/8/8/8/8 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-04:C"
+      },
+      "C_transition_id": "transition:suffix-spurious-04:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-04",
+      "visible_atom_ids": [
+        "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+        "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g2g1",
+        "outcome": false,
+        "physical_transition_digest": "57232ad2a48865d978606d79fe7a5be1d6b7d801402ee95b908d799565d943df",
+        "predecessor_fen": "8/8/8/8/8/8/6R1/K1k5 w - - 0 1",
+        "successor_fen": "8/8/8/8/8/8/8/K1k3R1 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-05:AB"
+      },
+      "A_transition_id": "transition:suffix-spurious-05:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g2g1",
+        "outcome": true,
+        "physical_transition_digest": "f01df59527006ee8066cb37e183e9b1f5d9b51d791f225db1358b566d4ffddc7",
+        "predecessor_fen": "8/8/8/8/8/K7/6R1/k7 w - - 0 1",
+        "successor_fen": "8/8/8/8/8/K7/8/k5R1 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-05:C"
+      },
+      "C_transition_id": "transition:suffix-spurious-05:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-05",
+      "visible_atom_ids": [
+        "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+        "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g2g1",
+        "outcome": false,
+        "physical_transition_digest": "d52f54740ac0e3d1a4ad2f83409060cc84781319d85760f82b41064e3eca1d7f",
+        "predecessor_fen": "8/8/8/8/8/8/6R1/K2k4 w - - 0 1",
+        "successor_fen": "8/8/8/8/8/8/8/K2k2R1 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-06:AB"
+      },
+      "A_transition_id": "transition:suffix-spurious-06:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g2g1",
+        "outcome": true,
+        "physical_transition_digest": "80840b9aa8a53df456844f845a2dd46e3b1a3a11ff06bf9e6211d3d1c9ab9c18",
+        "predecessor_fen": "8/8/8/8/8/1K6/6R1/k7 w - - 0 1",
+        "successor_fen": "8/8/8/8/8/1K6/8/k5R1 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-06:C"
+      },
+      "C_transition_id": "transition:suffix-spurious-06:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-06",
+      "visible_atom_ids": [
+        "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+        "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g2g1",
+        "outcome": false,
+        "physical_transition_digest": "4a7f6dbda0352df5c47b0b816e555a0eae74468d1798ad6b2f9189a7ad11fcb6",
+        "predecessor_fen": "8/8/8/8/8/8/6R1/K3k3 w - - 0 1",
+        "successor_fen": "8/8/8/8/8/8/8/K3k1R1 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-07:AB"
+      },
+      "A_transition_id": "transition:suffix-spurious-07:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g2g1",
+        "outcome": true,
+        "physical_transition_digest": "ad2da71635a8a165cdf8aff2cc7f64fbf56c5205ebffbc66a78b485267697ef8",
+        "predecessor_fen": "8/8/8/8/8/1K6/6R1/1k6 w - - 0 1",
+        "successor_fen": "8/8/8/8/8/1K6/8/1k4R1 b - - 1 1",
+        "transition_id": "transition:suffix-spurious-07:C"
+      },
+      "C_transition_id": "transition:suffix-spurious-07:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-spurious-07",
+      "visible_atom_ids": [
+        "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+        "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+      ],
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g2g1",
+        "outcome": true,
+        "physical_transition_digest": "79856ddd0cf5579fe3a3db9230d0fca274c6bdaa7efa7cf378b40a0c887d98ce",
+        "predecessor_fen": "8/8/8/8/8/2K5/6R1/2k5 w - - 0 1",
+        "successor_fen": "8/8/8/8/8/2K5/8/2k3R1 b - - 1 1",
+        "transition_id": "transition:suffix-planted-00:AB"
+      },
+      "A_transition_id": "transition:suffix-planted-00:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g2g1",
+        "outcome": false,
+        "physical_transition_digest": "f13ed57be7906c315fe350004b8002cce52fcf92411383257bf368319aa38ee8",
+        "predecessor_fen": "8/8/8/8/8/8/6R1/K4k2 w - - 0 1",
+        "successor_fen": "8/8/8/8/8/8/8/K4kR1 b - - 1 1",
+        "transition_id": "transition:suffix-planted-00:C"
+      },
+      "C_transition_id": "transition:suffix-planted-00:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-00",
+      "visible_atom_ids": [
+        "opaque_terminal:cb210646fa32365dbcfc0df3a626fbb47a7b9d954c1100af9ec2e35b7303b3f0",
+        "opaque_terminal:f7bd765a25f1a4eba30f4f51d5139c8ebda7dd53f819206e482f8099f1895e7c"
+      ],
+      "visible_family": "suffix_planted"
+    },
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g2g1",
+        "outcome": true,
+        "physical_transition_digest": "d5f774f1e0ebbc28567999ffcf630fb76cddcc986e89c48bd9b743b474cb10f4",
+        "predecessor_fen": "8/8/8/8/8/3K4/6R1/3k4 w - - 0 1",
+        "successor_fen": "8/8/8/8/8/3K4/8/3k2R1 b - - 1 1",
+        "transition_id": "transition:suffix-planted-01:AB"
+      },
+      "A_transition_id": "transition:suffix-planted-01:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g2g1",
+        "outcome": false,
+        "physical_transition_digest": "858ec826b9b8836b09369fdc534f627e5f6ff66060501ad85dcf28331cbcd5b8",
+        "predecessor_fen": "8/8/8/8/8/8/6R1/K6k w - - 0 1",
+        "successor_fen": "8/8/8/8/8/8/8/K5Rk b - - 1 1",
+        "transition_id": "transition:suffix-planted-01:C"
+      },
+      "C_transition_id": "transition:suffix-planted-01:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-01",
+      "visible_atom_ids": [
+        "opaque_terminal:cb210646fa32365dbcfc0df3a626fbb47a7b9d954c1100af9ec2e35b7303b3f0",
+        "opaque_terminal:f7bd765a25f1a4eba30f4f51d5139c8ebda7dd53f819206e482f8099f1895e7c"
+      ],
+      "visible_family": "suffix_planted"
+    },
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g2g1",
+        "outcome": true,
+        "physical_transition_digest": "f8e3fb76cded4a21d847ba97c2b1404ee74aced816c5280c41359acaeb677d3e",
+        "predecessor_fen": "8/8/8/8/8/4K3/6R1/4k3 w - - 0 1",
+        "successor_fen": "8/8/8/8/8/4K3/8/4k1R1 b - - 1 1",
+        "transition_id": "transition:suffix-planted-02:AB"
+      },
+      "A_transition_id": "transition:suffix-planted-02:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "g2g1",
+        "outcome": false,
+        "physical_transition_digest": "db78c2914c3f82d68fde1b883afdd802eb744e701369f9f7f5366fa6b2fbdf54",
+        "predecessor_fen": "8/8/8/8/8/k7/6R1/K7 w - - 0 1",
+        "successor_fen": "8/8/8/8/8/k7/8/K5R1 b - - 1 1",
+        "transition_id": "transition:suffix-planted-02:C"
+      },
+      "C_transition_id": "transition:suffix-planted-02:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-02",
+      "visible_atom_ids": [
+        "opaque_terminal:cb210646fa32365dbcfc0df3a626fbb47a7b9d954c1100af9ec2e35b7303b3f0",
+        "opaque_terminal:f7bd765a25f1a4eba30f4f51d5139c8ebda7dd53f819206e482f8099f1895e7c"
+      ],
+      "visible_family": "suffix_planted"
+    },
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "h1h8",
+        "outcome": true,
+        "physical_transition_digest": "c1e94f9f09b73ae3d0dfd911ef2ae67c4bee8715f27027230d21d0764458ef5f",
+        "predecessor_fen": "k7/8/K7/8/8/8/8/7R w - - 0 1",
+        "successor_fen": "k6R/8/K7/8/8/8/8/8 b - - 1 1",
+        "transition_id": "transition:suffix-planted-03:AB"
+      },
+      "A_transition_id": "transition:suffix-planted-03:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "h1h8",
+        "outcome": false,
+        "physical_transition_digest": "5b42746638e52516d22bfe00f5123f25c4357240b338f3d25d7bbc00ab5b8703",
+        "predecessor_fen": "8/8/8/8/8/8/3k4/K6R w - - 0 1",
+        "successor_fen": "7R/8/8/8/8/8/3k4/K7 b - - 1 1",
+        "transition_id": "transition:suffix-planted-03:C"
+      },
+      "C_transition_id": "transition:suffix-planted-03:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-03",
+      "visible_atom_ids": [
+        "opaque_terminal:cb210646fa32365dbcfc0df3a626fbb47a7b9d954c1100af9ec2e35b7303b3f0",
+        "opaque_terminal:f7bd765a25f1a4eba30f4f51d5139c8ebda7dd53f819206e482f8099f1895e7c"
+      ],
+      "visible_family": "suffix_planted"
+    },
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "h1h8",
+        "outcome": true,
+        "physical_transition_digest": "9b9cf66899d36a156cef7caecf8c1669b971c32033275bc1437b04c65e789d58",
+        "predecessor_fen": "k7/8/1K6/8/8/8/8/7R w - - 0 1",
+        "successor_fen": "k6R/8/1K6/8/8/8/8/8 b - - 1 1",
+        "transition_id": "transition:suffix-planted-04:AB"
+      },
+      "A_transition_id": "transition:suffix-planted-04:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "h1h8",
+        "outcome": false,
+        "physical_transition_digest": "561fad066a18971bb034d687cc8a603b8432738c0e5c6a6df79992c44208996f",
+        "predecessor_fen": "8/8/8/8/8/8/4k3/K6R w - - 0 1",
+        "successor_fen": "7R/8/8/8/8/8/4k3/K7 b - - 1 1",
+        "transition_id": "transition:suffix-planted-04:C"
+      },
+      "C_transition_id": "transition:suffix-planted-04:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-04",
+      "visible_atom_ids": [
+        "opaque_terminal:cb210646fa32365dbcfc0df3a626fbb47a7b9d954c1100af9ec2e35b7303b3f0",
+        "opaque_terminal:f7bd765a25f1a4eba30f4f51d5139c8ebda7dd53f819206e482f8099f1895e7c"
+      ],
+      "visible_family": "suffix_planted"
+    },
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "h1h8",
+        "outcome": true,
+        "physical_transition_digest": "7ab0c1629593c5282bd948a6eda2a23d1327fd9024001834d4c6abc1a5802ad7",
+        "predecessor_fen": "1k6/8/1K6/8/8/8/8/7R w - - 0 1",
+        "successor_fen": "1k5R/8/1K6/8/8/8/8/8 b - - 1 1",
+        "transition_id": "transition:suffix-planted-05:AB"
+      },
+      "A_transition_id": "transition:suffix-planted-05:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "h1h8",
+        "outcome": false,
+        "physical_transition_digest": "96ff87dd78f8021d0a04b347edabcc9aeeba42f6addf96a041cb3b1b261d260b",
+        "predecessor_fen": "8/8/8/8/8/8/5k2/K6R w - - 0 1",
+        "successor_fen": "7R/8/8/8/8/8/5k2/K7 b - - 1 1",
+        "transition_id": "transition:suffix-planted-05:C"
+      },
+      "C_transition_id": "transition:suffix-planted-05:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-05",
+      "visible_atom_ids": [
+        "opaque_terminal:cb210646fa32365dbcfc0df3a626fbb47a7b9d954c1100af9ec2e35b7303b3f0",
+        "opaque_terminal:f7bd765a25f1a4eba30f4f51d5139c8ebda7dd53f819206e482f8099f1895e7c"
+      ],
+      "visible_family": "suffix_planted"
+    },
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "h1h8",
+        "outcome": true,
+        "physical_transition_digest": "ebb951524c49b32b0a1bc4f380ebf90be0658c752bd913895491922d0079db6c",
+        "predecessor_fen": "2k5/8/2K5/8/8/8/8/7R w - - 0 1",
+        "successor_fen": "2k4R/8/2K5/8/8/8/8/8 b - - 1 1",
+        "transition_id": "transition:suffix-planted-06:AB"
+      },
+      "A_transition_id": "transition:suffix-planted-06:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "h1h8",
+        "outcome": false,
+        "physical_transition_digest": "0884572e97ecc2f473fa6a687f477d352965959e0d1100aafd380d661f52895c",
+        "predecessor_fen": "8/8/8/8/8/8/6k1/K6R w - - 0 1",
+        "successor_fen": "7R/8/8/8/8/8/6k1/K7 b - - 1 1",
+        "transition_id": "transition:suffix-planted-06:C"
+      },
+      "C_transition_id": "transition:suffix-planted-06:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-06",
+      "visible_atom_ids": [
+        "opaque_terminal:cb210646fa32365dbcfc0df3a626fbb47a7b9d954c1100af9ec2e35b7303b3f0",
+        "opaque_terminal:f7bd765a25f1a4eba30f4f51d5139c8ebda7dd53f819206e482f8099f1895e7c"
+      ],
+      "visible_family": "suffix_planted"
+    },
+    {
+      "A_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "h1h8",
+        "outcome": true,
+        "physical_transition_digest": "5b527cdc0f959b144b49e82ad11399ca067eb840d094f1365dedf75cb5ac54fd",
+        "predecessor_fen": "3k4/8/3K4/8/8/8/8/7R w - - 0 1",
+        "successor_fen": "3k3R/8/3K4/8/8/8/8/8 b - - 1 1",
+        "transition_id": "transition:suffix-planted-07:AB"
+      },
+      "A_transition_id": "transition:suffix-planted-07:AB",
+      "C_transition": {
+        "environment_outcome_terminal_identity": "mate",
+        "move_uci": "h1h8",
+        "outcome": false,
+        "physical_transition_digest": "0250803a97718ecf21ffbeb371b52f5adccbca58cbe72658bde22914c814273d",
+        "predecessor_fen": "8/8/8/8/8/k7/8/K6R w - - 0 1",
+        "successor_fen": "7R/8/8/8/8/k7/8/K7 b - - 1 1",
+        "transition_id": "transition:suffix-planted-07:C"
+      },
+      "C_transition_id": "transition:suffix-planted-07:C",
+      "permutation_operation": "swap_within_frozen_opposite_outcome_pair",
+      "row_id": "suffix-planted-07",
+      "visible_atom_ids": [
+        "opaque_terminal:cb210646fa32365dbcfc0df3a626fbb47a7b9d954c1100af9ec2e35b7303b3f0",
+        "opaque_terminal:f7bd765a25f1a4eba30f4f51d5139c8ebda7dd53f819206e482f8099f1895e7c"
+      ],
+      "visible_family": "suffix_planted"
+    }
+  ],
+  "schema_version": "native_v2_review_repair_v2_c_permutation.v1",
+  "truthful_transitions": true
+}
