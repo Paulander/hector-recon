@@ -565,3 +565,22 @@ This is instrument readiness, not a scientific or KRK result. The consumed
 suffix remains closed; any scientific successor requires a newly preregistered,
 physically disjoint full ecology/tape and new experiment/seed namespace. See
 `docs/autogrowth/NATIVE_V2_ATOMIC_SNAPSHOT_RECLOSURE_RESULT_20260725.md`.
+
+
+The V2 fresh discriminator replacement runner has now passed its bounded
+source-freeze engineering canary. The protected V2.1 organism, registry and
+atomic harness remain byte-identical. The permanently retired actual-V2 canary
+verified all 96 snapshots before outcomes; first/last corruption, formal
+identity swaps, false preflight authorization, pre-outcome parity, all A/B/C
+stages, tri-arm row commit and a genuine durable COMMITTED failure all failed
+closed. A clean actual-V2 row then committed with exactly three capability-
+guarded accesses, and its complete scientific result reconstructed byte-for-
+byte from COMMITTED records without replay. The focused package passed 10/10
+tests.
+
+This is still pre-execution engineering, not a causal result or KRK evidence.
+No canonical fresh discovery, canonical fresh grounded receipt, suffix outcome,
+KRK pool, retired-65 row, R1 row or held-out row has opened. After the exact
+source commit is pushed, seeds and the physically disjoint ecology/manifests may
+be derived from that commit; the package then stops for external audit. See
+`docs/autogrowth/NATIVE_V2_FRESH_DISCRIMINATOR_SOURCE_FREEZE_20260726.md`.

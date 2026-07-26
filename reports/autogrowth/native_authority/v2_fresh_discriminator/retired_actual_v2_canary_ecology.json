@@ -1,0 +1,2801 @@
+{
+  "completion_terminal_identity": "mate",
+  "ecology_digest": "73512a7bfbeec43080ca61bd8e690e54ed0d14f8ae63105a7f369a4dc7e157ee",
+  "experiment_id": "native_v2_fresh_retired_actual_canary.v1",
+  "laboratory_private_atom_map": {
+    "n0": "opaque_terminal:4d5cd3b03fea44058687938a59ec133880aa0bf50613d64fc6d68f96e7d25f1b",
+    "n1": "opaque_terminal:35cff40336b141df3be76ad0ecda9aa90a511532d61b8bd30c0d691fb9ff5930",
+    "n2": "opaque_terminal:cb1d99e1da1acc406cdb653353f7d26caad11f23c0fcb5b480a4a38073a67e03",
+    "n3": "opaque_terminal:2767e0a00f14fc98e6a4ed79344eaa5bf6a9485bab7200764cec516ffcde037a",
+    "n4": "opaque_terminal:dd9f1f40a8b7b58116f63f7055d8bbed69a28210acef7328101327a714a15fb8",
+    "n5": "opaque_terminal:fa611ad18262bb59b6848617497229937633ccc71bf5a3b5c0287d226a8ff745",
+    "n6": "opaque_terminal:26ad93e99d917e46b7f08700dc6d0e5b18dbd677a1661980dfa6bc3d3820a9ff",
+    "n7": "opaque_terminal:6fb60e4e2a1c32c42ab8eb614e042e4dd33fad782a0bcec46be23029ecc030cb",
+    "p0": "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e",
+    "p1": "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+    "s0": "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+    "s1": "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea"
+  },
+  "learner_visible_labels": false,
+  "logical_doses": {
+    "prefix_negative": 32,
+    "prefix_positive": 32,
+    "suffix_planted": 8,
+    "suffix_spurious": 8
+  },
+  "opaque_terminal_identities": [
+    "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+    "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+    "opaque_terminal:26ad93e99d917e46b7f08700dc6d0e5b18dbd677a1661980dfa6bc3d3820a9ff",
+    "opaque_terminal:2767e0a00f14fc98e6a4ed79344eaa5bf6a9485bab7200764cec516ffcde037a",
+    "opaque_terminal:35cff40336b141df3be76ad0ecda9aa90a511532d61b8bd30c0d691fb9ff5930",
+    "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+    "opaque_terminal:4d5cd3b03fea44058687938a59ec133880aa0bf50613d64fc6d68f96e7d25f1b",
+    "opaque_terminal:6fb60e4e2a1c32c42ab8eb614e042e4dd33fad782a0bcec46be23029ecc030cb",
+    "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e",
+    "opaque_terminal:cb1d99e1da1acc406cdb653353f7d26caad11f23c0fcb5b480a4a38073a67e03",
+    "opaque_terminal:dd9f1f40a8b7b58116f63f7055d8bbed69a28210acef7328101327a714a15fb8",
+    "opaque_terminal:fa611ad18262bb59b6848617497229937633ccc71bf5a3b5c0287d226a8ff745"
+  ],
+  "opaque_terminal_salt": "native-v2-fresh-retired-canary.20260725.v1",
+  "planted_members": [
+    "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+    "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+  ],
+  "planted_pattern_digest": "d95ada35708946f400efffd866230de68bb617fc3882a479998097331822d574",
+  "prefix_row_order": [
+    "prefix-positive-00",
+    "prefix-positive-01",
+    "prefix-positive-02",
+    "prefix-positive-03",
+    "prefix-positive-04",
+    "prefix-positive-05",
+    "prefix-positive-06",
+    "prefix-positive-07",
+    "prefix-positive-08",
+    "prefix-positive-09",
+    "prefix-positive-10",
+    "prefix-positive-11",
+    "prefix-positive-12",
+    "prefix-positive-13",
+    "prefix-positive-14",
+    "prefix-positive-15",
+    "prefix-positive-16",
+    "prefix-positive-17",
+    "prefix-positive-18",
+    "prefix-positive-19",
+    "prefix-positive-20",
+    "prefix-positive-21",
+    "prefix-positive-22",
+    "prefix-positive-23",
+    "prefix-positive-24",
+    "prefix-positive-25",
+    "prefix-positive-26",
+    "prefix-positive-27",
+    "prefix-positive-28",
+    "prefix-positive-29",
+    "prefix-positive-30",
+    "prefix-positive-31",
+    "prefix-negative-0-00",
+    "prefix-negative-0-01",
+    "prefix-negative-0-02",
+    "prefix-negative-0-03",
+    "prefix-negative-0-04",
+    "prefix-negative-0-05",
+    "prefix-negative-0-06",
+    "prefix-negative-0-07",
+    "prefix-negative-1-00",
+    "prefix-negative-1-01",
+    "prefix-negative-1-02",
+    "prefix-negative-1-03",
+    "prefix-negative-1-04",
+    "prefix-negative-1-05",
+    "prefix-negative-1-06",
+    "prefix-negative-1-07",
+    "prefix-negative-2-00",
+    "prefix-negative-2-01",
+    "prefix-negative-2-02",
+    "prefix-negative-2-03",
+    "prefix-negative-2-04",
+    "prefix-negative-2-05",
+    "prefix-negative-2-06",
+    "prefix-negative-2-07",
+    "prefix-negative-3-00",
+    "prefix-negative-3-01",
+    "prefix-negative-3-02",
+    "prefix-negative-3-03",
+    "prefix-negative-3-04",
+    "prefix-negative-3-05",
+    "prefix-negative-3-06",
+    "prefix-negative-3-07"
+  ],
+  "rows": [
+    {
+      "A_transition_id": "transition:prefix-positive-00:AB",
+      "B_transition_id": "transition:prefix-positive-00:AB",
+      "C_transition_id": "transition:prefix-positive-00:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 0,
+      "move_uci": "a1a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-00",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-01:AB",
+      "B_transition_id": "transition:prefix-positive-01:AB",
+      "C_transition_id": "transition:prefix-positive-01:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 1,
+      "move_uci": "a1h1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-01",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-02:AB",
+      "B_transition_id": "transition:prefix-positive-02:AB",
+      "C_transition_id": "transition:prefix-positive-02:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 2,
+      "move_uci": "a2a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-02",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-03:AB",
+      "B_transition_id": "transition:prefix-positive-03:AB",
+      "C_transition_id": "transition:prefix-positive-03:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 3,
+      "move_uci": "a2a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-03",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-04:AB",
+      "B_transition_id": "transition:prefix-positive-04:AB",
+      "C_transition_id": "transition:prefix-positive-04:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 4,
+      "move_uci": "a3a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-04",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-05:AB",
+      "B_transition_id": "transition:prefix-positive-05:AB",
+      "C_transition_id": "transition:prefix-positive-05:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 5,
+      "move_uci": "a3a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-05",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-06:AB",
+      "B_transition_id": "transition:prefix-positive-06:AB",
+      "C_transition_id": "transition:prefix-positive-06:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 6,
+      "move_uci": "a3h3",
+      "phase": "prefix",
+      "row_id": "prefix-positive-06",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-07:AB",
+      "B_transition_id": "transition:prefix-positive-07:AB",
+      "C_transition_id": "transition:prefix-positive-07:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 7,
+      "move_uci": "a4a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-07",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-08:AB",
+      "B_transition_id": "transition:prefix-positive-08:AB",
+      "C_transition_id": "transition:prefix-positive-08:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 8,
+      "move_uci": "a4a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-08",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-09:AB",
+      "B_transition_id": "transition:prefix-positive-09:AB",
+      "C_transition_id": "transition:prefix-positive-09:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 9,
+      "move_uci": "a4h4",
+      "phase": "prefix",
+      "row_id": "prefix-positive-09",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-10:AB",
+      "B_transition_id": "transition:prefix-positive-10:AB",
+      "C_transition_id": "transition:prefix-positive-10:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 10,
+      "move_uci": "a5a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-10",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-11:AB",
+      "B_transition_id": "transition:prefix-positive-11:AB",
+      "C_transition_id": "transition:prefix-positive-11:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 11,
+      "move_uci": "a5a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-11",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-12:AB",
+      "B_transition_id": "transition:prefix-positive-12:AB",
+      "C_transition_id": "transition:prefix-positive-12:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 12,
+      "move_uci": "a5h5",
+      "phase": "prefix",
+      "row_id": "prefix-positive-12",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-13:AB",
+      "B_transition_id": "transition:prefix-positive-13:AB",
+      "C_transition_id": "transition:prefix-positive-13:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 13,
+      "move_uci": "a5h5",
+      "phase": "prefix",
+      "row_id": "prefix-positive-13",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-14:AB",
+      "B_transition_id": "transition:prefix-positive-14:AB",
+      "C_transition_id": "transition:prefix-positive-14:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 14,
+      "move_uci": "a5h5",
+      "phase": "prefix",
+      "row_id": "prefix-positive-14",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-15:AB",
+      "B_transition_id": "transition:prefix-positive-15:AB",
+      "C_transition_id": "transition:prefix-positive-15:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 15,
+      "move_uci": "a5h5",
+      "phase": "prefix",
+      "row_id": "prefix-positive-15",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-16:AB",
+      "B_transition_id": "transition:prefix-positive-16:AB",
+      "C_transition_id": "transition:prefix-positive-16:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 16,
+      "move_uci": "a5h5",
+      "phase": "prefix",
+      "row_id": "prefix-positive-16",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-17:AB",
+      "B_transition_id": "transition:prefix-positive-17:AB",
+      "C_transition_id": "transition:prefix-positive-17:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 17,
+      "move_uci": "a6a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-17",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-18:AB",
+      "B_transition_id": "transition:prefix-positive-18:AB",
+      "C_transition_id": "transition:prefix-positive-18:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 18,
+      "move_uci": "a6a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-18",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-19:AB",
+      "B_transition_id": "transition:prefix-positive-19:AB",
+      "C_transition_id": "transition:prefix-positive-19:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 19,
+      "move_uci": "a6a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-19",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-20:AB",
+      "B_transition_id": "transition:prefix-positive-20:AB",
+      "C_transition_id": "transition:prefix-positive-20:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 20,
+      "move_uci": "a6a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-20",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-21:AB",
+      "B_transition_id": "transition:prefix-positive-21:AB",
+      "C_transition_id": "transition:prefix-positive-21:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 21,
+      "move_uci": "a6a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-21",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-22:AB",
+      "B_transition_id": "transition:prefix-positive-22:AB",
+      "C_transition_id": "transition:prefix-positive-22:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 22,
+      "move_uci": "a6a1",
+      "phase": "prefix",
+      "row_id": "prefix-positive-22",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-23:AB",
+      "B_transition_id": "transition:prefix-positive-23:AB",
+      "C_transition_id": "transition:prefix-positive-23:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 23,
+      "move_uci": "a6a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-23",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-24:AB",
+      "B_transition_id": "transition:prefix-positive-24:AB",
+      "C_transition_id": "transition:prefix-positive-24:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 24,
+      "move_uci": "a6a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-24",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-25:AB",
+      "B_transition_id": "transition:prefix-positive-25:AB",
+      "C_transition_id": "transition:prefix-positive-25:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 25,
+      "move_uci": "a6a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-25",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-26:AB",
+      "B_transition_id": "transition:prefix-positive-26:AB",
+      "C_transition_id": "transition:prefix-positive-26:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 26,
+      "move_uci": "a6a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-26",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-27:AB",
+      "B_transition_id": "transition:prefix-positive-27:AB",
+      "C_transition_id": "transition:prefix-positive-27:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 27,
+      "move_uci": "a6a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-27",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-28:AB",
+      "B_transition_id": "transition:prefix-positive-28:AB",
+      "C_transition_id": "transition:prefix-positive-28:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 28,
+      "move_uci": "a6a8",
+      "phase": "prefix",
+      "row_id": "prefix-positive-28",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-29:AB",
+      "B_transition_id": "transition:prefix-positive-29:AB",
+      "C_transition_id": "transition:prefix-positive-29:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 29,
+      "move_uci": "a6h6",
+      "phase": "prefix",
+      "row_id": "prefix-positive-29",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-30:AB",
+      "B_transition_id": "transition:prefix-positive-30:AB",
+      "C_transition_id": "transition:prefix-positive-30:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 30,
+      "move_uci": "a6h6",
+      "phase": "prefix",
+      "row_id": "prefix-positive-30",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-positive-31:AB",
+      "B_transition_id": "transition:prefix-positive-31:AB",
+      "C_transition_id": "transition:prefix-positive-31:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 31,
+      "move_uci": "a6h6",
+      "phase": "prefix",
+      "row_id": "prefix-positive-31",
+      "visible_family": "prefix_positive"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-0-00:AB",
+      "B_transition_id": "transition:prefix-negative-0-00:AB",
+      "C_transition_id": "transition:prefix-negative-0-00:C",
+      "active_atom_ids": [
+        "opaque_terminal:35cff40336b141df3be76ad0ecda9aa90a511532d61b8bd30c0d691fb9ff5930",
+        "opaque_terminal:4d5cd3b03fea44058687938a59ec133880aa0bf50613d64fc6d68f96e7d25f1b",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 32,
+      "move_uci": "a6h6",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-00",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-0-01:AB",
+      "B_transition_id": "transition:prefix-negative-0-01:AB",
+      "C_transition_id": "transition:prefix-negative-0-01:C",
+      "active_atom_ids": [
+        "opaque_terminal:35cff40336b141df3be76ad0ecda9aa90a511532d61b8bd30c0d691fb9ff5930",
+        "opaque_terminal:4d5cd3b03fea44058687938a59ec133880aa0bf50613d64fc6d68f96e7d25f1b",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 33,
+      "move_uci": "a6h6",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-01",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-0-02:AB",
+      "B_transition_id": "transition:prefix-negative-0-02:AB",
+      "C_transition_id": "transition:prefix-negative-0-02:C",
+      "active_atom_ids": [
+        "opaque_terminal:35cff40336b141df3be76ad0ecda9aa90a511532d61b8bd30c0d691fb9ff5930",
+        "opaque_terminal:4d5cd3b03fea44058687938a59ec133880aa0bf50613d64fc6d68f96e7d25f1b",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 34,
+      "move_uci": "a6h6",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-02",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-0-03:AB",
+      "B_transition_id": "transition:prefix-negative-0-03:AB",
+      "C_transition_id": "transition:prefix-negative-0-03:C",
+      "active_atom_ids": [
+        "opaque_terminal:35cff40336b141df3be76ad0ecda9aa90a511532d61b8bd30c0d691fb9ff5930",
+        "opaque_terminal:4d5cd3b03fea44058687938a59ec133880aa0bf50613d64fc6d68f96e7d25f1b",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 35,
+      "move_uci": "a7a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-03",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-0-04:AB",
+      "B_transition_id": "transition:prefix-negative-0-04:AB",
+      "C_transition_id": "transition:prefix-negative-0-04:C",
+      "active_atom_ids": [
+        "opaque_terminal:35cff40336b141df3be76ad0ecda9aa90a511532d61b8bd30c0d691fb9ff5930",
+        "opaque_terminal:4d5cd3b03fea44058687938a59ec133880aa0bf50613d64fc6d68f96e7d25f1b",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 36,
+      "move_uci": "a7a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-04",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-0-05:AB",
+      "B_transition_id": "transition:prefix-negative-0-05:AB",
+      "C_transition_id": "transition:prefix-negative-0-05:C",
+      "active_atom_ids": [
+        "opaque_terminal:35cff40336b141df3be76ad0ecda9aa90a511532d61b8bd30c0d691fb9ff5930",
+        "opaque_terminal:4d5cd3b03fea44058687938a59ec133880aa0bf50613d64fc6d68f96e7d25f1b",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 37,
+      "move_uci": "a7a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-05",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-0-06:AB",
+      "B_transition_id": "transition:prefix-negative-0-06:AB",
+      "C_transition_id": "transition:prefix-negative-0-06:C",
+      "active_atom_ids": [
+        "opaque_terminal:35cff40336b141df3be76ad0ecda9aa90a511532d61b8bd30c0d691fb9ff5930",
+        "opaque_terminal:4d5cd3b03fea44058687938a59ec133880aa0bf50613d64fc6d68f96e7d25f1b",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 38,
+      "move_uci": "a7a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-06",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-0-07:AB",
+      "B_transition_id": "transition:prefix-negative-0-07:AB",
+      "C_transition_id": "transition:prefix-negative-0-07:C",
+      "active_atom_ids": [
+        "opaque_terminal:35cff40336b141df3be76ad0ecda9aa90a511532d61b8bd30c0d691fb9ff5930",
+        "opaque_terminal:4d5cd3b03fea44058687938a59ec133880aa0bf50613d64fc6d68f96e7d25f1b",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 39,
+      "move_uci": "a7a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-0-07",
+      "visible_family": "prefix_negative_0"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-1-00:AB",
+      "B_transition_id": "transition:prefix-negative-1-00:AB",
+      "C_transition_id": "transition:prefix-negative-1-00:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:2767e0a00f14fc98e6a4ed79344eaa5bf6a9485bab7200764cec516ffcde037a",
+        "opaque_terminal:cb1d99e1da1acc406cdb653353f7d26caad11f23c0fcb5b480a4a38073a67e03"
+      ],
+      "latent_pair_ordinal": 40,
+      "move_uci": "a7a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-00",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-1-01:AB",
+      "B_transition_id": "transition:prefix-negative-1-01:AB",
+      "C_transition_id": "transition:prefix-negative-1-01:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:2767e0a00f14fc98e6a4ed79344eaa5bf6a9485bab7200764cec516ffcde037a",
+        "opaque_terminal:cb1d99e1da1acc406cdb653353f7d26caad11f23c0fcb5b480a4a38073a67e03"
+      ],
+      "latent_pair_ordinal": 41,
+      "move_uci": "a7a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-01",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-1-02:AB",
+      "B_transition_id": "transition:prefix-negative-1-02:AB",
+      "C_transition_id": "transition:prefix-negative-1-02:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:2767e0a00f14fc98e6a4ed79344eaa5bf6a9485bab7200764cec516ffcde037a",
+        "opaque_terminal:cb1d99e1da1acc406cdb653353f7d26caad11f23c0fcb5b480a4a38073a67e03"
+      ],
+      "latent_pair_ordinal": 42,
+      "move_uci": "a7a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-02",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-1-03:AB",
+      "B_transition_id": "transition:prefix-negative-1-03:AB",
+      "C_transition_id": "transition:prefix-negative-1-03:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:2767e0a00f14fc98e6a4ed79344eaa5bf6a9485bab7200764cec516ffcde037a",
+        "opaque_terminal:cb1d99e1da1acc406cdb653353f7d26caad11f23c0fcb5b480a4a38073a67e03"
+      ],
+      "latent_pair_ordinal": 43,
+      "move_uci": "a7a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-03",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-1-04:AB",
+      "B_transition_id": "transition:prefix-negative-1-04:AB",
+      "C_transition_id": "transition:prefix-negative-1-04:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:2767e0a00f14fc98e6a4ed79344eaa5bf6a9485bab7200764cec516ffcde037a",
+        "opaque_terminal:cb1d99e1da1acc406cdb653353f7d26caad11f23c0fcb5b480a4a38073a67e03"
+      ],
+      "latent_pair_ordinal": 44,
+      "move_uci": "a7a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-04",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-1-05:AB",
+      "B_transition_id": "transition:prefix-negative-1-05:AB",
+      "C_transition_id": "transition:prefix-negative-1-05:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:2767e0a00f14fc98e6a4ed79344eaa5bf6a9485bab7200764cec516ffcde037a",
+        "opaque_terminal:cb1d99e1da1acc406cdb653353f7d26caad11f23c0fcb5b480a4a38073a67e03"
+      ],
+      "latent_pair_ordinal": 45,
+      "move_uci": "a7a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-05",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-1-06:AB",
+      "B_transition_id": "transition:prefix-negative-1-06:AB",
+      "C_transition_id": "transition:prefix-negative-1-06:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:2767e0a00f14fc98e6a4ed79344eaa5bf6a9485bab7200764cec516ffcde037a",
+        "opaque_terminal:cb1d99e1da1acc406cdb653353f7d26caad11f23c0fcb5b480a4a38073a67e03"
+      ],
+      "latent_pair_ordinal": 46,
+      "move_uci": "a7a8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-06",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-1-07:AB",
+      "B_transition_id": "transition:prefix-negative-1-07:AB",
+      "C_transition_id": "transition:prefix-negative-1-07:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:2767e0a00f14fc98e6a4ed79344eaa5bf6a9485bab7200764cec516ffcde037a",
+        "opaque_terminal:cb1d99e1da1acc406cdb653353f7d26caad11f23c0fcb5b480a4a38073a67e03"
+      ],
+      "latent_pair_ordinal": 47,
+      "move_uci": "a7h7",
+      "phase": "prefix",
+      "row_id": "prefix-negative-1-07",
+      "visible_family": "prefix_negative_1"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-2-00:AB",
+      "B_transition_id": "transition:prefix-negative-2-00:AB",
+      "C_transition_id": "transition:prefix-negative-2-00:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:dd9f1f40a8b7b58116f63f7055d8bbed69a28210acef7328101327a714a15fb8",
+        "opaque_terminal:fa611ad18262bb59b6848617497229937633ccc71bf5a3b5c0287d226a8ff745"
+      ],
+      "latent_pair_ordinal": 48,
+      "move_uci": "a7h7",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-00",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-2-01:AB",
+      "B_transition_id": "transition:prefix-negative-2-01:AB",
+      "C_transition_id": "transition:prefix-negative-2-01:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:dd9f1f40a8b7b58116f63f7055d8bbed69a28210acef7328101327a714a15fb8",
+        "opaque_terminal:fa611ad18262bb59b6848617497229937633ccc71bf5a3b5c0287d226a8ff745"
+      ],
+      "latent_pair_ordinal": 49,
+      "move_uci": "a7h7",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-01",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-2-02:AB",
+      "B_transition_id": "transition:prefix-negative-2-02:AB",
+      "C_transition_id": "transition:prefix-negative-2-02:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:dd9f1f40a8b7b58116f63f7055d8bbed69a28210acef7328101327a714a15fb8",
+        "opaque_terminal:fa611ad18262bb59b6848617497229937633ccc71bf5a3b5c0287d226a8ff745"
+      ],
+      "latent_pair_ordinal": 50,
+      "move_uci": "a7h7",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-02",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-2-03:AB",
+      "B_transition_id": "transition:prefix-negative-2-03:AB",
+      "C_transition_id": "transition:prefix-negative-2-03:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:dd9f1f40a8b7b58116f63f7055d8bbed69a28210acef7328101327a714a15fb8",
+        "opaque_terminal:fa611ad18262bb59b6848617497229937633ccc71bf5a3b5c0287d226a8ff745"
+      ],
+      "latent_pair_ordinal": 51,
+      "move_uci": "a7h7",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-03",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-2-04:AB",
+      "B_transition_id": "transition:prefix-negative-2-04:AB",
+      "C_transition_id": "transition:prefix-negative-2-04:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:dd9f1f40a8b7b58116f63f7055d8bbed69a28210acef7328101327a714a15fb8",
+        "opaque_terminal:fa611ad18262bb59b6848617497229937633ccc71bf5a3b5c0287d226a8ff745"
+      ],
+      "latent_pair_ordinal": 52,
+      "move_uci": "a7h7",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-04",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-2-05:AB",
+      "B_transition_id": "transition:prefix-negative-2-05:AB",
+      "C_transition_id": "transition:prefix-negative-2-05:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:dd9f1f40a8b7b58116f63f7055d8bbed69a28210acef7328101327a714a15fb8",
+        "opaque_terminal:fa611ad18262bb59b6848617497229937633ccc71bf5a3b5c0287d226a8ff745"
+      ],
+      "latent_pair_ordinal": 53,
+      "move_uci": "a8a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-05",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-2-06:AB",
+      "B_transition_id": "transition:prefix-negative-2-06:AB",
+      "C_transition_id": "transition:prefix-negative-2-06:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:dd9f1f40a8b7b58116f63f7055d8bbed69a28210acef7328101327a714a15fb8",
+        "opaque_terminal:fa611ad18262bb59b6848617497229937633ccc71bf5a3b5c0287d226a8ff745"
+      ],
+      "latent_pair_ordinal": 54,
+      "move_uci": "a8a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-06",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-2-07:AB",
+      "B_transition_id": "transition:prefix-negative-2-07:AB",
+      "C_transition_id": "transition:prefix-negative-2-07:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:dd9f1f40a8b7b58116f63f7055d8bbed69a28210acef7328101327a714a15fb8",
+        "opaque_terminal:fa611ad18262bb59b6848617497229937633ccc71bf5a3b5c0287d226a8ff745"
+      ],
+      "latent_pair_ordinal": 55,
+      "move_uci": "a8a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-2-07",
+      "visible_family": "prefix_negative_2"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-3-00:AB",
+      "B_transition_id": "transition:prefix-negative-3-00:AB",
+      "C_transition_id": "transition:prefix-negative-3-00:C",
+      "active_atom_ids": [
+        "opaque_terminal:26ad93e99d917e46b7f08700dc6d0e5b18dbd677a1661980dfa6bc3d3820a9ff",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:6fb60e4e2a1c32c42ab8eb614e042e4dd33fad782a0bcec46be23029ecc030cb"
+      ],
+      "latent_pair_ordinal": 56,
+      "move_uci": "a8a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-00",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-3-01:AB",
+      "B_transition_id": "transition:prefix-negative-3-01:AB",
+      "C_transition_id": "transition:prefix-negative-3-01:C",
+      "active_atom_ids": [
+        "opaque_terminal:26ad93e99d917e46b7f08700dc6d0e5b18dbd677a1661980dfa6bc3d3820a9ff",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:6fb60e4e2a1c32c42ab8eb614e042e4dd33fad782a0bcec46be23029ecc030cb"
+      ],
+      "latent_pair_ordinal": 57,
+      "move_uci": "a8a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-01",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-3-02:AB",
+      "B_transition_id": "transition:prefix-negative-3-02:AB",
+      "C_transition_id": "transition:prefix-negative-3-02:C",
+      "active_atom_ids": [
+        "opaque_terminal:26ad93e99d917e46b7f08700dc6d0e5b18dbd677a1661980dfa6bc3d3820a9ff",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:6fb60e4e2a1c32c42ab8eb614e042e4dd33fad782a0bcec46be23029ecc030cb"
+      ],
+      "latent_pair_ordinal": 58,
+      "move_uci": "a8a1",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-02",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-3-03:AB",
+      "B_transition_id": "transition:prefix-negative-3-03:AB",
+      "C_transition_id": "transition:prefix-negative-3-03:C",
+      "active_atom_ids": [
+        "opaque_terminal:26ad93e99d917e46b7f08700dc6d0e5b18dbd677a1661980dfa6bc3d3820a9ff",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:6fb60e4e2a1c32c42ab8eb614e042e4dd33fad782a0bcec46be23029ecc030cb"
+      ],
+      "latent_pair_ordinal": 59,
+      "move_uci": "a8h8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-03",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-3-04:AB",
+      "B_transition_id": "transition:prefix-negative-3-04:AB",
+      "C_transition_id": "transition:prefix-negative-3-04:C",
+      "active_atom_ids": [
+        "opaque_terminal:26ad93e99d917e46b7f08700dc6d0e5b18dbd677a1661980dfa6bc3d3820a9ff",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:6fb60e4e2a1c32c42ab8eb614e042e4dd33fad782a0bcec46be23029ecc030cb"
+      ],
+      "latent_pair_ordinal": 60,
+      "move_uci": "a8h8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-04",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-3-05:AB",
+      "B_transition_id": "transition:prefix-negative-3-05:AB",
+      "C_transition_id": "transition:prefix-negative-3-05:C",
+      "active_atom_ids": [
+        "opaque_terminal:26ad93e99d917e46b7f08700dc6d0e5b18dbd677a1661980dfa6bc3d3820a9ff",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:6fb60e4e2a1c32c42ab8eb614e042e4dd33fad782a0bcec46be23029ecc030cb"
+      ],
+      "latent_pair_ordinal": 61,
+      "move_uci": "a8h8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-05",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-3-06:AB",
+      "B_transition_id": "transition:prefix-negative-3-06:AB",
+      "C_transition_id": "transition:prefix-negative-3-06:C",
+      "active_atom_ids": [
+        "opaque_terminal:26ad93e99d917e46b7f08700dc6d0e5b18dbd677a1661980dfa6bc3d3820a9ff",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:6fb60e4e2a1c32c42ab8eb614e042e4dd33fad782a0bcec46be23029ecc030cb"
+      ],
+      "latent_pair_ordinal": 62,
+      "move_uci": "a8h8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-06",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "A_transition_id": "transition:prefix-negative-3-07:AB",
+      "B_transition_id": "transition:prefix-negative-3-07:AB",
+      "C_transition_id": "transition:prefix-negative-3-07:C",
+      "active_atom_ids": [
+        "opaque_terminal:26ad93e99d917e46b7f08700dc6d0e5b18dbd677a1661980dfa6bc3d3820a9ff",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea",
+        "opaque_terminal:6fb60e4e2a1c32c42ab8eb614e042e4dd33fad782a0bcec46be23029ecc030cb"
+      ],
+      "latent_pair_ordinal": 63,
+      "move_uci": "a8h8",
+      "phase": "prefix",
+      "row_id": "prefix-negative-3-07",
+      "visible_family": "prefix_negative_3"
+    },
+    {
+      "A_transition_id": "transition:suffix-spurious-00:AB",
+      "B_transition_id": "transition:suffix-spurious-00:AB",
+      "C_transition_id": "transition:suffix-spurious-00:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea"
+      ],
+      "latent_pair_ordinal": 64,
+      "move_uci": "a8h8",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-00",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition_id": "transition:suffix-spurious-01:AB",
+      "B_transition_id": "transition:suffix-spurious-01:AB",
+      "C_transition_id": "transition:suffix-spurious-01:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea"
+      ],
+      "latent_pair_ordinal": 65,
+      "move_uci": "b1a1",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-01",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition_id": "transition:suffix-spurious-02:AB",
+      "B_transition_id": "transition:suffix-spurious-02:AB",
+      "C_transition_id": "transition:suffix-spurious-02:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea"
+      ],
+      "latent_pair_ordinal": 66,
+      "move_uci": "b1a1",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-02",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition_id": "transition:suffix-spurious-03:AB",
+      "B_transition_id": "transition:suffix-spurious-03:AB",
+      "C_transition_id": "transition:suffix-spurious-03:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea"
+      ],
+      "latent_pair_ordinal": 67,
+      "move_uci": "b1a1",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-03",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition_id": "transition:suffix-spurious-04:AB",
+      "B_transition_id": "transition:suffix-spurious-04:AB",
+      "C_transition_id": "transition:suffix-spurious-04:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea"
+      ],
+      "latent_pair_ordinal": 68,
+      "move_uci": "b1a1",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-04",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition_id": "transition:suffix-spurious-05:AB",
+      "B_transition_id": "transition:suffix-spurious-05:AB",
+      "C_transition_id": "transition:suffix-spurious-05:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea"
+      ],
+      "latent_pair_ordinal": 69,
+      "move_uci": "b1a1",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-05",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition_id": "transition:suffix-spurious-06:AB",
+      "B_transition_id": "transition:suffix-spurious-06:AB",
+      "C_transition_id": "transition:suffix-spurious-06:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea"
+      ],
+      "latent_pair_ordinal": 70,
+      "move_uci": "b1a1",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-06",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition_id": "transition:suffix-spurious-07:AB",
+      "B_transition_id": "transition:suffix-spurious-07:AB",
+      "C_transition_id": "transition:suffix-spurious-07:C",
+      "active_atom_ids": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea"
+      ],
+      "latent_pair_ordinal": 71,
+      "move_uci": "b1b8",
+      "phase": "suffix",
+      "row_id": "suffix-spurious-07",
+      "visible_family": "suffix_spurious"
+    },
+    {
+      "A_transition_id": "transition:suffix-planted-00:AB",
+      "B_transition_id": "transition:suffix-planted-00:AB",
+      "C_transition_id": "transition:suffix-planted-00:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 72,
+      "move_uci": "b1b8",
+      "phase": "suffix",
+      "row_id": "suffix-planted-00",
+      "visible_family": "suffix_planted"
+    },
+    {
+      "A_transition_id": "transition:suffix-planted-01:AB",
+      "B_transition_id": "transition:suffix-planted-01:AB",
+      "C_transition_id": "transition:suffix-planted-01:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 73,
+      "move_uci": "b1b8",
+      "phase": "suffix",
+      "row_id": "suffix-planted-01",
+      "visible_family": "suffix_planted"
+    },
+    {
+      "A_transition_id": "transition:suffix-planted-02:AB",
+      "B_transition_id": "transition:suffix-planted-02:AB",
+      "C_transition_id": "transition:suffix-planted-02:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 74,
+      "move_uci": "b1b8",
+      "phase": "suffix",
+      "row_id": "suffix-planted-02",
+      "visible_family": "suffix_planted"
+    },
+    {
+      "A_transition_id": "transition:suffix-planted-03:AB",
+      "B_transition_id": "transition:suffix-planted-03:AB",
+      "C_transition_id": "transition:suffix-planted-03:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 75,
+      "move_uci": "b1b8",
+      "phase": "suffix",
+      "row_id": "suffix-planted-03",
+      "visible_family": "suffix_planted"
+    },
+    {
+      "A_transition_id": "transition:suffix-planted-04:AB",
+      "B_transition_id": "transition:suffix-planted-04:AB",
+      "C_transition_id": "transition:suffix-planted-04:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 76,
+      "move_uci": "b1b8",
+      "phase": "suffix",
+      "row_id": "suffix-planted-04",
+      "visible_family": "suffix_planted"
+    },
+    {
+      "A_transition_id": "transition:suffix-planted-05:AB",
+      "B_transition_id": "transition:suffix-planted-05:AB",
+      "C_transition_id": "transition:suffix-planted-05:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 77,
+      "move_uci": "b1h1",
+      "phase": "suffix",
+      "row_id": "suffix-planted-05",
+      "visible_family": "suffix_planted"
+    },
+    {
+      "A_transition_id": "transition:suffix-planted-06:AB",
+      "B_transition_id": "transition:suffix-planted-06:AB",
+      "C_transition_id": "transition:suffix-planted-06:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 78,
+      "move_uci": "b1h1",
+      "phase": "suffix",
+      "row_id": "suffix-planted-06",
+      "visible_family": "suffix_planted"
+    },
+    {
+      "A_transition_id": "transition:suffix-planted-07:AB",
+      "B_transition_id": "transition:suffix-planted-07:AB",
+      "C_transition_id": "transition:suffix-planted-07:C",
+      "active_atom_ids": [
+        "opaque_terminal:05f18e4e5870032763455d5c36e0e4570ddf2a5f9d118050fdf794e50431a188",
+        "opaque_terminal:87ae637c842013b2dd09a1a8b0c545ac196f11df0c428d52a696778dacd4e68e"
+      ],
+      "latent_pair_ordinal": 79,
+      "move_uci": "b1h1",
+      "phase": "suffix",
+      "row_id": "suffix-planted-07",
+      "visible_family": "suffix_planted"
+    }
+  ],
+  "schema_version": "native_v2_fresh_ecology.v1",
+  "spurious_family": [
+    {
+      "members": [
+        "opaque_terminal:0b9587dffa33076c7de2a516d6a064a1f507e109ce117f22146a43da668d24bf",
+        "opaque_terminal:37c9e6edeaaf613d76d411b019f9d0306a4afa062e9c34cf939a4f90aad35aea"
+      ],
+      "pattern_digest": "ce9b4bee66a4c87a8cfa79b462d7861f05b3dc9871053f530dfa77e5a6679a65"
+    }
+  ],
+  "spurious_selection_rule": "eligible_predeclared_family_then_lexicographically_smallest_sha256_canonical_hypothesis_manifest_then_cell_id",
+  "suffix_row_order": [
+    "suffix-spurious-00",
+    "suffix-spurious-01",
+    "suffix-spurious-02",
+    "suffix-spurious-03",
+    "suffix-spurious-04",
+    "suffix-spurious-05",
+    "suffix-spurious-06",
+    "suffix-spurious-07",
+    "suffix-planted-00",
+    "suffix-planted-01",
+    "suffix-planted-02",
+    "suffix-planted-03",
+    "suffix-planted-04",
+    "suffix-planted-05",
+    "suffix-planted-06",
+    "suffix-planted-07"
+  ],
+  "transitions": [
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6h6",
+      "outcome": false,
+      "physical_transition_digest": "cf03e55b10d6e564a7502161a8696ffb460ccab0a5b175141c51d5d49a3b379f",
+      "predecessor_fen": "8/8/R7/8/8/8/5k2/K7 w - - 0 1",
+      "successor_fen": "8/8/7R/8/8/8/5k2/K7 b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-00:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6h6",
+      "outcome": true,
+      "physical_transition_digest": "7dc00c5bade7e8fe76be159c4fac3e7821ff22f09bf261c4e4b608b950d6f885",
+      "predecessor_fen": "8/8/R7/8/8/5K1k/8/8 w - - 0 1",
+      "successor_fen": "8/8/7R/8/8/5K1k/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-00:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6h6",
+      "outcome": false,
+      "physical_transition_digest": "463c0f7fea56499e174b42ddd9dc443fbb3b5f543cf019f4e010f9d762a0189d",
+      "predecessor_fen": "8/8/R7/8/8/8/6k1/K7 w - - 0 1",
+      "successor_fen": "8/8/7R/8/8/8/6k1/K7 b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-01:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6h6",
+      "outcome": true,
+      "physical_transition_digest": "348fd1c8dab16d2ff2b8d58c1a9b7499ae5543e6c0796a726be8e04fe4ad3376",
+      "predecessor_fen": "8/8/R7/8/5K1k/8/8/8 w - - 0 1",
+      "successor_fen": "8/8/7R/8/5K1k/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-01:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6h6",
+      "outcome": false,
+      "physical_transition_digest": "4d99ff8b06e089777ac7fae5482231c9e186cae1c8ff1368955242343b121cd7",
+      "predecessor_fen": "8/8/R7/8/8/8/7k/K7 w - - 0 1",
+      "successor_fen": "8/8/7R/8/8/8/7k/K7 b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-02:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6h6",
+      "outcome": true,
+      "physical_transition_digest": "ff265e1573d6ff3175925c378825c978429726dd595cab0759fd160aaf8de09a",
+      "predecessor_fen": "7k/5K2/R7/8/8/8/8/8 w - - 0 1",
+      "successor_fen": "7k/5K2/7R/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-02:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a1",
+      "outcome": false,
+      "physical_transition_digest": "52bcf6daba8540ed14bf7587a4c403d59eb39806fe0a9a219d16298bc39c13f0",
+      "predecessor_fen": "8/R7/8/8/8/8/8/1K1k4 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/RK1k4 b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-03:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a1",
+      "outcome": true,
+      "physical_transition_digest": "368b6be722001275ccbf915235a8757ad6c97e9d9ffb9a2bc5b6e1eb3327a514",
+      "predecessor_fen": "8/R7/8/8/8/2K5/8/2k5 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/2K5/8/R1k5 b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-03:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a1",
+      "outcome": false,
+      "physical_transition_digest": "066060da14e074267ec0c87d1c525aec35148bb1ab5ad5e8310667be0976456e",
+      "predecessor_fen": "8/R7/8/8/8/8/8/1K2k3 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/RK2k3 b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-04:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a1",
+      "outcome": true,
+      "physical_transition_digest": "e83e0a9926addd82a01d93dbc8e585eb1b073d85d0ccfc4c86acd39ed591dd8a",
+      "predecessor_fen": "8/R7/8/8/8/3K4/8/3k4 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/3K4/8/R2k4 b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-04:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a1",
+      "outcome": false,
+      "physical_transition_digest": "397e82aae5bdb2bf0976fa402ee5f279484f17371c8c40d8889084c13e859955",
+      "predecessor_fen": "8/R7/8/8/8/8/8/1K3k2 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/RK3k2 b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-05:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a1",
+      "outcome": true,
+      "physical_transition_digest": "b6cd09727156f6f5550318142f55911600a00ab8bd6a38d07de175bdbdda6f79",
+      "predecessor_fen": "8/R7/8/8/8/4K3/8/4k3 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/4K3/8/R3k3 b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-05:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a1",
+      "outcome": false,
+      "physical_transition_digest": "fc63a46a2e6cc832f314b64dc39145891eee8346c0a8c82cd6b9ddda8f47fca8",
+      "predecessor_fen": "8/R7/8/8/8/8/8/1K4k1 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/RK4k1 b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-06:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a1",
+      "outcome": true,
+      "physical_transition_digest": "bff1b896a9b5720dd0b6074218c809c4cde7e54ec18d250f38c84d210f62b3f0",
+      "predecessor_fen": "8/R7/8/8/8/5K2/8/5k2 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/5K2/8/R4k2 b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-06:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a1",
+      "outcome": false,
+      "physical_transition_digest": "7953d27927fd64eb6784878439606e3ff8e0f88b7cac5a64306f76fd05597fe5",
+      "predecessor_fen": "8/R7/8/8/8/8/8/1K5k w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/RK5k b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-07:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a1",
+      "outcome": true,
+      "physical_transition_digest": "0fe378db8e4f9ad7d1591c505b3e20bb3b59deeead62bbe03c62c68e6322cd16",
+      "predecessor_fen": "8/R7/8/8/8/6K1/8/6k1 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/6K1/8/R5k1 b - - 1 1",
+      "transition_id": "transition:prefix-negative-0-07:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a1",
+      "outcome": false,
+      "physical_transition_digest": "326da8a1154b7358270833320c26007c37297181f2f7da5e075eb9703e7cf4d4",
+      "predecessor_fen": "8/R7/8/8/8/8/3k4/1K6 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/3k4/RK6 b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-00:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a1",
+      "outcome": true,
+      "physical_transition_digest": "81ad9f167737fbd5044b2458a839093e4abb4cdc44cc5e1a8c2c4eab8a55c165",
+      "predecessor_fen": "8/R7/8/8/8/6K1/8/7k w - - 0 1",
+      "successor_fen": "8/8/8/8/8/6K1/8/R6k b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-00:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a8",
+      "outcome": false,
+      "physical_transition_digest": "cf1fb0e9fdbac09664891aafe6a6494d5156bb45162ace2437aa6f4910b76dc9",
+      "predecessor_fen": "8/R7/8/8/8/8/8/K1k5 w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/8/8/K1k5 b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-01:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a8",
+      "outcome": true,
+      "physical_transition_digest": "eb6ed4663daccd7c1f9e95493bb0126413e78b3538e90037e6caa29ec293be74",
+      "predecessor_fen": "2k5/R7/2K5/8/8/8/8/8 w - - 0 1",
+      "successor_fen": "R1k5/8/2K5/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-01:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a8",
+      "outcome": false,
+      "physical_transition_digest": "17824ac70425e8eeff3c2c145f4de395287f3a04cb70058ce2415a5e4c6f099c",
+      "predecessor_fen": "8/R7/8/8/8/8/8/K2k4 w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/8/8/K2k4 b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-02:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a8",
+      "outcome": true,
+      "physical_transition_digest": "3d25762bac74ac8f76f66e94935add07febc7ab6f141a4c6aff5086b708473cc",
+      "predecessor_fen": "3k4/R7/3K4/8/8/8/8/8 w - - 0 1",
+      "successor_fen": "R2k4/8/3K4/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-02:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a8",
+      "outcome": false,
+      "physical_transition_digest": "8783c533c421b5fead361bba250ef0c211ad9d0b07c8b66b2f459b6c508781e5",
+      "predecessor_fen": "8/R7/8/8/8/8/8/K3k3 w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/8/8/K3k3 b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-03:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a8",
+      "outcome": true,
+      "physical_transition_digest": "bf0c6e3bcb5add9f1e0b5ebfc7eac790745ec3a4486495d23a3b1dc206951b7e",
+      "predecessor_fen": "4k3/R7/4K3/8/8/8/8/8 w - - 0 1",
+      "successor_fen": "R3k3/8/4K3/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-03:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a8",
+      "outcome": false,
+      "physical_transition_digest": "4869ad0795f24e219150e2bace361f77bae32f02cf4dc11b5bab3bf9c8a576bb",
+      "predecessor_fen": "8/R7/8/8/8/8/8/K4k2 w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/8/8/K4k2 b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-04:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a8",
+      "outcome": true,
+      "physical_transition_digest": "3d66a2fbceb1b4fc424fb10d5b4c445446ed1cc9c269b1b8a2748228b2e0d0f6",
+      "predecessor_fen": "5k2/R7/5K2/8/8/8/8/8 w - - 0 1",
+      "successor_fen": "R4k2/8/5K2/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-04:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a8",
+      "outcome": false,
+      "physical_transition_digest": "57ec001e059334d1e1714c044447b80f1081e2fcb0c0c9fb354a6ce0ca3f6327",
+      "predecessor_fen": "8/R7/8/8/8/8/8/K5k1 w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/8/8/K5k1 b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-05:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a8",
+      "outcome": true,
+      "physical_transition_digest": "de945a9de3971ae0dc3d723d897ce09920e6a38c711772a40cbbf07090b1f089",
+      "predecessor_fen": "6k1/R7/6K1/8/8/8/8/8 w - - 0 1",
+      "successor_fen": "R5k1/8/6K1/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-05:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a8",
+      "outcome": false,
+      "physical_transition_digest": "80982bd8289d7750ad69607547a996faeca5215076277246b3f9a3ced6aff8af",
+      "predecessor_fen": "8/R7/8/8/8/8/8/K6k w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/8/8/K6k b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-06:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7a8",
+      "outcome": true,
+      "physical_transition_digest": "eb89e58599d5ebf5115e23eb48730d048c96208331e001718eded4e42e90cfea",
+      "predecessor_fen": "7k/R7/6K1/8/8/8/8/8 w - - 0 1",
+      "successor_fen": "R6k/8/6K1/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-06:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7h7",
+      "outcome": false,
+      "physical_transition_digest": "2cbdd4bcc9a1fbc292726c1093b4eaa6c630ea8b7c7dba5feafa7d26c1b698d9",
+      "predecessor_fen": "8/R7/8/8/8/8/2k5/K7 w - - 0 1",
+      "successor_fen": "8/7R/8/8/8/8/2k5/K7 b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-07:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7h7",
+      "outcome": true,
+      "physical_transition_digest": "90533c89d5eb3d59c16705ece8367a305514193106df1580bdac3359b35ddce4",
+      "predecessor_fen": "8/R7/8/8/8/8/8/5K1k w - - 0 1",
+      "successor_fen": "8/7R/8/8/8/8/8/5K1k b - - 1 1",
+      "transition_id": "transition:prefix-negative-1-07:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7h7",
+      "outcome": false,
+      "physical_transition_digest": "c7a2e4f468665ac69bfc463211396434ee9dd5f7aff9866c0043adc46f8f96e5",
+      "predecessor_fen": "8/R7/8/8/8/8/3k4/K7 w - - 0 1",
+      "successor_fen": "8/7R/8/8/8/8/3k4/K7 b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-00:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7h7",
+      "outcome": true,
+      "physical_transition_digest": "4085eb7da1340b2a7cc8194853ca9b0c402dd60536aca9a77e353b43547081fe",
+      "predecessor_fen": "8/R7/8/8/8/8/5K2/7k w - - 0 1",
+      "successor_fen": "8/7R/8/8/8/8/5K2/7k b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-00:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7h7",
+      "outcome": false,
+      "physical_transition_digest": "d2b8eab2e473aeaaa003cc360ac9f81bff2563ff819d244349931ecc89c8df3e",
+      "predecessor_fen": "8/R7/8/8/8/8/4k3/K7 w - - 0 1",
+      "successor_fen": "8/7R/8/8/8/8/4k3/K7 b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-01:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7h7",
+      "outcome": true,
+      "physical_transition_digest": "350120d2edaa454237f0072e613e661245dbf2a636a8e72dc0580189eb829552",
+      "predecessor_fen": "8/R7/8/8/8/8/5K1k/8 w - - 0 1",
+      "successor_fen": "8/7R/8/8/8/8/5K1k/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-01:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7h7",
+      "outcome": false,
+      "physical_transition_digest": "ae57e0d76d146abbb707a6c2c6fef9f25397a977566ed48536ee5ae62542ec85",
+      "predecessor_fen": "8/R7/8/8/8/8/5k2/K7 w - - 0 1",
+      "successor_fen": "8/7R/8/8/8/8/5k2/K7 b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-02:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7h7",
+      "outcome": true,
+      "physical_transition_digest": "5ce49fd74854fea4a94427e5d59c1cba2f98d0c177735a381322ef05dd431c8f",
+      "predecessor_fen": "8/R7/8/8/8/5K1k/8/8 w - - 0 1",
+      "successor_fen": "8/7R/8/8/8/5K1k/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-02:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7h7",
+      "outcome": false,
+      "physical_transition_digest": "38675426684090a3aab87fb1662b78bf415d5503fcaa1d6a938ffe08f4c91a8c",
+      "predecessor_fen": "8/R7/8/8/8/8/6k1/K7 w - - 0 1",
+      "successor_fen": "8/7R/8/8/8/8/6k1/K7 b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-03:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7h7",
+      "outcome": true,
+      "physical_transition_digest": "b2fadc92a2467e85fc37c21151994aac30bcd8db05145dd40e708fd2df7316e9",
+      "predecessor_fen": "8/R7/8/8/5K1k/8/8/8 w - - 0 1",
+      "successor_fen": "8/7R/8/8/5K1k/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-03:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7h7",
+      "outcome": false,
+      "physical_transition_digest": "f502b8f42f77caa926c9ea8c21aad34e12c7e9600310d7a5cb4231d2a41aa260",
+      "predecessor_fen": "8/R7/8/8/8/8/7k/K7 w - - 0 1",
+      "successor_fen": "8/7R/8/8/8/8/7k/K7 b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-04:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a7h7",
+      "outcome": true,
+      "physical_transition_digest": "aec2a4e338b34f1bd5c04621147f35632ac3f5048d192e18cb64325f992696c9",
+      "predecessor_fen": "8/R7/8/5K1k/8/8/8/8 w - - 0 1",
+      "successor_fen": "8/7R/8/5K1k/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-04:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8a1",
+      "outcome": false,
+      "physical_transition_digest": "9fced45ded97fd627f5ea65d1d672b01941d22aaf23bbfbc1b9256f69d741b77",
+      "predecessor_fen": "R7/8/8/8/8/8/8/1K1k4 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/RK1k4 b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-05:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8a1",
+      "outcome": true,
+      "physical_transition_digest": "b02c5b7943f8c703e7b231f999ffc41824b480e562816eb3fea17b9bc97c5650",
+      "predecessor_fen": "R7/8/8/8/8/2K5/8/2k5 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/2K5/8/R1k5 b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-05:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8a1",
+      "outcome": false,
+      "physical_transition_digest": "138b5d50907b1a64d5cee78c7fcff5ecdb52da9c863c7b572705054aa06a9a40",
+      "predecessor_fen": "R7/8/8/8/8/8/8/1K2k3 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/RK2k3 b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-06:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8a1",
+      "outcome": true,
+      "physical_transition_digest": "c372edf421a3bda9546798489a80bfd63f3c532fb8325455802a81fbcfb56f62",
+      "predecessor_fen": "R7/8/8/8/8/3K4/8/3k4 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/3K4/8/R2k4 b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-06:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8a1",
+      "outcome": false,
+      "physical_transition_digest": "743fc1c51cfe11745edd6842da3711d960c02437e4bd06c876b5eed1f1e090c1",
+      "predecessor_fen": "R7/8/8/8/8/8/8/1K3k2 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/RK3k2 b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-07:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8a1",
+      "outcome": true,
+      "physical_transition_digest": "4a921925c16834015f7880f98fe987232d6d92624fd47250c68d8fb42b028e51",
+      "predecessor_fen": "R7/8/8/8/8/4K3/8/4k3 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/4K3/8/R3k3 b - - 1 1",
+      "transition_id": "transition:prefix-negative-2-07:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8a1",
+      "outcome": false,
+      "physical_transition_digest": "ab9e1fcdfca99eab22b0cf10a48836811a745ae28e392fffbf9cfdb1a2bfce46",
+      "predecessor_fen": "R7/8/8/8/8/8/8/1K4k1 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/RK4k1 b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-00:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8a1",
+      "outcome": true,
+      "physical_transition_digest": "b9a3deeeb5107dc2478f2adf7447fe193b69e86b5cf4207a3d047fb4c7fd30f7",
+      "predecessor_fen": "R7/8/8/8/8/5K2/8/5k2 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/5K2/8/R4k2 b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-00:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8a1",
+      "outcome": false,
+      "physical_transition_digest": "2f539ae63586ee6b4dc33b81ca09476416f079392c3e0fef0fd99daaa2b3509f",
+      "predecessor_fen": "R7/8/8/8/8/8/8/1K5k w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/RK5k b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-01:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8a1",
+      "outcome": true,
+      "physical_transition_digest": "27a17d2ddf94eab72b6cae488a58dc9c15b066a8d25ca109fab1c8de6346a6b1",
+      "predecessor_fen": "R7/8/8/8/8/6K1/8/6k1 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/6K1/8/R5k1 b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-01:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8a1",
+      "outcome": false,
+      "physical_transition_digest": "d706abc43738d7aa85abb7cbb761a8a387aa6a748023b74bdff73b50a674f6b5",
+      "predecessor_fen": "R7/8/8/8/8/8/3k4/1K6 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/3k4/RK6 b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-02:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8a1",
+      "outcome": true,
+      "physical_transition_digest": "ed3e437e7db49b93a937864fed18c685c189eac188cfe99b7d91c9485b7a0209",
+      "predecessor_fen": "R7/8/8/8/8/6K1/8/7k w - - 0 1",
+      "successor_fen": "8/8/8/8/8/6K1/8/R6k b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-02:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8h8",
+      "outcome": false,
+      "physical_transition_digest": "7ec75deba7e6307fa0f21404ce18d3afaf6a0b6457146c95737f7a4745193739",
+      "predecessor_fen": "R7/8/8/8/8/8/8/K1k5 w - - 0 1",
+      "successor_fen": "7R/8/8/8/8/8/8/K1k5 b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-03:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8h8",
+      "outcome": true,
+      "physical_transition_digest": "f428e1b9e260a907b4db28183c407a7279daca828373e3982cd5a102fd83fe7a",
+      "predecessor_fen": "R7/8/8/8/8/8/8/5K1k w - - 0 1",
+      "successor_fen": "7R/8/8/8/8/8/8/5K1k b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-03:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8h8",
+      "outcome": false,
+      "physical_transition_digest": "9b1e96eac71251dd0d1890d5aae0bceb4d25fdbc497ef409b940b352a9882ca6",
+      "predecessor_fen": "R7/8/8/8/8/8/8/K2k4 w - - 0 1",
+      "successor_fen": "7R/8/8/8/8/8/8/K2k4 b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-04:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8h8",
+      "outcome": true,
+      "physical_transition_digest": "a0edf025b6156c5113e5fd3cf5be226ffea1906c20336f31c13b1ef92d41fe3e",
+      "predecessor_fen": "R7/8/8/8/8/8/5K2/7k w - - 0 1",
+      "successor_fen": "7R/8/8/8/8/8/5K2/7k b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-04:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8h8",
+      "outcome": false,
+      "physical_transition_digest": "e05f2957a85d1519e05e0bb06adf47e39344053fed2994f1aa547aa6b1237b40",
+      "predecessor_fen": "R7/8/8/8/8/8/8/K3k3 w - - 0 1",
+      "successor_fen": "7R/8/8/8/8/8/8/K3k3 b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-05:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8h8",
+      "outcome": true,
+      "physical_transition_digest": "8977359edba2c0fd7561cf32b256d96b7b4237048e203177d381ce244853a387",
+      "predecessor_fen": "R7/8/8/8/8/8/5K1k/8 w - - 0 1",
+      "successor_fen": "7R/8/8/8/8/8/5K1k/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-05:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8h8",
+      "outcome": false,
+      "physical_transition_digest": "f1c920f99a002bae93bfc020177e82b283984a03d07cd561788dd4f4fccd52f5",
+      "predecessor_fen": "R7/8/8/8/8/8/8/K4k2 w - - 0 1",
+      "successor_fen": "7R/8/8/8/8/8/8/K4k2 b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-06:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8h8",
+      "outcome": true,
+      "physical_transition_digest": "a3c1ac5bf9c8f62625dab4a7b6a17b625d910be3619e394b4e27e00d6555d9f8",
+      "predecessor_fen": "R7/8/8/8/8/5K1k/8/8 w - - 0 1",
+      "successor_fen": "7R/8/8/8/8/5K1k/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-06:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8h8",
+      "outcome": false,
+      "physical_transition_digest": "c829027e1c880dbce079a774ba064f360922b68dbb4a7f7a0bc96415987902bf",
+      "predecessor_fen": "R7/8/8/8/8/8/8/K5k1 w - - 0 1",
+      "successor_fen": "7R/8/8/8/8/8/8/K5k1 b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-07:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8h8",
+      "outcome": true,
+      "physical_transition_digest": "965693c75f5014ce7f148e593218dc8915583966aa491130507af25378a7a6a7",
+      "predecessor_fen": "R7/8/8/8/5K1k/8/8/8 w - - 0 1",
+      "successor_fen": "7R/8/8/8/5K1k/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-negative-3-07:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a1a8",
+      "outcome": true,
+      "physical_transition_digest": "bdac5eec3d68828efb736af3dd018150066311fbf27186b3fcaaaaa18c0a54f8",
+      "predecessor_fen": "7k/8/7K/8/8/8/8/R7 w - - 0 1",
+      "successor_fen": "R6k/8/7K/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-00:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a1a8",
+      "outcome": false,
+      "physical_transition_digest": "af3eb61a3e8b3f158aa94c94168662c054b24e1acb0c885bde40418e4dfbc213",
+      "predecessor_fen": "8/8/8/8/8/8/4k3/RK6 w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/8/4k3/1K6 b - - 1 1",
+      "transition_id": "transition:prefix-positive-00:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a1h1",
+      "outcome": true,
+      "physical_transition_digest": "4f7c59eaf2f29f402778b153092198b16ce820e25bc530c30aa8e301e7b4ad17",
+      "predecessor_fen": "5K1k/8/8/8/8/8/8/R7 w - - 0 1",
+      "successor_fen": "5K1k/8/8/8/8/8/8/7R b - - 1 1",
+      "transition_id": "transition:prefix-positive-01:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a1h1",
+      "outcome": false,
+      "physical_transition_digest": "59fa0068e4863dbe4469ff7242db2003e47e5679d24bdd4875e7aec88cea2d07",
+      "predecessor_fen": "8/8/8/8/8/2k5/K7/R7 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/2k5/K7/7R b - - 1 1",
+      "transition_id": "transition:prefix-positive-01:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a2a1",
+      "outcome": true,
+      "physical_transition_digest": "3684ca963d6e457f1ff83d7352915b948e22e8b3a9a701142231bb1ec607da8e",
+      "predecessor_fen": "8/8/8/8/8/7K/R7/7k w - - 0 1",
+      "successor_fen": "8/8/8/8/8/7K/8/R6k b - - 1 1",
+      "transition_id": "transition:prefix-positive-02:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a2a1",
+      "outcome": false,
+      "physical_transition_digest": "5df0d9f63f3f2f45d7872ad730af98078df1cf6accb99c15f32f09121ce4d145",
+      "predecessor_fen": "8/8/8/8/8/2k5/R7/1K6 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/2k5/8/RK6 b - - 1 1",
+      "transition_id": "transition:prefix-positive-02:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a2a8",
+      "outcome": true,
+      "physical_transition_digest": "522853c84cac048171e6a793ea1a8b6c8e7fc210af7156e0b284b48f902f6b4c",
+      "predecessor_fen": "7k/8/7K/8/8/8/R7/8 w - - 0 1",
+      "successor_fen": "R6k/8/7K/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-03:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a2a8",
+      "outcome": false,
+      "physical_transition_digest": "57e24f5b969ada9eca8a2e7a31db92eacee4e5ec1f76b774152d8cd9e2012077",
+      "predecessor_fen": "8/8/8/8/8/7k/R7/K7 w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/7k/8/K7 b - - 1 1",
+      "transition_id": "transition:prefix-positive-03:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a3a1",
+      "outcome": true,
+      "physical_transition_digest": "addd9a89bfe7e6c7cc313a2cc2661861c53cde4606e2688017a4c76b53d50eaf",
+      "predecessor_fen": "8/8/8/8/8/R6K/8/7k w - - 0 1",
+      "successor_fen": "8/8/8/8/8/7K/8/R6k b - - 1 1",
+      "transition_id": "transition:prefix-positive-04:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a3a1",
+      "outcome": false,
+      "physical_transition_digest": "7604130893b0c362e00c768cee3a731da2c5fa1f457bf6a599b3772f8022c195",
+      "predecessor_fen": "8/8/8/8/8/R7/4k3/1K6 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/4k3/RK6 b - - 1 1",
+      "transition_id": "transition:prefix-positive-04:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a3a8",
+      "outcome": true,
+      "physical_transition_digest": "d6d3e46df4846555c3fdabcf23b0b69de9f13cd6778fbc17e4f0bd364ece4f57",
+      "predecessor_fen": "7k/8/7K/8/8/R7/8/8 w - - 0 1",
+      "successor_fen": "R6k/8/7K/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-05:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a3a8",
+      "outcome": false,
+      "physical_transition_digest": "a0b1deff206cea589e8517c72a5d49c32fefc219fca2bda42535a5176eff070e",
+      "predecessor_fen": "8/8/8/8/1k6/R7/8/K7 w - - 0 1",
+      "successor_fen": "R7/8/8/8/1k6/8/8/K7 b - - 1 1",
+      "transition_id": "transition:prefix-positive-05:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a3h3",
+      "outcome": true,
+      "physical_transition_digest": "c83273b14c1e251a090b5b1f1e547cb50a0c9ac559f2c2054d017bbfe9cb3d15",
+      "predecessor_fen": "5K1k/8/8/8/8/R7/8/8 w - - 0 1",
+      "successor_fen": "5K1k/8/8/8/8/7R/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-06:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a3h3",
+      "outcome": false,
+      "physical_transition_digest": "ff1a06b834804728d8e6a306bb4e85242a510168c57fa5ceed23b1610b69e5f4",
+      "predecessor_fen": "8/8/8/8/2k5/R7/8/K7 w - - 0 1",
+      "successor_fen": "8/8/8/8/2k5/7R/8/K7 b - - 1 1",
+      "transition_id": "transition:prefix-positive-06:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a4a1",
+      "outcome": true,
+      "physical_transition_digest": "a269def1dfade0587deeda79eb9790be82b64613f0008acd8b523ebb76cfc43f",
+      "predecessor_fen": "8/8/8/8/R7/7K/8/7k w - - 0 1",
+      "successor_fen": "8/8/8/8/8/7K/8/R6k b - - 1 1",
+      "transition_id": "transition:prefix-positive-07:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a4a1",
+      "outcome": false,
+      "physical_transition_digest": "6b9d4bf360307ac4c18ce737f1c157aade3af15637304603b6befc4420dec5bc",
+      "predecessor_fen": "8/8/8/8/R7/8/4k3/1K6 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/4k3/RK6 b - - 1 1",
+      "transition_id": "transition:prefix-positive-07:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a4a8",
+      "outcome": true,
+      "physical_transition_digest": "71d8e97151b8e0d7e2e0a24de411981679ff1bb29e0592682a040cc9f2f5ec7b",
+      "predecessor_fen": "7k/8/7K/8/R7/8/8/8 w - - 0 1",
+      "successor_fen": "R6k/8/7K/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-08:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a4a8",
+      "outcome": false,
+      "physical_transition_digest": "00a7168fa4c3cb194523abc875efb84a41c0b56eb21bb76ed40027ebf50a7cbb",
+      "predecessor_fen": "8/8/8/8/R7/1k6/8/K7 w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/1k6/8/K7 b - - 1 1",
+      "transition_id": "transition:prefix-positive-08:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a4h4",
+      "outcome": true,
+      "physical_transition_digest": "34523dbe4d6aa51826d2c4e292db9b23833480d88761a3301ea55af35f2413b7",
+      "predecessor_fen": "5K1k/8/8/8/R7/8/8/8 w - - 0 1",
+      "successor_fen": "5K1k/8/8/8/7R/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-09:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a4h4",
+      "outcome": false,
+      "physical_transition_digest": "ea0b63bdb475a6b3492968a49966306039094082e8991a70b20ff53a24a740b6",
+      "predecessor_fen": "8/8/8/8/R7/2k5/8/K7 w - - 0 1",
+      "successor_fen": "8/8/8/8/7R/2k5/8/K7 b - - 1 1",
+      "transition_id": "transition:prefix-positive-09:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a5a1",
+      "outcome": true,
+      "physical_transition_digest": "c9e34ae5753821b68312cba757954d0053e774c49895d78baef48f259be9c420",
+      "predecessor_fen": "8/8/8/R7/8/7K/8/7k w - - 0 1",
+      "successor_fen": "8/8/8/8/8/7K/8/R6k b - - 1 1",
+      "transition_id": "transition:prefix-positive-10:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a5a1",
+      "outcome": false,
+      "physical_transition_digest": "2dd3690199042f0f6dd3ff8275637541058804e82d0413eacfa4469eb9bb4fe5",
+      "predecessor_fen": "8/8/8/R7/8/8/4k3/1K6 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/4k3/RK6 b - - 1 1",
+      "transition_id": "transition:prefix-positive-10:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a5a8",
+      "outcome": true,
+      "physical_transition_digest": "c3ddb61bed6925088f25791330e662107332d2c8fb7c98bc1191cf14cac4b865",
+      "predecessor_fen": "7k/8/7K/R7/8/8/8/8 w - - 0 1",
+      "successor_fen": "R6k/8/7K/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-11:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a5a8",
+      "outcome": false,
+      "physical_transition_digest": "903145382108c1c4343eb295ad0821e7dfc12087926005e65a570cf0f7cd124c",
+      "predecessor_fen": "8/8/8/R7/8/8/4k3/K7 w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/8/4k3/K7 b - - 1 1",
+      "transition_id": "transition:prefix-positive-11:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a5h5",
+      "outcome": true,
+      "physical_transition_digest": "00c0e9d598c0a5ca0eb477b246ce9bf82694efa02ac315429ac10e665fb107eb",
+      "predecessor_fen": "8/8/8/R7/8/8/5K1k/8 w - - 0 1",
+      "successor_fen": "8/8/8/7R/8/8/5K1k/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-12:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a5h5",
+      "outcome": false,
+      "physical_transition_digest": "23847511637e77baa7e3b1a128d929632cd28839091921e9fa4633c34bd13926",
+      "predecessor_fen": "8/8/8/R7/8/8/5k2/K7 w - - 0 1",
+      "successor_fen": "8/8/8/7R/8/8/5k2/K7 b - - 1 1",
+      "transition_id": "transition:prefix-positive-12:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a5h5",
+      "outcome": true,
+      "physical_transition_digest": "0071ec57059cfb3a4ec1a31ba93da39ab93384f889949ac767e3693b41080c66",
+      "predecessor_fen": "8/8/8/R7/8/5K1k/8/8 w - - 0 1",
+      "successor_fen": "8/8/8/7R/8/5K1k/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-13:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a5h5",
+      "outcome": false,
+      "physical_transition_digest": "e684f9bd7dd794b1167b7348205042772f0f8268407273406135de9737557f3e",
+      "predecessor_fen": "8/8/8/R7/8/8/6k1/K7 w - - 0 1",
+      "successor_fen": "8/8/8/7R/8/8/6k1/K7 b - - 1 1",
+      "transition_id": "transition:prefix-positive-13:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a5h5",
+      "outcome": true,
+      "physical_transition_digest": "a76445da90bf16ea358cddb352c2c6fd121db787ebaf8432acd02cf6af8be831",
+      "predecessor_fen": "8/5K1k/8/R7/8/8/8/8 w - - 0 1",
+      "successor_fen": "8/5K1k/8/7R/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-14:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a5h5",
+      "outcome": false,
+      "physical_transition_digest": "6f52d8db96b5f2041d22561128900b51818cbe06026513979336157ebce5c8e2",
+      "predecessor_fen": "8/8/8/R7/8/8/7k/K7 w - - 0 1",
+      "successor_fen": "8/8/8/7R/8/8/7k/K7 b - - 1 1",
+      "transition_id": "transition:prefix-positive-14:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a5h5",
+      "outcome": true,
+      "physical_transition_digest": "a7aed59569b848221a34780e734a13e9eb42393621f50a1fdc0a30c69190ba13",
+      "predecessor_fen": "7k/5K2/8/R7/8/8/8/8 w - - 0 1",
+      "successor_fen": "7k/5K2/8/7R/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-15:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a5h5",
+      "outcome": false,
+      "physical_transition_digest": "c53a1a014789478e6e0b51fb49b599afe0e3b11e402876bb516f0c1229d55269",
+      "predecessor_fen": "8/8/8/R7/8/1k6/8/K7 w - - 0 1",
+      "successor_fen": "8/8/8/7R/8/1k6/8/K7 b - - 1 1",
+      "transition_id": "transition:prefix-positive-15:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a5h5",
+      "outcome": true,
+      "physical_transition_digest": "eb7c9795697b694a8f686d087764dbd15ef75c1a7e646c42d0d11dbe6a189133",
+      "predecessor_fen": "5K1k/8/8/R7/8/8/8/8 w - - 0 1",
+      "successor_fen": "5K1k/8/8/7R/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-16:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a5h5",
+      "outcome": false,
+      "physical_transition_digest": "fd7ad3640487fbd2309bbdf4b0f0eb7af25cae20e041960f1fc3e0c9fea376a9",
+      "predecessor_fen": "8/8/8/R7/8/2k5/8/K7 w - - 0 1",
+      "successor_fen": "8/8/8/7R/8/2k5/8/K7 b - - 1 1",
+      "transition_id": "transition:prefix-positive-16:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a1",
+      "outcome": true,
+      "physical_transition_digest": "c06093a67744877252e694d862094beae2e7d3c2fc19d987afcfc6e80e29bc97",
+      "predecessor_fen": "8/8/R7/8/8/2K5/8/2k5 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/2K5/8/R1k5 b - - 1 1",
+      "transition_id": "transition:prefix-positive-17:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a1",
+      "outcome": false,
+      "physical_transition_digest": "d0548564655bd8492f630d66cf66a0045d87e2613f34335bd53339e2e428425c",
+      "predecessor_fen": "8/8/R7/8/8/8/8/1K1k4 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/RK1k4 b - - 1 1",
+      "transition_id": "transition:prefix-positive-17:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a1",
+      "outcome": true,
+      "physical_transition_digest": "35de24953e329bfb30929f8662ebae2c925b886e2831e1c3f23b23983f641dfb",
+      "predecessor_fen": "8/8/R7/8/8/3K4/8/3k4 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/3K4/8/R2k4 b - - 1 1",
+      "transition_id": "transition:prefix-positive-18:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a1",
+      "outcome": false,
+      "physical_transition_digest": "85b6b2d138aa40fec73b7feb7519a31d47bdc938623ce896d6373ebf422999e2",
+      "predecessor_fen": "8/8/R7/8/8/8/8/1K2k3 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/RK2k3 b - - 1 1",
+      "transition_id": "transition:prefix-positive-18:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a1",
+      "outcome": true,
+      "physical_transition_digest": "ecbcf51507997ab3a193b0487f8e4c317951fd5280a42a93dcd0ec1ed1d103a8",
+      "predecessor_fen": "8/8/R7/8/8/4K3/8/4k3 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/4K3/8/R3k3 b - - 1 1",
+      "transition_id": "transition:prefix-positive-19:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a1",
+      "outcome": false,
+      "physical_transition_digest": "56732be66cb57eb75196c288b9ea30132f1f5a1293bdd7dd58d3357ad183f2e6",
+      "predecessor_fen": "8/8/R7/8/8/8/8/1K3k2 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/RK3k2 b - - 1 1",
+      "transition_id": "transition:prefix-positive-19:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a1",
+      "outcome": true,
+      "physical_transition_digest": "78b73789a5ea600be720b3f2504bde4b3e2ad824b65229308b5cf5301e823ff6",
+      "predecessor_fen": "8/8/R7/8/8/5K2/8/5k2 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/5K2/8/R4k2 b - - 1 1",
+      "transition_id": "transition:prefix-positive-20:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a1",
+      "outcome": false,
+      "physical_transition_digest": "8831cffc403da7d82c368bb49b2f1d7cc70edf49c7df1c55c8f7b00cc57d1466",
+      "predecessor_fen": "8/8/R7/8/8/8/8/1K4k1 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/RK4k1 b - - 1 1",
+      "transition_id": "transition:prefix-positive-20:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a1",
+      "outcome": true,
+      "physical_transition_digest": "7e79653f28274572f6b0172dffbe500a7bc536325d12d57013c04a5cbb06c732",
+      "predecessor_fen": "8/8/R7/8/8/6K1/8/6k1 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/6K1/8/R5k1 b - - 1 1",
+      "transition_id": "transition:prefix-positive-21:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a1",
+      "outcome": false,
+      "physical_transition_digest": "47b979c76b8200d5f734549c5a3650037deb65d217f666187c072529214fb0bc",
+      "predecessor_fen": "8/8/R7/8/8/8/8/1K5k w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/RK5k b - - 1 1",
+      "transition_id": "transition:prefix-positive-21:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a1",
+      "outcome": true,
+      "physical_transition_digest": "125058d3dcf1e7cbc7d70e7980bd2a493103b7b068e8ec0d88d07b4d8cf76412",
+      "predecessor_fen": "8/8/R7/8/8/6K1/8/7k w - - 0 1",
+      "successor_fen": "8/8/8/8/8/6K1/8/R6k b - - 1 1",
+      "transition_id": "transition:prefix-positive-22:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a1",
+      "outcome": false,
+      "physical_transition_digest": "13d9aae187271706254e7d8ca4c01deda5821a7882912ca02ee391cf7078fdee",
+      "predecessor_fen": "8/8/R7/8/8/8/3k4/1K6 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/3k4/RK6 b - - 1 1",
+      "transition_id": "transition:prefix-positive-22:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a8",
+      "outcome": true,
+      "physical_transition_digest": "d94fc01fcab729d58fb9e69abad9228a9c30fc46e83bd05f4ceb29648ca3ee60",
+      "predecessor_fen": "2k5/8/R1K5/8/8/8/8/8 w - - 0 1",
+      "successor_fen": "R1k5/8/2K5/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-23:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a8",
+      "outcome": false,
+      "physical_transition_digest": "284131e52cf4cd78b418dcdd0e77886ad722fedb8fcf1ddf150472c75aa74629",
+      "predecessor_fen": "8/8/R7/8/8/8/8/K1k5 w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/8/8/K1k5 b - - 1 1",
+      "transition_id": "transition:prefix-positive-23:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a8",
+      "outcome": true,
+      "physical_transition_digest": "d92fa7f45a3085d4a0e2532ddd2ab66aa57b71815026f4a4f1e26709907e2459",
+      "predecessor_fen": "3k4/8/R2K4/8/8/8/8/8 w - - 0 1",
+      "successor_fen": "R2k4/8/3K4/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-24:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a8",
+      "outcome": false,
+      "physical_transition_digest": "48aad893a93481bd8bfedae034363f91e54e8b96d6c19e561ac70fcb8216e05b",
+      "predecessor_fen": "8/8/R7/8/8/8/8/K2k4 w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/8/8/K2k4 b - - 1 1",
+      "transition_id": "transition:prefix-positive-24:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a8",
+      "outcome": true,
+      "physical_transition_digest": "dfc80b6f3fb51c1a2e9d9ddbba74e48b95d59747edab0ee3d72ab1747268d03c",
+      "predecessor_fen": "4k3/8/R3K3/8/8/8/8/8 w - - 0 1",
+      "successor_fen": "R3k3/8/4K3/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-25:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a8",
+      "outcome": false,
+      "physical_transition_digest": "43d5b7161bd232d20d85b2971f8c9c7aa006051ad71cb8ccb3e7d7cdea990cde",
+      "predecessor_fen": "8/8/R7/8/8/8/8/K3k3 w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/8/8/K3k3 b - - 1 1",
+      "transition_id": "transition:prefix-positive-25:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a8",
+      "outcome": true,
+      "physical_transition_digest": "0063078c235261132e41a54a7f384a97df6e5d98224e68fa8fe948e45ac43e20",
+      "predecessor_fen": "5k2/8/R4K2/8/8/8/8/8 w - - 0 1",
+      "successor_fen": "R4k2/8/5K2/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-26:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a8",
+      "outcome": false,
+      "physical_transition_digest": "06ebab01ff58490702a726979b9ddeb01bea6a534a7b44e2ac5924fc6217d489",
+      "predecessor_fen": "8/8/R7/8/8/8/8/K4k2 w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/8/8/K4k2 b - - 1 1",
+      "transition_id": "transition:prefix-positive-26:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a8",
+      "outcome": true,
+      "physical_transition_digest": "4390c35f56e5c7a6ce667eb96aba471a56ddf32babac7100fb2a7a82ba05e329",
+      "predecessor_fen": "6k1/8/R5K1/8/8/8/8/8 w - - 0 1",
+      "successor_fen": "R5k1/8/6K1/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-27:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a8",
+      "outcome": false,
+      "physical_transition_digest": "372506f284918e87d528367d857137f2068a1b59c0076abcc78c74a82d36df1c",
+      "predecessor_fen": "8/8/R7/8/8/8/8/K5k1 w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/8/8/K5k1 b - - 1 1",
+      "transition_id": "transition:prefix-positive-27:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a8",
+      "outcome": true,
+      "physical_transition_digest": "90d1155f6642303f0106c61d43918cf1fed6dab6aed6f471f160615c73b7f3cd",
+      "predecessor_fen": "7k/8/R5K1/8/8/8/8/8 w - - 0 1",
+      "successor_fen": "R6k/8/6K1/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-28:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6a8",
+      "outcome": false,
+      "physical_transition_digest": "d6df2737594645d1ca5e71b9191b616b0e90c8939c2ccf407a56e7008e941b4b",
+      "predecessor_fen": "8/8/R7/8/8/8/8/K6k w - - 0 1",
+      "successor_fen": "R7/8/8/8/8/8/8/K6k b - - 1 1",
+      "transition_id": "transition:prefix-positive-28:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6h6",
+      "outcome": true,
+      "physical_transition_digest": "444ff86892e6b3dd3c1ecd4cf360a1d73739566f936541f18fb284eedcc6bb3c",
+      "predecessor_fen": "8/8/R7/8/8/8/8/5K1k w - - 0 1",
+      "successor_fen": "8/8/7R/8/8/8/8/5K1k b - - 1 1",
+      "transition_id": "transition:prefix-positive-29:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6h6",
+      "outcome": false,
+      "physical_transition_digest": "d87e66fe85482ec32cc60bceee641fbfb85720b6a7ed96b420d3bfa3f3889279",
+      "predecessor_fen": "8/8/R7/8/8/8/2k5/K7 w - - 0 1",
+      "successor_fen": "8/8/7R/8/8/8/2k5/K7 b - - 1 1",
+      "transition_id": "transition:prefix-positive-29:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6h6",
+      "outcome": true,
+      "physical_transition_digest": "fd560252a46cbafd7ff84fab114625dde083a1738a9f84c0ebceee5e120c7a29",
+      "predecessor_fen": "8/8/R7/8/8/8/5K2/7k w - - 0 1",
+      "successor_fen": "8/8/7R/8/8/8/5K2/7k b - - 1 1",
+      "transition_id": "transition:prefix-positive-30:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6h6",
+      "outcome": false,
+      "physical_transition_digest": "3423d2b0d9cba58b6f53985ebb9e980478b1c84bec8a1c58e794400005374cea",
+      "predecessor_fen": "8/8/R7/8/8/8/3k4/K7 w - - 0 1",
+      "successor_fen": "8/8/7R/8/8/8/3k4/K7 b - - 1 1",
+      "transition_id": "transition:prefix-positive-30:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6h6",
+      "outcome": true,
+      "physical_transition_digest": "1a82f3f830232d76b32f9ba1016e6bcd201824aebc0bcfef9dc49e5083cbca29",
+      "predecessor_fen": "8/8/R7/8/8/8/5K1k/8 w - - 0 1",
+      "successor_fen": "8/8/7R/8/8/8/5K1k/8 b - - 1 1",
+      "transition_id": "transition:prefix-positive-31:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a6h6",
+      "outcome": false,
+      "physical_transition_digest": "c4c9a18268334746502160a834e208978ebcfaaa2c19c89ec21fca608226b8f5",
+      "predecessor_fen": "8/8/R7/8/8/8/4k3/K7 w - - 0 1",
+      "successor_fen": "8/8/7R/8/8/8/4k3/K7 b - - 1 1",
+      "transition_id": "transition:prefix-positive-31:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1b8",
+      "outcome": true,
+      "physical_transition_digest": "b9f1da0f1a63798e85e7950e9df5732e83e1dc146ae642dae5edda1bd94a539b",
+      "predecessor_fen": "4k3/8/4K3/8/8/8/8/1R6 w - - 0 1",
+      "successor_fen": "1R2k3/8/4K3/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:suffix-planted-00:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1b8",
+      "outcome": false,
+      "physical_transition_digest": "273a3a9d25a71d3638702139af4338a2ecd099e8a910628d3a876f34b35632bb",
+      "predecessor_fen": "8/8/8/8/8/8/3k4/KR6 w - - 0 1",
+      "successor_fen": "1R6/8/8/8/8/8/3k4/K7 b - - 1 1",
+      "transition_id": "transition:suffix-planted-00:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1b8",
+      "outcome": true,
+      "physical_transition_digest": "ab43b8ec759df657802bd45f7489dd63e98cf529a2bff7aa2c6b5c83cf090793",
+      "predecessor_fen": "5k2/8/5K2/8/8/8/8/1R6 w - - 0 1",
+      "successor_fen": "1R3k2/8/5K2/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:suffix-planted-01:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1b8",
+      "outcome": false,
+      "physical_transition_digest": "d512326b7b8637edf47f02b7df097153edda273c03cba3f11d30ace53dc723f8",
+      "predecessor_fen": "8/8/8/8/8/8/4k3/KR6 w - - 0 1",
+      "successor_fen": "1R6/8/8/8/8/8/4k3/K7 b - - 1 1",
+      "transition_id": "transition:suffix-planted-01:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1b8",
+      "outcome": true,
+      "physical_transition_digest": "2a8a89ccb70d213ad86c81ea949a32a965c1ddab107ea3783c3d6c21cade0301",
+      "predecessor_fen": "6k1/8/6K1/8/8/8/8/1R6 w - - 0 1",
+      "successor_fen": "1R4k1/8/6K1/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:suffix-planted-02:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1b8",
+      "outcome": false,
+      "physical_transition_digest": "b4a6d9fcb4c609ccfec568c1a3b3b3c4583166987ad174ffc000535dc506f0bb",
+      "predecessor_fen": "8/8/8/8/8/8/5k2/KR6 w - - 0 1",
+      "successor_fen": "1R6/8/8/8/8/8/5k2/K7 b - - 1 1",
+      "transition_id": "transition:suffix-planted-02:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1b8",
+      "outcome": true,
+      "physical_transition_digest": "200d12d808b4f668a409b066e459c0dca529e41558dae69187f5cf852fc8146d",
+      "predecessor_fen": "7k/8/6K1/8/8/8/8/1R6 w - - 0 1",
+      "successor_fen": "1R5k/8/6K1/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:suffix-planted-03:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1b8",
+      "outcome": false,
+      "physical_transition_digest": "f8fa22194bc54bb635342aa397321a723793c53a28eb4c5c93e36e1156080e57",
+      "predecessor_fen": "8/8/8/8/8/8/6k1/KR6 w - - 0 1",
+      "successor_fen": "1R6/8/8/8/8/8/6k1/K7 b - - 1 1",
+      "transition_id": "transition:suffix-planted-03:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1b8",
+      "outcome": true,
+      "physical_transition_digest": "437530a05242a7e6b3fb3cb4b9b3a158c83778e74242ddbada969d9ebb8e73df",
+      "predecessor_fen": "7k/8/7K/8/8/8/8/1R6 w - - 0 1",
+      "successor_fen": "1R5k/8/7K/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:suffix-planted-04:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1b8",
+      "outcome": false,
+      "physical_transition_digest": "983eda10ad89e49b503cc2f17bae62e2805715b937a75a60deec187914d33e99",
+      "predecessor_fen": "8/8/8/8/8/8/7k/KR6 w - - 0 1",
+      "successor_fen": "1R6/8/8/8/8/8/7k/K7 b - - 1 1",
+      "transition_id": "transition:suffix-planted-04:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1h1",
+      "outcome": true,
+      "physical_transition_digest": "036e0f40e02d323d688821f15dbd5d26c64ce5264da4f45a303ccb9c3561c8fe",
+      "predecessor_fen": "8/8/8/8/8/5K1k/8/1R6 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/5K1k/8/7R b - - 1 1",
+      "transition_id": "transition:suffix-planted-05:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1h1",
+      "outcome": false,
+      "physical_transition_digest": "b8da3ced21f6d05209db7b4f4471c5cdcf0d71e818b8381efca8c7778631c62d",
+      "predecessor_fen": "8/8/8/8/8/k7/8/KR6 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/k7/8/K6R b - - 1 1",
+      "transition_id": "transition:suffix-planted-05:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1h1",
+      "outcome": true,
+      "physical_transition_digest": "40e3b26faffada3aec17eb6e56a72da6f6a6559d2510192837df7df73fd6d7fa",
+      "predecessor_fen": "8/8/8/8/5K1k/8/8/1R6 w - - 0 1",
+      "successor_fen": "8/8/8/8/5K1k/8/8/7R b - - 1 1",
+      "transition_id": "transition:suffix-planted-06:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1h1",
+      "outcome": false,
+      "physical_transition_digest": "37fe301ec4f06a856d02982a0b47b1063517a3fbbc9f9a76d358b87db73177a6",
+      "predecessor_fen": "8/8/8/8/8/2k5/8/KR6 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/2k5/8/K6R b - - 1 1",
+      "transition_id": "transition:suffix-planted-06:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1h1",
+      "outcome": true,
+      "physical_transition_digest": "93468ae10d8bc3feabf257bae30a66cdbd4adb03d684c68645ad5bc3db193276",
+      "predecessor_fen": "8/8/8/5K1k/8/8/8/1R6 w - - 0 1",
+      "successor_fen": "8/8/8/5K1k/8/8/8/7R b - - 1 1",
+      "transition_id": "transition:suffix-planted-07:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1h1",
+      "outcome": false,
+      "physical_transition_digest": "85a1d746688d3bed683aba30ec78ff334c6b918332101861cc94f8b1942b4796",
+      "predecessor_fen": "8/8/8/8/8/3k4/8/KR6 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/3k4/8/K6R b - - 1 1",
+      "transition_id": "transition:suffix-planted-07:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8h8",
+      "outcome": false,
+      "physical_transition_digest": "583ab8d6f7338a2b924d1fc42082970e533a3b03207c363b9fb667e0046bb031",
+      "predecessor_fen": "R7/8/8/8/8/8/8/K6k w - - 0 1",
+      "successor_fen": "7R/8/8/8/8/8/8/K6k b - - 1 1",
+      "transition_id": "transition:suffix-spurious-00:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "a8h8",
+      "outcome": true,
+      "physical_transition_digest": "7fe98107c4da10b4a5ac9f05b8c7b5e4c5248ec117428724d0073ad3dcc6082f",
+      "predecessor_fen": "R7/8/8/5K1k/8/8/8/8 w - - 0 1",
+      "successor_fen": "7R/8/8/5K1k/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:suffix-spurious-00:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1a1",
+      "outcome": false,
+      "physical_transition_digest": "e311706e14e7bb5f44f8a8d26f2f36966fc11e0879d5b3167831284135e64306",
+      "predecessor_fen": "8/8/8/8/8/8/8/1RK1k3 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/R1K1k3 b - - 1 1",
+      "transition_id": "transition:suffix-spurious-01:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1a1",
+      "outcome": true,
+      "physical_transition_digest": "e815b33dcd58f9d7c39fc6b4cc66e1a498b656790e2dce0b91ccaa1759d1d329",
+      "predecessor_fen": "8/8/8/8/8/k1K5/8/1R6 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/k1K5/8/R7 b - - 1 1",
+      "transition_id": "transition:suffix-spurious-01:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1a1",
+      "outcome": false,
+      "physical_transition_digest": "9f1c85bc0de444a55dda118dc85c193f7ef407f4ab179610c2ff17eb6f5effc9",
+      "predecessor_fen": "8/8/8/8/8/8/8/1RK2k2 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/R1K2k2 b - - 1 1",
+      "transition_id": "transition:suffix-spurious-02:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1a1",
+      "outcome": true,
+      "physical_transition_digest": "0fc225bfd19a2307118cdfa978218ddfaff93a772f291d506a9c614bdb7ac902",
+      "predecessor_fen": "8/8/8/8/k1K5/8/8/1R6 w - - 0 1",
+      "successor_fen": "8/8/8/8/k1K5/8/8/R7 b - - 1 1",
+      "transition_id": "transition:suffix-spurious-02:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1a1",
+      "outcome": false,
+      "physical_transition_digest": "bd72bf4bfea248d84947b20774e472fb020d185163c4c6a54ef42cb4df99f828",
+      "predecessor_fen": "8/8/8/8/8/8/8/1RK3k1 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/R1K3k1 b - - 1 1",
+      "transition_id": "transition:suffix-spurious-03:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1a1",
+      "outcome": true,
+      "physical_transition_digest": "96c810271597c49338ae80a0e5472f95dc20249ecca5f34d77aab49c85c57f9c",
+      "predecessor_fen": "8/8/8/k1K5/8/8/8/1R6 w - - 0 1",
+      "successor_fen": "8/8/8/k1K5/8/8/8/R7 b - - 1 1",
+      "transition_id": "transition:suffix-spurious-03:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1a1",
+      "outcome": false,
+      "physical_transition_digest": "ddae9de2709ff82f10362d017f6827d5686fdba4ce389e9b714c83cd5b155ff9",
+      "predecessor_fen": "8/8/8/8/8/8/8/1RK4k w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/8/R1K4k b - - 1 1",
+      "transition_id": "transition:suffix-spurious-04:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1a1",
+      "outcome": true,
+      "physical_transition_digest": "2d828f82138d21019ffc9b4ce7084bab4dea21e433fe457ae2bab3ce18419bf0",
+      "predecessor_fen": "8/8/k1K5/8/8/8/8/1R6 w - - 0 1",
+      "successor_fen": "8/8/k1K5/8/8/8/8/R7 b - - 1 1",
+      "transition_id": "transition:suffix-spurious-04:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1a1",
+      "outcome": false,
+      "physical_transition_digest": "349d16b5daa0e4a4bde1ad10ecf29d72e89b16d41649f75b7a58890947688850",
+      "predecessor_fen": "8/8/8/8/8/8/k7/1RK5 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/k7/R1K5 b - - 1 1",
+      "transition_id": "transition:suffix-spurious-05:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1a1",
+      "outcome": true,
+      "physical_transition_digest": "d20bd7d9f4c28d1f88da95e9384613f9f7597794cbd8101f1ff95bceb47f3932",
+      "predecessor_fen": "8/k1K5/8/8/8/8/8/1R6 w - - 0 1",
+      "successor_fen": "8/k1K5/8/8/8/8/8/R7 b - - 1 1",
+      "transition_id": "transition:suffix-spurious-05:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1a1",
+      "outcome": false,
+      "physical_transition_digest": "90bdc733883bbd8186941d8f34917ac189033b155334caac49a119656a688457",
+      "predecessor_fen": "8/8/8/8/8/8/4k3/1RK5 w - - 0 1",
+      "successor_fen": "8/8/8/8/8/8/4k3/R1K5 b - - 1 1",
+      "transition_id": "transition:suffix-spurious-06:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1a1",
+      "outcome": true,
+      "physical_transition_digest": "2883b27efcd3d97e32d4a925c7166ab8b21d9f4468d36f42ff82522785bb21ce",
+      "predecessor_fen": "k7/2K5/8/8/8/8/8/1R6 w - - 0 1",
+      "successor_fen": "k7/2K5/8/8/8/8/8/R7 b - - 1 1",
+      "transition_id": "transition:suffix-spurious-06:C"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1b8",
+      "outcome": false,
+      "physical_transition_digest": "8047caf3935b1e5e8e7d490afe3a95f89d7c34155ea74cdc69b3aeff8f67ca9a",
+      "predecessor_fen": "8/8/8/8/8/8/2k5/KR6 w - - 0 1",
+      "successor_fen": "1R6/8/8/8/8/8/2k5/K7 b - - 1 1",
+      "transition_id": "transition:suffix-spurious-07:AB"
+    },
+    {
+      "environment_outcome_terminal_identity": "mate",
+      "move_uci": "b1b8",
+      "outcome": true,
+      "physical_transition_digest": "004fef613f7e9bd79a8d31c84d471bb686d41e3a018aff4496bbc00a44d24350",
+      "predecessor_fen": "3k4/8/3K4/8/8/8/8/1R6 w - - 0 1",
+      "successor_fen": "1R1k4/8/3K4/8/8/8/8/8 b - - 1 1",
+      "transition_id": "transition:suffix-spurious-07:C"
+    }
+  ]
+}
