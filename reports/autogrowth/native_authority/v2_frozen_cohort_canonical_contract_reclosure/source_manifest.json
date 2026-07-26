@@ -1,0 +1,40 @@
+{
+  "deterministic_environment": {
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0",
+    "TZ": "UTC"
+  },
+  "package_id": "native_v2_frozen_cohort_canonical_contract_reclosure.v1",
+  "preservation": {
+    "graph_and_registry_byte_identical": true,
+    "protected_v2_1_byte_identical": true,
+    "snapshot_harness_byte_identical": true,
+    "stopped_runner_byte_identical": true
+  },
+  "protected_source_hashes": {
+    "src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py": "25945864fd998caf22ae12cbcb9bcb4779447337c0079f705640c63d2356f029",
+    "src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2_lab.py": "f3aee5cccf761af1cb6a5de94b886d5e758c0a07cb0f6d77b8898f662ca73b58",
+    "src/recon_lite_chess/autogrowth/native_v2_atomic_snapshot_graph.py": "d2516068af30ea59b5c544286c677b7dbcc267d540f89ea35e5edb3a6f14aa68",
+    "src/recon_lite_chess/autogrowth/native_v2_atomic_snapshot_harness.py": "8611853ca56c2dab3e2a44ebad18997f9d9d55578627acbaff6e727a578fd894",
+    "src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py": "75cfd4221c05665259e17c7dcc3bc2a3ebff9b53e6b0868bb019246742bfaeae"
+  },
+  "runtime": {
+    "implementation": "CPython",
+    "pytest": "9.0.2",
+    "python": "3.12.3",
+    "python_chess": "1.999"
+  },
+  "schema_version": "native_v2_canonical_contract_source_manifest.v1",
+  "source_freeze_commit": "0859a4a1db53eb6221e3ac48e19d156896aa56c6",
+  "source_hashes": {
+    "docs/autogrowth/NATIVE_V2_FROZEN_COHORT_CANONICAL_CONTRACT_RECLOSURE_PREREGISTRATION_20260727.md": "07e68c4d36735d2be9589d88a332f4c75eb206ad9bd38bc438aa52c4b76a67f7",
+    "src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_canonical_contract_reclosure.py": "009660b6031d124fd85fa7dfb2f43e382ed5a1102d6f74fdf527f01c6e2de8b9",
+    "tests/autogrowth/test_native_v2_frozen_cohort_canonical_contract_reclosure.py": "83499c7f992f800cf31ff7a6ce19244eec79e41d38eca99504ae587400422be4"
+  },
+  "source_manifest_digest": "30df57817025d4ecf615bae1b7da599771037f19093bf3d01bee91a706f8bc7a"
+}
