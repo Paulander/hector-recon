@@ -1,0 +1,16 @@
+{
+  "compressed": {
+    "compression": "gzip -n -9",
+    "path": "arm_snapshot_manifest.json.gz",
+    "sha256": "92b8e7aa1b437281e346ddc57b1f4cb5c139ef68190c57f1699e6acd86f8d43f",
+    "size": 65766696
+  },
+  "exact_reconstruction_required": true,
+  "raw": {
+    "canonical_manifest_digest": "9415a2cf6527de69e8048b6b0b33e46be92180992fcac8931dfaafa95f67eb68",
+    "path": "arm_snapshot_manifest.json",
+    "sha256": "ccb91d226c61b3354cb1c89cc939123c01a24723a0868ac5da36bf9b14a0b2e4",
+    "size": 1129782531
+  },
+  "schema_version": "native_v2_review_repair_v2_snapshot_manifest_transport.v1"
+}

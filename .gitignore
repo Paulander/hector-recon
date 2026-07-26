@@ -59,3 +59,7 @@ reports/autogrowth/native_from_scratch/r1_structural_smoke_seed_20260721.json
 reports/autogrowth/native_from_scratch/r1_structural_smoke_seed_20260721_progress.json
 reports/autogrowth/native_from_scratch/r1_structural_consolidation_smoke_seed_20260719.json
 reports/autogrowth/native_from_scratch/r1_structural_consolidation_smoke_seed_20260719_progress.json
+
+# Exact raw V2 snapshot manifest is preserved locally; the deterministic
+# compressed transport and its hash/size record are committed.
+reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/arm_snapshot_package/arm_snapshot_manifest.json
