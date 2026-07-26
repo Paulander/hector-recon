@@ -639,3 +639,22 @@ receipt and exact hash/size binding are committed for audit. This is a
 prefix/candidate identity instrument failure, not evidence for or against the
 scientific hypothesis. See
 `docs/autogrowth/NATIVE_V2_FRESH_DISCRIMINATOR_REVIEW_REPAIR_V2_INSTRUMENT_ABORT_20260726.md`.
+
+
+The bounded frozen-cohort canonical-contract reclosure then localized seed 0
+exactly as expected: stored and restored contracts share canonical digest
+`a5f275b7dc3d897f7870535d7e0f471969eb3ff8c9bec2452d77f8445c9d95aa`
+and identical canonical bytes; raw dictionary inequality consists only of
+tuple/list and string-enum/string representation changes. Fifteen focused
+checks passed, and the separately frozen manifests bind 32 prefix organisms,
+96 A/B/C snapshots and all 32 contracts.
+
+The all-cohort command nevertheless stopped before its first comparison because
+the frozen outer runner asked Python to start module `__main__`, which Python
+cannot resolve as a fresh-process module. The failure record contains zero
+completed orders, zero exposure rows and zero outcome reads. It is an outer
+runner instrument failure—not a canonical mismatch, pass or scientific result.
+The package was not repaired or rerun. The fixed candidate cohort remains
+already observed (32/32 planted, 30/32 selected comparison), and the evaluation
+suffix remains unopened. See
+`docs/autogrowth/NATIVE_V2_FROZEN_COHORT_CANONICAL_CONTRACT_RECLOSURE_RESULT_20260727.md`.

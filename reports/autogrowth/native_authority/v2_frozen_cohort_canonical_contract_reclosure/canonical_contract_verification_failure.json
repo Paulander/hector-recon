@@ -1,0 +1,12 @@
+{
+  "completed_order_count": 0,
+  "exposure_rows_read": 0,
+  "failure_digest": "e3c05cd49296381e0eb2508084a7d38e0ee6c0508a141f54f15fde2bdb0d8b9d",
+  "order_name": "ascending",
+  "outcome_reads": 0,
+  "package_id": "native_v2_frozen_cohort_canonical_contract_reclosure.v1",
+  "returncode": 1,
+  "schema_version": "native_v2_canonical_contract_run_failure.v1",
+  "stderr": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3: Error while finding module specification for '__main__' (ValueError: __main__.__spec__ is None)\n",
+  "stdout": ""
+}
