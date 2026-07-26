@@ -1,0 +1,1722 @@
+{
+  "actual_native_v2_adapter": true,
+  "arm_identity_contract": {
+    "common_identity_fields_digest": "a4a8eaffb54afe892b447e5a69d58388e8697363e6ba3cfb16fbe2739c74d6eb",
+    "common_structure_digest": "93a1a34e47b4c9ac564e5c504bed5c236b1db56f290b75fd6d4fff87b2447d7d",
+    "contract_digest": "70e22dfca7dcc5b4d684ba06514f2a8524fc8a79e3166d496fec3a9b1f9bc2d7",
+    "expected_authority_digest": "4bae90738b0bb2c116ac10307f2bcddbe4d8bc15bd0b6b3ca511ce07d15d27a0",
+    "expected_modes": {
+      "A": "prospective",
+      "B": "legacy_same_ledger",
+      "C": "prospective"
+    },
+    "lawfully_different_fields": [
+      "mode",
+      "authority_manifest",
+      "authority_identity",
+      "experiment_identity",
+      "continuation_manifest",
+      "continuation_digest"
+    ],
+    "per_arm_semantic_identity_digests": {
+      "A": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef",
+      "B": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d",
+      "C": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+    },
+    "suffix_topology_identity_digest": "f555c210ccce42695426d567417e07d6a28a72339aa7a24d3df25404f27a8e61"
+  },
+  "canary_digest": "94639984435bf2599e6843bbda6a4543a728483d734337a1ec35af0917a7cd31",
+  "direct_outcome_rejection": {
+    "detail": "truthful transition requires mint capability",
+    "evidence_digest": "889b9373a8edefbc4d14fa80f0b7fac2765c225e524a70b81f8a14de18cc456f",
+    "exception_type": "OutcomeCapabilityError",
+    "label": "direct_outcome_access_without_capability",
+    "rejected": true
+  },
+  "discovery": {
+    "added_cell_ids": [
+      "competence_context_0005",
+      "competence_context_0006",
+      "competence_context_0007",
+      "competence_context_0008",
+      "competence_context_0009",
+      "competence_context_0010",
+      "competence_context_0011",
+      "competence_context_0012",
+      "competence_context_0014",
+      "competence_context_0015",
+      "competence_context_0016",
+      "competence_context_0017",
+      "competence_context_0018",
+      "competence_context_0019",
+      "competence_context_0020",
+      "competence_context_0021",
+      "competence_context_0026",
+      "competence_context_0027"
+    ],
+    "continuation_digest": "b52a896cb320d803fa4154ff89d2e258d1f0817557262a393e857683e667b47c",
+    "experimental_identity_digest": "1ce0324b372d9d3e316d034af98beb4927974cbec394ed3d5596f81ae7baa6b4",
+    "genome_seed": 8907251,
+    "ordinal": 0,
+    "structural_identity_digest": "93a1a34e47b4c9ac564e5c504bed5c236b1db56f290b75fd6d4fff87b2447d7d",
+    "targets": {
+      "candidate_population_count": 18,
+      "candidate_population_digest": "9b9a671b564a5e14d917752e913fabd5d9f2238ca57dd41b642d91790202f1d7",
+      "eligible_spurious_count": 2,
+      "planted": {
+        "cell_id": "competence_context_0021",
+        "eligible": true,
+        "hypothesis_digest": "465d4cf0e6a4cc183177270902a167d517c0084b79b61a4e57a97ace620b4d48",
+        "members": [
+          "opaque_terminal:3a48dc43bd0367c34421c56b7ec8a19df71c8e2cd2d01944800cf8d074d9a61f",
+          "opaque_terminal:8840c2b39e936fd6e86be8a3f39fff50fef99794de25fdfb1f98a8a2c5607616"
+        ],
+        "pattern_digest": "690b0575dbce4569b08e4945bd6eedc54eabcce3de23d5a97fa62fd54cadac5e"
+      },
+      "planted_pattern_digest": "690b0575dbce4569b08e4945bd6eedc54eabcce3de23d5a97fa62fd54cadac5e",
+      "selected_spurious": {
+        "cell_id": "competence_context_0020",
+        "eligible": true,
+        "hypothesis_digest": "43c492784cd8bb30e4d3449abe167aaf504ad8d31e428540e63fc28b26aa56e3",
+        "members": [
+          "opaque_terminal:cf3f826b60aa7e970b36af00ecccc9f5bcc5d95f3b8319c80a211f66d0588f16",
+          "opaque_terminal:9c25f871b0fc7cf969cae9474b6d95dcad3eebb39cf50edc13cfd1e2b30c2c7e"
+        ],
+        "pattern_digest": "76e381ee7517a8599bef3e23e724b29982de301402f2e013b60954e602e55b18"
+      },
+      "selection_used_suffix": false
+    },
+    "uncompressed_sha256": "038edf682039670d71073c9b28b6319f50296e0376638ec8b1efc9a157b1ed81"
+  },
+  "ecology_digest": "95c1a52738084ca51e91ef2f3e29b99a0166147531d2526e61e0c6fa90ea77e1",
+  "ecology_graph_validation": {
+    "exact_visible_pair_count": 80,
+    "physical_fingerprints": [
+      "00783834c41e7ae3c9dc6a9b5600f9fd1bd206782f48842fe345d47a6a35c030",
+      "00e77621bbc1695d3e130625ebba41970c1a7fd96794754d88985df1a877b66f",
+      "01906cbe5445f7c8780c6fbb9291a5759e44fc084ac9d6e17916d2b591be1a1d",
+      "027fc76f5ac7d6bfded4a6bca7d3eb5bcd0be41e5f2917fd63d6a7ffb81aa5ec",
+      "0332c664b0bd250bb9f20f6e006206c8efb4248c120fbcd2cd9fbde05d3bcc33",
+      "03d3af871846a5c061e1f11ff1e504807b26e64bf69148aedf4aefbe34528fcc",
+      "0474471eb6f823be1ad00dda31d010251cb5a1cddbfa05cdef9993a340d8c5d6",
+      "0630fb74dbd86d79278317b0797b72fec0309ae2a238c8943403d0c22a11e9c9",
+      "092683c9160e25d304f626f3dd8743fe31671f2536aa6529198232011d0447ac",
+      "092bba3718d9f564a89517f310a723d071da3fd2f3e4921223e3c0e232d70ac2",
+      "096e6f5cc0e49684d87a1ac480865a0a7549ab9bc6a1fa98fbc87fdcdae67337",
+      "09ccb90b60e39d3cdc1d0e312f40dbb5a020b3fd4bf3019cb2b51220a8be1a33",
+      "0a690c3f1cf53b7b1e5096e9eef83559acd42c84da2281f093ccad9fce9be84a",
+      "0a97c1ec31865bba85688124ce66756af6cfe31c86c08d2f1772bc7adcd7587f",
+      "0bc98ea7e8a70e28f5eb4c5db6cbb16cafa7a455d3736b89eabab10377b3dd74",
+      "0dd688312397ddfb27b7ae3151b824cc44c4133da8509b480bd79b5c59039007",
+      "0ee9d9ee3c8096adf09ef55ce956357428e5b5d4eecbcbf82089569528427a88",
+      "10b73f677db9ebb81291ecc7e7a3a3dfa869d786d178605bf36af74ed8b1d3b0",
+      "142f65631ed82bb2a1319e980340fc79ad0c965eccdb748a2345bc11af63f6f1",
+      "14b1a6d04c42b061c31807fa406b41d2cd65c3cc37a2a9ab42646d679b1411f7",
+      "14f6111bb19a69fece509a0627ce5a39bc20ec632cdd2ea3e7357088f761e98f",
+      "1648f1a6e104e965a98b116943fa9e9189a1f299ccfdb811c8064a956584e009",
+      "18be7319683148104075596fbccabfaf46c545eebe24d63ea32028bcc7fb1c9d",
+      "19179cd7891ba5ad3abf95e7c4275d2f503b98cefacf55568aaa29a8ef603434",
+      "19edee21c0098449683a247d2bce6ab5c4a815af8f17a7df1a2a2d32001c43f9",
+      "1b1ca09386b9a1d0934dadf66163d3340c19e40e251ec945c70e730fbcf4a21c",
+      "1e84dc4fca5cd549d00e6e0776361624be07c67cc490714b731ec4576adb74bd",
+      "20d1b04d7ee9524ee62345637e685a7383efee2a5bae587195f4f45668fa5f8c",
+      "211d19e9860d0daf5132c27d834f45c58ae3d2c111f4a2f5cf9f6c522c8a9e1d",
+      "229959d9712582f00f2f1885d46d3cc822afc1ccde29d404844af26b8873641e",
+      "23afb0e2ce7bb178e1071fa5c0562ae55876c520bd5e41fd31115e364ef9ebfc",
+      "251600724ae5c21e65d26ad34d76b547df295b5f21c5df13596a3d94f6feb0d4",
+      "256eac2350aed3c3c85a63c4d039575aedae7df1e2c899bcfa60413a2f813a2d",
+      "2610d092639095292867d4ad1bf12e3858f4467d6b0ea07a2f0960356804f15e",
+      "262177daad0fe7a7561cdda1c635fda96bd9a5a1f8561612fa4e19e8b9656f20",
+      "27ecb34d2d94134bed0f432ef41b062d80ca8c5ce2c5873d51cc8f2adbcadf3c",
+      "2802afd13d72559abd7ea9339f299b7ec18375f5995bd92bc19fbc8430e0164a",
+      "289582734c17808820ec76826777609506faf27319a18e3253ec69ed15677a73",
+      "2a67d7bfa271b72bf565217a160e43baeadf51aabeaffba44ca7136e8bd04a36",
+      "2acd0650a4e45808bb52ff6f8b28d17adbbd57256aa587dee13e397212cecf62",
+      "2c140df59d2c1c44a04ccf01ccdf70ddb09ca12fcc1088ac9869fcf5e2245da8",
+      "2cd08fd970c437d998bcaa322ae4f39847298cc8a94a6409f5e2354f38015fb6",
+      "2f5e17a3d5b8399a301525cfe7754bd1117e4c159d6dd70028d4ddbe7f8d44f6",
+      "2fe008a6550c8277a54e5de090c9c82125326b3e265b3f87aa65fbe9559e068b",
+      "318dd20d1dbf5fc0c008f086d398983883618fe5f031e0eb98de059e1254c016",
+      "34ec72d2733cf60da698c64cdd06ef0fd740256185818ca1c414b0ad06cef9fe",
+      "34ed888604517315572e5fb41335bcbae5cf766cf2a668ef76113888c46fe388",
+      "34f786e8af92593489ae829df304d9ddfdfa7f5931d7c3c2c4d4a9e410842b1a",
+      "3686cc1644957832f2733f7ca1c753ea0cbe8cba7680a95a674d3430530f9be4",
+      "3754d7506db280b64efb0c28b596ad8516aa9f9d9b56af5f67f1f5841af632fc",
+      "3839d692319b12617af153d022f6bde5ca9535192e347acb5c3cd61e5456d32d",
+      "38fc8f5c037b8a5e44a92e5fba97fc91f53fef2015162b3a32a517ebffb8ca5d",
+      "3a1472157673d387c5e7b50d4f88203f9077ccce01069b9877f6dfd6dc0b38ce",
+      "3b57800cc0899d8624b4004ac3ba6f9622877185db9c140d85947ffa3980eb7d",
+      "3c4778075a3f5b3cb2559a445d57d01e1248ba7203b86159badbc25f26e160c7",
+      "4288f49b7b4a121e2a134badd6dd132fe51a97a4ace61efbd673a7eb1d7fd89b",
+      "4329089c056f508f0d9ed49f4bb1d4ed944d75fed6ad32a9c23e680e11c9c89f",
+      "443a3f77ed20aea00e3e8ecdc7ca25fcfc08b4b2a75b86244cc81b6f32103f75",
+      "4464a7300e8078a1c227e52adcabf3572f3d43adb8828a781edd0a21e7494d86",
+      "4492b0d6032d3dafc2b6a2660fd2fb7aa4e1520b03cdc1b00e2f8e3bf81b6fad",
+      "4518ad685bc142292057d97c9e6900a75a10438ca932950f20ce72983d1b1e31",
+      "46afcd48502db0576c7660981b7295085b948307cd7cc576d4230f43eaad6e29",
+      "47f67470bac329ed5c396d368a63b81960f527e5ea5904a89cffe9fc2e18644a",
+      "4d9e27854298dc2c39f82f99c06233319542bbdd14c85cf19beaa5a635ce9be7",
+      "4f2c359da2eca224190a25ffa970b144f071b5549ba03115157956d54cd5326a",
+      "4fd2ff2729c2a27c627d66457f9058dae277b95ba9136a0cd2165f57c4aefae5",
+      "501c75489ba222b3097e9cc56c8ade08ad041db92946bbe556e725d4a7adf738",
+      "57a9815ecb2f6dec00dc7813555b6d3fd447c0ec5889862e497686759fedf3cc",
+      "57b9f5ff524006e963a933af044eb6c43a3bec3ba314963321fa454c3f7558e1",
+      "58304b1e86b82504640832e017e237e880d1abd5ee40e1ea90a07601f902a689",
+      "5984914dd33e9e7a6571ae14f50c80590f78ee58e5db7a6c777451748bcdf898",
+      "5ad31bb6c2c53db4aaf0a4d0988c3bf9c370f02e286fe4ac85547b491c094ef8",
+      "5ca8d30e23be2f55f8a72b883bb56ed8e11bc6eea1657f8ea4b58de06c1536e8",
+      "5d6213f0ae90a69f5c921a768f9d84a3127290eb92923a10376b8d68ed169d26",
+      "5f3b6c7f315165b11abde363c833f4fea1dc76ad9c0bb61fe2d578d45bd055b7",
+      "6235adc034668e6aff67dd4c8d14b821246add862022524447fe342de187744c",
+      "62c6bbba3c5d0962a99524a3e91eb275f0297d14257df8acecb85e61c455eac9",
+      "64ecd31b9ae42d631f7a65eddb784b3bdc1912b44eb6440d62cd3249e31e08ca",
+      "66ca752b32f3cebb87596e56483247945328461b7587ce7501e85ab2755722bf",
+      "67e056aa0593b07cb3ab76a29b195eca426d98fbe0b2568957e4a4942c7bc92d",
+      "6c3a3f9d6e64160d159e80b7a6c4e18a8b53d235577501c21151d41472ae8d31",
+      "6ec204c5542ccb8d62bff6b1e751b99ee1bdf9d37c32fa2c2e716a931aa2aef5",
+      "6f650740a9011cc21485fe9f36c5353e9346f43534f2d008448e9121559c0fa3",
+      "761ece0f3d07773aee0b2d3b0c28ec73ca1263c2d7afbe6106abfc96afbbe064",
+      "7940fb7ed6b1661bcd1638192ac9a4fc195bb39f339f4dd25bcc0df94649fda1",
+      "7a6e046ff2431d1ca4995af7b7f6792b051809703154ed5652eb9c745e23465a",
+      "7c79b09d288367e1138f8f2490aad647a75fd43f7af068a99dc6d6f5f15854c4",
+      "7f5ea5aa49c7a5eec043bcb6c98d66c7dba1e8383b8730b1a23ced1cd7af4e9f",
+      "811eb2dc61ef579fd7afeb3178aeb7aefbc5eea17c68b5a148d03fa9c74ecc17",
+      "819660ee37881bf9c90a9bba4a62732e35d01344fbed9bba27926926bf80ceb9",
+      "81b46aaa92a512db0ad348392bf49564e68f06c78e201ae8625f6fe5df997cbd",
+      "823f57a07b4d733800915c1331e2081d0dd3482d49f9cc30db838f3598408ebb",
+      "86df285f70fa71ff9c354b8cf7ad6abcd834ba43fad0aee5440985ef58e9b051",
+      "87bce44af34b2e77ba93a00156780744bf1313cb6d0fe1117353bbdb1e45ebc1",
+      "87e6a22a9b3b02404dc52c388d5f68050de56cdf4ae20d98a2aff36506ba3cf4",
+      "88a3c3c7cd168c8981083f75619e0a954eb8cbc74506fd20dd130da617485f73",
+      "8b3021ba3ac73bf6f36c032103452a1059759cf25adae4877177750cf61c8ef7",
+      "8c91b5bb1d1e3b8f0054a54e2f0e55ed9a201ec7805fcc32cc951dcf29c1107e",
+      "8c9b68e37f1040f490deca4e90383d292f5cb00fbe93a50e51df257b10a68d71",
+      "8e3001473ea91a7e4283875963003d4e87d96b5879c6b8cacc41b70f3e697344",
+      "91fadc169dd87cc00df903d960f7b97790d3d75ef0c800d9e800344822900be7",
+      "921af0d6ea43d3e6a66768a93a94ed39dc5331d21b6c1db18bc323a3854926cb",
+      "9520bb33282500b46df4405c3b6be6c7355afe2b1939efbe4a1cd03cdc56f6c4",
+      "9768bcd2877b5534a1a5428d178cfd7de887d2c010c2ce0dd47ea5025d3cdad0",
+      "984969b899614d914759fa0bb99d302d9b4e0f8eb7393e8975bac39a4371160a",
+      "9c2e01afc106a986aaeec577bc7b8aa8d7a6b74da6b2adab219e790b66953b5e",
+      "9fca89e1792865ba07acb0095a35fc5523cda06d2530498bd1011c1e7ff6615c",
+      "a2bfcc0ea3c769dcb3b2a9a9fa3930007690e025613f792e430b88c67abab0ed",
+      "a30cc864430a1d94a15c4cfadeacd04830b451e49734bfa072df44d7b56e530b",
+      "a39042899ae936d5f3b0bfb89f70b7eca3762dd3ac2dd09dbf7d62ad68a20d92",
+      "a4938eb592ada33dc01fcdc810e79e3d6090c472e20f1cb5fc1a665ce5b2c511",
+      "a871afe0c3ba8174330b241da0fa0b2347268c5a4e74cc5395a955cfd813fc84",
+      "a969e7a54df8e218a6367645019afa6ec9b36a0056248450ae9e5b41d2f1e253",
+      "a96a02e1bb24c64a6d84a53c3576faf9f57e7177d9e97cac05d7e92e3116c1d4",
+      "aba70299dc04e398a6c7724fe55e4ea054f37ba236242afc1c8ce70a48c5e7e8",
+      "aceeb135ed09c331421c78d79d52e1c1f2af82bb91b2e717fdd3090ea85f58e0",
+      "ae4ef415768d790f82677cb383e8976308c130efe9fd374d6fd08ae77fb4441c",
+      "b48d1944e5552c903914d6612ad2fbaf8e4217b96492a058502dad67eaab35de",
+      "b528188ad15fddabbf4778d5a7bc07451cf7ddb682feaa400eb6aac9b6a3704d",
+      "b7652e30817601bafacf4161b60e422fca0a72c958daad356589058359fb038a",
+      "b8caeb3dcaf7484ed70d5dacc4516b5f9a1538107890fb49104c71d0685f9d65",
+      "b9d70d551c7d6da4eb5149bca4c4e0f27c6298bb503761b5f29f7ae547f2311d",
+      "bc28241a8fcd075d07a0bd51af0d9056d1d9fa513b73c2295056074e729d2273",
+      "bfb4ce32ff3fea25b8ae1248f0957274cc0bc96e7476e3c757e949a67ee6bd06",
+      "bfc176ad45649d3ef213a2edf7de37b904dba4dcc036cc689068ac8fa989cf63",
+      "c1af666ba3da2ab6adcf5539a94ca54acf7a3a5d31cdc0281ba635f5e1700ff6",
+      "ca327c5c146d3a2dba8829c535b40e8aa817b9f862616210316d5cc0e3845d0b",
+      "cb21d47fa07f54ea5d6e42844daf9a320e1fe8c2e27411adae8831a16dfddb00",
+      "cb2af8f1f797f1b6ae16908b31304e2db11e839e898f5f39f69b54c34b29bd8d",
+      "cc6ab0c0ae791f1b27784728c1a09aee232c7890deedda9859d5a51deb0c1d09",
+      "cc7bd17384c637175c58b7d69f6d73e1998ed0f694096ec7dc7531a30428972a",
+      "cd3aa651bc1649bc6802d7e7f7799c5c4a0ed24ede64b63b5d3cc300135c3741",
+      "cdadc7068bed6d6530a0538199e081974dfc33dd531509847c78ef5e38237e09",
+      "cdb05c5c7c9b60d5994696a9549ff3ac6ebd76a280cb190af6ff428327bcdae2",
+      "ce9e91a6e3f3f346252843153562242ee391c3d36ee8faa4eeceb8be01865f67",
+      "cf37d8c02266d1df7f12c521879b84b1a20d82a9edf37715b8cb2c0c1bf9f7c4",
+      "d151babe860285039f40de1738246f94de13e5ac0444b2a7e3f5f56a51517f50",
+      "d339179c5b3f7539b7ff963db8cbfe5576db3141de6c938d29b9898b0baf58a9",
+      "d4023cb2cdd12d71143532e69bb786c4bb63759b44653e05e1c35e7241c80cd2",
+      "d508df5f980a6b8904874aad67d878c979599a845bf5ade5709aa9d31d533931",
+      "d5d88fa57cafa089a3c462193261da4a446388d1404311f33a5ccc0ed82f6732",
+      "d5e1b88393be0d89d7bcfb6e5077b4e3e075359ddad1972297bc63af78355eb0",
+      "da3ced79b121ddc4b05bd1359f1c097abda8f045bd2b26fa53b993d9015d1f21",
+      "da735b1c86462bb0eae318940c756dc5e177f348fb6ea5f11e1a485cb82a38ce",
+      "dba28f3af6ef22d546ab6e40c3af8acd430d9a57161749b7fce0d827905fcfeb",
+      "dbe9a791d8c359681fb5161084f6d7d1c3128423b79c9f3a8f1314e0cd433756",
+      "dc9bbcd34214f0265d6ca4ddc258e086a82319f2af026848bf3a2fd964fbd68a",
+      "dcd7a3cd56d141ed6c70d15524161903d4d204b41c1c6b5753b786c7c856291e",
+      "dd25c5aa6cd40b4d87e23c6741cd35183d7e425cf1895e6870353815b8ed9e9c",
+      "ddac0eb9012747ae81b0b504078e9e042e9ee296d9c5a4cb9e1f653667f3706e",
+      "dec7b6d08b48319ff499052d0e96521f16ab4c3e0582af63bcab67771b315f78",
+      "e03209a45ae042ff6843af6d2693312bdd85c8619fb5786e1733b017844a8f4b",
+      "e33dd7ad740f1ac03a9c12a208ee81f836dd4ee85132c3f6932712c452df9f5c",
+      "e3ed923f678ba13d7ee5340937dcc82c29403749943a485b6aeaab7f04e3a291",
+      "e46ed7e9e262fc481f729b0e1b3251a806294a5e7458ab675a2b1fec1bcde3af",
+      "e7a3691e2fa3297ccf45c9a37a3803f846cdc435520ea70cd56edb55fc2a6a04",
+      "f12060a82d4282cc072eed23bb76d11fead445cdccf029098528aaa0695e0c71",
+      "f1e0d1e60fb86fe259dbfa3753e9551073573238389e983a8e10f43987f6541f",
+      "f5118c5d8df72db8e3c01bea49a03cf3352eacb724faf24613bbe507d22e3aac",
+      "fac81577c46f2fb93af3f0ecfe5442073a79344d43b9f94b0702ab85d90d0125"
+    ],
+    "row_count": 80,
+    "rows_digest": "9bb76cf0ad23cb6b339ea5b4bbdbfbbcc213d31ddeb3cf653636e4bc1d6028c7",
+    "source_organism_identity": "3e34068651999b4857d0e611d5e3ab924f529bca0050c2f1090d42f2d29dcf33",
+    "source_state_identity": "55097869246d3ac34d05a517b74341852f4a78e9277e0a103bc79811a61877eb"
+  },
+  "ecology_sha256": "8b68e67711871336f79d9f95e3669018f1599c86f8d04aa9274a13110690e389",
+  "experiment_id": "native_v2_review_repair_v2_retired_canary.v1",
+  "exposure": {
+    "after_continuation_digest": "b52a896cb320d803fa4154ff89d2e258d1f0817557262a393e857683e667b47c",
+    "before_continuation_digest": "b52a896cb320d803fa4154ff89d2e258d1f0817557262a393e857683e667b47c",
+    "physical_fingerprint_digest": "40d9675262e20d58aa7360b1e35d0020b52ec55d58f49926d3b290c89b5a137e",
+    "row_count": 16,
+    "unchanged": true
+  },
+  "fabricated_receipt_rejection": {
+    "detail": "preflight exact binding mismatch",
+    "evidence_digest": "e2249eadff8e2aa1249d255a71a533dd6cf526b39b9ddfc06401dffdfe6f96ad",
+    "exception_type": "FreshScientificIntegrityError",
+    "label": "minimally_fabricated_preflight_receipt",
+    "rejected": true
+  },
+  "fault_matrix_resume_used": true,
+  "first_corruption": {
+    "detail": "global preflight failed:transport corruption",
+    "entry": {
+      "arm": "A",
+      "path": "arm_snapshots/seed-00/A.pkl.gz",
+      "seed_ordinal": 0
+    },
+    "evidence_digest": "f5141acf7f3e795acd2993de6e802055ff1093d7c8ee0c8d12960a4f5773726d",
+    "exception_type": "AtomicSnapshotIntegrityError",
+    "failure": {
+      "arm": "A",
+      "canonical_json_pointer_differences": [],
+      "classification": "transport corruption",
+      "detail": "compressed transport hash or size mismatch",
+      "expected_compressed_sha256": "c1185187d5fdafafc47a08e345a167cca460788989c7787190879557244ca2ae",
+      "expected_compressed_size": 295690,
+      "expected_continuation_digest": "b52a896cb320d803fa4154ff89d2e258d1f0817557262a393e857683e667b47c",
+      "expected_raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+      "expected_raw_size": 2435310,
+      "failure_digest": "69bc378a44e964949a1d9b9c5834763b116e0ab64c0f9b03869dee0f0d1268e6",
+      "first_differing_byte_offset": 0,
+      "observed_compressed_sha256": "b9a6d22e1b7872a5b46bb83ff08c04930e9e1ded0e50ba8a7f92484e6a69677b",
+      "observed_compressed_size": 295690,
+      "observed_continuation_digest": null,
+      "observed_raw_sha256": null,
+      "observed_raw_size": null,
+      "outcome_access": {
+        "count": 0,
+        "event_ids": []
+      },
+      "path": "arm_snapshots/seed-00/A.pkl.gz",
+      "schema_version": "native_v2_global_preflight_failure.v1",
+      "seed_ordinal": 0
+    },
+    "failure_file_sha256": "8a5e164297299afb6c1c5c6f1f722c1398324afde406f56582cd467b6db532be",
+    "label": "first_of_96_corruption",
+    "rejected": true
+  },
+  "fresh_process_restoration": {
+    "expected": "recon_lite_chess.autogrowth.native_v2_atomic_snapshot_graph:b52a896cb320d803fa4154ff89d2e258d1f0817557262a393e857683e667b47c",
+    "observed": "recon_lite_chess.autogrowth.native_v2_atomic_snapshot_graph:b52a896cb320d803fa4154ff89d2e258d1f0817557262a393e857683e667b47c",
+    "passed": true
+  },
+  "global_preflight_receipt": {
+    "codec_identity": "native_v2_authority_snapshot.v1",
+    "coverage": {
+      "arm_count": 3,
+      "artifact_count": 96,
+      "complete": true,
+      "seed_count": 32
+    },
+    "manifest_digest": "e3a613e5e0e241ac20bc45389c64ba54dbefa9e6feb2b09eb335de66300b07e5",
+    "manifest_path": "arm_snapshot_manifest.json",
+    "outcome_access": {
+      "count": 0,
+      "event_ids": []
+    },
+    "receipt_digest": "5b21d2666c938b92a8470b415970f0a1d53b131a178311aa899e65b803e79284",
+    "schema_version": "native_v2_global_preflight_receipt.v1",
+    "verification_rows": [
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-00/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 0,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-00/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 0,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-00/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 0,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-01/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 1,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-01/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 1,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-01/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 1,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-02/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 2,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-02/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 2,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-02/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 2,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-03/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 3,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-03/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 3,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-03/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 3,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-04/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 4,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-04/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 4,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-04/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 4,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-05/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 5,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-05/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 5,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-05/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 5,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-06/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 6,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-06/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 6,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-06/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 6,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-07/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 7,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-07/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 7,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-07/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 7,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-08/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 8,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-08/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 8,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-08/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 8,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-09/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 9,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-09/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 9,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-09/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 9,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-10/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 10,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-10/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 10,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-10/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 10,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-11/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 11,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-11/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 11,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-11/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 11,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-12/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 12,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-12/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 12,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-12/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 12,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-13/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 13,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-13/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 13,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-13/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 13,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-14/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 14,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-14/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 14,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-14/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 14,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-15/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 15,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-15/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 15,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-15/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 15,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-16/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 16,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-16/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 16,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-16/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 16,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-17/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 17,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-17/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 17,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-17/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 17,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-18/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 18,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-18/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 18,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-18/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 18,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-19/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 19,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-19/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 19,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-19/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 19,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-20/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 20,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-20/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 20,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-20/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 20,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-21/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 21,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-21/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 21,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-21/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 21,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-22/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 22,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-22/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 22,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-22/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 22,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-23/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 23,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-23/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 23,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-23/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 23,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-24/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 24,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-24/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 24,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-24/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 24,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-25/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 25,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-25/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 25,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-25/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 25,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-26/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 26,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-26/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 26,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-26/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 26,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-27/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 27,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-27/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 27,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-27/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 27,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-28/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 28,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-28/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 28,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-28/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 28,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-29/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 29,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-29/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 29,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-29/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 29,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-30/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 30,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-30/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 30,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-30/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 30,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "A",
+        "path": "arm_snapshots/seed-31/A.pkl.gz",
+        "raw_sha256": "9ef7d50cf48d867ee22791f96528d06c0956892e42fbbb0c0f56204995c5433e",
+        "seed_ordinal": 31,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      },
+      {
+        "arm": "B",
+        "path": "arm_snapshots/seed-31/B.pkl.gz",
+        "raw_sha256": "a947a9489d0aef06fdad5d966cf6cd9c427a20c8296e644152bf47a59f94fa2f",
+        "seed_ordinal": 31,
+        "semantic_identity_digest": "f1e74457bccda83c6f9719f91f6763ff1db0ac0bbf6439425ed6241dc341162d"
+      },
+      {
+        "arm": "C",
+        "path": "arm_snapshots/seed-31/C.pkl.gz",
+        "raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+        "seed_ordinal": 31,
+        "semantic_identity_digest": "f4ad24c6b48df1cfba78befb546eb4645087ae80ab9f1e8a9cb9b5e903c0dfef"
+      }
+    ]
+  },
+  "identity_swap_rejections": [
+    {
+      "detail": "unlawful V2 initial authority state",
+      "evidence_digest": "ea51bcb0e0766b1e98997282b0344c6d4f76d33ed892c37cf90fa52ea6d105ea",
+      "exception_type": "AtomicSnapshotIntegrityError",
+      "label": "mode_swap",
+      "rejected": true
+    },
+    {
+      "detail": "complete arm structure differs",
+      "evidence_digest": "46cb42410bf70d41a84e5c86855c2b7aa0ad7b395fcc6ca72755b8b9bb93c5bc",
+      "exception_type": "FreshScientificIntegrityError",
+      "label": "source_swap",
+      "rejected": true
+    },
+    {
+      "detail": "complete arm structure differs",
+      "evidence_digest": "cf58d96f6efdf42982eea4bb425b4fac08ba3c143df9cc87626fa3cd41c50d1c",
+      "exception_type": "FreshScientificIntegrityError",
+      "label": "candidate_swap",
+      "rejected": true
+    },
+    {
+      "detail": "complete arm structure differs",
+      "evidence_digest": "0c5719935e4d8f3ff8d8ae16f144b5fe66c859e8c69b89040b84061e449ab7a8",
+      "exception_type": "FreshScientificIntegrityError",
+      "label": "topology_swap",
+      "rejected": true
+    }
+  ],
+  "last_corruption": {
+    "detail": "global preflight failed:transport corruption",
+    "entry": {
+      "arm": "C",
+      "path": "arm_snapshots/seed-31/C.pkl.gz",
+      "seed_ordinal": 31
+    },
+    "evidence_digest": "b59f76853c3bcfe0bdbe8db861de9bbad4650c20550e3bf8add16c11acbffbc3",
+    "exception_type": "AtomicSnapshotIntegrityError",
+    "failure": {
+      "arm": "C",
+      "canonical_json_pointer_differences": [],
+      "classification": "transport corruption",
+      "detail": "compressed transport hash or size mismatch",
+      "expected_compressed_sha256": "e1bf93a5fb28eede83db23ec54a44d97c1c3923b3ef3ecaacfb831657907f60b",
+      "expected_compressed_size": 295675,
+      "expected_continuation_digest": "b52a896cb320d803fa4154ff89d2e258d1f0817557262a393e857683e667b47c",
+      "expected_raw_sha256": "4377ac47827b4fbde276a49f70c626dffe968bcbd8eda09f9128335408c1718e",
+      "expected_raw_size": 2435310,
+      "failure_digest": "90dc31ec01f64d92f80b38e73ae9b800d43d84a226ca54519337a88c210854e0",
+      "first_differing_byte_offset": 0,
+      "observed_compressed_sha256": "f67c0b1439dbaf5c32cecab8e3337cf13ca67e0900c691677a8e807a9a23b5a0",
+      "observed_compressed_size": 295675,
+      "observed_continuation_digest": null,
+      "observed_raw_sha256": null,
+      "observed_raw_size": null,
+      "outcome_access": {
+        "count": 0,
+        "event_ids": []
+      },
+      "path": "arm_snapshots/seed-31/C.pkl.gz",
+      "schema_version": "native_v2_global_preflight_failure.v1",
+      "seed_ordinal": 31
+    },
+    "failure_file_sha256": "f65f6140558264ec231ada12759352f6aab719c8f25b3c40ec36fe673f3c3dba",
+    "label": "last_of_96_corruption",
+    "rejected": true
+  },
+  "outcome_access_law": {
+    "expected_one_per_arm_per_row": 48,
+    "passed": true,
+    "successful_truthful_accesses": 48
+  },
+  "passed": true,
+  "permanently_retired": true,
+  "preflight_authorization": {
+    "authorization_digest": "5f46a9d9f7b503a948c0437d5c1702aafd8b114eecddb4b9deab54122f3996be",
+    "expected_global_preflight": {
+      "receipt_digest": "5b21d2666c938b92a8470b415970f0a1d53b131a178311aa899e65b803e79284",
+      "registry_package_hash": "retired-actual-v2-canary-registry",
+      "snapshot_manifest_digest": "e3a613e5e0e241ac20bc45389c64ba54dbefa9e6feb2b09eb335de66300b07e5"
+    },
+    "experiment_id": "native_v2_review_repair_v2_retired_canary.v1",
+    "registry_package_hash": "retired-actual-v2-canary-registry",
+    "schema_version": "native_v2_review_repair_v2_preflight_authorization.v1"
+  },
+  "protected_boundary_hashes": {
+    "reports/autogrowth/native_authority/v2_atomic_snapshot_reclosure/arm_snapshot_manifest.json.gz": "f0ee54a32210d38a78f98588f42baffeb67324335273148e856f053fb6a9d557",
+    "reports/autogrowth/native_authority/v2_atomic_snapshot_reclosure/global_preflight_receipt.json": "fb1d9ba3fa5f296875970468d481dbcf6688d751e854070792c504cb3454c8f7",
+    "reports/autogrowth/native_authority/v2_scientific_discriminator/suffix_integrity_abort.json": "f59607a5f45223f4950a3c419d86517c5b24cd272a48440c803f1bf1224a24e4",
+    "src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py": "25945864fd998caf22ae12cbcb9bcb4779447337c0079f705640c63d2356f029",
+    "src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2_lab.py": "f3aee5cccf761af1cb6a5de94b886d5e758c0a07cb0f6d77b8898f662ca73b58",
+    "src/recon_lite_chess/autogrowth/native_v2_atomic_snapshot_harness.py": "8611853ca56c2dab3e2a44ebad18997f9d9d55578627acbaff6e727a578fd894"
+  },
+  "row_parity_rejection": {
+    "detail": "control_exposure_parity_failure:suffix-spurious-00",
+    "evidence_digest": "b9e9f670aa06b6e6c00f18a1ab1bd9785ec61aaf9bbc175052850965063c9411",
+    "exception_type": "FreshScientificIntegrityError",
+    "label": "row_parity_before_outcome",
+    "rejected": true
+  },
+  "schema_version": "native_v2_review_repair_v2_retired_canary_result.v1",
+  "snapshot_artifact_count": 96,
+  "snapshot_manifest_digest": "e3a613e5e0e241ac20bc45389c64ba54dbefa9e6feb2b09eb335de66300b07e5",
+  "stage_failures": [
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedFreshFailure:open:A",
+        "evidence_digest": "50ee713307468592d891b5ffc8801c7da6ce5f7a80560a6822d6a6ae08ef3535",
+        "exception_type": "InjectedFreshFailure",
+        "label": "actual_open_A",
+        "rejected": true
+      },
+      "journal_chain_digest": "ddfccb513b8e3d910240e01ec0a29478b49b74d6492bb8582ca761e63c8df838",
+      "journal_kinds": [
+        "PREPARED",
+        "FAILED"
+      ],
+      "label": "actual_open_A",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "0077737862bb9bacc09109af6120a6b738db2ccd7033d3ed17070c90d818cbf9",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_open_A_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedFreshFailure:open:B",
+        "evidence_digest": "780edbdf354abc2e12b8c30fc948cf679accc626c86f79650c7fb94a369b9f36",
+        "exception_type": "InjectedFreshFailure",
+        "label": "actual_open_B",
+        "rejected": true
+      },
+      "journal_chain_digest": "80413b9e0f7cd40b20e96c76e6a9266bf9b02f6d93c958f1e739c11fb3509b79",
+      "journal_kinds": [
+        "PREPARED",
+        "FAILED"
+      ],
+      "label": "actual_open_B",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "7c90bc486ba6016301afbc124a6864dd5b8901a5b3f6aad9420cbcd7f9d060a3",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_open_B_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedFreshFailure:open:C",
+        "evidence_digest": "e164b35c128d75bb17cdfacb59e5293029ddadae1c43f5d5ab862fd5542f1729",
+        "exception_type": "InjectedFreshFailure",
+        "label": "actual_open_C",
+        "rejected": true
+      },
+      "journal_chain_digest": "d81b075ecdb63b5186f5b4722bb14c23ec26099f94784361883e886acc020ea5",
+      "journal_kinds": [
+        "PREPARED",
+        "FAILED"
+      ],
+      "label": "actual_open_C",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "74f5926bf879062e0d35b92f074d4af0fdf76ade4e5ae026075c981130810fe1",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_open_C_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedFreshFailure:mint:A",
+        "evidence_digest": "f004e18403a646e0b28de52f180296d97478e8ea05fb076c094cd14db5f435fb",
+        "exception_type": "InjectedFreshFailure",
+        "label": "actual_mint_A",
+        "rejected": true
+      },
+      "journal_chain_digest": "5e015749aa8bb477f42c96f0900cc04638bf2ede5e4199e9e9014cf3b2201789",
+      "journal_kinds": [
+        "PREPARED",
+        "FAILED"
+      ],
+      "label": "actual_mint_A",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "30f6841a1f7caaa676ba07311f5bdd8c0677f05cbe793b92fabf9e7239608eb8",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_mint_A_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedFreshFailure:mint:B",
+        "evidence_digest": "8bbcfb776ce1039c996882a28d3427b1d442ba479692f802866059e583233680",
+        "exception_type": "InjectedFreshFailure",
+        "label": "actual_mint_B",
+        "rejected": true
+      },
+      "journal_chain_digest": "67f96a9c2c7a87bca4373c6b38d3330a63ee952abf96636e8f33f0cbf2f409b1",
+      "journal_kinds": [
+        "PREPARED",
+        "OUTCOME_ACCESSED",
+        "FAILED"
+      ],
+      "label": "actual_mint_B",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "083e1f98d22e70a078aa728e7b25d5e5968d155c42b53176f3c8891dbb1898db",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_mint_B_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedFreshFailure:mint:C",
+        "evidence_digest": "4b1acec9f4d2d4d37cff1317d731d4b97240c6bf544956c1887c1a28faf1f677",
+        "exception_type": "InjectedFreshFailure",
+        "label": "actual_mint_C",
+        "rejected": true
+      },
+      "journal_chain_digest": "cf2ab43420d524bd1cedbe317dade1fa1e315f10a7405457f5ecf8017f94768e",
+      "journal_kinds": [
+        "PREPARED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "FAILED"
+      ],
+      "label": "actual_mint_C",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "51378bc594cba1c186c786d660c5340ff3f6c1254a26034eee0bbf36a042be9b",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_mint_C_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedFreshFailure:consume:A",
+        "evidence_digest": "6f9ba0e3b12a3b174899d2fd3151da5be637fd41c1ef9550578c8bdfb32a97a6",
+        "exception_type": "InjectedFreshFailure",
+        "label": "actual_consume_A",
+        "rejected": true
+      },
+      "journal_chain_digest": "790e896516eda2467ffda009e1c93a48316e2bd805acb3d52f6c39733e4ba473",
+      "journal_kinds": [
+        "PREPARED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "FAILED"
+      ],
+      "label": "actual_consume_A",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "7ea7263c7cb988066f2c8d28c9fea82247572a27b9b2f34a832ea0c52f35c99d",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_consume_A_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedFreshFailure:consume:B",
+        "evidence_digest": "c9e052c80fa6a1de2b2b6c56e276c871fb1f99bd97bfa2795c08ed44fb3f0134",
+        "exception_type": "InjectedFreshFailure",
+        "label": "actual_consume_B",
+        "rejected": true
+      },
+      "journal_chain_digest": "ff1c4006b680a5c37efa86e6a56856bd17b361197845b79474b608db8ec1655d",
+      "journal_kinds": [
+        "PREPARED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "FAILED"
+      ],
+      "label": "actual_consume_B",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "808cd2439e01c0b8940ffa627f63093f7e22e82dfddcb7174920fdf042c20097",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_consume_B_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedFreshFailure:consume:C",
+        "evidence_digest": "0e3305834f1386f420622d898d2f4eac62277ff8f6186dd5a6c2f3bf764861f2",
+        "exception_type": "InjectedFreshFailure",
+        "label": "actual_consume_C",
+        "rejected": true
+      },
+      "journal_chain_digest": "4c6735fefe2add2b596252259ae0d8e827e5b64a185e2afb81833c47e3bb247b",
+      "journal_kinds": [
+        "PREPARED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "FAILED"
+      ],
+      "label": "actual_consume_C",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "1c34bee9ce67a04ee30c2ca8cf0a32b9793632f9734b8483197c6b6e953fb59d",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_consume_C_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedFreshFailure:validation:A",
+        "evidence_digest": "0b76e0a2fb4a856a12bc24588ce1c9665579597e553bae77a7c184583c0e6a77",
+        "exception_type": "InjectedFreshFailure",
+        "label": "actual_validation_A",
+        "rejected": true
+      },
+      "journal_chain_digest": "0dcec5d73df7eb95de88cc01272f55f68b610633ad57cef4b29bcc1771c6d186",
+      "journal_kinds": [
+        "PREPARED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "FAILED"
+      ],
+      "label": "actual_validation_A",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "af40aa508525f65c6b9717ea44cde4db4bcd3b8135b8928bff16a9a10e99336c",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_validation_A_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedFreshFailure:validation:B",
+        "evidence_digest": "802e150cc4f6dc341814567ffb749cad18e4951ec67d3d1f1069fd3ad3452f3f",
+        "exception_type": "InjectedFreshFailure",
+        "label": "actual_validation_B",
+        "rejected": true
+      },
+      "journal_chain_digest": "4566dbcc8f9c4afc058c8ef67f9902ce8d73a8d53862e7080473b6ad268b95c5",
+      "journal_kinds": [
+        "PREPARED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "FAILED"
+      ],
+      "label": "actual_validation_B",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "42909e18c1bf4e5ccc653160368e3b46ec53673007d3b81f247d698969ffbef5",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_validation_B_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedFreshFailure:validation:C",
+        "evidence_digest": "5d31da852f8acb7a5b10296b6a9f42521a1dc6704363542ca3e07a844e1d0056",
+        "exception_type": "InjectedFreshFailure",
+        "label": "actual_validation_C",
+        "rejected": true
+      },
+      "journal_chain_digest": "a56310414c0e37312e9df82a0c48b8588b99aa0a59b0cc0c07e9531dfc496c30",
+      "journal_kinds": [
+        "PREPARED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "FAILED"
+      ],
+      "label": "actual_validation_C",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "fd0290a454e464514d7f42bbe6a8530d1b10c4bda798c382b7af7f9e17c676bc",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_validation_C_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedFreshFailure:commit:A",
+        "evidence_digest": "15e8284f87185de629bc6143559d8773380e9258ab49a10d92517468a8a9bf0e",
+        "exception_type": "InjectedFreshFailure",
+        "label": "actual_commit_A",
+        "rejected": true
+      },
+      "journal_chain_digest": "87ced6376383ac8f76a1d0ee14b169eee293da6d417e7956d9d9660827cb7ea6",
+      "journal_kinds": [
+        "PREPARED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "FAILED"
+      ],
+      "label": "actual_commit_A",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "2dcd8af09bb9bd1d4e4841ac003c24d702f21e6f4d513399402ce173a59da4d2",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_commit_A_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedFreshFailure:commit:B",
+        "evidence_digest": "1f6cacd4e685e40f4a4282911a3bc6c3f5f60a58b5199d9e1a44863a47ae9cbc",
+        "exception_type": "InjectedFreshFailure",
+        "label": "actual_commit_B",
+        "rejected": true
+      },
+      "journal_chain_digest": "77224a7015612ebfcadce12ef4bab0819c7213978baca99176737b452e442281",
+      "journal_kinds": [
+        "PREPARED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "FAILED"
+      ],
+      "label": "actual_commit_B",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "d6c49b644335e566ca27d03382f5f9ea44f4ecc5285575f26ee4ef36140a3e99",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_commit_B_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedFreshFailure:commit:C",
+        "evidence_digest": "924b8ebc0d3eb5178dfb91efde6ee6761fbdb8e480c419da6f9c870dd1558a8e",
+        "exception_type": "InjectedFreshFailure",
+        "label": "actual_commit_C",
+        "rejected": true
+      },
+      "journal_chain_digest": "c45e5b7c4b3800e119c5afccbb59ed95df770633f115f30ac554d613c9345525",
+      "journal_kinds": [
+        "PREPARED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "FAILED"
+      ],
+      "label": "actual_commit_C",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "c0be8801a7227e1f9176c18beb557985b37b6f8f80bbb3ffe8c9a01d317e58cc",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_commit_C_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedHarnessFailure:durable_commit:TRI_ARM_ROW_COMMITTED",
+        "evidence_digest": "1f2b4880fe4109ce548c9ea9a6818e1b533f1a18683672d4bbea2803ebdcdb07",
+        "exception_type": "InjectedHarnessFailure",
+        "label": "actual_row_durable_barrier",
+        "rejected": true
+      },
+      "journal_chain_digest": "99f741b92bd358e4788c9211f24a58c36a9196ce1649647dcba90bc13d35eb2f",
+      "journal_kinds": [
+        "PREPARED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "FAILED"
+      ],
+      "label": "actual_row_durable_barrier",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "a4b4afc384881d86ea17c1c2bd46ad6a354db5808516aa82f745d5116a17e4b4",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_row_durable_barrier_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    },
+    {
+      "B_or_C_failure_did_not_advance_A": true,
+      "failure": {
+        "detail": "InjectedHarnessFailure:durable_commit:COMMITTED",
+        "evidence_digest": "d252c9223bcbbefd609efa320a85a47753457fed067e46f3f511ab94007c67b9",
+        "exception_type": "InjectedHarnessFailure",
+        "label": "actual_seed_durable_barrier",
+        "rejected": true
+      },
+      "journal_chain_digest": "43355e52cb3ddb97ec6c8dcf7278ad7ce9326add38dc06a3ca23c79bcca4a9ee",
+      "journal_kinds": [
+        "PREPARED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "OUTCOME_ACCESSED",
+        "TRI_ARM_ROW_COMMITTED",
+        "FAILED"
+      ],
+      "label": "actual_seed_durable_barrier",
+      "live_state_byte_identical": true,
+      "nonresumable": {
+        "detail": "dangling PREPARED seed is nonresumable:0",
+        "evidence_digest": "7220d580a0cadd808dfdda12e4c3028e40a69df35ff542a10a49ece173111c2f",
+        "exception_type": "NonResumableJournal",
+        "label": "actual_seed_durable_barrier_dangling_prepared",
+        "rejected": true
+      },
+      "reconstructed_from_prior_completed_fault_process": true
+    }
+  ],
+  "success_transaction": {
+    "final_state_digest": "5d848ee69106aab765f5bd46261990e1aa3f525dd720d6b518cc08f4b298e53c",
+    "initial_state_digest": "cb1aa0aa4b5f9c4101e14a7755c2b9a74944b5f24a4c995de627772e245a376f",
+    "journal_chain_digest": "d31dc321db89e796f5d014225956f6764afd1629029419716e29b93b4838637a",
+    "journal_kinds": [
+      "PREPARED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "OUTCOME_ACCESSED",
+      "TRI_ARM_ROW_COMMITTED",
+      "COMMITTED"
+    ],
+    "journal_next_seed": 1,
+    "journal_only_reconstruction_byte_identical": true,
+    "next_seed": 1,
+    "outcome_access": {
+      "count": 48,
+      "event_ids": [
+        "seed-00:suffix-spurious-00:A",
+        "seed-00:suffix-spurious-00:B",
+        "seed-00:suffix-spurious-00:C",
+        "seed-00:suffix-spurious-01:A",
+        "seed-00:suffix-spurious-01:B",
+        "seed-00:suffix-spurious-01:C",
+        "seed-00:suffix-spurious-02:A",
+        "seed-00:suffix-spurious-02:B",
+        "seed-00:suffix-spurious-02:C",
+        "seed-00:suffix-spurious-03:A",
+        "seed-00:suffix-spurious-03:B",
+        "seed-00:suffix-spurious-03:C",
+        "seed-00:suffix-spurious-04:A",
+        "seed-00:suffix-spurious-04:B",
+        "seed-00:suffix-spurious-04:C",
+        "seed-00:suffix-spurious-05:A",
+        "seed-00:suffix-spurious-05:B",
+        "seed-00:suffix-spurious-05:C",
+        "seed-00:suffix-spurious-06:A",
+        "seed-00:suffix-spurious-06:B",
+        "seed-00:suffix-spurious-06:C",
+        "seed-00:suffix-spurious-07:A",
+        "seed-00:suffix-spurious-07:B",
+        "seed-00:suffix-spurious-07:C",
+        "seed-00:suffix-planted-00:A",
+        "seed-00:suffix-planted-00:B",
+        "seed-00:suffix-planted-00:C",
+        "seed-00:suffix-planted-01:A",
+        "seed-00:suffix-planted-01:B",
+        "seed-00:suffix-planted-01:C",
+        "seed-00:suffix-planted-02:A",
+        "seed-00:suffix-planted-02:B",
+        "seed-00:suffix-planted-02:C",
+        "seed-00:suffix-planted-03:A",
+        "seed-00:suffix-planted-03:B",
+        "seed-00:suffix-planted-03:C",
+        "seed-00:suffix-planted-04:A",
+        "seed-00:suffix-planted-04:B",
+        "seed-00:suffix-planted-04:C",
+        "seed-00:suffix-planted-05:A",
+        "seed-00:suffix-planted-05:B",
+        "seed-00:suffix-planted-05:C",
+        "seed-00:suffix-planted-06:A",
+        "seed-00:suffix-planted-06:B",
+        "seed-00:suffix-planted-06:C",
+        "seed-00:suffix-planted-07:A",
+        "seed-00:suffix-planted-07:B",
+        "seed-00:suffix-planted-07:C"
+      ]
+    },
+    "reconstructed_after_committed_without_replay": true,
+    "row_count": 1,
+    "science_journal_chain_digest": "d31dc321db89e796f5d014225956f6764afd1629029419716e29b93b4838637a",
+    "scientific_result_digest": "45e7d8394b71933e5c19b38593031fcf9d09a1e1bc7a3a9a0816b63a2163f301",
+    "seed_ordinal": 0
+  },
+  "transport_resume_used": true,
+  "wrong_authorization_rejection": {
+    "detail": "preflight exact binding mismatch",
+    "evidence_digest": "2f80d054c83b934f3465eba0425f0d32e62f2e588ad2faeb2be37e7d6d6be444",
+    "exception_type": "FreshScientificIntegrityError",
+    "label": "wrong_exact_preflight_authorization",
+    "rejected": true
+  }
+}
