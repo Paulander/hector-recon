@@ -1,0 +1,70 @@
+{
+  "artifact_binding_digest": "106748944c333d2a9dab449c2bc574db5352c401b04e4888d219e6e4f2ab49ea",
+  "bound_commits": {
+    "stopped_manifests": "7b41c9210aff57d0b8db2b5302754e68695836bb",
+    "stopped_result": "5016f776a0a698033ff7df9e3dfed4311b51fa3a",
+    "stopped_source": "0859a4a1db53eb6221e3ac48e19d156896aa56c6"
+  },
+  "disclosures": {
+    "evaluation_suffix_unopened": true,
+    "fixed_outcome_blindly_reused_cohort": true,
+    "future_claim_conditional_on_fixed_cohort_and_ecology": true,
+    "planted_target_count_known": 32,
+    "prior_instrument_stops_remain_valid": true,
+    "selected_comparison_target_count_known": 30
+  },
+  "frozen_inputs": {
+    "child_module": "recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure",
+    "child_source_path": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_canonical_contract_reclosure.py",
+    "child_source_sha256": "009660b6031d124fd85fa7dfb2f43e382ed5a1102d6f74fdf527f01c6e2de8b9",
+    "contract_set_digest": "4575095179345aede60e02febf60f791dd2cdde79aa1f326933f586e67e98f81",
+    "exposure_rows_read": 0,
+    "frozen_file_hashes": {
+      "docs/autogrowth/NATIVE_V2_FROZEN_COHORT_CANONICAL_CONTRACT_RECLOSURE_RESULT_20260727.md": "639c68c2779f02fd33d2a0e156ed9dbbaee112d23e3570fcbc2d558417db3741",
+      "reports/autogrowth/native_authority/v2_frozen_cohort_canonical_contract_reclosure/artifact_binding_manifest.json": "f6f60742ebd5341eaa37d9704e8595d0d712754429ae824e2e6434d436968869",
+      "reports/autogrowth/native_authority/v2_frozen_cohort_canonical_contract_reclosure/canonical_contract_verification_failure.json": "c345a35666a95d603472a01b935cd2ec4cedb8581996c8684568fb29ae0ff9c6",
+      "reports/autogrowth/native_authority/v2_frozen_cohort_canonical_contract_reclosure/source_manifest.json": "4050a6598f54b50c05f7abe580cf122c27bcc56738e5bb9f515d858180730f62",
+      "src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_canonical_contract_reclosure.py": "009660b6031d124fd85fa7dfb2f43e382ed5a1102d6f74fdf527f01c6e2de8b9",
+      "tests/autogrowth/test_native_v2_frozen_cohort_canonical_contract_reclosure.py": "83499c7f992f800cf31ff7a6ce19244eec79e41d38eca99504ae587400422be4"
+    },
+    "outcome_reads": 0,
+    "prefix_organism_set_digest": "98bbe684ae9219589f565abc00f82c6a9aa27c94e431cd42839bdd230ec1bd23",
+    "snapshot_set_digest": "a73884f9180161673cc9f2ff26ec030641a675eb3885ef38da2d168b0724261c",
+    "stopped_artifact_binding_digest": "2e1e68a107ad6e28bf86764c89f206dccf438d376b83c965f5a862d0cb40462f",
+    "stopped_artifact_binding_sha256": "f6f60742ebd5341eaa37d9704e8595d0d712754429ae824e2e6434d436968869",
+    "stopped_source_manifest_digest": "30df57817025d4ecf615bae1b7da599771037f19093bf3d01bee91a706f8bc7a",
+    "stopped_source_manifest_sha256": "4050a6598f54b50c05f7abe580cf122c27bcc56738e5bb9f515d858180730f62",
+    "target_counts": {
+      "planted": 32,
+      "selected_comparison": 30
+    }
+  },
+  "launcher_contract": {
+    "child_module": "recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure",
+    "deterministic_environment": {
+      "LANG": "C.UTF-8",
+      "LC_ALL": "C.UTF-8",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "PYTHONHASHSEED": "0",
+      "TZ": "UTC"
+    },
+    "orders": [
+      "ascending",
+      "descending",
+      "even_then_odd"
+    ],
+    "python_executable": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+    "working_directory": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit",
+    "wrapper_module": "recon_lite_chess.autogrowth.native_v2_frozen_cohort_import_path_launcher_reclosure"
+  },
+  "package_id": "native_v2_frozen_cohort_import_path_launcher_reclosure.v1",
+  "schema_version": "native_v2_import_path_launcher_artifact_binding.v1",
+  "source_manifest": {
+    "digest": "457a267d8aa2a3dda8341bd1ea73963276cc22ca9807a5e1a3d9eacf1aea92e0",
+    "path": "reports/autogrowth/native_authority/v2_frozen_cohort_import_path_launcher_reclosure/source_manifest.json",
+    "sha256": "c296034ec4b7c9d7c1e5394bc41efc256b577422a108009ae1785d8d433e04d4"
+  }
+}

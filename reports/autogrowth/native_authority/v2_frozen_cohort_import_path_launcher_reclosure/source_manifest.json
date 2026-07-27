@@ -1,0 +1,36 @@
+{
+  "deterministic_environment": {
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0",
+    "TZ": "UTC"
+  },
+  "fixed_child_module": "recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure",
+  "fixed_child_source_path": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_canonical_contract_reclosure.py",
+  "fixed_child_source_sha256": "009660b6031d124fd85fa7dfb2f43e382ed5a1102d6f74fdf527f01c6e2de8b9",
+  "package_id": "native_v2_frozen_cohort_import_path_launcher_reclosure.v1",
+  "preservation": {
+    "evaluation_suffix_unopened": true,
+    "frozen_cohort_byte_identical": true,
+    "launcher_only_correction": true,
+    "stopped_package_byte_identical": true
+  },
+  "runtime": {
+    "python_executable": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+    "python_implementation": "CPython",
+    "python_version": "3.12.3",
+    "working_directory": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit"
+  },
+  "schema_version": "native_v2_import_path_launcher_source_manifest.v1",
+  "source_freeze_commit": "dfd486a57868309a04df263ce49717d89e37b583",
+  "source_hashes": {
+    "docs/autogrowth/NATIVE_V2_FROZEN_COHORT_IMPORT_PATH_LAUNCHER_RECLOSURE_PREREGISTRATION_20260727.md": "4000183a9a0b01aa41bb18f1e8c054d149208e39949c947e9440ae7377e65c5d",
+    "src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_import_path_launcher_reclosure.py": "2a8fd7add2726ae16a0cad3bdb55a03cc75376ece1f56545273a8398d55907d5",
+    "tests/autogrowth/test_native_v2_frozen_cohort_import_path_launcher_reclosure.py": "3590e8861e4c1417e6faf8ea8f3a1dce82674c7153c9c42aef5572806f3ef8fb"
+  },
+  "source_manifest_digest": "457a267d8aa2a3dda8341bd1ea73963276cc22ca9807a5e1a3d9eacf1aea92e0"
+}
