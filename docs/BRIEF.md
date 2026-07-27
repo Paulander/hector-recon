@@ -683,3 +683,26 @@ it is not exposure, causal or KRK evidence. The fixed cohort remains already
 known at 32/32 planted and 30/32 selected comparison targets, and the suffix is
 still unopened. See
 `docs/autogrowth/NATIVE_V2_FROZEN_COHORT_IMPORT_PATH_LAUNCHER_RECLOSURE_RESULT_20260727.md`.
+
+
+The separately frozen V2 cohort execution adapter has passed its one authorized
+real-cohort readiness check and stops before exposure. Eighteen focused checks
+passed. The adapter reproduced the stopped raw representation mismatch, proved
+canonical equality, then passed the unchanged frozen verifier through an
+ephemeral runtime view without changing the 1.13 GB source manifest, any
+candidate/graph state, or any module binding.
+
+Readiness verified 32/32 candidate contracts and 96/96 A/B/C organisms with the
+accepted cohort digest
+`a144fe94f4479c819756dfc44b22a2594e2b9df09367d571d39ab54007560bb8`.
+Candidate/graph mutations, exposure rows and outcome reads were all zero. The
+readiness artifact SHA-256 is
+`0aeb4a2621f262a84e6a90c5f24eda5bbc28896a6e223973dac38c3de89e7954`,
+with canonical digest
+`fdcf5e656018c5174d1d898751098ed2254f7da9b33e4ed4de42bb88e3afb49b`.
+
+This is execution-path readiness, not exposure, causal or KRK evidence. The
+real scan and evaluation suffix remain unopened; `run-exposure` and
+`run-science` are frozen for later independent authorization. Every earlier
+stopped package remains unchanged. See
+`docs/autogrowth/NATIVE_V2_FROZEN_COHORT_EXECUTION_ADAPTER_FREEZE_RESULT_20260727.md`.

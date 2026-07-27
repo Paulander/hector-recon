@@ -1,0 +1,1759 @@
+{
+  "actual_parent_argv": [
+    "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+    "-m",
+    "recon_lite_chess.autogrowth.native_v2_frozen_cohort_execution_adapter_freeze",
+    "verify-readiness"
+  ],
+  "artifact_binding": {
+    "digest": "391e6758398ff6ed650217e7b8ee9a7259f2bab9ad4aa85c5623f68e777b4a3b",
+    "sha256": "b89263e3fdc117e2e6d4a2c4f476b89e57c58f71effcf859c7b305b93146a546"
+  },
+  "candidate_or_graph_mutation_count": 0,
+  "cohort_digest": "a144fe94f4479c819756dfc44b22a2594e2b9df09367d571d39ab54007560bb8",
+  "core": {
+    "exposure_rows_read": 0,
+    "outcome_access": {
+      "count": 0,
+      "event_ids": []
+    },
+    "prefix_transport_set_digest": "98bbe684ae9219589f565abc00f82c6a9aa27c94e431cd42839bdd230ec1bd23",
+    "raw_manifest_reconstruction": {
+      "compressed_sha256": "92b8e7aa1b437281e346ddc57b1f4cb5c139ef68190c57f1699e6acd86f8d43f",
+      "manifest_digest": "9415a2cf6527de69e8048b6b0b33e46be92180992fcac8931dfaafa95f67eb68",
+      "raw_sha256": "ccb91d226c61b3354cb1c89cc939123c01a24723a0868ac5da36bf9b14a0b2e4",
+      "raw_size": 1129782531
+    },
+    "seed_rows": [
+      {
+        "after_semantic_set_digest": "11a10f7885e937d381611ca4b2ab33145b3b2dea379d80fba03e9f56c0104ded",
+        "before_semantic_set_digest": "11a10f7885e937d381611ca4b2ab33145b3b2dea379d80fba03e9f56c0104ded",
+        "canonical_equal": true,
+        "canonical_size": 12457001,
+        "contract_digest": "a5f275b7dc3d897f7870535d7e0f471969eb3ff8c9bec2452d77f8445c9d95aa",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 0,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "fc3e1b52a582b1b1ddaea89ee3e715391438ef80624f0a0f10733a6f46d0dd44",
+        "before_semantic_set_digest": "fc3e1b52a582b1b1ddaea89ee3e715391438ef80624f0a0f10733a6f46d0dd44",
+        "canonical_equal": true,
+        "canonical_size": 11881045,
+        "contract_digest": "84db6c8e903b115fca4988d14ed0760129c1af14e9f5262910ece45a2b3fd56f",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 1,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "c579394c3a8abe2e207ef074a17a1345f743bd1fc4ab86770898d944c60a0158",
+        "before_semantic_set_digest": "c579394c3a8abe2e207ef074a17a1345f743bd1fc4ab86770898d944c60a0158",
+        "canonical_equal": true,
+        "canonical_size": 11688799,
+        "contract_digest": "8ac3adbb4b370ae2acfc27fb2a9545f2b36304556afb95d1cd0f78effaa2d087",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 2,
+        "selected_comparison_target_present": false
+      },
+      {
+        "after_semantic_set_digest": "41eac7288fc14df7235f48d610cdb23b72490a6b4e08fb5e072b1ae3c5f80a3f",
+        "before_semantic_set_digest": "41eac7288fc14df7235f48d610cdb23b72490a6b4e08fb5e072b1ae3c5f80a3f",
+        "canonical_equal": true,
+        "canonical_size": 12264520,
+        "contract_digest": "08361256705a7082aefd0f9f238267e425f9539f3dfbe69701e87776bfe623e9",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 3,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "bfe83b26b15e1884fa975430bffb54a62d73288f94ef1c36759ca74f0650043e",
+        "before_semantic_set_digest": "bfe83b26b15e1884fa975430bffb54a62d73288f94ef1c36759ca74f0650043e",
+        "canonical_equal": true,
+        "canonical_size": 11207675,
+        "contract_digest": "1cfdb801fa18447a2a01fdddbac022a6fa45baab46d44e359fa538f4745bb5c3",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 4,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "da7da98ade45870d6130ab7a3658702dacaac105f2e5f7361452c2ee004df664",
+        "before_semantic_set_digest": "da7da98ade45870d6130ab7a3658702dacaac105f2e5f7361452c2ee004df664",
+        "canonical_equal": true,
+        "canonical_size": 12778072,
+        "contract_digest": "3b10f1f70afef1cc4e66a76ee6d59946dae7761c300ce34aac970952eb5a8e18",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 5,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "1c0fa3993dccb92d8404e4832cfce63d8c747b8f6be29c4f8a59c82a0bf26b8a",
+        "before_semantic_set_digest": "1c0fa3993dccb92d8404e4832cfce63d8c747b8f6be29c4f8a59c82a0bf26b8a",
+        "canonical_equal": true,
+        "canonical_size": 12487940,
+        "contract_digest": "146a6e28db7853eed379e639a03fe4566877523e4933b7c1ba8b75bedfcb82e6",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 6,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "3c06e80dedc6b6fa77df2a40a681914e413a6ea0c7dc43cec167b5197cf0bc24",
+        "before_semantic_set_digest": "3c06e80dedc6b6fa77df2a40a681914e413a6ea0c7dc43cec167b5197cf0bc24",
+        "canonical_equal": true,
+        "canonical_size": 12586263,
+        "contract_digest": "8abf98d41875ba5831f1d8bd21d8f2539cc9a15f46a6f89ea53f7ce6390d995e",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 7,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "ce60139013ecb5baaf8455b0d4438012c5082ce29ad2396cfa09f33759db1b48",
+        "before_semantic_set_digest": "ce60139013ecb5baaf8455b0d4438012c5082ce29ad2396cfa09f33759db1b48",
+        "canonical_equal": true,
+        "canonical_size": 12586744,
+        "contract_digest": "a95f8d8ae3657624060e069ccfa5eaa518273b3611709ec639e596c1e67e3a5e",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 8,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "8d35b1bb0097dcfbaafdb2fef9d13e2a7942a3b996436c7eeb6e816e16f6011f",
+        "before_semantic_set_digest": "8d35b1bb0097dcfbaafdb2fef9d13e2a7942a3b996436c7eeb6e816e16f6011f",
+        "canonical_equal": true,
+        "canonical_size": 11496545,
+        "contract_digest": "0695d43870ad9f16f53ce4d5627505ad4c5239ae4808539cbcbe4be9df88fd18",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 9,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "bc5ba1aa7c03b60cec52a37faa3acd7985b5d7affd6281abc4416c5d3593cf78",
+        "before_semantic_set_digest": "bc5ba1aa7c03b60cec52a37faa3acd7985b5d7affd6281abc4416c5d3593cf78",
+        "canonical_equal": true,
+        "canonical_size": 10662378,
+        "contract_digest": "13638ca59f7fccaee08fbe65094a6d0cd093df6f676cd83a8b578399a898312e",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 10,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "d20a6c60b564ce6d9cadea9dab71268f42d2dbb452a0bfa94ca4edd27bfe4b0e",
+        "before_semantic_set_digest": "d20a6c60b564ce6d9cadea9dab71268f42d2dbb452a0bfa94ca4edd27bfe4b0e",
+        "canonical_equal": true,
+        "canonical_size": 11367599,
+        "contract_digest": "bc319245df37122acd6b3ed36d6a96801d4ed753913c59bc09223f4c6909ecee",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 11,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "504cd6d41a911451663e33f1d4a60215df96dc458a81d132527ae860937bc8dd",
+        "before_semantic_set_digest": "504cd6d41a911451663e33f1d4a60215df96dc458a81d132527ae860937bc8dd",
+        "canonical_equal": true,
+        "canonical_size": 11368766,
+        "contract_digest": "322186367595f5e77ae320cc177c5a15de351050a19ab459a01d19d37e9dece1",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 12,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "bfaa5cc3354802ba2613c365b1b1a20442853ca4abc64a4f705f3d49c3026541",
+        "before_semantic_set_digest": "bfaa5cc3354802ba2613c365b1b1a20442853ca4abc64a4f705f3d49c3026541",
+        "canonical_equal": true,
+        "canonical_size": 12587240,
+        "contract_digest": "144995bc8f442c30e75de71161e9b1ac168934afa2392210f6325999961b8a7d",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 13,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "9b91304dd1aaa7d9699d2fbbe32f6ad8e985a40ae7412814e48255624de1ccbc",
+        "before_semantic_set_digest": "9b91304dd1aaa7d9699d2fbbe32f6ad8e985a40ae7412814e48255624de1ccbc",
+        "canonical_equal": true,
+        "canonical_size": 12809555,
+        "contract_digest": "1e46dbe62b5277cf8d69dc69c93a015b7d228c1db9c542a4b8685ba773db17f7",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 14,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "ee99e44a464240462a3370c8d11bb87149d7239b6eae5122a08fc160821b4a86",
+        "before_semantic_set_digest": "ee99e44a464240462a3370c8d11bb87149d7239b6eae5122a08fc160821b4a86",
+        "canonical_equal": true,
+        "canonical_size": 11720893,
+        "contract_digest": "08f8788749f112d73a747011bced6cc33690c16b0292d97e4b9fb667bfbef6b3",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 15,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "66f92c24ad48abb0eb6f2d1da064a01b4f365caf7be6b623543fa2b543e41718",
+        "before_semantic_set_digest": "66f92c24ad48abb0eb6f2d1da064a01b4f365caf7be6b623543fa2b543e41718",
+        "canonical_equal": true,
+        "canonical_size": 10086447,
+        "contract_digest": "fd7fdc6eb90f096caa6ec92fa81c5d8e11929d48ff3d609e282c586da260163e",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 16,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "6cef5c1471e8101c067a6e36c1432392203b0dfcccf0cdb9aba4af807e4c0298",
+        "before_semantic_set_digest": "6cef5c1471e8101c067a6e36c1432392203b0dfcccf0cdb9aba4af807e4c0298",
+        "canonical_equal": true,
+        "canonical_size": 11499113,
+        "contract_digest": "ca7c47004c48094488b913c9a85b39ac80833e8a7df09dacd504826192ab8264",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 17,
+        "selected_comparison_target_present": false
+      },
+      {
+        "after_semantic_set_digest": "9b9f25de769ccc6d420ed5c5d0ad589e47144150abeab275b1662c218486d2ca",
+        "before_semantic_set_digest": "9b9f25de769ccc6d420ed5c5d0ad589e47144150abeab275b1662c218486d2ca",
+        "canonical_equal": true,
+        "canonical_size": 11880991,
+        "contract_digest": "e5cc04b3cc9926f108a123f4fff9c204e13f76be57df3c0c19304e41599cfc9b",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 18,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "e84b317ff4c648ae082c3f78a75dc948022cb94f97d91de5b59e5756e88d362c",
+        "before_semantic_set_digest": "e84b317ff4c648ae082c3f78a75dc948022cb94f97d91de5b59e5756e88d362c",
+        "canonical_equal": true,
+        "canonical_size": 11399573,
+        "contract_digest": "0ff41595e66f85e8fee97651fb5279b5d8dac281e965ba5e12d663de5a1d815d",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 19,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "0b46868d3124686f9663c27408847df14b33e8aa4764645d322fe5a4f3bd782f",
+        "before_semantic_set_digest": "0b46868d3124686f9663c27408847df14b33e8aa4764645d322fe5a4f3bd782f",
+        "canonical_equal": true,
+        "canonical_size": 12073224,
+        "contract_digest": "bcd06233d9407a399bc80da4182bd3bc16c8c0926582da42138863ebdd6f0be9",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 20,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "20c97079ae5e83342bb494913e8becb83c8021a8730f2bdadc0ce3045f779a5e",
+        "before_semantic_set_digest": "20c97079ae5e83342bb494913e8becb83c8021a8730f2bdadc0ce3045f779a5e",
+        "canonical_equal": true,
+        "canonical_size": 12457536,
+        "contract_digest": "9846944cd2657dc16faed866cc7365fa2828bfe25419e889ceb98a6367f3cee8",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 21,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "24388a8a2c55df1ee101d053eff2727f1240e412d6ad91cf462b09747fb30985",
+        "before_semantic_set_digest": "24388a8a2c55df1ee101d053eff2727f1240e412d6ad91cf462b09747fb30985",
+        "canonical_equal": true,
+        "canonical_size": 11367383,
+        "contract_digest": "47e77f8e5d803dc7729d6ca1c599b3e9af730a1532bddabea0b18d4e7b4a0039",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 22,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "d46ad9bb67a53b582d9b601a297731a71b1fd2e1d066781d60f08159da97afae",
+        "before_semantic_set_digest": "d46ad9bb67a53b582d9b601a297731a71b1fd2e1d066781d60f08159da97afae",
+        "canonical_equal": true,
+        "canonical_size": 13289775,
+        "contract_digest": "028e94b3b0bab82c983bd6343df49513986291b83d12a271590bf4ebe23b3ca2",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 23,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "0860b3b7920b5709c9cf1aa2c79fcc79f34b6dbe42b85f8574a049f5207c572f",
+        "before_semantic_set_digest": "0860b3b7920b5709c9cf1aa2c79fcc79f34b6dbe42b85f8574a049f5207c572f",
+        "canonical_equal": true,
+        "canonical_size": 11559250,
+        "contract_digest": "2c10d1c76de0394ee7efebfcf61db7c3195dd8e9013679f273bc9554943bf859",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 24,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "9d80dfcca92fe46ba82fb262b5faea3e1a05ae8f3b85b5b140e7e49425e52e7f",
+        "before_semantic_set_digest": "9d80dfcca92fe46ba82fb262b5faea3e1a05ae8f3b85b5b140e7e49425e52e7f",
+        "canonical_equal": true,
+        "canonical_size": 13130003,
+        "contract_digest": "6a17abca91850c5cf07321a6be21fc8c38bf05ee6d10f0dcef34145eea93bfb5",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 25,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "588d73020afc28a81a7d61cd1d2ad9d23665121be54fd11dff0f260e82ba4b76",
+        "before_semantic_set_digest": "588d73020afc28a81a7d61cd1d2ad9d23665121be54fd11dff0f260e82ba4b76",
+        "canonical_equal": true,
+        "canonical_size": 10854344,
+        "contract_digest": "c80159c6321c9a5c79b5c191b2d4ed2be812706db73462b0e5372cb6085a496b",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 26,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "c80f28449b6e3c2c6ea8cc277da6a74571951e62af1f53590c164c0004a906ad",
+        "before_semantic_set_digest": "c80f28449b6e3c2c6ea8cc277da6a74571951e62af1f53590c164c0004a906ad",
+        "canonical_equal": true,
+        "canonical_size": 11560329,
+        "contract_digest": "e0e8e2901d2732fe8763bd59df7a4a5f7d07ae1263ff1434bcc91ab6acd906c0",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 27,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "50b1d5fd84e59276cab8200b0b2bd58c2fdbe17bec8bd71967774584e69f46c2",
+        "before_semantic_set_digest": "50b1d5fd84e59276cab8200b0b2bd58c2fdbe17bec8bd71967774584e69f46c2",
+        "canonical_equal": true,
+        "canonical_size": 11881605,
+        "contract_digest": "c1da2d23a78752fb14a8f0988da1c76630f15c6201fafd3197d313fe07402c69",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 28,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "443d580449047d46cbece03c58e27e2144a8933f3a2ac27348d220141b4977b4",
+        "before_semantic_set_digest": "443d580449047d46cbece03c58e27e2144a8933f3a2ac27348d220141b4977b4",
+        "canonical_equal": true,
+        "canonical_size": 13130635,
+        "contract_digest": "b9fdbebb15c9d0680ac669c0999535a52f5ac2f0ddb349b9b8c9206f6cfe2a8f",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 29,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "f141ade12d5c8ddcb082368611b16c680a5ec51b1d07bf5203818cd28521f356",
+        "before_semantic_set_digest": "f141ade12d5c8ddcb082368611b16c680a5ec51b1d07bf5203818cd28521f356",
+        "canonical_equal": true,
+        "canonical_size": 11146152,
+        "contract_digest": "d04e525401eb9d9f2fa5276a51a8b0ccdeea85da2d1306f10c30d9c6a1aeb695",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 30,
+        "selected_comparison_target_present": true
+      },
+      {
+        "after_semantic_set_digest": "cdfe51555323fa54a0f35ece93a604d4b18bad9d4edf3fe09b6cd9db9e301a10",
+        "before_semantic_set_digest": "cdfe51555323fa54a0f35ece93a604d4b18bad9d4edf3fe09b6cd9db9e301a10",
+        "canonical_equal": true,
+        "canonical_size": 11368638,
+        "contract_digest": "a62f8c0a476e2922c5a32a43bc1b9f1eeddb8412815091160e486edd60c6c5a4",
+        "no_candidate_or_graph_mutation": true,
+        "planted_target_present": true,
+        "raw_python_equal": false,
+        "seed_ordinal": 31,
+        "selected_comparison_target_present": true
+      }
+    ],
+    "snapshot_transport_set_digest": "a73884f9180161673cc9f2ff26ec030641a675eb3885ef38da2d168b0724261c",
+    "stopped_output_paths_present": {
+      "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/canonical_result.json.gz": false,
+      "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/execution_manifest.json": false,
+      "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/preoutcome_exposure_admission.json": false,
+      "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_carrier": false,
+      "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_journal": false
+    }
+  },
+  "deterministic_environment": {
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0",
+    "TZ": "UTC"
+  },
+  "elapsed_seconds": 1955.758009,
+  "evaluation_suffix_unopened": true,
+  "exposure_rows_read": 0,
+  "fixed_inputs": {
+    "driver_identity": {
+      "outer": {
+        "data_prohibition": [
+          "KRK historical regression",
+          "fresh KRK",
+          "retired-65",
+          "R1",
+          "validation/regression pools",
+          "held-out pools",
+          "retired V2 suffix"
+        ],
+        "design_files": {
+          "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/c_permutation_manifest.json": "4bdaf74a29cf8dbb86ddff4e504e24e4be275b5f81e57698bc77a3969b2a2b05",
+          "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/ecology_manifest.json": "9a0b0e05d01c8aea06ef09b2ccf25875623fb03ff730572ae9ebea093cf7e9bc",
+          "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/environment_manifest.json": "02bba3f543c898fd3da13996fab9957d9d9b82fd8876573f75514dacb2a774bd",
+          "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/excluded_position_manifest.json": "a09d58e936709f70a0c2c6425f1b0ba49dd749bb0211786ad43665516985fead",
+          "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/seed_manifest.json": "bb56e2fe5fc994fd05584b29c79b0d82a94d7aa18147148868fef5683be284f9",
+          "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/source_runtime_manifest.json": "5fbd66f3f01529d4750f0ac4701e7e502826d18bfcc104c4afd3d17af1ccaa3a"
+        },
+        "ecology_graph_validation": {
+          "exact_visible_pair_count": 80,
+          "physical_fingerprints": [
+            "00e1cf667bb3df43d0287ab3d27ce3a2cec973ff9dcb4f7cf960d3bbef77a39b",
+            "0375740ab411d94459a67ad789538582be7c8034d0ea8945385edcf261b3c2b6",
+            "05684848b1c96120fcf2c40114ac6f3aa9d4dc4b4e0a42c4a275a1b75920faeb",
+            "06821078147a13d933c9028d9422789d36f066c1978998690b62dc288afcbecd",
+            "073b32f37bf635698f4e44a3ec9fdafd228fdfad014de4724a4968e2789c0d38",
+            "097133583bfbc97e9df27526cacbfd16fde7b044fba3ec4aeaca61dddb156bbd",
+            "09fa65f9153cdc29b0f8af823768984d18f7f2ac03314c5cc5586cd80427581e",
+            "0dc9cffedbcdd4c7ed7f22b540b52759c9df20c80668a99a8fe58d6771808c97",
+            "0e76b0c1ac312a366c1070f573a2b035dbaf764ccd5aef45fbe2361f78b59cef",
+            "102641556c6739813e3cd21fb4b8c96e2cbc6d39132576e618ba0f71645b42ba",
+            "106c92e2d41584f8b3d51ba7b39b59a3c6cdbd20c29e81f59e9667f57517b0f9",
+            "11c520c32e8293a24ad188f709474434c12df7b3ea2520b9ddb875726850a0f4",
+            "13be140737c2ee75fd2afa627b8d21595b83d37e850e399066ea3d033b72a916",
+            "1541a94f2a7e8e99674d136a69fee14bb477897f79911bde15528b43f97935a8",
+            "1969bdbb3506927a71aac1848e95c05392b0703b4ef804586e1bcb744ad88257",
+            "1be3193638080da10b72d115c582d18c830bfe4e4317d6e7734a9f45099a60eb",
+            "1ccea53db91236fd76b46aa7c40a9ff5993b8a80ec614b9fec93b78bef6b4e32",
+            "1d42f130ccaf05717361e29c5314e18c03ca8ea5e78c57b15670f714ecf98c8b",
+            "1e0f5a5582809e6cf25bd17c61ea465f253c95cde684852448b13cd16944b7c3",
+            "1e9b36d3e28d3c7bcd4aad939f021dc5ea1fde3820c595ad76ca7b832df50644",
+            "1ee6cd2ff1d4338dba94bb578022f8dbb3859b09f0bd0262875e537cf3b64a75",
+            "2048de15787e25c8b5474f42f0951b0032ae10138fc3c6b3f6078534b6af5b5c",
+            "216ad5ad32fd88ed9cb2ac8bab52f33677399b72e55ae5ce0a23c939c423aa99",
+            "21d67aac329f5da7873bbd4350cfc27cb495259510a1a82a9072407cf04a1b92",
+            "225daf73a386a795f4d4a5cc39a6b96ddbc16969156d038f5f1fbb076ff11dc9",
+            "25643fe2e32b496d024ff2c7cbdff9c2fc885a38c05c0ed1f47e2737744daffb",
+            "284612189ca3ed04c8b77d62eec7f21af053bdba3757b57e7de0c13fe2976e0e",
+            "2bace1b1281b38a5273fde4a3272bca337e2c0077746084229f509df4419cc84",
+            "2ee25d38a6739a760bb077e6a609f9a211f0fb5edec2323184b223bf0a0cc451",
+            "33d22dc0ce33d7840ee7b0c4c6b95fec8fe3926dc875cf5c9dbe0e6396656c6f",
+            "3498605fd5490ed2d712fd1993079aec1e1a3f851e2dc39762779ab779a0da3f",
+            "3894a481cddf9aaf790b9e7f926dc053ce294396fb640762cc9e88126455eebe",
+            "38e614e4b800fb59aa6dccd4ebb5b45bd39436c1b7930b80ea65cebd9740be19",
+            "39ee8e13e1e196280de06b546bb586172cafa5fd177e2cd4da9530bee0490445",
+            "3b29c0fc9de96131ee8f959904462752010e1e1cd681d556e945ad0fc4bd35d8",
+            "3c49de0d74e8ad2011609a0a3e13b9208473cc3fd0d1e0358c87d0fee509f2e1",
+            "3dbc330636dab5f249982e313b68cbaf07e936ffc6c91b752921fd3a60dc77ca",
+            "3e8698e03a0e252c5a5d794087ff498dabe6710759d13ef7e50b9dccf616af4c",
+            "3f9abebc6263fec04556d05b84327d086af68921e483874d6852109e48e0f26b",
+            "3fe4292c29312f6427e52ee93edd5fa41a7bff57b6bd0823ab53a19a87c25fff",
+            "406d66f3cf434596e57a5f7d6fff33c11e45a5de2d6d3b8338031b86d28846d3",
+            "42d655332fd74c6c6d533001689ecf5d8ca1803bcb3b1d987402e3a25e470c29",
+            "438ee548421eb6cefe0ea3e21717352d6b456437dd4e354fc419e05b44a72bc7",
+            "43a427ce4fe806015def597979e8a7f570240e3adb521227e8efde78dca4e147",
+            "43b9a84c63850ae5a32bc8d827fee3a46a9da05d5d9364e7a8db03da98f8a404",
+            "4447257963f5066775781246fbe5cfc0d34edd462ed6a03af7bccffaf8c3966d",
+            "45d5c2c172a67159f85e049bd0c1a0ef3948022eaa019d0aea824e923283c3b8",
+            "468eae3fb7a48faa0a555248bc62e249d728c01246fc8f07f18f330be4d7538c",
+            "4aeaad476c0af635a7dab696a7abdf623f3532ade1f2a2b2abd3bfae10ef0e94",
+            "4af9b4d0ff7fd658197c54e635056fe8f555a4fbf00a486b037e3579b597ff38",
+            "4b60a1503ba65812a1ef4bb42f88d7dfdaf2740dfb357ac42282d65e10c8d6d1",
+            "4c39803e55e30bb0f66fac260c9030a4af780beb8450b80540f857ac9fbefd8a",
+            "510b777406ceee29440eab78c58d57f5075f1cab70ce13055a8aeaf2ce044a60",
+            "52308c98f4a73e1c947cda0bb159970cd375d5ebdba8a559af2291f10cf7ba30",
+            "5288d0138f5a851efc066d22d1ce9b7854753fe24bcf9913b269883a063debca",
+            "54772323ed8784b2cece64756cb12518ed853b9b22c336cd8c66ddde34ca6c05",
+            "54c7e68c8d829bf38df92a1ad5ca904c20530ba2031e0e35578b28e6966a48d0",
+            "569992ed25e25dcdde2558173818916bda6e1774736e7e430b0c391dd3b28034",
+            "5a30e6cf11ad5a0ae749a85c3e7736cbc01633caf9549096f0be3f10195cf966",
+            "5b7e265c7177480d4a550ce150635a77371b18becc6a3c2dffd82c16f30ada45",
+            "5d1e6bce72c4732bc20dd164b2264a6db1a7c48d69db5e88615967c935f0d3a3",
+            "5e551ef1781f6e0deff61443893f7f9ce294f73f7bacfff0c5bea2f10fad93d5",
+            "6129229d9bb8d40950747cf1ee23e49cb9482c0072902a4d4eb12f33b165ce02",
+            "67316d351697af7740a5b4fdcaa3153fbb87a2a2f1e08bd362cc359431c9e3d3",
+            "6acd5573a51c910427b06539e2de9c80fa57e4626045c76b6dece855af2fab35",
+            "6b20400fb94b41fbb4fd3d8464cd8cad99966bd7ad4da998d3be934a34b07a0c",
+            "6b398272c7a98ae4eb853a729e1d2b28976c9a37ff5f9f595186216b628434bc",
+            "6c234d27a54edecc089de93ca50151bd192340458809d53e30da75c16b16de9c",
+            "6c58e9cc8b0991970b556b70a019dc00af6356dfd21ddf7d5c3423545a845aaf",
+            "6ef4fb5833702af9b0387c411074272376959c04ef7d968c1ae4a61040da55be",
+            "6f8906752b454cd2e315ec1d73e98d049f445a78d16a55e9f51cb38c230023f8",
+            "7041892436f05bd983168a29c8fb5d0d3833bca07a91c6ac67d490b1d3e20d5c",
+            "70abcbbfc94e79cd03309badfdd21b4234b3f89cda0ca074f0688d0aa3997861",
+            "7166bf104ab4a3ce5760940fe1d8d062c84eee8197f9e758c93ab24da8140c90",
+            "759c042b2ec72f7a0bc7bb872a7a082f8f65d39d4346b67e83bdf0d1b3dbe864",
+            "76338ce20af59ef130fe86dab4ee19cddc48fbd9bc40548af9c81dda2573b155",
+            "794b142187c1fee5e8e994e8b65af3218f55fd0686b0dd08fdb80dfc956f1e31",
+            "797118b4a21cbb558f8c79fe27fea68d2bad6061447b1c8dcaf5b068cf0c4b43",
+            "79ac1e8a9f513b03aa69743963533b7b8246db8dda9e2c91128e2750ff5cc0ba",
+            "7b5df0daa734b40c72e31c66e6f87d68d4589512045955b79421456ab1d87d56",
+            "7bf6fff36f832fba1715c569ea4874ad7c910a09e986ef5f72a61be9c3308b15",
+            "7fd197f41b08782c34aa8bfc6d64ed758bd2dc39e0778a4ccbfc7fb41c4e2159",
+            "7fefd5a881d1bbdb97f0462e455810232f2989ae1bd15e5ebcd83fe1c12e1d84",
+            "807151c73258a7873c29929fe4da486d925736bb9f84eda5990b282c39abd240",
+            "80fd1222ee7f143a3cdf42fc34f96b9998f1f84c44a9d4f17ede4b72e40dc7df",
+            "8245c4f3ba4998962b48dd23e5fc298a11b8b6293ba3aee2b8f561b18bbe6311",
+            "82958f0b75691d03d2e48700db014fff4d8b7f6fb394c68e357af193fea5b511",
+            "842e64ee3ae880aaa7ab7b35ced73527f334d57e99b32ac8fb640a849642cdd7",
+            "89dc67ddd7f0a2dd7e48d67150d657ea170187a157ded044c1b283fa67b8a040",
+            "89f138e108a94a5ffc2eaa54598a7be1900a4dfb8af55fb4ba71bfbeef44b708",
+            "8a9fd58c43aac0423c8519eb442a1be78329130d434e8e9f7b74e353e766425d",
+            "8ad2be68dc8c193fd4f3d54b8bb61776f86600075f03b2cf49b149630f2102f5",
+            "8c088559a362b2a736cb37ea288a542078e0990888e88c5fc17d57b828a827b7",
+            "8c08db525859516b05fe821dada8c88c423e43a6b55b73d1603ea1b91376f7bf",
+            "8eaf81defcb6f0b5b7996ce0bef4e0a0b53165f436f08bfa0286bf133516b70a",
+            "8ee228d17a680b750678fa229e8448b739eb609e0e7b895b9303834c85ddfdd2",
+            "93621a37d39d4317aa5b2dc826c25bddcf8c73baa08c79940ae58ea2e871238a",
+            "94686afdbace74bb25d3c735903ee46e2ad67a05374361e8b79026d146cfabfa",
+            "94b842dba06f005935993ef05d86600ea396a3127b7d6644dccbd9a45b7d173b",
+            "98239a228a91c50807685f0a6a6f15a7bdd35deb6fa32fa3920e08592cec3d13",
+            "98a8008453543519fbdb8e02c4765499e2f11599a0048b16fd451df6dc35bfa5",
+            "998585a073da85f52c6355599e30475140daa0753a1806216e69f5729e119efe",
+            "9b9702ed12a03498712647349e6192b3772e3d9ef579c0941ed88e1e554b62ba",
+            "9bc29cd8ba230599e106c2bea54c106d25c485e9ef2767af1a88070eb919239c",
+            "9c8780e6e74c94b41494262ca19de271c9577c04a4b1f72c03ea2bf9dc01d084",
+            "9ff9e544260e2f81a2b9a3682dae7ccb9bdae19feed8645cd685eb13896eb714",
+            "a0ef5e54f74e4f3857c28ebbfc1c36e31ea7e5e71002bde29bba6cbf594d356e",
+            "a0fa868067f79d4dc0de6d6bc7eeda274afb524569abde51f1829e34e82e7f71",
+            "a38e5d818808a369cc6e9dbc53ecf34cc1e3927748b41100ae45b274c5e33125",
+            "a58d40ec9ebb50a4ea2dc450ec5ad226b6f1b6e741f64c5e7c976257e6234d84",
+            "a5b80c04a62efd45f70dc8e0676ad814bf14b1ce07f2349421b0de7d01499b2f",
+            "a5ba945aeebcf76b42e18972c912f40bc77d127b865116691e5998a75d70ed18",
+            "a692a64286fc3bf4b52fa23b850676a1b063acca7f65275f20399e4c4a734cf1",
+            "a7c18a0b8dc8b83a8578cc56ca6a26d8d21c52329ff1a60e65e5ef33186ddbf0",
+            "a98909c2e8fd26b2d7ec8a31dc33cfb2f74232f6180c988753c96491914a106a",
+            "aaeaed7bd415d3eda85eb8a02b57f0d2186d8392ca74342daa3058aabcacb8c1",
+            "ab92bb7c7c295e7fada314cec49d029c8a0b67254d34936e8b7c8b837ccb1262",
+            "af12ec5ebd49d288ddd9e8f2240c5c24270a95fca4a075d3e1f16fcc5ae74f8b",
+            "b2344b5ba3f7f7c7de3c93ff2d1f27aa4a49e0cd94a8945032be0c66ffdb2957",
+            "b24fa6b04c14d6032768f23d98a98be2e7dade9f42f8c71a57727fb14356cd9d",
+            "b3d418a153c2074897911d6196247fea194194116a1aa50d8393a46637df4b5b",
+            "b6ae89f4473a0f5bc65f2cf64e3a5acac3f6a0a18793349141d23ed77602a5d1",
+            "b6e0a02ec44c0252a4fa5659e59aac843156fe044ee4fb8910bf0a5224a86864",
+            "bb30fea3c2369b94e46c7ed138361f42ebfc7b5eba5dbd87fc277fbd9b5a81c3",
+            "bc13a8d21077ce3b16e2409d8e6e3222d241a4a116d4ccc125bf1b6053e4e57f",
+            "bcc8781cc3051931f0453ccbe415a3ab76527037e7b22a59871257c48e38f07a",
+            "bdb2c008900845fdf6ada87b2e7ffb2c155fc47689d933db086bfab861af4eff",
+            "bdfb3781c551a67696d1af3b4228cf4ef314620b851f1f3d788c684e96705066",
+            "bf816e24322f44fbd697e371b99dcfb9fa5d7f5ebb30447d2c97faf7d67a9244",
+            "c006629ee3ca09c9a14c0aaecb03fd4d014888fc283b72c3dc5fdfb9bae8fb35",
+            "c0206fdbb03cdf3d889c3c7888ac91729d88201a1acbf138928756566319e7f9",
+            "c021fc6dcf18fa9f6e92f7371629624924e6182089ead3567d298e6b98b6f181",
+            "c8badbead041c376051a93e6c38cf9aa0f228329e315d45b960f66705b9b111b",
+            "c8d42e889bf8f9e3a7ce7925ca687e669dd7ee69a834a1ead65549509d2ff040",
+            "caddef7018df0e4c4cca3a73aa64cb364c74e70a214c5f97f2f22b9a9babd8fc",
+            "cbe9d346bebb0abffcc935ac5eb445b1fdf126338ae5a88710599dea6f41a4ea",
+            "cd22e2ae8c647e483bbb005313d489e06ad228683c56fe6f5e273177cc893e0c",
+            "ce3ef12869cac55a63991fbbf950ab60394a8db3f1b0da085ba97602cc3d6c83",
+            "d03e49c10542bb1c0131cc3686cddec4394e61954b9a0ca2fc1699641d7c35b4",
+            "d07e9c4157a1a26398f7104bf8a3bb8c7b24d7d0c768eeaeaa73ae7ff0b95c67",
+            "d87661567e4d7a6bd22e22561ac9b483202fc931f3d7e8e52dd588501b67de27",
+            "dac329720fea7ee69731fe5e8397b7cb132005938513a28d0336dc2b16d70f83",
+            "dc4977653be66c96da09e4ee5876d83f52221d0219fecbad8a4d0bd4c6549114",
+            "dd3b1522786d408f9e1eecf0ca7e2e59e89f55d04de6fa74c0b2a66fe791a65a",
+            "dd957c87ed632ebd313ac893685d8f38cfbbf971e66847fc3a0e4e94f6a01868",
+            "df0210818ac308e9b5bd70f4580d0f74ddcddbb621a3a99e7c68d836dae24afd",
+            "e532eebc0a257f9753f14566ce60756891a2a31a5b60be7e25001c313f4a8f93",
+            "e542cf10037d660aae574d45b39f702b95c066c5c6dbd31dcc64d7b34447b08c",
+            "e8a3a21176cddad23c7f89d2c57a735cb0ca7d15b4ff7444e8f23e4c77e8ff5b",
+            "eb1c08f9164a7eca9ba2e13825f56a793d9e4f36c0206d65640603ab3eb089be",
+            "edf32f1ea494c13906f3c3a7b877eff23ab6df7f0bf5f0c3a4102bfe153e8d9d",
+            "efbd5552479b4309a9450b149dcd7b1a50f3c8197764c47f07d2c201df088e00",
+            "f14e0fa04b520d941a35c8bec7b20f186901523a0966bdaf51167a45da38d16f",
+            "f5b760cc23e5edb32bed38f3b19ffdbd6efcb4b5433afaf01cb18d8493bae5ce",
+            "f813cabd9574c13ffb8cab5d08475e0ccb381d4da5b51024566f5e67f3797490",
+            "f951b1cca0173a0f1b2b9ca0ce9af6413ea8f65de2586a907068d0011059e982",
+            "f9ba1828a75badd55ffeb99d6c8a87310a3c35dc08cdb8ca1d1af3c7ce4aecd5",
+            "fd6cbcece16353a99c3a27601897b24bd6f5e2ce267a5d2327e63af348a2547c",
+            "fd707c86abaa0bca6f0156d7cde4304782ceba08b4f2bcc2c89c7fb905ece1b6",
+            "ff4f53ba233a54e9f726f365a3d701c669dbfac503ef9f614b4497e00bba8aef"
+          ],
+          "row_count": 80,
+          "rows_digest": "84101f389e9f5691af8bac37570dc861d0f4be5f9f91bc3d12da43923182920c",
+          "source_organism_identity": "925d64d330ef2c56a7a8ba017e673289bf0e78a66472f825c465cb112ca8d329",
+          "source_state_identity": "9f6f26296132066cd7e8f1ab9706ac0b5adfb6390a40e166ac5f28a3b6fa5060"
+        },
+        "experiment_id": "native_v2_fresh_discriminator_review_repair_v2.v1",
+        "frozen_gates": {
+          "bootstrap_replicates": 20000,
+          "holm_family_size": 2,
+          "minimum_favorable_seeds": 17,
+          "minimum_qualifying_seeds": 24,
+          "primary_alpha": 0.05,
+          "primary_tests": [
+            "D_safe",
+            "D_signal"
+          ],
+          "seed_count": 32,
+          "target_opportunities_per_arm": 4
+        },
+        "opaque_terminal_salt": "native-v2-review-repair-v2-opaque-terminals.20260726.v1",
+        "outer_manifest_digest": "93228166bdb2bee000511882b1ec05d72e46df58563e7adc57fc32ab15565b95",
+        "physical_freshness": {
+          "fresh": true,
+          "freshness_digest": "80c11f1e7ff54cb35844712c5e234b48a9ccb91db4583355370491a49905c894",
+          "internally_unique_complete_board_positions": true,
+          "new_all_position_count": 320,
+          "new_resulting_position_count": 160,
+          "new_stable_interaction_id_count": 160,
+          "new_starting_position_count": 160,
+          "new_transition_count": 160,
+          "overlaps": {
+            "complete_transitions": [],
+            "resulting_positions": [],
+            "stable_interaction_ids": [],
+            "starting_positions": []
+          },
+          "superseded_overlap_comparison": {
+            "complete_transitions": {
+              "count": 0,
+              "values": []
+            },
+            "measurement_digest": "2476c3361ed50f478037b9fc1942071ac5104e6161808b609e257f47571344fa",
+            "resulting_positions": {
+              "count": 28,
+              "values": [
+                "1R1k4/8/3K4/8/8/8/8/8 b - - 1 1",
+                "1R2k3/8/4K3/8/8/8/8/8 b - - 1 1",
+                "1R3k2/8/5K2/8/8/8/8/8 b - - 1 1",
+                "1R4k1/8/6K1/8/8/8/8/8 b - - 1 1",
+                "1R5k/8/6K1/8/8/8/8/8 b - - 1 1",
+                "1R5k/8/7K/8/8/8/8/8 b - - 1 1",
+                "5K1k/8/8/8/8/8/7R/8 b - - 1 1",
+                "5K1k/8/8/8/8/8/8/7R b - - 1 1",
+                "7k/5K2/8/8/8/7R/8/8 b - - 1 1",
+                "7k/5K2/8/8/8/8/7R/8 b - - 1 1",
+                "7k/5K2/8/8/8/8/8/7R b - - 1 1",
+                "8/5K1k/8/8/8/7R/8/8 b - - 1 1",
+                "8/5K1k/8/8/8/8/7R/8 b - - 1 1",
+                "8/5K1k/8/8/8/8/8/7R b - - 1 1",
+                "8/8/5K1k/8/8/7R/8/8 b - - 1 1",
+                "8/8/5K1k/8/8/8/7R/8 b - - 1 1",
+                "8/8/5K1k/8/8/8/8/7R b - - 1 1",
+                "8/8/8/5K1k/8/7R/8/8 b - - 1 1",
+                "8/8/8/5K1k/8/8/7R/8 b - - 1 1",
+                "8/8/8/8/5K1k/8/7R/8 b - - 1 1",
+                "8/8/8/8/7R/8/5K2/7k b - - 1 1",
+                "8/8/8/8/7R/8/8/5K1k b - - 1 1",
+                "8/8/8/8/8/7K/8/R6k b - - 1 1",
+                "8/8/8/8/8/7R/5K2/7k b - - 1 1",
+                "8/8/8/8/8/7R/8/5K1k b - - 1 1",
+                "8/8/8/8/8/8/4k3/RK6 b - - 1 1",
+                "R6k/8/7K/8/8/8/8/8 b - - 1 1",
+                "R7/8/8/8/8/1k6/8/K7 b - - 1 1"
+              ]
+            },
+            "stable_interaction_ids": {
+              "count": 0,
+              "values": []
+            },
+            "starting_positions": {
+              "count": 0,
+              "values": []
+            }
+          }
+        },
+        "predata_stop": {
+          "fresh_discovery_prefix_executed": false,
+          "fresh_grounded_receipts_minted": 0,
+          "required_absent_paths": [
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_candidate_manifest.json",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/arm_snapshot_package",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/preoutcome_exposure_admission.json",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/execution_manifest.json",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_journal",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_carrier",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/canonical_result.json.gz"
+          ]
+        },
+        "predeclared_artifact_paths": {
+          "arm_snapshot_root": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/arm_snapshot_package",
+          "canonical_result": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/canonical_result.json.gz",
+          "execution_manifest": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/execution_manifest.json",
+          "prefix_manifest": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_candidate_manifest.json",
+          "prefix_organisms": [
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-00.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-01.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-02.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-03.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-04.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-05.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-06.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-07.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-08.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-09.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-10.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-11.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-12.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-13.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-14.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-15.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-16.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-17.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-18.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-19.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-20.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-21.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-22.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-23.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-24.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-25.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-26.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-27.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-28.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-29.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-30.pkl.gz",
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/prefix_organisms/seed-31.pkl.gz"
+          ],
+          "preoutcome_exposure": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/preoutcome_exposure_admission.json",
+          "science_carrier": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_carrier",
+          "science_journal": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_journal"
+        },
+        "schema_version": "native_v2_review_repair_v2_outer_manifest.v1",
+        "source_base_commit": "bd2ceb788340c6f7ccc30e7ba1e8440cce4a7270",
+        "source_freeze_commit": "29329b5906dbe41640fb9b94b7df5d4f971be693",
+        "source_runtime_digest": "0ed1fd16bb0372fc85d05ced715c6e9605af5e7b62492bf2eac2bc04aee19b8a"
+      },
+      "outer_sha256": "de8ff271ba49451e372814aa843956b85f22d557f52ecb7cad1b1d2a0cb2db60",
+      "source_freeze_commit": "29329b5906dbe41640fb9b94b7df5d4f971be693",
+      "source_runtime_digest": "0ed1fd16bb0372fc85d05ced715c6e9605af5e7b62492bf2eac2bc04aee19b8a"
+    },
+    "exposure_rows_read": 0,
+    "laboratory_package_digest": "837da27658bb691490fc771f5eec445c28870888ff6bb7b3f8140f527bb38da4",
+    "laboratory_package_hashes": {
+      "design:reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/c_permutation_manifest.json": "4bdaf74a29cf8dbb86ddff4e504e24e4be275b5f81e57698bc77a3969b2a2b05",
+      "design:reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/ecology_manifest.json": "9a0b0e05d01c8aea06ef09b2ccf25875623fb03ff730572ae9ebea093cf7e9bc",
+      "design:reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/environment_manifest.json": "02bba3f543c898fd3da13996fab9957d9d9b82fd8876573f75514dacb2a774bd",
+      "design:reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/excluded_position_manifest.json": "a09d58e936709f70a0c2c6425f1b0ba49dd749bb0211786ad43665516985fead",
+      "design:reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/seed_manifest.json": "bb56e2fe5fc994fd05584b29c79b0d82a94d7aa18147148868fef5683be284f9",
+      "design:reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/source_runtime_manifest.json": "5fbd66f3f01529d4750f0ac4701e7e502826d18bfcc104c4afd3d17af1ccaa3a",
+      "experiment:docs/autogrowth/NATIVE_V2_FRESH_DISCRIMINATOR_REVIEW_REPAIR_V2_COMPLIANCE_20260726.md": "a92b189c2900d25cb5640c952081e6c01a59a76037f8ac6788dcb76990481fc9",
+      "experiment:docs/autogrowth/NATIVE_V2_FRESH_DISCRIMINATOR_REVIEW_REPAIR_V2_PREREGISTRATION_20260726.md": "f84973b6735d4ad132cf7aff27b3530e1b299845fe40f937649422b4b96c515a",
+      "experiment:src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py": "75cfd4221c05665259e17c7dcc3bc2a3ebff9b53e6b0868bb019246742bfaeae",
+      "experiment:tests/autogrowth/test_native_v2_fresh_discriminator_review_repair_v2.py": "78ecf0c7d30835a05fd2237f1785f0e5dfb25ec99db60d50c41d5d552c2fc8cc",
+      "outer_manifest": "de8ff271ba49451e372814aa843956b85f22d557f52ecb7cad1b1d2a0cb2db60",
+      "runtime:libs/recon-lite/src/recon_lite/__init__.py": "919490aa8b703eeb9ab8162539d7b945e041fa1d947e5055a717c6f271e4ff83",
+      "runtime:libs/recon-lite/src/recon_lite/__version__.py": "91447944015cec709e8aa7655f7e9d64e1e4508e7023a57fe3746911c0fc6fed",
+      "runtime:libs/recon-lite/src/recon_lite/binding/manager.py": "5eb59edda722e9024cbf6e2eb6948752e434c86bdbda5ee5a5d328fadab3cf9b",
+      "runtime:libs/recon-lite/src/recon_lite/causal_rent.py": "a97333bd13cb4e4f88ca45d295656a2641af57447e10fd18c6a3a8d7e50de75b",
+      "runtime:libs/recon-lite/src/recon_lite/choice_genome.py": "be303914bd077e5a6e0bd320c8cb14f05cecdad711b308e0284179634d6a03ae",
+      "runtime:libs/recon-lite/src/recon_lite/core/activations.py": "a736530827bd21f4b58868e9b9f45a7494ee904762fde9f8eee202147deaa280",
+      "runtime:libs/recon-lite/src/recon_lite/engine.py": "68e04dec07cd5487b2103ff736a6bac63d52e93dfe528db096ad946f1807544a",
+      "runtime:libs/recon-lite/src/recon_lite/episodic_composition.py": "38fc9d725ccbbaafa1af4b3fb485c4f6a33f670f0148dae0fba131bdbdad2828",
+      "runtime:libs/recon-lite/src/recon_lite/examples/README.md": "bc21e46d3adc33420ac40ebf19adcec582ff6e1283beb1c611cad166ae36e206",
+      "runtime:libs/recon-lite/src/recon_lite/examples/__init__.py": "96b012bba1c43244a933b02e4afef25246001371910833f41e7778f0df11ecb1",
+      "runtime:libs/recon-lite/src/recon_lite/examples/gridworld.py": "88fbc2ef7c78db2983a3bb03f832f310ddb85fb23531d5e707c472f0489d2840",
+      "runtime:libs/recon-lite/src/recon_lite/formal_engine.py": "28199a3199de7335725b2b119909862356a494743fd37c794e3da9b4cee58aa7",
+      "runtime:libs/recon-lite/src/recon_lite/frame_context.py": "2acc51b1db9f761fd8406b6f72e19a2cb0047b8413050371d7ac694adb8bffe4",
+      "runtime:libs/recon-lite/src/recon_lite/graph.py": "98784171b2eda47c20c01362e5ef9fe7e925bcd894034d07524a0dcbbb4ec0cf",
+      "runtime:libs/recon-lite/src/recon_lite/logger.py": "10c377f5c7a436a32c1c1460baa85c3815924b1a90e2a5bb37c739fec2661309",
+      "runtime:libs/recon-lite/src/recon_lite/macrograph.py": "78582c3da6c8f786f1cd7ecab537bcddeb9aa772d03a19bb23f34b69fdc6b37d",
+      "runtime:libs/recon-lite/src/recon_lite/online_composition.py": "176882d00af0ef660e635051f0e8f12f208e028e55836cd648353af0db267ecf",
+      "runtime:libs/recon-lite/src/recon_lite/plugins.py": "aabe9ffb53b3081c8ff632e56727cdf69b1db6d5152d2b263f41ff02352e99cb",
+      "runtime:libs/recon-lite/src/recon_lite/robust_policy.py": "2d564513d205a29a3b63498384b0a4cffca1fef889369e4d82b371440445f8b0",
+      "runtime:libs/recon-lite/src/recon_lite/robust_return.py": "a6e14edb6fa47f8c865265234073bc3c52d6f888d5c9231a35af7c99648169c8",
+      "runtime:libs/recon-lite/src/recon_lite/time/microtick.py": "567a587e4c1589066fc2000174b9bdd787e71189788c5935d7baafd5603d478a",
+      "runtime:libs/recon-lite/src/recon_lite/trace_db.py": "fc7d91b0611d561e9885245395b6512c2ca204241d62810121856252ab63e95b",
+      "runtime:src/recon_lite.egg-info/PKG-INFO": "671f46520f3b0487e8f8b55ca4ce82fbef08fa947d046aa699ddaa56aa888d9f",
+      "runtime:src/recon_lite.egg-info/SOURCES.txt": "d652ec910288bab4ad0e2b5e277513bee96b17e75b5437ff8cae04f4741b3f79",
+      "runtime:src/recon_lite.egg-info/dependency_links.txt": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "runtime:src/recon_lite.egg-info/requires.txt": "13d3c4193c66107b42d4abec4754b4ce33c92580c20aaddc190e4eb121f4614b",
+      "runtime:src/recon_lite.egg-info/top_level.txt": "2cf3d6c6e7e4e2e3f6e194a8b83b06bd4e47683154b9283f0c691082beee425b",
+      "runtime:src/recon_lite_chess/__init__.py": "fc815b2697f1ad2787d1f74989df019076a259d417e79b03a5b75711ca48f414",
+      "runtime:src/recon_lite_chess/actuators.py": "03499ecb66b217d4c0c500092c50ec12d42a8a52fbc30b27928e6da0c33b96a8",
+      "runtime:src/recon_lite_chess/actuators_blend.py": "64f3c191f1fe234d4897d3c13860013ac769d34c843dce2f178fa21cf915cd81",
+      "runtime:src/recon_lite_chess/affordance/__init__.py": "f9362da3f047efcd55f54a764eb56b1cc4d2cec0d002ae7b527548dc1e7c873e",
+      "runtime:src/recon_lite_chess/affordance/sensors.py": "fb10420c647371b419374b3ed011158f548f80cb6aa555c1c594f25c0f5d1f31",
+      "runtime:src/recon_lite_chess/autogrowth/__init__.py": "c415d76f3b3b0acb3f6bf02be71e7c5135e449a33dd7f0a7d31a6cc50ca69e2f",
+      "runtime:src/recon_lite_chess/autogrowth/approach_discovery_probe.py": "2bfbb762a75a0680c3951ed723f72499b950ba0ce872df4a494a59a113e0972a",
+      "runtime:src/recon_lite_chess/autogrowth/arbitration.py": "1973442475c220ad5766549538204fca10f62cd92720af99ccf0a98344b3d62b",
+      "runtime:src/recon_lite_chess/autogrowth/boundary_dataset_expansion_child_coverage_ladder.py": "a70a72438013dfdf99bd331083c0cc05761cd61c8ab519fe79ceb4b1d1df29a7",
+      "runtime:src/recon_lite_chess/autogrowth/cached_online_episode_scale_matrix.py": "61feb11fe700f558dcfc5cb44dc20e75df5da1211fb5c5e97189200352f49ec5",
+      "runtime:src/recon_lite_chess/autogrowth/cached_trajectory_selection_repair.py": "3f3dc59470b29b6a74a9b5cfad21b97ffab6042770b01e569855b22e4656d0d9",
+      "runtime:src/recon_lite_chess/autogrowth/candidate_ecology_runtime_path_installation.py": "3ba963d13cc074efbba283373cfa3ab85e608b332a93478a3d74095d1fb6b83b",
+      "runtime:src/recon_lite_chess/autogrowth/candidate_generation.py": "ff73d80e7aeb636a38915bf955cc113b00ed310e5f56517a51aa8f2f73000221",
+      "runtime:src/recon_lite_chess/autogrowth/child_boundary_active_learning_shadow_stress.py": "c5526f4c9529ff034867c093f418cffcbbe0c87cceba558b1eb56d9b1bb3e498",
+      "runtime:src/recon_lite_chess/autogrowth/child_boundary_coverage_scale_shadow_stability.py": "069d66de6b05254702e78c2159b963d7ab474d4aba73c07591db6ccd4804faef",
+      "runtime:src/recon_lite_chess/autogrowth/child_consensus_runtime_policy.py": "605cd7386a8d03e795d90ab5ae34c93802eb8ba73855b6d9c4184731901f2fd9",
+      "runtime:src/recon_lite_chess/autogrowth/child_foundation_basin_coverage.py": "76cf3745aeee9c97b7df6008652af7617135489fca5267d34e7d816f8ab0954f",
+      "runtime:src/recon_lite_chess/autogrowth/clean_edge_fence_stage.py": "6de8b63c9d1668103fcd8a26383cd2943abbc56c957867c71aa0a3c687c74b9c",
+      "runtime:src/recon_lite_chess/autogrowth/clean_slate_full_curriculum.py": "94df56262d91083157267e5511ae8708cf9e4a28eb507e3cf97bb8121a7f7be4",
+      "runtime:src/recon_lite_chess/autogrowth/context_gated_curriculum.py": "30a058f3d60b12bffc437a951f05fab4bf5a115b286b20d80a58ff84c196f8b9",
+      "runtime:src/recon_lite_chess/autogrowth/context_gated_edge_fence_validation.py": "c89c5afe3286ea9e0f942f11fea3d43381ce5bcaf7856142c89e535a95de1756",
+      "runtime:src/recon_lite_chess/autogrowth/continuation_candidate_ecology_materialization.py": "40907805e1a67574605d46b17e2948d9674a267cd30bbbed1d6832533ef3521b",
+      "runtime:src/recon_lite_chess/autogrowth/continuation_candidate_retrieval_repair.py": "c747aa8b2caa240c6b356c22dee798758fe75a6faf3944146a66aa53efdc422f",
+      "runtime:src/recon_lite_chess/autogrowth/continuation_evidence_materialization.py": "decd4e0e515baa536927d13d628cca126c51291ddd0b496c8296aa25fbcaeadf",
+      "runtime:src/recon_lite_chess/autogrowth/continuation_retry.py": "f616bfe82a1587abe0ded10219098ac5c5add6b65818be110ae1f32f811a5eda",
+      "runtime:src/recon_lite_chess/autogrowth/continuous_handoff_attention.py": "6cab07eaeb1baa0b563e9a11c85cc86eec3228b7e4ecb5a3804ba5c8d1227778",
+      "runtime:src/recon_lite_chess/autogrowth/controlled_mixed_frontier_edge_curriculum.py": "bbf97d717ff5e9c6c5a26f56c84dc849af0e2b8fc87408524cf7c7694dd38df2",
+      "runtime:src/recon_lite_chess/autogrowth/curated_replay_curriculum.py": "b8f3a15357c20f77c572cbc8b9860aa61b99bae5520244e0b063a9c610d3bda8",
+      "runtime:src/recon_lite_chess/autogrowth/curated_stockfish_validation.py": "404acf3cf045972492daa1bf04d0a6185be3fe33515ea372f9e1921361103c1c",
+      "runtime:src/recon_lite_chess/autogrowth/curated_terminal_curriculum.py": "38ae47a9b41419af31125f8f809f15dd4e2d2e9f32d306b65dd51e3acc72e2b6",
+      "runtime:src/recon_lite_chess/autogrowth/curriculum_reward_recovery.py": "82a107326dcd3df75a037795be4692783e9b6734565cf8b928d0ffa911603c3c",
+      "runtime:src/recon_lite_chess/autogrowth/d3c3_trajectory_evidence_repair.py": "b8fa40dbf65ab1fffb1306d24c5799b7d500fee74164f95265625f4fa50e7697",
+      "runtime:src/recon_lite_chess/autogrowth/default_off_canary_runtime_campaign.py": "d1c3a0ea72f52aa054495d13648721e7a78d6a84a69c44521d48c0a61dcd6c2a",
+      "runtime:src/recon_lite_chess/autogrowth/deterministic_native_activation_closure.py": "123eb72b6bf5fbe20ec02c0fcbbe78cb179572aaa6991063c32a22da45ad3381",
+      "runtime:src/recon_lite_chess/autogrowth/edge_fence_curriculum.py": "fe467d3fae09c762da357d0e54ae33f33c530535d526e4febdccbeb54039c1fb",
+      "runtime:src/recon_lite_chess/autogrowth/edge_killbox_curriculum.py": "eaf83faa0a2c9f0b40f3c8c5bbea01261f37448202c0f111901f3490b93c4c73",
+      "runtime:src/recon_lite_chess/autogrowth/evaluate.py": "635aaf49e5855c25e1f67e3957fa310e2baab68bedfee5c9b6b5b1dd55d9c2cf",
+      "runtime:src/recon_lite_chess/autogrowth/experiment.py": "6fa5561dfd2920ad5ee5f5218f70f341894764d2603e85bf7b805bb80130b6ac",
+      "runtime:src/recon_lite_chess/autogrowth/experimental_child_runtime_ab.py": "f29c7e735f57e7f9d7769760b60b4f047acef79888559064331fc56a4d6994bf",
+      "runtime:src/recon_lite_chess/autogrowth/feature_flagged_child_consensus_runtime_canary.py": "a4b37d46c62afe3f3a7903771e49559567a6ba2d102b77196d542cdc7bcf8910",
+      "runtime:src/recon_lite_chess/autogrowth/features.py": "892b7d693e39f3d19d2c08733bd1a733b0dd6476d3cbb3b362e7f15b19f45cf0",
+      "runtime:src/recon_lite_chess/autogrowth/fence_boundary_rehearsal.py": "f97bba749856b3d877e5dd48c87599b4f44634925112e08d22dcd227285a2f3a",
+      "runtime:src/recon_lite_chess/autogrowth/fence_boundary_signal.py": "a7badd0e92916b94f115bdb92fd10380d8792bb94ca1b662c026b7cb013c0a2a",
+      "runtime:src/recon_lite_chess/autogrowth/forced_chain_decomposition.py": "d51ac8300d26033b03645f91c21770a6e53f12fc928c0bbe6824cf0cb9d0f369",
+      "runtime:src/recon_lite_chess/autogrowth/foundation_backed_bridge_frontier.py": "ed30a217b2686c7e73dd850585d9fca21093ec8a5b742522d02cd4e48f3d6b7e",
+      "runtime:src/recon_lite_chess/autogrowth/foundation_curriculum.py": "e658ecadab5ad98a698e8fd5d7b7134682c49fad0d4546e7ed2913eac3a7be55",
+      "runtime:src/recon_lite_chess/autogrowth/fragment_chain_curriculum.py": "28f149163a798ed55524315d586b1c4d6cf8b29d5d7ab56d9efe30bf26d88d16",
+      "runtime:src/recon_lite_chess/autogrowth/frozen_foundation_bridge_pressure.py": "3b9f4b9fb1093976f8fff430223f98bbb655ac135b524abed73915765c5e4f3a",
+      "runtime:src/recon_lite_chess/autogrowth/frozen_foundation_edge_fence_reentry.py": "2e93c37b1c51bfeb76d092819d383a6e453f5acefa89d888a6b8e31f27fa11a5",
+      "runtime:src/recon_lite_chess/autogrowth/frozen_foundation_response_cache_bridge_retrieval.py": "95cf5873dc748ce2ada4472f4e42641fce3d8d5369dceecef9673408d7c45c58",
+      "runtime:src/recon_lite_chess/autogrowth/full_foundation_frontier_pool_resume.py": "268452e58be2ba92677fc765ccbf0a7a41295634fa8dcd30e412900d58567e2c",
+      "runtime:src/recon_lite_chess/autogrowth/full_frontier_validation_near_miss.py": "85f104e693638e6109c33f5443ebe22c9d486eedfdf498599f55f4ceec20ec61",
+      "runtime:src/recon_lite_chess/autogrowth/handoff_filter_validation.py": "7bd7ba6f3bdb85bea9972e6a03b76b454cca8c74414bae647060687dac33e1c0",
+      "runtime:src/recon_lite_chess/autogrowth/handoff_reachability_audit.py": "3d18f63f3c68f556c204e362605897ba5f02cc3314299d1cccb68699c71f11cf",
+      "runtime:src/recon_lite_chess/autogrowth/horizon_limited_continuation_repair.py": "4a3c1211a69d305ed18c2ed05403f1bd75d864e39b1dee7c8ac4b25054b1af80",
+      "runtime:src/recon_lite_chess/autogrowth/internal_handoff_affordance_guard_audit.py": "68cd4beb0217aca7d6d3fd3d80d67c49cfab6d93ae18c8571b772dc6075f3035",
+      "runtime:src/recon_lite_chess/autogrowth/intrinsic_krk_credit.py": "13ef097363fc0cc8a5c0772a7ff7eb3b539021733642259526c1ac711f7e569f",
+      "runtime:src/recon_lite_chess/autogrowth/krk_preregistered_closure.py": "41b5b383e3d87367ace6fb42fe097f7c51f9ece8fcb752eb1ae238859d4df0e5",
+      "runtime:src/recon_lite_chess/autogrowth/lag_terminals.py": "cd4ed0cba2a18dc688a97ae0fd219d3ad3e0b7309e140e400caa66007a9f3882",
+      "runtime:src/recon_lite_chess/autogrowth/live_chain_sufficiency_basin_boundary_audit.py": "746ff4b3c91587d54eb0974609772e914a5884dc4d8393ac9fc3458f6977b4e5",
+      "runtime:src/recon_lite_chess/autogrowth/m4_foundation_consolidation.py": "571d001cf6beded827f1f0a4717b3f205ac69e55d9bbc5c028e989e2083b55e8",
+      "runtime:src/recon_lite_chess/autogrowth/mate2_foundation_repair.py": "b77412958d4c64c01022b55a67d12a5f8ff58c7648ba39b86e33c8a9b3b210c8",
+      "runtime:src/recon_lite_chess/autogrowth/mature_candidate_post_selection_sufficiency_audit.py": "e7251ca8439d765fbdab03ef1ca06ee4f8c9d457c09ae30e59d4446df0d00f5f",
+      "runtime:src/recon_lite_chess/autogrowth/measurement_integrity.py": "550a02769c85ebc9625c579b7a32e28b656e3f196fa509d2e7a6bd018cd99d46",
+      "runtime:src/recon_lite_chess/autogrowth/mining.py": "c471e318d1e159f0dc728d02839d455aa7b5758438ac66f8706ce2e3f62e745d",
+      "runtime:src/recon_lite_chess/autogrowth/native_authority_handover.py": "b65fc61f05f1ecda992e44e5baa1e98daeec53495573c0a5b6ec24b3fc68f445",
+      "runtime:src/recon_lite_chess/autogrowth/native_authority_lab.py": "c53dc184a5469ccc53d872b2d21b477446d44543a57c1b50c4e14fedaf5b5047",
+      "runtime:src/recon_lite_chess/autogrowth/native_child_availability.py": "c3739bdd5d9cc1b4f8bf1774027d9501dc0f68b234214f30a66a9478ec26936a",
+      "runtime:src/recon_lite_chess/autogrowth/native_child_availability_diagnostic.py": "ea14b17b2a7f40e173ac25a0f0a5f95c1c41928d6e197b883d70dcaa9c320026",
+      "runtime:src/recon_lite_chess/autogrowth/native_competence_envelope.py": "0452da3fbe15138696280728547c03d0ad5a09d7b88fdbd0b75e60c0eac3e1ca",
+      "runtime:src/recon_lite_chess/autogrowth/native_competence_envelope_experiment.py": "730a969d70c5c6fe66fa3e42facebed0de37d32f12045122db136dd5aa58410a",
+      "runtime:src/recon_lite_chess/autogrowth/native_competence_envelope_formal_or_corrected_replication.py": "c6784f6bd7b7897dc3f91702f81c1a6216ab641f6dde4f6dd856dc77630e8f9e",
+      "runtime:src/recon_lite_chess/autogrowth/native_competence_envelope_v2_training.py": "b2f499131b7628faa1211273c298070c693e94f767a59c9ae7510019e67e9341",
+      "runtime:src/recon_lite_chess/autogrowth/native_competence_envelope_v3_training.py": "1df46e7ccb64d9c8aa2b16207fe1710a8a5d430439578835a3507693fe9fa3ac",
+      "runtime:src/recon_lite_chess/autogrowth/native_competence_envelope_v3b_seed_robustness.py": "b355c0a4198cb11ea8e91d0bf8f6a1c39b5b3468565981fea7632f315e503746",
+      "runtime:src/recon_lite_chess/autogrowth/native_competence_envelope_v3c_heldout.py": "fae1824c4930dcce0fcc1193015cb0cf74d4e0b88799c80c81f02e83f81c168c",
+      "runtime:src/recon_lite_chess/autogrowth/native_contradiction_specialization.py": "e8a251c876a13d748842aa9996da5c0273dd8b95255a33cdd69af5b0159d60b2",
+      "runtime:src/recon_lite_chess/autogrowth/native_foundation_generalization.py": "24e5242788f82a3d1322c2312378dd94db0e23bf1457853de068bde795884645",
+      "runtime:src/recon_lite_chess/autogrowth/native_foundation_scale_replay.py": "9d97847ff4211fe751fbe2ea90cb6b1fbb6f3afd38c0500d2fe250671f5601d9",
+      "runtime:src/recon_lite_chess/autogrowth/native_frame_purity_authority_canary.py": "8f22388b50a7da560f9ef1fe9a1e93ea853558f25a33735292278144ba1c49f3",
+      "runtime:src/recon_lite_chess/autogrowth/native_intrinsic_curriculum.py": "be1405f7515b2d13bfc0216664428b44ae0f239da74646dec36384880a1044d5",
+      "runtime:src/recon_lite_chess/autogrowth/native_mature_cell_falsification.py": "bb9f1fdb054940030599f3043c97bce004378166ad632ebb61a5036043951ed5",
+      "runtime:src/recon_lite_chess/autogrowth/native_mature_envelope_authority_addendum.py": "bd7fe9a739f563dab2004c30c4b0a053721419388970a9a166a799d8df76499b",
+      "runtime:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority.py": "d6ce5d33f0dc28346292dcef31a887d731b789a4a909d11b873a5e24d531a494",
+      "runtime:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py": "25945864fd998caf22ae12cbcb9bcb4779447337c0079f705640c63d2356f029",
+      "runtime:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2_lab.py": "f3aee5cccf761af1cb6a5de94b886d5e758c0a07cb0f6d77b8898f662ca73b58",
+      "runtime:src/recon_lite_chess/autogrowth/native_prospective_evidence_package.py": "7396ca132898448c825111d3e4a33b7c8848f9dcd92c3600f9a3c9371ed8a7c9",
+      "runtime:src/recon_lite_chess/autogrowth/native_prospective_evidence_v2_science.py": "dd7915db39355190b357611de01afd36246f1da0223c968075364c491255a6b4",
+      "runtime:src/recon_lite_chess/autogrowth/native_quorum_mate2_chaining.py": "38641e9c3ae6eee98ad805b22c2d8615468a154650c77b97f36bf2d6cd21634a",
+      "runtime:src/recon_lite_chess/autogrowth/native_quorum_materialization.py": "756f3ac4ee5f2ceafb469654e902ffaf5a63279686453358b21ce5920a4c3311",
+      "runtime:src/recon_lite_chess/autogrowth/native_scheduler_replay_audit.py": "94342383de19e996ff76642f35a37377e9789012ba539d0e116f112f41a7d58a",
+      "runtime:src/recon_lite_chess/autogrowth/native_single_graph_curriculum.py": "1b7554b33abffb27d6d6ba6dc2d89f45442872609754720cf39ce6b6023785b1",
+      "runtime:src/recon_lite_chess/autogrowth/native_terminal_trace_authority_closure.py": "a32d03d57db068a29f524d0243f5fa6d4e425c8c517970f132f00e1cae0d6d17",
+      "runtime:src/recon_lite_chess/autogrowth/native_terminal_trace_historical_regression.py": "558311827703b4726bfea38daa1a96d84b81bad1cc46a1d63961bc05d16a255d",
+      "runtime:src/recon_lite_chess/autogrowth/native_trace_competence_authority.py": "18fe12e2e6bdfa6ff163067caac6e00b76918cb93af9e7f41be62fbff9fc2183",
+      "runtime:src/recon_lite_chess/autogrowth/native_v2_atomic_snapshot_graph.py": "d2516068af30ea59b5c544286c677b7dbcc267d540f89ea35e5edb3a6f14aa68",
+      "runtime:src/recon_lite_chess/autogrowth/native_v2_atomic_snapshot_harness.py": "8611853ca56c2dab3e2a44ebad18997f9d9d55578627acbaff6e727a578fd894",
+      "runtime:src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator.py": "2bc7413df95ee910bf18eb465ffdc111fdf9fb1f64a75e452cdd5ae848871036",
+      "runtime:src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py": "75cfd4221c05665259e17c7dcc3bc2a3ebff9b53e6b0868bb019246742bfaeae",
+      "runtime:src/recon_lite_chess/autogrowth/online_failure_decomposition.py": "1bbea443629846ca2ceb0f05058c6e9da4545a203dcac04957327dd4639b4c56",
+      "runtime:src/recon_lite_chess/autogrowth/online_low_progress_repair.py": "f4686492c2351f5d85ccad5988fd743e26502b622b21ac687c95d9d1a03fcb58",
+      "runtime:src/recon_lite_chess/autogrowth/paired_child_consensus_canary_stress.py": "27c54bb95038fb7756a3cec79c2d4fb32442c8dcea6a70183f959ef41a383a85",
+      "runtime:src/recon_lite_chess/autogrowth/persisted_foundation_backed_frontier_pool.py": "e5651fef60e014c86c9d5f966f67c091e4b5f773ca0da9ffbcdea31b09c3f8fa",
+      "runtime:src/recon_lite_chess/autogrowth/persisted_pool_validation.py": "39b34747db79839756a644cc6a2f62a543b04a2b2a982224835eb843672f6c68",
+      "runtime:src/recon_lite_chess/autogrowth/persisted_staged_predecessor_pool.py": "38521e2bf4123c1d40a36ae231ad580aeff6bd038b16085a8a145d75bb4e3873",
+      "runtime:src/recon_lite_chess/autogrowth/persistent_staged_ladder.py": "4822c302ceb3a498c9bf90c0f110c02fe4a994c08c2adb92c26e949cc455b74e",
+      "runtime:src/recon_lite_chess/autogrowth/positions.py": "1960aedcbc8a3db72a913724c891ee1ef9e3947992ecbf708441182db073f1b3",
+      "runtime:src/recon_lite_chess/autogrowth/post_trajectory_second_move_handoff_audit.py": "99f209a87dd8e153bbf7c9f283bc582caf1c1a6345d8983ab222c1a701940059",
+      "runtime:src/recon_lite_chess/autogrowth/precision_gate.py": "f284ec07ac1545abfbb73bf65bbc550ed11678204b3e3ccdc26348918de9bec8",
+      "runtime:src/recon_lite_chess/autogrowth/progress_candidate_selection_repair.py": "7df033621e2254679c8ef46f3b4d45becfcc7d9bfcce62dc92a4eb7ce8684993",
+      "runtime:src/recon_lite_chess/autogrowth/quorum_basin.py": "593e92e14474d113a5330438d64af328bea07d9eac7e3a09eeee08aa7f797267",
+      "runtime:src/recon_lite_chess/autogrowth/real_clean_slate_foundation.py": "44d1244c6d68bdd4f6ec115d5b885d0863c2cda7593c4b3ed03e917de28a1ea9",
+      "runtime:src/recon_lite_chess/autogrowth/real_context_runtime_trajectory_validation.py": "0e7f7b010047e0c5c0cf961315a4653d30bf01d4400fc386968ae92ef2421005",
+      "runtime:src/recon_lite_chess/autogrowth/reply_robust_bridge_pressure.py": "b3d66722709d005eb702b138b4867c9a26adb3613a9d44a883f91b37d303e910",
+      "runtime:src/recon_lite_chess/autogrowth/reply_robust_mature_followup_repair.py": "c4c76de953f7a09ab2332b93c887db16cc79c2a45f984fad59a2123e031250ce",
+      "runtime:src/recon_lite_chess/autogrowth/reply_robust_progress_pool.py": "2df53d71d540322426332db3378430fced10354be0ceff40a6a985fc399173e5",
+      "runtime:src/recon_lite_chess/autogrowth/retry_candidate_expansion.py": "83f7ab324e170be09734088003263bc48628771840bd05766d278e8ae9d6451f",
+      "runtime:src/recon_lite_chess/autogrowth/retry_diagnostics.py": "59cea54f8535c8651c1fc8f3d515057de993979110ca0e4d05029f8982fc0ec1",
+      "runtime:src/recon_lite_chess/autogrowth/retry_edges.py": "076c3639e95be5c043705f92424301d74cd4963dd16f15441f1e0fc03ee934cf",
+      "runtime:src/recon_lite_chess/autogrowth/runtime_stage_gate_campaign.py": "4de93830e82bdca747a54c0e078f3577400e15a46552eb52346474001761c28e",
+      "runtime:src/recon_lite_chess/autogrowth/runtime_trajectory_repair_integration.py": "4f8cd51604ea2632b81ff9bef9c9afeef12bea3c4e04d033b1d6c7340c8850ae",
+      "runtime:src/recon_lite_chess/autogrowth/s1_full_reply_cache_online_recheck.py": "83eab6fd85421e74d598ad81fe5a10ed0df7efa29458afa805dee51bc0be8123",
+      "runtime:src/recon_lite_chess/autogrowth/s1_full_reply_handoff_validation.py": "332d680a21154713aba6a6867fc838387c996a90c207ae3d193b2a486cb6c6eb",
+      "runtime:src/recon_lite_chess/autogrowth/sandbox.py": "959a3f7d24adb58c79954bb3ba9da7bc45a2961cdbcdb28311f94534b1962f53",
+      "runtime:src/recon_lite_chess/autogrowth/script_candidates.py": "16e86ba94bbcbe08a4870b2f1623ec4aa63e342e486d19df87126c09a718c83d",
+      "runtime:src/recon_lite_chess/autogrowth/script_fragments.py": "3850e8583cc369459c1a1490c4e30bb634e7d5d05dc21f11ba2caa5cd0f9a081",
+      "runtime:src/recon_lite_chess/autogrowth/shared_atom_utility_voting.py": "722184110a9f723168c80a08cb703182e50e819ac2b0b0c5330d21f3e1e0dbf8",
+      "runtime:src/recon_lite_chess/autogrowth/shared_feature_atoms.py": "978612f7c251b56fe0a30affa062ee295ba164d5847d860d85ca6bf8caa19782",
+      "runtime:src/recon_lite_chess/autogrowth/single_graph_curriculum.py": "c713782cbe176f1280927eb38e5029f321dd3b76886acc84f8b45a3f6fb36d13",
+      "runtime:src/recon_lite_chess/autogrowth/single_miss_repair.py": "d60d4a8989fb5fc76a16c487a041c252cf7e59acaa801ed3e99b2dfeff363817",
+      "runtime:src/recon_lite_chess/autogrowth/stable_trajectory_cache_selection_microprobe.py": "169d914563efc84c1279f7ca6917a4cb6e299eee786fa9a6c7a974a4b0a3d77a",
+      "runtime:src/recon_lite_chess/autogrowth/stage_b_ecological_discovery_probe.py": "0f21ae0cd72154416170a5ce53a6affa4e188a21d6151d8b72cbaaec27d6d469",
+      "runtime:src/recon_lite_chess/autogrowth/staged_edge_bridge_foundation_rollout.py": "72f124a6c4b5fe762a13fc2126245654cc4f6862c1e57217d9a8bec5ec8df9dd",
+      "runtime:src/recon_lite_chess/autogrowth/staged_near_miss_ablation_restoration.py": "bce2ef2b7c1d2495b4be473b543472ee1e08cd7db6ea1f6eb8366496f69d4df6",
+      "runtime:src/recon_lite_chess/autogrowth/staged_pool_integrity_modest_scale.py": "14718cd354f10039f13ac4beba151e03a440f4287f1514350fca6eb92d5503f9",
+      "runtime:src/recon_lite_chess/autogrowth/suppressor.py": "0ae4c05ac22c48bbe01c58c83c576b2ebcbd39e5fd33b315eff1274358fe6165",
+      "runtime:src/recon_lite_chess/autogrowth/terminal_edge_fence_validation.py": "f2529f8040cd1b6bcd2aa03bbe6699754e10d24033f8e58c7ab677b789658349",
+      "runtime:src/recon_lite_chess/autogrowth/terminal_lifecycle.py": "23e24cdc81cab5413672a999045c9b287dbdc31cd5f08f8d364737925ce42c16",
+      "runtime:src/recon_lite_chess/autogrowth/terminal_lifecycle_modest_scale.py": "95f1d99c69bc4de8fae6edc95890b69b4384629ef21f80b47726d9b502ea5419",
+      "runtime:src/recon_lite_chess/autogrowth/terminal_substrate.py": "c145b66d63711a98bafa7f6e7cf487155bd856df406ad6d466c9703fc9ed7b25",
+      "runtime:src/recon_lite_chess/autogrowth/tg48a2_same_side_diagnostic.py": "a433a912f73679164d05651a4238ce13f3b8343d9ba30c0309269ef639a407bd",
+      "runtime:src/recon_lite_chess/autogrowth/tg48a2_same_side_episode_training.py": "7b1a73908153d75fc9cdb0e41c53103f587219b857fd568ca92931804d0b263c",
+      "runtime:src/recon_lite_chess/autogrowth/tg48a2_same_side_microstage.py": "ff275518d1f25df98883a5a1bb275017c1a0514634dc2476a7a9618fc95889da",
+      "runtime:src/recon_lite_chess/autogrowth/tight_followup_success_basin_coverage.py": "8dba06cfccede83616df79aca1b068042a01ccaf42ab0150545001923093783d",
+      "runtime:src/recon_lite_chess/autogrowth/tiny_online_krk_episode_runner.py": "ac0e4c2bf0c3b63823e41dbfa14c198c2756c4c4f60eb404ce06fc388ac41643",
+      "runtime:src/recon_lite_chess/autogrowth/topological_growth.py": "e1cfd7b87a32a88159198577c0e5414f51cdf7a8def806a7703ddb99d0a0f1e1",
+      "runtime:src/recon_lite_chess/autogrowth/traces.py": "50edf2fada269dd485d2b7eeaf550a893eb9280f749e58d9244ac0775f1a5fac",
+      "runtime:src/recon_lite_chess/autogrowth/training.py": "a10b8820c08864ff24773db2cdbbf0a29b8e5073cf9fa15bc1662e2ed840e978",
+      "runtime:src/recon_lite_chess/autogrowth/trajectory_positive_prefix_audit.py": "b2753070498cf5828a1aa60522599710687a9f29471149bc520f64f464f056fd",
+      "runtime:src/recon_lite_chess/autogrowth/validated_basin_acceptance.py": "3a584aa569287efd76c108df2e08c5aeb8a4598cfe7bfae0913a5c675b4b1147",
+      "runtime:src/recon_lite_chess/autogrowth/validated_reachability_expansion.py": "b44de0a6d8b300a2d13d6164bbd73a5f82eb5beb0ca1c8b063b1b6d07fd6a40a",
+      "runtime:src/recon_lite_chess/baseline_teacher.py": "b348835e4c678555a4d2b28c704245749fcdc9c11b58d43165e7127e98f1ecf9",
+      "runtime:src/recon_lite_chess/endgame_utils.py": "755e324d7aeaa9a0b8decb842586516a3c75ae6c133ad69eb016fa6d538f19f0",
+      "runtime:src/recon_lite_chess/eval/__init__.py": "1862a09f374aad148ed613ab7f6413f7daa11ea0ee08281a599d1b5c4e0a21d3",
+      "runtime:src/recon_lite_chess/eval/distill.py": "2bee2a5f84ddeab22797104997e4582abdb9312861ffb69465a0447be334478b",
+      "runtime:src/recon_lite_chess/eval/features.py": "d6f99828cf306f3f4b4ac65fc3d9a88b37961a1efe5901af6a7cf03ef6e23da2",
+      "runtime:src/recon_lite_chess/eval/heuristic.py": "e1d1cd49acc841586568af2fe209eb2ea2e71a84d28b6097661c7e3428cd742d",
+      "runtime:src/recon_lite_chess/eval/manager.py": "da8e6a745b3f773a9f48fe7a19b5d0008a0a241cae4d0e67c22992eb07a7e121",
+      "runtime:src/recon_lite_chess/features/__init__.py": "3c01c65f91fb5c39c7fe682c4a1d8e31fcdf827f1263d04b8aacbcfad17355b6",
+      "runtime:src/recon_lite_chess/features/hub.py": "4357a59a11ae3034d019c835ab15db535b5610aca25f417ae7d1c5d5dc28f960",
+      "runtime:src/recon_lite_chess/features/integration.py": "911e5388a8b5eeb128b56a36d9042db8e94afca2885116426783fc8e8b53f33d",
+      "runtime:src/recon_lite_chess/features/kpk_features.py": "c950aa6d70c7a1e75a7851d54487f5ff5d34f2d7beba43d7ba461825cc799095",
+      "runtime:src/recon_lite_chess/features/krk_features.py": "a3135b0c0b2686c328b792b4c0a232394e8de1a8eeab3c18e9d66c8e541ab023",
+      "runtime:src/recon_lite_chess/features/sensors_v2.py": "ddad72cf2a29dd687f104a5e24310a068aa3341e1b066385286865f04b991de0",
+      "runtime:src/recon_lite_chess/goal_actuators.py": "89bb54d12045736a8cdd2fcd92a76c2d3de820cd66b0df7d288e2505d28c5b63",
+      "runtime:src/recon_lite_chess/goals/__init__.py": "6d185bbab979b42881b806561fe5b4a86eb2b589d078d85c0bf15aba99077d99",
+      "runtime:src/recon_lite_chess/goals/strategic.py": "4f3512cd9942d594910a68f7b35f09d23273f98daa4081e846908591eb64b51f",
+      "runtime:src/recon_lite_chess/goals/ultimate.py": "99e94632c1173e3c4bfa46a009bbf46daa7f57ac53f3ee1ce9fbe11c8e876242",
+      "runtime:src/recon_lite_chess/graph/SUBGRAPH_INTEGRATION.md": "4b64049e0c6200d7c2f04ea428c74cf1524f815c54bed640aa4b78a378649071",
+      "runtime:src/recon_lite_chess/graph/__init__.py": "fc298ac30c5e6c0eea342718593e5a5540d0a28a7531d1921b6b615309cf5db3",
+      "runtime:src/recon_lite_chess/graph/builder.py": "bbc7649e180426a1019f7f1105f342894e1dfd355e783ad03cb62e48cb46455e",
+      "runtime:src/recon_lite_chess/graph/subgraph_gates.py": "d539839c7f4cd0ccc33e8a4c5d27705cc61bea12f77c5d6c4e783b0114b738cf",
+      "runtime:src/recon_lite_chess/graph/unified_builder.py": "ab9bacc897803b763eca632975585a4be397c9fbd1c010fe3a2796c5b7ca6445",
+      "runtime:src/recon_lite_chess/krk_baseline_nodes.py": "1ce66b0bb6fafc97d9a5a46f032408c3a2225b6804d09dab9edcaa0f73f74c00",
+      "runtime:src/recon_lite_chess/krk_checkmate_actuator.py": "360dc506b3aebd92c559cd5b344791ca77189b8bb86bee57e970a510542b7497",
+      "runtime:src/recon_lite_chess/krk_integration.py": "b621af0b43ba4a41141675ec3537ce4dd13130b3dd18c3ee1cd308b079ea143a",
+      "runtime:src/recon_lite_chess/krk_nodes.py": "aa0de59c7af38c4d14f76e2f99e8cf2af54fa4aca9dd948fba9daf6b9189824b",
+      "runtime:src/recon_lite_chess/krk_strategy.py": "07debce8e99ebde5f10b37911b5e04c24c5c8efb397ab280824541a9404941e5",
+      "runtime:src/recon_lite_chess/patterns/__init__.py": "3333143d23c4d00f6abeefed6c3890958795a635bc382c3d444dc1b992a626ae",
+      "runtime:src/recon_lite_chess/patterns/auto_detectors.py": "48c05341d182489cb504695ef8596971f003252f5665ba35536ceb74cc9fed06",
+      "runtime:src/recon_lite_chess/patterns/boosting.py": "81f5dc9febf34c2f1c2095939aff1b1b6bbe4871352a3344a64ef586a4c37b49",
+      "runtime:src/recon_lite_chess/patterns/embeddings.py": "28931f53866c35c3f30993c8d79ab279c1f0ca3a3c6df1fb0cf3e280ab1e1a1b",
+      "runtime:src/recon_lite_chess/patterns/memory.py": "25c9cba895c2d3ef5a18a15f74323d6d6183847bd6c8b31d8095dd5d3727b24d",
+      "runtime:src/recon_lite_chess/predicates.py": "4cfd91d99180b4189d13ae76a5c5981798f6c61a44bdd6b1c1fa9d96c900d8a6",
+      "runtime:src/recon_lite_chess/routing/__init__.py": "d12e6db06cf7e9b96e8ad1135ecdb419d1cab6ceb7df20e3559c117c476786ef",
+      "runtime:src/recon_lite_chess/routing/contracts.py": "7b8d5c3bfc5bc12b2bef96ed285c0387baa25fbaba39a61e66bf1ddc95d3cde1",
+      "runtime:src/recon_lite_chess/routing/handoff_analysis.py": "002369adb38c9e9b86a993640e81eb79a9810002128e91cfd55db1c6017723d7",
+      "runtime:src/recon_lite_chess/routing/shadow_queue.py": "327b0f5f94548a865535dfc9f9e18fde82f2e187f5bc66812b44de256eb33377",
+      "runtime:src/recon_lite_chess/scripts/__init__.py": "c03b11616008f1dbb0f2bd07d4a82b4874b2155e24c39788299b6ee029a86431",
+      "runtime:src/recon_lite_chess/scripts/endgame_gate.py": "a567233cb2e5a15ccc8d16440a023080f32c6e2e78d700fff68d74fc29614b76",
+      "runtime:src/recon_lite_chess/scripts/kpk.py": "e5a59d5b079fc8b6f93c1303d57116140da45652502ec6310f4bbe56478c893c",
+      "runtime:src/recon_lite_chess/scripts/kqk.py": "f99d8f14e569c3d6f73e14c51dc5520c314da0831994d20f3703d66b662e2ce7",
+      "runtime:src/recon_lite_chess/scripts/middlegame.py": "1640c4bf1a0c3a71b4410975c9c287b5dac651c5e981d1a236ff48c73fa33a77",
+      "runtime:src/recon_lite_chess/scripts/opening.py": "ef6fc7ed503f9a1500e698056130367a350f8375209c6412f4736cb80924e564",
+      "runtime:src/recon_lite_chess/scripts/rook_endgame.py": "c5100955bb0799f169f9018616ceefab8c233e9d9ecbf34c3a12cae32fb8bc13",
+      "runtime:src/recon_lite_chess/scripts/rook_endings.py": "3c64b61dfb9ae9f58a4d8805e7ef23ca55c26c8809ce2004d66bff7dc25d34f2",
+      "runtime:src/recon_lite_chess/scripts/stalemate_detector.py": "5a4fc42c60d3e037b86bbbdf5ec506026554eb41737517dc997199228ef74b97",
+      "runtime:src/recon_lite_chess/scripts/strategy_actuator.py": "bfd19d9415d6701d5d1a8cae8437bdf81f367b17d47c41bbb75d7f2b94043210",
+      "runtime:src/recon_lite_chess/scripts/tactics.py": "e6f826563c31a12f0970c2ee263296fceb13324eb2f5268eb2b35ddd35c314e1",
+      "runtime:src/recon_lite_chess/sensors/__init__.py": "f967fe490d9405938d2e88da5d851a761583d6ef6152b002653fd16fb87c27bd",
+      "runtime:src/recon_lite_chess/sensors/material.py": "b6651e329e7a7d28a6ee59a4fca148c5ebdac3f0d44b46e77f1f85d1ddd6cb95",
+      "runtime:src/recon_lite_chess/sensors/phase.py": "cf0f4db7dadacddf743e9fcdf042162aa83f0c20c707caeef233e6404f6543f6",
+      "runtime:src/recon_lite_chess/sensors/positional.py": "819114d71cbac1b5d2074676c5ad26b67b4ca68abfaceb652ac9a86c3f7af6af",
+      "runtime:src/recon_lite_chess/sensors/structure.py": "897d42b5de3d03e56fdab33188d52e27d6165e12e50a56803453186bc125a3d6",
+      "runtime:src/recon_lite_chess/sensors/tactics.py": "3edd7517b323e65b66c60b5aa6562e8f1630d2933f945db75e5030fb66a38249",
+      "runtime:src/recon_lite_chess/spawn_point.py": "8dbc93962953f040099afcaf2e08ea328da853cf750bcd980df8fd6e09ef98ec",
+      "runtime:src/recon_lite_chess/strategy/__init__.py": "3d33e62cfca4b63c5e2b7443ebf278166304ec9a6372612f18dcc5e3cbb4dd27",
+      "runtime:src/recon_lite_chess/strategy/move_generators.py": "57d570f63acbfd6dcd2cd34d1a54b73cdd4d191a577aa99d7de467b6fa49c7db",
+      "runtime:src/recon_lite_chess/strategy_layer/__init__.py": "1fd6b63dfb5360d02b5865999a07320a0ec70cce0713b3d2a5b2924184fe9ed8",
+      "runtime:src/recon_lite_chess/strategy_layer/move_generators.py": "57d570f63acbfd6dcd2cd34d1a54b73cdd4d191a577aa99d7de467b6fa49c7db",
+      "runtime:src/recon_lite_chess/tactics/__init__.py": "abe94a36b263f8c52f9ec863b7e296aa809de50482ccff9d3d2889ebbd17bfe4",
+      "runtime:src/recon_lite_chess/tactics/features.py": "821c61a09236859342b413ba2933adf8d82c17507935fe5ceddf9f6857505165",
+      "runtime:src/recon_lite_chess/tactics/mlp_detector.py": "ddf1bed322a5762f456ee914f2799e3fa5a159494220d5c35cfdf87d39fa68cb",
+      "runtime:src/recon_lite_chess/training/__init__.py": "dd650126e911a4244fe46ea299f24cbc3c70903b1eb9a3a70f04ac0191c887f5",
+      "runtime:src/recon_lite_chess/training/adaptive_curriculum.py": "417f463b7d2c44ada570e9d98a3f7b08e6e89d2c439d62b5804d4dbf84b53eb8",
+      "runtime:src/recon_lite_chess/training/curriculum.py": "beea922e7544bf167855c90545e4912dd1769184d9790bee74657519160da951",
+      "runtime:src/recon_lite_chess/training/generators.py": "43be19de411c1b9a97feca396e4484c65cf29aad7bef6d2de307bfd5c32ae2fc",
+      "runtime:src/recon_lite_chess/training/krk_curriculum.py": "edba3a4211f7c8655021fb79957352d81e6d0cfb799c54292ff527037b4ef496",
+      "runtime:src/recon_lite_chess/training/krk_landmarks.py": "52db9ab2eebe9672b6d9aaf8e7e2405439630045ec5346866fdd880a24e50b4c",
+      "runtime:src/recon_lite_chess/training/rewards.py": "75abe02cfd6e30a1c822c2455027fee57c6c9d9c4ff353506981456d9b0dd89d",
+      "runtime:src/recon_lite_chess/triplets.py": "c8950d8891c2fec61e8975bdde30f2c67da78ca92f3489b80147995c79104554",
+      "runtime:src/recon_lite_hector/__init__.py": "40fd3769c3eef077f9a22af81778ccdc3442ffed55f5e3db3a9daee9d3158559",
+      "runtime:src/recon_lite_hector/benchmarks/__init__.py": "fdd029d6b9699339a8f8dd4bd14629da9c05356759bfeb77fa11a2223cdbbf8e",
+      "runtime:src/recon_lite_hector/benchmarks/intrinsic_competence_chain.py": "fc6c05d42ac0baa3aeb2fe0a806d496dc045aff69f5a319fd73bed81a55c87ad",
+      "runtime:src/recon_lite_hector/benchmarks/planted_composition.py": "e84ccc9039cbe1b9876e5e5c23997f2e0fbc9518177e96e52513cacc6bba5182",
+      "runtime:src/recon_lite_hector/dynamics/__init__.py": "a0b54e6738370cd6af0059272ed118ba70b228a110919d5c86cc6875505d8073",
+      "runtime:src/recon_lite_hector/dynamics/persistence.py": "a83dcfb13f02ff89cc2c24b2fcf614b1bfcfd7047110db94073cd69169115e10",
+      "runtime:src/recon_lite_hector/engine.py": "ee92313ca6be659a93c067be762026a5ccd9766b680d41a638cdb02bf0dae310",
+      "runtime:src/recon_lite_hector/graph.py": "524fe1b991df73a90ec5ad3e753adc7ab9fca97a2f00dd70776fb627455d3324",
+      "runtime:src/recon_lite_hector/learning/__init__.py": "245af9c5e6c355044540e63e3180b055a1308066a9b22a872fee20ebba89e217",
+      "runtime:src/recon_lite_hector/learning/baseline.py": "6879eea3f95300cbcf03ad90919c9e12c4545b6ce4d3f7dd3fe6e5ebeabd6781",
+      "runtime:src/recon_lite_hector/learning/baseline_viz.py": "49095b46889b79f483ecd46206159a899b7a9c82874416b237b35b4e4fda4b1d",
+      "runtime:src/recon_lite_hector/learning/intrinsic_credit.py": "f5aafac7f1d9cd281528cfd87bcb2869402f43d13a399fdc34022edb92d7db67",
+      "runtime:src/recon_lite_hector/learning/m5_structure.py": "0d6d4a28d950f5c5caea5484bd2a7c44b7585d6b2e6f79be3631ca735426af05",
+      "runtime:src/recon_lite_hector/learning/sweep_engine.py": "b0110ef49b21297111fb38334ff72ece09ca6ac996f3ef678750c403e7b2dc44",
+      "runtime:src/recon_lite_hector/macro_engine.py": "1f78e09f17913e5b1e7860d53cee8ebbbb5963533d91de791313637884ded66e",
+      "runtime:src/recon_lite_hector/macro_trace.py": "f77ece3559a55b5f19d12f54a375e7cdad73ce5ce4afce6a2dc950878ecfc6d5",
+      "runtime:src/recon_lite_hector/models/__init__.py": "c84bef7275240d6349e4af055b3f85cd5ca10ae282be189f25f6cf22444dd821",
+      "runtime:src/recon_lite_hector/models/registry.py": "ce5dcbaa3e2572eba04d908afbc454ea6cbc3ecfa845462e913fc9059e41fda0",
+      "runtime:src/recon_lite_hector/motifs/__init__.py": "baa3b649b80abda924bb4708a1a7747b8762a3da180a6a5d1d7e74b5151526e4",
+      "runtime:src/recon_lite_hector/motifs/descriptors.py": "2d935af3918e776e17a2d85b49024620425a0920702acb184e52872308687831",
+      "runtime:src/recon_lite_hector/motifs/extractors.py": "8c3dfa3cff6dda6e8ca9eb9610fdbe781b7c8535f0f8ee086f4d084ae93a06a2",
+      "runtime:src/recon_lite_hector/motifs/induction.py": "2bbe9a085eafe6636ac4d438764dbf3292e003c3beb8af86d19bc6529aaedb0f",
+      "runtime:src/recon_lite_hector/nodes/__init__.py": "7a02f2aa65bb422166d1cb94a4b0abe6fc811901cf7a6946a4be0b11afcef831",
+      "runtime:src/recon_lite_hector/nodes/binding_space.py": "83f981efb34ad49c7e81c542a9bf8b6566705d562005fb9353af880cf4f81627",
+      "runtime:src/recon_lite_hector/nodes/pack_template.py": "e403bea60245b128c221b45700de1081374eb9325fac0b698fd529277be206f6",
+      "runtime:src/recon_lite_hector/nodes/stem_cell.py": "cc5dee612dca639d3dcc03588b7c772db3745323d8244fdd59b48916dacd0081",
+      "runtime:src/recon_lite_hector/plasticity/__init__.py": "0b059e3b708e973f44ae4ff2bab85c1a0f6914e19921a71212924228cbde8b4c",
+      "runtime:src/recon_lite_hector/plasticity/bandit.py": "cf8c01e1e4ef5f0cf8b9c0edb0e9173eaa7eb52ecc8e38bff94e6f9d1eafbb31",
+      "runtime:src/recon_lite_hector/plasticity/consolidate.py": "7a4f1fd88986a1cbc6a6295453790a2599a8724a5b4dda3baa532728d515fdd8",
+      "runtime:src/recon_lite_hector/plasticity/fast.py": "866a05a1a6959b9503751b27c7dcf0107588258ba26678d38046bd3c2ed06fa7",
+      "runtime:src/recon_lite_hector/plasticity/modulation.py": "3cc935dce240d9f16da7698a95cc14900ecf73780aea9b47668e239033112345",
+      "runtime:src/recon_lite_hector/trace_db.py": "cd9e7f2e2c31dc738037edea85d5171f9e6242c2206990c234aaddd5b40c6921",
+      "runtime:src/recon_lite_hector/trust/__init__.py": "73273ae7b37abc8c06616015b28536ecbeb4660bb57b2da60ffc22f6c740bc2e",
+      "runtime:src/recon_lite_hector/trust/scoring.py": "917391d3e8d5058cb046ab681de1ca41e63dc140d79fd1bd511bd35b3baf919d",
+      "runtime:src/recon_lite_hector/viz/__init__.py": "1b6ae233bd6f35a8bb138b2d83ec5c092cc709feeeb82cc54e34663b0370ec54",
+      "runtime:src/recon_lite_hector/viz/evolution_viz.py": "9c3839005032f0f14229855560f838fa86e49215cfff2b148f6a9190633cb64e",
+      "runtime:src/recon_lite_hector/viz/signature_viz.py": "b6ea05c8614fc8ec3a94e42083f80717521b55060b32e0dac486a32aa5bbaa9e"
+    },
+    "launcher_package": {
+      "artifact_binding_digest": "106748944c333d2a9dab449c2bc574db5352c401b04e4888d219e6e4f2ab49ea",
+      "artifact_binding_sha256": "39165254df9f8a833058faff4681abe677eff4d04a8d6dfddbd41f8789347f50",
+      "source_manifest_digest": "457a267d8aa2a3dda8341bd1ea73963276cc22ca9807a5e1a3d9eacf1aea92e0",
+      "source_manifest_sha256": "c296034ec4b7c9d7c1e5394bc41efc256b577422a108009ae1785d8d433e04d4"
+    },
+    "module_paths": {
+      "recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2": {
+        "module": "recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2",
+        "path": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py",
+        "sha256": "75cfd4221c05665259e17c7dcc3bc2a3ebff9b53e6b0868bb019246742bfaeae"
+      },
+      "recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure": {
+        "module": "recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure",
+        "path": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_canonical_contract_reclosure.py",
+        "sha256": "009660b6031d124fd85fa7dfb2f43e382ed5a1102d6f74fdf527f01c6e2de8b9"
+      },
+      "recon_lite_chess.autogrowth.native_v2_frozen_cohort_execution_adapter_freeze": {
+        "module": "recon_lite_chess.autogrowth.native_v2_frozen_cohort_execution_adapter_freeze",
+        "path": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_execution_adapter_freeze.py",
+        "sha256": "2769811a3fe31560d2f3b2265aa661aa18c3b03b920c36c09525d5642b7c9dcb"
+      },
+      "recon_lite_chess.autogrowth.native_v2_frozen_cohort_import_path_launcher_reclosure": {
+        "module": "recon_lite_chess.autogrowth.native_v2_frozen_cohort_import_path_launcher_reclosure",
+        "path": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_import_path_launcher_reclosure.py",
+        "sha256": "2a8fd7add2726ae16a0cad3bdb55a03cc75376ece1f56545273a8398d55907d5"
+      }
+    },
+    "old_output_identity": {
+      "digest": "392fbe3a215b27538d310ecb3b595f1fcc8ab35a63899111fcec93a55e5f5905",
+      "rows": [
+        {
+          "exists": false,
+          "path": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/preoutcome_exposure_admission.json",
+          "sha256": null,
+          "size": null
+        },
+        {
+          "exists": false,
+          "path": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/execution_manifest.json",
+          "sha256": null,
+          "size": null
+        },
+        {
+          "exists": false,
+          "path": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_journal",
+          "sha256": null,
+          "size": null
+        },
+        {
+          "exists": false,
+          "path": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_carrier",
+          "sha256": null,
+          "size": null
+        },
+        {
+          "exists": false,
+          "path": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/canonical_result.json.gz",
+          "sha256": null,
+          "size": null
+        },
+        {
+          "exists": false,
+          "path": "reports/autogrowth/native_authority/v2_frozen_cohort_canonical_contract_reclosure/canonical_contract_verification.json",
+          "sha256": null,
+          "size": null
+        },
+        {
+          "exists": true,
+          "path": "reports/autogrowth/native_authority/v2_frozen_cohort_canonical_contract_reclosure/canonical_contract_verification_failure.json",
+          "sha256": "c345a35666a95d603472a01b935cd2ec4cedb8581996c8684568fb29ae0ff9c6",
+          "size": 576
+        },
+        {
+          "exists": true,
+          "path": "reports/autogrowth/native_authority/v2_frozen_cohort_import_path_launcher_reclosure/canonical_launcher_verification.json",
+          "sha256": "92cf2e099a1f860deef4c90515f6b0617d7b95af521ab1c8604baecccd7202df",
+          "size": 79565
+        },
+        {
+          "exists": false,
+          "path": "reports/autogrowth/native_authority/v2_frozen_cohort_import_path_launcher_reclosure/canonical_launcher_verification_failure.json",
+          "sha256": null,
+          "size": null
+        }
+      ]
+    },
+    "outcome_reads": 0,
+    "passing_launcher_result": {
+      "cohort_digest": "a144fe94f4479c819756dfc44b22a2594e2b9df09367d571d39ab54007560bb8",
+      "path": "reports/autogrowth/native_authority/v2_frozen_cohort_import_path_launcher_reclosure/canonical_launcher_verification.json",
+      "result_digest": "24a10043dce9894caac1db11dbb191011d92376e2e39b42f058bd53ff444e71c",
+      "sha256": "92cf2e099a1f860deef4c90515f6b0617d7b95af521ab1c8604baecccd7202df"
+    },
+    "prefix_manifest_digest": "9397f9734d42dbcfd0d614d5c30accd5253a73020b6c260f1a095db585bc642e",
+    "preflight_receipt_digest": "bfd01aa67abbbb18849f5e15f2a8b05901fdd5ad158095612f1fda8b8033ec2e",
+    "starting_head": "2916fb04f4020bc682c29474ec3b1e9cb8dbf405",
+    "target_counts": {
+      "planted": 32,
+      "selected_comparison": 30
+    },
+    "transport_checks": {
+      "compressed_snapshot_sha256": "92b8e7aa1b437281e346ddc57b1f4cb5c139ef68190c57f1699e6acd86f8d43f",
+      "prefix_manifest_sha256": "b927528e1566f7c057cd5bedbf48d69b449633330c9a010c2667e29d22c0c542",
+      "preflight_receipt_sha256": "a20aec5ac0263deb6780c7426a5d2c3c02e92e0279f121735b2c1c3ca33afb92",
+      "raw_snapshot_sha256": "ccb91d226c61b3354cb1c89cc939123c01a24723a0868ac5da36bf9b14a0b2e4",
+      "raw_snapshot_size": 1129782531
+    }
+  },
+  "frozen_raw_verifier": {
+    "candidate_manifest_digest": "af8ef5e77bd03042baa8ae69a6ffc61caa8fc4dff4cadf2cf4b395a3b8a60788",
+    "row_count": 32,
+    "rows": [
+      {
+        "candidate_manifest_digest": "3558667b325e5fc46d42df78e187ed5b934d922126a67163dfaec270543b49e3",
+        "identity_contract_digest": "a5f275b7dc3d897f7870535d7e0f471969eb3ff8c9bec2452d77f8445c9d95aa",
+        "ordinal": 0
+      },
+      {
+        "candidate_manifest_digest": "67edaea5881743854bf0614921b524be2e4f35fac161f45e96c5acb238e7a8f3",
+        "identity_contract_digest": "84db6c8e903b115fca4988d14ed0760129c1af14e9f5262910ece45a2b3fd56f",
+        "ordinal": 1
+      },
+      {
+        "candidate_manifest_digest": "943f0a659f73ec46d6216007699bdfea5917d33efe27d7a8d20e818a7e6dcbf5",
+        "identity_contract_digest": "8ac3adbb4b370ae2acfc27fb2a9545f2b36304556afb95d1cd0f78effaa2d087",
+        "ordinal": 2
+      },
+      {
+        "candidate_manifest_digest": "1e0576a33750546a75729a3a21040e22a78188638c01588db37ca7879dc95457",
+        "identity_contract_digest": "08361256705a7082aefd0f9f238267e425f9539f3dfbe69701e87776bfe623e9",
+        "ordinal": 3
+      },
+      {
+        "candidate_manifest_digest": "136daf5a33580bb5ce28d816dc3ce8204ecb5c99a25ab47f4363f1d509dcb4d8",
+        "identity_contract_digest": "1cfdb801fa18447a2a01fdddbac022a6fa45baab46d44e359fa538f4745bb5c3",
+        "ordinal": 4
+      },
+      {
+        "candidate_manifest_digest": "99edd17f43f0bcf87655351b1f022e39c6775efb1550c2b2cd517116bd135851",
+        "identity_contract_digest": "3b10f1f70afef1cc4e66a76ee6d59946dae7761c300ce34aac970952eb5a8e18",
+        "ordinal": 5
+      },
+      {
+        "candidate_manifest_digest": "605dc62a701b035402c1a56a669cd573b3e138a91c7750bea79149eacabe420f",
+        "identity_contract_digest": "146a6e28db7853eed379e639a03fe4566877523e4933b7c1ba8b75bedfcb82e6",
+        "ordinal": 6
+      },
+      {
+        "candidate_manifest_digest": "93d15ae630e2129410c439f221b2051a8ac70c6dce3591381e464bcb75d9c820",
+        "identity_contract_digest": "8abf98d41875ba5831f1d8bd21d8f2539cc9a15f46a6f89ea53f7ce6390d995e",
+        "ordinal": 7
+      },
+      {
+        "candidate_manifest_digest": "4e94dca0fd641c5795290b2205a1e017ecd2ddfda4ba978936397d9fc99ffa52",
+        "identity_contract_digest": "a95f8d8ae3657624060e069ccfa5eaa518273b3611709ec639e596c1e67e3a5e",
+        "ordinal": 8
+      },
+      {
+        "candidate_manifest_digest": "3e74ef0e3b8101786615da59904dcc201e8289cad75d099415afe683cc2b17f2",
+        "identity_contract_digest": "0695d43870ad9f16f53ce4d5627505ad4c5239ae4808539cbcbe4be9df88fd18",
+        "ordinal": 9
+      },
+      {
+        "candidate_manifest_digest": "99576b0a86bd16dc73e0e5e6952b56806af735f50490d287cd2b42f0482cf47f",
+        "identity_contract_digest": "13638ca59f7fccaee08fbe65094a6d0cd093df6f676cd83a8b578399a898312e",
+        "ordinal": 10
+      },
+      {
+        "candidate_manifest_digest": "6d887765337538ae82cf24376eb8fd4ba823f0eeb13b81d58a733eb115ff2375",
+        "identity_contract_digest": "bc319245df37122acd6b3ed36d6a96801d4ed753913c59bc09223f4c6909ecee",
+        "ordinal": 11
+      },
+      {
+        "candidate_manifest_digest": "a7d075d18aff93f7ce531259c604e96b2648a44e3acf9297a7f21d1450aa94f4",
+        "identity_contract_digest": "322186367595f5e77ae320cc177c5a15de351050a19ab459a01d19d37e9dece1",
+        "ordinal": 12
+      },
+      {
+        "candidate_manifest_digest": "ef3f05624a3720414eb982d5f8eb438a94bb1330553f736c7c0482e1f626cf21",
+        "identity_contract_digest": "144995bc8f442c30e75de71161e9b1ac168934afa2392210f6325999961b8a7d",
+        "ordinal": 13
+      },
+      {
+        "candidate_manifest_digest": "0d790a57d291814d1b153fd92a9ec78ea8de5e8489b297a26e7d8330428e1711",
+        "identity_contract_digest": "1e46dbe62b5277cf8d69dc69c93a015b7d228c1db9c542a4b8685ba773db17f7",
+        "ordinal": 14
+      },
+      {
+        "candidate_manifest_digest": "be0f01d7c49cef94557d5cc8f2b37a817c6a84f5d7476862d0d926aa09425421",
+        "identity_contract_digest": "08f8788749f112d73a747011bced6cc33690c16b0292d97e4b9fb667bfbef6b3",
+        "ordinal": 15
+      },
+      {
+        "candidate_manifest_digest": "47d6c902c86d4ee052b3a7d36bc2953f50c5a18dad9d707ebf0f553b9917c725",
+        "identity_contract_digest": "fd7fdc6eb90f096caa6ec92fa81c5d8e11929d48ff3d609e282c586da260163e",
+        "ordinal": 16
+      },
+      {
+        "candidate_manifest_digest": "d1a4ec5bb5a8bc65a58901a3652cc66047ea57197062cb00eb8ca50e3aba85d8",
+        "identity_contract_digest": "ca7c47004c48094488b913c9a85b39ac80833e8a7df09dacd504826192ab8264",
+        "ordinal": 17
+      },
+      {
+        "candidate_manifest_digest": "3d12eb0096b8b763ae10b69ca5d74a11d560a2eacbca6848e0d0b4caa9b650cb",
+        "identity_contract_digest": "e5cc04b3cc9926f108a123f4fff9c204e13f76be57df3c0c19304e41599cfc9b",
+        "ordinal": 18
+      },
+      {
+        "candidate_manifest_digest": "ffbf893dc25f60b79fb330419fe7577791a58d31e3823c0a2aec96d979e0a7d9",
+        "identity_contract_digest": "0ff41595e66f85e8fee97651fb5279b5d8dac281e965ba5e12d663de5a1d815d",
+        "ordinal": 19
+      },
+      {
+        "candidate_manifest_digest": "f5798138c268fce49437d9354b98a60232b59307a7b1af14baf979aa656ed38d",
+        "identity_contract_digest": "bcd06233d9407a399bc80da4182bd3bc16c8c0926582da42138863ebdd6f0be9",
+        "ordinal": 20
+      },
+      {
+        "candidate_manifest_digest": "a9735168838e2849758b98f8460586fdf7f8386e7a630a15252a7b4be199546a",
+        "identity_contract_digest": "9846944cd2657dc16faed866cc7365fa2828bfe25419e889ceb98a6367f3cee8",
+        "ordinal": 21
+      },
+      {
+        "candidate_manifest_digest": "c38a88e3e7bf8b6bba4ff5949a7a94b46b581e9ba512465d9b994f335005e696",
+        "identity_contract_digest": "47e77f8e5d803dc7729d6ca1c599b3e9af730a1532bddabea0b18d4e7b4a0039",
+        "ordinal": 22
+      },
+      {
+        "candidate_manifest_digest": "6ef000db68f20998d2593b0ddeb57ce1a7094737016d4b738d83645d0ff97d27",
+        "identity_contract_digest": "028e94b3b0bab82c983bd6343df49513986291b83d12a271590bf4ebe23b3ca2",
+        "ordinal": 23
+      },
+      {
+        "candidate_manifest_digest": "a460f1b50ffcd3de479ce44e02dfb3ba9a70857df2a82f139fa8a0cef34325cb",
+        "identity_contract_digest": "2c10d1c76de0394ee7efebfcf61db7c3195dd8e9013679f273bc9554943bf859",
+        "ordinal": 24
+      },
+      {
+        "candidate_manifest_digest": "d8ef44882b74c227ef89eff7caf59a0a67981775f0145298a98968848b26e55b",
+        "identity_contract_digest": "6a17abca91850c5cf07321a6be21fc8c38bf05ee6d10f0dcef34145eea93bfb5",
+        "ordinal": 25
+      },
+      {
+        "candidate_manifest_digest": "8a581bf59878b3c9820ed0306aa75e09019313e19b6c6bd61f5fbb0eabdf4f10",
+        "identity_contract_digest": "c80159c6321c9a5c79b5c191b2d4ed2be812706db73462b0e5372cb6085a496b",
+        "ordinal": 26
+      },
+      {
+        "candidate_manifest_digest": "cb03ed4128337fc2eeeaa0c8e4a3e1d0ca42bac4d45a024cafcbd9a0e3e3cea8",
+        "identity_contract_digest": "e0e8e2901d2732fe8763bd59df7a4a5f7d07ae1263ff1434bcc91ab6acd906c0",
+        "ordinal": 27
+      },
+      {
+        "candidate_manifest_digest": "ee8f655d861e994ee4db449bda00a9f634e5ac058468f7df8ff5ed4474cb3fdf",
+        "identity_contract_digest": "c1da2d23a78752fb14a8f0988da1c76630f15c6201fafd3197d313fe07402c69",
+        "ordinal": 28
+      },
+      {
+        "candidate_manifest_digest": "7e5dde3e2f6d527e53312d7b2acce4a6554a754c6a41728a367f4855daf2cb7f",
+        "identity_contract_digest": "b9fdbebb15c9d0680ac669c0999535a52f5ac2f0ddb349b9b8c9206f6cfe2a8f",
+        "ordinal": 29
+      },
+      {
+        "candidate_manifest_digest": "ea5c5ffcf0845a3879be7ba7f3fd4826947732a79dcbe991309e256d438eac0f",
+        "identity_contract_digest": "d04e525401eb9d9f2fa5276a51a8b0ccdeea85da2d1306f10c30d9c6a1aeb695",
+        "ordinal": 30
+      },
+      {
+        "candidate_manifest_digest": "d39c81145caec868a555022bbb97313baff70402e55e681687bcb8d5aed85ced",
+        "identity_contract_digest": "a62f8c0a476e2922c5a32a43bc1b9f1eeddb8412815091160e486edd60c6c5a4",
+        "ordinal": 31
+      }
+    ],
+    "verification_digest": "16875de669ca7748ff6bf656fc759539be8c9da326ceb15c6896e2532182cac6"
+  },
+  "legacy_seed_zero_abort_reproduced": true,
+  "manifest_digest_after": "9415a2cf6527de69e8048b6b0b33e46be92180992fcac8931dfaafa95f67eb68",
+  "manifest_digest_before": "9415a2cf6527de69e8048b6b0b33e46be92180992fcac8931dfaafa95f67eb68",
+  "manifest_file_after": {
+    "sha256": "ccb91d226c61b3354cb1c89cc939123c01a24723a0868ac5da36bf9b14a0b2e4",
+    "size": 1129782531
+  },
+  "manifest_file_before": {
+    "sha256": "ccb91d226c61b3354cb1c89cc939123c01a24723a0868ac5da36bf9b14a0b2e4",
+    "size": 1129782531
+  },
+  "module_global_replacement_count": 0,
+  "old_output_identity_after": {
+    "digest": "392fbe3a215b27538d310ecb3b595f1fcc8ab35a63899111fcec93a55e5f5905",
+    "rows": [
+      {
+        "exists": false,
+        "path": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/preoutcome_exposure_admission.json",
+        "sha256": null,
+        "size": null
+      },
+      {
+        "exists": false,
+        "path": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/execution_manifest.json",
+        "sha256": null,
+        "size": null
+      },
+      {
+        "exists": false,
+        "path": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_journal",
+        "sha256": null,
+        "size": null
+      },
+      {
+        "exists": false,
+        "path": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_carrier",
+        "sha256": null,
+        "size": null
+      },
+      {
+        "exists": false,
+        "path": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/canonical_result.json.gz",
+        "sha256": null,
+        "size": null
+      },
+      {
+        "exists": false,
+        "path": "reports/autogrowth/native_authority/v2_frozen_cohort_canonical_contract_reclosure/canonical_contract_verification.json",
+        "sha256": null,
+        "size": null
+      },
+      {
+        "exists": true,
+        "path": "reports/autogrowth/native_authority/v2_frozen_cohort_canonical_contract_reclosure/canonical_contract_verification_failure.json",
+        "sha256": "c345a35666a95d603472a01b935cd2ec4cedb8581996c8684568fb29ae0ff9c6",
+        "size": 576
+      },
+      {
+        "exists": true,
+        "path": "reports/autogrowth/native_authority/v2_frozen_cohort_import_path_launcher_reclosure/canonical_launcher_verification.json",
+        "sha256": "92cf2e099a1f860deef4c90515f6b0617d7b95af521ab1c8604baecccd7202df",
+        "size": 79565
+      },
+      {
+        "exists": false,
+        "path": "reports/autogrowth/native_authority/v2_frozen_cohort_import_path_launcher_reclosure/canonical_launcher_verification_failure.json",
+        "sha256": null,
+        "size": null
+      }
+    ]
+  },
+  "old_output_identity_before": {
+    "digest": "392fbe3a215b27538d310ecb3b595f1fcc8ab35a63899111fcec93a55e5f5905",
+    "rows": [
+      {
+        "exists": false,
+        "path": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/preoutcome_exposure_admission.json",
+        "sha256": null,
+        "size": null
+      },
+      {
+        "exists": false,
+        "path": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/execution_manifest.json",
+        "sha256": null,
+        "size": null
+      },
+      {
+        "exists": false,
+        "path": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_journal",
+        "sha256": null,
+        "size": null
+      },
+      {
+        "exists": false,
+        "path": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_carrier",
+        "sha256": null,
+        "size": null
+      },
+      {
+        "exists": false,
+        "path": "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/canonical_result.json.gz",
+        "sha256": null,
+        "size": null
+      },
+      {
+        "exists": false,
+        "path": "reports/autogrowth/native_authority/v2_frozen_cohort_canonical_contract_reclosure/canonical_contract_verification.json",
+        "sha256": null,
+        "size": null
+      },
+      {
+        "exists": true,
+        "path": "reports/autogrowth/native_authority/v2_frozen_cohort_canonical_contract_reclosure/canonical_contract_verification_failure.json",
+        "sha256": "c345a35666a95d603472a01b935cd2ec4cedb8581996c8684568fb29ae0ff9c6",
+        "size": 576
+      },
+      {
+        "exists": true,
+        "path": "reports/autogrowth/native_authority/v2_frozen_cohort_import_path_launcher_reclosure/canonical_launcher_verification.json",
+        "sha256": "92cf2e099a1f860deef4c90515f6b0617d7b95af521ab1c8604baecccd7202df",
+        "size": 79565
+      },
+      {
+        "exists": false,
+        "path": "reports/autogrowth/native_authority/v2_frozen_cohort_import_path_launcher_reclosure/canonical_launcher_verification_failure.json",
+        "sha256": null,
+        "size": null
+      }
+    ]
+  },
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "package_id": "native_v2_frozen_cohort_execution_adapter_freeze.v1",
+  "process_id": 1108517,
+  "public_command": [
+    "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+    "-m",
+    "recon_lite_chess.autogrowth.native_v2_frozen_cohort_execution_adapter_freeze",
+    "verify-readiness"
+  ],
+  "python_executable": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+  "readiness_digest": "fdcf5e656018c5174d1d898751098ed2254f7da9b33e4ed4de42bb88e3afb49b",
+  "runtime_view_proof": {
+    "contract_row_set_digest": "8df25b8ad8bd4267bb6f73a20c3ffab3abf4fac00d81e31cc4969175a3e1f484",
+    "contract_rows": [
+      {
+        "canonical_equal": true,
+        "canonical_size": 12457001,
+        "contract_digest": "a5f275b7dc3d897f7870535d7e0f471969eb3ff8c9bec2452d77f8445c9d95aa",
+        "raw_python_equal": false,
+        "seed_ordinal": 0
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11881045,
+        "contract_digest": "84db6c8e903b115fca4988d14ed0760129c1af14e9f5262910ece45a2b3fd56f",
+        "raw_python_equal": false,
+        "seed_ordinal": 1
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11688799,
+        "contract_digest": "8ac3adbb4b370ae2acfc27fb2a9545f2b36304556afb95d1cd0f78effaa2d087",
+        "raw_python_equal": false,
+        "seed_ordinal": 2
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 12264520,
+        "contract_digest": "08361256705a7082aefd0f9f238267e425f9539f3dfbe69701e87776bfe623e9",
+        "raw_python_equal": false,
+        "seed_ordinal": 3
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11207675,
+        "contract_digest": "1cfdb801fa18447a2a01fdddbac022a6fa45baab46d44e359fa538f4745bb5c3",
+        "raw_python_equal": false,
+        "seed_ordinal": 4
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 12778072,
+        "contract_digest": "3b10f1f70afef1cc4e66a76ee6d59946dae7761c300ce34aac970952eb5a8e18",
+        "raw_python_equal": false,
+        "seed_ordinal": 5
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 12487940,
+        "contract_digest": "146a6e28db7853eed379e639a03fe4566877523e4933b7c1ba8b75bedfcb82e6",
+        "raw_python_equal": false,
+        "seed_ordinal": 6
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 12586263,
+        "contract_digest": "8abf98d41875ba5831f1d8bd21d8f2539cc9a15f46a6f89ea53f7ce6390d995e",
+        "raw_python_equal": false,
+        "seed_ordinal": 7
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 12586744,
+        "contract_digest": "a95f8d8ae3657624060e069ccfa5eaa518273b3611709ec639e596c1e67e3a5e",
+        "raw_python_equal": false,
+        "seed_ordinal": 8
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11496545,
+        "contract_digest": "0695d43870ad9f16f53ce4d5627505ad4c5239ae4808539cbcbe4be9df88fd18",
+        "raw_python_equal": false,
+        "seed_ordinal": 9
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 10662378,
+        "contract_digest": "13638ca59f7fccaee08fbe65094a6d0cd093df6f676cd83a8b578399a898312e",
+        "raw_python_equal": false,
+        "seed_ordinal": 10
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11367599,
+        "contract_digest": "bc319245df37122acd6b3ed36d6a96801d4ed753913c59bc09223f4c6909ecee",
+        "raw_python_equal": false,
+        "seed_ordinal": 11
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11368766,
+        "contract_digest": "322186367595f5e77ae320cc177c5a15de351050a19ab459a01d19d37e9dece1",
+        "raw_python_equal": false,
+        "seed_ordinal": 12
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 12587240,
+        "contract_digest": "144995bc8f442c30e75de71161e9b1ac168934afa2392210f6325999961b8a7d",
+        "raw_python_equal": false,
+        "seed_ordinal": 13
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 12809555,
+        "contract_digest": "1e46dbe62b5277cf8d69dc69c93a015b7d228c1db9c542a4b8685ba773db17f7",
+        "raw_python_equal": false,
+        "seed_ordinal": 14
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11720893,
+        "contract_digest": "08f8788749f112d73a747011bced6cc33690c16b0292d97e4b9fb667bfbef6b3",
+        "raw_python_equal": false,
+        "seed_ordinal": 15
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 10086447,
+        "contract_digest": "fd7fdc6eb90f096caa6ec92fa81c5d8e11929d48ff3d609e282c586da260163e",
+        "raw_python_equal": false,
+        "seed_ordinal": 16
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11499113,
+        "contract_digest": "ca7c47004c48094488b913c9a85b39ac80833e8a7df09dacd504826192ab8264",
+        "raw_python_equal": false,
+        "seed_ordinal": 17
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11880991,
+        "contract_digest": "e5cc04b3cc9926f108a123f4fff9c204e13f76be57df3c0c19304e41599cfc9b",
+        "raw_python_equal": false,
+        "seed_ordinal": 18
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11399573,
+        "contract_digest": "0ff41595e66f85e8fee97651fb5279b5d8dac281e965ba5e12d663de5a1d815d",
+        "raw_python_equal": false,
+        "seed_ordinal": 19
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 12073224,
+        "contract_digest": "bcd06233d9407a399bc80da4182bd3bc16c8c0926582da42138863ebdd6f0be9",
+        "raw_python_equal": false,
+        "seed_ordinal": 20
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 12457536,
+        "contract_digest": "9846944cd2657dc16faed866cc7365fa2828bfe25419e889ceb98a6367f3cee8",
+        "raw_python_equal": false,
+        "seed_ordinal": 21
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11367383,
+        "contract_digest": "47e77f8e5d803dc7729d6ca1c599b3e9af730a1532bddabea0b18d4e7b4a0039",
+        "raw_python_equal": false,
+        "seed_ordinal": 22
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 13289775,
+        "contract_digest": "028e94b3b0bab82c983bd6343df49513986291b83d12a271590bf4ebe23b3ca2",
+        "raw_python_equal": false,
+        "seed_ordinal": 23
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11559250,
+        "contract_digest": "2c10d1c76de0394ee7efebfcf61db7c3195dd8e9013679f273bc9554943bf859",
+        "raw_python_equal": false,
+        "seed_ordinal": 24
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 13130003,
+        "contract_digest": "6a17abca91850c5cf07321a6be21fc8c38bf05ee6d10f0dcef34145eea93bfb5",
+        "raw_python_equal": false,
+        "seed_ordinal": 25
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 10854344,
+        "contract_digest": "c80159c6321c9a5c79b5c191b2d4ed2be812706db73462b0e5372cb6085a496b",
+        "raw_python_equal": false,
+        "seed_ordinal": 26
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11560329,
+        "contract_digest": "e0e8e2901d2732fe8763bd59df7a4a5f7d07ae1263ff1434bcc91ab6acd906c0",
+        "raw_python_equal": false,
+        "seed_ordinal": 27
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11881605,
+        "contract_digest": "c1da2d23a78752fb14a8f0988da1c76630f15c6201fafd3197d313fe07402c69",
+        "raw_python_equal": false,
+        "seed_ordinal": 28
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 13130635,
+        "contract_digest": "b9fdbebb15c9d0680ac669c0999535a52f5ac2f0ddb349b9b8c9206f6cfe2a8f",
+        "raw_python_equal": false,
+        "seed_ordinal": 29
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11146152,
+        "contract_digest": "d04e525401eb9d9f2fa5276a51a8b0ccdeea85da2d1306f10c30d9c6a1aeb695",
+        "raw_python_equal": false,
+        "seed_ordinal": 30
+      },
+      {
+        "canonical_equal": true,
+        "canonical_size": 11368638,
+        "contract_digest": "a62f8c0a476e2922c5a32a43bc1b9f1eeddb8412815091160e486edd60c6c5a4",
+        "raw_python_equal": false,
+        "seed_ordinal": 31
+      }
+    ],
+    "runtime_view": {
+      "sha256": "0ae7e3696619d76056a33099a45c3c4b3f157e3f1847dac69e3b790c03e24ddb",
+      "size": 732563064
+    },
+    "source_after": {
+      "sha256": "0ae7e3696619d76056a33099a45c3c4b3f157e3f1847dac69e3b790c03e24ddb",
+      "size": 732563064
+    },
+    "source_before": {
+      "sha256": "0ae7e3696619d76056a33099a45c3c4b3f157e3f1847dac69e3b790c03e24ddb",
+      "size": 732563064
+    }
+  },
+  "schema_version": "native_v2_execution_adapter_readiness.v1",
+  "semantic_state_after_digest": "130842160194a59ee06df577165209374ebcf663b7db19aa806958219afb9737",
+  "semantic_state_before_digest": "130842160194a59ee06df577165209374ebcf663b7db19aa806958219afb9737",
+  "source_manifest": {
+    "digest": "f57338c80a681c981f6a1fcbbf2168a5b6b5e0b2ba1f2159cc147a479136097e",
+    "sha256": "0f0c9daedb0cf667d147c41f63af7dccb0eb9593423f34f14fd9b236e4340b75"
+  },
+  "unchanged_module_global_bindings": [
+    "canonical._verify_target_identity",
+    "canonical.compare_complete_contracts",
+    "canonical.legacy_raw_contract_check",
+    "driver.EXECUTION_MANIFEST_PATH",
+    "driver.EXPOSURE_PATH",
+    "driver.RESULT_PATH",
+    "driver.SCIENCE_CARRIER_DIR",
+    "driver.SCIENCE_JOURNAL_DIR",
+    "driver._reconstruct_exposure_value",
+    "driver._restore_snapshot_entry",
+    "driver._verify_prefix_snapshot_metadata",
+    "driver.adjudicate_committed_results",
+    "driver.committed_seed_results",
+    "driver.execute_fresh_seed_atomically",
+    "launcher.CHILD_MODULE",
+    "launcher.FAILURE_PATH",
+    "launcher.RESULT_PATH"
+  ],
+  "verified_organism_count": 96,
+  "verified_seed_count": 32,
+  "working_directory": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit"
+}
