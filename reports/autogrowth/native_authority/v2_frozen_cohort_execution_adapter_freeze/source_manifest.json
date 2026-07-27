@@ -1,0 +1,60 @@
+{
+  "deterministic_environment": {
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0",
+    "TZ": "UTC"
+  },
+  "module_paths": {
+    "adapter": "recon_lite_chess.autogrowth.native_v2_frozen_cohort_execution_adapter_freeze",
+    "canonical": "recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure",
+    "driver": "recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2",
+    "launcher": "recon_lite_chess.autogrowth.native_v2_frozen_cohort_import_path_launcher_reclosure"
+  },
+  "package_id": "native_v2_frozen_cohort_execution_adapter_freeze.v1",
+  "preservation": {
+    "no_module_global_replacement": true,
+    "old_packages_byte_identical": true,
+    "outer_adapter_only": true,
+    "real_exposure_not_run": true,
+    "real_outcomes_not_read": true
+  },
+  "public_commands": {
+    "run-exposure": [
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "-m",
+      "recon_lite_chess.autogrowth.native_v2_frozen_cohort_execution_adapter_freeze",
+      "run-exposure"
+    ],
+    "run-science": [
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "-m",
+      "recon_lite_chess.autogrowth.native_v2_frozen_cohort_execution_adapter_freeze",
+      "run-science"
+    ],
+    "verify-readiness": [
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "-m",
+      "recon_lite_chess.autogrowth.native_v2_frozen_cohort_execution_adapter_freeze",
+      "verify-readiness"
+    ]
+  },
+  "runtime": {
+    "implementation": "CPython",
+    "python_executable": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+    "python_version": "3.12.3",
+    "working_directory": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit"
+  },
+  "schema_version": "native_v2_execution_adapter_source_manifest.v1",
+  "source_freeze_commit": "d797b5568cd5866c20b71d9d44da2f30c83b99db",
+  "source_hashes": {
+    "docs/autogrowth/NATIVE_V2_FROZEN_COHORT_EXECUTION_ADAPTER_FREEZE_PREREGISTRATION_20260727.md": "87b7d175b3a77038f281b8ad076e1eac4369e651702f8a248dff1aa08ab1914b",
+    "src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_execution_adapter_freeze.py": "2769811a3fe31560d2f3b2265aa661aa18c3b03b920c36c09525d5642b7c9dcb",
+    "tests/autogrowth/test_native_v2_frozen_cohort_execution_adapter_freeze.py": "5d909f237734e01d8dea7b62bee7185e46fea3d760db250384cab2da751e4bdf"
+  },
+  "source_manifest_digest": "f57338c80a681c981f6a1fcbbf2168a5b6b5e0b2ba1f2159cc147a479136097e"
+}
