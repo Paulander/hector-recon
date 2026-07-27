@@ -706,3 +706,26 @@ real scan and evaluation suffix remain unopened; `run-exposure` and
 `run-science` are frozen for later independent authorization. Every earlier
 stopped package remains unchanged. See
 `docs/autogrowth/NATIVE_V2_FROZEN_COHORT_EXECUTION_ADAPTER_FREEZE_RESULT_20260727.md`.
+
+
+The one authorized frozen `run-exposure` command then stopped terminally before
+admission and before any outcome read. The laboratory registry rejected the
+supplied package-hash map because it could not find the required alias
+`hector_m5_structure`. The map does contain the correct
+`m5_structure.py` SHA-256 under its full runtime-path key, but the frozen
+registry looks up the alias key directly. No source or manifest was changed to
+bridge the naming schemes, and the command was not repeated.
+
+The stop occurred while constructing the first registry, before the first
+organism exposure probe. The preserved failure artifact has SHA-256
+`1e7713a5ef3b33e46d61fa7525e95f430126996b48477f96bbc5ee871886ab9f`
+and internal digest
+`e76be5210359e1dc5a3aed02d18bd081a1f2e6555a64af519af3763d8936a110`;
+it records zero outcome accesses. No admitted exposure, execution manifest,
+science journal, carrier, canonical result or science process exists.
+
+This is an execution-package source-binding stop, not an exposure result or
+scientific evidence. All seed results, paired effects, probabilities,
+engagement counts, revocations and scientific gates are not evaluated.
+`run-science` was not started. See
+`docs/autogrowth/NATIVE_V2_FROZEN_COHORT_EXECUTION_ADAPTER_EXPOSURE_STOP_20260727.md`.

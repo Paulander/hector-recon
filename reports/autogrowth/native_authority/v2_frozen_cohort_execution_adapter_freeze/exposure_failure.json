@@ -1,0 +1,20 @@
+{
+  "command": "run-exposure",
+  "detail": "laboratory package omits or alters policy-critical source: hector_m5_structure",
+  "exception_type": "ProspectiveV2IntegrityError",
+  "exposure_rows_read": null,
+  "failure_digest": "e76be5210359e1dc5a3aed02d18bd081a1f2e6555a64af519af3763d8936a110",
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "package_id": "native_v2_frozen_cohort_execution_adapter_freeze.v1",
+  "parent_argv": [
+    ".venv/bin/python3",
+    "-m",
+    "recon_lite_chess.autogrowth.native_v2_frozen_cohort_execution_adapter_freeze",
+    "run-exposure"
+  ],
+  "process_id": 1133585,
+  "schema_version": "native_v2_execution_adapter_failure.v1"
+}
