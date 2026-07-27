@@ -658,3 +658,28 @@ The package was not repaired or rerun. The fixed candidate cohort remains
 already observed (32/32 planted, 30/32 selected comparison), and the evaluation
 suffix remains unopened. See
 `docs/autogrowth/NATIVE_V2_FROZEN_COHORT_CANONICAL_CONTRACT_RECLOSURE_RESULT_20260727.md`.
+
+
+The separately frozen import-path launcher reclosure now passes the complete
+fixed cohort. Eight focused checks used real processes to prove that the child
+command contains the literal frozen module path even when its parent runs as
+`__main__`; public help, distinct process identity, exact nonzero-exit records
+and clean JSON output also passed without loading an organism. The stopped
+module and every prior source, manifest, failure and result remain unchanged.
+
+The one canonical execution then completed ascending, descending and
+even-then-odd in three distinct fresh processes. Every order verified 32/32
+stored candidate contracts and 96/96 A/B/C organisms. The cohort digest was
+identical at
+`a144fe94f4479c819756dfc44b22a2594e2b9df09367d571d39ab54007560bb8`;
+all per-seed contract digests matched; candidate/graph mutations, exposure rows
+and outcome reads were all zero. Result SHA-256 is
+`92cf2e099a1f860deef4c90515f6b0617d7b95af521ab1c8604baecccd7202df`,
+with canonical digest
+`24a10043dce9894caac1db11dbb191011d92376e2e39b42f058bd53ff444e71c`.
+
+This closes the launcher and canonical prefix-to-snapshot identity boundary;
+it is not exposure, causal or KRK evidence. The fixed cohort remains already
+known at 32/32 planted and 30/32 selected comparison targets, and the suffix is
+still unopened. See
+`docs/autogrowth/NATIVE_V2_FROZEN_COHORT_IMPORT_PATH_LAUNCHER_RECLOSURE_RESULT_20260727.md`.

@@ -1,0 +1,1600 @@
+{
+  "all_orders_identical": true,
+  "artifact_binding": {
+    "digest": "106748944c333d2a9dab449c2bc574db5352c401b04e4888d219e6e4f2ab49ea",
+    "sha256": "39165254df9f8a833058faff4681abe677eff4d04a8d6dfddbd41f8789347f50"
+  },
+  "candidate_or_graph_mutation_count": 0,
+  "child_process_ids": [
+    1077205,
+    1081481,
+    1083186
+  ],
+  "deterministic_environment": {
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0",
+    "TZ": "UTC"
+  },
+  "elapsed_seconds": 4732.314753,
+  "evaluation_suffix_unopened": true,
+  "exposure_rows_read": 0,
+  "fixed_child_module": "recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure",
+  "fresh_process_count": 3,
+  "identical_cohort_digest": "a144fe94f4479c819756dfc44b22a2594e2b9df09367d571d39ab54007560bb8",
+  "orders": [
+    {
+      "child": {
+        "argv": [
+          "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+          "-m",
+          "recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure",
+          "verify-order",
+          "--order",
+          "ascending"
+        ],
+        "elapsed_seconds": 1615.707323,
+        "order_name": "ascending",
+        "process_id": 1077205,
+        "returncode": 0,
+        "stderr": "",
+        "stdout_sha256": "cf4f9891784328fc316b5f985047d5b8f006ebb75908b8ebb6edf58214227ba8",
+        "stdout_size": 21067
+      },
+      "result": {
+        "cohort_digest": "a144fe94f4479c819756dfc44b22a2594e2b9df09367d571d39ab54007560bb8",
+        "core": {
+          "exposure_rows_read": 0,
+          "outcome_access": {
+            "count": 0,
+            "event_ids": []
+          },
+          "prefix_transport_set_digest": "98bbe684ae9219589f565abc00f82c6a9aa27c94e431cd42839bdd230ec1bd23",
+          "raw_manifest_reconstruction": {
+            "compressed_sha256": "92b8e7aa1b437281e346ddc57b1f4cb5c139ef68190c57f1699e6acd86f8d43f",
+            "manifest_digest": "9415a2cf6527de69e8048b6b0b33e46be92180992fcac8931dfaafa95f67eb68",
+            "raw_sha256": "ccb91d226c61b3354cb1c89cc939123c01a24723a0868ac5da36bf9b14a0b2e4",
+            "raw_size": 1129782531
+          },
+          "seed_rows": [
+            {
+              "after_semantic_set_digest": "11a10f7885e937d381611ca4b2ab33145b3b2dea379d80fba03e9f56c0104ded",
+              "before_semantic_set_digest": "11a10f7885e937d381611ca4b2ab33145b3b2dea379d80fba03e9f56c0104ded",
+              "canonical_equal": true,
+              "canonical_size": 12457001,
+              "contract_digest": "a5f275b7dc3d897f7870535d7e0f471969eb3ff8c9bec2452d77f8445c9d95aa",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 0,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "fc3e1b52a582b1b1ddaea89ee3e715391438ef80624f0a0f10733a6f46d0dd44",
+              "before_semantic_set_digest": "fc3e1b52a582b1b1ddaea89ee3e715391438ef80624f0a0f10733a6f46d0dd44",
+              "canonical_equal": true,
+              "canonical_size": 11881045,
+              "contract_digest": "84db6c8e903b115fca4988d14ed0760129c1af14e9f5262910ece45a2b3fd56f",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 1,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "c579394c3a8abe2e207ef074a17a1345f743bd1fc4ab86770898d944c60a0158",
+              "before_semantic_set_digest": "c579394c3a8abe2e207ef074a17a1345f743bd1fc4ab86770898d944c60a0158",
+              "canonical_equal": true,
+              "canonical_size": 11688799,
+              "contract_digest": "8ac3adbb4b370ae2acfc27fb2a9545f2b36304556afb95d1cd0f78effaa2d087",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 2,
+              "selected_comparison_target_present": false
+            },
+            {
+              "after_semantic_set_digest": "41eac7288fc14df7235f48d610cdb23b72490a6b4e08fb5e072b1ae3c5f80a3f",
+              "before_semantic_set_digest": "41eac7288fc14df7235f48d610cdb23b72490a6b4e08fb5e072b1ae3c5f80a3f",
+              "canonical_equal": true,
+              "canonical_size": 12264520,
+              "contract_digest": "08361256705a7082aefd0f9f238267e425f9539f3dfbe69701e87776bfe623e9",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 3,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "bfe83b26b15e1884fa975430bffb54a62d73288f94ef1c36759ca74f0650043e",
+              "before_semantic_set_digest": "bfe83b26b15e1884fa975430bffb54a62d73288f94ef1c36759ca74f0650043e",
+              "canonical_equal": true,
+              "canonical_size": 11207675,
+              "contract_digest": "1cfdb801fa18447a2a01fdddbac022a6fa45baab46d44e359fa538f4745bb5c3",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 4,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "da7da98ade45870d6130ab7a3658702dacaac105f2e5f7361452c2ee004df664",
+              "before_semantic_set_digest": "da7da98ade45870d6130ab7a3658702dacaac105f2e5f7361452c2ee004df664",
+              "canonical_equal": true,
+              "canonical_size": 12778072,
+              "contract_digest": "3b10f1f70afef1cc4e66a76ee6d59946dae7761c300ce34aac970952eb5a8e18",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 5,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "1c0fa3993dccb92d8404e4832cfce63d8c747b8f6be29c4f8a59c82a0bf26b8a",
+              "before_semantic_set_digest": "1c0fa3993dccb92d8404e4832cfce63d8c747b8f6be29c4f8a59c82a0bf26b8a",
+              "canonical_equal": true,
+              "canonical_size": 12487940,
+              "contract_digest": "146a6e28db7853eed379e639a03fe4566877523e4933b7c1ba8b75bedfcb82e6",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 6,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "3c06e80dedc6b6fa77df2a40a681914e413a6ea0c7dc43cec167b5197cf0bc24",
+              "before_semantic_set_digest": "3c06e80dedc6b6fa77df2a40a681914e413a6ea0c7dc43cec167b5197cf0bc24",
+              "canonical_equal": true,
+              "canonical_size": 12586263,
+              "contract_digest": "8abf98d41875ba5831f1d8bd21d8f2539cc9a15f46a6f89ea53f7ce6390d995e",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 7,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "ce60139013ecb5baaf8455b0d4438012c5082ce29ad2396cfa09f33759db1b48",
+              "before_semantic_set_digest": "ce60139013ecb5baaf8455b0d4438012c5082ce29ad2396cfa09f33759db1b48",
+              "canonical_equal": true,
+              "canonical_size": 12586744,
+              "contract_digest": "a95f8d8ae3657624060e069ccfa5eaa518273b3611709ec639e596c1e67e3a5e",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 8,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "8d35b1bb0097dcfbaafdb2fef9d13e2a7942a3b996436c7eeb6e816e16f6011f",
+              "before_semantic_set_digest": "8d35b1bb0097dcfbaafdb2fef9d13e2a7942a3b996436c7eeb6e816e16f6011f",
+              "canonical_equal": true,
+              "canonical_size": 11496545,
+              "contract_digest": "0695d43870ad9f16f53ce4d5627505ad4c5239ae4808539cbcbe4be9df88fd18",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 9,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "bc5ba1aa7c03b60cec52a37faa3acd7985b5d7affd6281abc4416c5d3593cf78",
+              "before_semantic_set_digest": "bc5ba1aa7c03b60cec52a37faa3acd7985b5d7affd6281abc4416c5d3593cf78",
+              "canonical_equal": true,
+              "canonical_size": 10662378,
+              "contract_digest": "13638ca59f7fccaee08fbe65094a6d0cd093df6f676cd83a8b578399a898312e",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 10,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "d20a6c60b564ce6d9cadea9dab71268f42d2dbb452a0bfa94ca4edd27bfe4b0e",
+              "before_semantic_set_digest": "d20a6c60b564ce6d9cadea9dab71268f42d2dbb452a0bfa94ca4edd27bfe4b0e",
+              "canonical_equal": true,
+              "canonical_size": 11367599,
+              "contract_digest": "bc319245df37122acd6b3ed36d6a96801d4ed753913c59bc09223f4c6909ecee",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 11,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "504cd6d41a911451663e33f1d4a60215df96dc458a81d132527ae860937bc8dd",
+              "before_semantic_set_digest": "504cd6d41a911451663e33f1d4a60215df96dc458a81d132527ae860937bc8dd",
+              "canonical_equal": true,
+              "canonical_size": 11368766,
+              "contract_digest": "322186367595f5e77ae320cc177c5a15de351050a19ab459a01d19d37e9dece1",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 12,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "bfaa5cc3354802ba2613c365b1b1a20442853ca4abc64a4f705f3d49c3026541",
+              "before_semantic_set_digest": "bfaa5cc3354802ba2613c365b1b1a20442853ca4abc64a4f705f3d49c3026541",
+              "canonical_equal": true,
+              "canonical_size": 12587240,
+              "contract_digest": "144995bc8f442c30e75de71161e9b1ac168934afa2392210f6325999961b8a7d",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 13,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "9b91304dd1aaa7d9699d2fbbe32f6ad8e985a40ae7412814e48255624de1ccbc",
+              "before_semantic_set_digest": "9b91304dd1aaa7d9699d2fbbe32f6ad8e985a40ae7412814e48255624de1ccbc",
+              "canonical_equal": true,
+              "canonical_size": 12809555,
+              "contract_digest": "1e46dbe62b5277cf8d69dc69c93a015b7d228c1db9c542a4b8685ba773db17f7",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 14,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "ee99e44a464240462a3370c8d11bb87149d7239b6eae5122a08fc160821b4a86",
+              "before_semantic_set_digest": "ee99e44a464240462a3370c8d11bb87149d7239b6eae5122a08fc160821b4a86",
+              "canonical_equal": true,
+              "canonical_size": 11720893,
+              "contract_digest": "08f8788749f112d73a747011bced6cc33690c16b0292d97e4b9fb667bfbef6b3",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 15,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "66f92c24ad48abb0eb6f2d1da064a01b4f365caf7be6b623543fa2b543e41718",
+              "before_semantic_set_digest": "66f92c24ad48abb0eb6f2d1da064a01b4f365caf7be6b623543fa2b543e41718",
+              "canonical_equal": true,
+              "canonical_size": 10086447,
+              "contract_digest": "fd7fdc6eb90f096caa6ec92fa81c5d8e11929d48ff3d609e282c586da260163e",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 16,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "6cef5c1471e8101c067a6e36c1432392203b0dfcccf0cdb9aba4af807e4c0298",
+              "before_semantic_set_digest": "6cef5c1471e8101c067a6e36c1432392203b0dfcccf0cdb9aba4af807e4c0298",
+              "canonical_equal": true,
+              "canonical_size": 11499113,
+              "contract_digest": "ca7c47004c48094488b913c9a85b39ac80833e8a7df09dacd504826192ab8264",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 17,
+              "selected_comparison_target_present": false
+            },
+            {
+              "after_semantic_set_digest": "9b9f25de769ccc6d420ed5c5d0ad589e47144150abeab275b1662c218486d2ca",
+              "before_semantic_set_digest": "9b9f25de769ccc6d420ed5c5d0ad589e47144150abeab275b1662c218486d2ca",
+              "canonical_equal": true,
+              "canonical_size": 11880991,
+              "contract_digest": "e5cc04b3cc9926f108a123f4fff9c204e13f76be57df3c0c19304e41599cfc9b",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 18,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "e84b317ff4c648ae082c3f78a75dc948022cb94f97d91de5b59e5756e88d362c",
+              "before_semantic_set_digest": "e84b317ff4c648ae082c3f78a75dc948022cb94f97d91de5b59e5756e88d362c",
+              "canonical_equal": true,
+              "canonical_size": 11399573,
+              "contract_digest": "0ff41595e66f85e8fee97651fb5279b5d8dac281e965ba5e12d663de5a1d815d",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 19,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "0b46868d3124686f9663c27408847df14b33e8aa4764645d322fe5a4f3bd782f",
+              "before_semantic_set_digest": "0b46868d3124686f9663c27408847df14b33e8aa4764645d322fe5a4f3bd782f",
+              "canonical_equal": true,
+              "canonical_size": 12073224,
+              "contract_digest": "bcd06233d9407a399bc80da4182bd3bc16c8c0926582da42138863ebdd6f0be9",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 20,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "20c97079ae5e83342bb494913e8becb83c8021a8730f2bdadc0ce3045f779a5e",
+              "before_semantic_set_digest": "20c97079ae5e83342bb494913e8becb83c8021a8730f2bdadc0ce3045f779a5e",
+              "canonical_equal": true,
+              "canonical_size": 12457536,
+              "contract_digest": "9846944cd2657dc16faed866cc7365fa2828bfe25419e889ceb98a6367f3cee8",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 21,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "24388a8a2c55df1ee101d053eff2727f1240e412d6ad91cf462b09747fb30985",
+              "before_semantic_set_digest": "24388a8a2c55df1ee101d053eff2727f1240e412d6ad91cf462b09747fb30985",
+              "canonical_equal": true,
+              "canonical_size": 11367383,
+              "contract_digest": "47e77f8e5d803dc7729d6ca1c599b3e9af730a1532bddabea0b18d4e7b4a0039",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 22,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "d46ad9bb67a53b582d9b601a297731a71b1fd2e1d066781d60f08159da97afae",
+              "before_semantic_set_digest": "d46ad9bb67a53b582d9b601a297731a71b1fd2e1d066781d60f08159da97afae",
+              "canonical_equal": true,
+              "canonical_size": 13289775,
+              "contract_digest": "028e94b3b0bab82c983bd6343df49513986291b83d12a271590bf4ebe23b3ca2",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 23,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "0860b3b7920b5709c9cf1aa2c79fcc79f34b6dbe42b85f8574a049f5207c572f",
+              "before_semantic_set_digest": "0860b3b7920b5709c9cf1aa2c79fcc79f34b6dbe42b85f8574a049f5207c572f",
+              "canonical_equal": true,
+              "canonical_size": 11559250,
+              "contract_digest": "2c10d1c76de0394ee7efebfcf61db7c3195dd8e9013679f273bc9554943bf859",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 24,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "9d80dfcca92fe46ba82fb262b5faea3e1a05ae8f3b85b5b140e7e49425e52e7f",
+              "before_semantic_set_digest": "9d80dfcca92fe46ba82fb262b5faea3e1a05ae8f3b85b5b140e7e49425e52e7f",
+              "canonical_equal": true,
+              "canonical_size": 13130003,
+              "contract_digest": "6a17abca91850c5cf07321a6be21fc8c38bf05ee6d10f0dcef34145eea93bfb5",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 25,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "588d73020afc28a81a7d61cd1d2ad9d23665121be54fd11dff0f260e82ba4b76",
+              "before_semantic_set_digest": "588d73020afc28a81a7d61cd1d2ad9d23665121be54fd11dff0f260e82ba4b76",
+              "canonical_equal": true,
+              "canonical_size": 10854344,
+              "contract_digest": "c80159c6321c9a5c79b5c191b2d4ed2be812706db73462b0e5372cb6085a496b",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 26,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "c80f28449b6e3c2c6ea8cc277da6a74571951e62af1f53590c164c0004a906ad",
+              "before_semantic_set_digest": "c80f28449b6e3c2c6ea8cc277da6a74571951e62af1f53590c164c0004a906ad",
+              "canonical_equal": true,
+              "canonical_size": 11560329,
+              "contract_digest": "e0e8e2901d2732fe8763bd59df7a4a5f7d07ae1263ff1434bcc91ab6acd906c0",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 27,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "50b1d5fd84e59276cab8200b0b2bd58c2fdbe17bec8bd71967774584e69f46c2",
+              "before_semantic_set_digest": "50b1d5fd84e59276cab8200b0b2bd58c2fdbe17bec8bd71967774584e69f46c2",
+              "canonical_equal": true,
+              "canonical_size": 11881605,
+              "contract_digest": "c1da2d23a78752fb14a8f0988da1c76630f15c6201fafd3197d313fe07402c69",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 28,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "443d580449047d46cbece03c58e27e2144a8933f3a2ac27348d220141b4977b4",
+              "before_semantic_set_digest": "443d580449047d46cbece03c58e27e2144a8933f3a2ac27348d220141b4977b4",
+              "canonical_equal": true,
+              "canonical_size": 13130635,
+              "contract_digest": "b9fdbebb15c9d0680ac669c0999535a52f5ac2f0ddb349b9b8c9206f6cfe2a8f",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 29,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "f141ade12d5c8ddcb082368611b16c680a5ec51b1d07bf5203818cd28521f356",
+              "before_semantic_set_digest": "f141ade12d5c8ddcb082368611b16c680a5ec51b1d07bf5203818cd28521f356",
+              "canonical_equal": true,
+              "canonical_size": 11146152,
+              "contract_digest": "d04e525401eb9d9f2fa5276a51a8b0ccdeea85da2d1306f10c30d9c6a1aeb695",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 30,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "cdfe51555323fa54a0f35ece93a604d4b18bad9d4edf3fe09b6cd9db9e301a10",
+              "before_semantic_set_digest": "cdfe51555323fa54a0f35ece93a604d4b18bad9d4edf3fe09b6cd9db9e301a10",
+              "canonical_equal": true,
+              "canonical_size": 11368638,
+              "contract_digest": "a62f8c0a476e2922c5a32a43bc1b9f1eeddb8412815091160e486edd60c6c5a4",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 31,
+              "selected_comparison_target_present": true
+            }
+          ],
+          "snapshot_transport_set_digest": "a73884f9180161673cc9f2ff26ec030641a675eb3885ef38da2d168b0724261c",
+          "stopped_output_paths_present": {
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/canonical_result.json.gz": false,
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/execution_manifest.json": false,
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/preoutcome_exposure_admission.json": false,
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_carrier": false,
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_journal": false
+          }
+        },
+        "elapsed_seconds": 1612.93781,
+        "evaluation_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31
+        ],
+        "order_name": "ascending",
+        "order_result_digest": "a4d56f6629cf67647cee758a46159df22088821eecb4a62b2edbcb502fc94032",
+        "package_id": "native_v2_frozen_cohort_canonical_contract_reclosure.v1",
+        "process_id": 1077205,
+        "schema_version": "native_v2_canonical_contract_order_result.v1",
+        "verified_organism_count": 96,
+        "verified_seed_count": 32
+      }
+    },
+    {
+      "child": {
+        "argv": [
+          "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+          "-m",
+          "recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure",
+          "verify-order",
+          "--order",
+          "descending"
+        ],
+        "elapsed_seconds": 1555.060834,
+        "order_name": "descending",
+        "process_id": 1081481,
+        "returncode": 0,
+        "stderr": "",
+        "stdout_sha256": "bf2fe07c74ab1f2600172d7145acd558dabad3e41623e469b606cc6cab46ffc6",
+        "stdout_size": 21069
+      },
+      "result": {
+        "cohort_digest": "a144fe94f4479c819756dfc44b22a2594e2b9df09367d571d39ab54007560bb8",
+        "core": {
+          "exposure_rows_read": 0,
+          "outcome_access": {
+            "count": 0,
+            "event_ids": []
+          },
+          "prefix_transport_set_digest": "98bbe684ae9219589f565abc00f82c6a9aa27c94e431cd42839bdd230ec1bd23",
+          "raw_manifest_reconstruction": {
+            "compressed_sha256": "92b8e7aa1b437281e346ddc57b1f4cb5c139ef68190c57f1699e6acd86f8d43f",
+            "manifest_digest": "9415a2cf6527de69e8048b6b0b33e46be92180992fcac8931dfaafa95f67eb68",
+            "raw_sha256": "ccb91d226c61b3354cb1c89cc939123c01a24723a0868ac5da36bf9b14a0b2e4",
+            "raw_size": 1129782531
+          },
+          "seed_rows": [
+            {
+              "after_semantic_set_digest": "11a10f7885e937d381611ca4b2ab33145b3b2dea379d80fba03e9f56c0104ded",
+              "before_semantic_set_digest": "11a10f7885e937d381611ca4b2ab33145b3b2dea379d80fba03e9f56c0104ded",
+              "canonical_equal": true,
+              "canonical_size": 12457001,
+              "contract_digest": "a5f275b7dc3d897f7870535d7e0f471969eb3ff8c9bec2452d77f8445c9d95aa",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 0,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "fc3e1b52a582b1b1ddaea89ee3e715391438ef80624f0a0f10733a6f46d0dd44",
+              "before_semantic_set_digest": "fc3e1b52a582b1b1ddaea89ee3e715391438ef80624f0a0f10733a6f46d0dd44",
+              "canonical_equal": true,
+              "canonical_size": 11881045,
+              "contract_digest": "84db6c8e903b115fca4988d14ed0760129c1af14e9f5262910ece45a2b3fd56f",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 1,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "c579394c3a8abe2e207ef074a17a1345f743bd1fc4ab86770898d944c60a0158",
+              "before_semantic_set_digest": "c579394c3a8abe2e207ef074a17a1345f743bd1fc4ab86770898d944c60a0158",
+              "canonical_equal": true,
+              "canonical_size": 11688799,
+              "contract_digest": "8ac3adbb4b370ae2acfc27fb2a9545f2b36304556afb95d1cd0f78effaa2d087",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 2,
+              "selected_comparison_target_present": false
+            },
+            {
+              "after_semantic_set_digest": "41eac7288fc14df7235f48d610cdb23b72490a6b4e08fb5e072b1ae3c5f80a3f",
+              "before_semantic_set_digest": "41eac7288fc14df7235f48d610cdb23b72490a6b4e08fb5e072b1ae3c5f80a3f",
+              "canonical_equal": true,
+              "canonical_size": 12264520,
+              "contract_digest": "08361256705a7082aefd0f9f238267e425f9539f3dfbe69701e87776bfe623e9",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 3,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "bfe83b26b15e1884fa975430bffb54a62d73288f94ef1c36759ca74f0650043e",
+              "before_semantic_set_digest": "bfe83b26b15e1884fa975430bffb54a62d73288f94ef1c36759ca74f0650043e",
+              "canonical_equal": true,
+              "canonical_size": 11207675,
+              "contract_digest": "1cfdb801fa18447a2a01fdddbac022a6fa45baab46d44e359fa538f4745bb5c3",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 4,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "da7da98ade45870d6130ab7a3658702dacaac105f2e5f7361452c2ee004df664",
+              "before_semantic_set_digest": "da7da98ade45870d6130ab7a3658702dacaac105f2e5f7361452c2ee004df664",
+              "canonical_equal": true,
+              "canonical_size": 12778072,
+              "contract_digest": "3b10f1f70afef1cc4e66a76ee6d59946dae7761c300ce34aac970952eb5a8e18",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 5,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "1c0fa3993dccb92d8404e4832cfce63d8c747b8f6be29c4f8a59c82a0bf26b8a",
+              "before_semantic_set_digest": "1c0fa3993dccb92d8404e4832cfce63d8c747b8f6be29c4f8a59c82a0bf26b8a",
+              "canonical_equal": true,
+              "canonical_size": 12487940,
+              "contract_digest": "146a6e28db7853eed379e639a03fe4566877523e4933b7c1ba8b75bedfcb82e6",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 6,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "3c06e80dedc6b6fa77df2a40a681914e413a6ea0c7dc43cec167b5197cf0bc24",
+              "before_semantic_set_digest": "3c06e80dedc6b6fa77df2a40a681914e413a6ea0c7dc43cec167b5197cf0bc24",
+              "canonical_equal": true,
+              "canonical_size": 12586263,
+              "contract_digest": "8abf98d41875ba5831f1d8bd21d8f2539cc9a15f46a6f89ea53f7ce6390d995e",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 7,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "ce60139013ecb5baaf8455b0d4438012c5082ce29ad2396cfa09f33759db1b48",
+              "before_semantic_set_digest": "ce60139013ecb5baaf8455b0d4438012c5082ce29ad2396cfa09f33759db1b48",
+              "canonical_equal": true,
+              "canonical_size": 12586744,
+              "contract_digest": "a95f8d8ae3657624060e069ccfa5eaa518273b3611709ec639e596c1e67e3a5e",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 8,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "8d35b1bb0097dcfbaafdb2fef9d13e2a7942a3b996436c7eeb6e816e16f6011f",
+              "before_semantic_set_digest": "8d35b1bb0097dcfbaafdb2fef9d13e2a7942a3b996436c7eeb6e816e16f6011f",
+              "canonical_equal": true,
+              "canonical_size": 11496545,
+              "contract_digest": "0695d43870ad9f16f53ce4d5627505ad4c5239ae4808539cbcbe4be9df88fd18",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 9,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "bc5ba1aa7c03b60cec52a37faa3acd7985b5d7affd6281abc4416c5d3593cf78",
+              "before_semantic_set_digest": "bc5ba1aa7c03b60cec52a37faa3acd7985b5d7affd6281abc4416c5d3593cf78",
+              "canonical_equal": true,
+              "canonical_size": 10662378,
+              "contract_digest": "13638ca59f7fccaee08fbe65094a6d0cd093df6f676cd83a8b578399a898312e",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 10,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "d20a6c60b564ce6d9cadea9dab71268f42d2dbb452a0bfa94ca4edd27bfe4b0e",
+              "before_semantic_set_digest": "d20a6c60b564ce6d9cadea9dab71268f42d2dbb452a0bfa94ca4edd27bfe4b0e",
+              "canonical_equal": true,
+              "canonical_size": 11367599,
+              "contract_digest": "bc319245df37122acd6b3ed36d6a96801d4ed753913c59bc09223f4c6909ecee",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 11,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "504cd6d41a911451663e33f1d4a60215df96dc458a81d132527ae860937bc8dd",
+              "before_semantic_set_digest": "504cd6d41a911451663e33f1d4a60215df96dc458a81d132527ae860937bc8dd",
+              "canonical_equal": true,
+              "canonical_size": 11368766,
+              "contract_digest": "322186367595f5e77ae320cc177c5a15de351050a19ab459a01d19d37e9dece1",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 12,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "bfaa5cc3354802ba2613c365b1b1a20442853ca4abc64a4f705f3d49c3026541",
+              "before_semantic_set_digest": "bfaa5cc3354802ba2613c365b1b1a20442853ca4abc64a4f705f3d49c3026541",
+              "canonical_equal": true,
+              "canonical_size": 12587240,
+              "contract_digest": "144995bc8f442c30e75de71161e9b1ac168934afa2392210f6325999961b8a7d",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 13,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "9b91304dd1aaa7d9699d2fbbe32f6ad8e985a40ae7412814e48255624de1ccbc",
+              "before_semantic_set_digest": "9b91304dd1aaa7d9699d2fbbe32f6ad8e985a40ae7412814e48255624de1ccbc",
+              "canonical_equal": true,
+              "canonical_size": 12809555,
+              "contract_digest": "1e46dbe62b5277cf8d69dc69c93a015b7d228c1db9c542a4b8685ba773db17f7",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 14,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "ee99e44a464240462a3370c8d11bb87149d7239b6eae5122a08fc160821b4a86",
+              "before_semantic_set_digest": "ee99e44a464240462a3370c8d11bb87149d7239b6eae5122a08fc160821b4a86",
+              "canonical_equal": true,
+              "canonical_size": 11720893,
+              "contract_digest": "08f8788749f112d73a747011bced6cc33690c16b0292d97e4b9fb667bfbef6b3",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 15,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "66f92c24ad48abb0eb6f2d1da064a01b4f365caf7be6b623543fa2b543e41718",
+              "before_semantic_set_digest": "66f92c24ad48abb0eb6f2d1da064a01b4f365caf7be6b623543fa2b543e41718",
+              "canonical_equal": true,
+              "canonical_size": 10086447,
+              "contract_digest": "fd7fdc6eb90f096caa6ec92fa81c5d8e11929d48ff3d609e282c586da260163e",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 16,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "6cef5c1471e8101c067a6e36c1432392203b0dfcccf0cdb9aba4af807e4c0298",
+              "before_semantic_set_digest": "6cef5c1471e8101c067a6e36c1432392203b0dfcccf0cdb9aba4af807e4c0298",
+              "canonical_equal": true,
+              "canonical_size": 11499113,
+              "contract_digest": "ca7c47004c48094488b913c9a85b39ac80833e8a7df09dacd504826192ab8264",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 17,
+              "selected_comparison_target_present": false
+            },
+            {
+              "after_semantic_set_digest": "9b9f25de769ccc6d420ed5c5d0ad589e47144150abeab275b1662c218486d2ca",
+              "before_semantic_set_digest": "9b9f25de769ccc6d420ed5c5d0ad589e47144150abeab275b1662c218486d2ca",
+              "canonical_equal": true,
+              "canonical_size": 11880991,
+              "contract_digest": "e5cc04b3cc9926f108a123f4fff9c204e13f76be57df3c0c19304e41599cfc9b",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 18,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "e84b317ff4c648ae082c3f78a75dc948022cb94f97d91de5b59e5756e88d362c",
+              "before_semantic_set_digest": "e84b317ff4c648ae082c3f78a75dc948022cb94f97d91de5b59e5756e88d362c",
+              "canonical_equal": true,
+              "canonical_size": 11399573,
+              "contract_digest": "0ff41595e66f85e8fee97651fb5279b5d8dac281e965ba5e12d663de5a1d815d",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 19,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "0b46868d3124686f9663c27408847df14b33e8aa4764645d322fe5a4f3bd782f",
+              "before_semantic_set_digest": "0b46868d3124686f9663c27408847df14b33e8aa4764645d322fe5a4f3bd782f",
+              "canonical_equal": true,
+              "canonical_size": 12073224,
+              "contract_digest": "bcd06233d9407a399bc80da4182bd3bc16c8c0926582da42138863ebdd6f0be9",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 20,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "20c97079ae5e83342bb494913e8becb83c8021a8730f2bdadc0ce3045f779a5e",
+              "before_semantic_set_digest": "20c97079ae5e83342bb494913e8becb83c8021a8730f2bdadc0ce3045f779a5e",
+              "canonical_equal": true,
+              "canonical_size": 12457536,
+              "contract_digest": "9846944cd2657dc16faed866cc7365fa2828bfe25419e889ceb98a6367f3cee8",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 21,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "24388a8a2c55df1ee101d053eff2727f1240e412d6ad91cf462b09747fb30985",
+              "before_semantic_set_digest": "24388a8a2c55df1ee101d053eff2727f1240e412d6ad91cf462b09747fb30985",
+              "canonical_equal": true,
+              "canonical_size": 11367383,
+              "contract_digest": "47e77f8e5d803dc7729d6ca1c599b3e9af730a1532bddabea0b18d4e7b4a0039",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 22,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "d46ad9bb67a53b582d9b601a297731a71b1fd2e1d066781d60f08159da97afae",
+              "before_semantic_set_digest": "d46ad9bb67a53b582d9b601a297731a71b1fd2e1d066781d60f08159da97afae",
+              "canonical_equal": true,
+              "canonical_size": 13289775,
+              "contract_digest": "028e94b3b0bab82c983bd6343df49513986291b83d12a271590bf4ebe23b3ca2",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 23,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "0860b3b7920b5709c9cf1aa2c79fcc79f34b6dbe42b85f8574a049f5207c572f",
+              "before_semantic_set_digest": "0860b3b7920b5709c9cf1aa2c79fcc79f34b6dbe42b85f8574a049f5207c572f",
+              "canonical_equal": true,
+              "canonical_size": 11559250,
+              "contract_digest": "2c10d1c76de0394ee7efebfcf61db7c3195dd8e9013679f273bc9554943bf859",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 24,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "9d80dfcca92fe46ba82fb262b5faea3e1a05ae8f3b85b5b140e7e49425e52e7f",
+              "before_semantic_set_digest": "9d80dfcca92fe46ba82fb262b5faea3e1a05ae8f3b85b5b140e7e49425e52e7f",
+              "canonical_equal": true,
+              "canonical_size": 13130003,
+              "contract_digest": "6a17abca91850c5cf07321a6be21fc8c38bf05ee6d10f0dcef34145eea93bfb5",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 25,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "588d73020afc28a81a7d61cd1d2ad9d23665121be54fd11dff0f260e82ba4b76",
+              "before_semantic_set_digest": "588d73020afc28a81a7d61cd1d2ad9d23665121be54fd11dff0f260e82ba4b76",
+              "canonical_equal": true,
+              "canonical_size": 10854344,
+              "contract_digest": "c80159c6321c9a5c79b5c191b2d4ed2be812706db73462b0e5372cb6085a496b",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 26,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "c80f28449b6e3c2c6ea8cc277da6a74571951e62af1f53590c164c0004a906ad",
+              "before_semantic_set_digest": "c80f28449b6e3c2c6ea8cc277da6a74571951e62af1f53590c164c0004a906ad",
+              "canonical_equal": true,
+              "canonical_size": 11560329,
+              "contract_digest": "e0e8e2901d2732fe8763bd59df7a4a5f7d07ae1263ff1434bcc91ab6acd906c0",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 27,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "50b1d5fd84e59276cab8200b0b2bd58c2fdbe17bec8bd71967774584e69f46c2",
+              "before_semantic_set_digest": "50b1d5fd84e59276cab8200b0b2bd58c2fdbe17bec8bd71967774584e69f46c2",
+              "canonical_equal": true,
+              "canonical_size": 11881605,
+              "contract_digest": "c1da2d23a78752fb14a8f0988da1c76630f15c6201fafd3197d313fe07402c69",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 28,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "443d580449047d46cbece03c58e27e2144a8933f3a2ac27348d220141b4977b4",
+              "before_semantic_set_digest": "443d580449047d46cbece03c58e27e2144a8933f3a2ac27348d220141b4977b4",
+              "canonical_equal": true,
+              "canonical_size": 13130635,
+              "contract_digest": "b9fdbebb15c9d0680ac669c0999535a52f5ac2f0ddb349b9b8c9206f6cfe2a8f",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 29,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "f141ade12d5c8ddcb082368611b16c680a5ec51b1d07bf5203818cd28521f356",
+              "before_semantic_set_digest": "f141ade12d5c8ddcb082368611b16c680a5ec51b1d07bf5203818cd28521f356",
+              "canonical_equal": true,
+              "canonical_size": 11146152,
+              "contract_digest": "d04e525401eb9d9f2fa5276a51a8b0ccdeea85da2d1306f10c30d9c6a1aeb695",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 30,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "cdfe51555323fa54a0f35ece93a604d4b18bad9d4edf3fe09b6cd9db9e301a10",
+              "before_semantic_set_digest": "cdfe51555323fa54a0f35ece93a604d4b18bad9d4edf3fe09b6cd9db9e301a10",
+              "canonical_equal": true,
+              "canonical_size": 11368638,
+              "contract_digest": "a62f8c0a476e2922c5a32a43bc1b9f1eeddb8412815091160e486edd60c6c5a4",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 31,
+              "selected_comparison_target_present": true
+            }
+          ],
+          "snapshot_transport_set_digest": "a73884f9180161673cc9f2ff26ec030641a675eb3885ef38da2d168b0724261c",
+          "stopped_output_paths_present": {
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/canonical_result.json.gz": false,
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/execution_manifest.json": false,
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/preoutcome_exposure_admission.json": false,
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_carrier": false,
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_journal": false
+          }
+        },
+        "elapsed_seconds": 1552.311337,
+        "evaluation_order": [
+          31,
+          30,
+          29,
+          28,
+          27,
+          26,
+          25,
+          24,
+          23,
+          22,
+          21,
+          20,
+          19,
+          18,
+          17,
+          16,
+          15,
+          14,
+          13,
+          12,
+          11,
+          10,
+          9,
+          8,
+          7,
+          6,
+          5,
+          4,
+          3,
+          2,
+          1,
+          0
+        ],
+        "order_name": "descending",
+        "order_result_digest": "6317754773acf390103e26d0d3581e4c594ec778007cf3c43fc02cbfd450f6cd",
+        "package_id": "native_v2_frozen_cohort_canonical_contract_reclosure.v1",
+        "process_id": 1081481,
+        "schema_version": "native_v2_canonical_contract_order_result.v1",
+        "verified_organism_count": 96,
+        "verified_seed_count": 32
+      }
+    },
+    {
+      "child": {
+        "argv": [
+          "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+          "-m",
+          "recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure",
+          "verify-order",
+          "--order",
+          "even_then_odd"
+        ],
+        "elapsed_seconds": 1561.543797,
+        "order_name": "even_then_odd",
+        "process_id": 1083186,
+        "returncode": 0,
+        "stderr": "",
+        "stdout_sha256": "4e23dc06e7d659a33b9f25113a51355b1c11b43d1dea4b1471f188ca6dee2f81",
+        "stdout_size": 21072
+      },
+      "result": {
+        "cohort_digest": "a144fe94f4479c819756dfc44b22a2594e2b9df09367d571d39ab54007560bb8",
+        "core": {
+          "exposure_rows_read": 0,
+          "outcome_access": {
+            "count": 0,
+            "event_ids": []
+          },
+          "prefix_transport_set_digest": "98bbe684ae9219589f565abc00f82c6a9aa27c94e431cd42839bdd230ec1bd23",
+          "raw_manifest_reconstruction": {
+            "compressed_sha256": "92b8e7aa1b437281e346ddc57b1f4cb5c139ef68190c57f1699e6acd86f8d43f",
+            "manifest_digest": "9415a2cf6527de69e8048b6b0b33e46be92180992fcac8931dfaafa95f67eb68",
+            "raw_sha256": "ccb91d226c61b3354cb1c89cc939123c01a24723a0868ac5da36bf9b14a0b2e4",
+            "raw_size": 1129782531
+          },
+          "seed_rows": [
+            {
+              "after_semantic_set_digest": "11a10f7885e937d381611ca4b2ab33145b3b2dea379d80fba03e9f56c0104ded",
+              "before_semantic_set_digest": "11a10f7885e937d381611ca4b2ab33145b3b2dea379d80fba03e9f56c0104ded",
+              "canonical_equal": true,
+              "canonical_size": 12457001,
+              "contract_digest": "a5f275b7dc3d897f7870535d7e0f471969eb3ff8c9bec2452d77f8445c9d95aa",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 0,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "fc3e1b52a582b1b1ddaea89ee3e715391438ef80624f0a0f10733a6f46d0dd44",
+              "before_semantic_set_digest": "fc3e1b52a582b1b1ddaea89ee3e715391438ef80624f0a0f10733a6f46d0dd44",
+              "canonical_equal": true,
+              "canonical_size": 11881045,
+              "contract_digest": "84db6c8e903b115fca4988d14ed0760129c1af14e9f5262910ece45a2b3fd56f",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 1,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "c579394c3a8abe2e207ef074a17a1345f743bd1fc4ab86770898d944c60a0158",
+              "before_semantic_set_digest": "c579394c3a8abe2e207ef074a17a1345f743bd1fc4ab86770898d944c60a0158",
+              "canonical_equal": true,
+              "canonical_size": 11688799,
+              "contract_digest": "8ac3adbb4b370ae2acfc27fb2a9545f2b36304556afb95d1cd0f78effaa2d087",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 2,
+              "selected_comparison_target_present": false
+            },
+            {
+              "after_semantic_set_digest": "41eac7288fc14df7235f48d610cdb23b72490a6b4e08fb5e072b1ae3c5f80a3f",
+              "before_semantic_set_digest": "41eac7288fc14df7235f48d610cdb23b72490a6b4e08fb5e072b1ae3c5f80a3f",
+              "canonical_equal": true,
+              "canonical_size": 12264520,
+              "contract_digest": "08361256705a7082aefd0f9f238267e425f9539f3dfbe69701e87776bfe623e9",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 3,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "bfe83b26b15e1884fa975430bffb54a62d73288f94ef1c36759ca74f0650043e",
+              "before_semantic_set_digest": "bfe83b26b15e1884fa975430bffb54a62d73288f94ef1c36759ca74f0650043e",
+              "canonical_equal": true,
+              "canonical_size": 11207675,
+              "contract_digest": "1cfdb801fa18447a2a01fdddbac022a6fa45baab46d44e359fa538f4745bb5c3",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 4,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "da7da98ade45870d6130ab7a3658702dacaac105f2e5f7361452c2ee004df664",
+              "before_semantic_set_digest": "da7da98ade45870d6130ab7a3658702dacaac105f2e5f7361452c2ee004df664",
+              "canonical_equal": true,
+              "canonical_size": 12778072,
+              "contract_digest": "3b10f1f70afef1cc4e66a76ee6d59946dae7761c300ce34aac970952eb5a8e18",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 5,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "1c0fa3993dccb92d8404e4832cfce63d8c747b8f6be29c4f8a59c82a0bf26b8a",
+              "before_semantic_set_digest": "1c0fa3993dccb92d8404e4832cfce63d8c747b8f6be29c4f8a59c82a0bf26b8a",
+              "canonical_equal": true,
+              "canonical_size": 12487940,
+              "contract_digest": "146a6e28db7853eed379e639a03fe4566877523e4933b7c1ba8b75bedfcb82e6",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 6,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "3c06e80dedc6b6fa77df2a40a681914e413a6ea0c7dc43cec167b5197cf0bc24",
+              "before_semantic_set_digest": "3c06e80dedc6b6fa77df2a40a681914e413a6ea0c7dc43cec167b5197cf0bc24",
+              "canonical_equal": true,
+              "canonical_size": 12586263,
+              "contract_digest": "8abf98d41875ba5831f1d8bd21d8f2539cc9a15f46a6f89ea53f7ce6390d995e",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 7,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "ce60139013ecb5baaf8455b0d4438012c5082ce29ad2396cfa09f33759db1b48",
+              "before_semantic_set_digest": "ce60139013ecb5baaf8455b0d4438012c5082ce29ad2396cfa09f33759db1b48",
+              "canonical_equal": true,
+              "canonical_size": 12586744,
+              "contract_digest": "a95f8d8ae3657624060e069ccfa5eaa518273b3611709ec639e596c1e67e3a5e",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 8,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "8d35b1bb0097dcfbaafdb2fef9d13e2a7942a3b996436c7eeb6e816e16f6011f",
+              "before_semantic_set_digest": "8d35b1bb0097dcfbaafdb2fef9d13e2a7942a3b996436c7eeb6e816e16f6011f",
+              "canonical_equal": true,
+              "canonical_size": 11496545,
+              "contract_digest": "0695d43870ad9f16f53ce4d5627505ad4c5239ae4808539cbcbe4be9df88fd18",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 9,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "bc5ba1aa7c03b60cec52a37faa3acd7985b5d7affd6281abc4416c5d3593cf78",
+              "before_semantic_set_digest": "bc5ba1aa7c03b60cec52a37faa3acd7985b5d7affd6281abc4416c5d3593cf78",
+              "canonical_equal": true,
+              "canonical_size": 10662378,
+              "contract_digest": "13638ca59f7fccaee08fbe65094a6d0cd093df6f676cd83a8b578399a898312e",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 10,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "d20a6c60b564ce6d9cadea9dab71268f42d2dbb452a0bfa94ca4edd27bfe4b0e",
+              "before_semantic_set_digest": "d20a6c60b564ce6d9cadea9dab71268f42d2dbb452a0bfa94ca4edd27bfe4b0e",
+              "canonical_equal": true,
+              "canonical_size": 11367599,
+              "contract_digest": "bc319245df37122acd6b3ed36d6a96801d4ed753913c59bc09223f4c6909ecee",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 11,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "504cd6d41a911451663e33f1d4a60215df96dc458a81d132527ae860937bc8dd",
+              "before_semantic_set_digest": "504cd6d41a911451663e33f1d4a60215df96dc458a81d132527ae860937bc8dd",
+              "canonical_equal": true,
+              "canonical_size": 11368766,
+              "contract_digest": "322186367595f5e77ae320cc177c5a15de351050a19ab459a01d19d37e9dece1",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 12,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "bfaa5cc3354802ba2613c365b1b1a20442853ca4abc64a4f705f3d49c3026541",
+              "before_semantic_set_digest": "bfaa5cc3354802ba2613c365b1b1a20442853ca4abc64a4f705f3d49c3026541",
+              "canonical_equal": true,
+              "canonical_size": 12587240,
+              "contract_digest": "144995bc8f442c30e75de71161e9b1ac168934afa2392210f6325999961b8a7d",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 13,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "9b91304dd1aaa7d9699d2fbbe32f6ad8e985a40ae7412814e48255624de1ccbc",
+              "before_semantic_set_digest": "9b91304dd1aaa7d9699d2fbbe32f6ad8e985a40ae7412814e48255624de1ccbc",
+              "canonical_equal": true,
+              "canonical_size": 12809555,
+              "contract_digest": "1e46dbe62b5277cf8d69dc69c93a015b7d228c1db9c542a4b8685ba773db17f7",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 14,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "ee99e44a464240462a3370c8d11bb87149d7239b6eae5122a08fc160821b4a86",
+              "before_semantic_set_digest": "ee99e44a464240462a3370c8d11bb87149d7239b6eae5122a08fc160821b4a86",
+              "canonical_equal": true,
+              "canonical_size": 11720893,
+              "contract_digest": "08f8788749f112d73a747011bced6cc33690c16b0292d97e4b9fb667bfbef6b3",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 15,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "66f92c24ad48abb0eb6f2d1da064a01b4f365caf7be6b623543fa2b543e41718",
+              "before_semantic_set_digest": "66f92c24ad48abb0eb6f2d1da064a01b4f365caf7be6b623543fa2b543e41718",
+              "canonical_equal": true,
+              "canonical_size": 10086447,
+              "contract_digest": "fd7fdc6eb90f096caa6ec92fa81c5d8e11929d48ff3d609e282c586da260163e",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 16,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "6cef5c1471e8101c067a6e36c1432392203b0dfcccf0cdb9aba4af807e4c0298",
+              "before_semantic_set_digest": "6cef5c1471e8101c067a6e36c1432392203b0dfcccf0cdb9aba4af807e4c0298",
+              "canonical_equal": true,
+              "canonical_size": 11499113,
+              "contract_digest": "ca7c47004c48094488b913c9a85b39ac80833e8a7df09dacd504826192ab8264",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 17,
+              "selected_comparison_target_present": false
+            },
+            {
+              "after_semantic_set_digest": "9b9f25de769ccc6d420ed5c5d0ad589e47144150abeab275b1662c218486d2ca",
+              "before_semantic_set_digest": "9b9f25de769ccc6d420ed5c5d0ad589e47144150abeab275b1662c218486d2ca",
+              "canonical_equal": true,
+              "canonical_size": 11880991,
+              "contract_digest": "e5cc04b3cc9926f108a123f4fff9c204e13f76be57df3c0c19304e41599cfc9b",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 18,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "e84b317ff4c648ae082c3f78a75dc948022cb94f97d91de5b59e5756e88d362c",
+              "before_semantic_set_digest": "e84b317ff4c648ae082c3f78a75dc948022cb94f97d91de5b59e5756e88d362c",
+              "canonical_equal": true,
+              "canonical_size": 11399573,
+              "contract_digest": "0ff41595e66f85e8fee97651fb5279b5d8dac281e965ba5e12d663de5a1d815d",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 19,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "0b46868d3124686f9663c27408847df14b33e8aa4764645d322fe5a4f3bd782f",
+              "before_semantic_set_digest": "0b46868d3124686f9663c27408847df14b33e8aa4764645d322fe5a4f3bd782f",
+              "canonical_equal": true,
+              "canonical_size": 12073224,
+              "contract_digest": "bcd06233d9407a399bc80da4182bd3bc16c8c0926582da42138863ebdd6f0be9",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 20,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "20c97079ae5e83342bb494913e8becb83c8021a8730f2bdadc0ce3045f779a5e",
+              "before_semantic_set_digest": "20c97079ae5e83342bb494913e8becb83c8021a8730f2bdadc0ce3045f779a5e",
+              "canonical_equal": true,
+              "canonical_size": 12457536,
+              "contract_digest": "9846944cd2657dc16faed866cc7365fa2828bfe25419e889ceb98a6367f3cee8",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 21,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "24388a8a2c55df1ee101d053eff2727f1240e412d6ad91cf462b09747fb30985",
+              "before_semantic_set_digest": "24388a8a2c55df1ee101d053eff2727f1240e412d6ad91cf462b09747fb30985",
+              "canonical_equal": true,
+              "canonical_size": 11367383,
+              "contract_digest": "47e77f8e5d803dc7729d6ca1c599b3e9af730a1532bddabea0b18d4e7b4a0039",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 22,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "d46ad9bb67a53b582d9b601a297731a71b1fd2e1d066781d60f08159da97afae",
+              "before_semantic_set_digest": "d46ad9bb67a53b582d9b601a297731a71b1fd2e1d066781d60f08159da97afae",
+              "canonical_equal": true,
+              "canonical_size": 13289775,
+              "contract_digest": "028e94b3b0bab82c983bd6343df49513986291b83d12a271590bf4ebe23b3ca2",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 23,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "0860b3b7920b5709c9cf1aa2c79fcc79f34b6dbe42b85f8574a049f5207c572f",
+              "before_semantic_set_digest": "0860b3b7920b5709c9cf1aa2c79fcc79f34b6dbe42b85f8574a049f5207c572f",
+              "canonical_equal": true,
+              "canonical_size": 11559250,
+              "contract_digest": "2c10d1c76de0394ee7efebfcf61db7c3195dd8e9013679f273bc9554943bf859",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 24,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "9d80dfcca92fe46ba82fb262b5faea3e1a05ae8f3b85b5b140e7e49425e52e7f",
+              "before_semantic_set_digest": "9d80dfcca92fe46ba82fb262b5faea3e1a05ae8f3b85b5b140e7e49425e52e7f",
+              "canonical_equal": true,
+              "canonical_size": 13130003,
+              "contract_digest": "6a17abca91850c5cf07321a6be21fc8c38bf05ee6d10f0dcef34145eea93bfb5",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 25,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "588d73020afc28a81a7d61cd1d2ad9d23665121be54fd11dff0f260e82ba4b76",
+              "before_semantic_set_digest": "588d73020afc28a81a7d61cd1d2ad9d23665121be54fd11dff0f260e82ba4b76",
+              "canonical_equal": true,
+              "canonical_size": 10854344,
+              "contract_digest": "c80159c6321c9a5c79b5c191b2d4ed2be812706db73462b0e5372cb6085a496b",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 26,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "c80f28449b6e3c2c6ea8cc277da6a74571951e62af1f53590c164c0004a906ad",
+              "before_semantic_set_digest": "c80f28449b6e3c2c6ea8cc277da6a74571951e62af1f53590c164c0004a906ad",
+              "canonical_equal": true,
+              "canonical_size": 11560329,
+              "contract_digest": "e0e8e2901d2732fe8763bd59df7a4a5f7d07ae1263ff1434bcc91ab6acd906c0",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 27,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "50b1d5fd84e59276cab8200b0b2bd58c2fdbe17bec8bd71967774584e69f46c2",
+              "before_semantic_set_digest": "50b1d5fd84e59276cab8200b0b2bd58c2fdbe17bec8bd71967774584e69f46c2",
+              "canonical_equal": true,
+              "canonical_size": 11881605,
+              "contract_digest": "c1da2d23a78752fb14a8f0988da1c76630f15c6201fafd3197d313fe07402c69",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 28,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "443d580449047d46cbece03c58e27e2144a8933f3a2ac27348d220141b4977b4",
+              "before_semantic_set_digest": "443d580449047d46cbece03c58e27e2144a8933f3a2ac27348d220141b4977b4",
+              "canonical_equal": true,
+              "canonical_size": 13130635,
+              "contract_digest": "b9fdbebb15c9d0680ac669c0999535a52f5ac2f0ddb349b9b8c9206f6cfe2a8f",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 29,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "f141ade12d5c8ddcb082368611b16c680a5ec51b1d07bf5203818cd28521f356",
+              "before_semantic_set_digest": "f141ade12d5c8ddcb082368611b16c680a5ec51b1d07bf5203818cd28521f356",
+              "canonical_equal": true,
+              "canonical_size": 11146152,
+              "contract_digest": "d04e525401eb9d9f2fa5276a51a8b0ccdeea85da2d1306f10c30d9c6a1aeb695",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 30,
+              "selected_comparison_target_present": true
+            },
+            {
+              "after_semantic_set_digest": "cdfe51555323fa54a0f35ece93a604d4b18bad9d4edf3fe09b6cd9db9e301a10",
+              "before_semantic_set_digest": "cdfe51555323fa54a0f35ece93a604d4b18bad9d4edf3fe09b6cd9db9e301a10",
+              "canonical_equal": true,
+              "canonical_size": 11368638,
+              "contract_digest": "a62f8c0a476e2922c5a32a43bc1b9f1eeddb8412815091160e486edd60c6c5a4",
+              "no_candidate_or_graph_mutation": true,
+              "planted_target_present": true,
+              "raw_python_equal": false,
+              "seed_ordinal": 31,
+              "selected_comparison_target_present": true
+            }
+          ],
+          "snapshot_transport_set_digest": "a73884f9180161673cc9f2ff26ec030641a675eb3885ef38da2d168b0724261c",
+          "stopped_output_paths_present": {
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/canonical_result.json.gz": false,
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/execution_manifest.json": false,
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/preoutcome_exposure_admission.json": false,
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_carrier": false,
+            "reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/science_journal": false
+          }
+        },
+        "elapsed_seconds": 1558.590748,
+        "evaluation_order": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30,
+          1,
+          3,
+          5,
+          7,
+          9,
+          11,
+          13,
+          15,
+          17,
+          19,
+          21,
+          23,
+          25,
+          27,
+          29,
+          31
+        ],
+        "order_name": "even_then_odd",
+        "order_result_digest": "3e74ffb7f11ef5fe449a37bc63f0e9814cb3cbe4cb5429db2b010849e4b01273",
+        "package_id": "native_v2_frozen_cohort_canonical_contract_reclosure.v1",
+        "process_id": 1083186,
+        "schema_version": "native_v2_canonical_contract_order_result.v1",
+        "verified_organism_count": 96,
+        "verified_seed_count": 32
+      }
+    }
+  ],
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "package_id": "native_v2_frozen_cohort_import_path_launcher_reclosure.v1",
+  "parent_argv": [
+    "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+    "-m",
+    "recon_lite_chess.autogrowth.native_v2_frozen_cohort_import_path_launcher_reclosure",
+    "run-verification"
+  ],
+  "parent_process_id": 1077155,
+  "per_seed_contract_digest_set": "62c940dada05d6073682caa6bc3150af18a1157bcc7fd62d291d01630962f223",
+  "per_seed_contract_digests": [
+    {
+      "contract_digest": "a5f275b7dc3d897f7870535d7e0f471969eb3ff8c9bec2452d77f8445c9d95aa",
+      "seed_ordinal": 0
+    },
+    {
+      "contract_digest": "84db6c8e903b115fca4988d14ed0760129c1af14e9f5262910ece45a2b3fd56f",
+      "seed_ordinal": 1
+    },
+    {
+      "contract_digest": "8ac3adbb4b370ae2acfc27fb2a9545f2b36304556afb95d1cd0f78effaa2d087",
+      "seed_ordinal": 2
+    },
+    {
+      "contract_digest": "08361256705a7082aefd0f9f238267e425f9539f3dfbe69701e87776bfe623e9",
+      "seed_ordinal": 3
+    },
+    {
+      "contract_digest": "1cfdb801fa18447a2a01fdddbac022a6fa45baab46d44e359fa538f4745bb5c3",
+      "seed_ordinal": 4
+    },
+    {
+      "contract_digest": "3b10f1f70afef1cc4e66a76ee6d59946dae7761c300ce34aac970952eb5a8e18",
+      "seed_ordinal": 5
+    },
+    {
+      "contract_digest": "146a6e28db7853eed379e639a03fe4566877523e4933b7c1ba8b75bedfcb82e6",
+      "seed_ordinal": 6
+    },
+    {
+      "contract_digest": "8abf98d41875ba5831f1d8bd21d8f2539cc9a15f46a6f89ea53f7ce6390d995e",
+      "seed_ordinal": 7
+    },
+    {
+      "contract_digest": "a95f8d8ae3657624060e069ccfa5eaa518273b3611709ec639e596c1e67e3a5e",
+      "seed_ordinal": 8
+    },
+    {
+      "contract_digest": "0695d43870ad9f16f53ce4d5627505ad4c5239ae4808539cbcbe4be9df88fd18",
+      "seed_ordinal": 9
+    },
+    {
+      "contract_digest": "13638ca59f7fccaee08fbe65094a6d0cd093df6f676cd83a8b578399a898312e",
+      "seed_ordinal": 10
+    },
+    {
+      "contract_digest": "bc319245df37122acd6b3ed36d6a96801d4ed753913c59bc09223f4c6909ecee",
+      "seed_ordinal": 11
+    },
+    {
+      "contract_digest": "322186367595f5e77ae320cc177c5a15de351050a19ab459a01d19d37e9dece1",
+      "seed_ordinal": 12
+    },
+    {
+      "contract_digest": "144995bc8f442c30e75de71161e9b1ac168934afa2392210f6325999961b8a7d",
+      "seed_ordinal": 13
+    },
+    {
+      "contract_digest": "1e46dbe62b5277cf8d69dc69c93a015b7d228c1db9c542a4b8685ba773db17f7",
+      "seed_ordinal": 14
+    },
+    {
+      "contract_digest": "08f8788749f112d73a747011bced6cc33690c16b0292d97e4b9fb667bfbef6b3",
+      "seed_ordinal": 15
+    },
+    {
+      "contract_digest": "fd7fdc6eb90f096caa6ec92fa81c5d8e11929d48ff3d609e282c586da260163e",
+      "seed_ordinal": 16
+    },
+    {
+      "contract_digest": "ca7c47004c48094488b913c9a85b39ac80833e8a7df09dacd504826192ab8264",
+      "seed_ordinal": 17
+    },
+    {
+      "contract_digest": "e5cc04b3cc9926f108a123f4fff9c204e13f76be57df3c0c19304e41599cfc9b",
+      "seed_ordinal": 18
+    },
+    {
+      "contract_digest": "0ff41595e66f85e8fee97651fb5279b5d8dac281e965ba5e12d663de5a1d815d",
+      "seed_ordinal": 19
+    },
+    {
+      "contract_digest": "bcd06233d9407a399bc80da4182bd3bc16c8c0926582da42138863ebdd6f0be9",
+      "seed_ordinal": 20
+    },
+    {
+      "contract_digest": "9846944cd2657dc16faed866cc7365fa2828bfe25419e889ceb98a6367f3cee8",
+      "seed_ordinal": 21
+    },
+    {
+      "contract_digest": "47e77f8e5d803dc7729d6ca1c599b3e9af730a1532bddabea0b18d4e7b4a0039",
+      "seed_ordinal": 22
+    },
+    {
+      "contract_digest": "028e94b3b0bab82c983bd6343df49513986291b83d12a271590bf4ebe23b3ca2",
+      "seed_ordinal": 23
+    },
+    {
+      "contract_digest": "2c10d1c76de0394ee7efebfcf61db7c3195dd8e9013679f273bc9554943bf859",
+      "seed_ordinal": 24
+    },
+    {
+      "contract_digest": "6a17abca91850c5cf07321a6be21fc8c38bf05ee6d10f0dcef34145eea93bfb5",
+      "seed_ordinal": 25
+    },
+    {
+      "contract_digest": "c80159c6321c9a5c79b5c191b2d4ed2be812706db73462b0e5372cb6085a496b",
+      "seed_ordinal": 26
+    },
+    {
+      "contract_digest": "e0e8e2901d2732fe8763bd59df7a4a5f7d07ae1263ff1434bcc91ab6acd906c0",
+      "seed_ordinal": 27
+    },
+    {
+      "contract_digest": "c1da2d23a78752fb14a8f0988da1c76630f15c6201fafd3197d313fe07402c69",
+      "seed_ordinal": 28
+    },
+    {
+      "contract_digest": "b9fdbebb15c9d0680ac669c0999535a52f5ac2f0ddb349b9b8c9206f6cfe2a8f",
+      "seed_ordinal": 29
+    },
+    {
+      "contract_digest": "d04e525401eb9d9f2fa5276a51a8b0ccdeea85da2d1306f10c30d9c6a1aeb695",
+      "seed_ordinal": 30
+    },
+    {
+      "contract_digest": "a62f8c0a476e2922c5a32a43bc1b9f1eeddb8412815091160e486edd60c6c5a4",
+      "seed_ordinal": 31
+    }
+  ],
+  "python_executable": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+  "result_digest": "24a10043dce9894caac1db11dbb191011d92376e2e39b42f058bd53ff444e71c",
+  "schema_version": "native_v2_import_path_launcher_result.v1",
+  "source_manifest": {
+    "digest": "457a267d8aa2a3dda8341bd1ea73963276cc22ca9807a5e1a3d9eacf1aea92e0",
+    "sha256": "c296034ec4b7c9d7c1e5394bc41efc256b577422a108009ae1785d8d433e04d4"
+  },
+  "verified_organism_count_per_order": 96,
+  "verified_seed_count_per_order": 32,
+  "working_directory": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit"
+}
