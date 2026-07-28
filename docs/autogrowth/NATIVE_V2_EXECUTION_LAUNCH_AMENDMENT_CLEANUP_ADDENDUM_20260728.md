@@ -31,3 +31,10 @@ Any different command failure, diagnostic text, loaded state, active state, or
 remaining process still fails. No learner, graph, registry, laboratory,
 cohort, ecology, threshold, journal, statistic, exposure, or outcome behavior
 changes.
+
+The same exact adjudication is also the only exception to the relaunch
+concurrency stop for a terminal attempt whose terminal and cleanup records are
+durable but whose final record was never written. It permits a new unique
+attempt only when those records identify the same command/attempt and the unit
+is independently absent. A missing, malformed, mismatched, or still-live
+attempt remains blocking.

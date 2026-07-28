@@ -864,6 +864,32 @@ def reject_concurrent_matching_run(
         if final_path.exists():
             _load_external(final_path, "final_record_digest")
             continue
+        terminal_path = directory / "terminal.json"
+        cleanup_path = directory / "cleanup.json"
+        if terminal_path.is_file() and cleanup_path.is_file():
+            terminal = _load_external(
+                terminal_path, "terminal_capture_digest"
+            )
+            cleanup = _load_external(
+                cleanup_path, "cleanup_digest"
+            )
+            current_status = dict(
+                status_reader(str(launch["service_name"]))
+            )
+            adjudication = adjudicate_cleanup_record(
+                str(launch["service_name"]),
+                cleanup.get("actions", ()),
+                current_status,
+            )
+            if (
+                terminal.get("attempt_id") == launch["attempt_id"]
+                and terminal.get("command") == command
+                and terminal.get("terminal_status", {}).get(
+                    "exec_main_code"
+                )
+                and adjudication["accepted"] is True
+            ):
+                continue
         status = status_reader(str(launch["service_name"]))
         if not _service_terminal(status):
             raise ExecutionLaunchAmendmentError(
@@ -1751,6 +1777,78 @@ def _terminal_capture(
     return capture
 
 
+def adjudicate_cleanup_record(
+    service_name: str,
+    actions: Sequence[Mapping[str, Any]],
+    post_cleanup_status: Mapping[str, str],
+) -> dict[str, Any]:
+    expected_argv = {
+        action: [
+            "systemctl", "--user", action, service_name
+        ]
+        for action in ("stop", "reset-failed")
+    }
+    actions_by_name = {
+        str(item.get("action")): item for item in actions
+    }
+    exact_actions = (
+        len(actions) == 2
+        and set(actions_by_name) == {"stop", "reset-failed"}
+        and all(
+            actions_by_name[action].get("argv")
+            == expected_argv[action]
+            for action in expected_argv
+        )
+    )
+    stop = actions_by_name.get("stop", {})
+    reset = actions_by_name.get("reset-failed", {})
+    stop_succeeded = stop.get("returncode") == 0
+    reset_succeeded = reset.get("returncode") == 0
+    expected_unloaded_message = (
+        "Failed to reset failed state of unit "
+        f"{service_name}.service: Unit {service_name}.service not loaded.\n"
+    )
+    reset_found_already_unloaded = (
+        reset.get("returncode") == 1
+        and reset.get("stdout") == ""
+        and reset.get("stderr") == expected_unloaded_message
+    )
+    unloaded = (
+        post_cleanup_status.get("LoadState") == "not-found"
+        and post_cleanup_status.get("ActiveState") == "inactive"
+        and post_cleanup_status.get("SubState") == "dead"
+        and post_cleanup_status.get("ExecMainPID") in {"", "0"}
+    )
+    value = {
+        "schema_version": "native_v2_cleanup_adjudication.v1",
+        "package_id": PACKAGE_ID,
+        "service_name": service_name,
+        "exact_actions": exact_actions,
+        "stop_succeeded": stop_succeeded,
+        "reset_outcome": (
+            "reset_succeeded"
+            if reset_succeeded
+            else (
+                "already_unloaded_after_stop"
+                if reset_found_already_unloaded
+                else "reset_failed"
+            )
+        ),
+        "post_cleanup_status": copy.deepcopy(
+            dict(post_cleanup_status)
+        ),
+        "unit_absent": unloaded,
+        "accepted": (
+            exact_actions
+            and stop_succeeded
+            and (reset_succeeded or reset_found_already_unloaded)
+            and unloaded
+        ),
+    }
+    value["adjudication_digest"] = digest(value)
+    return value
+
+
 def cleanup_retained_service(
     service_name: str,
     *,
@@ -1771,22 +1869,8 @@ def cleanup_retained_service(
             "stderr": str(result.stderr),
         })
     post_cleanup_status = dict(status_reader(service_name))
-    stop_succeeded = actions[0]["returncode"] == 0
-    reset_succeeded = actions[1]["returncode"] == 0
-    expected_unloaded_message = (
-        "Failed to reset failed state of unit "
-        f"{service_name}.service: Unit {service_name}.service not loaded.\n"
-    )
-    reset_found_already_unloaded = (
-        actions[1]["returncode"] == 1
-        and actions[1]["stdout"] == ""
-        and actions[1]["stderr"] == expected_unloaded_message
-    )
-    unloaded = (
-        post_cleanup_status.get("LoadState") == "not-found"
-        and post_cleanup_status.get("ActiveState") == "inactive"
-        and post_cleanup_status.get("SubState") == "dead"
-        and post_cleanup_status.get("ExecMainPID") in {"", "0"}
+    adjudication = adjudicate_cleanup_record(
+        service_name, actions, post_cleanup_status
     )
     value = {
         "schema_version": "native_v2_service_cleanup.v1",
@@ -1794,20 +1878,9 @@ def cleanup_retained_service(
         "service_name": service_name,
         "actions": actions,
         "post_cleanup_status": post_cleanup_status,
-        "reset_outcome": (
-            "reset_succeeded"
-            if reset_succeeded
-            else (
-                "already_unloaded_after_stop"
-                if reset_found_already_unloaded
-                else "reset_failed"
-            )
-        ),
-        "completed": (
-            stop_succeeded
-            and (reset_succeeded or reset_found_already_unloaded)
-            and unloaded
-        ),
+        "adjudication": adjudication,
+        "reset_outcome": adjudication["reset_outcome"],
+        "completed": adjudication["accepted"],
         "completed_at_utc": datetime.now(timezone.utc).isoformat(),
     }
     value["cleanup_digest"] = digest(value)

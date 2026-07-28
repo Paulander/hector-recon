@@ -365,6 +365,95 @@ def test_corrupt_final_attempt_cannot_authorize_relaunch(
         _launch(tmp_path, attempt_id=ATTEMPT_2)
 
 
+def test_valid_orphaned_terminal_cleanup_allows_new_attempt(
+    tmp_path: Path,
+) -> None:
+    _launch(tmp_path)
+    directory = _attempt_dir(tmp_path)
+    launch = amendment.load_json(directory / "launch.json")
+    terminal = {
+        "schema_version": "native_v2_terminal_capture.v1",
+        "package_id": amendment.PACKAGE_ID,
+        "attempt_id": ATTEMPT_1,
+        "command": "run-exposure",
+        "terminal_status": {"exec_main_code": "1"},
+    }
+    terminal["terminal_capture_digest"] = amendment.digest(terminal)
+    amendment.atomic_json(directory / "terminal.json", terminal)
+    service_name = launch["service_name"]
+    actions = [
+        {
+            "action": "stop",
+            "argv": ["systemctl", "--user", "stop", service_name],
+            "returncode": 0,
+            "stdout": "",
+            "stderr": "",
+        },
+        {
+            "action": "reset-failed",
+            "argv": [
+                "systemctl", "--user", "reset-failed", service_name
+            ],
+            "returncode": 1,
+            "stdout": "",
+            "stderr": (
+                "Failed to reset failed state of unit "
+                f"{service_name}.service: Unit "
+                f"{service_name}.service not loaded.\n"
+            ),
+        },
+    ]
+    cleanup = {
+        "schema_version": "native_v2_service_cleanup.v1",
+        "package_id": amendment.PACKAGE_ID,
+        "service_name": service_name,
+        "actions": actions,
+        "completed": False,
+    }
+    cleanup["cleanup_digest"] = amendment.digest(cleanup)
+    amendment.atomic_json(directory / "cleanup.json", cleanup)
+    amendment.reject_concurrent_matching_run(
+        "run-exposure",
+        attempt_root=tmp_path / "attempts",
+        status_reader=lambda _name: _unloaded_status(),
+    )
+
+
+def test_malformed_orphaned_cleanup_still_blocks_relaunch(
+    tmp_path: Path,
+) -> None:
+    _launch(tmp_path)
+    directory = _attempt_dir(tmp_path)
+    terminal = {
+        "attempt_id": ATTEMPT_1,
+        "command": "run-exposure",
+        "terminal_status": {"exec_main_code": "1"},
+    }
+    terminal["terminal_capture_digest"] = amendment.digest(terminal)
+    amendment.atomic_json(directory / "terminal.json", terminal)
+    cleanup = {
+        "actions": [{
+            "action": "stop",
+            "argv": ["systemctl", "--user", "stop", "wrong"],
+            "returncode": 0,
+            "stdout": "",
+            "stderr": "",
+        }],
+        "completed": False,
+    }
+    cleanup["cleanup_digest"] = amendment.digest(cleanup)
+    amendment.atomic_json(directory / "cleanup.json", cleanup)
+    with pytest.raises(
+        amendment.ExecutionLaunchAmendmentError,
+        match="matching service",
+    ):
+        amendment.reject_concurrent_matching_run(
+            "run-exposure",
+            attempt_root=tmp_path / "attempts",
+            status_reader=lambda _name: _unloaded_status(),
+        )
+
+
 def test_launch_record_binds_final_readiness_and_context(
     tmp_path: Path,
 ) -> None:
