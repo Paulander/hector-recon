@@ -780,3 +780,28 @@ but this exposure attempt is terminal and cannot be reused. This external
 process stop is not evidence for or against the hypothesis and is not KRK R1
 evidence. See
 `docs/autogrowth/NATIVE_V2_FROZEN_COHORT_PACKAGE_ALIAS_COMPATIBILITY_EXPOSURE_PROCESS_STOP_20260728.md`.
+
+
+The separately frozen process-resilient outer closure now passes its one
+authorized data-free readiness run and stops before exposure. It preserves the
+stopped package and exact 32-seed/96-organism cohort while dividing any future
+outcome-blind exposure into 96 atomic, chained, independently resumable units.
+The exact frozen monolithic and unitized production code produced canonically
+equal results on a small isolated synthetic cohort. Focused tests passed 30/30;
+the adjacent frozen packages passed 87 with 1 intentional skip.
+
+The harmless user-service canary completed with a distinct child process,
+literal four-element Python command, frozen environment, repository working
+directory, durable separate logs, exit 0, and no wall-clock limit. The
+four-unit synthetic journal resumed one unfinished unit and committed all
+four. Readiness SHA-256 is
+`d06096cf486155e6765d9b7243daa23514a4a26905cfbe78c4f1e636eec4d755`,
+with canonical digest
+`e7aea48976d4ddcfb889b1224b43e96f4da85883a0c67e6f222dd19fb18795f4`.
+
+Real exposure and outcome execution remain false, with zero outcome events.
+No real exposure journal, exposure artifact, execution manifest,
+science-started marker, science journal, carrier, result, or new failure
+artifact exists. This is process-readiness evidence only—not exposure,
+causal, scientific, or KRK R1 evidence. See
+`docs/autogrowth/NATIVE_V2_PROCESS_RESILIENT_EXECUTION_RECLOSURE_RESULT_20260728.md`.
