@@ -1,0 +1,36 @@
+{
+  "artifact_binding": {
+    "digest": "ed183553a1a08e0044c6acd7a98fdc8e16125e56164a65ba0f972a18959c7779",
+    "sha256": "37501ae67287314d33432176a9a610f277752c3c147ca6a530d51a00dfad952b"
+  },
+  "canary_duration_seconds": 1085,
+  "cohort_digest": "a144fe94f4479c819756dfc44b22a2594e2b9df09367d571d39ab54007560bb8",
+  "elapsed_seconds": 28.485862,
+  "expanded_package_map_digest": "2334cce42845479e8d1a642876d088b96ad18c5d1b55c9b31e7cfaa0549f048d",
+  "launch_readiness_digest": "bde7332ac0047157b35e7e336e4f1b1727a5a21ab15bb4da4d0d78a3050e3f75",
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "package_id": "native_v2_process_readiness_repair.v1",
+  "real_exposure_run": false,
+  "real_outcome_run": false,
+  "runtime_call_path_canary": {
+    "call_canary_digest": "65545734c397fa2bc6e46fa3bdf363c7db5fab7d21edfa0ab860ac37413d1e47",
+    "organism_count": 96,
+    "outcome_access": {
+      "count": 0,
+      "event_ids": []
+    },
+    "registry_count": 3,
+    "verification_call_count": 1
+  },
+  "runtime_input_digest": "54764eab47f60a409f79cf4cf144711dac262d31fb5ee53e0a3278bcace3bfee",
+  "schema_version": "native_v2_process_launch_readiness.v1",
+  "source_manifest": {
+    "digest": "3c9ebf686e132e9fd570689f2cc87aa0ca881c03959ea9b5e3f51fd8423def0a",
+    "sha256": "5a02c564dab31d4efceb1fae24d934d9320284a20418774ca28f8fe5ca48d295"
+  },
+  "verified_organism_count": 96,
+  "verified_seed_count": 32
+}
