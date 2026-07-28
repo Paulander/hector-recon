@@ -12,6 +12,10 @@ artifact, the terminal external-process-stop report, all 32 seeds, all 96
 A/B/C organisms, the frozen ecology, targets, thresholds, statistical rules,
 learner, graph, registry and driver.
 
+The stopped package is verified from its committed bytes, self-digests,
+source hashes and readiness bindings. Its import-name-sensitive live
+self-reconstruction is not rerun under this later outer-package commit.
+
 No real exposure, outcome, R1, retired-65, historical-regression or follow-up
 mechanism may run in this package.
 

@@ -952,6 +952,16 @@ def test_new_namespace_is_disjoint_and_old_exposure_is_never_called() -> None:
     assert "stopped_adapter.run_exposure" not in source
 
 
+def test_stopped_alias_package_is_verified_as_preserved_bytes() -> None:
+    value = resilience.verify_stopped_alias_package_bytes()
+    assert value["verification_mode"] == (
+        "committed_bytes_and_frozen_digests"
+    )
+    assert value["readiness_digest"]
+    source = inspect.getsource(resilience.verify_frozen_inputs)
+    assert "frozen.verify_package_manifests" not in source
+
+
 def test_source_has_no_module_global_replacement_or_forbidden_fallback() -> None:
     source = Path(resilience.__file__).read_text(encoding="utf-8")
     assert "runpy" not in source

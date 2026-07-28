@@ -318,10 +318,85 @@ def preserved_input_identity() -> dict[str, Any]:
     return value
 
 
+def verify_stopped_alias_package_bytes() -> dict[str, Any]:
+    """Verify the stopped package as frozen bytes, without reinterpreting it."""
+
+    source = _load_json(ROOT / frozen.SOURCE_MANIFEST_PATH)
+    source_digest = verify_self_digest(
+        source,
+        "source_manifest_digest",
+        label="stopped alias source manifest",
+    )
+    for relative, expected in source["source_hashes"].items():
+        if sha256_file(ROOT / relative) != expected:
+            raise ProcessResilienceError(
+                f"stopped alias source changed:{relative}"
+            )
+    source_commit = str(source["source_freeze_commit"])
+    if subprocess.run(
+        ["git", "merge-base", "--is-ancestor", source_commit, "HEAD"],
+        cwd=ROOT,
+        check=False,
+    ).returncode != 0:
+        raise ProcessResilienceError(
+            "stopped alias source commit is not an ancestor"
+        )
+
+    binding = _load_json(ROOT / frozen.ARTIFACT_BINDING_PATH)
+    binding_digest = verify_self_digest(
+        binding,
+        "artifact_binding_digest",
+        label="stopped alias artifact binding",
+    )
+    if (
+        binding["source_manifest"]["sha256"]
+        != sha256_file(ROOT / frozen.SOURCE_MANIFEST_PATH)
+        or binding["source_manifest"]["digest"] != source_digest
+        or binding["frozen_inputs"]["accepted_cohort_digest"]
+        != ACCEPTED_COHORT_DIGEST
+        or binding["frozen_inputs"]["expanded_package_map"][
+            "expanded_map_digest"
+        ]
+        != EXPANDED_PACKAGE_MAP_DIGEST
+    ):
+        raise ProcessResilienceError(
+            "stopped alias source/artifact byte binding changed"
+        )
+
+    readiness = frozen.load_and_verify_readiness(committed=True)
+    if (
+        readiness["source_manifest"]["sha256"]
+        != sha256_file(ROOT / frozen.SOURCE_MANIFEST_PATH)
+        or readiness["source_manifest"]["digest"] != source_digest
+        or readiness["artifact_binding"]["sha256"]
+        != sha256_file(ROOT / frozen.ARTIFACT_BINDING_PATH)
+        or readiness["artifact_binding"]["digest"] != binding_digest
+        or readiness["expanded_package_map"]["expanded_map_digest"]
+        != EXPANDED_PACKAGE_MAP_DIGEST
+    ):
+        raise ProcessResilienceError(
+            "stopped alias readiness byte binding changed"
+        )
+    return {
+        "source_manifest_sha256": sha256_file(
+            ROOT / frozen.SOURCE_MANIFEST_PATH
+        ),
+        "source_manifest_digest": source_digest,
+        "artifact_binding_sha256": sha256_file(
+            ROOT / frozen.ARTIFACT_BINDING_PATH
+        ),
+        "artifact_binding_digest": binding_digest,
+        "readiness_sha256": sha256_file(ROOT / frozen.READINESS_PATH),
+        "readiness_digest": readiness["readiness_digest"],
+        "source_freeze_commit": source_commit,
+        "verification_mode": "committed_bytes_and_frozen_digests",
+    }
+
+
 def verify_frozen_inputs() -> dict[str, Any]:
     _require_starting_ancestor()
     preserved = preserved_input_identity()
-    alias_package = frozen.verify_package_manifests()
+    alias_package = verify_stopped_alias_package_bytes()
     readiness = frozen.load_and_verify_readiness(committed=True)
     if (
         readiness["cohort_digest"] != ACCEPTED_COHORT_DIGEST
