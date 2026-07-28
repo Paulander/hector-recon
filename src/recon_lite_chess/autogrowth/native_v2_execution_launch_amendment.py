@@ -53,6 +53,8 @@ SOURCE_FILES = (
     "test_native_v2_execution_launch_amendment.py",
     "docs/autogrowth/"
     "NATIVE_V2_EXECUTION_LAUNCH_AMENDMENT_PREREGISTRATION_20260728.md",
+    "docs/autogrowth/"
+    "NATIVE_V2_EXECUTION_LAUNCH_AMENDMENT_CLEANUP_ADDENDUM_20260728.md",
 )
 PRE_REVIEW_FILES = (
     "src/recon_lite_chess/autogrowth/"
@@ -1755,6 +1757,7 @@ def cleanup_retained_service(
     runner: Callable[
         [Sequence[str]], subprocess.CompletedProcess
     ] = _completed_process,
+    status_reader: Callable[[str], Mapping[str, str]] = _systemctl_show,
 ) -> dict[str, Any]:
     actions = []
     for action in ("stop", "reset-failed"):
@@ -1767,13 +1770,43 @@ def cleanup_retained_service(
             "stdout": str(result.stdout),
             "stderr": str(result.stderr),
         })
+    post_cleanup_status = dict(status_reader(service_name))
+    stop_succeeded = actions[0]["returncode"] == 0
+    reset_succeeded = actions[1]["returncode"] == 0
+    expected_unloaded_message = (
+        "Failed to reset failed state of unit "
+        f"{service_name}.service: Unit {service_name}.service not loaded.\n"
+    )
+    reset_found_already_unloaded = (
+        actions[1]["returncode"] == 1
+        and actions[1]["stdout"] == ""
+        and actions[1]["stderr"] == expected_unloaded_message
+    )
+    unloaded = (
+        post_cleanup_status.get("LoadState") == "not-found"
+        and post_cleanup_status.get("ActiveState") == "inactive"
+        and post_cleanup_status.get("SubState") == "dead"
+        and post_cleanup_status.get("ExecMainPID") in {"", "0"}
+    )
     value = {
         "schema_version": "native_v2_service_cleanup.v1",
         "package_id": PACKAGE_ID,
         "service_name": service_name,
         "actions": actions,
-        "completed": all(
-            item["returncode"] == 0 for item in actions
+        "post_cleanup_status": post_cleanup_status,
+        "reset_outcome": (
+            "reset_succeeded"
+            if reset_succeeded
+            else (
+                "already_unloaded_after_stop"
+                if reset_found_already_unloaded
+                else "reset_failed"
+            )
+        ),
+        "completed": (
+            stop_succeeded
+            and (reset_succeeded or reset_found_already_unloaded)
+            and unloaded
         ),
         "completed_at_utc": datetime.now(timezone.utc).isoformat(),
     }
@@ -1828,6 +1861,9 @@ def poll_service_attempt(
     cleanup_runner: Callable[
         [Sequence[str]], subprocess.CompletedProcess
     ] = _completed_process,
+    cleanup_status_reader: Callable[[str], Mapping[str, str]] = (
+        _systemctl_show
+    ),
     readiness_validator: Callable[[str], Mapping[str, Any]] | None = None,
     record_persister: Callable[[Mapping[str, Any]], Path] = (
         _persist_repository_terminal_record
@@ -1886,7 +1922,9 @@ def poll_service_attempt(
         cleanup = _load_external(cleanup_path, "cleanup_digest")
     else:
         cleanup = cleanup_retained_service(
-            str(launch["service_name"]), runner=cleanup_runner
+            str(launch["service_name"]),
+            runner=cleanup_runner,
+            status_reader=cleanup_status_reader,
         )
         atomic_json(cleanup_path, cleanup)
     if cleanup.get("completed") is not True:

@@ -1,0 +1,34 @@
+{
+  "actions": [
+    {
+      "action": "stop",
+      "argv": [
+        "systemctl",
+        "--user",
+        "stop",
+        "recon-v2-execution-launch-amendment-service-canary-20260728T182313225859Z-adb3075695c24bc6a90adc5cf07b58da"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "action": "reset-failed",
+      "argv": [
+        "systemctl",
+        "--user",
+        "reset-failed",
+        "recon-v2-execution-launch-amendment-service-canary-20260728T182313225859Z-adb3075695c24bc6a90adc5cf07b58da"
+      ],
+      "returncode": 1,
+      "stderr": "Failed to reset failed state of unit recon-v2-execution-launch-amendment-service-canary-20260728T182313225859Z-adb3075695c24bc6a90adc5cf07b58da.service: Unit recon-v2-execution-launch-amendment-service-canary-20260728T182313225859Z-adb3075695c24bc6a90adc5cf07b58da.service not loaded.\n",
+      "stdout": ""
+    }
+  ],
+  "cleanup_digest": "ddf10f3f5235b96b344c8a15142315a1747dabbd54605eb51b8012e3b47e7762",
+  "completed": false,
+  "completed_at_utc": "2026-07-28T18:47:19.891344+00:00",
+  "package_id": "native_v2_execution_launch_amendment.v1",
+  "schema_version": "native_v2_service_cleanup.v1",
+  "service_name": "recon-v2-execution-launch-amendment-service-canary-20260728T182313225859Z-adb3075695c24bc6a90adc5cf07b58da"
+}

@@ -56,6 +56,15 @@ def _status(
     }
 
 
+def _unloaded_status() -> dict[str, str]:
+    return {
+        **_status(terminal=True, pid="0"),
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "SubState": "dead",
+    }
+
+
 def _readiness_identity(kind: str = "final_readiness") -> dict:
     return {
         "kind": kind,
@@ -778,6 +787,7 @@ def test_terminal_poll_captures_then_cleans_and_is_idempotent(
         attempt_root=tmp_path / "attempts",
         status_reader=lambda _name: _status(terminal=True),
         cleanup_runner=cleanup_runner,
+        cleanup_status_reader=lambda _name: _unloaded_status(),
         readiness_validator=lambda _command: {},
         record_persister=lambda value: (
             persisted.append(copy.deepcopy(dict(value)))
@@ -822,6 +832,7 @@ def test_terminal_poll_preserves_failed_production_attempt(
             terminal=True, code="2", result="signal", status="15"
         ),
         cleanup_runner=lambda argv: _completed(argv),
+        cleanup_status_reader=lambda _name: _unloaded_status(),
         readiness_validator=lambda _command: {},
         record_persister=lambda value: (
             persisted.append(copy.deepcopy(dict(value)))
@@ -854,6 +865,7 @@ def test_successful_production_terminal_binds_artifacts(
         attempt_root=tmp_path / "attempts",
         status_reader=lambda _name: _status(terminal=True),
         cleanup_runner=lambda argv: _completed(argv),
+        cleanup_status_reader=lambda _name: _unloaded_status(),
         readiness_validator=lambda _command: {},
         record_persister=lambda _value: tmp_path / "record.json",
         artifact_binder=lambda *_args, **_kwargs: artifacts,
@@ -921,7 +933,9 @@ def test_cleanup_records_exit_and_signal_fields_separately(
         return _completed(argv)
 
     value = amendment.cleanup_retained_service(
-        "unit-name", runner=runner
+        "unit-name",
+        runner=runner,
+        status_reader=lambda _name: _unloaded_status(),
     )
     assert value["completed"] is True
     assert [row["action"] for row in value["actions"]] == [
@@ -930,6 +944,62 @@ def test_cleanup_records_exit_and_signal_fields_separately(
     assert calls[0] == (
         "systemctl", "--user", "stop", "unit-name"
     )
+
+
+def test_cleanup_accepts_exact_already_unloaded_after_successful_stop() -> None:
+    service_name = "unit-name"
+
+    def runner(argv):
+        if argv[2] == "stop":
+            return _completed(argv)
+        return _completed(
+            argv,
+            returncode=1,
+            stderr=(
+                "Failed to reset failed state of unit "
+                f"{service_name}.service: Unit "
+                f"{service_name}.service not loaded.\n"
+            ),
+        )
+
+    value = amendment.cleanup_retained_service(
+        service_name,
+        runner=runner,
+        status_reader=lambda _name: _unloaded_status(),
+    )
+    assert value["completed"] is True
+    assert value["reset_outcome"] == "already_unloaded_after_stop"
+    assert value["post_cleanup_status"]["LoadState"] == "not-found"
+
+
+@pytest.mark.parametrize(
+    ("reset_stderr", "post_status"),
+    (
+        ("different failure\n", _unloaded_status()),
+        (
+            "Failed to reset failed state of unit unit-name.service: "
+            "Unit unit-name.service not loaded.\n",
+            _status(terminal=True),
+        ),
+    ),
+)
+def test_cleanup_rejects_nonexact_or_still_loaded_reset(
+    reset_stderr: str,
+    post_status: dict[str, str],
+) -> None:
+    def runner(argv):
+        return (
+            _completed(argv)
+            if argv[2] == "stop"
+            else _completed(argv, returncode=1, stderr=reset_stderr)
+        )
+
+    value = amendment.cleanup_retained_service(
+        "unit-name",
+        runner=runner,
+        status_reader=lambda _name: post_status,
+    )
+    assert value["completed"] is False
 
 
 def test_no_pre_review_module_global_replacement_or_large_driver_copy() -> None:

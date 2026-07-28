@@ -1,0 +1,14 @@
+{
+  "attempt_id": "20260728T182313225859Z-adb3075695c24bc6a90adc5cf07b58da",
+  "child_result_digest": "28603357459ee46f1b8dfb7aba8360b4b0be9815f2c681f159d65bc7b40fc2ca",
+  "command": "service-canary",
+  "elapsed_seconds": 1085.0680383399595,
+  "ended_at_utc": "2026-07-28T18:40:33.772048+00:00",
+  "launch_digest": "7277497ee197fc578554c4612bfda575c9513d02be40184ced7894fa0b5ff7c7",
+  "package_id": "native_v2_execution_launch_amendment.v1",
+  "parent_process_id": 330,
+  "process_id": 1540418,
+  "requested_seconds": 1085,
+  "schema_version": "native_v2_recorded_canary_result.v1",
+  "started_at_utc": "2026-07-28T18:23:41.599800+00:00"
+}
