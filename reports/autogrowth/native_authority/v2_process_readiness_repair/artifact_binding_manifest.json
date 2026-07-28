@@ -1,0 +1,93 @@
+{
+  "artifact_binding_digest": "ed183553a1a08e0044c6acd7a98fdc8e16125e56164a65ba0f972a18959c7779",
+  "frozen_inputs": {
+    "arms": [
+      "A",
+      "B",
+      "C"
+    ],
+    "cohort_digest": "a144fe94f4479c819756dfc44b22a2594e2b9df09367d571d39ab54007560bb8",
+    "expanded_package_map_digest": "2334cce42845479e8d1a642876d088b96ad18c5d1b55c9b31e7cfaa0549f048d",
+    "minimum_qualifying_seeds": 24,
+    "minimum_target_opportunities": 4,
+    "outcome_access": {
+      "count": 0,
+      "event_ids": []
+    },
+    "previous_package": {
+      "artifact_binding_digest": "9a4a0050afdd11e59747250766507583775832cbf564c046c0bb5820c6b2a708",
+      "artifact_binding_sha256": "6857ad7ce0c8fb6ca9573af0ead29d849a358154d7e1255cadfc86c5e2bdeae7",
+      "source_manifest_digest": "1093a7f56a1f712e0f3dc8d60f7077ed5fb54bc00762ef99d7a889c3559f7b68",
+      "source_manifest_sha256": "5386d40b819ef4711adb5fd7ce0da5c8b2a23a1506c10a969127cdbc613ead89"
+    },
+    "previous_readiness": {
+      "digest": "e7aea48976d4ddcfb889b1224b43e96f4da85883a0c67e6f222dd19fb18795f4",
+      "sha256": "d06096cf486155e6765d9b7243daa23514a4a26905cfbe78c4f1e636eec4d755"
+    },
+    "prior_file_set_digest": "b149513bd321b2fc120790ba29f7f86ae688a4e99f6b1fb41c97992bcbbd87c5",
+    "prior_files": [
+      {
+        "path": "reports/autogrowth/native_authority/v2_process_resilient_execution_reclosure/source_manifest.json",
+        "sha256": "5386d40b819ef4711adb5fd7ce0da5c8b2a23a1506c10a969127cdbc613ead89",
+        "size": 18034
+      },
+      {
+        "path": "reports/autogrowth/native_authority/v2_process_resilient_execution_reclosure/artifact_binding_manifest.json",
+        "sha256": "6857ad7ce0c8fb6ca9573af0ead29d849a358154d7e1255cadfc86c5e2bdeae7",
+        "size": 18528
+      },
+      {
+        "path": "reports/autogrowth/native_authority/v2_process_resilient_execution_reclosure/readiness.json",
+        "sha256": "d06096cf486155e6765d9b7243daa23514a4a26905cfbe78c4f1e636eec4d755",
+        "size": 7091
+      },
+      {
+        "path": "docs/autogrowth/NATIVE_V2_PROCESS_RESILIENT_EXECUTION_RECLOSURE_RESULT_20260728.md",
+        "sha256": "4bee22d802f3b1e448b15c6c27153e68ed6844dd32816dc0ffba23b92e370f9d",
+        "size": 7145
+      }
+    ],
+    "row_count": 16,
+    "runtime_input_digest": "54764eab47f60a409f79cf4cf144711dac262d31fb5ee53e0a3278bcace3bfee",
+    "seed_count": 32,
+    "starting_head": "f9f0afde10b7ad2bf6ad817bd04c2d47fefabb74",
+    "stopped_alias_package": {
+      "artifact_binding_digest": "136c63f0ab35ecfc2422a5a4bdf6f758ab9091828e09f4f49e10b0550d2e4be7",
+      "artifact_binding_sha256": "334880f320cecc55c180792d70ff2382e74ca1779d2fa6a3c09ea9c4cf571af5",
+      "readiness_digest": "e7e37b53b2a251e65a7e4214b74eae11f98c6b8ea7a6f6001d7dfa9a7598d02a",
+      "readiness_sha256": "1eb1fb814593341f96766e9fad6696b595803055b5a8b85b2c7a20be97037bed",
+      "source_freeze_commit": "3a8dc372a1503c828538704c5d8b3f4a46e46a05",
+      "source_manifest_digest": "f6251ca38731c3b22b277f3f47c60b546630c18ec69787fcc0bfec6f96381fd2",
+      "source_manifest_sha256": "d1736b3ca31f975c295bf5524879de28bd591d6c0ef2fcc6c9f7a3ac644dbe8b",
+      "verification_mode": "committed_bytes_and_frozen_digests"
+    },
+    "unit_count": 96
+  },
+  "package_id": "native_v2_process_readiness_repair.v1",
+  "paths": {
+    "completion": "reports/autogrowth/native_authority/v2_process_readiness_repair/exposure_completion.json",
+    "execution": "reports/autogrowth/native_authority/v2_process_readiness_repair/execution_manifest.json",
+    "exposure": "reports/autogrowth/native_authority/v2_process_readiness_repair/preoutcome_exposure.json",
+    "exposure_journal": "reports/autogrowth/native_authority/v2_process_readiness_repair/exposure_journal",
+    "launch_readiness": "reports/autogrowth/native_authority/v2_process_readiness_repair/launch_readiness.json",
+    "readiness": "reports/autogrowth/native_authority/v2_process_readiness_repair/readiness.json",
+    "result": "reports/autogrowth/native_authority/v2_process_readiness_repair/canonical_result.json.gz",
+    "science_carrier": "reports/autogrowth/native_authority/v2_process_readiness_repair/science_carrier",
+    "science_journal": "reports/autogrowth/native_authority/v2_process_readiness_repair/science_journal",
+    "science_started": "reports/autogrowth/native_authority/v2_process_readiness_repair/science_started.json",
+    "service_canary_record": "reports/autogrowth/native_authority/v2_process_readiness_repair/service_canary_record.json"
+  },
+  "schema_version": "native_v2_process_readiness_binding.v1",
+  "service_law": {
+    "canary_duration_seconds": 1085,
+    "four_item_python_argv": true,
+    "no_shell": true,
+    "no_wall_timeout": true,
+    "unique_attempt": true
+  },
+  "source_manifest": {
+    "digest": "3c9ebf686e132e9fd570689f2cc87aa0ca881c03959ea9b5e3f51fd8423def0a",
+    "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/source_manifest.json",
+    "sha256": "5a02c564dab31d4efceb1fae24d934d9320284a20418774ca28f8fe5ca48d295"
+  }
+}
