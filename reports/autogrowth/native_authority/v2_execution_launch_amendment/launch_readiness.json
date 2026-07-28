@@ -1,0 +1,30 @@
+{
+  "artifact_binding": {
+    "digest": "7d67fb420042ea661ce6b34171eb6926cdb644888a8a01b5845972c1895b2364",
+    "sha256": "c19eecf528489d46256e013802f1008f08df063c7536499b4604530015fb7127"
+  },
+  "canary_duration_seconds": 1085,
+  "cohort_digest": "a144fe94f4479c819756dfc44b22a2594e2b9df09367d571d39ab54007560bb8",
+  "elapsed_seconds": 16.46641,
+  "expanded_package_map_digest": "2334cce42845479e8d1a642876d088b96ad18c5d1b55c9b31e7cfaa0549f048d",
+  "launch_readiness_digest": "4c64d97ad1424abd91e59c097a1341a96b5d8b26c624bc6ce9e2884b7f52e368",
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "package_id": "native_v2_execution_launch_amendment.v1",
+  "pre_review_readiness": {
+    "digest": "6b8514c129429dc1546e2da9d4c50ce1ae257a9fcaad48458165c28ce43897be",
+    "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/readiness.json",
+    "sha256": "2e033de288aa7d1f8dfa74d6caecb98d1081cff0a3661d4722e0eb6c8a2d68ca",
+    "size": 1620
+  },
+  "production_launch_authorized": false,
+  "real_exposure_run": false,
+  "real_outcome_run": false,
+  "schema_version": "native_v2_execution_launch_readiness.v1",
+  "source_manifest": {
+    "digest": "754f9d5cd7f80b1410598f322d032a3b02691e3342cd5045092ffa9dfe30cf79",
+    "sha256": "957b727bcb9ec7bc31d9ceccedf1e6a23f094b0822fea26903794ee1e44ab318"
+  }
+}
