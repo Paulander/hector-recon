@@ -729,3 +729,33 @@ scientific evidence. All seed results, paired effects, probabilities,
 engagement counts, revocations and scientific gates are not evaluated.
 `run-science` was not started. See
 `docs/autogrowth/NATIVE_V2_FROZEN_COHORT_EXECUTION_ADAPTER_EXPOSURE_STOP_20260727.md`.
+
+
+The separately frozen package-alias compatibility reclosure now passes its one
+authorized data-free real-cohort readiness check. Programmatic diagnosis proved
+that the original 296-entry map contained the correct file digests under all
+13 full runtime paths but none of the 13 registry aliases. The new outer
+package retains every original entry and derives exactly those aliases from
+`POLICY_CRITICAL_SOURCE_PATHS`; the resulting 309-entry map has digest
+`2334cce42845479e8d1a642876d088b96ad18c5d1b55c9b31e7cfaa0549f048d`.
+No protected module or module-global binding changed.
+
+Readiness canonically verified 32/32 candidate contracts and 96/96 A/B/C
+organisms with cohort digest
+`a144fe94f4479c819756dfc44b22a2594e2b9df09367d571d39ab54007560bb8`.
+It constructed all three registries over 1,536 frozen row definitions, then
+stopped before the first organism probe. Registry scans, cohort exposure
+adjudications, organism probes, outcome reads, candidate/graph mutations and
+module-global replacements were all zero. Before/after semantic state was
+identical at
+`130842160194a59ee06df577165209374ebcf663b7db19aa806958219afb9737`.
+
+The readiness artifact SHA-256 is
+`1eb1fb814593341f96766e9fad6696b595803055b5a8b85b2c7a20be97037bed`,
+with canonical digest
+`e7e37b53b2a251e65a7e4214b74eae11f98c6b8ea7a6f6001d7dfa9a7598d02a`.
+No exposure, execution-manifest, journal, result or science-failure path exists
+in the new package, and `run-exposure` plus `run-science` remain unopened for
+independent review. This is compatibility/readiness evidence only—not exposure,
+causal, scientific or KRK R1 evidence. See
+`docs/autogrowth/NATIVE_V2_FROZEN_COHORT_PACKAGE_ALIAS_COMPATIBILITY_RECLOSURE_RESULT_20260727.md`.
