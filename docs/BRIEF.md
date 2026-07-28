@@ -759,3 +759,24 @@ in the new package, and `run-exposure` plus `run-science` remain unopened for
 independent review. This is compatibility/readiness evidence only—not exposure,
 causal, scientific or KRK R1 evidence. See
 `docs/autogrowth/NATIVE_V2_FROZEN_COHORT_PACKAGE_ALIAS_COMPATIBILITY_RECLOSURE_RESULT_20260727.md`.
+
+
+The independently authorized package-alias `run-exposure` invocation then
+ended externally with exit code 143 after approximately 17 minutes. It emitted
+no stdout or stderr, and the program wrote no exposure artifact, failure
+artifact or execution manifest. No package process survived. The worktree and
+all three pre-existing package files remained unchanged.
+
+The command was invoked exactly once and was not repaired, resumed or repeated.
+Per the Stage 1 stop rule, exposure qualification, the qualifying-seed count,
+24/32 admission, parity, engagement, graph clearing, endpoint totals, paired
+effects, probabilities, favorable seeds and every scientific gate are **not
+evaluated**, not zero. The interrupted process produced no durable mutation or
+outcome-access audit, so those in-run counts are also not evaluated.
+
+`run-science` was not started; no science journal, carrier, result or science
+failure exists. The outcome suffix therefore remains unconsumed by science,
+but this exposure attempt is terminal and cannot be reused. This external
+process stop is not evidence for or against the hypothesis and is not KRK R1
+evidence. See
+`docs/autogrowth/NATIVE_V2_FROZEN_COHORT_PACKAGE_ALIAS_COMPATIBILITY_EXPOSURE_PROCESS_STOP_20260728.md`.
