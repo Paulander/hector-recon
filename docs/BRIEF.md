@@ -805,3 +805,32 @@ science-started marker, science journal, carrier, result, or new failure
 artifact exists. This is process-readiness evidence only—not exposure,
 causal, scientific, or KRK R1 evidence. See
 `docs/autogrowth/NATIVE_V2_PROCESS_RESILIENT_EXECUTION_RECLOSURE_RESULT_20260728.md`.
+
+
+The bounded V2 process-readiness repair now passes and stops before real
+exposure. The new outer package leaves every learner, graph, registry,
+laboratory, cohort, seed, ecology, threshold and statistic unchanged. Its
+production exposure and science paths share the preserved-byte input verifier;
+science admission now requires an exact 96-unit journal, completion-marker
+identity, and byte-for-byte exposure/execution reconstruction before any
+science-start marker or outcome environment. Partial outcome counts require the
+canonical seed/row/arm/event/transition/checkpoint sequence; inconsistency is
+reported as unknown. Package-specific atomic temporaries recover only
+byte-identical pending renames, and look-alike or unrelated output paths stop.
+
+Focused checks passed 52/52, including a full synthetic 96-unit admission.
+The selected adjacent frozen suites passed 87/87. The authoritative detached
+service canary ran for `1085.0050478300545` seconds as PID `1499560`, exited
+zero, used a literal four-item Python command, retained unique logs, and
+reported `RuntimeMaxUSec=infinity`. Its terminal record digest is
+`c29ff250bc61dfb06ebca56382d0b9e13c2acde19792998ba814bd2d93904c68`.
+
+Final readiness SHA-256 is
+`2e033de288aa7d1f8dfa74d6caecb98d1081cff0a3661d4722e0eb6c8a2d68ca`,
+with canonical digest
+`6b8514c129429dc1546e2da9d4c50ce1ae257a9fcaad48458165c28ce43897be`.
+Real exposure and outcomes remain unopened; their counts and all scientific
+gates are not evaluated. No exposure journal, exposure/execution artifact,
+science-start marker, science journal, carrier, or scientific result exists.
+See
+`docs/autogrowth/NATIVE_V2_PROCESS_READINESS_REPAIR_RESULT_20260728.md`.
