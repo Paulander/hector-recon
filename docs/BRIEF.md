@@ -834,3 +834,42 @@ gates are not evaluated. No exposure journal, exposure/execution artifact,
 science-start marker, science journal, carrier, or scientific result exists.
 See
 `docs/autogrowth/NATIVE_V2_PROCESS_READINESS_REPAIR_RESULT_20260728.md`.
+
+
+The final bounded V2 execution-launch amendment now passes and stops before
+exposure. It leaves every learner, graph, registry, laboratory, cohort,
+organism, ecology, threshold, journal rule, statistic, exposure implementation,
+and outcome implementation unchanged. Production launch, exposure-child,
+completed-exposure/science admission, and science-child paths now require one
+committed strict final-readiness loader plus a matching recorded service
+context. Direct production-child commands stop before delegated work.
+
+Canary launch still requires a clean tree. Production relaunch permits only the
+inherited exact journal/marker/carrier/result paths and deep filename rules.
+Recognized pending temporaries are checked at process entry, target-plus-
+temporary ambiguity stops, and unrelated paths remain forbidden. Each launch
+uses an atomic per-command lock, unique attempt/service/log paths, literal
+four-item Python command, and exact HEAD/readiness/argv/environment/working-
+directory binding. Terminal metadata precedes cleanup; cleanup records both
+service-manager actions and independently requires the unit absent. Finalized
+polling is idempotent.
+
+Final focused checks passed 63/63. The final focused-plus-adjacent run passed
+202/202 in 384.71 seconds. Two pre-final canaries found and preserved narrow
+launch-only defects: expected unit unloading was initially misclassified, then
+final-readiness creation used the wrong nested launch-readiness field. Both
+provisional freezes remain committed. The final source-bound canary ran
+`1085.0545391429914` seconds as PID `1549546`, exited zero, had empty stderr,
+reported unlimited runtime, confirmed the unit absent after cleanup, and has
+final-record digest
+`152b0338981a582c664da3649c38247a29b8f0ce22cd64fac78d048d6fe198db`.
+
+Final readiness SHA-256 is
+`11450ce7a49c34fe8b349f9eef554f95ccc4566f5caeec7becb0bd47bd3ec366`,
+with canonical digest
+`420622a02696ca0b352ff949a837d6705d062b8164fc7790f386d74a4612f74e`.
+Real exposure and outcomes remain unopened; their quantities and every
+scientific gate are not evaluated. Future production use is documented only
+through `launch-service` and `poll-service`; neither production launch was
+performed. See
+`docs/autogrowth/NATIVE_V2_EXECUTION_LAUNCH_AMENDMENT_RESULT_20260728.md`.
