@@ -257,6 +257,78 @@ def test_complete_final_readiness_rejects_extra_field() -> None:
         amendment.validate_final_readiness_identity(value, expected)
 
 
+def _passing_canary() -> dict:
+    return {
+        "command": "service-canary",
+        "terminal": True,
+        "terminal_status": {
+            "result": "success",
+            "exit_status": 0,
+            "runtime_max_usec": "infinity",
+        },
+        "cleanup": {
+            "completed": True,
+            "adjudication": {"accepted": True},
+        },
+        "child_result": {
+            "elapsed_seconds": 1085.1,
+            "requested_seconds": 1085,
+        },
+        "launch": {
+            "identity": {
+                "readiness": {"sha256": "launch-readiness-sha"}
+            }
+        },
+    }
+
+
+def test_final_readiness_canary_uses_nested_launch_identity_path() -> None:
+    amendment.validate_authoritative_canary(
+        _passing_canary(),
+        expected_launch_readiness_sha256="launch-readiness-sha",
+    )
+    wrong = _passing_canary()
+    wrong["launch"] = {
+        "readiness": {"sha256": "launch-readiness-sha"}
+    }
+    with pytest.raises(
+        amendment.ExecutionLaunchAmendmentError,
+        match="canary gate failed",
+    ):
+        amendment.validate_authoritative_canary(
+            wrong,
+            expected_launch_readiness_sha256="launch-readiness-sha",
+        )
+
+
+@pytest.mark.parametrize(
+    ("path", "value"),
+    (
+        (("cleanup", "completed"), False),
+        (("cleanup", "adjudication", "accepted"), False),
+        (("child_result", "elapsed_seconds"), 1060.0),
+        (("terminal_status", "exit_status"), 1),
+    ),
+)
+def test_final_readiness_canary_rechecks_each_material_gate(
+    path: tuple[str, ...],
+    value,
+) -> None:
+    canary = _passing_canary()
+    target = canary
+    for part in path[:-1]:
+        target = target[part]
+    target[path[-1]] = value
+    with pytest.raises(
+        amendment.ExecutionLaunchAmendmentError,
+        match="canary gate failed",
+    ):
+        amendment.validate_authoritative_canary(
+            canary,
+            expected_launch_readiness_sha256="launch-readiness-sha",
+        )
+
+
 def test_production_worktree_allows_exact_partial_exposure_journal() -> None:
     journal = amendment.prior.EXPOSURE_JOURNAL_DIR.as_posix()
     rows = (

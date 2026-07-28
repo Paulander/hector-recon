@@ -667,6 +667,12 @@ def load_and_verify_final_readiness(
     verify_self_digest(
         canary, "final_record_digest", label="service canary"
     )
+    validate_authoritative_canary(
+        canary,
+        expected_launch_readiness_sha256=sha256_file(
+            ROOT / LAUNCH_READINESS_PATH
+        ),
+    )
     pre_review = verify_pre_review_closure()
     expected = {
         "schema_version": "native_v2_execution_launch_final.v1",
@@ -719,6 +725,36 @@ def validate_final_readiness_identity(
             )
 
 
+def validate_authoritative_canary(
+    canary: Mapping[str, Any],
+    *,
+    expected_launch_readiness_sha256: str,
+) -> None:
+    child = canary.get("child_result", {})
+    if (
+        canary.get("command") != "service-canary"
+        or canary.get("terminal") is not True
+        or canary.get("terminal_status", {}).get("result") != "success"
+        or canary.get("terminal_status", {}).get("exit_status") != 0
+        or canary.get("terminal_status", {}).get("runtime_max_usec")
+        not in {"infinity", "18446744073709551615"}
+        or canary.get("cleanup", {}).get("completed") is not True
+        or canary.get("cleanup", {}).get(
+            "adjudication", {}
+        ).get("accepted") is not True
+        or float(child.get("elapsed_seconds", 0))
+        < CANARY_DURATION_SECONDS
+        or child.get("requested_seconds") != CANARY_DURATION_SECONDS
+        or canary.get("launch", {}).get(
+            "identity", {}
+        ).get("readiness", {}).get("sha256")
+        != expected_launch_readiness_sha256
+    ):
+        raise ExecutionLaunchAmendmentError(
+            "corrected detached canary gate failed"
+        )
+
+
 def run_final_readiness() -> dict[str, Any]:
     require_launch_worktree("service-canary")
     if (ROOT / READINESS_PATH).exists():
@@ -730,24 +766,13 @@ def run_final_readiness() -> dict[str, Any]:
     verify_self_digest(
         canary, "final_record_digest", label="service canary"
     )
-    child = canary.get("child_result", {})
-    if (
-        canary.get("command") != "service-canary"
-        or canary.get("terminal") is not True
-        or canary.get("terminal_status", {}).get("result") != "success"
-        or canary.get("terminal_status", {}).get("exit_status") != 0
-        or canary.get("terminal_status", {}).get("runtime_max_usec")
-        not in {"infinity", "18446744073709551615"}
-        or canary.get("cleanup", {}).get("completed") is not True
-        or float(child.get("elapsed_seconds", 0))
-        < CANARY_DURATION_SECONDS
-        or child.get("requested_seconds") != CANARY_DURATION_SECONDS
-        or canary.get("launch", {}).get("readiness", {}).get("sha256")
-        != sha256_file(ROOT / LAUNCH_READINESS_PATH)
-    ):
-        raise ExecutionLaunchAmendmentError(
-            "corrected detached canary gate failed"
-        )
+    validate_authoritative_canary(
+        canary,
+        expected_launch_readiness_sha256=sha256_file(
+            ROOT / LAUNCH_READINESS_PATH
+        ),
+    )
+    child = canary["child_result"]
     pre_review = verify_pre_review_closure()
     value = {
         "schema_version": "native_v2_execution_launch_final.v1",

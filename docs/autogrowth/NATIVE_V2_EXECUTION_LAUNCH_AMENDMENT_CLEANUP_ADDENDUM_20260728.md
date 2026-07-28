@@ -38,3 +38,13 @@ durable but whose final record was never written. It permits a new unique
 attempt only when those records identify the same command/attempt and the unit
 is independently absent. A missing, malformed, mismatched, or still-live
 attempt remains blocking.
+
+The first corrected-cleanup canary then passed its child, terminal capture,
+cleanup adjudication, final record, and idempotent re-poll. Final-readiness
+creation nevertheless stopped before writing because its gate read the launch
+readiness at `launch.readiness`; the frozen launch schema stores it at
+`launch.identity.readiness`. That source and passing canary are preserved as a
+second provisional freeze. The exact field path is corrected, and the final
+readiness loader now re-applies the same canary-duration, terminal, cleanup,
+unloaded-unit, and nested readiness checks rather than relying only on the
+readiness artifact's stored canary digest.
