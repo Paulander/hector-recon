@@ -1,0 +1,274 @@
+{
+  "alias_diagnosis": {
+    "alias_count": 13,
+    "all_original_aliases_absent": true,
+    "all_path_file_alias_digests_equal": true,
+    "diagnostic_digest": "b33d2d72aaf33693c7b04a14cb63db50271d38f3ab2278723b9a141be97e228d",
+    "original_key_count": 296,
+    "original_map_digest": "837da27658bb691490fc771f5eec445c28870888ff6bb7b3f8140f527bb38da4",
+    "rows": [
+      {
+        "alias": "hector_m5_structure",
+        "alias_present": false,
+        "declared_path": "src/recon_lite_hector/learning/m5_structure.py",
+        "expected_alias_digest": "0d6d4a28d950f5c5caea5484bd2a7c44b7585d6b2e6f79be3631ca735426af05",
+        "file_digest": "0d6d4a28d950f5c5caea5484bd2a7c44b7585d6b2e6f79be3631ca735426af05",
+        "runtime_digest": "0d6d4a28d950f5c5caea5484bd2a7c44b7585d6b2e6f79be3631ca735426af05",
+        "runtime_key": "runtime:src/recon_lite_hector/learning/m5_structure.py"
+      },
+      {
+        "alias": "hector_pack_template",
+        "alias_present": false,
+        "declared_path": "src/recon_lite_hector/nodes/pack_template.py",
+        "expected_alias_digest": "e403bea60245b128c221b45700de1081374eb9325fac0b698fd529277be206f6",
+        "file_digest": "e403bea60245b128c221b45700de1081374eb9325fac0b698fd529277be206f6",
+        "runtime_digest": "e403bea60245b128c221b45700de1081374eb9325fac0b698fd529277be206f6",
+        "runtime_key": "runtime:src/recon_lite_hector/nodes/pack_template.py"
+      },
+      {
+        "alias": "hector_stem_cell",
+        "alias_present": false,
+        "declared_path": "src/recon_lite_hector/nodes/stem_cell.py",
+        "expected_alias_digest": "cc5dee612dca639d3dcc03588b7c772db3745323d8244fdd59b48916dacd0081",
+        "file_digest": "cc5dee612dca639d3dcc03588b7c772db3745323d8244fdd59b48916dacd0081",
+        "runtime_digest": "cc5dee612dca639d3dcc03588b7c772db3745323d8244fdd59b48916dacd0081",
+        "runtime_key": "runtime:src/recon_lite_hector/nodes/stem_cell.py"
+      },
+      {
+        "alias": "native_authority_handover",
+        "alias_present": false,
+        "declared_path": "src/recon_lite_chess/autogrowth/native_authority_handover.py",
+        "expected_alias_digest": "b65fc61f05f1ecda992e44e5baa1e98daeec53495573c0a5b6ec24b3fc68f445",
+        "file_digest": "b65fc61f05f1ecda992e44e5baa1e98daeec53495573c0a5b6ec24b3fc68f445",
+        "runtime_digest": "b65fc61f05f1ecda992e44e5baa1e98daeec53495573c0a5b6ec24b3fc68f445",
+        "runtime_key": "runtime:src/recon_lite_chess/autogrowth/native_authority_handover.py"
+      },
+      {
+        "alias": "native_competence_envelope",
+        "alias_present": false,
+        "declared_path": "src/recon_lite_chess/autogrowth/native_competence_envelope.py",
+        "expected_alias_digest": "0452da3fbe15138696280728547c03d0ad5a09d7b88fdbd0b75e60c0eac3e1ca",
+        "file_digest": "0452da3fbe15138696280728547c03d0ad5a09d7b88fdbd0b75e60c0eac3e1ca",
+        "runtime_digest": "0452da3fbe15138696280728547c03d0ad5a09d7b88fdbd0b75e60c0eac3e1ca",
+        "runtime_key": "runtime:src/recon_lite_chess/autogrowth/native_competence_envelope.py"
+      },
+      {
+        "alias": "native_single_graph_curriculum",
+        "alias_present": false,
+        "declared_path": "src/recon_lite_chess/autogrowth/native_single_graph_curriculum.py",
+        "expected_alias_digest": "1b7554b33abffb27d6d6ba6dc2d89f45442872609754720cf39ce6b6023785b1",
+        "file_digest": "1b7554b33abffb27d6d6ba6dc2d89f45442872609754720cf39ce6b6023785b1",
+        "runtime_digest": "1b7554b33abffb27d6d6ba6dc2d89f45442872609754720cf39ce6b6023785b1",
+        "runtime_key": "runtime:src/recon_lite_chess/autogrowth/native_single_graph_curriculum.py"
+      },
+      {
+        "alias": "native_trace_competence_authority",
+        "alias_present": false,
+        "declared_path": "src/recon_lite_chess/autogrowth/native_trace_competence_authority.py",
+        "expected_alias_digest": "18fe12e2e6bdfa6ff163067caac6e00b76918cb93af9e7f41be62fbff9fc2183",
+        "file_digest": "18fe12e2e6bdfa6ff163067caac6e00b76918cb93af9e7f41be62fbff9fc2183",
+        "runtime_digest": "18fe12e2e6bdfa6ff163067caac6e00b76918cb93af9e7f41be62fbff9fc2183",
+        "runtime_key": "runtime:src/recon_lite_chess/autogrowth/native_trace_competence_authority.py"
+      },
+      {
+        "alias": "recon_choice_genome",
+        "alias_present": false,
+        "declared_path": "libs/recon-lite/src/recon_lite/choice_genome.py",
+        "expected_alias_digest": "be303914bd077e5a6e0bd320c8cb14f05cecdad711b308e0284179634d6a03ae",
+        "file_digest": "be303914bd077e5a6e0bd320c8cb14f05cecdad711b308e0284179634d6a03ae",
+        "runtime_digest": "be303914bd077e5a6e0bd320c8cb14f05cecdad711b308e0284179634d6a03ae",
+        "runtime_key": "runtime:libs/recon-lite/src/recon_lite/choice_genome.py"
+      },
+      {
+        "alias": "recon_formal_engine",
+        "alias_present": false,
+        "declared_path": "libs/recon-lite/src/recon_lite/formal_engine.py",
+        "expected_alias_digest": "28199a3199de7335725b2b119909862356a494743fd37c794e3da9b4cee58aa7",
+        "file_digest": "28199a3199de7335725b2b119909862356a494743fd37c794e3da9b4cee58aa7",
+        "runtime_digest": "28199a3199de7335725b2b119909862356a494743fd37c794e3da9b4cee58aa7",
+        "runtime_key": "runtime:libs/recon-lite/src/recon_lite/formal_engine.py"
+      },
+      {
+        "alias": "recon_frame_context",
+        "alias_present": false,
+        "declared_path": "libs/recon-lite/src/recon_lite/frame_context.py",
+        "expected_alias_digest": "2acc51b1db9f761fd8406b6f72e19a2cb0047b8413050371d7ac694adb8bffe4",
+        "file_digest": "2acc51b1db9f761fd8406b6f72e19a2cb0047b8413050371d7ac694adb8bffe4",
+        "runtime_digest": "2acc51b1db9f761fd8406b6f72e19a2cb0047b8413050371d7ac694adb8bffe4",
+        "runtime_key": "runtime:libs/recon-lite/src/recon_lite/frame_context.py"
+      },
+      {
+        "alias": "recon_graph",
+        "alias_present": false,
+        "declared_path": "libs/recon-lite/src/recon_lite/graph.py",
+        "expected_alias_digest": "98784171b2eda47c20c01362e5ef9fe7e925bcd894034d07524a0dcbbb4ec0cf",
+        "file_digest": "98784171b2eda47c20c01362e5ef9fe7e925bcd894034d07524a0dcbbb4ec0cf",
+        "runtime_digest": "98784171b2eda47c20c01362e5ef9fe7e925bcd894034d07524a0dcbbb4ec0cf",
+        "runtime_key": "runtime:libs/recon-lite/src/recon_lite/graph.py"
+      },
+      {
+        "alias": "v2_authority",
+        "alias_present": false,
+        "declared_path": "src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py",
+        "expected_alias_digest": "25945864fd998caf22ae12cbcb9bcb4779447337c0079f705640c63d2356f029",
+        "file_digest": "25945864fd998caf22ae12cbcb9bcb4779447337c0079f705640c63d2356f029",
+        "runtime_digest": "25945864fd998caf22ae12cbcb9bcb4779447337c0079f705640c63d2356f029",
+        "runtime_key": "runtime:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py"
+      },
+      {
+        "alias": "v2_laboratory_registry",
+        "alias_present": false,
+        "declared_path": "src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2_lab.py",
+        "expected_alias_digest": "f3aee5cccf761af1cb6a5de94b886d5e758c0a07cb0f6d77b8898f662ca73b58",
+        "file_digest": "f3aee5cccf761af1cb6a5de94b886d5e758c0a07cb0f6d77b8898f662ca73b58",
+        "runtime_digest": "f3aee5cccf761af1cb6a5de94b886d5e758c0a07cb0f6d77b8898f662ca73b58",
+        "runtime_key": "runtime:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2_lab.py"
+      }
+    ]
+  },
+  "bounded_reconstruction_ast": {
+    "bounded_acquisition_ast": "Assign(targets=[Name(id='package_hashes', ctx=Store())], value=Call(func=Name(id='validate_expanded_package_map', ctx=Load()), args=[Name(id='package_hashes', ctx=Load())], keywords=[]))",
+    "bounded_function": "__main__.reconstruct_exposure_value_with_expanded_map",
+    "comparison_digest": "92353d43756cdab75ce1747e1a46cc38adea028db68a4ff1fbdd484077d1a534",
+    "frozen_acquisition_ast": "Assign(targets=[Name(id='package_hashes', ctx=Store())], value=Call(func=Name(id='laboratory_package_hashes', ctx=Load()), args=[], keywords=[]))",
+    "frozen_function": "recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2._reconstruct_exposure_value",
+    "normalized_ast_digest": "1665deadeca58f825282e17ea7f64af48ea91a93a4ce56493da2518273afd7fb",
+    "normalized_equal": true
+  },
+  "deterministic_environment": {
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0",
+    "TZ": "UTC"
+  },
+  "expanded_package_map": {
+    "alias_count": 13,
+    "aliases": {
+      "hector_m5_structure": {
+        "declared_path": "src/recon_lite_hector/learning/m5_structure.py",
+        "digest": "0d6d4a28d950f5c5caea5484bd2a7c44b7585d6b2e6f79be3631ca735426af05",
+        "runtime_key": "runtime:src/recon_lite_hector/learning/m5_structure.py"
+      },
+      "hector_pack_template": {
+        "declared_path": "src/recon_lite_hector/nodes/pack_template.py",
+        "digest": "e403bea60245b128c221b45700de1081374eb9325fac0b698fd529277be206f6",
+        "runtime_key": "runtime:src/recon_lite_hector/nodes/pack_template.py"
+      },
+      "hector_stem_cell": {
+        "declared_path": "src/recon_lite_hector/nodes/stem_cell.py",
+        "digest": "cc5dee612dca639d3dcc03588b7c772db3745323d8244fdd59b48916dacd0081",
+        "runtime_key": "runtime:src/recon_lite_hector/nodes/stem_cell.py"
+      },
+      "native_authority_handover": {
+        "declared_path": "src/recon_lite_chess/autogrowth/native_authority_handover.py",
+        "digest": "b65fc61f05f1ecda992e44e5baa1e98daeec53495573c0a5b6ec24b3fc68f445",
+        "runtime_key": "runtime:src/recon_lite_chess/autogrowth/native_authority_handover.py"
+      },
+      "native_competence_envelope": {
+        "declared_path": "src/recon_lite_chess/autogrowth/native_competence_envelope.py",
+        "digest": "0452da3fbe15138696280728547c03d0ad5a09d7b88fdbd0b75e60c0eac3e1ca",
+        "runtime_key": "runtime:src/recon_lite_chess/autogrowth/native_competence_envelope.py"
+      },
+      "native_single_graph_curriculum": {
+        "declared_path": "src/recon_lite_chess/autogrowth/native_single_graph_curriculum.py",
+        "digest": "1b7554b33abffb27d6d6ba6dc2d89f45442872609754720cf39ce6b6023785b1",
+        "runtime_key": "runtime:src/recon_lite_chess/autogrowth/native_single_graph_curriculum.py"
+      },
+      "native_trace_competence_authority": {
+        "declared_path": "src/recon_lite_chess/autogrowth/native_trace_competence_authority.py",
+        "digest": "18fe12e2e6bdfa6ff163067caac6e00b76918cb93af9e7f41be62fbff9fc2183",
+        "runtime_key": "runtime:src/recon_lite_chess/autogrowth/native_trace_competence_authority.py"
+      },
+      "recon_choice_genome": {
+        "declared_path": "libs/recon-lite/src/recon_lite/choice_genome.py",
+        "digest": "be303914bd077e5a6e0bd320c8cb14f05cecdad711b308e0284179634d6a03ae",
+        "runtime_key": "runtime:libs/recon-lite/src/recon_lite/choice_genome.py"
+      },
+      "recon_formal_engine": {
+        "declared_path": "libs/recon-lite/src/recon_lite/formal_engine.py",
+        "digest": "28199a3199de7335725b2b119909862356a494743fd37c794e3da9b4cee58aa7",
+        "runtime_key": "runtime:libs/recon-lite/src/recon_lite/formal_engine.py"
+      },
+      "recon_frame_context": {
+        "declared_path": "libs/recon-lite/src/recon_lite/frame_context.py",
+        "digest": "2acc51b1db9f761fd8406b6f72e19a2cb0047b8413050371d7ac694adb8bffe4",
+        "runtime_key": "runtime:libs/recon-lite/src/recon_lite/frame_context.py"
+      },
+      "recon_graph": {
+        "declared_path": "libs/recon-lite/src/recon_lite/graph.py",
+        "digest": "98784171b2eda47c20c01362e5ef9fe7e925bcd894034d07524a0dcbbb4ec0cf",
+        "runtime_key": "runtime:libs/recon-lite/src/recon_lite/graph.py"
+      },
+      "v2_authority": {
+        "declared_path": "src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py",
+        "digest": "25945864fd998caf22ae12cbcb9bcb4779447337c0079f705640c63d2356f029",
+        "runtime_key": "runtime:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py"
+      },
+      "v2_laboratory_registry": {
+        "declared_path": "src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2_lab.py",
+        "digest": "f3aee5cccf761af1cb6a5de94b886d5e758c0a07cb0f6d77b8898f662ca73b58",
+        "runtime_key": "runtime:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2_lab.py"
+      }
+    },
+    "complete_original_map_retained": true,
+    "expanded_key_count": 309,
+    "expanded_map_digest": "2334cce42845479e8d1a642876d088b96ad18c5d1b55c9b31e7cfaa0549f048d",
+    "manifest_digest": "b150ac2ad6368343411285d8afdea2593d54f6b0babe61f0419e6c8bd4929d71",
+    "original_key_count": 296,
+    "original_map_digest": "837da27658bb691490fc771f5eec445c28870888ff6bb7b3f8140f527bb38da4"
+  },
+  "module_paths": {
+    "compatibility": "recon_lite_chess.autogrowth.native_v2_frozen_cohort_package_alias_compatibility_reclosure",
+    "driver": "recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2",
+    "laboratory_registry": "recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2_lab",
+    "stopped_adapter": "recon_lite_chess.autogrowth.native_v2_frozen_cohort_execution_adapter_freeze"
+  },
+  "package_id": "native_v2_frozen_cohort_package_alias_compatibility_reclosure.v1",
+  "preservation": {
+    "no_module_global_replacement": true,
+    "old_failure_preserved": true,
+    "outer_compatibility_only": true,
+    "real_exposure_not_run": true,
+    "real_outcomes_not_read": true,
+    "real_registry_scan_not_run": true,
+    "stopped_adapter_byte_identical": true
+  },
+  "public_commands": {
+    "run-exposure": [
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "-m",
+      "recon_lite_chess.autogrowth.native_v2_frozen_cohort_package_alias_compatibility_reclosure",
+      "run-exposure"
+    ],
+    "run-science": [
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "-m",
+      "recon_lite_chess.autogrowth.native_v2_frozen_cohort_package_alias_compatibility_reclosure",
+      "run-science"
+    ],
+    "verify-readiness": [
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "-m",
+      "recon_lite_chess.autogrowth.native_v2_frozen_cohort_package_alias_compatibility_reclosure",
+      "verify-readiness"
+    ]
+  },
+  "runtime": {
+    "implementation": "CPython",
+    "python_executable": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+    "python_version": "3.12.3",
+    "working_directory": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit"
+  },
+  "schema_version": "native_v2_package_alias_compatibility_source_manifest.v1",
+  "source_freeze_commit": "3a8dc372a1503c828538704c5d8b3f4a46e46a05",
+  "source_hashes": {
+    "docs/autogrowth/NATIVE_V2_FROZEN_COHORT_PACKAGE_ALIAS_COMPATIBILITY_RECLOSURE_PREREGISTRATION_20260727.md": "b835b3c44910ab434929ced42448bbe46664b6986c7e5433172bbb866784c44c",
+    "src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py": "61f8f19a619288761cfd5a204b5939fbac31791c1284c695fcf005e2f935a538",
+    "tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py": "d9e931987918abeb91a00264fc1465c5096897954a54a78c82f8a638637185a9"
+  },
+  "source_manifest_digest": "f6251ca38731c3b22b277f3f47c60b546630c18ec69787fcc0bfec6f96381fd2"
+}
