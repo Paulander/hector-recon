@@ -1,0 +1,272 @@
+{
+  "actual_end_timestamp": "Tue 2026-07-28 22:00:51 CEST",
+  "actual_start_timestamp": "Tue 2026-07-28 21:43:34 CEST",
+  "attempt_id": "20260728T194334475115Z-961f071e3cce4b86883dca4552464d14",
+  "captured_at_utc": "2026-07-28T20:03:24.848170+00:00",
+  "child_result": {
+    "attempt_id": "20260728T194334475115Z-961f071e3cce4b86883dca4552464d14",
+    "child_result_digest": "ada05d7cd324594f1bc1e4baa2cd332e868b5b3e03c8d5aaae05983564adf6cf",
+    "command": "service-canary",
+    "elapsed_seconds": 1085.0545391429914,
+    "ended_at_utc": "2026-07-28T20:00:51.762723+00:00",
+    "launch_digest": "12d678949ce7ae952909ed2c4ab293e699234cb91bb9d6913a7c3d7ae804d22e",
+    "package_id": "native_v2_execution_launch_amendment.v1",
+    "parent_process_id": 330,
+    "process_id": 1549546,
+    "requested_seconds": 1085,
+    "schema_version": "native_v2_recorded_canary_result.v1",
+    "started_at_utc": "2026-07-28T19:44:02.488425+00:00"
+  },
+  "cleanup": {
+    "actions": [
+      {
+        "action": "stop",
+        "argv": [
+          "systemctl",
+          "--user",
+          "stop",
+          "recon-v2-execution-launch-amendment-service-canary-20260728T194334475115Z-961f071e3cce4b86883dca4552464d14"
+        ],
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      {
+        "action": "reset-failed",
+        "argv": [
+          "systemctl",
+          "--user",
+          "reset-failed",
+          "recon-v2-execution-launch-amendment-service-canary-20260728T194334475115Z-961f071e3cce4b86883dca4552464d14"
+        ],
+        "returncode": 1,
+        "stderr": "Failed to reset failed state of unit recon-v2-execution-launch-amendment-service-canary-20260728T194334475115Z-961f071e3cce4b86883dca4552464d14.service: Unit recon-v2-execution-launch-amendment-service-canary-20260728T194334475115Z-961f071e3cce4b86883dca4552464d14.service not loaded.\n",
+        "stdout": ""
+      }
+    ],
+    "adjudication": {
+      "accepted": true,
+      "adjudication_digest": "8fde905ae10717920ecb7d4a322a2a619bb11c7ccc9ed9f6d49e13c3f8869974",
+      "exact_actions": true,
+      "package_id": "native_v2_execution_launch_amendment.v1",
+      "post_cleanup_status": {
+        "ActiveState": "inactive",
+        "ExecMainCode": "0",
+        "ExecMainExitTimestamp": "",
+        "ExecMainPID": "0",
+        "ExecMainStartTimestamp": "",
+        "ExecMainStatus": "0",
+        "InvocationID": "",
+        "LoadState": "not-found",
+        "Result": "success",
+        "RuntimeMaxUSec": "infinity",
+        "SubState": "dead"
+      },
+      "reset_outcome": "already_unloaded_after_stop",
+      "schema_version": "native_v2_cleanup_adjudication.v1",
+      "service_name": "recon-v2-execution-launch-amendment-service-canary-20260728T194334475115Z-961f071e3cce4b86883dca4552464d14",
+      "stop_succeeded": true,
+      "unit_absent": true
+    },
+    "cleanup_digest": "e60130dfeaae00d5cc05edc2b56e77fb098d83733c0da1a6d45d379c08503c13",
+    "completed": true,
+    "completed_at_utc": "2026-07-28T20:03:24.883067+00:00",
+    "package_id": "native_v2_execution_launch_amendment.v1",
+    "post_cleanup_status": {
+      "ActiveState": "inactive",
+      "ExecMainCode": "0",
+      "ExecMainExitTimestamp": "",
+      "ExecMainPID": "0",
+      "ExecMainStartTimestamp": "",
+      "ExecMainStatus": "0",
+      "InvocationID": "",
+      "LoadState": "not-found",
+      "Result": "success",
+      "RuntimeMaxUSec": "infinity",
+      "SubState": "dead"
+    },
+    "reset_outcome": "already_unloaded_after_stop",
+    "schema_version": "native_v2_service_cleanup.v1",
+    "service_name": "recon-v2-execution-launch-amendment-service-canary-20260728T194334475115Z-961f071e3cce4b86883dca4552464d14"
+  },
+  "command": "service-canary",
+  "dispatch": {
+    "attempt_id": "20260728T194334475115Z-961f071e3cce4b86883dca4552464d14",
+    "dispatch_digest": "940965e199184e5037736a5cf777d5db37d53d26a9767cecfcf516035d3ccf23",
+    "dispatched_at_utc": "2026-07-28T19:43:34.569922+00:00",
+    "package_id": "native_v2_execution_launch_amendment.v1",
+    "returncode": 0,
+    "schema_version": "native_v2_launch_dispatch.v1",
+    "stderr": "Running as unit: recon-v2-execution-launch-amendment-service-canary-20260728T194334475115Z-961f071e3cce4b86883dca4552464d14.service; invocation ID: 0d5b643b0e2e4c56976f3b41a94f4f73\n",
+    "stdout": ""
+  },
+  "final_record_digest": "152b0338981a582c664da3649c38247a29b8f0ce22cd64fac78d048d6fe198db",
+  "finalized_at_utc": "2026-07-28T20:03:24.890889+00:00",
+  "launch": {
+    "attempt_id": "20260728T194334475115Z-961f071e3cce4b86883dca4552464d14",
+    "child_context": {
+      "RECON_V2_FINAL_READINESS_DIGEST": "",
+      "RECON_V2_FINAL_READINESS_SHA256": "",
+      "RECON_V2_LAUNCH_ATTEMPT_ID": "20260728T194334475115Z-961f071e3cce4b86883dca4552464d14",
+      "RECON_V2_LAUNCH_COMMAND": "service-canary",
+      "RECON_V2_LAUNCH_DIGEST": "12d678949ce7ae952909ed2c4ab293e699234cb91bb9d6913a7c3d7ae804d22e",
+      "RECON_V2_LAUNCH_RECORD": "/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T194334475115Z-961f071e3cce4b86883dca4552464d14/launch.json"
+    },
+    "command": "service-canary",
+    "environment": {
+      "LANG": "C.UTF-8",
+      "LC_ALL": "C.UTF-8",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "PYTHONHASHSEED": "0",
+      "RECON_SERVICE_CANARY_SECONDS": "1085",
+      "RECON_V2_FINAL_READINESS_DIGEST": "",
+      "RECON_V2_FINAL_READINESS_SHA256": "",
+      "RECON_V2_LAUNCH_ATTEMPT_ID": "20260728T194334475115Z-961f071e3cce4b86883dca4552464d14",
+      "RECON_V2_LAUNCH_COMMAND": "service-canary",
+      "RECON_V2_LAUNCH_DIGEST": "12d678949ce7ae952909ed2c4ab293e699234cb91bb9d6913a7c3d7ae804d22e",
+      "RECON_V2_LAUNCH_RECORD": "/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T194334475115Z-961f071e3cce4b86883dca4552464d14/launch.json",
+      "TZ": "UTC"
+    },
+    "identity": {
+      "attempt_id": "20260728T194334475115Z-961f071e3cce4b86883dca4552464d14",
+      "base_environment": {
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "MKL_NUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "PYTHONHASHSEED": "0",
+        "RECON_SERVICE_CANARY_SECONDS": "1085",
+        "TZ": "UTC"
+      },
+      "command": "service-canary",
+      "exact_head": "29147411ad4b2ea0c97c989cf146b72b7a399df1",
+      "exact_python_argv": [
+        "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+        "-m",
+        "recon_lite_chess.autogrowth.native_v2_execution_launch_amendment",
+        "service-canary"
+      ],
+      "package_id": "native_v2_execution_launch_amendment.v1",
+      "package_identity": {
+        "artifact_binding_digest": "7d67fb420042ea661ce6b34171eb6926cdb644888a8a01b5845972c1895b2364",
+        "artifact_binding_sha256": "c19eecf528489d46256e013802f1008f08df063c7536499b4604530015fb7127",
+        "pre_review_digest": "b3f143f62ec23e15c1e56420690e965ad2bf4558c0ec521ec9c2ac0799941294",
+        "source_manifest_digest": "754f9d5cd7f80b1410598f322d032a3b02691e3342cd5045092ffa9dfe30cf79",
+        "source_manifest_sha256": "957b727bcb9ec7bc31d9ceccedf1e6a23f094b0822fea26903794ee1e44ab318"
+      },
+      "readiness": {
+        "digest": "4c64d97ad1424abd91e59c097a1341a96b5d8b26c624bc6ce9e2884b7f52e368",
+        "kind": "launch_readiness",
+        "path": "reports/autogrowth/native_authority/v2_execution_launch_amendment/launch_readiness.json",
+        "sha256": "ba9954ecd21803e7d6545f5822a6843fde0d3be50243b50b94bf7e2b885544d7"
+      },
+      "schema_version": "native_v2_launch_identity.v1",
+      "service_name": "recon-v2-execution-launch-amendment-service-canary-20260728T194334475115Z-961f071e3cce4b86883dca4552464d14",
+      "stderr_path": "/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T194334475115Z-961f071e3cce4b86883dca4552464d14/stderr.log",
+      "stdout_path": "/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T194334475115Z-961f071e3cce4b86883dca4552464d14/stdout.log",
+      "working_directory": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit",
+      "worktree": {
+        "allowed": true,
+        "row_count": 0,
+        "rows": [],
+        "worktree_digest": "656de056dbcf8eb3cb4ffc1229de9967895b1f7aa21dd44ba3126a992e1215f7"
+      }
+    },
+    "launch_digest": "12d678949ce7ae952909ed2c4ab293e699234cb91bb9d6913a7c3d7ae804d22e",
+    "launch_lock": {
+      "command": "service-canary",
+      "lock_digest": "7243a463721422e23115dd3ebe0d5dee9004622b7e78f4f22374e2626b9ce161",
+      "owner": "5d32fe9c5cb24f429f6f5b5bc6afee7d"
+    },
+    "launch_record_digest": "d314105f9a13d6b8418602381c0a4b7eea71336988f50f4fe378a7fd50a6b8dd",
+    "lawful_restart_requires_new_attempt": true,
+    "no_shell_transformation": true,
+    "no_wall_clock_timeout": true,
+    "package_id": "native_v2_execution_launch_amendment.v1",
+    "requested_at_utc": "2026-07-28T19:43:34.517819+00:00",
+    "schema_version": "native_v2_launch_record.v1",
+    "service_name": "recon-v2-execution-launch-amendment-service-canary-20260728T194334475115Z-961f071e3cce4b86883dca4552464d14",
+    "systemd_argv": [
+      "systemd-run",
+      "--user",
+      "--unit=recon-v2-execution-launch-amendment-service-canary-20260728T194334475115Z-961f071e3cce4b86883dca4552464d14",
+      "--property=Type=exec",
+      "--property=RemainAfterExit=yes",
+      "--property=WorkingDirectory=/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit",
+      "--property=StandardOutput=file:/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T194334475115Z-961f071e3cce4b86883dca4552464d14/stdout.log",
+      "--property=StandardError=file:/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T194334475115Z-961f071e3cce4b86883dca4552464d14/stderr.log",
+      "--setenv=LANG=C.UTF-8",
+      "--setenv=LC_ALL=C.UTF-8",
+      "--setenv=MKL_NUM_THREADS=1",
+      "--setenv=NUMEXPR_NUM_THREADS=1",
+      "--setenv=OMP_NUM_THREADS=1",
+      "--setenv=OPENBLAS_NUM_THREADS=1",
+      "--setenv=PYTHONHASHSEED=0",
+      "--setenv=RECON_SERVICE_CANARY_SECONDS=1085",
+      "--setenv=RECON_V2_FINAL_READINESS_DIGEST=",
+      "--setenv=RECON_V2_FINAL_READINESS_SHA256=",
+      "--setenv=RECON_V2_LAUNCH_ATTEMPT_ID=20260728T194334475115Z-961f071e3cce4b86883dca4552464d14",
+      "--setenv=RECON_V2_LAUNCH_COMMAND=service-canary",
+      "--setenv=RECON_V2_LAUNCH_DIGEST=12d678949ce7ae952909ed2c4ab293e699234cb91bb9d6913a7c3d7ae804d22e",
+      "--setenv=RECON_V2_LAUNCH_RECORD=/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T194334475115Z-961f071e3cce4b86883dca4552464d14/launch.json",
+      "--setenv=TZ=UTC",
+      "--",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "-m",
+      "recon_lite_chess.autogrowth.native_v2_execution_launch_amendment",
+      "service-canary"
+    ]
+  },
+  "observation": {
+    "attempt_id": "20260728T194334475115Z-961f071e3cce4b86883dca4552464d14",
+    "observation_digest": "6268810379756605fc31091a5883c67b133046ea249cb10514659fb646f7e8f3",
+    "observed_at_utc": "2026-07-28T19:43:34.587284+00:00",
+    "package_id": "native_v2_execution_launch_amendment.v1",
+    "schema_version": "native_v2_launch_observation.v1",
+    "status": {
+      "ActiveState": "active",
+      "ExecMainCode": "0",
+      "ExecMainExitTimestamp": "",
+      "ExecMainPID": "1549546",
+      "ExecMainStartTimestamp": "Tue 2026-07-28 21:43:34 CEST",
+      "ExecMainStatus": "0",
+      "InvocationID": "0d5b643b0e2e4c56976f3b41a94f4f73",
+      "LoadState": "loaded",
+      "Result": "success",
+      "RuntimeMaxUSec": "infinity",
+      "SubState": "running"
+    }
+  },
+  "package_id": "native_v2_execution_launch_amendment.v1",
+  "process_id": 1549546,
+  "schema_version": "native_v2_terminal_service_record.v1",
+  "stderr_log": {
+    "path": "/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T194334475115Z-961f071e3cce4b86883dca4552464d14/stderr.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "size": 0
+  },
+  "stdout_log": {
+    "path": "/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T194334475115Z-961f071e3cce4b86883dca4552464d14/stdout.log",
+    "sha256": "316c96fa7859bffce9b21d7d96c91236f54b826f42fcd71efff262ff49be8b41",
+    "size": 640
+  },
+  "terminal": true,
+  "terminal_capture_digest": "f3284a2cd4ea11026e2aab571af03a2f137c15273a3ca7b075d0ba484ffbb165",
+  "terminal_status": {
+    "active_state": "active",
+    "exec_main_code": "1",
+    "exec_main_status": "0",
+    "exit_status": 0,
+    "invocation_id": "0d5b643b0e2e4c56976f3b41a94f4f73",
+    "load_state": "loaded",
+    "result": "success",
+    "runtime_max_usec": "infinity",
+    "signal_status": null,
+    "sub_state": "exited"
+  }
+}
