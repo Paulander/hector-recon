@@ -1,0 +1,114 @@
+{
+  "architecture": {
+    "atomic_per_command_launch_lock": true,
+    "final_readiness_required_for_production": true,
+    "large_driver_copy": false,
+    "module_global_replacement": false,
+    "outer_launch_amendment_only": true,
+    "passed_scientific_logic_imported": true,
+    "recorded_launch_context_required": true,
+    "terminal_capture_before_cleanup": true
+  },
+  "module_path": "recon_lite_chess.autogrowth.native_v2_execution_launch_amendment",
+  "package_id": "native_v2_execution_launch_amendment.v1",
+  "pre_review": {
+    "cohort_digest": "a144fe94f4479c819756dfc44b22a2594e2b9df09367d571d39ab54007560bb8",
+    "expanded_package_map_digest": "2334cce42845479e8d1a642876d088b96ad18c5d1b55c9b31e7cfaa0549f048d",
+    "file_binding_digest": "39f097d6c9f4c48933363bed4fa5cf54f38582f4e02f3451f7e3629e9cd039cb",
+    "file_bindings": [
+      {
+        "path": "src/recon_lite_chess/autogrowth/native_v2_process_readiness_repair.py",
+        "sha256": "ae663e67ffad3dbdf8a7e988b5638181fa7a2c4398d3d46b7668cb80ee3d76a6",
+        "size": 85110
+      },
+      {
+        "path": "tests/autogrowth/test_native_v2_process_readiness_repair.py",
+        "sha256": "fc3ea605cb8e49c0b3f20b359e3e181b2736d236b2f22f4b6c49946a9d4d2004",
+        "size": 27974
+      },
+      {
+        "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/source_manifest.json",
+        "sha256": "51dbc24db0a8ab35bbf912eaf65b7883b6c40abc77f406eae1fd9649e824478e",
+        "size": 5655
+      },
+      {
+        "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/artifact_binding_manifest.json",
+        "sha256": "787a52dc5645a20fecb6ff9ec2715aa1c1a97b48960d66cacf5f6b710007d6b4",
+        "size": 5022
+      },
+      {
+        "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/launch_readiness.json",
+        "sha256": "8cca1afdbb325a91f9637934f3f63163e2ddfe20127675024f093f57e0ef7ef9",
+        "size": 1420
+      },
+      {
+        "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/service_canary_record.json",
+        "sha256": "fa81875b011d8eaae1f6e18f5efdaa3d7c93bda7329a1c075acdc681886268cb",
+        "size": 7178
+      },
+      {
+        "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/readiness.json",
+        "sha256": "2e033de288aa7d1f8dfa74d6caecb98d1081cff0a3661d4722e0eb6c8a2d68ca",
+        "size": 1620
+      },
+      {
+        "path": "docs/autogrowth/NATIVE_V2_PROCESS_READINESS_REPAIR_RESULT_20260728.md",
+        "sha256": "846d30440439db541770530a41cda86acc3c08d4124eb1c8077e3225064c0a8a",
+        "size": 7279
+      }
+    ],
+    "outcome_access": {
+      "count": 0,
+      "event_ids": []
+    },
+    "package": {
+      "artifact_binding_digest": "6ca3425948145882a6e5d7a4cf28f798f0dcdde4380f18cb1400a502d5f10fed",
+      "artifact_binding_sha256": "787a52dc5645a20fecb6ff9ec2715aa1c1a97b48960d66cacf5f6b710007d6b4",
+      "source_manifest_digest": "dc5bde548d1b83a8a49ebe092fcf51b073889138b309a61d80ea0fe9a81a3cf5",
+      "source_manifest_sha256": "51dbc24db0a8ab35bbf912eaf65b7883b6c40abc77f406eae1fd9649e824478e"
+    },
+    "pre_review_digest": "b3f143f62ec23e15c1e56420690e965ad2bf4558c0ec521ec9c2ac0799941294",
+    "readiness": {
+      "digest": "6b8514c129429dc1546e2da9d4c50ce1ae257a9fcaad48458165c28ce43897be",
+      "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/readiness.json",
+      "sha256": "2e033de288aa7d1f8dfa74d6caecb98d1081cff0a3661d4722e0eb6c8a2d68ca",
+      "size": 1620
+    },
+    "starting_head": "e6c4a292a4fd4a448ce7a1bb12aae713e656f8dd"
+  },
+  "public_child_commands": {
+    "run-exposure": [
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "-m",
+      "recon_lite_chess.autogrowth.native_v2_execution_launch_amendment",
+      "run-exposure"
+    ],
+    "run-science": [
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "-m",
+      "recon_lite_chess.autogrowth.native_v2_execution_launch_amendment",
+      "run-science"
+    ],
+    "service-canary": [
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "-m",
+      "recon_lite_chess.autogrowth.native_v2_execution_launch_amendment",
+      "service-canary"
+    ]
+  },
+  "runtime": {
+    "implementation": "CPython",
+    "python_executable": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+    "python_version": "3.12.3",
+    "working_directory": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit"
+  },
+  "schema_version": "native_v2_execution_launch_source.v1",
+  "source_freeze_commit": "606db03424f325c35ebe1a23b062ab4fd119c496",
+  "source_hashes": {
+    "docs/autogrowth/NATIVE_V2_EXECUTION_LAUNCH_AMENDMENT_CLEANUP_ADDENDUM_20260728.md": "99e58a652966979693a89b644443cbfbbd3de5ef20fe1d72511e941034533a55",
+    "docs/autogrowth/NATIVE_V2_EXECUTION_LAUNCH_AMENDMENT_PREREGISTRATION_20260728.md": "80ac1e2cdc3a60f02c46551e7bc630afd8977b15bf01c2bb1585ef13c11757e2",
+    "src/recon_lite_chess/autogrowth/native_v2_execution_launch_amendment.py": "ff8d059ebb9f2f7104d9dd753ad288a64b3c0e03b5b7db7e42b03571ea8a0917",
+    "tests/autogrowth/test_native_v2_execution_launch_amendment.py": "09d49407defd37af01c2e983ebbfb7ebd040793406bbd1dd6faf34151c117018"
+  },
+  "source_manifest_digest": "2432fefbae930819b800d6474b365ec5e93d0a323d6a062972ccbbe8334df51a"
+}
