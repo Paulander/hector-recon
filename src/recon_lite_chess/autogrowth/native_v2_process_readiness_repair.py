@@ -251,6 +251,16 @@ _SCIENCE_RECORD = re.compile(
     r"^\d{6}_(?:PREPARED|OUTCOME_ACCESSED|"
     r"TRI_ARM_ROW_COMMITTED|COMMITTED|FAILED)\.json$"
 )
+_SCIENCE_CARRIER_TARGET = re.compile(
+    r"^seed-(?:0\d|[12]\d|3[01])/(?:"
+    r"rows/suffix-(?:spurious|planted)-0[0-7]\.json|"
+    r"final_snapshots/[ABC]\.pkl\.gz|"
+    r"seed_result\.json)$"
+)
+
+
+def is_recognized_science_carrier_target(relative: Path) -> bool:
+    return bool(_SCIENCE_CARRIER_TARGET.fullmatch(relative.as_posix()))
 
 
 def is_recognized_package_temporary(path: Path) -> bool:
@@ -290,11 +300,47 @@ def is_recognized_package_temporary(path: Path) -> bool:
     if parent == SCIENCE_JOURNAL_DIR.relative_to(PACKAGE_DIR):
         return bool(_SCIENCE_RECORD.fullmatch(target_name))
     if str(parent).startswith(str(SCIENCE_CARRIER_DIR.relative_to(PACKAGE_DIR))):
-        return bool(
-            target_name.endswith(".json")
-            or target_name in {"A.pkl.gz", "B.pkl.gz", "C.pkl.gz"}
+        carrier_target = (
+            parent.relative_to(
+                SCIENCE_CARRIER_DIR.relative_to(PACKAGE_DIR)
+            )
+            / target_name
         )
+        return is_recognized_science_carrier_target(carrier_target)
     return False
+
+
+def is_allowed_runtime_worktree_path(candidate_text: str) -> bool:
+    candidate = ROOT / candidate_text
+    if is_recognized_package_temporary(candidate):
+        return True
+    exact_files = {
+        item.as_posix()
+        for item in (
+            EXPOSURE_PATH,
+            EXECUTION_MANIFEST_PATH,
+            EXPOSURE_COMPLETION_PATH,
+            EXPOSURE_FAILURE_PATH,
+            SCIENCE_STARTED_PATH,
+            RESULT_PATH,
+            SCIENCE_FAILURE_PATH,
+        )
+    }
+    if candidate_text in exact_files:
+        return True
+    runtime_directories = {
+        item.as_posix()
+        for item in (
+            EXPOSURE_JOURNAL_DIR,
+            SCIENCE_JOURNAL_DIR,
+            SCIENCE_CARRIER_DIR,
+        )
+    }
+    return any(
+        candidate_text == directory
+        or candidate_text.startswith(f"{directory}/")
+        for directory in runtime_directories
+    )
 
 
 def _require_clean_worktree(*, allow_runtime: bool = False) -> None:
@@ -303,27 +349,10 @@ def _require_clean_worktree(*, allow_runtime: bool = False) -> None:
         if rows:
             raise ProcessReadinessRepairError(f"worktree is not clean:{rows}")
         return
-    allowed_roots = (
-        EXPOSURE_JOURNAL_DIR.as_posix(),
-        EXPOSURE_PATH.as_posix(),
-        EXECUTION_MANIFEST_PATH.as_posix(),
-        EXPOSURE_COMPLETION_PATH.as_posix(),
-        EXPOSURE_FAILURE_PATH.as_posix(),
-        SCIENCE_STARTED_PATH.as_posix(),
-        SCIENCE_JOURNAL_DIR.as_posix(),
-        SCIENCE_CARRIER_DIR.as_posix(),
-        RESULT_PATH.as_posix(),
-        SCIENCE_FAILURE_PATH.as_posix(),
-    )
     unexpected = []
     for row in rows:
         candidate_text = row[3:].strip()
-        candidate = ROOT / candidate_text
-        if any(candidate_text.startswith(root) for root in allowed_roots):
-            if candidate.name.startswith(".") and not (
-                is_recognized_package_temporary(candidate)
-            ):
-                unexpected.append(row)
+        if is_allowed_runtime_worktree_path(candidate_text):
             continue
         unexpected.append(row)
     if unexpected:
@@ -361,11 +390,12 @@ def _require_clean_worktree(*, allow_runtime: bool = False) -> None:
                 continue
             if str(relative.parent).startswith(
                 str(SCIENCE_CARRIER_DIR.relative_to(PACKAGE_DIR))
-            ) and (
-                path.name.endswith(".json")
-                or path.name in {"A.pkl.gz", "B.pkl.gz", "C.pkl.gz"}
             ):
-                continue
+                carrier_target = relative.relative_to(
+                    SCIENCE_CARRIER_DIR.relative_to(PACKAGE_DIR)
+                )
+                if is_recognized_science_carrier_target(carrier_target):
+                    continue
             raise ProcessReadinessRepairError(
                 f"unrecognized runtime file:{path}"
             )

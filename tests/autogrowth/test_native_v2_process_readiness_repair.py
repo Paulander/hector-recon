@@ -712,6 +712,52 @@ def test_only_precisely_named_package_temporaries_are_recognized() -> None:
     )
 
 
+def test_runtime_worktree_paths_require_exact_files_or_directory_boundary(
+) -> None:
+    exposure = repair.EXPOSURE_PATH.as_posix()
+    journal = repair.EXPOSURE_JOURNAL_DIR.as_posix()
+    assert repair.is_allowed_runtime_worktree_path(exposure)
+    assert repair.is_allowed_runtime_worktree_path(journal)
+    assert repair.is_allowed_runtime_worktree_path(
+        f"{journal}/000000_PREPARED_000_A_seed-00.json"
+    )
+    assert not repair.is_allowed_runtime_worktree_path(f"{exposure}.foreign")
+    assert not repair.is_allowed_runtime_worktree_path(f"{journal}-foreign")
+    assert not repair.is_allowed_runtime_worktree_path(
+        f"{repair.PACKAGE_DIR.as_posix()}/unrelated.json"
+    )
+
+
+@pytest.mark.parametrize(
+    "relative",
+    (
+        "seed-00/rows/suffix-spurious-00.json",
+        "seed-31/rows/suffix-planted-07.json",
+        "seed-00/final_snapshots/A.pkl.gz",
+        "seed-31/final_snapshots/C.pkl.gz",
+        "seed-05/seed_result.json",
+    ),
+)
+def test_science_carrier_accepts_only_frozen_target_shapes(
+    relative: str,
+) -> None:
+    assert repair.is_recognized_science_carrier_target(Path(relative))
+
+
+@pytest.mark.parametrize(
+    "relative",
+    (
+        "seed-00/rows/foreign.json",
+        "seed-32/rows/suffix-planted-00.json",
+        "seed-00/final_snapshots/D.pkl.gz",
+        "seed-00/extra.json",
+        "foreign/seed_result.json",
+    ),
+)
+def test_science_carrier_rejects_unrelated_targets(relative: str) -> None:
+    assert not repair.is_recognized_science_carrier_target(Path(relative))
+
+
 def test_service_argv_is_unique_file_backed_and_has_no_timeout(
     tmp_path: Path,
 ) -> None:
