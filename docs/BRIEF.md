@@ -888,3 +888,19 @@ its unit absent. Outcome access remains exactly zero and the outcome stage was
 not started. This is a successful exposure/admission result only—not evidence
 for the proposed mechanism, not a learning result, and not KRK evidence. See
 `docs/autogrowth/NATIVE_V2_EXPOSURE_ADMISSION_RESULT_20260729.md`.
+
+
+The authorized frozen V2 science service then stopped before science start.
+Attempt
+`20260729T154354756091Z-04d8f7e03f144963a272919e64c7f221`
+ran from exact commit `e02423739fbd27809a6b6c820aa85e59898fe728`
+and exited 1 while reconstructing exposure admission:
+`ProcessResilienceError: changed or foreign PREPARED unit:0`.
+
+No science-start marker, outcome journal, carrier, canonical result,
+science-failure artifact, or outcome-result binding was created. The failure
+preceded outcome-environment construction, so no outcome was read or consumed.
+The service cleanup passed and its unit is absent. This is an **instrument
+failure before science start**, not a mechanism result, valid negative, or
+engagement failure. The attempt was not repaired or relaunched. See
+`docs/autogrowth/NATIVE_V2_OUTCOME_EXECUTION_INSTRUMENT_STOP_20260729.md`.
