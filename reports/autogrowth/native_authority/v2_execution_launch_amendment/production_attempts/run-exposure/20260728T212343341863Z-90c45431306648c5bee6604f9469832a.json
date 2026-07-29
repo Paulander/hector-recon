@@ -1,0 +1,292 @@
+{
+  "actual_end_timestamp": "Wed 2026-07-29 13:32:03 CEST",
+  "actual_start_timestamp": "Tue 2026-07-28 23:23:43 CEST",
+  "artifact_binding": {
+    "artifact_set_digest": "13e810621c4504fba32f7bfe6f409931228a6c5e989d0db47e2cd379062b82c7",
+    "completion": {
+      "digest": "a63e0e073bbf77598a3fdd67192e83a0162b5b65475a88b05306cbd5c6b4a8a8",
+      "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/exposure_completion.json",
+      "sha256": "c92a51b13c16be884ae168cece22b16501ab9006086ba1fea16b7658fd2c0ec7",
+      "size": 1096
+    },
+    "execution_manifest": {
+      "digest": "35587e65c9dc59a420af68c42868333f54af85d8b7f31b73c60d9eec948edb5d",
+      "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/execution_manifest.json",
+      "sha256": "8fa649f4587099f5f1eae54468736bfd410b3d12d46576393916021a4a128216",
+      "size": 38200
+    },
+    "exposure": {
+      "digest": "c95b60c670bb7b80a387f44da4c40e1790bc4100ff3f2a4f923b8a26ee5b7e3b",
+      "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/preoutcome_exposure.json",
+      "sha256": "6a0d086599c44f035d07a07fa389d680019e7e7fdeaace75e978640e587ad2a7",
+      "size": 1159280
+    }
+  },
+  "attempt_id": "20260728T212343341863Z-90c45431306648c5bee6604f9469832a",
+  "captured_at_utc": "2026-07-29T11:57:28.748293+00:00",
+  "child_result": {
+    "admission": null,
+    "attempt_id": "20260728T212343341863Z-90c45431306648c5bee6604f9469832a",
+    "child_result_digest": "e0df6b3feab2bd059630d69ecb6044209c6c803f888b03e741e2d254a4428060",
+    "command": "run-exposure",
+    "delegated_result_digest": "04e497fe457a0ffb78fc3eca79c577a4bc38b76b03499bdd0fe9890eeba4fe3f",
+    "final_readiness": {
+      "digest": "420622a02696ca0b352ff949a837d6705d062b8164fc7790f386d74a4612f74e",
+      "kind": "final_readiness",
+      "path": "reports/autogrowth/native_authority/v2_execution_launch_amendment/readiness.json",
+      "sha256": "11450ce7a49c34fe8b349f9eef554f95ccc4566f5caeec7becb0bd47bd3ec366"
+    },
+    "launch_digest": "32a9255368d1125e59590f38bbccddda2763fbdd6cda0a9d7773365ce9e5da95",
+    "package_id": "native_v2_execution_launch_amendment.v1",
+    "schema_version": "native_v2_recorded_child_result.v1"
+  },
+  "cleanup": {
+    "actions": [
+      {
+        "action": "stop",
+        "argv": [
+          "systemctl",
+          "--user",
+          "stop",
+          "recon-v2-execution-launch-amendment-run-exposure-20260728T212343341863Z-90c45431306648c5bee6604f9469832a"
+        ],
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      {
+        "action": "reset-failed",
+        "argv": [
+          "systemctl",
+          "--user",
+          "reset-failed",
+          "recon-v2-execution-launch-amendment-run-exposure-20260728T212343341863Z-90c45431306648c5bee6604f9469832a"
+        ],
+        "returncode": 1,
+        "stderr": "Failed to reset failed state of unit recon-v2-execution-launch-amendment-run-exposure-20260728T212343341863Z-90c45431306648c5bee6604f9469832a.service: Unit recon-v2-execution-launch-amendment-run-exposure-20260728T212343341863Z-90c45431306648c5bee6604f9469832a.service not loaded.\n",
+        "stdout": ""
+      }
+    ],
+    "adjudication": {
+      "accepted": true,
+      "adjudication_digest": "b1d3bc8d4ec0c3e18c725bb82d6b305bcdcf261fa27e348d387bf264f09f4f0f",
+      "exact_actions": true,
+      "package_id": "native_v2_execution_launch_amendment.v1",
+      "post_cleanup_status": {
+        "ActiveState": "inactive",
+        "ExecMainCode": "0",
+        "ExecMainExitTimestamp": "",
+        "ExecMainPID": "0",
+        "ExecMainStartTimestamp": "",
+        "ExecMainStatus": "0",
+        "InvocationID": "",
+        "LoadState": "not-found",
+        "Result": "success",
+        "RuntimeMaxUSec": "infinity",
+        "SubState": "dead"
+      },
+      "reset_outcome": "already_unloaded_after_stop",
+      "schema_version": "native_v2_cleanup_adjudication.v1",
+      "service_name": "recon-v2-execution-launch-amendment-run-exposure-20260728T212343341863Z-90c45431306648c5bee6604f9469832a",
+      "stop_succeeded": true,
+      "unit_absent": true
+    },
+    "cleanup_digest": "db0501ed5914b5b634ff3a7e25e270c5fd1260dcb67e42482193aac2e7bfb2bf",
+    "completed": true,
+    "completed_at_utc": "2026-07-29T11:57:28.925072+00:00",
+    "package_id": "native_v2_execution_launch_amendment.v1",
+    "post_cleanup_status": {
+      "ActiveState": "inactive",
+      "ExecMainCode": "0",
+      "ExecMainExitTimestamp": "",
+      "ExecMainPID": "0",
+      "ExecMainStartTimestamp": "",
+      "ExecMainStatus": "0",
+      "InvocationID": "",
+      "LoadState": "not-found",
+      "Result": "success",
+      "RuntimeMaxUSec": "infinity",
+      "SubState": "dead"
+    },
+    "reset_outcome": "already_unloaded_after_stop",
+    "schema_version": "native_v2_service_cleanup.v1",
+    "service_name": "recon-v2-execution-launch-amendment-run-exposure-20260728T212343341863Z-90c45431306648c5bee6604f9469832a"
+  },
+  "command": "run-exposure",
+  "dispatch": {
+    "attempt_id": "20260728T212343341863Z-90c45431306648c5bee6604f9469832a",
+    "dispatch_digest": "fb26612b9152f5420f717291582a891eb7fd1d2ab2ddbd6ae231d67c0496b0fa",
+    "dispatched_at_utc": "2026-07-28T21:23:43.500350+00:00",
+    "package_id": "native_v2_execution_launch_amendment.v1",
+    "returncode": 0,
+    "schema_version": "native_v2_launch_dispatch.v1",
+    "stderr": "Running as unit: recon-v2-execution-launch-amendment-run-exposure-20260728T212343341863Z-90c45431306648c5bee6604f9469832a.service; invocation ID: 4b8bce37309d409787ab17f753e06ec5\n",
+    "stdout": ""
+  },
+  "final_record_digest": "9fda978b1b9768c304dc16f1b91f3267aa11138a4a68925d921874d4ba042bf9",
+  "finalized_at_utc": "2026-07-29T11:57:28.932330+00:00",
+  "launch": {
+    "attempt_id": "20260728T212343341863Z-90c45431306648c5bee6604f9469832a",
+    "child_context": {
+      "RECON_V2_FINAL_READINESS_DIGEST": "420622a02696ca0b352ff949a837d6705d062b8164fc7790f386d74a4612f74e",
+      "RECON_V2_FINAL_READINESS_SHA256": "11450ce7a49c34fe8b349f9eef554f95ccc4566f5caeec7becb0bd47bd3ec366",
+      "RECON_V2_LAUNCH_ATTEMPT_ID": "20260728T212343341863Z-90c45431306648c5bee6604f9469832a",
+      "RECON_V2_LAUNCH_COMMAND": "run-exposure",
+      "RECON_V2_LAUNCH_DIGEST": "32a9255368d1125e59590f38bbccddda2763fbdd6cda0a9d7773365ce9e5da95",
+      "RECON_V2_LAUNCH_RECORD": "/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T212343341863Z-90c45431306648c5bee6604f9469832a/launch.json"
+    },
+    "command": "run-exposure",
+    "environment": {
+      "LANG": "C.UTF-8",
+      "LC_ALL": "C.UTF-8",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "PYTHONHASHSEED": "0",
+      "RECON_V2_FINAL_READINESS_DIGEST": "420622a02696ca0b352ff949a837d6705d062b8164fc7790f386d74a4612f74e",
+      "RECON_V2_FINAL_READINESS_SHA256": "11450ce7a49c34fe8b349f9eef554f95ccc4566f5caeec7becb0bd47bd3ec366",
+      "RECON_V2_LAUNCH_ATTEMPT_ID": "20260728T212343341863Z-90c45431306648c5bee6604f9469832a",
+      "RECON_V2_LAUNCH_COMMAND": "run-exposure",
+      "RECON_V2_LAUNCH_DIGEST": "32a9255368d1125e59590f38bbccddda2763fbdd6cda0a9d7773365ce9e5da95",
+      "RECON_V2_LAUNCH_RECORD": "/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T212343341863Z-90c45431306648c5bee6604f9469832a/launch.json",
+      "TZ": "UTC"
+    },
+    "identity": {
+      "attempt_id": "20260728T212343341863Z-90c45431306648c5bee6604f9469832a",
+      "base_environment": {
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "MKL_NUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "PYTHONHASHSEED": "0",
+        "TZ": "UTC"
+      },
+      "command": "run-exposure",
+      "exact_head": "0bff5e622a9a28c75d13e421cff4faae33e55e5c",
+      "exact_python_argv": [
+        "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+        "-m",
+        "recon_lite_chess.autogrowth.native_v2_execution_launch_amendment",
+        "run-exposure"
+      ],
+      "package_id": "native_v2_execution_launch_amendment.v1",
+      "package_identity": {
+        "artifact_binding_digest": "7d67fb420042ea661ce6b34171eb6926cdb644888a8a01b5845972c1895b2364",
+        "artifact_binding_sha256": "c19eecf528489d46256e013802f1008f08df063c7536499b4604530015fb7127",
+        "pre_review_digest": "b3f143f62ec23e15c1e56420690e965ad2bf4558c0ec521ec9c2ac0799941294",
+        "source_manifest_digest": "754f9d5cd7f80b1410598f322d032a3b02691e3342cd5045092ffa9dfe30cf79",
+        "source_manifest_sha256": "957b727bcb9ec7bc31d9ceccedf1e6a23f094b0822fea26903794ee1e44ab318"
+      },
+      "readiness": {
+        "digest": "420622a02696ca0b352ff949a837d6705d062b8164fc7790f386d74a4612f74e",
+        "kind": "final_readiness",
+        "path": "reports/autogrowth/native_authority/v2_execution_launch_amendment/readiness.json",
+        "sha256": "11450ce7a49c34fe8b349f9eef554f95ccc4566f5caeec7becb0bd47bd3ec366"
+      },
+      "schema_version": "native_v2_launch_identity.v1",
+      "service_name": "recon-v2-execution-launch-amendment-run-exposure-20260728T212343341863Z-90c45431306648c5bee6604f9469832a",
+      "stderr_path": "/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T212343341863Z-90c45431306648c5bee6604f9469832a/stderr.log",
+      "stdout_path": "/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T212343341863Z-90c45431306648c5bee6604f9469832a/stdout.log",
+      "working_directory": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit",
+      "worktree": {
+        "allowed": true,
+        "row_count": 0,
+        "rows": [],
+        "worktree_digest": "656de056dbcf8eb3cb4ffc1229de9967895b1f7aa21dd44ba3126a992e1215f7"
+      }
+    },
+    "launch_digest": "32a9255368d1125e59590f38bbccddda2763fbdd6cda0a9d7773365ce9e5da95",
+    "launch_lock": {
+      "command": "run-exposure",
+      "lock_digest": "ba087873a36ed80e9d3a60b9038392cea1daeeab1c2cefa648e134ee9a518a24",
+      "owner": "417a73a0ee464cbeaffe0da491636ce0"
+    },
+    "launch_record_digest": "3b13bdf1291eb1d7f3199300511a8de694f1463e8c360b453ced6856a8204017",
+    "lawful_restart_requires_new_attempt": true,
+    "no_shell_transformation": true,
+    "no_wall_clock_timeout": true,
+    "package_id": "native_v2_execution_launch_amendment.v1",
+    "requested_at_utc": "2026-07-28T21:23:43.399765+00:00",
+    "schema_version": "native_v2_launch_record.v1",
+    "service_name": "recon-v2-execution-launch-amendment-run-exposure-20260728T212343341863Z-90c45431306648c5bee6604f9469832a",
+    "systemd_argv": [
+      "systemd-run",
+      "--user",
+      "--unit=recon-v2-execution-launch-amendment-run-exposure-20260728T212343341863Z-90c45431306648c5bee6604f9469832a",
+      "--property=Type=exec",
+      "--property=RemainAfterExit=yes",
+      "--property=WorkingDirectory=/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit",
+      "--property=StandardOutput=file:/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T212343341863Z-90c45431306648c5bee6604f9469832a/stdout.log",
+      "--property=StandardError=file:/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T212343341863Z-90c45431306648c5bee6604f9469832a/stderr.log",
+      "--setenv=LANG=C.UTF-8",
+      "--setenv=LC_ALL=C.UTF-8",
+      "--setenv=MKL_NUM_THREADS=1",
+      "--setenv=NUMEXPR_NUM_THREADS=1",
+      "--setenv=OMP_NUM_THREADS=1",
+      "--setenv=OPENBLAS_NUM_THREADS=1",
+      "--setenv=PYTHONHASHSEED=0",
+      "--setenv=RECON_V2_FINAL_READINESS_DIGEST=420622a02696ca0b352ff949a837d6705d062b8164fc7790f386d74a4612f74e",
+      "--setenv=RECON_V2_FINAL_READINESS_SHA256=11450ce7a49c34fe8b349f9eef554f95ccc4566f5caeec7becb0bd47bd3ec366",
+      "--setenv=RECON_V2_LAUNCH_ATTEMPT_ID=20260728T212343341863Z-90c45431306648c5bee6604f9469832a",
+      "--setenv=RECON_V2_LAUNCH_COMMAND=run-exposure",
+      "--setenv=RECON_V2_LAUNCH_DIGEST=32a9255368d1125e59590f38bbccddda2763fbdd6cda0a9d7773365ce9e5da95",
+      "--setenv=RECON_V2_LAUNCH_RECORD=/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T212343341863Z-90c45431306648c5bee6604f9469832a/launch.json",
+      "--setenv=TZ=UTC",
+      "--",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "-m",
+      "recon_lite_chess.autogrowth.native_v2_execution_launch_amendment",
+      "run-exposure"
+    ]
+  },
+  "observation": {
+    "attempt_id": "20260728T212343341863Z-90c45431306648c5bee6604f9469832a",
+    "observation_digest": "fbb3a39b4466318e020d964f6ee5a2937823cc4679492086e9f622a89c402dfa",
+    "observed_at_utc": "2026-07-28T21:23:43.524293+00:00",
+    "package_id": "native_v2_execution_launch_amendment.v1",
+    "schema_version": "native_v2_launch_observation.v1",
+    "status": {
+      "ActiveState": "active",
+      "ExecMainCode": "0",
+      "ExecMainExitTimestamp": "",
+      "ExecMainPID": "1575205",
+      "ExecMainStartTimestamp": "Tue 2026-07-28 23:23:43 CEST",
+      "ExecMainStatus": "0",
+      "InvocationID": "4b8bce37309d409787ab17f753e06ec5",
+      "LoadState": "loaded",
+      "Result": "success",
+      "RuntimeMaxUSec": "infinity",
+      "SubState": "running"
+    }
+  },
+  "package_id": "native_v2_execution_launch_amendment.v1",
+  "process_id": 1575205,
+  "schema_version": "native_v2_terminal_service_record.v1",
+  "stderr_log": {
+    "path": "/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T212343341863Z-90c45431306648c5bee6604f9469832a/stderr.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "size": 0
+  },
+  "stdout_log": {
+    "path": "/home/banquo/.local/state/hector-recon-v2-execution-launch-amendment/attempts/20260728T212343341863Z-90c45431306648c5bee6604f9469832a/stdout.log",
+    "sha256": "8649f866959c027d23f82a74e51807f0e46dd8fa67db47db02f58cef5a93e365",
+    "size": 840
+  },
+  "terminal": true,
+  "terminal_capture_digest": "1e05b1bd061d61d8ae64c1bb9a422e9004ed1434a8465cfee831856f6123d0eb",
+  "terminal_status": {
+    "active_state": "active",
+    "exec_main_code": "1",
+    "exec_main_status": "0",
+    "exit_status": 0,
+    "invocation_id": "4b8bce37309d409787ab17f753e06ec5",
+    "load_state": "loaded",
+    "result": "success",
+    "runtime_max_usec": "infinity",
+    "signal_status": null,
+    "sub_state": "exited"
+  }
+}

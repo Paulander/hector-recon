@@ -873,3 +873,18 @@ scientific gate are not evaluated. Future production use is documented only
 through `launch-service` and `poll-service`; neither production launch was
 performed. See
 `docs/autogrowth/NATIVE_V2_EXECUTION_LAUNCH_AMENDMENT_RESULT_20260728.md`.
+
+
+The frozen V2 pre-outcome exposure stage has now completed successfully and is
+preserved from source commit `0bff5e622a9a28c75d13e421cff4faae33e55e5c`.
+The exact journal contains 96 ordered preparation/commit pairs with zero
+recomputation. All 512 A/B/C pre-outcome row comparisons matched. The planted
+target had eight distinct opportunities in all 32 seeds; the selected
+comparison target had eight in 30 seeds and was absent in two. Accordingly,
+30/32 seeds qualified against the frozen 24/32 admission requirement.
+
+The recorded service exited zero with empty stderr, completed cleanup, and left
+its unit absent. Outcome access remains exactly zero and the outcome stage was
+not started. This is a successful exposure/admission result only—not evidence
+for the proposed mechanism, not a learning result, and not KRK evidence. See
+`docs/autogrowth/NATIVE_V2_EXPOSURE_ADMISSION_RESULT_20260729.md`.

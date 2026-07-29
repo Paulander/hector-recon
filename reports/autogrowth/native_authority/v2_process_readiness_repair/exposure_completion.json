@@ -1,0 +1,23 @@
+{
+  "completion_digest": "a63e0e073bbf77598a3fdd67192e83a0162b5b65475a88b05306cbd5c6b4a8a8",
+  "execution_manifest": {
+    "digest": "35587e65c9dc59a420af68c42868333f54af85d8b7f31b73c60d9eec948edb5d",
+    "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/execution_manifest.json",
+    "sha256": "8fa649f4587099f5f1eae54468736bfd410b3d12d46576393916021a4a128216"
+  },
+  "experiment_id": "native_v2_fresh_discriminator_review_repair_v2.v1",
+  "exposure": {
+    "digest": "c95b60c670bb7b80a387f44da4c40e1790bc4100ff3f2a4f923b8a26ee5b7e3b",
+    "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/preoutcome_exposure.json",
+    "sha256": "6a0d086599c44f035d07a07fa389d680019e7e7fdeaace75e978640e587ad2a7"
+  },
+  "exposure_journal_chain_digest": "d827d8f1d45f4cebd8adb02ec895e4c3cd9d48249265572a64c81f568f6c3f75",
+  "exposure_recomputation_count": 0,
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "package_id": "native_v2_process_readiness_repair.v1",
+  "schema_version": "native_v2_process_readiness_completion.v1",
+  "unit_count": 96
+}
