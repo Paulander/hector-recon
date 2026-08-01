@@ -560,6 +560,192 @@ def build_real_exposure_runtime(
     }
 
 
+PORTABLE_UNIT_BINDING_SCHEMA = (
+    "native_v2_exposure_unit_binding.portable_semantic.v1"
+)
+_PRODUCTION_UNIT_BINDING_SCHEMA = "native_v2_exposure_unit_binding.v1"
+_TRANSPORT_ONLY_UNIT_BINDING_FIELDS = frozenset({
+    "payload_sha256",
+    "registry_identity",
+    "unit_binding_digest",
+})
+
+
+def _require_hex_digest(value: Any, *, label: str) -> str:
+    text = str(value)
+    if not re.fullmatch(r"[0-9a-f]{64}", text):
+        raise ProcessReadinessRepairError(f"invalid {label} digest")
+    return text
+
+
+def portable_unit_binding_projection(
+    binding: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Bind policy-relevant unit state, excluding proven pickle transport.
+
+    ``payload_sha256`` records the historical exposure-session pickle bytes.
+    ``registry_identity`` includes that byte hash, and
+    ``unit_binding_digest`` includes both.  The double-restore localization
+    proved that those three fields can change solely because equal dictionary
+    key strings acquire different pickle memo/reference sharing.  Every other
+    field remains binding here, including the immutable source snapshot,
+    semantic state, graph continuation, rows, tape, run, package, and the
+    explicit zero-outcome state.
+    """
+
+    value = copy.deepcopy(dict(binding))
+    if value.get("schema_version") != _PRODUCTION_UNIT_BINDING_SCHEMA:
+        raise ProcessReadinessRepairError(
+            "portable comparison requires a production unit binding"
+        )
+    required = {
+        "unit_index", "unit_id", "arm", "seed_ordinal", "organism_id",
+        "source_snapshot_identity", "candidate_graph_continuation_digest",
+        "payload_sha256", "registry_identity", "registry_tape_identity",
+        "registry_run_identity", "expanded_package_map_digest", "row_order",
+        "row_order_digest", "row_definitions", "row_definition_digest",
+        "outcome_access", "unit_binding_digest",
+    }
+    if set(value) != required | {"schema_version"}:
+        raise ProcessReadinessRepairError(
+            "production unit binding field set changed"
+        )
+    if value["outcome_access"] != {"count": 0, "event_ids": []}:
+        raise ProcessReadinessRepairError(
+            "portable unit binding contains outcome access"
+        )
+    if value["unit_id"] != (
+        f"{value['arm']}/seed-{int(value['seed_ordinal']):02d}"
+    ) or value["organism_id"] != (
+        f"seed-{int(value['seed_ordinal']):02d}"
+    ):
+        raise ProcessReadinessRepairError(
+            "portable unit/arm/seed/organism identity changed"
+        )
+    snapshot_identity = value["source_snapshot_identity"]
+    if not isinstance(snapshot_identity, Mapping):
+        raise ProcessReadinessRepairError(
+            "portable source snapshot identity is malformed"
+        )
+    entry = copy.deepcopy(dict(snapshot_identity.get("entry", {})))
+    if (
+        snapshot_identity.get("entry_digest") != digest(entry)
+        or entry.get("arm") != value["arm"]
+        or int(entry.get("seed_ordinal", -1))
+        != int(value["seed_ordinal"])
+    ):
+        raise ProcessReadinessRepairError(
+            "portable source snapshot identity changed"
+        )
+    semantic = copy.deepcopy(dict(entry.get("semantic_identity", {})))
+    if entry.get("semantic_identity_digest") != digest(semantic):
+        raise ProcessReadinessRepairError(
+            "portable source semantic identity changed"
+        )
+    continuation = copy.deepcopy(dict(
+        semantic.get("continuation_manifest", {})
+    ))
+    experimental = copy.deepcopy(dict(
+        continuation.get("experimental_identity", {})
+    ))
+    if (
+        semantic.get("continuation_digest")
+        != value["candidate_graph_continuation_digest"]
+        or experimental.get("identity_digest")
+        != semantic.get("experiment_identity")
+        or experimental.get("candidate_population_identity")
+        != semantic.get("candidate_population_identity")
+    ):
+        raise ProcessReadinessRepairError(
+            "portable graph/candidate/experimental identity changed"
+        )
+    for key in (
+        "raw_sha256", "compressed_sha256", "semantic_identity_digest"
+    ):
+        _require_hex_digest(entry.get(key), label=f"source snapshot {key}")
+    for key in ("payload_sha256", "registry_identity", "unit_binding_digest"):
+        _require_hex_digest(value.get(key), label=key)
+    if (
+        value["row_order_digest"] != digest(value["row_order"])
+        or value["row_definition_digest"]
+        != digest(value["row_definitions"])
+    ):
+        raise ProcessReadinessRepairError(
+            "portable row identity changed"
+        )
+
+    retained = {
+        key: item for key, item in value.items()
+        if key not in _TRANSPORT_ONLY_UNIT_BINDING_FIELDS
+    }
+    source_binding = {
+        "source_organism_identity": semantic.get(
+            "source_organism_identity"
+        ),
+        "source_state_identity": semantic.get("source_state_identity"),
+        "source_base_continuation_digest": semantic.get(
+            "source_base_continuation_digest"
+        ),
+        "candidate_population_identity": semantic.get(
+            "candidate_population_identity"
+        ),
+        "authority_topology_digest": digest(
+            continuation.get("authority_topology")
+        ),
+        "experimental_source": experimental.get("source"),
+    }
+    projection = {
+        "schema_version": PORTABLE_UNIT_BINDING_SCHEMA,
+        "unit_identity": {
+            "unit_index": int(value["unit_index"]),
+            "unit_id": str(value["unit_id"]),
+            "arm": str(value["arm"]),
+            "seed_ordinal": int(value["seed_ordinal"]),
+            "organism_id": str(value["organism_id"]),
+        },
+        "source_snapshot_transport": {
+            "path": entry.get("path"),
+            "raw_sha256": entry.get("raw_sha256"),
+            "raw_size": entry.get("raw_size"),
+            "compressed_sha256": entry.get("compressed_sha256"),
+            "compressed_size": entry.get("compressed_size"),
+            "entry_digest": snapshot_identity.get("entry_digest"),
+        },
+        "source_snapshot_semantic_identity_digest": entry.get(
+            "semantic_identity_digest"
+        ),
+        "source_binding_projection": source_binding,
+        "source_binding_projection_digest": digest(source_binding),
+        "experimental_identity_digest": experimental.get(
+            "identity_digest"
+        ),
+        "candidate_population_identity": semantic.get(
+            "candidate_population_identity"
+        ),
+        "candidate_graph_continuation_digest": value[
+            "candidate_graph_continuation_digest"
+        ],
+        "registry_tape_identity": value["registry_tape_identity"],
+        "registry_run_identity": value["registry_run_identity"],
+        "expanded_package_map_digest": value[
+            "expanded_package_map_digest"
+        ],
+        "row_order_digest": value["row_order_digest"],
+        "row_definition_digest": value["row_definition_digest"],
+        "outcome_access": copy.deepcopy(value["outcome_access"]),
+        "retained_binding_digest": digest(retained),
+        "excluded_transport_fields": sorted(
+            _TRANSPORT_ONLY_UNIT_BINDING_FIELDS
+        ),
+    }
+    projection["portable_projection_digest"] = digest(projection)
+    return projection
+
+
+def _is_production_unit_binding(value: Mapping[str, Any]) -> bool:
+    return value.get("schema_version") == _PRODUCTION_UNIT_BINDING_SCHEMA
+
+
 class RepairExposureUnitJournal(previous.ExposureUnitJournal):
     def append(
         self,
@@ -592,6 +778,87 @@ class RepairExposureUnitJournal(previous.ExposureUnitJournal):
         )
         atomic_json(self.root / name, row)
         return row
+
+    def analyze(
+        self, bindings: Sequence[Mapping[str, Any]]
+    ) -> dict[str, Any]:
+        """Use portable semantics, then retain the exact historical chain."""
+
+        expected = tuple(copy.deepcopy(dict(item)) for item in bindings)
+        records = self.records()
+        historicalized = []
+        comparisons = []
+        for unit_index, binding in enumerate(expected):
+            prepared = [
+                row for row in records
+                if row.get("kind") == "PREPARED"
+                and int(row.get("unit_index", -1)) == unit_index
+            ]
+            if not prepared:
+                historicalized.append(binding)
+                continue
+            stored = prepared[0].get("payload", {}).get("unit_binding")
+            if not isinstance(stored, Mapping):
+                raise ProcessReadinessRepairError(
+                    f"missing historical PREPARED binding:{unit_index}"
+                )
+            if any(
+                row.get("payload", {}).get("unit_binding") != stored
+                for row in prepared[1:]
+            ):
+                raise ProcessReadinessRepairError(
+                    f"historical PREPARED attempts disagree:{unit_index}"
+                )
+            stored_is_production = _is_production_unit_binding(stored)
+            expected_is_production = _is_production_unit_binding(binding)
+            if stored_is_production != expected_is_production:
+                raise ProcessReadinessRepairError(
+                    f"portable binding schema changed:{unit_index}"
+                )
+            if not stored_is_production:
+                historicalized.append(binding)
+                continue
+            stored_projection = portable_unit_binding_projection(stored)
+            expected_projection = portable_unit_binding_projection(binding)
+            if stored_projection != expected_projection:
+                raise ProcessReadinessRepairError(
+                    f"portable unit binding changed:{unit_index}"
+                )
+            adjusted = copy.deepcopy(binding)
+            for field in _TRANSPORT_ONLY_UNIT_BINDING_FIELDS:
+                adjusted[field] = copy.deepcopy(stored[field])
+            historicalized.append(adjusted)
+            comparisons.append({
+                "unit_index": unit_index,
+                "unit_id": str(binding["unit_id"]),
+                "portable_projection_digest": stored_projection[
+                    "portable_projection_digest"
+                ],
+                "historical_transport_metadata": {
+                    field: str(stored[field])
+                    for field in sorted(
+                        _TRANSPORT_ONLY_UNIT_BINDING_FIELDS
+                    )
+                },
+                "current_transport_metadata": {
+                    field: str(binding[field])
+                    for field in sorted(
+                        _TRANSPORT_ONLY_UNIT_BINDING_FIELDS
+                    )
+                },
+                "transport_metadata_equal": all(
+                    stored[field] == binding[field]
+                    for field in _TRANSPORT_ONLY_UNIT_BINDING_FIELDS
+                ),
+            })
+        plan = super().analyze(historicalized)
+        plan["portable_binding_comparison_schema"] = (
+            PORTABLE_UNIT_BINDING_SCHEMA
+        )
+        plan["portable_binding_comparison_count"] = len(comparisons)
+        plan["portable_binding_comparisons"] = comparisons
+        plan["portable_binding_comparison_digest"] = digest(comparisons)
+        return plan
 
 
 def build_execution_manifest(

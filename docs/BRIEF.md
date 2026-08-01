@@ -904,3 +904,30 @@ The service cleanup passed and its unit is absent. This is an **instrument
 failure before science start**, not a mechanism result, valid negative, or
 engagement failure. The attempt was not repaired or relaunched. See
 `docs/autogrowth/NATIVE_V2_OUTCOME_EXECUTION_INSTRUMENT_STOP_20260729.md`.
+
+
+The bounded V2 unit-binding admission localization proved that the recorded
+second-restore mismatch is transport-only at the unit-binding boundary.  The
+raw payload for `A/seed-00` changed from
+`8d029f3dd290b1e76aa5b566fda6c913761b8e79494ebe1b33d41fb7c39df18d`
+to `b7c977af92995c6163b555fd50817101e4f887532ad215452fd604430a2b7e84`
+because equal dictionary-key strings acquired different pickle memo/reference
+sharing.  Values, dictionary order, graph continuation, candidates, topology,
+rows, tape, run, package, and outcome state were exact.
+
+An in-place portable semantic unit-binding comparison excludes only that raw
+payload hash and its derived registry/binding hashes.  Focused checks passed
+25/25; the current-plus-adjacent admission suites passed 94/94.  The first
+replacement restore then passed 96/96 comparisons and exact artifact
+reconstruction with zero outcome access.
+
+The decisive second restore passed the portable binding boundary but stopped
+during artifact reconstruction with `foreign registry scan result`: committed
+scan wrappers retain the historical raw-derived registry identity, while the
+fresh registry contains the second-restore identity.  All 195 protected files
+remain byte-identical at set digest
+`9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239`.
+No science marker, outcome environment, journal, carrier, or result was created;
+outcome access is exactly zero.  This is another **instrument stop before
+science**, not mechanism evidence.  No repair or rerun followed.  See
+`docs/autogrowth/NATIVE_V2_UNIT_BINDING_ADMISSION_RECLOSURE_STOP_20260801.md`.

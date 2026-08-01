@@ -1,0 +1,74 @@
+{
+  "decision": "transport_only_repair_permitted",
+  "double_restore_localization": {
+    "diagnostic_digest": "a022644f5ce49478436a0dbdd8a1162ab09dbd8e0503a9575e703c1122725afd",
+    "differing_registry_input_count": 32,
+    "differing_unit_binding_count": 32,
+    "first_complete_admission_digest": "ca4ab4346dbf914381b1172d5ba822d65ffe841b5882cc66483647e691c7f3a7",
+    "affected_arm": "A",
+    "affected_unit_ids": "A/seed-00 through A/seed-31",
+    "root_difference": {
+      "unit_id": "A/seed-00",
+      "path": "$.payload_sha256",
+      "stored_value": "8d029f3dd290b1e76aa5b566fda6c913761b8e79494ebe1b33d41fb7c39df18d",
+      "reconstructed_value": "b7c977af92995c6163b555fd50817101e4f887532ad215452fd604430a2b7e84"
+    },
+    "derived_differences": {
+      "arm_A_registry_identity": {
+        "stored_value": "aef4b583851558b5d1b636820a39015a9be8b2b2970b7b28d943684ca53cde69",
+        "reconstructed_value": "0530b942e74ecd7a7ad0c6ad7376525f324416f4ec8ec8f16f9127a6df072c72"
+      },
+      "unit_0_binding_digest": {
+        "stored_value": "c2fb67937ecef1deb936a6f567ea9ff89a7c89f3a7492bf459c96da90e153c37",
+        "reconstructed_value": "e1777463af9b48d0ab3205c22812ed0e7b8e7176934d93d8e5b2af38e253c3e6"
+      },
+      "all_arm_A_unit_binding_digests_changed_from_shared_registry_identity": true
+    }
+  },
+  "single_organism_reproduction": {
+    "source_snapshot_raw_sha256": "67d6a31447ea45d8c21c877bae99f3111ac6e4a91ba422992d40fdd55535495e",
+    "first_dump_sha256": "8d029f3dd290b1e76aa5b566fda6c913761b8e79494ebe1b33d41fb7c39df18d",
+    "second_dump_sha256": "b7c977af92995c6163b555fd50817101e4f887532ad215452fd604430a2b7e84",
+    "value_difference_count": 0,
+    "dictionary_order_difference_count": 0,
+    "continuation_equal": true,
+    "reference_alias_difference_count": 69,
+    "bounded_reference_alias_examples": [
+      {
+        "path": "$.__dict__['base'].__dict__['envelope'].__dict__.<key:'config'>",
+        "first_reference_owner": "$.__dict__['base'].__dict__['r0'].__dict__['graph'].__dict__.<key:'config'>",
+        "second_reference_owner": "$.__dict__['base'].__dict__['envelope'].__dict__.<key:'config'>"
+      },
+      {
+        "path": "$.__dict__['base'].__dict__['r0'].__dict__['graph'].__dict__.<key:'graph'>",
+        "first_reference_owner": "$.__dict__['base'].__dict__['r0'].__dict__.<key:'graph'>",
+        "second_reference_owner": "$.__dict__['base'].__dict__['r0'].__dict__['graph'].__dict__.<key:'graph'>"
+      }
+    ],
+    "classification": "pickle memo/reference sharing of equal dictionary-key strings only"
+  },
+  "stable_semantic_contract": {
+    "candidate_graph_continuation_digest": "848147bc58212aa1bb72f07918edde522465a07f69851c18cdf9ebcc611759af",
+    "candidate_population_identity_unchanged": true,
+    "experimental_identity_unchanged": true,
+    "source_binding_identity_unchanged": true,
+    "source_snapshot_identity_unchanged": true,
+    "graph_and_topology_state_unchanged": true,
+    "arm_seed_and_organism_identity_unchanged": true,
+    "row_order_and_definitions_unchanged": true,
+    "registry_tape_run_and_package_identity_unchanged": true,
+    "outcome_access": {
+      "count": 0,
+      "event_ids": []
+    }
+  },
+  "preservation": {
+    "starting_commit": "4c41e8b15597aab959ac2d271bffa2f5293d7bb5",
+    "existing_exposure_journal_modified": false,
+    "science_start_marker_created": false,
+    "outcome_environment_constructed": false,
+    "outcome_journal_created": false,
+    "outcome_read_count": 0
+  },
+  "schema_version": "native_v2_unit_binding_admission_diagnostic.v1"
+}

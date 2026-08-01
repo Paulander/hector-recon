@@ -1,0 +1,22 @@
+{
+  "attempt_id": "20260731T202101435174689Z",
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "process_id": 2,
+  "protected_file_count": 195,
+  "protected_file_set_digest": "9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239",
+  "record_digest": "b35addaf4113c248299ed97d10c9cca199ba5c2678a500ff22ab498af5d354e5",
+  "recorded_at_utc": "2026-07-31T21:12:21.369561+00:00",
+  "schema_version": "native_v2_portable_admission_attempt.v1",
+  "science_paths_absent": true,
+  "source_binding": {
+    "reports/autogrowth/native_authority/v2_process_readiness_repair/unit_binding_admission_diagnostic.json": "61ede2efa636456ee330d25e00f85b50c870e47a4b7ec5d42767f8d7cbf15400",
+    "src/recon_lite_chess/autogrowth/native_v2_process_readiness_repair.py": "37f173452d2e2eeb955f409461e4a92551fd0d5907bfd1dd584890dfaf435bd4",
+    "tests/autogrowth/test_native_v2_process_readiness_repair.py": "0917e7a2126f5559bab527d02eaac4a69163410aa719c7d3c67435f311001b32"
+  },
+  "source_binding_digest": "3dd6183471f5bd8cc16c567e3e21118710ef4332197c95c41689ad5e89f810c5",
+  "stage": "started",
+  "starting_head": "4c41e8b15597aab959ac2d271bffa2f5293d7bb5"
+}

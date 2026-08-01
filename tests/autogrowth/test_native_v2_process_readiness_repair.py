@@ -23,6 +23,75 @@ def _binding(index: int) -> dict:
     return value
 
 
+def _production_binding(index: int = 0) -> dict:
+    candidate_identity = "a" * 64
+    continuation_digest = "b" * 64
+    experimental = {
+        "identity_digest": "c" * 64,
+        "candidate_population_identity": candidate_identity,
+        "source": {
+            "base_continuation_digest": "d" * 64,
+            "organism_identity": "e" * 64,
+            "state_identity": "f" * 64,
+        },
+    }
+    semantic = {
+        "candidate_population_identity": candidate_identity,
+        "continuation_digest": continuation_digest,
+        "continuation_manifest": {
+            "authority_topology": {"nodes": {}, "edges": {}},
+            "experimental_identity": experimental,
+        },
+        "experiment_identity": experimental["identity_digest"],
+        "source_base_continuation_digest": "d" * 64,
+        "source_organism_identity": "e" * 64,
+        "source_state_identity": "f" * 64,
+    }
+    entry = {
+        "arm": "A",
+        "seed_ordinal": index,
+        "path": f"arm_snapshots/seed-{index:02d}/A.pkl.gz",
+        "raw_sha256": "1" * 64,
+        "raw_size": 101,
+        "compressed_sha256": "2" * 64,
+        "compressed_size": 79,
+        "compressed_reference_b64": "transport",
+        "semantic_identity": semantic,
+        "semantic_identity_digest": repair.digest(semantic),
+    }
+    rows = [{
+        "row_id": "suffix-00",
+        "frame_id": f"frame:A:{index}:suffix-00",
+        "predecessor_fen": "8/8/8/8/8/8/3k4/K5R1 w - - 0 1",
+    }]
+    order = ["suffix-00"]
+    value = {
+        "schema_version": "native_v2_exposure_unit_binding.v1",
+        "unit_index": index,
+        "unit_id": f"A/seed-{index:02d}",
+        "arm": "A",
+        "seed_ordinal": index,
+        "organism_id": f"seed-{index:02d}",
+        "source_snapshot_identity": {
+            "entry": entry,
+            "entry_digest": repair.digest(entry),
+        },
+        "candidate_graph_continuation_digest": continuation_digest,
+        "payload_sha256": "3" * 64,
+        "registry_identity": "4" * 64,
+        "registry_tape_identity": "5" * 64,
+        "registry_run_identity": "6" * 64,
+        "expanded_package_map_digest": "7" * 64,
+        "row_order": order,
+        "row_order_digest": repair.digest(order),
+        "row_definitions": rows,
+        "row_definition_digest": repair.digest(rows),
+        "outcome_access": {"count": 0, "event_ids": []},
+    }
+    value["unit_binding_digest"] = repair.digest(value)
+    return value
+
+
 def _unit_result(binding: dict) -> dict:
     value = {
         "unit_index": binding["unit_index"],
@@ -321,6 +390,108 @@ def test_production_sized_admission_requires_all_96_units(
     assert admitted["plan"]["committed_unit_indices"] == list(range(96))
     assert admitted["plan"]["committed_unit_count"] == 96
     assert admitted["journal_record_count"] == 192
+
+
+def test_transport_only_binding_variation_uses_portable_semantics(
+    tmp_path: Path,
+) -> None:
+    stored = _production_binding()
+    journal = repair.RepairExposureUnitJournal(tmp_path / "journal")
+    prepared = journal.prepare(stored, ())
+    journal.commit(stored, prepared, _unit_result(stored))
+    restored = copy.deepcopy(stored)
+    restored["payload_sha256"] = "8" * 64
+    restored["registry_identity"] = "9" * 64
+    restored["unit_binding_digest"] = repair.digest({
+        key: item for key, item in restored.items()
+        if key != "unit_binding_digest"
+    })
+
+    plan = journal.analyze((restored,))
+
+    assert plan["committed_unit_count"] == 1
+    assert plan["portable_binding_comparison_count"] == 1
+    comparison = plan["portable_binding_comparisons"][0]
+    assert comparison["transport_metadata_equal"] is False
+    assert comparison["historical_transport_metadata"] == {
+        "payload_sha256": "3" * 64,
+        "registry_identity": "4" * 64,
+        "unit_binding_digest": stored["unit_binding_digest"],
+    }
+
+
+@pytest.mark.parametrize(
+    "field",
+    (
+        "candidate_graph_continuation_digest",
+        "registry_tape_identity",
+        "registry_run_identity",
+        "expanded_package_map_digest",
+        "row_order",
+        "row_definitions",
+        "outcome_access",
+        "arm",
+        "seed_ordinal",
+        "organism_id",
+    ),
+)
+def test_portable_binding_rejects_changed_semantics(
+    tmp_path: Path, field: str
+) -> None:
+    stored = _production_binding()
+    journal = repair.RepairExposureUnitJournal(tmp_path / field)
+    prepared = journal.prepare(stored, ())
+    journal.commit(stored, prepared, _unit_result(stored))
+    changed = copy.deepcopy(stored)
+    if field == "row_order":
+        changed[field] = ["foreign"]
+    elif field == "row_definitions":
+        changed[field][0]["predecessor_fen"] = (
+            "8/8/8/8/8/8/4k3/K5R1 w - - 0 1"
+        )
+    elif field == "outcome_access":
+        changed[field] = {"count": 1, "event_ids": ["foreign"]}
+    elif field == "seed_ordinal":
+        changed[field] = 1
+    else:
+        changed[field] = "f" * 64 if "identity" in field else "foreign"
+    changed["payload_sha256"] = "8" * 64
+    changed["registry_identity"] = "9" * 64
+    changed["unit_binding_digest"] = repair.digest({
+        key: item for key, item in changed.items()
+        if key != "unit_binding_digest"
+    })
+
+    with pytest.raises(repair.ProcessReadinessRepairError):
+        journal.analyze((changed,))
+
+
+def test_portable_projection_binds_snapshot_candidate_and_topology() -> None:
+    baseline = _production_binding()
+    expected = repair.portable_unit_binding_projection(baseline)
+    for mutation in ("snapshot", "candidate", "topology"):
+        changed = copy.deepcopy(baseline)
+        entry = changed["source_snapshot_identity"]["entry"]
+        semantic = entry["semantic_identity"]
+        if mutation == "snapshot":
+            entry["raw_sha256"] = "8" * 64
+        elif mutation == "candidate":
+            semantic["candidate_population_identity"] = "8" * 64
+            semantic["continuation_manifest"]["experimental_identity"][
+                "candidate_population_identity"
+            ] = "8" * 64
+        else:
+            semantic["continuation_manifest"]["authority_topology"] = {
+                "nodes": {"foreign": {}}, "edges": {}
+            }
+        entry["semantic_identity_digest"] = repair.digest(semantic)
+        changed["source_snapshot_identity"]["entry_digest"] = (
+            repair.digest(entry)
+        )
+        observed = repair.portable_unit_binding_projection(changed)
+        assert observed["portable_projection_digest"] != expected[
+            "portable_projection_digest"
+        ]
 
 
 @pytest.mark.parametrize(

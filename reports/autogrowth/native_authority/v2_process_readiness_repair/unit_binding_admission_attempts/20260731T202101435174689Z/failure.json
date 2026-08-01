@@ -1,0 +1,16 @@
+{
+  "attempt_id": "20260731T202101435174689Z",
+  "exception_message": "foreign registry scan result",
+  "exception_type": "ProspectiveV2IntegrityError",
+  "failed_during": "second_restore",
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "record_digest": "49a0ce38597d59ce245cb5096d48850fee5217000b55057e00d39fe7b93ac0c9",
+  "recorded_at_utc": "2026-08-01T00:47:19.609059+00:00",
+  "schema_version": "native_v2_portable_admission_attempt.v1",
+  "stage": "failed",
+  "started_at_utc": "2026-07-31T21:12:11.650339+00:00",
+  "traceback": "Traceback (most recent call last):\n  File \"/tmp/v2_portable_admission_96.py\", line 165, in <module>\n    second = admit_once()\n             ^^^^^^^^^^^^\n  File \"/tmp/v2_portable_admission_96.py\", line 110, in admit_once\n    return repair.validate_exposure_journal_admission(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_process_readiness_repair.py\", line 1125, in validate_exposure_journal_admission\n    rebuilt_exposure = dict(exposure_builder(runtime, results))\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_process_resilient_execution_reclosure.py\", line 1025, in assemble_production_exposure\n    adjudication = registry.adjudicate_cohort(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2_lab.py\", line 521, in adjudicate_cohort\n    raise ProspectiveV2IntegrityError(\nrecon_lite_chess.autogrowth.native_prospective_evidence_authority_v2.ProspectiveV2IntegrityError: foreign registry scan result\n"
+}

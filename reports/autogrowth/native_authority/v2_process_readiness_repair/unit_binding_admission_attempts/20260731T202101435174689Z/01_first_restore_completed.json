@@ -1,0 +1,23 @@
+{
+  "attempt_id": "20260731T202101435174689Z",
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "protected_files_byte_identical": true,
+  "record_digest": "ff8939f1409f26e73a5b9f5f377590fdcaa8d259cec1728e686ebb4d1b66cb07",
+  "recorded_at_utc": "2026-07-31T23:02:04.981592+00:00",
+  "result": {
+    "committed_unit_count": 96,
+    "execution_manifest_digest": "35587e65c9dc59a420af68c42868333f54af85d8b7f31b73c60d9eec948edb5d",
+    "exposure_digest": "c95b60c670bb7b80a387f44da4c40e1790bc4100ff3f2a4f923b8a26ee5b7e3b",
+    "journal_chain_digest": "d827d8f1d45f4cebd8adb02ec895e4c3cd9d48249265572a64c81f568f6c3f75",
+    "portable_binding_comparison_count": 96,
+    "portable_binding_comparison_digest": "fd20e380a2a9abfdbd2b93d06455e9d3d1a3802add7a1346371343b3e086cb2e",
+    "transport_mismatch_count": 0,
+    "transport_mismatch_unit_ids": []
+  },
+  "schema_version": "native_v2_portable_admission_attempt.v1",
+  "science_paths_absent": true,
+  "stage": "first_restore_completed"
+}
