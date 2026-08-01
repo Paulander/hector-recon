@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-admission-recovery/src/recon_lite_chess/autogrowth/native_v2_portable_admission_bridge.py", line 1905, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-admission-recovery/src/recon_lite_chess/autogrowth/native_v2_portable_admission_bridge.py", line 1894, in main
+    _print(run_admission(arguments.attempt_id))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-admission-recovery/src/recon_lite_chess/autogrowth/native_v2_portable_admission_bridge.py", line 1465, in run_admission
+    runtime = historical.build_real_exposure_runtime()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-admission-recovery/src/recon_lite_chess/autogrowth/native_v2_process_readiness_repair.py", line 507, in build_real_exposure_runtime
+    context = dict(deps.build_context())
+                   ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-admission-recovery/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_execution_adapter_freeze.py", line 559, in build_readiness_context
+    fixed = verify_frozen_inputs()
+            ^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-admission-recovery/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_execution_adapter_freeze.py", line 369, in verify_frozen_inputs
+    launcher_package = launcher.verify_package_manifests()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-admission-recovery/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_import_path_launcher_reclosure.py", line 419, in verify_package_manifests
+    raise LauncherIntegrityError("frozen input binding mismatch")
+recon_lite_chess.autogrowth.native_v2_frozen_cohort_import_path_launcher_reclosure.LauncherIntegrityError: frozen input binding mismatch

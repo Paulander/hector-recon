@@ -931,3 +931,16 @@ No science marker, outcome environment, journal, carrier, or result was created;
 outcome access is exactly zero.  This is another **instrument stop before
 science**, not mechanism evidence.  No repair or rerun followed.  See
 `docs/autogrowth/NATIVE_V2_UNIT_BINDING_ADMISSION_RECLOSURE_STOP_20260801.md`.
+
+
+A separately preserved, interruption-resistant recovery execution of the
+frozen portable-admission bridge ran from exact commit
+`8479cbdd22ed06d09eea3bd051a2e0e8344063ec`. The detached process passed the
+historical-journal checkpoint, then stopped at the unchanged historical
+runtime's `LauncherIntegrityError: frozen input binding mismatch`. Its frozen
+terminal rule forbids another retry or in-package repair. Processes two and
+three were not started. All 195 protected files remain exact at set digest
+`9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239`;
+outcome access remains exactly zero. This is a terminal admission instrument
+stop, not learning, mechanism, or KRK evidence. See
+`docs/autogrowth/NATIVE_V2_PORTABLE_ADMISSION_BRIDGE_RECOVERY_STOP_20260801.md`.

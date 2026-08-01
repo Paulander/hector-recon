@@ -1,0 +1,17 @@
+{
+  "argv": [
+    ".venv/bin/python3",
+    "-m",
+    "recon_lite_chess.autogrowth.native_v2_portable_admission_bridge",
+    "run-admission",
+    "--attempt-id",
+    "portable-admission-01-e7dfd710b975"
+  ],
+  "attempt_id": "portable-admission-01-e7dfd710b975",
+  "cwd": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-admission-recovery",
+  "launched_at_utc": "2026-08-01T16:42:25.273610+00:00",
+  "pid": 59209,
+  "start_new_session": true,
+  "stderr": "/tmp/recon-v2-portable-recovery/process1.stderr",
+  "stdout": "/tmp/recon-v2-portable-recovery/process1.stdout"
+}

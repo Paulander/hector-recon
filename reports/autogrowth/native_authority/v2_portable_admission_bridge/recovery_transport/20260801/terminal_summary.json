@@ -1,0 +1,33 @@
+{
+  "attempt_id": "portable-admission-01-e7dfd710b975",
+  "classification": "terminal_admission_instrument_stop",
+  "detached_process_id": 59965,
+  "failure": {
+    "error": "frozen input binding mismatch",
+    "error_type": "LauncherIntegrityError",
+    "record_digest": "a25bcf3994bf53f5d4960817e855ec6e86994dd11897e01d2da77be9383871e2",
+    "sha256": "8f66ffb264c8509e75dcdfb883081ebdff9cf2017d589fdb1ae077c5ee79fba1"
+  },
+  "frozen_source_commit": "8479cbdd22ed06d09eea3bd051a2e0e8344063ec",
+  "historical_journal_validation": {
+    "record_sha256": "5d3f34984649e3f455edd5bf2a3fbb8597ad40c2a26594819ed288bfbc55b827",
+    "status": "passed"
+  },
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "protected_files": {
+    "count": 195,
+    "set_digest": "9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239",
+    "status": "unchanged"
+  },
+  "relaunch_permitted": false,
+  "started_record_sha256": "d9de2f6653134a74bd3f56afbc0c4f911b500cdc183e1cd3f163551a12353048",
+  "transport": {
+    "detached": true,
+    "detached_launch_sha256": "fd354a81432e979a6eb24061ca6ecd3fe4fcc4fd6dea5829228a5a618a1ee1c2",
+    "stderr_sha256": "2398b104cbff7c22cb28410ea91541661dd3d4c22a2ab9cfd3cb5f76a229b7de",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
