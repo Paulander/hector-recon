@@ -1,0 +1,42 @@
+{
+  "attempt_directories_absent": true,
+  "branch": "codex/native-v2-portable-admission-canonical-recovery-20260801",
+  "bridge_temporaries_absent": true,
+  "canonical_interpreter": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+  "canonical_repository_root": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit",
+  "controller_sha256": "4d418130ced7299f5d91a13279d6986108901e78db6de17598d6a4eabd2a7b3b",
+  "frozen_hashes": {
+    "artifact_dependency_manifest": "e988c0b9e87e768b9f7cc05bbda6709c5242e06ce9fee7496efefad03acaeb14",
+    "canonical_child": "009660b6031d124fd85fa7dfb2f43e382ed5a1102d6f74fdf527f01c6e2de8b9",
+    "field_classification": "595a572a43bb92b7808d7e67ac58ba9325826c92e48ed488f3652b40ffca625b",
+    "historical_launcher": "2a8fd7add2726ae16a0cad3bdb55a03cc75376ece1f56545273a8398d55907d5",
+    "portable_admission_bridge": "69e7a1674b727db907fc297fe14a71669e8363924edf5d8f48df5f6acfd44de3",
+    "portable_bridge_source_manifest": "770c4987d30a1f86711648f85a164ac2585b5e178b191a9227a153c2a4ba2921",
+    "restored_historical_process_source": "ae663e67ffad3dbdf8a7e988b5638181fa7a2c4398d3d46b7668cb80ee3d76a6",
+    "restored_historical_process_test": "fc3ea605cb8e49c0b3f20b359e3e181b2736d236b2f22f4b6c49946a9d4d2004"
+  },
+  "head": "8479cbdd22ed06d09eea3bd051a2e0e8344063ec",
+  "historical_launcher_verification": "passed",
+  "module_paths": {
+    "bridge": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_portable_admission_bridge.py",
+    "canonical_child": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_canonical_contract_reclosure.py",
+    "historical_launcher": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_import_path_launcher_reclosure.py"
+  },
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "outer_manifest_sha256": "1de6f9ff09bac37120e72fbf7238e54c3310447788645e6bd86057dae91c8b0b",
+  "preservation_refs": {
+    "original_interrupted_execution": "06707deef7bd1655f2abf999c89711392689ce91",
+    "sibling_location_stop": "dec63b552846364dec5aa3e2f3f4a99b4777cd23"
+  },
+  "protected_files": {
+    "count": 195,
+    "set_digest": "9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239"
+  },
+  "pythonpath": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src",
+  "resolved_child_path_matches_historical_binding": true,
+  "science_paths_absent": true,
+  "worktree_clean": true
+}

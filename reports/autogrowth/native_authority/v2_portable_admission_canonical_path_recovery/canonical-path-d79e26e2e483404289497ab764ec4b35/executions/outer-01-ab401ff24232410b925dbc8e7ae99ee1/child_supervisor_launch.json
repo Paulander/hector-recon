@@ -1,0 +1,26 @@
+{
+  "child_slot": "portable-admission-01-e7dfd710b975",
+  "controller_sha256": "4d418130ced7299f5d91a13279d6986108901e78db6de17598d6a4eabd2a7b3b",
+  "manifest_sha256": "1de6f9ff09bac37120e72fbf7238e54c3310447788645e6bd86057dae91c8b0b",
+  "outer_execution_id": "outer-01-ab401ff24232410b925dbc8e7ae99ee1",
+  "record_digest": "7b018dc4f6b27af287d4e16ee76cb98e35632f109bc3eab1bc2b2983b4ca2a51",
+  "recovery_series_id": "canonical-path-d79e26e2e483404289497ab764ec4b35",
+  "schema_version": "native_v2_outer_supervisor_launch.v1",
+  "start_new_session": true,
+  "started_at_utc": "2026-08-01T19:47:33.108230+00:00",
+  "supervisor_command": [
+    "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+    "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-canonical-recovery/canonical-path-d79e26e2e483404289497ab764ec4b35/detached_controller.py",
+    "supervise",
+    "--manifest",
+    "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-canonical-recovery/canonical-path-d79e26e2e483404289497ab764ec4b35/outer_recovery_manifest.json",
+    "--manifest-sha256",
+    "1de6f9ff09bac37120e72fbf7238e54c3310447788645e6bd86057dae91c8b0b",
+    "--outer-execution-id",
+    "outer-01-ab401ff24232410b925dbc8e7ae99ee1",
+    "--task",
+    "child"
+  ],
+  "supervisor_pid": 9,
+  "task": "child"
+}

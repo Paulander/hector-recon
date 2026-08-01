@@ -931,3 +931,20 @@ No science marker, outcome environment, journal, carrier, or result was created;
 outcome access is exactly zero.  This is another **instrument stop before
 science**, not mechanism evidence.  No repair or rerun followed.  See
 `docs/autogrowth/NATIVE_V2_UNIT_BINDING_ADMISSION_RECLOSURE_STOP_20260801.md`.
+
+
+The Pro-approved canonical-path recovery series then passed its complete
+preflight from exact frozen commit `8479cbdd22ed06d09eea3bd051a2e0e8344063ec`:
+canonical checkout and interpreter, absolute module paths, every required frozen
+hash, all 195 protected files, absent child/science paths, and zero outcome
+access. Its outer manifest SHA-256 is
+`1de6f9ff09bac37120e72fbf7238e54c3310447788645e6bd86057dae91c8b0b`.
+
+The temporary command environment terminated slot 01's detached supervisor when
+the launcher returned, before any child process, child launch record, terminal
+record, or child attempt directory existed. The frozen missing-terminal-result
+rule therefore stopped the series. Slots 02/03 and every verifier were not
+started; all protected files and zero-outcome state remained exact. This is an
+**external transport interruption before child start**, not admission,
+learning, mechanism, or KRK evidence. See
+`docs/autogrowth/NATIVE_V2_CANONICAL_PATH_RECOVERY_SERIES_STOP_20260801.md`.

@@ -1,0 +1,32 @@
+{
+  "child_attempt_directory_created": false,
+  "child_process_launch_record_created": false,
+  "child_slot": "portable-admission-01-e7dfd710b975",
+  "classification": "external_transport_interruption_before_child_start",
+  "controller_sha256": "4d418130ced7299f5d91a13279d6986108901e78db6de17598d6a4eabd2a7b3b",
+  "frozen_head_after_stop": "8479cbdd22ed06d09eea3bd051a2e0e8344063ec",
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "outer_execution_id": "outer-01-ab401ff24232410b925dbc8e7ae99ee1",
+  "outer_manifest_sha256": "1de6f9ff09bac37120e72fbf7238e54c3310447788645e6bd86057dae91c8b0b",
+  "processes_two_and_three_started": false,
+  "protected_files": {
+    "count": 195,
+    "set_digest": "9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239",
+    "status": "unchanged"
+  },
+  "recovery_series_id": "canonical-path-d79e26e2e483404289497ab764ec4b35",
+  "relaunch_permitted_within_series": false,
+  "science_paths_created": false,
+  "stop_reason": "The detached supervisor was launched inside a temporary execution sandbox configured to terminate descendants when its launcher exited. It produced neither a task launch record nor a terminal record. The frozen series therefore stopped under the external-interruption or missing-terminal-result rule before the child process started.",
+  "supervisor_launch": {
+    "record_digest": "7b018dc4f6b27af287d4e16ee76cb98e35632f109bc3eab1bc2b2983b4ca2a51",
+    "sha256": "a43577e208fca8234d50d5b1735a4c96c45e17d10f22dac251bcf39a1526872e",
+    "started_at_utc": "2026-08-01T19:47:33.108230+00:00",
+    "supervisor_pid_in_launch_namespace": 9
+  },
+  "supervisor_terminal_record_created": false,
+  "verifiers_started": false
+}
