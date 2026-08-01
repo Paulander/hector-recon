@@ -1,0 +1,15 @@
+{
+  "canary_launched": false,
+  "command": [
+    "systemctl",
+    "--user",
+    "is-system-running"
+  ],
+  "exit_code": 1,
+  "observed": "Failed to connect to bus: Operation not permitted",
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "substitute_launcher_used": false
+}

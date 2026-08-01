@@ -1,0 +1,15 @@
+{
+  "classification": "transport_only",
+  "elapsed_seconds": 7.362,
+  "failed": 0,
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "passed": 10,
+  "real_aggregate_commands_run": 0,
+  "real_child_commands_run": 0,
+  "real_verifier_commands_run": 0,
+  "test_file": "test_transport_only.py",
+  "total": 10
+}

@@ -948,3 +948,23 @@ started; all protected files and zero-outcome state remained exact. This is an
 **external transport interruption before child start**, not admission,
 learning, mechanism, or KRK evidence. See
 `docs/autogrowth/NATIVE_V2_CANONICAL_PATH_RECOVERY_SERIES_STOP_20260801.md`.
+
+
+The next transport layer is now prepared and frozen without running real work.
+Series `systemd-foreground-1107519c8a4448ed8e7bc134b8a68140` uses a WSL
+systemd user service whose foreground `ExecStart` process synchronously owns
+the complete three-child, three-verifier, one-aggregate sequence. `Restart=no`,
+an infinite runtime ceiling, canonical root/interpreter/PYTHONPATH, unique
+outer execution IDs, exact sequential gates, persistent external records, and
+terminal-on-interruption behavior are all frozen.
+
+Transport-only tests passed 10/10. A read-only preflight at clean exact child
+HEAD `8479cbdd22ed06d09eea3bd051a2e0e8344063ec` passed all frozen hashes,
+absolute module paths, preservation refs, the 195-file protected set, absent
+attempt/science paths, and zero outcomes. The managed command environment could
+not access the WSL user bus, so neither the harmless 80-second canary nor the
+real series was launched; exact normal-WSL commands are preserved for review.
+Outer manifest SHA-256 is
+`2f9895f3a9a7c7b6aae99615b5739a2eb4fdab8efc7244a814e20e9d68aa0b28`.
+This is transport preparation only. See
+`docs/autogrowth/NATIVE_V2_SYSTEMD_FOREGROUND_TRANSPORT_PREPARATION_20260801.md`.

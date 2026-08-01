@@ -1,0 +1,290 @@
+{
+  "aggregate_command": [
+    ".venv/bin/python3",
+    "-m",
+    "recon_lite_chess.autogrowth.native_v2_portable_admission_bridge",
+    "verify-aggregate"
+  ],
+  "canary": {
+    "duration_seconds": 80,
+    "path": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/harmless_systemd_canary.py",
+    "record_root": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/canary_records",
+    "service_stderr": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/canary_service.stderr",
+    "service_stdout": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/canary_service.stdout",
+    "sha256": "46be6389c326ad00aa7ec11a85fe8d3d73bae68cf9fd2f9740d8a645a45b06a7",
+    "unit_name": "hector-recon-v2-canary-2ec72b8bab3d4965a987e8b7433e19cc.service"
+  },
+  "canary_environment": {
+    "HOME": "/home/banquo",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "PYTHONHASHSEED": "0",
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src",
+    "RECON_CANARY_UNIT": "hector-recon-v2-canary-2ec72b8bab3d4965a987e8b7433e19cc.service",
+    "RECON_RECOVERY_SERIES_ID": "systemd-foreground-1107519c8a4448ed8e7bc134b8a68140",
+    "TZ": "UTC"
+  },
+  "canonical_interpreter": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+  "canonical_pythonpath": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src",
+  "canonical_repository_root": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit",
+  "child_attempt_root": "reports/autogrowth/native_authority/v2_portable_admission_bridge/attempts",
+  "child_environment": {
+    "HOME": "/home/banquo",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "PYTHONHASHSEED": "0",
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src",
+    "TZ": "UTC"
+  },
+  "closed_series_ids": [
+    "canonical-path-d79e26e2e483404289497ab764ec4b35"
+  ],
+  "coordinator": {
+    "path": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/foreground_series_coordinator.py",
+    "sha256": "8d14ba9c67f3558e23143bde19a0aa070e3c1c1937ebad4b5d27f2dad94a963c"
+  },
+  "coordinator_environment": {
+    "HOME": "/home/banquo",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "PYTHONHASHSEED": "0",
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src",
+    "RECON_RECOVERY_SERIES_ID": "systemd-foreground-1107519c8a4448ed8e7bc134b8a68140",
+    "RECON_RECOVERY_UNIT": "hector-recon-v2-admission-e697c46cf43a4129a54d24341be70e29.service",
+    "TZ": "UTC"
+  },
+  "executions": [
+    {
+      "child_command": [
+        ".venv/bin/python3",
+        "-m",
+        "recon_lite_chess.autogrowth.native_v2_portable_admission_bridge",
+        "run-admission",
+        "--attempt-id",
+        "portable-admission-01-e7dfd710b975"
+      ],
+      "child_slot": "portable-admission-01-e7dfd710b975",
+      "outer_execution_id": "outer-01-b7f1b46f135c4a66893f079e2c1a13c5",
+      "sequence": 1,
+      "verifier_command": [
+        ".venv/bin/python3",
+        "-m",
+        "recon_lite_chess.autogrowth.native_v2_portable_admission_bridge",
+        "verify-attempt",
+        "--attempt-id",
+        "portable-admission-01-e7dfd710b975"
+      ]
+    },
+    {
+      "child_command": [
+        ".venv/bin/python3",
+        "-m",
+        "recon_lite_chess.autogrowth.native_v2_portable_admission_bridge",
+        "run-admission",
+        "--attempt-id",
+        "portable-admission-02-e7dfd710b975"
+      ],
+      "child_slot": "portable-admission-02-e7dfd710b975",
+      "outer_execution_id": "outer-02-667cb406345d472c8ef878c975d9553a",
+      "sequence": 2,
+      "verifier_command": [
+        ".venv/bin/python3",
+        "-m",
+        "recon_lite_chess.autogrowth.native_v2_portable_admission_bridge",
+        "verify-attempt",
+        "--attempt-id",
+        "portable-admission-02-e7dfd710b975"
+      ]
+    },
+    {
+      "child_command": [
+        ".venv/bin/python3",
+        "-m",
+        "recon_lite_chess.autogrowth.native_v2_portable_admission_bridge",
+        "run-admission",
+        "--attempt-id",
+        "portable-admission-03-e7dfd710b975"
+      ],
+      "child_slot": "portable-admission-03-e7dfd710b975",
+      "outer_execution_id": "outer-03-df72c8c3c9204dd4af9616cf8adab5f3",
+      "sequence": 3,
+      "verifier_command": [
+        ".venv/bin/python3",
+        "-m",
+        "recon_lite_chess.autogrowth.native_v2_portable_admission_bridge",
+        "verify-attempt",
+        "--attempt-id",
+        "portable-admission-03-e7dfd710b975"
+      ]
+    }
+  ],
+  "frozen_child_package_commit": "8479cbdd22ed06d09eea3bd051a2e0e8344063ec",
+  "frozen_files": {
+    "reports/autogrowth/native_authority/v2_portable_admission_bridge/artifact_dependency_manifest.json": "e988c0b9e87e768b9f7cc05bbda6709c5242e06ce9fee7496efefad03acaeb14",
+    "reports/autogrowth/native_authority/v2_portable_admission_bridge/field_classification.json": "595a572a43bb92b7808d7e67ac58ba9325826c92e48ed488f3652b40ffca625b",
+    "reports/autogrowth/native_authority/v2_portable_admission_bridge/source_manifest.json": "770c4987d30a1f86711648f85a164ac2585b5e178b191a9227a153c2a4ba2921",
+    "src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_canonical_contract_reclosure.py": "009660b6031d124fd85fa7dfb2f43e382ed5a1102d6f74fdf527f01c6e2de8b9",
+    "src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_import_path_launcher_reclosure.py": "2a8fd7add2726ae16a0cad3bdb55a03cc75376ece1f56545273a8398d55907d5",
+    "src/recon_lite_chess/autogrowth/native_v2_portable_admission_bridge.py": "69e7a1674b727db907fc297fe14a71669e8363924edf5d8f48df5f6acfd44de3",
+    "src/recon_lite_chess/autogrowth/native_v2_process_readiness_repair.py": "ae663e67ffad3dbdf8a7e988b5638181fa7a2c4398d3d46b7668cb80ee3d76a6",
+    "tests/autogrowth/test_native_v2_process_readiness_repair.py": "fc3ea605cb8e49c0b3f20b359e3e181b2736d236b2f22f4b6c49946a9d4d2004"
+  },
+  "launch_templates": {
+    "canary_start": [
+      "systemd-run",
+      "--user",
+      "--unit=hector-recon-v2-canary-2ec72b8bab3d4965a987e8b7433e19cc.service",
+      "--service-type=exec",
+      "--property=Restart=no",
+      "--property=RuntimeMaxSec=infinity",
+      "--working-directory=/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit",
+      "--property=StandardOutput=append:/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/canary_service.stdout",
+      "--property=StandardError=append:/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/canary_service.stderr",
+      "--no-block",
+      "<CANARY_ENVIRONMENT_SETENV_ARGUMENTS>",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/harmless_systemd_canary.py",
+      "run",
+      "--manifest",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/outer_manifest.json",
+      "--manifest-sha256",
+      "<OUTER_MANIFEST_SHA256>"
+    ],
+    "real_start": [
+      "systemd-run",
+      "--user",
+      "--unit=hector-recon-v2-admission-e697c46cf43a4129a54d24341be70e29.service",
+      "--service-type=exec",
+      "--property=Restart=no",
+      "--property=RuntimeMaxSec=infinity",
+      "--working-directory=/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit",
+      "--property=StandardOutput=append:/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/series_service.stdout",
+      "--property=StandardError=append:/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/series_service.stderr",
+      "--no-block",
+      "<COORDINATOR_ENVIRONMENT_SETENV_ARGUMENTS>",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/foreground_series_coordinator.py",
+      "run-series",
+      "--manifest",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/outer_manifest.json",
+      "--manifest-sha256",
+      "<OUTER_MANIFEST_SHA256>"
+    ]
+  },
+  "modules": {
+    "bridge": {
+      "module": "recon_lite_chess.autogrowth.native_v2_portable_admission_bridge",
+      "resolved_path": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_portable_admission_bridge.py"
+    },
+    "canonical_child": {
+      "module": "recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure",
+      "resolved_path": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_canonical_contract_reclosure.py"
+    },
+    "historical_launcher": {
+      "module": "recon_lite_chess.autogrowth.native_v2_frozen_cohort_import_path_launcher_reclosure",
+      "resolved_path": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_import_path_launcher_reclosure.py"
+    }
+  },
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "preparation_branch": "codex/native-v2-systemd-transport-preparation-20260801",
+  "preservation_refs": [
+    {
+      "commit": "06707deef7bd1655f2abf999c89711392689ce91",
+      "name": "original_interrupted_execution",
+      "record_hashes": {
+        "reports/autogrowth/native_authority/v2_portable_admission_bridge/attempts/portable-admission-01-e7dfd710b975/00_started.json": "0221fe470e2159b421944b3cd3f0aba906433affbc7571fe036e4a039f61dcce",
+        "reports/autogrowth/native_authority/v2_portable_admission_bridge/attempts/portable-admission-01-e7dfd710b975/01_historical_journal_verified.json": "5d3f34984649e3f455edd5bf2a3fbb8597ad40c2a26594819ed288bfbc55b827"
+      }
+    },
+    {
+      "commit": "dec63b552846364dec5aa3e2f3f4a99b4777cd23",
+      "failure_record_digest": "a25bcf3994bf53f5d4960817e855ec6e86994dd11897e01d2da77be9383871e2",
+      "name": "sibling_location_stop",
+      "record_hashes": {
+        "reports/autogrowth/native_authority/v2_portable_admission_bridge/attempts/portable-admission-01-e7dfd710b975/00_started.json": "d9de2f6653134a74bd3f56afbc0c4f911b500cdc183e1cd3f163551a12353048",
+        "reports/autogrowth/native_authority/v2_portable_admission_bridge/attempts/portable-admission-01-e7dfd710b975/01_historical_journal_verified.json": "5d3f34984649e3f455edd5bf2a3fbb8597ad40c2a26594819ed288bfbc55b827",
+        "reports/autogrowth/native_authority/v2_portable_admission_bridge/attempts/portable-admission-01-e7dfd710b975/failure.json": "8f66ffb264c8509e75dcdfb883081ebdff9cf2017d589fdb1ae077c5ee79fba1"
+      }
+    },
+    {
+      "commit": "16b535079c7382a6b173f27b91c2d49b14159241",
+      "name": "canonical_path_transport_stop",
+      "record_hashes": {
+        "docs/autogrowth/NATIVE_V2_CANONICAL_PATH_RECOVERY_SERIES_STOP_20260801.md": "e096e24935caf8acbf204399b724176d5da8e256e3c5af91a5990406b2748392",
+        "reports/autogrowth/native_authority/v2_portable_admission_canonical_path_recovery/canonical-path-d79e26e2e483404289497ab764ec4b35/executions/outer-01-ab401ff24232410b925dbc8e7ae99ee1/child_supervisor_launch.json": "a43577e208fca8234d50d5b1735a4c96c45e17d10f22dac251bcf39a1526872e",
+        "reports/autogrowth/native_authority/v2_portable_admission_canonical_path_recovery/canonical-path-d79e26e2e483404289497ab764ec4b35/outer_recovery_manifest.json": "1de6f9ff09bac37120e72fbf7238e54c3310447788645e6bd86057dae91c8b0b",
+        "reports/autogrowth/native_authority/v2_portable_admission_canonical_path_recovery/canonical-path-d79e26e2e483404289497ab764ec4b35/preflight.json": "4af2bba41d7bf50624cabba766a1366da1e749d73a9bbd9271ca4a67130a8f50",
+        "reports/autogrowth/native_authority/v2_portable_admission_canonical_path_recovery/canonical-path-d79e26e2e483404289497ab764ec4b35/series_stop.json": "fe09f45f597021f9faa1db7bbff7f9a10e6618c540ee3361e6a8f9f6a1725a1f"
+      }
+    }
+  ],
+  "protected_files": {
+    "count": 195,
+    "dependency_manifest_path": "reports/autogrowth/native_authority/v2_portable_admission_bridge/artifact_dependency_manifest.json",
+    "dependency_manifest_sha256": "e988c0b9e87e768b9f7cc05bbda6709c5242e06ce9fee7496efefad03acaeb14",
+    "set_digest": "9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239"
+  },
+  "record_root": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/series_records",
+  "recovery_series_id": "systemd-foreground-1107519c8a4448ed8e7bc134b8a68140",
+  "schema_version": "native_v2_systemd_foreground_series.v1",
+  "science_paths_required_absent": [
+    "reports/autogrowth/native_authority/v2_process_readiness_repair/science_started.json",
+    "reports/autogrowth/native_authority/v2_process_readiness_repair/science_journal",
+    "reports/autogrowth/native_authority/v2_process_readiness_repair/science_carrier",
+    "reports/autogrowth/native_authority/v2_process_readiness_repair/canonical_result.json.gz",
+    "reports/autogrowth/native_authority/v2_process_readiness_repair/science_failure.json"
+  ],
+  "sequential_gates": [
+    "complete canonical preflight before slot 01",
+    "slot 01 child then slot 01 verifier",
+    "slot 02 child only after slot 01 verifier passes",
+    "slot 02 verifier before slot 03",
+    "slot 03 child then slot 03 verifier",
+    "aggregate only after all three verifiers pass"
+  ],
+  "stopping_conditions": [
+    "coordinator or service interruption",
+    "nonzero child or verifier exit",
+    "missing terminal result",
+    "pre-existing child directory",
+    "noncanonical physical path or interpreter",
+    "source, manifest, historical, or protected byte difference",
+    "semantic, candidate, topology, continuation, row, scan, registry, or artifact difference",
+    "mutation",
+    "new unclassified serialization dependency",
+    "outcome access or science path creation",
+    "cross-process disagreement",
+    "duplicate PID or outer execution identity",
+    "sequential-order deviation"
+  ],
+  "systemd": {
+    "restart": "no",
+    "runtime_max": "infinity",
+    "service_stderr": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/series_service.stderr",
+    "service_stdout": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/series_service.stdout",
+    "type": "exec",
+    "unit_name": "hector-recon-v2-admission-e697c46cf43a4129a54d24341be70e29.service",
+    "working_directory": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit"
+  }
+}

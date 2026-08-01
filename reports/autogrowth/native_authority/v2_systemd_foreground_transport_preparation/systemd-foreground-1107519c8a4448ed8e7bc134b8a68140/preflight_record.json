@@ -1,0 +1,20 @@
+{
+  "canonical_interpreter": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+  "canonical_repository_root": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit",
+  "head": "8479cbdd22ed06d09eea3bd051a2e0e8344063ec",
+  "module_paths": {
+    "bridge": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_portable_admission_bridge.py",
+    "canonical_child": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_canonical_contract_reclosure.py",
+    "historical_launcher": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_import_path_launcher_reclosure.py"
+  },
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "protected_file_count": 195,
+  "protected_file_set_digest": "9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239",
+  "pythonpath": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src",
+  "recovery_series_id": "systemd-foreground-1107519c8a4448ed8e7bc134b8a68140",
+  "schema_version": "native_v2_systemd_foreground_preflight.v1",
+  "service_contract": null
+}
