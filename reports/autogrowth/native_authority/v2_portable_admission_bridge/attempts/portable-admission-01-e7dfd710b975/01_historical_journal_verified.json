@@ -1,0 +1,15 @@
+{
+  "attempt_id": "portable-admission-01-e7dfd710b975",
+  "historical_unit_count": 96,
+  "journal_chain_digest": "d827d8f1d45f4cebd8adb02ec895e4c3cd9d48249265572a64c81f568f6c3f75",
+  "journal_record_count": 192,
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "package_id": "native_v2_portable_admission_bridge.v1",
+  "recomputation_count": 0,
+  "record_digest": "c1324e4604a4579d0b1147f0580f4e1f6cfd51725f18b34e41dc2c5ec67e55c2",
+  "schema_version": "native_v2_portable_admission_attempt_record.v1",
+  "stage": "historical_journal_verified"
+}

@@ -1,0 +1,30 @@
+{
+  "argv": [
+    "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_portable_admission_bridge.py",
+    "run-admission",
+    "--attempt-id",
+    "portable-admission-01-e7dfd710b975"
+  ],
+  "attempt_id": "portable-admission-01-e7dfd710b975",
+  "classification_manifest_digest": "d78fd98216597d2e913515975ef223496e7ab91cb9186ebd0313257bfd47273b",
+  "dependency_manifest_digest": "a9421ce2187c6f700ed46033f83f48e14f13b6e1d47b0673c841c3cfe6b080b4",
+  "literal_frozen_command": [
+    ".venv/bin/python3",
+    "-m",
+    "recon_lite_chess.autogrowth.native_v2_portable_admission_bridge",
+    "run-admission",
+    "--attempt-id",
+    "portable-admission-01-e7dfd710b975"
+  ],
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "package_id": "native_v2_portable_admission_bridge.v1",
+  "process_id": 46345,
+  "protected_file_set_digest": "9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239",
+  "record_digest": "f2166068db8dc6a6a131d6b7434350805a080ea57a25a7f172ca44b3fb0e78c1",
+  "schema_version": "native_v2_portable_admission_attempt_record.v1",
+  "source_manifest_digest": "df90c83a9ea3e1cfda9f272780141fbfe64f656c1a1cda61a1ae086ecb297d66",
+  "stage": "started"
+}

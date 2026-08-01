@@ -931,3 +931,20 @@ No science marker, outcome environment, journal, carrier, or result was created;
 outcome access is exactly zero.  This is another **instrument stop before
 science**, not mechanism evidence.  No repair or rerun followed.  See
 `docs/autogrowth/NATIVE_V2_UNIT_BINDING_ADMISSION_RECLOSURE_STOP_20260801.md`.
+
+
+The new outer V2 portable-admission bridge was frozen and pushed at
+`8479cbdd22ed06d09eea3bd051a2e0e8344063ec`. Its closed classification covers
+681 concrete objects across the 12 preregistered schema families; focused tests
+passed 39/39 and the directly adjacent suites passed 83/83. It preserves the
+restored historical package and has no exposure, science, or outcome command.
+
+The first of three literal admission processes passed the unchanged 192-record
+historical journal validation, then was externally interrupted during fresh
+cohort restoration before any fresh unit completed. Only its immutable start
+and historical-validation records exist; there is no progress, result, or
+program-failure record. It was not deleted, relaunched, or replaced, and later
+attempts were not opened. All 195 protected files remain exact and outcome
+access remains zero. This is an external execution interruption—not an
+admission, mechanism, learning, or KRK result. See
+`docs/autogrowth/NATIVE_V2_PORTABLE_ADMISSION_BRIDGE_INTERRUPTION_20260801.md`.
