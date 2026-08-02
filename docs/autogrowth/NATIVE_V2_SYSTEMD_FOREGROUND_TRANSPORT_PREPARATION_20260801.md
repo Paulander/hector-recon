@@ -80,3 +80,18 @@ in
   `9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239`.
 - Outcome access remains exactly zero.
 - No real service was launched.
+
+## Subsequent execution closure
+
+After independent authorization, the harmless canary passed and the real
+service was launched once from exact child commit `8479cbdd`. The service
+transport remained alive for the complete first child, which passed all 96
+portable-admission units after approximately 9 hours 11 minutes. The outer
+coordinator then stopped before verification because the child result's
+zero-access object included the additional truthful field
+`science_paths_absent: true`, while the coordinator required exact equality to
+a two-field object.
+
+Outcome access remained zero. No later child, verifier, aggregate, exposure, or
+science step ran. The frozen no-retry series is terminal and preserved in
+`NATIVE_V2_SYSTEMD_FOREGROUND_SERIES_STOP_20260802.md`.

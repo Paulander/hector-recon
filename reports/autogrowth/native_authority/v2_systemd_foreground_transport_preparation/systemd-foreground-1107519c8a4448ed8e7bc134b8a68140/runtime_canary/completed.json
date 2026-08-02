@@ -1,0 +1,10 @@
+{
+  "completed_at_utc": "2026-08-01T21:50:40.930417+00:00",
+  "elapsed_seconds": 80.00831587400171,
+  "pid": 256049,
+  "record_digest": "322e2d0141b9db215f2b008cba26a20f7446b472c4e1297b63a970e701ba78aa",
+  "schema_version": "native_v2_systemd_canary_completed.v1",
+  "started_record_digest": "217df7f69c50598783d57f9fb2d899b07bdc02aa46220bb198e7ae928285c596",
+  "survived_launcher_return_boundary": true,
+  "unit": "hector-recon-v2-canary-2ec72b8bab3d4965a987e8b7433e19cc.service"
+}

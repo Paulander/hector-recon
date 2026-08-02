@@ -968,3 +968,20 @@ Outer manifest SHA-256 is
 `2f9895f3a9a7c7b6aae99615b5739a2eb4fdab8efc7244a814e20e9d68aa0b28`.
 This is transport preparation only. See
 `docs/autogrowth/NATIVE_V2_SYSTEMD_FOREGROUND_TRANSPORT_PREPARATION_20260801.md`.
+
+
+The authorized systemd foreground series subsequently demonstrated that its
+transport survives the launching task: slot 01 remained active for about 9
+hours 11 minutes and its portable-admission child exited zero after completing
+96/96 semantic identities, portable bindings, and unit results, with zero graph
+mutation and 32/32 registry admission in all three arms.
+
+The outer coordinator nevertheless stopped before the first verifier because
+it compared the child's complete zero-access object against an exact two-field
+object. The child added the truthful field `science_paths_absent: true`; outcome
+count and event identities remained exactly zero. Slots 02/03, every individual
+verifier, the aggregate verifier, exposure, and science were not started. The
+series is terminal under its no-retry rule. This closes a transport/schema
+contract mismatch after one child success, not a replicated admission,
+mechanism, learning, or KRK result. See
+`docs/autogrowth/NATIVE_V2_SYSTEMD_FOREGROUND_SERIES_STOP_20260802.md`.

@@ -1,0 +1,31 @@
+{
+  "classification": "terminal transport or admission stop",
+  "distinct_child_pids": [
+    282158
+  ],
+  "ended_at_utc": "2026-08-02T07:12:10.961091+00:00",
+  "error": "child outcome access changed:portable-admission-01-e7dfd710b975",
+  "error_type": "RuntimeError",
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "record_digest": "c3bffc735ca201c41e0b47bacf275b9b03c0290a4782e3bedb231a1bfa539aee",
+  "recovery_series_id": "systemd-foreground-1107519c8a4448ed8e7bc134b8a68140",
+  "schema_version": "native_v2_systemd_foreground_series_terminal.v1",
+  "status": "failed",
+  "systemd_unit": "hector-recon-v2-admission-e697c46cf43a4129a54d24341be70e29.service",
+  "task_count": 1,
+  "task_record_digests": [
+    "76b661c707ce164b5a114967712bca298835f7fc09b3ff7b488a2c86d11da3bb"
+  ],
+  "traceback_tail": [
+    "Traceback (most recent call last):",
+    "  File \"/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/foreground_series_coordinator.py\", line 573, in run_series",
+    "    child_result = verify_child_directory(",
+    "                   ^^^^^^^^^^^^^^^^^^^^^^^",
+    "  File \"/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/systemd-foreground-1107519c8a4448ed8e7bc134b8a68140/foreground_series_coordinator.py\", line 451, in verify_child_directory",
+    "    raise RuntimeError(f\"child outcome access changed:{child_slot}\")",
+    "RuntimeError: child outcome access changed:portable-admission-01-e7dfd710b975"
+  ]
+}

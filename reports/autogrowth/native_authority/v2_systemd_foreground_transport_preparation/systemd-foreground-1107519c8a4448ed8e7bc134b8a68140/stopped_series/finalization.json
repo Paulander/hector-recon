@@ -1,0 +1,35 @@
+{
+  "finalized_at_utc": "2026-08-02T09:17:56.342844+00:00",
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "record_digest": "5b4bc3717389ef10706001b0a712d47422d5b49f882f7ea36554dddaecb08697",
+  "record_hashes": {
+    "preflight.json": "9164eb81cb4d4640b7bfcd4f4ec9467ead17f44a025da45552a00de4fbf0fa66",
+    "series_started.json": "edf9ef88e3fd9460cb189ac170a20df36ae7c7e723129bb62db0eee60febe4c6",
+    "series_terminal.json": "ce3fa109164cd6163f331d1b461c6807655824823f369a1bb428269c7e910daa",
+    "slot-01-child.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "slot-01-child.stdout": "f3fa534f84eb6221b93146cac03d446bede447dfb91529e1553e63297a3bd3d6",
+    "slot-01-child_launch.json": "46a227a2cd4907b8478de171a24b51f9760154aed7d45cb068a6705bace3794e",
+    "slot-01-child_terminal.json": "f0ff74eb38f1a829aba498272c3b76af5e7de2af66b5f51fd8f24cd958005029"
+  },
+  "recovery_series_id": "systemd-foreground-1107519c8a4448ed8e7bc134b8a68140",
+  "schema_version": "native_v2_systemd_foreground_finalization.v1",
+  "service": {
+    "ActiveState": "failed",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "1",
+    "Id": "hector-recon-v2-admission-e697c46cf43a4129a54d24341be70e29.service",
+    "LoadState": "loaded",
+    "MainPID": "0",
+    "Restart": "no",
+    "Result": "exit-code",
+    "RuntimeMaxUSec": "infinity",
+    "SubState": "failed",
+    "Type": "exec",
+    "WorkingDirectory": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit"
+  },
+  "service_error": null,
+  "unit": "hector-recon-v2-admission-e697c46cf43a4129a54d24341be70e29.service"
+}

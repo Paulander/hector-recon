@@ -1,0 +1,14 @@
+{
+  "coordinator_pid": 281979,
+  "manifest_sha256": "2f9895f3a9a7c7b6aae99615b5739a2eb4fdab8efc7244a814e20e9d68aa0b28",
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "record_digest": "3c224d8ec4621361a98cdf788273f0bb7073c0fd59071fc313d2719f5aadf785",
+  "recovery_series_id": "systemd-foreground-1107519c8a4448ed8e7bc134b8a68140",
+  "schema_version": "native_v2_systemd_foreground_series_started.v1",
+  "started_at_utc": "2026-08-01T22:13:25.762666+00:00",
+  "systemd_invocation_id": "13d95d226eda40bda22a499da87a4ed7",
+  "systemd_unit": "hector-recon-v2-admission-e697c46cf43a4129a54d24341be70e29.service"
+}

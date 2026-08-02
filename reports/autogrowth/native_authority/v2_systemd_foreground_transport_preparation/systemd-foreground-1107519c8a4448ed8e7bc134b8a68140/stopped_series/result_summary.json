@@ -1,0 +1,66 @@
+{
+  "classification": "terminal outer-contract stop after one successful portable-admission child",
+  "frozen_child_head": "8479cbdd22ed06d09eea3bd051a2e0e8344063ec",
+  "outer_manifest_sha256": "2f9895f3a9a7c7b6aae99615b5739a2eb4fdab8efc7244a814e20e9d68aa0b28",
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "portable_admission_child": {
+    "attempt_id": "portable-admission-01-e7dfd710b975",
+    "candidate_graph_mutation_count": 0,
+    "complete_semantic_identity_count": 96,
+    "elapsed_seconds": 33090.446947380995,
+    "historical_registry_admission": {
+      "A": "32/32",
+      "B": "32/32",
+      "C": "32/32"
+    },
+    "portable_binding_count": 96,
+    "portable_cohort_digest": "5f6de9695ee0da4a74d01b2f27d2f5b0e9abb2845e304f31d230c67b5477327b",
+    "portable_unit_result_count": 96,
+    "result_record_digest": "2165afec220b8c0cbd6867689c54c7ff9ed2166432c8a6d4d45df6647dd1c124",
+    "result_sha256": "f3fa534f84eb6221b93146cac03d446bede447dfb91529e1553e63297a3bd3d6",
+    "returncode": 0,
+    "stage": "passed"
+  },
+  "series_execution": {
+    "aggregate_verifier_started": false,
+    "child_slots_completed": 1,
+    "child_slots_planned": 3,
+    "individual_verifiers_started": 0,
+    "recovery_series_id": "systemd-foreground-1107519c8a4448ed8e7bc134b8a68140",
+    "restart": "no",
+    "runtime_limit": "infinity",
+    "service_main_pid_after_finalization": 0,
+    "service_result": "exit-code",
+    "service_status": "failed",
+    "series_terminal_record_digest": "c3bffc735ca201c41e0b47bacf275b9b03c0290a4782e3bedb231a1bfa539aee",
+    "slot_01_child_pid": 282158,
+    "slot_01_elapsed_seconds": 33094.033837487,
+    "slot_02_started": false,
+    "slot_03_started": false
+  },
+  "stop": {
+    "actual_child_outcome_access": {
+      "count": 0,
+      "event_ids": [],
+      "science_paths_absent": true
+    },
+    "coordinator_expected_exact_object": {
+      "count": 0,
+      "event_ids": []
+    },
+    "error": "child outcome access changed:portable-admission-01-e7dfd710b975",
+    "field_difference": "$.outcome_access.science_paths_absent is present only in the child result",
+    "interpretation": "schema-shape mismatch after child success; no outcome event was read",
+    "rerun_permitted": false
+  },
+  "finalization": {
+    "finalized_at_utc": "2026-08-02T09:17:56.342844+00:00",
+    "record_digest": "5b4bc3717389ef10706001b0a712d47422d5b49f882f7ea36554dddaecb08697",
+    "sha256": "a4c63c8f6476c87294efc576574e9eb79cc9fdd3d1a5b27e9f31705666ae4690"
+  },
+  "scientific_interpretation": "not an exposure, outcome, mechanism, learning, or KRK result",
+  "schema_version": "native_v2_systemd_foreground_series_stop_summary.v1"
+}
