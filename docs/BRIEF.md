@@ -985,3 +985,18 @@ series is terminal under its no-retry rule. This closes a transport/schema
 contract mismatch after one child success, not a replicated admission,
 mechanism, learning, or KRK result. See
 `docs/autogrowth/NATIVE_V2_SYSTEMD_FOREGROUND_SERIES_STOP_20260802.md`.
+
+
+An externally authorized outer-only schema reclosure is now frozen. It carries
+the successful slot-01 directory from `81f70c4` byte-for-byte, seeds PID
+uniqueness with historical child PID `282158`, and removes the slot-01 child
+command from the successor plan. Persisted child results now have their own
+exact three-field zero-access validator; verifier, aggregate, and transport
+outputs retain the original exact two-field contract.
+
+Focused transport checks passed 12/12. The new series
+`schema-reclosure-00079210ade5457dab063a8ce990a4a2` may run only slot-01's
+read-only verifier, slots 02/03 once with their verifiers, and the frozen
+aggregate, then stop. At freeze time slots 02/03, exposure, science, and outcomes
+remain unopened. See
+`docs/autogrowth/NATIVE_V2_SYSTEMD_OUTER_SCHEMA_RECLOSURE_FREEZE_20260802.md`.

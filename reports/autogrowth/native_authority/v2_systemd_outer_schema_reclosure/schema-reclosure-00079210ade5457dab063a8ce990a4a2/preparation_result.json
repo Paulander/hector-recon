@@ -1,0 +1,43 @@
+{
+  "carried_slot": {
+    "child_slot": "portable-admission-01-e7dfd710b975",
+    "historical_child_pid": 282158,
+    "result_record_digest": "2165afec220b8c0cbd6867689c54c7ff9ed2166432c8a6d4d45df6647dd1c124",
+    "result_sha256": "f3fa534f84eb6221b93146cac03d446bede447dfb91529e1553e63297a3bd3d6",
+    "source_commit": "81f70c4f90439d4c89d793ff6b8268d289b54d32"
+  },
+  "classification": "bounded outer schema reclosure freeze",
+  "frozen_child_head": "8479cbdd22ed06d09eea3bd051a2e0e8344063ec",
+  "hashes": {
+    "commands": "94ffd7ac9ef5ea489f3a437e23c13ad1d3e33e6567859f88584c6a799743d0df",
+    "coordinator": "f869e52e4505127d1e4a004d5f16d179196062725c24943acdafa17924c73c5f",
+    "launch_contract": "078a1b8b87987cff2ea0e404a99073d4e29d73070e8ae2066b3fba73c39e897c",
+    "outer_manifest": "643443467633a67943546c5d89a68f3948a6781324467ca0225ba87857ab4aea",
+    "transport_tests": "3bc475873a69f275e7136bd4a21b72dc6a8f2a4394e122a28bc25bb355654136"
+  },
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "protected_files": {
+    "count": 195,
+    "set_digest": "9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239"
+  },
+  "recovery_series_id": "schema-reclosure-00079210ade5457dab063a8ce990a4a2",
+  "remaining_task_plan": [
+    "slot-01-verifier",
+    "slot-02-child",
+    "slot-02-verifier",
+    "slot-03-child",
+    "slot-03-verifier",
+    "aggregate-verifier"
+  ],
+  "schema_version": "native_v2_systemd_schema_reclosure_preparation.v1",
+  "status": "ready_for_exact_child_preflight",
+  "systemd_unit": "hector-recon-v2-schema-6a8e100e71b846b98715e72fb378c75e.service",
+  "transport_tests": {
+    "elapsed_seconds": 4.809,
+    "passed": 12,
+    "total": 12
+  }
+}

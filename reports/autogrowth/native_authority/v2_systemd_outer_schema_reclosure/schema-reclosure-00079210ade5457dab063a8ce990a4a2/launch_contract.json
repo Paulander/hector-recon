@@ -1,0 +1,69 @@
+{
+  "commands": {
+    "finalize": [
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/schema-reclosure-00079210ade5457dab063a8ce990a4a2/foreground_schema_reclosure_coordinator.py",
+      "finalize",
+      "--manifest",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/schema-reclosure-00079210ade5457dab063a8ce990a4a2/outer_manifest.json",
+      "--manifest-sha256",
+      "643443467633a67943546c5d89a68f3948a6781324467ca0225ba87857ab4aea"
+    ],
+    "preflight_only": [
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/schema-reclosure-00079210ade5457dab063a8ce990a4a2/foreground_schema_reclosure_coordinator.py",
+      "preflight-only",
+      "--manifest",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/schema-reclosure-00079210ade5457dab063a8ce990a4a2/outer_manifest.json",
+      "--manifest-sha256",
+      "643443467633a67943546c5d89a68f3948a6781324467ca0225ba87857ab4aea"
+    ],
+    "start": [
+      "systemd-run",
+      "--user",
+      "--unit=hector-recon-v2-schema-6a8e100e71b846b98715e72fb378c75e.service",
+      "--service-type=exec",
+      "--property=Restart=no",
+      "--property=RuntimeMaxSec=infinity",
+      "--working-directory=/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit",
+      "--property=StandardOutput=append:/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/schema-reclosure-00079210ade5457dab063a8ce990a4a2/series_service.stdout",
+      "--property=StandardError=append:/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/schema-reclosure-00079210ade5457dab063a8ce990a4a2/series_service.stderr",
+      "--no-block",
+      "--setenv=HOME=/home/banquo",
+      "--setenv=LANG=C.UTF-8",
+      "--setenv=LC_ALL=C.UTF-8",
+      "--setenv=MKL_NUM_THREADS=1",
+      "--setenv=NUMEXPR_NUM_THREADS=1",
+      "--setenv=OMP_NUM_THREADS=1",
+      "--setenv=OPENBLAS_NUM_THREADS=1",
+      "--setenv=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "--setenv=PYTHONHASHSEED=0",
+      "--setenv=PYTHONNOUSERSITE=1",
+      "--setenv=PYTHONPATH=/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src",
+      "--setenv=RECON_RECOVERY_SERIES_ID=schema-reclosure-00079210ade5457dab063a8ce990a4a2",
+      "--setenv=RECON_RECOVERY_UNIT=hector-recon-v2-schema-6a8e100e71b846b98715e72fb378c75e.service",
+      "--setenv=TZ=UTC",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/schema-reclosure-00079210ade5457dab063a8ce990a4a2/foreground_schema_reclosure_coordinator.py",
+      "run-series",
+      "--manifest",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/schema-reclosure-00079210ade5457dab063a8ce990a4a2/outer_manifest.json",
+      "--manifest-sha256",
+      "643443467633a67943546c5d89a68f3948a6781324467ca0225ba87857ab4aea"
+    ],
+    "status": [
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/schema-reclosure-00079210ade5457dab063a8ce990a4a2/foreground_schema_reclosure_coordinator.py",
+      "status",
+      "--manifest",
+      "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/schema-reclosure-00079210ade5457dab063a8ce990a4a2/outer_manifest.json",
+      "--manifest-sha256",
+      "643443467633a67943546c5d89a68f3948a6781324467ca0225ba87857ab4aea"
+    ]
+  },
+  "coordinator_sha256": "f869e52e4505127d1e4a004d5f16d179196062725c24943acdafa17924c73c5f",
+  "manifest_sha256": "643443467633a67943546c5d89a68f3948a6781324467ca0225ba87857ab4aea",
+  "recovery_series_id": "schema-reclosure-00079210ade5457dab063a8ce990a4a2",
+  "schema_version": "native_v2_systemd_schema_reclosure_launch_contract.v1",
+  "systemd_unit": "hector-recon-v2-schema-6a8e100e71b846b98715e72fb378c75e.service"
+}
