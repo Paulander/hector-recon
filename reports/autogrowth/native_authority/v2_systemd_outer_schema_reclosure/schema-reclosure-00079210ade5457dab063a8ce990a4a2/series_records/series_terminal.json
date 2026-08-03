@@ -1,0 +1,31 @@
+{
+  "classification": "Carried-slot portable admission and exact historical reconstruction passed across three independently identified child processes.",
+  "distinct_child_pids": [
+    282158,
+    771002,
+    771465,
+    824700,
+    824722,
+    835306,
+    835326
+  ],
+  "ended_at_utc": "2026-08-03T04:02:24.661247+00:00",
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "record_digest": "def1470f6a2618e3738f20ee3fc65b2862f22394b51797a1738a3d93f5e7d75f",
+  "recovery_series_id": "schema-reclosure-00079210ade5457dab063a8ce990a4a2",
+  "schema_version": "native_v2_systemd_schema_reclosure_terminal.v1",
+  "status": "passed",
+  "systemd_unit": "hector-recon-v2-schema-6a8e100e71b846b98715e72fb378c75e.service",
+  "task_count": 6,
+  "task_record_digests": [
+    "172d586436251a066eb4410427a8380828b29822585a065eeae411e3a9bf8e0b",
+    "ccab5c46d9bc96a7c70cf76261f4fb54861bdf762ad96be6c57f2be8b9a6cf93",
+    "26efb83024d0c5fd7b2ced4b16d4599fd433144cb28894672ec866e877cad93d",
+    "e7ecb380766b643c64a234206cbf59f29f20f2e29aba8d5975ec54ce630567c2",
+    "93018dc788ac487d23b44bfb62e2580f73645148690ea506e7d9f98deea6f5ad",
+    "30b7169e6349e7e972eb2ce7f797ca55ab2e0bf618ecf9449d4c469152dd3b13"
+  ]
+}

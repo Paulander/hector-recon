@@ -1,0 +1,17 @@
+{
+  "child_slot": "portable-admission-01-e7dfd710b975",
+  "files": {
+    "00_started.json": "4c9a3691466e878f2fc660a5ab489d754e5e1244f31f266a8549e7d81b954f96",
+    "01_historical_journal_verified.json": "5d3f34984649e3f455edd5bf2a3fbb8597ad40c2a26594819ed288bfbc55b827",
+    "progress.json": "8aa8bb0da6e6aac6a31d9fdda01a887b313c9f5144fc215f3797c9f7d636aac7",
+    "result.json": "f3fa534f84eb6221b93146cac03d446bede447dfb91529e1553e63297a3bd3d6"
+  },
+  "historical_child_pid": 282158,
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "portable_cohort_digest": "5f6de9695ee0da4a74d01b2f27d2f5b0e9abb2845e304f31d230c67b5477327b",
+  "record_digest": "a90cef636075c530ca20e2062655c43fa6415ec6c6169cdde84c0c86ce4badf5",
+  "source_commit": "81f70c4f90439d4c89d793ff6b8268d289b54d32"
+}

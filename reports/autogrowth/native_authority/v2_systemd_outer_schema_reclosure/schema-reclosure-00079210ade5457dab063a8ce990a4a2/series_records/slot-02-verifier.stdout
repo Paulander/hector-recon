@@ -1,0 +1,23 @@
+{
+  "attempt_id": "portable-admission-02-e7dfd710b975",
+  "exact_artifacts": {
+    "completion_digest": "a63e0e073bbf77598a3fdd67192e83a0162b5b65475a88b05306cbd5c6b4a8a8",
+    "completion_sha256": "c92a51b13c16be884ae168cece22b16501ab9006086ba1fea16b7658fd2c0ec7",
+    "execution_digest": "35587e65c9dc59a420af68c42868333f54af85d8b7f31b73c60d9eec948edb5d",
+    "execution_sha256": "8fa649f4587099f5f1eae54468736bfd410b3d12d46576393916021a4a128216",
+    "exposure_digest": "c95b60c670bb7b80a387f44da4c40e1790bc4100ff3f2a4f923b8a26ee5b7e3b",
+    "exposure_sha256": "6a0d086599c44f035d07a07fa389d680019e7e7fdeaace75e978640e587ad2a7"
+  },
+  "historical_registry_ids": {
+    "A": "aef4b583851558b5d1b636820a39015a9be8b2b2970b7b28d943684ca53cde69",
+    "B": "2296cdb1b50cf931005721dabee6c1c4c4d91b3b607468147b8ba220351c0de7",
+    "C": "200e7ac6405debbd182ba7d5aef0d66fbeb63b81af97052fa17657c64c2015bb"
+  },
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "portable_cohort_digest": "5f6de9695ee0da4a74d01b2f27d2f5b0e9abb2845e304f31d230c67b5477327b",
+  "result_digest": "eb6750ef73e2070c74f30c6b9cb65dccf31cc18ea7577d973e6de310c46f56ab",
+  "result_sha256": "7b7f7b0aec56489c9f1d6c3fa5a632054bf45699051d1243854d08305124dfaf"
+}

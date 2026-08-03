@@ -1,0 +1,17 @@
+{
+  "command": [
+    ".venv/bin/python3",
+    "-m",
+    "recon_lite_chess.autogrowth.native_v2_portable_admission_bridge",
+    "run-admission",
+    "--attempt-id",
+    "portable-admission-03-e7dfd710b975"
+  ],
+  "cwd": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit",
+  "environment_digest": "58b4fab71e2754e8f49143aa0ad00fb32ec44d99d4dc620cc17bbc2f47d6720a",
+  "pid": 824722,
+  "record_digest": "24c5ad70c262b07c0cf32da0542379d3861bd67b3510cc11dad124e9dd0609bd",
+  "schema_version": "native_v2_systemd_foreground_task_launch.v1",
+  "started_at_utc": "2026-08-02T19:37:17.169836+00:00",
+  "task_name": "slot-03-child"
+}

@@ -1,0 +1,1918 @@
+{
+  "attempt_id": "portable-admission-03-e7dfd710b975",
+  "classification": "Portable admission and exact historical reconstruction passed.",
+  "elapsed_seconds": 31027.031871111,
+  "exact_artifacts": {
+    "completion_digest": "a63e0e073bbf77598a3fdd67192e83a0162b5b65475a88b05306cbd5c6b4a8a8",
+    "completion_sha256": "c92a51b13c16be884ae168cece22b16501ab9006086ba1fea16b7658fd2c0ec7",
+    "execution_digest": "35587e65c9dc59a420af68c42868333f54af85d8b7f31b73c60d9eec948edb5d",
+    "execution_sha256": "8fa649f4587099f5f1eae54468736bfd410b3d12d46576393916021a4a128216",
+    "exposure_digest": "c95b60c670bb7b80a387f44da4c40e1790bc4100ff3f2a4f923b8a26ee5b7e3b",
+    "exposure_sha256": "6a0d086599c44f035d07a07fa389d680019e7e7fdeaace75e978640e587ad2a7"
+  },
+  "fresh_verification": {
+    "complete_semantic_identity_count": 96,
+    "fresh_summary_classification_digests": {
+      "completion": "700f41e9278b13e5cdf13f9cc6c49865b61aa5f47c1e317899326fe82778f946",
+      "execution": "3c69a42f801ab78664bd641ebe7246c0d6ff1d906edfeb4840950d32c668d097",
+      "exposure": "e8d3022cc5675738349d8b6b0f0b545dc3ed7bc60dc05a208b14526520fbc294",
+      "per-arm:A": "27809776c1deaf6b024633184fdc5c728e66178a91b8eb2406e02ce2778e48ec",
+      "per-arm:B": "fea9d131b07e38f5b565203e20daeb1c50434faa3b171f262f78e3b68efc39d5",
+      "per-arm:C": "6ff094decbce3e824bcdd83a3071b6a13d1d690c37f0c8f9d368e4e6f48b5ba5"
+    },
+    "mutation_count": 0,
+    "portable_binding_count": 96,
+    "portable_cohort_digest": "5f6de9695ee0da4a74d01b2f27d2f5b0e9abb2845e304f31d230c67b5477327b",
+    "portable_unit_result_count": 96,
+    "unit_rows": [
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "f7d5d7c22fb3f3b2821f75f7eb7b1cfd7e19901ce3308b1747de95b981be53fd",
+        "continuation_digest": "848147bc58212aa1bb72f07918edde522465a07f69851c18cdf9ebcc611759af",
+        "fresh_scan_digest": "cbe8ba0bd82d0593acdc70e65f8b85fabe1942eaa384f654bbce742c67c33a9c",
+        "organism_id": "seed-00",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "163444c21a73a3b943a04e9a848f5bf80672390b15675cd7689462bd3aab6e2e",
+        "portable_unit_result_digest": "9d06e863a4cfae5adc7ada924d569651a7b3b640ea055b21d3282972fbd6e5c1",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "1532cd60fdb66972623558e43474902e476b45353afdcfe9d4cde239f44cf086",
+        "seed_ordinal": 0,
+        "unit_id": "A/seed-00",
+        "unit_index": 0
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "46ed02db3b1bfb50d530f71bc0bed39cc059f8d8b45e65a95273daea5caccd42",
+        "continuation_digest": "5928206096e10628d39903172c50afb195b7c9378d5165f86d1010dd8d5da480",
+        "fresh_scan_digest": "471819071e5470bbd65eaea30d171a6e4ccb305e034cfc40b449cffa72eab006",
+        "organism_id": "seed-01",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "c89d81d1814c1a5973074568b3746b130b48f4e29ebe897d8ca93757d93d3db5",
+        "portable_unit_result_digest": "804481022af324f1090a2065ca08ff4c19ba5635d1e5f33ef524ce0e2207da1f",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "27dac5f617713e96c40f617aab8bf143b6691660437b0419de3b4cbf09c40013",
+        "seed_ordinal": 1,
+        "unit_id": "A/seed-01",
+        "unit_index": 1
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "8e0cc67dbab69edf763524ffe8abd69ceac56dd71b066c588783df837eacfe65",
+        "continuation_digest": "fb65869a9aa9be72a4abd7540f3739cce7173a7c7c48b524db210eb38a9f17ca",
+        "fresh_scan_digest": "977c7027fe1df9c77c5930d421c80bf6b4491410b70bd66f6b52c6d87505152b",
+        "organism_id": "seed-02",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "2ca61aaf220d032c544da431f9e2931a4aa35cd9bcdffa511cd9ac02760844a5",
+        "portable_unit_result_digest": "7eb779a6fa153dbcbcea244c2397b9bdd89e65b1898b67a4f4059e7b05de2000",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "cdcc0f9893c4e15e80550e60e1eb3933c4cbda5501defaa854734d66487481d5",
+        "seed_ordinal": 2,
+        "unit_id": "A/seed-02",
+        "unit_index": 2
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "8bc68221504ea0c970f8e4bbc8daa6635b41feead204cc553a82462bb4926be0",
+        "continuation_digest": "5025cbbe63bd984d9106d5240bd26222f1398984a6732de9ac1f4884dace94f2",
+        "fresh_scan_digest": "b50bccaa7d22a4d874b83114b402fd9b9f84814928516388c55291f20e347666",
+        "organism_id": "seed-03",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "51707fc0dbf40f60394188a2b3a5917fdc2c229ff2f32abc1db3df66485bc415",
+        "portable_unit_result_digest": "d5cb5482a78642908ffefa1a5d1b9de77b10581e9bb923704b8253ac8f85179c",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "9ad4d0a85f681b70975c3e5b5fa74bbafcea24cb62847554e65887832793236d",
+        "seed_ordinal": 3,
+        "unit_id": "A/seed-03",
+        "unit_index": 3
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "b0753ab86045c9b0e1c98ce8989304fbc9f948939c41df88983e84f0639f55a2",
+        "continuation_digest": "b42cde327e50442ced2fa206784920957e3d81603c6fc4c3c82a9b77d75c4dc6",
+        "fresh_scan_digest": "8a314914082f435333e6a492436dcc39e02b570c074ee1f133ea9b0791eed162",
+        "organism_id": "seed-04",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "4a92561cfe6a9fdc7e3205cd9ea31ecf0a87c7d11c3e4a6f92386aa58c1286bf",
+        "portable_unit_result_digest": "1204033b1c7674ecc7b479e51b268d8dace4bdf93d314f23fde4df3111a44a2c",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "27c2055765227fb197825cd68f011f36fbf016a2c30e0a8a930d382fa10967b5",
+        "seed_ordinal": 4,
+        "unit_id": "A/seed-04",
+        "unit_index": 4
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "9d609c9c2d4585e1b6ddea019eea2dafdd923e8aa2d47e2809f562d6362fa99e",
+        "continuation_digest": "d86c4a39baeb71a9e675b86f78d58e95d551cab7384bc5d9c11e04ed2de4103d",
+        "fresh_scan_digest": "550f304aefbb93f3a7c636840dfa0ba5762356e514076d4f365ab684893af42f",
+        "organism_id": "seed-05",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "a00e06298262917b7266541f21f34594754e4f4c51b8c1a246e4b871263da132",
+        "portable_unit_result_digest": "36da79a15de6d9d1fd1befc610bb8ba88178520224182aa0dd8cd3c607fc3132",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "95b6df2ed1c571dbe1d52df68f3951a7d6898c18ee5b8ef95bd37bde617bab14",
+        "seed_ordinal": 5,
+        "unit_id": "A/seed-05",
+        "unit_index": 5
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "5df0d20c91cebbe03734c87b0b1355a0d56249e30a156855c12ce43f5e6e0314",
+        "continuation_digest": "467eb50a8d93215d4ec339d9a0a5344ca8868e78010e8aec21a16a41d3c22610",
+        "fresh_scan_digest": "92472d3c12b429726e16f1f081ba9d9146ecb8990f3ee1f94ac390422b302d96",
+        "organism_id": "seed-06",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "32a393a24d81689624f586637f7868cbe8d02629e874d676b81240033891f4b3",
+        "portable_unit_result_digest": "9c5f4166df3c529543da110649c97b7b5e34b744bd17ac2a9bef156038e6d832",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "4f3ba02f16eb46a951cc92969c02a7cf8c68df7a62eebb11eb2a2aa2001f5e2b",
+        "seed_ordinal": 6,
+        "unit_id": "A/seed-06",
+        "unit_index": 6
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "efd67c297ace98540424cacccb81ee1c612bdd13928d2ff01463991d75d282f2",
+        "continuation_digest": "a79ee96bcb55761dc82ba8a1cb81bc1933d32d67347afeb1001a07a9a671fb2b",
+        "fresh_scan_digest": "00bb0b82f5725bfdb936b2afdd48ec88950c3a855fbb2d9b1cce630499c0a830",
+        "organism_id": "seed-07",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "abf256531e73e057bbf18503c180a1235771f86b4ce695ee869d8ca5619ec69b",
+        "portable_unit_result_digest": "d59c90835b6d857adbf868a90b0bac202a04ee95e1863e8f5b1e693e29f295af",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "22f4c5cee317b4edbe5d10103a070b46d2aaf6817a92ee60446de8d66ab306a4",
+        "seed_ordinal": 7,
+        "unit_id": "A/seed-07",
+        "unit_index": 7
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "8c6d69715afd465bdef7aa8bdd02204bb445fa86253348b9a14c0cfaa81fd963",
+        "continuation_digest": "f59c406d69231cb97a2b17997d4bfc525d91b51963be93aa4f6732817f88e401",
+        "fresh_scan_digest": "58c40235df72285f791706e1067be5583ae790e4ecbfdf0c5687f4823f06df23",
+        "organism_id": "seed-08",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "d50fa100a65c0afab11d262f8a8f35b980ae5f35321d9a3e25f3cfbf32d2cb8f",
+        "portable_unit_result_digest": "0854a93e5361913f4709dccbc02669ea414682f932802552df28711e9dcbacda",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "b1a744d02f938f08e16962215dc7a2452e1aa795227017939e61cd27fd294bbe",
+        "seed_ordinal": 8,
+        "unit_id": "A/seed-08",
+        "unit_index": 8
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "de49fe34af00a7fb42dbd083f854a3ee0b175e4864ca23e8614e86113b3d4c2f",
+        "continuation_digest": "7a1c091dc4cbabf0dcc4b984ee5021ff04d862aa15be162f11cf7782e1bc2b3c",
+        "fresh_scan_digest": "588901b1999c04d5eb33b82c1092c307c435d62528cb9c0eb698544efaef2e85",
+        "organism_id": "seed-09",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "adb64ad2a96abbff1c85bfb5106b61ff641f188f5019088c1c66c592a3448200",
+        "portable_unit_result_digest": "0972cebf39564fa032df5140f6cf9307a017f36a1776c94ecfff747b60382418",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "af5e2d89fb276f11167626620717b33c276b5739b22eda2c6c607745292955b8",
+        "seed_ordinal": 9,
+        "unit_id": "A/seed-09",
+        "unit_index": 9
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "24299bb3f7220dc5550fae8fc3efd5452967af95f43d4c0da968a5927e4f4b45",
+        "continuation_digest": "c356acc55424badb4f3b3c78edcc7483fc8d9b5310305b7faad6c72300fb7b04",
+        "fresh_scan_digest": "d779924811cea4ffe1adb5357cd63c60c42c218e67c50d44b05fec4f15f57a1f",
+        "organism_id": "seed-10",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "2708062582d3fa82e9e735d83aac719ca45b4044463299c0f0fdc08b24364189",
+        "portable_unit_result_digest": "9252f22ca6d851c26d43d58e3f0fe2d61e9b9f2551190d3836a465e70407b23e",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "2887188053aa56a6e9acacb2edbbd1b017a62c30c3c6672316688a8a091ebe76",
+        "seed_ordinal": 10,
+        "unit_id": "A/seed-10",
+        "unit_index": 10
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "37dc9f13707d1777853811cb686f7b98e00aeda27806eca2ac567a2371f916e6",
+        "continuation_digest": "6f2838ab1f6ec7c20c4a210283a0606526c58970fa0d30f368adf2d2cb0e8cf6",
+        "fresh_scan_digest": "e6b4482b55941941560d030be86c505bb02fc497be5cf534fc779c81cd9f4342",
+        "organism_id": "seed-11",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "ae5da0c736e500dc91eeedda17c3e84815d0e61ca45223c65b8b6d7b20b36fa2",
+        "portable_unit_result_digest": "f292ee59b3486afeaff7b2215ce061f1c1509da0793e0c28d4797079ca79ec53",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "ef7ef3df4095bb0875654b1462693f9ccd1395f40e1c33e4bc643abab90818d1",
+        "seed_ordinal": 11,
+        "unit_id": "A/seed-11",
+        "unit_index": 11
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "99f6b757c89af3ea79939886b8731379895804f467d4893a2019828a31982e7c",
+        "continuation_digest": "f1c7ed0cd8d36cd16e1a46574bca83f6944e77c7910edafb77967d9065b1b767",
+        "fresh_scan_digest": "a43a95b8a075e893fd71591ab6b71863ba1e67fd0c4b4506bb2df2886675c95d",
+        "organism_id": "seed-12",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "69130f830eb643ec5b854859aee2813d8ef02cddf6340c50d391773714fa2051",
+        "portable_unit_result_digest": "8e71b1d312e9fea952990dc32f4e161708b5e3aa232576b9655d1469c644813a",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "e55e78b469308e018fd75a636c4846a84f45d983dc6db7c2e3385a8ae327617c",
+        "seed_ordinal": 12,
+        "unit_id": "A/seed-12",
+        "unit_index": 12
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "ede13c01b8816450fb95a3e7c4fdf8659fa880a7c4a0c121748014e92f4a5d76",
+        "continuation_digest": "70d2600cc01ae76b4a6bafe7ea8f4a4ef273cee14e07d0e633fa8ffea3d10374",
+        "fresh_scan_digest": "2e1eb72ec69c7cf6ad6c6ccade0a3ab584b0df5c456af2ae9761c497084cc22d",
+        "organism_id": "seed-13",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "2336164a981e417f80f82db02cf5366d0b49fc7f521441878ea34b5d7040ab07",
+        "portable_unit_result_digest": "4afad35f456ef23e91d06d19c9a35537fc9cd43f97ceaabfdd67ab2c9e175c52",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "3575b7656b60972c8911aff5e430ccb2559e35d59bd69ef0c53b59ebbef09e3d",
+        "seed_ordinal": 13,
+        "unit_id": "A/seed-13",
+        "unit_index": 13
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "945eb68998108d80eae6309f3b0b291948339f356f78205461f3ee6a77c62040",
+        "continuation_digest": "90cceb89d44ce15b869610e6be353afafc18184a97dace61b79d236d6f08f25c",
+        "fresh_scan_digest": "e32f27708515379f65950fa0b5b85089f27ea184d92db8904450dd7e4b3c2ff9",
+        "organism_id": "seed-14",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "f268e3d407929e4555a7336b8cb3259ea0240cca973c494a675313f854886433",
+        "portable_unit_result_digest": "d7a5bc1066bd205d71ac886a933255db33dd1d2aa5aee736b3cf90858e465918",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "8f19d7bde5e0b2a97f5f83ce2b9d62b11b56c0ff6cd022e1c5ed3c5a4bd9001a",
+        "seed_ordinal": 14,
+        "unit_id": "A/seed-14",
+        "unit_index": 14
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "c73bea0485a8033946cc0427cc5ad4579f549b1b4569fafc59924c9663d75517",
+        "continuation_digest": "3195f3612881da36318e91c0b0e7ec48fb36c937064cd10251b4134ff49c6855",
+        "fresh_scan_digest": "bc0f3c34b07e3eb53346feb299ddee3b53abe9375ed1b547ef49efb6fc0359f9",
+        "organism_id": "seed-15",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "060a4bf9fd7dbfd060b2ee1e3aa11e6cff38fecd30b9806eec14cae3d658cdad",
+        "portable_unit_result_digest": "6a16cc591fe74dddbefb0e24450935f7051b21d611af2c86768294e24f989d78",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "ec7abe4fb0e861712dc5fcf12fa384db87d25232a2d294ccc51c38145b079f66",
+        "seed_ordinal": 15,
+        "unit_id": "A/seed-15",
+        "unit_index": 15
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "094d83413678ed33d54ee654ebdd1b9fcfc8e71abc5e94eac51299f8daf1035f",
+        "continuation_digest": "bee0dea9966007e95cae462af1db7ac65c8ad0d2ddb82095e3dc096fec220ea4",
+        "fresh_scan_digest": "a687c9ed9227eb400a68ef85d86c23cef71a94270cd641248895a768340217b0",
+        "organism_id": "seed-16",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "6d45457f257efb060f511a81fce3875318fb195f5f92a41597777192bc5ad397",
+        "portable_unit_result_digest": "a6555961daa2828449352d5ea73dbcca82e7c57f91dd291033e7ac11d3eaf222",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "6617a3f68941d5332adf5358bc6fe8e1bc892d76e23510e2099e00b4e4a4d3ce",
+        "seed_ordinal": 16,
+        "unit_id": "A/seed-16",
+        "unit_index": 16
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "fce2ca7966d32864996bb1294b2ecd1a270babfe76f0ee8e750b29a1902fc3a7",
+        "continuation_digest": "90b576db7d08f279f3dc582ffd08b06f5063abb80379a492c193a2a996bf15f6",
+        "fresh_scan_digest": "392e1d1ce1f79ba98bf8956497024ef1968d20e5da0f79c8b5deb93b129e40dc",
+        "organism_id": "seed-17",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "894890ae2c6e6cfeaf5fafb7e44c569325c8cc85a4558febe6e9ea5fc753e08a",
+        "portable_unit_result_digest": "46b2e619a06b4f365fd54a191d79a5de2b5066604f20b9c4693d3b504e910c78",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "7890b0a599bd9e8fb1fa5685d32c314ab6f53b65450ec531fc97540be277d631",
+        "seed_ordinal": 17,
+        "unit_id": "A/seed-17",
+        "unit_index": 17
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "e6aee6b9f96ae9d8e95cd756afbfe746f9616eb523fb6d4fcafae02bc9646a0e",
+        "continuation_digest": "03c9f730638074a388c8d3380304232535ff0558982415f109a22ed9a7ed60c9",
+        "fresh_scan_digest": "4bd1c201b6a2bc3f13b219209d4ac4037ccd291086122737852ae70c921970f9",
+        "organism_id": "seed-18",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "6aa5408cf2c6b0403f0940f817a8062b00b077d6d314da84a62b9081b7d9dbfe",
+        "portable_unit_result_digest": "ba2f611488322241ff14157ec556b2b90aba2340c9c946ea525a621495973c2d",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "529885652a898e47dc45dd86fd493cab12f533020b1a1dc6b0cb11983ef144c2",
+        "seed_ordinal": 18,
+        "unit_id": "A/seed-18",
+        "unit_index": 18
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "d13e8641025cee6ace2f7dbb2eea247032b72e5f6cdab43a68f5485678c58c8f",
+        "continuation_digest": "e9d855b8cf7774da733db4da03ac4c9fd3f5bf7a8f23f3e47ce95f47788210a4",
+        "fresh_scan_digest": "fc94f1183e59018020a91064ac5f5c70c684c2d49893af3d594ec23307ec70ca",
+        "organism_id": "seed-19",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "6b2d33075b4373d210180763368462418cd200bc98d55d48cf136862886a2f10",
+        "portable_unit_result_digest": "79c87c2eed9fbe7d6bc7606be492e608d4d5f9f9caddc5510368812a7924f28d",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "0378d5c3ed97d6e9cb7dcb2b2081c1dec93275cd5fbfbba5fa04a884fc986687",
+        "seed_ordinal": 19,
+        "unit_id": "A/seed-19",
+        "unit_index": 19
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "415ef8b44be3cc16e3ddface6ec887c768515de8384a6443fc313683cf68d0e5",
+        "continuation_digest": "9cc745900b9d3811f445be2ee961afd6012bb77854fd8dc1af086c8c82491242",
+        "fresh_scan_digest": "22bf2c3eeac6278adbea4c0669e51ef23d3908adcf922813fd186280351acbf0",
+        "organism_id": "seed-20",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "552e919f8a3849baa103c58d0ab25f2d099f9a35549780c0cac4394c4d52725b",
+        "portable_unit_result_digest": "4b092e2bf46e36fa4afc4712d2df751ec50a956f18be97da2efe1bc8c8a88616",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "bcfc25019b88a9fa4bddaf017727a7de0728ba82329b0251bb181df0bbedd95e",
+        "seed_ordinal": 20,
+        "unit_id": "A/seed-20",
+        "unit_index": 20
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "1002ef09c525f37256d1b1843999000fcfd60d4c5d77f62f5c8965e8bb38edde",
+        "continuation_digest": "ffc712d15a8603f55e2caca85175b8ffe88f5352594f37a748f3e15350801931",
+        "fresh_scan_digest": "a94cfccad178258a57ed0f00fc620a9baf0f1d671e296674aa63934a80fc8173",
+        "organism_id": "seed-21",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "8c65976568e4327ff554ec9fc9695b9cf774a5bd7b53a1d1628c61f9bb11f3c9",
+        "portable_unit_result_digest": "ffb0c78d4a0ab86f79d146e72d143a132c3cc39252294b722244a20c4e899b3e",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "0a34bcc1aa76e940fcf7a4dfa66be78b86eba32fa79b61b525d665ee759e740d",
+        "seed_ordinal": 21,
+        "unit_id": "A/seed-21",
+        "unit_index": 21
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "c3d1a72a9c180ec404fc97448193ca6cf78d93d6d6da6ccefc7f5108af34058e",
+        "continuation_digest": "3891ef7ab4ed16312105ef2b3074c0ba0012428aee778cc52bedc6249077ec26",
+        "fresh_scan_digest": "3f73b6b1ef9b85ccf554c052b425169c89bdb28dc260e2547d49c05012169d4d",
+        "organism_id": "seed-22",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "df5c551fe5c3118ddc9d916f9dc90d4ba864e9ac191d0c80f1e9d180d189d9cd",
+        "portable_unit_result_digest": "7ab5758c175f712d8797c8893ecc7223010cc256f27fb9f698e6be7f48b6cf13",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "c162523c0c1c4ecacdedd4d53a2aa882d45f805ff868a96c004020bd6e845ee5",
+        "seed_ordinal": 22,
+        "unit_id": "A/seed-22",
+        "unit_index": 22
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "0192067b13e5c08e7a9d83c968d37a882bd3e076430a1776077c1acfdba615eb",
+        "continuation_digest": "8b539c0c149fb776dbf631fcdfec6ae7365b5aeda30aac41eae4217a8ddf7e67",
+        "fresh_scan_digest": "208382c48b3dd5c00c66a61bf2635d57e4c280eadb4afc0273b431e1e62ec58c",
+        "organism_id": "seed-23",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "88d8dd4e58d6cbadbbe461a04725c69972f9f3d170c9dbc77a17805dd79ddc06",
+        "portable_unit_result_digest": "66ad554dd416212b46444642f0a6a001fcd67ae5c88c54cf4893ddb979277d08",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "bde43dd9e52c2b44d1b98a2c616ccd7207bd5372d5e80b0f35adc23847c5d912",
+        "seed_ordinal": 23,
+        "unit_id": "A/seed-23",
+        "unit_index": 23
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "1187be23172b83f508783479eaa879148fec5ac4296ad4da9d0be7272f25fc7d",
+        "continuation_digest": "fb84ed819635af33827ba02cd476770ff93880df63ec3b48360b5be3cf40dde0",
+        "fresh_scan_digest": "6af211b389354607e7cb773ed61e9b0841e3e88265d9d4cf9608a1f3c7d78473",
+        "organism_id": "seed-24",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "35e456ae6d1bfbf9b8f9c331f0464105d2f29dd91e01a98dfcdb9f17d5da5ebb",
+        "portable_unit_result_digest": "f7af7e3ac813d7e67bb23aaf95504584d03b631edd068f4b71104f3198fd7626",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "b17dc305ddbe9d3385e377a7d8d009900aa49b45561d295e3cfac66b6a6bab56",
+        "seed_ordinal": 24,
+        "unit_id": "A/seed-24",
+        "unit_index": 24
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "7abd6313902be6032de55b55c2fbecc27b3369d65ff468311c331a2817e277a9",
+        "continuation_digest": "703bdcb65ff3e17645d3f46eeeb77b4eabcdc8a924a3748c0195eb8567f105ff",
+        "fresh_scan_digest": "223580e4a4a96c4e7835bb6614e97d6f467ac95f043408d6199640939c8452dd",
+        "organism_id": "seed-25",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "64946dee7b52d6dd0234c6d3e9819b08d0e81865cf66b9fc375e41074216a6c4",
+        "portable_unit_result_digest": "a5a6ac38dc25be4dc5c54a772cf54efc1e298af9e50e5468c92c280fa117eb9d",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "40575bdda5a4d8431370310ea6b6ba883fb605ee70e14858952fcce3da7ae39f",
+        "seed_ordinal": 25,
+        "unit_id": "A/seed-25",
+        "unit_index": 25
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "370ff25dfd79d9609810aa22ca3d62a26f9c3ef5c040b25c144662d9ba463220",
+        "continuation_digest": "a73473d58365c57a1a61820fad6c88a137d40d2b81ee46160d75e8a6e7d633e8",
+        "fresh_scan_digest": "5be98181a48170ec9a8b6aab46ab17b3688591af7a35d43027b74954c6d5724b",
+        "organism_id": "seed-26",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "3714389fe2830828d1444681087d9979e30e5e96a10f6d14037f4a869dd172f9",
+        "portable_unit_result_digest": "7c5346a9205ad15861aec51f817e06cc36c8b5debaa8c92fdffb60ae7cfd7ad3",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "8461b68b5dcf5c4cf1c917bc71daa7d782ca572f3310f95602e3b2076c6b9f3f",
+        "seed_ordinal": 26,
+        "unit_id": "A/seed-26",
+        "unit_index": 26
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "97633e7c697f0a6376e2704685c5a3c76179e01344733f7d0049e151af4abc44",
+        "continuation_digest": "c313f6e5d753ebe06d2ad8d60c4c69bc4050751c6157dc84d2c5cc5342679cd3",
+        "fresh_scan_digest": "23d5a065e225b60bd3b95c82af53e11d0330402bd5f9c20d6fa9f68d2024a888",
+        "organism_id": "seed-27",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "3bc1bb691e7ffec0c603549bf7c478d84f8f955e02542ea761e4ad6814cffd4f",
+        "portable_unit_result_digest": "25689ce0fe218b3f21b2b54e4907a4f5eb446ba63d9c3428014b805771772999",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "4f5c2610e1836e9e2b397117de52797f4338636623058ff4332c93e1476c7aff",
+        "seed_ordinal": 27,
+        "unit_id": "A/seed-27",
+        "unit_index": 27
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "14793f9c855c60dc563fda50dc3f7312683c167320713842c553b235ae3f65bd",
+        "continuation_digest": "345ff301b001b6187f442287f2a81393d5f22366490aafc81f8d4193ef5cb54d",
+        "fresh_scan_digest": "69ed0b282d608e2e022de1fd9ac2dee7616d1c51fa9028388c6e2b4225044092",
+        "organism_id": "seed-28",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "38272cacbe6d86b3c27838a50da05029919c1bbe350ac1d6e023ccc1311cf129",
+        "portable_unit_result_digest": "83ec5378233704e33e45f39dce814092b14d9ab73ae81247ed78ea19405fd752",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "902b653eb4ef47379c69bfc3df8b214d746087137c4b33fb66d039455c8b9341",
+        "seed_ordinal": 28,
+        "unit_id": "A/seed-28",
+        "unit_index": 28
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "821b0d8732442cdd94e7fbbc7353263ea8dd3587bfdf6088935806edf3dcc0a3",
+        "continuation_digest": "2464d0c1ba8aaac066961e5d6b1c9f569a9f532678bbf2af0cea66f94809c8ec",
+        "fresh_scan_digest": "6692b26aa5fb9736722e26ec76ef27d4513700a70db5edfdd84017a4dd5b05bc",
+        "organism_id": "seed-29",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "d2616f2260909dba20774fd5c0d4e489e3278744fd33229702a66a5c206ef402",
+        "portable_unit_result_digest": "ee4f6de591fc1ed74e1c64754789f04d3a7da6339bcc966b9e37d70f396c4ce7",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "74e2607c9c510b414bec20ad3290e6edbaee12c2b41fdabf15f5f75000ac36f0",
+        "seed_ordinal": 29,
+        "unit_id": "A/seed-29",
+        "unit_index": 29
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "182a3e1bdd00b05996531b94f30f803ceeb2041b3fb83c0ac96ce4f1ea6d46b0",
+        "continuation_digest": "9820dd3f74ffeb5e3a934f643e08eb89005619a8746fe5cf649e0d5e6a2f175e",
+        "fresh_scan_digest": "14de45c3ad670079256d818a958b426e5e2d929cb57fe360e4e5c569834edf27",
+        "organism_id": "seed-30",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "3e5de49b90d3a4bd58fbd18d6e859f27ef51eb11e46ebbc8876ccd7e3dea0610",
+        "portable_unit_result_digest": "5e62922d198672a878fde7fb0689dcf3f217095058fe8800576c6ce972e5ee14",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "192f6fe19eb111cc9c1f76e736119697c04d92ba33205e2a470e778e8e115048",
+        "seed_ordinal": 30,
+        "unit_id": "A/seed-30",
+        "unit_index": 30
+      },
+      {
+        "arm": "A",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "92c831b40ec8bb7e48545cfe15bd21daa8a570c941287752f683bbb35486e118",
+        "continuation_digest": "cffa9c4e6c4c0fab67d5e2dd581ce3ddaac5a187ea9de43776df5c3e6067b839",
+        "fresh_scan_digest": "264814f5e190ea3531b151950d7027b033f06b46b7def3fcb3139c23310593b5",
+        "organism_id": "seed-31",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "cf2b2a1de633a534d8bb448fe554b3367a0d125c5cacf111b26fc0600118a74c",
+        "portable_unit_result_digest": "512ca49162634b17ee29b579e187ab46743bc15103f23fc9b84e83553a5d6340",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "39fb072acf9e83768bd3b32ced4db701fbd938feca418737e28c351ef5da9778",
+        "seed_ordinal": 31,
+        "unit_id": "A/seed-31",
+        "unit_index": 31
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "c8919b1ec93a4b0fe7ac13d585ceac45d9ab0430043edb6d89e43f6dbdc2675b",
+        "continuation_digest": "60edf4643d577bbe9f316655b155a0f42e3161a05a206885cc1d4592b089c853",
+        "fresh_scan_digest": "e0acb9f2153723199561b67c997038d7c893202ad4ebc1fa5a3e7f53647e157a",
+        "organism_id": "seed-00",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "cd7bbd05f23c57782ddde5107e1e1d938c9457f9067e2f71c22b01aa6835d21d",
+        "portable_unit_result_digest": "4fdc949182290c1dc4ee65a977a9449d9c83d6295f091c5ff53673a26a462136",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "fc69cb874cd68962e03559d760315717bab94996656db38eb79e793eca53c6d9",
+        "seed_ordinal": 0,
+        "unit_id": "B/seed-00",
+        "unit_index": 32
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "fa271623e66c7363ec882edb8ee2ceb4bc31b140febd931977fa8daa90b20579",
+        "continuation_digest": "3c29dd0977755e5bb55a9603641c0f5340b3636de1eb707c6ed7a5eef80f5892",
+        "fresh_scan_digest": "56a6f283b650730926246d8d393536c0de98bcab3cbbdca27349618e36eb783b",
+        "organism_id": "seed-01",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "6a415b83ee30a31bbebe48ca5e0b19d95ec35a6fd3ee87745cd5cccc9e8a3b28",
+        "portable_unit_result_digest": "1108685994f6c9b07d3798ede7d0bd9b13a68db151c0f7f39e9c1fa5f5955096",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "e1aab430801615c3f044b98cea58f6c99b78931a0672b852adcb234a7a9d501f",
+        "seed_ordinal": 1,
+        "unit_id": "B/seed-01",
+        "unit_index": 33
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "f3c08bfacb27cba3c0aca52cbebe4defa0b095288f67ee5cb8474a40365e662c",
+        "continuation_digest": "033f0507764c146b7998ae201cc5a057b5dd8badb1ae841956f2ae5510257bf5",
+        "fresh_scan_digest": "a209405dcb89c82e8ae9a2528ce603c2b1347a839255fe3b90a32ee862214f9e",
+        "organism_id": "seed-02",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "185965d67ed6deb6a79de373375771c13383281a1d5645fa61fb4d58b5bf2266",
+        "portable_unit_result_digest": "4dbf877d3f42a2ea7eb518572070f31c8ded6fad483cdc8549022b49e407fdc6",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "120b25b5dc8afa46ac84114b0482e3eb0bdd1c1647a54b02b66067ae2a8ea325",
+        "seed_ordinal": 2,
+        "unit_id": "B/seed-02",
+        "unit_index": 34
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "17a0b945e6df725d04580d33c2038c17531c5977afd99410328217080a96d6f0",
+        "continuation_digest": "ab62e5ae84cac7b41dfab07d8e699393e471d151a40949705f070c5088959228",
+        "fresh_scan_digest": "9a65733f01246122e9a91f99ed2845f737dbcc723c374e7e120351c00e849fda",
+        "organism_id": "seed-03",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "e37df518224967c2e0d11a28bfac49a45e8aa51bdf217e9497f48d898ef7e5bc",
+        "portable_unit_result_digest": "1b8ecd2931d14215ae8a1704e57c70d1f68a3893fe78765f003b2bd4b8901137",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "592e239a3dd110f51faa8d4586084cd2642cfcd0e30b6c07d89c2c192eddd435",
+        "seed_ordinal": 3,
+        "unit_id": "B/seed-03",
+        "unit_index": 35
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "4d5443ebbb270a00fb60890ab6d97dda4356c7f0689d66f0918de926d871c085",
+        "continuation_digest": "c9598ce19ec7617fd7fb9198688d71d222dff7d761122bade1ed2006d1822f50",
+        "fresh_scan_digest": "0d535bfa2429013b432edc6504022f5a348d960077a4bab4d737821639ee6b06",
+        "organism_id": "seed-04",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "6830dde4fbef4ce5e92ce3d5174b2838092afe89f12e6859a9e266631fc30212",
+        "portable_unit_result_digest": "a0dcd5fa18660b31ab4280d55653f659135d7642605054b1ba4bbfea3f5060c7",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "6792d83ed5618a2ec13c6d666247b04f336b5b6962b90b03cd5f44a07ac86a21",
+        "seed_ordinal": 4,
+        "unit_id": "B/seed-04",
+        "unit_index": 36
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "7320cb0d8a03aeabcf513683345246a74d286c5a09c460aec72c571531b485af",
+        "continuation_digest": "eeca1bb9d72d73e07c39da2f1df2044040b7774ad9f28d789b1dd20a63c4ee51",
+        "fresh_scan_digest": "4cb7baa536a46285b3893528300e107a52c2656ea8baac0dd3e6058760daf1ac",
+        "organism_id": "seed-05",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "ad87b509d2e7faa4a831301e205036ea71e20049cddc60c9a7d0225e2979802c",
+        "portable_unit_result_digest": "cddf227348d015faa269c7f1472f29c84f62470a16c88eee2a6ffe300eaf383d",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "743518ee04f9ba6040c2a458317101475995a4e85da03fdef365c869ea650c4e",
+        "seed_ordinal": 5,
+        "unit_id": "B/seed-05",
+        "unit_index": 37
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "07dff4157fa1809c3a51bc82027c2273ade5a3e88940ae673dbbd70097d33bb5",
+        "continuation_digest": "a856130c3e41d60109012509e5d26f9b5c855ddc6d906e17e4bb30f060c8744c",
+        "fresh_scan_digest": "f466fd711a9d6cc0089b2565d9855160d106ad80227b4944430ee653111f351d",
+        "organism_id": "seed-06",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "770217e6c3d8cae809f280db94f428224ab2e9d5012865c6c5c41bc57f538e88",
+        "portable_unit_result_digest": "ae79a1ba1e4355bd16911300b8ea81333c1a31b31e453228bc8d8b989b0eb64c",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "1a966d2ca05d6fa4038980df4816bd74225dc8736d0fab74a786627a0feeb3b2",
+        "seed_ordinal": 6,
+        "unit_id": "B/seed-06",
+        "unit_index": 38
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "c1e57a035e8eb7c46cb5594937512293a844603fbf16e3fbb6090c87f526a0e1",
+        "continuation_digest": "07ec323e59f1afe5306945b36c7fee80176863a039b380c63687cf2568e43964",
+        "fresh_scan_digest": "c825385c8f73c0caf154117cba3cdb00c7658419fa189b5927d2a4bb8fc0e9a3",
+        "organism_id": "seed-07",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "7b1b64d5e9c576c0e5af1d661bf664e7bf10021265124b49d221923e540bfc6c",
+        "portable_unit_result_digest": "4c14d84fecc2bab2e3a9d715e920d90727a5cc2bf6b6ea4c21f0068581c38f29",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "5c664b5005500bac2e99a22c4f9902bc54fb7862a60c6b428dfe646287d8f6c3",
+        "seed_ordinal": 7,
+        "unit_id": "B/seed-07",
+        "unit_index": 39
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "942469f0261e6f1a96098d9ca5c51b401fd4b691fd90d3eca921ac1beac7ba4b",
+        "continuation_digest": "29dea2507b43adc7a4664c281705967cb26fd13f88ed070d3af9bd133ff8b4a5",
+        "fresh_scan_digest": "9d3c96298e5952c0f7bbbde36603d8ab48d605b51a19b4d906f6bb30fe3fe61d",
+        "organism_id": "seed-08",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "ce39d6c123392e0a573de66822fd783447c14c1cf23155e720cf67b164d69076",
+        "portable_unit_result_digest": "1dd6430927e17e755832bb08dc516b6cfc3f8a1b6ff36e6e17549aaff1e39f7b",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "b070237f04f90dbaaac7023462822eccc20feb736df9f70b035dfdbfa86ada30",
+        "seed_ordinal": 8,
+        "unit_id": "B/seed-08",
+        "unit_index": 40
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "f6fd00a0e4d471af3f113bc0d0000cdb3d9d0d6c373922fd13491e79fff08850",
+        "continuation_digest": "06fe436c18c8a89af4b3a4f0716d2d94e2105327296af3eb7e519d731932214b",
+        "fresh_scan_digest": "f3f623a9c051f9a483020d950f47bae81be1533a180043bbfeb26ceb8233498a",
+        "organism_id": "seed-09",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "1d78cc15693193cbb7fee436e16305a2bbd9cd9cad6fb7d4db2dd30166a6a5f6",
+        "portable_unit_result_digest": "2b443cde7cf7ad93bb558161c8b6c1e1cafb2d9911ebd103d83d8be21c0df519",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "1c225942664929ff0588e45830133f34976f58dd8132d731fb2309ae0ef3fc2c",
+        "seed_ordinal": 9,
+        "unit_id": "B/seed-09",
+        "unit_index": 41
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "ce413ae0e809d381b9d9cf52b4a5036c3e41f8e6414b7fce53099a4f7946c9dd",
+        "continuation_digest": "594d1dd3dc65cf5acc1852e76887400443339874a1765341520f7623f928e86e",
+        "fresh_scan_digest": "2e9d0f199bbcbcf6b21f4d380603780ffe31573056db888fb50ccf5d18b88718",
+        "organism_id": "seed-10",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "1e37f0861bb9ca9a995b1baebb5c73729722bde72616715f102e39f3edcd4e96",
+        "portable_unit_result_digest": "245360872c8597f2ea3c433b416954a5754dc0540c0ea188454132510b61769c",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "c0b9e13f152657a119a896ce8360416091c0383e2fbe88559a10d70ef9a2b02c",
+        "seed_ordinal": 10,
+        "unit_id": "B/seed-10",
+        "unit_index": 42
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "6ed883e77d791f7ddb7e4f7da3f903831163d485127e5ff6f3ff06b96f144dd2",
+        "continuation_digest": "c4353df03f798f4fc524ab745ca6bf4838856d4022da3b1bd8f37936b19c62de",
+        "fresh_scan_digest": "071f428aa09fc258e2c963e85c7410a0d8ce914a5d11623432f7c009af2f1868",
+        "organism_id": "seed-11",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "546afeda5fa2db83cf59bf408605856dfc85efb9b1efe0d05cc8daeef921b61b",
+        "portable_unit_result_digest": "9c255c39c2cb2f1a9afdd80cae95d80ce537f3b980240949367078ec6cb3e28e",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "6943901d8d1d8dafb3925572b57b87a9bc43c987e86d6dfa7fd294c67c3aa45b",
+        "seed_ordinal": 11,
+        "unit_id": "B/seed-11",
+        "unit_index": 43
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "e446c140d08834690a87fa3693e5bd6248daf55f6c41d00e8796f127aba30e61",
+        "continuation_digest": "9e26587fb0bcb0c9929165c276ff4f7619d82f8cfc50fdb137a5c69881765b99",
+        "fresh_scan_digest": "00d21f04aa44d356b9eb77cf107cc8cd76e3a6b564e74497c35215771488be28",
+        "organism_id": "seed-12",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "89404efb7f24b0efd130bc83dbabece2a931415d43e1728c503949ab72e64cea",
+        "portable_unit_result_digest": "6e19da8be4f36d56ee3e50097077bb9256cdbec7db37cb00abf52ff64f83b3cf",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "a92af10eb488496e77071dcd6af31aa55a0b45b74acd95fe2d3486adbecf8b04",
+        "seed_ordinal": 12,
+        "unit_id": "B/seed-12",
+        "unit_index": 44
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "0ee9b03998dc81e058b8eace8c289629366471bbe30bc2eda5ae3f23f7a0fa3d",
+        "continuation_digest": "fafb2da48cd401747c7efa8ad30a90811d9f9d92647706f25a5ca24273adc5ff",
+        "fresh_scan_digest": "f43dc4464e0e7124bd9e056e2d416e40fa50d49f84d8f21d83d0e8749c4bc2e4",
+        "organism_id": "seed-13",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "f81080a823d998f6f64dbe5805172b0e5ce0b848cf3494a2d2756e4de13d9192",
+        "portable_unit_result_digest": "a8642a15a5a31ce919db9f628a2fa8b400f2724f2c46143fbd80eab9c0e79ca0",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "68e5d8b9451a8e2a31618377c201da71f9f1bf05379a88e36208911d7aa6e5eb",
+        "seed_ordinal": 13,
+        "unit_id": "B/seed-13",
+        "unit_index": 45
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "06acdf99391cf982327671ee273d533d0653b692329f14a8f4d70e8ad4e3a54d",
+        "continuation_digest": "4f3b7b1e1602cb37961f530e2c395bf7ab0cfba86b97cc653636b918c516fc3f",
+        "fresh_scan_digest": "76bcc8db1cd02b9c6e81aad3ab6560e3cf9a36c77ab90f8061dd5612e1570483",
+        "organism_id": "seed-14",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "d51f50ffd7d6b539088965aa37868deca62c8366c87426c0875127bd63bf0d00",
+        "portable_unit_result_digest": "f37815dc5c49986856920f907ed3c22dd7350112666002a62049dfb0567da767",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "9313d56dcd53294393d28b69b1ce416c9f8339216471a4bab038f9e627f73f29",
+        "seed_ordinal": 14,
+        "unit_id": "B/seed-14",
+        "unit_index": 46
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "57aaeda0ea7e0502cde6c23bd1923aef8a8b433503a2e96fe20dffc6200ce542",
+        "continuation_digest": "163cc284c5ce36f7b010da8a4031426f11a89fec20373fc561a50c861561c863",
+        "fresh_scan_digest": "177cf80e2c03586a57e782df246fc43d0c61e373190965a6623bf29d7b2f3e00",
+        "organism_id": "seed-15",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "7d0bf41f308c5d92c04ba27f37366cbc05e772875fd9f072006fc72b4050282b",
+        "portable_unit_result_digest": "31fd0e65b8451f944daa6ee1503740451cc673b48f4dc2649a316998a207e34b",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "3b23611a468f4edb84ef8f1d9477d5859829374f991ad5d624f3a338614c350a",
+        "seed_ordinal": 15,
+        "unit_id": "B/seed-15",
+        "unit_index": 47
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "998b118f5d7211ce0699ce45056d8a60dd296ed2096a3a7740a47b4382245896",
+        "continuation_digest": "1692cfa1d8bec9c636e75c925d783e964279e600918e1b9e04d00540acca4109",
+        "fresh_scan_digest": "1a94c231164485c14a4cf7a5059d820842181fc06c72cb30fece25b975ff2d73",
+        "organism_id": "seed-16",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "3ded6f62acfc6a53f17f36c0b20051d73dc37b390f1794605b3c59dd9bce3e49",
+        "portable_unit_result_digest": "aaf160b420a3fdc588ed50b3f996411ed415416c1141081b157fcc5a9f41120a",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "638639a57bd49ed2d6b115adf2e3b8cd954ab53a61a2e83e982fcbc7344bed83",
+        "seed_ordinal": 16,
+        "unit_id": "B/seed-16",
+        "unit_index": 48
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "8cf7dfab105a16f87b830a0c973ddd40840c5c1657d96bc3159780e2b4963529",
+        "continuation_digest": "1c150827d0d7ea07cb6dc60d847cc7a7e157a01e43d1f1b5f67259c028a82323",
+        "fresh_scan_digest": "c2896238bad862c4068ffda4ee6498266f793ead86de4f7aeb3346b1fcad7435",
+        "organism_id": "seed-17",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "40b4310bd2cc6cde71f29467796806d926be1eb7d4e0ec23ac0d27c37c583990",
+        "portable_unit_result_digest": "438d3a736620f4d2326d0236fede192eed7b4124acb113e652a53d58f9461108",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "d454cb03f4ed89fae71b4ef3473401de4b022780f3798d682bd1ef8c7e10f64a",
+        "seed_ordinal": 17,
+        "unit_id": "B/seed-17",
+        "unit_index": 49
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "df8cab632355ce74eccf89e34c55bb83296984d7210b18083f6f53806adae295",
+        "continuation_digest": "8fb337934f8f1169a8e02d2dd41daa8912bf3c926eefff132a0f05117b0ba238",
+        "fresh_scan_digest": "b80f776349d4100dad15db757c97e53943686c30969df37656d645851f3cfe6d",
+        "organism_id": "seed-18",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "846d497405da1c6cb62750d73d32b428071b9ffc1a3ad5d41de9ab35dcab827a",
+        "portable_unit_result_digest": "6d2413ef777ad8be4a59c86f8bb5bfa0bf5bf82a64e36d27c396831ccdaefee0",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "2172351bbd394c4d4cf92e82f5e79fa690a3bc797f70306d8b65d277975d54f2",
+        "seed_ordinal": 18,
+        "unit_id": "B/seed-18",
+        "unit_index": 50
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "2bc5c88b1f727f1f44bc85485a5e76411600cba3b46ae422def8362d7e8f9c0a",
+        "continuation_digest": "6e8d0f87722e66bf8cc11f035f6c247a3d578fd018a940266f6aa24179fad57d",
+        "fresh_scan_digest": "285b3435dc45b2dd62c0df815357df4610c83a433a824522a6c47ccb72b09323",
+        "organism_id": "seed-19",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "faa10f3b6005b70f3baf8df9992d14cf201b28bec5f6a057af9b7014b9afecf1",
+        "portable_unit_result_digest": "8bb4269d20124bcbb4137354884508d7d34f35b32a60d8106dcfc02f1ad4f381",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "c8f1cdfec2765c977b690308b75d9395a1a63f42ab7fd3ae8a1b5f70f41f44fb",
+        "seed_ordinal": 19,
+        "unit_id": "B/seed-19",
+        "unit_index": 51
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "b970d7fe0b1ed7676302808d81fa724cf07091ac92f524a43f6ce5b4072e6fa4",
+        "continuation_digest": "f0d8d314d1efb749bddbf87dfba604085c2c3a2cf34e04f26fda23beceed6d0a",
+        "fresh_scan_digest": "58503a36daeee7699fd45ff9f66f45eb281be6b515d2b99b20f01916db3e4ada",
+        "organism_id": "seed-20",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "35dcb858be6254d853207db5d1eddcefd36bb0b65cf3e8f14b7facd718e3a134",
+        "portable_unit_result_digest": "fe82fa7ae717369e6e6e58dd0f82b15adb1c6ae979cc4bf16ae32962eff0ccfe",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "0cd6d2e5e5fb1e4b22fec609b6b398519a0e4149bda3e947ad07aed5f6d0f4ce",
+        "seed_ordinal": 20,
+        "unit_id": "B/seed-20",
+        "unit_index": 52
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "737378532ea22b4c9be01bc869e29896f540b780695f08d917f4fc1be47eec18",
+        "continuation_digest": "810976c96bce2da29202cde514adebeab9547331a38c900e4c3ec089b0e03eb5",
+        "fresh_scan_digest": "bb02f4f17f8e0e1b9f91dd19e85d80922ce4f95099723dd7a158f0e39b1be14d",
+        "organism_id": "seed-21",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "04b9d29608d5039883a712dcfcf21e4e16b7f9f155c2d16f0534b641493c8b95",
+        "portable_unit_result_digest": "e550963fddf2c1cd8f998b543e0a599d1d29d2710aac7c1cb1f45fd956adec04",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "21a60f3ba22125909e231e4c01fd93b4aa841b24c0dfff955144569a44fab98d",
+        "seed_ordinal": 21,
+        "unit_id": "B/seed-21",
+        "unit_index": 53
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "b2af10fb4dc4696f2690f4b92be91ff7ac4813a4b8d89e420539dadd5c3b2ef9",
+        "continuation_digest": "8dfab760d099aee72d2e032164323a04ba3596cffe348fef5451e74639d609aa",
+        "fresh_scan_digest": "9e19830e0cc39395ee89a7b91c586465c440d1ce27f54ed987c869c03c1d70fe",
+        "organism_id": "seed-22",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "e84c2f697b8af189a6810a2f59062195639ac012c03339ac00663c7c4a1baee6",
+        "portable_unit_result_digest": "8c8c55e69d5951035c2464053ab723b29ad761388ba9c363e902507435d202bb",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "3a327e97c6871277d30c7e3c54a81a3f3f6fbd69d1b28eb1479f3652b2e559ef",
+        "seed_ordinal": 22,
+        "unit_id": "B/seed-22",
+        "unit_index": 54
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "6f26a8cbc4806e4fc8f1f34880d82fd29f4793aab7c9ca6ad415972bdb21d038",
+        "continuation_digest": "a731299597aac797ede0a3ff46547380fd4daf57e1ea0404eae889926bbdc749",
+        "fresh_scan_digest": "0bed653edf4db89bf0e7cdd711317b52ecf4c1814e8c3ac15536f32cff195d13",
+        "organism_id": "seed-23",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "06b3ae89e9f1b8cb35c7bb9d16164088c9c7992aa4cd1d9beb5d54fd07548fbd",
+        "portable_unit_result_digest": "6e876b9c3532b325cd09006d0f71028bbc2b8d52210dcf5eb4f1f337bb990ea7",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "5f9a35e55780fe2bf4fe7cfb834d3b392187c0a0d0ddadeb55f03784828cdd20",
+        "seed_ordinal": 23,
+        "unit_id": "B/seed-23",
+        "unit_index": 55
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "9078801db72e19ec8876be1c4288506f070caf012b87fb598adb775f2a281d1e",
+        "continuation_digest": "5a88eec8f954396b1c126acca1f501037e8de0e2ddd98a18ac3f8fd1b117dcbd",
+        "fresh_scan_digest": "d736e969ea4bb800a37bb6b2785bbff8b1cdb95728edc8b4521002d6c14961fb",
+        "organism_id": "seed-24",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "a287d85156c34f0023f2036510d8a0a7391a91ffd0c64d026696d176466f9587",
+        "portable_unit_result_digest": "b06527f06923f02da5c2ba2fc303057c3e4930b41a97dea51c79b5b19f187af8",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "4b4752bed439c8c8d881302bf2a84eedc96ea664ae3abf0995408d8463cf2c7e",
+        "seed_ordinal": 24,
+        "unit_id": "B/seed-24",
+        "unit_index": 56
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "32b4ef56a909191d6681b858fbaa50449ca6c4d0e6c52be15505af10738971cd",
+        "continuation_digest": "6e78d13598c9871be817e9a3bbb93e4029cda29419b052909796301e95b28dbb",
+        "fresh_scan_digest": "804a52859b1c189251b61775b614e4c09213dbca84b7f05ae4592b7dcb23fd28",
+        "organism_id": "seed-25",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "be0a270621b5f96a8250c1ca2e2a2854eb70a0a3e4e8f3ba3f6c90068ef9d8d3",
+        "portable_unit_result_digest": "a3c05660eda3973b336aa4d98b25054e458812e7700680aefa1ecfaa7cfd0dba",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "b302b72ea4129ec88bef7c237e524af5813e4ad0e3daeb1ea5cbf360c35f55d6",
+        "seed_ordinal": 25,
+        "unit_id": "B/seed-25",
+        "unit_index": 57
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "ce03478d0de05cb155c5b005a2169da4bff920e715e3e151ebfc410e63653c6e",
+        "continuation_digest": "e21e4d0884e8fe71c9a49b02f93552adbccf7ee100e9f34178bdef5409fc1b24",
+        "fresh_scan_digest": "f1e44151eec1a71748d35beb8bc0abac9d10ec2d4b58f3a3ba548e2542ba2611",
+        "organism_id": "seed-26",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "38d152930b1a3c2ed385b052eeb4132e3e0f6432a06aa190f704881c56d726d4",
+        "portable_unit_result_digest": "c0635889bc8efa9314364a36216dcc34423add20ae24239ce4818330311cb90d",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "aa7bd6a12a5cb1ad3c6f92b71474ba6ca6f71687540f9bc5b51d6a04b816186a",
+        "seed_ordinal": 26,
+        "unit_id": "B/seed-26",
+        "unit_index": 58
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "85252dbb27610be9c958fbbafba4d89df26a8cea2ebb56c709430506f5459396",
+        "continuation_digest": "9df61f1682f6d20bd8a55cfd1f41c4b13e9f745b440a7f49d15bd3fd7f4e10fa",
+        "fresh_scan_digest": "6fca6c5460532aed75c949bd0ded8fb15038afd6d8d753a6b7922d485463600f",
+        "organism_id": "seed-27",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "33a928068b28f41c7b82958e3aa9bf5c7f9406cdbc93baa44b6d41878549c1b5",
+        "portable_unit_result_digest": "01ec9f72e5463eddfdf6c306498617637083bf1f67cb43a424cde81021a724c7",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "deb09d16589643d153ff2410172161d82e97ad0fd0b624afdeac2b56d1e130c4",
+        "seed_ordinal": 27,
+        "unit_id": "B/seed-27",
+        "unit_index": 59
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "0d449f06acb11a6ca1f9c69b526816cc1d7f5a173ede805f3ba74588e8e37645",
+        "continuation_digest": "caaa6b36e8b8d9520253ba06d743c9fcec3759dd9b8cfe9644553e4d1b37e9a2",
+        "fresh_scan_digest": "72ce5b8406499d99fea6df2c298ae947bc68d150151276a14cef3f1d54dc3050",
+        "organism_id": "seed-28",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "8fd41c44e52f6adae7c0da3ae7ceb91c48ae1ffb8a8325e4fabbec7b670f0a8d",
+        "portable_unit_result_digest": "a4b2c60de9d8b2857b53fb2868588e97efdf6cf035d6bb4adfca511bdb340828",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "90c0fe9eb96a9f97c6f3f70070e2f1beb44e4e45da8217e87a6d5375a97c5790",
+        "seed_ordinal": 28,
+        "unit_id": "B/seed-28",
+        "unit_index": 60
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "a6d31cced12142bf66a6232c901fe0809ba591c1c0fa624744c72918d978c460",
+        "continuation_digest": "c514b6cfefc7ef3a324d51d6b4c5c55898268dab6f77b488b177801a215eb558",
+        "fresh_scan_digest": "1ef830204f2779e77b6ea30c289e828bb809ab09578651b390e7ba0c6fe8f66e",
+        "organism_id": "seed-29",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "36c2739efcca6c2d875806b3854d6ff8faf75323c3a21b73b4ed9624ecb7b0f5",
+        "portable_unit_result_digest": "308d93cb8df8f5498508e89507eac9b1c6cf9437e18e19e1adf7c14673d19b46",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "2072a21f1d35c248efe97fe79f82fdd1107cdccb398e5da85d715a8204ed8041",
+        "seed_ordinal": 29,
+        "unit_id": "B/seed-29",
+        "unit_index": 61
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "557cd55fb4ccb6ea9177b5c5ca123feb9394ee5ad36d3ff43d493764cac9bb22",
+        "continuation_digest": "5602b773ce53d442f75fa08c8b30a7c1c338e3a8afad8834b186cbbd62547de5",
+        "fresh_scan_digest": "0802a6123f580ba2ebeab8c35eb452590286960b5102710e0db75b568ae6cec8",
+        "organism_id": "seed-30",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "54933614acc8de695aaac9de686523cedcf86042f3f339470e6717758d87bdcd",
+        "portable_unit_result_digest": "76d3cdd375c97ceb22baf5d6a679d9d33871adfbd8d0f274d231a75785eddf4c",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "6c9b2dc9302d2d87c1936a79f51844640cdc8f48adabf79b120301318bd5fa15",
+        "seed_ordinal": 30,
+        "unit_id": "B/seed-30",
+        "unit_index": 62
+      },
+      {
+        "arm": "B",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "8f5306db0482e09123fbacc1e59254d3e7a303ebe9dd754410702e844c293c80",
+        "continuation_digest": "7ae4c4ee7228a96786be58825ccffcd98b417fac9f722b5db46bdfce9233d056",
+        "fresh_scan_digest": "e2172d55cd7565ba3c198ebf4c2e2c902c51ea3e27685e02fbabc148217c0b7b",
+        "organism_id": "seed-31",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "70df1f955f4372c56038b7319c412b3956016f290f096cde25abcc084f4fbf83",
+        "portable_unit_result_digest": "554894aa756841a5804ab180cab94ef4ef2f660a26eceabd1420c9c5180ff08c",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "d4fb028811d09b9be634815d36d529cf7e830affbd17cc119e164f2d21214dc8",
+        "seed_ordinal": 31,
+        "unit_id": "B/seed-31",
+        "unit_index": 63
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "f7d5d7c22fb3f3b2821f75f7eb7b1cfd7e19901ce3308b1747de95b981be53fd",
+        "continuation_digest": "848147bc58212aa1bb72f07918edde522465a07f69851c18cdf9ebcc611759af",
+        "fresh_scan_digest": "b315b74614a6a62f100ccd8605633d607500baf64cf2d689abcd7cf0f6def9fc",
+        "organism_id": "seed-00",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "518caeabde2ca65390cb39ac9b347c355a7cf79ba3b63be520c504301f40aa61",
+        "portable_unit_result_digest": "4d7ef6656c94f1656283036b04a11e63dab9f54f2ec73f96d2ed221fe20fe642",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "2d532dfe9120912f631c5af03c8abe8a85137d30ad3c859224cd14d13555b56e",
+        "seed_ordinal": 0,
+        "unit_id": "C/seed-00",
+        "unit_index": 64
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "46ed02db3b1bfb50d530f71bc0bed39cc059f8d8b45e65a95273daea5caccd42",
+        "continuation_digest": "5928206096e10628d39903172c50afb195b7c9378d5165f86d1010dd8d5da480",
+        "fresh_scan_digest": "4b088846238b1a916c68041d9ac649a410993e503b99d4e28cccbaa9f1230641",
+        "organism_id": "seed-01",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "6fc1acff7f0cb7e9f25230d39ffa02974c79b3ecdfbae9b7a8b8b8c675e9c862",
+        "portable_unit_result_digest": "ac13d3398d758d666512efd950efe2278d44cf3f661265bea07cc8501d514728",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "abab07cf71649979648504128e5c3d70e725b1234360b26343e6aa673e730681",
+        "seed_ordinal": 1,
+        "unit_id": "C/seed-01",
+        "unit_index": 65
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "8e0cc67dbab69edf763524ffe8abd69ceac56dd71b066c588783df837eacfe65",
+        "continuation_digest": "fb65869a9aa9be72a4abd7540f3739cce7173a7c7c48b524db210eb38a9f17ca",
+        "fresh_scan_digest": "9dac8a2e53b4d98f7b5876c8b7adef6ebbadd99f24c3f8cd771355b5fddb2891",
+        "organism_id": "seed-02",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "930215e13f7579ff93bd53339dcb608ec9945f12e9abbaf30b8383c007a6654d",
+        "portable_unit_result_digest": "4184b767d01ca2c1395b9cf573afac90572d7a6dfe8d5c5f148691253bfce415",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "c8b0b92f9828a36ae77ba7cfb3450e6b6988147c9b5fb87d61b151df481d84fe",
+        "seed_ordinal": 2,
+        "unit_id": "C/seed-02",
+        "unit_index": 66
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "8bc68221504ea0c970f8e4bbc8daa6635b41feead204cc553a82462bb4926be0",
+        "continuation_digest": "5025cbbe63bd984d9106d5240bd26222f1398984a6732de9ac1f4884dace94f2",
+        "fresh_scan_digest": "0de25c08748b22d7ad503757dd0fabcfdb3190ca815074160d0f72ff79ecb830",
+        "organism_id": "seed-03",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "645020a7ecde4f2d2b62e45098a0c819619fcd220328a4c63e9a45ffebdcbb34",
+        "portable_unit_result_digest": "28bf80b4b3113c61e5cf09115933872e816aeecd259ce31ddcb59c17108d03e7",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "52241f07438629e64757417f58671b9f8ec875f05a7d4729b8b532cd097693bc",
+        "seed_ordinal": 3,
+        "unit_id": "C/seed-03",
+        "unit_index": 67
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "b0753ab86045c9b0e1c98ce8989304fbc9f948939c41df88983e84f0639f55a2",
+        "continuation_digest": "b42cde327e50442ced2fa206784920957e3d81603c6fc4c3c82a9b77d75c4dc6",
+        "fresh_scan_digest": "fc218befded5879667bdb41c1d4635938925f555ab7f516de640c6147edcc00f",
+        "organism_id": "seed-04",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "201b0f9ac33666dbedc7a96b966c14f8de67a2f17849b607c9059660905a7187",
+        "portable_unit_result_digest": "33fb096689e2a631a58205e58b4409659b60da546347a10b6cd34f6f8a7f8ab8",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "0202f1e13de3c9e02b3f9d5cedc28dd0f1fb4601aa6e0737a57308beb17048bd",
+        "seed_ordinal": 4,
+        "unit_id": "C/seed-04",
+        "unit_index": 68
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "9d609c9c2d4585e1b6ddea019eea2dafdd923e8aa2d47e2809f562d6362fa99e",
+        "continuation_digest": "d86c4a39baeb71a9e675b86f78d58e95d551cab7384bc5d9c11e04ed2de4103d",
+        "fresh_scan_digest": "23016fe0c13e30a7a1ecd447e7b5b24e796d6783a8e0c344c51f51a173041fa8",
+        "organism_id": "seed-05",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "d0c2a7efaf0e807a944e887e470c2b74e4a945c6c084ec7a1998537cc8bca81a",
+        "portable_unit_result_digest": "ec89556d0617dc37c1913773a11a62fcfc52941dad5d3ea1c5d0778773be9ef9",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "1e6b01b1c607c386156e8329b85bfbd25783006b58692d31db7e73727bb27639",
+        "seed_ordinal": 5,
+        "unit_id": "C/seed-05",
+        "unit_index": 69
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "5df0d20c91cebbe03734c87b0b1355a0d56249e30a156855c12ce43f5e6e0314",
+        "continuation_digest": "467eb50a8d93215d4ec339d9a0a5344ca8868e78010e8aec21a16a41d3c22610",
+        "fresh_scan_digest": "38ae7772b5768046d2a78a7caa3673bfccb5c9d4b602dad87ff5a80811746b1f",
+        "organism_id": "seed-06",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "f9315908145b174ff8dd283638d7fc2fede0a0d913693a5aa650dba4f79552ff",
+        "portable_unit_result_digest": "1409e7159a6de83e50a2a3f273e4b33e27e402222e79399d0c84db397f30801c",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "ac428ac8cb29e79f029e6180c9081633b3ddf30d83936f9943059f46d3cec234",
+        "seed_ordinal": 6,
+        "unit_id": "C/seed-06",
+        "unit_index": 70
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "efd67c297ace98540424cacccb81ee1c612bdd13928d2ff01463991d75d282f2",
+        "continuation_digest": "a79ee96bcb55761dc82ba8a1cb81bc1933d32d67347afeb1001a07a9a671fb2b",
+        "fresh_scan_digest": "4c2169cf2640e1418d8ae32c9dd01d7308684f67befa43ff343cd29b533b718a",
+        "organism_id": "seed-07",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "e059412f5faadb2c23f5601862d3affdcd85a9171412595504a616e2b1ccd541",
+        "portable_unit_result_digest": "02556d822ec78c932e7f641af185a4bc0501261b44b6ba2f16c605865930aba2",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "43f9e51bcce62a6cb64833c05445cb0567681a5e729cf809abb21e10813fe2f2",
+        "seed_ordinal": 7,
+        "unit_id": "C/seed-07",
+        "unit_index": 71
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "8c6d69715afd465bdef7aa8bdd02204bb445fa86253348b9a14c0cfaa81fd963",
+        "continuation_digest": "f59c406d69231cb97a2b17997d4bfc525d91b51963be93aa4f6732817f88e401",
+        "fresh_scan_digest": "474f98ea73b49d5a2f2632481a8299a6c9981a53cc9b6f9adfbc74f9dd6146c3",
+        "organism_id": "seed-08",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "70f381e9f6a951bd8a46e5ce8857b43b5bb196acd9567b61f021bd6b51306f18",
+        "portable_unit_result_digest": "aea733ce9389a69fefdf14a279c4f73960288673825acc5b6cce0e2540c3d7da",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "87459a5894db5f5938523c3ff555a74afe5cdae4bc038d4f8860414fd692df9a",
+        "seed_ordinal": 8,
+        "unit_id": "C/seed-08",
+        "unit_index": 72
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "de49fe34af00a7fb42dbd083f854a3ee0b175e4864ca23e8614e86113b3d4c2f",
+        "continuation_digest": "7a1c091dc4cbabf0dcc4b984ee5021ff04d862aa15be162f11cf7782e1bc2b3c",
+        "fresh_scan_digest": "74720c02610824674d6d375e82ef8a0995ef3a37a145bbf975cb209cc805fae3",
+        "organism_id": "seed-09",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "387164392d57a34738c07617941c8231f3adb82cd53b09a2ea110ced18464921",
+        "portable_unit_result_digest": "d20c3893eefa5c7bc77fd4b3c00165d11829f6acf34480caae7d42e0b3e9fb0d",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "6accdf1107d7d5052e5b6f257f63a06714dc9f139bb6ce1ff4414ad6b4eca896",
+        "seed_ordinal": 9,
+        "unit_id": "C/seed-09",
+        "unit_index": 73
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "24299bb3f7220dc5550fae8fc3efd5452967af95f43d4c0da968a5927e4f4b45",
+        "continuation_digest": "c356acc55424badb4f3b3c78edcc7483fc8d9b5310305b7faad6c72300fb7b04",
+        "fresh_scan_digest": "289d427793f06fd6ea38d2dff82b16c8259a8982f0e60981c66aac611b61e6e5",
+        "organism_id": "seed-10",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "116df1ed089e6596383cf55dda201b24c399e6b94835ba1e7b533ab664af4672",
+        "portable_unit_result_digest": "48734e314fd19e7c64e9765ce25bf0126e95a56dfcd1cf02d6b5f6f7cb3dee83",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "cb43b883023bcbe579b17e0d5b033b4871a19cd9aa0d971800a27361c8388553",
+        "seed_ordinal": 10,
+        "unit_id": "C/seed-10",
+        "unit_index": 74
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "37dc9f13707d1777853811cb686f7b98e00aeda27806eca2ac567a2371f916e6",
+        "continuation_digest": "6f2838ab1f6ec7c20c4a210283a0606526c58970fa0d30f368adf2d2cb0e8cf6",
+        "fresh_scan_digest": "1b4b944b896e4455add4278dca3632e55c59a0daef68b67d7e8f07bbec9176e8",
+        "organism_id": "seed-11",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "bff18b81b72c15162bf8f2a2a7065b9a08823e4bd79cc4ecafedad36696209b2",
+        "portable_unit_result_digest": "42ec56026b1a4dbdd36d422725343aec9a8153ed6dfd942768ecb4fd57062242",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "5f5c40f19d85657ce4593d5282ef95dc865983baab95b18eb3fe0596f9e35f44",
+        "seed_ordinal": 11,
+        "unit_id": "C/seed-11",
+        "unit_index": 75
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "99f6b757c89af3ea79939886b8731379895804f467d4893a2019828a31982e7c",
+        "continuation_digest": "f1c7ed0cd8d36cd16e1a46574bca83f6944e77c7910edafb77967d9065b1b767",
+        "fresh_scan_digest": "98f8dd2f9e023c0feaea4f0f88c0b8f8ddfa6b9f7324a9209c0902fc0b2b9aae",
+        "organism_id": "seed-12",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "075aacd5e5550de33bbac3a504e73ab40770944dd5f1449641fed348f56246d0",
+        "portable_unit_result_digest": "8d835f075d95378bfe41db98beef8f82f92a32b67b09010f5e0464fa8a8a8738",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "e4d95448a9ea0fd17d1e86305f96bf20ce4a9da6154b6d89e8ca7d205b04d4b4",
+        "seed_ordinal": 12,
+        "unit_id": "C/seed-12",
+        "unit_index": 76
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "ede13c01b8816450fb95a3e7c4fdf8659fa880a7c4a0c121748014e92f4a5d76",
+        "continuation_digest": "70d2600cc01ae76b4a6bafe7ea8f4a4ef273cee14e07d0e633fa8ffea3d10374",
+        "fresh_scan_digest": "3d67b0e6adcf57d0a5c449f49247af32647207eeac741465c08ac8dd21c4436f",
+        "organism_id": "seed-13",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "06b25ca99a3b7939567aa95c108088a3c957982b6754c3d50e682973a37492bb",
+        "portable_unit_result_digest": "3ae8b93fa32e0e5551f58e0c02ca0b1c4fc325523f9b7b1191ab4ca3fa223181",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "a5d1bb3b1c51faca7d34b9e5f898944596415a5b3ccd34a6d74ee500816edcb9",
+        "seed_ordinal": 13,
+        "unit_id": "C/seed-13",
+        "unit_index": 77
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "945eb68998108d80eae6309f3b0b291948339f356f78205461f3ee6a77c62040",
+        "continuation_digest": "90cceb89d44ce15b869610e6be353afafc18184a97dace61b79d236d6f08f25c",
+        "fresh_scan_digest": "3413f125308d52593eeda546ddcbe868ec10645078ce28f352739746373c21ab",
+        "organism_id": "seed-14",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "253d608b7d0de0803a2ebecd61372b461906e2918c6e2715779b52375411b379",
+        "portable_unit_result_digest": "6b0e6517e646194534067140d137d68d835786c6a239f85e8f32b78ca4a0bdf8",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "cb6f5be4d6596f0ef09459b343089fad6636332b93d4f0c6169d59ee3429ab53",
+        "seed_ordinal": 14,
+        "unit_id": "C/seed-14",
+        "unit_index": 78
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "c73bea0485a8033946cc0427cc5ad4579f549b1b4569fafc59924c9663d75517",
+        "continuation_digest": "3195f3612881da36318e91c0b0e7ec48fb36c937064cd10251b4134ff49c6855",
+        "fresh_scan_digest": "64043335963dae644ff366debe18c72a430ef3a1b61347fa77998a2f1444aea4",
+        "organism_id": "seed-15",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "4abe50d3273b4d28f07194e2b8bdf96067bc84facae3039895a167e1b2d3057d",
+        "portable_unit_result_digest": "b62d9e717bbcfb44b5741b2aca1437e6a177b231a084e4ea2d7951910ce0e978",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "e98112bbbbedc9dad737ceb9c443369d194e0997fb8cd012474f957bdb072ca4",
+        "seed_ordinal": 15,
+        "unit_id": "C/seed-15",
+        "unit_index": 79
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "094d83413678ed33d54ee654ebdd1b9fcfc8e71abc5e94eac51299f8daf1035f",
+        "continuation_digest": "bee0dea9966007e95cae462af1db7ac65c8ad0d2ddb82095e3dc096fec220ea4",
+        "fresh_scan_digest": "6fd86160a0cf0d3eec560bd06af509ab084539daf8323c961302e56382ca8839",
+        "organism_id": "seed-16",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "569ae0f22b7b19a29529b05dea8c7d6a863d66b779f07dc52a0ad012a9204c7d",
+        "portable_unit_result_digest": "462dd82ddf93769f1a1dd82f708fbd364c69a64b6bf79e2c7f0f409946cfd2b6",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "439f7b0c3a0ab6bec29c201c09cd01dded4b8e734c651c285172c4a836affb59",
+        "seed_ordinal": 16,
+        "unit_id": "C/seed-16",
+        "unit_index": 80
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "fce2ca7966d32864996bb1294b2ecd1a270babfe76f0ee8e750b29a1902fc3a7",
+        "continuation_digest": "90b576db7d08f279f3dc582ffd08b06f5063abb80379a492c193a2a996bf15f6",
+        "fresh_scan_digest": "176456dcd7ae4a19f0c062ecfbdb1958679d62336e2b6f4f9574c991ea8dd104",
+        "organism_id": "seed-17",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "80fd317caf84bc5372f06b88c8933c896d5329f603f83007d619292dae12bce8",
+        "portable_unit_result_digest": "94b6db317e18769270578bf11a014d2111166fb67d163711b876c216a4a870fe",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "6e085d058450a3bef133843335418ac4f6db763ec41b7816c961610862f1c3f9",
+        "seed_ordinal": 17,
+        "unit_id": "C/seed-17",
+        "unit_index": 81
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "e6aee6b9f96ae9d8e95cd756afbfe746f9616eb523fb6d4fcafae02bc9646a0e",
+        "continuation_digest": "03c9f730638074a388c8d3380304232535ff0558982415f109a22ed9a7ed60c9",
+        "fresh_scan_digest": "019d3704f42cbb34a7f744f72ae6d038152e1d84d4ddc4d47fd24dcc828141ad",
+        "organism_id": "seed-18",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "5041aadf5b47a003b47db3eba0f2cae42566acde787419b462b924f95fecb14d",
+        "portable_unit_result_digest": "8bf34b26c752135397deaccc807a24c52d68c912538d3ab37adb5df83e9dd8d2",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "82d047c4494e25f0fc6bf316540ae0cde83198592341105d722af5af35a838d5",
+        "seed_ordinal": 18,
+        "unit_id": "C/seed-18",
+        "unit_index": 82
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "d13e8641025cee6ace2f7dbb2eea247032b72e5f6cdab43a68f5485678c58c8f",
+        "continuation_digest": "e9d855b8cf7774da733db4da03ac4c9fd3f5bf7a8f23f3e47ce95f47788210a4",
+        "fresh_scan_digest": "6371bc513c32c35e5c20e8b3e4265b53ae874bb1b2ac8483d72b1add7fe72a62",
+        "organism_id": "seed-19",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "c7e32bff6a4dcaac3811ef7241f0248882e4e0a2002eab2081174b08597a4563",
+        "portable_unit_result_digest": "093eb68a1413fd34c3c89dcab68d645292bd8ed4862beacc7d6cf7b0a2beaa97",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "691fa13e04063c033bf750b9f716df6b807a6fbefefa29d6078104685237b9cf",
+        "seed_ordinal": 19,
+        "unit_id": "C/seed-19",
+        "unit_index": 83
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "415ef8b44be3cc16e3ddface6ec887c768515de8384a6443fc313683cf68d0e5",
+        "continuation_digest": "9cc745900b9d3811f445be2ee961afd6012bb77854fd8dc1af086c8c82491242",
+        "fresh_scan_digest": "3d5c1ec3bb6e2eef3e92cb40fbc031e273e56ec01535df0def6e3914c41ad624",
+        "organism_id": "seed-20",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "1f88372b290e4632aa14f6b95518cec7e0943c19c8e656063393576ba6cd70b4",
+        "portable_unit_result_digest": "dae2588e00d796ecbb176357be311b7e668d5b71c54d5af173718d652a91d59b",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "98d563b2ad753e568e3b9365d39be9befd339855b88bc93491285061cdcdb159",
+        "seed_ordinal": 20,
+        "unit_id": "C/seed-20",
+        "unit_index": 84
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "1002ef09c525f37256d1b1843999000fcfd60d4c5d77f62f5c8965e8bb38edde",
+        "continuation_digest": "ffc712d15a8603f55e2caca85175b8ffe88f5352594f37a748f3e15350801931",
+        "fresh_scan_digest": "3d77dbdad5c0f8e9c38a00d13786091d87be59c97eb5be4841348d5ddb7371a0",
+        "organism_id": "seed-21",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "073f15d5bb8bebc93d0a5671acfe48e2b6f9fa13fa4542e6768af353117b430f",
+        "portable_unit_result_digest": "33a91768401a79c54de64a64e8a6c11163b8bf8ba40358cc8378f409c06d7314",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "e5d06911d9e909bbebcbae46da3aa63d1c318a9795870074f974666dd0e8e868",
+        "seed_ordinal": 21,
+        "unit_id": "C/seed-21",
+        "unit_index": 85
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "c3d1a72a9c180ec404fc97448193ca6cf78d93d6d6da6ccefc7f5108af34058e",
+        "continuation_digest": "3891ef7ab4ed16312105ef2b3074c0ba0012428aee778cc52bedc6249077ec26",
+        "fresh_scan_digest": "24c74b526ef2a55c060298bde3cd50156d442e72f5a1f43bcbb95b29307c63c5",
+        "organism_id": "seed-22",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "c26d3ee0a04ac2a36c744fdf225fbf4557d10e6c947d486191cc3140de1adb9e",
+        "portable_unit_result_digest": "10efcbfbb1cdc052978b5c713e0ffd9976aeb554f002ffd95273209829852da1",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "a53e92f4c2a84c828a7fa9fbd21fc4a19d2370d0e91f1061ca7247cf2575967f",
+        "seed_ordinal": 22,
+        "unit_id": "C/seed-22",
+        "unit_index": 86
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "0192067b13e5c08e7a9d83c968d37a882bd3e076430a1776077c1acfdba615eb",
+        "continuation_digest": "8b539c0c149fb776dbf631fcdfec6ae7365b5aeda30aac41eae4217a8ddf7e67",
+        "fresh_scan_digest": "fc66260bd55e35b1c62429af9646f94e698cfd4b2288c5a6d79532707a8d9dd0",
+        "organism_id": "seed-23",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "62557d704d2ec149c7534859b49fb32c8e307657048bc7a42080f861e40b9d31",
+        "portable_unit_result_digest": "03a44aebf16b6f71992d7080bda2b549b5045b0c828b702005d80b35d21043ed",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "8faaebf8af64ff84748c75abae28ce30bae4d2fbee0bae252a0fedd3bfed583a",
+        "seed_ordinal": 23,
+        "unit_id": "C/seed-23",
+        "unit_index": 87
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "1187be23172b83f508783479eaa879148fec5ac4296ad4da9d0be7272f25fc7d",
+        "continuation_digest": "fb84ed819635af33827ba02cd476770ff93880df63ec3b48360b5be3cf40dde0",
+        "fresh_scan_digest": "c91abb2cbcbd95bc1ce060559cd0ef66e52b15b2f43a8c1614979be7e1d53d68",
+        "organism_id": "seed-24",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "0573ad88476e65cd43fd82197d0eee65587f7b56a47eef287c073b9d2300e370",
+        "portable_unit_result_digest": "7fdbc79f65afab290e28c6ae13c2b6969f48ab4f31aee73d5a1a6a930a39a496",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "a569942a3c7816b96da51cbb90f11df4bad2492df6b5d47c16df77b40a5a77c9",
+        "seed_ordinal": 24,
+        "unit_id": "C/seed-24",
+        "unit_index": 88
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "7abd6313902be6032de55b55c2fbecc27b3369d65ff468311c331a2817e277a9",
+        "continuation_digest": "703bdcb65ff3e17645d3f46eeeb77b4eabcdc8a924a3748c0195eb8567f105ff",
+        "fresh_scan_digest": "d218ddd67c1e8cb3e034c4fe202c78eb33c9cf73fea1b3dbd36a77102b2cbc8c",
+        "organism_id": "seed-25",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "79822e386d112b203076e3aeb818ab3e13f293d70856c0cc059c7fbc7b83c3a8",
+        "portable_unit_result_digest": "9f7541d5c894b4f1bc3198a93dc1464539137f9a731181b821cd6902d193e198",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "0f32cfe21c401beb480cdbc87a326000eb2139329ad5baea3a658399f176ca71",
+        "seed_ordinal": 25,
+        "unit_id": "C/seed-25",
+        "unit_index": 89
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "370ff25dfd79d9609810aa22ca3d62a26f9c3ef5c040b25c144662d9ba463220",
+        "continuation_digest": "a73473d58365c57a1a61820fad6c88a137d40d2b81ee46160d75e8a6e7d633e8",
+        "fresh_scan_digest": "3b9b2d28b5bf35f95d20d9a763b6dd11a4e7e196682a421905a53cd8bcc27785",
+        "organism_id": "seed-26",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "de7e37c4c297440bafaf6e6509e5b98b2e846e154aee5f6a3d6154b4e602f65e",
+        "portable_unit_result_digest": "43a1f4f185c53890c5f2ef4ac9a58308a35253a4ded6245ba1c1a6b5551a708a",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "b4df00d52419dc04cc6a5ebef9bfca1f6a21243322d78fdaf336d22038a04d0f",
+        "seed_ordinal": 26,
+        "unit_id": "C/seed-26",
+        "unit_index": 90
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "97633e7c697f0a6376e2704685c5a3c76179e01344733f7d0049e151af4abc44",
+        "continuation_digest": "c313f6e5d753ebe06d2ad8d60c4c69bc4050751c6157dc84d2c5cc5342679cd3",
+        "fresh_scan_digest": "3b0e48e2f79334fec150bd8d4a2cee3f6b13376b63265e6b2b2cac9fd1b1d689",
+        "organism_id": "seed-27",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "825cc2202c9ba0e5b57a842a7133a6f115164dfcbe4a674caa4768d452248406",
+        "portable_unit_result_digest": "038b5b8090842854b24b2cb2da25a665ad150199acebb1e2198d41fa9a3c45fa",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "74fd7e4afdfd19bf54b33ae1a8cf29e74f477dde4b0e161ad5445331e272e313",
+        "seed_ordinal": 27,
+        "unit_id": "C/seed-27",
+        "unit_index": 91
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "14793f9c855c60dc563fda50dc3f7312683c167320713842c553b235ae3f65bd",
+        "continuation_digest": "345ff301b001b6187f442287f2a81393d5f22366490aafc81f8d4193ef5cb54d",
+        "fresh_scan_digest": "435f469fb3843d2d3f0388a1082791aca3f4e83fd9398956b56abca1ad8e1c81",
+        "organism_id": "seed-28",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "e996cf8fbe44e71ffceb0db4572dcad87bab861fce2ec65041ada6117038a2dc",
+        "portable_unit_result_digest": "e2d79516d10744a059b4a8cc6b55429a428016904c0f09659b65b78948d8f039",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "4ea3a44c487e79db3789a76a702594aa4365e0a3e2a0be65fa490553dc25bf0e",
+        "seed_ordinal": 28,
+        "unit_id": "C/seed-28",
+        "unit_index": 92
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "821b0d8732442cdd94e7fbbc7353263ea8dd3587bfdf6088935806edf3dcc0a3",
+        "continuation_digest": "2464d0c1ba8aaac066961e5d6b1c9f569a9f532678bbf2af0cea66f94809c8ec",
+        "fresh_scan_digest": "c89930112c4c38ce76cdf04790c718d5a9c853def223d6e0bf0022b57b5c47db",
+        "organism_id": "seed-29",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "6047904b55738a2ff3ac57d3d4c25d264eef34a8d14305942dc2d1d13dee8efd",
+        "portable_unit_result_digest": "79e9c8536b3adf854f9534ef6e5677ccea686f1cddefb4586bd48082546f08d6",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "b5756d328853b7fcc68d724a2f808bc39cf2f092fc84b8b0f630718e4c7e54ec",
+        "seed_ordinal": 29,
+        "unit_id": "C/seed-29",
+        "unit_index": 93
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "182a3e1bdd00b05996531b94f30f803ceeb2041b3fb83c0ac96ce4f1ea6d46b0",
+        "continuation_digest": "9820dd3f74ffeb5e3a934f643e08eb89005619a8746fe5cf649e0d5e6a2f175e",
+        "fresh_scan_digest": "aa0e26192b6ad94504b5a241cb10dfdb9b89f14188cbbbc60817bce3834e14b2",
+        "organism_id": "seed-30",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "b0d79a0eba7099fb65604bc2152e9b2579f9145a119216574138834cbe8d6500",
+        "portable_unit_result_digest": "7391af1221177b1845687190a1b6da96b26d599c4307b79c745dcf6c296ed92e",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "ce65992c7198fe6ec8d8ef790056e0670963ec9a61f3f16e5c8c63fefcb2573d",
+        "seed_ordinal": 30,
+        "unit_id": "C/seed-30",
+        "unit_index": 94
+      },
+      {
+        "arm": "C",
+        "candidate_graph_state_unchanged": true,
+        "complete_semantic_identity_digest": "92c831b40ec8bb7e48545cfe15bd21daa8a570c941287752f683bbb35486e118",
+        "continuation_digest": "cffa9c4e6c4c0fab67d5e2dd581ce3ddaac5a187ea9de43776df5c3e6067b839",
+        "fresh_scan_digest": "cf06fe06d8dc0cb33e4e0b3f5886274134ea35f8bed5133b4aebcf9d009ab57c",
+        "organism_id": "seed-31",
+        "outcome_access": {
+          "count": 0,
+          "event_ids": []
+        },
+        "portable_binding_digest": "d1c8fddcd159c0ffc8d756dcf1f4bcdf3ada49b300949bed1bd72b642b7c33ce",
+        "portable_unit_result_digest": "9f856c262e46d6fc7c6f2559047cc44cf00d55dc7f9a0d8955476ea99a226df6",
+        "preoutcome_state_digest": "16ffae3b2293510c43d8a93311b2867744ae8415714a517aeb38a880e1300cbe",
+        "row_digest": "4c669b31fbb083f17a3aa880da80814b4e5d48d8ef2a6fcd71a82edf5c52291c",
+        "seed_ordinal": 31,
+        "unit_id": "C/seed-31",
+        "unit_index": 95
+      }
+    ]
+  },
+  "historical_journal": {
+    "journal_chain_digest": "d827d8f1d45f4cebd8adb02ec895e4c3cd9d48249265572a64c81f568f6c3f75",
+    "recomputation_count": 0,
+    "record_count": 192,
+    "unit_count": 96
+  },
+  "historical_registries": {
+    "A": {
+      "adjudication": {
+        "admitted": true,
+        "organism_count": 32,
+        "qualifying_organisms": 32,
+        "required_qualifying_organisms": 24,
+        "stop_reason": null
+      },
+      "fresh_registry_id": "aef4b583851558b5d1b636820a39015a9be8b2b2970b7b28d943684ca53cde69",
+      "historical_registry_id": "aef4b583851558b5d1b636820a39015a9be8b2b2970b7b28d943684ca53cde69",
+      "portable_registry_digest": "23b2dac501166aabd3d56d827194591153a84916fd1c9da8385466b9520983b3",
+      "registry_manifest_digest": "08813e36c08793ce7c71536aa2d3b42bc7a1e3fe8d1e7f3249a4a6bdd7ebcbe5",
+      "stored_wrapper_count": 32
+    },
+    "B": {
+      "adjudication": {
+        "admitted": true,
+        "organism_count": 32,
+        "qualifying_organisms": 32,
+        "required_qualifying_organisms": 24,
+        "stop_reason": null
+      },
+      "fresh_registry_id": "2296cdb1b50cf931005721dabee6c1c4c4d91b3b607468147b8ba220351c0de7",
+      "historical_registry_id": "2296cdb1b50cf931005721dabee6c1c4c4d91b3b607468147b8ba220351c0de7",
+      "portable_registry_digest": "bd4c1d04d4bc94103cd5e3bcb4ad2c2ed4bd14c24aec16beecf6396a4451d932",
+      "registry_manifest_digest": "a828f20a1bf76d2adb201faa4a089793d2f9cfb3c03d87b98b034f952b887e67",
+      "stored_wrapper_count": 32
+    },
+    "C": {
+      "adjudication": {
+        "admitted": true,
+        "organism_count": 32,
+        "qualifying_organisms": 32,
+        "required_qualifying_organisms": 24,
+        "stop_reason": null
+      },
+      "fresh_registry_id": "200e7ac6405debbd182ba7d5aef0d66fbeb63b81af97052fa17657c64c2015bb",
+      "historical_registry_id": "200e7ac6405debbd182ba7d5aef0d66fbeb63b81af97052fa17657c64c2015bb",
+      "portable_registry_digest": "52bff4d4667ee359e6030c1869b8648e5b24d51be09689bdd281b2141eb4818c",
+      "registry_manifest_digest": "523e0fb2c79ac9c06a2bc7ce4b7e350dda4d66c0e70724f47f0a6c987f1703f0",
+      "stored_wrapper_count": 32
+    }
+  },
+  "outcome_access": {
+    "count": 0,
+    "event_ids": [],
+    "science_paths_absent": true
+  },
+  "package_id": "native_v2_portable_admission_bridge.v1",
+  "process_id": 824722,
+  "protected_files": {
+    "file_count": 195,
+    "file_set_digest": "9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239"
+  },
+  "record_digest": "a5540e02df73b3dc478d059dfb94b194f7038814d9f2b00560737649f28c9fdb",
+  "schema_version": "native_v2_portable_admission_attempt_record.v1",
+  "stage": "passed"
+}

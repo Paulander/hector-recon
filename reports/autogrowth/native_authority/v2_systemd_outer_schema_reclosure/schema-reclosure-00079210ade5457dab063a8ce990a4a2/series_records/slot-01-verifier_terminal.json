@@ -1,0 +1,18 @@
+{
+  "elapsed_seconds": 8.712910560003365,
+  "ended_at_utc": "2026-08-02T10:43:52.858232+00:00",
+  "launch_record_digest": "a936b3546404e5f06606633a3a151efe8cc355f51db9556dae2b3c47e7842369",
+  "pid": 771002,
+  "record_digest": "172d586436251a066eb4410427a8380828b29822585a065eeae411e3a9bf8e0b",
+  "returncode": 0,
+  "schema_version": "native_v2_systemd_foreground_task_terminal.v1",
+  "signal": null,
+  "started_at_utc": "2026-08-02T10:43:44.145329+00:00",
+  "stderr_path": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/schema-reclosure-00079210ade5457dab063a8ce990a4a2/series_records/slot-01-verifier.stderr",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_size": 0,
+  "stdout_path": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-v2-systemd-series/schema-reclosure-00079210ade5457dab063a8ce990a4a2/series_records/slot-01-verifier.stdout",
+  "stdout_sha256": "e8de93b08cf49f9cc8845ea6dfdfa8d2d57db18d44b6cba49cb999f4d331a419",
+  "stdout_size": 1235,
+  "task_name": "slot-01-verifier"
+}

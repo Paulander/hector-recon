@@ -1,0 +1,73 @@
+{
+  "canonical_interpreter": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/.venv/bin/python3",
+  "canonical_repository_root": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit",
+  "carried_slot": {
+    "child_slot": "portable-admission-01-e7dfd710b975",
+    "child_terminal_record_digest": "76b661c707ce164b5a114967712bca298835f7fc09b3ff7b488a2c86d11da3bb",
+    "historical_child_pid": 282158,
+    "outcome_access": {
+      "count": 0,
+      "event_ids": []
+    },
+    "result_record_digest": "2165afec220b8c0cbd6867689c54c7ff9ed2166432c8a6d4d45df6647dd1c124",
+    "result_sha256": "f3fa534f84eb6221b93146cac03d446bede447dfb91529e1553e63297a3bd3d6"
+  },
+  "head": "8479cbdd22ed06d09eea3bd051a2e0e8344063ec",
+  "module_paths": {
+    "bridge": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_portable_admission_bridge.py",
+    "canonical_child": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_canonical_contract_reclosure.py",
+    "historical_launcher": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_import_path_launcher_reclosure.py"
+  },
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "protected_file_count": 195,
+  "protected_file_set_digest": "9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239",
+  "pythonpath": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit/src",
+  "record_digest": "61af965bc46ae728d74247c76c14f58b6908edc760179aa44260c5c89697ec51",
+  "recovery_series_id": "schema-reclosure-00079210ade5457dab063a8ce990a4a2",
+  "schema_version": "native_v2_systemd_foreground_preflight.v1",
+  "service_contract": {
+    "ActiveState": "active",
+    "Id": "hector-recon-v2-schema-6a8e100e71b846b98715e72fb378c75e.service",
+    "MainPID": "770622",
+    "Restart": "no",
+    "RuntimeMaxUSec": "infinity",
+    "SubState": "running",
+    "Type": "exec",
+    "WorkingDirectory": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit"
+  },
+  "task_plan": [
+    {
+      "child_slot": "portable-admission-01-e7dfd710b975",
+      "kind": "verifier",
+      "task": "slot-01-verifier"
+    },
+    {
+      "child_slot": "portable-admission-02-e7dfd710b975",
+      "kind": "child",
+      "task": "slot-02-child"
+    },
+    {
+      "child_slot": "portable-admission-02-e7dfd710b975",
+      "kind": "verifier",
+      "task": "slot-02-verifier"
+    },
+    {
+      "child_slot": "portable-admission-03-e7dfd710b975",
+      "kind": "child",
+      "task": "slot-03-child"
+    },
+    {
+      "child_slot": "portable-admission-03-e7dfd710b975",
+      "kind": "verifier",
+      "task": "slot-03-verifier"
+    },
+    {
+      "child_slot": "all",
+      "kind": "aggregate",
+      "task": "aggregate-verifier"
+    }
+  ]
+}

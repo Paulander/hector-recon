@@ -1,0 +1,17 @@
+{
+  "command": [
+    ".venv/bin/python3",
+    "-m",
+    "recon_lite_chess.autogrowth.native_v2_portable_admission_bridge",
+    "verify-attempt",
+    "--attempt-id",
+    "portable-admission-03-e7dfd710b975"
+  ],
+  "cwd": "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-audit",
+  "environment_digest": "58b4fab71e2754e8f49143aa0ad00fb32ec44d99d4dc620cc17bbc2f47d6720a",
+  "pid": 835306,
+  "record_digest": "3c8380a6887b31a87f90d3840e22c98d49703728d05eefd18c3df5be2ad9e137",
+  "schema_version": "native_v2_systemd_foreground_task_launch.v1",
+  "started_at_utc": "2026-08-03T04:01:50.804198+00:00",
+  "task_name": "slot-03-verifier"
+}

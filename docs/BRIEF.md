@@ -1000,3 +1000,23 @@ read-only verifier, slots 02/03 once with their verifiers, and the frozen
 aggregate, then stop. At freeze time slots 02/03, exposure, science, and outcomes
 remain unopened. See
 `docs/autogrowth/NATIVE_V2_SYSTEMD_OUTER_SCHEMA_RECLOSURE_FREEZE_20260802.md`.
+
+
+The bounded outer schema reclosure has now passed its complete admission-only
+series. Slot 01 was carried byte-for-byte and verified without rerunning its
+child. Slots 02 and 03 each ran once in independent processes and passed their
+read-only verifiers. All three child results reproduced 96/96 semantic
+identities, 96/96 portable bindings, 96/96 unit results, the same 96-unit
+historical journal, and the same exact exposure/execution/completion artifacts.
+The frozen aggregate accepted all three attempts with cohort digest
+`5f6de9695ee0da4a74d01b2f27d2f5b0e9abb2845e304f31d230c67b5477327b`.
+
+Graph/candidate mutation was zero; all 195 protected files remained exact at
+digest `9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239`.
+Outcome access was exactly zero in every child and aggregate record, and
+science paths remained absent. The service completed successfully and was
+absent after cleanup. This closes the portable admission/schema boundary only;
+it is not a new exposure run, outcome result, mechanism result, learning
+result, or KRK R1 evidence. No exposure, science, or follow-up mechanism is
+authorized by this package. See
+`docs/autogrowth/NATIVE_V2_SYSTEMD_OUTER_SCHEMA_RECLOSURE_RESULT_20260803.md`.

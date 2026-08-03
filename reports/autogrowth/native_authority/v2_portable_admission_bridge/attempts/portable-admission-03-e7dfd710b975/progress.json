@@ -1,0 +1,14 @@
+{
+  "attempt_id": "portable-admission-03-e7dfd710b975",
+  "completed_row_digest": "5f6de9695ee0da4a74d01b2f27d2f5b0e9abb2845e304f31d230c67b5477327b",
+  "completed_unit_count": 96,
+  "last_unit_id": "C/seed-31",
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "package_id": "native_v2_portable_admission_bridge.v1",
+  "record_digest": "4c9bd837d22b84f5d398290dad44d4e7dea86aed8a71d74a151d6353a3c85049",
+  "schema_version": "native_v2_portable_admission_attempt_record.v1",
+  "stage": "fresh_units"
+}
