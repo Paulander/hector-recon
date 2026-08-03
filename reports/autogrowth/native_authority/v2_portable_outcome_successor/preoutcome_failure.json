@@ -1,0 +1,33 @@
+{
+  "detail": "frozen input binding mismatch",
+  "exception_type": "LauncherIntegrityError",
+  "failure_digest": "a4dde45a874d0a43f3ea7537f75e1dd0632b9d40d371941a6967e3000ab5e6e7",
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  },
+  "outcome_attempt_id": "portable-outcome-19dbfa8e53bf4531bcb7d002cb4ef2f7",
+  "package_id": "native_v2_portable_outcome_successor.v1",
+  "schema_version": "native_v2_portable_outcome_preoutcome_failure.v1",
+  "traceback_tail": [
+    "Traceback (most recent call last):",
+    "  File \"/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py\", line 868, in run_science",
+    "    completed, handoff = build_portable_completed()",
+    "                         ^^^^^^^^^^^^^^^^^^^^^^^^^^",
+    "  File \"/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py\", line 721, in build_portable_completed",
+    "    runtime = historical.build_real_exposure_runtime()",
+    "              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+    "  File \"/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_process_readiness_repair.py\", line 507, in build_real_exposure_runtime",
+    "    context = dict(deps.build_context())",
+    "                   ^^^^^^^^^^^^^^^^^^^^",
+    "  File \"/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_execution_adapter_freeze.py\", line 559, in build_readiness_context",
+    "    fixed = verify_frozen_inputs()",
+    "            ^^^^^^^^^^^^^^^^^^^^^^",
+    "  File \"/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_execution_adapter_freeze.py\", line 369, in verify_frozen_inputs",
+    "    launcher_package = launcher.verify_package_manifests()",
+    "                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+    "  File \"/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_import_path_launcher_reclosure.py\", line 419, in verify_package_manifests",
+    "    raise LauncherIntegrityError(\"frozen input binding mismatch\")",
+    "recon_lite_chess.autogrowth.native_v2_frozen_cohort_import_path_launcher_reclosure.LauncherIntegrityError: frozen input binding mismatch"
+  ]
+}
