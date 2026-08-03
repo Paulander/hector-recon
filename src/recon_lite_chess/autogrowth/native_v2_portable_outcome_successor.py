@@ -41,10 +41,10 @@ MODULE_PATH = (
     "recon_lite_chess.autogrowth.native_v2_portable_outcome_successor"
 )
 OUTCOME_ATTEMPT_ID = (
-    "portable-outcome-03-19dbfa8e53bf4531bcb7d002cb4ef2f7"
+    "portable-outcome-04-19dbfa8e53bf4531bcb7d002cb4ef2f7"
 )
 SERVICE_UNIT = (
-    "hector-recon-v2-outcome-03-19dbfa8e53bf4531bcb7d002cb4ef2f7.service"
+    "hector-recon-v2-outcome-04-19dbfa8e53bf4531bcb7d002cb4ef2f7.service"
 )
 PACKAGE_DIR = Path(
     "reports/autogrowth/native_authority/v2_portable_outcome_successor"
@@ -53,6 +53,7 @@ SOURCE_MANIFEST_PATH = PACKAGE_DIR / "source_manifest.json"
 PACKAGE_MANIFEST_PATH = PACKAGE_DIR / "package_manifest.json"
 PREOUTCOME_FAILURE_PATH = PACKAGE_DIR / "preoutcome_failure.json"
 ATTEMPT_02_STDERR_PATH = PACKAGE_DIR / "preoutcome_attempt_02.stderr"
+ATTEMPT_03_STDERR_PATH = PACKAGE_DIR / "preoutcome_attempt_03.stderr"
 COMPLETION_PATH = PACKAGE_DIR / "completion.json"
 PREREGISTRATION_PATH = Path(
     "docs/autogrowth/"
@@ -189,6 +190,7 @@ def _artifact_paths() -> tuple[Path, ...]:
         portable.DEPENDENCY_MANIFEST_PATH,
         PREOUTCOME_FAILURE_PATH,
         ATTEMPT_02_STDERR_PATH,
+        ATTEMPT_03_STDERR_PATH,
     }
     for attempt_id in portable.ATTEMPT_IDS:
         attempt = portable.ATTEMPT_ROOT / attempt_id
@@ -636,7 +638,7 @@ def _portable_reference() -> tuple[dict[str, Any], list[dict[str, Any]]]:
 def _registry_entry_by_id(registry: Any, organism_id: str) -> Any:
     matches = [
         entry
-        for entry in registry.entries
+        for entry in registry.organisms
         if entry.organism_id == organism_id
     ]
     if len(matches) != 1:

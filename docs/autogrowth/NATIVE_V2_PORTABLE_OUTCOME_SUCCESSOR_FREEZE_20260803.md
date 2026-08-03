@@ -32,7 +32,7 @@ Frozen identities:
 - protected 195-file digest:
   `9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239`.
 
-The final exact focused suite passed 25/25 in 315.94 seconds. It covers the
+The final exact focused suite passed 26/26 in 316.21 seconds. It covers the
 portable handoff, exact path-only normalization, private-provider authority
 without module-global replacement, the real V2 transaction ordering,
 committed-seed restart, ordered row/final-graph reconstruction, and semantic
@@ -54,10 +54,16 @@ size 1,129,782,531, raw SHA-256
 and compressed SHA-256
 `92b8e7aa1b437281e346ddc57b1f4cb5c139ef68190c57f1699e6acd86f8d43f`.
 
+The third attempt restored the complete cohort and then stopped before the
+science marker because the successor used the nonexistent registry attribute
+`entries`; the frozen registry exposes the same tuple as `organisms`. Its exact
+trace is preserved. The final source changes only that attribute name and adds
+a focused lookup regression; outcome access remains zero.
+
 Outcome attempt
-`portable-outcome-03-19dbfa8e53bf4531bcb7d002cb4ef2f7` may run only as user
+`portable-outcome-04-19dbfa8e53bf4531bcb7d002cb4ef2f7` may run only as user
 service
-`hector-recon-v2-outcome-03-19dbfa8e53bf4531bcb7d002cb4ef2f7.service` through
+`hector-recon-v2-outcome-04-19dbfa8e53bf4531bcb7d002cb4ef2f7.service` through
 the exact four-item child command in the package manifest. A complete run is
 32 seeds x 16 rows x 3 arms = 1,536 truthful outcome events. Before this run,
 outcome access is zero and no science-start marker, journal, carrier, result,

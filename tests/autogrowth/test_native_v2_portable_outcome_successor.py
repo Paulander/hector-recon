@@ -49,6 +49,17 @@ def test_launcher_freeze_differs_only_by_absolute_child_path() -> None:
     assert proof["all_other_fields_exact"] is True
 
 
+def test_registry_lookup_consumes_frozen_registry_organisms() -> None:
+    entry = type("Entry", (), {"organism_id": "seed-00"})()
+    registry = type("Registry", (), {"organisms": (entry,)})()
+    assert successor._registry_entry_by_id(registry, "seed-00") is entry
+    with pytest.raises(
+        successor.PortableOutcomeSuccessorError,
+        match="registry organism coverage changed",
+    ):
+        successor._registry_entry_by_id(registry, "seed-01")
+
+
 def test_launcher_portable_check_rejects_non_path_change(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

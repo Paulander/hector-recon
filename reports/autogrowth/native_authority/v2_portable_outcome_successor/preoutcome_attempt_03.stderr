@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py", line 1112, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py", line 1106, in main
+    value = run_science()
+            ^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py", line 1063, in run_science
+    completed, handoff = build_portable_completed()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py", line 917, in build_portable_completed
+    mapping = _verify_live_mapping(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py", line 710, in _verify_live_mapping
+    entry = _registry_entry_by_id(registry, organism_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py", line 639, in _registry_entry_by_id
+    for entry in registry.entries
+                 ^^^^^^^^^^^^^^^^
+AttributeError: 'V2LaboratoryRegistry' object has no attribute 'entries'

@@ -62,6 +62,13 @@ when its size and SHA-256, and the compressed source SHA-256, match the older
 frozen adapter constants. This is transport materialization, not restoration,
 selection, or exposure replay.
 
+The third service attempt restored the complete cohort and then stopped before
+its start marker, again with zero outcome access, because the successor looked
+for the registry's organisms under the nonexistent attribute `entries`. The
+frozen registry API names this exact tuple `organisms`. The same-package final
+attempt corrects only that attribute name; registry construction, organism
+contents, ordering, and all comparisons are unchanged.
+
 ## Required report
 
 Report mechanism-engagement gates; graph-produced certification and clearing;
