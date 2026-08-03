@@ -1,7 +1,7 @@
 # Native V2 portable outcome successor freeze
 
-The bounded successor is frozen from source commit
-`c62517b13e00a9d011921b9bd731e10e272010fc`. It changes no learner,
+The bounded successor is frozen from amended source commit
+`91d22946c85f9f6cf03f9df6711a02ebd9659ee0`. It changes no learner,
 graph, terminal, arm, seed, row, ecology, threshold, transaction, metric,
 statistic, or interpretation.
 
@@ -16,13 +16,13 @@ module and its completed-exposure provider are not changed.
 Frozen identities:
 
 - source-manifest SHA-256:
-  `755a6ef255beb13f388e9d928c70f8ea346579ad3213cc92bc5993e403fcb7de`;
+  `f7ce00ca60954544a2d15b7f2c374cd54985fdb997f7c103bd8fe27987cf3915`;
 - source-manifest digest:
-  `787fa3989abe8458ceb0ae4c8219211f70b865b12e12b97db915baabbdd10aea`;
+  `5e3b2d74829287aa025ca8e2e6c0e77c3d09baf9980af7485c9e7a20efe52d33`;
 - package-manifest SHA-256:
-  `bebde9e9e82e103d8d5f05f19e02694d92b512d66c770366c59bca2befd54a10`;
+  `072b5e009ebaa9b8582fbdba5656e0aa17bee1613c18aed033733d6d76c083e4`;
 - package-manifest digest:
-  `46f305036bd9ff4161b806efb00966b9037d3010ddaabfbc6c5001baea924a3a`;
+  `e462480512b2c2d6a22e8d9ff59e4ace75de56177fac3c56a4fc4365747a5b05`;
 - portable aggregate digest:
   `a7bf36df7309f67da8d6c42ae700dd032413dcfa70390d47fba7e40c35eae733`;
 - portable cohort digest:
