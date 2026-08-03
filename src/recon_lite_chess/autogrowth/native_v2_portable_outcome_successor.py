@@ -41,10 +41,10 @@ MODULE_PATH = (
     "recon_lite_chess.autogrowth.native_v2_portable_outcome_successor"
 )
 OUTCOME_ATTEMPT_ID = (
-    "portable-outcome-02-19dbfa8e53bf4531bcb7d002cb4ef2f7"
+    "portable-outcome-03-19dbfa8e53bf4531bcb7d002cb4ef2f7"
 )
 SERVICE_UNIT = (
-    "hector-recon-v2-outcome-02-19dbfa8e53bf4531bcb7d002cb4ef2f7.service"
+    "hector-recon-v2-outcome-03-19dbfa8e53bf4531bcb7d002cb4ef2f7.service"
 )
 PACKAGE_DIR = Path(
     "reports/autogrowth/native_authority/v2_portable_outcome_successor"
@@ -52,6 +52,7 @@ PACKAGE_DIR = Path(
 SOURCE_MANIFEST_PATH = PACKAGE_DIR / "source_manifest.json"
 PACKAGE_MANIFEST_PATH = PACKAGE_DIR / "package_manifest.json"
 PREOUTCOME_FAILURE_PATH = PACKAGE_DIR / "preoutcome_failure.json"
+ATTEMPT_02_STDERR_PATH = PACKAGE_DIR / "preoutcome_attempt_02.stderr"
 COMPLETION_PATH = PACKAGE_DIR / "completion.json"
 PREREGISTRATION_PATH = Path(
     "docs/autogrowth/"
@@ -186,6 +187,8 @@ def _artifact_paths() -> tuple[Path, ...]:
         portable.SOURCE_MANIFEST_PATH,
         portable.CLASSIFICATION_MANIFEST_PATH,
         portable.DEPENDENCY_MANIFEST_PATH,
+        PREOUTCOME_FAILURE_PATH,
+        ATTEMPT_02_STDERR_PATH,
     }
     for attempt_id in portable.ATTEMPT_IDS:
         attempt = portable.ATTEMPT_ROOT / attempt_id
@@ -216,6 +219,18 @@ def _output_paths() -> tuple[Path, ...]:
     )
 
 
+def _materialized_input_spec() -> dict[str, Any]:
+    adapter = historical.stopped_adapter
+    return {
+        "path": adapter.RAW_SNAPSHOT_MANIFEST_PATH.as_posix(),
+        "size": adapter.RAW_SNAPSHOT_MANIFEST_SIZE,
+        "sha256": adapter.RAW_SNAPSHOT_MANIFEST_SHA256,
+        "compressed_path": adapter.COMPRESSED_SNAPSHOT_PATH.as_posix(),
+        "compressed_sha256": adapter.COMPRESSED_SNAPSHOT_SHA256,
+        "materialization": "exact decompression of frozen transport",
+    }
+
+
 def _worktree_rows() -> list[str]:
     return _git("status", "--porcelain=v1").splitlines()
 
@@ -229,7 +244,9 @@ def require_freeze_worktree() -> None:
 
 
 def require_runtime_worktree() -> None:
-    allowed = tuple(path.as_posix() for path in _output_paths())
+    allowed = tuple(path.as_posix() for path in _output_paths()) + (
+        _materialized_input_spec()["path"],
+    )
     unexpected = [
         row
         for row in _worktree_rows()
@@ -303,6 +320,7 @@ def freeze_package(source_commit: str) -> dict[str, Any]:
         "seed_count": SEED_COUNT,
         "suffix_row_count": 16,
         "scientific_changes": [],
+        "runtime_materialized_input": _materialized_input_spec(),
         "bypassed_obsolete_checks": [
             "recorded-child completed-exposure raw comparison",
             "historical run_science completed-exposure raw comparison",
@@ -350,9 +368,31 @@ def verify_package_freeze() -> tuple[dict[str, Any], dict[str, Any]]:
         or package.get("portable_cohort_digest")
         != EXPECTED_PORTABLE_COHORT_DIGEST
         or package.get("exact_child_command") != _service_child_command()
+        or package.get("runtime_materialized_input")
+        != _materialized_input_spec()
     ):
         raise PortableOutcomeSuccessorError("frozen execution identity changed")
     return source, package
+
+
+def verify_materialized_snapshot_manifest() -> dict[str, Any]:
+    spec = _materialized_input_spec()
+    raw = ROOT / spec["path"]
+    compressed = ROOT / spec["compressed_path"]
+    if (
+        not raw.is_file()
+        or raw.stat().st_size != spec["size"]
+        or sha256_file(raw) != spec["sha256"]
+        or not compressed.is_file()
+        or sha256_file(compressed) != spec["compressed_sha256"]
+    ):
+        raise PortableOutcomeSuccessorError(
+            "materialized frozen snapshot manifest changed or absent"
+        )
+    value = copy.deepcopy(spec)
+    value["verified"] = True
+    value["verification_digest"] = digest(value)
+    return value
 
 
 def _portable_launcher_package() -> tuple[dict[str, Any], dict[str, Any]]:
@@ -481,6 +521,7 @@ def _portable_readiness_context() -> tuple[dict[str, Any], dict[str, Any]]:
 
 
 def _build_portable_runtime() -> tuple[dict[str, Any], dict[str, Any]]:
+    snapshot_proof = verify_materialized_snapshot_manifest()
     dependencies = historical.production_runtime_dependencies()
     proof: dict[str, Any] = {}
 
@@ -504,6 +545,7 @@ def _build_portable_runtime() -> tuple[dict[str, Any], dict[str, Any]]:
         raise PortableOutcomeSuccessorError(
             "portable launcher proof was not consumed"
         )
+    proof["materialized_snapshot_manifest"] = snapshot_proof
     return runtime, proof
 
 

@@ -202,11 +202,47 @@ def test_runtime_worktree_allows_only_declared_output_paths(
         successor, "_worktree_rows", lambda: [f"?? {allowed.as_posix()}"]
     )
     successor.require_runtime_worktree()
+    materialized = successor._materialized_input_spec()["path"]
+    monkeypatch.setattr(
+        successor, "_worktree_rows", lambda: [f"?? {materialized}"]
+    )
+    successor.require_runtime_worktree()
     monkeypatch.setattr(
         successor, "_worktree_rows", lambda: ["?? unrelated.txt"]
     )
     with pytest.raises(successor.PortableOutcomeSuccessorError):
         successor.require_runtime_worktree()
+
+
+def test_materialized_snapshot_requires_exact_frozen_bytes(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    adapter = successor.historical.stopped_adapter
+    raw = b"exact raw snapshot"
+    compressed = b"exact frozen transport"
+    monkeypatch.setattr(successor, "ROOT", tmp_path)
+    monkeypatch.setattr(adapter, "RAW_SNAPSHOT_MANIFEST_PATH", Path("raw.json"))
+    monkeypatch.setattr(adapter, "COMPRESSED_SNAPSHOT_PATH", Path("raw.json.gz"))
+    monkeypatch.setattr(adapter, "RAW_SNAPSHOT_MANIFEST_SIZE", len(raw))
+    monkeypatch.setattr(
+        adapter,
+        "RAW_SNAPSHOT_MANIFEST_SHA256",
+        successor.hashlib.sha256(raw).hexdigest(),
+    )
+    monkeypatch.setattr(
+        adapter,
+        "COMPRESSED_SNAPSHOT_SHA256",
+        successor.hashlib.sha256(compressed).hexdigest(),
+    )
+    (tmp_path / "raw.json").write_bytes(raw)
+    (tmp_path / "raw.json.gz").write_bytes(compressed)
+    assert successor.verify_materialized_snapshot_manifest()["verified"] is True
+    (tmp_path / "raw.json").write_bytes(b"changed raw snapshot")
+    with pytest.raises(
+        successor.PortableOutcomeSuccessorError,
+        match="changed or absent",
+    ):
+        successor.verify_materialized_snapshot_manifest()
 
 
 def test_service_context_fails_without_user_service(

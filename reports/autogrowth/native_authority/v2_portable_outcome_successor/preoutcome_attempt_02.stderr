@@ -1,0 +1,37 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py", line 1070, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py", line 1064, in main
+    value = run_science()
+            ^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py", line 1021, in run_science
+    completed, handoff = build_portable_completed()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py", line 873, in build_portable_completed
+    runtime, launcher_path_proof = _build_portable_runtime()
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py", line 502, in _build_portable_runtime
+    runtime = historical.build_real_exposure_runtime(portable_dependencies)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_process_readiness_repair.py", line 507, in build_real_exposure_runtime
+    context = dict(deps.build_context())
+                   ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py", line 488, in build_context
+    context, observed = _portable_readiness_context()
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py", line 468, in _portable_readiness_context
+    value = dict(private_context())
+                 ^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_execution_adapter_freeze.py", line 559, in build_readiness_context
+    fixed = verify_frozen_inputs()
+            ^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_execution_adapter_freeze.py", line 393, in verify_frozen_inputs
+    "raw_snapshot_size": raw_path.stat().st_size,
+                         ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 842, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/reports/autogrowth/native_authority/v2_fresh_discriminator_review_repair_v2/arm_snapshot_package/arm_snapshot_manifest.json'

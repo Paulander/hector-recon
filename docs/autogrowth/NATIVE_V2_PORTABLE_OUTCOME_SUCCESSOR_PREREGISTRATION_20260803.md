@@ -54,6 +54,14 @@ and the child bytes to remain exact. The old verifier remains unchanged and
 the portable context is supplied through a private function namespace; no
 module global may be replaced.
 
+The second service attempt also stopped before its start marker and with zero
+outcome access: the alternate worktree contained the exact compressed cohort
+transport but had not materialized its 1,129,782,531-byte raw manifest. The
+same-package final attempt may use that exact decompressed runtime input only
+when its size and SHA-256, and the compressed source SHA-256, match the older
+frozen adapter constants. This is transport materialization, not restoration,
+selection, or exposure replay.
+
 ## Required report
 
 Report mechanism-engagement gates; graph-produced certification and clearing;

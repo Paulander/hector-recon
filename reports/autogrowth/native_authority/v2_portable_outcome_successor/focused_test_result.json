@@ -1,9 +1,9 @@
 {
   "package_id": "native_v2_portable_outcome_successor.v1",
   "result": "passed",
-  "passed": 24,
+  "passed": 25,
   "failed": 0,
-  "elapsed_seconds": 320.47,
+  "elapsed_seconds": 315.94,
   "scope": [
     "portable handoff, exact path-only normalization, and private-provider authority",
     "V2 real outcome transaction ordering",

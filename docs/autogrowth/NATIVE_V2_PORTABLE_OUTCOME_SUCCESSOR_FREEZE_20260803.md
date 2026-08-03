@@ -32,7 +32,7 @@ Frozen identities:
 - protected 195-file digest:
   `9082cf52f505d924590458c4dd2a7f365bbdec3494cdbbc3d974726e97cb4239`.
 
-The final exact focused suite passed 24/24 in 320.47 seconds. It covers the
+The final exact focused suite passed 25/25 in 315.94 seconds. It covers the
 portable handoff, exact path-only normalization, private-provider authority
 without module-global replacement, the real V2 transaction ordering,
 committed-seed restart, ordered row/final-graph reconstruction, and semantic
@@ -45,10 +45,19 @@ absolute checkout path. That exact failure is preserved. The final handoff
 normalizes only `child_source_path`; the child bytes and every other frozen
 launcher field remain exact, and the old launcher module is unchanged.
 
+The second service attempt then stopped at the next pre-outcome boundary
+because the alternate worktree had the exact 63 MiB compressed cohort
+transport but not its raw manifest. It also accessed zero outcomes. The final
+runtime permits only the one exact materialized input path and requires raw
+size 1,129,782,531, raw SHA-256
+`ccb91d226c61b3354cb1c89cc939123c01a24723a0868ac5da36bf9b14a0b2e4`,
+and compressed SHA-256
+`92b8e7aa1b437281e346ddc57b1f4cb5c139ef68190c57f1699e6acd86f8d43f`.
+
 Outcome attempt
-`portable-outcome-02-19dbfa8e53bf4531bcb7d002cb4ef2f7` may run only as user
+`portable-outcome-03-19dbfa8e53bf4531bcb7d002cb4ef2f7` may run only as user
 service
-`hector-recon-v2-outcome-02-19dbfa8e53bf4531bcb7d002cb4ef2f7.service` through
+`hector-recon-v2-outcome-03-19dbfa8e53bf4531bcb7d002cb4ef2f7.service` through
 the exact four-item child command in the package manifest. A complete run is
 32 seeds x 16 rows x 3 arms = 1,536 truthful outcome events. Before this run,
 outcome access is zero and no science-start marker, journal, carrier, result,
