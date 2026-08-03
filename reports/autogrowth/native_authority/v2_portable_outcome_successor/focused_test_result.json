@@ -1,0 +1,19 @@
+{
+  "package_id": "native_v2_portable_outcome_successor.v1",
+  "result": "passed",
+  "passed": 22,
+  "failed": 0,
+  "elapsed_seconds": 312.78,
+  "scope": [
+    "portable handoff and private-provider authority",
+    "V2 real outcome transaction ordering",
+    "committed-seed journal restart",
+    "ordered result and final-graph reconstruction",
+    "semantic partial-outcome accounting"
+  ],
+  "full_repository_suite_run": false,
+  "outcome_access": {
+    "count": 0,
+    "event_ids": []
+  }
+}
