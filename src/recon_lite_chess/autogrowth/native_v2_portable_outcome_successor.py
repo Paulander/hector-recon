@@ -41,10 +41,10 @@ MODULE_PATH = (
     "recon_lite_chess.autogrowth.native_v2_portable_outcome_successor"
 )
 OUTCOME_ATTEMPT_ID = (
-    "portable-outcome-19dbfa8e53bf4531bcb7d002cb4ef2f7"
+    "portable-outcome-02-19dbfa8e53bf4531bcb7d002cb4ef2f7"
 )
 SERVICE_UNIT = (
-    "hector-recon-v2-outcome-19dbfa8e53bf4531bcb7d002cb4ef2f7.service"
+    "hector-recon-v2-outcome-02-19dbfa8e53bf4531bcb7d002cb4ef2f7.service"
 )
 PACKAGE_DIR = Path(
     "reports/autogrowth/native_authority/v2_portable_outcome_successor"
@@ -353,6 +353,158 @@ def verify_package_freeze() -> tuple[dict[str, Any], dict[str, Any]]:
     ):
         raise PortableOutcomeSuccessorError("frozen execution identity changed")
     return source, package
+
+
+def _portable_launcher_package() -> tuple[dict[str, Any], dict[str, Any]]:
+    """Verify the old launcher while normalizing only its checkout path.
+
+    The launcher artifact embedded the absolute path of its child module even
+    though the same child bytes and every other frozen input are portable.
+    The three-process admission already established the complete organism and
+    unit semantics.  This verifier retains every old launcher check and permits
+    exactly that one absolute-path representation difference.
+    """
+
+    launcher = historical.stopped_adapter.launcher
+    source = launcher._load_json(ROOT / launcher.SOURCE_MANIFEST_PATH)
+    source_digest = launcher._verify_self_digest(
+        source, "source_manifest_digest", label="launcher source manifest"
+    )
+    for relative, expected in source["source_hashes"].items():
+        observed = launcher.sha256_file(ROOT / relative)
+        if observed != expected:
+            raise PortableOutcomeSuccessorError(
+                f"launcher source changed:{relative}:{observed}"
+            )
+    launcher._verify_commit(str(source["source_freeze_commit"]))
+    binding = launcher._load_json(ROOT / launcher.ARTIFACT_BINDING_PATH)
+    binding_digest = launcher._verify_self_digest(
+        binding, "artifact_binding_digest", label="launcher artifact binding"
+    )
+    if (
+        binding["source_manifest"]["sha256"]
+        != launcher.sha256_file(ROOT / launcher.SOURCE_MANIFEST_PATH)
+        or binding["source_manifest"]["digest"] != source_digest
+        or binding["launcher_contract"]["child_module"]
+        != launcher.CHILD_MODULE
+    ):
+        raise PortableOutcomeSuccessorError(
+            "launcher source/artifact binding changed"
+        )
+
+    observed_fixed = launcher.verify_frozen_inputs()
+    expected_fixed = binding["frozen_inputs"]
+    current_child = str(launcher.frozen_child_source_path())
+    if observed_fixed.get("child_source_path") != current_child:
+        raise PortableOutcomeSuccessorError(
+            "launcher child source resolution changed"
+        )
+    normalized = copy.deepcopy(observed_fixed)
+    normalized["child_source_path"] = expected_fixed.get(
+        "child_source_path"
+    )
+    if canonical_bytes(normalized) != canonical_bytes(expected_fixed):
+        raise PortableOutcomeSuccessorError(
+            "launcher frozen input changed beyond checkout path"
+        )
+    proof = {
+        "normalized_field": "child_source_path",
+        "recorded_value": expected_fixed["child_source_path"],
+        "runtime_value": observed_fixed["child_source_path"],
+        "child_source_sha256": observed_fixed["child_source_sha256"],
+        "all_other_fields_exact": True,
+    }
+    proof["proof_digest"] = digest(proof)
+    package = {
+        "source_manifest_sha256": launcher.sha256_file(
+            ROOT / launcher.SOURCE_MANIFEST_PATH
+        ),
+        "source_manifest_digest": source_digest,
+        "artifact_binding_sha256": launcher.sha256_file(
+            ROOT / launcher.ARTIFACT_BINDING_PATH
+        ),
+        "artifact_binding_digest": binding_digest,
+        "artifact_binding": binding,
+    }
+    return package, proof
+
+
+def _portable_readiness_context() -> tuple[dict[str, Any], dict[str, Any]]:
+    """Run the existing context builder with one private path-normalized input."""
+
+    adapter = historical.stopped_adapter
+    launcher_package, proof = _portable_launcher_package()
+    original_launcher = adapter.verify_frozen_inputs.__globals__.get("launcher")
+    verify_globals: MutableMapping[str, Any] = dict(
+        adapter.verify_frozen_inputs.__globals__
+    )
+    verify_globals["launcher"] = types.SimpleNamespace(
+        verify_package_manifests=lambda: launcher_package
+    )
+    private_verify = types.FunctionType(
+        adapter.verify_frozen_inputs.__code__,
+        verify_globals,
+        name=adapter.verify_frozen_inputs.__name__,
+        argdefs=adapter.verify_frozen_inputs.__defaults__,
+        closure=adapter.verify_frozen_inputs.__closure__,
+    )
+    private_verify.__kwdefaults__ = adapter.verify_frozen_inputs.__kwdefaults__
+
+    original_provider = adapter.build_readiness_context.__globals__.get(
+        "verify_frozen_inputs"
+    )
+    context_globals: MutableMapping[str, Any] = dict(
+        adapter.build_readiness_context.__globals__
+    )
+    context_globals["verify_frozen_inputs"] = private_verify
+    private_context = types.FunctionType(
+        adapter.build_readiness_context.__code__,
+        context_globals,
+        name=adapter.build_readiness_context.__name__,
+        argdefs=adapter.build_readiness_context.__defaults__,
+        closure=adapter.build_readiness_context.__closure__,
+    )
+    private_context.__kwdefaults__ = adapter.build_readiness_context.__kwdefaults__
+    value = dict(private_context())
+    if (
+        adapter.verify_frozen_inputs.__globals__.get("launcher")
+        is not original_launcher
+        or adapter.build_readiness_context.__globals__.get(
+            "verify_frozen_inputs"
+        )
+        is not original_provider
+    ):
+        raise PortableOutcomeSuccessorError(
+            "historical readiness module globals changed"
+        )
+    return value, proof
+
+
+def _build_portable_runtime() -> tuple[dict[str, Any], dict[str, Any]]:
+    dependencies = historical.production_runtime_dependencies()
+    proof: dict[str, Any] = {}
+
+    def build_context() -> Mapping[str, Any]:
+        context, observed = _portable_readiness_context()
+        proof.update(observed)
+        return context
+
+    portable_dependencies = historical.RuntimeDependencies(
+        verify_inputs=dependencies.verify_inputs,
+        load_previous_readiness=dependencies.load_previous_readiness,
+        build_context=build_context,
+        verify_outer_manifest=dependencies.verify_outer_manifest,
+        load_ecology=dependencies.load_ecology,
+        load_receipt=dependencies.load_receipt,
+        expanded_package_map=dependencies.expanded_package_map,
+        registry_type=dependencies.registry_type,
+    )
+    runtime = historical.build_real_exposure_runtime(portable_dependencies)
+    if not proof.get("all_other_fields_exact"):
+        raise PortableOutcomeSuccessorError(
+            "portable launcher proof was not consumed"
+        )
+    return runtime, proof
 
 
 def verify_service_context() -> dict[str, Any]:
@@ -718,7 +870,7 @@ def build_portable_completed() -> tuple[dict[str, Any], dict[str, Any]]:
                 "outcome state changed before science"
             )
     historical_state = portable.validate_historical_journal()
-    runtime = historical.build_real_exposure_runtime()
+    runtime, launcher_path_proof = _build_portable_runtime()
     classification = load_json(ROOT / portable.CLASSIFICATION_MANIFEST_PATH)
     mapping = _verify_live_mapping(
         runtime=runtime,
@@ -737,6 +889,7 @@ def build_portable_completed() -> tuple[dict[str, Any], dict[str, Any]]:
         "portable_aggregate_digest": aggregate["aggregate_digest"],
         "portable_cohort_digest": aggregate["portable_cohort_digest"],
         "historical_science_code_digest": science_code_digest(),
+        "launcher_path_proof": launcher_path_proof,
     })
     audit["handoff_digest"] = digest(
         {key: item for key, item in audit.items() if key != "handoff_digest"}

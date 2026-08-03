@@ -46,6 +46,14 @@ and final graph state.
 - No replacement seed, rediscovery, exposure replay, threshold change, or
   post-result tuning is permitted.
 
+Pre-outcome amendment: the first service attempt stopped before its start
+marker because an older launcher binding included the absolute checkout path
+of an otherwise byte-identical child module. The successor may normalize only
+that recorded `child_source_path` while requiring every other launcher field
+and the child bytes to remain exact. The old verifier remains unchanged and
+the portable context is supplied through a private function namespace; no
+module global may be replaced.
+
 ## Required report
 
 Report mechanism-engagement gates; graph-produced certification and clearing;

@@ -40,6 +40,36 @@ def test_historical_science_code_object_is_reused() -> None:
     assert "historical.run_science()" not in source
 
 
+def test_launcher_freeze_differs_only_by_absolute_child_path() -> None:
+    package, proof = successor._portable_launcher_package()
+    assert package["artifact_binding"]["frozen_inputs"][
+        "child_source_path"
+    ] == proof["recorded_value"]
+    assert proof["runtime_value"] != proof["recorded_value"]
+    assert proof["all_other_fields_exact"] is True
+
+
+def test_launcher_portable_check_rejects_non_path_change(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    launcher = successor.historical.stopped_adapter.launcher
+    observed = launcher.verify_frozen_inputs()
+    observed["target_counts"] = {"planted": 31, "selected_comparison": 30}
+    monkeypatch.setattr(launcher, "verify_frozen_inputs", lambda: observed)
+    with pytest.raises(
+        successor.PortableOutcomeSuccessorError,
+        match="changed beyond checkout path",
+    ):
+        successor._portable_launcher_package()
+
+
+def test_readiness_path_provider_is_private() -> None:
+    source = inspect.getsource(successor._portable_readiness_context)
+    assert source.count("types.FunctionType") == 2
+    assert "adapter.verify_frozen_inputs.__globals__" in source
+    assert "adapter.build_readiness_context.__globals__" in source
+
+
 def test_portable_reference_requires_three_exact_rows(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
