@@ -1,0 +1,9 @@
+{
+  "behavioral_boundary": "ValueError: R1 orbit key requires white king, white rook, and black king",
+  "development_only": true,
+  "fresh_data_touched": false,
+  "passed": false,
+  "schema_version": "native_v2_r0_handover_development.v2",
+  "stage": "exception_stop_no_rerun",
+  "traceback": "Traceback (most recent call last):\n  File \"/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_r0_handover_development.py\", line 998, in main\n    result = run(DevelopmentConfig(output=args.output))\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_r0_handover_development.py\", line 882, in run\n    disjointness = _disjointness(\n                   ^^^^^^^^^^^^^^\n  File \"/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_v2_r0_handover_development.py\", line 527, in _disjointness\n    handover_orbits = {_r1_orbit_key(fen) for fen in handover}\n                       ^^^^^^^^^^^^^^^^^^\n  File \"/mnt/c/Users/oskar/Documents/Webpages playground/hector-recon-schema-reclosure-result/src/recon_lite_chess/autogrowth/native_intrinsic_curriculum.py\", line 1097, in _r1_orbit_key\n    raise ValueError(\"R1 orbit key requires white king, white rook, and black king\")\nValueError: R1 orbit key requires white king, white rook, and black king\n"
+}

@@ -24,7 +24,6 @@ from .native_child_availability import (
     observe_query_completion,
 )
 from .native_competence_envelope import AvailabilityState
-from .native_intrinsic_curriculum import _r1_orbit_key
 from .native_prospective_evidence_authority_v2 import (
     NativeProspectiveAuthorityV2,
     V2Mode,
@@ -498,6 +497,44 @@ def _canonical_position(fen: str) -> str:
     return " ".join(chess.Board(fen).fen().split()[:4])
 
 
+def _symmetry_orbit_key(fen: str) -> str:
+    """Canonical D4 key for any board inventory, including captured rooks."""
+
+    board = chess.Board(fen)
+
+    def transform(square: int, variant: int) -> int:
+        file_index = chess.square_file(square)
+        rank_index = chess.square_rank(square)
+        coordinates = (
+            (file_index, rank_index),
+            (7 - file_index, rank_index),
+            (file_index, 7 - rank_index),
+            (7 - file_index, 7 - rank_index),
+            (rank_index, file_index),
+            (7 - rank_index, file_index),
+            (rank_index, 7 - file_index),
+            (7 - rank_index, 7 - file_index),
+        )
+        return chess.square(*coordinates[variant])
+
+    variants = []
+    for variant in range(8):
+        pieces = tuple(sorted(
+            (piece.symbol(), transform(square, variant))
+            for square, piece in board.piece_map().items()
+        ))
+        castling = tuple(sorted(
+            transform(square, variant)
+            for square in chess.SquareSet(board.castling_rights)
+        ))
+        ep_square = (
+            -1 if board.ep_square is None
+            else transform(board.ep_square, variant)
+        )
+        variants.append((pieces, int(board.turn), castling, ep_square))
+    return _sha_json(min(variants))
+
+
 def _handover_boards(parent_fen: str) -> tuple[str, ...]:
     parent = chess.Board(parent_fen)
     rows = [parent.fen()]
@@ -523,8 +560,8 @@ def _disjointness(
     handover = _handover_boards(parent_fen)
     evidence_positions = {_canonical_position(fen) for fen in evidence}
     handover_positions = {_canonical_position(fen) for fen in handover}
-    evidence_orbits = {_r1_orbit_key(fen) for fen in evidence}
-    handover_orbits = {_r1_orbit_key(fen) for fen in handover}
+    evidence_orbits = {_symmetry_orbit_key(fen) for fen in evidence}
+    handover_orbits = {_symmetry_orbit_key(fen) for fen in handover}
     exact_overlap = sorted(evidence_positions & handover_positions)
     orbit_overlap = sorted(evidence_orbits & handover_orbits)
     return {

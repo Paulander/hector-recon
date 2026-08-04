@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import chess
+
 from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import (
     VIRTUAL_AVAILABLE_VALUE,
     VIRTUAL_RESPONSE_UNCERTAINTY,
@@ -12,6 +14,7 @@ from recon_lite_chess.autogrowth.native_v2_r0_handover_development import (
     _fixed_source_item,
     _load_regression,
     _metrics,
+    _symmetry_orbit_key,
 )
 
 
@@ -118,3 +121,11 @@ def test_selectivity_metrics_keep_unknown_as_abstention() -> None:
     }
     assert metrics["abstentions"] == 2
     assert metrics["available_count"] == 2
+
+
+def test_symmetry_orbit_key_handles_rook_loss_without_false_krk_alias() -> None:
+    rook_loss = "8/k7/8/8/8/8/8/3K4 w - - 0 1"
+    mirrored = chess.Board(rook_loss).transform(chess.flip_horizontal).fen()
+    with_rook = "8/k7/8/8/8/8/7R/3K4 w - - 0 1"
+    assert _symmetry_orbit_key(rook_loss) == _symmetry_orbit_key(mirrored)
+    assert _symmetry_orbit_key(rook_loss) != _symmetry_orbit_key(with_rook)
