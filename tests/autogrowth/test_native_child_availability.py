@@ -123,12 +123,76 @@ def test_fail_closed_option_and_separate_graph_exploration() -> None:
     assert failed.exploit_actuator_multiplicity == 0
     assert failed.selection_mode == "explore"
     assert failed.exploration_actuation is not None
+    assert failed.exploration_actuation.activation == 1.0
     assert failed.host_fallback_count == 0
     disconnected = genome.decide_from_available_slots(
         board, slots, frames, disconnected=True
     )
     assert disconnected.exploit_actuation is None
     assert disconnected.selection_mode == "explore"
+
+
+def test_fail_closed_rejects_zero_strength_and_zero_reply_noncompletion() -> None:
+    board = chess.Board(R1_ROW)
+    slots, frames = _synthetic_slots(board, "d8c8")
+    zero_strength = {}
+    for action, queries in slots.items():
+        zero_strength[action] = tuple(
+            ChildQuery(
+                response=ChildResponse(
+                    child_id=query.response.child_id,
+                    confirmed=query.response.available,
+                    policy_response=True,
+                    available=query.response.available,
+                    expected_value=0.0,
+                    uncertainty=1.0,
+                    grounded=True,
+                    grounding_source="observed_outcomes",
+                ),
+                actuation=query.actuation,
+                frame_id=query.frame_id,
+                persistent_mutation_count=0,
+                effect_attempts=(),
+            )
+            for query in queries
+        )
+    decision = FailClosedNativeHandoverGenome().decide_from_available_slots(
+        board, zero_strength, frames
+    )
+    assert decision.selection_mode == "explore"
+    assert decision.exploit_actuation is None
+    assert decision.exploit_actuator_multiplicity == 0
+    assert decision.causal_graph_audit["root_state"] == "FAILED"
+    assert decision.causal_graph_audit["emitted_actuator_identity"] is None
+    empty_slots = {move.uci(): () for move in board.legal_moves}
+    zero_reply = FailClosedNativeHandoverGenome().decide_from_available_slots(
+        board, empty_slots, {}
+    )
+    assert zero_reply.selection_mode == "explore"
+    assert zero_reply.exploit_actuator_multiplicity == 0
+    assert zero_reply.causal_graph_audit["root_state"] == "FAILED"
+    stalemate_parent = chess.Board("7k/5K2/6Q1/8/8/8/8/8 b - - 0 1")
+    assert stalemate_parent.is_stalemate()
+    with pytest.raises(RuntimeError, match="cannot decide without legal actions"):
+        FailClosedNativeHandoverGenome().decide_from_available_slots(
+            stalemate_parent, {}, {}
+        )
+
+
+def test_immediate_mate_uses_separate_completion_route() -> None:
+    board = chess.Board(MATE_ONE)
+    slots = {move.uci(): () for move in board.legal_moves}
+    decision = FailClosedNativeHandoverGenome().decide_from_available_slots(
+        board, slots, {}
+    )
+    assert decision.selection_mode == "exploit"
+    assert _after(
+        board, chess.Move.from_uci(decision.actuation.move_uci)
+    ).is_checkmate()
+    audit = decision.causal_graph_audit
+    assert audit is not None
+    selected = audit["options"][audit["selected_option_id"]]
+    assert selected["route"] == "immediate_completion"
 
 
 def test_real_child_action_confirms_declared_completion_only_after_execution() -> None:

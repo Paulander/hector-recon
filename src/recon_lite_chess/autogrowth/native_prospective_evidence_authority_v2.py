@@ -12,10 +12,13 @@ from typing import Any, Mapping, Sequence
 
 import chess
 
-from recon_lite import FormalReConEngine, FrameContext, FrameKind, Graph, Node, NodeState, NodeType
+from recon_lite import (
+    ChildResponse, FormalReConEngine, FrameContext, FrameKind, Graph, Node,
+    NodeState, NodeType,
+)
 from recon_lite_hector.nodes import StemCellState
 
-from .native_authority_handover import GraphActuation, GraphSignalTrace
+from .native_authority_handover import ChildQuery, GraphActuation, GraphSignalTrace
 from .native_competence_envelope import (
     AvailabilityState, CompetenceContextCell, EnvelopeClassification,
     NominationEscrow, wilson_lower_bound,
@@ -41,6 +44,8 @@ NOMINATION_READ_CATEGORIES = (
 WILSON_Z = 1.6448536269514722
 MIN_SUPPORT = 4
 LOWER_BOUND = 0.55
+VIRTUAL_AVAILABLE_VALUE = 1.0
+VIRTUAL_RESPONSE_UNCERTAINTY = 0.0
 
 
 def _json(value: Any) -> bytes:
@@ -2607,8 +2612,85 @@ class NativeProspectiveAuthorityV2:
                 "virtual capability requires VIRTUAL frame"
             )
         session = self.base.dream_session()
-        result = session.request(frame)
+        raw = session.request(frame)
         session.close()
+        trace = raw.graph_signal_trace
+        if raw.actuation is not None and trace is None:
+            raise ProspectiveV2IntegrityError(
+                "VIRTUAL R0 actuation lacks its exact graph trace"
+            )
+        if trace is None:
+            graph = {role: () for role in AUTHORITY_ROLES}
+            classification = EnvelopeClassification(
+                AvailabilityState.UNKNOWN, 0.5, 1.0, (), (),
+                False, False, False,
+            )
+        else:
+            graph = self._graph_measure(trace)
+            classification = self._classification_from_emissions(
+                self.states, graph
+            )
+        available = (
+            raw.actuation is not None
+            and classification.state is AvailabilityState.AVAILABLE
+        )
+        matched_certified = tuple(
+            cell_id for cell_id in graph["commitment"]
+            if self.states[cell_id].prospectively_certified
+        )
+        provenance = {
+            cell_id: {
+                "hypothesis_digest": (
+                    self.states[cell_id].hypothesis.hypothesis_digest
+                ),
+                "polarity": self.states[cell_id].hypothesis.polarity.value,
+                "prospectively_certified": True,
+                "certification_receipt_ids": list(
+                    self.states[cell_id].certification_receipt_ids
+                ),
+                "certification_receipt_digest": _sha(list(
+                    self.states[cell_id].certification_receipt_ids
+                )),
+                "support": self.states[cell_id].support,
+                "contradictions": self.states[cell_id].contradictions,
+                "success_lower_bound": (
+                    self.states[cell_id].success_lower_bound
+                ),
+            }
+            for cell_id in matched_certified
+        }
+        response = ChildResponse(
+            child_id=self.base.r0.provenance.child_id,
+            confirmed=available,
+            policy_response=raw.actuation is not None,
+            available=available,
+            expected_value=VIRTUAL_AVAILABLE_VALUE if available else 0.0,
+            uncertainty=VIRTUAL_RESPONSE_UNCERTAINTY,
+            grounded=self.base.r0.provenance.grounded,
+            grounding_source=self.base.r0.provenance.grounding_source,
+        )
+        result = ChildQuery(
+            response=response,
+            actuation=raw.actuation,
+            frame_id=raw.frame_id,
+            persistent_mutation_count=raw.persistent_mutation_count,
+            effect_attempts=raw.effect_attempts,
+            active_competence_signal_ids=(
+                () if trace is None else trace.ordered_signal_identities
+            ),
+            availability_provenance={
+                "authority": "NativeProspectiveAuthorityV2_graph_emission",
+                "classification": classification.to_manifest(),
+                "matching_certified_cell_ids": list(matched_certified),
+                "available_cell_ids": list(graph["available"]),
+                "refuted_cell_ids": list(graph["refuted"]),
+                "certification_provenance": provenance,
+                "response_value": VIRTUAL_AVAILABLE_VALUE if available else 0.0,
+                "response_uncertainty": VIRTUAL_RESPONSE_UNCERTAINTY,
+                "certification_evidence_added": 0,
+            },
+            graph_signal_trace=trace,
+        )
         if self.continuation_digest() != before:
             raise ProspectiveV2IntegrityError(
                 "VIRTUAL evaluation mutated state"
@@ -2616,6 +2698,8 @@ class NativeProspectiveAuthorityV2:
         return {
             "query": result,
             "certification_commitment": None,
+            "classification": classification,
+            "graph_emissions": graph,
         }
 
     def continuation_manifest(self) -> dict[str, Any]:

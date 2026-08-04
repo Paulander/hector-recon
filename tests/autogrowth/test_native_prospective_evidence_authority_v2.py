@@ -304,6 +304,45 @@ def test_exact_historical_organism_compatibility_read_only():
     assert restored.continuation_manifest() == wrapper.continuation_manifest()
 
 
+def test_open_virtual_uses_only_prospective_certification(native_fixture):
+    organism = NativeProspectiveAuthorityV2.from_organism(
+        native_fixture["source"], mode=V2Mode.PROSPECTIVE
+    )
+    organism.close_nomination()
+    frame = FrameContext(
+        "v2-virtual-before-certification",
+        FrameKind.VIRTUAL,
+        values={"board": chess.Board(native_fixture["positive"][0])},
+    )
+    before = organism.continuation_digest()
+    unearned = organism.open_virtual(frame)
+    assert unearned["query"].response.policy_response is True
+    assert unearned["query"].response.available is False
+    assert unearned["classification"].state is AvailabilityState.UNKNOWN
+    assert unearned["query"].availability_provenance[
+        "matching_certified_cell_ids"
+    ] == []
+    assert organism.continuation_digest() == before
+    _run_rows(organism, native_fixture["positive"][:4], "v2-certify")
+    earned_before = organism.continuation_digest()
+    earned = organism.open_virtual(FrameContext(
+        "v2-virtual-after-certification",
+        FrameKind.VIRTUAL,
+        values={"board": chess.Board(native_fixture["positive"][0])},
+    ))
+    assert earned["query"].response.available is True
+    assert earned["query"].response.expected_value == 1.0
+    assert earned["query"].response.uncertainty == 0.0
+    assert earned["classification"].state is AvailabilityState.AVAILABLE
+    assert earned["query"].availability_provenance[
+        "matching_certified_cell_ids"
+    ]
+    assert earned["query"].availability_provenance[
+        "certification_provenance"
+    ]
+    assert organism.continuation_digest() == earned_before
+
+
 def test_historical_escrow_parity_and_probation_parent_matching(native_fixture):
     source = native_fixture["source"]
     source_before = source.continuation_digest_v3()

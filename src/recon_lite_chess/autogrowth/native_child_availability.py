@@ -50,6 +50,7 @@ class CorrectedHandoverDecision:
     exploit_actuator_multiplicity: int
     actuator_multiplicity: int
     host_fallback_count: int = 0
+    causal_graph_audit: Mapping[str, Any] | None = None
 
 
 class FailClosedNativeHandoverGenome:
@@ -69,7 +70,7 @@ class FailClosedNativeHandoverGenome:
         if not legal:
             raise RuntimeError("cannot decide without legal actions")
         graph, env = _materialize_fail_closed_choice(
-            legal, slots, frames=frames, disconnected=disconnected
+            board, legal, slots, frames=frames, disconnected=disconnected
         )
         engine = FormalReConEngine(graph, record_trace=False)
         engine.request(self.ROOT_ID)
@@ -108,6 +109,10 @@ class FailClosedNativeHandoverGenome:
             exploit_root_state=graph.nodes[self.ROOT_ID].state.name,
             exploit_actuator_multiplicity=len(emitted),
             actuator_multiplicity=1,
+            causal_graph_audit=_causal_graph_audit(graph, selected_id=(
+                None if not emitted
+                else str(graph.nodes[self.ROOT_ID].meta["choice_selected_child"])
+            )),
         )
 
 
@@ -319,6 +324,7 @@ def _declared_completion_terminal(
 
 
 def _materialize_fail_closed_choice(
+    board: chess.Board,
     legal: Sequence[chess.Move],
     slots: Mapping[str, tuple[ChildQuery, ...]],
     *, frames: Mapping[tuple[str, int], FrameContext],
@@ -327,13 +333,17 @@ def _materialize_fail_closed_choice(
     graph = Graph()
     graph.add_node(Node(
         FailClosedNativeHandoverGenome.ROOT_ID, NodeType.SCRIPT,
-        meta={"confirm_policy": "choice", "role": "exploitative_handover"},
+        meta={
+            "confirm_policy": "choice",
+            "role": "exploitative_handover",
+        },
     ))
     virtual_frames: dict[str, FrameContext] = {}
     for index, move in enumerate(legal):
         move_uci = move.uci()
         option_id = f"fail_closed_option_{index}"
         actuator_id = f"fail_closed_actuator_{index}"
+        nonempty_id = f"nonempty_reply_set_{index}"
         replies_id = f"all_replies_available_{index}"
         graph.add_node(Node(option_id, NodeType.SCRIPT, meta={
             "confirm_policy": "and",
@@ -347,11 +357,17 @@ def _materialize_fail_closed_choice(
             meta={"actuator_identity": f"{ACTUATOR_PREFIX}{move_uci}"},
         ))
         graph.add_node(Node(
+            nonempty_id, NodeType.TERMINAL,
+            predicate=_nonempty_reply_set_terminal,
+            meta={"reply_count": len(slots.get(move_uci, ()))},
+        ))
+        graph.add_node(Node(
             replies_id, NodeType.SCRIPT,
             meta={"confirm_policy": "and", "generic_quantifier": "all"},
         ))
         graph.add_hierarchy_pair(FailClosedNativeHandoverGenome.ROOT_ID, option_id)
         graph.add_hierarchy_pair(option_id, actuator_id)
+        graph.add_hierarchy_pair(option_id, nonempty_id)
         graph.add_hierarchy_pair(option_id, replies_id)
         response_ids: list[str] = []
         queries = slots.get(move_uci, ())
@@ -369,7 +385,7 @@ def _materialize_fail_closed_choice(
                 response_key = f"available_value_{index}_{reply_index}"
                 graph.add_node(Node(
                     response_id, NodeType.TERMINAL,
-                    predicate=child_response_terminal,
+                    predicate=_positive_child_response_terminal,
                     meta={"response_key": response_key, "terminal_kind": "AVAILABLE"},
                 ))
                 graph.add_hierarchy_pair(replies_id, response_id)
@@ -382,13 +398,81 @@ def _materialize_fail_closed_choice(
                     hypothetical_action=move_uci,
                 )
         graph.nodes[option_id].meta["choice_strength_node_ids"] = response_ids
+        immediate_option_id = f"immediate_completion_option_{index}"
+        immediate_terminal_id = f"immediate_completion_{index}"
+        graph.add_node(Node(immediate_option_id, NodeType.SCRIPT, meta={
+            "confirm_policy": "and",
+            "anonymous_option_identity": f"immediate_completion_leg_{index}",
+            "actuator_identity": f"{ACTUATOR_PREFIX}{move_uci}",
+            "choice_strength_node_ids": [immediate_terminal_id],
+            "choice_strength_require_all": True,
+            "choice_strength_aggregation": "minimum",
+            "route": "immediate_completion",
+        }))
+        graph.add_node(Node(
+            immediate_terminal_id, NodeType.TERMINAL,
+            predicate=_immediate_completion_terminal,
+            meta={"move_uci": move_uci},
+        ))
+        graph.add_hierarchy_pair(
+            FailClosedNativeHandoverGenome.ROOT_ID, immediate_option_id
+        )
+        graph.add_hierarchy_pair(immediate_option_id, immediate_terminal_id)
     env = {
         "legal_actuator_identities": {
             f"{ACTUATOR_PREFIX}{move.uci()}" for move in legal
         },
         "virtual_frames": virtual_frames,
+        "parent_board": board.copy(stack=False),
     }
     return graph, env
+
+
+def _causal_graph_audit(
+    graph: Graph, *, selected_id: str | None
+) -> dict[str, Any]:
+    root_id = FailClosedNativeHandoverGenome.ROOT_ID
+    options = {}
+    for option_id in graph.children(root_id):
+        option = graph.nodes[option_id]
+        children = {
+            child_id: {
+                "state": graph.nodes[child_id].state.name,
+                "activation": float(graph.nodes[child_id].activation.value),
+                "terminal_kind": graph.nodes[child_id].meta.get("terminal_kind"),
+                "children": {
+                    grandchild_id: {
+                        "state": graph.nodes[grandchild_id].state.name,
+                        "activation": float(
+                            graph.nodes[grandchild_id].activation.value
+                        ),
+                        "terminal_kind": graph.nodes[
+                            grandchild_id
+                        ].meta.get("terminal_kind"),
+                    }
+                    for grandchild_id in graph.children(child_id)
+                },
+            }
+            for child_id in graph.children(option_id)
+        }
+        options[option_id] = {
+            "selected": option_id == selected_id,
+            "state": option.state.name,
+            "activation": float(option.activation.value),
+            "actuator_identity": option.meta.get("actuator_identity"),
+            "route": option.meta.get("route", "all_replies_available"),
+            "children": children,
+        }
+    return {
+        "root_id": root_id,
+        "root_state": graph.nodes[root_id].state.name,
+        "root_activation": float(graph.nodes[root_id].activation.value),
+        "selected_option_id": selected_id,
+        "emitted_actuator_identity": graph.nodes[root_id].meta.get(
+            "emitted_actuator_identity"
+        ),
+        "options": options,
+    }
 
 
 def _emit_graph_exploration(legal: Sequence[chess.Move]) -> GraphActuation:
@@ -396,7 +480,7 @@ def _emit_graph_exploration(legal: Sequence[chess.Move]) -> GraphActuation:
         AnonymousChoiceOption(
             identity=f"exploration_leg_{index}",
             actuator_identity=f"{ACTUATOR_PREFIX}{move.uci()}",
-            activation=0.0, confirmed=True,
+            activation=1.0, confirmed=True,
         )
         for index, move in enumerate(legal)
     )
@@ -436,3 +520,45 @@ def _unavailable_terminal(
 ) -> tuple[bool, bool]:
     node.activation.value = 0.0
     return True, False
+
+
+def _positive_child_response_terminal(
+    node: Node, env: Mapping[str, Any]
+) -> tuple[bool, bool]:
+    done, success = child_response_terminal(node, env)
+    if not done or not success:
+        return done, success
+    response = env.get(str(node.meta["response_key"]))
+    if not isinstance(response, ChildResponse):
+        node.activation.value = 0.0
+        return True, False
+    positive = response.selection_strength > 0.0
+    if not positive:
+        node.activation.value = 0.0
+    return True, positive
+
+
+def _nonempty_reply_set_terminal(
+    node: Node, _env: Mapping[str, Any]
+) -> tuple[bool, bool]:
+    success = int(node.meta.get("reply_count", 0)) > 0
+    node.activation.value = 1.0 if success else 0.0
+    return True, success
+
+
+def _immediate_completion_terminal(
+    node: Node, env: Mapping[str, Any]
+) -> tuple[bool, bool]:
+    parent = env.get("parent_board")
+    if not isinstance(parent, chess.Board):
+        node.activation.value = 0.0
+        return True, False
+    move = chess.Move.from_uci(str(node.meta["move_uci"]))
+    if move not in parent.legal_moves:
+        node.activation.value = 0.0
+        return True, False
+    successor = parent.copy(stack=False)
+    successor.push(move)
+    success = successor.is_checkmate()
+    node.activation.value = 1.0 if success else 0.0
+    return True, success
