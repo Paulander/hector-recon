@@ -1,0 +1,146 @@
+{
+  "base_commit": "00c1330dc096f977738bebeb041a6fab8146e572",
+  "behavioral_boundary": "validation_zero_of_16_decoy_fp",
+  "certification": {
+    "candidate_count": 0,
+    "candidate_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "contradiction_driven_clearings": 0,
+    "final_certified_cell_count": 2,
+    "genome_seed": 927199493097905893,
+    "graph_maturity_emissions": 2,
+    "graph_revocation_emissions": 0,
+    "later_distinct_real_interactions": 32,
+    "ordinal": 0,
+    "serialization": {
+      "bytes": 4074331,
+      "roundtrip_continuation_exact": true,
+      "sha256": "700d9caf627dd3efcca9e6848d91f71d6e3d9b1a17d9efceb21a45e483a92b14"
+    }
+  },
+  "development_only": true,
+  "duration_seconds": 6254.91248612199,
+  "fresh_data_touched": false,
+  "implementation_map": [
+    "fixed trace-native R0 organism and earlier REAL ledgers nominate",
+    "32 distinct viewed regression REAL interactions certify V2",
+    "V2 open_virtual emits constant-strength binary child availability",
+    "one measurement feeds connected, availability-deranged and disconnected arms",
+    "existing fail-closed all-replies graph selects one touched first action"
+  ],
+  "package_source_freeze": {
+    "clean_before_execution": true,
+    "commit": "a888b009fa5f85f9d085eb055016d70dddd5d7e7"
+  },
+  "passed": false,
+  "pre_handover": {
+    "combined_positive_tp": 25,
+    "evidence_handover_disjointness": {
+      "evidence_board_count": 128,
+      "exact_overlap": [],
+      "handover_board_count": 66,
+      "passed": false,
+      "symmetry_orbit_overlap": [
+        "84472cb8e043091b33d62cfa8821664950702cb1a4e4c49fded9dc822bc06c50",
+        "b398d20df0bceca5943c9921f8d95f2aa940228bb1cc786dd942b72f7ae28324"
+      ]
+    },
+    "frozen_r0": {
+      "consolidated_value": 0.008902138618091514,
+      "persistent_state": {
+        "credit_sha256": "7fbab646098511a55b3f280870c79d365aefe03e60030e7ad85b8835479940d2",
+        "exact_state_sha256": "efef14aa893c554cb50176b822475a15dd11d37d7931d829281c9ab4484ab1a1",
+        "lifecycle_sha256": "6e4ec98eff5110fcea0e210fcc48201b12e8d3ba03f57d5e4aa6e733499d9bb1",
+        "serialized_state_sha256": "1cf6a9f5e8d026e27ca650036a0f9cf383ee77c5b0d7193e4db36befccf9a023",
+        "topology_sha256": "0a81d006e46bbb523b53f81472134300359f50ec9337eae8be6e2de13f52da68",
+        "weights_sha256": "2d4fa0269c8f31ffb5c79dd41284be601862d2f8433f3c02f2df298d83ea6e1c"
+      },
+      "retrieval_budget": 16,
+      "uncertainty": 0.30000000000000004
+    },
+    "mixed_outcome_identical_typed_traces": {
+      "mixed_typed_trace_group_count": 0,
+      "passed": false,
+      "violations": []
+    },
+    "preliminary_gates": {
+      "combined_positive_at_least_29_of_32": false,
+      "evidence_handover_exact_and_orbit_disjoint": false,
+      "exact_16_by_16_validation_and_regression": true,
+      "mixed_typed_traces_unknown": false,
+      "r0_retention_32_of_32": true,
+      "real_virtual_trace_action_parity": true,
+      "regression_at_least_14_of_16": false,
+      "regression_zero_of_16_decoy_fp": true,
+      "serialization_parity": true,
+      "validation_at_least_14_of_16": true,
+      "validation_zero_of_16_decoy_fp": false
+    },
+    "r0_retention": {
+      "count": 32,
+      "exact_count": 32
+    },
+    "real_virtual_action_trace_parity": true,
+    "regression": {
+      "abstentions": 21,
+      "availability_coverage": 0.34375,
+      "available_count": 11,
+      "fn": 0,
+      "fp": 0,
+      "tn": 0,
+      "tp": 11
+    },
+    "serialization_availability_parity": true,
+    "split_cardinality": {
+      "regression_decoy": 16,
+      "regression_positive": 16,
+      "validation_decoy": 16,
+      "validation_positive": 16
+    },
+    "validation": {
+      "abstentions": 16,
+      "availability_coverage": 0.5,
+      "available_count": 16,
+      "fn": 0,
+      "fp": 2,
+      "tn": 0,
+      "tp": 14
+    }
+  },
+  "preregistration": {
+    "controls": [
+      "equal-reply-count availability derangement",
+      "disconnected"
+    ],
+    "fixed_genome_seed": 927199493097905893,
+    "hypothesis": "one predeclared R0 genome earns exact binary V2 availability from later REAL competence interactions and causally changes the touched Mate-in-2 first action",
+    "information_boundary": "R0 board, graph-selected action, complete typed graph trace and observed REAL completion only; VIRTUAL frames and handover rows cannot learn",
+    "kill_rule": "stop at the first failed gate without tuning, another seed, another mechanism, R1 learning, or fresh data",
+    "null": "the fixed organism misses a touched-data competence gate, fails exact retired selectivity, or does not causally outperform both controls",
+    "response_contract": {
+      "available_uncertainty": 0.0,
+      "available_value": 1.0,
+      "confidence_fields": "telemetry_only"
+    },
+    "single_factor": "binary prospectively certified child availability",
+    "touched_gate": {
+      "combined_positive_min": 29,
+      "regression_decoy_fp_max": 0,
+      "regression_positive_min": 14,
+      "retired_65": "1 TP, 0 FP, 64 unavailable",
+      "validation_decoy_fp_max": 0,
+      "validation_positive_min": 14
+    }
+  },
+  "result_tag": "tg26m-v2-portable-outcome-result",
+  "schema_version": "native_v2_r0_handover_development.v2",
+  "source_hashes": {
+    "reports/autogrowth/native_authority/native_terminal_trace_historical_regression.json.gz": "eb60826db7269b1fb69cd2abe21d137bb1853503cd8177e69aeb36050a77ecf4",
+    "reports/autogrowth/native_authority/retired_r0_child_availability_diagnostic.json": "e946abccb4e846ca260f034174c6f440683155ebf17b617c0de8b2ae3a5baf2b",
+    "reports/autogrowth/native_from_scratch/r0_r1_balanced96_240_seed_20260719_compact.json": "c55a4097547713edb5d9ef27a250bbfac62fb9886d86afae87b387b72869c792",
+    "snapshots/autogrowth/native_authority/r0_organism.pkl": "bb58b7d64bd3ab5b696713a7253555e051bd0e9fdef4637db7c27e7517495eaf",
+    "src/recon_lite_chess/autogrowth/native_child_availability.py": "6565f30222947a37e9b6fb30971acb11462774cb0e769bc2f38f72b2a690ff0d",
+    "src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py": "bac4117b0e79449613c26fd1fc45b04342decc4572c0c8a7034337976c6213a7",
+    "src/recon_lite_chess/autogrowth/native_v2_r0_handover_development.py": "d8618d145d612555115a8b507e9a2fce5439f526b7d06e0178e5974925281910"
+  },
+  "stage": "closed_before_handover_measurement"
+}
