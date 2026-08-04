@@ -1,0 +1,924 @@
+{
+  "arms": {
+    "A": {
+      "arm": "A",
+      "endpoint_increments": {
+        "false_deployment_authority": 0,
+        "planted_authority_coverage": 0,
+        "selected_spurious_attributable_false_authority": 0
+      },
+      "graph_actuation": {
+        "activation": 0.0,
+        "actuator_identity": "chess_move:g1g8",
+        "candidate_count": 1,
+        "formal_ticks": 36,
+        "graph_owned": true,
+        "host_fallback": false,
+        "move_uci": "g1g8",
+        "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+      },
+      "graph_authority_emission": {
+        "contradiction_cell_ids": [
+          "competence_context_0014",
+          "competence_context_0022"
+        ],
+        "graph_maturity_ids": [],
+        "graph_revocation_ids": [],
+        "matching_cell_ids": [
+          "competence_context_0014",
+          "competence_context_0022"
+        ],
+        "matured_cell_ids": [],
+        "nomination_allowed_after_lifecycle": false,
+        "receipt_id": "c89fa68385717d3523c7d19eb6eca7e9c094e5b2c5e728d4c17b2670a2c709cf",
+        "revoked_cell_ids": [],
+        "supporting_cell_ids": []
+      },
+      "grounded_receipt": {
+        "environment_outcome_terminal_identity": "mate",
+        "frame_kind": "REAL",
+        "interaction_fingerprint": "39ee8e13e1e196280de06b546bb586172cafa5fd177e2cd4da9530bee0490445",
+        "issuer_identity": "native_v2_environment_terminal",
+        "observed_outcome": false,
+        "ordinal": 68,
+        "outcome_terminal_identity": "native_r0_real_completion_terminal",
+        "pending_token": "1d14ca6e8858147d7073fda85621287084455aa86005020cb41e048f8cb9f2b4",
+        "predecessor_fen": "8/8/8/8/8/k7/8/K5R1 w - - 0 1",
+        "receipt_id": "c89fa68385717d3523c7d19eb6eca7e9c094e5b2c5e728d4c17b2670a2c709cf",
+        "selected_actuation": {
+          "activation": 0.0,
+          "actuator_identity": "chess_move:g1g8",
+          "candidate_count": 1,
+          "formal_ticks": 36,
+          "graph_owned": true,
+          "host_fallback": false,
+          "move_uci": "g1g8",
+          "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+        },
+        "signature": "2f3b5710dc31b622a8b785e5d511486eb3ef26f74ba5a33d5161e0cfec4f5729",
+        "source_organism_identity": "925d64d330ef2c56a7a8ba017e673289bf0e78a66472f825c465cb112ca8d329",
+        "source_state_identity": "9f6f26296132066cd7e8f1ab9706ac0b5adfb6390a40e166ac5f28a3b6fa5060",
+        "successor_fen": "6R1/8/8/8/8/k7/8/K7 b - - 1 1",
+        "trace": {
+          "actuation": {
+            "activation": 0.0,
+            "actuator_identity": "chess_move:g1g8",
+            "candidate_count": 1,
+            "formal_ticks": 36,
+            "graph_owned": true,
+            "host_fallback": false,
+            "move_uci": "g1g8",
+            "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+          },
+          "confirmed_base_terminal_node_ids": [
+            "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+            "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+          ],
+          "confirmed_mature_composite_ids": [],
+          "frame_id": "v2-review-repair-v2:canonical:A:seed-07:suffix-spurious-04",
+          "frame_kind": "REAL",
+          "option_identity": "tg26o_triplet_420be129e1941719:g1g8",
+          "source_organism_identity": "925d64d330ef2c56a7a8ba017e673289bf0e78a66472f825c465cb112ca8d329",
+          "source_state_identity": "9f6f26296132066cd7e8f1ab9706ac0b5adfb6390a40e166ac5f28a3b6fa5060",
+          "terminal_signals": [
+            {
+              "identity": "internal:policy_response",
+              "provenance": "selected_graph_option_emitted_actuator",
+              "role": "POLICY_RESPONSE",
+              "source_node_identity": "tg26o_triplet_420be129e1941719:g1g8",
+              "stem_cell_identity": null,
+              "terminal_kind": "graph_choice_actuator"
+            },
+            {
+              "identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+              "provenance": "selected_option_confirmed_terminal",
+              "role": "BASE_TERMINAL",
+              "source_node_identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+              "stem_cell_identity": null,
+              "terminal_kind": "opaque_external_terminal"
+            },
+            {
+              "identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+              "provenance": "selected_option_confirmed_terminal",
+              "role": "BASE_TERMINAL",
+              "source_node_identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+              "stem_cell_identity": null,
+              "terminal_kind": "opaque_external_terminal"
+            }
+          ]
+        }
+      },
+      "matching_cell_commitment": [
+        "competence_context_0014",
+        "competence_context_0022"
+      ],
+      "parity_projection": {
+        "actuation_manifest": {
+          "activation": 0.0,
+          "actuator_identity": "chess_move:g1g8",
+          "candidate_count": 1,
+          "formal_ticks": 36,
+          "graph_owned": true,
+          "host_fallback": false,
+          "move_uci": "g1g8",
+          "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+        },
+        "candidate_activation_map": {
+          "competence_context_0005": false,
+          "competence_context_0006": false,
+          "competence_context_0007": false,
+          "competence_context_0008": false,
+          "competence_context_0009": false,
+          "competence_context_0010": false,
+          "competence_context_0011": false,
+          "competence_context_0012": false,
+          "competence_context_0014": true,
+          "competence_context_0016": false,
+          "competence_context_0017": false,
+          "competence_context_0018": false,
+          "competence_context_0019": false,
+          "competence_context_0021": false,
+          "competence_context_0022": true,
+          "competence_context_0024": false,
+          "competence_context_0025": false,
+          "competence_context_0028": false
+        },
+        "graph_actuator_identity": "chess_move:g1g8",
+        "logical_opportunity_identity": "33f9ba6868a16d0c93b4f714a44c76ed7eed172e14a3e69e3fe9d7c3dfbae968",
+        "matching_cell_commitment": [
+          "competence_context_0014",
+          "competence_context_0022"
+        ],
+        "option_identity": "tg26o_triplet_420be129e1941719:g1g8",
+        "ordered_classifier_visible_signal_identities": [
+          "internal:policy_response",
+          "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+          "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+        ],
+        "planted_activation": false,
+        "projection_digest": "62a3ab0694a7d0d4d3a30f6151543a3fb72fdf3fc0226e8a2b9181428fbfc012",
+        "row_id": "suffix-spurious-04",
+        "selected_opaque_inputs": [
+          "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+          "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+        ],
+        "selected_spurious_activation": true,
+        "typed_classifier_visible_signal_manifests": [
+          {
+            "identity": "internal:policy_response",
+            "provenance": "selected_graph_option_emitted_actuator",
+            "role": "POLICY_RESPONSE",
+            "source_node_identity": "tg26o_triplet_420be129e1941719:g1g8",
+            "stem_cell_identity": null,
+            "terminal_kind": "graph_choice_actuator"
+          },
+          {
+            "identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+            "provenance": "selected_option_confirmed_terminal",
+            "role": "BASE_TERMINAL",
+            "source_node_identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+            "stem_cell_identity": null,
+            "terminal_kind": "opaque_external_terminal"
+          },
+          {
+            "identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+            "provenance": "selected_option_confirmed_terminal",
+            "role": "BASE_TERMINAL",
+            "source_node_identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+            "stem_cell_identity": null,
+            "terminal_kind": "opaque_external_terminal"
+          }
+        ]
+      },
+      "pending": {
+        "actuation": {
+          "activation": 0.0,
+          "actuator_identity": "chess_move:g1g8",
+          "candidate_count": 1,
+          "formal_ticks": 36,
+          "graph_owned": true,
+          "host_fallback": false,
+          "move_uci": "g1g8",
+          "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+        },
+        "environment_outcome_terminal_identity": "mate",
+        "frame_id": "v2-review-repair-v2:canonical:A:seed-07:suffix-spurious-04",
+        "matching_cell_digest": "11340dc464c27ee3a6287446aee9410344faa805ddaef1c8271a91e3ddc623bb",
+        "matching_cell_ids": [
+          "competence_context_0014",
+          "competence_context_0022"
+        ],
+        "ordinal": 68,
+        "outcome_terminal_identity": "native_r0_real_completion_terminal",
+        "pending_token": "1d14ca6e8858147d7073fda85621287084455aa86005020cb41e048f8cb9f2b4",
+        "pre_outcome_classification": {
+          "available_cell_ids": [],
+          "formal_available": false,
+          "formal_refuted": false,
+          "policy_response": true,
+          "probability": 0.5,
+          "refuted_cell_ids": [],
+          "state": "unknown",
+          "uncertainty": 1.0
+        },
+        "predecessor_fen": "8/8/8/8/8/k7/8/K5R1 w - - 0 1",
+        "source_organism_identity": "925d64d330ef2c56a7a8ba017e673289bf0e78a66472f825c465cb112ca8d329",
+        "source_state_identity": "9f6f26296132066cd7e8f1ab9706ac0b5adfb6390a40e166ac5f28a3b6fa5060",
+        "state": "OPEN",
+        "structure_invariant_digest": "112ab3545fa5a65590358528b935f43224639c7128754885b37c97b5e9f88787",
+        "trace_digest": "1139dc809ca349952ac0f65d93827bf09b3107ac4318503afb280dbcc29b01fd",
+        "typed_signal_digest": "d7b956b9f7b25cbe9790896639c9253ba65dc45f9ea037f855bd13d109fbe254"
+      },
+      "planted_activation": false,
+      "post_event_continuation_digest": "548604217e14a0d12430f9317a5264f7dad87450bc7b43f10f4c6ff3b92078eb",
+      "pre_outcome_continuation_digest": "f3507ee5838d5c8ecf0ab4b6bc2a942c795979173cf451e9cc0a99643a9a8c41",
+      "production_classification": {
+        "available_cell_ids": [],
+        "formal_available": false,
+        "formal_refuted": false,
+        "policy_response": true,
+        "probability": 0.5,
+        "refuted_cell_ids": [],
+        "state": "unknown",
+        "uncertainty": 1.0
+      },
+      "production_formal_authority": false,
+      "result_record_digest": "1980cad7d48ef1927c7726e27f0427cfd42d085d959f64efa8d9df31965e6881",
+      "row_id": "suffix-spurious-04",
+      "selected_spurious_activation": true,
+      "structure_after_digest": "31b5568a29004e3cd680d7a575100d82f88e23dc69935ab70b94ef84bfa7a93e",
+      "structure_before_digest": "31b5568a29004e3cd680d7a575100d82f88e23dc69935ab70b94ef84bfa7a93e",
+      "trace": {
+        "actuation": {
+          "activation": 0.0,
+          "actuator_identity": "chess_move:g1g8",
+          "candidate_count": 1,
+          "formal_ticks": 36,
+          "graph_owned": true,
+          "host_fallback": false,
+          "move_uci": "g1g8",
+          "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+        },
+        "confirmed_base_terminal_node_ids": [
+          "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+          "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+        ],
+        "confirmed_mature_composite_ids": [],
+        "frame_id": "v2-review-repair-v2:canonical:A:seed-07:suffix-spurious-04",
+        "frame_kind": "REAL",
+        "option_identity": "tg26o_triplet_420be129e1941719:g1g8",
+        "source_organism_identity": "925d64d330ef2c56a7a8ba017e673289bf0e78a66472f825c465cb112ca8d329",
+        "source_state_identity": "9f6f26296132066cd7e8f1ab9706ac0b5adfb6390a40e166ac5f28a3b6fa5060",
+        "terminal_signals": [
+          {
+            "identity": "internal:policy_response",
+            "provenance": "selected_graph_option_emitted_actuator",
+            "role": "POLICY_RESPONSE",
+            "source_node_identity": "tg26o_triplet_420be129e1941719:g1g8",
+            "stem_cell_identity": null,
+            "terminal_kind": "graph_choice_actuator"
+          },
+          {
+            "identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+            "provenance": "selected_option_confirmed_terminal",
+            "role": "BASE_TERMINAL",
+            "source_node_identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+            "stem_cell_identity": null,
+            "terminal_kind": "opaque_external_terminal"
+          },
+          {
+            "identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+            "provenance": "selected_option_confirmed_terminal",
+            "role": "BASE_TERMINAL",
+            "source_node_identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+            "stem_cell_identity": null,
+            "terminal_kind": "opaque_external_terminal"
+          }
+        ]
+      },
+      "transition_id": "transition:suffix-spurious-04:AB",
+      "truthful_action_uci": "g1g8",
+      "truthful_outcome": false,
+      "truthful_predecessor_fen": "8/8/8/8/8/k7/8/K5R1 w - - 0 1",
+      "truthful_successor_fen": "6R1/8/8/8/8/k7/8/K7 b - - 1 1",
+      "visible_family": "suffix_spurious"
+    },
+    "B": {
+      "arm": "B",
+      "endpoint_increments": {
+        "false_deployment_authority": 0,
+        "planted_authority_coverage": 0,
+        "selected_spurious_attributable_false_authority": 0
+      },
+      "graph_actuation": {
+        "activation": 0.0,
+        "actuator_identity": "chess_move:g1g8",
+        "candidate_count": 1,
+        "formal_ticks": 36,
+        "graph_owned": true,
+        "host_fallback": false,
+        "move_uci": "g1g8",
+        "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+      },
+      "graph_authority_emission": {
+        "contradiction_cell_ids": [
+          "competence_context_0014",
+          "competence_context_0022"
+        ],
+        "graph_maturity_ids": [],
+        "graph_revocation_ids": [],
+        "matching_cell_ids": [
+          "competence_context_0014",
+          "competence_context_0022"
+        ],
+        "matured_cell_ids": [],
+        "nomination_allowed_after_lifecycle": false,
+        "receipt_id": "02b2b719265bb5006a456a455beca35da05bb4031b3e1c3e332f566bff780a85",
+        "revoked_cell_ids": [],
+        "supporting_cell_ids": []
+      },
+      "grounded_receipt": {
+        "environment_outcome_terminal_identity": "mate",
+        "frame_kind": "REAL",
+        "interaction_fingerprint": "39ee8e13e1e196280de06b546bb586172cafa5fd177e2cd4da9530bee0490445",
+        "issuer_identity": "native_v2_environment_terminal",
+        "observed_outcome": false,
+        "ordinal": 68,
+        "outcome_terminal_identity": "native_r0_real_completion_terminal",
+        "pending_token": "1fc075444558a60b356258d640ff98eaf7894d4eefc26bf92e50ded6f6c88c2d",
+        "predecessor_fen": "8/8/8/8/8/k7/8/K5R1 w - - 0 1",
+        "receipt_id": "02b2b719265bb5006a456a455beca35da05bb4031b3e1c3e332f566bff780a85",
+        "selected_actuation": {
+          "activation": 0.0,
+          "actuator_identity": "chess_move:g1g8",
+          "candidate_count": 1,
+          "formal_ticks": 36,
+          "graph_owned": true,
+          "host_fallback": false,
+          "move_uci": "g1g8",
+          "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+        },
+        "signature": "c33e257f885a3b8af6b7414c916bc64682c7ebceee3fd0b7a692c2bee7d8ac38",
+        "source_organism_identity": "925d64d330ef2c56a7a8ba017e673289bf0e78a66472f825c465cb112ca8d329",
+        "source_state_identity": "9f6f26296132066cd7e8f1ab9706ac0b5adfb6390a40e166ac5f28a3b6fa5060",
+        "successor_fen": "6R1/8/8/8/8/k7/8/K7 b - - 1 1",
+        "trace": {
+          "actuation": {
+            "activation": 0.0,
+            "actuator_identity": "chess_move:g1g8",
+            "candidate_count": 1,
+            "formal_ticks": 36,
+            "graph_owned": true,
+            "host_fallback": false,
+            "move_uci": "g1g8",
+            "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+          },
+          "confirmed_base_terminal_node_ids": [
+            "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+            "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+          ],
+          "confirmed_mature_composite_ids": [],
+          "frame_id": "v2-review-repair-v2:canonical:B:seed-07:suffix-spurious-04",
+          "frame_kind": "REAL",
+          "option_identity": "tg26o_triplet_420be129e1941719:g1g8",
+          "source_organism_identity": "925d64d330ef2c56a7a8ba017e673289bf0e78a66472f825c465cb112ca8d329",
+          "source_state_identity": "9f6f26296132066cd7e8f1ab9706ac0b5adfb6390a40e166ac5f28a3b6fa5060",
+          "terminal_signals": [
+            {
+              "identity": "internal:policy_response",
+              "provenance": "selected_graph_option_emitted_actuator",
+              "role": "POLICY_RESPONSE",
+              "source_node_identity": "tg26o_triplet_420be129e1941719:g1g8",
+              "stem_cell_identity": null,
+              "terminal_kind": "graph_choice_actuator"
+            },
+            {
+              "identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+              "provenance": "selected_option_confirmed_terminal",
+              "role": "BASE_TERMINAL",
+              "source_node_identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+              "stem_cell_identity": null,
+              "terminal_kind": "opaque_external_terminal"
+            },
+            {
+              "identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+              "provenance": "selected_option_confirmed_terminal",
+              "role": "BASE_TERMINAL",
+              "source_node_identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+              "stem_cell_identity": null,
+              "terminal_kind": "opaque_external_terminal"
+            }
+          ]
+        }
+      },
+      "matching_cell_commitment": [
+        "competence_context_0014",
+        "competence_context_0022"
+      ],
+      "parity_projection": {
+        "actuation_manifest": {
+          "activation": 0.0,
+          "actuator_identity": "chess_move:g1g8",
+          "candidate_count": 1,
+          "formal_ticks": 36,
+          "graph_owned": true,
+          "host_fallback": false,
+          "move_uci": "g1g8",
+          "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+        },
+        "candidate_activation_map": {
+          "competence_context_0005": false,
+          "competence_context_0006": false,
+          "competence_context_0007": false,
+          "competence_context_0008": false,
+          "competence_context_0009": false,
+          "competence_context_0010": false,
+          "competence_context_0011": false,
+          "competence_context_0012": false,
+          "competence_context_0014": true,
+          "competence_context_0016": false,
+          "competence_context_0017": false,
+          "competence_context_0018": false,
+          "competence_context_0019": false,
+          "competence_context_0021": false,
+          "competence_context_0022": true,
+          "competence_context_0024": false,
+          "competence_context_0025": false,
+          "competence_context_0028": false
+        },
+        "graph_actuator_identity": "chess_move:g1g8",
+        "logical_opportunity_identity": "33f9ba6868a16d0c93b4f714a44c76ed7eed172e14a3e69e3fe9d7c3dfbae968",
+        "matching_cell_commitment": [
+          "competence_context_0014",
+          "competence_context_0022"
+        ],
+        "option_identity": "tg26o_triplet_420be129e1941719:g1g8",
+        "ordered_classifier_visible_signal_identities": [
+          "internal:policy_response",
+          "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+          "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+        ],
+        "planted_activation": false,
+        "projection_digest": "62a3ab0694a7d0d4d3a30f6151543a3fb72fdf3fc0226e8a2b9181428fbfc012",
+        "row_id": "suffix-spurious-04",
+        "selected_opaque_inputs": [
+          "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+          "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+        ],
+        "selected_spurious_activation": true,
+        "typed_classifier_visible_signal_manifests": [
+          {
+            "identity": "internal:policy_response",
+            "provenance": "selected_graph_option_emitted_actuator",
+            "role": "POLICY_RESPONSE",
+            "source_node_identity": "tg26o_triplet_420be129e1941719:g1g8",
+            "stem_cell_identity": null,
+            "terminal_kind": "graph_choice_actuator"
+          },
+          {
+            "identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+            "provenance": "selected_option_confirmed_terminal",
+            "role": "BASE_TERMINAL",
+            "source_node_identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+            "stem_cell_identity": null,
+            "terminal_kind": "opaque_external_terminal"
+          },
+          {
+            "identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+            "provenance": "selected_option_confirmed_terminal",
+            "role": "BASE_TERMINAL",
+            "source_node_identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+            "stem_cell_identity": null,
+            "terminal_kind": "opaque_external_terminal"
+          }
+        ]
+      },
+      "pending": {
+        "actuation": {
+          "activation": 0.0,
+          "actuator_identity": "chess_move:g1g8",
+          "candidate_count": 1,
+          "formal_ticks": 36,
+          "graph_owned": true,
+          "host_fallback": false,
+          "move_uci": "g1g8",
+          "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+        },
+        "environment_outcome_terminal_identity": "mate",
+        "frame_id": "v2-review-repair-v2:canonical:B:seed-07:suffix-spurious-04",
+        "matching_cell_digest": "11340dc464c27ee3a6287446aee9410344faa805ddaef1c8271a91e3ddc623bb",
+        "matching_cell_ids": [
+          "competence_context_0014",
+          "competence_context_0022"
+        ],
+        "ordinal": 68,
+        "outcome_terminal_identity": "native_r0_real_completion_terminal",
+        "pending_token": "1fc075444558a60b356258d640ff98eaf7894d4eefc26bf92e50ded6f6c88c2d",
+        "pre_outcome_classification": {
+          "available_cell_ids": [],
+          "formal_available": false,
+          "formal_refuted": false,
+          "policy_response": true,
+          "probability": 0.5,
+          "refuted_cell_ids": [],
+          "state": "unknown",
+          "uncertainty": 1.0
+        },
+        "predecessor_fen": "8/8/8/8/8/k7/8/K5R1 w - - 0 1",
+        "source_organism_identity": "925d64d330ef2c56a7a8ba017e673289bf0e78a66472f825c465cb112ca8d329",
+        "source_state_identity": "9f6f26296132066cd7e8f1ab9706ac0b5adfb6390a40e166ac5f28a3b6fa5060",
+        "state": "OPEN",
+        "structure_invariant_digest": "112ab3545fa5a65590358528b935f43224639c7128754885b37c97b5e9f88787",
+        "trace_digest": "ce3b7c7ef584dc33f8a0edeb47136830ddff1bcaa42a4fa8769b030b8739cc54",
+        "typed_signal_digest": "d7b956b9f7b25cbe9790896639c9253ba65dc45f9ea037f855bd13d109fbe254"
+      },
+      "planted_activation": false,
+      "post_event_continuation_digest": "fd961155d91e655a09c76d591cb5dadc4d030386e519a46bb43ad3ec714504d0",
+      "pre_outcome_continuation_digest": "e85bdc03841c13a014c22a7e797453d4b1a9ce526cd475c347a57bb6781e78b2",
+      "production_classification": {
+        "available_cell_ids": [],
+        "formal_available": false,
+        "formal_refuted": false,
+        "policy_response": true,
+        "probability": 0.5,
+        "refuted_cell_ids": [],
+        "state": "unknown",
+        "uncertainty": 1.0
+      },
+      "production_formal_authority": false,
+      "result_record_digest": "4c2557048f5b0c75146800c49f7edbbc3b1627a768318ddc3a3426d61a13cb85",
+      "row_id": "suffix-spurious-04",
+      "selected_spurious_activation": true,
+      "structure_after_digest": "31b5568a29004e3cd680d7a575100d82f88e23dc69935ab70b94ef84bfa7a93e",
+      "structure_before_digest": "31b5568a29004e3cd680d7a575100d82f88e23dc69935ab70b94ef84bfa7a93e",
+      "trace": {
+        "actuation": {
+          "activation": 0.0,
+          "actuator_identity": "chess_move:g1g8",
+          "candidate_count": 1,
+          "formal_ticks": 36,
+          "graph_owned": true,
+          "host_fallback": false,
+          "move_uci": "g1g8",
+          "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+        },
+        "confirmed_base_terminal_node_ids": [
+          "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+          "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+        ],
+        "confirmed_mature_composite_ids": [],
+        "frame_id": "v2-review-repair-v2:canonical:B:seed-07:suffix-spurious-04",
+        "frame_kind": "REAL",
+        "option_identity": "tg26o_triplet_420be129e1941719:g1g8",
+        "source_organism_identity": "925d64d330ef2c56a7a8ba017e673289bf0e78a66472f825c465cb112ca8d329",
+        "source_state_identity": "9f6f26296132066cd7e8f1ab9706ac0b5adfb6390a40e166ac5f28a3b6fa5060",
+        "terminal_signals": [
+          {
+            "identity": "internal:policy_response",
+            "provenance": "selected_graph_option_emitted_actuator",
+            "role": "POLICY_RESPONSE",
+            "source_node_identity": "tg26o_triplet_420be129e1941719:g1g8",
+            "stem_cell_identity": null,
+            "terminal_kind": "graph_choice_actuator"
+          },
+          {
+            "identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+            "provenance": "selected_option_confirmed_terminal",
+            "role": "BASE_TERMINAL",
+            "source_node_identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+            "stem_cell_identity": null,
+            "terminal_kind": "opaque_external_terminal"
+          },
+          {
+            "identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+            "provenance": "selected_option_confirmed_terminal",
+            "role": "BASE_TERMINAL",
+            "source_node_identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+            "stem_cell_identity": null,
+            "terminal_kind": "opaque_external_terminal"
+          }
+        ]
+      },
+      "transition_id": "transition:suffix-spurious-04:AB",
+      "truthful_action_uci": "g1g8",
+      "truthful_outcome": false,
+      "truthful_predecessor_fen": "8/8/8/8/8/k7/8/K5R1 w - - 0 1",
+      "truthful_successor_fen": "6R1/8/8/8/8/k7/8/K7 b - - 1 1",
+      "visible_family": "suffix_spurious"
+    },
+    "C": {
+      "arm": "C",
+      "endpoint_increments": {
+        "false_deployment_authority": 0,
+        "planted_authority_coverage": 0,
+        "selected_spurious_attributable_false_authority": 0
+      },
+      "graph_actuation": {
+        "activation": 0.0,
+        "actuator_identity": "chess_move:g1g8",
+        "candidate_count": 1,
+        "formal_ticks": 36,
+        "graph_owned": true,
+        "host_fallback": false,
+        "move_uci": "g1g8",
+        "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+      },
+      "graph_authority_emission": {
+        "contradiction_cell_ids": [],
+        "graph_maturity_ids": [],
+        "graph_revocation_ids": [],
+        "matching_cell_ids": [
+          "competence_context_0014",
+          "competence_context_0022"
+        ],
+        "matured_cell_ids": [],
+        "nomination_allowed_after_lifecycle": false,
+        "receipt_id": "1c3a1d12bae89b625893206232c8b5be4ff79e5dd597d2a8a5fa25ceb06715ae",
+        "revoked_cell_ids": [],
+        "supporting_cell_ids": [
+          "competence_context_0014",
+          "competence_context_0022"
+        ]
+      },
+      "grounded_receipt": {
+        "environment_outcome_terminal_identity": "mate",
+        "frame_kind": "REAL",
+        "interaction_fingerprint": "842e64ee3ae880aaa7ab7b35ced73527f334d57e99b32ac8fb640a849642cdd7",
+        "issuer_identity": "native_v2_environment_terminal",
+        "observed_outcome": true,
+        "ordinal": 68,
+        "outcome_terminal_identity": "native_r0_real_completion_terminal",
+        "pending_token": "baa12ada7850521a53331cbd135adffc479380b51c8c085e9bb0f460ed5c02c1",
+        "predecessor_fen": "4k3/8/4K3/8/8/8/8/6R1 w - - 0 1",
+        "receipt_id": "1c3a1d12bae89b625893206232c8b5be4ff79e5dd597d2a8a5fa25ceb06715ae",
+        "selected_actuation": {
+          "activation": 0.0,
+          "actuator_identity": "chess_move:g1g8",
+          "candidate_count": 1,
+          "formal_ticks": 36,
+          "graph_owned": true,
+          "host_fallback": false,
+          "move_uci": "g1g8",
+          "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+        },
+        "signature": "a9a453538379d567e9af54733beeded4f33183a6f68c7d8aa36c29f183601895",
+        "source_organism_identity": "925d64d330ef2c56a7a8ba017e673289bf0e78a66472f825c465cb112ca8d329",
+        "source_state_identity": "9f6f26296132066cd7e8f1ab9706ac0b5adfb6390a40e166ac5f28a3b6fa5060",
+        "successor_fen": "4k1R1/8/4K3/8/8/8/8/8 b - - 1 1",
+        "trace": {
+          "actuation": {
+            "activation": 0.0,
+            "actuator_identity": "chess_move:g1g8",
+            "candidate_count": 1,
+            "formal_ticks": 36,
+            "graph_owned": true,
+            "host_fallback": false,
+            "move_uci": "g1g8",
+            "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+          },
+          "confirmed_base_terminal_node_ids": [
+            "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+            "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+          ],
+          "confirmed_mature_composite_ids": [],
+          "frame_id": "v2-review-repair-v2:canonical:C:seed-07:suffix-spurious-04",
+          "frame_kind": "REAL",
+          "option_identity": "tg26o_triplet_420be129e1941719:g1g8",
+          "source_organism_identity": "925d64d330ef2c56a7a8ba017e673289bf0e78a66472f825c465cb112ca8d329",
+          "source_state_identity": "9f6f26296132066cd7e8f1ab9706ac0b5adfb6390a40e166ac5f28a3b6fa5060",
+          "terminal_signals": [
+            {
+              "identity": "internal:policy_response",
+              "provenance": "selected_graph_option_emitted_actuator",
+              "role": "POLICY_RESPONSE",
+              "source_node_identity": "tg26o_triplet_420be129e1941719:g1g8",
+              "stem_cell_identity": null,
+              "terminal_kind": "graph_choice_actuator"
+            },
+            {
+              "identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+              "provenance": "selected_option_confirmed_terminal",
+              "role": "BASE_TERMINAL",
+              "source_node_identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+              "stem_cell_identity": null,
+              "terminal_kind": "opaque_external_terminal"
+            },
+            {
+              "identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+              "provenance": "selected_option_confirmed_terminal",
+              "role": "BASE_TERMINAL",
+              "source_node_identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+              "stem_cell_identity": null,
+              "terminal_kind": "opaque_external_terminal"
+            }
+          ]
+        }
+      },
+      "matching_cell_commitment": [
+        "competence_context_0014",
+        "competence_context_0022"
+      ],
+      "parity_projection": {
+        "actuation_manifest": {
+          "activation": 0.0,
+          "actuator_identity": "chess_move:g1g8",
+          "candidate_count": 1,
+          "formal_ticks": 36,
+          "graph_owned": true,
+          "host_fallback": false,
+          "move_uci": "g1g8",
+          "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+        },
+        "candidate_activation_map": {
+          "competence_context_0005": false,
+          "competence_context_0006": false,
+          "competence_context_0007": false,
+          "competence_context_0008": false,
+          "competence_context_0009": false,
+          "competence_context_0010": false,
+          "competence_context_0011": false,
+          "competence_context_0012": false,
+          "competence_context_0014": true,
+          "competence_context_0016": false,
+          "competence_context_0017": false,
+          "competence_context_0018": false,
+          "competence_context_0019": false,
+          "competence_context_0021": false,
+          "competence_context_0022": true,
+          "competence_context_0024": false,
+          "competence_context_0025": false,
+          "competence_context_0028": false
+        },
+        "graph_actuator_identity": "chess_move:g1g8",
+        "logical_opportunity_identity": "33f9ba6868a16d0c93b4f714a44c76ed7eed172e14a3e69e3fe9d7c3dfbae968",
+        "matching_cell_commitment": [
+          "competence_context_0014",
+          "competence_context_0022"
+        ],
+        "option_identity": "tg26o_triplet_420be129e1941719:g1g8",
+        "ordered_classifier_visible_signal_identities": [
+          "internal:policy_response",
+          "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+          "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+        ],
+        "planted_activation": false,
+        "projection_digest": "62a3ab0694a7d0d4d3a30f6151543a3fb72fdf3fc0226e8a2b9181428fbfc012",
+        "row_id": "suffix-spurious-04",
+        "selected_opaque_inputs": [
+          "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+          "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+        ],
+        "selected_spurious_activation": true,
+        "typed_classifier_visible_signal_manifests": [
+          {
+            "identity": "internal:policy_response",
+            "provenance": "selected_graph_option_emitted_actuator",
+            "role": "POLICY_RESPONSE",
+            "source_node_identity": "tg26o_triplet_420be129e1941719:g1g8",
+            "stem_cell_identity": null,
+            "terminal_kind": "graph_choice_actuator"
+          },
+          {
+            "identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+            "provenance": "selected_option_confirmed_terminal",
+            "role": "BASE_TERMINAL",
+            "source_node_identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+            "stem_cell_identity": null,
+            "terminal_kind": "opaque_external_terminal"
+          },
+          {
+            "identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+            "provenance": "selected_option_confirmed_terminal",
+            "role": "BASE_TERMINAL",
+            "source_node_identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+            "stem_cell_identity": null,
+            "terminal_kind": "opaque_external_terminal"
+          }
+        ]
+      },
+      "pending": {
+        "actuation": {
+          "activation": 0.0,
+          "actuator_identity": "chess_move:g1g8",
+          "candidate_count": 1,
+          "formal_ticks": 36,
+          "graph_owned": true,
+          "host_fallback": false,
+          "move_uci": "g1g8",
+          "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+        },
+        "environment_outcome_terminal_identity": "mate",
+        "frame_id": "v2-review-repair-v2:canonical:C:seed-07:suffix-spurious-04",
+        "matching_cell_digest": "11340dc464c27ee3a6287446aee9410344faa805ddaef1c8271a91e3ddc623bb",
+        "matching_cell_ids": [
+          "competence_context_0014",
+          "competence_context_0022"
+        ],
+        "ordinal": 68,
+        "outcome_terminal_identity": "native_r0_real_completion_terminal",
+        "pending_token": "baa12ada7850521a53331cbd135adffc479380b51c8c085e9bb0f460ed5c02c1",
+        "pre_outcome_classification": {
+          "available_cell_ids": [
+            "competence_context_0014",
+            "competence_context_0022"
+          ],
+          "formal_available": true,
+          "formal_refuted": false,
+          "policy_response": true,
+          "probability": 0.5965213747972954,
+          "refuted_cell_ids": [],
+          "state": "available",
+          "uncertainty": 0.4034786252027046
+        },
+        "predecessor_fen": "4k3/8/4K3/8/8/8/8/6R1 w - - 0 1",
+        "source_organism_identity": "925d64d330ef2c56a7a8ba017e673289bf0e78a66472f825c465cb112ca8d329",
+        "source_state_identity": "9f6f26296132066cd7e8f1ab9706ac0b5adfb6390a40e166ac5f28a3b6fa5060",
+        "state": "OPEN",
+        "structure_invariant_digest": "112ab3545fa5a65590358528b935f43224639c7128754885b37c97b5e9f88787",
+        "trace_digest": "b7ab695008030f31779190beabd91bc3d53853020d84392e168dd36d0342ce41",
+        "typed_signal_digest": "d7b956b9f7b25cbe9790896639c9253ba65dc45f9ea037f855bd13d109fbe254"
+      },
+      "planted_activation": false,
+      "post_event_continuation_digest": "0f2a130a0a986e6ce55711000021690347a952628804b3984f8c189b818c28b0",
+      "pre_outcome_continuation_digest": "666b9f913b0ca770a1fdd0ff5968d91ae780fcdab23078a8a8a501a23c96501a",
+      "production_classification": {
+        "available_cell_ids": [
+          "competence_context_0014",
+          "competence_context_0022"
+        ],
+        "formal_available": true,
+        "formal_refuted": false,
+        "policy_response": true,
+        "probability": 0.5965213747972954,
+        "refuted_cell_ids": [],
+        "state": "available",
+        "uncertainty": 0.4034786252027046
+      },
+      "production_formal_authority": true,
+      "result_record_digest": "357412504fa67821aac85f833aadc159284b0bb5fd908ed27f6d4cfdb670eb09",
+      "row_id": "suffix-spurious-04",
+      "selected_spurious_activation": true,
+      "structure_after_digest": "31b5568a29004e3cd680d7a575100d82f88e23dc69935ab70b94ef84bfa7a93e",
+      "structure_before_digest": "31b5568a29004e3cd680d7a575100d82f88e23dc69935ab70b94ef84bfa7a93e",
+      "trace": {
+        "actuation": {
+          "activation": 0.0,
+          "actuator_identity": "chess_move:g1g8",
+          "candidate_count": 1,
+          "formal_ticks": 36,
+          "graph_owned": true,
+          "host_fallback": false,
+          "move_uci": "g1g8",
+          "option_identity": "tg26o_triplet_420be129e1941719:g1g8"
+        },
+        "confirmed_base_terminal_node_ids": [
+          "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+          "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86"
+        ],
+        "confirmed_mature_composite_ids": [],
+        "frame_id": "v2-review-repair-v2:canonical:C:seed-07:suffix-spurious-04",
+        "frame_kind": "REAL",
+        "option_identity": "tg26o_triplet_420be129e1941719:g1g8",
+        "source_organism_identity": "925d64d330ef2c56a7a8ba017e673289bf0e78a66472f825c465cb112ca8d329",
+        "source_state_identity": "9f6f26296132066cd7e8f1ab9706ac0b5adfb6390a40e166ac5f28a3b6fa5060",
+        "terminal_signals": [
+          {
+            "identity": "internal:policy_response",
+            "provenance": "selected_graph_option_emitted_actuator",
+            "role": "POLICY_RESPONSE",
+            "source_node_identity": "tg26o_triplet_420be129e1941719:g1g8",
+            "stem_cell_identity": null,
+            "terminal_kind": "graph_choice_actuator"
+          },
+          {
+            "identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+            "provenance": "selected_option_confirmed_terminal",
+            "role": "BASE_TERMINAL",
+            "source_node_identity": "opaque_terminal:3f58a0633f700ddaddd96f8b752b287da3a7f5019536f56ecf1155bcfaf7e32a",
+            "stem_cell_identity": null,
+            "terminal_kind": "opaque_external_terminal"
+          },
+          {
+            "identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+            "provenance": "selected_option_confirmed_terminal",
+            "role": "BASE_TERMINAL",
+            "source_node_identity": "opaque_terminal:e8ae045b95da4911deb566240d20fde4ba01f68eb02a4ee5575893bb506c6a86",
+            "stem_cell_identity": null,
+            "terminal_kind": "opaque_external_terminal"
+          }
+        ]
+      },
+      "transition_id": "transition:suffix-spurious-04:C",
+      "truthful_action_uci": "g1g8",
+      "truthful_outcome": true,
+      "truthful_predecessor_fen": "4k3/8/4K3/8/8/8/8/6R1 w - - 0 1",
+      "truthful_successor_fen": "4k1R1/8/4K3/8/8/8/8/8 b - - 1 1",
+      "visible_family": "suffix_spurious"
+    }
+  },
+  "genome_seed": 7334992197147785690,
+  "row_id": "suffix-spurious-04",
+  "schema_version": "native_v2_review_repair_v2_scientific_row.v1",
+  "scientific_row_digest": "b4a2a36bb7b05f1030f9b882beb1537303b2e6322c265a6d8d5201a49199daf9",
+  "seed_ordinal": 7
+}

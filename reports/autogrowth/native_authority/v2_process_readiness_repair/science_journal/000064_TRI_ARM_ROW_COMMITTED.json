@@ -1,0 +1,84 @@
+{
+  "index": 64,
+  "kind": "TRI_ARM_ROW_COMMITTED",
+  "payload": {
+    "outcome_access": {
+      "count": 48,
+      "event_ids": [
+        "seed-00:suffix-spurious-00:A",
+        "seed-00:suffix-spurious-00:B",
+        "seed-00:suffix-spurious-00:C",
+        "seed-00:suffix-spurious-01:A",
+        "seed-00:suffix-spurious-01:B",
+        "seed-00:suffix-spurious-01:C",
+        "seed-00:suffix-spurious-02:A",
+        "seed-00:suffix-spurious-02:B",
+        "seed-00:suffix-spurious-02:C",
+        "seed-00:suffix-spurious-03:A",
+        "seed-00:suffix-spurious-03:B",
+        "seed-00:suffix-spurious-03:C",
+        "seed-00:suffix-spurious-04:A",
+        "seed-00:suffix-spurious-04:B",
+        "seed-00:suffix-spurious-04:C",
+        "seed-00:suffix-spurious-05:A",
+        "seed-00:suffix-spurious-05:B",
+        "seed-00:suffix-spurious-05:C",
+        "seed-00:suffix-spurious-06:A",
+        "seed-00:suffix-spurious-06:B",
+        "seed-00:suffix-spurious-06:C",
+        "seed-00:suffix-spurious-07:A",
+        "seed-00:suffix-spurious-07:B",
+        "seed-00:suffix-spurious-07:C",
+        "seed-00:suffix-planted-00:A",
+        "seed-00:suffix-planted-00:B",
+        "seed-00:suffix-planted-00:C",
+        "seed-00:suffix-planted-01:A",
+        "seed-00:suffix-planted-01:B",
+        "seed-00:suffix-planted-01:C",
+        "seed-00:suffix-planted-02:A",
+        "seed-00:suffix-planted-02:B",
+        "seed-00:suffix-planted-02:C",
+        "seed-00:suffix-planted-03:A",
+        "seed-00:suffix-planted-03:B",
+        "seed-00:suffix-planted-03:C",
+        "seed-00:suffix-planted-04:A",
+        "seed-00:suffix-planted-04:B",
+        "seed-00:suffix-planted-04:C",
+        "seed-00:suffix-planted-05:A",
+        "seed-00:suffix-planted-05:B",
+        "seed-00:suffix-planted-05:C",
+        "seed-00:suffix-planted-06:A",
+        "seed-00:suffix-planted-06:B",
+        "seed-00:suffix-planted-06:C",
+        "seed-00:suffix-planted-07:A",
+        "seed-00:suffix-planted-07:B",
+        "seed-00:suffix-planted-07:C"
+      ]
+    },
+    "row_id": "suffix-planted-07",
+    "staged_state": {
+      "A": {
+        "continuation_digest": "9e88db0fdcc8fd5167434847ca38bf3c4abf4aff823297a7285f84d51eae9d7a",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "B": {
+        "continuation_digest": "a50675207c55bfa6c1986c5f56c762b674aa1e92edc7aba9bf97a1955fa22090",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "C": {
+        "continuation_digest": "027e6d9fe2f9fe2f924dd2728fb462e30045bd5a8112aad7650b1430969c9199",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "scientific_row_binding": {
+        "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/science_carrier/seed-00/rows/suffix-planted-07.json",
+        "scientific_row_digest": "f531f47d37108cd68b1b742e2e1d21fc79bce487fe55f6fa157e8a9eeb6ac562",
+        "sha256": "67e1641fac664289148eedda4f37472af684e6e86853a318b31b8828e4a88e31",
+        "size": 42965
+      }
+    }
+  },
+  "previous_hash": "8c396af1a82d19798aaddfc0ecde0fdceaad511e62aefaa95db49cd57dbde78e",
+  "record_hash": "4bd3141433952993827d26bb3e13244dbae6f7fc31694e9e2c060f6449789c92",
+  "schema_version": "native_v2_atomic_journal.v1",
+  "seed_ordinal": 0
+}

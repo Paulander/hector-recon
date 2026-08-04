@@ -1,0 +1,48 @@
+{
+  "index": 41,
+  "kind": "OUTCOME_ACCESSED",
+  "payload": {
+    "event_id": "seed-00:suffix-planted-02:A",
+    "next_guard_manifest": {
+      "count": 31,
+      "event_ids": [
+        "seed-00:suffix-spurious-00:A",
+        "seed-00:suffix-spurious-00:B",
+        "seed-00:suffix-spurious-00:C",
+        "seed-00:suffix-spurious-01:A",
+        "seed-00:suffix-spurious-01:B",
+        "seed-00:suffix-spurious-01:C",
+        "seed-00:suffix-spurious-02:A",
+        "seed-00:suffix-spurious-02:B",
+        "seed-00:suffix-spurious-02:C",
+        "seed-00:suffix-spurious-03:A",
+        "seed-00:suffix-spurious-03:B",
+        "seed-00:suffix-spurious-03:C",
+        "seed-00:suffix-spurious-04:A",
+        "seed-00:suffix-spurious-04:B",
+        "seed-00:suffix-spurious-04:C",
+        "seed-00:suffix-spurious-05:A",
+        "seed-00:suffix-spurious-05:B",
+        "seed-00:suffix-spurious-05:C",
+        "seed-00:suffix-spurious-06:A",
+        "seed-00:suffix-spurious-06:B",
+        "seed-00:suffix-spurious-06:C",
+        "seed-00:suffix-spurious-07:A",
+        "seed-00:suffix-spurious-07:B",
+        "seed-00:suffix-spurious-07:C",
+        "seed-00:suffix-planted-00:A",
+        "seed-00:suffix-planted-00:B",
+        "seed-00:suffix-planted-00:C",
+        "seed-00:suffix-planted-01:A",
+        "seed-00:suffix-planted-01:B",
+        "seed-00:suffix-planted-01:C",
+        "seed-00:suffix-planted-02:A"
+      ]
+    },
+    "transition_id": "transition:suffix-planted-02:AB"
+  },
+  "previous_hash": "26ee3f414b38e449bd837147d9e49f4ed211be8f88273901d04f2c658f1bb7cd",
+  "record_hash": "7b2dd6bd86fccb68a038280eff7b6ce0194afd4c6ce9c3680179f1ff9fdb8d10",
+  "schema_version": "native_v2_atomic_journal.v1",
+  "seed_ordinal": 0
+}

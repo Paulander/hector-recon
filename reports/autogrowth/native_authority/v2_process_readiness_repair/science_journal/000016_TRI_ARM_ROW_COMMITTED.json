@@ -1,0 +1,48 @@
+{
+  "index": 16,
+  "kind": "TRI_ARM_ROW_COMMITTED",
+  "payload": {
+    "outcome_access": {
+      "count": 12,
+      "event_ids": [
+        "seed-00:suffix-spurious-00:A",
+        "seed-00:suffix-spurious-00:B",
+        "seed-00:suffix-spurious-00:C",
+        "seed-00:suffix-spurious-01:A",
+        "seed-00:suffix-spurious-01:B",
+        "seed-00:suffix-spurious-01:C",
+        "seed-00:suffix-spurious-02:A",
+        "seed-00:suffix-spurious-02:B",
+        "seed-00:suffix-spurious-02:C",
+        "seed-00:suffix-spurious-03:A",
+        "seed-00:suffix-spurious-03:B",
+        "seed-00:suffix-spurious-03:C"
+      ]
+    },
+    "row_id": "suffix-spurious-03",
+    "staged_state": {
+      "A": {
+        "continuation_digest": "fae00072020d2bb70350acab29e8a0b0e545f51ce3744bd124d355088dcbc4d5",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "B": {
+        "continuation_digest": "054c066194b966f214eda809c6dd58e819bfe08add9eb1c6b5038c170b77f225",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "C": {
+        "continuation_digest": "4ce6321b30c61b3b7be7a01ac651674aefcce3d5b5d993c03f2d9d44d37e826b",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "scientific_row_binding": {
+        "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/science_carrier/seed-00/rows/suffix-spurious-03.json",
+        "scientific_row_digest": "b386538c14d5b2663653093a6e28b1af5b3fb0435d3978af298d2f3c83153dd9",
+        "sha256": "2ce176303e6d9455da4d86de07ddcfbd96db55f82fd9e02ab3a94ed159d32ce7",
+        "size": 42692
+      }
+    }
+  },
+  "previous_hash": "9e3fcdfda53cda3e749fc47b6cf4cb45c2e5acfa2cc248ef0c45431aa8dd09a9",
+  "record_hash": "64b668c215263e086f486c9075dd0f2df04f14be5ed3a951bb24f823b86c85ab",
+  "schema_version": "native_v2_atomic_journal.v1",
+  "seed_ordinal": 0
+}

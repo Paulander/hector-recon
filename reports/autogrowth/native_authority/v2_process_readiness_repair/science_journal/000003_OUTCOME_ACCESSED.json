@@ -1,0 +1,20 @@
+{
+  "index": 3,
+  "kind": "OUTCOME_ACCESSED",
+  "payload": {
+    "event_id": "seed-00:suffix-spurious-00:C",
+    "next_guard_manifest": {
+      "count": 3,
+      "event_ids": [
+        "seed-00:suffix-spurious-00:A",
+        "seed-00:suffix-spurious-00:B",
+        "seed-00:suffix-spurious-00:C"
+      ]
+    },
+    "transition_id": "transition:suffix-spurious-00:C"
+  },
+  "previous_hash": "a6df0f19d1ff2af4e243cee19d1dcdb65854a64b988b45f1e2f675b5fc78bc50",
+  "record_hash": "93fd180c3ab5c4208e9ef947901edfeee7d74c11740d598b603108d885d79341",
+  "schema_version": "native_v2_atomic_journal.v1",
+  "seed_ordinal": 0
+}

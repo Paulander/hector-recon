@@ -1,0 +1,39 @@
+{
+  "index": 29,
+  "kind": "OUTCOME_ACCESSED",
+  "payload": {
+    "event_id": "seed-00:suffix-spurious-07:A",
+    "next_guard_manifest": {
+      "count": 22,
+      "event_ids": [
+        "seed-00:suffix-spurious-00:A",
+        "seed-00:suffix-spurious-00:B",
+        "seed-00:suffix-spurious-00:C",
+        "seed-00:suffix-spurious-01:A",
+        "seed-00:suffix-spurious-01:B",
+        "seed-00:suffix-spurious-01:C",
+        "seed-00:suffix-spurious-02:A",
+        "seed-00:suffix-spurious-02:B",
+        "seed-00:suffix-spurious-02:C",
+        "seed-00:suffix-spurious-03:A",
+        "seed-00:suffix-spurious-03:B",
+        "seed-00:suffix-spurious-03:C",
+        "seed-00:suffix-spurious-04:A",
+        "seed-00:suffix-spurious-04:B",
+        "seed-00:suffix-spurious-04:C",
+        "seed-00:suffix-spurious-05:A",
+        "seed-00:suffix-spurious-05:B",
+        "seed-00:suffix-spurious-05:C",
+        "seed-00:suffix-spurious-06:A",
+        "seed-00:suffix-spurious-06:B",
+        "seed-00:suffix-spurious-06:C",
+        "seed-00:suffix-spurious-07:A"
+      ]
+    },
+    "transition_id": "transition:suffix-spurious-07:AB"
+  },
+  "previous_hash": "2809c4ff0dd3b3d3aed4514464b98a132626ce0b09e597cf69a002b6b99b5894",
+  "record_hash": "1add4f4d71607086f83718db3a898b9aa5d9a256771ceb0a581b7a2427d91932",
+  "schema_version": "native_v2_atomic_journal.v1",
+  "seed_ordinal": 0
+}

@@ -1,0 +1,54 @@
+{
+  "index": 24,
+  "kind": "TRI_ARM_ROW_COMMITTED",
+  "payload": {
+    "outcome_access": {
+      "count": 18,
+      "event_ids": [
+        "seed-00:suffix-spurious-00:A",
+        "seed-00:suffix-spurious-00:B",
+        "seed-00:suffix-spurious-00:C",
+        "seed-00:suffix-spurious-01:A",
+        "seed-00:suffix-spurious-01:B",
+        "seed-00:suffix-spurious-01:C",
+        "seed-00:suffix-spurious-02:A",
+        "seed-00:suffix-spurious-02:B",
+        "seed-00:suffix-spurious-02:C",
+        "seed-00:suffix-spurious-03:A",
+        "seed-00:suffix-spurious-03:B",
+        "seed-00:suffix-spurious-03:C",
+        "seed-00:suffix-spurious-04:A",
+        "seed-00:suffix-spurious-04:B",
+        "seed-00:suffix-spurious-04:C",
+        "seed-00:suffix-spurious-05:A",
+        "seed-00:suffix-spurious-05:B",
+        "seed-00:suffix-spurious-05:C"
+      ]
+    },
+    "row_id": "suffix-spurious-05",
+    "staged_state": {
+      "A": {
+        "continuation_digest": "5fe7ccbb5626f6fbe08f43873b3a1540368990e9f1fb093bf0eaf8eec711da6e",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "B": {
+        "continuation_digest": "fb3e752daf956f358dc3040868a2959ba53a6f152a25632da73f3c9b077e2169",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "C": {
+        "continuation_digest": "d878c44c21a4457159959899aeb4dfed9d1ae56a95d502ff721f65f02a62a740",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "scientific_row_binding": {
+        "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/science_carrier/seed-00/rows/suffix-spurious-05.json",
+        "scientific_row_digest": "e603dafbdf0d96a01cb82461c46de8c6cbbfc1b88824e1b080b61af8316fe21a",
+        "sha256": "656d6432015d8aa777d88dc0ef91e73576c16e93a1ea168745d14924772c1dc6",
+        "size": 42761
+      }
+    }
+  },
+  "previous_hash": "934c80bcf28569f0d233a1c9de737a7201fc2e352d6c81006e25abb0df97cba8",
+  "record_hash": "bacd79efc691cf813693479c242b6d22fc51f5ee8fd5cf808da891660a9fbdf5",
+  "schema_version": "native_v2_atomic_journal.v1",
+  "seed_ordinal": 0
+}

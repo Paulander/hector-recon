@@ -1020,3 +1020,27 @@ it is not a new exposure run, outcome result, mechanism result, learning
 result, or KRK R1 evidence. No exposure, science, or follow-up mechanism is
 authorized by this package. See
 `docs/autogrowth/NATIVE_V2_SYSTEMD_OUTER_SCHEMA_RECLOSURE_RESULT_20260803.md`.
+
+
+The frozen V2 portable-outcome successor has now completed the preregistered
+32-seed scientific run. Its terminal conclusion is
+`prospective_evidence_separation_supported_in_frozen_ecology`. The complete
+mechanism-engagement conjunction passed: 30/32 seeds were fully engaged, all
+32 planted-A cases were later certified, 30/32 spurious-A cases were later
+contradicted, the C dose gate passed 32/32, and all 46 decision-bearing
+contradictions had graph-produced clearings with none missing.
+
+Both genome-seed paired tests passed. D_safe had 30 wins, zero losses, two ties
+(`n=30`, exact one-sided and Holm-adjusted `p=9.313225746154785e-10`);
+D_signal had 32 wins, zero losses, zero ties (`n=32`, exact one-sided
+`p=2.3283064365386963e-10`, Holm-adjusted
+`p=4.656612873077393e-10`). Favorable-seed counts were 30/32 and 32/32,
+respectively, against the preregistered 17/32 requirement.
+
+All 32 seeds, 512 A/B/C row commits, 1,536 unique truthful outcome uses, 96
+final snapshots, and 2,112 chained journal records passed read-only closure
+verification. Attempts 01-03 remain preserved zero-outcome preflight stops;
+attempt 04 completed without interruption reconstruction. The WSL user service
+exited successfully and was absent after cleanup. No discovery or exposure was
+replayed, and no KRK R1 or follow-up mechanism was started. See
+`docs/autogrowth/NATIVE_V2_PORTABLE_OUTCOME_SUCCESSOR_RESULT_20260804.md`.

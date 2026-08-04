@@ -1,0 +1,28 @@
+{
+  "index": 0,
+  "kind": "PREPARED",
+  "payload": {
+    "initial_state": {
+      "A": {
+        "continuation_digest": "848147bc58212aa1bb72f07918edde522465a07f69851c18cdf9ebcc611759af",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "B": {
+        "continuation_digest": "60edf4643d577bbe9f316655b155a0f42e3161a05a206885cc1d4592b089c853",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "C": {
+        "continuation_digest": "848147bc58212aa1bb72f07918edde522465a07f69851c18cdf9ebcc611759af",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      }
+    },
+    "outcome_access": {
+      "count": 0,
+      "event_ids": []
+    }
+  },
+  "previous_hash": "GENESIS",
+  "record_hash": "e0de81e071d1d8f92ea20e2e4c26643863a1f8a104c1f59ec85c9002cd1725d3",
+  "schema_version": "native_v2_atomic_journal.v1",
+  "seed_ordinal": 0
+}

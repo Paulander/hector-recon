@@ -1,0 +1,81 @@
+{
+  "index": 60,
+  "kind": "TRI_ARM_ROW_COMMITTED",
+  "payload": {
+    "outcome_access": {
+      "count": 45,
+      "event_ids": [
+        "seed-00:suffix-spurious-00:A",
+        "seed-00:suffix-spurious-00:B",
+        "seed-00:suffix-spurious-00:C",
+        "seed-00:suffix-spurious-01:A",
+        "seed-00:suffix-spurious-01:B",
+        "seed-00:suffix-spurious-01:C",
+        "seed-00:suffix-spurious-02:A",
+        "seed-00:suffix-spurious-02:B",
+        "seed-00:suffix-spurious-02:C",
+        "seed-00:suffix-spurious-03:A",
+        "seed-00:suffix-spurious-03:B",
+        "seed-00:suffix-spurious-03:C",
+        "seed-00:suffix-spurious-04:A",
+        "seed-00:suffix-spurious-04:B",
+        "seed-00:suffix-spurious-04:C",
+        "seed-00:suffix-spurious-05:A",
+        "seed-00:suffix-spurious-05:B",
+        "seed-00:suffix-spurious-05:C",
+        "seed-00:suffix-spurious-06:A",
+        "seed-00:suffix-spurious-06:B",
+        "seed-00:suffix-spurious-06:C",
+        "seed-00:suffix-spurious-07:A",
+        "seed-00:suffix-spurious-07:B",
+        "seed-00:suffix-spurious-07:C",
+        "seed-00:suffix-planted-00:A",
+        "seed-00:suffix-planted-00:B",
+        "seed-00:suffix-planted-00:C",
+        "seed-00:suffix-planted-01:A",
+        "seed-00:suffix-planted-01:B",
+        "seed-00:suffix-planted-01:C",
+        "seed-00:suffix-planted-02:A",
+        "seed-00:suffix-planted-02:B",
+        "seed-00:suffix-planted-02:C",
+        "seed-00:suffix-planted-03:A",
+        "seed-00:suffix-planted-03:B",
+        "seed-00:suffix-planted-03:C",
+        "seed-00:suffix-planted-04:A",
+        "seed-00:suffix-planted-04:B",
+        "seed-00:suffix-planted-04:C",
+        "seed-00:suffix-planted-05:A",
+        "seed-00:suffix-planted-05:B",
+        "seed-00:suffix-planted-05:C",
+        "seed-00:suffix-planted-06:A",
+        "seed-00:suffix-planted-06:B",
+        "seed-00:suffix-planted-06:C"
+      ]
+    },
+    "row_id": "suffix-planted-06",
+    "staged_state": {
+      "A": {
+        "continuation_digest": "59ef5dc101e58d21ad8b1a4ad380cb94e64619081d11ce38326b3801e949208f",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "B": {
+        "continuation_digest": "d1439a06745c5ec2c45b065407fe17d8aea0cbcce8f3312e674167cdc2715812",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "C": {
+        "continuation_digest": "b336ebedfd2831877a57e78755bc11e740da25b806c84e5a895111fb835c352c",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "scientific_row_binding": {
+        "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/science_carrier/seed-00/rows/suffix-planted-06.json",
+        "scientific_row_digest": "b830911ceb2c80210742c85e8c1c124a05d5b6c1b981cf260ff0e8611ac545e8",
+        "sha256": "87bdfccf622448874799343ff21b52f6572539ff0cdef8764b9e6a435b27cbe9",
+        "size": 42966
+      }
+    }
+  },
+  "previous_hash": "bd4ca68d9acdbbda45381b9b8b7120cf952704602effb8b6a3ab5064395b40b4",
+  "record_hash": "4d8f35555c9ec5b855a3a14bcbb08a09de8b25f8e62c1f6647ccf4ef18fa0abf",
+  "schema_version": "native_v2_atomic_journal.v1",
+  "seed_ordinal": 0
+}

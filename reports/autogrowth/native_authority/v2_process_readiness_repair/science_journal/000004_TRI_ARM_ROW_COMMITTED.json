@@ -1,0 +1,39 @@
+{
+  "index": 4,
+  "kind": "TRI_ARM_ROW_COMMITTED",
+  "payload": {
+    "outcome_access": {
+      "count": 3,
+      "event_ids": [
+        "seed-00:suffix-spurious-00:A",
+        "seed-00:suffix-spurious-00:B",
+        "seed-00:suffix-spurious-00:C"
+      ]
+    },
+    "row_id": "suffix-spurious-00",
+    "staged_state": {
+      "A": {
+        "continuation_digest": "300079d3c50709a367affe12dad9ea55a25b9075bd08342d0dd2f95c9a95e79d",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "B": {
+        "continuation_digest": "671b4b69883624e7a4094047b58a40dd2249c2f1d819f0c2957e15e04869bdb0",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "C": {
+        "continuation_digest": "ca5d7bd5149a927501e287c7df5715883c8ee5e5b25f2a3f6e6e780a1e86e827",
+        "suffix_topology_identity_digest": "69d01a24913a9943ef34b639d4d5ac1f2f509fc920f25f4b8c732b62e1f82ecc"
+      },
+      "scientific_row_binding": {
+        "path": "reports/autogrowth/native_authority/v2_process_readiness_repair/science_carrier/seed-00/rows/suffix-spurious-00.json",
+        "scientific_row_digest": "e7e0c1339161275652905df323259a289485a3783f7eede76ac1ed8c7314e9a5",
+        "sha256": "92000ecb278b0e6ef99c17f20337e1fe738c90bbec4f510c8c8339737ef55f15",
+        "size": 42868
+      }
+    }
+  },
+  "previous_hash": "93fd180c3ab5c4208e9ef947901edfeee7d74c11740d598b603108d885d79341",
+  "record_hash": "b108c83083ad65d190b4ceafbafb99a977d70294b0225d0442a5eb872d4007d7",
+  "schema_version": "native_v2_atomic_journal.v1",
+  "seed_ordinal": 0
+}
