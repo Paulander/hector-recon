@@ -1,0 +1,7 @@
+# Natural-R0 competence failure localization
+
+Of the two frozen prospectively certified cells, `competence_context_0105` produced both validation false positives (`validation_decoy:09` and `validation_decoy:15`); `competence_context_0126` produced none. The JSON preserves each cell's members, polarity, lineage/structure, discovery and later certification evidence, post-birth support/contradiction opportunities, and every viewed row it matched.
+
+All seven unavailable positive rows had no learned-cell match even though an already-supported legal three-identity conjunction present in the current trace language matched them. That conjunction covers 32/32 positives with zero false positives, but is absent from the candidate population. The binding cause is therefore `candidate_growth_coverage_failure`, not prospective-exposure shortage, nomination failure, representation loss, or an uncleared-contradiction defect.
+
+Both false-positive traces contain distinguishing opaque terminal signals the learned cells did not use. Full typed signals and the identity-only projection have the same 32/32 zero-FP ceiling here, so discarded typed fields are not binding. Mixed-outcome identical typed traces were not exercised (zero groups, zero violations). The two known overlap orbits are localized on the R0-evidence side; a future outcome-blind split can assign whole canonical D4 orbits before outcome access and exclude those two keys from the handover side.
