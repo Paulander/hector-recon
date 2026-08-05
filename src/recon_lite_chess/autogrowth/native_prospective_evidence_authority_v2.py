@@ -21,6 +21,7 @@ from recon_lite_hector.nodes import StemCellState
 from .native_authority_handover import ChildQuery, GraphActuation, GraphSignalTrace
 from .native_competence_envelope import (
     AvailabilityState, CompetenceContextCell, EnvelopeClassification,
+    NOMINATION_READ_CATEGORIES_V1, NOMINATION_READ_CATEGORIES_V2,
     NominationEscrow, wilson_lower_bound,
 )
 from .native_trace_competence_authority import TraceNativeCompetenceOrganism
@@ -38,9 +39,7 @@ AUTHORITY_ROLES = (
     "maturity", "revocation",
 )
 ROLE_ROOTS = {role: f"v2_authority_{role}_root" for role in AUTHORITY_ROLES}
-NOMINATION_READ_CATEGORIES = (
-    "direct", "parent_support", "eligibility", "contradiction_trigger",
-)
+NOMINATION_READ_CATEGORIES = NOMINATION_READ_CATEGORIES_V1
 WILSON_Z = 1.6448536269514722
 MIN_SUPPORT = 4
 LOWER_BOUND = 0.55
@@ -224,7 +223,10 @@ class FrozenHypothesis:
                 raise ProspectiveV2IntegrityError(
                     "prospective frozen escrow identity is incomplete"
                 )
-            if tuple(name for name, _ids in categories) != NOMINATION_READ_CATEGORIES:
+            if tuple(name for name, _ids in categories) not in {
+                NOMINATION_READ_CATEGORIES_V1,
+                NOMINATION_READ_CATEGORIES_V2,
+            }:
                 raise ProspectiveProvenanceUnavailable(
                     "prospective_provenance_unavailable: incomplete nomination read set"
                 )

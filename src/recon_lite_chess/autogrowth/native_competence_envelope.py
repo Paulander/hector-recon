@@ -45,9 +45,16 @@ CORRECTION_ROOT_ID = "competence_mature_correction_root"
 SPECIALIZATION_REQUEST_ROOT_ID = "competence_specialization_request_root"
 SPECIALIZATION_ELIGIBILITY_ROOT_ID = "competence_specialization_eligibility_root"
 SCHEMA_VERSION = "native_r0_competence_envelope.v1"
-NOMINATION_READ_CATEGORIES = (
+NOMINATION_READ_CATEGORIES_V1 = (
     "direct", "parent_support", "eligibility", "contradiction_trigger",
 )
+NOMINATION_READ_CATEGORIES_V2 = (
+    "direct", "parent_support", "eligibility", "contradiction_trigger",
+    "consensus_reads",
+)
+NOMINATION_READ_CATEGORIES = NOMINATION_READ_CATEGORIES_V1
+NOMINATION_ESCROW_V1 = "native_nomination_escrow.v1"
+NOMINATION_ESCROW_V2 = "native_nomination_escrow.v2_consensus_reads"
 
 
 class AvailabilityState(str, Enum):
@@ -87,6 +94,16 @@ class NominationEscrow:
     nomination_read_frontier: int
     certification_frontier: int
     escrow_digest: str = ""
+    escrow_schema_version: str = NOMINATION_ESCROW_V1
+
+    def __setstate__(self, state: Mapping[str, Any]) -> None:
+        for key, value in state.items():
+            object.__setattr__(self, key, value)
+        if "escrow_schema_version" not in state:
+            object.__setattr__(
+                self, "escrow_schema_version", NOMINATION_ESCROW_V1
+            )
+        self.__post_init__()
 
     def __post_init__(self) -> None:
         object.__setattr__(
@@ -95,7 +112,14 @@ class NominationEscrow:
         if self.operation not in {"ordinary", "specialization"}:
             raise ValueError("unknown nomination operation")
         names = tuple(name for name, _ids in self.categorized_reads)
-        if names != NOMINATION_READ_CATEGORIES:
+        expected_categories = (
+            NOMINATION_READ_CATEGORIES_V1
+            if self.escrow_schema_version == NOMINATION_ESCROW_V1
+            else NOMINATION_READ_CATEGORIES_V2
+            if self.escrow_schema_version == NOMINATION_ESCROW_V2
+            else ()
+        )
+        if names != expected_categories:
             raise ValueError("incomplete nomination read categories")
         for _name, ids in self.categorized_reads:
             if tuple(sorted(ids)) != ids or len(set(ids)) != len(ids):
@@ -140,7 +164,7 @@ class NominationEscrow:
         } | set(self.transitive_ancestor_receipt_ids)))
 
     def _unsigned_manifest(self) -> dict[str, Any]:
-        return {
+        result = {
             "operation": self.operation,
             "fixed_polarity": self.fixed_polarity.value,
             "categorized_reads": {
@@ -162,6 +186,9 @@ class NominationEscrow:
             "nomination_read_frontier": self.nomination_read_frontier,
             "certification_frontier": self.certification_frontier,
         }
+        if self.escrow_schema_version != NOMINATION_ESCROW_V1:
+            result["escrow_schema_version"] = self.escrow_schema_version
+        return result
 
     def manifest(self) -> dict[str, Any]:
         return {**self._unsigned_manifest(), "escrow_digest": self.escrow_digest}
@@ -415,6 +442,7 @@ class GrowthProposal:
     round_index: int
     request_ordinal: int
     genome_seed: int
+    consensus_read_ids: tuple[str, ...] = ()
 
 
 @dataclass
@@ -618,6 +646,7 @@ class GraphNativeCompetenceEnvelope:
     _specialization_request_ordinal: int = 0
     _specialization_proposal_ordinal: int = 0
     nomination_epoch: ProspectiveDiscoveryEpoch | None = None
+    consensus_memory: Any | None = None
 
     def __setstate__(self, state: Mapping[str, Any]) -> None:
         self.__dict__.update(state)
@@ -626,6 +655,7 @@ class GraphNativeCompetenceEnvelope:
         self.__dict__.setdefault("_specialization_request_ordinal", 0)
         self.__dict__.setdefault("_specialization_proposal_ordinal", 0)
         self.__dict__.setdefault("nomination_epoch", None)
+        self.__dict__.setdefault("consensus_memory", None)
 
     def __post_init__(self) -> None:
         if self.schema_version != SCHEMA_VERSION:
@@ -826,6 +856,7 @@ class GraphNativeCompetenceEnvelope:
         emission: GrowthRequestEmission,
         active_context_ids: Sequence[str],
         members: Sequence[str],
+        consensus_read_ids: Sequence[str] = (),
     ) -> NominationEscrow | None:
         if self.nomination_epoch is None:
             return None
@@ -842,11 +873,28 @@ class GraphNativeCompetenceEnvelope:
         parent_support = self._supporting_receipts(active_context_ids)
         epoch = self.nomination_epoch
         assert epoch is not None
-        read_ids = set((record.evidence_key,)) | set(parent_support) | set(
-            ancestor_ids
+        consensus_reads = tuple(sorted(set(map(str, consensus_read_ids))))
+        read_ids = (
+            set((record.evidence_key,)) | set(parent_support)
+            | set(ancestor_ids) | set(consensus_reads)
         )
         ordinals = dict(epoch.receipt_ordinals)
         certification_frontier = max(ordinals.values(), default=-1)
+        categorized_reads = (
+            (
+                ("direct", (record.evidence_key,)),
+                ("parent_support", parent_support),
+                ("eligibility", ()),
+                ("contradiction_trigger", ()),
+                ("consensus_reads", consensus_reads),
+            )
+            if consensus_reads else (
+                ("direct", (record.evidence_key,)),
+                ("parent_support", parent_support),
+                ("eligibility", ()),
+                ("contradiction_trigger", ()),
+            )
+        )
         escrow = NominationEscrow(
             operation="ordinary",
             fixed_polarity=(
@@ -854,12 +902,7 @@ class GraphNativeCompetenceEnvelope:
                 if record.observed_completion
                 else AvailabilityState.REFUTED
             ),
-            categorized_reads=(
-                ("direct", (record.evidence_key,)),
-                ("parent_support", parent_support),
-                ("eligibility", ()),
-                ("contradiction_trigger", ()),
-            ),
+            categorized_reads=categorized_reads,
             transitive_ancestor_receipt_ids=ancestor_ids,
             discovery_exclusion_receipt_ids=tuple(sorted(self.evidence)),
             birth_frontier=certification_frontier,
@@ -872,6 +915,10 @@ class GraphNativeCompetenceEnvelope:
                 (ordinals[item] for item in read_ids), default=-1
             ),
             certification_frontier=certification_frontier,
+            escrow_schema_version=(
+                NOMINATION_ESCROW_V2
+                if consensus_reads else NOMINATION_ESCROW_V1
+            ),
         )
         self._validate_escrow(escrow)
         return escrow
@@ -1634,6 +1681,23 @@ class GraphNativeCompetenceEnvelope:
                     observed_completion=record.observed_completion,
                     classification=classification,
                 )
+                active_contexts = tuple(
+                    cell.cell_id
+                    for cell in self.cells.values()
+                    if cell.is_mature and self._cell_matches(cell, record, set())
+                )
+                scheduled_proposal = None
+                consider_request = getattr(
+                    growth_genome, "consider_request", None
+                )
+                if consider_request is not None:
+                    scheduled_proposal = consider_request(
+                        request_emitted=emission.emitted,
+                        active_base_ids=record.active_signal_ids,
+                        active_mature_context_ids=active_contexts,
+                        round_index=round_index,
+                        request_ordinal=request_ordinal,
+                    )
                 if not emission.emitted:
                     continue
                 self.audit.graph_request_emissions += 1
@@ -1641,16 +1705,14 @@ class GraphNativeCompetenceEnvelope:
                     self.audit.capacity_rejections += 1
                     continue
                 self.audit.proposal_attempts += 1
-                active_contexts = tuple(
-                    cell.cell_id
-                    for cell in self.cells.values()
-                    if cell.is_mature and self._cell_matches(cell, record, set())
-                )
-                proposal = growth_genome.propose(
-                    active_base_ids=record.active_signal_ids,
-                    active_mature_context_ids=active_contexts,
-                    round_index=round_index,
-                    request_ordinal=request_ordinal,
+                proposal = (
+                    scheduled_proposal
+                    if consider_request is not None else growth_genome.propose(
+                        active_base_ids=record.active_signal_ids,
+                        active_mature_context_ids=active_contexts,
+                        round_index=round_index,
+                        request_ordinal=request_ordinal,
+                    )
                 )
                 if proposal is None:
                     self.audit.insufficient_member_rejections += 1
@@ -1705,6 +1767,7 @@ class GraphNativeCompetenceEnvelope:
             emission=emission,
             active_context_ids=active_context_ids,
             members=members,
+            consensus_read_ids=proposal.consensus_read_ids,
         )
         cell_id = f"competence_context_{self._next_cell_index:04d}"
         stem = StemCellTerminal(cell_id)
@@ -2346,6 +2409,8 @@ class GraphNativeCompetenceEnvelope:
         }
         if self.nomination_epoch is not None:
             result["nomination_epoch"] = self.nomination_epoch.manifest()
+        if self.consensus_memory is not None:
+            result["consensus_memory"] = self.consensus_memory.manifest()
         return result
 
     def continuation_digest_v2(self) -> str:
