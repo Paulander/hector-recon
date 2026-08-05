@@ -46,6 +46,10 @@ PROSPECTIVE_V2_READINESS_ESCROW_LEARNER_SHA256 = (
     "0452da3fbe15138696280728547c03d0ad5a09d7b88fdbd0b75e60c0eac3e1ca"
 )
 
+RESIDUAL_CONSENSUS_EXTENSION_LEARNER_SHA256 = (
+    "429152c86ecf9a978a2946f927b7dd8dce93f3da74fec3f6d6c6e8ee8e46f2c0"
+)
+
 
 def _records() -> tuple[CompetenceEvidenceRecord, ...]:
     return tuple(
@@ -118,9 +122,11 @@ def test_v3b_locks_artifact_rows_and_declares_additive_specialization_extension(
     assert PROSPECTIVE_V2_INTEGRATION_LEARNER_SHA256 == (
         "5e1882f7bd8bc494f38031fa85c31f2e09eca2496487fbef9a1430cc0a80a754"
     )
-    assert (
-        _file_sha256(LEARNER_MODULE)
-        == PROSPECTIVE_V2_READINESS_ESCROW_LEARNER_SHA256
+    assert PROSPECTIVE_V2_READINESS_ESCROW_LEARNER_SHA256 == (
+        "0452da3fbe15138696280728547c03d0ad5a09d7b88fdbd0b75e60c0eac3e1ca"
+    )
+    assert _file_sha256(LEARNER_MODULE) == (
+        RESIDUAL_CONSENSUS_EXTENSION_LEARNER_SHA256
     )
 
 

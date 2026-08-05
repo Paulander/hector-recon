@@ -48,11 +48,11 @@ REGRESSION_SHA = "eb60826db7269b1fb69cd2abe21d137bb1853503cd8177e69aeb36050a77ec
 STAGE0 = Path("/tmp/native_residual_consensus_stage0.json")
 OUTPUT_GZ = Path(
     "reports/autogrowth/native_authority/"
-    "native_residual_consensus_candidate_allocation.json.gz"
+    "native_residual_consensus_candidate_allocation_reclosure.json.gz"
 )
 OUTPUT_MD = Path(
     "reports/autogrowth/native_authority/"
-    "native_residual_consensus_candidate_allocation.md"
+    "native_residual_consensus_candidate_allocation_reclosure.md"
 )
 ARM_ORDER = (
     AllocationMode.TRUE_CONSENSUS,
@@ -142,13 +142,67 @@ def _memory(
     return memory
 
 
-def _trace_digest(trace: Any) -> str | None:
+def _frame_neutral_trace_manifest(trace: Any) -> dict[str, Any] | None:
     if trace is None:
         return None
     value = trace.canonical_manifest()
     value.pop("frame_id", None)
     value.pop("frame_kind", None)
-    return _sha_json(value)
+    return value
+
+
+def _trace_digest(trace: Any) -> str | None:
+    value = _frame_neutral_trace_manifest(trace)
+    return None if value is None else _sha_json(value)
+
+
+def _trace_parity_failures(
+    trace: Any, reference: Mapping[str, Any]
+) -> tuple[str, ...]:
+    failures = []
+    if asdict(trace.actuation) != reference["actuation"]:
+        failures.append("GraphActuation")
+    if list(trace.ordered_signal_identities) != reference[
+        "ordered_signal_identities"
+    ]:
+        failures.append("ordered_signal_identities")
+    if [asdict(item) for item in trace.terminal_signals] != reference[
+        "terminal_signals"
+    ]:
+        failures.append("typed_terminal_signals")
+    if _trace_digest(trace) != reference["semantic_trace_digest"]:
+        failures.append("frame_neutral_semantic_trace")
+    return tuple(failures)
+
+
+def _bind_semantic_reference_digests(
+    references: Sequence[Mapping[str, Any]],
+    source_item: Mapping[str, Any],
+) -> tuple[dict[str, Any], ...]:
+    """Bind stored raw hashes to exact traces, then derive neutral hashes."""
+
+    source = _load_source(source_item)
+    before = source.r0.persistent_state_audit()
+    result = []
+    for reference in references:
+        board = chess.Board(str(reference["fen"]))
+        _actuation, trace = source.r0.emit_action_with_trace(FrameContext(
+            f"trace-regression-real:{reference['row_index']}",
+            FrameKind.REAL,
+            values={"board": board},
+        ))
+        if trace is None or trace.digest() != reference["trace_digest"]:
+            raise RuntimeError("stored reference trace binding changed")
+        bound = {
+            **dict(reference),
+            "semantic_trace_digest": _trace_digest(trace),
+        }
+        if _trace_parity_failures(trace, bound):
+            raise RuntimeError("stored reference semantic fields changed")
+        result.append(bound)
+    if source.r0.persistent_state_audit() != before:
+        raise RuntimeError("reference semantic binding mutated R0")
+    return tuple(result)
 
 
 def _typed_digest(trace: Any) -> str | None:
@@ -286,11 +340,12 @@ def _worker(arg: Mapping[str, Any]) -> dict[str, Any]:
             f"residual-consensus-prospective:{index}", FrameKind.REAL,
             values={"board": board},
         ))
-        if (
-            asdict(trace.actuation) != reference["actuation"]
-            or trace.digest() != reference["trace_digest"]
-        ):
-            raise RuntimeError("frozen R0 action/trace parity failure")
+        parity_failures = _trace_parity_failures(trace, reference)
+        if parity_failures:
+            raise RuntimeError(
+                "frozen R0 action/trace parity failure: "
+                + ",".join(parity_failures)
+            )
         successor = board.copy(stack=False)
         successor.push(chess.Move.from_uci(trace.actuation.move_uci))
         if successor.is_checkmate() != bool(reference["actual_completion"]):
@@ -517,7 +572,9 @@ def run(freeze_path: str, *, max_workers: int) -> dict[str, Any]:
         raise RuntimeError("retained 32-seed cohort changed")
     if [int(item["genome_seed"]) for item in items] != freeze["genome_seeds"]:
         raise RuntimeError("frozen genome-seed cohort changed")
-    references = tuple(regression["reference_rows"])
+    references = _bind_semantic_reference_digests(
+        tuple(regression["reference_rows"]), items[0]
+    )
     build = load_retired_r0_build(NativeAuthorityLabConfig())
     evaluation_rows = tuple(
         [(f"validation_positive:{index:02d}", fen, True)
