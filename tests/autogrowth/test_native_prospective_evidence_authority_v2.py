@@ -794,6 +794,39 @@ def test_pruned_post_epoch_cell_retains_birth_escrow(native_fixture):
     ] == escrow_manifest
 
 
+def test_invalid_escrow_copy_reaches_atomic_domain_validation(native_fixture):
+    organism = NativeProspectiveAuthorityV2.from_organism(
+        native_fixture["source"], mode=V2Mode.PROSPECTIVE
+    )
+    receipts = _ground_receipts(
+        organism, native_fixture["negative"][:4], "copy-boundary-prefix"
+    )
+    organism.nominate_prefix_from_grounded_receipts(receipts)
+    epoch = organism.base.envelope.nomination_epoch
+    assert epoch is not None and epoch.post_epoch_cell_ids
+    cell = organism.base.envelope.cells[epoch.post_epoch_cell_ids[0]]
+    assert cell.nomination_escrow is not None
+    object.__setattr__(cell.nomination_escrow, "escrow_digest", "0" * 64)
+
+    before_manifest = organism.base.envelope.continuation_manifest_v2()
+    before_bytes = pickle.dumps(organism, protocol=pickle.HIGHEST_PROTOCOL)
+    copied = copy.deepcopy(organism)
+    copied_cell = copied.base.envelope.cells[cell.cell_id]
+    assert copied_cell.nomination_escrow is not None
+    assert copied_cell.nomination_escrow.escrow_digest == "0" * 64
+
+    with pytest.raises(
+        ProspectiveV2IntegrityError,
+        match="escrow|digest|provenance|tombstone",
+    ):
+        organism.sync_organism_nominations()
+    assert organism.base.envelope.continuation_manifest_v2() == before_manifest
+    assert (
+        pickle.dumps(organism, protocol=pickle.HIGHEST_PROTOCOL)
+        == before_bytes
+    )
+
+
 def test_specialization_materialization_has_exact_native_escrow(native_fixture):
     source = copy.deepcopy(native_fixture["source"])
     source.learning_config = replace(

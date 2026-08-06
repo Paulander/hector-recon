@@ -1,0 +1,2284 @@
+Script started on 2026-08-06 03:41:53+02:00 [COMMAND="env PYTHONPATH=src ../hector-recon-audit/.venv/bin/pytest -q --tb=long" <not executed on terminal>]
+........................................................................ [  5%]
+........................................................................ [ 10%]
+........................................................................ [ 15%]
+........................................................................ [ 20%]
+...................................................................F.... [ 25%]
+........................................................................ [ 30%]
+........................................................................ [ 35%]
+...................................F..s......F..s....................... [ 40%]
+...........F..................F......F.FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF [ 45%]
+.F....F........................................F.F..........F........... [ 51%]
+........................................................................ [ 56%]
+........................................................................ [ 61%]
+........................................................................ [ 66%]
+........................................................................ [ 71%]
+........................................................................ [ 76%]
+........................................................................ [ 81%]
+........................................................................ [ 86%]
+........................................................................ [ 91%]
+........................................................................ [ 97%]
+..........................................                               [100%]
+=================================== FAILURES ===================================
+_____________________ test_protected_v21_boundary_is_exact _____________________
+
+    def test_protected_v21_boundary_is_exact():
+>       verify_protected_boundary()
+
+tests/autogrowth/test_native_prospective_evidence_v2_science.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> None:
+        for relative, expected in PROTECTED_HASHES.items():
+            observed = sha256_file(ROOT / relative)
+            if observed != expected:
+>               raise ScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{observed}"
+                )
+E               recon_lite_chess.autogrowth.native_prospective_evidence_v2_science.ScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_prospective_evidence_v2_science.py:184: ScientificIntegrityError
+____________________ test_protected_boundary_is_byte_exact _____________________
+
+    def test_protected_boundary_is_byte_exact() -> None:
+>       observed = fresh.verify_protected_boundary()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_fresh_discriminator.py:141: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator.py:197: FreshScientificIntegrityError
+____________________ test_protected_boundary_is_byte_exact _____________________
+
+    def test_protected_boundary_is_byte_exact() -> None:
+>       observed = fresh.verify_protected_boundary()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_fresh_discriminator_review_repair_v2.py:141: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+_____ test_actual_seed_zero_reproduces_abort_and_passes_canonical_contract _____
+
+    def test_actual_seed_zero_reproduces_abort_and_passes_canonical_contract() -> None:
+>       static = closure.verify_static_bindings()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_canonical_contract_reclosure.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_static_bindings() -> dict[str, Any]:
+        _verify_commit_ancestry()
+        protected = {}
+        for relative, expected in PROTECTED_SOURCE_HASHES.items():
+            observed = sha256_file(ROOT / relative)
+            protected[relative] = observed
+            if observed != expected:
+>               raise CanonicalContractIntegrityError(
+                    f"protected source changed:{relative}:{observed}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure.CanonicalContractIntegrityError: protected source changed:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_canonical_contract_reclosure.py:245: CanonicalContractIntegrityError
+____________ test_frozen_input_bindings_and_old_paths_remain_exact _____________
+
+    def test_frozen_input_bindings_and_old_paths_remain_exact() -> None:
+>       fixed = adapter.verify_frozen_inputs()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_execution_adapter_freeze.py:313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_frozen_inputs() -> dict[str, Any]:
+        _require_commit(STARTING_HEAD)
+>       launcher_package = launcher.verify_package_manifests()
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_execution_adapter_freeze.py:369: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_package_manifests() -> dict[str, Any]:
+        source = _load_json(ROOT / SOURCE_MANIFEST_PATH)
+        source_digest = _verify_self_digest(
+            source, "source_manifest_digest", label="launcher source manifest"
+        )
+        for relative, expected in source["source_hashes"].items():
+            observed = sha256_file(ROOT / relative)
+            if observed != expected:
+                raise LauncherIntegrityError(
+                    f"launcher source changed:{relative}:{observed}"
+                )
+        _verify_commit(str(source["source_freeze_commit"]))
+        binding = _load_json(ROOT / ARTIFACT_BINDING_PATH)
+        binding_digest = _verify_self_digest(
+            binding, "artifact_binding_digest", label="launcher artifact binding"
+        )
+        if (
+            binding["source_manifest"]["sha256"]
+            != sha256_file(ROOT / SOURCE_MANIFEST_PATH)
+            or binding["source_manifest"]["digest"] != source_digest
+            or binding["launcher_contract"]["child_module"] != CHILD_MODULE
+        ):
+            raise LauncherIntegrityError("launcher source/artifact binding mismatch")
+>       fixed = verify_frozen_inputs()
+                ^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_import_path_launcher_reclosure.py:417: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_frozen_inputs() -> dict[str, Any]:
+        for commit in (
+            STOPPED_SOURCE_COMMIT,
+            STOPPED_MANIFEST_COMMIT,
+            STOPPED_RESULT_COMMIT,
+        ):
+            _verify_commit(commit)
+        observed_hashes = {}
+        for relative, expected in FROZEN_FILE_HASHES.items():
+            observed = sha256_file(ROOT / relative)
+            observed_hashes[relative] = observed
+            if observed != expected:
+                raise LauncherIntegrityError(
+                    f"frozen file changed:{relative}:expected={expected}:observed={observed}"
+                )
+        child_source = frozen_child_source_path()
+        if sha256_file(child_source) != FROZEN_FILE_HASHES[
+            "src/recon_lite_chess/autogrowth/"
+            "native_v2_frozen_cohort_canonical_contract_reclosure.py"
+        ]:
+            raise LauncherIntegrityError("resolved child source hash mismatch")
+        stopped_package = frozen._verify_frozen_package_manifests()
+>       static = frozen.verify_static_bindings()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_import_path_launcher_reclosure.py:276: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_static_bindings() -> dict[str, Any]:
+        _verify_commit_ancestry()
+        protected = {}
+        for relative, expected in PROTECTED_SOURCE_HASHES.items():
+            observed = sha256_file(ROOT / relative)
+            protected[relative] = observed
+            if observed != expected:
+>               raise CanonicalContractIntegrityError(
+                    f"protected source changed:{relative}:{observed}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure.CanonicalContractIntegrityError: protected source changed:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_canonical_contract_reclosure.py:245: CanonicalContractIntegrityError
+_____________ test_frozen_inputs_and_stopped_failure_remain_exact ______________
+
+    def test_frozen_inputs_and_stopped_failure_remain_exact() -> None:
+>       fixed = launcher.verify_frozen_inputs()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_import_path_launcher_reclosure.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_frozen_inputs() -> dict[str, Any]:
+        for commit in (
+            STOPPED_SOURCE_COMMIT,
+            STOPPED_MANIFEST_COMMIT,
+            STOPPED_RESULT_COMMIT,
+        ):
+            _verify_commit(commit)
+        observed_hashes = {}
+        for relative, expected in FROZEN_FILE_HASHES.items():
+            observed = sha256_file(ROOT / relative)
+            observed_hashes[relative] = observed
+            if observed != expected:
+                raise LauncherIntegrityError(
+                    f"frozen file changed:{relative}:expected={expected}:observed={observed}"
+                )
+        child_source = frozen_child_source_path()
+        if sha256_file(child_source) != FROZEN_FILE_HASHES[
+            "src/recon_lite_chess/autogrowth/"
+            "native_v2_frozen_cohort_canonical_contract_reclosure.py"
+        ]:
+            raise LauncherIntegrityError("resolved child source hash mismatch")
+        stopped_package = frozen._verify_frozen_package_manifests()
+>       static = frozen.verify_static_bindings()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_import_path_launcher_reclosure.py:276: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_static_bindings() -> dict[str, Any]:
+        _verify_commit_ancestry()
+        protected = {}
+        for relative, expected in PROTECTED_SOURCE_HASHES.items():
+            observed = sha256_file(ROOT / relative)
+            protected[relative] = observed
+            if observed != expected:
+>               raise CanonicalContractIntegrityError(
+                    f"protected source changed:{relative}:{observed}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure.CanonicalContractIntegrityError: protected source changed:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_canonical_contract_reclosure.py:245: CanonicalContractIntegrityError
+_________ test_diagnosis_has_exactly_13_absent_three_way_equal_aliases _________
+
+    def test_diagnosis_has_exactly_13_absent_three_way_equal_aliases() -> None:
+>       value = closure.diagnose_original_package_map()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:173: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+original = None
+
+    def diagnose_original_package_map(
+        original: Mapping[str, str] | None = None,
+    ) -> dict[str, Any]:
+        path_map = dict(
+>           driver.laboratory_package_hashes()
+            if original is None else original
+        )
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:245: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+______ test_expansion_retains_complete_original_map_and_adds_only_aliases ______
+
+    def test_expansion_retains_complete_original_map_and_adds_only_aliases() -> None:
+>       original = closure.driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:189: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+____ test_removing_or_changing_any_alias_fails[remove-hector_m5_structure] _____
+
+alias = 'hector_m5_structure', operation = 'remove'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+____ test_removing_or_changing_any_alias_fails[remove-hector_pack_template] ____
+
+alias = 'hector_pack_template', operation = 'remove'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+______ test_removing_or_changing_any_alias_fails[remove-hector_stem_cell] ______
+
+alias = 'hector_stem_cell', operation = 'remove'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+_ test_removing_or_changing_any_alias_fails[remove-native_authority_handover] __
+
+alias = 'native_authority_handover', operation = 'remove'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+_ test_removing_or_changing_any_alias_fails[remove-native_competence_envelope] _
+
+alias = 'native_competence_envelope', operation = 'remove'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+_ test_removing_or_changing_any_alias_fails[remove-native_single_graph_curriculum] _
+
+alias = 'native_single_graph_curriculum', operation = 'remove'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+_ test_removing_or_changing_any_alias_fails[remove-native_trace_competence_authority] _
+
+alias = 'native_trace_competence_authority', operation = 'remove'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+____ test_removing_or_changing_any_alias_fails[remove-recon_choice_genome] _____
+
+alias = 'recon_choice_genome', operation = 'remove'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+____ test_removing_or_changing_any_alias_fails[remove-recon_formal_engine] _____
+
+alias = 'recon_formal_engine', operation = 'remove'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+____ test_removing_or_changing_any_alias_fails[remove-recon_frame_context] _____
+
+alias = 'recon_frame_context', operation = 'remove'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+________ test_removing_or_changing_any_alias_fails[remove-recon_graph] _________
+
+alias = 'recon_graph', operation = 'remove'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+________ test_removing_or_changing_any_alias_fails[remove-v2_authority] ________
+
+alias = 'v2_authority', operation = 'remove'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+___ test_removing_or_changing_any_alias_fails[remove-v2_laboratory_registry] ___
+
+alias = 'v2_laboratory_registry', operation = 'remove'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+____ test_removing_or_changing_any_alias_fails[change-hector_m5_structure] _____
+
+alias = 'hector_m5_structure', operation = 'change'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+____ test_removing_or_changing_any_alias_fails[change-hector_pack_template] ____
+
+alias = 'hector_pack_template', operation = 'change'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+______ test_removing_or_changing_any_alias_fails[change-hector_stem_cell] ______
+
+alias = 'hector_stem_cell', operation = 'change'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+_ test_removing_or_changing_any_alias_fails[change-native_authority_handover] __
+
+alias = 'native_authority_handover', operation = 'change'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+_ test_removing_or_changing_any_alias_fails[change-native_competence_envelope] _
+
+alias = 'native_competence_envelope', operation = 'change'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+_ test_removing_or_changing_any_alias_fails[change-native_single_graph_curriculum] _
+
+alias = 'native_single_graph_curriculum', operation = 'change'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+_ test_removing_or_changing_any_alias_fails[change-native_trace_competence_authority] _
+
+alias = 'native_trace_competence_authority', operation = 'change'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+____ test_removing_or_changing_any_alias_fails[change-recon_choice_genome] _____
+
+alias = 'recon_choice_genome', operation = 'change'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+____ test_removing_or_changing_any_alias_fails[change-recon_formal_engine] _____
+
+alias = 'recon_formal_engine', operation = 'change'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+____ test_removing_or_changing_any_alias_fails[change-recon_frame_context] _____
+
+alias = 'recon_frame_context', operation = 'change'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+________ test_removing_or_changing_any_alias_fails[change-recon_graph] _________
+
+alias = 'recon_graph', operation = 'change'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+________ test_removing_or_changing_any_alias_fails[change-v2_authority] ________
+
+alias = 'v2_authority', operation = 'change'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+___ test_removing_or_changing_any_alias_fails[change-v2_laboratory_registry] ___
+
+alias = 'v2_laboratory_registry', operation = 'change'
+
+    @pytest.mark.parametrize(
+        "alias", sorted(closure.laboratory.POLICY_CRITICAL_SOURCE_PATHS)
+    )
+    @pytest.mark.parametrize("operation", ("remove", "change"))
+    def test_removing_or_changing_any_alias_fails(
+        alias: str, operation: str
+    ) -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+________________________ test_wrong_declared_path_fails ________________________
+
+    def test_wrong_declared_path_fails() -> None:
+        wrong = closure.declared_alias_paths()
+        wrong["hector_m5_structure"] = wrong["hector_pack_template"]
+        with pytest.raises(
+            closure.CompatibilityClosureError,
+            match="declared alias-to-path",
+        ):
+            closure.derive_expanded_package_map(
+>               closure.driver.laboratory_package_hashes(),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                declared_paths=wrong,
+            )
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:223: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+___________________ test_extra_manually_authored_alias_fails ___________________
+
+    def test_extra_manually_authored_alias_fails() -> None:
+>       expanded = closure.expanded_package_map()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+______________ test_production_expanded_map_creates_real_registry ______________
+
+synthetic_registry_fixture = {'commitments': {'organism-00': (CanonicalExposureCommitment(schema_version='native_v2_bound_exposure.v5', source_orga...f_receipt_secret\x94C*native-prospective-v2-environment-terminal\x94ub.', ...}, 'row_order': ('synthetic-row-0',), ...}
+
+    def test_production_expanded_map_creates_real_registry(
+        synthetic_registry_fixture: dict,
+    ) -> None:
+>       package_map = closure.expanded_package_map()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:240: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+______________ test_data_free_create_scan_and_cohort_use_same_map ______________
+
+synthetic_registry_fixture = {'commitments': {'organism-00': (CanonicalExposureCommitment(schema_version='native_v2_bound_exposure.v5', source_orga...f_receipt_secret\x94C*native-prospective-v2-environment-terminal\x94ub.', ...}, 'row_order': ('synthetic-row-0',), ...}
+
+    def test_data_free_create_scan_and_cohort_use_same_map(
+        synthetic_registry_fixture: dict,
+    ) -> None:
+>       package_map = closure.expanded_package_map()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:251: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+_______________ test_old_map_reproduces_preserved_alias_failure ________________
+
+synthetic_registry_fixture = {'commitments': {'organism-00': (CanonicalExposureCommitment(schema_version='native_v2_bound_exposure.v5', source_orga...f_receipt_secret\x94C*native-prospective-v2-environment-terminal\x94ub.', ...}, 'row_order': ('synthetic-row-0',), ...}
+
+    def test_old_map_reproduces_preserved_alias_failure(
+        synthetic_registry_fixture: dict,
+    ) -> None:
+>       old_map = closure.driver.laboratory_package_hashes()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:281: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+_________ test_compatibility_operations_do_not_replace_module_globals __________
+
+synthetic_registry_fixture = {'commitments': {'organism-00': (CanonicalExposureCommitment(schema_version='native_v2_bound_exposure.v5', source_orga...f_receipt_secret\x94C*native-prospective-v2-environment-terminal\x94ub.', ...}, 'row_order': ('synthetic-row-0',), ...}
+
+    def test_compatibility_operations_do_not_replace_module_globals(
+        synthetic_registry_fixture: dict,
+    ) -> None:
+        before = closure.capture_critical_bindings()
+>       package_map = closure.expanded_package_map()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:303: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+_______________ test_historical_files_are_restored_and_protected _______________
+
+    def test_historical_files_are_restored_and_protected() -> None:
+        assert bridge.verify_historical_inner_hashes() == {
+            bridge.HISTORICAL_PROCESS_PATH.as_posix(): (
+                bridge.HISTORICAL_PROCESS_SHA256
+            ),
+            bridge.HISTORICAL_TEST_PATH.as_posix(): bridge.HISTORICAL_TEST_SHA256,
+        }
+        protected = bridge.verify_protected_files()
+        assert protected["file_count"] == 195
+        assert protected["file_set_digest"] == bridge.PROTECTED_FILE_SET_DIGEST
+>       assert bridge.verify_zero_outcome_access()["count"] == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_portable_admission_bridge.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_zero_outcome_access() -> dict[str, Any]:
+        present = [path.as_posix() for path in _science_paths() if (ROOT / path).exists()]
+        if present:
+>           raise PortableAdmissionError(f"outcome-stage path exists:{present}")
+E           recon_lite_chess.autogrowth.native_v2_portable_admission_bridge.PortableAdmissionError: outcome-stage path exists:['reports/autogrowth/native_authority/v2_process_readiness_repair/science_started.json', 'reports/autogrowth/native_authority/v2_process_readiness_repair/science_journal', 'reports/autogrowth/native_authority/v2_process_readiness_repair/science_carrier', 'reports/autogrowth/native_authority/v2_process_readiness_repair/canonical_result.json.gz']
+
+src/recon_lite_chess/autogrowth/native_v2_portable_admission_bridge.py:280: PortableAdmissionError
+___________ test_launcher_freeze_differs_only_by_absolute_child_path ___________
+
+    def test_launcher_freeze_differs_only_by_absolute_child_path() -> None:
+>       package, proof = successor._portable_launcher_package()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_portable_outcome_successor.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _portable_launcher_package() -> tuple[dict[str, Any], dict[str, Any]]:
+        """Verify the old launcher while normalizing only its checkout path.
+    
+        The launcher artifact embedded the absolute path of its child module even
+        though the same child bytes and every other frozen input are portable.
+        The three-process admission already established the complete organism and
+        unit semantics.  This verifier retains every old launcher check and permits
+        exactly that one absolute-path representation difference.
+        """
+    
+        launcher = historical.stopped_adapter.launcher
+        source = launcher._load_json(ROOT / launcher.SOURCE_MANIFEST_PATH)
+        source_digest = launcher._verify_self_digest(
+            source, "source_manifest_digest", label="launcher source manifest"
+        )
+        for relative, expected in source["source_hashes"].items():
+            observed = launcher.sha256_file(ROOT / relative)
+            if observed != expected:
+                raise PortableOutcomeSuccessorError(
+                    f"launcher source changed:{relative}:{observed}"
+                )
+        launcher._verify_commit(str(source["source_freeze_commit"]))
+        binding = launcher._load_json(ROOT / launcher.ARTIFACT_BINDING_PATH)
+        binding_digest = launcher._verify_self_digest(
+            binding, "artifact_binding_digest", label="launcher artifact binding"
+        )
+        if (
+            binding["source_manifest"]["sha256"]
+            != launcher.sha256_file(ROOT / launcher.SOURCE_MANIFEST_PATH)
+            or binding["source_manifest"]["digest"] != source_digest
+            or binding["launcher_contract"]["child_module"]
+            != launcher.CHILD_MODULE
+        ):
+            raise PortableOutcomeSuccessorError(
+                "launcher source/artifact binding changed"
+            )
+    
+>       observed_fixed = launcher.verify_frozen_inputs()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_portable_outcome_successor.py:437: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_frozen_inputs() -> dict[str, Any]:
+        for commit in (
+            STOPPED_SOURCE_COMMIT,
+            STOPPED_MANIFEST_COMMIT,
+            STOPPED_RESULT_COMMIT,
+        ):
+            _verify_commit(commit)
+        observed_hashes = {}
+        for relative, expected in FROZEN_FILE_HASHES.items():
+            observed = sha256_file(ROOT / relative)
+            observed_hashes[relative] = observed
+            if observed != expected:
+                raise LauncherIntegrityError(
+                    f"frozen file changed:{relative}:expected={expected}:observed={observed}"
+                )
+        child_source = frozen_child_source_path()
+        if sha256_file(child_source) != FROZEN_FILE_HASHES[
+            "src/recon_lite_chess/autogrowth/"
+            "native_v2_frozen_cohort_canonical_contract_reclosure.py"
+        ]:
+            raise LauncherIntegrityError("resolved child source hash mismatch")
+        stopped_package = frozen._verify_frozen_package_manifests()
+>       static = frozen.verify_static_bindings()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_import_path_launcher_reclosure.py:276: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_static_bindings() -> dict[str, Any]:
+        _verify_commit_ancestry()
+        protected = {}
+        for relative, expected in PROTECTED_SOURCE_HASHES.items():
+            observed = sha256_file(ROOT / relative)
+            protected[relative] = observed
+            if observed != expected:
+>               raise CanonicalContractIntegrityError(
+                    f"protected source changed:{relative}:{observed}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure.CanonicalContractIntegrityError: protected source changed:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_canonical_contract_reclosure.py:245: CanonicalContractIntegrityError
+_____________ test_launcher_portable_check_rejects_non_path_change _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x778fe6275a90>
+
+    def test_launcher_portable_check_rejects_non_path_change(
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        launcher = successor.historical.stopped_adapter.launcher
+>       observed = launcher.verify_frozen_inputs()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_portable_outcome_successor.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_frozen_inputs() -> dict[str, Any]:
+        for commit in (
+            STOPPED_SOURCE_COMMIT,
+            STOPPED_MANIFEST_COMMIT,
+            STOPPED_RESULT_COMMIT,
+        ):
+            _verify_commit(commit)
+        observed_hashes = {}
+        for relative, expected in FROZEN_FILE_HASHES.items():
+            observed = sha256_file(ROOT / relative)
+            observed_hashes[relative] = observed
+            if observed != expected:
+                raise LauncherIntegrityError(
+                    f"frozen file changed:{relative}:expected={expected}:observed={observed}"
+                )
+        child_source = frozen_child_source_path()
+        if sha256_file(child_source) != FROZEN_FILE_HASHES[
+            "src/recon_lite_chess/autogrowth/"
+            "native_v2_frozen_cohort_canonical_contract_reclosure.py"
+        ]:
+            raise LauncherIntegrityError("resolved child source hash mismatch")
+        stopped_package = frozen._verify_frozen_package_manifests()
+>       static = frozen.verify_static_bindings()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_import_path_launcher_reclosure.py:276: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_static_bindings() -> dict[str, Any]:
+        _verify_commit_ancestry()
+        protected = {}
+        for relative, expected in PROTECTED_SOURCE_HASHES.items():
+            observed = sha256_file(ROOT / relative)
+            protected[relative] = observed
+            if observed != expected:
+>               raise CanonicalContractIntegrityError(
+                    f"protected source changed:{relative}:{observed}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_frozen_cohort_canonical_contract_reclosure.CanonicalContractIntegrityError: protected source changed:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_canonical_contract_reclosure.py:245: CanonicalContractIntegrityError
+__________ test_actual_runtime_call_path_calls_injected_verifier_once __________
+
+    def test_actual_runtime_call_path_calls_injected_verifier_once() -> None:
+        calls = {"count": 0}
+    
+        def verify() -> dict:
+            calls["count"] += 1
+            return {"verified": True}
+    
+>       value = repair.data_free_runtime_call_canary(verifier=verify)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/autogrowth/test_native_v2_process_readiness_repair.py:303: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+verifier = <function test_actual_runtime_call_path_calls_injected_verifier_once.<locals>.verify at 0x778fea8e59e0>
+
+    def data_free_runtime_call_canary(
+        verifier: Callable[[], Mapping[str, Any]] = verify_runtime_inputs,
+    ) -> dict[str, Any]:
+        calls = {"verify": 0}
+    
+        def counted_verify() -> Mapping[str, Any]:
+            calls["verify"] += 1
+            return verifier()
+    
+        class FakeRegistry:
+            @staticmethod
+            def freeze(
+                payloads: Mapping[str, bytes], **kwargs: Any
+            ) -> Any:
+                return type("Registry", (), {
+                    "registry_id": digest(sorted(payloads)),
+                    "tape_identity": digest(kwargs["row_order"]),
+                    "run_identity": kwargs["run_identity"],
+                })()
+    
+        class FakeWrapper:
+            def __init__(self, identity: str) -> None:
+                self.identity = identity
+    
+            def dumps(self) -> bytes:
+                return self.identity.encode()
+    
+        restored = {
+            (ordinal, arm): FakeWrapper(f"{ordinal}:{arm}")
+            for ordinal in range(SEED_COUNT) for arm in ARMS
+        }
+        dependencies = RuntimeDependencies(
+            verify_inputs=counted_verify,
+            load_previous_readiness=lambda: {"readiness_digest": "previous"},
+            build_context=lambda: {
+                "restored": restored,
+                "prefix": {"results": []},
+                "runtime_manifest": {"entries": []},
+            },
+            verify_outer_manifest=lambda _label: {
+                "outer_sha256": "outer",
+                "source_freeze_commit": "source",
+                "source_runtime_digest": "runtime",
+            },
+            load_ecology=lambda: {
+                "rows": [{
+                    "phase": "suffix",
+                    "row_id": f"row-{index:02d}",
+                    **{
+                        f"{arm}_transition_id": f"{arm}:{index}"
+                        for arm in ARMS
+                    },
+                } for index in range(ROW_COUNT)],
+                "transitions": [{
+                    "transition_id": f"{arm}:{index}",
+                    "predecessor_fen": (
+                        "8/8/8/8/8/7K/5R2/7k w - - 0 1"
+                    ),
+                } for arm in ARMS for index in range(ROW_COUNT)],
+            },
+            load_receipt=lambda: {"receipt_digest": "receipt"},
+            expanded_package_map=frozen.expanded_package_map,
+            registry_type=FakeRegistry,
+        )
+>       runtime = build_real_exposure_runtime(dependencies)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_process_readiness_repair.py:2045: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+dependencies = RuntimeDependencies(verify_inputs=<function data_free_runtime_call_canary.<locals>.counted_verify at 0x778fea8e5b20>, ... 'recon_lite_chess.autogrowth.native_v2_process_readiness_repair.data_free_runtime_call_canary.<locals>.FakeRegistry'>)
+
+    def build_real_exposure_runtime(
+        dependencies: RuntimeDependencies | None = None,
+    ) -> dict[str, Any]:
+        deps = dependencies or production_runtime_dependencies()
+        verified_inputs = copy.deepcopy(dict(deps.verify_inputs()))
+        readiness = copy.deepcopy(dict(deps.load_previous_readiness()))
+        context = dict(deps.build_context())
+        identity = copy.deepcopy(dict(deps.verify_outer_manifest(
+            "process-readiness-repair runtime"
+        )))
+        ecology = copy.deepcopy(dict(deps.load_ecology()))
+        receipt = copy.deepcopy(dict(deps.load_receipt()))
+>       package_hashes = dict(deps.expanded_package_map())
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_process_readiness_repair.py:513: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def expanded_package_map() -> dict[str, str]:
+>       original = driver.laboratory_package_hashes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_frozen_cohort_package_alias_compatibility_reclosure.py:348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def laboratory_package_hashes() -> dict[str, str]:
+>       identity = verify_outer_manifest("laboratory package binding")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3058: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+phase = 'laboratory package binding'
+
+    def verify_outer_manifest(phase: str) -> dict[str, Any]:
+>       verify_protected_boundary()
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:3024: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def verify_protected_boundary() -> dict[str, str]:
+        observed = {}
+        for relative, expected in PROTECTED_HASHES.items():
+            actual = sha256_file(ROOT / relative)
+            observed[relative] = actual
+            if actual != expected:
+>               raise FreshScientificIntegrityError(
+                    f"engineering_boundary_requires_reclosure:{relative}:{actual}"
+                )
+E               recon_lite_chess.autogrowth.native_v2_fresh_discriminator_review_repair_v2.FreshScientificIntegrityError: engineering_boundary_requires_reclosure:src/recon_lite_chess/autogrowth/native_prospective_evidence_authority_v2.py:1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d
+
+src/recon_lite_chess/autogrowth/native_v2_fresh_discriminator_review_repair_v2.py:199: FreshScientificIntegrityError
+=========================== short test summary info ============================
+FAILED tests/autogrowth/test_native_prospective_evidence_v2_science.py::test_protected_v21_boundary_is_exact
+FAILED tests/autogrowth/test_native_v2_fresh_discriminator.py::test_protected_boundary_is_byte_exact
+FAILED tests/autogrowth/test_native_v2_fresh_discriminator_review_repair_v2.py::test_protected_boundary_is_byte_exact
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_canonical_contract_reclosure.py::test_actual_seed_zero_reproduces_abort_and_passes_canonical_contract
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_execution_adapter_freeze.py::test_frozen_input_bindings_and_old_paths_remain_exact
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_import_path_launcher_reclosure.py::test_frozen_inputs_and_stopped_failure_remain_exact
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_diagnosis_has_exactly_13_absent_three_way_equal_aliases
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_expansion_retains_complete_original_map_and_adds_only_aliases
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[remove-hector_m5_structure]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[remove-hector_pack_template]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[remove-hector_stem_cell]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[remove-native_authority_handover]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[remove-native_competence_envelope]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[remove-native_single_graph_curriculum]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[remove-native_trace_competence_authority]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[remove-recon_choice_genome]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[remove-recon_formal_engine]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[remove-recon_frame_context]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[remove-recon_graph]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[remove-v2_authority]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[remove-v2_laboratory_registry]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[change-hector_m5_structure]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[change-hector_pack_template]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[change-hector_stem_cell]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[change-native_authority_handover]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[change-native_competence_envelope]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[change-native_single_graph_curriculum]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[change-native_trace_competence_authority]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[change-recon_choice_genome]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[change-recon_formal_engine]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[change-recon_frame_context]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[change-recon_graph]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[change-v2_authority]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_removing_or_changing_any_alias_fails[change-v2_laboratory_registry]
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_wrong_declared_path_fails
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_extra_manually_authored_alias_fails
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_production_expanded_map_creates_real_registry
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_data_free_create_scan_and_cohort_use_same_map
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_old_map_reproduces_preserved_alias_failure
+FAILED tests/autogrowth/test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py::test_compatibility_operations_do_not_replace_module_globals
+FAILED tests/autogrowth/test_native_v2_portable_admission_bridge.py::test_historical_files_are_restored_and_protected
+FAILED tests/autogrowth/test_native_v2_portable_outcome_successor.py::test_launcher_freeze_differs_only_by_absolute_child_path
+FAILED tests/autogrowth/test_native_v2_portable_outcome_successor.py::test_launcher_portable_check_rejects_non_path_change
+FAILED tests/autogrowth/test_native_v2_process_readiness_repair.py::test_actual_runtime_call_path_calls_injected_verifier_once
+44 failed, 1364 passed, 2 skipped in 13072.98s (3:37:52)
+
+Script done on 2026-08-06 07:17:41+02:00 [COMMAND_EXIT_CODE="1"]

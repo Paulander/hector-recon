@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import copy
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields
 from enum import Enum
 import hashlib
 import json
@@ -95,6 +95,19 @@ class NominationEscrow:
     certification_frontier: int
     escrow_digest: str = ""
     escrow_schema_version: str = NOMINATION_ESCROW_V1
+
+    def __deepcopy__(
+        self, memo: dict[int, Any]
+    ) -> "NominationEscrow":
+        clone = object.__new__(type(self))
+        memo[id(self)] = clone
+        for item in fields(self):
+            object.__setattr__(
+                clone,
+                item.name,
+                copy.deepcopy(getattr(self, item.name), memo),
+            )
+        return clone
 
     def __setstate__(self, state: Mapping[str, Any]) -> None:
         for key, value in state.items():

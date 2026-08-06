@@ -1,0 +1,65 @@
+{
+  "schema_version": "native_residual_consensus_compatibility_validation_stop.v1",
+  "recorded_at_utc": "2026-08-05T22:23:44Z",
+  "branch": "codex/native-v2-systemd-schema-reclosure-20260802",
+  "starting_commit": "a2bc42667b58dee87976815491364d441b272fdb",
+  "status": "STOPPED_BEFORE_SCIENCE",
+  "compatibility_repair": {
+    "mechanism": "NominationEscrow.__deepcopy__ mechanically copies all dataclass fields without invoking __post_init__",
+    "setstate_validation_changed": false,
+    "learner_module_sha256": "12c7dec80ead19c75edce8e1ed6a1d2080f1983145707698a5a076738b10025f"
+  },
+  "ordered_validation": [
+    {
+      "stage": "three_previously_failing_tests",
+      "status": "passed",
+      "passed": 3,
+      "failed": 0,
+      "duration_seconds": 407.13
+    },
+    {
+      "stage": "complete_prospective_nomination_escrow_file",
+      "status": "passed",
+      "passed": 31,
+      "failed": 0,
+      "duration_seconds": 9627.17
+    },
+    {
+      "stage": "comparator_tests",
+      "status": "passed",
+      "passed": 7,
+      "failed": 0,
+      "duration_seconds": 214.19
+    },
+    {
+      "stage": "residual_and_adjacent_tests",
+      "status": "failed",
+      "passed": 51,
+      "failed": 2,
+      "duration_seconds": 500.88,
+      "expected_learner_module_sha256": "429152c86ecf9a978a2946f927b7dd8dce93f3da74fec3f6d6c6e8ee8e46f2c0",
+      "actual_learner_module_sha256": "12c7dec80ead19c75edce8e1ed6a1d2080f1983145707698a5a076738b10025f",
+      "failures": [
+        "tests/autogrowth/test_native_competence_envelope_v3_training.py::test_v3_preserves_frozen_hash_and_locks_additive_terminal_trace_authority_extension",
+        "tests/autogrowth/test_native_competence_envelope_v3b_seed_robustness.py::test_v3b_locks_artifact_rows_and_declares_additive_specialization_extension"
+      ]
+    },
+    {
+      "stage": "complete_repository_suite",
+      "status": "not_run_due_to_prior_required_stop"
+    }
+  ],
+  "science": {
+    "source_freeze_created": false,
+    "stage_0_rerun": false,
+    "experiment_started": false,
+    "result_path_absent": "reports/autogrowth/native_authority/native_residual_consensus_candidate_allocation_reclosure.json.gz"
+  },
+  "preserved_attempts": {
+    "native_residual_consensus_candidate_allocation.json.gz": "9ba7de982b76c52f83f4f2bcd37dd1b199c1552be3b3bbb11b4852e644110f2c",
+    "native_residual_consensus_candidate_allocation.md": "90ead3650c8943df66dd89a47cac0f02cbde80a3166d41bc554188e91617a083",
+    "native_residual_consensus_harness_reclosure/escrow_failure_trace.log.gz": "ff0f0c157728622bc177803701ec1b468ea16af91b55363e2272b18d6321506f",
+    "native_residual_consensus_harness_reclosure/engineering_validation.json": "b32c0a27f853ddee04299dcc68b2e1a46a47e6b71a41ba8ab3cb30a04d429a23",
+    "native_residual_consensus_harness_reclosure/CLOSURE.md": "61e230211230aa9ccc9f4669d83ecd120c595f02c75afcd4d242f78a6e04a7c4"
+  }
+}

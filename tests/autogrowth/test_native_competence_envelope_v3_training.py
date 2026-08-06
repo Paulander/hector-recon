@@ -40,6 +40,10 @@ RESIDUAL_CONSENSUS_EXTENSION_LEARNER_SHA256 = (
     "429152c86ecf9a978a2946f927b7dd8dce93f3da74fec3f6d6c6e8ee8e46f2c0"
 )
 
+RESIDUAL_CONSENSUS_COPY_COMPATIBILITY_LEARNER_SHA256 = (
+    "12c7dec80ead19c75edce8e1ed6a1d2080f1983145707698a5a076738b10025f"
+)
+
 
 def _actuation(activation: float = 0.25) -> dict[str, object]:
     return {
@@ -82,11 +86,18 @@ def test_v3_preserves_frozen_hash_and_locks_additive_terminal_trace_authority_ex
     assert PROSPECTIVE_V2_READINESS_ESCROW_LEARNER_SHA256 == (
         "0452da3fbe15138696280728547c03d0ad5a09d7b88fdbd0b75e60c0eac3e1ca"
     )
-    # The residual-consensus extension adds versioned consensus reads while
-    # preserving V1 escrow manifests and frozen continuation digests; those
-    # compatibility properties are locked by the focused residual tests.
+    # Preserve the earlier residual-consensus source identity as historical
+    # evidence for its stopped attempts. The later copy/restore compatibility
+    # layer changes no learning rule, manifest, or continuation digest; strict
+    # deserialization validation remains independently locked.
+    assert RESIDUAL_CONSENSUS_EXTENSION_LEARNER_SHA256 == (
+        "429152c86ecf9a978a2946f927b7dd8dce93f3da74fec3f6d6c6e8ee8e46f2c0"
+    )
+    assert RESIDUAL_CONSENSUS_COPY_COMPATIBILITY_LEARNER_SHA256 == (
+        "12c7dec80ead19c75edce8e1ed6a1d2080f1983145707698a5a076738b10025f"
+    )
     assert _file_sha256(LEARNER_MODULE) == (
-        RESIDUAL_CONSENSUS_EXTENSION_LEARNER_SHA256
+        RESIDUAL_CONSENSUS_COPY_COMPATIBILITY_LEARNER_SHA256
     )
 
 

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from dataclasses import asdict
+import copy
+from dataclasses import asdict, fields
+import pickle
 
 import pytest
 
@@ -224,3 +226,93 @@ def test_consensus_escrow_is_complete_and_v1_manifest_stays_unversioned() -> Non
         "event:00", "event:01"
     )
     assert v2.discovery_receipt_ids == ("event:00", "event:01")
+
+
+@pytest.mark.parametrize("version", (NOMINATION_ESCROW_V1, NOMINATION_ESCROW_V2))
+def test_nomination_escrow_deepcopy_is_field_and_manifest_exact(
+    version: str,
+) -> None:
+    categories = (
+        ("direct", ("event:00",)),
+        ("parent_support", ()),
+        ("eligibility", ()),
+        ("contradiction_trigger", ()),
+    )
+    if version == NOMINATION_ESCROW_V2:
+        categories = (*categories, ("consensus_reads", ("event:01",)))
+    original = _escrow(categories, version)
+    copied = copy.deepcopy(original)
+    assert copied is not original
+    assert copied.manifest() == original.manifest()
+    assert copied.escrow_digest == original.escrow_digest
+    assert all(
+        getattr(copied, item.name) == getattr(original, item.name)
+        for item in fields(NominationEscrow)
+    )
+
+
+def test_nomination_escrow_deepcopy_mechanically_preserves_bad_digest() -> None:
+    original = _escrow((
+        ("direct", ("event:00",)),
+        ("parent_support", ()),
+        ("eligibility", ()),
+        ("contradiction_trigger", ()),
+    ), NOMINATION_ESCROW_V1)
+    object.__setattr__(original, "escrow_digest", "0" * 64)
+    copied = copy.deepcopy(original)
+    assert copied.escrow_digest == "0" * 64
+    assert copied.manifest() == original.manifest()
+
+
+@pytest.mark.parametrize("version", (NOMINATION_ESCROW_V1, NOMINATION_ESCROW_V2))
+def test_nomination_escrow_valid_pickle_round_trip(version: str) -> None:
+    categories = (
+        ("direct", ("event:00",)),
+        ("parent_support", ()),
+        ("eligibility", ()),
+        ("contradiction_trigger", ()),
+    )
+    if version == NOMINATION_ESCROW_V2:
+        categories = (*categories, ("consensus_reads", ("event:01",)))
+    original = _escrow(categories, version)
+    restored = pickle.loads(pickle.dumps(original))
+    assert restored.manifest() == original.manifest()
+    assert restored.escrow_schema_version == version
+
+
+def _raw_escrow_state(
+    source: NominationEscrow, *, include_schema: bool = True
+) -> NominationEscrow:
+    raw = object.__new__(NominationEscrow)
+    for item in fields(NominationEscrow):
+        if item.name == "escrow_schema_version" and not include_schema:
+            continue
+        object.__setattr__(raw, item.name, getattr(source, item.name))
+    return raw
+
+
+def test_nomination_escrow_missing_schema_restores_strict_v1() -> None:
+    original = _escrow((
+        ("direct", ("event:00",)),
+        ("parent_support", ()),
+        ("eligibility", ()),
+        ("contradiction_trigger", ()),
+    ), NOMINATION_ESCROW_V1)
+    legacy = _raw_escrow_state(original, include_schema=False)
+    restored = pickle.loads(pickle.dumps(legacy))
+    assert restored.escrow_schema_version == NOMINATION_ESCROW_V1
+    assert restored.manifest() == original.manifest()
+
+
+def test_nomination_escrow_corrupt_pickle_fails_closed() -> None:
+    original = _escrow((
+        ("direct", ("event:00",)),
+        ("parent_support", ()),
+        ("eligibility", ()),
+        ("contradiction_trigger", ()),
+    ), NOMINATION_ESCROW_V1)
+    corrupt = _raw_escrow_state(original)
+    object.__setattr__(corrupt, "escrow_digest", "0" * 64)
+    payload = pickle.dumps(corrupt)
+    with pytest.raises(ValueError, match="nomination escrow digest mismatch"):
+        pickle.loads(payload)

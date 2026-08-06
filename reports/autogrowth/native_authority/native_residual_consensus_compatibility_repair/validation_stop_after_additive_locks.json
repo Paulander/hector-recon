@@ -1,0 +1,122 @@
+{
+  "schema_version": "native_residual_consensus_copy_compatibility_validation_decision.v2",
+  "recorded_at_utc": "2026-08-06T05:23:08Z",
+  "branch": "codex/native-v2-systemd-schema-reclosure-20260802",
+  "starting_commit": "a2bc42667b58dee87976815491364d441b272fdb",
+  "decision_recorded_at_utc": "2026-08-06T07:22:43Z",
+  "status": "DIFFERENTIAL_VALIDATION_ACCEPTED",
+  "copy_compatibility_source": {
+    "learner_module_sha256": "12c7dec80ead19c75edce8e1ed6a1d2080f1983145707698a5a076738b10025f",
+    "historical_residual_consensus_sha256_retained": "429152c86ecf9a978a2946f927b7dd8dce93f3da74fec3f6d6c6e8ee8e46f2c0",
+    "learning_rule_changed": false,
+    "manifest_or_continuation_digest_changed": false,
+    "strict_deserialization_validation_retained": true
+  },
+  "ordered_validation": [
+    {
+      "stage": "two_additive_source_lock_tests",
+      "status": "passed",
+      "passed": 2,
+      "failed": 0,
+      "duration_seconds": 3.26
+    },
+    {
+      "stage": "complete_prospective_nomination_escrow_file",
+      "status": "passed",
+      "passed": 31,
+      "failed": 0,
+      "duration_seconds": 8887.49
+    },
+    {
+      "stage": "comparator_tests",
+      "status": "passed",
+      "passed": 7,
+      "failed": 0,
+      "duration_seconds": 189.35
+    },
+    {
+      "stage": "residual_and_adjacent_tests",
+      "status": "passed",
+      "passed": 53,
+      "failed": 0,
+      "duration_seconds": 451.87
+    },
+    {
+      "stage": "complete_repository_suite",
+      "status": "failed",
+      "passed": 1364,
+      "failed": 44,
+      "skipped": 2,
+      "duration_seconds": 13072.98,
+      "complete_terminal_output": "full_repository_suite_20260806.typescript",
+      "complete_terminal_output_sha256": "fe397747c671aea4f5bcd7be279e7fdb4a022d98cc525cef60cfc6618e39dc01"
+    }
+  ],
+  "failure_groups": [
+    {
+      "count": 43,
+      "classification": "historical_protected_source_binding_stop",
+      "expected_native_prospective_authority_v2_sha256": "25945864fd998caf22ae12cbcb9bcb4779447337c0079f705640c63d2356f029",
+      "observed_native_prospective_authority_v2_sha256": "1d4ed9d144fcc91d2b121ad11d041d7a48d50bb9abb3337b751fa0481173632d",
+      "test_file_counts": {
+        "test_native_prospective_evidence_v2_science.py": 1,
+        "test_native_v2_fresh_discriminator.py": 1,
+        "test_native_v2_fresh_discriminator_review_repair_v2.py": 1,
+        "test_native_v2_frozen_cohort_canonical_contract_reclosure.py": 1,
+        "test_native_v2_frozen_cohort_execution_adapter_freeze.py": 1,
+        "test_native_v2_frozen_cohort_import_path_launcher_reclosure.py": 1,
+        "test_native_v2_frozen_cohort_package_alias_compatibility_reclosure.py": 34,
+        "test_native_v2_portable_outcome_successor.py": 2,
+        "test_native_v2_process_readiness_repair.py": 1
+      },
+      "behavioral_execution_reached": false
+    },
+    {
+      "count": 1,
+      "classification": "historical_portable_admission_preflight_stop",
+      "test": "tests/autogrowth/test_native_v2_portable_admission_bridge.py::test_historical_files_are_restored_and_protected",
+      "present_paths": [
+        "reports/autogrowth/native_authority/v2_process_readiness_repair/science_started.json",
+        "reports/autogrowth/native_authority/v2_process_readiness_repair/science_journal",
+        "reports/autogrowth/native_authority/v2_process_readiness_repair/science_carrier",
+        "reports/autogrowth/native_authority/v2_process_readiness_repair/canonical_result.json.gz"
+      ],
+      "behavioral_execution_reached": false
+    }
+  ],
+  "differential_validation_decision": {
+    "baseline_commit": "a2bc42667b58dee87976815491364d441b272fdb",
+    "baseline_authority_hash_verified": true,
+    "successful_outcome_commit_00c1330_is_ancestor": true,
+    "four_outcome_stage_paths_exist_at_baseline": true,
+    "baseline_historical_incompatibility_failure_count": 44,
+    "compatibility_repair_demonstrated_new_failure_count": 0,
+    "active_source_lock_tests_passed": 2,
+    "prospective_escrow_tests_passed": 31,
+    "comparator_tests_passed": 7,
+    "residual_adjacent_tests_passed": 53,
+    "accepted_for_source_freeze_and_science": true
+  },
+  "testing_architecture_debt": {
+    "present": true,
+    "note": "The default test collection mixes active regression tests with historical exact-environment replay guards that are intentionally incompatible with the current branch.",
+    "taxonomy_repair_in_scope": false
+  },
+  "science": {
+    "source_freeze_created": false,
+    "stage_0_rerun": false,
+    "experiment_started": false,
+    "result_path_absent": "reports/autogrowth/native_authority/native_residual_consensus_candidate_allocation_reclosure.json.gz"
+  },
+  "closure_actions": {
+    "compatibility_commit_authorized": true,
+    "push_authorized": true,
+    "source_freeze_authorized": true,
+    "unchanged_scientific_execution_authorized": true
+  },
+  "preserved_attempts": {
+    "native_residual_consensus_candidate_allocation.json.gz": "9ba7de982b76c52f83f4f2bcd37dd1b199c1552be3b3bbb11b4852e644110f2c",
+    "native_residual_consensus_candidate_allocation.md": "90ead3650c8943df66dd89a47cac0f02cbde80a3166d41bc554188e91617a083",
+    "native_residual_consensus_harness_reclosure/escrow_failure_trace.log.gz": "ff0f0c157728622bc177803701ec1b468ea16af91b55363e2272b18d6321506f"
+  }
+}
