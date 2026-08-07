@@ -1044,3 +1044,21 @@ attempt 04 completed without interruption reconstruction. The WSL user service
 exited successfully and was absent after cleanup. No discovery or exposure was
 replayed, and no KRK R1 or follow-up mechanism was started. See
 `docs/autogrowth/NATIVE_V2_PORTABLE_OUTCOME_SUCCESSOR_RESULT_20260804.md`.
+
+
+The copy-compatible residual-consensus package has now completed its one frozen
+32-seed, three-arm execution from commit
+`aea0fd24330b62957492672d5aa9639228a9d5f2`. Compatibility validation retained
+the historical source identity and Stage-0's 32/32 pair/triple and 32/32 direct-
+triple opportunity admission without changing the scientific factor.
+
+The scientific terminal conclusion is
+`residual_consensus_engagement_or_evidence_starvation`. True and deranged
+consensus each engaged 0/32 seeds and produced no certified direct pair/triple;
+the hash control engaged 26/32 but produced 16 false positives and no safe-
+narrow seed. True consensus had zero wins against either control. R0 action
+retention remained 3,072/3,072, but persistent-state exactness was 0/96 and
+matched primary search budgets held for only 20/32 seeds, so the independent
+integrity and budget gates also failed. The negative result is preserved without
+repair or rerun, and no handover or fresh data was opened. See
+`reports/autogrowth/native_authority/native_residual_consensus_copy_compatibility_result/RESULT.md`.

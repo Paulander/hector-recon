@@ -1,0 +1,171 @@
+{
+  "schema_version": "native_residual_consensus_copy_compatibility_execution_closure.v1",
+  "recorded_at_utc": "2026-08-07T22:50:38Z",
+  "branch": "codex/native-v2-systemd-schema-reclosure-20260802",
+  "compatibility_and_differential_validation": {
+    "source_freeze_commit": "aea0fd24330b62957492672d5aa9639228a9d5f2",
+    "learner_module_sha256": "12c7dec80ead19c75edce8e1ed6a1d2080f1983145707698a5a076738b10025f",
+    "historical_residual_consensus_sha256_retained": "429152c86ecf9a978a2946f927b7dd8dce93f3da74fec3f6d6c6e8ee8e46f2c0",
+    "learning_rule_changed": false,
+    "manifest_or_continuation_digest_changed": false,
+    "strict_deserialization_validation_retained": true,
+    "focused_validation": {
+      "active_source_lock_tests": "2/2",
+      "prospective_and_nomination_escrow": "31/31",
+      "frame_neutral_comparator": "7/7",
+      "residual_and_adjacent": "53/53"
+    },
+    "complete_repository_suite": {
+      "passed": 1364,
+      "failed": 44,
+      "skipped": 2,
+      "demonstrated_new_failures": 0,
+      "failure_classification": "baseline historical exact-environment replay incompatibilities"
+    }
+  },
+  "retained_stage0_admission": {
+    "stage0_reexecuted": false,
+    "seeds_with_legal_direct_pair_or_triple": 32,
+    "seeds_with_legal_direct_triple": 32,
+    "stage0_sha256": "e31445a8564462d005fa815adab1077d1386de2fee5fab4aa3ef7445af5c7efd",
+    "source_artifact_sha256": "eb60826db7269b1fb69cd2abe21d137bb1853503cd8177e69aeb36050a77ecf4"
+  },
+  "execution": {
+    "unit": "hector-recon-residual-consensus-copycompat-aea0fd2.service",
+    "invocation_id": "cff9391fe0ee44d49a7d9599f59ef43f",
+    "main_pid": 1007220,
+    "restart": "no",
+    "started_at": "2026-08-06T09:34:24+02:00",
+    "terminal_resource_recorded_at": "2026-08-08T00:34:51+02:00",
+    "terminal_process_observation": "main_pid_absent",
+    "cpu_usage_nsec": 558932792687000,
+    "memory_peak_bytes": 1242710016,
+    "memory_swap_peak_bytes": 0,
+    "stderr_size_bytes": 0,
+    "entrypoint_completed_output": true,
+    "scientific_passed": false,
+    "terminal_conclusion": "residual_consensus_engagement_or_evidence_starvation",
+    "repair_or_rerun_after_outcomes": false
+  },
+  "freeze_and_result_integrity": {
+    "execution_freeze_sha256": "d2c82e484f46520db683bf4eded8c8ca979e9e52fbbbf27a8cf3583203553c90",
+    "result_embedded_freeze_exact": true,
+    "current_source_hashes_match_freeze": true,
+    "result_gzip_complete": true,
+    "result_schema_version": "native_residual_consensus_candidate_allocation.v1",
+    "result_duration_seconds": 146952.09544267692,
+    "organism_count": 96,
+    "seed_count": 32,
+    "organisms_per_arm": 32,
+    "failure_field_present": false,
+    "scope": {
+      "viewed_data_only": true,
+      "fresh_data_opened": false,
+      "mate_in_2_handover_opened": false,
+      "retired_65_opened": false,
+      "r1_learning": false
+    },
+    "artifacts": {
+      "native_residual_consensus_candidate_allocation_reclosure.json.gz": {
+        "size_bytes": 6850716,
+        "sha256": "f27afaa58909fe785aa7087f03b2908cf89977f390a2fbe2dae0de346433d892"
+      },
+      "native_residual_consensus_candidate_allocation_reclosure.md": {
+        "size_bytes": 940,
+        "sha256": "9e219af2fbb4220d1396bfa7c81752605d2b9a66a730f22d2a7c81a84796a143"
+      },
+      "service_stdout.json": {
+        "size_bytes": 336,
+        "sha256": "3e1b0bbf135862bd6139e1a6b82cd0852cbc62ec06cefd1dd8ddf733896d4d38"
+      },
+      "service_stderr.log": {
+        "size_bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "preserved_stopped_attempts_byte_exact": true
+  },
+  "scientific_result": {
+    "cohort": {
+      "true_residual_consensus_without_replacement": {
+        "engaged_seeds": 0,
+        "safe_narrow_seeds": 0,
+        "tp": 0,
+        "fp": 0,
+        "deployable_tp": 0,
+        "abstentions": 2048,
+        "nominated_pair_or_triple": 4096,
+        "nominated_with_four_later_opportunities": 0,
+        "certified_pair_or_triple": 0
+      },
+      "responsibility_deranged_consensus_without_replacement": {
+        "engaged_seeds": 0,
+        "safe_narrow_seeds": 0,
+        "tp": 0,
+        "fp": 0,
+        "deployable_tp": 0,
+        "abstentions": 2048,
+        "nominated_pair_or_triple": 4096,
+        "nominated_with_four_later_opportunities": 0,
+        "certified_pair_or_triple": 0
+      },
+      "hash_priority_without_replacement": {
+        "engaged_seeds": 26,
+        "safe_narrow_seeds": 0,
+        "tp": 234,
+        "fp": 16,
+        "deployable_tp": 7,
+        "abstentions": 1798,
+        "nominated_pair_or_triple": 3810,
+        "nominated_with_four_later_opportunities": 47,
+        "certified_pair_or_triple": 17
+      }
+    },
+    "paired_comparisons": [
+      {
+        "control": "responsibility_deranged_consensus_without_replacement",
+        "wins": 0,
+        "losses": 0,
+        "ties": 32,
+        "p_value": 1.0,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "control": "hash_priority_without_replacement",
+        "wins": 0,
+        "losses": 1,
+        "ties": 31,
+        "p_value": 1.0,
+        "holm_adjusted_p": 1.0
+      }
+    ],
+    "gates": {
+      "engagement_at_least_24_all_arms": false,
+      "true_safe_narrow_at_least_24": false,
+      "zero_mixed_trace_available": true,
+      "true_deployable_tp_exceeds_hash": false,
+      "true_deployable_tp_exceeds_deranged": false,
+      "paired_tests_holm_pass": false,
+      "at_least_17_favor_true_each": false,
+      "all_32_each_comparison": true,
+      "matched_primary_search_budgets": false,
+      "matched_runtime_exposure_and_capacity": true,
+      "all_integrity": false
+    },
+    "integrity_detail": {
+      "r0_behavior_retention": "3072/3072",
+      "r0_behavior_retention_per_arm": "1024/1024",
+      "r0_persistent_state_exact": "0/96",
+      "serialization_virtual_parity": "96/96",
+      "virtual_memory_changes": 0,
+      "host_candidate_selector": false,
+      "mixed_outcome_identical_complete_trace_groups": 0,
+      "mixed_trace_violations": 0,
+      "matched_primary_search_budget_seeds": "20/32",
+      "proposal_slots_consumed_matched_seeds": "32/32",
+      "budget_field_mismatch_seeds": 12
+    },
+    "binding_boundary": "The true and deranged consensus arms nominated direct pair/triple candidates in every seed, but none received four later activation opportunities and neither arm certified a direct pair/triple. The hash arm engaged but produced false positives and no safe-narrow seed. The true arm therefore supplied no deployable evidence and did not outperform either control. Independent preregistered integrity and matched-budget gates also failed; they are preserved without repair.",
+    "followup_started": false
+  }
+}
