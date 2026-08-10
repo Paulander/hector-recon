@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import pickle
+import inspect
 
 import pytest
 
+from recon_lite import Node, NodeState, NodeType
 from recon_lite_hector.nodes import StemCellState
 
 from recon_lite_chess.autogrowth.native_competence_envelope import (
@@ -15,9 +17,12 @@ from recon_lite_chess.autogrowth.native_competence_envelope import (
 )
 from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import (
     DeferredSpecializationRequest,
+    GenerationPhase,
+    MIN_SUPPORT,
     NativeProspectiveAuthorityV2,
     ProspectiveV2IntegrityError,
     SpecializationCandidateTerminalState,
+    _v2_specialization_eligibility_terminal,
 )
 
 
@@ -96,12 +101,27 @@ def test_canonical_matcher_rejects_unrelated_or_unbound_dormant_parent():
 
 def _request(index: int) -> DeferredSpecializationRequest:
     receipt = f"receipt-{index:03d}"
+    supporting_receipts = tuple(
+        f"{receipt}-support-{item}" for item in range(MIN_SUPPORT)
+    )
+    supporting_interactions = tuple(
+        f"physical-{index:03d}-{item}" for item in range(MIN_SUPPORT)
+    )
     terminal = SpecializationCandidateTerminalState(
         identity=f"opaque:{index}",
         node_id=f"node:{index}",
+        role_permitted=True,
+        recursively_implied_by_parent=False,
+        supporting_receipt_ids=supporting_receipts,
+        supporting_stable_physical_interaction_ids=(
+            supporting_interactions
+        ),
+        supporting_occurrence_count=MIN_SUPPORT,
+        present_in_triggering_contradiction=index % 2 != 0,
+        specialization_mode=SpecializationMode.LOCAL_CONTRAST,
         confirmed=index % 2 == 0,
         node_state="CONFIRMED" if index % 2 == 0 else "FAILED",
-        inspected_receipt_ids=(receipt,),
+        inspected_receipt_ids=tuple(sorted({receipt, *supporting_receipts})),
     )
     return DeferredSpecializationRequest(
         request_id=f"request-{index:03d}",
@@ -143,6 +163,168 @@ def test_candidate_confirmed_and_rejected_states_pickle_exact():
     assert restored == request
     assert restored.candidate_terminals[0].confirmed is False
     assert restored.candidate_terminals[0].node_state == "FAILED"
+
+
+def _eligibility_node(
+    *,
+    mode: SpecializationMode,
+    implied: bool = False,
+    count: int = MIN_SUPPORT,
+    in_contradiction: bool = False,
+) -> Node:
+    return Node(
+        "eligibility",
+        NodeType.TERMINAL,
+        predicate=_v2_specialization_eligibility_terminal,
+        meta={
+            "role_permitted": True,
+            "recursively_implied_by_parent": implied,
+            "supporting_occurrence_count": count,
+            "present_in_triggering_contradiction": in_contradiction,
+            "specialization_mode": mode.value,
+        },
+    )
+
+
+@pytest.mark.parametrize(
+    ("mode", "implied", "count", "in_contradiction", "expected"),
+    [
+        (SpecializationMode.COUNTEREXAMPLE_BLIND, True, MIN_SUPPORT, False, False),
+        (SpecializationMode.COUNTEREXAMPLE_BLIND, False, MIN_SUPPORT - 1, False, False),
+        (SpecializationMode.COUNTEREXAMPLE_BLIND, False, MIN_SUPPORT, True, True),
+        (SpecializationMode.LOCAL_CONTRAST, False, MIN_SUPPORT, True, False),
+        (SpecializationMode.LOCAL_CONTRAST, False, MIN_SUPPORT, False, True),
+    ],
+)
+def test_complete_graph_eligibility_rule(
+    mode, implied, count, in_contradiction, expected
+):
+    node = _eligibility_node(
+        mode=mode,
+        implied=implied,
+        count=count,
+        in_contradiction=in_contradiction,
+    )
+    processed, confirmed = _v2_specialization_eligibility_terminal(node, {})
+    assert processed is True
+    assert confirmed is expected
+
+
+def test_local_and_blind_candidate_population_differs_only_at_predicate():
+    local = _request(7).candidate_terminals[0]
+    blind = SpecializationCandidateTerminalState(
+        **{
+            **local.__dict__,
+            "specialization_mode": SpecializationMode.COUNTEREXAMPLE_BLIND,
+            "confirmed": True,
+            "node_state": NodeState.CONFIRMED.name,
+        }
+    )
+    ignored = {
+        "specialization_mode",
+        "present_in_triggering_contradiction",
+        "confirmed",
+        "node_state",
+    }
+    assert {
+        key: value for key, value in local.manifest().items()
+        if key not in ignored
+    } == {
+        key: value for key, value in blind.manifest().items()
+        if key not in ignored
+    }
+    assert pickle.loads(pickle.dumps((local, blind))) == (local, blind)
+
+
+def _synthetic_structural_authority(
+    requests: tuple[DeferredSpecializationRequest, ...],
+) -> NativeProspectiveAuthorityV2:
+    authority = object.__new__(NativeProspectiveAuthorityV2)
+    authority.generation_phase = GenerationPhase.STRUCTURAL_OPEN
+    authority.sealed_request_ids = tuple(item.request_id for item in requests)
+    authority.deferred_requests = {
+        item.request_id: item for item in requests
+    }
+    authority.request_consumptions = {}
+    authority.deferred_child_births = {}
+    authority.states = {}
+    authority.current_generation = 1
+    authority.specialization_genome_seed = 117
+    return authority
+
+
+def test_structural_consumption_is_organism_owned_and_canonical(monkeypatch):
+    monkeypatch.setattr(
+        NativeProspectiveAuthorityV2,
+        "_verify_invariants",
+        lambda _self: None,
+    )
+    first = _request(0)
+    second = DeferredSpecializationRequest(
+        **{
+            **_request(2).__dict__,
+            "request_id": "request-001",
+            "parent_cell_id": first.parent_cell_id,
+            "parent_hypothesis_digest": first.parent_hypothesis_digest,
+            "candidate_terminals": first.candidate_terminals,
+        }
+    )
+    authority = _synthetic_structural_authority((first, second))
+    assert not hasattr(authority, "consume_structural_request")
+    assert tuple(inspect.signature(
+        authority.consume_next_structural_request
+    ).parameters) == ()
+
+    first_result = authority.consume_next_structural_request()
+    assert first_result.request_id == first.request_id
+    assert first_result.attempt_ordinal == 0
+    assert first_result.genome_seed == authority.specialization_genome_seed
+    assert first_result.genome_call_count == 1
+
+    restored = pickle.loads(pickle.dumps(authority))
+    assert restored.request_consumptions == authority.request_consumptions
+    second_result = authority.consume_next_structural_request()
+    assert second_result.request_id == second.request_id
+    assert second_result.attempt_ordinal == 1
+    assert second_result.disposition == "REJECTED_DUPLICATE_PATTERN"
+    assert second_result.selected_members == first_result.selected_members
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="fully consumed"
+    ):
+        authority.consume_next_structural_request()
+    assert len(authority.request_consumptions) == 2
+
+
+def test_all_192_sealed_requests_consume_one_permanent_slot(monkeypatch):
+    monkeypatch.setattr(
+        NativeProspectiveAuthorityV2,
+        "_verify_invariants",
+        lambda _self: None,
+    )
+    template = _request(0)
+    requests = tuple(
+        DeferredSpecializationRequest(
+            **{
+                **template.__dict__,
+                "request_id": f"request-{index:03d}",
+                "contradiction_ordinal": index,
+            }
+        )
+        for index in range(192)
+    )
+    authority = _synthetic_structural_authority(requests)
+    results = tuple(
+        authority.consume_next_structural_request() for _ in requests
+    )
+    assert tuple(item.request_id for item in results) == tuple(
+        item.request_id for item in requests
+    )
+    assert tuple(item.attempt_ordinal for item in results) == tuple(range(192))
+    assert all(item.genome_call_count == 1 for item in results)
+    assert len(authority.request_consumptions) == 192
+    assert results[-1].disposition == "REJECTED_DUPLICATE_PATTERN"
+    with pytest.raises(ProspectiveV2IntegrityError, match="fully consumed"):
+        authority.consume_next_structural_request()
 
 
 def test_dormant_origins_are_distinct_serialized_values():

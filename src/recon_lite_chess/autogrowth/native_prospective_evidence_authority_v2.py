@@ -32,8 +32,8 @@ from .native_competence_envelope import (
 from .native_trace_competence_authority import TraceNativeCompetenceOrganism
 
 
-SCHEMA_VERSION = "native_prospective_evidence_authority_v2.v5_deferred_specialization"
-IMPLEMENTATION_IDENTITY = "native_prospective_two_phase_authority.v5_deferred_specialization"
+SCHEMA_VERSION = "native_prospective_evidence_authority_v2.v6_engineering_corrections"
+IMPLEMENTATION_IDENTITY = "native_prospective_two_phase_authority.v6_engineering_corrections"
 EXPECTED_RECEIPT_ISSUER = "native_v2_environment_terminal"
 OUTCOME_TERMINAL_IDENTITY = "native_r0_real_completion_terminal"
 EXPOSURE_SCHEMA_VERSION = "native_v2_bound_exposure.v5"
@@ -544,14 +544,100 @@ class AcceptedRealReference:
 class SpecializationCandidateTerminalState:
     identity: str
     node_id: str
+    role_permitted: bool
+    recursively_implied_by_parent: bool
+    supporting_receipt_ids: tuple[str, ...]
+    supporting_stable_physical_interaction_ids: tuple[str, ...]
+    supporting_occurrence_count: int
+    present_in_triggering_contradiction: bool
+    specialization_mode: SpecializationMode
     confirmed: bool
     node_state: str
     inspected_receipt_ids: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self,
+            "specialization_mode",
+            SpecializationMode(self.specialization_mode),
+        )
+        if self.supporting_occurrence_count != len(
+            self.supporting_receipt_ids
+        ):
+            raise ProspectiveV2IntegrityError(
+                "eligibility support count differs from receipts"
+            )
+        if (
+            len(set(self.supporting_receipt_ids))
+            != len(self.supporting_receipt_ids)
+            or tuple(sorted(self.supporting_receipt_ids))
+            != self.supporting_receipt_ids
+            or len(set(self.supporting_stable_physical_interaction_ids))
+            != len(self.supporting_stable_physical_interaction_ids)
+            or tuple(sorted(
+                self.supporting_stable_physical_interaction_ids
+            )) != self.supporting_stable_physical_interaction_ids
+            or len(self.supporting_receipt_ids)
+            != len(self.supporting_stable_physical_interaction_ids)
+        ):
+            raise ProspectiveV2IntegrityError(
+                "noncanonical eligibility support evidence"
+            )
+        if (
+            len(set(self.inspected_receipt_ids))
+            != len(self.inspected_receipt_ids)
+            or tuple(sorted(self.inspected_receipt_ids))
+            != self.inspected_receipt_ids
+            or not set(self.supporting_receipt_ids).issubset(
+                self.inspected_receipt_ids
+            )
+        ):
+            raise ProspectiveV2IntegrityError(
+                "noncanonical eligibility inspected evidence"
+            )
+        expected_confirmation = bool(
+            self.role_permitted
+            and not self.recursively_implied_by_parent
+            and self.supporting_occurrence_count >= MIN_SUPPORT
+            and (
+                self.specialization_mode
+                is SpecializationMode.COUNTEREXAMPLE_BLIND
+                or (
+                    self.specialization_mode
+                    is SpecializationMode.LOCAL_CONTRAST
+                    and not self.present_in_triggering_contradiction
+                )
+            )
+        )
+        expected_node_state = (
+            NodeState.CONFIRMED.name
+            if expected_confirmation else NodeState.FAILED.name
+        )
+        if (
+            self.confirmed is not expected_confirmation
+            or self.node_state != expected_node_state
+        ):
+            raise ProspectiveV2IntegrityError(
+                "eligibility terminal result differs from graph rule"
+            )
 
     def manifest(self) -> dict[str, Any]:
         return {
             "identity": self.identity,
             "node_id": self.node_id,
+            "role_permitted": self.role_permitted,
+            "recursively_implied_by_parent": (
+                self.recursively_implied_by_parent
+            ),
+            "supporting_receipt_ids": list(self.supporting_receipt_ids),
+            "supporting_stable_physical_interaction_ids": list(
+                self.supporting_stable_physical_interaction_ids
+            ),
+            "supporting_occurrence_count": self.supporting_occurrence_count,
+            "present_in_triggering_contradiction": (
+                self.present_in_triggering_contradiction
+            ),
+            "specialization_mode": self.specialization_mode.value,
             "confirmed": self.confirmed,
             "node_state": self.node_state,
             "inspected_receipt_ids": list(self.inspected_receipt_ids),
@@ -684,6 +770,7 @@ class GenerationBoundary:
     structural_epoch_schedule_digest: str
     candidate_manifest_digest: str
     parent_decision_history_digest: str
+    specialization_genome_seed: int
 
     def manifest(self) -> dict[str, Any]:
         return {
@@ -700,6 +787,7 @@ class GenerationBoundary:
             "parent_decision_history_digest": (
                 self.parent_decision_history_digest
             ),
+            "specialization_genome_seed": self.specialization_genome_seed,
         }
 
 
@@ -720,7 +808,8 @@ class V2CertificationEmission:
         tuple[str, tuple[SpecializationCandidateTerminalState, ...]], ...
     ] = ()
     request_queue_appended_ids: tuple[str, ...] = ()
-    triggering_false_prediction_ids: tuple[str, ...] = ()
+    # Cells whose committed pre-outcome decision was contradicted.
+    prequential_false_authority_ids: tuple[str, ...] = ()
 
     def manifest(self) -> dict[str, Any]:
         return asdict(self)
@@ -923,17 +1012,45 @@ def _specialization_identity_role_permitted(
     return bool(roles.intersection({"BASE_TERMINAL", "MATURE_COMPOSITE"}))
 
 
+def _recursively_implied_signal_ids(
+    cell_id: str,
+    states: Mapping[str, ProspectiveAuthorityState],
+    visiting: frozenset[str] = frozenset(),
+) -> frozenset[str]:
+    """Return the opaque signals required by one frozen structural pattern."""
+
+    if cell_id in visiting:
+        raise ProspectiveV2IntegrityError("cyclic implied-parent pattern")
+    state = states.get(cell_id)
+    if state is None:
+        raise ProspectiveV2IntegrityError("implied-parent pattern is absent")
+    implied: set[str] = set()
+    next_visiting = visiting | {cell_id}
+    for member in state.hypothesis.members:
+        if member.startswith("context:"):
+            implied.update(_recursively_implied_signal_ids(
+                member.split(":", 1)[1], states, next_visiting
+            ))
+        else:
+            implied.add(member)
+    return frozenset(implied)
+
+
 def _v2_specialization_eligibility_terminal(
     node: Node, env: Mapping[str, Any]
 ) -> tuple[bool, bool]:
+    del env
     mode = SpecializationMode(str(node.meta["specialization_mode"]))
-    identity = str(node.meta["identity"])
-    contradiction_ids = set(env.get("contradiction_signal_ids", ()))
     confirmed = bool(
-        mode is SpecializationMode.COUNTEREXAMPLE_BLIND
-        or (
-            mode is SpecializationMode.LOCAL_CONTRAST
-            and identity not in contradiction_ids
+        node.meta["role_permitted"]
+        and not node.meta["recursively_implied_by_parent"]
+        and int(node.meta["supporting_occurrence_count"]) >= MIN_SUPPORT
+        and (
+            mode is SpecializationMode.COUNTEREXAMPLE_BLIND
+            or (
+                mode is SpecializationMode.LOCAL_CONTRAST
+                and not node.meta["present_in_triggering_contradiction"]
+            )
         )
     )
     node.activation.value = 1.0 if confirmed else 0.0
@@ -1066,6 +1183,7 @@ def _run_authority_graph(
         ))
         for parent_id in request_parents:
             state = states[parent_id]
+            implied_ids = _recursively_implied_signal_ids(parent_id, states)
             support_ids = tuple(sorted(set(
                 state.hypothesis.discovery_support_receipt_ids
             ) | set(state.support_receipt_ids)))
@@ -1086,6 +1204,27 @@ def _run_authority_graph(
             }))
             terminal_rows: list[SpecializationCandidateTerminalState] = []
             for identity in vocabulary:
+                occurrence_refs = tuple(
+                    reference for reference in support_refs
+                    if identity in reference.ordered_signal_identities
+                )
+                supporting_receipt_ids = tuple(sorted(
+                    reference.receipt_id for reference in occurrence_refs
+                ))
+                supporting_physical_ids = tuple(sorted(
+                    reference.stable_physical_interaction_id
+                    for reference in occurrence_refs
+                ))
+                role_permitted = any(
+                    _specialization_identity_role_permitted(
+                        reference, identity
+                    )
+                    for reference in occurrence_refs
+                )
+                present_in_contradiction = bool(
+                    receipt is not None
+                    and identity in receipt.trace.ordered_signal_identities
+                )
                 token = hashlib.sha256(
                     f"{parent_id}|{identity}".encode("utf-8")
                 ).hexdigest()[:16]
@@ -1099,6 +1238,20 @@ def _run_authority_graph(
                         "authority_role": "specialization_eligibility",
                         "parent_cell_id": parent_id,
                         "identity": identity,
+                        "role_permitted": role_permitted,
+                        "recursively_implied_by_parent": (
+                            identity in implied_ids
+                        ),
+                        "supporting_receipt_ids": supporting_receipt_ids,
+                        "supporting_stable_physical_interaction_ids": (
+                            supporting_physical_ids
+                        ),
+                        "supporting_occurrence_count": len(
+                            supporting_receipt_ids
+                        ),
+                        "present_in_triggering_contradiction": (
+                            present_in_contradiction
+                        ),
                         "specialization_mode": specialization_mode.value,
                     },
                 ))
@@ -1118,12 +1271,7 @@ def _run_authority_graph(
                 )
                 eligibility_engine.run(
                     max_ticks=max(32, len(vocabulary) * 4),
-                    env={
-                        "contradiction_signal_ids": (
-                            () if receipt is None
-                            else receipt.trace.ordered_signal_identities
-                        ),
-                    },
+                    env={},
                 )
             inspected = tuple(sorted({
                 *support_ids,
@@ -1134,12 +1282,34 @@ def _run_authority_graph(
                     f"{parent_id}|{identity}".encode("utf-8")
                 ).hexdigest()[:16]
                 node_id = f"v2:specialization_eligibility:{token}"
+                meta = graph.nodes[node_id].meta
                 confirmed = graph.nodes[node_id].state == NodeState.CONFIRMED
                 if confirmed:
                     confirmed_tokens.append(f"{parent_id}|{identity}")
                 terminal_rows.append(SpecializationCandidateTerminalState(
                     identity=identity,
                     node_id=node_id,
+                    role_permitted=bool(meta["role_permitted"]),
+                    recursively_implied_by_parent=bool(
+                        meta["recursively_implied_by_parent"]
+                    ),
+                    supporting_receipt_ids=tuple(
+                        meta["supporting_receipt_ids"]
+                    ),
+                    supporting_stable_physical_interaction_ids=tuple(
+                        meta[
+                            "supporting_stable_physical_interaction_ids"
+                        ]
+                    ),
+                    supporting_occurrence_count=int(
+                        meta["supporting_occurrence_count"]
+                    ),
+                    present_in_triggering_contradiction=bool(
+                        meta["present_in_triggering_contradiction"]
+                    ),
+                    specialization_mode=SpecializationMode(
+                        meta["specialization_mode"]
+                    ),
                     confirmed=confirmed,
                     node_state=graph.nodes[node_id].state.name,
                     inspected_receipt_ids=inspected,
@@ -1331,6 +1501,7 @@ class NativeProspectiveAuthorityV2:
     next_expected_ordinal: int
     discovery_prefix_physical_fingerprints: tuple[str, ...]
     discovery_prefix_physical_fingerprint_digest: str
+    specialization_genome_seed: int
     specialization_mode: SpecializationMode = SpecializationMode.DISCONNECTED
     structural_epoch_schedule: tuple[int, ...] = ()
     current_generation: int = 0
@@ -1556,6 +1727,7 @@ class NativeProspectiveAuthorityV2:
             discovery_prefix_physical_fingerprint_digest=_sha(
                 list(prefix_fingerprints)
             ),
+            specialization_genome_seed=base.learning_config.genome_seed,
             specialization_mode=specialization_mode,
             structural_epoch_schedule=schedule,
             accepted_real_references={
@@ -1731,6 +1903,7 @@ class NativeProspectiveAuthorityV2:
                 }
                 for cell_id, value in sorted(self.states.items())
             },
+            "specialization_genome_seed": self.specialization_genome_seed,
             "close_event": copy.deepcopy(
                 self.nomination_events[-1]
                 if self.nomination_events else None
@@ -1743,6 +1916,16 @@ class NativeProspectiveAuthorityV2:
     ) -> None:
         if self.schema_version != SCHEMA_VERSION:
             raise ProspectiveV2IntegrityError("unsupported V2 schema")
+        if (
+            isinstance(self.specialization_genome_seed, bool)
+            or not isinstance(self.specialization_genome_seed, int)
+            or self.specialization_genome_seed < 0
+            or self.specialization_genome_seed
+            != self.base.learning_config.genome_seed
+        ):
+            raise ProspectiveV2IntegrityError(
+                "specialization genome seed differs from frozen organism"
+            )
         try:
             self.base.validate_canonical_evidence_ledger()
         except RuntimeError as exc:
@@ -1942,6 +2125,47 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "consumption exists outside request queue"
             )
+        consumed_member_tuples: set[tuple[str, ...]] = set()
+        for request_id, consumption in sorted(
+            self.request_consumptions.items()
+        ):
+            request = self.deferred_requests[request_id]
+            generation_ids = tuple(
+                item for item in self.request_queue
+                if self.deferred_requests[item].source_generation
+                == request.source_generation
+            )
+            if (
+                consumption.request_id != request_id
+                or consumption.attempt_ordinal
+                != generation_ids.index(request_id)
+                or consumption.genome_seed
+                != self.specialization_genome_seed
+                or consumption.genome_call_count != 1
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "structural request consumption identity mismatch"
+                )
+            if consumption.selected_members:
+                if consumption.selected_members in consumed_member_tuples:
+                    if consumption.disposition != "REJECTED_DUPLICATE_PATTERN":
+                        raise ProspectiveV2IntegrityError(
+                            "repeated specialization tuple was not rejected"
+                        )
+                else:
+                    consumed_member_tuples.add(
+                        consumption.selected_members
+                    )
+        current_consumed = tuple(
+            request_id for request_id in self.sealed_request_ids
+            if request_id in self.request_consumptions
+        )
+        if current_consumed != self.sealed_request_ids[
+            :len(current_consumed)
+        ]:
+            raise ProspectiveV2IntegrityError(
+                "sealed requests were skipped or reordered"
+            )
         if set(self.deferred_child_births).difference(
             self.request_consumptions
         ):
@@ -1953,6 +2177,14 @@ class NativeProspectiveAuthorityV2:
         ):
             raise ProspectiveV2IntegrityError(
                 "disconnected mode contains a dummy request"
+            )
+        if any(
+            boundary.specialization_genome_seed
+            != self.specialization_genome_seed
+            for boundary in self.generation_boundaries
+        ):
+            raise ProspectiveV2IntegrityError(
+                "generation boundary genome seed mismatch"
             )
         stable_ids = [
             item.stable_physical_interaction_id
@@ -2147,11 +2379,21 @@ class NativeProspectiveAuthorityV2:
                 )
             classification = self._classification_from_emissions(
                 active_derived, pre_graph
-            ).to_manifest()
-            if classification != transaction.get("pre_outcome_classification"):
+            )
+            if classification.to_manifest() != transaction.get(
+                "pre_outcome_classification"
+            ):
                 raise ProspectiveV2IntegrityError(
                     "replayed pre-outcome classification mismatch"
                 )
+            prequential_false_ids = (
+                self._prequential_false_authority_ids(
+                    active_derived,
+                    classification,
+                    matching,
+                    receipt.observed_outcome,
+                )
+            )
             if not transaction.get("structure_invariant_digest"):
                 raise ProspectiveV2IntegrityError(
                     "replayed structure invariant is absent"
@@ -2274,8 +2516,8 @@ class NativeProspectiveAuthorityV2:
                 request_queue_appended_ids=tuple(
                     item.request_id for item in requests
                 ),
-                triggering_false_prediction_ids=tuple(
-                    graph["specialization_request"]
+                prequential_false_authority_ids=(
+                    prequential_false_ids
                 ),
             )
             replay_references[reference.receipt_id] = reference
@@ -2467,6 +2709,32 @@ class NativeProspectiveAuthorityV2:
             formal_refuted=bool(refuted),
             policy_response=True,
         )
+
+    @staticmethod
+    def _prequential_false_authority_ids(
+        states: Mapping[str, ProspectiveAuthorityState],
+        classification: EnvelopeClassification,
+        matching_cell_ids: Sequence[str],
+        observed_outcome: bool,
+    ) -> tuple[str, ...]:
+        """Cells whose committed pre-outcome decision was contradicted."""
+
+        committed = {
+            *classification.available_cell_ids,
+            *classification.refuted_cell_ids,
+        }
+        return tuple(sorted(
+            cell_id for cell_id in matching_cell_ids
+            if (
+                cell_id in committed
+                and states[cell_id].prospectively_certified
+                and observed_outcome
+                != (
+                    states[cell_id].hypothesis.polarity
+                    is AvailabilityState.AVAILABLE
+                )
+            )
+        ))
 
     def open_real_event(
         self, frame: FrameContext
@@ -2795,6 +3063,12 @@ class NativeProspectiveAuthorityV2:
         self._validate_receipt(receipt)
         pending = self.pending_event
         assert pending is not None
+        prequential_false_ids = self._prequential_false_authority_ids(
+            self.states,
+            pending.pre_outcome_classification,
+            pending.matching_cell_ids,
+            receipt.observed_outcome,
+        )
         graph = self._graph_measure(receipt.trace, receipt)
         if graph["commitment"] != pending.matching_cell_ids:
             raise ProspectiveV2IntegrityError(
@@ -2909,7 +3183,7 @@ class NativeProspectiveAuthorityV2:
             request_queue_appended_ids=tuple(
                 request.request_id for request in new_requests
             ),
-            triggering_false_prediction_ids=request_parent_ids,
+            prequential_false_authority_ids=prequential_false_ids,
         )
         self.consumed_receipts[receipt.receipt_id] = receipt
         self.consumed_tokens.add(receipt.pending_token)
@@ -3005,6 +3279,7 @@ class NativeProspectiveAuthorityV2:
             parent_decision_history_digest=(
                 self._parent_decision_history_digest()
             ),
+            specialization_genome_seed=self.specialization_genome_seed,
         )
 
     def seal_prospective_generation(self) -> GenerationBoundary:
@@ -3085,41 +3360,39 @@ class NativeProspectiveAuthorityV2:
         self._verify_invariants()
         return boundary
 
-    def consume_structural_request(
+    def consume_next_structural_request(
         self,
-        request_id: str,
-        genome: CompetenceContextGrowthGenome,
     ) -> StructuralRequestConsumption:
+        """Consume the next sealed request with the organism-frozen genome."""
+
         candidate = copy.deepcopy(self)
-        result = candidate._consume_structural_request_in_place(
-            request_id, genome
-        )
+        result = candidate._consume_next_structural_request_in_place()
         self.__dict__.clear()
         self.__dict__.update(candidate.__dict__)
         return result
 
-    def _consume_structural_request_in_place(
+    def _consume_next_structural_request_in_place(
         self,
-        request_id: str,
-        genome: CompetenceContextGrowthGenome,
     ) -> StructuralRequestConsumption:
         self._verify_invariants()
         if self.generation_phase is not GenerationPhase.STRUCTURAL_OPEN:
             raise ProspectiveV2IntegrityError(
                 "request consumption requires STRUCTURAL_OPEN"
             )
-        if request_id not in self.sealed_request_ids:
+        unconsumed = tuple(
+            request_id for request_id in self.sealed_request_ids
+            if request_id not in self.request_consumptions
+        )
+        if not unconsumed:
             raise ProspectiveV2IntegrityError(
-                "request is outside the sealed queue"
+                "sealed structural request queue is fully consumed"
             )
-        if request_id in self.request_consumptions:
-            raise ProspectiveV2IntegrityError(
-                "structural request cannot be retried"
-            )
-        if not isinstance(genome, CompetenceContextGrowthGenome):
-            raise TypeError("structural request requires frozen genome")
+        request_id = unconsumed[0]
         request = self.deferred_requests[request_id]
-        attempt = len(self.request_consumptions)
+        attempt = self.sealed_request_ids.index(request_id)
+        genome = CompetenceContextGrowthGenome(
+            self.specialization_genome_seed
+        )
         proposal = genome.propose_specialization(_GraphSpecializationRequest(
             context_member=f"context:{request.parent_cell_id}",
             eligible_base_ids=request.eligible_base_ids,
@@ -3141,9 +3414,18 @@ class NativeProspectiveAuthorityV2:
                 raise ProspectiveV2IntegrityError(
                     "genome emitted an ineligible specialization child"
                 )
-            if members in {
+            reserved_members = {
                 state.hypothesis.members for state in self.states.values()
-            }:
+            }
+            reserved_members.update(
+                birth.members for birth in self.deferred_child_births.values()
+            )
+            reserved_members.update(
+                item.selected_members
+                for item in self.request_consumptions.values()
+                if item.selected_members
+            )
+            if members in reserved_members:
                 disposition = "REJECTED_DUPLICATE_PATTERN"
             elif len(self.deferred_child_births) >= (
                 DORMANT_SPECIALIZATION_CHILD_CAPACITY
@@ -3157,7 +3439,7 @@ class NativeProspectiveAuthorityV2:
         consumption = StructuralRequestConsumption(
             request_id=request_id,
             attempt_ordinal=attempt,
-            genome_seed=genome.seed,
+            genome_seed=self.specialization_genome_seed,
             genome_call_count=1,
             selected_members=members,
             disposition=disposition,
@@ -3169,7 +3451,7 @@ class NativeProspectiveAuthorityV2:
                 request_id=request_id,
                 child_cell_id=child_id,
                 members=members,
-                genome_seed=genome.seed,
+                genome_seed=self.specialization_genome_seed,
                 proposal_ordinal=attempt,
                 source_generation=self.current_generation,
                 disposition="PENDING_MATERIALIZATION",
@@ -4193,6 +4475,7 @@ class NativeProspectiveAuthorityV2:
             "schema_version": self.schema_version,
             "mode": self.mode.value,
             "specialization_mode": self.specialization_mode.value,
+            "specialization_genome_seed": self.specialization_genome_seed,
             "structural_epoch_schedule": list(
                 self.structural_epoch_schedule
             ),

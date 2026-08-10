@@ -16,7 +16,6 @@ from recon_lite_hector.nodes import StemCellState, StemCellTerminal
 from .native_competence_envelope import (
     AvailabilityState,
     CompetenceContextCell,
-    CompetenceContextGrowthGenome,
     DormantOrigin,
     GraphNativeCompetenceEnvelope,
     SpecializationMode,
@@ -24,9 +23,9 @@ from .native_competence_envelope import (
 from .native_prospective_evidence_authority_v2 import (
     NativeProspectiveAuthorityV2,
     V2Mode,
-    _GraphSpecializationRequest,
     _run_authority_graph,
     AuthorityMeasurementSnapshot,
+    MIN_SUPPORT,
 )
 from .native_residual_consensus_candidate_allocation_run import (
     REGRESSION,
@@ -44,16 +43,27 @@ from .native_shadow_hypothesis_development_canary import (
 from .native_trace_competence_authority import TraceNativeCompetenceOrganism
 
 
-STARTING_COMMIT = "59903b744078150a3b65c7166a0de8cfe45edf40"
-DEFAULT_OUTPUT = Path(
+STARTING_COMMIT = "ce8cb6e3a00b3421b0bd2ea6be6d5f57b11d8e62"
+PRESERVED_CANARY = Path(
     "reports/autogrowth/native_authority/"
     "native_deferred_specialization_development_canary.json"
+)
+PRESERVED_CANARY_SHA256 = (
+    "9e455a32c913a581d75dfeef77686fbe248db6f2ad6a0fe8a538b43136346b04"
+)
+DEFAULT_OUTPUT = Path(
+    "reports/autogrowth/native_authority/"
+    "native_deferred_specialization_development_canary_v2_corrected.json"
 )
 ARMS = (
     SpecializationMode.LOCAL_CONTRAST,
     SpecializationMode.DISCONNECTED,
     SpecializationMode.COUNTEREXAMPLE_BLIND,
 )
+
+
+class CorrectedCanaryAdmissionFailure(RuntimeError):
+    """The frozen corrected canary could not admit both child paths."""
 
 
 def _controlled_discovery_source(
@@ -157,44 +167,6 @@ def _id_set_check(ids: Sequence[str]) -> dict[str, Any]:
     }
 
 
-def _choose_matched_genome_seed(
-    local_request: Any,
-    blind_request: Any,
-    traces: Sequence[tuple[str, ...]],
-) -> tuple[int, dict[str, str], dict[str, tuple[int, ...]]]:
-    for seed in range(100_000):
-        selections: dict[str, str] = {}
-        matches: dict[str, tuple[int, ...]] = {}
-        usable = True
-        for name, request in (
-            ("local_contrast", local_request),
-            ("counterexample_blind", blind_request),
-        ):
-            proposal = CompetenceContextGrowthGenome(seed).propose_specialization(
-                _GraphSpecializationRequest(
-                    context_member=f"context:{request.parent_cell_id}",
-                    eligible_base_ids=request.eligible_base_ids,
-                    request_ordinal=0,
-                )
-            )
-            if proposal is None:
-                usable = False
-                break
-            identity = proposal.members[1]
-            occurrences = tuple(
-                index for index in range(4, 16)
-                if identity in traces[index]
-            )
-            if len(occurrences) < 5:
-                usable = False
-                break
-            selections[name] = identity
-            matches[name] = occurrences
-        if usable:
-            return seed, selections, matches
-    raise RuntimeError("no matched-budget development genome seed found")
-
-
 def _metric_row(
     *,
     mode: SpecializationMode,
@@ -233,6 +205,12 @@ def _metric_row(
 
 
 def run_canary() -> dict[str, Any]:
+    if (
+        not PRESERVED_CANARY.is_file()
+        or hashlib.sha256(PRESERVED_CANARY.read_bytes()).hexdigest()
+        != PRESERVED_CANARY_SHA256
+    ):
+        raise RuntimeError("preserved v1 development canary changed")
     if hashlib.sha256(REGRESSION.read_bytes()).hexdigest() != REGRESSION_SHA:
         raise RuntimeError("already-viewed regression artifact changed")
     item = _source_item()
@@ -306,6 +284,7 @@ def run_canary() -> dict[str, Any]:
             raise RuntimeError("parent did not earn prospective certification")
 
     trigger_false_prediction: dict[SpecializationMode, int] = {}
+    trigger_authority_ids: dict[str, dict[str, list[str]]] = {}
     old_materializer = GraphNativeCompetenceEnvelope._materialize_specialization
     def _forbidden_materializer(*_args: Any, **_kwargs: Any) -> None:
         raise RuntimeError("V2 invoked old immediate specialization path")
@@ -328,8 +307,23 @@ def run_canary() -> dict[str, Any]:
                 receipt.receipt_id
             )
             trigger_false_prediction[mode] = int(
-                parent_id in pending.pre_outcome_classification.available_cell_ids
+                parent_id in emission.prequential_false_authority_ids
             )
+            if emission.prequential_false_authority_ids != (parent_id,):
+                raise RuntimeError(
+                    "persisted prequential false prediction mismatch"
+                )
+            trigger_authority_ids[mode.value] = {
+                "prequential_false_authority_ids": list(
+                    emission.prequential_false_authority_ids
+                ),
+                "graph_revocation_ids": list(
+                    emission.graph_revocation_ids
+                ),
+                "graph_specialization_request_ids": list(
+                    emission.graph_specialization_request_ids
+                ),
+            }
             if authority.states[parent_id].prospectively_certified:
                 raise RuntimeError("contradiction did not revoke parent authority")
             expected_requests = (
@@ -372,9 +366,43 @@ def run_canary() -> dict[str, Any]:
     blind = arms[SpecializationMode.COUNTEREXAMPLE_BLIND]
     local_request = next(iter(local.deferred_requests.values()))
     blind_request = next(iter(blind.deferred_requests.values()))
-    genome_seed, selected_identities, later_matches = (
-        _choose_matched_genome_seed(local_request, blind_request, traces)
-    )
+    def _anonymous_population(request: Any) -> tuple[dict[str, Any], ...]:
+        ignored = {
+            "specialization_mode",
+            "present_in_triggering_contradiction",
+            "confirmed",
+            "node_state",
+            # Arm-local receipt IDs bind frame IDs; stable physical IDs below
+            # establish the identical accepted REAL interactions.
+            "supporting_receipt_ids",
+            "inspected_receipt_ids",
+        }
+        return tuple({
+            key: value for key, value in item.manifest().items()
+            if key not in ignored
+        } for item in request.candidate_terminals)
+
+    local_population = _anonymous_population(local_request)
+    blind_population = _anonymous_population(blind_request)
+    if local_population != blind_population:
+        raise RuntimeError(
+            "local/blind anonymous candidate populations diverged"
+        )
+    candidate_population_parity = {
+        "identical_before_contradiction_absence_predicate": True,
+        "candidate_count": len(local_population),
+        "local_confirmed_count": len(local_request.eligible_base_ids),
+        "blind_confirmed_count": len(blind_request.eligible_base_ids),
+        "anonymous_population_sha256": hashlib.sha256(
+            json.dumps(
+                local_population, sort_keys=True, separators=(",", ":")
+            ).encode("utf-8")
+        ).hexdigest(),
+    }
+    genome_seed = template.specialization_genome_seed
+    selected_identities: dict[str, str] = {}
+    selected_eligibility: dict[str, dict[str, Any]] = {}
+    later_matches: dict[str, tuple[int, ...]] = {}
 
     child_ids: dict[SpecializationMode, str] = {}
     child_birth_evidence: dict[str, Any] = {}
@@ -386,11 +414,74 @@ def run_canary() -> dict[str, Any]:
         authority.open_structural_successor()
         if mode is not SpecializationMode.DISCONNECTED:
             request_id = authority.sealed_request_ids[0]
-            consumption = authority.consume_structural_request(
-                request_id, CompetenceContextGrowthGenome(genome_seed)
-            )
-            if consumption.genome_call_count != 1:
+            if hasattr(authority, "consume_structural_request"):
+                raise RuntimeError("caller-controlled consumption API remains")
+            consumption = authority.consume_next_structural_request()
+            if (
+                consumption.request_id != request_id
+                or consumption.genome_call_count != 1
+                or consumption.attempt_ordinal != 0
+                or consumption.genome_seed != genome_seed
+            ):
                 raise RuntimeError("request did not consume exactly one genome call")
+            if not consumption.selected_members:
+                raise CorrectedCanaryAdmissionFailure(
+                    "corrected canary admission failed: frozen genome emitted "
+                    "no specialization child"
+                )
+            if consumption.child_cell_id is None:
+                raise CorrectedCanaryAdmissionFailure(
+                    "corrected canary admission failed: frozen structural "
+                    f"attempt ended {consumption.disposition}"
+                )
+            identity = consumption.selected_members[1]
+            request = authority.deferred_requests[request_id]
+            terminal = next(
+                item for item in request.candidate_terminals
+                if item.identity == identity
+            )
+            if (
+                terminal.recursively_implied_by_parent
+                or terminal.supporting_occurrence_count < MIN_SUPPORT
+                or len(set(terminal.supporting_receipt_ids)) < MIN_SUPPORT
+                or len(set(
+                    terminal.supporting_stable_physical_interaction_ids
+                )) < MIN_SUPPORT
+            ):
+                raise RuntimeError(
+                    "frozen genome selected an ineligible terminal"
+                )
+            selected_identities[mode.value] = identity
+            selected_eligibility[mode.value] = {
+                "identity": identity,
+                "role_permitted": terminal.role_permitted,
+                "recursively_implied_by_parent": (
+                    terminal.recursively_implied_by_parent
+                ),
+                "supporting_occurrence_count": (
+                    terminal.supporting_occurrence_count
+                ),
+                "distinct_supporting_receipt_count": len(set(
+                    terminal.supporting_receipt_ids
+                )),
+                "distinct_supporting_physical_interaction_count": len(set(
+                    terminal.supporting_stable_physical_interaction_ids
+                )),
+                "present_in_triggering_contradiction": (
+                    terminal.present_in_triggering_contradiction
+                ),
+                "confirmed": terminal.confirmed,
+                "node_state": terminal.node_state,
+            }
+            later_matches[mode.value] = tuple(
+                index for index in range(4, 16)
+                if identity in traces[index]
+            )
+            if len(later_matches[mode.value]) < 5:
+                raise CorrectedCanaryAdmissionFailure(
+                    "corrected canary admission failed: frozen selected "
+                    f"identity {identity} lacks five later viewed occurrences"
+                )
             authority = _roundtrip(
                 authority, "REQUEST_CONSUMPTION", serialization[mode.value]
             )
@@ -500,7 +591,10 @@ def run_canary() -> dict[str, Any]:
             child_id is not None
             and not authority.states[child_id].prospectively_certified
         ):
-            raise RuntimeError("child did not earn later prospective certification")
+            raise CorrectedCanaryAdmissionFailure(
+                "corrected canary admission failed: child did not earn "
+                "later prospective certification"
+            )
         arms[mode] = _roundtrip(
             authority, "CHILD_CERTIFICATION", serialization[mode.value]
         )
@@ -632,7 +726,8 @@ def run_canary() -> dict[str, Any]:
 
     return {
         "schema_version": (
-            "native_deferred_specialization_development_canary.v1"
+            "native_deferred_specialization_development_canary."
+            "v2_engineering_corrections"
         ),
         "status": "PASS",
         "development_only": True,
@@ -653,6 +748,9 @@ def run_canary() -> dict[str, Any]:
         },
         "selected_development_genome_seed": genome_seed,
         "selected_identities": selected_identities,
+        "selected_eligibility": selected_eligibility,
+        "candidate_population_parity": candidate_population_parity,
+        "trigger_authority_ids": trigger_authority_ids,
         "metrics": metrics,
         "evidence_separation": {
             mode: {
@@ -686,7 +784,15 @@ def run_canary() -> dict[str, Any]:
                 "rejected_at": 193,
             },
             "specialization_arm_genome_calls_matched": True,
+            "organism_owned_seed": genome_seed,
+            "caller_selected_request_or_genome_api_available": False,
+            "canonical_next_request_only": True,
             "disconnected_dummy_requests": 0,
+        },
+        "preserved_v1_canary": {
+            "path": str(PRESERVED_CANARY),
+            "sha256": PRESERVED_CANARY_SHA256,
+            "byte_identical": True,
         },
     }
 
@@ -695,7 +801,26 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
-    result = run_canary()
+    try:
+        result = run_canary()
+    except CorrectedCanaryAdmissionFailure as exc:
+        result = {
+            "schema_version": (
+                "native_deferred_specialization_development_canary."
+                "v2_engineering_corrections"
+            ),
+            "status": "ADMISSION_FAIL",
+            "development_only": True,
+            "scientific_claim": False,
+            "starting_commit": STARTING_COMMIT,
+            "reason": str(exc),
+            "in_package_repair_performed": False,
+            "preserved_v1_canary": {
+                "path": str(PRESERVED_CANARY),
+                "sha256": PRESERVED_CANARY_SHA256,
+                "byte_identical": True,
+            },
+        }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(
         json.dumps(result, indent=2, sort_keys=True) + "\n",
@@ -704,9 +829,9 @@ def main() -> int:
     print(json.dumps({
         "status": result["status"],
         "output": str(args.output),
-        "metrics": result["metrics"],
+        "metrics": result.get("metrics"),
     }, sort_keys=True))
-    return 0
+    return 0 if result["status"] == "PASS" else 1
 
 
 if __name__ == "__main__":

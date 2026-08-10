@@ -456,17 +456,60 @@ def test_mixed_shadow_is_real_only_until_existing_v2_rule_promotes(
     assert earned["query"].response.available is True
     assert earned["classification"].state is AvailabilityState.AVAILABLE
 
+    connected = copy.deepcopy(organism)
+    connected.specialization_mode = SpecializationMode.LOCAL_CONTRAST
+    _connected_pending, _trace, connected_contradiction = _open_mint(
+        connected,
+        native_fixture["negative"][2],
+        frame_id="shadow-later-contradiction-connected",
+    )
+    connected_revoked = connected.consume(connected_contradiction)
+
     _pending, _trace, contradiction = _open_mint(
         organism,
         native_fixture["negative"][2],
-        frame_id="shadow-later-contradiction",
+        frame_id="shadow-later-contradiction-disconnected",
     )
     revoked = organism.consume(contradiction)
     assert revoked.revoked_cell_ids == (cell.cell_id,)
+    assert connected_revoked.graph_revocation_ids == (cell.cell_id,)
+    assert revoked.prequential_false_authority_ids == (cell.cell_id,)
+    assert connected_revoked.prequential_false_authority_ids == (
+        cell.cell_id,
+    )
+    assert revoked.graph_specialization_request_ids == ()
+    assert connected_revoked.graph_specialization_request_ids == (
+        cell.cell_id,
+    )
+    assert len(organism.request_queue) == 0
+    assert len(connected.request_queue) == 1
     assert not organism.states[cell.cell_id].prospectively_certified
+    assert not connected.states[cell.cell_id].prospectively_certified
+    for item, suffix in ((organism, "disconnected"), (connected, "connected")):
+        zero_influence = item.open_virtual(FrameContext(
+            f"shadow-post-revocation-{suffix}",
+            FrameKind.VIRTUAL,
+            values={"board": chess.Board(native_fixture["negative"][2])},
+        ))
+        assert cell.cell_id not in zero_influence[
+            "classification"
+        ].available_cell_ids
+        assert cell.cell_id not in zero_influence[
+            "classification"
+        ].refuted_cell_ids
     assert organism.states[cell.cell_id].transition_rows[-1][
         "transition"
     ] == "GRAPH_LOCAL_REVOCATION"
+
+    restored_connected = NativeProspectiveAuthorityV2.loads(
+        connected.dumps()
+    )
+    connected_emission = next(reversed(
+        restored_connected.emissions.values()
+    ))
+    assert connected_emission.prequential_false_authority_ids == (
+        cell.cell_id,
+    )
 
     restored_after = NativeProspectiveAuthorityV2.loads(organism.dumps())
     assert restored_after.continuation_manifest() == organism.continuation_manifest()

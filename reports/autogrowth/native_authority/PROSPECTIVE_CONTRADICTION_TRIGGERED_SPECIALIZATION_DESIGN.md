@@ -1,7 +1,7 @@
 # Prospective contradiction-triggered specialization of shadow-origin hypotheses
 
-Contract version: **v2 — external MODIFY integrated**
-Status: **ENGINEERING IMPLEMENTED; DEVELOPMENT CANARY PASS; NO SCIENTIFIC EXECUTION**
+Contract version: **v3 — blocking engineering corrections integrated**
+Status: **ENGINEERING RECLOSED; CORRECTED DEVELOPMENT CANARY PASS; NO SCIENTIFIC EXECUTION**
 
 ## Frozen question and boundary
 
@@ -83,14 +83,28 @@ For exact graph-emitted parent requests only, Python may attach candidate
 terminals for every role-permitted opaque identity in the request-bound support
 vocabulary. Python may not outcome-filter or rank identities. Persist graph
 revocation IDs, graph request IDs, eligible IDs per request, and every candidate
-terminal identity with confirmed/unconfirmed state. Only graph-emitted request
-IDs may append the organism-owned queue.
+terminal's identity, role permission, recursive implication status, exact
+distinct parent-supporting REAL receipt and stable-physical-interaction IDs,
+support count, contradiction presence, specialization mode, confirmation, and
+graph node state. A terminal confirms exactly when it is role-permitted, is not
+recursively implied, has at least `MIN_SUPPORT` parent-polarity supports, and is
+either counterexample-blind or absent from the triggering contradiction.
+LOCAL_CONTRAST and COUNTEREXAMPLE_BLIND receive the same anonymous terminal
+population before that final contradiction-absence predicate. Only
+graph-emitted request IDs may append the organism-owned queue.
 
 Atomic order is fixed: pre-outcome prediction commits; REAL action occurs;
 grounded result arrives; graph emits contradiction, revocation, request, and
 eligibility; decision state clears and the request appends atomically; event
 closes with no child creation, matching, capacity allocation, or evaluation.
-The triggering contradiction is a legitimate prequential false prediction.
+The emission persists three independent ledgers:
+`prequential_false_authority_ids`, `graph_revocation_ids`, and
+`graph_specialization_request_ids`. The first means cells whose committed
+pre-outcome decision was contradicted; it is derived from immutable pre-outcome
+classification, matching certified cells, truthful REAL outcome, and fixed
+polarity, never from mode or request creation. Requests are a subset of
+revocations; revocation may occur without a request; later state changes never
+erase the prequential error.
 Parent influence after consumption, including intervening VIRTUAL queries, is
 zero. A required revocation without its request, or a request without graph
 revocation, is an implementation failure. A focused fail-fast test forbids V2
@@ -147,6 +161,17 @@ Both capacities equal the existing proposal-attempt cap: request queue `192`;
 dormant specialization-child storage `192`. The append-only queue is ordered by
 `(contradiction ordinal, parent cell ID)`.
 
+The specialization genome seed is derived before outcomes from the organism's
+frozen learning configuration and bound into experimental, continuation,
+generation-boundary, consumption, and child-birth identities. The sole
+production consumer is `consume_next_structural_request()`: it selects the
+first unconsumed sealed request, takes the attempt ordinal from that request's
+fixed sealed index, constructs one `CompetenceContextGrowthGenome` internally,
+and makes exactly one call. Caller-selected request IDs, seeds, and genome
+objects are unavailable. Existing hypotheses, pending births, every prior
+attempted tuple (including rejected tuples), and materialized children form one
+without-replacement reservation set.
+
 - one lifetime request per depth-zero parent;
 - no depth-one recursive specialization;
 - one genome call and at most one child per consumed request;
@@ -158,7 +183,9 @@ dormant specialization-child storage `192`. The append-only queue is ordered by
   make exactly one genome call; only eligibility semantics differ;
 - DISCONNECTED produces no dummy request.
 
-Focused tests accept requests 1 through 192 and reject the 193rd.
+Focused tests consume every sealed request exactly once, including permanent
+empty, duplicate, and capacity rejections; slot 192 remains permanently
+consumed and request append 193 fails atomically.
 
 ## Four-region development canary
 
@@ -198,3 +225,12 @@ identities at every generation and serialization boundary.
 Stop before interpretation on any contract violation. If all focused tests and
 the canary pass, preserve only this engineering closure and stop. No scientific
 cohort or follow-on mechanism is authorized.
+
+The corrected one-seed development canary passed with 119 identical anonymous
+candidate terminals before the intended predicate difference. Local confirmed
+37 and selected `tg26s_shared_atom_a3c023db787c08da42e7` from 32 distinct
+supports; blind confirmed 117 and selected
+`tg26s_shared_atom_462644543c09da5451c1` from 37. Both children certified, but
+each evaluation produced 1 TP, 2 FP, and 1 abstention, hence zero safe coverage.
+This is engineering evidence for memory, engagement, correction, ownership,
+and isolation only—not safe competence or a local-versus-blind comparison.
