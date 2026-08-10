@@ -17,27 +17,33 @@ from recon_lite import (
     NodeState, NodeType,
 )
 from recon_lite_hector.nodes import StemCellState
+from recon_lite_hector.nodes import StemCellTerminal
 
 from .native_authority_handover import ChildQuery, GraphActuation, GraphSignalTrace
 from .native_competence_envelope import (
-    AvailabilityState, CompetenceContextCell, EnvelopeClassification,
+    AvailabilityState, CompetenceContextCell, CompetenceContextGrowthGenome,
+    DormantOrigin, EnvelopeClassification, GrowthProposal,
     NOMINATION_READ_CATEGORIES_V1, NOMINATION_READ_CATEGORIES_V2,
-    NominationEscrow, wilson_lower_bound,
+    NOMINATION_READ_CATEGORIES_V3, NOMINATION_ESCROW_V3,
+    NominationEscrow, SpecializationMode, StructuralMatchDescriptor,
+    _GraphSpecializationRequest, canonical_structural_pattern_matches,
+    wilson_lower_bound,
 )
 from .native_trace_competence_authority import TraceNativeCompetenceOrganism
 
 
-SCHEMA_VERSION = "native_prospective_evidence_authority_v2.v4"
-IMPLEMENTATION_IDENTITY = "native_prospective_two_phase_authority.v4"
+SCHEMA_VERSION = "native_prospective_evidence_authority_v2.v5_deferred_specialization"
+IMPLEMENTATION_IDENTITY = "native_prospective_two_phase_authority.v5_deferred_specialization"
 EXPECTED_RECEIPT_ISSUER = "native_v2_environment_terminal"
 OUTCOME_TERMINAL_IDENTITY = "native_r0_real_completion_terminal"
 EXPOSURE_SCHEMA_VERSION = "native_v2_bound_exposure.v5"
 PHYSICAL_TRACE_PROJECTION_SCHEMA = "native_v2_physical_trace_projection.v1"
 _EXPOSURE_BINDING_SECRET = b"native-v2-bound-exposure-capability.v1"
-AUTHORITY_ROLES = (
+CELL_AUTHORITY_ROLES = (
     "commitment", "available", "refuted", "support", "contradiction",
-    "maturity", "revocation",
+    "maturity", "revocation", "specialization_request",
 )
+AUTHORITY_ROLES = (*CELL_AUTHORITY_ROLES, "specialization_eligibility")
 ROLE_ROOTS = {role: f"v2_authority_{role}_root" for role in AUTHORITY_ROLES}
 NOMINATION_READ_CATEGORIES = NOMINATION_READ_CATEGORIES_V1
 WILSON_Z = 1.6448536269514722
@@ -45,6 +51,8 @@ MIN_SUPPORT = 4
 LOWER_BOUND = 0.55
 VIRTUAL_AVAILABLE_VALUE = 1.0
 VIRTUAL_RESPONSE_UNCERTAINTY = 0.0
+REQUEST_QUEUE_CAPACITY = 192
+DORMANT_SPECIALIZATION_CHILD_CAPACITY = 192
 
 
 def _json(value: Any) -> bytes:
@@ -80,6 +88,12 @@ class InitializationOrigin(str, Enum):
     PROSPECTIVE = "prospective"
 
 
+class GenerationPhase(str, Enum):
+    STRUCTURAL_OPEN = "STRUCTURAL_OPEN"
+    PROSPECTIVE_OPEN = "PROSPECTIVE_OPEN"
+    PROSPECTIVE_SEALED = "PROSPECTIVE_SEALED"
+
+
 @dataclass(frozen=True)
 class FrozenHypothesis:
     cell_id: str
@@ -106,6 +120,10 @@ class FrozenHypothesis:
     discovery_exclusion_receipt_ids: tuple[str, ...] = ()
     initialization_origin: InitializationOrigin = InitializationOrigin.PROSPECTIVE
     hypothesis_digest: str = ""
+    dormant_origin: DormantOrigin | None = None
+    parent_hypothesis_digest: str | None = None
+    source_generation: int = 0
+    discovery_support_receipt_ids: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if self.polarity is None:
@@ -155,6 +173,41 @@ class FrozenHypothesis:
             "initialization_origin",
             InitializationOrigin(self.initialization_origin),
         )
+        if self.dormant_origin is not None:
+            object.__setattr__(
+                self, "dormant_origin", DormantOrigin(self.dormant_origin)
+            )
+        if self.structural_state == StemCellState.DORMANT.name:
+            if self.dormant_origin is None:
+                raise ProspectiveV2IntegrityError(
+                    "dormant hypothesis lacks explicit origin"
+                )
+        elif self.dormant_origin is not None:
+            raise ProspectiveV2IntegrityError(
+                "non-dormant hypothesis carries dormant origin"
+            )
+        if self.source_generation < 0:
+            raise ProspectiveV2IntegrityError("negative source generation")
+        discovery_support = tuple(sorted(set(
+            self.discovery_support_receipt_ids
+        )))
+        if discovery_support != self.discovery_support_receipt_ids:
+            raise ProspectiveV2IntegrityError(
+                "noncanonical discovery support receipts"
+            )
+        if not set(discovery_support).issubset(self.discovery_receipt_ids):
+            raise ProspectiveV2IntegrityError(
+                "discovery support is outside discovery reads"
+            )
+        if self.source_generation > 0 and (
+            self.nomination_operation != "specialization"
+            or self.dormant_origin
+            is not DormantOrigin.DEFERRED_SPECIALIZATION_CHILD
+            or not self.parent_hypothesis_digest
+        ):
+            raise ProspectiveV2IntegrityError(
+                "successor hypothesis lacks deferred lineage binding"
+            )
         if not self.members:
             raise ProspectiveV2IntegrityError("empty pattern at candidate birth")
         canonical = tuple(sorted(set(self.discovery_receipt_ids)))
@@ -226,6 +279,7 @@ class FrozenHypothesis:
             if tuple(name for name, _ids in categories) not in {
                 NOMINATION_READ_CATEGORIES_V1,
                 NOMINATION_READ_CATEGORIES_V2,
+                NOMINATION_READ_CATEGORIES_V3,
             }:
                 raise ProspectiveProvenanceUnavailable(
                     "prospective_provenance_unavailable: incomplete nomination read set"
@@ -280,6 +334,15 @@ class FrozenHypothesis:
                 self.discovery_exclusion_receipt_ids
             ),
             "initialization_origin": self.initialization_origin.value,
+            "dormant_origin": (
+                None if self.dormant_origin is None
+                else self.dormant_origin.value
+            ),
+            "parent_hypothesis_digest": self.parent_hypothesis_digest,
+            "source_generation": self.source_generation,
+            "discovery_support_receipt_ids": list(
+                self.discovery_support_receipt_ids
+            ),
         }
 
     def manifest(self) -> dict[str, Any]:
@@ -299,6 +362,9 @@ class CellStructuralInvariant:
     structural_state: str
     authority_node_ids: tuple[str, ...]
     authority_topology_identity: str
+    dormant_origin: DormantOrigin | None
+    immutable_hypothesis_digest: str | None
+    parent_hypothesis_digest: str | None
 
     def manifest(self) -> dict[str, Any]:
         return {
@@ -310,6 +376,12 @@ class CellStructuralInvariant:
             "structural_state": self.structural_state,
             "authority_node_ids": list(self.authority_node_ids),
             "authority_topology_identity": self.authority_topology_identity,
+            "dormant_origin": (
+                None if self.dormant_origin is None
+                else self.dormant_origin.value
+            ),
+            "immutable_hypothesis_digest": self.immutable_hypothesis_digest,
+            "parent_hypothesis_digest": self.parent_hypothesis_digest,
         }
 
 
@@ -431,6 +503,207 @@ class V2GroundedReceipt:
 
 
 @dataclass(frozen=True)
+class AcceptedRealReference:
+    """Immutable task-generic identity for one accepted REAL interaction."""
+
+    receipt_id: str
+    ordinal: int
+    stable_physical_interaction_id: str
+    trace_digest: str
+    typed_signal_digest: str
+    observed_outcome: bool
+    source_generation: int
+    ordered_signal_identities: tuple[str, ...]
+    typed_signal_roles: tuple[tuple[str, str], ...]
+
+    def __post_init__(self) -> None:
+        if not self.receipt_id or not self.stable_physical_interaction_id:
+            raise ProspectiveV2IntegrityError("incomplete accepted REAL reference")
+        if self.ordinal < 0 or self.source_generation < 0:
+            raise ProspectiveV2IntegrityError("negative REAL reference ordinal")
+        if tuple(sorted(self.typed_signal_roles)) != self.typed_signal_roles:
+            raise ProspectiveV2IntegrityError("noncanonical typed signal roles")
+
+    def manifest(self) -> dict[str, Any]:
+        return {
+            "receipt_id": self.receipt_id,
+            "ordinal": self.ordinal,
+            "stable_physical_interaction_id": (
+                self.stable_physical_interaction_id
+            ),
+            "trace_digest": self.trace_digest,
+            "typed_signal_digest": self.typed_signal_digest,
+            "observed_outcome": self.observed_outcome,
+            "source_generation": self.source_generation,
+            "ordered_signal_identities": list(self.ordered_signal_identities),
+            "typed_signal_roles": [list(item) for item in self.typed_signal_roles],
+        }
+
+
+@dataclass(frozen=True)
+class SpecializationCandidateTerminalState:
+    identity: str
+    node_id: str
+    confirmed: bool
+    node_state: str
+    inspected_receipt_ids: tuple[str, ...]
+
+    def manifest(self) -> dict[str, Any]:
+        return {
+            "identity": self.identity,
+            "node_id": self.node_id,
+            "confirmed": self.confirmed,
+            "node_state": self.node_state,
+            "inspected_receipt_ids": list(self.inspected_receipt_ids),
+        }
+
+
+@dataclass(frozen=True)
+class DeferredSpecializationRequest:
+    request_id: str
+    source_generation: int
+    parent_cell_id: str
+    parent_hypothesis_digest: str
+    fixed_polarity: AvailabilityState
+    contradiction_receipt_id: str
+    contradiction_ordinal: int
+    specialization_mode: SpecializationMode
+    parent_discovery_receipt_ids: tuple[str, ...]
+    parent_discovery_support_receipt_ids: tuple[str, ...]
+    parent_prospective_support_receipt_ids: tuple[str, ...]
+    transitive_ancestor_receipt_ids: tuple[str, ...]
+    candidate_terminals: tuple[SpecializationCandidateTerminalState, ...]
+    graph_revocation_confirmed: bool = True
+    graph_request_confirmed: bool = True
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self, "fixed_polarity", AvailabilityState(self.fixed_polarity)
+        )
+        object.__setattr__(
+            self, "specialization_mode", SpecializationMode(
+                self.specialization_mode
+            )
+        )
+        if self.specialization_mode is SpecializationMode.DISCONNECTED:
+            raise ProspectiveV2IntegrityError("disconnected dummy request")
+        if not self.graph_revocation_confirmed or not self.graph_request_confirmed:
+            raise ProspectiveV2IntegrityError("request lacks graph revocation")
+
+    @property
+    def eligible_base_ids(self) -> tuple[str, ...]:
+        return tuple(
+            item.identity for item in self.candidate_terminals
+            if item.confirmed
+        )
+
+    def manifest(self) -> dict[str, Any]:
+        return {
+            "request_id": self.request_id,
+            "source_generation": self.source_generation,
+            "parent_cell_id": self.parent_cell_id,
+            "parent_hypothesis_digest": self.parent_hypothesis_digest,
+            "fixed_polarity": self.fixed_polarity.value,
+            "contradiction_receipt_id": self.contradiction_receipt_id,
+            "contradiction_ordinal": self.contradiction_ordinal,
+            "specialization_mode": self.specialization_mode.value,
+            "parent_discovery_receipt_ids": list(
+                self.parent_discovery_receipt_ids
+            ),
+            "parent_discovery_support_receipt_ids": list(
+                self.parent_discovery_support_receipt_ids
+            ),
+            "parent_prospective_support_receipt_ids": list(
+                self.parent_prospective_support_receipt_ids
+            ),
+            "transitive_ancestor_receipt_ids": list(
+                self.transitive_ancestor_receipt_ids
+            ),
+            "candidate_terminals": [
+                item.manifest() for item in self.candidate_terminals
+            ],
+            "graph_revocation_confirmed": self.graph_revocation_confirmed,
+            "graph_request_confirmed": self.graph_request_confirmed,
+        }
+
+
+@dataclass(frozen=True)
+class StructuralRequestConsumption:
+    request_id: str
+    attempt_ordinal: int
+    genome_seed: int
+    genome_call_count: int
+    selected_members: tuple[str, ...]
+    disposition: str
+    child_cell_id: str | None = None
+
+    def manifest(self) -> dict[str, Any]:
+        return {
+            "request_id": self.request_id,
+            "attempt_ordinal": self.attempt_ordinal,
+            "genome_seed": self.genome_seed,
+            "genome_call_count": self.genome_call_count,
+            "selected_members": list(self.selected_members),
+            "disposition": self.disposition,
+            "child_cell_id": self.child_cell_id,
+        }
+
+
+@dataclass(frozen=True)
+class DeferredChildBirth:
+    """A consumed structural request awaiting or recording one child birth."""
+
+    request_id: str
+    child_cell_id: str
+    members: tuple[str, ...]
+    genome_seed: int
+    proposal_ordinal: int
+    source_generation: int
+    disposition: str
+
+    def manifest(self) -> dict[str, Any]:
+        return {
+            "request_id": self.request_id,
+            "child_cell_id": self.child_cell_id,
+            "members": list(self.members),
+            "genome_seed": self.genome_seed,
+            "proposal_ordinal": self.proposal_ordinal,
+            "source_generation": self.source_generation,
+            "disposition": self.disposition,
+        }
+
+
+@dataclass(frozen=True)
+class GenerationBoundary:
+    generation: int
+    phase: GenerationPhase
+    event_frontier: int
+    prior_continuation_digest: str
+    accepted_real_ledger_digest: str
+    request_queue_digest: str
+    structural_epoch_schedule_digest: str
+    candidate_manifest_digest: str
+    parent_decision_history_digest: str
+
+    def manifest(self) -> dict[str, Any]:
+        return {
+            "generation": self.generation,
+            "phase": self.phase.value,
+            "event_frontier": self.event_frontier,
+            "prior_continuation_digest": self.prior_continuation_digest,
+            "accepted_real_ledger_digest": self.accepted_real_ledger_digest,
+            "request_queue_digest": self.request_queue_digest,
+            "structural_epoch_schedule_digest": (
+                self.structural_epoch_schedule_digest
+            ),
+            "candidate_manifest_digest": self.candidate_manifest_digest,
+            "parent_decision_history_digest": (
+                self.parent_decision_history_digest
+            ),
+        }
+
+
+@dataclass(frozen=True)
 class V2CertificationEmission:
     receipt_id: str
     matching_cell_ids: tuple[str, ...]
@@ -441,6 +714,13 @@ class V2CertificationEmission:
     graph_maturity_ids: tuple[str, ...]
     graph_revocation_ids: tuple[str, ...]
     nomination_allowed_after_lifecycle: bool
+    graph_specialization_request_ids: tuple[str, ...] = ()
+    eligible_ids_by_request: tuple[tuple[str, tuple[str, ...]], ...] = ()
+    candidate_terminal_states: tuple[
+        tuple[str, tuple[SpecializationCandidateTerminalState, ...]], ...
+    ] = ()
+    request_queue_appended_ids: tuple[str, ...] = ()
+    triggering_false_prediction_ids: tuple[str, ...] = ()
 
     def manifest(self) -> dict[str, Any]:
         return asdict(self)
@@ -502,7 +782,7 @@ class CanonicalExposureCommitment:
 
 
 def _cell_node_ids(cell_id: str) -> tuple[str, ...]:
-    return tuple(f"v2:{role}:{cell_id}" for role in AUTHORITY_ROLES)
+    return tuple(f"v2:{role}:{cell_id}" for role in CELL_AUTHORITY_ROLES)
 
 
 def _cell_topology_identity(cell_id: str) -> str:
@@ -511,7 +791,7 @@ def _cell_topology_identity(cell_id: str) -> str:
         "nodes": list(_cell_node_ids(cell_id)),
         "edges": [
             [ROLE_ROOTS[role], f"v2:{role}:{cell_id}", "SUB_SUR"]
-            for role in AUTHORITY_ROLES
+            for role in CELL_AUTHORITY_ROLES
         ],
     })
 
@@ -522,34 +802,30 @@ def _structural_pattern_matches(
     active_signal_ids: Sequence[str],
     visiting: frozenset[str] = frozenset(),
 ) -> bool:
-    if cell_id in visiting:
-        raise ProspectiveV2IntegrityError("cyclic competence context")
-    state = states.get(cell_id)
-    if state is None:
-        return False
-    hypothesis = state.hypothesis
-    active = set(active_signal_ids)
-    next_visiting = visiting | {cell_id}
-    for member in hypothesis.members:
-        if member.startswith("context:"):
-            parent_id = member.split(":", 1)[1]
-            parent = states.get(parent_id)
-            if parent is None:
-                return False
-            parent_state = parent.hypothesis.structural_state
-            parent_usable = (
-                parent_state == StemCellState.MATURE.name
-            ) or (
-                hypothesis.lineage_parent_id == parent_id
-                and parent_state == StemCellState.PROBATION.name
-            )
-            if not parent_usable or not _structural_pattern_matches(
-                parent_id, states, active_signal_ids, next_visiting
-            ):
-                return False
-        elif member not in active:
-            return False
-    return True
+    descriptors = {
+        item_id: StructuralMatchDescriptor(
+            cell_id=item_id,
+            members=value.hypothesis.members,
+            structural_state=value.hypothesis.structural_state,
+            lineage_parent_id=value.hypothesis.lineage_parent_id,
+            specialization_depth=value.hypothesis.specialization_depth,
+            nomination_operation=value.hypothesis.nomination_operation,
+            parent_hypothesis_digest=(
+                value.hypothesis.parent_hypothesis_digest
+            ),
+            hypothesis_digest=value.hypothesis.hypothesis_digest,
+        )
+        for item_id, value in states.items()
+    }
+    try:
+        return canonical_structural_pattern_matches(
+            cell_id,
+            descriptors,
+            active_signal_ids,
+            visiting,
+        )
+    except RuntimeError as exc:
+        raise ProspectiveV2IntegrityError(str(exc)) from exc
 
 
 def _receipt_supports(
@@ -617,8 +893,49 @@ def _authority_terminal(
         "revocation": (
             matched and contradicts and state.prospectively_certified
         ),
+        "specialization_request": (
+            matched
+            and contradicts
+            and state.prospectively_certified
+            and state.hypothesis.specialization_depth == 0
+            and state.hypothesis.dormant_origin
+            is DormantOrigin.MIXED_OUTCOME_SHADOW
+            and cell_id not in set(env.get("lifetime_requested_parent_ids", ()))
+            and SpecializationMode(env.get(
+                "specialization_mode", SpecializationMode.DISCONNECTED.value
+            )) is not SpecializationMode.DISCONNECTED
+        ),
     }
     confirmed = bool(values[role])
+    node.activation.value = 1.0 if confirmed else 0.0
+    return True, confirmed
+
+
+def _specialization_identity_role_permitted(
+    reference: AcceptedRealReference, identity: str
+) -> bool:
+    if identity == "internal:policy_response":
+        return False
+    roles = {
+        role for item_identity, role in reference.typed_signal_roles
+        if item_identity == identity
+    }
+    return bool(roles.intersection({"BASE_TERMINAL", "MATURE_COMPOSITE"}))
+
+
+def _v2_specialization_eligibility_terminal(
+    node: Node, env: Mapping[str, Any]
+) -> tuple[bool, bool]:
+    mode = SpecializationMode(str(node.meta["specialization_mode"]))
+    identity = str(node.meta["identity"])
+    contradiction_ids = set(env.get("contradiction_signal_ids", ()))
+    confirmed = bool(
+        mode is SpecializationMode.COUNTEREXAMPLE_BLIND
+        or (
+            mode is SpecializationMode.LOCAL_CONTRAST
+            and identity not in contradiction_ids
+        )
+    )
     node.activation.value = 1.0 if confirmed else 0.0
     return True, confirmed
 
@@ -628,7 +945,7 @@ def _build_authority_graph(
 ) -> Graph:
     """Build the canonical organism-owned authority graph."""
     graph = Graph()
-    for role in AUTHORITY_ROLES:
+    for role in CELL_AUTHORITY_ROLES:
         graph.add_node(Node(
             ROLE_ROOTS[role], NodeType.SCRIPT,
             meta={"confirm_policy": "or", "authority_role": role},
@@ -669,7 +986,13 @@ def _executed_authority_topology_manifest(
             for node_id, node in sorted(graph.nodes.items())
         },
         "root_confirmation_policies": {
-            role: graph.nodes[ROLE_ROOTS[role]].meta.get("confirm_policy")
+            role: (
+                None
+                if ROLE_ROOTS[role] not in graph.nodes
+                else graph.nodes[ROLE_ROOTS[role]].meta.get(
+                    "confirm_policy"
+                )
+            )
             for role in AUTHORITY_ROLES
         },
         "authority_roles": list(AUTHORITY_ROLES),
@@ -687,25 +1010,144 @@ def _executed_authority_topology_manifest(
 def _run_authority_graph(
     states: Mapping[str, ProspectiveAuthorityState],
     snapshot: AuthorityMeasurementSnapshot,
-) -> dict[str, tuple[str, ...]]:
+    *,
+    accepted_real_references: Mapping[str, AcceptedRealReference] | None = None,
+    specialization_mode: SpecializationMode = SpecializationMode.DISCONNECTED,
+    lifetime_requested_parent_ids: Sequence[str] = (),
+) -> dict[str, Any]:
     if not states:
-        return {role: () for role in AUTHORITY_ROLES}
+        return {
+            **{role: () for role in AUTHORITY_ROLES},
+            "specialization_candidate_states": (),
+        }
+    specialization_mode = SpecializationMode(specialization_mode)
     graph = _build_authority_graph(states)
     engine = FormalReConEngine(graph, record_trace=False)
-    for role in AUTHORITY_ROLES:
+    for role in CELL_AUTHORITY_ROLES:
         engine.request(ROLE_ROOTS[role])
     engine.run(
         max_ticks=max(32, len(states) * len(AUTHORITY_ROLES) * 4),
-        env={"authority_snapshot": snapshot, "authority_states": states},
+        env={
+            "authority_snapshot": snapshot,
+            "authority_states": states,
+            "specialization_mode": specialization_mode.value,
+            "lifetime_requested_parent_ids": tuple(
+                lifetime_requested_parent_ids
+            ),
+        },
     )
-    return {
+    result: dict[str, Any] = {
         role: tuple(sorted(
             cell_id for cell_id in states
             if graph.nodes[f"v2:{role}:{cell_id}"].state
             == NodeState.CONFIRMED
         ))
-        for role in AUTHORITY_ROLES
+        for role in CELL_AUTHORITY_ROLES
     }
+    request_parents = result["specialization_request"]
+    candidate_states: list[
+        tuple[str, tuple[SpecializationCandidateTerminalState, ...]]
+    ] = []
+    confirmed_tokens: list[str] = []
+    receipt = snapshot.grounded_receipt
+    references = accepted_real_references or {}
+    if request_parents and receipt is None:
+        raise ProspectiveV2IntegrityError(
+            "specialization request lacks grounded REAL receipt"
+        )
+    if request_parents:
+        graph.add_node(Node(
+            ROLE_ROOTS["specialization_eligibility"],
+            NodeType.SCRIPT,
+            meta={
+                "confirm_policy": "or",
+                "authority_role": "specialization_eligibility",
+            },
+        ))
+        for parent_id in request_parents:
+            state = states[parent_id]
+            support_ids = tuple(sorted(set(
+                state.hypothesis.discovery_support_receipt_ids
+            ) | set(state.support_receipt_ids)))
+            support_refs = tuple(
+                references[item] for item in support_ids if item in references
+            )
+            if len(support_refs) != len(support_ids):
+                raise ProspectiveV2IntegrityError(
+                    "request-bound support vocabulary is incomplete"
+                )
+            vocabulary = tuple(sorted({
+                identity
+                for reference in support_refs
+                for identity in reference.ordered_signal_identities
+                if _specialization_identity_role_permitted(
+                    reference, identity
+                )
+            }))
+            terminal_rows: list[SpecializationCandidateTerminalState] = []
+            for identity in vocabulary:
+                token = hashlib.sha256(
+                    f"{parent_id}|{identity}".encode("utf-8")
+                ).hexdigest()[:16]
+                node_id = f"v2:specialization_eligibility:{token}"
+                graph.add_node(Node(
+                    node_id,
+                    NodeType.TERMINAL,
+                    predicate=_v2_specialization_eligibility_terminal,
+                    meta={
+                        "terminal_kind": "SPECIALIZATION_ELIGIBILITY",
+                        "authority_role": "specialization_eligibility",
+                        "parent_cell_id": parent_id,
+                        "identity": identity,
+                        "specialization_mode": specialization_mode.value,
+                    },
+                ))
+                graph.add_hierarchy_pair(
+                    ROLE_ROOTS["specialization_eligibility"], node_id
+                )
+            if vocabulary:
+                eligibility_engine = FormalReConEngine(
+                    graph, record_trace=False
+                )
+                for runtime_node in graph.nodes.values():
+                    runtime_node.state = NodeState.INACTIVE
+                    runtime_node.tick_entered = -1
+                    runtime_node.activation.reset()
+                eligibility_engine.request(
+                    ROLE_ROOTS["specialization_eligibility"]
+                )
+                eligibility_engine.run(
+                    max_ticks=max(32, len(vocabulary) * 4),
+                    env={
+                        "contradiction_signal_ids": (
+                            () if receipt is None
+                            else receipt.trace.ordered_signal_identities
+                        ),
+                    },
+                )
+            inspected = tuple(sorted({
+                *support_ids,
+                *(() if receipt is None else (receipt.receipt_id,)),
+            }))
+            for identity in vocabulary:
+                token = hashlib.sha256(
+                    f"{parent_id}|{identity}".encode("utf-8")
+                ).hexdigest()[:16]
+                node_id = f"v2:specialization_eligibility:{token}"
+                confirmed = graph.nodes[node_id].state == NodeState.CONFIRMED
+                if confirmed:
+                    confirmed_tokens.append(f"{parent_id}|{identity}")
+                terminal_rows.append(SpecializationCandidateTerminalState(
+                    identity=identity,
+                    node_id=node_id,
+                    confirmed=confirmed,
+                    node_state=graph.nodes[node_id].state.name,
+                    inspected_receipt_ids=inspected,
+                ))
+            candidate_states.append((parent_id, tuple(terminal_rows)))
+    result["specialization_eligibility"] = tuple(sorted(confirmed_tokens))
+    result["specialization_candidate_states"] = tuple(candidate_states)
+    return result
 
 
 def _canonical_source_manifest_digest(r0: Any) -> str:
@@ -889,6 +1331,31 @@ class NativeProspectiveAuthorityV2:
     next_expected_ordinal: int
     discovery_prefix_physical_fingerprints: tuple[str, ...]
     discovery_prefix_physical_fingerprint_digest: str
+    specialization_mode: SpecializationMode = SpecializationMode.DISCONNECTED
+    structural_epoch_schedule: tuple[int, ...] = ()
+    current_generation: int = 0
+    generation_phase: GenerationPhase = GenerationPhase.PROSPECTIVE_OPEN
+    accepted_real_references: dict[str, AcceptedRealReference] = field(
+        default_factory=dict
+    )
+    deferred_requests: dict[str, DeferredSpecializationRequest] = field(
+        default_factory=dict
+    )
+    request_queue: tuple[str, ...] = ()
+    lifetime_requested_parent_ids: tuple[str, ...] = ()
+    request_consumptions: dict[str, StructuralRequestConsumption] = field(
+        default_factory=dict
+    )
+    deferred_child_births: dict[str, DeferredChildBirth] = field(
+        default_factory=dict
+    )
+    deferred_child_escrows: dict[str, NominationEscrow] = field(
+        default_factory=dict
+    )
+    generation_boundaries: tuple[GenerationBoundary, ...] = ()
+    sealed_request_ids: tuple[str, ...] = ()
+    sealed_request_queue_digest: str | None = None
+    evaluation_sealed: bool = False
     pending_event: PendingRealEvent | None = None
     consumed_receipts: dict[str, V2GroundedReceipt] = field(default_factory=dict)
     consumed_tokens: set[str] = field(default_factory=set)
@@ -911,12 +1378,22 @@ class NativeProspectiveAuthorityV2:
         *,
         mode: V2Mode,
         frontier: int | None = None,
+        specialization_mode: SpecializationMode = SpecializationMode.DISCONNECTED,
+        structural_epoch_schedule: Sequence[int] = (),
     ) -> "NativeProspectiveAuthorityV2":
         if frontier is not None:
             raise ProspectiveV2IntegrityError(
                 "runner-supplied frontier is forbidden"
             )
         mode = V2Mode(mode)
+        specialization_mode = SpecializationMode(specialization_mode)
+        schedule = tuple(map(int, structural_epoch_schedule))
+        if tuple(sorted(set(schedule))) != schedule or any(
+            item < 0 for item in schedule
+        ):
+            raise ProspectiveV2IntegrityError(
+                "structural epoch schedule is not canonical"
+            )
         base = copy.deepcopy(source)
         epoch = base.open_prospective_discovery_epoch()
         base.validate_prospective_discovery_epoch()
@@ -931,6 +1408,7 @@ class NativeProspectiveAuthorityV2:
             StemCellState.MATURE,
             StemCellState.SPECIALIZED,
             StemCellState.PROBATION,
+            StemCellState.DORMANT,
         }
         opened_cells = set(epoch.opened_cell_ids)
         for cell in sorted(
@@ -981,6 +1459,15 @@ class NativeProspectiveAuthorityV2:
                     provenance_kind=ProvenanceKind.HISTORICAL_ACCEPTED_LEDGER,
                     discovery_exclusion_receipt_ids=historical_ledger_ids,
                     initialization_origin=InitializationOrigin.HISTORICAL,
+                    dormant_origin=getattr(cell, "dormant_origin", None),
+                    source_generation=0,
+                    discovery_support_receipt_ids=tuple(sorted(
+                        receipt_id
+                        for receipt_id in historical_ledger_ids
+                        if cls._historical_receipt_supports_cell(
+                            base, cell, receipt_id
+                        )
+                    )),
                 )
             else:
                 escrow = cell.nomination_escrow
@@ -1033,7 +1520,18 @@ class NativeProspectiveAuthorityV2:
                         escrow.discovery_exclusion_receipt_ids
                     ),
                     initialization_origin=InitializationOrigin.PROSPECTIVE,
+                    dormant_origin=getattr(cell, "dormant_origin", None),
+                    parent_hypothesis_digest=escrow.parent_hypothesis_digest,
+                    source_generation=0,
+                    discovery_support_receipt_ids=tuple(sorted(
+                        receipt_id
+                        for receipt_id in escrow.discovery_receipt_ids
+                        if cls._historical_receipt_supports_cell(
+                            base, cell, receipt_id
+                        )
+                    )),
                 )
+            cell.immutable_hypothesis_digest = frozen.hypothesis_digest
             states[cell.cell_id] = ProspectiveAuthorityState(
                 hypothesis=frozen,
                 prospectively_certified=(
@@ -1058,9 +1556,67 @@ class NativeProspectiveAuthorityV2:
             discovery_prefix_physical_fingerprint_digest=_sha(
                 list(prefix_fingerprints)
             ),
+            specialization_mode=specialization_mode,
+            structural_epoch_schedule=schedule,
+            accepted_real_references={
+                reference.receipt_id: reference
+                for reference in cls._historical_real_references(base)
+            },
         )
         item._verify_invariants()
         return item
+
+    @staticmethod
+    def _historical_receipt_supports_cell(
+        base: TraceNativeCompetenceOrganism,
+        cell: CompetenceContextCell,
+        receipt_id: str,
+    ) -> bool:
+        record = base.envelope.evidence[receipt_id]
+        return bool(
+            base.envelope._cell_pattern_matches(cell, record, set())
+            and record.observed_completion
+            == (cell.polarity is AvailabilityState.AVAILABLE)
+        )
+
+    @staticmethod
+    def _historical_real_references(
+        base: TraceNativeCompetenceOrganism,
+    ) -> tuple[AcceptedRealReference, ...]:
+        rows: list[AcceptedRealReference] = []
+        for receipt in sorted(
+            base.receipts.values(),
+            key=lambda item: (item.event_ordinal, item.event_id),
+        ):
+            trace = receipt.decision_trace
+            physical_identity = _interaction_fingerprint(
+                source_organism_identity=trace.source_organism_identity,
+                source_state_identity=trace.source_state_identity,
+                predecessor_fen=receipt.predecessor_fen,
+                trace=trace,
+                actuation=trace.actuation,
+                successor_fen=receipt.successor_fen,
+                environment_outcome_terminal_identity=(
+                    receipt.completion_terminal_identity
+                ),
+            )
+            rows.append(AcceptedRealReference(
+                receipt_id=receipt.event_id,
+                ordinal=receipt.event_ordinal,
+                stable_physical_interaction_id=physical_identity,
+                trace_digest=trace.digest(),
+                typed_signal_digest=_sha([
+                    asdict(item) for item in trace.terminal_signals
+                ]),
+                observed_outcome=receipt.observed_terminal_result,
+                source_generation=0,
+                ordered_signal_identities=trace.ordered_signal_identities,
+                typed_signal_roles=tuple(sorted(
+                    (item.identity, item.role)
+                    for item in trace.terminal_signals
+                )),
+            ))
+        return tuple(rows)
 
     @staticmethod
     def _invariant_from_cell(
@@ -1079,6 +1635,14 @@ class NativeProspectiveAuthorityV2:
             structural_state=cell.state.name,
             authority_node_ids=_cell_node_ids(cell.cell_id),
             authority_topology_identity=_cell_topology_identity(cell.cell_id),
+            dormant_origin=getattr(cell, "dormant_origin", None),
+            immutable_hypothesis_digest=getattr(
+                cell, "immutable_hypothesis_digest", None
+            ),
+            parent_hypothesis_digest=(
+                None if cell.nomination_escrow is None
+                else cell.nomination_escrow.parent_hypothesis_digest
+            ),
         )
 
     def _structural_manifest(self) -> dict[str, Any]:
@@ -1204,6 +1768,48 @@ class NativeProspectiveAuthorityV2:
                 "live invariant/state identity mismatch"
             )
         for cell_id in sorted(registered):
+            hypothesis = self.states[cell_id].hypothesis
+            if hypothesis.source_generation > 0:
+                invariant = self.structural_invariants[cell_id]
+                if (
+                    hypothesis.members != invariant.members
+                    or hypothesis.polarity != invariant.polarity
+                    or hypothesis.lineage_parent_id
+                    != invariant.lineage_parent_id
+                    or hypothesis.specialization_depth
+                    != invariant.specialization_depth
+                    or hypothesis.structural_state
+                    != invariant.structural_state
+                    or hypothesis.dormant_origin
+                    != invariant.dormant_origin
+                    or hypothesis.hypothesis_digest
+                    != invariant.immutable_hypothesis_digest
+                    or hypothesis.parent_hypothesis_digest
+                    != invariant.parent_hypothesis_digest
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        f"successor structural invariant mutation: {cell_id}"
+                    )
+                escrow = self.deferred_child_escrows.get(cell_id)
+                if not isinstance(escrow, NominationEscrow):
+                    raise ProspectiveV2IntegrityError(
+                        f"successor child lacks V3 escrow: {cell_id}"
+                    )
+                if (
+                    escrow.escrow_schema_version != NOMINATION_ESCROW_V3
+                    or hypothesis.nomination_escrow_digest
+                    != escrow.escrow_digest
+                    or hypothesis.nomination_read_sets
+                    != escrow.categorized_reads
+                    or hypothesis.discovery_exclusion_receipt_ids
+                    != escrow.discovery_exclusion_receipt_ids
+                    or hypothesis.parent_hypothesis_digest
+                    != escrow.parent_hypothesis_digest
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        f"successor child escrow mismatch: {cell_id}"
+                    )
+                continue
             cell = self.base.envelope.cells.get(cell_id)
             if cell is None:
                 raise ProspectiveV2IntegrityError(
@@ -1214,7 +1820,6 @@ class NativeProspectiveAuthorityV2:
                 raise ProspectiveV2IntegrityError(
                     f"live structural invariant mutation: {cell_id}"
                 )
-            hypothesis = self.states[cell_id].hypothesis
             if hypothesis.hypothesis_digest != _sha(hypothesis.identity_manifest()):
                 raise ProspectiveV2IntegrityError(
                     f"immutable hypothesis digest mismatch: {cell_id}"
@@ -1299,15 +1904,63 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "authority topology identity mismatch"
             )
-        if epoch.nomination_closed:
+        successor_ids = {
+            cell_id for cell_id, state in self.states.items()
+            if state.hypothesis.source_generation > 0
+        }
+        if epoch.nomination_closed and not successor_ids:
             expected_identity = self._build_experimental_identity()
             if self.experimental_identity != expected_identity:
                 raise ProspectiveV2IntegrityError(
                     "experimental initialization identity mismatch"
                 )
-        elif self.experimental_identity is not None:
+        elif not epoch.nomination_closed and self.experimental_identity is not None:
             raise ProspectiveV2IntegrityError(
                 "open nomination carries experimental identity"
+            )
+
+        if len(self.request_queue) > REQUEST_QUEUE_CAPACITY:
+            raise ProspectiveV2IntegrityError("request queue capacity exceeded")
+        if len(successor_ids) > DORMANT_SPECIALIZATION_CHILD_CAPACITY:
+            raise ProspectiveV2IntegrityError(
+                "dormant specialization-child capacity exceeded"
+            )
+        if set(self.deferred_requests) != set(self.request_queue):
+            raise ProspectiveV2IntegrityError(
+                "deferred request/queue identity mismatch"
+            )
+        ordered_queue = tuple(sorted(
+            self.request_queue,
+            key=lambda request_id: (
+                self.deferred_requests[request_id].contradiction_ordinal,
+                self.deferred_requests[request_id].parent_cell_id,
+            ),
+        ))
+        if self.request_queue != ordered_queue:
+            raise ProspectiveV2IntegrityError("request queue is not canonical")
+        if set(self.request_consumptions).difference(self.request_queue):
+            raise ProspectiveV2IntegrityError(
+                "consumption exists outside request queue"
+            )
+        if set(self.deferred_child_births).difference(
+            self.request_consumptions
+        ):
+            raise ProspectiveV2IntegrityError(
+                "child birth exists without consumed request"
+            )
+        if self.specialization_mode is SpecializationMode.DISCONNECTED and (
+            self.request_queue or self.deferred_requests
+        ):
+            raise ProspectiveV2IntegrityError(
+                "disconnected mode contains a dummy request"
+            )
+        stable_ids = [
+            item.stable_physical_interaction_id
+            for item in self.accepted_real_references.values()
+        ]
+        if len(stable_ids) != len(set(stable_ids)):
+            raise ProspectiveV2IntegrityError(
+                "accepted REAL physical identity replay"
             )
 
         self._verify_ledger_derived_state()
@@ -1428,6 +2081,14 @@ class NativeProspectiveAuthorityV2:
         expected_tokens: set[str] = set()
         expected_fingerprints: dict[str, str] = {}
         expected_emissions: dict[str, V2CertificationEmission] = {}
+        historical_references = {
+            item.receipt_id: item
+            for item in self._historical_real_references(self.base)
+        }
+        replay_references = dict(historical_references)
+        replay_requests: dict[str, DeferredSpecializationRequest] = {}
+        replay_queue: list[str] = []
+        replay_lifetime: set[str] = set()
         for offset, receipt in enumerate(ordered):
             if receipt.ordinal != expected_start + offset:
                 raise ProspectiveV2IntegrityError(
@@ -1456,8 +2117,24 @@ class NativeProspectiveAuthorityV2:
                     "accepted receipt lacks pre-outcome transaction"
                 )
             self._validate_replayed_receipt(receipt, transaction)
+            reference = self.accepted_real_references.get(receipt.receipt_id)
+            if reference != self._reference_from_v2_receipt(
+                receipt, source_generation=reference.source_generation
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "accepted REAL reference differs from receipt"
+                )
+            active_derived = {
+                cell_id: state for cell_id, state in derived.items()
+                if state.hypothesis.source_generation
+                <= reference.source_generation
+            }
             pre_graph = _run_authority_graph(
-                derived, AuthorityMeasurementSnapshot(receipt.trace, None)
+                active_derived,
+                AuthorityMeasurementSnapshot(receipt.trace, None),
+                accepted_real_references=replay_references,
+                specialization_mode=self.specialization_mode,
+                lifetime_requested_parent_ids=tuple(sorted(replay_lifetime)),
             )
             matching = pre_graph["commitment"]
             if list(matching) != transaction.get("matching_cell_ids"):
@@ -1469,20 +2146,22 @@ class NativeProspectiveAuthorityV2:
                     "replayed commitment digest mismatch"
                 )
             classification = self._classification_from_emissions(
-                derived, pre_graph
+                active_derived, pre_graph
             ).to_manifest()
             if classification != transaction.get("pre_outcome_classification"):
                 raise ProspectiveV2IntegrityError(
                     "replayed pre-outcome classification mismatch"
                 )
-            if transaction.get("structure_invariant_digest") != (
-                self._structure_invariant_digest()
-            ):
+            if not transaction.get("structure_invariant_digest"):
                 raise ProspectiveV2IntegrityError(
-                    "replayed structure invariant mismatch"
+                    "replayed structure invariant is absent"
                 )
             graph = _run_authority_graph(
-                derived, AuthorityMeasurementSnapshot(receipt.trace, receipt)
+                active_derived,
+                AuthorityMeasurementSnapshot(receipt.trace, receipt),
+                accepted_real_references=replay_references,
+                specialization_mode=self.specialization_mode,
+                lifetime_requested_parent_ids=tuple(sorted(replay_lifetime)),
             )
             supporting = graph["support"]
             contradictions = graph["contradiction"]
@@ -1491,7 +2170,7 @@ class NativeProspectiveAuthorityV2:
                     "replayed lifecycle omitted commitment"
                 )
             for cell_id in matching:
-                state = derived[cell_id]
+                state = active_derived[cell_id]
                 state.support += 1
                 state.certification_receipt_ids = (
                     *state.certification_receipt_ids, receipt.receipt_id
@@ -1529,6 +2208,48 @@ class NativeProspectiveAuthorityV2:
                             "pending_token": receipt.pending_token,
                         },
                     )
+            request_rows = dict(graph["specialization_candidate_states"])
+            requests: list[DeferredSpecializationRequest] = []
+            for parent_id in graph["specialization_request"]:
+                parent_state = active_derived[parent_id]
+                hypothesis = parent_state.hypothesis
+                request_id = _sha({
+                    "kind": "V2_GRAPH_SPECIALIZATION_REQUEST",
+                    "generation": reference.source_generation,
+                    "parent_cell_id": parent_id,
+                    "parent_hypothesis_digest": hypothesis.hypothesis_digest,
+                    "contradiction_receipt_id": receipt.receipt_id,
+                    "contradiction_ordinal": receipt.ordinal,
+                })
+                request = DeferredSpecializationRequest(
+                    request_id=request_id,
+                    source_generation=reference.source_generation,
+                    parent_cell_id=parent_id,
+                    parent_hypothesis_digest=hypothesis.hypothesis_digest,
+                    fixed_polarity=hypothesis.polarity,
+                    contradiction_receipt_id=receipt.receipt_id,
+                    contradiction_ordinal=receipt.ordinal,
+                    specialization_mode=self.specialization_mode,
+                    parent_discovery_receipt_ids=(
+                        hypothesis.discovery_receipt_ids
+                    ),
+                    parent_discovery_support_receipt_ids=(
+                        hypothesis.discovery_support_receipt_ids
+                    ),
+                    parent_prospective_support_receipt_ids=(
+                        parent_state.support_receipt_ids[:-1]
+                        if parent_id in supporting
+                        else parent_state.support_receipt_ids
+                    ),
+                    transitive_ancestor_receipt_ids=(
+                        hypothesis.transitive_ancestor_receipt_ids
+                    ),
+                    candidate_terminals=request_rows.get(parent_id, ()),
+                )
+                requests.append(request)
+                replay_requests[request.request_id] = request
+                replay_queue.append(request.request_id)
+                replay_lifetime.add(parent_id)
             expected_emissions[receipt.receipt_id] = V2CertificationEmission(
                 receipt_id=receipt.receipt_id,
                 matching_cell_ids=matching,
@@ -1539,7 +2260,25 @@ class NativeProspectiveAuthorityV2:
                 graph_maturity_ids=graph["maturity"],
                 graph_revocation_ids=graph["revocation"],
                 nomination_allowed_after_lifecycle=False,
+                graph_specialization_request_ids=tuple(
+                    graph["specialization_request"]
+                ),
+                eligible_ids_by_request=tuple(
+                    (item.parent_cell_id, item.eligible_base_ids)
+                    for item in requests
+                ),
+                candidate_terminal_states=tuple(
+                    (item.parent_cell_id, item.candidate_terminals)
+                    for item in requests
+                ),
+                request_queue_appended_ids=tuple(
+                    item.request_id for item in requests
+                ),
+                triggering_false_prediction_ids=tuple(
+                    graph["specialization_request"]
+                ),
             )
+            replay_references[reference.receipt_id] = reference
             expected_tokens.add(receipt.pending_token)
             expected_fingerprints[
                 receipt.interaction_fingerprint
@@ -1557,6 +2296,40 @@ class NativeProspectiveAuthorityV2:
         if self.prospective_physical_fingerprints != expected_fingerprints:
             raise ProspectiveV2IntegrityError(
                 "prospective physical-fingerprint ledger mismatch"
+            )
+        if self.accepted_real_references != {
+            **historical_references,
+            **{
+                receipt.receipt_id: self._reference_from_v2_receipt(
+                    receipt,
+                    source_generation=self.accepted_real_references[
+                        receipt.receipt_id
+                    ].source_generation,
+                )
+                for receipt in ordered
+            },
+        }:
+            raise ProspectiveV2IntegrityError(
+                "accepted REAL reference ledger mismatch"
+            )
+        if self.deferred_requests != replay_requests:
+            raise ProspectiveV2IntegrityError(
+                "deferred request ledger differs from graph replay"
+            )
+        expected_queue = tuple(sorted(
+            replay_queue,
+            key=lambda request_id: (
+                replay_requests[request_id].contradiction_ordinal,
+                replay_requests[request_id].parent_cell_id,
+            ),
+        ))
+        if self.request_queue != expected_queue:
+            raise ProspectiveV2IntegrityError(
+                "request queue differs from graph replay"
+            )
+        if self.lifetime_requested_parent_ids != tuple(sorted(replay_lifetime)):
+            raise ProspectiveV2IntegrityError(
+                "lifetime request ledger differs from graph replay"
             )
         expected_next = expected_start + len(ordered)
         if self.next_expected_ordinal != expected_next:
@@ -1579,9 +2352,87 @@ class NativeProspectiveAuthorityV2:
         self,
         trace: GraphSignalTrace,
         receipt: V2GroundedReceipt | None = None,
-    ) -> dict[str, tuple[str, ...]]:
+    ) -> dict[str, Any]:
         return _run_authority_graph(
-            self.states, AuthorityMeasurementSnapshot(trace, receipt)
+            self.states,
+            AuthorityMeasurementSnapshot(trace, receipt),
+            accepted_real_references=self.accepted_real_references,
+            specialization_mode=self.specialization_mode,
+            lifetime_requested_parent_ids=(
+                self.lifetime_requested_parent_ids
+            ),
+        )
+
+    def _reference_from_v2_receipt(
+        self,
+        receipt: V2GroundedReceipt,
+        *,
+        source_generation: int | None = None,
+    ) -> AcceptedRealReference:
+        return AcceptedRealReference(
+            receipt_id=receipt.receipt_id,
+            ordinal=receipt.ordinal,
+            stable_physical_interaction_id=(
+                receipt.interaction_fingerprint
+            ),
+            trace_digest=receipt.trace.digest(),
+            typed_signal_digest=_sha([
+                asdict(item) for item in receipt.trace.terminal_signals
+            ]),
+            observed_outcome=receipt.observed_outcome,
+            source_generation=(
+                self.current_generation
+                if source_generation is None
+                else int(source_generation)
+            ),
+            ordered_signal_identities=(
+                receipt.trace.ordered_signal_identities
+            ),
+            typed_signal_roles=tuple(sorted(
+                (item.identity, item.role)
+                for item in receipt.trace.terminal_signals
+            )),
+        )
+
+    def _request_from_graph(
+        self,
+        *,
+        parent_cell_id: str,
+        receipt: V2GroundedReceipt,
+        candidate_rows: tuple[SpecializationCandidateTerminalState, ...],
+    ) -> DeferredSpecializationRequest:
+        state = self.states[parent_cell_id]
+        hypothesis = state.hypothesis
+        request_id = _sha({
+            "kind": "V2_GRAPH_SPECIALIZATION_REQUEST",
+            "generation": self.current_generation,
+            "parent_cell_id": parent_cell_id,
+            "parent_hypothesis_digest": hypothesis.hypothesis_digest,
+            "contradiction_receipt_id": receipt.receipt_id,
+            "contradiction_ordinal": receipt.ordinal,
+        })
+        return DeferredSpecializationRequest(
+            request_id=request_id,
+            source_generation=self.current_generation,
+            parent_cell_id=parent_cell_id,
+            parent_hypothesis_digest=hypothesis.hypothesis_digest,
+            fixed_polarity=hypothesis.polarity,
+            contradiction_receipt_id=receipt.receipt_id,
+            contradiction_ordinal=receipt.ordinal,
+            specialization_mode=self.specialization_mode,
+            parent_discovery_receipt_ids=(
+                hypothesis.discovery_receipt_ids
+            ),
+            parent_discovery_support_receipt_ids=(
+                hypothesis.discovery_support_receipt_ids
+            ),
+            parent_prospective_support_receipt_ids=(
+                state.support_receipt_ids
+            ),
+            transitive_ancestor_receipt_ids=(
+                hypothesis.transitive_ancestor_receipt_ids
+            ),
+            candidate_terminals=candidate_rows,
         )
 
     @staticmethod
@@ -1621,6 +2472,14 @@ class NativeProspectiveAuthorityV2:
         self, frame: FrameContext
     ) -> tuple[PendingRealEvent, GraphSignalTrace]:
         self._verify_invariants()
+        if self.generation_phase is not GenerationPhase.PROSPECTIVE_OPEN:
+            raise ProspectiveV2IntegrityError(
+                "REAL event outside PROSPECTIVE_OPEN"
+            )
+        if self.evaluation_sealed:
+            raise ProspectiveV2IntegrityError(
+                "sealed evaluation cannot open a REAL transaction"
+            )
         epoch = self.base.envelope.nomination_epoch
         if epoch is None or not epoch.nomination_closed:
             raise ProspectiveV2IntegrityError(
@@ -1884,7 +2743,26 @@ class NativeProspectiveAuthorityV2:
     def consume(
         self, receipt: V2GroundedReceipt
     ) -> V2CertificationEmission:
+        """Atomically consume one REAL result; never materialize a child."""
+
+        candidate = copy.deepcopy(self)
+        result = candidate._consume_in_place(receipt)
+        self.__dict__.clear()
+        self.__dict__.update(candidate.__dict__)
+        return result
+
+    def _consume_in_place(
+        self, receipt: V2GroundedReceipt
+    ) -> V2CertificationEmission:
         self._verify_invariants()
+        if self.generation_phase is not GenerationPhase.PROSPECTIVE_OPEN:
+            raise ProspectiveV2IntegrityError(
+                "REAL consumption outside PROSPECTIVE_OPEN"
+            )
+        if self.evaluation_sealed:
+            raise ProspectiveV2IntegrityError(
+                "sealed evaluation cannot consume evidence"
+            )
         if (
             self.pending_event is not None
             and self.pending_event.structure_invariant_digest
@@ -1935,6 +2813,38 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "lifecycle accounting omitted commitment"
             )
+        request_parent_ids = tuple(graph["specialization_request"])
+        candidate_rows_by_parent = dict(
+            graph["specialization_candidate_states"]
+        )
+        required_request_ids = tuple(sorted(
+            cell_id for cell_id in graph["revocation"]
+            if (
+                self.specialization_mode
+                is not SpecializationMode.DISCONNECTED
+                and self.states[cell_id].hypothesis.specialization_depth == 0
+                and self.states[cell_id].hypothesis.dormant_origin
+                is DormantOrigin.MIXED_OUTCOME_SHADOW
+                and cell_id not in self.lifetime_requested_parent_ids
+            )
+        ))
+        if request_parent_ids != required_request_ids:
+            raise ProspectiveV2IntegrityError(
+                "graph request/revocation contract mismatch"
+            )
+        if not set(request_parent_ids).issubset(graph["revocation"]):
+            raise ProspectiveV2IntegrityError(
+                "specialization request lacks graph revocation"
+            )
+        new_requests = tuple(
+            self._request_from_graph(
+                parent_cell_id=parent_id,
+                receipt=receipt,
+                candidate_rows=candidate_rows_by_parent.get(parent_id, ()),
+            )
+            for parent_id in request_parent_ids
+        )
+        self._validate_request_append_capacity(new_requests)
         for cell_id in pending.matching_cell_ids:
             state = self.states[cell_id]
             state.support += 1
@@ -1987,6 +2897,19 @@ class NativeProspectiveAuthorityV2:
             graph_maturity_ids=graph["maturity"],
             graph_revocation_ids=graph["revocation"],
             nomination_allowed_after_lifecycle=False,
+            graph_specialization_request_ids=request_parent_ids,
+            eligible_ids_by_request=tuple(
+                (request.parent_cell_id, request.eligible_base_ids)
+                for request in new_requests
+            ),
+            candidate_terminal_states=tuple(
+                (request.parent_cell_id, request.candidate_terminals)
+                for request in new_requests
+            ),
+            request_queue_appended_ids=tuple(
+                request.request_id for request in new_requests
+            ),
+            triggering_false_prediction_ids=request_parent_ids,
         )
         self.consumed_receipts[receipt.receipt_id] = receipt
         self.consumed_tokens.add(receipt.pending_token)
@@ -1994,6 +2917,29 @@ class NativeProspectiveAuthorityV2:
             receipt.interaction_fingerprint
         ] = receipt.receipt_id
         self.emissions[receipt.receipt_id] = emission
+        reference = self._reference_from_v2_receipt(receipt)
+        if reference.receipt_id in self.accepted_real_references:
+            raise ProspectiveV2IntegrityError(
+                "accepted REAL reference identity collision"
+            )
+        self.accepted_real_references[reference.receipt_id] = reference
+        for request in new_requests:
+            if request.request_id in self.deferred_requests:
+                raise ProspectiveV2IntegrityError(
+                    "deferred request identity collision"
+                )
+            self.deferred_requests[request.request_id] = request
+        self.request_queue = tuple(sorted(
+            (*self.request_queue, *(item.request_id for item in new_requests)),
+            key=lambda request_id: (
+                self.deferred_requests[request_id].contradiction_ordinal,
+                self.deferred_requests[request_id].parent_cell_id,
+            ),
+        ))
+        self.lifetime_requested_parent_ids = tuple(sorted({
+            *self.lifetime_requested_parent_ids,
+            *request_parent_ids,
+        }))
         self.next_expected_ordinal += 1
         self.event_transactions[receipt.pending_token] = {
             **pending.manifest(),
@@ -2003,6 +2949,504 @@ class NativeProspectiveAuthorityV2:
         self.pending_event = None
         self._verify_invariants()
         return emission
+
+    def _validate_request_append_capacity(
+        self, requests: Sequence[DeferredSpecializationRequest]
+    ) -> None:
+        if len(self.request_queue) + len(requests) > REQUEST_QUEUE_CAPACITY:
+            raise ProspectiveV2IntegrityError(
+                "request queue capacity exceeded"
+            )
+
+    def _accepted_real_ledger_digest(self) -> str:
+        return _sha([
+            item.manifest() for item in sorted(
+                self.accepted_real_references.values(),
+                key=lambda row: (row.ordinal, row.receipt_id),
+            )
+        ])
+
+    def _request_queue_digest(self, request_ids: Sequence[str]) -> str:
+        return _sha([
+            self.deferred_requests[item].manifest() for item in request_ids
+        ])
+
+    def _parent_decision_history_digest(self) -> str:
+        return _sha({
+            cell_id: {
+                "prospectively_certified": state.prospectively_certified,
+                "transition_rows": list(state.transition_rows),
+                "support_receipt_ids": list(state.support_receipt_ids),
+                "contradiction_receipt_ids": list(
+                    state.contradiction_receipt_ids
+                ),
+            }
+            for cell_id, state in sorted(self.states.items())
+        })
+
+    def _generation_boundary(
+        self,
+        *,
+        phase: GenerationPhase,
+        prior_continuation_digest: str,
+        queue_ids: Sequence[str],
+    ) -> GenerationBoundary:
+        return GenerationBoundary(
+            generation=self.current_generation,
+            phase=phase,
+            event_frontier=self.next_expected_ordinal,
+            prior_continuation_digest=prior_continuation_digest,
+            accepted_real_ledger_digest=self._accepted_real_ledger_digest(),
+            request_queue_digest=self._request_queue_digest(queue_ids),
+            structural_epoch_schedule_digest=_sha(
+                list(self.structural_epoch_schedule)
+            ),
+            candidate_manifest_digest=self._candidate_manifest_digest(),
+            parent_decision_history_digest=(
+                self._parent_decision_history_digest()
+            ),
+        )
+
+    def seal_prospective_generation(self) -> GenerationBoundary:
+        candidate = copy.deepcopy(self)
+        result = candidate._seal_prospective_generation_in_place()
+        self.__dict__.clear()
+        self.__dict__.update(candidate.__dict__)
+        return result
+
+    def _seal_prospective_generation_in_place(self) -> GenerationBoundary:
+        self._verify_invariants()
+        if self.generation_phase is not GenerationPhase.PROSPECTIVE_OPEN:
+            raise ProspectiveV2IntegrityError(
+                "generation is not prospectively open"
+            )
+        if self.pending_event is not None or self.evaluation_sealed:
+            raise ProspectiveV2IntegrityError(
+                "generation cannot seal with open evidence capability"
+            )
+        if self.current_generation >= len(self.structural_epoch_schedule):
+            raise ProspectiveV2IntegrityError(
+                "no predetermined structural frontier"
+            )
+        expected_frontier = self.structural_epoch_schedule[
+            self.current_generation
+        ]
+        if self.next_expected_ordinal != expected_frontier:
+            raise ProspectiveV2IntegrityError(
+                "structural transition is outside predetermined frontier"
+            )
+        prior = self.continuation_digest()
+        sealed = tuple(
+            request_id for request_id in self.request_queue
+            if (
+                self.deferred_requests[request_id].source_generation
+                == self.current_generation
+                and request_id not in self.request_consumptions
+            )
+        )
+        self.sealed_request_ids = sealed
+        self.sealed_request_queue_digest = self._request_queue_digest(sealed)
+        self.generation_phase = GenerationPhase.PROSPECTIVE_SEALED
+        boundary = self._generation_boundary(
+            phase=self.generation_phase,
+            prior_continuation_digest=prior,
+            queue_ids=sealed,
+        )
+        self.generation_boundaries = (*self.generation_boundaries, boundary)
+        self._verify_invariants()
+        return boundary
+
+    def open_structural_successor(self) -> GenerationBoundary:
+        candidate = copy.deepcopy(self)
+        result = candidate._open_structural_successor_in_place()
+        self.__dict__.clear()
+        self.__dict__.update(candidate.__dict__)
+        return result
+
+    def _open_structural_successor_in_place(self) -> GenerationBoundary:
+        self._verify_invariants()
+        if self.generation_phase is not GenerationPhase.PROSPECTIVE_SEALED:
+            raise ProspectiveV2IntegrityError(
+                "structural successor requires a sealed generation"
+            )
+        if self.sealed_request_queue_digest != self._request_queue_digest(
+            self.sealed_request_ids
+        ):
+            raise ProspectiveV2IntegrityError("sealed request queue changed")
+        prior = self.continuation_digest()
+        self.current_generation += 1
+        self.generation_phase = GenerationPhase.STRUCTURAL_OPEN
+        boundary = self._generation_boundary(
+            phase=self.generation_phase,
+            prior_continuation_digest=prior,
+            queue_ids=self.sealed_request_ids,
+        )
+        self.generation_boundaries = (*self.generation_boundaries, boundary)
+        self._verify_invariants()
+        return boundary
+
+    def consume_structural_request(
+        self,
+        request_id: str,
+        genome: CompetenceContextGrowthGenome,
+    ) -> StructuralRequestConsumption:
+        candidate = copy.deepcopy(self)
+        result = candidate._consume_structural_request_in_place(
+            request_id, genome
+        )
+        self.__dict__.clear()
+        self.__dict__.update(candidate.__dict__)
+        return result
+
+    def _consume_structural_request_in_place(
+        self,
+        request_id: str,
+        genome: CompetenceContextGrowthGenome,
+    ) -> StructuralRequestConsumption:
+        self._verify_invariants()
+        if self.generation_phase is not GenerationPhase.STRUCTURAL_OPEN:
+            raise ProspectiveV2IntegrityError(
+                "request consumption requires STRUCTURAL_OPEN"
+            )
+        if request_id not in self.sealed_request_ids:
+            raise ProspectiveV2IntegrityError(
+                "request is outside the sealed queue"
+            )
+        if request_id in self.request_consumptions:
+            raise ProspectiveV2IntegrityError(
+                "structural request cannot be retried"
+            )
+        if not isinstance(genome, CompetenceContextGrowthGenome):
+            raise TypeError("structural request requires frozen genome")
+        request = self.deferred_requests[request_id]
+        attempt = len(self.request_consumptions)
+        proposal = genome.propose_specialization(_GraphSpecializationRequest(
+            context_member=f"context:{request.parent_cell_id}",
+            eligible_base_ids=request.eligible_base_ids,
+            request_ordinal=attempt,
+        ))
+        disposition = "PENDING_CHILD"
+        members: tuple[str, ...] = ()
+        child_id: str | None = None
+        if proposal is None:
+            disposition = "REJECTED_EMPTY_ELIGIBILITY"
+        else:
+            members = tuple(proposal.members)
+            expected_context = f"context:{request.parent_cell_id}"
+            if (
+                len(members) != 2
+                or members[0] != expected_context
+                or members[1] not in request.eligible_base_ids
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "genome emitted an ineligible specialization child"
+                )
+            if members in {
+                state.hypothesis.members for state in self.states.values()
+            }:
+                disposition = "REJECTED_DUPLICATE_PATTERN"
+            elif len(self.deferred_child_births) >= (
+                DORMANT_SPECIALIZATION_CHILD_CAPACITY
+            ):
+                disposition = "REJECTED_CHILD_CAPACITY"
+            else:
+                child_id = (
+                    f"v2_deferred_specialization_"
+                    f"g{self.current_generation:02d}_{attempt:04d}"
+                )
+        consumption = StructuralRequestConsumption(
+            request_id=request_id,
+            attempt_ordinal=attempt,
+            genome_seed=genome.seed,
+            genome_call_count=1,
+            selected_members=members,
+            disposition=disposition,
+            child_cell_id=child_id,
+        )
+        self.request_consumptions[request_id] = consumption
+        if child_id is not None:
+            self.deferred_child_births[request_id] = DeferredChildBirth(
+                request_id=request_id,
+                child_cell_id=child_id,
+                members=members,
+                genome_seed=genome.seed,
+                proposal_ordinal=attempt,
+                source_generation=self.current_generation,
+                disposition="PENDING_MATERIALIZATION",
+            )
+        self._verify_invariants()
+        return consumption
+
+    def _matching_parent_plus_identity_receipts(
+        self,
+        parent_id: str,
+        identity: str,
+        visible: Sequence[AcceptedRealReference],
+    ) -> tuple[str, ...]:
+        descriptors = {
+            cell_id: StructuralMatchDescriptor(
+                cell_id=cell_id,
+                members=state.hypothesis.members,
+                structural_state=state.hypothesis.structural_state,
+                lineage_parent_id=state.hypothesis.lineage_parent_id,
+                specialization_depth=state.hypothesis.specialization_depth,
+                nomination_operation=state.hypothesis.nomination_operation,
+                parent_hypothesis_digest=(
+                    state.hypothesis.parent_hypothesis_digest
+                ),
+                hypothesis_digest=state.hypothesis.hypothesis_digest,
+            )
+            for cell_id, state in self.states.items()
+        }
+        return tuple(sorted(
+            item.receipt_id for item in visible
+            if (
+                identity in item.ordered_signal_identities
+                and canonical_structural_pattern_matches(
+                    parent_id,
+                    descriptors,
+                    item.ordered_signal_identities,
+                )
+            )
+        ))
+
+    def materialize_deferred_child(
+        self, request_id: str
+    ) -> str:
+        candidate = copy.deepcopy(self)
+        result = candidate._materialize_deferred_child_in_place(request_id)
+        self.__dict__.clear()
+        self.__dict__.update(candidate.__dict__)
+        return result
+
+    def _materialize_deferred_child_in_place(self, request_id: str) -> str:
+        self._verify_invariants()
+        if self.generation_phase is not GenerationPhase.STRUCTURAL_OPEN:
+            raise ProspectiveV2IntegrityError(
+                "child birth requires STRUCTURAL_OPEN"
+            )
+        birth = self.deferred_child_births.get(request_id)
+        if birth is None or birth.disposition != "PENDING_MATERIALIZATION":
+            raise ProspectiveV2IntegrityError(
+                "request has no pending child birth"
+            )
+        request = self.deferred_requests[request_id]
+        selected_identity = birth.members[1]
+        visible = tuple(sorted(
+            self.accepted_real_references.values(),
+            key=lambda item: (item.ordinal, item.receipt_id),
+        ))
+        if not visible:
+            raise ProspectiveV2IntegrityError("child birth has no REAL ledger")
+        visible_ids = tuple(sorted(item.receipt_id for item in visible))
+        ordinals = {item.receipt_id: item.ordinal for item in visible}
+        direct = self._matching_parent_plus_identity_receipts(
+            request.parent_cell_id, selected_identity, visible
+        )
+        candidate_state = next(
+            item for item in request.candidate_terminals
+            if item.identity == selected_identity
+        )
+        categories = (
+            ("direct_child_matches", direct),
+            ("parent_discovery_reads", tuple(sorted(
+                request.parent_discovery_receipt_ids
+            ))),
+            ("parent_discovery_support", tuple(sorted(
+                request.parent_discovery_support_receipt_ids
+            ))),
+            ("parent_prospective_support", tuple(sorted(
+                request.parent_prospective_support_receipt_ids
+            ))),
+            ("eligibility_reads", tuple(sorted(
+                candidate_state.inspected_receipt_ids
+            ))),
+            ("contradiction_trigger", (
+                request.contradiction_receipt_id,
+            )),
+            ("transitive_ancestor_reads", tuple(sorted(
+                request.transitive_ancestor_receipt_ids
+            ))),
+        )
+        categorized_ids = {
+            receipt_id for _name, ids in categories for receipt_id in ids
+        }
+        if not categorized_ids.issubset(visible_ids):
+            raise ProspectiveV2IntegrityError(
+                "child escrow reads beyond V_birth"
+            )
+        nomination_frontier = max(
+            (ordinals[item] for item in categorized_ids), default=-1
+        )
+        birth_frontier = max(ordinals.values(), default=-1)
+        escrow = NominationEscrow(
+            operation="specialization",
+            fixed_polarity=request.fixed_polarity,
+            categorized_reads=categories,
+            transitive_ancestor_receipt_ids=tuple(sorted(
+                request.transitive_ancestor_receipt_ids
+            )),
+            discovery_exclusion_receipt_ids=visible_ids,
+            birth_frontier=birth_frontier,
+            triggering_receipt_id=request.contradiction_receipt_id,
+            graph_request_root_state=NodeState.CONFIRMED.name,
+            graph_request_terminal_state=NodeState.CONFIRMED.name,
+            considered_context_ids=(request.parent_cell_id,),
+            selected_context_ids=(request.parent_cell_id,),
+            nomination_read_frontier=nomination_frontier,
+            certification_frontier=birth_frontier,
+            parent_hypothesis_digest=request.parent_hypothesis_digest,
+            escrow_schema_version=NOMINATION_ESCROW_V3,
+        )
+        hypothesis = FrozenHypothesis(
+            cell_id=birth.child_cell_id,
+            members=birth.members,
+            polarity=request.fixed_polarity,
+            lineage_parent_id=request.parent_cell_id,
+            specialization_depth=1,
+            discovery_receipt_ids=escrow.discovery_receipt_ids,
+            discovery_receipt_digest=_sha(list(
+                escrow.discovery_receipt_ids
+            )),
+            birth_frontier=escrow.birth_frontier,
+            structural_state=StemCellState.DORMANT.name,
+            nomination_operation="specialization",
+            triggering_receipt_id=escrow.triggering_receipt_id,
+            graph_request_root_state=escrow.graph_request_root_state,
+            graph_request_terminal_state=escrow.graph_request_terminal_state,
+            considered_context_ids=escrow.considered_context_ids,
+            selected_context_ids=escrow.selected_context_ids,
+            nomination_read_frontier=escrow.nomination_read_frontier,
+            certification_frontier=escrow.certification_frontier,
+            nomination_escrow_digest=escrow.escrow_digest,
+            provenance_kind=ProvenanceKind.EXACT_NOMINATION_READ_SET,
+            nomination_read_sets=escrow.categorized_reads,
+            transitive_ancestor_receipt_ids=(
+                escrow.transitive_ancestor_receipt_ids
+            ),
+            discovery_exclusion_receipt_ids=(
+                escrow.discovery_exclusion_receipt_ids
+            ),
+            initialization_origin=InitializationOrigin.PROSPECTIVE,
+            dormant_origin=DormantOrigin.DEFERRED_SPECIALIZATION_CHILD,
+            parent_hypothesis_digest=request.parent_hypothesis_digest,
+            source_generation=self.current_generation,
+            discovery_support_receipt_ids=(),
+        )
+        self.states[birth.child_cell_id] = ProspectiveAuthorityState(
+            hypothesis=hypothesis,
+            prospectively_certified=False,
+        )
+        self.structural_invariants[birth.child_cell_id] = (
+            CellStructuralInvariant(
+                cell_id=birth.child_cell_id,
+                members=birth.members,
+                polarity=request.fixed_polarity,
+                lineage_parent_id=request.parent_cell_id,
+                specialization_depth=1,
+                structural_state=StemCellState.DORMANT.name,
+                authority_node_ids=_cell_node_ids(birth.child_cell_id),
+                authority_topology_identity=_cell_topology_identity(
+                    birth.child_cell_id
+                ),
+                dormant_origin=(
+                    DormantOrigin.DEFERRED_SPECIALIZATION_CHILD
+                ),
+                immutable_hypothesis_digest=hypothesis.hypothesis_digest,
+                parent_hypothesis_digest=(
+                    request.parent_hypothesis_digest
+                ),
+            )
+        )
+        self.deferred_child_escrows[birth.child_cell_id] = escrow
+        self.deferred_child_births[request_id] = replace(
+            birth, disposition="MATERIALIZED"
+        )
+        self.request_consumptions[request_id] = replace(
+            self.request_consumptions[request_id],
+            disposition="MATERIALIZED",
+        )
+        self.authority_topology = _executed_authority_topology_manifest(
+            self.states
+        )
+        self._verify_invariants()
+        return birth.child_cell_id
+
+    def open_prospective_successor(self) -> GenerationBoundary:
+        candidate = copy.deepcopy(self)
+        result = candidate._open_prospective_successor_in_place()
+        self.__dict__.clear()
+        self.__dict__.update(candidate.__dict__)
+        return result
+
+    def _open_prospective_successor_in_place(self) -> GenerationBoundary:
+        self._verify_invariants()
+        if self.generation_phase is not GenerationPhase.STRUCTURAL_OPEN:
+            raise ProspectiveV2IntegrityError(
+                "prospective successor requires STRUCTURAL_OPEN"
+            )
+        if set(self.sealed_request_ids).difference(
+            self.request_consumptions
+        ):
+            raise ProspectiveV2IntegrityError(
+                "sealed requests remain unconsumed"
+            )
+        if any(
+            item.disposition == "PENDING_MATERIALIZATION"
+            for item in self.deferred_child_births.values()
+        ):
+            raise ProspectiveV2IntegrityError(
+                "pending child birth at prospective open"
+            )
+        prior = self.continuation_digest()
+        self.generation_phase = GenerationPhase.PROSPECTIVE_OPEN
+        boundary = self._generation_boundary(
+            phase=self.generation_phase,
+            prior_continuation_digest=prior,
+            queue_ids=self.sealed_request_ids,
+        )
+        self.generation_boundaries = (*self.generation_boundaries, boundary)
+        self._verify_invariants()
+        return boundary
+
+    def seal_read_only_evaluation(self) -> None:
+        candidate = copy.deepcopy(self)
+        candidate._verify_invariants()
+        if (
+            candidate.generation_phase
+            is not GenerationPhase.PROSPECTIVE_OPEN
+            or candidate.pending_event is not None
+        ):
+            raise ProspectiveV2IntegrityError(
+                "evaluation seal requires idle PROSPECTIVE_OPEN"
+            )
+        candidate.evaluation_sealed = True
+        candidate._verify_invariants()
+        self.__dict__.clear()
+        self.__dict__.update(candidate.__dict__)
+
+    def evaluate_sealed_real(
+        self, frame: FrameContext
+    ) -> dict[str, Any]:
+        if not self.evaluation_sealed:
+            raise ProspectiveV2IntegrityError(
+                "read-only evaluation capability is not sealed"
+            )
+        before = self.continuation_digest()
+        commitment = self.probe_real_exposure(frame)
+        graph = self._graph_measure(commitment.trace)
+        classification = self._classification_from_emissions(
+            self.states, graph
+        )
+        if self.continuation_digest() != before:
+            raise ProspectiveV2IntegrityError(
+                "sealed evaluation mutated authority"
+            )
+        return {
+            "commitment": commitment,
+            "classification": classification,
+            "graph_emissions": graph,
+        }
 
     def _frozen_prospective_hypothesis(
         self, cell: CompetenceContextCell
@@ -2152,6 +3596,15 @@ class NativeProspectiveAuthorityV2:
                 escrow.discovery_exclusion_receipt_ids
             ),
             initialization_origin=InitializationOrigin.PROSPECTIVE,
+            dormant_origin=getattr(cell, "dormant_origin", None),
+            parent_hypothesis_digest=escrow.parent_hypothesis_digest,
+            source_generation=0,
+            discovery_support_receipt_ids=tuple(sorted(
+                receipt_id for receipt_id in escrow.discovery_receipt_ids
+                if self._historical_receipt_supports_cell(
+                    self.base, cell, receipt_id
+                )
+            )),
         )
     def _sync_open_discovery_baseline(self) -> None:
         """Refresh only organism-derived state before nomination is frozen."""
@@ -2169,6 +3622,10 @@ class NativeProspectiveAuthorityV2:
         self.discovery_prefix_physical_fingerprint_digest = _sha(
             list(prefix_fingerprints)
         )
+        self.accepted_real_references = {
+            item.receipt_id: item
+            for item in self._historical_real_references(self.base)
+        }
         ledger_ids = tuple(sorted(dict(epoch.receipt_ordinals)))
         frontier = max(dict(epoch.receipt_ordinals).values(), default=-1)
         allowed = {
@@ -2176,6 +3633,7 @@ class NativeProspectiveAuthorityV2:
             (StemCellState.MATURE.name, StemCellState.PROBATION.name),
             (StemCellState.PROBATION.name, StemCellState.PROBATION.name),
             (StemCellState.SPECIALIZED.name, StemCellState.SPECIALIZED.name),
+            (StemCellState.DORMANT.name, StemCellState.DORMANT.name),
         }
         for cell_id in sorted(set(epoch.opened_cell_ids) & set(self.states)):
             cell = self.base.envelope.cells[cell_id]
@@ -2212,7 +3670,16 @@ class NativeProspectiveAuthorityV2:
                 provenance_kind=ProvenanceKind.HISTORICAL_ACCEPTED_LEDGER,
                 discovery_exclusion_receipt_ids=ledger_ids,
                 initialization_origin=InitializationOrigin.HISTORICAL,
+                dormant_origin=getattr(cell, "dormant_origin", None),
+                source_generation=0,
+                discovery_support_receipt_ids=tuple(sorted(
+                    receipt_id for receipt_id in ledger_ids
+                    if self._historical_receipt_supports_cell(
+                        self.base, cell, receipt_id
+                    )
+                )),
             )
+            cell.immutable_hypothesis_digest = hypothesis.hypothesis_digest
             self.states[cell_id] = ProspectiveAuthorityState(
                 hypothesis=hypothesis,
                 prospectively_certified=(
@@ -2228,7 +3695,7 @@ class NativeProspectiveAuthorityV2:
                 contradiction_lower_bound=previous.contradiction_lower_bound,
                 transition_rows=previous.transition_rows,
             )
-            self.structural_invariants[cell_id] = current
+            self.structural_invariants[cell_id] = self._invariant_from_cell(cell)
         for cell_id in sorted(
             set(epoch.opened_cell_ids) & set(self.historical_tombstones)
         ):
@@ -2391,6 +3858,23 @@ class NativeProspectiveAuthorityV2:
         candidate.experimental_identity = (
             candidate._build_experimental_identity()
         )
+        if not candidate.generation_boundaries:
+            structural = candidate._generation_boundary(
+                phase=GenerationPhase.STRUCTURAL_OPEN,
+                prior_continuation_digest=(
+                    candidate.base.continuation_digest_v3()
+                ),
+                queue_ids=(),
+            )
+            candidate.generation_boundaries = (structural,)
+            prospective = candidate._generation_boundary(
+                phase=GenerationPhase.PROSPECTIVE_OPEN,
+                prior_continuation_digest=candidate.continuation_digest(),
+                queue_ids=(),
+            )
+            candidate.generation_boundaries = (
+                *candidate.generation_boundaries, prospective
+            )
         candidate._verify_invariants()
         self.__dict__.clear()
         self.__dict__.update(candidate.__dict__)
@@ -2708,6 +4192,12 @@ class NativeProspectiveAuthorityV2:
         return {
             "schema_version": self.schema_version,
             "mode": self.mode.value,
+            "specialization_mode": self.specialization_mode.value,
+            "structural_epoch_schedule": list(
+                self.structural_epoch_schedule
+            ),
+            "current_generation": self.current_generation,
+            "generation_phase": self.generation_phase.value,
             "base_v3": self.base.continuation_manifest_v3(),
             "states": {
                 key: value.manifest()
@@ -2720,6 +4210,46 @@ class NativeProspectiveAuthorityV2:
                 dict(sorted(self.historical_tombstones.items()))
             ),
             "next_expected_ordinal": self.next_expected_ordinal,
+            "accepted_real_references": {
+                key: value.manifest()
+                for key, value in sorted(
+                    self.accepted_real_references.items()
+                )
+            },
+            "deferred_requests": {
+                key: value.manifest()
+                for key, value in sorted(self.deferred_requests.items())
+            },
+            "request_queue": list(self.request_queue),
+            "lifetime_requested_parent_ids": list(
+                self.lifetime_requested_parent_ids
+            ),
+            "request_consumptions": {
+                key: value.manifest()
+                for key, value in sorted(
+                    self.request_consumptions.items()
+                )
+            },
+            "deferred_child_births": {
+                key: value.manifest()
+                for key, value in sorted(
+                    self.deferred_child_births.items()
+                )
+            },
+            "deferred_child_escrows": {
+                key: value.manifest()
+                for key, value in sorted(
+                    self.deferred_child_escrows.items()
+                )
+            },
+            "generation_boundaries": [
+                item.manifest() for item in self.generation_boundaries
+            ],
+            "sealed_request_ids": list(self.sealed_request_ids),
+            "sealed_request_queue_digest": (
+                self.sealed_request_queue_digest
+            ),
+            "evaluation_sealed": self.evaluation_sealed,
             "physical_trace_projection_schema": (
                 PHYSICAL_TRACE_PROJECTION_SCHEMA
             ),

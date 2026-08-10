@@ -495,7 +495,9 @@ def test_mixed_shadow_is_real_only_until_existing_v2_rule_promotes(
     assert source_trace.terminal_signals == shadow_trace.terminal_signals
 
 
-def test_historical_escrow_parity_and_probation_parent_matching(native_fixture):
+def test_historical_escrow_parity_and_unbound_probation_parent_isolation(
+    native_fixture,
+):
     source = native_fixture["source"]
     source_before = source.continuation_digest_v3()
     prospective = NativeProspectiveAuthorityV2.from_organism(
@@ -528,7 +530,9 @@ def test_historical_escrow_parity_and_probation_parent_matching(native_fixture):
         probation, native_fixture["positive"][0], frame_id="probation-parent"
     )
     assert "v2_parent" in pending.matching_cell_ids
-    assert "v2_child" in pending.matching_cell_ids
+    # Historical-ledger provenance does not invent an immutable specialization
+    # binding.  Only an actual bound specialization may unfold PROBATION.
+    assert "v2_child" not in pending.matching_cell_ids
 
 
 def test_complete_receipt_validation_and_atomic_structure_guard(native_fixture):

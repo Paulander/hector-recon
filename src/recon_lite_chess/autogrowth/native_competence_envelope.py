@@ -52,9 +52,19 @@ NOMINATION_READ_CATEGORIES_V2 = (
     "direct", "parent_support", "eligibility", "contradiction_trigger",
     "consensus_reads",
 )
+NOMINATION_READ_CATEGORIES_V3 = (
+    "direct_child_matches",
+    "parent_discovery_reads",
+    "parent_discovery_support",
+    "parent_prospective_support",
+    "eligibility_reads",
+    "contradiction_trigger",
+    "transitive_ancestor_reads",
+)
 NOMINATION_READ_CATEGORIES = NOMINATION_READ_CATEGORIES_V1
 NOMINATION_ESCROW_V1 = "native_nomination_escrow.v1"
 NOMINATION_ESCROW_V2 = "native_nomination_escrow.v2_consensus_reads"
+NOMINATION_ESCROW_V3 = "native_nomination_escrow.v3_deferred_specialization"
 
 
 class AvailabilityState(str, Enum):
@@ -76,11 +86,109 @@ class MixedOutcomeDisposition(str, Enum):
     RETAIN_SHADOW = "retain_shadow"
 
 
+class DormantOrigin(str, Enum):
+    """Immutable reason a zero-authority cell is retained."""
+
+    MIXED_OUTCOME_SHADOW = "MIXED_OUTCOME_SHADOW"
+    DEFERRED_SPECIALIZATION_CHILD = "DEFERRED_SPECIALIZATION_CHILD"
+
+
+@dataclass(frozen=True)
+class StructuralMatchDescriptor:
+    """Pure structural identity consumed by the canonical matcher."""
+
+    cell_id: str
+    members: tuple[str, ...]
+    structural_state: str
+    lineage_parent_id: str | None
+    specialization_depth: int
+    nomination_operation: str
+    parent_hypothesis_digest: str | None
+    hypothesis_digest: str | None
+
+
+def canonical_structural_pattern_matches(
+    cell_id: str,
+    descriptors: Mapping[str, StructuralMatchDescriptor],
+    active_signal_ids: Sequence[str],
+    visiting: frozenset[str] = frozenset(),
+) -> bool:
+    """Match one frozen pattern; non-mature recursion is lineage-only."""
+
+    if cell_id in visiting:
+        raise RuntimeError("cyclic competence context")
+    descriptor = descriptors.get(cell_id)
+    if descriptor is None:
+        return False
+    active = set(active_signal_ids)
+    next_visiting = visiting | {cell_id}
+    context_members = tuple(
+        member for member in descriptor.members
+        if member.startswith("context:")
+    )
+    for member in descriptor.members:
+        if not member.startswith("context:"):
+            if member not in active:
+                return False
+            continue
+        parent_id = member.split(":", 1)[1]
+        parent = descriptors.get(parent_id)
+        if parent is None or parent.structural_state == StemCellState.PRUNED.name:
+            return False
+        if parent.structural_state == StemCellState.MATURE.name:
+            pass
+        elif parent.structural_state in {
+            StemCellState.DORMANT.name,
+            StemCellState.PROBATION.name,
+        }:
+            if (
+                descriptor.lineage_parent_id != parent_id
+                or descriptor.nomination_operation != "specialization"
+                or descriptor.specialization_depth != 1
+                or descriptor.specialization_depth
+                != parent.specialization_depth + 1
+                or context_members != (f"context:{parent_id}",)
+                or not descriptor.parent_hypothesis_digest
+                or descriptor.parent_hypothesis_digest
+                != parent.hypothesis_digest
+            ):
+                return False
+        else:
+            return False
+        if not canonical_structural_pattern_matches(
+            parent_id,
+            descriptors,
+            active_signal_ids,
+            next_visiting,
+        ):
+            return False
+    return True
+
+
 def _nomination_sha(value: Any) -> str:
     payload = json.dumps(
         value, sort_keys=True, separators=(",", ":"), allow_nan=False
     ).encode("utf-8")
     return hashlib.sha256(payload).hexdigest()
+
+
+def _cell_structural_hypothesis_digest(cell: "CompetenceContextCell") -> str:
+    """Stable envelope-local hypothesis identity for lineage binding."""
+
+    return _nomination_sha({
+        "cell_id": cell.cell_id,
+        "members": list(cell.members),
+        "polarity": None if cell.polarity is None else cell.polarity.value,
+        "lineage_parent_id": cell.lineage_parent_id,
+        "specialization_depth": cell.specialization_depth,
+        "nomination_escrow_digest": (
+            None if cell.nomination_escrow is None
+            else cell.nomination_escrow.escrow_digest
+        ),
+        "dormant_origin": (
+            None if cell.dormant_origin is None else cell.dormant_origin.value
+        ),
+    })
 
 
 @dataclass(frozen=True)
@@ -100,6 +208,7 @@ class NominationEscrow:
     selected_context_ids: tuple[str, ...]
     nomination_read_frontier: int
     certification_frontier: int
+    parent_hypothesis_digest: str | None = None
     escrow_digest: str = ""
     escrow_schema_version: str = NOMINATION_ESCROW_V1
 
@@ -123,6 +232,8 @@ class NominationEscrow:
             object.__setattr__(
                 self, "escrow_schema_version", NOMINATION_ESCROW_V1
             )
+        if "parent_hypothesis_digest" not in state:
+            object.__setattr__(self, "parent_hypothesis_digest", None)
         self.__post_init__()
 
     def __post_init__(self) -> None:
@@ -137,6 +248,8 @@ class NominationEscrow:
             if self.escrow_schema_version == NOMINATION_ESCROW_V1
             else NOMINATION_READ_CATEGORIES_V2
             if self.escrow_schema_version == NOMINATION_ESCROW_V2
+            else NOMINATION_READ_CATEGORIES_V3
+            if self.escrow_schema_version == NOMINATION_ESCROW_V3
             else ()
         )
         if names != expected_categories:
@@ -150,7 +263,12 @@ class NominationEscrow:
         ):
             if tuple(sorted(ids)) != ids or len(set(ids)) != len(ids):
                 raise ValueError("noncanonical nomination provenance")
-        if not dict(self.categorized_reads)["direct"]:
+        direct_category = (
+            "direct_child_matches"
+            if self.escrow_schema_version == NOMINATION_ESCROW_V3
+            else "direct"
+        )
+        if not dict(self.categorized_reads)[direct_category]:
             raise ValueError("nomination direct reads are empty")
         if self.triggering_receipt_id not in self.discovery_exclusion_receipt_ids:
             raise ValueError("triggering receipt missing from discovery exclusion")
@@ -170,6 +288,13 @@ class NominationEscrow:
             raise ValueError("nomination frontier exceeds certification frontier")
         if self.birth_frontier != self.certification_frontier:
             raise ValueError("birth frontier differs from certification frontier")
+        if self.operation == "specialization" and (
+            self.escrow_schema_version == NOMINATION_ESCROW_V3
+            and not self.parent_hypothesis_digest
+        ):
+            raise ValueError("deferred specialization lacks parent hypothesis")
+        if self.operation != "specialization" and self.parent_hypothesis_digest:
+            raise ValueError("ordinary nomination binds a parent hypothesis")
         expected = _nomination_sha(self._unsigned_manifest())
         if self.escrow_digest and self.escrow_digest != expected:
             raise ValueError("nomination escrow digest mismatch")
@@ -206,6 +331,8 @@ class NominationEscrow:
             "nomination_read_frontier": self.nomination_read_frontier,
             "certification_frontier": self.certification_frontier,
         }
+        if self.parent_hypothesis_digest is not None:
+            result["parent_hypothesis_digest"] = self.parent_hypothesis_digest
         if self.escrow_schema_version != NOMINATION_ESCROW_V1:
             result["escrow_schema_version"] = self.escrow_schema_version
         return result
@@ -355,6 +482,8 @@ class CompetenceContextCell:
     specialization_proposal_ordinal: int | None = None
     provenance: str = "unique_real_r0_completion"
     nomination_escrow: NominationEscrow | None = None
+    dormant_origin: DormantOrigin | None = None
+    immutable_hypothesis_digest: str | None = None
 
     def __setstate__(self, state: Mapping[str, Any]) -> None:
         self.__dict__.update(state)
@@ -364,6 +493,14 @@ class CompetenceContextCell:
         self.__dict__.setdefault("specialization_depth", 0)
         self.__dict__.setdefault("specialization_request_ordinal", None)
         self.__dict__.setdefault("specialization_proposal_ordinal", None)
+        dormant_origin = self.__dict__.get("dormant_origin")
+        if dormant_origin is not None:
+            self.dormant_origin = DormantOrigin(dormant_origin)
+        elif (
+            self.stem_cell.state == StemCellState.DORMANT
+            and self.prune_reason == "mixed_outcomes"
+        ):
+            self.dormant_origin = DormantOrigin.MIXED_OUTCOME_SHADOW
 
     @property
     def state(self) -> StemCellState:
@@ -381,12 +518,25 @@ class CompetenceContextCell:
     def is_shadow(self) -> bool:
         return (
             self.stem_cell.state == StemCellState.DORMANT
-            and self.prune_reason == "mixed_outcomes"
+            and getattr(self, "dormant_origin", None)
+            is DormantOrigin.MIXED_OUTCOME_SHADOW
         )
 
     @property
+    def is_deferred_specialization_child(self) -> bool:
+        return (
+            self.stem_cell.state == StemCellState.DORMANT
+            and getattr(self, "dormant_origin", None)
+            is DormantOrigin.DEFERRED_SPECIALIZATION_CHILD
+        )
+
+    @property
+    def is_dormant(self) -> bool:
+        return self.stem_cell.state == StemCellState.DORMANT
+
+    @property
     def competes_for_active_capacity(self) -> bool:
-        return self.stem_cell.state != StemCellState.PRUNED and not self.is_shadow
+        return self.stem_cell.state != StemCellState.PRUNED and not self.is_dormant
 
     def to_manifest(self) -> dict[str, Any]:
         result = {
@@ -409,7 +559,19 @@ class CompetenceContextCell:
             "revoked_evidence_key": self.revoked_evidence_key,
             "revocation_count": self.revocation_count,
             "provenance": self.provenance,
+            "lineage_parent_id": self.lineage_parent_id,
+            "specialization_depth": self.specialization_depth,
+            "specialization_request_ordinal": self.specialization_request_ordinal,
+            "specialization_proposal_ordinal": self.specialization_proposal_ordinal,
         }
+        dormant_origin = getattr(self, "dormant_origin", None)
+        immutable_digest = getattr(self, "immutable_hypothesis_digest", None)
+        if dormant_origin is not None:
+            result["dormant_origin"] = dormant_origin.value
+        if immutable_digest is not None:
+            result["immutable_hypothesis_digest"] = (
+                immutable_digest
+            )
         if self.nomination_escrow is not None:
             result["nomination_escrow"] = self.nomination_escrow.manifest()
         return result
@@ -1512,6 +1674,10 @@ class GraphNativeCompetenceEnvelope:
                     (ordinals[item] for item in read_ids), default=-1
                 ),
                 certification_frontier=certification_frontier,
+                parent_hypothesis_digest=(
+                    parent.immutable_hypothesis_digest
+                    or _cell_structural_hypothesis_digest(parent)
+                ),
             )
             self._validate_escrow(escrow)
             self._transaction_checkpoint("escrow_construction")
@@ -1545,6 +1711,13 @@ class GraphNativeCompetenceEnvelope:
             specialization_request_ordinal=parent.specialization_request_ordinal,
             specialization_proposal_ordinal=proposal_ordinal,
             nomination_escrow=escrow,
+        )
+        parent.immutable_hypothesis_digest = (
+            parent.immutable_hypothesis_digest
+            or _cell_structural_hypothesis_digest(parent)
+        )
+        cell.immutable_hypothesis_digest = _cell_structural_hypothesis_digest(
+            cell
         )
         self._register_prospective_cell(cell)
         self._next_cell_index += 1
@@ -1983,6 +2156,11 @@ class GraphNativeCompetenceEnvelope:
                         else StemCellState.PRUNED
                     )
                     cell.prune_reason = "mixed_outcomes"
+                    cell.dormant_origin = (
+                        DormantOrigin.MIXED_OUTCOME_SHADOW
+                        if cell.stem_cell.state == StemCellState.DORMANT
+                        else None
+                    )
                 else:
                     cell.stem_cell.state = StemCellState.PRUNED
                     cell.prune_reason = "lower_bound_or_capacity"
@@ -2001,28 +2179,34 @@ class GraphNativeCompetenceEnvelope:
         record: CompetenceEvidenceRecord,
         visiting: set[str],
     ) -> bool:
-        if cell.cell_id in visiting:
-            raise RuntimeError("cyclic competence context")
-        next_visiting = set(visiting)
-        next_visiting.add(cell.cell_id)
-        active = set(record.active_signal_ids)
-        for member in cell.members:
-            if member.startswith("context:"):
-                parent_id = member.split(":", 1)[1]
-                parent = self.cells.get(parent_id)
-                if parent is None:
-                    return False
-                parent_usable = parent.is_mature or (
-                    cell.lineage_parent_id == parent_id
-                    and parent.state == StemCellState.PROBATION
-                )
-                if not parent_usable:
-                    return False
-                if not self._cell_matches(parent, record, next_visiting):
-                    return False
-            elif member not in active:
-                return False
-        return True
+        descriptors = {
+            item.cell_id: StructuralMatchDescriptor(
+                cell_id=item.cell_id,
+                members=tuple(item.members),
+                structural_state=item.state.name,
+                lineage_parent_id=item.lineage_parent_id,
+                specialization_depth=item.specialization_depth,
+                nomination_operation=(
+                    "historical" if item.nomination_escrow is None
+                    else item.nomination_escrow.operation
+                ),
+                parent_hypothesis_digest=(
+                    None if item.nomination_escrow is None
+                    else item.nomination_escrow.parent_hypothesis_digest
+                ),
+                hypothesis_digest=(
+                    item.immutable_hypothesis_digest
+                    or _cell_structural_hypothesis_digest(item)
+                ),
+            )
+            for item in self.cells.values()
+        }
+        return canonical_structural_pattern_matches(
+            cell.cell_id,
+            descriptors,
+            record.active_signal_ids,
+            frozenset(visiting),
+        )
 
     def _cell_pattern_matches(
         self,

@@ -15,6 +15,7 @@ from recon_lite_chess.autogrowth.native_competence_envelope import (
     CompetenceContextCell,
     CompetenceContextGrowthGenome,
     CompetenceEvidenceRecord,
+    DormantOrigin,
     EnvelopeClassification,
     GraphNativeCompetenceEnvelope,
     MixedOutcomeDisposition,
@@ -140,9 +141,14 @@ def test_mixed_outcome_finalization_clones_to_shadow_or_tombstone_only() -> None
     assert tombstone.cells[sparse.cell_id].prune_reason == "insufficient_support"
 
     retained_state = retained.stem_cell.state
+    retained_origin = retained.dormant_origin
     retained.stem_cell.state = removed.stem_cell.state
+    retained.dormant_origin = removed.dormant_origin
     assert retained.to_manifest() == removed.to_manifest()
     retained.stem_cell.state = retained_state
+    retained.dormant_origin = retained_origin
+    assert retained.dormant_origin is DormantOrigin.MIXED_OUTCOME_SHADOW
+    assert removed.dormant_origin is None
 
 
 def test_dormant_shadow_has_no_envelope_decision_or_correction_path() -> None:
@@ -154,6 +160,7 @@ def test_dormant_shadow_has_no_envelope_decision_or_correction_path() -> None:
         polarity=AvailabilityState.AVAILABLE,
     )
     shadow.prune_reason = "mixed_outcomes"
+    shadow.dormant_origin = DormantOrigin.MIXED_OUTCOME_SHADOW
     shadow.support = 4
     shadow.successes = 2
     shadow.failures = 2
