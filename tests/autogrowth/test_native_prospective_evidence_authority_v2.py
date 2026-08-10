@@ -24,7 +24,9 @@ from recon_lite_chess.autogrowth.native_competence_envelope import (
     AvailabilityState,
     CompetenceContextCell,
     CompetenceEnvelopeConfig,
+    GrowthProposal,
     GraphNativeCompetenceEnvelope,
+    MixedOutcomeDisposition,
     SpecializationMode,
 )
 from recon_lite_chess.autogrowth import (
@@ -341,6 +343,156 @@ def test_open_virtual_uses_only_prospective_certification(native_fixture):
         "certification_provenance"
     ]
     assert organism.continuation_digest() == earned_before
+
+
+def test_mixed_shadow_is_real_only_until_existing_v2_rule_promotes(
+    native_fixture,
+):
+    source = copy.deepcopy(native_fixture["source"])
+    source.envelope.cells.clear()
+    source.envelope._member_specs.clear()
+    source.envelope.rebuild_graph()
+    source_r0 = source.r0.persistent_state_audit()
+    organism = NativeProspectiveAuthorityV2.from_organism(
+        source, mode=V2Mode.PROSPECTIVE
+    )
+
+    records = []
+    discovery_fens = (
+        native_fixture["positive"][0],
+        native_fixture["negative"][0],
+        native_fixture["positive"][1],
+        native_fixture["negative"][1],
+    )
+    for index, fen in enumerate(discovery_fens):
+        receipt = _ground_receipts(
+            organism, (fen,), f"shadow-discovery:{index}"
+        )[0]
+        record, inserted = organism.base._accept_receipt(receipt)
+        assert inserted
+        assert organism.base.envelope.add_unique_evidence(record)
+        records.append(record)
+    trigger = records[0]
+    classification = organism.base.envelope.classify(
+        trigger.active_signal_ids, policy_response=True
+    )
+    request = organism.base.envelope.emit_growth_request(
+        observed_completion=trigger.observed_completion,
+        classification=classification,
+    )
+    proposal = GrowthProposal(
+        members=("internal:policy_response",),
+        round_index=0,
+        request_ordinal=0,
+        genome_seed=organism.base.learning_config.genome_seed,
+    )
+    cell = organism.base.envelope._materialize_proposal(
+        proposal,
+        request,
+        record=trigger,
+        active_context_ids=(),
+    )
+    assert cell is not None and cell.nomination_escrow is not None
+    escrow_manifest = cell.nomination_escrow.manifest()
+    organism.base.envelope._review_lifecycle(
+        final=True,
+        mixed_outcome_disposition=MixedOutcomeDisposition.RETAIN_SHADOW,
+    )
+    organism.base.envelope.rebuild_graph()
+    assert cell.is_shadow and cell.state is StemCellState.DORMANT
+    assert cell.prune_reason == "mixed_outcomes"
+    assert cell.nomination_escrow.manifest() == escrow_manifest
+
+    assert organism.sync_organism_nominations() == (cell.cell_id,)
+    organism.close_nomination()
+    state = organism.states[cell.cell_id]
+    assert state.hypothesis.members == cell.members
+    assert state.hypothesis.polarity is cell.polarity
+    assert state.hypothesis.nomination_escrow_digest == (
+        cell.nomination_escrow.escrow_digest
+    )
+    assert not state.prospectively_certified
+    assert state.support == state.successes == state.contradictions == 0
+
+    dream_frame = FrameContext(
+        "shadow-dream-before-certification",
+        FrameKind.VIRTUAL,
+        values={"board": chess.Board(native_fixture["positive"][2])},
+    )
+    before_dream = organism.continuation_digest()
+    dream = organism.open_virtual(dream_frame)
+    assert cell.cell_id in dream["graph_emissions"]["commitment"]
+    assert dream["classification"].state is AvailabilityState.UNKNOWN
+    assert dream["query"].response.available is False
+    assert organism.continuation_digest() == before_dream
+    assert organism.states[cell.cell_id].support == 0
+    assert not organism.states[cell.cell_id].prospectively_certified
+
+    restored_before = NativeProspectiveAuthorityV2.loads(organism.dumps())
+    assert restored_before.continuation_manifest() == organism.continuation_manifest()
+    organism = restored_before
+    for index, fen in enumerate(native_fixture["positive"][2:6]):
+        pending, _trace, receipt = _open_mint(
+            organism, fen, frame_id=f"shadow-later-real:{index}"
+        )
+        assert cell.cell_id in pending.matching_cell_ids
+        assert pending.pre_outcome_classification.state is AvailabilityState.UNKNOWN
+        emission = organism.consume(receipt)
+        if index < 3:
+            assert cell.cell_id not in emission.matured_cell_ids
+            assert not organism.states[cell.cell_id].prospectively_certified
+        else:
+            assert emission.matured_cell_ids == (cell.cell_id,)
+            assert organism.states[cell.cell_id].prospectively_certified
+    assert organism.states[cell.cell_id].support == 4
+    assert organism.states[cell.cell_id].successes == 4
+    assert organism.states[cell.cell_id].contradictions == 0
+
+    earned = organism.open_virtual(FrameContext(
+        "shadow-dream-after-certification",
+        FrameKind.VIRTUAL,
+        values={"board": chess.Board(native_fixture["positive"][2])},
+    ))
+    assert earned["query"].response.available is True
+    assert earned["classification"].state is AvailabilityState.AVAILABLE
+
+    _pending, _trace, contradiction = _open_mint(
+        organism,
+        native_fixture["negative"][2],
+        frame_id="shadow-later-contradiction",
+    )
+    revoked = organism.consume(contradiction)
+    assert revoked.revoked_cell_ids == (cell.cell_id,)
+    assert not organism.states[cell.cell_id].prospectively_certified
+    assert organism.states[cell.cell_id].transition_rows[-1][
+        "transition"
+    ] == "GRAPH_LOCAL_REVOCATION"
+
+    restored_after = NativeProspectiveAuthorityV2.loads(organism.dumps())
+    assert restored_after.continuation_manifest() == organism.continuation_manifest()
+    after_r0 = restored_after.base.r0.persistent_state_audit()
+    for key in (
+        "topology_sha256", "weights_sha256", "credit_sha256",
+        "lifecycle_sha256",
+    ):
+        assert after_r0[key] == source_r0[key]
+    source_action, source_trace = source.r0.emit_action_with_trace(FrameContext(
+        "shadow-source-action",
+        FrameKind.REAL,
+        values={"board": chess.Board(native_fixture["positive"][2])},
+    ))
+    shadow_action, shadow_trace = restored_after.base.r0.emit_action_with_trace(
+        FrameContext(
+            "shadow-restored-action",
+            FrameKind.REAL,
+            values={"board": chess.Board(native_fixture["positive"][2])},
+        )
+    )
+    assert source_action == shadow_action
+    assert source_trace.ordered_signal_identities == (
+        shadow_trace.ordered_signal_identities
+    )
+    assert source_trace.terminal_signals == shadow_trace.terminal_signals
 
 
 def test_historical_escrow_parity_and_probation_parent_matching(native_fixture):

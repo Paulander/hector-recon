@@ -1,0 +1,162 @@
+{
+  "schema_version": "native_shadow_hypothesis_first_discriminator_proposal.v1",
+  "status": "PROPOSED_NOT_EXECUTED",
+  "starting_commit": "e35681f8acd436e56580819b177cb71e7e6cdc1b",
+  "immediate_question": "Does dormant retention let residual responsibility engage selectively relative to an identically retained deranged-responsibility control and a pre-lifecycle tombstone control?",
+  "excluded_claims": [
+    "Mate-in-2 closure",
+    "29/32 positive coverage",
+    "R1 handover",
+    "retired-successor performance"
+  ],
+  "bindings": {
+    "completed_execution_freeze": {
+      "path": "reports/autogrowth/native_authority/native_residual_consensus_copy_compatibility_result/execution_freeze.json",
+      "sha256": "d2c82e484f46520db683bf4eded8c8ca979e9e52fbbbf27a8cf3583203553c90"
+    },
+    "completed_execution_closure": {
+      "path": "reports/autogrowth/native_authority/native_residual_consensus_copy_compatibility_result/execution_closure.json",
+      "sha256": "869f864f2b54f495cfe5133d48697dc203a5000466eb4da2825ff348b89d0159"
+    },
+    "failure_localization": {
+      "path": "reports/autogrowth/native_authority/native_residual_consensus_copy_compatibility_result/residual_consensus_failure_localization.json.gz",
+      "sha256": "f10cb869d96816ee39c1cbcea9a72df8f04231325f7dd9f83a4fa385b9b0aa42"
+    },
+    "development_canary": {
+      "path": "reports/autogrowth/native_authority/native_shadow_hypothesis_development_canary.json",
+      "sha256": "b88547b74177b7723d0e9c2ec7a0f075616206900888378f46b54ee00e65af9b",
+      "scientific_claim": false
+    }
+  },
+  "frozen_scope": {
+    "paired_seed_count": 32,
+    "seeds": "exact completed residual-consensus cohort",
+    "source_organisms": "exact completed frozen source organisms",
+    "training_and_evaluation_rows": "exact already-viewed completed-package rows in their frozen order",
+    "fresh_data": false,
+    "learner_and_graph_behavior_outside_shadow_state": "unchanged",
+    "residual_score": "unchanged",
+    "memory_bounds_and_eviction": "unchanged",
+    "proposal_and_candidate_evaluation_budgets": "unchanged",
+    "tuple_grammar_and_width": "unchanged",
+    "without_replacement": "unchanged",
+    "prospective_rule_and_thresholds": "unchanged",
+    "graph_local_contradiction_and_revocation": "unchanged"
+  },
+  "arms": [
+    {
+      "id": "true_residual_shadow",
+      "responsibility": "true residual responsibility",
+      "mixed_outcomes_disposition": "retain dormant shadow",
+      "role": "treatment"
+    },
+    {
+      "id": "deranged_responsibility_shadow",
+      "responsibility": "frozen deranged responsibility",
+      "mixed_outcomes_disposition": "retain dormant shadow identically",
+      "role": "responsibility control"
+    },
+    {
+      "id": "true_residual_tombstone",
+      "responsibility": "true residual responsibility",
+      "mixed_outcomes_disposition": "existing tombstoning",
+      "role": "retention control",
+      "construction": "clone true_residual_shadow before the final lifecycle decision, then apply only the alternate mixed_outcomes disposition"
+    }
+  ],
+  "hash_arm": {
+    "included": false,
+    "reason": "Early hash-selected width-2 maturation changed the later proposal grammar in 12 completed seeds.",
+    "recorded_mismatched_seed_ordinals": [5, 7, 11, 12, 13, 14, 16, 19, 23, 26, 27, 30],
+    "repair_in_this_package": false
+  },
+  "shadow_contract": {
+    "origin": "actual existing-genome nomination only",
+    "eligible_prune_reason": "mixed_outcomes only",
+    "preserved": [
+      "complete member pattern",
+      "fixed polarity",
+      "lineage",
+      "nomination escrow"
+    ],
+    "pre_certification_influence": 0,
+    "eligible_measurement": "later REAL terminal-trace matches only",
+    "discovery_evidence_can_certify": false,
+    "virtual_activation_can_count": false,
+    "promotion": "unchanged existing V2 prospective support/contradiction rule",
+    "later_contradiction": "unchanged graph-produced removal path",
+    "active_capacity_competition_before_certification": false
+  },
+  "exact_budget_match": {
+    "comparison": [
+      "true_residual_shadow",
+      "deranged_responsibility_shadow"
+    ],
+    "required_per_seed_fields": [
+      "proposal_slots_consumed",
+      "proposal_slots_by_tuple_width",
+      "unique_candidate_tuples_examined",
+      "candidate_score_evaluations",
+      "duplicate_candidate_slots",
+      "attempted_pattern_digest"
+    ],
+    "mismatch_disposition": "instrument stop before outcome adjudication"
+  },
+  "prequential_measurements": {
+    "certification": [
+      "first later REAL activation row",
+      "support and contradiction counts before each outcome is consumed",
+      "first row satisfying the unchanged rule",
+      "promotion row and promoted cell identity"
+    ],
+    "contradictions": [
+      "later contradictory outcome rows",
+      "graph-local removal or revocation row",
+      "post-revocation decision state"
+    ],
+    "decision_safety": [
+      "AVAILABLE or REFUTED emissions before prospective certification",
+      "action differences before prospective certification",
+      "post-certification false-positive rows"
+    ],
+    "safe_deployable_positive_coverage": "Per seed, count unique frozen positive evaluation rows correctly classified by then-certified, non-revoked cells only when that deployed population has zero false-positive evaluation rows; report the raw count without a 29/32 gate.",
+    "r0_retention": [
+      "topology_sha256",
+      "weights_sha256",
+      "credit_sha256",
+      "lifecycle_sha256",
+      "action and semantic-trace parity"
+    ],
+    "budgets": "all exact_budget_match fields per seed and arm"
+  },
+  "paired_estimands": {
+    "responsibility_selectivity": "true_residual_shadow minus deranged_responsibility_shadow",
+    "retention_effect": "true_residual_shadow minus true_residual_tombstone",
+    "reported_outcomes": [
+      "seeds with at least one prospectively certified mixed-outcome cell",
+      "seeds with post-certification decision engagement",
+      "seeds and aggregate rows with safe deployable positive coverage",
+      "post-certification contradictions and false positives"
+    ]
+  },
+  "adjudication": {
+    "selective_engagement_supported": "The true-shadow arm exceeds both controls in safe-engaged seeds and aggregate safe deployable positive coverage, while every engineering validity gate passes.",
+    "retention_engages_nonselectively": "True-shadow exceeds tombstone, but does not exceed deranged-shadow on both selective-engagement measures.",
+    "retention_does_not_engage": "True-shadow does not exceed tombstone in safe-engaged seeds or safe deployable positive coverage.",
+    "unsafe_engagement": "Prospective certifications occur, but no positive coverage is deployable at zero false positives.",
+    "no_in_package_rescue": true
+  },
+  "engineering_validity_gates": [
+    "every shadow is traceable to an actual genome nomination",
+    "true-shadow and true-tombstone are identical before the final lifecycle decision",
+    "only mixed_outcomes disposition differs between the retention pair",
+    "insufficient-support and capacity removals are unchanged",
+    "discovery evidence contributes zero prospective support",
+    "VIRTUAL queries contribute zero prospective evidence",
+    "shadows have zero decision or capacity influence before certification",
+    "serialization and restoration are exact",
+    "R0 topology, weights, credit, lifecycle, action and semantic traces remain invariant",
+    "true and deranged budget fields match exactly in every seed"
+  ],
+  "execution_authorized": false
+}

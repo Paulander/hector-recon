@@ -17,6 +17,7 @@ from recon_lite_chess.autogrowth.native_competence_envelope import (
     CompetenceEvidenceRecord,
     EnvelopeClassification,
     GraphNativeCompetenceEnvelope,
+    MixedOutcomeDisposition,
     wilson_lower_bound,
 )
 
@@ -83,6 +84,96 @@ def test_trial_is_shadow_only_then_mature_available_routes_formally() -> None:
     assert envelope.classify(
         ("atom:a",), policy_response=False
     ).state == AvailabilityState.UNKNOWN
+
+
+def test_mixed_outcome_finalization_clones_to_shadow_or_tombstone_only() -> None:
+    envelope = GraphNativeCompetenceEnvelope()
+    mixed = _cell(
+        "competence_context_0000",
+        ("atom:mixed",),
+        polarity=AvailabilityState.AVAILABLE,
+    )
+    mixed.lineage_parent_id = "lineage:parent"
+    mixed.specialization_depth = 1
+    sparse = _cell(
+        "competence_context_0001",
+        ("atom:sparse",),
+        polarity=AvailabilityState.AVAILABLE,
+    )
+    envelope.cells = {mixed.cell_id: mixed, sparse.cell_id: sparse}
+    for index, outcome in enumerate((True, False, True, False)):
+        envelope.add_unique_evidence(
+            _record(f"mixed-{index}", ("atom:mixed",), outcome)
+        )
+    envelope.add_unique_evidence(
+        _record("sparse-0", ("atom:sparse",), True)
+    )
+    envelope.rebuild_graph()
+
+    before = pickle.dumps(envelope, protocol=pickle.HIGHEST_PROTOCOL)
+    shadow = pickle.loads(before)
+    tombstone = pickle.loads(before)
+    shadow._review_lifecycle(
+        final=True,
+        mixed_outcome_disposition=MixedOutcomeDisposition.RETAIN_SHADOW,
+    )
+    tombstone._review_lifecycle(
+        final=True,
+        mixed_outcome_disposition=MixedOutcomeDisposition.TOMBSTONE,
+    )
+    shadow.rebuild_graph()
+    tombstone.rebuild_graph()
+
+    retained = shadow.cells[mixed.cell_id]
+    removed = tombstone.cells[mixed.cell_id]
+    assert retained.is_shadow
+    assert retained.state is StemCellState.DORMANT
+    assert removed.state is StemCellState.PRUNED
+    assert retained.prune_reason == removed.prune_reason == "mixed_outcomes"
+    assert retained.members == removed.members == mixed.members
+    assert retained.polarity is removed.polarity is mixed.polarity
+    assert retained.lineage_parent_id == removed.lineage_parent_id
+    assert retained.specialization_depth == removed.specialization_depth
+    assert shadow.cells[sparse.cell_id].state is StemCellState.PRUNED
+    assert tombstone.cells[sparse.cell_id].state is StemCellState.PRUNED
+    assert shadow.cells[sparse.cell_id].prune_reason == "insufficient_support"
+    assert tombstone.cells[sparse.cell_id].prune_reason == "insufficient_support"
+
+    retained_state = retained.stem_cell.state
+    retained.stem_cell.state = removed.stem_cell.state
+    assert retained.to_manifest() == removed.to_manifest()
+    retained.stem_cell.state = retained_state
+
+
+def test_dormant_shadow_has_no_envelope_decision_or_correction_path() -> None:
+    envelope = GraphNativeCompetenceEnvelope()
+    shadow = _cell(
+        "competence_context_0000",
+        ("atom:shadow",),
+        state=StemCellState.DORMANT,
+        polarity=AvailabilityState.AVAILABLE,
+    )
+    shadow.prune_reason = "mixed_outcomes"
+    shadow.support = 4
+    shadow.successes = 2
+    shadow.failures = 2
+    envelope.cells[shadow.cell_id] = shadow
+    envelope.rebuild_graph()
+
+    assert shadow.is_shadow
+    assert not shadow.competes_for_active_capacity
+    assert envelope.classify(
+        ("atom:shadow",), policy_response=True
+    ).state is AvailabilityState.UNKNOWN
+    before = (shadow.support, shadow.evidence_keys)
+    emission = envelope.observe_real_outcome(
+        _real_frame("shadow-correction-exclusion"),
+        _record("later-real", ("atom:shadow",), True),
+        lifecycle_connected=True,
+    )
+    assert emission.matching_cell_ids == ()
+    assert emission.transitioned_cell_ids == ()
+    assert (shadow.support, shadow.evidence_keys) == before
 
 
 def test_refuted_is_separate_and_conflict_fails_to_unknown() -> None:

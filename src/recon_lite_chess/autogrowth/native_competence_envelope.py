@@ -69,6 +69,13 @@ class SpecializationMode(str, Enum):
     COUNTEREXAMPLE_BLIND = "counterexample_blind"
 
 
+class MixedOutcomeDisposition(str, Enum):
+    """Final structural treatment for an already-nominated mixed trial."""
+
+    TOMBSTONE = "tombstone"
+    RETAIN_SHADOW = "retain_shadow"
+
+
 def _nomination_sha(value: Any) -> str:
     payload = json.dumps(
         value, sort_keys=True, separators=(",", ":"), allow_nan=False
@@ -369,6 +376,17 @@ class CompetenceContextCell:
     @property
     def is_trial(self) -> bool:
         return self.stem_cell.state == StemCellState.TRIAL
+
+    @property
+    def is_shadow(self) -> bool:
+        return (
+            self.stem_cell.state == StemCellState.DORMANT
+            and self.prune_reason == "mixed_outcomes"
+        )
+
+    @property
+    def competes_for_active_capacity(self) -> bool:
+        return self.stem_cell.state != StemCellState.PRUNED and not self.is_shadow
 
     def to_manifest(self) -> dict[str, Any]:
         result = {
@@ -1047,6 +1065,7 @@ class GraphNativeCompetenceEnvelope:
         matching = tuple(sorted(
             cell.cell_id
             for cell in self.cells.values()
+            if not cell.is_shadow
             if self._cell_pattern_matches(cell, record, set())
         ))
         for cell_id in matching:
@@ -1441,7 +1460,7 @@ class GraphNativeCompetenceEnvelope:
             self.specialization_audit.request_rows.append(row)
             return None
         live = sum(
-            cell.state != StemCellState.PRUNED for cell in self.cells.values()
+            cell.competes_for_active_capacity for cell in self.cells.values()
         )
         if live >= self.config.trial_capacity:
             self.specialization_audit.capacity_rejections += 1
@@ -1672,6 +1691,10 @@ class GraphNativeCompetenceEnvelope:
         records: Sequence[CompetenceEvidenceRecord],
         *,
         genome: CompetenceContextGrowthGenome | None = None,
+        finalize: bool = True,
+        mixed_outcome_disposition: MixedOutcomeDisposition = (
+            MixedOutcomeDisposition.TOMBSTONE
+        ),
     ) -> GrowthAudit:
         if (
             self.nomination_epoch is not None
@@ -1736,10 +1759,31 @@ class GraphNativeCompetenceEnvelope:
                     record=record,
                     active_context_ids=active_contexts,
                 )
-            self._review_lifecycle(
-                final=round_index == self.config.structural_rounds - 1
-            )
+            final_round = round_index == self.config.structural_rounds - 1
+            if not final_round or finalize:
+                self._review_lifecycle(
+                    final=final_round,
+                    mixed_outcome_disposition=mixed_outcome_disposition,
+                )
             self.rebuild_graph()
+        return self.audit
+
+    def finalize_growth(
+        self,
+        *,
+        mixed_outcome_disposition: MixedOutcomeDisposition = (
+            MixedOutcomeDisposition.TOMBSTONE
+        ),
+    ) -> GrowthAudit:
+        """Resolve deferred final trials at the cloneable lifecycle boundary."""
+
+        if not any(cell.is_trial for cell in self.cells.values()):
+            raise RuntimeError("no deferred final lifecycle is pending")
+        self._review_lifecycle(
+            final=True,
+            mixed_outcome_disposition=mixed_outcome_disposition,
+        )
+        self.rebuild_graph()
         return self.audit
 
     def _materialize_proposal(
@@ -1767,7 +1811,7 @@ class GraphNativeCompetenceEnvelope:
             self.audit.proposal_rows.append(row)
             return None
         live = sum(
-            cell.state != StemCellState.PRUNED for cell in self.cells.values()
+            cell.competes_for_active_capacity for cell in self.cells.values()
         )
         if live >= self.config.trial_capacity:
             self.audit.capacity_rejections += 1
@@ -1827,7 +1871,17 @@ class GraphNativeCompetenceEnvelope:
         parent = self.cells.get(member.split(":", 1)[1])
         return 1 if parent is None else parent.stem_cell.depth + 1
 
-    def _review_lifecycle(self, *, final: bool) -> None:
+    def _review_lifecycle(
+        self,
+        *,
+        final: bool,
+        mixed_outcome_disposition: MixedOutcomeDisposition = (
+            MixedOutcomeDisposition.TOMBSTONE
+        ),
+    ) -> None:
+        mixed_outcome_disposition = MixedOutcomeDisposition(
+            mixed_outcome_disposition
+        )
         self._review_count += 1
         positive_count = sum(
             cell.is_mature and cell.polarity == AvailabilityState.AVAILABLE
@@ -1918,12 +1972,19 @@ class GraphNativeCompetenceEnvelope:
                 cell.maturity_review = self._review_count
                 refuted_count += 1
             elif final:
-                cell.stem_cell.state = StemCellState.PRUNED
                 if len(matched) < self.config.min_maturity_support:
+                    cell.stem_cell.state = StemCellState.PRUNED
                     cell.prune_reason = "insufficient_support"
                 elif successes and failures:
+                    cell.stem_cell.state = (
+                        StemCellState.DORMANT
+                        if mixed_outcome_disposition
+                        is MixedOutcomeDisposition.RETAIN_SHADOW
+                        else StemCellState.PRUNED
+                    )
                     cell.prune_reason = "mixed_outcomes"
                 else:
+                    cell.stem_cell.state = StemCellState.PRUNED
                     cell.prune_reason = "lower_bound_or_capacity"
             review_rows.append(cell.to_manifest())
         self.audit.lifecycle_reviews.append({

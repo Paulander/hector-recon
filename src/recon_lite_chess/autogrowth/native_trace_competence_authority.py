@@ -34,6 +34,7 @@ from .native_competence_envelope import (
     EnvelopeClassification,
     GraphNativeCompetenceEnvelope,
     MatureCorrectionEmission,
+    MixedOutcomeDisposition,
     NativeCompetenceSessionAudit,
     ProspectiveDiscoveryEpoch,
     SpecializationMode,
@@ -436,7 +437,13 @@ class TraceNativeCompetenceOrganism:
         return self._record_from_receipt(receipt), True
 
     def grow_from_grounded_receipts(
-        self, receipts: Sequence[GroundedOutcomeReceipt]
+        self,
+        receipts: Sequence[GroundedOutcomeReceipt],
+        *,
+        finalize: bool = True,
+        mixed_outcome_disposition: MixedOutcomeDisposition = (
+            MixedOutcomeDisposition.TOMBSTONE
+        ),
     ) -> Any:
         records = []
         for receipt in receipts:
@@ -449,6 +456,8 @@ class TraceNativeCompetenceOrganism:
             genome=CompetenceContextGrowthGenome(
                 self.learning_config.genome_seed
             ),
+            finalize=finalize,
+            mixed_outcome_disposition=mixed_outcome_disposition,
         )
 
     def observe_grounded(
