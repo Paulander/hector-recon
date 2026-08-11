@@ -1,0 +1,185 @@
+{
+  "all_32_seeds": [
+    {
+      "genome_seed": 907644595097955793,
+      "ordinal": 0,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 712155576387041666,
+      "ordinal": 1,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 4885767146672703791,
+      "ordinal": 2,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 7502913297808550194,
+      "ordinal": 3,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 2309457312534921520,
+      "ordinal": 4,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 856812592524298243,
+      "ordinal": 5,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 884349908943639978,
+      "ordinal": 6,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 1342059648411793303,
+      "ordinal": 7,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 879746762984859251,
+      "ordinal": 8,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 5202804795557146578,
+      "ordinal": 9,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 2032704802324732287,
+      "ordinal": 10,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 6323957234433104873,
+      "ordinal": 11,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 2519506886275132358,
+      "ordinal": 12,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 6393781767661057366,
+      "ordinal": 13,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 215409178457643119,
+      "ordinal": 14,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 552171492848245550,
+      "ordinal": 15,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 7193340071292159175,
+      "ordinal": 16,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 7530122476315414739,
+      "ordinal": 17,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 7832861258023129499,
+      "ordinal": 18,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 509238441727594227,
+      "ordinal": 19,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 5007776211345582471,
+      "ordinal": 20,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 3204836191548007807,
+      "ordinal": 21,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 7507085827092416940,
+      "ordinal": 22,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 1749598110089750693,
+      "ordinal": 23,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 1954604479790197505,
+      "ordinal": 24,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 2167777654974978732,
+      "ordinal": 25,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 1870120362598064672,
+      "ordinal": 26,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 9077156202074593130,
+      "ordinal": 27,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 1499946237526846685,
+      "ordinal": 28,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 3295949975416671995,
+      "ordinal": 29,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 8544175010195934307,
+      "ordinal": 30,
+      "status": "FROZEN_NOT_STARTED"
+    },
+    {
+      "genome_seed": 3005001640407880315,
+      "ordinal": 31,
+      "status": "FROZEN_NOT_STARTED"
+    }
+  ],
+  "child_certification_outcomes_accessed": false,
+  "child_exposure_scanned": false,
+  "execution_authorized": false,
+  "fresh_cache_constructed": false,
+  "in_package_rescue_performed": false,
+  "original_result_placeholder_sha256": "4877e375745b0ca9c36e83d4ad27781f89b4be2ffe53baa32d86ff17bd2f96bd",
+  "parent_discovery_outcomes_accessed": false,
+  "parent_prospective_outcomes_accessed": false,
+  "performance_manifest_payload_sha256": "adc388f9c3aa68081f38692638fd2038d475a8e08326d4d60791aa8622b1ad3d",
+  "performance_source_manifest_path": "reports/autogrowth/native_authority/native_deferred_specialization_performance_source_manifest.json",
+  "performance_source_manifest_sha256": "ac5e2e3d28cae49d86f2a64ebf37521f1da782704af4c57e065450df82880248",
+  "schema_version": "native_deferred_specialization_performance_result.v1",
+  "scientific_outcomes_accessed": false,
+  "sealed_evaluation_started": false,
+  "source_manifest_path": "reports/autogrowth/native_authority/native_deferred_specialization_fresh_discriminator_source_manifest.json",
+  "source_manifest_payload_sha256": "195a1e2a7e6d7b1167980af875b5d9dc96d41d874db47b935193626a40e1eb3a",
+  "source_manifest_sha256": "d8aa3011926803a18c3c0b5265ff4e1099aeec2cb161e044f93d624d21995531",
+  "stage_a_started": false,
+  "stage_b_started": false,
+  "starting_commit": "26242968cca9327f6239a4bb22b7d80866c2297d",
+  "status": "PERFORMANCE_RECLOSED_NOT_EXECUTED"
+}
