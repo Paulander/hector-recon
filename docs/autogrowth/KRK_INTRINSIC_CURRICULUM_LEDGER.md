@@ -117,3 +117,15 @@ The complete run contract is
 This is not exhaustive retrograde search. Positions come from bounded curriculum
 generators and played trajectories; no tablebase or exact move provider selects
 runtime actions.
+
+## Deferred-specialization frozen attempt — terminal execution failure
+
+On 2026-08-13/14, the single performance-reclosed attempt from commit
+`8301c9e39e543fc512c083323a1a115c8a676ddc` ran once with eight workers. The
+640-row immutable R0 cache completed and verified, but all 32 Stage-A shards
+failed during V2 wrapping with `experimental initialization identity mismatch`.
+No Stage-A seed completed, the exposure gate was not calculated, and Stage B
+never started. This is an execution-integrity failure with no scientific or
+mechanism conclusion. The failed attempt is immutable: no repair or rerun was
+performed or authorized. See
+`docs/autogrowth/NATIVE_DEFERRED_SPECIALIZATION_PERFORMANCE_ATTEMPT_RESULT.md`.

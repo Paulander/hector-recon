@@ -1,0 +1,92 @@
+{
+  "schema_version": "native_deferred_specialization_performance_terminal_failure.v1",
+  "status": "EXECUTION_FAILED",
+  "scientific_status": "NOT_ADJUDICATED",
+  "mechanism_result": false,
+  "source_commit": "8301c9e39e543fc512c083323a1a115c8a676ddc",
+  "branch": "codex/native-v2-systemd-schema-reclosure-20260802",
+  "attempt": {
+    "attempt_id": "28dca63a15216c62eddab4eba989981c3f772c501901397f4d71a1f39958cf2e",
+    "attempt_file_sha256": "01e241771e47c1094f81c30eca7007fbb820f0a269e8851c05feebea0ee02ccc",
+    "selected_workers": 8,
+    "source_manifest_payload_sha256": "195a1e2a7e6d7b1167980af875b5d9dc96d41d874db47b935193626a40e1eb3a",
+    "stream_sha256": "128137b08c64ede2fb4650a91b6423072f2512469aab5ff7a976c411913808de",
+    "input_digest": "c672d9cff9fefe544bb9ba942f9ca15688e5f63e5da381a30e2e8a2f55c5c704"
+  },
+  "service": {
+    "unit": "hector-recon-deferred-specialization-perf-8301c9e.service",
+    "invocation_id": "a176f492c17d479c864d3075a1744ed0",
+    "restart": "no",
+    "started_local": "2026-08-13T23:23:08+02:00",
+    "failed_local": "2026-08-14T01:10:17+02:00",
+    "failed_utc_exact": "2026-08-13T23:10:17.085351278Z",
+    "wall_time_seconds_one_second_resolution": 6429,
+    "wall_time_hms": "01:47:09",
+    "active_state": "failed",
+    "sub_state": "failed",
+    "result": "exit-code",
+    "exec_main_code": 1,
+    "exec_main_status": 1,
+    "cpu_usage_ns": 22769290628000,
+    "memory_peak_bytes_reported_by_systemd": 133750784,
+    "stdout_bytes": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_bytes": 3820,
+    "stderr_sha256": "4350c28a116cf9c0460af714935ac504beb9a5ccce0324d6d7a69c2faf30d7bc"
+  },
+  "cache": {
+    "state": "COMPLETED",
+    "file_sha256": "2d364c274fab22863082daa09fc51d4e402df41c44ebb0d692539f0967c5403f",
+    "sha_matches_attempt": true,
+    "records_verified": 640,
+    "committed_verifier_passed": true
+  },
+  "stage_a": {
+    "state_at_stop": "STARTED",
+    "expected_seed_count": 32,
+    "state_record_count": 32,
+    "completed_seed_count": 0,
+    "failed_seed_count": 32,
+    "payload_count": 0,
+    "all_shard_identities_exact": true,
+    "all_attempt_seed_ordinal_input_and_stream_bindings_exact": true,
+    "state_file_hash_inventory_sha256": "0b78a48ae895cb2efd7a0b7de3cfa841019f2857e114fa1c95e01452d8b3b13a",
+    "error_type": "ProspectiveV2IntegrityError",
+    "error_message": "experimental initialization identity mismatch",
+    "failure_location": "NativeProspectiveAuthorityV2.from_organism -> _verify_invariants",
+    "worker_wall_seconds_min": 572.6651327809959,
+    "worker_wall_seconds_max": 584.7858789910097,
+    "worker_peak_rss_kib_max": 303508
+  },
+  "exposure_gate": {
+    "state": "NOT_STARTED",
+    "qualifying_seeds": null
+  },
+  "stage_b": {
+    "state": "NOT_STARTED",
+    "state_record_count": 0,
+    "completed_seed_count": 0
+  },
+  "scientific_outputs": {
+    "engagement": null,
+    "per_arm_tp_fp_abstention_safe_coverage": null,
+    "certifications": null,
+    "revocations": null,
+    "paired_seed_comparisons": null,
+    "effective_sample_sizes": null,
+    "corrected_probabilities": null,
+    "frozen_conclusion": "NOT_AVAILABLE_EXECUTION_FAILURE_BEFORE_EXPOSURE_GATE"
+  },
+  "failure_classification": {
+    "category": "EXECUTION_INTEGRITY_FAILURE",
+    "interpretation": "The frozen attempt entered Stage A and consumed the parent-discovery path, but no seed completed preparation. The stop therefore supplies no exposure-gate, arm-comparison, competence, or mechanism result.",
+    "rerun_authorized": false,
+    "repair_performed": false
+  },
+  "preservation": {
+    "local_attempt_directory": "reports/autogrowth/runs/native_deferred_specialization_performance_attempt_v1",
+    "raw_attempt_records_preserved_locally": true,
+    "raw_records_ignored_by_repository_policy": true,
+    "compact_hash_linked_record_committed": true
+  }
+}
