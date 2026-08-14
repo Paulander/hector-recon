@@ -129,3 +129,18 @@ never started. This is an execution-integrity failure with no scientific or
 mechanism conclusion. The failed attempt is immutable: no repair or rerun was
 performed or authorized. See
 `docs/autogrowth/NATIVE_DEFERRED_SPECIALIZATION_PERFORMANCE_ATTEMPT_RESULT.md`.
+
+## Deferred-specialization initialization reclosure — engineering closure
+
+On 2026-08-14, an additive package confirmed that both historical runners
+closed the discovery epoch before V2 import, leaving
+`experimental_identity=None` at the closed-epoch invariant check. The corrected
+ordering is open, grow, wrap once, wrapper-close once, then clone arms. A bounded
+canary using only the already-consumed 64-row discovery prefix passed 32/32 seed
+initializations and 96/96 pre-parent arm invariants with exact semantic parity;
+parent-prospective, exposure, Stage B, and new-outcome counts were all zero. No
+scientific attempt was started. The original failed attempt and historical
+packages remain immutable. See
+`docs/autogrowth/NATIVE_DEFERRED_SPECIALIZATION_INITIALIZATION_RECLOSURE.md`
+and
+`docs/autogrowth/NATIVE_DEFERRED_SPECIALIZATION_DATA_REUSE_ADJUDICATION.md`.
