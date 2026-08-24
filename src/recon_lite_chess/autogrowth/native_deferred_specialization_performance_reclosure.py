@@ -437,6 +437,7 @@ def open_cached_real_event(
         raise v2.ProspectiveV2IntegrityError(
             "first certification event requires closed nomination"
         )
+    authority._ensure_incremental_history_initialized()
     if _sha_json(_r0_component_digests(authority.base)) != source_r0_digest:
         raise v2.ProspectiveV2IntegrityError(
             "cached observation R0 differs from organism R0"
@@ -455,6 +456,9 @@ def open_cached_real_event(
     )
     typed_digest = v2._sha([asdict(item) for item in trace.terminal_signals])
     structure_digest = authority._structure_invariant_digest()
+    predecessor_continuation_digest = (
+        authority._incremental_predecessor_continuation_digest()
+    )
     token = v2._sha({
         "implementation": v2.IMPLEMENTATION_IDENTITY,
         "ordinal": authority.next_expected_ordinal,
@@ -476,6 +480,7 @@ def open_cached_real_event(
         matching_cell_ids=matching,
         matching_cell_digest=v2._sha(list(matching)),
         structure_invariant_digest=structure_digest,
+        predecessor_continuation_digest=predecessor_continuation_digest,
         pending_token=token,
         outcome_terminal_identity=v2.OUTCOME_TERMINAL_IDENTITY,
         environment_outcome_terminal_identity=(

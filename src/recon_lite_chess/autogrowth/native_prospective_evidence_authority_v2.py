@@ -53,6 +53,16 @@ VIRTUAL_AVAILABLE_VALUE = 1.0
 VIRTUAL_RESPONSE_UNCERTAINTY = 0.0
 REQUEST_QUEUE_CAPACITY = 192
 DORMANT_SPECIALIZATION_CHILD_CAPACITY = 192
+INCREMENTAL_HISTORY_SCHEMA = "native_v2_incremental_real_history.v1"
+INCREMENTAL_HISTORY_EVENT_SCHEMA = (
+    "native_v2_incremental_real_history_event.v1"
+)
+HISTORY_VALIDATION_INCREMENTAL = "incremental"
+HISTORY_VALIDATION_LEGACY = "legacy_full_replay"
+HISTORY_VALIDATION_MODES = frozenset({
+    HISTORY_VALIDATION_INCREMENTAL,
+    HISTORY_VALIDATION_LEGACY,
+})
 
 
 def _json(value: Any) -> bytes:
@@ -429,6 +439,7 @@ class PendingRealEvent:
     matching_cell_ids: tuple[str, ...]
     matching_cell_digest: str
     structure_invariant_digest: str
+    predecessor_continuation_digest: str
     pending_token: str
     outcome_terminal_identity: str
     environment_outcome_terminal_identity: str
@@ -449,6 +460,9 @@ class PendingRealEvent:
             "matching_cell_ids": list(self.matching_cell_ids),
             "matching_cell_digest": self.matching_cell_digest,
             "structure_invariant_digest": self.structure_invariant_digest,
+            "predecessor_continuation_digest": (
+                self.predecessor_continuation_digest
+            ),
             "pending_token": self.pending_token,
             "outcome_terminal_identity": self.outcome_terminal_identity,
             "environment_outcome_terminal_identity": (
@@ -456,6 +470,27 @@ class PendingRealEvent:
             ),
             "state": self.state,
         }
+
+
+@dataclass(frozen=True)
+class IncrementalHistoryValidationState:
+    """Non-authoritative append-only validation state for accepted REAL events.
+
+    The graph never reads this state.  It can only reject an invalid append;
+    complete reconstruction remains authoritative at explicit boundaries.
+    """
+
+    schema_version: str
+    origin_digest: str
+    first_ordinal: int
+    event_count: int
+    last_ordinal: int | None
+    last_receipt_id: str | None
+    last_event_digest: str | None
+    history_digest: str
+
+    def manifest(self) -> dict[str, Any]:
+        return asdict(self)
 
 
 @dataclass(frozen=True)
@@ -1537,9 +1572,15 @@ class NativeProspectiveAuthorityV2:
     event_transactions: dict[str, dict[str, Any]] = field(default_factory=dict)
     nomination_events: tuple[dict[str, Any], ...] = ()
     experimental_identity: dict[str, Any] | None = None
+    incremental_history_state: IncrementalHistoryValidationState | None = None
     schema_version: str = SCHEMA_VERSION
     _receipt_secret: bytes = field(
         default=b"native-prospective-v2-environment-terminal"
+    )
+    _history_validation_mode: str = field(
+        default=HISTORY_VALIDATION_INCREMENTAL,
+        repr=False,
+        compare=False,
     )
 
     @classmethod
@@ -1911,6 +1952,364 @@ class NativeProspectiveAuthorityV2:
         }
         return {**unsigned, "identity_digest": _sha(unsigned)}
 
+    def set_history_validation_mode_for_development(self, mode: str) -> None:
+        """Select validation strategy without changing learner-visible state."""
+
+        if mode not in HISTORY_VALIDATION_MODES:
+            raise ValueError(f"unknown history validation mode: {mode}")
+        if self.pending_event is not None:
+            raise ProspectiveV2IntegrityError(
+                "history validation mode cannot change during an open event"
+            )
+        self._history_validation_mode = mode
+
+    def _history_expected_start(self) -> int:
+        epoch = self.base.envelope.nomination_epoch
+        if epoch is None:
+            raise ProspectiveV2IntegrityError(
+                "prospective discovery epoch is absent"
+            )
+        return max(dict(epoch.receipt_ordinals).values(), default=-1) + 1
+
+    def _incremental_history_origin_digest(self) -> str:
+        initial_ids = tuple(sorted(
+            cell_id for cell_id, state in self.states.items()
+            if state.hypothesis.source_generation == 0
+        ))
+        return _sha({
+            "schema_version": INCREMENTAL_HISTORY_SCHEMA,
+            "implementation_identity": IMPLEMENTATION_IDENTITY,
+            "mode": self.mode.value,
+            "specialization_mode": self.specialization_mode.value,
+            "first_ordinal": self._history_expected_start(),
+            "source_organism_identity": (
+                self.base.r0.source_organism_identity()
+            ),
+            "source_state_identity": self.base.r0.trace_state_identity(),
+            "discovery_prefix_physical_fingerprint_digest": (
+                self.discovery_prefix_physical_fingerprint_digest
+            ),
+            "initial_hypotheses": {
+                cell_id: self.states[cell_id].hypothesis.manifest()
+                for cell_id in initial_ids
+            },
+            "initial_structural_invariants": {
+                cell_id: self.structural_invariants[cell_id].manifest()
+                for cell_id in initial_ids
+            },
+            "historical_tombstone_digest": _sha(
+                self.historical_tombstones
+            ),
+        })
+
+    def _new_incremental_history_state(
+        self,
+    ) -> IncrementalHistoryValidationState:
+        first = self._history_expected_start()
+        origin = self._incremental_history_origin_digest()
+        return IncrementalHistoryValidationState(
+            schema_version=INCREMENTAL_HISTORY_SCHEMA,
+            origin_digest=origin,
+            first_ordinal=first,
+            event_count=0,
+            last_ordinal=None,
+            last_receipt_id=None,
+            last_event_digest=None,
+            history_digest=_sha({
+                "schema_version": INCREMENTAL_HISTORY_SCHEMA,
+                "origin_digest": origin,
+                "first_ordinal": first,
+            }),
+        )
+
+    def _ensure_incremental_history_initialized(self) -> None:
+        if self.incremental_history_state is None:
+            if self.consumed_receipts:
+                raise ProspectiveV2IntegrityError(
+                    "incremental history missing for accepted REAL events"
+                )
+            self.incremental_history_state = (
+                self._new_incremental_history_state()
+            )
+
+    @staticmethod
+    def _incremental_lifecycle_projection(
+        state: ProspectiveAuthorityState,
+    ) -> dict[str, Any]:
+        return {
+            "hypothesis_digest": state.hypothesis.hypothesis_digest,
+            "source_generation": state.hypothesis.source_generation,
+            "prospectively_certified": state.prospectively_certified,
+            "successes": state.successes,
+            "contradictions": state.contradictions,
+            "support": state.support,
+            "success_lower_bound": state.success_lower_bound,
+            "contradiction_lower_bound": state.contradiction_lower_bound,
+            "certification_receipt_count": len(
+                state.certification_receipt_ids
+            ),
+            "last_certification_receipt_id": (
+                state.certification_receipt_ids[-1]
+                if state.certification_receipt_ids else None
+            ),
+            "support_receipt_count": len(state.support_receipt_ids),
+            "last_support_receipt_id": (
+                state.support_receipt_ids[-1]
+                if state.support_receipt_ids else None
+            ),
+            "contradiction_receipt_count": len(
+                state.contradiction_receipt_ids
+            ),
+            "last_contradiction_receipt_id": (
+                state.contradiction_receipt_ids[-1]
+                if state.contradiction_receipt_ids else None
+            ),
+            "transition_count": len(state.transition_rows),
+            "last_transition": (
+                state.transition_rows[-1] if state.transition_rows else None
+            ),
+        }
+
+    def _incremental_predecessor_digest_from_parts(
+        self,
+        *,
+        history: IncrementalHistoryValidationState,
+        states: Mapping[str, ProspectiveAuthorityState],
+        generation: int,
+        next_ordinal: int,
+        request_ids: Sequence[str],
+        lifetime_requested_parent_ids: Sequence[str],
+    ) -> str:
+        active = {
+            cell_id: state for cell_id, state in states.items()
+            if state.hypothesis.source_generation <= generation
+        }
+        return _sha({
+            "schema_version": INCREMENTAL_HISTORY_SCHEMA,
+            "history": history.manifest(),
+            "generation": generation,
+            "next_ordinal": next_ordinal,
+            "specialization_mode": self.specialization_mode.value,
+            "active_lifecycle": {
+                cell_id: self._incremental_lifecycle_projection(state)
+                for cell_id, state in sorted(active.items())
+            },
+            "active_structural_invariants": {
+                cell_id: self.structural_invariants[cell_id].manifest()
+                for cell_id in sorted(active)
+            },
+            "active_authority_topology_digest": _sha(
+                _executed_authority_topology_manifest(active)
+            ),
+            "request_ids": list(request_ids),
+            "lifetime_requested_parent_ids": list(
+                lifetime_requested_parent_ids
+            ),
+        })
+
+    def _incremental_predecessor_continuation_digest(self) -> str:
+        history = self.incremental_history_state
+        if history is None:
+            raise ProspectiveV2IntegrityError(
+                "incremental history is not initialized"
+            )
+        return self._incremental_predecessor_digest_from_parts(
+            history=history,
+            states=self.states,
+            generation=self.current_generation,
+            next_ordinal=self.next_expected_ordinal,
+            request_ids=self.request_queue,
+            lifetime_requested_parent_ids=(
+                self.lifetime_requested_parent_ids
+            ),
+        )
+
+    @staticmethod
+    def _incremental_event_manifest(
+        *,
+        position: int,
+        previous_history_digest: str,
+        receipt: V2GroundedReceipt,
+        transaction: Mapping[str, Any],
+        reference: AcceptedRealReference,
+        emission: V2CertificationEmission,
+    ) -> dict[str, Any]:
+        return {
+            "schema_version": INCREMENTAL_HISTORY_EVENT_SCHEMA,
+            "position": position,
+            "ordinal": receipt.ordinal,
+            "previous_history_digest": previous_history_digest,
+            "predecessor_continuation_digest": transaction.get(
+                "predecessor_continuation_digest"
+            ),
+            "receipt": receipt.manifest(),
+            "transaction": dict(transaction),
+            "accepted_reference": reference.manifest(),
+            "emission": emission.manifest(),
+        }
+
+    @classmethod
+    def _next_incremental_history_state(
+        cls,
+        prior: IncrementalHistoryValidationState,
+        *,
+        receipt: V2GroundedReceipt,
+        transaction: Mapping[str, Any],
+        reference: AcceptedRealReference,
+        emission: V2CertificationEmission,
+    ) -> IncrementalHistoryValidationState:
+        position = prior.event_count
+        expected_ordinal = prior.first_ordinal + position
+        if receipt.ordinal != expected_ordinal:
+            raise ProspectiveV2IntegrityError(
+                "incremental history append position mismatch"
+            )
+        if not transaction.get("predecessor_continuation_digest"):
+            raise ProspectiveV2IntegrityError(
+                "incremental history predecessor continuation is absent"
+            )
+        event = cls._incremental_event_manifest(
+            position=position,
+            previous_history_digest=prior.history_digest,
+            receipt=receipt,
+            transaction=transaction,
+            reference=reference,
+            emission=emission,
+        )
+        event_digest = _sha(event)
+        history_digest = _sha({
+            "schema_version": INCREMENTAL_HISTORY_SCHEMA,
+            "previous_history_digest": prior.history_digest,
+            "contiguous_position": position,
+            "event_digest": event_digest,
+        })
+        return IncrementalHistoryValidationState(
+            schema_version=INCREMENTAL_HISTORY_SCHEMA,
+            origin_digest=prior.origin_digest,
+            first_ordinal=prior.first_ordinal,
+            event_count=position + 1,
+            last_ordinal=receipt.ordinal,
+            last_receipt_id=receipt.receipt_id,
+            last_event_digest=event_digest,
+            history_digest=history_digest,
+        )
+
+    def _append_incremental_history(
+        self,
+        *,
+        receipt: V2GroundedReceipt,
+        transaction: Mapping[str, Any],
+        reference: AcceptedRealReference,
+        emission: V2CertificationEmission,
+    ) -> None:
+        prior = self.incremental_history_state
+        if prior is None:
+            raise ProspectiveV2IntegrityError(
+                "incremental history is not initialized at append"
+            )
+        self.incremental_history_state = self._next_incremental_history_state(
+            prior,
+            receipt=receipt,
+            transaction=transaction,
+            reference=reference,
+            emission=emission,
+        )
+
+    def _verify_incremental_history_state(self) -> None:
+        if self._history_validation_mode not in HISTORY_VALIDATION_MODES:
+            raise ProspectiveV2IntegrityError(
+                "unknown incremental history validation mode"
+            )
+        history = self.incremental_history_state
+        count = len(self.consumed_receipts)
+        if history is None:
+            if count or self.pending_event is not None:
+                raise ProspectiveV2IntegrityError(
+                    "incremental history missing for active REAL history"
+                )
+            return
+        if (
+            history.schema_version != INCREMENTAL_HISTORY_SCHEMA
+            or history.origin_digest
+            != self._incremental_history_origin_digest()
+            or history.first_ordinal != self._history_expected_start()
+            or history.event_count != count
+            or self.next_expected_ordinal
+            != history.first_ordinal + history.event_count
+        ):
+            raise ProspectiveV2IntegrityError(
+                "incremental history state identity mismatch"
+            )
+        expected_last = (
+            None if not count else self.next_expected_ordinal - 1
+        )
+        if history.last_ordinal != expected_last:
+            raise ProspectiveV2IntegrityError(
+                "incremental history last ordinal mismatch"
+            )
+        if count:
+            receipt = self.consumed_receipts.get(history.last_receipt_id or "")
+            if receipt is None or receipt.ordinal != history.last_ordinal:
+                raise ProspectiveV2IntegrityError(
+                    "incremental history last receipt mismatch"
+                )
+        elif any((
+            history.last_receipt_id,
+            history.last_event_digest,
+            history.last_ordinal,
+        )):
+            raise ProspectiveV2IntegrityError(
+                "empty incremental history has a terminal event"
+            )
+        if any(len(value) != 64 for value in (
+            history.origin_digest,
+            history.history_digest,
+            history.last_event_digest or "0" * 64,
+        )):
+            raise ProspectiveV2IntegrityError(
+                "incremental history digest encoding mismatch"
+            )
+        if (
+            len(self.consumed_tokens) != count
+            or len(self.prospective_physical_fingerprints) != count
+            or len(self.emissions) != count
+            or len(self.accepted_real_references)
+            != len(self.base.receipts) + count
+        ):
+            raise ProspectiveV2IntegrityError(
+                "incremental history ledger cardinality mismatch"
+            )
+        expected_transactions = count + (
+            1 if self.pending_event is not None else 0
+        )
+        if len(self.event_transactions) != expected_transactions:
+            raise ProspectiveV2IntegrityError(
+                "incremental history transaction cardinality mismatch"
+            )
+        if self.pending_event is not None:
+            if (
+                self.pending_event.ordinal != self.next_expected_ordinal
+                or self.pending_event.predecessor_continuation_digest
+                != self._incremental_predecessor_continuation_digest()
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "incremental pending predecessor disagreement"
+                )
+
+    def verify_full_history_boundary(self, boundary: str) -> None:
+        """Reconstruct accepted REAL history and compare incremental state."""
+
+        if not boundary:
+            raise ValueError("full history boundary name is required")
+        try:
+            self._verify_invariants()
+            if self._history_validation_mode != HISTORY_VALIDATION_LEGACY:
+                self._verify_ledger_derived_state()
+        except ProspectiveV2IntegrityError as exc:
+            raise ProspectiveV2IntegrityError(
+                f"full history boundary {boundary} failed: {exc}"
+            ) from exc
+
     def _verify_invariants(
         self, *, allow_unregistered: bool = False
     ) -> None:
@@ -2195,7 +2594,10 @@ class NativeProspectiveAuthorityV2:
                 "accepted REAL physical identity replay"
             )
 
-        self._verify_ledger_derived_state()
+        if self._history_validation_mode == HISTORY_VALIDATION_LEGACY:
+            self._verify_ledger_derived_state()
+        else:
+            self._verify_incremental_history_state()
 
     def _validate_replayed_receipt(
         self, receipt: V2GroundedReceipt, transaction: Mapping[str, Any]
@@ -2321,6 +2723,15 @@ class NativeProspectiveAuthorityV2:
         replay_requests: dict[str, DeferredSpecializationRequest] = {}
         replay_queue: list[str] = []
         replay_lifetime: set[str] = set()
+        if ordered and self.incremental_history_state is None:
+            raise ProspectiveV2IntegrityError(
+                "incremental history missing for accepted REAL events"
+            )
+        replay_history = (
+            self._new_incremental_history_state()
+            if self.incremental_history_state is not None
+            else None
+        )
         for offset, receipt in enumerate(ordered):
             if receipt.ordinal != expected_start + offset:
                 raise ProspectiveV2IntegrityError(
@@ -2350,11 +2761,45 @@ class NativeProspectiveAuthorityV2:
                 )
             self._validate_replayed_receipt(receipt, transaction)
             reference = self.accepted_real_references.get(receipt.receipt_id)
+            if reference is None:
+                raise ProspectiveV2IntegrityError(
+                    "accepted REAL reference is absent"
+                )
             if reference != self._reference_from_v2_receipt(
                 receipt, source_generation=reference.source_generation
             ):
                 raise ProspectiveV2IntegrityError(
                     "accepted REAL reference differs from receipt"
+                )
+            assert replay_history is not None
+            predecessor_digest = (
+                self._incremental_predecessor_digest_from_parts(
+                    history=replay_history,
+                    states=derived,
+                    generation=reference.source_generation,
+                    next_ordinal=receipt.ordinal,
+                    request_ids=tuple(sorted(
+                        replay_queue,
+                        key=lambda request_id: (
+                            replay_requests[
+                                request_id
+                            ].contradiction_ordinal,
+                            replay_requests[
+                                request_id
+                            ].parent_cell_id,
+                        ),
+                    )),
+                    lifetime_requested_parent_ids=tuple(sorted(
+                        replay_lifetime
+                    )),
+                )
+            )
+            if transaction.get(
+                "predecessor_continuation_digest"
+            ) != predecessor_digest:
+                raise ProspectiveV2IntegrityError(
+                    "incremental history predecessor disagreement "
+                    f"at ordinal {receipt.ordinal}"
                 )
             active_derived = {
                 cell_id: state for cell_id, state in derived.items()
@@ -2525,6 +2970,13 @@ class NativeProspectiveAuthorityV2:
             expected_fingerprints[
                 receipt.interaction_fingerprint
             ] = receipt.receipt_id
+            replay_history = self._next_incremental_history_state(
+                replay_history,
+                receipt=receipt,
+                transaction=transaction,
+                reference=reference,
+                emission=expected_emissions[receipt.receipt_id],
+            )
         if derived != self.states:
             raise ProspectiveV2IntegrityError(
                 "mutable authority cache differs from grounded ledger replay"
@@ -2572,6 +3024,10 @@ class NativeProspectiveAuthorityV2:
         if self.lifetime_requested_parent_ids != tuple(sorted(replay_lifetime)):
             raise ProspectiveV2IntegrityError(
                 "lifetime request ledger differs from graph replay"
+            )
+        if replay_history != self.incremental_history_state:
+            raise ProspectiveV2IntegrityError(
+                "incremental history disagreement with complete reconstruction"
             )
         expected_next = expected_start + len(ordered)
         if self.next_expected_ordinal != expected_next:
@@ -2753,6 +3209,7 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError(
                 "first certification event requires closed nomination"
             )
+        self._ensure_incremental_history_initialized()
         before = self.continuation_digest()
         if frame.kind is not FrameKind.REAL:
             raise ProspectiveV2IntegrityError(
@@ -2779,6 +3236,9 @@ class NativeProspectiveAuthorityV2:
             asdict(item) for item in trace.terminal_signals
         ])
         structure_digest = self._structure_invariant_digest()
+        predecessor_continuation_digest = (
+            self._incremental_predecessor_continuation_digest()
+        )
         token = _sha({
             "implementation": IMPLEMENTATION_IDENTITY,
             "ordinal": self.next_expected_ordinal,
@@ -2803,6 +3263,9 @@ class NativeProspectiveAuthorityV2:
             matching_cell_ids=matching,
             matching_cell_digest=_sha(list(matching)),
             structure_invariant_digest=structure_digest,
+            predecessor_continuation_digest=(
+                predecessor_continuation_digest
+            ),
             pending_token=token,
             outcome_terminal_identity=OUTCOME_TERMINAL_IDENTITY,
             environment_outcome_terminal_identity=(
@@ -2933,6 +3396,13 @@ class NativeProspectiveAuthorityV2:
         ):
             raise ProspectiveV2IntegrityError(
                 "wrong or consumed pending token"
+            )
+        if (
+            pending.predecessor_continuation_digest
+            != self._incremental_predecessor_continuation_digest()
+        ):
+            raise ProspectiveV2IntegrityError(
+                "incremental pending predecessor disagreement"
             )
         if receipt.trace.digest() != pending.trace_digest:
             raise ProspectiveV2IntegrityError("trace mismatch")
@@ -3215,11 +3685,18 @@ class NativeProspectiveAuthorityV2:
             *request_parent_ids,
         }))
         self.next_expected_ordinal += 1
-        self.event_transactions[receipt.pending_token] = {
+        transaction = {
             **pending.manifest(),
             "state": "CONSUMED",
             "consumed_receipt_id": receipt.receipt_id,
         }
+        self.event_transactions[receipt.pending_token] = transaction
+        self._append_incremental_history(
+            receipt=receipt,
+            transaction=transaction,
+            reference=reference,
+            emission=emission,
+        )
         self.pending_event = None
         self._verify_invariants()
         return emission
@@ -4542,6 +5019,11 @@ class NativeProspectiveAuthorityV2:
             "discovery_prefix_physical_fingerprint_digest": (
                 self.discovery_prefix_physical_fingerprint_digest
             ),
+            "incremental_history_state": (
+                None
+                if self.incremental_history_state is None
+                else self.incremental_history_state.manifest()
+            ),
             "pending_event": (
                 None if self.pending_event is None
                 else self.pending_event.manifest()
@@ -4573,7 +5055,7 @@ class NativeProspectiveAuthorityV2:
         return _sha(self.continuation_manifest())
 
     def dumps(self) -> bytes:
-        self._verify_invariants()
+        self.verify_full_history_boundary("serialization")
         return pickle.dumps(
             copy.deepcopy(self), protocol=pickle.HIGHEST_PROTOCOL
         )
@@ -4589,7 +5071,7 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError("unsupported V2 schema")
         before = item.continuation_manifest()
         item.base._canonical_rebuild()
-        item._verify_invariants()
+        item.verify_full_history_boundary("restoration")
         if item.continuation_manifest() != before:
             raise ProspectiveV2IntegrityError(
                 "serialization restore changed state"
