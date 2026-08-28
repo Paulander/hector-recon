@@ -8,6 +8,7 @@ import hashlib
 import hmac
 import json
 import pickle
+from types import MappingProxyType
 from typing import Any, Mapping, Sequence
 
 import chess
@@ -63,6 +64,17 @@ HISTORY_VALIDATION_MODES = frozenset({
     HISTORY_VALIDATION_INCREMENTAL,
     HISTORY_VALIDATION_LEGACY,
 })
+# These authority graphs contain immediate terminal leaves under requested OR
+# roots.  A successful component reaches root CONFIRMED by formal tick seven;
+# keep a wider invariant guard so an engine/topology regression fails hard.
+_AUTHORITY_COMPONENT_MAX_TICKS = 32
+_AUTHORITY_SETTLED_STATES = frozenset({
+    NodeState.CONFIRMED,
+    NodeState.FAILED,
+})
+_AUTHORITY_TERMINAL_CACHE_ENV_KEY = (
+    "__native_v2_authority_terminal_evaluation_cache__"
+)
 
 
 def _json(value: Any) -> bytes:
@@ -920,13 +932,12 @@ def _cell_topology_identity(cell_id: str) -> str:
     })
 
 
-def _structural_pattern_matches(
-    cell_id: str,
+def _structural_match_descriptors(
     states: Mapping[str, ProspectiveAuthorityState],
-    active_signal_ids: Sequence[str],
-    visiting: frozenset[str] = frozenset(),
-) -> bool:
-    descriptors = {
+) -> Mapping[str, StructuralMatchDescriptor]:
+    """Freeze the graph-call structural input consumed by all terminals."""
+
+    return MappingProxyType({
         item_id: StructuralMatchDescriptor(
             cell_id=item_id,
             members=value.hypothesis.members,
@@ -940,7 +951,17 @@ def _structural_pattern_matches(
             hypothesis_digest=value.hypothesis.hypothesis_digest,
         )
         for item_id, value in states.items()
-    }
+    })
+
+
+def _structural_pattern_matches_descriptors(
+    cell_id: str,
+    descriptors: Mapping[str, StructuralMatchDescriptor],
+    active_signal_ids: Sequence[str],
+    visiting: frozenset[str] = frozenset(),
+) -> bool:
+    """Invoke the canonical matcher with V2's fail-hard error type."""
+
     try:
         return canonical_structural_pattern_matches(
             cell_id,
@@ -952,12 +973,212 @@ def _structural_pattern_matches(
         raise ProspectiveV2IntegrityError(str(exc)) from exc
 
 
+def _structural_pattern_matches(
+    cell_id: str,
+    states: Mapping[str, ProspectiveAuthorityState],
+    active_signal_ids: Sequence[str],
+    visiting: frozenset[str] = frozenset(),
+) -> bool:
+    return _structural_pattern_matches_descriptors(
+        cell_id,
+        _structural_match_descriptors(states),
+        active_signal_ids,
+        visiting,
+    )
+
+
+@dataclass
+class _StructuralPatternMatchCache:
+    """Call-local top-level memo around the canonical semantic source."""
+
+    descriptors: Mapping[str, StructuralMatchDescriptor]
+    active_signal_ids: frozenset[str]
+    matches: dict[str, bool] = field(default_factory=dict)
+
+    def match(
+        self,
+        cell_id: str,
+        visiting: frozenset[str] = frozenset(),
+    ) -> bool:
+        if not visiting and cell_id in self.matches:
+            return self.matches[cell_id]
+        result = _structural_pattern_matches_descriptors(
+            cell_id,
+            self.descriptors,
+            tuple(self.active_signal_ids),
+            visiting,
+        )
+        if not visiting:
+            self.matches[cell_id] = result
+        return result
+
+
 def _receipt_supports(
     state: ProspectiveAuthorityState, receipt: V2GroundedReceipt
 ) -> bool:
     return receipt.observed_outcome == (
         state.hypothesis.polarity is AvailabilityState.AVAILABLE
     )
+
+
+@dataclass(frozen=True)
+class _AuthorityCellFacts:
+    """One terminal-owned evaluation shared by a cell's eight role leaves."""
+
+    commitment: bool
+    available: bool
+    refuted: bool
+    support: bool
+    contradiction: bool
+    maturity: bool
+    revocation: bool
+    specialization_request: bool
+
+    def confirms(self, role: str) -> bool:
+        if role not in CELL_AUTHORITY_ROLES:
+            raise KeyError(role)
+        return bool(getattr(self, role))
+
+
+@dataclass
+class _AuthorityTerminalEvaluationCache:
+    """Graph-call-local common facts; never an injected authority-ID set."""
+
+    snapshot: AuthorityMeasurementSnapshot
+    states: Mapping[str, ProspectiveAuthorityState]
+    specialization_mode: SpecializationMode
+    lifetime_requested_parent_ids: frozenset[str]
+    structural_matches: _StructuralPatternMatchCache
+    facts: dict[str, _AuthorityCellFacts] = field(default_factory=dict)
+    failures: dict[str, Exception] = field(default_factory=dict)
+
+    @classmethod
+    def from_environment(
+        cls,
+        snapshot: AuthorityMeasurementSnapshot,
+        states: Mapping[str, ProspectiveAuthorityState],
+        env: Mapping[str, Any],
+    ) -> _AuthorityTerminalEvaluationCache:
+        return cls(
+            snapshot=snapshot,
+            states=states,
+            specialization_mode=SpecializationMode(env.get(
+                "specialization_mode", SpecializationMode.DISCONNECTED.value
+            )),
+            lifetime_requested_parent_ids=frozenset(
+                env.get("lifetime_requested_parent_ids", ())
+            ),
+            structural_matches=_StructuralPatternMatchCache(
+                descriptors=_structural_match_descriptors(states),
+                active_signal_ids=frozenset(
+                    snapshot.trace.ordered_signal_identities
+                ),
+            ),
+        )
+
+    def facts_for(self, cell_id: str) -> _AuthorityCellFacts:
+        if cell_id in self.facts:
+            return self.facts[cell_id]
+        if cell_id in self.failures:
+            raise self.failures[cell_id]
+        try:
+            state = self.states.get(cell_id)
+            if not isinstance(state, ProspectiveAuthorityState):
+                raise ProspectiveV2IntegrityError(
+                    "authority cell state is unavailable"
+                )
+            matched = self.structural_matches.match(cell_id)
+            receipt = self.snapshot.grounded_receipt
+            post_frontier = bool(
+                receipt is not None
+                and receipt.receipt_id
+                and receipt.ordinal > state.hypothesis.certification_frontier
+                and receipt.receipt_id
+                not in state.hypothesis.discovery_exclusion_receipt_ids
+            )
+            supports = bool(
+                post_frontier
+                and receipt is not None
+                and _receipt_supports(state, receipt)
+            )
+            contradicts = bool(post_frontier and not supports)
+            projected_support = state.support + int(post_frontier)
+            projected_successes = state.successes + int(supports)
+            projected_contradictions = (
+                state.contradictions + int(contradicts)
+            )
+            projected_success_lower = wilson_lower_bound(
+                projected_successes, projected_support, WILSON_Z
+            )
+            result = _AuthorityCellFacts(
+                commitment=matched,
+                available=(
+                    matched and state.prospectively_certified
+                    and state.hypothesis.polarity
+                    is AvailabilityState.AVAILABLE
+                ),
+                refuted=(
+                    matched and state.prospectively_certified
+                    and state.hypothesis.polarity
+                    is AvailabilityState.REFUTED
+                ),
+                support=matched and supports,
+                contradiction=matched and contradicts,
+                maturity=(
+                    matched and supports
+                    and not state.prospectively_certified
+                    and projected_successes >= MIN_SUPPORT
+                    and projected_contradictions == 0
+                    and projected_success_lower >= LOWER_BOUND
+                ),
+                revocation=(
+                    matched and contradicts and state.prospectively_certified
+                ),
+                specialization_request=(
+                    matched
+                    and contradicts
+                    and state.prospectively_certified
+                    and state.hypothesis.specialization_depth == 0
+                    and state.hypothesis.dormant_origin
+                    is DormantOrigin.MIXED_OUTCOME_SHADOW
+                    and cell_id not in self.lifetime_requested_parent_ids
+                    and self.specialization_mode
+                    is not SpecializationMode.DISCONNECTED
+                ),
+            )
+        except Exception as exc:
+            # The formal engine turns predicate exceptions into FAILED leaves.
+            # Re-raising the same cached failure preserves that behavior for
+            # every role without repeating an invalid structural traversal.
+            self.failures[cell_id] = exc
+            raise
+        self.facts[cell_id] = result
+        return result
+
+
+def _authority_terminal_evaluation_cache(
+    env: Mapping[str, Any],
+    snapshot: AuthorityMeasurementSnapshot,
+    states: Mapping[str, ProspectiveAuthorityState],
+) -> _AuthorityTerminalEvaluationCache:
+    root_env = env.get("__root_env__")
+    owner = root_env if isinstance(root_env, dict) else env
+    cached = owner.get(_AUTHORITY_TERMINAL_CACHE_ENV_KEY)
+    if cached is None:
+        cached = _AuthorityTerminalEvaluationCache.from_environment(
+            snapshot, states, env
+        )
+        if isinstance(owner, dict):
+            owner[_AUTHORITY_TERMINAL_CACHE_ENV_KEY] = cached
+    if not isinstance(cached, _AuthorityTerminalEvaluationCache):
+        raise ProspectiveV2IntegrityError(
+            "invalid authority terminal evaluation cache"
+        )
+    if cached.snapshot is not snapshot or cached.states is not states:
+        raise ProspectiveV2IntegrityError(
+            "authority terminal evaluation cache crossed graph calls"
+        )
+    return cached
 
 
 def _authority_terminal(
@@ -975,62 +1196,8 @@ def _authority_terminal(
     state = states.get(cell_id)
     if not isinstance(state, ProspectiveAuthorityState):
         return True, False
-    matched = _structural_pattern_matches(
-        cell_id, states, snapshot.trace.ordered_signal_identities
-    )
-    receipt = snapshot.grounded_receipt
-    post_frontier = (
-        receipt is not None
-        and bool(receipt.receipt_id)
-        and receipt.ordinal > state.hypothesis.certification_frontier
-        and receipt.receipt_id not in state.hypothesis.discovery_exclusion_receipt_ids
-    )
-    supports = bool(
-        post_frontier and receipt is not None
-        and _receipt_supports(state, receipt)
-    )
-    contradicts = bool(post_frontier and not supports)
-    projected_support = state.support + int(post_frontier)
-    projected_successes = state.successes + int(supports)
-    projected_contradictions = state.contradictions + int(contradicts)
-    projected_success_lower = wilson_lower_bound(
-        projected_successes, projected_support, WILSON_Z
-    )
-    values = {
-        "commitment": matched,
-        "available": (
-            matched and state.prospectively_certified
-            and state.hypothesis.polarity is AvailabilityState.AVAILABLE
-        ),
-        "refuted": (
-            matched and state.prospectively_certified
-            and state.hypothesis.polarity is AvailabilityState.REFUTED
-        ),
-        "support": matched and supports,
-        "contradiction": matched and contradicts,
-        "maturity": (
-            matched and supports and not state.prospectively_certified
-            and projected_successes >= MIN_SUPPORT
-            and projected_contradictions == 0
-            and projected_success_lower >= LOWER_BOUND
-        ),
-        "revocation": (
-            matched and contradicts and state.prospectively_certified
-        ),
-        "specialization_request": (
-            matched
-            and contradicts
-            and state.prospectively_certified
-            and state.hypothesis.specialization_depth == 0
-            and state.hypothesis.dormant_origin
-            is DormantOrigin.MIXED_OUTCOME_SHADOW
-            and cell_id not in set(env.get("lifetime_requested_parent_ids", ()))
-            and SpecializationMode(env.get(
-                "specialization_mode", SpecializationMode.DISCONNECTED.value
-            )) is not SpecializationMode.DISCONNECTED
-        ),
-    }
-    confirmed = bool(values[role])
+    facts = _authority_terminal_evaluation_cache(env, snapshot, states)
+    confirmed = facts.facts_for(cell_id).confirms(role)
     node.activation.value = 1.0 if confirmed else 0.0
     return True, confirmed
 
@@ -1116,6 +1283,85 @@ def _build_authority_graph(
             ))
             graph.add_hierarchy_pair(ROLE_ROOTS[role], node_id)
     return graph
+
+
+def _authority_component_nodes(
+    graph: Graph,
+    root_ids: Sequence[str],
+) -> frozenset[str]:
+    """Return the requested authority stars and reject malformed components."""
+
+    active: set[str] = set()
+    for root_id in root_ids:
+        root = graph.nodes.get(root_id)
+        if root is None or root.ntype is not NodeType.SCRIPT:
+            raise ProspectiveV2IntegrityError(
+                f"authority component root is unavailable: {root_id}"
+            )
+        children = tuple(graph.children(root_id))
+        if not children:
+            raise ProspectiveV2IntegrityError(
+                f"authority component has no terminals: {root_id}"
+            )
+        if any(
+            graph.nodes.get(child_id) is None
+            or graph.nodes[child_id].ntype is not NodeType.TERMINAL
+            for child_id in children
+        ):
+            raise ProspectiveV2IntegrityError(
+                f"authority component is not a terminal star: {root_id}"
+            )
+        active.add(root_id)
+        active.update(children)
+    return frozenset(active)
+
+
+def _authority_component_settled(
+    engine: FormalReConEngine,
+    active_nodes: frozenset[str],
+) -> bool:
+    """All requested roots and leaves reached graph-absorbing states."""
+
+    return all(
+        engine.g.nodes[node_id].state in _AUTHORITY_SETTLED_STATES
+        for node_id in active_nodes
+    )
+
+
+def _run_authority_component(
+    graph: Graph,
+    root_ids: Sequence[str],
+    *,
+    env: Mapping[str, Any],
+) -> FormalReConEngine:
+    """Execute immediate authority stars to absorption or fail hard."""
+
+    roots = tuple(root_ids)
+    active_nodes = _authority_component_nodes(graph, roots)
+    engine = FormalReConEngine(graph, record_trace=False)
+    for root_id in roots:
+        engine.request(root_id)
+    engine.run(
+        max_ticks=_AUTHORITY_COMPONENT_MAX_TICKS,
+        env=dict(env),
+        until=lambda current: _authority_component_settled(
+            current, active_nodes
+        ),
+        active_nodes=active_nodes,
+    )
+    if not _authority_component_settled(engine, active_nodes):
+        unsettled = tuple(sorted(
+            (node_id, graph.nodes[node_id].state.name)
+            for node_id in active_nodes
+            if graph.nodes[node_id].state not in _AUTHORITY_SETTLED_STATES
+        ))
+        raise ProspectiveV2IntegrityError(
+            "authority graph did not settle within fail-hard cap: "
+            f"{unsettled}"
+        )
+    return engine
+
+
 def _predicate_identity(predicate: Any) -> str | None:
     if predicate is None:
         return None
@@ -1174,11 +1420,9 @@ def _run_authority_graph(
         }
     specialization_mode = SpecializationMode(specialization_mode)
     graph = _build_authority_graph(states)
-    engine = FormalReConEngine(graph, record_trace=False)
-    for role in CELL_AUTHORITY_ROLES:
-        engine.request(ROLE_ROOTS[role])
-    engine.run(
-        max_ticks=max(32, len(states) * len(AUTHORITY_ROLES) * 4),
+    _run_authority_component(
+        graph,
+        tuple(ROLE_ROOTS[role] for role in CELL_AUTHORITY_ROLES),
         env={
             "authority_snapshot": snapshot,
             "authority_states": states,
@@ -1216,6 +1460,9 @@ def _run_authority_graph(
                 "authority_role": "specialization_eligibility",
             },
         ))
+        eligibility_plans: list[
+            tuple[str, tuple[str, ...], tuple[str, ...]]
+        ] = []
         for parent_id in request_parents:
             state = states[parent_id]
             implied_ids = _recursively_implied_signal_ids(parent_id, states)
@@ -1237,7 +1484,6 @@ def _run_authority_graph(
                     reference, identity
                 )
             }))
-            terminal_rows: list[SpecializationCandidateTerminalState] = []
             for identity in vocabulary:
                 occurrence_refs = tuple(
                     reference for reference in support_refs
@@ -1293,25 +1539,24 @@ def _run_authority_graph(
                 graph.add_hierarchy_pair(
                     ROLE_ROOTS["specialization_eligibility"], node_id
                 )
-            if vocabulary:
-                eligibility_engine = FormalReConEngine(
-                    graph, record_trace=False
-                )
-                for runtime_node in graph.nodes.values():
-                    runtime_node.state = NodeState.INACTIVE
-                    runtime_node.tick_entered = -1
-                    runtime_node.activation.reset()
-                eligibility_engine.request(
-                    ROLE_ROOTS["specialization_eligibility"]
-                )
-                eligibility_engine.run(
-                    max_ticks=max(32, len(vocabulary) * 4),
-                    env={},
-                )
             inspected = tuple(sorted({
                 *support_ids,
                 *(() if receipt is None else (receipt.receipt_id,)),
             }))
+            eligibility_plans.append((parent_id, vocabulary, inspected))
+
+        if any(
+            vocabulary
+            for _parent, vocabulary, _inspected in eligibility_plans
+        ):
+            _run_authority_component(
+                graph,
+                (ROLE_ROOTS["specialization_eligibility"],),
+                env={},
+            )
+
+        for parent_id, vocabulary, inspected in eligibility_plans:
+            terminal_rows: list[SpecializationCandidateTerminalState] = []
             for identity in vocabulary:
                 token = hashlib.sha256(
                     f"{parent_id}|{identity}".encode("utf-8")
