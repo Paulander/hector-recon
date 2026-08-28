@@ -174,3 +174,23 @@ current implementation commit.
 - Decision: preserve this failed attempt; rerun the exact epoch-1 gate from a
   fresh output directory before any bounded two-hour continuation. Scope remains
   `DEVELOPMENT_VIEWED_NOT_SCIENTIFIC`.
+
+### Exact epoch-1 preflight at `a998acda` — performance-gate stop
+
+- Conditions: same fixed seed/pools and `1 s` cooperative / `2700 s` external
+  ceilings as above; duplicate-index repair present; clean tracked tree.
+- Result: R0 again passed at epoch 72 with validation/regression `1.0/1.0`.
+  The external watchdog stopped the process before an epoch-1 R1 snapshot; only
+  the atomic R0 progress record exists. The prior schema exception did not recur.
+- Diagnosis: each V3 continuation manifest recomputed the complete frozen-R0
+  persistent audit four times; one REAL transaction invoked five manifests in a
+  synthetic profile, hence 20 audits. Those audits deep-copy, scan, pickle, and
+  hash the learned graph. This is finite repeated work, not nontermination.
+- Exact repair canary: compute one four-component identity audit per manifest,
+  while retaining the unchanged six-component full audit at trust boundaries.
+  Three synthetic manifests improved `0.1592 -> 0.0136 s`; one REAL transaction
+  improved `0.4552 -> 0.2277 s`. Manifest identity matched the full audit.
+- Validation: data-free handover `7 passed`; combined authority-settlement,
+  incremental-history, and intrinsic suites `50 passed in 69.38 s`.
+- Decision: rerun the same exact epoch-1 gate from the repaired committed source;
+  do not launch the two-hour continuation unless its atomic snapshot passes.

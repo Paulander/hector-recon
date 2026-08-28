@@ -492,6 +492,7 @@ class TraceNativeCompetenceOrganism:
         self.validate_prospective_discovery_epoch()
         canonical_envelope = copy.deepcopy(self.envelope)
         canonical_envelope.rebuild_graph()
+        r0_persistent_state = self.r0.persistent_identity_audit()
         cell_state_hashes = {
             cell_id: _sha256_json(_canonical_persistent_value(cell))
             for cell_id, cell in sorted(canonical_envelope.cells.items())
@@ -526,7 +527,7 @@ class TraceNativeCompetenceOrganism:
                 for key, value in sorted(self.observation_emissions.items())
             },
             "r0_persistent_state": {
-                key: self.r0.persistent_state_audit()[key]
+                key: r0_persistent_state[key]
                 for key in (
                     "topology_sha256", "weights_sha256", "credit_sha256",
                     "lifecycle_sha256",

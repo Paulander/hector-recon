@@ -248,6 +248,34 @@ def test_v2_predecessor_index_uses_receipt_ledgers_and_round_trips() -> None:
     assert _v2_authoritative_predecessor_fens(restored) == frozenset(expected)
 
 
+def test_v3_manifest_computes_the_r0_identity_audit_once(monkeypatch) -> None:
+    source = _synthetic_authority().base
+    expected = source.continuation_manifest_v3()
+    full_audit = source.r0.persistent_state_audit()
+    r0_type = type(source.r0)
+    original = r0_type.persistent_identity_audit
+    calls = 0
+
+    def counted_audit(self):
+        nonlocal calls
+        calls += 1
+        return original(self)
+
+    monkeypatch.setattr(r0_type, "persistent_identity_audit", counted_audit)
+
+    assert source.continuation_manifest_v3() == expected
+    assert calls == 1
+    assert expected["r0_persistent_state"] == {
+        key: full_audit[key]
+        for key in (
+            "topology_sha256",
+            "weights_sha256",
+            "credit_sha256",
+            "lifecycle_sha256",
+        )
+    }
+
+
 def test_incremental_and_complete_replay_are_exact_after_every_event() -> None:
     initial = _synthetic_authority()
     incremental = copy.deepcopy(initial)

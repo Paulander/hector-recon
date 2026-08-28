@@ -326,21 +326,9 @@ class NativeR0Organism:
         if not hasattr(self, "_trace_state_identity_cache"):
             self.trace_state_identity()
 
-    def persistent_state_audit(self) -> Mapping[str, str]:
-        """Hash every persistent component, including unnormalized runtime fields."""
+    def persistent_identity_audit(self) -> Mapping[str, str]:
+        """Hash the four persistent components used by trace identity."""
 
-        exact_graph = copy.deepcopy(self.graph)
-        for node in exact_graph.graph.nodes.values():
-            node.predicate = None
-        exact_payload = {
-            "graph_dict": exact_graph.__dict__,
-            "credit": copy.deepcopy(self.credit),
-            "provenance": self.provenance,
-            "frozen_triplet_ids": self.frozen_triplet_ids,
-            "source_manifest": dict(self.source_manifest),
-            "retrieval_budget": self.retrieval_budget_per_actuator,
-            "schema_version": self.schema_version,
-        }
         topology = {
             "nodes": sorted(
                 (nid, node.ntype.name)
@@ -392,15 +380,46 @@ class NativeR0Organism:
             ),
             "provenance": asdict(self.provenance),
         }
+
         def digest(value: Any) -> str:
             return hashlib.sha256(
                 pickle.dumps(value, protocol=pickle.HIGHEST_PROTOCOL)
             ).hexdigest()
+
         return {
             "topology_sha256": digest(topology),
             "weights_sha256": digest(weights),
             "credit_sha256": digest(self.credit),
             "lifecycle_sha256": digest(lifecycle),
+        }
+
+    def persistent_state_audit(self) -> Mapping[str, str]:
+        """Hash every persistent component, including unnormalized runtime fields."""
+
+        exact_graph = copy.deepcopy(self.graph)
+        for node in exact_graph.graph.nodes.values():
+            node.predicate = None
+        exact_payload = {
+            "graph_dict": exact_graph.__dict__,
+            "credit": copy.deepcopy(self.credit),
+            "provenance": self.provenance,
+            "frozen_triplet_ids": self.frozen_triplet_ids,
+            "source_manifest": dict(self.source_manifest),
+            "retrieval_budget": self.retrieval_budget_per_actuator,
+            "schema_version": self.schema_version,
+        }
+
+        def digest(value: Any) -> str:
+            return hashlib.sha256(
+                pickle.dumps(value, protocol=pickle.HIGHEST_PROTOCOL)
+            ).hexdigest()
+
+        identity = self.persistent_identity_audit()
+        return {
+            "topology_sha256": identity["topology_sha256"],
+            "weights_sha256": identity["weights_sha256"],
+            "credit_sha256": identity["credit_sha256"],
+            "lifecycle_sha256": identity["lifecycle_sha256"],
             "exact_state_sha256": digest(exact_payload),
             "serialized_state_sha256": hashlib.sha256(
                 pickle.dumps(self, protocol=pickle.HIGHEST_PROTOCOL)
@@ -410,7 +429,7 @@ class NativeR0Organism:
         cached = getattr(self, "_trace_state_identity_cache", None)
         if cached is not None:
             return str(cached)
-        audit = self.persistent_state_audit()
+        audit = self.persistent_identity_audit()
         payload = {key: audit[key] for key in (
             "topology_sha256", "weights_sha256", "credit_sha256",
             "lifecycle_sha256",
