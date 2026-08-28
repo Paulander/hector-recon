@@ -3728,8 +3728,20 @@ class NativeProspectiveAuthorityV2:
     ) -> V2CertificationEmission:
         """Atomically consume one REAL result; never materialize a child."""
 
-        candidate = copy.deepcopy(self)
-        result = candidate._consume_in_place(receipt)
+        frozen_r0 = self.base.r0
+        frozen_r0_guard = frozen_r0.inference_guard_identity()
+        candidate = copy.deepcopy(self, {id(frozen_r0): frozen_r0})
+        if candidate.base.r0 is not frozen_r0:
+            raise ProspectiveV2IntegrityError(
+                "REAL transaction failed to share the frozen R0 source"
+            )
+        try:
+            result = candidate._consume_in_place(receipt)
+        finally:
+            if frozen_r0.inference_guard_identity() != frozen_r0_guard:
+                raise ProspectiveV2IntegrityError(
+                    "REAL transaction mutated its shared frozen R0 source"
+                )
         self.__dict__.clear()
         self.__dict__.update(candidate.__dict__)
         return result
@@ -5102,8 +5114,10 @@ class NativeProspectiveAuthorityV2:
                 "virtual capability requires VIRTUAL frame"
             )
         session = self.base.dream_session()
-        raw = session.request(frame)
-        session.close()
+        try:
+            raw = session.request(frame)
+        finally:
+            session.close()
         trace = raw.graph_signal_trace
         if raw.actuation is not None and trace is None:
             raise ProspectiveV2IntegrityError(

@@ -4,6 +4,7 @@ import copy
 from pathlib import Path
 
 import chess
+import pytest
 
 from recon_lite import ChildResponse, FrameContext, FrameKind
 from recon_lite_hector.learning import IntrinsicCreditConfig, IntrinsicCreditEngine
@@ -97,6 +98,107 @@ def test_actual_child_query_is_deep_isolated_and_does_not_verify_dream_outcome()
     assert query.persistent_mutation_count == 0
     assert organism.graph.to_dict() == graph_before
     assert board.fen() == MATE_ONE
+
+
+def test_dream_session_uses_projected_guard_not_full_serialization(
+    monkeypatch,
+) -> None:
+    organism = _tiny_organism()
+    frame = FrameContext(
+        "projected-guard",
+        FrameKind.VIRTUAL,
+        {"board": chess.Board(MATE_ONE)},
+    )
+    original_guard = organism.inference_guard_identity
+    calls = 0
+
+    def counted_guard() -> str:
+        nonlocal calls
+        calls += 1
+        return original_guard()
+
+    def forbidden_full_audit():
+        raise AssertionError("dream hot path used the full serialization audit")
+
+    monkeypatch.setattr(organism, "inference_guard_identity", counted_guard)
+    monkeypatch.setattr(organism, "persistent_state_audit", forbidden_full_audit)
+    session = organism.dream_session()
+    try:
+        query = session.request(frame)
+    finally:
+        session.close()
+
+    assert query.persistent_mutation_count == 0
+    assert calls == 3
+
+
+def test_dream_session_guard_detects_static_source_manifest_mutation() -> None:
+    organism = _tiny_organism()
+    session = organism.dream_session()
+    organism.source_manifest["unexpected_mutation"] = True
+
+    with pytest.raises(RuntimeError, match="mutated the persistent organism"):
+        session.request(FrameContext(
+            "manifest-mutation",
+            FrameKind.VIRTUAL,
+            {"board": chess.Board(MATE_ONE)},
+        ))
+
+
+def test_dream_session_guard_detects_inference_metadata_mutation() -> None:
+    organism = _tiny_organism()
+    session = organism.dream_session()
+    action_node = next(
+        node for node in organism.graph.graph.nodes.values()
+        if "action_uci" in node.meta
+    )
+    original = str(action_node.meta["action_uci"])
+    action_node.meta["action_uci"] = (
+        "a1a2" if original != "a1a2" else "a1a3"
+    )
+
+    with pytest.raises(RuntimeError, match="mutated the persistent organism"):
+        session.request(FrameContext(
+            "action-metadata-mutation",
+            FrameKind.VIRTUAL,
+            {"board": chess.Board(MATE_ONE)},
+        ))
+
+
+def test_inference_guard_binds_composite_trace_index() -> None:
+    organism = _tiny_organism()
+    before = organism.inference_guard_identity()
+    organism.graph.composite_node_by_triplet[(
+        "unexpected-composite", "unexpected-triplet"
+    )] = "unexpected-node"
+
+    assert organism.inference_guard_identity() != before
+
+
+def test_inference_guard_binds_behavioral_graph_adjacency() -> None:
+    organism = _tiny_organism()
+    before = organism.inference_guard_identity()
+    key = next(iter(organism.graph.graph.out))
+    organism.graph.graph.out[key] = []
+
+    assert organism.inference_guard_identity() != before
+
+
+def test_inference_guard_binds_node_object_identity() -> None:
+    organism = _tiny_organism()
+    before = organism.inference_guard_identity()
+    node = next(iter(organism.graph.graph.nodes.values()))
+    node.nid = "mutated-node-identity"
+
+    assert organism.inference_guard_identity() != before
+
+
+def test_inference_guard_binds_cached_trace_identity() -> None:
+    organism = _tiny_organism()
+    before = organism.inference_guard_identity()
+    organism._trace_state_identity_cache = "mutated-trace-identity"
+
+    assert organism.inference_guard_identity() != before
 
 
 class _PlantedTestChild:

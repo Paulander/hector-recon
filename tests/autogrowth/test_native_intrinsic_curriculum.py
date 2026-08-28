@@ -2,9 +2,14 @@ from __future__ import annotations
 
 from collections import Counter
 import copy
+from dataclasses import replace
 import hashlib
+import os
 from pathlib import Path
 import pickle
+import subprocess
+import sys
+import textwrap
 from types import SimpleNamespace
 
 import chess
@@ -44,6 +49,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _r0_available,
     _r0_available_with_dispatch_cache,
     _r1_orbit_key,
+    _r1_snapshot_fingerprint,
     _replay_r0,
     _restore_disabled_composites,
     _run_r1_arm,
@@ -302,6 +308,73 @@ def test_native_graph_pickle_roundtrip_restores_runtime_predicates() -> None:
         for node in restored.graph.nodes.values()
         if node.ntype.name == "TERMINAL"
     )
+    assert all(
+        edge is restored.graph.edge_by_key[
+            (edge.src, edge.dst, edge.ltype)
+        ]
+        for edges in restored.triplet_trainable_edges.values()
+        for edge in edges
+    )
+    triplet_id = min(restored.triplet_trainable_edges)
+    indexed_edge = restored.triplet_trainable_edges[triplet_id][0]
+    canonical_edge = restored.graph.edge_by_key[
+        (indexed_edge.src, indexed_edge.dst, indexed_edge.ltype)
+    ]
+    before_weight = float(canonical_edge.w)
+    restored._apply_m3(triplet_id, reward=1.0)
+    assert indexed_edge is canonical_edge
+    assert float(canonical_edge.w) != before_weight
+
+
+def test_native_graph_restores_legacy_detached_trainable_edge_index() -> None:
+    graph = _graph()
+    board = chess.Board(MATE_ONE_FEN)
+    graph.ensure_triplet(
+        board,
+        min(board.legal_moves, key=lambda item: item.uci()),
+        stage="legacy_snapshot_alias_test",
+    )
+    legacy_state = dict(graph.__dict__)
+    legacy_state["graph"] = copy.deepcopy(graph.graph)
+    legacy_state["snapshot_schema_version"] = "native_recon_krk_graph.v1"
+    assert any(
+        edge is not legacy_state["graph"].edge_by_key[
+            (edge.src, edge.dst, edge.ltype)
+        ]
+        for edges in legacy_state["triplet_trainable_edges"].values()
+        for edge in edges
+    )
+
+    restored = object.__new__(NativeReConKRKGraph)
+    restored.__setstate__(legacy_state)
+
+    assert all(
+        edge is restored.graph.edge_by_key[
+            (edge.src, edge.dst, edge.ltype)
+        ]
+        for edges in restored.triplet_trainable_edges.values()
+        for edge in edges
+    )
+
+
+def test_native_graph_semantic_manifest_excludes_only_runtime_diagnostics() -> None:
+    graph = _graph()
+    board = chess.Board(MATE_ONE_FEN)
+    graph.ensure_triplet(
+        board,
+        min(board.legal_moves, key=lambda item: item.uci()),
+        stage="semantic_manifest_test",
+    )
+    before = graph.canonical_semantic_manifest()
+    node = next(iter(graph.graph.nodes.values()))
+    node.meta["activation_count"] = 999
+    node.meta["choice_selected"] = True
+    graph.runtime_choice_count = 999
+    graph.scheduler_stats["choose_calls"] = 999
+    assert graph.canonical_semantic_manifest() == before
+
+    node.meta["action_uci"] = "a1a2"
+    assert graph.canonical_semantic_manifest() != before
 
 
 def test_frozen_policy_token_cache_matches_live_formal_confirmation() -> None:
@@ -959,7 +1032,11 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
             _FakeV2Authority(certify_after=1) if v2_enabled else None
         ),
         max_epochs=4,
-        config=resume_config,
+        config=replace(
+            resume_config,
+            development_wall_ceiling_seconds=10_000.0,
+            development_peak_rss_ceiling_mib=4_096.0,
+        ),
     )
 
     ignored_training_keys = {
@@ -982,6 +1059,9 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
     assert resumed["regression"] == uninterrupted["regression"]
     assert resumed["r0_retention"] == uninterrupted["r0_retention"]
     assert resumed_graph.learned_state_audit() == uninterrupted_graph.learned_state_audit()
+    assert resumed_graph.canonical_semantic_manifest() == (
+        uninterrupted_graph.canonical_semantic_manifest()
+    )
     assert resumed_credit.snapshot() == uninterrupted_credit.snapshot()
     assert resumed["training"]["resumed_from_snapshot"] is True
     if v2_enabled:
@@ -996,6 +1076,178 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(
         Path(path).exists()
         for path in resumed["training"]["history_snapshot_paths"]
     )
+
+
+def test_r1_snapshot_fingerprint_ignores_only_operational_controls(tmp_path) -> None:
+    graph = _graph()
+    board = chess.Board(MATE_ONE_FEN)
+    graph.ensure_triplet(
+        board,
+        min(board.legal_moves, key=lambda item: item.uci()),
+        stage="fingerprint_test",
+    )
+    r0_triplets = frozenset(graph.triplet_ids)
+    graph.freeze_existing_parameters(reason="fingerprint_test")
+    credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
+    credit.register(R0_COMPETENCE_ID, mature=True)
+    gate = OutcomeCalibratedPrototypeGate(
+        feature_names=("probe",),
+        offsets=(0.0,),
+        scales=(1.0,),
+        prototypes=((0.0,), (1.0,)),
+        outcomes=(False, True),
+        neighbors=1,
+        threshold=0.5,
+        train_metrics={},
+        validation_metrics={},
+        mature=True,
+    )
+    pools = _Pools(
+        r0_train=(MATE_ONE_FEN,),
+        r0_validation=(MATE_ONE_FEN,),
+        r0_regression=(MATE_ONE_FEN,),
+        gate_train_decoys=(),
+        gate_validation_decoys=(),
+        gate_regression_decoys=(),
+        r1_train=(R1_RETIRED_DEVELOPMENT_FENS[0],),
+        r1_validation=(R1_RETIRED_DEVELOPMENT_FENS[1],),
+        r1_regression=(R1_RETIRED_DEVELOPMENT_FENS[2],),
+        r0_train_strata=("test",),
+        r0_validation_strata=("test",),
+        r0_regression_strata=("test",),
+        r0_excluded_fens=(),
+        r0_pool_mode="test",
+        r1_train_strata=("test",),
+        r1_validation_strata=("test",),
+        r1_regression_strata=("test",),
+        r1_pool_mode="test",
+    )
+    arm = R1MechanisticArm(name="no_bootstrap", bootstrap_enabled=False)
+    config = NativeIntrinsicCurriculumConfig(
+        output_path=str(tmp_path / "one" / "result.json"),
+        progress_path=str(tmp_path / "one" / "progress.json"),
+        r1_snapshot_dir=str(tmp_path / "one" / "snapshots"),
+        resume_r1_snapshots=False,
+        r1_keep_checkpoint_history=True,
+        max_samples=1,
+        development_wall_ceiling_seconds=1.0,
+        development_peak_rss_ceiling_mib=512.0,
+    )
+
+    def fingerprint(candidate: NativeIntrinsicCurriculumConfig) -> str:
+        return _r1_snapshot_fingerprint(
+            graph,
+            credit,
+            gate,
+            pools,
+            arm_name=arm.name,
+            arm_spec=arm,
+            r0_child_triplet_ids=r0_triplets,
+            r0_child_authority_digest="authority-digest",
+            config=candidate,
+        )
+
+    operationally_changed = replace(
+        config,
+        output_path=str(tmp_path / "two" / "result.json"),
+        progress_path=str(tmp_path / "two" / "progress.json"),
+        r1_snapshot_dir=str(tmp_path / "two" / "snapshots"),
+        resume_r1_snapshots=True,
+        r1_keep_checkpoint_history=False,
+        max_samples=0,
+        development_wall_ceiling_seconds=7_200.0,
+        development_peak_rss_ceiling_mib=8_192.0,
+    )
+    assert fingerprint(operationally_changed) == fingerprint(config)
+    assert fingerprint(replace(config, eta_m3=config.eta_m3 / 2.0)) != fingerprint(
+        config
+    )
+    before_metadata_change = fingerprint(config)
+    action_node = next(
+        node for node in graph.graph.nodes.values()
+        if "action_uci" in node.meta
+    )
+    original_action = str(action_node.meta["action_uci"])
+    action_node.meta["action_uci"] = (
+        "a1a2" if original_action != "a1a2" else "a1a3"
+    )
+    after_metadata_change = fingerprint(config)
+    assert after_metadata_change != before_metadata_change
+    triplet_id = min(graph.triplet_ids)
+    graph.triplet_pattern_key_cache[triplet_id] = {
+        "resume-cache-sensitivity"
+    }
+    after_cache_change = fingerprint(config)
+    assert after_cache_change != after_metadata_change
+    credit.event_index += 1
+    assert fingerprint(config) != after_cache_change
+
+
+def test_r1_base_state_identity_is_hash_seed_stable() -> None:
+    script = textwrap.dedent(
+        """
+        import hashlib
+        import json
+        import chess
+
+        from recon_lite_hector.learning import IntrinsicCreditConfig, IntrinsicCreditEngine
+        from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
+            R0_COMPETENCE_ID,
+            _r1_base_state_identity,
+        )
+        from recon_lite_chess.autogrowth.native_single_graph_curriculum import (
+            NativeReConKRKGraph,
+            NativeSingleGraphConfig,
+        )
+
+        graph = NativeReConKRKGraph(config=NativeSingleGraphConfig(
+            include_symmetries=False,
+            key_mode="canonical",
+            shared_feature_atoms=True,
+            shared_projection_atoms=True,
+            include_grouped_cache_terminals=False,
+        ))
+        board = chess.Board("k7/8/1K6/8/8/8/8/7R w - - 0 1")
+        for move in sorted(board.legal_moves, key=lambda item: item.uci())[:4]:
+            graph.ensure_triplet(board, move, stage="hash_seed_test")
+        triplets = frozenset(graph.triplet_ids)
+        graph.freeze_existing_parameters(reason="hash_seed_test")
+        credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
+        credit.register(R0_COMPETENCE_ID, mature=True)
+        credit.states[R0_COMPETENCE_ID].grounding_ancestors = {
+            "ancestor-a", "ancestor-b", "ancestor-c", "ancestor-d"
+        }
+        manifest = _r1_base_state_identity(graph, credit, triplets)
+        encoded = json.dumps(
+            manifest, sort_keys=True, separators=(",", ":"), allow_nan=False
+        ).encode("utf-8")
+        print(hashlib.sha256(encoded).hexdigest())
+        """
+    )
+    pythonpath = os.pathsep.join(
+        filter(
+            None,
+            (
+                str(Path.cwd() / "src"),
+                str(Path.cwd() / "libs" / "recon-lite" / "src"),
+                os.environ.get("PYTHONPATH"),
+            ),
+        )
+    )
+    digests = []
+    for seed in ("1", "2"):
+        environment = dict(os.environ)
+        environment.update(PYTHONHASHSEED=seed, PYTHONPATH=pythonpath)
+        result = subprocess.run(
+            (sys.executable, "-c", script),
+            check=True,
+            capture_output=True,
+            text=True,
+            env=environment,
+        )
+        digests.append(result.stdout.strip())
+
+    assert len(set(digests)) == 1
 
 
 def test_balanced_r1_quotas_cover_all_setup_and_orientation_strata() -> None:

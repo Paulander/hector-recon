@@ -276,6 +276,38 @@ def test_v3_manifest_computes_the_r0_identity_audit_once(monkeypatch) -> None:
     }
 
 
+def test_real_transaction_shares_frozen_r0_with_full_clone_parity() -> None:
+    initial = _synthetic_authority()
+    shared = copy.deepcopy(initial)
+    full_clone = copy.deepcopy(initial)
+    shared_open = _open_mint(
+        shared,
+        fullmove=10,
+        frame_id="shared-r0-transaction",
+    )
+    full_open = _open_mint(
+        full_clone,
+        fullmove=10,
+        frame_id="shared-r0-transaction",
+    )
+    assert shared_open == full_open
+
+    frozen_r0 = shared.base.r0
+    frozen_before = frozen_r0.persistent_state_audit()
+    shared_emission = shared.consume(shared_open[2])
+
+    legacy_candidate = copy.deepcopy(full_clone)
+    full_emission = legacy_candidate._consume_in_place(full_open[2])
+    full_clone.__dict__.clear()
+    full_clone.__dict__.update(legacy_candidate.__dict__)
+
+    assert shared_emission == full_emission
+    assert shared.base.r0 is frozen_r0
+    assert frozen_r0.persistent_state_audit() == frozen_before
+    assert shared.continuation_manifest() == full_clone.continuation_manifest()
+    shared.verify_full_history_boundary("shared frozen R0 parity")
+
+
 def test_incremental_and_complete_replay_are_exact_after_every_event() -> None:
     initial = _synthetic_authority()
     incremental = copy.deepcopy(initial)

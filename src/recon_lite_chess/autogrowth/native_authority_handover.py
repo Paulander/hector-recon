@@ -214,9 +214,7 @@ class NativeR0DreamSession:
 
     def __init__(self, organism: "NativeR0Organism") -> None:
         self.organism = organism
-        self.persistent_digest = organism.persistent_state_audit()[
-            "exact_state_sha256"
-        ]
+        self.persistent_digest = organism.inference_guard_identity()
         self.virtual_graph = copy.deepcopy(organism.graph)
         self.virtual_credit = copy.deepcopy(organism.credit)
         self.closed = False
@@ -237,12 +235,12 @@ class NativeR0DreamSession:
             credit=self.virtual_credit,
             provenance=self.organism.provenance,
             frozen_triplet_ids=self.organism.frozen_triplet_ids,
-            source_manifest=self.organism.source_manifest,
+            source_manifest=copy.deepcopy(dict(self.organism.source_manifest)),
             retrieval_budget_per_actuator=self.organism.retrieval_budget_per_actuator,
         )
         actuation, signal_trace = virtual.emit_action_with_trace(frame)
         mutation_count = int(
-            self.organism.persistent_state_audit()["exact_state_sha256"]
+            self.organism.inference_guard_identity()
             != self.persistent_digest
         )
         if mutation_count:
@@ -279,7 +277,7 @@ class NativeR0DreamSession:
 
     def close(self) -> None:
         if (
-            self.organism.persistent_state_audit()["exact_state_sha256"]
+            self.organism.inference_guard_identity()
             != self.persistent_digest
         ):
             raise RuntimeError("dream session leaked into the persistent organism")
@@ -392,6 +390,48 @@ class NativeR0Organism:
             "credit_sha256": digest(self.credit),
             "lifecycle_sha256": digest(lifecycle),
         }
+
+    def inference_guard_identity(self) -> str:
+        """Hash every persistent component that can affect frozen inference.
+
+        This deliberately omits transient frame state and the expensive exact
+        serialization hashes.  Full ``persistent_state_audit`` remains the
+        trust-boundary check; dream sessions use this projection to prove that
+        their structurally isolated execution did not alter source semantics.
+        """
+
+        persistent = self.persistent_identity_audit()
+        graph_semantic_state_sha256 = hashlib.sha256(
+            json.dumps(
+                self.graph.canonical_semantic_manifest(),
+                sort_keys=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ).encode("utf-8")
+        ).hexdigest()
+        payload = {
+            "schema_version": "native_r0_inference_guard.v1",
+            "persistent_identity": dict(persistent),
+            # The four historical identity components intentionally summarize
+            # topology and learned weights.  The canonical semantic state also
+            # binds inference-sensitive metadata, ordered adjacency, retrieval
+            # indexes, composite trace indexes and trainable-edge aliases.
+            "graph_semantic_state_sha256": graph_semantic_state_sha256,
+            "source_organism_identity": self.source_organism_identity(),
+            "trace_state_identity": self.trace_state_identity(),
+            "source_manifest": copy.deepcopy(dict(self.source_manifest)),
+            "retrieval_budget_per_actuator": int(
+                self.retrieval_budget_per_actuator
+            ),
+        }
+        return hashlib.sha256(
+            json.dumps(
+                payload,
+                sort_keys=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ).encode("utf-8")
+        ).hexdigest()
 
     def persistent_state_audit(self) -> Mapping[str, str]:
         """Hash every persistent component, including unnormalized runtime fields."""

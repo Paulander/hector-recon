@@ -33,6 +33,12 @@ from .terminal_substrate import _bucket, _delta_bucket, extract_terminal_feature
 
 
 ROOT_ID = "tg26o_root"
+_TRANSIENT_NODE_META_KEYS = frozenset({
+    "activation_count",
+    "choice_selected",
+    "choice_selected_child",
+    "emitted_actuator_identity",
+})
 
 
 @dataclass(frozen=True)
@@ -184,6 +190,140 @@ class NativeReConKRKGraph:
             setattr(restored, key, copy.deepcopy(value, memo))
         return restored
 
+    def canonical_semantic_manifest(self) -> dict[str, Any]:
+        """Return the complete process-stable learned/structural graph state.
+
+        Frame-local node activation and diagnostic scheduler counters are
+        intentionally absent.  Ordered graph rows, behaviorally active
+        adjacency indexes, graph-owned retrieval indexes, and trainable-edge
+        aliases are all bound explicitly.
+        """
+
+        edge_ordinals = {
+            id(edge): ordinal for ordinal, edge in enumerate(self.graph.edges)
+        }
+        edge_by_key_rows = []
+        for (src, dst, ltype), edge in self.graph.edge_by_key.items():
+            ordinal = edge_ordinals.get(id(edge))
+            if ordinal is None or (
+                edge.src, edge.dst, edge.ltype
+            ) != (src, dst, ltype):
+                raise ValueError(
+                    "native graph edge index is detached or inconsistent"
+                )
+            edge_by_key_rows.append((src, dst, ltype.name, ordinal))
+
+        trainable_rows: dict[str, list[tuple[str, str, str, int]]] = {}
+        for triplet_id, edges in sorted(self.triplet_trainable_edges.items()):
+            rows: list[tuple[str, str, str, int]] = []
+            for edge in edges:
+                ordinal = edge_ordinals.get(id(edge))
+                if ordinal is None:
+                    raise ValueError(
+                        "trainable-edge index is detached from graph edges"
+                    )
+                rows.append((edge.src, edge.dst, edge.ltype.name, ordinal))
+            trainable_rows[triplet_id] = rows
+
+        return {
+            "schema": "native_recon_krk_semantic_state.v1",
+            "config": asdict(self.config),
+            "graph": {
+                "nodes": [
+                    {
+                        "id": node_id,
+                        "node_nid": node.nid,
+                        "type": node.ntype.name,
+                        "meta": {
+                            key: copy.deepcopy(value)
+                            for key, value in node.meta.items()
+                            if key not in _TRANSIENT_NODE_META_KEYS
+                        },
+                    }
+                    for node_id, node in self.graph.nodes.items()
+                ],
+                "edges": [
+                    {
+                        "src": edge.src,
+                        "dst": edge.dst,
+                        "type": edge.ltype.name,
+                        "weight": float(edge.w),
+                        "meta": copy.deepcopy(edge.meta),
+                    }
+                    for edge in self.graph.edges
+                ],
+                "edge_by_key": edge_by_key_rows,
+                "out": [
+                    (src, ltype.name, list(destinations))
+                    for (src, ltype), destinations in self.graph.out.items()
+                ],
+                "inc": [
+                    (dst, ltype.name, list(sources))
+                    for (dst, ltype), sources in self.graph.inc.items()
+                ],
+                "parent": [
+                    (node_id, parent_id)
+                    for node_id, parent_id in self.graph.parent.items()
+                ],
+                "parents_fanin": [
+                    (node_id, list(parent_ids))
+                    for node_id, parent_ids
+                    in self.graph.parents_fanin.items()
+                ],
+            },
+            "triplet_ids": sorted(self.triplet_ids),
+            "triplet_nodes": {
+                key: sorted(value)
+                for key, value in sorted(self.triplet_nodes.items())
+            },
+            "triplet_trainable_edges": trainable_rows,
+            "triplet_pattern_key_cache": {
+                key: sorted(value)
+                for key, value
+                in sorted(self.triplet_pattern_key_cache.items())
+            },
+            "shared_atom_ids_by_key": sorted(
+                (str(role), str(pattern_key), atom_id)
+                for (role, pattern_key), atom_id
+                in self.shared_atom_ids_by_key.items()
+            ),
+            "shared_atom_triplets": {
+                key: sorted(value)
+                for key, value in sorted(self.shared_atom_triplets.items())
+            },
+            "shared_atom_key_by_id": sorted(
+                (atom_id, str(role), str(pattern_key))
+                for atom_id, (role, pattern_key)
+                in self.shared_atom_key_by_id.items()
+            ),
+            "pruned_terminal_ids": sorted(self.pruned_terminal_ids),
+            "pruned_triplet_ids": sorted(self.pruned_triplet_ids),
+            "frozen_policy_triplet_ids": sorted(
+                self.frozen_policy_triplet_ids
+            ),
+            "frozen_policy_token": self.frozen_policy_token,
+            "composite_cells": {
+                key: cell.to_dict()
+                for key, cell in sorted(self.composite_cells.items())
+            },
+            "composite_member_ids": {
+                key: list(value)
+                for key, value in sorted(self.composite_member_ids.items())
+            },
+            "composite_triplets": {
+                key: sorted(value)
+                for key, value in sorted(self.composite_triplets.items())
+            },
+            "composite_node_by_triplet": sorted(
+                (composite_id, triplet_id, node_id)
+                for (composite_id, triplet_id), node_id
+                in self.composite_node_by_triplet.items()
+            ),
+            "disabled_composite_ids": sorted(self.disabled_composite_ids),
+            "m3_update_count": int(self.m3_update_count),
+            "m4_event_count": int(self.m4_event_count),
+        }
+
     def normalize_inference_runtime(self) -> None:
         """Canonicalize frame-local state without touching learned evidence."""
 
@@ -215,11 +355,14 @@ class NativeReConKRKGraph:
     def __getstate__(self) -> dict[str, Any]:
         """Return an exact snapshot state without unpickleable predicate closures."""
 
-        state = dict(self.__dict__)
-        graph = copy.deepcopy(self.graph)
+        # Copy the complete state in one memoized operation.  In particular,
+        # ``triplet_trainable_edges`` must continue to reference the same Edge
+        # objects as ``graph.edges`` after a round trip; copying only ``graph``
+        # would serialize a second, detached set of trainable edges.
+        state = copy.deepcopy(self.__dict__)
+        graph = state["graph"]
         for node in graph.nodes.values():
             node.predicate = None
-        state["graph"] = graph
         state["snapshot_schema_version"] = "native_recon_krk_graph.v1"
         return state
 
@@ -228,7 +371,100 @@ class NativeReConKRKGraph:
         if schema != "native_recon_krk_graph.v1":
             raise ValueError(f"unsupported native graph snapshot schema: {schema!r}")
         self.__dict__.update(state)
+        self._rebind_triplet_trainable_edges()
+        self._validate_derived_graph_indexes()
         self._restore_runtime_predicates()
+
+    def _rebind_triplet_trainable_edges(self) -> None:
+        """Restore and verify the trainable-edge index's object aliases.
+
+        Snapshots written by the original v1 serializer contain value-equal
+        detached Edge objects in ``triplet_trainable_edges``.  Rebinding them
+        on load is deterministic because the native graph forbids duplicate
+        directed/link-type edge identities.
+        """
+
+        canonical_by_key: dict[tuple[str, str, Any], Any] = {}
+        for edge in self.graph.edges:
+            key = (edge.src, edge.dst, edge.ltype)
+            if key in canonical_by_key:
+                raise ValueError(
+                    "native graph snapshot has duplicate edge identity"
+                )
+            if self.graph.edge_by_key.get(key) is not edge:
+                raise ValueError(
+                    "native graph edge index does not reference canonical edge"
+                )
+            canonical_by_key[key] = edge
+
+        rebound: dict[str, list[Any]] = {}
+        for triplet_id, indexed_edges in self.triplet_trainable_edges.items():
+            rebound_edges: list[Any] = []
+            for indexed in indexed_edges:
+                key = (indexed.src, indexed.dst, indexed.ltype)
+                canonical = canonical_by_key.get(key)
+                if canonical is None:
+                    raise ValueError(
+                        "trainable-edge index references an absent graph edge"
+                    )
+                if indexed.w != canonical.w or indexed.meta != canonical.meta:
+                    raise ValueError(
+                        "trainable-edge index differs from canonical graph edge"
+                    )
+                rebound_edges.append(canonical)
+            rebound[str(triplet_id)] = rebound_edges
+        self.triplet_trainable_edges = rebound
+
+    def _validate_derived_graph_indexes(self) -> None:
+        expected_out: dict[tuple[str, Any], list[str]] = {}
+        expected_inc: dict[tuple[str, Any], list[str]] = {}
+        expected_parent = {node_id: None for node_id in self.graph.nodes}
+        expected_fanin = {
+            node_id: []
+            for node_id, node in self.graph.nodes.items()
+            if node.ntype is NodeType.TERMINAL
+        }
+        expected_edge_by_key: dict[tuple[str, str, Any], Any] = {}
+        if any(
+            node.nid != node_id
+            for node_id, node in self.graph.nodes.items()
+        ):
+            raise ValueError("native graph node index differs from node identity")
+        for edge in self.graph.edges:
+            if edge.src not in self.graph.nodes or edge.dst not in self.graph.nodes:
+                raise ValueError("native graph edge references an absent node")
+            key = (edge.src, edge.dst, edge.ltype)
+            if key in expected_edge_by_key:
+                raise ValueError("native graph has duplicate edge identity")
+            expected_edge_by_key[key] = edge
+            expected_out.setdefault((edge.src, edge.ltype), []).append(edge.dst)
+            expected_inc.setdefault((edge.dst, edge.ltype), []).append(edge.src)
+            if edge.ltype is not LinkType.SUB:
+                continue
+            destination = self.graph.nodes[edge.dst]
+            if destination.ntype is NodeType.TERMINAL:
+                expected_fanin[edge.dst].append(edge.src)
+                if expected_parent[edge.dst] is None:
+                    expected_parent[edge.dst] = edge.src
+            else:
+                if expected_parent[edge.dst] is not None:
+                    raise ValueError(
+                        "native graph SCRIPT has multiple SUB parents"
+                    )
+                expected_parent[edge.dst] = edge.src
+
+        if (
+            self.graph.out != expected_out
+            or self.graph.inc != expected_inc
+            or self.graph.parent != expected_parent
+            or self.graph.parents_fanin != expected_fanin
+            or set(self.graph.edge_by_key) != set(expected_edge_by_key)
+            or any(
+                self.graph.edge_by_key[key] is not edge
+                for key, edge in expected_edge_by_key.items()
+            )
+        ):
+            raise ValueError("native graph derived indexes are inconsistent")
 
     def _restore_runtime_predicates(self) -> None:
         """Rebuild generic runtime predicates solely from persisted node metadata."""

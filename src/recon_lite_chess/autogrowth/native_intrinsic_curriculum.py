@@ -1493,6 +1493,40 @@ def _r1_history_snapshot_path(
     )
 
 
+def _r1_base_state_identity(
+    graph: NativeReConKRKGraph,
+    credit: IntrinsicCreditEngine,
+    r0_child_triplet_ids: frozenset[str],
+) -> dict[str, Any]:
+    """Return a canonical, process-stable identity for the R1 base state.
+
+    Raw pickle bytes are not an identity: the graph contains sets whose pickle
+    order changes with ``PYTHONHASHSEED``.  The frozen policy token covers the
+    executable topology and parameters, while the remaining sorted indexes and
+    lifecycle fields cover graph-owned retrieval and structural state.
+    """
+
+    policy_sha256 = graph.frozen_child_policy_token(r0_child_triplet_ids)
+    if policy_sha256 is None:
+        policy_sha256 = graph._compute_frozen_policy_token(
+            r0_child_triplet_ids
+        )
+
+    return {
+        "schema": "native_intrinsic_r1_base_state.v2",
+        "policy_sha256": policy_sha256,
+        # The frozen token is deliberately compact.  The semantic manifest
+        # additionally binds ordered graph rows and derived indexes, every
+        # graph-owned retrieval/composite index, cached prototype keys, and
+        # verified trainable-edge aliases.
+        "graph_semantic_state_sha256": _hash_json(
+            graph.canonical_semantic_manifest()
+        ),
+        "credit_event_index": int(credit.event_index),
+        "credit": credit.snapshot(),
+    }
+
+
 def _r1_snapshot_fingerprint(
     graph: NativeReConKRKGraph,
     credit: IntrinsicCreditEngine,
@@ -1511,13 +1545,14 @@ def _r1_snapshot_fingerprint(
         "progress_path",
         "r1_snapshot_dir",
         "resume_r1_snapshots",
+        "r1_keep_checkpoint_history",
         "max_samples",
         "development_wall_ceiling_seconds",
         "development_peak_rss_ceiling_mib",
     ):
         behavior_config.pop(key, None)
     payload = {
-        "schema": "native_intrinsic_r1_resume.v1",
+        "schema": "native_intrinsic_r1_resume.v2",
         "arm_name": arm_name,
         "arm_spec": asdict(arm_spec),
         "behavior_config": behavior_config,
@@ -1526,9 +1561,13 @@ def _r1_snapshot_fingerprint(
         "r0_child_triplet_ids": sorted(r0_child_triplet_ids),
         "r0_child_authority_digest": r0_child_authority_digest,
         "source_identity": _source_identity(),
-        "base_state_sha256": hashlib.sha256(
-            pickle.dumps((graph, credit), protocol=5)
-        ).hexdigest(),
+        "base_state_sha256": _hash_json(
+            _r1_base_state_identity(
+                graph,
+                credit,
+                r0_child_triplet_ids,
+            )
+        ),
     }
     return _hash_json(payload)
 
