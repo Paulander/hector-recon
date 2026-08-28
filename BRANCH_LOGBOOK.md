@@ -1,5 +1,21 @@
 # Branch logbook
 
+## Current branch at a glance
+
+Read this table first. The detailed evidence ledger below preserves exact
+boundaries and artifact identities.
+
+| Experiment | Conditions | Result |
+| --- | --- | --- |
+| Incremental-history Phase 1 | 32 events, three arms, incremental versus full replay after every event | Exact parity passed; event-wall speedups were `2.78x-4.37x`. |
+| Incremental-history boundary | Restored event 32; incremental events 33-64; full reconstruction at event 64 | Additive-chain, full-history, checkpoint and round-trip parity passed. |
+| Fixed-pool R0 depth | Seed `2026082801`; one core; fixed 48/16/16 pools | Joint validation/regression reached `1.0/1.0` at epoch 72; R0 training took `350.20 s`. |
+| R1 epoch-1 integration gate | Same seed/pools; clean `1fef1bff`; one process/core; external `2700 s` watchdog | Exact epoch-1 snapshot passed in `2326.714 s`; cross-process resume then exposed a process-dependent pickle fingerprint. |
+| Fixed two-hour development shot | Same seed/pools; clean `1fef1bff`; one process/core; `7200 s` cooperative ceiling | Exact epoch-4 stop after `7627.513 s`: 187 unique REAL observations, 29 mates, zero AVAILABLE handoffs; saved state is permanently availability-locked. |
+| Resume repair canary | Data-free/test-scale resume; changed only wall/RSS controls; two hash seeds | Canonical base identity was stable across processes and resumed execution matched uninterrupted execution exactly. |
+| VIRTUAL hot-path canary | Same saved epoch-4 artifact and query; runtime commit `7d56d5d5` | `48.241 -> 18.107 s` (`2.664x`); UNKNOWN, zero source mutation, exact continuation-manifest equality. |
+| REAL rollback-clone canary | Same saved epoch-4 authority; runtime commit `7d56d5d5`; clone operation only | `5.114 -> 0.193 s` (`26.47x` clone-only); idempotent/rollback public transactions took `2.632/2.321 s` with exact parity. |
+
 ## Purpose and validity scope
 
 Quick-scan ledger for the current development branch. Raw artifacts remain
@@ -16,7 +32,9 @@ current implementation commit.
 
 `reports/autogrowth/development/` is local and untracked at this snapshot.
 
-## Code lineage
+## Detailed evidence ledger
+
+### Code lineage
 
 - `f9f12628cb303c9326a00acfc138e0d471410a65` — audited starting point for
   incremental-history runtime work.
@@ -29,6 +47,15 @@ current implementation commit.
   checkpoint runner and tests.
 - `f482aac677228817d5924e6b139a824249110e85` — persistent V2 intrinsic R0 ->
   R1 development integration and exact snapshot/resume boundary.
+- `a998acda2d97d7ac9cabf2d0abbe930097125344` — corrected the V2 duplicate
+  index to derive predecessor FENs from signed discovery and consumed REAL
+  receipts rather than the intentionally FEN-free reference schema.
+- `1fef1bff3cf9be0b9f8273f2af3bf0ab768467c9` — hoisted the frozen-R0
+  identity audit and removed unused exact/serialized audit work from each V3
+  continuation manifest.
+- `7d56d5d55af8459b9e1a053c54f8a103033fd7d6` — process-stable exact R1
+  resume identity, snapshot edge-alias repair, guarded dream hot path, and
+  frozen-R0-sharing REAL rollback transactions.
 
 ## Evidenced experiments
 
@@ -194,3 +221,100 @@ current implementation commit.
   incremental-history, and intrinsic suites `50 passed in 69.38 s`.
 - Decision: rerun the same exact epoch-1 gate from the repaired committed source;
   do not launch the two-hour continuation unless its atomic snapshot passes.
+
+### Exact epoch-1 preflight at `1fef1bff` — gate passed
+
+- Conditions: same seed, fixed pools, one process/core, clean tracked source,
+  cooperative `1 s` ceiling checked only at an exact epoch boundary, `8192 MiB`
+  RSS ceiling, and external `2700 s` watchdog.
+- Result: R0 again reached validation/regression `1.0/1.0` at epoch 72. The
+  full-intrinsic arm reached and atomically serialized epoch 1 in `2326.714 s`;
+  status `CEILING_REACHED_AT_EXACT_EPOCH_SNAPSHOT`. Snapshot size was
+  `81.8 MB`. This passed the predeclared 45-minute integration gate.
+- A second process using only a longer wall ceiling rebuilt the deterministic
+  prefix but rejected the saved snapshot: fingerprint `60861370...` versus
+  `ebdc7381...`. The ceilings were already excluded. The actual defect was the
+  process-dependent raw-pickle hash of graph sets; equivalent frozen policy and
+  credit state produced different bytes under different hash seeds.
+- Decision: preserve the snapshot and failed resume. Replace the pickle hash
+  with a canonical base-state identity and regression-test cross-process hash
+  stability; source changes necessarily make this old snapshot non-resumable.
+
+### Fixed 7200-second development shot at `1fef1bff`
+
+- Conditions: fresh output directory; seed `2026082801`; fixed 48/16/16 R0 and
+  48/16/16 R1 pools; one process/core; full-intrinsic arm; R0/R1 caps 96/240;
+  cooperative `7200 s` wall and `8192 MiB` RSS ceilings; external `8100 s`
+  watchdog; exact clean commit `1fef1bff`. This is
+  `DEVELOPMENT_VIEWED_NOT_SCIENTIFIC`, with no control arm completed.
+- Result: exact atomic stop at epoch 4 after `7627.513 s` total wall
+  (`7586.712 s` at the safe-boundary check): 192 R1 episodes, 187 unique REAL
+  authority observations, zero duplicate-REAL evidence, one structural
+  transition, 42 requests/children materialized, zero AVAILABLE queries, zero
+  child handoffs, and zero successor-value sum. The epoch-1 heldout checkpoint
+  had conversion `0/16` and R0 retention `15/16`; the forced epoch-4 checkpoint
+  intentionally skipped heldout evaluation. Graph state was 1,031 triplets,
+  257,888 edges and 5,508 nodes.
+- Authority diagnosis: 112 states = 70 generation-0 plus 42 generation-1.
+  Three generation-1 cells certified, all with REFUTED polarity. Each of the
+  26 generation-0 candidate cells with AVAILABLE polarity had already
+  accumulated a monotone contradiction; all 42 generated children were
+  REFUTED; and the sole structural frontier was consumed. Therefore this exact
+  continuation can never emit AVAILABLE or exercise R0 -> R1 bootstrap,
+  however long it runs.
+  The 187 REAL outcomes included 29 immediate mates, so zero availability is a
+  certification/representation lockout rather than absence of positive world
+  outcomes.
+- Performance diagnosis: a saved-epoch VIRTUAL probe was interrupted after
+  more than 90 seconds inside `NativeR0DreamSession.request` while recomputing a
+  complete persistent-state audit. The session performs that graph-deepcopy /
+  pickle audit at open, request and close; this is the next exact hot path.
+- Evidence:
+  `reports/autogrowth/development/native_intrinsic_v2_r0_r1_seed_2026082801_1fef1bff_shot_7200/attempt.json`
+  SHA-256
+  `032567ba8cd0236be07b87c1bbc068c51e67b99b95ebcffebceacd317b4a6379`;
+  `progress.json` SHA-256
+  `4704959ce859f9d3c854d70ccd95f49911f82d4ae4568d5366d32f9d86a07a12`;
+  epoch-4 snapshot SHA-256
+  `0e02f7fe69d2d3fd6a7d5316a42ecd3ba25ca1e4af770bf64988b3e9a4848244`.
+- Decision: **do not resume this snapshot and do not start a longer curriculum
+  shot.** First close the process-stable resume identity, remove exact audit
+  work from the frame hot path with differential parity, and validate a
+  prospective AVAILABLE path in a bounded mechanism canary.
+
+### Post-shot exact runtime reclosure — `7d56d5d5`
+
+- Resume identity: replaced the process-dependent raw `(graph, credit)` pickle
+  hash with a canonical semantic graph and credit identity. It binds ordered
+  nodes/edges, behaviorally active adjacency and retrieval indexes, prototype
+  cache, composite indexes, edge aliases and credit event ordinal. Output
+  paths, resume/write-retention controls, evaluation caps and resource ceilings
+  remain operational. In a data-free/test-scale canary, two subprocesses with
+  distinct `PYTHONHASHSEED` values produced one identity, and resume across
+  changed wall/RSS ceilings matched uninterrupted execution exactly.
+- Snapshot repair: the prior graph serializer deep-copied the formal graph but
+  not its trainable-edge index, detaching edge objects after restore. The new
+  serializer preserves aliases, while v1 loads deterministically rebind and
+  validate them. The saved epoch-4 artifact repaired all `105306/105306` R0
+  and `128944/128944` R1 trainable-edge references; a fresh current-code R0
+  round trip retained exact semantic state and all aliases.
+- Dream isolation: replaced three full six-component graph-copy/pickle audits
+  per session request with a three-point inference-semantic guard. The graph
+  and credit execution copies remain isolated and are still discarded per
+  frame; full audits remain at serialization/test/trust boundaries. The same
+  exact epoch-4 artifact and query measured `48.241 -> 18.107 s` (`2.664x`);
+  the repaired query returned UNKNOWN with zero mutation and exact
+  continuation-manifest equality. No fresh outcome was opened or consumed.
+- REAL rollback clone: only the mature frozen R0 object is memo-shared while
+  the evolving V2 authority is still copied. A pre/post inference guard fails
+  if that shared object changes. On the exact epoch-4 snapshot, full authority
+  clone versus guarded frozen-R0-sharing clone was `5.114/0.193 s` (`26.47x`
+  for the rollback clone only), with exact continuation-manifest parity.
+  Public idempotent and invalid-rollback transactions took `2.632/2.321 s`;
+  both preserved the full six-hash source audit and R0 object identity.
+- Validation: four affected suites `56 passed in 72.98 s`; exact uninterrupted
+  versus resumed canonical-semantic state parity passes; `py_compile` and
+  `git diff --check` pass. Historical artifact-backed V2/trace tests cannot run
+  in this clone because their referenced `reports/autogrowth/native_*` inputs
+  are absent; the observed setup errors are preserved as an environment
+  limitation, not counted as passes.
