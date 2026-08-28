@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import replace
+from dataclasses import asdict, replace
 from typing import Any
 
 import pytest
@@ -185,6 +185,27 @@ def _reference(
     )
 
 
+def _grounded_reference(
+    receipt: V2GroundedReceipt,
+) -> AcceptedRealReference:
+    return AcceptedRealReference(
+        receipt_id=receipt.receipt_id,
+        ordinal=receipt.ordinal,
+        stable_physical_interaction_id=receipt.interaction_fingerprint,
+        trace_digest=receipt.trace.digest(),
+        typed_signal_digest=_sha([
+            asdict(item) for item in receipt.trace.terminal_signals
+        ]),
+        observed_outcome=receipt.observed_outcome,
+        source_generation=0,
+        ordered_signal_identities=receipt.trace.ordered_signal_identities,
+        typed_signal_roles=tuple(sorted(
+            (item.identity, item.role)
+            for item in receipt.trace.terminal_signals
+        )),
+    )
+
+
 def _node_semantics(graph: Any) -> dict[str, tuple[str, int, float]]:
     return {
         node_id: (
@@ -315,7 +336,14 @@ def test_grounded_settlement_matches_full_cap_for_every_lifecycle_role(
     monkeypatch.setattr(
         authority_module.FormalReConEngine, "run", recording_run
     )
-    actual = authority_module._run_authority_graph(states, snapshot)
+    assert snapshot.grounded_receipt is not None
+    actual = authority_module._run_authority_graph(
+        states,
+        snapshot,
+        current_real_reference=_grounded_reference(
+            snapshot.grounded_receipt
+        ),
+    )
 
     assert actual == expected
     assert len(calls) == 1
@@ -618,7 +646,11 @@ def test_multi_parent_eligibility_is_batched_once_for_every_mode(
 ) -> None:
     states, snapshot, references = _specialization_case()
     original_run = authority_module.FormalReConEngine.run
+    original_reference_validation = (
+        authority_module._validate_current_real_reference
+    )
     calls: list[dict[str, Any]] = []
+    reference_validations = 0
 
     def recording_run(self, *args, **kwargs):
         result = original_run(self, *args, **kwargs)
@@ -630,18 +662,33 @@ def test_multi_parent_eligibility_is_batched_once_for_every_mode(
         })
         return result
 
+    def recording_reference_validation(*args, **kwargs):
+        nonlocal reference_validations
+        reference_validations += 1
+        return original_reference_validation(*args, **kwargs)
+
     monkeypatch.setattr(
         authority_module.FormalReConEngine, "run", recording_run
     )
+    monkeypatch.setattr(
+        authority_module,
+        "_validate_current_real_reference",
+        recording_reference_validation,
+    )
+    assert snapshot.grounded_receipt is not None
     result = authority_module._run_authority_graph(
         states,
         snapshot,
         accepted_real_references=references,
+        current_real_reference=_grounded_reference(
+            snapshot.grounded_receipt
+        ),
         specialization_mode=mode,
     )
 
     assert result["specialization_request"] == expected_requests
     assert result["specialization_eligibility"] == expected_eligible
+    assert reference_validations == 1
     assert len(calls) == (1 if mode is SpecializationMode.DISCONNECTED else 2)
     assert all(call["tick"] <= 7 for call in calls)
     assert all(callable(call["until"]) for call in calls)

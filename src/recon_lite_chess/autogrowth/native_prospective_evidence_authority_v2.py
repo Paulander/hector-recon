@@ -33,8 +33,14 @@ from .native_competence_envelope import (
 from .native_trace_competence_authority import TraceNativeCompetenceOrganism
 
 
-SCHEMA_VERSION = "native_prospective_evidence_authority_v2.v6_engineering_corrections"
-IMPLEMENTATION_IDENTITY = "native_prospective_two_phase_authority.v6_engineering_corrections"
+SCHEMA_VERSION = (
+    "native_prospective_evidence_authority_v2."
+    "v7_mixed_evidence_specialization"
+)
+IMPLEMENTATION_IDENTITY = (
+    "native_prospective_two_phase_authority."
+    "v7_mixed_evidence_specialization"
+)
 EXPECTED_RECEIPT_ISSUER = "native_v2_environment_terminal"
 OUTCOME_TERMINAL_IDENTITY = "native_r0_real_completion_terminal"
 EXPOSURE_SCHEMA_VERSION = "native_v2_bound_exposure.v5"
@@ -114,6 +120,11 @@ class GenerationPhase(str, Enum):
     STRUCTURAL_OPEN = "STRUCTURAL_OPEN"
     PROSPECTIVE_OPEN = "PROSPECTIVE_OPEN"
     PROSPECTIVE_SEALED = "PROSPECTIVE_SEALED"
+
+
+class RequestBasis(str, Enum):
+    CERTIFIED_REVOCATION = "CERTIFIED_REVOCATION"
+    UNCERTIFIED_MIXED_EVIDENCE = "UNCERTIFIED_MIXED_EVIDENCE"
 
 
 @dataclass(frozen=True)
@@ -698,6 +709,9 @@ class DeferredSpecializationRequest:
     parent_cell_id: str
     parent_hypothesis_digest: str
     fixed_polarity: AvailabilityState
+    request_basis: RequestBasis
+    request_emission_receipt_id: str
+    request_emission_ordinal: int
     contradiction_receipt_id: str
     contradiction_ordinal: int
     specialization_mode: SpecializationMode
@@ -706,8 +720,8 @@ class DeferredSpecializationRequest:
     parent_prospective_support_receipt_ids: tuple[str, ...]
     transitive_ancestor_receipt_ids: tuple[str, ...]
     candidate_terminals: tuple[SpecializationCandidateTerminalState, ...]
-    graph_revocation_confirmed: bool = True
-    graph_request_confirmed: bool = True
+    graph_revocation_confirmed: bool
+    graph_request_confirmed: bool
 
     def __post_init__(self) -> None:
         object.__setattr__(
@@ -718,25 +732,63 @@ class DeferredSpecializationRequest:
                 self.specialization_mode
             )
         )
+        object.__setattr__(
+            self, "request_basis", RequestBasis(self.request_basis)
+        )
+        if not isinstance(self.graph_revocation_confirmed, bool) or not (
+            isinstance(self.graph_request_confirmed, bool)
+        ):
+            raise ProspectiveV2IntegrityError(
+                "request graph confirmations are not Boolean"
+            )
         if self.specialization_mode is SpecializationMode.DISCONNECTED:
             raise ProspectiveV2IntegrityError("disconnected dummy request")
-        if not self.graph_revocation_confirmed or not self.graph_request_confirmed:
-            raise ProspectiveV2IntegrityError("request lacks graph revocation")
+        if not self.graph_request_confirmed:
+            raise ProspectiveV2IntegrityError(
+                "request lacks graph confirmation"
+            )
+        if (
+            not self.request_id
+            or not self.request_emission_receipt_id
+            or not self.contradiction_receipt_id
+            or self.source_generation < 0
+            or self.request_emission_ordinal < 0
+            or self.contradiction_ordinal < 0
+            or self.contradiction_ordinal > self.request_emission_ordinal
+        ):
+            raise ProspectiveV2IntegrityError(
+                "invalid specialization request identity or order"
+            )
+        if self.request_basis is RequestBasis.CERTIFIED_REVOCATION:
+            if (
+                not self.graph_revocation_confirmed
+                or self.contradiction_receipt_id
+                != self.request_emission_receipt_id
+                or self.contradiction_ordinal
+                != self.request_emission_ordinal
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "certified-revocation request lacks its current "
+                    "contradiction anchor"
+                )
+        elif self.graph_revocation_confirmed:
+            raise ProspectiveV2IntegrityError(
+                "uncertified mixed-evidence request claims revocation"
+            )
 
-    @property
-    def eligible_base_ids(self) -> tuple[str, ...]:
-        return tuple(
-            item.identity for item in self.candidate_terminals
-            if item.confirmed
-        )
+    def identity_manifest(self) -> dict[str, Any]:
+        """All causal request fields bound by ``request_id``."""
 
-    def manifest(self) -> dict[str, Any]:
         return {
-            "request_id": self.request_id,
             "source_generation": self.source_generation,
             "parent_cell_id": self.parent_cell_id,
             "parent_hypothesis_digest": self.parent_hypothesis_digest,
             "fixed_polarity": self.fixed_polarity.value,
+            "request_basis": self.request_basis.value,
+            "request_emission_receipt_id": (
+                self.request_emission_receipt_id
+            ),
+            "request_emission_ordinal": self.request_emission_ordinal,
             "contradiction_receipt_id": self.contradiction_receipt_id,
             "contradiction_ordinal": self.contradiction_ordinal,
             "specialization_mode": self.specialization_mode.value,
@@ -757,6 +809,19 @@ class DeferredSpecializationRequest:
             ],
             "graph_revocation_confirmed": self.graph_revocation_confirmed,
             "graph_request_confirmed": self.graph_request_confirmed,
+        }
+
+    @property
+    def eligible_base_ids(self) -> tuple[str, ...]:
+        return tuple(
+            item.identity for item in self.candidate_terminals
+            if item.confirmed
+        )
+
+    def manifest(self) -> dict[str, Any]:
+        return {
+            "request_id": self.request_id,
+            **self.identity_manifest(),
         }
 
 
@@ -1021,6 +1086,162 @@ def _receipt_supports(
     )
 
 
+def _specialization_request_basis(
+    state: ProspectiveAuthorityState,
+    *,
+    matched: bool,
+    post_frontier: bool,
+    supports: bool,
+    contradicts: bool,
+    specialization_mode: SpecializationMode,
+    already_requested: bool,
+) -> RequestBasis | None:
+    """Return the unique causal basis for a projected REAL event."""
+
+    if supports and contradicts:
+        raise ProspectiveV2IntegrityError(
+            "specialization trigger cannot support and contradict"
+        )
+    if not (
+        matched
+        and post_frontier
+        and (supports or contradicts)
+        and state.hypothesis.specialization_depth == 0
+        and state.hypothesis.dormant_origin
+        is DormantOrigin.MIXED_OUTCOME_SHADOW
+        and not already_requested
+        and specialization_mode is not SpecializationMode.DISCONNECTED
+    ):
+        return None
+    if state.prospectively_certified and contradicts:
+        return RequestBasis.CERTIFIED_REVOCATION
+    projected_successes = state.successes + int(supports)
+    projected_contradictions = state.contradictions + int(contradicts)
+    if (
+        not state.prospectively_certified
+        and projected_successes >= MIN_SUPPORT
+        and projected_contradictions >= 1
+    ):
+        return RequestBasis.UNCERTIFIED_MIXED_EVIDENCE
+    return None
+
+
+@dataclass(frozen=True)
+class _SpecializationRequestTrigger:
+    basis: RequestBasis
+    emission_reference: AcceptedRealReference
+    contradiction_reference: AcceptedRealReference
+    parent_prospective_support_receipt_ids: tuple[str, ...]
+    all_support_receipt_ids: tuple[str, ...]
+
+
+def _validate_current_real_reference(
+    receipt: V2GroundedReceipt,
+    current_reference: AcceptedRealReference,
+) -> None:
+    """Prove that one accepted reference is the grounded REAL receipt."""
+
+    if (
+        current_reference.receipt_id != receipt.receipt_id
+        or current_reference.ordinal != receipt.ordinal
+        or current_reference.stable_physical_interaction_id
+        != receipt.interaction_fingerprint
+        or current_reference.observed_outcome != receipt.observed_outcome
+        or current_reference.trace_digest != receipt.trace.digest()
+        or current_reference.typed_signal_digest != _sha([
+            asdict(item) for item in receipt.trace.terminal_signals
+        ])
+        or current_reference.ordered_signal_identities
+        != receipt.trace.ordered_signal_identities
+        or current_reference.typed_signal_roles != tuple(sorted(
+            (item.identity, item.role)
+            for item in receipt.trace.terminal_signals
+        ))
+    ):
+        raise ProspectiveV2IntegrityError(
+            "current REAL reference differs from grounded receipt"
+        )
+
+
+def _derive_specialization_request_trigger(
+    state: ProspectiveAuthorityState,
+    receipt: V2GroundedReceipt,
+    current_reference: AcceptedRealReference,
+    references: Mapping[str, AcceptedRealReference],
+    *,
+    matched: bool,
+    specialization_mode: SpecializationMode,
+    already_requested: bool,
+    current_reference_validated: bool = False,
+) -> _SpecializationRequestTrigger | None:
+    """Bind request timing, current support, and the earliest contradiction."""
+
+    if not current_reference_validated:
+        _validate_current_real_reference(receipt, current_reference)
+    post_frontier = bool(
+        receipt.receipt_id
+        and receipt.ordinal > state.hypothesis.certification_frontier
+        and receipt.receipt_id
+        not in state.hypothesis.discovery_exclusion_receipt_ids
+    )
+    supports = bool(post_frontier and _receipt_supports(state, receipt))
+    contradicts = bool(post_frontier and not supports)
+    basis = _specialization_request_basis(
+        state,
+        matched=matched,
+        post_frontier=post_frontier,
+        supports=supports,
+        contradicts=contradicts,
+        specialization_mode=specialization_mode,
+        already_requested=already_requested,
+    )
+    if basis is None:
+        return None
+
+    prospective_support_ids = (
+        *state.support_receipt_ids,
+        *((receipt.receipt_id,) if supports else ()),
+    )
+    contradiction_ids = (
+        *state.contradiction_receipt_ids,
+        *((receipt.receipt_id,) if contradicts else ()),
+    )
+    missing = tuple(sorted(
+        receipt_id for receipt_id in {
+            *prospective_support_ids,
+            *contradiction_ids,
+            *state.hypothesis.discovery_support_receipt_ids,
+            receipt.receipt_id,
+        }
+        if receipt_id not in references
+    ))
+    if missing:
+        raise ProspectiveV2IntegrityError(
+            "specialization trigger references are incomplete: "
+            + ",".join(missing)
+        )
+    if not contradiction_ids:
+        raise ProspectiveV2IntegrityError(
+            "specialization request has no contradiction anchor"
+        )
+    contradiction_reference = min(
+        (references[item] for item in contradiction_ids),
+        key=lambda item: (item.ordinal, item.receipt_id),
+    )
+    return _SpecializationRequestTrigger(
+        basis=basis,
+        emission_reference=current_reference,
+        contradiction_reference=contradiction_reference,
+        parent_prospective_support_receipt_ids=tuple(sorted(
+            prospective_support_ids
+        )),
+        all_support_receipt_ids=tuple(sorted({
+            *state.hypothesis.discovery_support_receipt_ids,
+            *prospective_support_ids,
+        })),
+    )
+
+
 @dataclass(frozen=True)
 class _AuthorityCellFacts:
     """One terminal-owned evaluation shared by a cell's eight role leaves."""
@@ -1033,6 +1254,7 @@ class _AuthorityCellFacts:
     maturity: bool
     revocation: bool
     specialization_request: bool
+    specialization_request_basis: RequestBasis | None
 
     def confirms(self, role: str) -> bool:
         if role not in CELL_AUTHORITY_ROLES:
@@ -1110,6 +1332,17 @@ class _AuthorityTerminalEvaluationCache:
             projected_success_lower = wilson_lower_bound(
                 projected_successes, projected_support, WILSON_Z
             )
+            request_basis = _specialization_request_basis(
+                state,
+                matched=matched,
+                post_frontier=post_frontier,
+                supports=supports,
+                contradicts=contradicts,
+                specialization_mode=self.specialization_mode,
+                already_requested=(
+                    cell_id in self.lifetime_requested_parent_ids
+                ),
+            )
             result = _AuthorityCellFacts(
                 commitment=matched,
                 available=(
@@ -1134,17 +1367,8 @@ class _AuthorityTerminalEvaluationCache:
                 revocation=(
                     matched and contradicts and state.prospectively_certified
                 ),
-                specialization_request=(
-                    matched
-                    and contradicts
-                    and state.prospectively_certified
-                    and state.hypothesis.specialization_depth == 0
-                    and state.hypothesis.dormant_origin
-                    is DormantOrigin.MIXED_OUTCOME_SHADOW
-                    and cell_id not in self.lifetime_requested_parent_ids
-                    and self.specialization_mode
-                    is not SpecializationMode.DISCONNECTED
-                ),
+                specialization_request=request_basis is not None,
+                specialization_request_basis=request_basis,
             )
         except Exception as exc:
             # The formal engine turns predicate exceptions into FAILED leaves.
@@ -1410,6 +1634,7 @@ def _run_authority_graph(
     snapshot: AuthorityMeasurementSnapshot,
     *,
     accepted_real_references: Mapping[str, AcceptedRealReference] | None = None,
+    current_real_reference: AcceptedRealReference | None = None,
     specialization_mode: SpecializationMode = SpecializationMode.DISCONNECTED,
     lifetime_requested_parent_ids: Sequence[str] = (),
 ) -> dict[str, Any]:
@@ -1446,7 +1671,26 @@ def _run_authority_graph(
     ] = []
     confirmed_tokens: list[str] = []
     receipt = snapshot.grounded_receipt
-    references = accepted_real_references or {}
+    references = dict(accepted_real_references or {})
+    if receipt is None:
+        if current_real_reference is not None:
+            raise ProspectiveV2IntegrityError(
+                "pre-outcome graph received a grounded REAL reference"
+            )
+    else:
+        if current_real_reference is None:
+            raise ProspectiveV2IntegrityError(
+                "grounded graph lacks its current accepted REAL reference"
+            )
+        _validate_current_real_reference(receipt, current_real_reference)
+        prior = references.get(current_real_reference.receipt_id)
+        if prior is not None and prior != current_real_reference:
+            raise ProspectiveV2IntegrityError(
+                "grounded graph REAL reference collision"
+            )
+        references[current_real_reference.receipt_id] = (
+            current_real_reference
+        )
     if request_parents and receipt is None:
         raise ProspectiveV2IntegrityError(
             "specialization request lacks grounded REAL receipt"
@@ -1465,10 +1709,26 @@ def _run_authority_graph(
         ] = []
         for parent_id in request_parents:
             state = states[parent_id]
+            assert receipt is not None
+            assert current_real_reference is not None
+            trigger = _derive_specialization_request_trigger(
+                state,
+                receipt,
+                current_real_reference,
+                references,
+                matched=True,
+                specialization_mode=specialization_mode,
+                already_requested=(
+                    parent_id in lifetime_requested_parent_ids
+                ),
+                current_reference_validated=True,
+            )
+            if trigger is None:
+                raise ProspectiveV2IntegrityError(
+                    "graph request lacks a causal trigger"
+                )
             implied_ids = _recursively_implied_signal_ids(parent_id, states)
-            support_ids = tuple(sorted(set(
-                state.hypothesis.discovery_support_receipt_ids
-            ) | set(state.support_receipt_ids)))
+            support_ids = trigger.all_support_receipt_ids
             support_refs = tuple(
                 references[item] for item in support_ids if item in references
             )
@@ -1484,6 +1744,9 @@ def _run_authority_graph(
                     reference, identity
                 )
             }))
+            contradiction_signal_ids = (
+                trigger.contradiction_reference.ordered_signal_identities
+            )
             for identity in vocabulary:
                 occurrence_refs = tuple(
                     reference for reference in support_refs
@@ -1503,8 +1766,7 @@ def _run_authority_graph(
                     for reference in occurrence_refs
                 )
                 present_in_contradiction = bool(
-                    receipt is not None
-                    and identity in receipt.trace.ordered_signal_identities
+                    identity in contradiction_signal_ids
                 )
                 token = hashlib.sha256(
                     f"{parent_id}|{identity}".encode("utf-8")
@@ -1541,7 +1803,8 @@ def _run_authority_graph(
                 )
             inspected = tuple(sorted({
                 *support_ids,
-                *(() if receipt is None else (receipt.receipt_id,)),
+                trigger.contradiction_reference.receipt_id,
+                trigger.emission_reference.receipt_id,
             }))
             eligibility_plans.append((parent_id, vocabulary, inspected))
 
@@ -2550,10 +2813,344 @@ class NativeProspectiveAuthorityV2:
             self._verify_invariants()
             if self._history_validation_mode != HISTORY_VALIDATION_LEGACY:
                 self._verify_ledger_derived_state()
+            self._verify_deferred_specialization_requests(
+                reconstruct_evidence=True
+            )
         except ProspectiveV2IntegrityError as exc:
             raise ProspectiveV2IntegrityError(
                 f"full history boundary {boundary} failed: {exc}"
             ) from exc
+
+    def _verify_deferred_specialization_requests(
+        self, *, reconstruct_evidence: bool = False
+    ) -> None:
+        """Validate request bindings; reconstruct evidence at boundaries."""
+
+        requested_parents: list[str] = []
+        references = self.accepted_real_references
+        for request_id, request in sorted(self.deferred_requests.items()):
+            if request.request_id != request_id or request_id != _sha({
+                "kind": "V2_GRAPH_SPECIALIZATION_REQUEST_V7",
+                "request": request.identity_manifest(),
+            }):
+                raise ProspectiveV2IntegrityError(
+                    "specialization request identity mismatch"
+                )
+            state = self.states.get(request.parent_cell_id)
+            if state is None:
+                raise ProspectiveV2IntegrityError(
+                    "specialization request parent is absent"
+                )
+            hypothesis = state.hypothesis
+            if (
+                request.specialization_mode != self.specialization_mode
+                or request.source_generation > self.current_generation
+                or hypothesis.source_generation > request.source_generation
+                or hypothesis.hypothesis_digest
+                != request.parent_hypothesis_digest
+                or hypothesis.polarity is not request.fixed_polarity
+                or hypothesis.specialization_depth != 0
+                or hypothesis.dormant_origin
+                is not DormantOrigin.MIXED_OUTCOME_SHADOW
+                or request.parent_discovery_receipt_ids
+                != hypothesis.discovery_receipt_ids
+                or request.parent_discovery_support_receipt_ids
+                != hypothesis.discovery_support_receipt_ids
+                or request.transitive_ancestor_receipt_ids
+                != hypothesis.transitive_ancestor_receipt_ids
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "specialization request parent contract mismatch"
+                )
+
+            emission_reference = references.get(
+                request.request_emission_receipt_id
+            )
+            contradiction_reference = references.get(
+                request.contradiction_receipt_id
+            )
+            emission_receipt = self.consumed_receipts.get(
+                request.request_emission_receipt_id
+            )
+            emission = self.emissions.get(
+                request.request_emission_receipt_id
+            )
+            if (
+                emission_reference is None
+                or contradiction_reference is None
+                or emission_receipt is None
+                or emission is None
+                or emission_reference.ordinal
+                != request.request_emission_ordinal
+                or contradiction_reference.ordinal
+                != request.contradiction_ordinal
+                or emission_reference.source_generation
+                != request.source_generation
+                or request.parent_cell_id
+                not in emission.graph_specialization_request_ids
+                or request.request_id
+                not in emission.request_queue_appended_ids
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "specialization request emission contract mismatch"
+                )
+            expected_outcome = (
+                request.fixed_polarity is AvailabilityState.AVAILABLE
+            )
+            if contradiction_reference.observed_outcome is expected_outcome:
+                raise ProspectiveV2IntegrityError(
+                    "specialization anchor is not contradictory"
+                )
+            if request.request_basis is RequestBasis.CERTIFIED_REVOCATION:
+                if (
+                    not request.graph_revocation_confirmed
+                    or request.parent_cell_id
+                    not in emission.graph_revocation_ids
+                    or contradiction_reference != emission_reference
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        "certified-revocation request basis mismatch"
+                    )
+            elif (
+                request.graph_revocation_confirmed
+                or request.parent_cell_id in emission.graph_revocation_ids
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "uncertified mixed-evidence request basis mismatch"
+                )
+            if (
+                dict(emission.eligible_ids_by_request).get(
+                    request.parent_cell_id
+                ) != request.eligible_base_ids
+                or dict(emission.candidate_terminal_states).get(
+                    request.parent_cell_id
+                ) != request.candidate_terminals
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "specialization request differs from graph emission"
+                )
+            requested_parents.append(request.parent_cell_id)
+            if not reconstruct_evidence:
+                continue
+
+            try:
+                prospective_support_ids = tuple(sorted(
+                    receipt_id for receipt_id in state.support_receipt_ids
+                    if references[receipt_id].ordinal
+                    <= request.request_emission_ordinal
+                ))
+                contradiction_ids = tuple(sorted(
+                    receipt_id
+                    for receipt_id in state.contradiction_receipt_ids
+                    if references[receipt_id].ordinal
+                    <= request.request_emission_ordinal
+                ))
+                all_support_ids = tuple(sorted({
+                    *request.parent_discovery_support_receipt_ids,
+                    *prospective_support_ids,
+                }))
+                all_support_references = tuple(
+                    references[item] for item in all_support_ids
+                )
+            except KeyError as exc:
+                raise ProspectiveV2IntegrityError(
+                    "specialization request references unknown REAL evidence"
+                ) from exc
+            if (
+                prospective_support_ids
+                != request.parent_prospective_support_receipt_ids
+                or not contradiction_ids
+                or any(
+                    reference.observed_outcome is not expected_outcome
+                    for reference in all_support_references
+                )
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "specialization request support contract mismatch"
+                )
+            earliest_contradiction = min(
+                (references[item] for item in contradiction_ids),
+                key=lambda item: (item.ordinal, item.receipt_id),
+            )
+            if earliest_contradiction != contradiction_reference:
+                raise ProspectiveV2IntegrityError(
+                    "specialization request did not anchor its earliest "
+                    "contradiction"
+                )
+
+            transition_at_emission = tuple(
+                row for row in state.transition_rows
+                if row.get("receipt_id")
+                == request.request_emission_receipt_id
+            )
+            if request.request_basis is RequestBasis.CERTIFIED_REVOCATION:
+                if (
+                    not request.graph_revocation_confirmed
+                    or request.parent_cell_id
+                    not in emission.graph_revocation_ids
+                    or transition_at_emission != ({
+                        "transition": "GRAPH_LOCAL_REVOCATION",
+                        "receipt_id": request.request_emission_receipt_id,
+                        "ordinal": request.request_emission_ordinal,
+                        "pending_token": emission_receipt.pending_token,
+                    },)
+                    or contradiction_reference != emission_reference
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        "certified-revocation request basis mismatch"
+                    )
+            else:
+                evidence_prefix = sorted(
+                    (
+                        (references[item].ordinal, item, True)
+                        for item in prospective_support_ids
+                    ),
+                    key=lambda row: (row[0], row[1]),
+                ) + sorted(
+                    (
+                        (references[item].ordinal, item, False)
+                        for item in contradiction_ids
+                    ),
+                    key=lambda row: (row[0], row[1]),
+                )
+                evidence_prefix.sort(key=lambda row: (row[0], row[1]))
+                successes = 0
+                contradictions = 0
+                first_mixed_ordinal: int | None = None
+                for ordinal, _receipt_id, supports in evidence_prefix:
+                    successes += int(supports)
+                    contradictions += int(not supports)
+                    if successes >= MIN_SUPPORT and contradictions >= 1:
+                        first_mixed_ordinal = ordinal
+                        break
+                transaction = self.event_transactions.get(
+                    emission_receipt.pending_token, {}
+                )
+                classification = transaction.get(
+                    "pre_outcome_classification", {}
+                )
+                committed_ids = {
+                    *classification.get("available_cell_ids", ()),
+                    *classification.get("refuted_cell_ids", ()),
+                }
+                if (
+                    request.graph_revocation_confirmed
+                    or request.parent_cell_id in emission.graph_revocation_ids
+                    or transition_at_emission
+                    or first_mixed_ordinal
+                    != request.request_emission_ordinal
+                    or state.prospectively_certified
+                    or request.parent_cell_id in committed_ids
+                ):
+                    raise ProspectiveV2IntegrityError(
+                        "uncertified mixed-evidence request basis mismatch"
+                    )
+
+            implied_ids = _recursively_implied_signal_ids(
+                request.parent_cell_id, self.states
+            )
+            vocabulary = tuple(sorted({
+                identity
+                for reference in all_support_references
+                for identity in reference.ordered_signal_identities
+                if _specialization_identity_role_permitted(
+                    reference, identity
+                )
+            }))
+            inspected_ids = tuple(sorted({
+                *all_support_ids,
+                request.contradiction_receipt_id,
+                request.request_emission_receipt_id,
+            }))
+            expected_candidates: list[
+                SpecializationCandidateTerminalState
+            ] = []
+            for identity in vocabulary:
+                occurrence_references = tuple(
+                    reference for reference in all_support_references
+                    if identity in reference.ordered_signal_identities
+                )
+                supporting_ids = tuple(sorted(
+                    item.receipt_id for item in occurrence_references
+                ))
+                supporting_physical_ids = tuple(sorted(
+                    item.stable_physical_interaction_id
+                    for item in occurrence_references
+                ))
+                role_permitted = any(
+                    _specialization_identity_role_permitted(
+                        reference, identity
+                    )
+                    for reference in occurrence_references
+                )
+                present_in_anchor = (
+                    identity
+                    in contradiction_reference.ordered_signal_identities
+                )
+                confirmed = bool(
+                    role_permitted
+                    and identity not in implied_ids
+                    and len(supporting_ids) >= MIN_SUPPORT
+                    and (
+                        self.specialization_mode
+                        is SpecializationMode.COUNTEREXAMPLE_BLIND
+                        or (
+                            self.specialization_mode
+                            is SpecializationMode.LOCAL_CONTRAST
+                            and not present_in_anchor
+                        )
+                    )
+                )
+                token = hashlib.sha256(
+                    f"{request.parent_cell_id}|{identity}".encode("utf-8")
+                ).hexdigest()[:16]
+                expected_candidates.append(
+                    SpecializationCandidateTerminalState(
+                        identity=identity,
+                        node_id=(
+                            "v2:specialization_eligibility:" + token
+                        ),
+                        role_permitted=role_permitted,
+                        recursively_implied_by_parent=(
+                            identity in implied_ids
+                        ),
+                        supporting_receipt_ids=supporting_ids,
+                        supporting_stable_physical_interaction_ids=(
+                            supporting_physical_ids
+                        ),
+                        supporting_occurrence_count=len(supporting_ids),
+                        present_in_triggering_contradiction=(
+                            present_in_anchor
+                        ),
+                        specialization_mode=self.specialization_mode,
+                        confirmed=confirmed,
+                        node_state=(
+                            NodeState.CONFIRMED.name
+                            if confirmed else NodeState.FAILED.name
+                        ),
+                        inspected_receipt_ids=inspected_ids,
+                    )
+                )
+            if tuple(expected_candidates) != request.candidate_terminals:
+                raise ProspectiveV2IntegrityError(
+                    "specialization candidate evidence contract mismatch"
+                )
+            if any(
+                references[item].ordinal
+                > request.request_emission_ordinal
+                for item in inspected_ids
+            ):
+                raise ProspectiveV2IntegrityError(
+                    "specialization candidate read beyond request emission"
+                )
+        if (
+            len(requested_parents) != len(set(requested_parents))
+            or tuple(sorted(requested_parents))
+            != self.lifetime_requested_parent_ids
+        ):
+            raise ProspectiveV2IntegrityError(
+                "lifetime specialization request ledger mismatch"
+            )
 
     def _verify_invariants(
         self, *, allow_unregistered: bool = False
@@ -2759,12 +3356,15 @@ class NativeProspectiveAuthorityV2:
         ordered_queue = tuple(sorted(
             self.request_queue,
             key=lambda request_id: (
-                self.deferred_requests[request_id].contradiction_ordinal,
+                self.deferred_requests[
+                    request_id
+                ].request_emission_ordinal,
                 self.deferred_requests[request_id].parent_cell_id,
             ),
         ))
         if self.request_queue != ordered_queue:
             raise ProspectiveV2IntegrityError("request queue is not canonical")
+        self._verify_deferred_specialization_requests()
         if set(self.request_consumptions).difference(self.request_queue):
             raise ProspectiveV2IntegrityError(
                 "consumption exists outside request queue"
@@ -3028,7 +3628,7 @@ class NativeProspectiveAuthorityV2:
                         key=lambda request_id: (
                             replay_requests[
                                 request_id
-                            ].contradiction_ordinal,
+                            ].request_emission_ordinal,
                             replay_requests[
                                 request_id
                             ].parent_cell_id,
@@ -3092,6 +3692,7 @@ class NativeProspectiveAuthorityV2:
                 active_derived,
                 AuthorityMeasurementSnapshot(receipt.trace, receipt),
                 accepted_real_references=replay_references,
+                current_real_reference=reference,
                 specialization_mode=self.specialization_mode,
                 lifetime_requested_parent_ids=tuple(sorted(replay_lifetime)),
             )
@@ -3101,6 +3702,25 @@ class NativeProspectiveAuthorityV2:
                 raise ProspectiveV2IntegrityError(
                     "replayed lifecycle omitted commitment"
                 )
+            request_rows = dict(graph["specialization_candidate_states"])
+            requests = tuple(
+                self._request_from_graph_state(
+                    parent_cell_id=parent_id,
+                    state=active_derived[parent_id],
+                    receipt=receipt,
+                    current_reference=reference,
+                    accepted_real_references=replay_references,
+                    current_reference_validated=True,
+                    source_generation=reference.source_generation,
+                    specialization_mode=self.specialization_mode,
+                    already_requested=parent_id in replay_lifetime,
+                    graph_revocation_confirmed=(
+                        parent_id in graph["revocation"]
+                    ),
+                    candidate_rows=request_rows.get(parent_id, ()),
+                )
+                for parent_id in graph["specialization_request"]
+            )
             for cell_id in matching:
                 state = active_derived[cell_id]
                 state.support += 1
@@ -3140,48 +3760,10 @@ class NativeProspectiveAuthorityV2:
                             "pending_token": receipt.pending_token,
                         },
                     )
-            request_rows = dict(graph["specialization_candidate_states"])
-            requests: list[DeferredSpecializationRequest] = []
-            for parent_id in graph["specialization_request"]:
-                parent_state = active_derived[parent_id]
-                hypothesis = parent_state.hypothesis
-                request_id = _sha({
-                    "kind": "V2_GRAPH_SPECIALIZATION_REQUEST",
-                    "generation": reference.source_generation,
-                    "parent_cell_id": parent_id,
-                    "parent_hypothesis_digest": hypothesis.hypothesis_digest,
-                    "contradiction_receipt_id": receipt.receipt_id,
-                    "contradiction_ordinal": receipt.ordinal,
-                })
-                request = DeferredSpecializationRequest(
-                    request_id=request_id,
-                    source_generation=reference.source_generation,
-                    parent_cell_id=parent_id,
-                    parent_hypothesis_digest=hypothesis.hypothesis_digest,
-                    fixed_polarity=hypothesis.polarity,
-                    contradiction_receipt_id=receipt.receipt_id,
-                    contradiction_ordinal=receipt.ordinal,
-                    specialization_mode=self.specialization_mode,
-                    parent_discovery_receipt_ids=(
-                        hypothesis.discovery_receipt_ids
-                    ),
-                    parent_discovery_support_receipt_ids=(
-                        hypothesis.discovery_support_receipt_ids
-                    ),
-                    parent_prospective_support_receipt_ids=(
-                        parent_state.support_receipt_ids[:-1]
-                        if parent_id in supporting
-                        else parent_state.support_receipt_ids
-                    ),
-                    transitive_ancestor_receipt_ids=(
-                        hypothesis.transitive_ancestor_receipt_ids
-                    ),
-                    candidate_terminals=request_rows.get(parent_id, ()),
-                )
-                requests.append(request)
+            for request in requests:
                 replay_requests[request.request_id] = request
                 replay_queue.append(request.request_id)
-                replay_lifetime.add(parent_id)
+                replay_lifetime.add(request.parent_cell_id)
             expected_emissions[receipt.receipt_id] = V2CertificationEmission(
                 receipt_id=receipt.receipt_id,
                 matching_cell_ids=matching,
@@ -3258,7 +3840,7 @@ class NativeProspectiveAuthorityV2:
         expected_queue = tuple(sorted(
             replay_queue,
             key=lambda request_id: (
-                replay_requests[request_id].contradiction_ordinal,
+                replay_requests[request_id].request_emission_ordinal,
                 replay_requests[request_id].parent_cell_id,
             ),
         ))
@@ -3295,11 +3877,15 @@ class NativeProspectiveAuthorityV2:
         self,
         trace: GraphSignalTrace,
         receipt: V2GroundedReceipt | None = None,
+        current_real_reference: AcceptedRealReference | None = None,
     ) -> dict[str, Any]:
+        if receipt is not None and current_real_reference is None:
+            current_real_reference = self._reference_from_v2_receipt(receipt)
         return _run_authority_graph(
             self.states,
             AuthorityMeasurementSnapshot(trace, receipt),
             accepted_real_references=self.accepted_real_references,
+            current_real_reference=current_real_reference,
             specialization_mode=self.specialization_mode,
             lifetime_requested_parent_ids=(
                 self.lifetime_requested_parent_ids
@@ -3337,32 +3923,68 @@ class NativeProspectiveAuthorityV2:
             )),
         )
 
-    def _request_from_graph(
-        self,
+    @staticmethod
+    def _request_from_graph_state(
         *,
         parent_cell_id: str,
+        state: ProspectiveAuthorityState,
         receipt: V2GroundedReceipt,
+        current_reference: AcceptedRealReference,
+        accepted_real_references: Mapping[str, AcceptedRealReference],
+        current_reference_validated: bool,
+        source_generation: int,
+        specialization_mode: SpecializationMode,
+        already_requested: bool,
+        graph_revocation_confirmed: bool,
         candidate_rows: tuple[SpecializationCandidateTerminalState, ...],
     ) -> DeferredSpecializationRequest:
-        state = self.states[parent_cell_id]
         hypothesis = state.hypothesis
-        request_id = _sha({
-            "kind": "V2_GRAPH_SPECIALIZATION_REQUEST",
-            "generation": self.current_generation,
-            "parent_cell_id": parent_cell_id,
-            "parent_hypothesis_digest": hypothesis.hypothesis_digest,
-            "contradiction_receipt_id": receipt.receipt_id,
-            "contradiction_ordinal": receipt.ordinal,
-        })
-        return DeferredSpecializationRequest(
-            request_id=request_id,
-            source_generation=self.current_generation,
+        references = dict(accepted_real_references)
+        prior = references.get(current_reference.receipt_id)
+        if prior is not None and prior != current_reference:
+            raise ProspectiveV2IntegrityError(
+                "request builder REAL reference collision"
+            )
+        references[current_reference.receipt_id] = current_reference
+        trigger = _derive_specialization_request_trigger(
+            state,
+            receipt,
+            current_reference,
+            references,
+            matched=True,
+            specialization_mode=specialization_mode,
+            already_requested=already_requested,
+            current_reference_validated=current_reference_validated,
+        )
+        if trigger is None:
+            raise ProspectiveV2IntegrityError(
+                "request builder lacks a causal trigger"
+            )
+        expected_revocation = (
+            trigger.basis is RequestBasis.CERTIFIED_REVOCATION
+        )
+        if graph_revocation_confirmed is not expected_revocation:
+            raise ProspectiveV2IntegrityError(
+                "request basis differs from graph revocation"
+            )
+        if current_reference.source_generation != source_generation:
+            raise ProspectiveV2IntegrityError(
+                "request generation differs from emission reference"
+            )
+        draft = DeferredSpecializationRequest(
+            request_id="UNBOUND_V7_SPECIALIZATION_REQUEST",
+            source_generation=source_generation,
             parent_cell_id=parent_cell_id,
             parent_hypothesis_digest=hypothesis.hypothesis_digest,
             fixed_polarity=hypothesis.polarity,
-            contradiction_receipt_id=receipt.receipt_id,
-            contradiction_ordinal=receipt.ordinal,
-            specialization_mode=self.specialization_mode,
+            request_basis=trigger.basis,
+            request_emission_receipt_id=receipt.receipt_id,
+            request_emission_ordinal=receipt.ordinal,
+            contradiction_receipt_id=(
+                trigger.contradiction_reference.receipt_id
+            ),
+            contradiction_ordinal=trigger.contradiction_reference.ordinal,
+            specialization_mode=specialization_mode,
             parent_discovery_receipt_ids=(
                 hypothesis.discovery_receipt_ids
             ),
@@ -3370,13 +3992,19 @@ class NativeProspectiveAuthorityV2:
                 hypothesis.discovery_support_receipt_ids
             ),
             parent_prospective_support_receipt_ids=(
-                state.support_receipt_ids
+                trigger.parent_prospective_support_receipt_ids
             ),
             transitive_ancestor_receipt_ids=(
                 hypothesis.transitive_ancestor_receipt_ids
             ),
             candidate_terminals=candidate_rows,
+            graph_revocation_confirmed=graph_revocation_confirmed,
+            graph_request_confirmed=True,
         )
+        return replace(draft, request_id=_sha({
+            "kind": "V2_GRAPH_SPECIALIZATION_REQUEST_V7",
+            "request": draft.identity_manifest(),
+        }))
 
     @staticmethod
     def _classification_from_emissions(
@@ -3796,20 +4424,25 @@ class NativeProspectiveAuthorityV2:
             pending.matching_cell_ids,
             receipt.observed_outcome,
         )
-        graph = self._graph_measure(receipt.trace, receipt)
+        current_reference = self._reference_from_v2_receipt(receipt)
+        graph = self._graph_measure(
+            receipt.trace, receipt, current_reference
+        )
         if graph["commitment"] != pending.matching_cell_ids:
             raise ProspectiveV2IntegrityError(
                 "consumption commitment differs from pre-outcome commitment"
             )
         supporting = graph["support"]
         contradictions = graph["contradiction"]
-        if set(supporting).intersection(contradictions):
+        supporting_set = set(supporting)
+        contradiction_set = set(contradictions)
+        matching_set = set(pending.matching_cell_ids)
+        if supporting_set.intersection(contradiction_set):
             raise ProspectiveV2IntegrityError(
                 "support/contradiction overlap"
             )
         if (
-            set(supporting).union(contradictions)
-            != set(pending.matching_cell_ids)
+            supporting_set.union(contradiction_set) != matching_set
         ):
             raise ProspectiveV2IntegrityError(
                 "lifecycle accounting omitted commitment"
@@ -3819,28 +4452,47 @@ class NativeProspectiveAuthorityV2:
             graph["specialization_candidate_states"]
         )
         required_request_ids = tuple(sorted(
-            cell_id for cell_id in graph["revocation"]
-            if (
-                self.specialization_mode
-                is not SpecializationMode.DISCONNECTED
-                and self.states[cell_id].hypothesis.specialization_depth == 0
-                and self.states[cell_id].hypothesis.dormant_origin
-                is DormantOrigin.MIXED_OUTCOME_SHADOW
-                and cell_id not in self.lifetime_requested_parent_ids
-            )
+            cell_id for cell_id in pending.matching_cell_ids
+            if _specialization_request_basis(
+                self.states[cell_id],
+                matched=True,
+                post_frontier=bool(
+                    receipt.receipt_id
+                    and receipt.ordinal > self.states[
+                        cell_id
+                    ].hypothesis.certification_frontier
+                    and receipt.receipt_id not in self.states[
+                        cell_id
+                    ].hypothesis.discovery_exclusion_receipt_ids
+                ),
+                supports=cell_id in supporting_set,
+                contradicts=cell_id in contradiction_set,
+                specialization_mode=self.specialization_mode,
+                already_requested=(
+                    cell_id in self.lifetime_requested_parent_ids
+                ),
+            ) is not None
         ))
         if request_parent_ids != required_request_ids:
             raise ProspectiveV2IntegrityError(
-                "graph request/revocation contract mismatch"
-            )
-        if not set(request_parent_ids).issubset(graph["revocation"]):
-            raise ProspectiveV2IntegrityError(
-                "specialization request lacks graph revocation"
+                "graph request/trigger contract mismatch"
             )
         new_requests = tuple(
-            self._request_from_graph(
+            self._request_from_graph_state(
                 parent_cell_id=parent_id,
+                state=self.states[parent_id],
                 receipt=receipt,
+                current_reference=current_reference,
+                accepted_real_references=self.accepted_real_references,
+                current_reference_validated=True,
+                source_generation=self.current_generation,
+                specialization_mode=self.specialization_mode,
+                already_requested=(
+                    parent_id in self.lifetime_requested_parent_ids
+                ),
+                graph_revocation_confirmed=(
+                    parent_id in graph["revocation"]
+                ),
                 candidate_rows=candidate_rows_by_parent.get(parent_id, ()),
             )
             for parent_id in request_parent_ids
@@ -3918,7 +4570,7 @@ class NativeProspectiveAuthorityV2:
             receipt.interaction_fingerprint
         ] = receipt.receipt_id
         self.emissions[receipt.receipt_id] = emission
-        reference = self._reference_from_v2_receipt(receipt)
+        reference = current_reference
         if reference.receipt_id in self.accepted_real_references:
             raise ProspectiveV2IntegrityError(
                 "accepted REAL reference identity collision"
@@ -3933,7 +4585,9 @@ class NativeProspectiveAuthorityV2:
         self.request_queue = tuple(sorted(
             (*self.request_queue, *(item.request_id for item in new_requests)),
             key=lambda request_id: (
-                self.deferred_requests[request_id].contradiction_ordinal,
+                self.deferred_requests[
+                    request_id
+                ].request_emission_ordinal,
                 self.deferred_requests[request_id].parent_cell_id,
             ),
         ))

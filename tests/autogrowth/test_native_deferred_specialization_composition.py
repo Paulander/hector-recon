@@ -21,6 +21,7 @@ from recon_lite_chess.autogrowth.native_prospective_evidence_authority_v2 import
     MIN_SUPPORT,
     NativeProspectiveAuthorityV2,
     ProspectiveV2IntegrityError,
+    RequestBasis,
     SpecializationCandidateTerminalState,
     _v2_specialization_eligibility_terminal,
 )
@@ -129,6 +130,9 @@ def _request(index: int) -> DeferredSpecializationRequest:
         parent_cell_id=f"parent-{index:03d}",
         parent_hypothesis_digest=f"digest-{index:03d}",
         fixed_polarity=AvailabilityState.AVAILABLE,
+        request_basis=RequestBasis.CERTIFIED_REVOCATION,
+        request_emission_receipt_id=receipt,
+        request_emission_ordinal=index,
         contradiction_receipt_id=receipt,
         contradiction_ordinal=index,
         specialization_mode=SpecializationMode.LOCAL_CONTRAST,
@@ -137,7 +141,22 @@ def _request(index: int) -> DeferredSpecializationRequest:
         parent_prospective_support_receipt_ids=(),
         transitive_ancestor_receipt_ids=(),
         candidate_terminals=(terminal,),
+        graph_revocation_confirmed=True,
+        graph_request_confirmed=True,
     )
+
+
+@pytest.mark.parametrize(
+    "field",
+    ("graph_revocation_confirmed", "graph_request_confirmed"),
+)
+def test_request_graph_truth_claims_are_explicit_booleans(field: str):
+    values = dict(_request(0).__dict__)
+    values[field] = 1
+    with pytest.raises(
+        ProspectiveV2IntegrityError, match="not Boolean"
+    ):
+        DeferredSpecializationRequest(**values)
 
 
 def test_request_capacity_accepts_192_and_rejects_193_atomically():
@@ -307,6 +326,9 @@ def test_all_192_sealed_requests_consume_one_permanent_slot(monkeypatch):
             **{
                 **template.__dict__,
                 "request_id": f"request-{index:03d}",
+                "request_emission_receipt_id": f"receipt-{index:03d}",
+                "request_emission_ordinal": index,
+                "contradiction_receipt_id": f"receipt-{index:03d}",
                 "contradiction_ordinal": index,
             }
         )
