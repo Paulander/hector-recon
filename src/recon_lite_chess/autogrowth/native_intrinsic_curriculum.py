@@ -22,12 +22,14 @@ from pathlib import Path
 import pickle
 import platform
 import random
+import resource
 import subprocess
 from time import perf_counter
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Callable, Iterable, Mapping, Sequence
 
 import chess
 
+from recon_lite import FrameContext, FrameKind
 from recon_lite_hector.nodes.stem_cell import StemCellState
 
 from recon_lite_hector.learning import (
@@ -56,6 +58,7 @@ from .native_single_graph_curriculum import (
 
 R0_COMPETENCE_ID = "native_intrinsic_r0_mate_in_1"
 R1_COMPETENCE_ID = "native_intrinsic_r1_mate_in_2"
+V2_PROSPECTIVE_AVAILABILITY = "v2_prospective"
 GATE_FEATURE_NAMES = (
     "selected_score",
     "selected_margin",
@@ -167,6 +170,9 @@ class NativeIntrinsicCurriculumConfig:
     r1_composite_max_atoms_per_triplet: int = 64
     r1_composite_min_support: int = 2
     r1_heldout_mature_composites_only: bool = True
+    development_wall_ceiling_seconds: float | None = None
+    development_peak_rss_ceiling_mib: float | None = None
+    development_fen_fullmove_base: int | None = None
     eta_m3: float = 0.08
     eta_fast: float = 0.20
     eta_slow: float = 1.0
@@ -199,6 +205,7 @@ class R1MechanisticArm:
             "prototype_gate",
             "virtual_frame_verified",
             "shuffled_prototype_gate",
+            V2_PROSPECTIVE_AVAILABILITY,
         }:
             raise ValueError(f"unsupported R1 availability mode: {self.availability_mode}")
         if self.child_value_mode not in {"learned", "zero", "constant"}:
@@ -359,6 +366,9 @@ class _Pools:
             "r1_regression": self.r1_regression,
         }
         all_fens = [fen for values in groups.values() for fen in values]
+        fullmove_numbers = [
+            chess.Board(fen).fullmove_number for fen in all_fens
+        ]
         r0_groups = {
             "r0_train": self.r0_train,
             "r0_validation": self.r0_validation,
@@ -399,6 +409,11 @@ class _Pools:
             },
             "all_fens_disjoint": len(all_fens) == len(set(all_fens)),
             "combined_sha256": _hash_json(groups),
+            "fen_fullmove_namespace": {
+                "minimum": min(fullmove_numbers, default=None),
+                "maximum": max(fullmove_numbers, default=None),
+                "unique_count": len(set(fullmove_numbers)),
+            },
             "final_test_created_or_touched": False,
             "solution_predicates_used_for": "curriculum scheduling only",
             "r0_excluded_development": {
@@ -440,8 +455,27 @@ class _R0ReplayExperience:
 def run_native_intrinsic_curriculum(
     *,
     config: NativeIntrinsicCurriculumConfig | None = None,
+    r0_child_authority_factory: Callable[
+        [
+            NativeReConKRKGraph,
+            IntrinsicCreditEngine,
+            "_Pools",
+            NativeIntrinsicCurriculumConfig,
+        ],
+        tuple[Any, Mapping[str, Any]],
+    ]
+    | None = None,
 ) -> NativeIntrinsicCurriculumResult:
     cfg = config or NativeIntrinsicCurriculumConfig()
+    if (
+        cfg.r0_availability_mode == V2_PROSPECTIVE_AVAILABILITY
+        and cfg.r1_mechanistic_factorial
+    ):
+        raise ValueError(
+            "v2_prospective requires the fixed full/no-bootstrap design; "
+            "V2-specific mechanistic factorial arms are not defined"
+        )
+    run_started = perf_counter()
     pools = _build_pools(cfg)
     graph = NativeReConKRKGraph(config=_graph_config(cfg))
     ecology_uuid = hashlib.sha256(
@@ -533,6 +567,42 @@ def run_native_intrinsic_curriculum(
         r0_parameter_freeze = graph.freeze_existing_parameters(
             reason="R0_joint_mastery_consolidation",
         )
+    r0_child_authority: Any | None = None
+    r0_child_authority_audit: dict[str, Any] = {
+        "enabled": False,
+        "reason": "availability_mode_is_not_v2_prospective",
+    }
+    if (
+        cfg.run_r1
+        and r0_pass
+        and cfg.r0_availability_mode == V2_PROSPECTIVE_AVAILABILITY
+    ):
+        if r0_child_authority_factory is None:
+            raise ValueError(
+                "v2_prospective availability requires an explicit R0 child "
+                "authority factory"
+            )
+        before_factory = hashlib.sha256(
+            pickle.dumps((graph, credit), protocol=5)
+        ).hexdigest()
+        authority, authority_audit = r0_child_authority_factory(
+            graph, credit, pools, cfg
+        )
+        after_factory = hashlib.sha256(
+            pickle.dumps((graph, credit), protocol=5)
+        ).hexdigest()
+        if before_factory != after_factory:
+            raise RuntimeError("R0 child authority construction mutated the curriculum")
+        if not callable(getattr(authority, "open_virtual", None)):
+            raise TypeError("R0 child authority lacks open_virtual")
+        if not callable(getattr(authority, "continuation_digest", None)):
+            raise TypeError("R0 child authority lacks continuation_digest")
+        r0_child_authority = authority
+        r0_child_authority_audit = {
+            "enabled": True,
+            "continuation_digest": authority.continuation_digest(),
+            **dict(authority_audit),
+        }
     progress: dict[str, Any] = {
         "schema_version": "krk_native_intrinsic_r0_r1_progress.v0",
         "ecology_uuid": ecology_uuid,
@@ -550,10 +620,16 @@ def run_native_intrinsic_curriculum(
     selected_graph = graph
     selected_credit = credit
     availability_ready = bool(
-        r0_gate is not None
-        and (
-            r0_gate.mature
-            or cfg.r0_availability_mode == "virtual_frame_verified"
+        (
+            cfg.r0_availability_mode == V2_PROSPECTIVE_AVAILABILITY
+            and r0_child_authority is not None
+        )
+        or (
+            r0_gate is not None
+            and (
+                r0_gate.mature
+                or cfg.r0_availability_mode == "virtual_frame_verified"
+            )
         )
     )
     if cfg.run_r1 and r0_pass and availability_ready:
@@ -589,6 +665,8 @@ def run_native_intrinsic_curriculum(
                 max_epochs=arm_epoch_budget,
                 config=cfg,
                 arm_spec=arm_spec,
+                r0_child_authority=r0_child_authority,
+                run_started=run_started,
             )
             if arm_name == primary_arm_name:
                 selected_graph = arm_graph
@@ -702,6 +780,18 @@ def run_native_intrinsic_curriculum(
             "runtime_child_priority_uses_stage_labels": False,
             "runtime_mature_child_priority_is_arm_specific": True,
             "runtime_child_priority_source": "explicit_mechanistic_arm",
+            "v2_child_authority_derived_from_same_run_r0": bool(
+                r0_child_authority is not None
+            ),
+            "v2_virtual_child_queries_are_read_only": bool(
+                r0_child_authority is not None
+            ),
+            "v2_real_training_evidence_is_append_only": bool(
+                r0_child_authority is not None
+            ),
+            "v2_same_event_outcome_cannot_bootstrap_itself": bool(
+                r0_child_authority is not None
+            ),
             "r1_reply_schedule": "per_position_action_content_blind_round_robin",
             "serialized_interval_snapshot_resume_implemented": True,
             "snapshot_resume_requires_exact_fingerprint": True,
@@ -727,6 +817,7 @@ def run_native_intrinsic_curriculum(
         "clone_resume_probe": clone_parity,
         "r0_replay_memory": r0_replay_memory_audit,
         "r0_parameter_freeze": r0_parameter_freeze,
+        "r0_child_authority": r0_child_authority_audit,
         "r1_arms": arms,
         "final_graph": selected_graph.to_dict(),
         "final_credit": selected_credit.snapshot(),
@@ -899,6 +990,31 @@ def _build_pools(cfg: NativeIntrinsicCurriculumConfig) -> _Pools:
         )
     else:
         raise ValueError("r1_pool_mode must be random or balanced_setup")
+    if cfg.development_fen_fullmove_base is not None:
+        (
+            r0_train,
+            r0_validation,
+            r0_regression,
+            gate_train_decoys,
+            gate_validation_decoys,
+            gate_regression_decoys,
+            r1_train,
+            r1_validation,
+            r1_regression,
+        ) = _namespace_development_fullmoves(
+            (
+                r0_train,
+                r0_validation,
+                r0_regression,
+                gate_train_decoys,
+                gate_validation_decoys,
+                gate_regression_decoys,
+                r1_train,
+                r1_validation,
+                r1_regression,
+            ),
+            base=int(cfg.development_fen_fullmove_base),
+        )
     return _Pools(
         r0_train=r0_train,
         r0_validation=r0_validation,
@@ -919,6 +1035,32 @@ def _build_pools(cfg: NativeIntrinsicCurriculumConfig) -> _Pools:
         r1_regression_strata=r1_regression_strata,
         r1_pool_mode=cfg.r1_pool_mode,
     )
+
+
+def _namespace_development_fullmoves(
+    groups: Sequence[Sequence[str]],
+    *,
+    base: int,
+) -> tuple[tuple[str, ...], ...]:
+    """Give viewed development inputs an exact physical-identity namespace."""
+
+    if base < 10_000:
+        raise ValueError("development FEN fullmove base must be at least 10,000")
+    ordinal = 0
+    result: list[tuple[str, ...]] = []
+    for group in groups:
+        namespaced: list[str] = []
+        for fen in group:
+            board = chess.Board(fen)
+            if board.fullmove_number != 1:
+                raise ValueError(
+                    "development FEN namespace expects generated fullmove number 1"
+                )
+            board.fullmove_number = base + ordinal
+            namespaced.append(board.fen())
+            ordinal += 1
+        result.append(tuple(namespaced))
+    return tuple(result)
 
 
 def _balanced_r0_quotas(count: int) -> dict[str, int]:
@@ -1231,6 +1373,52 @@ class R1CheckpointInterrupt(RuntimeError):
         self.snapshot_path = snapshot_path
 
 
+class R1DevelopmentCeilingReached(RuntimeError):
+    """Raised at an epoch boundary after persisting an exact R1 snapshot."""
+
+    def __init__(
+        self, *, epoch: int, snapshot_path: Path, reason: str
+    ) -> None:
+        super().__init__(
+            f"R1 development ceiling reached after epoch {epoch}; "
+            f"reason={reason}; snapshot={snapshot_path}"
+        )
+        self.epoch = int(epoch)
+        self.snapshot_path = snapshot_path
+        self.reason = str(reason)
+
+
+def _peak_rss_mib() -> float:
+    raw = float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
+    return raw / (1024.0 * 1024.0) if platform.system() == "Darwin" else raw / 1024.0
+
+
+def _development_ceiling_reason(
+    config: NativeIntrinsicCurriculumConfig,
+    *,
+    run_started: float,
+) -> str | None:
+    elapsed = perf_counter() - run_started
+    if (
+        config.development_wall_ceiling_seconds is not None
+        and elapsed >= float(config.development_wall_ceiling_seconds)
+    ):
+        return (
+            f"wall_seconds={elapsed:.3f}>="
+            f"{float(config.development_wall_ceiling_seconds):.3f}"
+        )
+    peak = _peak_rss_mib()
+    if (
+        config.development_peak_rss_ceiling_mib is not None
+        and peak >= float(config.development_peak_rss_ceiling_mib)
+    ):
+        return (
+            f"peak_rss_mib={peak:.3f}>="
+            f"{float(config.development_peak_rss_ceiling_mib):.3f}"
+        )
+    return None
+
+
 def _package_version(*names: str) -> str:
     for name in names:
         try:
@@ -1260,6 +1448,12 @@ def _source_identity() -> dict[str, Any]:
     behavior_files = (
         Path(__file__).resolve(),
         Path(__file__).with_name("native_single_graph_curriculum.py").resolve(),
+        Path(__file__).with_name("native_authority_handover.py").resolve(),
+        Path(__file__).with_name("native_competence_envelope.py").resolve(),
+        Path(__file__).with_name("native_trace_competence_authority.py").resolve(),
+        Path(__file__).with_name(
+            "native_prospective_evidence_authority_v2.py"
+        ).resolve(),
         (repo_root / "src/recon_lite_hector/learning/intrinsic_credit.py").resolve(),
     )
     return {
@@ -1308,6 +1502,7 @@ def _r1_snapshot_fingerprint(
     arm_name: str,
     arm_spec: R1MechanisticArm,
     r0_child_triplet_ids: frozenset[str],
+    r0_child_authority_digest: str | None,
     config: NativeIntrinsicCurriculumConfig,
 ) -> str:
     behavior_config = asdict(config)
@@ -1317,6 +1512,8 @@ def _r1_snapshot_fingerprint(
         "r1_snapshot_dir",
         "resume_r1_snapshots",
         "max_samples",
+        "development_wall_ceiling_seconds",
+        "development_peak_rss_ceiling_mib",
     ):
         behavior_config.pop(key, None)
     payload = {
@@ -1327,6 +1524,7 @@ def _r1_snapshot_fingerprint(
         "pool_manifest": pools.manifest(),
         "r0_gate": r0_gate.to_dict(),
         "r0_child_triplet_ids": sorted(r0_child_triplet_ids),
+        "r0_child_authority_digest": r0_child_authority_digest,
         "source_identity": _source_identity(),
         "base_state_sha256": hashlib.sha256(
             pickle.dumps((graph, credit), protocol=5)
@@ -1463,6 +1661,8 @@ def _run_r1_arm(
     config: NativeIntrinsicCurriculumConfig,
     stop_after_epoch: int | None = None,
     arm_spec: R1MechanisticArm | None = None,
+    r0_child_authority: Any | None = None,
+    run_started: float | None = None,
 ) -> dict[str, Any]:
     arm = arm_spec or _legacy_r1_arm(arm_name, config)
     if arm.name != arm_name:
@@ -1472,6 +1672,11 @@ def _run_r1_arm(
         score_hierarchy_edge_weights=arm.hierarchy_edge_scoring,
     )
     child_value_control = _apply_child_value_control(credit, arm, config)
+    if r0_child_authority is not None:
+        authority_type = type(r0_child_authority)
+        r0_child_authority = authority_type.loads(r0_child_authority.dumps())
+        if r0_child_authority.pending_event is not None:
+            raise RuntimeError("R1 child authority clone has a pending REAL event")
     epoch_budget = max(1, int(max_epochs))
     if config.r1_validation_interval <= 0 or config.r1_snapshot_interval <= 0:
         raise ValueError("R1 validation and snapshot intervals must be positive")
@@ -1484,6 +1689,11 @@ def _run_r1_arm(
         arm_name=arm_name,
         arm_spec=arm,
         r0_child_triplet_ids=r0_child_triplet_ids,
+        r0_child_authority_digest=(
+            None
+            if r0_child_authority is None
+            else str(r0_child_authority.continuation_digest())
+        ),
         config=config,
     )
     restored = (
@@ -1517,6 +1727,9 @@ def _run_r1_arm(
             "availability_queries": 0,
             "availability_positives": 0,
             "successor_value_sum": 0.0,
+            "v2_real_observations": 0,
+            "v2_duplicate_virtual_queries": 0,
+            "v2_structural_transitions": 0,
         }
         reply_orbits: set[tuple[str, str, str]] = set()
         reply_exposure_counts: dict[tuple[str, str], int] = {}
@@ -1524,6 +1737,7 @@ def _run_r1_arm(
         checkpoints: list[dict[str, Any]] = []
         composition_events: list[dict[str, Any]] = []
         composition_consolidation_events: list[dict[str, Any]] = []
+        v2_structural_events: list[dict[str, Any]] = []
         history_snapshot_paths: list[str] = []
         stopped_epoch = epoch_budget
         joint_mastery = False
@@ -1535,6 +1749,27 @@ def _run_r1_arm(
             )
         _replace_object_state(graph, restored["graph"])
         _replace_object_state(credit, restored["credit"])
+        authority_payload = restored.get("r0_child_authority_payload")
+        if r0_child_authority is not None:
+            if not isinstance(authority_payload, bytes):
+                raise RuntimeError("V2 R1 snapshot omitted child authority state")
+            r0_child_authority = type(r0_child_authority).loads(
+                authority_payload
+            )
+            if r0_child_authority.pending_event is not None:
+                raise RuntimeError("restored V2 authority has a pending REAL event")
+            persisted_seen = restored.get("v2_seen_predecessor_fens")
+            if not isinstance(persisted_seen, tuple):
+                raise RuntimeError("V2 R1 snapshot omitted its duplicate index")
+            authoritative_seen = _v2_authoritative_predecessor_fens(
+                r0_child_authority
+            )
+            if frozenset(persisted_seen) != authoritative_seen:
+                raise RuntimeError(
+                    "V2 R1 snapshot duplicate index differs from authority history"
+                )
+        elif authority_payload is not None:
+            raise RuntimeError("legacy R1 arm snapshot contains V2 authority state")
         start_epoch = int(restored["next_epoch"])
         counters = dict(restored["counters"])
         reply_orbits = set(restored["reply_orbits"])
@@ -1545,14 +1780,24 @@ def _run_r1_arm(
         composition_consolidation_events = list(
             restored.get("composition_consolidation_events", [])
         )
+        v2_structural_events = list(restored.get("v2_structural_events", []))
         history_snapshot_paths = list(restored.get("history_snapshot_paths", []))
         stopped_epoch = int(restored["stopped_epoch"])
         joint_mastery = bool(restored["joint_mastery"])
         duration_before_resume = float(restored["duration_seconds"])
         snapshot_writes = int(restored.get("snapshot_writes", 0))
 
+    v2_seen_predecessor_fens = (
+        set(_v2_authoritative_predecessor_fens(r0_child_authority))
+        if r0_child_authority is not None
+        else set()
+    )
+
     evaluation_child_triplet_ids = (
         r0_child_triplet_ids if arm.mature_child_priority else None
+    )
+    evaluation_child_authority = (
+        r0_child_authority if arm.mature_child_priority else None
     )
     evaluation_child_dispatch_cache = (
         child_dispatch_cache if config.freeze_r0_parameters_for_r1 else None
@@ -1603,7 +1848,31 @@ def _run_r1_arm(
                     successor.push(reply)
                     reply_orbits.add((fen, move.uci(), reply.uci()))
                     terminal_kind = _terminal_kind(successor)
-                    if terminal_kind is None and arm.bootstrap_enabled:
+                    if terminal_kind is None and r0_child_authority is not None:
+                        available, response, duplicate, structural = (
+                            _v2_r0_observe_training_successor(
+                                r0_child_authority,
+                                successor,
+                                seen_predecessor_fens=v2_seen_predecessor_fens,
+                                frame_id=(
+                                    f"native-intrinsic-v2:{arm_name}:"
+                                    f"{epoch}:{position_index}:"
+                                    f"{move.uci()}:{reply.uci()}"
+                                ),
+                            )
+                        )
+                        counters["availability_queries"] += 1
+                        counters["availability_positives"] += int(available)
+                        counters["virtual_frame_queries"] += int(duplicate)
+                        counters["v2_duplicate_virtual_queries"] += int(duplicate)
+                        counters["v2_real_observations"] += int(not duplicate)
+                        if structural is not None:
+                            counters["v2_structural_transitions"] += 1
+                            v2_structural_events.append(structural)
+                        if arm.bootstrap_enabled and available:
+                            successor_ids = (R0_COMPETENCE_ID,)
+                            counters["child_handoffs"] += 1
+                    elif terminal_kind is None and arm.bootstrap_enabled:
                         available, response, cache_hit, cache_mismatch = (
                             _r0_available_with_dispatch_cache(
                                 graph,
@@ -1724,7 +1993,15 @@ def _run_r1_arm(
                     ),
                 }
             )
-        force_stop = stop_after_epoch is not None and epoch_number >= stop_after_epoch
+        ceiling_reason = (
+            None
+            if run_started is None
+            else _development_ceiling_reason(config, run_started=run_started)
+        )
+        diagnostic_stop = (
+            stop_after_epoch is not None and epoch_number >= stop_after_epoch
+        )
+        force_stop = diagnostic_stop or ceiling_reason is not None
         should_observe = (
             epoch == 0
             or epoch_number == epoch_budget
@@ -1733,7 +2010,16 @@ def _run_r1_arm(
             or force_stop
         )
         latest_checkpoint: dict[str, Any] | None = None
-        if should_observe:
+        if ceiling_reason is not None:
+            latest_checkpoint = {
+                "epoch": epoch_number,
+                "resource_ceiling_snapshot": True,
+                "resource_ceiling_reason": ceiling_reason,
+                "heldout_evaluation_skipped": True,
+                "child_handoff_count": counters["child_handoffs"],
+            }
+            checkpoints.append(latest_checkpoint)
+        elif should_observe:
             heldout_disabled_state = _disable_nonmature_composites(
                 graph,
                 enabled=config.r1_heldout_mature_composites_only,
@@ -1746,6 +2032,7 @@ def _run_r1_arm(
                 stop_after_first_failure=True,
                 r0_child_triplet_ids=evaluation_child_triplet_ids,
                 child_dispatch_cache=evaluation_child_dispatch_cache,
+                r0_child_authority=evaluation_child_authority,
             )
             retention = _evaluate_r0(
                 graph,
@@ -1753,6 +2040,7 @@ def _run_r1_arm(
                 max_samples=0,
                 r0_child_triplet_ids=evaluation_child_triplet_ids,
                 child_dispatch_cache=evaluation_child_dispatch_cache,
+                r0_child_authority=evaluation_child_authority,
             )
             latest_checkpoint = {
                 "epoch": epoch_number,
@@ -1774,6 +2062,7 @@ def _run_r1_arm(
                     stop_after_first_failure=True,
                     r0_child_triplet_ids=evaluation_child_triplet_ids,
                     child_dispatch_cache=evaluation_child_dispatch_cache,
+                    r0_child_authority=evaluation_child_authority,
                 )
                 latest_checkpoint["regression_conversion_rate_at_mastery_probe"] = (
                     regression_probe["conversion_rate"]
@@ -1798,6 +2087,19 @@ def _run_r1_arm(
         )
         if should_snapshot:
             elapsed = duration_before_resume + (perf_counter() - started)
+            if r0_child_authority is not None:
+                authoritative_seen = _v2_authoritative_predecessor_fens(
+                    r0_child_authority
+                )
+                if frozenset(v2_seen_predecessor_fens) != authoritative_seen:
+                    raise RuntimeError(
+                        "V2 duplicate index differs from authority history"
+                    )
+            authority_payload = (
+                None
+                if r0_child_authority is None
+                else r0_child_authority.dumps()
+            )
             history_path = _r1_history_snapshot_path(
                 config, pools, arm_name, epoch_number
             )
@@ -1824,6 +2126,11 @@ def _run_r1_arm(
                 "checkpoints": checkpoints,
                 "composition_events": composition_events,
                 "composition_consolidation_events": composition_consolidation_events,
+                "v2_structural_events": v2_structural_events,
+                "r0_child_authority_payload": authority_payload,
+                "v2_seen_predecessor_fens": tuple(
+                    sorted(v2_seen_predecessor_fens)
+                ),
                 "stopped_epoch": stopped_epoch,
                 "joint_mastery": joint_mastery,
                 "duration_seconds": elapsed,
@@ -1853,6 +2160,12 @@ def _run_r1_arm(
                 resumed=resumed_from_snapshot,
             )
         if force_stop:
+            if ceiling_reason is not None:
+                raise R1DevelopmentCeilingReached(
+                    epoch=epoch_number,
+                    snapshot_path=snapshot_path,
+                    reason=ceiling_reason,
+                )
             raise R1CheckpointInterrupt(
                 epoch=epoch_number,
                 snapshot_path=snapshot_path,
@@ -1872,6 +2185,7 @@ def _run_r1_arm(
         max_samples=config.max_samples,
         r0_child_triplet_ids=evaluation_child_triplet_ids,
         child_dispatch_cache=evaluation_child_dispatch_cache,
+        r0_child_authority=evaluation_child_authority,
     )
     final_regression = _evaluate_r1(
         graph,
@@ -1880,6 +2194,7 @@ def _run_r1_arm(
         max_samples=config.max_samples,
         r0_child_triplet_ids=evaluation_child_triplet_ids,
         child_dispatch_cache=evaluation_child_dispatch_cache,
+        r0_child_authority=evaluation_child_authority,
     )
     final_r0_retention = _evaluate_r0(
         graph,
@@ -1887,11 +2202,14 @@ def _run_r1_arm(
         max_samples=config.max_samples,
         r0_child_triplet_ids=evaluation_child_triplet_ids,
         child_dispatch_cache=evaluation_child_dispatch_cache,
+        r0_child_authority=evaluation_child_authority,
+    )
+    current_child_priority = bool(
+        evaluation_child_triplet_ids is not None
+        or evaluation_child_authority is not None
     )
     current_routing_name = (
-        "child_priority_on"
-        if evaluation_child_triplet_ids is not None
-        else "child_priority_off"
+        "child_priority_on" if current_child_priority else "child_priority_off"
     )
     routing_ablation: dict[str, Any] = {
         current_routing_name: {
@@ -1901,13 +2219,12 @@ def _run_r1_arm(
         }
     }
     alternate_routing_name = (
-        "child_priority_off"
-        if evaluation_child_triplet_ids is not None
-        else "child_priority_on"
+        "child_priority_off" if current_child_priority else "child_priority_on"
     )
     alternate_ids = (
-        None if evaluation_child_triplet_ids is not None else r0_child_triplet_ids
+        None if current_child_priority else r0_child_triplet_ids
     )
+    alternate_authority = None if current_child_priority else r0_child_authority
     alternate_cache = child_dispatch_cache if alternate_ids is not None else None
     routing_ablation[alternate_routing_name] = {
         "validation": _evaluate_r1(
@@ -1917,6 +2234,7 @@ def _run_r1_arm(
             max_samples=0,
             r0_child_triplet_ids=alternate_ids,
             child_dispatch_cache=alternate_cache,
+            r0_child_authority=alternate_authority,
         ),
         "regression": _evaluate_r1(
             graph,
@@ -1925,10 +2243,57 @@ def _run_r1_arm(
             max_samples=0,
             r0_child_triplet_ids=alternate_ids,
             child_dispatch_cache=alternate_cache,
+            r0_child_authority=alternate_authority,
         ),
         "reused_main_evaluation": False,
     }
     _restore_disabled_composites(graph, heldout_disabled_state)
+    v2_authority_audit: dict[str, Any] = {
+        "enabled": False,
+        "reason": "arm_has_no_v2_child_authority",
+    }
+    if r0_child_authority is not None:
+        authoritative_seen = _v2_authoritative_predecessor_fens(
+            r0_child_authority
+        )
+        if frozenset(v2_seen_predecessor_fens) != authoritative_seen:
+            raise RuntimeError("final V2 duplicate index differs from authority history")
+        r0_child_authority.verify_full_history_boundary(
+            f"native-intrinsic-r1-final:{arm_name}"
+        )
+        authority_payload = r0_child_authority.dumps()
+        restored_authority = type(r0_child_authority).loads(authority_payload)
+        if (
+            restored_authority.continuation_manifest()
+            != r0_child_authority.continuation_manifest()
+        ):
+            raise RuntimeError("final V2 child authority roundtrip mismatch")
+        v2_authority_audit = {
+            "enabled": True,
+            "next_expected_ordinal": int(r0_child_authority.next_expected_ordinal),
+            "discovery_event_count": len(r0_child_authority.base.receipts),
+            "prospective_event_count": len(r0_child_authority.consumed_receipts),
+            "current_generation": int(r0_child_authority.current_generation),
+            "generation_phase": r0_child_authority.generation_phase.value,
+            "candidate_count": len(r0_child_authority.states),
+            "prospectively_certified_count": sum(
+                state.prospectively_certified
+                for state in r0_child_authority.states.values()
+            ),
+            "deferred_request_count": len(r0_child_authority.deferred_requests),
+            "materialized_child_count": sum(
+                birth.disposition == "MATERIALIZED"
+                for birth in r0_child_authority.deferred_child_births.values()
+            ),
+            "continuation_digest": r0_child_authority.continuation_digest(),
+            "seen_predecessor_count": len(authoritative_seen),
+            "seen_predecessor_sha256": _hash_json(sorted(authoritative_seen)),
+            "serialized_bytes": len(authority_payload),
+            "serialized_sha256": hashlib.sha256(authority_payload).hexdigest(),
+            "full_history_boundary_exact": True,
+            "serialization_roundtrip_exact": True,
+            "structural_events": v2_structural_events,
+        }
     return {
         "training": {
             "episodes": counters["episodes"],
@@ -1967,6 +2332,15 @@ def _run_r1_arm(
             "r0_child_dispatch_cache_live_mismatch_count": counters["child_dispatch_cache_mismatches"],
             "r0_child_dispatch_cache_certified_hit_count": counters["child_dispatch_cache_certified_hits"],
             "r0_child_cache_validation_mode": config.r0_child_cache_validation_mode,
+            "v2_real_observation_count": counters.get("v2_real_observations", 0),
+            "v2_duplicate_virtual_query_count": counters.get(
+                "v2_duplicate_virtual_queries", 0
+            ),
+            "v2_structural_transition_count": counters.get(
+                "v2_structural_transitions", 0
+            ),
+            "v2_availability_used_for_bootstrap": bool(arm.bootstrap_enabled),
+            "v2_same_event_outcome_used_for_bootstrap": False,
             "observed_terminal_failure_count": counters["failures"],
             "unique_first_move_reply_exposures": len(reply_orbits),
             "distinct_first_move_actions_exposed": len(reply_exposure_counts),
@@ -1997,6 +2371,7 @@ def _run_r1_arm(
         "r0_retention": final_r0_retention,
         "graph": graph.learned_state_audit(),
         "credit": credit.snapshot(),
+        "v2_child_authority": v2_authority_audit,
     }
 
 def _disable_nonmature_composites(
@@ -2289,10 +2664,25 @@ def _choose_with_child_priority(
     *,
     r0_child_triplet_ids: frozenset[str] | None,
     child_dispatch_cache: dict[str, dict[str, Any]] | None = None,
+    r0_child_authority: Any | None = None,
 ) -> chess.Move | None:
     """Let a mature child control only when its own virtual reply is available."""
 
-    if r0_child_triplet_ids:
+    if r0_child_authority is not None:
+        available, response = _v2_r0_available(
+            r0_child_authority,
+            board,
+            frame_id=(
+                "native-intrinsic-v2-evaluation:"
+                + hashlib.sha256(board.fen().encode("utf-8")).hexdigest()
+            ),
+        )
+        selected_uci = response.get("selected_move")
+        if available and selected_uci is not None:
+            move = chess.Move.from_uci(str(selected_uci))
+            if move in board.legal_moves:
+                return move
+    elif r0_child_triplet_ids:
         if child_dispatch_cache is None:
             available, response = _r0_available(
                 graph,
@@ -2329,6 +2719,7 @@ def _evaluate_r0(
     max_samples: int,
     r0_child_triplet_ids: frozenset[str] | None = None,
     child_dispatch_cache: dict[str, dict[str, Any]] | None = None,
+    r0_child_authority: Any | None = None,
 ) -> dict[str, Any]:
     rows: list[dict[str, Any]] = []
     correct = illegal = null = stalemate = rook_loss = 0
@@ -2340,8 +2731,10 @@ def _evaluate_r0(
                 board,
                 r0_child_triplet_ids=r0_child_triplet_ids,
                 child_dispatch_cache=child_dispatch_cache,
+                r0_child_authority=r0_child_authority,
             )
-            if r0_child_triplet_ids and not masked_triplets
+            if (r0_child_triplet_ids or r0_child_authority is not None)
+            and not masked_triplets
             else graph.choose(board, masked_triplets=masked_triplets)
         )
         terminal_kind = None if move is None else _execute_white_and_observe(board, move)
@@ -2390,6 +2783,7 @@ def _evaluate_r1(
     stop_after_first_failure: bool = False,
     r0_child_triplet_ids: frozenset[str] | None = None,
     child_dispatch_cache: dict[str, dict[str, Any]] | None = None,
+    r0_child_authority: Any | None = None,
 ) -> dict[str, Any]:
     rows: list[dict[str, Any]] = []
     converted = parent_correct = null = illegal = reply_total = reply_mated = 0
@@ -2404,6 +2798,7 @@ def _evaluate_r1(
             board,
             r0_child_triplet_ids=r0_child_triplet_ids,
             child_dispatch_cache=child_dispatch_cache,
+            r0_child_authority=r0_child_authority,
         )
         forced_first_uci = _diagnostic_forced_first_uci(fen)
         first_is_parent_correct = bool(
@@ -2427,6 +2822,7 @@ def _evaluate_r1(
                     before_second,
                     r0_child_triplet_ids=r0_child_triplet_ids,
                     child_dispatch_cache=child_dispatch_cache,
+                    r0_child_authority=r0_child_authority,
                 )
                 terminal_kind = (
                     None
@@ -2494,7 +2890,9 @@ def _evaluate_r1(
         "reply_evaluation_mode": (
             "early_exit_on_failure" if stop_after_first_failure else "exhaustive"
         ),
-        "mature_child_priority_enabled": bool(r0_child_triplet_ids),
+        "mature_child_priority_enabled": bool(
+            r0_child_triplet_ids or r0_child_authority is not None
+        ),
         "stratum_conversion": dict(sorted(stratum_conversion.items())),
         "samples": rows,
     }
@@ -2585,6 +2983,145 @@ def _gate_example(graph: NativeReConKRKGraph, fen: str) -> CompetenceGateExample
     )
 
 
+def _v2_r0_available(
+    authority: Any,
+    board: chess.Board,
+    *,
+    frame_id: str,
+) -> tuple[bool, dict[str, Any]]:
+    """Query only the V2 graph-emitted availability capability."""
+
+    before = str(authority.continuation_digest())
+    opened = authority.open_virtual(
+        FrameContext(
+            frame_id=str(frame_id),
+            kind=FrameKind.VIRTUAL,
+            values={"board": board.copy(stack=False)},
+        )
+    )
+    query = opened.get("query")
+    if query is None:
+        raise RuntimeError("V2 child authority omitted its graph query")
+    provenance = dict(query.availability_provenance or {})
+    if provenance.get("authority") != "NativeProspectiveAuthorityV2_graph_emission":
+        raise RuntimeError("V2 child availability bypassed graph authority")
+    if int(provenance.get("certification_evidence_added", -1)) != 0:
+        raise RuntimeError("VIRTUAL V2 query created certification evidence")
+    if str(authority.continuation_digest()) != before:
+        raise RuntimeError("VIRTUAL V2 query mutated the persistent authority")
+    actuation = query.actuation
+    selected_move = None if actuation is None else str(actuation.move_uci)
+    response = {
+        "selected_move": selected_move,
+        "selected_triplet": (
+            None if actuation is None else str(actuation.option_identity)
+        ),
+        "observed_immediate_mate": bool(query.response.available),
+        "availability_source": "v2_prospective_graph_emission",
+        "availability_provenance": provenance,
+        "classification": opened["classification"].to_manifest(),
+        "virtual_frame_terminal_grounding_granted": False,
+    }
+    return bool(query.response.available), response
+
+
+def _advance_v2_structural_frontier(authority: Any) -> dict[str, Any] | None:
+    schedule = tuple(int(item) for item in authority.structural_epoch_schedule)
+    generation = int(authority.current_generation)
+    if generation >= len(schedule):
+        return None
+    if int(authority.next_expected_ordinal) != schedule[generation]:
+        return None
+    sealed = authority.seal_prospective_generation()
+    structural = authority.open_structural_successor()
+    consumptions: list[dict[str, Any]] = []
+    child_ids: list[str] = []
+    while any(
+        request_id not in authority.request_consumptions
+        for request_id in authority.sealed_request_ids
+    ):
+        consumption = authority.consume_next_structural_request()
+        row = consumption.manifest()
+        if consumption.child_cell_id is not None:
+            child_id = authority.materialize_deferred_child(
+                consumption.request_id
+            )
+            child_ids.append(child_id)
+            row = {**row, "materialized_child_id": child_id}
+        consumptions.append(row)
+    prospective = authority.open_prospective_successor()
+    return {
+        "sealed_boundary": sealed.manifest(),
+        "structural_boundary": structural.manifest(),
+        "prospective_boundary": prospective.manifest(),
+        "sealed_request_count": len(authority.sealed_request_ids),
+        "consumptions": consumptions,
+        "child_ids": child_ids,
+    }
+
+
+def _v2_authoritative_predecessor_fens(authority: Any) -> frozenset[str]:
+    """Rebuild the duplicate index only from signed/accepted authority history."""
+
+    discovery = {
+        str(item.predecessor_fen) for item in authority.base.receipts.values()
+    }
+    prospective = {
+        str(item.predecessor_fen)
+        for item in authority.accepted_real_references.values()
+    }
+    return frozenset(discovery | prospective)
+
+
+def _v2_r0_observe_training_successor(
+    authority: Any,
+    board: chess.Board,
+    *,
+    seen_predecessor_fens: set[str],
+    frame_id: str,
+) -> tuple[bool, dict[str, Any], bool, dict[str, Any] | None]:
+    """Classify before one unique REAL result, then learn for later events."""
+
+    predecessor_fen = board.fen()
+    if predecessor_fen in seen_predecessor_fens:
+        available, response = _v2_r0_available(
+            authority, board, frame_id=f"{frame_id}:duplicate-virtual"
+        )
+        return available, response, True, None
+
+    pending, trace = authority.open_real_event(
+        FrameContext(
+            frame_id=str(frame_id),
+            kind=FrameKind.REAL,
+            values={"board": board.copy(stack=False)},
+        )
+    )
+    selected_move = chess.Move.from_uci(trace.actuation.move_uci)
+    successor = board.copy(stack=False)
+    successor.push(selected_move)
+    receipt = authority.mint_environment_receipt(
+        pending_token=pending.pending_token,
+        trace=trace,
+        predecessor=board,
+        successor=successor,
+    )
+    emission = authority.consume(receipt)
+    seen_predecessor_fens.add(predecessor_fen)
+    classification = pending.pre_outcome_classification.to_manifest()
+    available = str(classification["state"]).lower() == "available"
+    response = {
+        "selected_move": selected_move.uci(),
+        "selected_triplet": str(trace.actuation.option_identity),
+        "observed_immediate_mate": successor.is_checkmate(),
+        "availability_source": "v2_prospective_pre_outcome_graph_emission",
+        "classification": classification,
+        "certification_emission": emission.manifest(),
+        "virtual_frame_terminal_grounding_granted": False,
+    }
+    structural = _advance_v2_structural_frontier(authority)
+    return available, response, False, structural
+
+
 def _r0_available(
     graph: NativeReConKRKGraph,
     gate: OutcomeCalibratedPrototypeGate | None,
@@ -2621,7 +3158,7 @@ def _r0_available(
         return bool(response["observed_immediate_mate"]), response
     raise ValueError(
         "r0_availability_mode must be prototype_gate, shuffled_prototype_gate, "
-        "or virtual_frame_verified"
+        "virtual_frame_verified, or v2_prospective"
     )
 
 

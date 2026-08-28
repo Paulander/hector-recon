@@ -2,8 +2,10 @@ from __future__ import annotations
 
 from collections import Counter
 import copy
+import hashlib
 from pathlib import Path
 import pickle
+from types import SimpleNamespace
 
 import chess
 import pytest
@@ -24,6 +26,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     R1_BALANCED_STRATA,
     R1_RETIRED_DEVELOPMENT_FENS,
     R1CheckpointInterrupt,
+    V2_PROSPECTIVE_AVAILABILITY,
     _Pools,
     _apply_child_value_control,
     _balanced_r0_quotas,
@@ -37,12 +40,15 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _generate_balanced_r0_split,
     _generate_balanced_r1_split,
     _mechanistic_r1_arms,
+    _namespace_development_fullmoves,
     _r0_available,
     _r0_available_with_dispatch_cache,
     _r1_orbit_key,
     _replay_r0,
     _restore_disabled_composites,
     _run_r1_arm,
+    _v2_r0_available,
+    _v2_r0_observe_training_successor,
 )
 from recon_lite_chess.autogrowth.foundation_curriculum import (
     _forced_mate_in_two_first_moves,
@@ -55,6 +61,133 @@ from recon_lite_chess.autogrowth.native_single_graph_curriculum import (
 
 
 MATE_ONE_FEN = "k7/8/1K6/8/8/8/8/7R w - - 0 1"
+
+
+class _FakeV2Authority:
+    """Minimal serialized authority double for curriculum-boundary tests."""
+
+    def __init__(self, *, certify_after: int = 1) -> None:
+        self.certify_after = int(certify_after)
+        self.receipts = {}
+        self.base = SimpleNamespace(receipts=self.receipts)
+        self.accepted_real_references = {}
+        self.consumed_receipts = {}
+        self.pending_event = None
+        self.next_expected_ordinal = 0
+        self.structural_epoch_schedule = ()
+        self.current_generation = 0
+        self.generation_phase = SimpleNamespace(value="prospective")
+        self.states = {}
+        self.deferred_requests = {}
+        self.deferred_child_births = {}
+
+    @property
+    def certified(self) -> bool:
+        return self.next_expected_ordinal >= self.certify_after
+
+    def _classification(self):
+        state = "AVAILABLE" if self.certified else "UNKNOWN"
+        return SimpleNamespace(
+            state=state,
+            to_manifest=lambda: {"state": state},
+        )
+
+    @staticmethod
+    def _actuation(board: chess.Board):
+        move = min(board.legal_moves, key=lambda item: item.uci())
+        return SimpleNamespace(
+            move_uci=move.uci(),
+            option_identity="fake-v2-r0-option",
+        )
+
+    def open_virtual(self, frame) -> dict[str, object]:
+        actuation = self._actuation(frame.values["board"])
+        response = SimpleNamespace(available=self.certified)
+        query = SimpleNamespace(
+            actuation=actuation,
+            response=response,
+            availability_provenance={
+                "authority": "NativeProspectiveAuthorityV2_graph_emission",
+                "certification_evidence_added": 0,
+            },
+        )
+        return {"query": query, "classification": self._classification()}
+
+    def open_real_event(self, frame):
+        if self.pending_event is not None:
+            raise RuntimeError("fake V2 authority already has a pending event")
+        actuation = self._actuation(frame.values["board"])
+        pending = SimpleNamespace(
+            pending_token=f"pending-{self.next_expected_ordinal}",
+            pre_outcome_classification=self._classification(),
+        )
+        self.pending_event = pending
+        return pending, SimpleNamespace(actuation=actuation)
+
+    def mint_environment_receipt(
+        self, *, pending_token, trace, predecessor, successor
+    ):
+        del trace, successor
+        if self.pending_event is None or pending_token != self.pending_event.pending_token:
+            raise RuntimeError("fake V2 receipt is not paired with its pending event")
+        return SimpleNamespace(
+            event_id=f"event-{self.next_expected_ordinal}",
+            predecessor_fen=predecessor.fen(),
+        )
+
+    def consume(self, receipt):
+        if self.pending_event is None:
+            raise RuntimeError("fake V2 consume has no pending event")
+        self.accepted_real_references[receipt.event_id] = receipt
+        self.consumed_receipts[receipt.event_id] = receipt
+        self.next_expected_ordinal += 1
+        self.pending_event = None
+        return SimpleNamespace(
+            manifest=lambda: {"event_id": receipt.event_id}
+        )
+
+    def continuation_manifest(self) -> dict[str, object]:
+        return {
+            "certify_after": self.certify_after,
+            "next_expected_ordinal": self.next_expected_ordinal,
+            "accepted_real_references": tuple(
+                (key, receipt.predecessor_fen)
+                for key, receipt in sorted(
+                    self.accepted_real_references.items()
+                )
+            ),
+        }
+
+    def continuation_digest(self) -> str:
+        return hashlib.sha256(
+            repr(self.continuation_manifest()).encode("utf-8")
+        ).hexdigest()
+
+    def dumps(self) -> bytes:
+        return pickle.dumps(self, protocol=5)
+
+    @classmethod
+    def loads(cls, payload: bytes) -> "_FakeV2Authority":
+        restored = pickle.loads(payload)
+        if not isinstance(restored, cls):
+            raise TypeError("unexpected fake V2 authority payload")
+        return restored
+
+    def verify_full_history_boundary(self, boundary: str) -> None:
+        assert boundary
+
+
+def test_development_fullmove_namespace_is_exact_and_non_geometric() -> None:
+    groups = _namespace_development_fullmoves(
+        ((MATE_ONE_FEN,), ()),
+        base=900_000,
+    )
+    board = chess.Board(groups[0][0])
+    original = chess.Board(MATE_ONE_FEN)
+    assert board.fullmove_number == 900_000
+    assert board.board_fen() == original.board_fen()
+    assert board.turn == original.turn
+    assert groups[1] == ()
 
 
 def _graph() -> NativeReConKRKGraph:
@@ -631,7 +764,55 @@ def test_r1_structural_epoch_materializes_trial_candidates_without_causal_maturi
     assert cell.candidate_stats.credit_stats.total_interventions == 1
 
 
-def test_r1_interval_snapshot_resume_matches_uninterrupted(tmp_path) -> None:
+def test_v2_training_observation_cannot_bootstrap_itself_and_duplicate_is_virtual() -> None:
+    authority = _FakeV2Authority(certify_after=1)
+    board = chess.Board(MATE_ONE_FEN)
+    seen_predecessor_fens: set[str] = set()
+
+    before_real = authority.continuation_digest()
+    available, response, duplicate, structural = _v2_r0_observe_training_successor(
+        authority,
+        board,
+        seen_predecessor_fens=seen_predecessor_fens,
+        frame_id="v2-curriculum:first-real",
+    )
+
+    assert available is False
+    assert response["classification"] == {"state": "UNKNOWN"}
+    assert duplicate is False
+    assert structural is None
+    assert authority.next_expected_ordinal == 1
+    assert authority.continuation_digest() != before_real
+
+    after_real = authority.continuation_digest()
+    now_available, virtual_response = _v2_r0_available(
+        authority,
+        board,
+        frame_id="v2-curriculum:post-outcome-virtual",
+    )
+    assert now_available is True
+    assert virtual_response["classification"] == {"state": "AVAILABLE"}
+    assert authority.continuation_digest() == after_real
+
+    duplicate_available, _, is_duplicate, duplicate_structural = (
+        _v2_r0_observe_training_successor(
+            authority,
+            board,
+            seen_predecessor_fens=seen_predecessor_fens,
+            frame_id="v2-curriculum:duplicate",
+        )
+    )
+    assert duplicate_available is True
+    assert is_duplicate is True
+    assert duplicate_structural is None
+    assert authority.next_expected_ordinal == 1
+    assert authority.continuation_digest() == after_real
+
+
+@pytest.mark.parametrize("v2_enabled", (False, True), ids=("legacy", "v2"))
+def test_r1_interval_snapshot_resume_matches_uninterrupted(
+    tmp_path, v2_enabled
+) -> None:
     base_graph = _graph()
     base_credit = IntrinsicCreditEngine(IntrinsicCreditConfig())
     base_credit.register(R0_COMPETENCE_ID, mature=True)
@@ -668,6 +849,11 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(tmp_path) -> None:
         r1_pool_mode="test",
     )
     common = dict(
+        r0_availability_mode=(
+            V2_PROSPECTIVE_AVAILABILITY
+            if v2_enabled
+            else "virtual_frame_verified"
+        ),
         r0_replay_per_r1_epoch=0,
         r1_validation_interval=1,
         r1_snapshot_interval=1,
@@ -691,6 +877,9 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(tmp_path) -> None:
         pools,
         r0_replay_memory=(),
         r0_child_triplet_ids=frozenset(),
+        r0_child_authority=(
+            _FakeV2Authority(certify_after=1) if v2_enabled else None
+        ),
         max_epochs=4,
         config=uninterrupted_config,
     )
@@ -710,6 +899,9 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(tmp_path) -> None:
             pools,
             r0_replay_memory=(),
             r0_child_triplet_ids=frozenset(),
+            r0_child_authority=(
+                _FakeV2Authority(certify_after=1) if v2_enabled else None
+            ),
             max_epochs=4,
             config=resume_config,
             stop_after_epoch=2,
@@ -727,6 +919,9 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(tmp_path) -> None:
         pools,
         r0_replay_memory=(),
         r0_child_triplet_ids=frozenset(),
+        r0_child_authority=(
+            _FakeV2Authority(certify_after=1) if v2_enabled else None
+        ),
         max_epochs=4,
         config=resume_config,
     )
@@ -753,6 +948,13 @@ def test_r1_interval_snapshot_resume_matches_uninterrupted(tmp_path) -> None:
     assert resumed_graph.learned_state_audit() == uninterrupted_graph.learned_state_audit()
     assert resumed_credit.snapshot() == uninterrupted_credit.snapshot()
     assert resumed["training"]["resumed_from_snapshot"] is True
+    if v2_enabled:
+        assert resumed["v2_child_authority"] == uninterrupted[
+            "v2_child_authority"
+        ]
+        assert resumed["training"]["v2_real_observation_count"] > 0
+        assert resumed["training"]["availability_query_count"] > 0
+        assert resumed["training"]["child_handoff_count"] == 0
     assert len(resumed["training"]["history_snapshot_paths"]) == 4
     assert all(
         Path(path).exists()
