@@ -26,7 +26,9 @@ current implementation commit.
 - `b6848ef4e3eb27d022ac6c67f3c903c962907737` — authority-graph settlement
   optimization; audited core for the v2 development benchmark.
 - `97cce727442da25c4a5c443897550ccc9c6758b4` — bounded, atomic Phase-1
-  checkpoint runner and tests; current HEAD.
+  checkpoint runner and tests.
+- `f482aac677228817d5924e6b139a824249110e85` — persistent V2 intrinsic R0 ->
+  R1 development integration and exact snapshot/resume boundary.
 
 ## Evidenced experiments
 
@@ -155,3 +157,20 @@ current implementation commit.
   reaches an atomic snapshot under a 45-minute hard watchdog.** A bounded stop
   before the control arm is runtime/integration evidence only, never a causal
   or mate-in-2 result.
+
+### Exact epoch-1 preflight at `f482aac6` — integration failure
+
+- Conditions: seed `2026082801`; fixed 48/16/16 R0 and 48/16/16 R1 pools;
+  fullmove namespace starting at `900000`; cooperative wall ceiling `1 s`, RSS
+  ceiling `8192 MiB`, and external `2700 s` watchdog; local single-process run.
+- Result: R0 passed at epoch 72 with validation/regression `1.0/1.0`. After
+  `1959.336 s`, R1 duplicate-index initialization failed before any arm epoch or
+  snapshot: `AcceptedRealReference` intentionally has no `predecessor_fen`.
+- Repair: derive the exact index from FEN-bearing discovery receipts plus
+  accepted prospective `consumed_receipts`; do not change the generic reference
+  schema. Real-authority receipt/round-trip, duplicate-VIRTUAL, and V2
+  snapshot/resume regressions pass; combined affected suites: `49 passed in
+  91.73 s`.
+- Decision: preserve this failed attempt; rerun the exact epoch-1 gate from a
+  fresh output directory before any bounded two-hour continuation. Scope remains
+  `DEVELOPMENT_VIEWED_NOT_SCIENTIFIC`.

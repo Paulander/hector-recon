@@ -3068,7 +3068,7 @@ def _v2_authoritative_predecessor_fens(authority: Any) -> frozenset[str]:
     }
     prospective = {
         str(item.predecessor_fen)
-        for item in authority.accepted_real_references.values()
+        for item in authority.consumed_receipts.values()
     }
     return frozenset(discovery | prospective)
 

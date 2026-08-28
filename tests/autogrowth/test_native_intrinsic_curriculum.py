@@ -47,6 +47,7 @@ from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     _replay_r0,
     _restore_disabled_composites,
     _run_r1_arm,
+    _v2_authoritative_predecessor_fens,
     _v2_r0_available,
     _v2_r0_observe_training_successor,
 )
@@ -138,7 +139,10 @@ class _FakeV2Authority:
     def consume(self, receipt):
         if self.pending_event is None:
             raise RuntimeError("fake V2 consume has no pending event")
-        self.accepted_real_references[receipt.event_id] = receipt
+        self.accepted_real_references[receipt.event_id] = SimpleNamespace(
+            receipt_id=receipt.event_id,
+            stable_physical_interaction_id=f"physical:{receipt.event_id}",
+        )
         self.consumed_receipts[receipt.event_id] = receipt
         self.next_expected_ordinal += 1
         self.pending_event = None
@@ -151,10 +155,14 @@ class _FakeV2Authority:
             "certify_after": self.certify_after,
             "next_expected_ordinal": self.next_expected_ordinal,
             "accepted_real_references": tuple(
-                (key, receipt.predecessor_fen)
-                for key, receipt in sorted(
+                (key, reference.stable_physical_interaction_id)
+                for key, reference in sorted(
                     self.accepted_real_references.items()
                 )
+            ),
+            "consumed_receipts": tuple(
+                (key, receipt.predecessor_fen)
+                for key, receipt in sorted(self.consumed_receipts.items())
             ),
         }
 
@@ -807,6 +815,34 @@ def test_v2_training_observation_cannot_bootstrap_itself_and_duplicate_is_virtua
     assert duplicate_structural is None
     assert authority.next_expected_ordinal == 1
     assert authority.continuation_digest() == after_real
+
+
+def test_v2_duplicate_index_reads_only_fen_bearing_receipt_ledgers() -> None:
+    discovery_fen = MATE_ONE_FEN
+    prospective_fen = R1_RETIRED_DEVELOPMENT_FENS[0]
+    authority = SimpleNamespace(
+        base=SimpleNamespace(
+            receipts={
+                "discovery": SimpleNamespace(predecessor_fen=discovery_fen),
+            }
+        ),
+        consumed_receipts={
+            "prospective": SimpleNamespace(predecessor_fen=prospective_fen),
+            "repeated": SimpleNamespace(predecessor_fen=discovery_fen),
+        },
+        accepted_real_references={
+            key: SimpleNamespace(receipt_id=key)
+            for key in ("discovery", "prospective", "repeated")
+        },
+    )
+
+    assert all(
+        not hasattr(reference, "predecessor_fen")
+        for reference in authority.accepted_real_references.values()
+    )
+    assert _v2_authoritative_predecessor_fens(authority) == frozenset(
+        (discovery_fen, prospective_fen)
+    )
 
 
 @pytest.mark.parametrize("v2_enabled", (False, True), ids=("legacy", "v2"))

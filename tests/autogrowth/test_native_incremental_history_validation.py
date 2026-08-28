@@ -27,6 +27,7 @@ from recon_lite_chess.autogrowth.native_competence_envelope import (
 )
 from recon_lite_chess.autogrowth.native_intrinsic_curriculum import (
     R0_COMPETENCE_ID,
+    _v2_authoritative_predecessor_fens,
 )
 from recon_lite_chess.autogrowth import (
     native_deferred_specialization_fresh_discriminator as science,
@@ -220,6 +221,31 @@ def _accept(
         authority, fullmove=fullmove, frame_id=frame_id
     )
     return pending, trace, receipt, authority.consume(receipt)
+
+
+def test_v2_predecessor_index_uses_receipt_ledgers_and_round_trips() -> None:
+    authority = _synthetic_authority()
+    expected = {
+        chess.Board(MATE_ONE.format(fullmove=index)).fen()
+        for index in range(1, 5)
+    }
+
+    assert all(
+        not hasattr(reference, "predecessor_fen")
+        for reference in authority.accepted_real_references.values()
+    )
+    assert _v2_authoritative_predecessor_fens(authority) == frozenset(expected)
+
+    _accept(
+        authority,
+        fullmove=5,
+        frame_id="predecessor-index:prospective",
+    )
+    expected.add(chess.Board(MATE_ONE.format(fullmove=5)).fen())
+    assert _v2_authoritative_predecessor_fens(authority) == frozenset(expected)
+
+    restored = NativeProspectiveAuthorityV2.loads(authority.dumps())
+    assert _v2_authoritative_predecessor_fens(restored) == frozenset(expected)
 
 
 def test_incremental_and_complete_replay_are_exact_after_every_event() -> None:
