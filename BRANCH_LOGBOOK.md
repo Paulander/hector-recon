@@ -17,6 +17,7 @@ boundaries and artifact identities.
 | REAL rollback-clone canary | Same saved epoch-4 authority; runtime commit `7d56d5d5`; clone operation only | `5.114 -> 0.193 s` (`26.47x` clone-only); idempotent/rollback public transactions took `2.632/2.321 s` with exact parity. |
 | Mixed-evidence request reachability | Commit `5efc88ce`; data-free `C,S,S,S,S` lifecycle, both polarities, incremental versus full replay | No request through S3; one request exactly at S4, anchored to the earliest C; parent remains UNKNOWN and never gains authority. |
 | Specialized-child prospective gate | Same data-free fixture; actual birth, round-trip, then post-birth evidence | Child starts at zero; four clean supports certify it, while one matching contradiction plus four supports leaves it uncertified. Certified `S,S,S,S,C` revocation also remains exact. |
+| V7 bounded R0 -> R1 shot | Semantic commit `5efc88ce`; seed `2026082801`; one process/core; fixed viewed 48/16/16 pools; cooperative `7200 s` / `8192 MiB` epoch-boundary ceilings | R0 passed at epoch 72 with validation/regression `1.0/1.0`; no first R1 epoch boundary was persisted before the two-hour scope ended. The stop landed in a full graph `deepcopy` that source places on each observed REAL-action path. No R1 or mate-in-2 conclusion is supported. |
 
 ## Purpose and validity scope
 
@@ -369,3 +370,39 @@ current implementation commit.
   not mate-in-2 learning or generalization. The old epoch-4 continuation stays
   permanently locked and should not be resumed. The next evidence step is a
   bounded fresh development integration shot, not a full curriculum run.
+
+### V7 fixed two-hour development shot — first R1 boundary not reached
+
+- Conditions: fresh local output; semantic source `5efc88ce`, branch-log tip
+  `8ba352e4`; fixed viewed seed `2026082801` and 48/16/16 R0/R1 pools; one
+  Python process/core with BLAS/OpenMP thread counts fixed to one; unchanged
+  learner; `7200 s` wall and `8192 MiB` peak-RSS settings. Approximate launch
+  was 2026-08-28 22:47 CEST and the single operator interrupt was approximately
+  2026-08-29 00:49 CEST. The output directory was new and no snapshot resumed.
+- Persisted result: R0 passed at epoch 72 with validation/regression `1.0/1.0`,
+  V2 prospective mode and ecology UUID `ac9481307138d07143ee38b9`. The exact
+  target contains only the 302-byte atomic `progress.json`; its SHA-256 is
+  `1980773b196dab7e8ccf545d9f73bf5c21690665d3c38e01006f953261078882`.
+  `completed_r1_arms` is empty, and no R1 snapshot, `attempt.json`,
+  `result.json` or partial file exists.
+- Boundedness result: `--max-wall-seconds` is checked only after a complete R1
+  epoch. Epoch 1 had not reached that safe boundary when the nominal two-hour
+  scope expired, so the runner could not enforce a hard wall limit itself. It
+  was stopped once with Ctrl-C; atomic completed output remained intact.
+- Direct hot-path observation: the interrupt stack was
+  `_v2_r0_observe_training_successor -> open_real_event ->
+  emit_action_with_trace -> frame_runtime_copy -> copy.deepcopy`. Source
+  control flow invokes this full learned-graph copy for every nonduplicate
+  nonterminal R1 successor sent to the V2 REAL observer. The same unique event
+  also performs four frozen-R0 persistent-identity audits and two canonical
+  semantic-graph traversals through its pre/post guards; those audits sort
+  edge-sized collections. This proves repeated whole-graph work remains on the
+  per-observation path; one stack observation does not by itself attribute all
+  elapsed time to `deepcopy`.
+- Interpretation: the shot confirms fixed-pool R0 and same-run V2 authority
+  construction, but it did not exercise an exact R1 epoch boundary. Therefore
+  it supplies no end-to-end evidence about mixed requests, specialized
+  children, AVAILABLE handoffs, R1 learning or mate-in-2 capability. Before
+  another curriculum shot, benchmark and remove the full per-frame graph copy
+  with exact trace/isolation parity, and give the development launcher a real
+  external hard-wall guard in addition to safe-boundary snapshots.
