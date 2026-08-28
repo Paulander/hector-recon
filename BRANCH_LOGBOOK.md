@@ -15,6 +15,8 @@ boundaries and artifact identities.
 | Resume repair canary | Data-free/test-scale resume; changed only wall/RSS controls; two hash seeds | Canonical base identity was stable across processes and resumed execution matched uninterrupted execution exactly. |
 | VIRTUAL hot-path canary | Same saved epoch-4 artifact and query; runtime commit `7d56d5d5` | `48.241 -> 18.107 s` (`2.664x`); UNKNOWN, zero source mutation, exact continuation-manifest equality. |
 | REAL rollback-clone canary | Same saved epoch-4 authority; runtime commit `7d56d5d5`; clone operation only | `5.114 -> 0.193 s` (`26.47x` clone-only); idempotent/rollback public transactions took `2.632/2.321 s` with exact parity. |
+| Mixed-evidence request reachability | Commit `5efc88ce`; data-free `C,S,S,S,S` lifecycle, both polarities, incremental versus full replay | No request through S3; one request exactly at S4, anchored to the earliest C; parent remains UNKNOWN and never gains authority. |
+| Specialized-child prospective gate | Same data-free fixture; actual birth, round-trip, then post-birth evidence | Child starts at zero; four clean supports certify it, while one matching contradiction plus four supports leaves it uncertified. Certified `S,S,S,S,C` revocation also remains exact. |
 
 ## Purpose and validity scope
 
@@ -56,6 +58,9 @@ current implementation commit.
 - `7d56d5d55af8459b9e1a053c54f8a103033fd7d6` — process-stable exact R1
   resume identity, snapshot edge-alias repair, guarded dream hot path, and
   frozen-R0-sharing REAL rollback transactions.
+- `5efc88cecd9603e5f30016470a68bdfcce9813b0` — v7 mixed-evidence
+  specialization reachability, exact causal request identity and boundary-only
+  request-evidence reclosure.
 
 ## Evidenced experiments
 
@@ -318,3 +323,49 @@ current implementation commit.
   in this clone because their referenced `reports/autogrowth/native_*` inputs
   are absent; the observed setup errors are preserved as an environment
   limitation, not counted as passes.
+
+### V7 mixed-evidence specialization reachability — `5efc88ce`
+
+- Diagnosis: a generation-0 `MIXED_OUTCOME_SHADOW` previously requested a
+  child only when it was already prospectively certified and the current REAL
+  event contradicted it. An earlier monotone contradiction made certification
+  impossible, so the exact epoch-4 continuation's 26 AVAILABLE-polarity
+  shadows could never request a compensating child.
+- Repair: an uncertified mixed shadow now emits one lifetime request at the
+  first projected event with at least four prospective polarity-consistent
+  supports and at least one contradiction. The request separately binds its
+  emission receipt and its earliest contradiction anchor. The existing
+  certified-revocation basis remains distinct. Request IDs bind the complete
+  causal manifest, and live execution and full replay use one constructor.
+- Data-free mechanism canary: fixed two-geometry KRK R0, local-contrast mode,
+  both AVAILABLE and REFUTED polarities. For `C,S1,S2,S3,S4,S5`, incremental
+  and legacy-full-replay authorities were compared after every event. No
+  request appeared through S3; S4 emitted exactly one mixed-evidence request
+  without revocation or parent authority; S5 emitted no repeat. Dump/load and
+  full-history reconstruction remained exact.
+- Child gate: the request was structurally consumed and materialized with zero
+  support, successes and contradictions and with all pre-birth REAL receipts
+  excluded. Four new matching supports certified the clean child. A separate
+  physically valid matching contradiction followed by four supports produced
+  `(successes, contradictions, certified) = (4, 1, False)` for both
+  polarities. The certified `S,S,S,S,C` path still revoked and requested with
+  contradiction anchor equal to request emission, then passed replay and
+  round-trip checks.
+- Runtime discipline: exact request-evidence/candidate reconstruction runs
+  only at explicit full-history, serialization and restoration boundaries.
+  Ordinary invariants retain request-ID, parent, queue and emission bindings
+  without rescanning growing evidence tails. A tiny reviewer canary measured
+  `0.50 ms` for the routine request check versus `2.59 ms` for exact reclosure;
+  grounded-reference canonicalization occurs once per authority graph, not
+  once per matching cell.
+- Validation at the committed source: focused mixed/settlement/composition/
+  incremental suites `49 passed in 61.98 s`; intrinsic/handover suites
+  `42 passed in 46.57 s`; atomic-snapshot and development-benchmark harnesses
+  `57 passed in 103.83 s` with the sandbox-only process-pool test explicitly
+  deselected. `py_compile` and `git diff --check` pass; independent review
+  found no remaining blocker. Missing historical `reports/autogrowth/native_*`
+  inputs remain an environment limitation and are not counted as passes.
+- Scope: this establishes mechanism reachability and exact software semantics,
+  not mate-in-2 learning or generalization. The old epoch-4 continuation stays
+  permanently locked and should not be resumed. The next evidence step is a
+  bounded fresh development integration shot, not a full curriculum run.
