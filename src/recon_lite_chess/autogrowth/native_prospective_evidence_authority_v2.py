@@ -20,7 +20,12 @@ from recon_lite import (
 from recon_lite_hector.nodes import StemCellState
 from recon_lite_hector.nodes import StemCellTerminal
 
-from .native_authority_handover import ChildQuery, GraphActuation, GraphSignalTrace
+from .native_authority_handover import (
+    ChildQuery,
+    GraphActuation,
+    GraphSignalTrace,
+    NativeR0DreamSession,
+)
 from .native_competence_envelope import (
     AvailabilityState, CompetenceContextCell, CompetenceContextGrowthGenome,
     DormantOrigin, EnvelopeClassification, GrowthProposal,
@@ -2033,6 +2038,66 @@ def _validated_prefix_physical_fingerprints(
     return tuple(sorted(set(fingerprints)))
 
 
+class NativeV2FrameSession:
+    """Epoch-local frozen-R0 runtime and immutable base-manifest guard."""
+
+    def __init__(self, authority: "NativeProspectiveAuthorityV2") -> None:
+        self.authority = authority
+        self.base_manifest = copy.deepcopy(
+            authority.base.continuation_manifest_v3()
+        )
+        self.base_continuation_digest = _sha(self.base_manifest)
+        self.source_guard = authority.base.r0.inference_guard_identity()
+        self.r0_session = NativeR0DreamSession(
+            authority.base.r0,
+            guard_each_request=False,
+            persistent_digest=self.source_guard,
+        )
+        self.closed = False
+
+    def _require_open(
+        self, authority: "NativeProspectiveAuthorityV2"
+    ) -> None:
+        if self.closed:
+            raise ProspectiveV2IntegrityError("V2 frame session is closed")
+        if authority is not self.authority:
+            raise ProspectiveV2IntegrityError(
+                "V2 frame session belongs to another authority"
+            )
+
+    def continuation_digest(
+        self, authority: "NativeProspectiveAuthorityV2"
+    ) -> str:
+        self._require_open(authority)
+        return authority.continuation_digest(
+            frozen_base_v3=self.base_manifest
+        )
+
+    def close(self) -> None:
+        if self.closed:
+            return
+        runtime_error: Exception | None = None
+        try:
+            self.r0_session.close()
+        except Exception as exc:  # preserve the first exact isolation failure
+            runtime_error = exc
+        current_base = self.authority.base.continuation_manifest_v3()
+        current_source_guard = (
+            self.authority.base.r0.inference_guard_identity()
+        )
+        self.closed = True
+        if runtime_error is not None:
+            raise runtime_error
+        if current_base != self.base_manifest:
+            raise ProspectiveV2IntegrityError(
+                "V2 frame session observed base-organism mutation"
+            )
+        if current_source_guard != self.source_guard:
+            raise ProspectiveV2IntegrityError(
+                "V2 frame session observed frozen-R0 mutation"
+            )
+
+
 @dataclass
 class NativeProspectiveAuthorityV2:
     base: TraceNativeCompetenceOrganism
@@ -2379,7 +2444,11 @@ class NativeProspectiveAuthorityV2:
             "tombstones": self.historical_tombstones,
         })
 
-    def _build_experimental_identity(self) -> dict[str, Any]:
+    def _build_experimental_identity(
+        self,
+        *,
+        base_continuation_digest: str | None = None,
+    ) -> dict[str, Any]:
         epoch = self.base.envelope.nomination_epoch
         if epoch is None or not epoch.nomination_closed:
             raise ProspectiveV2IntegrityError(
@@ -2425,6 +2494,8 @@ class NativeProspectiveAuthorityV2:
                 "state_identity": self.base.r0.trace_state_identity(),
                 "base_continuation_digest": (
                     self.base.continuation_digest_v3()
+                    if base_continuation_digest is None
+                    else str(base_continuation_digest)
                 ),
             },
             "candidate_population_identity": _sha(candidate_population),
@@ -3153,7 +3224,10 @@ class NativeProspectiveAuthorityV2:
             )
 
     def _verify_invariants(
-        self, *, allow_unregistered: bool = False
+        self,
+        *,
+        allow_unregistered: bool = False,
+        frozen_base_continuation_digest: str | None = None,
     ) -> None:
         if self.schema_version != SCHEMA_VERSION:
             raise ProspectiveV2IntegrityError("unsupported V2 schema")
@@ -3333,7 +3407,11 @@ class NativeProspectiveAuthorityV2:
             if state.hypothesis.source_generation > 0
         }
         if epoch.nomination_closed and not successor_ids:
-            expected_identity = self._build_experimental_identity()
+            expected_identity = self._build_experimental_identity(
+                base_continuation_digest=(
+                    frozen_base_continuation_digest
+                )
+            )
             if self.experimental_identity != expected_identity:
                 raise ProspectiveV2IntegrityError(
                     "experimental initialization identity mismatch"
@@ -4065,10 +4143,27 @@ class NativeProspectiveAuthorityV2:
             )
         ))
 
-    def open_real_event(
-        self, frame: FrameContext
-    ) -> tuple[PendingRealEvent, GraphSignalTrace]:
+    def frame_session(self) -> NativeV2FrameSession:
+        """Open one non-serializable frozen-R0 execution session."""
+
         self._verify_invariants()
+        return NativeV2FrameSession(self)
+
+    def open_real_event(
+        self,
+        frame: FrameContext,
+        *,
+        frame_session: NativeV2FrameSession | None = None,
+    ) -> tuple[PendingRealEvent, GraphSignalTrace]:
+        if frame_session is not None:
+            frame_session._require_open(self)
+        self._verify_invariants(
+            frozen_base_continuation_digest=(
+                None
+                if frame_session is None
+                else frame_session.base_continuation_digest
+            )
+        )
         if self.generation_phase is not GenerationPhase.PROSPECTIVE_OPEN:
             raise ProspectiveV2IntegrityError(
                 "REAL event outside PROSPECTIVE_OPEN"
@@ -4083,7 +4178,11 @@ class NativeProspectiveAuthorityV2:
                 "first certification event requires closed nomination"
             )
         self._ensure_incremental_history_initialized()
-        before = self.continuation_digest()
+        before = (
+            self.continuation_digest()
+            if frame_session is None
+            else frame_session.continuation_digest(self)
+        )
         if frame.kind is not FrameKind.REAL:
             raise ProspectiveV2IntegrityError(
                 "VIRTUAL cannot open certification event"
@@ -4095,7 +4194,12 @@ class NativeProspectiveAuthorityV2:
         board = frame.values.get("board")
         if not isinstance(board, chess.Board):
             raise TypeError("REAL event requires chess.Board")
-        actuation, trace = self.base.r0.emit_action_with_trace(frame)
+        if frame_session is None:
+            actuation, trace = self.base.r0.emit_action_with_trace(frame)
+        else:
+            actuation, trace = (
+                frame_session.r0_session.emit_action_with_trace(frame)
+            )
         if actuation is None or trace is None:
             raise ProspectiveV2IntegrityError(
                 "graph emitted no REAL actuation"
@@ -4145,7 +4249,12 @@ class NativeProspectiveAuthorityV2:
                 environment_terminal_identity
             ),
         )
-        if self.continuation_digest() != before:
+        after = (
+            self.continuation_digest()
+            if frame_session is None
+            else frame_session.continuation_digest(self)
+        )
+        if after != before:
             raise ProspectiveV2IntegrityError(
                 "prediction mutated persistent state"
             )
@@ -4352,21 +4461,40 @@ class NativeProspectiveAuthorityV2:
             raise ProspectiveV2IntegrityError("receipt ID mismatch")
 
     def consume(
-        self, receipt: V2GroundedReceipt
+        self,
+        receipt: V2GroundedReceipt,
+        *,
+        frame_session: NativeV2FrameSession | None = None,
     ) -> V2CertificationEmission:
         """Atomically consume one REAL result; never materialize a child."""
 
         frozen_r0 = self.base.r0
-        frozen_r0_guard = frozen_r0.inference_guard_identity()
+        frozen_r0_guard = (
+            frozen_r0.inference_guard_identity()
+            if frame_session is None
+            else None
+        )
+        if frame_session is not None:
+            frame_session._require_open(self)
         candidate = copy.deepcopy(self, {id(frozen_r0): frozen_r0})
         if candidate.base.r0 is not frozen_r0:
             raise ProspectiveV2IntegrityError(
                 "REAL transaction failed to share the frozen R0 source"
             )
         try:
-            result = candidate._consume_in_place(receipt)
+            result = candidate._consume_in_place(
+                receipt,
+                frozen_base_continuation_digest=(
+                    None
+                    if frame_session is None
+                    else frame_session.base_continuation_digest
+                ),
+            )
         finally:
-            if frozen_r0.inference_guard_identity() != frozen_r0_guard:
+            if (
+                frozen_r0_guard is not None
+                and frozen_r0.inference_guard_identity() != frozen_r0_guard
+            ):
                 raise ProspectiveV2IntegrityError(
                     "REAL transaction mutated its shared frozen R0 source"
                 )
@@ -4375,9 +4503,16 @@ class NativeProspectiveAuthorityV2:
         return result
 
     def _consume_in_place(
-        self, receipt: V2GroundedReceipt
+        self,
+        receipt: V2GroundedReceipt,
+        *,
+        frozen_base_continuation_digest: str | None = None,
     ) -> V2CertificationEmission:
-        self._verify_invariants()
+        self._verify_invariants(
+            frozen_base_continuation_digest=(
+                frozen_base_continuation_digest
+            )
+        )
         if self.generation_phase is not GenerationPhase.PROSPECTIVE_OPEN:
             raise ProspectiveV2IntegrityError(
                 "REAL consumption outside PROSPECTIVE_OPEN"
@@ -4609,7 +4744,11 @@ class NativeProspectiveAuthorityV2:
             emission=emission,
         )
         self.pending_event = None
-        self._verify_invariants()
+        self._verify_invariants(
+            frozen_base_continuation_digest=(
+                frozen_base_continuation_digest
+            )
+        )
         return emission
 
     def _validate_request_append_capacity(
@@ -5760,18 +5899,38 @@ class NativeProspectiveAuthorityV2:
         return result
 
 
-    def open_virtual(self, frame: FrameContext) -> dict[str, Any]:
-        self._verify_invariants()
-        before = self.continuation_digest()
+    def open_virtual(
+        self,
+        frame: FrameContext,
+        *,
+        frame_session: NativeV2FrameSession | None = None,
+    ) -> dict[str, Any]:
+        if frame_session is not None:
+            frame_session._require_open(self)
+        self._verify_invariants(
+            frozen_base_continuation_digest=(
+                None
+                if frame_session is None
+                else frame_session.base_continuation_digest
+            )
+        )
+        before = (
+            self.continuation_digest()
+            if frame_session is None
+            else frame_session.continuation_digest(self)
+        )
         if frame.kind is not FrameKind.VIRTUAL:
             raise ProspectiveV2IntegrityError(
                 "virtual capability requires VIRTUAL frame"
             )
-        session = self.base.dream_session()
-        try:
-            raw = session.request(frame)
-        finally:
-            session.close()
+        if frame_session is None:
+            session = self.base.dream_session()
+            try:
+                raw = session.request(frame)
+            finally:
+                session.close()
+        else:
+            raw = frame_session.r0_session.request(frame)
         trace = raw.graph_signal_trace
         if raw.actuation is not None and trace is None:
             raise ProspectiveV2IntegrityError(
@@ -5849,7 +6008,12 @@ class NativeProspectiveAuthorityV2:
             },
             graph_signal_trace=trace,
         )
-        if self.continuation_digest() != before:
+        after = (
+            self.continuation_digest()
+            if frame_session is None
+            else frame_session.continuation_digest(self)
+        )
+        if after != before:
             raise ProspectiveV2IntegrityError(
                 "VIRTUAL evaluation mutated state"
             )
@@ -5860,7 +6024,11 @@ class NativeProspectiveAuthorityV2:
             "graph_emissions": graph,
         }
 
-    def continuation_manifest(self) -> dict[str, Any]:
+    def continuation_manifest(
+        self,
+        *,
+        frozen_base_v3: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
         return {
             "schema_version": self.schema_version,
             "mode": self.mode.value,
@@ -5871,7 +6039,11 @@ class NativeProspectiveAuthorityV2:
             ),
             "current_generation": self.current_generation,
             "generation_phase": self.generation_phase.value,
-            "base_v3": self.base.continuation_manifest_v3(),
+            "base_v3": (
+                self.base.continuation_manifest_v3()
+                if frozen_base_v3 is None
+                else copy.deepcopy(dict(frozen_base_v3))
+            ),
             "states": {
                 key: value.manifest()
                 for key, value in sorted(self.states.items())
@@ -5964,8 +6136,14 @@ class NativeProspectiveAuthorityV2:
             ),
         }
 
-    def continuation_digest(self) -> str:
-        return _sha(self.continuation_manifest())
+    def continuation_digest(
+        self,
+        *,
+        frozen_base_v3: Mapping[str, Any] | None = None,
+    ) -> str:
+        return _sha(self.continuation_manifest(
+            frozen_base_v3=frozen_base_v3
+        ))
 
     def dumps(self) -> bytes:
         self.verify_full_history_boundary("serialization")

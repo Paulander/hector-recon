@@ -212,12 +212,52 @@ class ChildQuery:
 class NativeR0DreamSession:
     """One isolated graph clone reused across frame-local child requests."""
 
-    def __init__(self, organism: "NativeR0Organism") -> None:
+    def __init__(
+        self,
+        organism: "NativeR0Organism",
+        *,
+        guard_each_request: bool = True,
+        persistent_digest: str | None = None,
+    ) -> None:
         self.organism = organism
-        self.persistent_digest = organism.inference_guard_identity()
-        self.virtual_graph = copy.deepcopy(organism.graph)
+        self.persistent_digest = (
+            organism.inference_guard_identity()
+            if persistent_digest is None
+            else str(persistent_digest)
+        )
+        self.guard_each_request = bool(guard_each_request)
+        self.virtual_graph = organism.graph.frame_runtime_copy()
         self.virtual_credit = copy.deepcopy(organism.credit)
+        self._activation_counts = {
+            node_id: node.meta.get("activation_count")
+            for node_id, node in self.virtual_graph.graph.nodes.items()
+        }
         self.closed = False
+        self._reset_runtime()
+        self._runtime_semantic_manifest = (
+            self.virtual_graph.canonical_semantic_manifest()
+        )
+
+    def _reset_runtime(self) -> None:
+        self.virtual_graph.normalize_inference_runtime()
+        for node_id, baseline in self._activation_counts.items():
+            node = self.virtual_graph.graph.nodes[node_id]
+            if baseline is None:
+                node.meta.pop("activation_count", None)
+            else:
+                node.meta["activation_count"] = baseline
+
+    def emit_action_with_trace(
+        self, frame: FrameContext
+    ) -> tuple[GraphActuation | None, GraphSignalTrace | None]:
+        """Execute one frame on the session-owned isolated runtime graph."""
+
+        if self.closed:
+            raise RuntimeError("dream session is closed")
+        self._reset_runtime()
+        return self.organism._emit_action_with_trace_on_runtime(
+            frame, self.virtual_graph
+        )
 
     def request(self, frame: FrameContext) -> ChildQuery:
         if self.closed:
@@ -230,17 +270,13 @@ class NativeR0DreamSession:
         board = runtime.get("board")
         if not isinstance(board, chess.Board):
             raise TypeError("virtual R0 frame requires a chess.Board")
-        virtual = NativeR0Organism(
-            graph=self.virtual_graph,
-            credit=self.virtual_credit,
-            provenance=self.organism.provenance,
-            frozen_triplet_ids=self.organism.frozen_triplet_ids,
-            source_manifest=copy.deepcopy(dict(self.organism.source_manifest)),
-            retrieval_budget_per_actuator=self.organism.retrieval_budget_per_actuator,
-        )
-        actuation, signal_trace = virtual.emit_action_with_trace(frame)
+        actuation, signal_trace = self.emit_action_with_trace(frame)
+        # The isolated runtime cannot reach the persistent source.  Its full
+        # identity is checked once at close, rather than rescanning the frozen
+        # graph after every frame.
         mutation_count = int(
-            self.organism.inference_guard_identity()
+            self.guard_each_request
+            and self.organism.inference_guard_identity()
             != self.persistent_digest
         )
         if mutation_count:
@@ -276,6 +312,14 @@ class NativeR0DreamSession:
         )
 
     def close(self) -> None:
+        if self.closed:
+            return
+        self._reset_runtime()
+        if (
+            self.virtual_graph.canonical_semantic_manifest()
+            != self._runtime_semantic_manifest
+        ):
+            raise RuntimeError("dream runtime changed frozen inference semantics")
         if (
             self.organism.inference_guard_identity()
             != self.persistent_digest
@@ -500,14 +544,28 @@ class NativeR0Organism:
     ) -> tuple[GraphActuation | None, GraphSignalTrace | None]:
         """Emit exactly one action and its immutable selected-option trace."""
 
+        return self._emit_action_with_trace_on_runtime(
+            frame, self.graph.frame_runtime_copy()
+        )
+
+    def _emit_action_with_trace_on_runtime(
+        self,
+        frame: FrameContext,
+        runtime_policy: NativeReConKRKGraph,
+    ) -> tuple[GraphActuation | None, GraphSignalTrace | None]:
+        """Emit on an already isolated runtime owned by the caller."""
+
         if not isinstance(frame, FrameContext):
             raise TypeError("trace-native R0 execution requires FrameContext")
+        if runtime_policy is self.graph:
+            raise RuntimeError("persistent R0 graph cannot be used as frame runtime")
+        if runtime_policy.frozen_policy_token != self.graph.frozen_policy_token:
+            raise RuntimeError("frame runtime belongs to another frozen R0 policy")
         runtime = frame.to_env_overlay()
         board = runtime.get("board")
         if not isinstance(board, chess.Board):
             raise TypeError("trace-native R0 frame requires a chess.Board")
         source_state_identity = self.trace_state_identity()
-        runtime_policy = self.graph.frame_runtime_copy()
         options, ticks, captures = _formal_native_options(
             runtime_policy,
             board,

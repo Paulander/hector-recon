@@ -197,6 +197,7 @@ def _open_mint(
     fullmove: int,
     frame_id: str,
     fen_template: str | None = None,
+    frame_session=None,
 ):
     board = (
         _board(outcome, fullmove)
@@ -205,7 +206,7 @@ def _open_mint(
     )
     pending, trace = authority.open_real_event(FrameContext(
         frame_id, FrameKind.REAL, {"board": board}
-    ))
+    ), frame_session=frame_session)
     successor = _after(
         board, chess.Move.from_uci(pending.actuation.move_uci)
     )
@@ -226,6 +227,7 @@ def _consume(
     fullmove: int,
     frame_id: str,
     fen_template: str | None = None,
+    frame_session=None,
 ):
     opened = _open_mint(
         authority,
@@ -233,8 +235,11 @@ def _consume(
         fullmove=fullmove,
         frame_id=frame_id,
         fen_template=fen_template,
+        frame_session=frame_session,
     )
-    return opened, authority.consume(opened[2])
+    return opened, authority.consume(
+        opened[2], frame_session=frame_session
+    )
 
 
 @pytest.mark.parametrize(
@@ -459,3 +464,188 @@ def test_certified_revocation_keeps_current_contradiction_as_anchor(
     )
     restored = NativeProspectiveAuthorityV2.loads(authority.dumps())
     assert restored.continuation_manifest() == authority.continuation_manifest()
+
+
+def test_epoch_frame_session_is_exact_and_clones_frozen_r0_once(
+    monkeypatch,
+) -> None:
+    initial = _mixed_authority(AvailabilityState.AVAILABLE)
+    baseline = copy.deepcopy(initial)
+    reused = copy.deepcopy(initial)
+    phase = "baseline"
+    copies = {"baseline": 0, "reused": 0}
+    original = NativeReConKRKGraph.frame_runtime_copy
+
+    def counted(runtime_graph):
+        copies[phase] += 1
+        return original(runtime_graph)
+
+    monkeypatch.setattr(
+        NativeReConKRKGraph, "frame_runtime_copy", counted
+    )
+    sequence = (
+        (False, 70, "contradiction"),
+        (True, 71, "support-1"),
+        (True, 72, "support-2"),
+    )
+    expected = []
+    for outcome, fullmove, label in sequence:
+        virtual = baseline.open_virtual(FrameContext(
+            f"frame-session:virtual:{label}",
+            FrameKind.VIRTUAL,
+            {"board": _board(outcome, fullmove)},
+        ))
+        opened = _open_mint(
+            baseline,
+            outcome=outcome,
+            fullmove=fullmove,
+            frame_id=f"frame-session:real:{label}",
+        )
+        emission = baseline.consume(opened[2])
+        expected.append((
+            virtual,
+            opened,
+            emission,
+            baseline.continuation_manifest(),
+        ))
+
+    phase = "reused"
+    session = reused.frame_session()
+    try:
+        for index, (outcome, fullmove, label) in enumerate(sequence):
+            virtual = reused.open_virtual(
+                FrameContext(
+                    f"frame-session:virtual:{label}",
+                    FrameKind.VIRTUAL,
+                    {"board": _board(outcome, fullmove)},
+                ),
+                frame_session=session,
+            )
+            opened = _open_mint(
+                reused,
+                outcome=outcome,
+                fullmove=fullmove,
+                frame_id=f"frame-session:real:{label}",
+                frame_session=session,
+            )
+            emission = reused.consume(
+                opened[2], frame_session=session
+            )
+            assert (
+                virtual,
+                opened,
+                emission,
+                reused.continuation_manifest(),
+            ) == expected[index]
+    finally:
+        session.close()
+
+    assert copies == {
+        "baseline": 2 * len(sequence),
+        "reused": 1,
+    }
+    reused.verify_full_history_boundary("epoch frame session parity")
+
+
+def test_epoch_frame_session_closes_across_structural_replacement() -> None:
+    authority = _mixed_authority(AvailabilityState.AVAILABLE)
+    session = authority.frame_session()
+    sequence = (
+        (False, 80, "contradiction"),
+        (True, 81, "support-1"),
+        (True, 82, "support-2"),
+        (True, 83, "support-3"),
+        (True, 84, "support-4"),
+        (True, 85, "support-5"),
+    )
+    for outcome, fullmove, label in sequence:
+        _consume(
+            authority,
+            outcome=outcome,
+            fullmove=fullmove,
+            frame_id=f"frame-session-structure:{label}",
+            frame_session=session,
+        )
+    assert authority.next_expected_ordinal == 10
+    authority.seal_prospective_generation()
+    authority.open_structural_successor()
+    while any(
+        request_id not in authority.request_consumptions
+        for request_id in authority.sealed_request_ids
+    ):
+        consumption = authority.consume_next_structural_request()
+        if consumption.child_cell_id is not None:
+            authority.materialize_deferred_child(consumption.request_id)
+    authority.open_prospective_successor()
+    session.close()
+
+    resumed_session = authority.frame_session()
+    try:
+        _consume(
+            authority,
+            outcome=True,
+            fullmove=86,
+            frame_id="frame-session-structure:post-boundary",
+            frame_session=resumed_session,
+        )
+    finally:
+        resumed_session.close()
+    authority.verify_full_history_boundary(
+        "epoch frame session structural replacement"
+    )
+
+
+def test_epoch_frame_session_detects_runtime_semantic_mutation() -> None:
+    authority = _mixed_authority(AvailabilityState.AVAILABLE)
+    session = authority.frame_session()
+    session.r0_session.virtual_graph.graph.edges[0].w += 0.125
+
+    with pytest.raises(
+        RuntimeError, match="runtime changed frozen inference semantics"
+    ):
+        session.close()
+
+
+def test_epoch_frame_session_source_audits_are_constant_per_epoch(
+    monkeypatch,
+) -> None:
+    authority = _mixed_authority(AvailabilityState.AVAILABLE)
+    r0_type = type(authority.base.r0)
+    original = r0_type.persistent_identity_audit
+    audit_calls = 0
+
+    def counted(organism):
+        nonlocal audit_calls
+        audit_calls += 1
+        return original(organism)
+
+    monkeypatch.setattr(r0_type, "persistent_identity_audit", counted)
+    session = authority.frame_session()
+    calls_after_open = audit_calls
+    assert calls_after_open == 3
+    try:
+        for index, (outcome, fullmove) in enumerate((
+            (False, 90),
+            (True, 91),
+            (True, 92),
+        )):
+            authority.open_virtual(
+                FrameContext(
+                    f"constant-audit:virtual:{index}",
+                    FrameKind.VIRTUAL,
+                    {"board": _board(outcome, fullmove)},
+                ),
+                frame_session=session,
+            )
+            opened = _open_mint(
+                authority,
+                outcome=outcome,
+                fullmove=fullmove,
+                frame_id=f"constant-audit:real:{index}",
+                frame_session=session,
+            )
+            authority.consume(opened[2], frame_session=session)
+            assert audit_calls == calls_after_open
+    finally:
+        session.close()
+    assert audit_calls == 6

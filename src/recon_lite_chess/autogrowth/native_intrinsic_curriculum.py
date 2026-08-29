@@ -1861,113 +1861,133 @@ def _run_r1_arm(
         }
 
     for epoch in range(start_epoch, epoch_budget):
-        for position_index, fen in enumerate(pools.r1_train):
-            board = chess.Board(fen)
-            move, triplet_id, confirmed, graph_prediction = _scheduled_confirmed_action(
-                graph,
-                board,
-                schedule_index=epoch + position_index,
-                stage_diagnostic="R1_mate_in_2",
+        r0_frame_session = (
+            None
+            if (
+                r0_child_authority is None
+                or not callable(
+                    getattr(r0_child_authority, "frame_session", None)
+                )
             )
-            counters["formal_confirmation_failures"] += int(not confirmed)
-            after_first = board.copy(stack=False)
-            after_first.push(move)
-            terminal_kind: str | None = _terminal_kind(after_first)
-            successor_ids: tuple[str, ...] = ()
-            if terminal_kind is None:
-                replies = tuple(sorted(after_first.legal_moves, key=lambda item: item.uci()))
-                if not replies:
-                    terminal_kind = "failure"
-                else:
-                    reply_key = (fen, move.uci())
-                    reply_index = reply_exposure_counts.get(reply_key, 0)
-                    reply = replies[reply_index % len(replies)]
-                    reply_exposure_counts[reply_key] = reply_index + 1
-                    successor = after_first.copy(stack=False)
-                    successor.push(reply)
-                    reply_orbits.add((fen, move.uci(), reply.uci()))
-                    terminal_kind = _terminal_kind(successor)
-                    if terminal_kind is None and r0_child_authority is not None:
-                        available, response, duplicate, structural = (
-                            _v2_r0_observe_training_successor(
-                                r0_child_authority,
-                                successor,
-                                seen_predecessor_fens=v2_seen_predecessor_fens,
-                                frame_id=(
-                                    f"native-intrinsic-v2:{arm_name}:"
-                                    f"{epoch}:{position_index}:"
-                                    f"{move.uci()}:{reply.uci()}"
-                                ),
+            else r0_child_authority.frame_session()
+        )
+        try:
+            for position_index, fen in enumerate(pools.r1_train):
+                board = chess.Board(fen)
+                move, triplet_id, confirmed, graph_prediction = _scheduled_confirmed_action(
+                    graph,
+                    board,
+                    schedule_index=epoch + position_index,
+                    stage_diagnostic="R1_mate_in_2",
+                )
+                counters["formal_confirmation_failures"] += int(not confirmed)
+                after_first = board.copy(stack=False)
+                after_first.push(move)
+                terminal_kind: str | None = _terminal_kind(after_first)
+                successor_ids: tuple[str, ...] = ()
+                if terminal_kind is None:
+                    replies = tuple(sorted(after_first.legal_moves, key=lambda item: item.uci()))
+                    if not replies:
+                        terminal_kind = "failure"
+                    else:
+                        reply_key = (fen, move.uci())
+                        reply_index = reply_exposure_counts.get(reply_key, 0)
+                        reply = replies[reply_index % len(replies)]
+                        reply_exposure_counts[reply_key] = reply_index + 1
+                        successor = after_first.copy(stack=False)
+                        successor.push(reply)
+                        reply_orbits.add((fen, move.uci(), reply.uci()))
+                        terminal_kind = _terminal_kind(successor)
+                        if terminal_kind is None and r0_child_authority is not None:
+                            available, response, duplicate, structural = (
+                                _v2_r0_observe_training_successor(
+                                    r0_child_authority,
+                                    successor,
+                                    seen_predecessor_fens=v2_seen_predecessor_fens,
+                                    frame_id=(
+                                        f"native-intrinsic-v2:{arm_name}:"
+                                        f"{epoch}:{position_index}:"
+                                        f"{move.uci()}:{reply.uci()}"
+                                    ),
+                                    frame_session=r0_frame_session,
+                                )
                             )
-                        )
-                        counters["availability_queries"] += 1
-                        counters["availability_positives"] += int(available)
-                        counters["virtual_frame_queries"] += int(duplicate)
-                        counters["v2_duplicate_virtual_queries"] += int(duplicate)
-                        counters["v2_real_observations"] += int(not duplicate)
-                        if structural is not None:
-                            counters["v2_structural_transitions"] += 1
-                            v2_structural_events.append(structural)
-                        if arm.bootstrap_enabled and available:
-                            successor_ids = (R0_COMPETENCE_ID,)
-                            counters["child_handoffs"] += 1
-                    elif terminal_kind is None and arm.bootstrap_enabled:
-                        available, response, cache_hit, cache_mismatch = (
-                            _r0_available_with_dispatch_cache(
-                                graph,
-                                r0_gate,
-                                successor,
-                                mode=arm.availability_mode,
-                                allowed_triplets=r0_child_triplet_ids,
-                                cache=child_dispatch_cache,
-                                enabled=config.freeze_r0_parameters_for_r1,
-                                cache_validation_mode=config.r0_child_cache_validation_mode,
+                            counters["availability_queries"] += 1
+                            counters["availability_positives"] += int(available)
+                            counters["virtual_frame_queries"] += int(duplicate)
+                            counters["v2_duplicate_virtual_queries"] += int(duplicate)
+                            counters["v2_real_observations"] += int(not duplicate)
+                            if structural is not None:
+                                counters["v2_structural_transitions"] += 1
+                                v2_structural_events.append(structural)
+                                if r0_frame_session is not None:
+                                    r0_frame_session.close()
+                                    r0_frame_session = (
+                                        r0_child_authority.frame_session()
+                                    )
+                            if arm.bootstrap_enabled and available:
+                                successor_ids = (R0_COMPETENCE_ID,)
+                                counters["child_handoffs"] += 1
+                        elif terminal_kind is None and arm.bootstrap_enabled:
+                            available, response, cache_hit, cache_mismatch = (
+                                _r0_available_with_dispatch_cache(
+                                    graph,
+                                    r0_gate,
+                                    successor,
+                                    mode=arm.availability_mode,
+                                    allowed_triplets=r0_child_triplet_ids,
+                                    cache=child_dispatch_cache,
+                                    enabled=config.freeze_r0_parameters_for_r1,
+                                    cache_validation_mode=config.r0_child_cache_validation_mode,
+                                )
                             )
-                        )
-                        counters["child_dispatch_cache_hits"] += int(cache_hit)
-                        counters["child_dispatch_cache_misses"] += int(not cache_hit)
-                        counters["child_dispatch_cache_mismatches"] += int(cache_mismatch)
-                        counters["child_dispatch_cache_certified_hits"] += int(
-                            response.get("cache_validation_mode") == "frozen_policy_token"
-                        )
-                        counters["virtual_frame_queries"] += int(
-                            arm.availability_mode == "virtual_frame_verified"
-                        )
-                        if arm.availability_mode == "shuffled_prototype_gate":
-                            schedule_index = counters["availability_queries"]
-                            if schedule_index >= len(shuffled_schedule):
-                                raise RuntimeError("shuffled availability schedule exhausted")
-                            available = shuffled_schedule[schedule_index]
-                            response["availability_before_shuffle"] = bool(
-                                r0_gate.confirms(response["features"])
+                            counters["child_dispatch_cache_hits"] += int(cache_hit)
+                            counters["child_dispatch_cache_misses"] += int(not cache_hit)
+                            counters["child_dispatch_cache_mismatches"] += int(cache_mismatch)
+                            counters["child_dispatch_cache_certified_hits"] += int(
+                                response.get("cache_validation_mode") == "frozen_policy_token"
                             )
-                            response["availability_after_shuffle"] = bool(available)
-                        counters["availability_queries"] += 1
-                        counters["availability_positives"] += int(available)
-                        if available:
-                            successor_ids = (R0_COMPETENCE_ID,)
-                            counters["child_handoffs"] += 1
-            credit.register(triplet_id, hierarchy_depth=1)
-            credit.begin_episode()
-            event = credit.transition(
-                triplet_id,
-                responsibilities=(
-                    Responsibility(triplet_id, parent_distance=0),
-                    Responsibility(R1_COMPETENCE_ID, parent_distance=1),
-                ),
-                successor_ids=successor_ids,
-                terminal_kind=terminal_kind,
-                prediction_override=graph_prediction,
-            )
-            counters["successor_value_sum"] += float(event.successor_value)
-            graph.apply_intrinsic_td(
-                board,
-                move,
-                td_error=event.td_error,
-                stage_diagnostic="R1_mate_in_2",
-            )
-            counters["episodes"] += 1
-            counters["failures"] += int(terminal_kind is not None)
+                            counters["virtual_frame_queries"] += int(
+                                arm.availability_mode == "virtual_frame_verified"
+                            )
+                            if arm.availability_mode == "shuffled_prototype_gate":
+                                schedule_index = counters["availability_queries"]
+                                if schedule_index >= len(shuffled_schedule):
+                                    raise RuntimeError("shuffled availability schedule exhausted")
+                                available = shuffled_schedule[schedule_index]
+                                response["availability_before_shuffle"] = bool(
+                                    r0_gate.confirms(response["features"])
+                                )
+                                response["availability_after_shuffle"] = bool(available)
+                            counters["availability_queries"] += 1
+                            counters["availability_positives"] += int(available)
+                            if available:
+                                successor_ids = (R0_COMPETENCE_ID,)
+                                counters["child_handoffs"] += 1
+                credit.register(triplet_id, hierarchy_depth=1)
+                credit.begin_episode()
+                event = credit.transition(
+                    triplet_id,
+                    responsibilities=(
+                        Responsibility(triplet_id, parent_distance=0),
+                        Responsibility(R1_COMPETENCE_ID, parent_distance=1),
+                    ),
+                    successor_ids=successor_ids,
+                    terminal_kind=terminal_kind,
+                    prediction_override=graph_prediction,
+                )
+                counters["successor_value_sum"] += float(event.successor_value)
+                graph.apply_intrinsic_td(
+                    board,
+                    move,
+                    td_error=event.td_error,
+                    stage_diagnostic="R1_mate_in_2",
+                )
+                counters["episodes"] += 1
+                counters["failures"] += int(terminal_kind is not None)
+        finally:
+            if r0_frame_session is not None:
+                r0_frame_session.close()
 
         replay = _replay_r0(
             graph,
@@ -3027,15 +3047,25 @@ def _v2_r0_available(
     board: chess.Board,
     *,
     frame_id: str,
+    frame_session: Any | None = None,
 ) -> tuple[bool, dict[str, Any]]:
     """Query only the V2 graph-emitted availability capability."""
 
-    before = str(authority.continuation_digest())
-    opened = authority.open_virtual(
-        FrameContext(
-            frame_id=str(frame_id),
-            kind=FrameKind.VIRTUAL,
-            values={"board": board.copy(stack=False)},
+    before = str(
+        authority.continuation_digest()
+        if frame_session is None
+        else frame_session.continuation_digest(authority)
+    )
+    frame = FrameContext(
+        frame_id=str(frame_id),
+        kind=FrameKind.VIRTUAL,
+        values={"board": board.copy(stack=False)},
+    )
+    opened = (
+        authority.open_virtual(frame)
+        if frame_session is None
+        else authority.open_virtual(
+            frame, frame_session=frame_session
         )
     )
     query = opened.get("query")
@@ -3046,7 +3076,12 @@ def _v2_r0_available(
         raise RuntimeError("V2 child availability bypassed graph authority")
     if int(provenance.get("certification_evidence_added", -1)) != 0:
         raise RuntimeError("VIRTUAL V2 query created certification evidence")
-    if str(authority.continuation_digest()) != before:
+    after = str(
+        authority.continuation_digest()
+        if frame_session is None
+        else frame_session.continuation_digest(authority)
+    )
+    if after != before:
         raise RuntimeError("VIRTUAL V2 query mutated the persistent authority")
     actuation = query.actuation
     selected_move = None if actuation is None else str(actuation.move_uci)
@@ -3118,21 +3153,30 @@ def _v2_r0_observe_training_successor(
     *,
     seen_predecessor_fens: set[str],
     frame_id: str,
+    frame_session: Any | None = None,
 ) -> tuple[bool, dict[str, Any], bool, dict[str, Any] | None]:
     """Classify before one unique REAL result, then learn for later events."""
 
     predecessor_fen = board.fen()
     if predecessor_fen in seen_predecessor_fens:
         available, response = _v2_r0_available(
-            authority, board, frame_id=f"{frame_id}:duplicate-virtual"
+            authority,
+            board,
+            frame_id=f"{frame_id}:duplicate-virtual",
+            frame_session=frame_session,
         )
         return available, response, True, None
 
-    pending, trace = authority.open_real_event(
-        FrameContext(
-            frame_id=str(frame_id),
-            kind=FrameKind.REAL,
-            values={"board": board.copy(stack=False)},
+    frame = FrameContext(
+        frame_id=str(frame_id),
+        kind=FrameKind.REAL,
+        values={"board": board.copy(stack=False)},
+    )
+    pending, trace = (
+        authority.open_real_event(frame)
+        if frame_session is None
+        else authority.open_real_event(
+            frame, frame_session=frame_session
         )
     )
     selected_move = chess.Move.from_uci(trace.actuation.move_uci)
@@ -3144,7 +3188,11 @@ def _v2_r0_observe_training_successor(
         predecessor=board,
         successor=successor,
     )
-    emission = authority.consume(receipt)
+    emission = (
+        authority.consume(receipt)
+        if frame_session is None
+        else authority.consume(receipt, frame_session=frame_session)
+    )
     seen_predecessor_fens.add(predecessor_fen)
     classification = pending.pre_outcome_classification.to_manifest()
     available = str(classification["state"]).lower() == "available"
