@@ -18,6 +18,8 @@ boundaries and artifact identities.
 | Mixed-evidence request reachability | Commit `5efc88ce`; data-free `C,S,S,S,S` lifecycle, both polarities, incremental versus full replay | No request through S3; one request exactly at S4, anchored to the earliest C; parent remains UNKNOWN and never gains authority. |
 | Specialized-child prospective gate | Same data-free fixture; actual birth, round-trip, then post-birth evidence | Child starts at zero; four clean supports certify it, while one matching contradiction plus four supports leaves it uncertified. Certified `S,S,S,S,C` revocation also remains exact. |
 | V7 bounded R0 -> R1 shot | Semantic commit `5efc88ce`; seed `2026082801`; one process/core; fixed viewed 48/16/16 pools; cooperative `7200 s` / `8192 MiB` epoch-boundary ceilings | R0 passed at epoch 72 with validation/regression `1.0/1.0`; no first R1 epoch boundary was persisted before the two-hour scope ended. The stop landed in a full graph `deepcopy` that source places on each observed REAL-action path. No R1 or mate-in-2 conclusion is supported. |
+| Epoch-scoped frozen-R0 execution | Commit `60e3c9b8`; mixed REAL/VIRTUAL parity canary; focused authority, history, handover and curriculum suites | Exact one-shot/session parity; one isolated R0 runtime clone per epoch session instead of per frame; frozen-source audits remain constant within a session; `57 passed`. |
+| Full-work development run (active) | Commit `60e3c9b8`; seed `2026082801`; one process/core; fixed viewed 48/16/16 pools; unchanged learner; `21600 s` / `8192 MiB` safe-epoch-boundary ceilings | R0 passed at epoch 72 with validation/regression `1.0/1.0` at 2026-08-29 10:22 CEST. R1 is active; no exact R1 epoch boundary or mate-in-2 result has persisted yet. |
 
 ## Purpose and validity scope
 
@@ -53,6 +55,9 @@ current implementation commit.
 - `a998acda2d97d7ac9cabf2d0abbe930097125344` — corrected the V2 duplicate
   index to derive predecessor FENs from signed discovery and consumed REAL
   receipts rather than the intentionally FEN-free reference schema.
+- `60e3c9b8b085e49db069b9db53422e3899c116fb` — reuses one isolated frozen-R0
+  inference runtime across each R1 epoch session, with exact boundary guards
+  and structural-session rotation.
 - `1fef1bff3cf9be0b9f8273f2af3bf0ab768467c9` — hoisted the frozen-R0
   identity audit and removed unused exact/serialized audit work from each V3
   continuation manifest.
