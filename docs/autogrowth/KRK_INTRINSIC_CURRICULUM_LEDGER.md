@@ -144,3 +144,20 @@ packages remain immutable. See
 `docs/autogrowth/NATIVE_DEFERRED_SPECIALIZATION_INITIALIZATION_RECLOSURE.md`
 and
 `docs/autogrowth/NATIVE_DEFERRED_SPECIALIZATION_DATA_REUSE_ADJUDICATION.md`.
+
+## Deferred-specialization initialization-reclosed attempt — performance stop
+
+On 2026-08-29, the single initialization-reclosed attempt from
+`f9f12628cb303c9326a00acfc138e0d471410a65` was stopped once through its exact
+systemd unit after 14 days, 12 hours, 55 minutes, and 28.690927558 seconds to
+the first explicit inactive-and-PID-absent timestamp. Eight Stage-A shards had
+started; zero completed and zero failed, no seed payload existed, and the
+exposure gate, Stage B, and final aggregation never began. This is a
+`COMPUTATIONAL_PERFORMANCE_STOP` with `NO_SCIENTIFIC_CONCLUSION`: sustained
+CPU use exposed unbounded repeated-history execution cost, not evidence for or
+against the deferred-specialization hypothesis. All scientific metrics are
+`NOT_EVALUATED`. The complete fresh stream/cohort is conservatively
+`VIEWED_AND_RETIRED_FOR_FUTURE_CONFIRMATORY_USE` and may be used only for
+labelled development/performance diagnosis. No repair, rerun, or replacement
+attempt occurred. See
+`docs/autogrowth/NATIVE_DEFERRED_SPECIALIZATION_INITIALIZATION_RECLOSED_ATTEMPT_PERFORMANCE_STOP.md`.

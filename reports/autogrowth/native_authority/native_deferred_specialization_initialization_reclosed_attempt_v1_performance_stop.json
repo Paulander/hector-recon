@@ -1,0 +1,131 @@
+{
+  "classification": "COMPUTATIONAL_PERFORMANCE_STOP",
+  "scientific_conclusion": "NO_SCIENTIFIC_CONCLUSION",
+  "source_commit": "f9f12628cb303c9326a00acfc138e0d471410a65",
+  "branch": "codex/native-v2-systemd-schema-reclosure-20260802",
+  "attempt_id": "9300fdc844d799acd28c71563abd8ff8ef7b77b1b14c3b4a20a5e5e53c7cb5df",
+  "attempt_directory": "reports/autogrowth/runs/native_deferred_specialization_initialization_reclosed_attempt_v1",
+  "service": {
+    "unit": "hector-recon-deferred-specialization-init-f9f1262.service",
+    "invocation_id": "61d777fc10fb4b329156a2da6fca6a5d",
+    "restart_count": 0,
+    "start_time": "2026-08-15T10:18:40+02:00",
+    "stop_request": "systemctl --user stop --no-block hector-recon-deferred-specialization-init-f9f1262.service",
+    "stop_request_count": 1,
+    "stop_request_exit_status": 0,
+    "stop_time": "2026-08-29T23:14:08.690927558+02:00",
+    "stop_time_basis": "First explicit timestamp sampled after inactive/dead state and absence of all recorded PIDs. Actual exit occurred at or before this instant; the transient unit unloaded and the journal retained no finer exit timestamp.",
+    "wall_seconds_to_recorded_stop": 1256128.690927558,
+    "wall_display": "14d 12h 55m 28.690927558s",
+    "cumulative_cpu_seconds_last_pre_stop_sample": 9989289.005433,
+    "cumulative_cpu_display": "115d 14h 48m 09.005433s",
+    "cpu_accounting_qualification": "Final cgroup accounting sample taken immediately before the single stop request; the transient cgroup was removed at shutdown, so no later retained counter existed.",
+    "pre_stop_state": {"active_state": "active", "sub_state": "running", "result": "success", "main_pid": 87435, "control_pid": 0, "coordinator_state": "S (sleeping)", "worker_states": "R (running) for all eight workers"},
+    "post_stop_state": {"active_state": "inactive", "sub_state": "dead", "main_pid": 0, "control_pid": 0, "manager_stop_result": "success", "all_recorded_pids_absent": true, "duplicate_experiment_processes": 0, "stronger_termination_used": false},
+    "exit_signal_information": {
+      "stop_operation": "normal systemd stop",
+      "stop_command_exit_status": 0,
+      "per_process_exit_code": "NOT_RETAINED",
+      "per_process_terminal_signal": "NOT_RETAINED",
+      "journal_entries": 0,
+      "qualification": "The transient unit unloaded after the successful stop and no invocation journal entry existed; no unrecorded exit code or signal is inferred."
+    }
+  },
+  "processes_before_stop": {
+    "coordinator": {"pid": 87435, "ppid": 832, "rss_kib": 169152, "threads": 3},
+    "workers": [
+      {"pid": 89170, "ppid": 87435, "rss_kib": 429136, "threads": 1},
+      {"pid": 89171, "ppid": 87435, "rss_kib": 426284, "threads": 1},
+      {"pid": 89172, "ppid": 87435, "rss_kib": 423272, "threads": 1},
+      {"pid": 89173, "ppid": 87435, "rss_kib": 426412, "threads": 1},
+      {"pid": 89174, "ppid": 87435, "rss_kib": 424712, "threads": 1},
+      {"pid": 89175, "ppid": 87435, "rss_kib": 427292, "threads": 1},
+      {"pid": 89176, "ppid": 87435, "rss_kib": 427436, "threads": 1},
+      {"pid": 89177, "ppid": 87435, "rss_kib": 427288, "threads": 1}
+    ],
+    "rss_sum_kib": 3580984,
+    "rss_sum_bytes": 3666927616,
+    "rss_sum_gib": 3.4150924682617188,
+    "cgroup_memory_current_bytes": 3201863680,
+    "cgroup_memory_current_gib": 2.9819679260253906,
+    "rss_sum_qualification": "Per-process RSS double-counts shared resident pages; cgroup memory.current is reported separately."
+  },
+  "cache": {"state": "COMPLETED", "sha256": "c6aaab1d8632e93c288ce81b3d1245f8c33029b4abe810ca0e838bb6c644dab0", "size_bytes": 44913304, "modified": "2026-08-15T11:27:48.823763400+02:00"},
+  "stage_a": {
+    "state": "STARTED",
+    "started_count": 8,
+    "completed_count": 0,
+    "failed_count": 0,
+    "started_seeds": [
+      {"ordinal": 0, "genome_seed": 907644595097955793, "shard_identity": "d546764d49f716485d0abca4c1968a81cd679bc52515432a7ca9ea64e12fc7ff", "fresh_rows_or_outcomes_opened": "NOT_RECORDED"},
+      {"ordinal": 1, "genome_seed": 712155576387041666, "shard_identity": "bb09b77d97c4cba2141106484736f676b0406837e56f6e7b5e5eb3866b33f4d9", "fresh_rows_or_outcomes_opened": "NOT_RECORDED"},
+      {"ordinal": 2, "genome_seed": 4885767146672703791, "shard_identity": "c4da1f546d162bc94cad3b7e069186f8a461eecb007f72ef46bddb668b746091", "fresh_rows_or_outcomes_opened": "NOT_RECORDED"},
+      {"ordinal": 3, "genome_seed": 7502913297808550194, "shard_identity": "fc9bd15316da4fd62b7ff8a4e157053b1bee3024c0fb751831db560db310e174", "fresh_rows_or_outcomes_opened": "NOT_RECORDED"},
+      {"ordinal": 4, "genome_seed": 2309457312534921520, "shard_identity": "4962b42ec250edeccc3bf8c00c7b729ec411dc4f57a34e40a1b2e5c115d5eb26", "fresh_rows_or_outcomes_opened": "NOT_RECORDED"},
+      {"ordinal": 5, "genome_seed": 856812592524298243, "shard_identity": "a3b6b809210fc536c139725bef721d05d235aa3c95ca066d3ce7c95560c71703", "fresh_rows_or_outcomes_opened": "NOT_RECORDED"},
+      {"ordinal": 6, "genome_seed": 884349908943639978, "shard_identity": "080095642ee5e63259df0665a29bb4d3ff36fc201c4cbce05423c3cf7b418a1f", "fresh_rows_or_outcomes_opened": "NOT_RECORDED"},
+      {"ordinal": 7, "genome_seed": 1342059648411793303, "shard_identity": "393e766ba9560fd4009bd152eea23d6788ccb51e28f24a440252ad6f8d45618b", "fresh_rows_or_outcomes_opened": "NOT_RECORDED"}
+    ],
+    "payloads_completed": 0,
+    "payload_files_present": 0,
+    "output_digests_present": 0,
+    "errors_present": 0,
+    "tracebacks_present": 0,
+    "fresh_access_qualification": "The existing shard states contain no fresh-access counter. No outcome content was opened for this preservation report. Per-seed access is therefore not inferred from CPU activity."
+  },
+  "later_stages": {
+    "exposure_gate_state": "NOT_STARTED",
+    "stage_b_state": "NOT_STARTED",
+    "final_aggregation_state": "NOT_STARTED",
+    "qualifying_seed_count": "NOT_EVALUATED",
+    "engagement": "NOT_EVALUATED",
+    "per_arm_metrics": "NOT_EVALUATED",
+    "certifications": "NOT_EVALUATED",
+    "revocations": "NOT_EVALUATED",
+    "specializations": "NOT_EVALUATED",
+    "paired_comparisons": "NOT_EVALUATED",
+    "effective_sample_sizes": "NOT_EVALUATED",
+    "corrected_probabilities": "NOT_EVALUATED",
+    "frozen_mechanism_conclusion": "NOT_EVALUATED"
+  },
+  "preserved_attempt_records": [
+    {"path": "reports/autogrowth/runs/native_deferred_specialization_initialization_reclosed_attempt_v1/attempt.json", "size_bytes": 684, "modified": "2026-08-15T11:27:49.162461400+02:00", "sha256": "088f4075ddf94f06c1d13750faec159be868062ff980f27e905b07dfe73f0683"},
+    {"path": "reports/autogrowth/runs/native_deferred_specialization_initialization_reclosed_attempt_v1/r0_observation_cache.json", "size_bytes": 44913304, "modified": "2026-08-15T11:27:48.823763400+02:00", "sha256": "c6aaab1d8632e93c288ce81b3d1245f8c33029b4abe810ca0e838bb6c644dab0"},
+    {"path": "reports/autogrowth/runs/native_deferred_specialization_initialization_reclosed_attempt_v1/shards/a/00.state.json", "size_bytes": 810, "modified": "2026-08-15T11:28:06.247366500+02:00", "sha256": "7b1ea9399c125b8190013b8008f47484e62f112307a8d8beb08cb26aebdef356"},
+    {"path": "reports/autogrowth/runs/native_deferred_specialization_initialization_reclosed_attempt_v1/shards/a/01.state.json", "size_bytes": 810, "modified": "2026-08-15T11:28:06.247716000+02:00", "sha256": "913aa2307a0e7b2356ba2f9140fed5e00c7dba7386a4cd0690aac527dea86944"},
+    {"path": "reports/autogrowth/runs/native_deferred_specialization_initialization_reclosed_attempt_v1/shards/a/02.state.json", "size_bytes": 811, "modified": "2026-08-15T11:28:06.314065200+02:00", "sha256": "e796ca093ac4cdc1843274f2243d40e0c7be1f95b60404e474563b84b2e1d599"},
+    {"path": "reports/autogrowth/runs/native_deferred_specialization_initialization_reclosed_attempt_v1/shards/a/03.state.json", "size_bytes": 811, "modified": "2026-08-15T11:28:06.746224600+02:00", "sha256": "a25e78a21a3524a4a413ffc650942b498c80045a777f056bb4882f765b0accb9"},
+    {"path": "reports/autogrowth/runs/native_deferred_specialization_initialization_reclosed_attempt_v1/shards/a/04.state.json", "size_bytes": 811, "modified": "2026-08-15T11:28:06.890425900+02:00", "sha256": "4c762203bbd2b04de01498c63975286c5eed1cf87050c7dfec49169b51b6e98b"},
+    {"path": "reports/autogrowth/runs/native_deferred_specialization_initialization_reclosed_attempt_v1/shards/a/05.state.json", "size_bytes": 810, "modified": "2026-08-15T11:28:06.984025800+02:00", "sha256": "e7fc51fff6cf48ecf129588d4bf6ec7ac7a3933ae28fb635e5b834ac90068c97"},
+    {"path": "reports/autogrowth/runs/native_deferred_specialization_initialization_reclosed_attempt_v1/shards/a/06.state.json", "size_bytes": 810, "modified": "2026-08-15T11:28:06.996242800+02:00", "sha256": "921bfebe59e0afd06294fd591496644871c7e49c543a567a9a10f678bbb8a54b"},
+    {"path": "reports/autogrowth/runs/native_deferred_specialization_initialization_reclosed_attempt_v1/shards/a/07.state.json", "size_bytes": 811, "modified": "2026-08-15T11:28:07.062794500+02:00", "sha256": "d6da964ff1382a0dcb0ed8b6e6420e342d87f4b7f01576cc3d7f75914c3526b3"}
+  ],
+  "preservation_comparison": {
+    "pre_stop_file_count": 10,
+    "post_stop_file_count": 10,
+    "hashes_identical_before_and_after_stop": true,
+    "files_finalized_during_graceful_shutdown": [],
+    "attempt_records_modified": false,
+    "journal_files_in_attempt_directory": [],
+    "systemd_journal_entries_for_unit_or_invocation": 0,
+    "free_disk_bytes_before_stop": 536028946432
+  },
+  "data_adjudication": {
+    "complete_fresh_stream_or_cohort": "VIEWED_AND_RETIRED_FOR_FUTURE_CONFIRMATORY_USE",
+    "future_confirmatory_reuse_permitted": false,
+    "permitted_future_use": "Clearly labelled development/performance diagnosis only",
+    "reason": "Per-seed fresh access was not durably counted, so the complete cohort is retired conservatively rather than treating unpersisted access as absent."
+  },
+  "execution_adjudication": {
+    "reason_for_stop": "Unbounded repeated-history execution cost with no durable seed completion",
+    "diagnoses": "Execution method and computational performance",
+    "does_not_diagnose": "Deferred-specialization learning hypothesis",
+    "repair_performed": false,
+    "rerun_performed": false,
+    "replacement_attempt_started": false,
+    "learner_source_changed": false,
+    "scientific_parameters_changed": false,
+    "frozen_manifests_changed": false,
+    "original_placeholder_changed": false
+  }
+}
