@@ -19,7 +19,8 @@ boundaries and artifact identities.
 | Specialized-child prospective gate | Same data-free fixture; actual birth, round-trip, then post-birth evidence | Child starts at zero; four clean supports certify it, while one matching contradiction plus four supports leaves it uncertified. Certified `S,S,S,S,C` revocation also remains exact. |
 | V7 bounded R0 -> R1 shot | Semantic commit `5efc88ce`; seed `2026082801`; one process/core; fixed viewed 48/16/16 pools; cooperative `7200 s` / `8192 MiB` epoch-boundary ceilings | R0 passed at epoch 72 with validation/regression `1.0/1.0`; no first R1 epoch boundary was persisted before the two-hour scope ended. The stop landed in a full graph `deepcopy` that source places on each observed REAL-action path. No R1 or mate-in-2 conclusion is supported. |
 | Epoch-scoped frozen-R0 execution | Commit `60e3c9b8`; mixed REAL/VIRTUAL parity canary; focused authority, history, handover and curriculum suites | Exact one-shot/session parity; one isolated R0 runtime clone per epoch session instead of per frame; frozen-source audits remain constant within a session; `57 passed`. |
-| Full-work development run | Commit `60e3c9b8`; seed `2026082801`; one process/core; fixed viewed 48/16/16 pools; unchanged learner; `21600 s` / `8192 MiB` safe-epoch-boundary ceilings | R0 passed at epoch 72 with validation/regression `1.0/1.0` at 2026-08-29 10:22 CEST. The process was observed live at 10:31 and absent at 16:10; no R1 snapshot, `attempt.json`, or `result.json` exists. Thus no exact R1 epoch or mate-in-2 result persisted, and the exit was outside the runner's handled ceiling/failure paths. |
+| Full-work development launch | Commit `60e3c9b8`; seed `2026082801`; one process/core; fixed viewed 48/16/16 pools; unchanged learner; `21600 s` / `8192 MiB` safe-epoch-boundary ceilings | Launched 09:58 CEST; R0 passed at epoch 72 with validation/regression `1.0/1.0` at 10:22; the Codex-managed execution was reaped at 12:02 after about `2 h 04 m`, exactly 90 minutes after its owning task ended. No handled-exit artifact exists. R1 snapshots/progress are written only every 20 epochs, so the absent R1 artifact does not establish that zero R1 epochs completed. |
+| Current V7 realistic runtime profile | HEAD `2b517ded`, behavior `60e3c9b8`; already-viewed R0 with 4,535 nodes/210,612 edges/842 triplets; one core; exact viewed REAL sequence | First 48 REAL events took `426.572 s`; 64 took `574.615 s` with stable per-event cost and `94.66%` in frame inference. The event-64 frontier produced and materialized 62 children in `561.914 s`; all checks and exact continuation parity passed. The path is costly but finite and cannot explain the epoch-1 artifact loss. |
 
 ## Purpose and validity scope
 
@@ -411,3 +412,34 @@ current implementation commit.
   another curriculum shot, benchmark and remove the full per-frame graph copy
   with exact trace/isolation parity, and give the development launcher a real
   external hard-wall guard in addition to safe-boundary snapshots.
+
+### Full-work launch termination and current-code profile
+
+- Conditions: behavior commit `60e3c9b8`; branch-log tip `2b517ded`; seed
+  `2026082801`; fixed viewed 48/16/16 pools; unchanged learner; one
+  process/core; `21600 s` / `8192 MiB` cooperative epoch-boundary ceilings.
+- Exit forensics: launch was 2026-08-29 09:58:24 CEST. Its owning Codex task
+  ended at 10:32:25, and the managed execution became `failed`, exit code
+  `-1`, at 12:02:25 -- exactly `5400.000 s` later. macOS independently records
+  the accompanying `caffeinate` client dying at that instant after `02:04:00`.
+  There was no nearby sleep/reboot or Python crash report. Normal success, a
+  cooperative ceiling, or a caught Python exception would have written
+  `result.json` or `attempt.json`; neither exists. This strongly identifies
+  managed-session cleanup, while the exact terminating signal is unknown.
+- Persistence limit: normal R1 progress and snapshots are written only every
+  20 epochs. Epoch 1 is evaluated but not persisted unless a ceiling or other
+  forced stop is observed at its safe boundary. Therefore the last R0-only
+  progress file proves no exact R1 boundary, but it does not prove that zero
+  R1 epochs ran before the external termination.
+- Realistic current-code profile: the already-viewed R0 has 4,535 nodes,
+  210,612 edges and 842 triplets. The exact viewed first 48 REAL events took
+  `426.572 s`; 64 events took `574.615 s` with no growing per-event slope.
+  Frame open/inference was `94.66%` of REAL time. At frontier 96, all 62 V7
+  requests materialized; seal/open/consume/materialize/reopen took `561.914 s`
+  and performed 127 explicit full-authority copies. Session-close parity and
+  full-history verification passed. This is finite CPU-bound work and occurs
+  only after 64 prospective events, so it cannot explain an epoch-1 loss.
+- Interpretation: the launch failed because its process lifetime was tied to
+  the wrong execution owner. Residual formal inference and structural-copy
+  costs remain worthwhile optimization targets, but neither supplies evidence
+  of nontermination or of a ReCoN exception in this launch.
