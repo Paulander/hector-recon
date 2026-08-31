@@ -26,7 +26,7 @@ boundaries and artifact identities.
 | Adaptive-boundary v7 red-team stop | Same canary; contrastive candidate work in progress | Stopped before R1 after review found adaptive children could not themselves request refinement. No scientific or R1 result. |
 | Adaptive-boundary v8 residual-beam canary | Seed `2026082801`; random 8/4/4 R1 pools; one process/core; residual-guided beam; repaired recursive lifecycle; exact epoch-4 checkpoint | R0 `16/16`; R1 heldout `0/4`, retention `15/16`; 40 buds, 38 successors and depth 2. All 9 positive buds died; 20 negative buds promoted; zero AVAILABLE, handoffs or value. Stopped by predeclared no-functional-signal rule. |
 | Adaptive-boundary v9 multi-seed discriminator | Base `2f1b68c9`; local hybrid implementation; seeds `2026083101/02/03` in parallel plus viewed reference seed `2026082801`; one process/seed and numerical threads fixed to one; random 8/4/4 R1; exact epoch 4 | `3101` failed R0 validation (`13/16`) and never entered R1. The other three completed the primary arm at `0/16` exhaustive mate-in-2 and zero handoff/value. `3103` produced 5 surprise mates, 87 buds, 2 positive promotions and 23 live successors; `2801` produced 3 surprise mates and recursive refinement through generation 4 with 18 live successors; neither produced certified AVAILABLE authority. Durable epoch snapshots were preserved and the processes were stopped before control arms. |
-| Adaptive-boundary V14 exact preflight | Branch `codex/adaptive-boundary-ecology`; positive-shell ecology, local atomic metabolism, protected core-first routing and exact worst-reply credit | Focused `128/128`, adjacent `114/114`, final bounded-transaction `12/12`, and independent review `55/55` passed. Three fresh exact epoch-4 seeds remain the next scientific discriminator. |
+| Adaptive-boundary V14 mechanism gate | Implementation `55e940a9`; report repair `4cf1711b`; five fresh seeds, of which three passed R0 and two reached durable R1 snapshots | Bounded local turnover and positive promotion worked, but no post-birth certification, AVAILABLE envelope, handoff, successor value, or mate-in-2 conversion appeared. **NO-GO** for a longer run. |
 
 ## Purpose and validity scope
 
@@ -655,3 +655,56 @@ recorded in the V14 entry below as their source identity.
   deliberately perform a full history reclosure. Longer gates must record
   whether serialization duration grows materially, but this work does not add
   a monitoring framework or weaken the checkpoint trust boundary.
+
+### V14 five-seed mechanism gate and compact-report repair
+
+- Binding and conditions: implementation commit
+  `55e940a992909174b6e6893c3f5674f420cf9f77`; fresh independent directories;
+  seeds `2026090101..2026090105`; one process per seed with every numerical
+  thread pool fixed to one; random `8/4/4` R1 canary, exact four-epoch cap,
+  `7200 s`/`8192 MiB` safe-boundary ceilings. Seeds `0104/0105` were the next
+  predetermined replacements after `0101/0102` failed before R1; all failures
+  remain preserved and counted.
+- Seeds `0101` and `0102` stopped honestly at the epoch-96 R0 gate after
+  `556.585 s` and `552.469 s`. Both validation scores were `14/16`; report-only
+  regression was `15/16` and `16/16`. Neither executed R1.
+- Seed `0103` passed R0 `16/16` at epoch 1 and saved exact R1 epoch 4 after
+  `929.183 s` of R1 work (`1423.812 s` attempt wall). Its 32 episodes produced
+  31 unique REAL observations, 67 lifetime buds, 46 tombstones, 21 live or
+  refining candidates under the cap of 32, five positive promotions, five
+  live authority roots and authority generation 4. It nevertheless had zero
+  post-birth certification receipts, zero certified roots, zero AVAILABLE
+  envelopes, zero handoffs, zero successor value, `0/4` exhaustive mate-in-2
+  validation, and final R0 retention `15/16`.
+- Seed `0104` passed R0 `16/16` at epoch 1 and was deliberately stopped after
+  seed `0103` crossed the branch stop rule. Its durable epoch-2 snapshot records
+  `459.522 s` of R1 work, 16 episodes, 25 buds, 18 live/refining candidates,
+  seven tombstones, three positive promotions and three live authority roots.
+  It retained R0 `16/16`, but again had zero certification receipts, AVAILABLE
+  envelopes, handoffs, successor value, or `4`-case mate-in-2 conversion.
+- Seed `0105` passed R0 `16/16` at epoch 8 but was stopped before a first R1
+  snapshot after the same branch-level stop condition. The two stopped
+  processes exited `130`; their completed atomic artifacts remain intact.
+- Seed `0103` then failed closed only while building its final report. The V4
+  request for candidate `37bb8671539c2d44aa4b3e13b8ce9c20` committed exactly
+  to 30 inspected receipts from trigger ordinal 33 through frontier 62, but
+  its bounded four-ID diagnostic witness list did not include the trigger.
+  The old report audit incorrectly treated witnesses as the complete set.
+  Authority restoration, full-history validation, inspected/support commitment
+  reclosure and certification-discovery separation all passed; this was not
+  evidence leakage or a corrupt snapshot.
+- Repair commit `4cf1711b9c09b374fc6c55ea33a58d4c0c3d11ee` keeps the legacy
+  literal-list rule but reconstructs and verifies the complete trigger-to-
+  frontier interval for compact V4 requests. It reports commitment manifests
+  separately from bounded witnesses. A deterministic regression fails at the
+  exact implementation commit and passes with the repair; the preserved
+  epoch-4 snapshot now audits as five lineages, five live roots and zero leaks.
+  The exact post-fix focused suite passed `244/244` in `442.55 s`; targeted
+  `compileall` and `git diff --check` are clean.
+- Decision: **NO-GO for the 1–2-hour gate or a real mate-in-2 curriculum run.**
+  The implementation demonstrates renewable local birth, refinement, bounded
+  active ecology, retirement pressure, compact replay-safe commitments and
+  positive authority promotion. It does not yet demonstrate the indispensable
+  next link: a promoted root acquiring post-birth evidence and becoming
+  AVAILABLE. Repeating this source longer would not satisfy the predeclared
+  functional gate; no further seed was launched.
